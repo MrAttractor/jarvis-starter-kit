@@ -3,14 +3,32 @@ import { supabase } from '../lib/supabase';
 import { MOCK } from '../data';
 import { Icon, AssistGlyph, TypingDots, Card, Pill } from '../components/ui';
 
-// ─── Openers personnalisés par agent ─────────────────────────────────────────
+// ─── Openers par agent ───────────────────────────────────────────────────────
 
-const OPENERS = {
-  coach:  (p, n) => `Salut ${p}. Je suis ${n}. Qu'est-ce qu'on attaque aujourd'hui ?`,
-  awa:    (p)    => `Salut ${p}. Je suis Awa. Dis-moi qui tu veux convaincre — un client, un partenaire, une audience. Je prépare le message.`,
-  miriam: (p)    => `Salut ${p}. Je suis Miriam. Posts, réponses, broadcasts — je gère ta présence digitale. Par quoi on commence ?`,
-  serge:  (p)    => `Salut ${p}. Je suis Serge. Dis-moi ce qui est dans ta tête en ce moment — tâches, rendez-vous, relances. Je trie et j'organise.`,
-  roland: (p)    => `Salut ${p}. Je suis Roland. Parle-moi de tes prix et tes ventes. Je te dis si tu es rentable ou pas.`,
+const OPENERS_AGENTS = {
+  awa:    (p) => `Salut ${p}. Je suis Awa. Dis-moi qui tu veux convaincre — un client, un partenaire, une audience. Je prépare le message.`,
+  miriam: (p) => `Salut ${p}. Je suis Miriam. Posts, réponses, broadcasts — je gère ta présence digitale. Par quoi on commence ?`,
+  serge:  (p) => `Salut ${p}. Je suis Serge. Dis-moi ce qui est dans ta tête en ce moment — tâches, rendez-vous, relances. Je trie et j'organise.`,
+  roland: (p) => `Salut ${p}. Je suis Roland. Parle-moi de tes prix et tes ventes. Je te dis si tu es rentable ou pas.`,
+};
+
+// Opener bras droit — contextuel selon le profil
+const buildCoachOpener = (profile, nomAss) => {
+  const prenom    = profile?.prenom       || "toi";
+  const ouverture = profile?.ouverture    || "";
+  const memoire   = profile?.memoire_cache || "";
+
+  // Utilisateur qui revient
+  if (memoire) {
+    return `Content de te revoir, ${prenom}. ${memoire}\n\nOn continue ou tu as autre chose en tête ?`;
+  }
+
+  // Première conversation — visite guidée
+  const intro = ouverture
+    ? `Salut ${prenom}. Je suis ${nomAss} — ton bras droit IA, disponible maintenant.\n\nTu m'as dit que tu voulais : "${ouverture}". C'est exactement pour ça que je suis là.`
+    : `Salut ${prenom}. Je suis ${nomAss} — ton bras droit IA, disponible maintenant.`;
+
+  return `${intro}\n\nVoilà comment on fonctionne ensemble :\n→ Moi : je suis ton point de contact principal. Tout ce qui est dans ta tête, tu me le dis.\n→ Awa : tes relances et messages de prospection\n→ Miriam : tes posts et présence digitale\n→ Serge : ton organisation et planning\n→ Roland : tes marges et finances\nTu les trouves dans "Mon équipe".\n\nMaintenant — par quoi tu veux qu'on commence ?`;
 };
 
 // Agents verrouillés = mode passif interactif
@@ -76,8 +94,9 @@ export function ConversationScreen({ go, notify, params, profile }) {
   const nomAss   = profile?.nom_assistant || a.name;
   const isLocked = LOCKED_AGENTS.includes(a.id);
 
-  const openerFn = OPENERS[a.id] || OPENERS.coach;
-  const opener   = openerFn(first, isLocked ? a.name : nomAss);
+  const opener = a.id === "coach"
+    ? buildCoachOpener(profile, isLocked ? a.name : nomAss)
+    : (OPENERS_AGENTS[a.id] || OPENERS_AGENTS.awa)(first);
 
   const [msgs, setMsgs]     = useState([{ from: "bot", text: opener }]);
   const [typing, setTyping] = useState(false);
@@ -133,6 +152,9 @@ export function ConversationScreen({ go, notify, params, profile }) {
             nom_assistant:   profile?.nom_assistant,
             activite:        profile?.activite,
             canal_principal: profile?.canal_principal,
+            ouverture:       profile?.ouverture,
+            zone:            profile?.zone,
+            ton_prefere:     profile?.ton_prefere,
           },
           ppsd:          ppsd || {},
           memoire_cache: profile?.memoire_cache || "",

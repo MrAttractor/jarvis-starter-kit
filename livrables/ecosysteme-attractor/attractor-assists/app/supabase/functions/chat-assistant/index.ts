@@ -45,21 +45,26 @@ const KNOWLEDGE_BASE = `
 **Agenda/Organisation :** Pour les questions d'agenda, de planning, de todo → orienter vers Serge (Chief of Staff) qui gère ça. Le bras droit peut noter et transmettre mais Serge est le spécialiste.
 `;
 
-const COACH_SYSTEM = `Tu es le bras droit personnel de l'utilisateur — son assistant IA qui le décharge mentalement au quotidien.
+const COACH_SYSTEM = `Tu es le bras droit personnel de l'utilisateur — son assistant IA qui le décharge mentalement au quotidien. Tu t'appelles avec le nom que l'utilisateur t'a donné.
 
-## QUI TU ES
-Tu t'appelles comme l'utilisateur t'a prénommé (son nom d'assistant). Tu n'es pas un coach générique. Tu connais son contexte, son activité, ses objectifs. Tu travailles pour lui, pas pour lui apprendre des concepts.
+## CE QUE TU SAIS SUR LUI
+Tu as accès à tout ce qu'il t'a dit pendant son inscription : ce qu'il veut que tu fasses (ouverture), sa journée type, ce qui l'épuise, sa vision dans 6 mois, son activité, sa zone géographique, ses clients. Tu utilises ces infos activement dans chaque réponse — tu ne poses pas une question dont tu as déjà la réponse.
 
-## TON RÔLE
-Décharger mentalement l'utilisateur. Il te parle de tout ce qui touche son business et sa vie d'entrepreneur. Tu ne refuses jamais d'aider. Si une question touche le domaine d'un spécialiste de l'équipe (agenda → Serge, contenu → Miriam, prospection → Awa, finances → Roland), tu l'aides quand même et tu mentionnes qui peut aller plus loin.
+## TON RÔLE — PROACTIF
+Tu n'attends pas qu'on te demande. Tu prends des initiatives basées sur ce que tu sais. Si l'utilisateur t'a dit qu'il voulait "organiser son agence" et qu'il t'envoie un message flou, tu l'aides à clarifier EN LIEN avec ça.
 
-## TON COMPORTEMENT — RÈGLE ABSOLUE
-- **Maximum 3 phrases par réponse.** Pas plus. Jamais.
-- Si tu produis quelque chose (post, message, offre) : le texte prêt à copier, puis UNE question courte.
-- Tutoiement. Phrases courtes. Pas de listes à puces sauf si demandé.
-- Tu poses UNE question pour avancer. Pas deux.
-- Tu produis, tu n'enseignes pas. Pas de cours, pas de théorie non demandée.
-- Tu ancres dans la réalité CI : prénoms ivoiriens, Wave, WhatsApp Business, Abidjan.
+Si une info importante manque pour bien aider (cible précise, prix, délai) — tu la demandes, UNE seule à la fois.
+
+## TON ÉQUIPE
+Awa (prospection), Miriam (contenu), Serge (organisation), Roland (finances). Si la demande touche leur domaine, tu aides ET tu mentionnes qui peut aller plus loin.
+
+## TON COMPORTEMENT
+- Tutoiement. Phrases courtes. Ton chaleureux mais direct — voix CI.
+- Pour une réponse simple : 2-3 phrases max.
+- Pour produire (texte, offre, message) : le livrable complet + 1 question courte.
+- Tu produis, tu n'enseignes pas. Pas de théorie sauf si l'utilisateur demande.
+- Tu ancres dans la réalité : Wave, WhatsApp Business, prénoms ivoiriens, Abidjan ou sa ville.
+- Si tu ne sais pas quelque chose sur lui → tu demandes directement.
 
 ${KNOWLEDGE_BASE}`;
 
@@ -132,10 +137,20 @@ serve(async (req) => {
 
     const systemBase = SYSTEMS[assistant_id] ?? SYSTEMS.coach;
 
-    // Contexte profil
-    const contextBlock = profile.activite
-      ? `\n\nCONTEXTE UTILISATEUR :\nPrénom : ${profile.prenom || "l'entrepreneur"}\nNom assistant : ${profile.nom_assistant || "Attractor"}\nActivité : ${profile.activite}\nCanal principal : ${profile.canal_principal || "non précisé"}`
-      : `\n\nPrénom : ${profile.prenom || "l'entrepreneur"}\nNom assistant : ${profile.nom_assistant || "Attractor"}`;
+    // Contexte profil complet
+    const contextLines = [
+      `\n\nCONTEXTE UTILISATEUR :`,
+      `Prénom : ${profile.prenom || "l'entrepreneur"}`,
+      `Nom de l'assistant : ${profile.nom_assistant || "Attractor"}`,
+      profile.ouverture   ? `Ce qu'il veut que tu fasses : "${profile.ouverture}"` : null,
+      profile.activite    ? `Son activité / journée type : ${profile.activite}` : null,
+      profile.canal_principal ? `Où il trouve ses clients : ${profile.canal_principal}` : null,
+      profile.zone        ? `Zone géographique : ${profile.zone}` : null,
+      ppsd.cible          ? `Sa cible : ${ppsd.cible}` : null,
+      ppsd.problemes      ? `Ce qui l'épuise : ${ppsd.problemes}` : null,
+      ppsd.souhaits       ? `Sa vision dans 6 mois : ${ppsd.souhaits}` : null,
+    ].filter(Boolean).join("\n");
+    const contextBlock = contextLines;
 
     // Mémoire courte — injecte les échanges résumés des sessions précédentes
     const memoireBlock = memoire_cache
