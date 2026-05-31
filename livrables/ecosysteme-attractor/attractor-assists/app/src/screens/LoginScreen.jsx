@@ -79,10 +79,10 @@ export function LoginScreen({ onAuthed }) {
           <div className="mt-auto animate-[fadeUp_.4s_ease]">
             <Pill tone="white" icon="bolt" className="backdrop-blur-sm">Gratuit · sans carte</Pill>
             <h1 className="font-display font-extrabold text-[36px] leading-[1.06] tracking-tight mt-4">
-              Moins dans la tête,<br />plus dans l'<span className="text-amber">action</span>.
+              Trouve ton <span className="text-amber">Couloir</span>…<br />et cours dedans !
             </h1>
             <p className="text-[15.5px] text-white/85 mt-4 max-w-[330px] leading-relaxed">
-              Argumentaires, posts, offres, messages — prêts à copier. On avance avec toi, comme nous.
+              Nous sommes là pour t'aider.
             </p>
             <div className="mt-7 space-y-3">
               <Btn className="w-full" iconRight="arrow" onClick={() => setStep("email")}>Démarrer gratuitement</Btn>

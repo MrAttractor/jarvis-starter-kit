@@ -40,12 +40,12 @@ export function DashboardScreen({ go, notify, profile }) {
           supabase.from('gamification').select('streak,niveau,xp').eq('user_id', user.id).maybeSingle(),
           supabase.from('usage_daily').select('nb_messages').eq('user_id', user.id).eq('jour', today).maybeSingle(),
           supabase.from('ppsd').select('user_id').eq('user_id', user.id).maybeSingle(),
-          supabase.from('profiles').select('id', { count: 'exact', head: true }),
+          supabase.rpc('get_user_count'),
         ]);
         if (gamifRes.data) setGamif(gamifRes.data);
         if (usageRes.data) setUsedToday(usageRes.data.nb_messages);
         if (ppsdRes.data)  setPpsdDone(true);
-        if (countRes.count) setUserCount(countRes.count);
+        if (countRes.data) setUserCount(countRes.data);
       } catch {}
     };
     load();

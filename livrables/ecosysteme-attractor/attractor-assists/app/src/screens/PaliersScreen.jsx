@@ -8,8 +8,8 @@ export function PaliersScreen({ go, notify }) {
   const [userCount, setUserCount] = useState(null);
 
   useEffect(() => {
-    supabase.from('profiles').select('id', { count: 'exact', head: true })
-      .then(({ count }) => { if (count) setUserCount(count); });
+    supabase.rpc('get_user_count')
+      .then(({ data }) => { if (data) setUserCount(data); });
   }, []);
 
   return (
@@ -28,7 +28,7 @@ export function PaliersScreen({ go, notify }) {
         </div>
 
         {MOCK.forfaits.map(f => (
-          <ForfaitCard key={f.id} f={f} onPick={() => f.current ? notify("C'est déjà ton palier") : setPay(f)} />
+          <ForfaitCard key={f.id} f={f} userCount={userCount} onPick={() => f.current ? notify("C'est déjà ton palier") : setPay(f)} />
         ))}
 
         <div className="flex items-center justify-center gap-2 text-[12px] text-g400 mt-1">
@@ -42,14 +42,19 @@ export function PaliersScreen({ go, notify }) {
   );
 }
 
-function ForfaitCard({ f, onPick }) {
+function ForfaitCard({ f, onPick, userCount }) {
   return (
     <div className={`relative rounded-[20px] p-5 ${f.highlight ? "bg-charbon text-white shadow-[0_18px_40px_-18px_rgba(26,23,20,.6)]" : "bg-white border border-g200 shadow-soft"}`}>
       {f.highlight && (
-        <div className="absolute -top-3 left-5">
+        <div className="absolute -top-3 left-5 flex items-center gap-2">
           <span className="bg-amber text-charbon font-display font-extrabold text-[11px] px-3 py-1 rounded-full flex items-center gap-1">
             <Icon name="bolt" size={13} /> {f.promo}
           </span>
+          {userCount != null && (
+            <span className="bg-white/15 text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20">
+              {Math.max(0, 100 - userCount)} places restantes
+            </span>
+          )}
         </div>
       )}
       <div className="flex items-start justify-between">
@@ -60,10 +65,17 @@ function ForfaitCard({ f, onPick }) {
         {f.current && <Pill tone="growth">Actuel</Pill>}
       </div>
       <div className="flex items-baseline gap-2 mt-4">
-        {f.eurOld && <span className="font-display text-[18px] line-through text-g400">{f.eurOld}</span>}
         <span className={`font-display font-extrabold text-[34px] leading-none ${f.highlight ? "text-orange-light" : "text-charbon"}`}>{f.eur}</span>
         <span className={`text-[13px] ${f.highlight ? "text-white/60" : "text-g400"}`}>{f.period}</span>
+        {f.eurOld && (
+          <span className="ml-1 bg-amber text-charbon text-[11px] font-extrabold px-2 py-0.5 rounded-full">-70%</span>
+        )}
       </div>
+      {f.eurOld && (
+        <div className="text-[12px] text-white/50 mt-0.5">
+          Prix habituel : <span className="line-through">{f.eurOld}{f.period}</span> · Promo fondateurs
+        </div>
+      )}
       <div className={`text-[13px] font-semibold mt-0.5 ${f.highlight ? "text-amber" : "text-growth"}`}>{f.fcfa} {f.eur !== "0 €" ? f.period : ""}</div>
       <ul className="mt-4 space-y-2.5">
         {f.features.map((x, i) => (

@@ -7,6 +7,18 @@
 
 ---
 
+## 2026-05-31 (session 9 — Générateur d'Apps Métier + J'Envoie Express)
+
+### Validation du concept Générateur d'Apps Métier
+
+- Analyse de faisabilité des 13 projets de l'écosystème Attractor : classement en 4 niveaux (faisable maintenant / moyen terme / long terme / reporter). Top 3 prioritaires : Générateur d'Apps Métier, Attractor IA, Brain Dump vocal.
+- Concept Générateur d'Apps Métier validé : pipeline industrialisé de l'audit à la livraison. Collecte via Tally → personnalisation Claude vision → validation client → déploiement Netlify. 3 niveaux de personnalisation (surface, modules, nouveau secteur). Logique "Shopify des apps métier africaines".
+- Pipeline interne en 5 étapes : réception infos client → personnalisation par Claude (~20 min) → validation Mac Arthur (~5 min) → déploiement Netlify (~5 min) → livraison client. Total : moins de 48h après réception des infos.
+- Template #1 créé : Livraison colis (J'Envoie Express). 8 modules : dashboard KPI, gestion colis, voyages, clients, demandes, tarifs, tracking avec preview mobile, assistant IA intégré.
+- J'Envoie Express : maquette HTML complète analysée. 6 infos manquantes identifiées (logo, WA business, adresses collecte, prochain voyage, validation couleurs). Message WhatsApp de collecte rédigé et prêt à envoyer.
+
+---
+
 ## 2026-05-31 (session 8 — suite : dark mode, forfaits, référencement)
 
 ### Chantiers livrés (fin de session)

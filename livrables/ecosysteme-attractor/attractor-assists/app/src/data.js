@@ -52,14 +52,46 @@ export const MOCK = {
       bio: "Grand-Bassam, revenu de France avec son master et une aversion pour les chiffres flous. Il ne fait pas de comptabilité — il fait de la clarté. Version focalisée dans l'app ; la version complète arrive dans l'app sœur.",
       proactif: "Il fait ton point financier mensuel automatiquement et t'alerte quand tes marges descendent sous le seuil de rentabilité.",
     },
+    {
+      id: "kofi", name: "Kofi", role: "Storytelling & Campagnes", plan: "Manager", status: "verrouillé", accent: "info", icon: "trend", photo: "/uploads/agents/kofi.jpg",
+      desc: "Il transforme ton activité en histoire qui vend. Posts, séquences, campagnes — il scénarise tout.",
+      bio: "San-Pédro, fils d'un commerçant de bois. Il a grandi en écoutant son père convaincre des acheteurs avec des histoires, pas des prix. Aujourd'hui il fait pareil — mais pour des entrepreneurs digitaux. Il ne fait pas des posts. Il construit des récits qui créent de la loyauté.",
+      proactif: "Il construit ta campagne complète : film de marque personnelle, séquence de posts en 3 phases, messages WhatsApp broadcast — tout ancré dans ton histoire et ta cible.",
+    },
   ],
   forfaits: [
-    { id: "decouverte", name: "Découverte", eur: "0 €", fcfa: "0 FCFA", period: "pour toujours", tagline: "Ton bras droit personnel — gratuit pour toujours", current: true,
-      features: ["Ton bras droit disponible 24h/24", "20 messages par jour", "Agenda et rappels de tes tâches", "Accès à la méthode ATTRACTOR"] },
-    { id: "brasdroit", name: "Bras Droit Pro", eur: "≈ 14 €", fcfa: "9 000 FCFA", period: "/ mois", tagline: "Ton bras droit qui agit à ta place",
-      features: ["Analyse tes pages et surveille les tendances de ton marché", "Te propose des actions concrètes pour booster tes ventes", "Te fait des rapports précis sur ta progression", "Messages sans limite journalière"] },
-    { id: "manager", name: "Manager", eur: "29 €", eurOld: "99 €", fcfa: "≈ 19 000 FCFA", period: "/ mois", tagline: "Ta petite agence digitale à portée de main", highlight: true, promo: "Promo flash",
-      features: ["Des agents spécialisés qui travaillent 24h/24 pour toi", "Prospection, contenu, organisation, finances — tout couvert", "Accès complet à toute l'équipe", "Tout le Bras Droit Pro inclus"] },
+    {
+      id: "decouverte", name: "Découverte", eur: "0 €", fcfa: "0 FCFA", period: "pour toujours",
+      tagline: "Commence sans rien payer. Ton premier bras droit IA.", current: true,
+      features: [
+        "Bras droit IA disponible 24h/24 — répond en quelques secondes",
+        "Awa incluse : tes messages de prospection et relances prêts à envoyer",
+        "20 messages/jour · +5 par ami invité grâce au parrainage",
+        "Agenda intelligent : tâches, priorités, suivi de tes relances",
+        "Méthode ATTRACTOR complète : PPSD, offre irrésistible, couloir de croissance",
+      ]
+    },
+    {
+      id: "brasdroit", name: "Bras Droit Pro", eur: "≈ 14 €", fcfa: "9 000 FCFA", period: "/ mois",
+      tagline: "Ton bras droit passe à l'action — plus de limites.",
+      features: [
+        "Messages illimités avec ton bras droit et Awa — plus de compteur",
+        "Mémoire long terme : ton bras droit se souvient de tout entre les sessions",
+        "Awa en mode avancé : séquences de closing et suivi de prospects",
+        "Priorité de réponse — jamais en attente",
+      ]
+    },
+    {
+      id: "manager", name: "Manager", eur: "29 €", eurOld: "99 €", fcfa: "≈ 19 000 FCFA", period: "/ mois",
+      tagline: "5 experts dans ta poche. Une agence sans les charges.", highlight: true, promo: "Promo fondateurs",
+      features: [
+        "Awa (vente), Miriam (contenu), Serge (agenda), Roland (finances), Kofi (campagnes)",
+        "Campagnes complètes scénarisées par Kofi — film, posts, WhatsApp en 3 phases",
+        "Messages illimités avec toute l'équipe — disponible à 3h du matin",
+        "Tout le plan Bras Droit Pro inclus",
+        "Économise 70€/mois · Promo réservée aux 100 premiers",
+      ]
+    },
   ],
   milestones: [
     { id: 1, label: "Se connaître", state: "done" },

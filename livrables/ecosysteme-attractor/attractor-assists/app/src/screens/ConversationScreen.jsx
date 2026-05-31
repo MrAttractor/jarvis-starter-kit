@@ -6,10 +6,24 @@ import { Icon, AssistGlyph, TypingDots, Card, Pill } from '../components/ui';
 // ─── Openers par agent ───────────────────────────────────────────────────────
 
 const OPENERS_AGENTS = {
-  awa:    (p) => `Salut ${p}. Je suis Awa. Dis-moi qui tu veux convaincre — un client, un partenaire, une audience. Je prépare le message.`,
+  awa: (p, profile) => {
+    const ouverture = profile?.ouverture || '';
+    const activite  = profile?.activite  || '';
+    const txt = (ouverture + ' ' + activite).toLowerCase();
+
+    if (txt.includes('relance') || txt.includes('prospect'))
+      return `Salut ${p}. Je suis Awa.\n\nJ'ai vu que tu cherches à relancer des prospects. Je prépare ton message maintenant — dis-moi juste : c'est pour quel type de client et depuis combien de temps tu attends ?`;
+    if (txt.includes('client') || txt.includes('vente') || txt.includes('closing'))
+      return `Salut ${p}. Je suis Awa.\n\nTu es en phase de vente. Donne-moi le nom ou le profil du client que tu veux convaincre — je te prépare l'approche complète : premier message, relance et closing.`;
+    if (txt.includes('contenu') || txt.includes('post') || txt.includes('audience'))
+      return `Salut ${p}. Je suis Awa.\n\nTu construis ton audience ? Bien. Je peux transformer tes followers en clients. Dis-moi ce que tu vends et à qui — je commence par ton message d'approche.`;
+
+    return `Salut ${p}. Je suis Awa.\n\nJe ne fais pas de conseils — je rédige directement. Dis-moi qui tu veux convaincre et de quoi. Je prépare le message en moins d'une minute.`;
+  },
   miriam: (p) => `Salut ${p}. Je suis Miriam. Posts, réponses, broadcasts — je gère ta présence digitale. Par quoi on commence ?`,
   serge:  (p) => `Salut ${p}. Je suis Serge. Dis-moi ce qui est dans ta tête en ce moment — tâches, rendez-vous, relances. Je trie et j'organise.`,
   roland: (p) => `Salut ${p}. Je suis Roland. Parle-moi de tes prix et tes ventes. Je te dis si tu es rentable ou pas.`,
+  kofi:   (p) => `Salut ${p}. Je suis Kofi. Je transforme ce que tu fais en histoire qui vend.\n\nDis-moi : c'est quoi ton activité, et c'est qui ta cible ? Je construis ta campagne complète.`,
 };
 
 // Opener bras droit — contextuel selon le profil dominant
@@ -49,7 +63,7 @@ const buildCoachOpener = (profile, nomAss) => {
 };
 
 // Agents verrouillés = mode passif interactif
-const LOCKED_AGENTS = ["miriam", "serge", "roland"];
+const LOCKED_AGENTS = ["miriam", "serge", "roland", "kofi"];
 
 // Nombre de lignes visibles avant troncature pour les agents passifs
 const TRUNCATE_AFTER_CHARS = 320;
@@ -113,7 +127,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
 
   const opener = a.id === "coach"
     ? buildCoachOpener(profile, isLocked ? a.name : nomAss)
-    : (OPENERS_AGENTS[a.id] || OPENERS_AGENTS.awa)(first);
+    : (OPENERS_AGENTS[a.id] || OPENERS_AGENTS.awa)(first, profile);
 
   const [msgs, setMsgs]     = useState([{ from: "bot", text: opener }]);
   const [typing, setTyping] = useState(false);
@@ -222,6 +236,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
     a.id === "awa"    ? ["Rédige mon message de prospection", "Aide-moi à relancer un prospect", "Crée un argumentaire WhatsApp"] :
     a.id === "miriam" ? ["Rédige mon post Facebook de cette semaine", "Planifie 3 broadcasts WhatsApp", "Aide-moi à répondre à ma communauté"] :
     a.id === "serge"  ? ["Organise ma semaine", "Quelles sont mes priorités aujourd'hui ?", "J'ai des relances en retard"] :
+    a.id === "kofi"   ? ["Construis ma campagne de lancement", "Écris mon film de marque", "Prépare ma séquence WhatsApp"] :
                         ["Mon prix est-il bon ?", "Aide-moi à calculer ma marge", "Je veux augmenter mes tarifs"];
 
   return (

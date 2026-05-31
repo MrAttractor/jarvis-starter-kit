@@ -41,6 +41,14 @@ function buildTeaser(agentId, profile) {
       { when: true,
         msg: "Tu as une activité. Est-ce qu'elle est vraiment rentable ? Je peux répondre à ça maintenant." },
     ],
+    kofi: [
+      { when: txt.includes('lancement') || txt.includes('lancer') || txt.includes('campagne'),
+        msg: "Tu veux lancer quelque chose ? Je construis la campagne complète : film, posts, WhatsApp — tout en 3 phases." },
+      { when: txt.includes('post') || txt.includes('contenu') || txt.includes('histoire'),
+        msg: "Je transforme ce que tu fais en récit. Pas des posts — une narrative qui crée de la loyauté." },
+      { when: true,
+        msg: "Dis-moi ton activité et ta cible. Je te sors le script de ta campagne de lancement." },
+    ],
   };
 
   const list = teasers[agentId] || [];
@@ -237,10 +245,12 @@ function AgentBioModal({ a, profile, onClose, onAction }) {
         {/* Contenu */}
         <div className="overflow-y-auto flex-1 px-5 py-5 flex flex-col gap-4">
 
-          {/* Ce qu'elle ferait pour toi maintenant */}
+          {/* Ce qu'il/elle ferait pour toi maintenant */}
           {teaser && (
             <div className="bg-sable rounded-[16px] p-4 border border-g200">
-              <p className="text-[11.5px] font-bold text-g400 uppercase tracking-wider mb-2">Ce qu'elle ferait pour toi là</p>
+              <p className="text-[11.5px] font-bold text-g400 uppercase tracking-wider mb-2">
+                {["awa", "miriam"].includes(a.id) ? "Ce qu'elle ferait pour toi là" : "Ce qu'il ferait pour toi là"}
+              </p>
               <p className="text-[14.5px] text-charbon leading-relaxed italic">"{teaser}"</p>
             </div>
           )}
@@ -250,14 +260,29 @@ function AgentBioModal({ a, profile, onClose, onAction }) {
           )}
 
           {a.proactif && (
-            <div className="bg-sable rounded-[16px] p-4">
-              <p className="text-[11.5px] font-bold text-g400 uppercase tracking-wider mb-2">En mode Manager</p>
-              <p className="text-[14px] text-charbon leading-relaxed">{a.proactif}</p>
+            <div className="rounded-[16px] overflow-hidden border border-orange/20">
+              <div className="bg-orange/8 px-4 py-2.5 flex items-center gap-2">
+                <Icon name="bolt" size={14} className="text-orange" />
+                <p className="text-[11.5px] font-bold text-orange uppercase tracking-wider">Pleine puissance — Plan Manager</p>
+              </div>
+              <div className="bg-white px-4 py-3">
+                <p className="text-[13.5px] text-charbon leading-relaxed">{a.proactif}</p>
+              </div>
+            </div>
+          )}
+
+          {a.status === "verrouillé" && (
+            <div className="bg-charbon rounded-[16px] p-4 flex items-start gap-3">
+              <Icon name="lock" size={16} className="text-amber flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-[13px] font-bold text-white">Disponible avec le plan Manager</p>
+                <p className="text-[12px] text-white/60 mt-0.5">29€/mois · <span className="line-through text-white/40">99€</span> · Promo fondateurs</p>
+              </div>
             </div>
           )}
 
           <Btn className="w-full mt-1" iconRight={a.status === "verrouillé" ? "arrow" : "send"} onClick={onAction}>
-            {a.status === "verrouillé" ? `Débloquer ${a.name} avec Manager` : `Parler à ${a.name}`}
+            {a.status === "verrouillé" ? `Débloquer ${a.name} — 29€/mois` : `Parler à ${a.name}`}
           </Btn>
         </div>
       </div>
