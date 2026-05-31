@@ -125,7 +125,12 @@ export function LoginScreen({ onAuthed }) {
                   <Icon name="send" size={28} className="text-orange" />
                 </div>
                 <p className="text-[15px] font-semibold text-charbon">Clique sur le lien dans ton email pour entrer dans l'app.</p>
-                <p className="text-[12.5px] text-g400">Pense à vérifier tes spams si tu ne le vois pas.</p>
+              </div>
+              <div className="bg-sable rounded-[14px] p-3.5 flex flex-col gap-2">
+                <p className="text-[12.5px] font-bold text-charbon">Tu ne vois pas l'email ?</p>
+                <p className="text-[12px] text-g700 leading-snug">1. Vérifie ton dossier <b>Spams</b> ou <b>Indésirables</b></p>
+                <p className="text-[12px] text-g700 leading-snug">2. Si tu le trouves dans les spams, clique <b>"Pas un spam"</b> pour le recevoir normalement la prochaine fois</p>
+                <p className="text-[12px] text-g700 leading-snug">3. L'expéditeur est <b>noreply@agenceattractor.com</b></p>
               </div>
               {err && <p className="text-[12.5px] text-[#D64545] font-semibold mt-2 flex items-center gap-1.5"><Icon name="warn" size={14} />{err}</p>}
               <button onClick={resend} disabled={isSending}
