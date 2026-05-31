@@ -7,4 +7,11 @@ if (!url || !anonKey) {
   console.warn('Supabase: VITE_SUPABASE_URL ou VITE_SUPABASE_ANON_KEY manquant (voir .env.local)')
 }
 
-export const supabase = createClient(url, anonKey)
+export const supabase = createClient(url, anonKey, {
+  auth: {
+    persistSession:    true,
+    autoRefreshToken:  true,
+    detectSessionInUrl: true,
+    storageKey: 'attractor-assists-auth',
+  }
+})

@@ -92,7 +92,7 @@ export function LoginScreen({ onAuthed }) {
               <Icon name="back" size={18} /> Retour
             </button>
             <h2 className="font-display font-extrabold text-[28px] leading-tight">On y va. C'est quoi ton email ?</h2>
-            <p className="text-[14px] text-white/80 mt-2 mb-5">Je t'envoie un code à 6 chiffres, pas de mot de passe à retenir.</p>
+            <p className="text-[14px] text-white/80 mt-2 mb-5">Je t'envoie un lien de connexion. Un clic et tu es dans l'app.</p>
             <div className="bg-white rounded-[20px] p-5 text-charbon shadow-xl">
               <Field label="Ton email">
                 <Input type="email" inputMode="email" placeholder="prenom@exemple.ci" value={email}
@@ -106,7 +106,7 @@ export function LoginScreen({ onAuthed }) {
                 onClick={submitEmail}>
                 {isSending
                   ? <><Spinner className="w-4 h-4 !border-white/30 !border-t-white" /> Envoi en cours…</>
-                  : "Recevoir mon code"}
+                  : "Recevoir mon lien"}
               </Btn>
             </div>
           </div>
@@ -114,28 +114,23 @@ export function LoginScreen({ onAuthed }) {
 
         {step === "otp" && (
           <div className="mt-auto animate-[fadeUp_.3s_ease]">
-            <button onClick={() => { setStep("email"); setErr(""); setCode(["","","","","",""]); }} className="mb-5 inline-flex items-center gap-1.5 text-[14px] font-semibold text-white/80 hover:text-white">
+            <button onClick={() => { setStep("email"); setErr(""); }} className="mb-5 inline-flex items-center gap-1.5 text-[14px] font-semibold text-white/80 hover:text-white">
               <Icon name="back" size={18} /> Retour
             </button>
-            <h2 className="font-display font-extrabold text-[28px] leading-tight">Entre ton code</h2>
-            <p className="text-[14px] text-white/80 mt-2 mb-5">Envoyé à <b className="text-white">{email}</b></p>
+            <h2 className="font-display font-extrabold text-[28px] leading-tight">Vérifie ton email</h2>
+            <p className="text-[14px] text-white/80 mt-2 mb-5">Lien envoyé à <b className="text-white">{email}</b></p>
             <div className="bg-white rounded-[20px] p-5 text-charbon shadow-xl">
-              <div className="flex gap-2 justify-between">
-                {code.map((c, i) => (
-                  <input key={i} ref={refs[i]} value={c} inputMode="numeric" maxLength={1}
-                    onChange={(e) => onCode(i, e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Backspace" && !c && i > 0) refs[i - 1].current.focus();
-                      if (e.key === "Enter") verify();
-                    }}
-                    className="w-full aspect-square text-center font-display font-extrabold text-[20px] bg-sable border-[1.5px] border-g200 rounded-xl outline-none focus:border-orange focus:ring-4 focus:ring-orange/12" />
-                ))}
+              <div className="flex flex-col items-center gap-3 py-4 text-center">
+                <div className="w-16 h-16 rounded-full bg-orange/10 flex items-center justify-center">
+                  <Icon name="send" size={28} className="text-orange" />
+                </div>
+                <p className="text-[15px] font-semibold text-charbon">Clique sur le lien dans ton email pour entrer dans l'app.</p>
+                <p className="text-[12.5px] text-g400">Pense à vérifier tes spams si tu ne le vois pas.</p>
               </div>
-              {err && <p className="text-[12.5px] text-[#D64545] font-semibold mt-3 flex items-center gap-1.5"><Icon name="warn" size={14} />{err}</p>}
-              <Btn className="w-full mt-4" iconRight="arrow" onClick={verify}>Entrer dans l'app</Btn>
+              {err && <p className="text-[12.5px] text-[#D64545] font-semibold mt-2 flex items-center gap-1.5"><Icon name="warn" size={14} />{err}</p>}
               <button onClick={resend} disabled={isSending}
                 className="w-full text-center text-[13px] font-semibold text-g400 mt-3 hover:text-orange disabled:opacity-40 transition">
-                {isSending ? "Envoi en cours…" : "Renvoyer le code"}
+                {isSending ? "Envoi en cours…" : "Renvoyer le lien"}
               </button>
             </div>
           </div>
