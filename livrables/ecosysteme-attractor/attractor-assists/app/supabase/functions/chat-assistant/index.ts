@@ -138,17 +138,28 @@ serve(async (req) => {
     const systemBase = SYSTEMS[assistant_id] ?? SYSTEMS.coach;
 
     // Contexte profil complet
+    const profil_type = (profile as Record<string, string>).profil_type ||
+      (typeof profile === "object" && (profile as Record<string,string>).profil_dominant) || "entrepreneur";
+
+    const profilLabel: Record<string, string> = {
+      entrepreneur: "Entrepreneur — a son business, cherche à développer et structurer",
+      salarie:      "Salarié — emploi principal, projet en parallèle, temps limité",
+      etudiant:     "En formation — apprend, construit son projet, pas encore de clients",
+      mix:          "Salarié + Entrepreneur — jongle entre les deux, chaque heure compte",
+    };
+
     const contextLines = [
       `\n\nCONTEXTE UTILISATEUR :`,
-      `Prénom : ${profile.prenom || "l'entrepreneur"}`,
+      `Prénom : ${profile.prenom || "l'utilisateur"}`,
       `Nom de l'assistant : ${profile.nom_assistant || "Attractor"}`,
-      profile.ouverture   ? `Ce qu'il veut que tu fasses : "${profile.ouverture}"` : null,
-      profile.activite    ? `Son activité / journée type : ${profile.activite}` : null,
-      profile.canal_principal ? `Où il trouve ses clients : ${profile.canal_principal}` : null,
-      profile.zone        ? `Zone géographique : ${profile.zone}` : null,
-      ppsd.cible          ? `Sa cible : ${ppsd.cible}` : null,
-      ppsd.problemes      ? `Ce qui l'épuise : ${ppsd.problemes}` : null,
-      ppsd.souhaits       ? `Sa vision dans 6 mois : ${ppsd.souhaits}` : null,
+      `Profil : ${profilLabel[profil_type] || profilLabel.entrepreneur}`,
+      profile.ouverture       ? `Ce qu'il veut que tu fasses : "${profile.ouverture}"` : null,
+      profile.activite        ? `Sa journée type / activité : ${profile.activite}` : null,
+      profile.canal_principal ? `Comment il trouve ses clients / contacts : ${profile.canal_principal}` : null,
+      profile.zone            ? `Zone géographique : ${profile.zone}` : null,
+      ppsd?.cible             ? `Sa cible : ${ppsd.cible}` : null,
+      ppsd?.problemes         ? `Ce qui l'épuise / son problème principal : ${ppsd.problemes}` : null,
+      ppsd?.souhaits          ? `Sa vision dans 6 mois : ${ppsd.souhaits}` : null,
     ].filter(Boolean).join("\n");
     const contextBlock = contextLines;
 

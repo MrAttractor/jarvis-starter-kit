@@ -12,23 +12,40 @@ const OPENERS_AGENTS = {
   roland: (p) => `Salut ${p}. Je suis Roland. Parle-moi de tes prix et tes ventes. Je te dis si tu es rentable ou pas.`,
 };
 
-// Opener bras droit — contextuel selon le profil
+// Opener bras droit — contextuel selon le profil dominant
 const buildCoachOpener = (profile, nomAss) => {
-  const prenom    = profile?.prenom       || "toi";
-  const ouverture = profile?.ouverture    || "";
+  const prenom    = profile?.prenom        || "toi";
+  const ouverture = profile?.ouverture     || "";
   const memoire   = profile?.memoire_cache || "";
+  const profil    = typeof window !== "undefined"
+    ? (localStorage.getItem("aa_profil") || "entrepreneur")
+    : "entrepreneur";
 
   // Utilisateur qui revient
   if (memoire) {
     return `Content de te revoir, ${prenom}. ${memoire}\n\nOn continue ou tu as autre chose en tête ?`;
   }
 
-  // Première conversation — visite guidée
+  // Intro commune
   const intro = ouverture
-    ? `Salut ${prenom}. Je suis ${nomAss} — ton bras droit IA, disponible maintenant.\n\nTu m'as dit que tu voulais : "${ouverture}". C'est exactement pour ça que je suis là.`
-    : `Salut ${prenom}. Je suis ${nomAss} — ton bras droit IA, disponible maintenant.`;
+    ? `Salut ${prenom}. Je suis ${nomAss} — ton assistant IA, disponible maintenant.\n\nTu m'as dit que tu voulais : "${ouverture}". C'est exactement pour ça que je suis là.`
+    : `Salut ${prenom}. Je suis ${nomAss} — ton assistant IA, disponible maintenant.`;
 
-  return `${intro}\n\nVoilà comment on fonctionne ensemble :\n→ Moi : je suis ton point de contact principal. Tout ce qui est dans ta tête, tu me le dis.\n→ Awa : tes relances et messages de prospection\n→ Miriam : tes posts et présence digitale\n→ Serge : ton organisation et planning\n→ Roland : tes marges et finances\nTu les trouves dans "Mon équipe".\n\nMaintenant — par quoi tu veux qu'on commence ?`;
+  // Présentation équipe selon le profil
+  if (profil === "etudiant") {
+    return `${intro}\n\nJe suis là pour t'aider à structurer tes idées, clarifier ton projet, avancer à ton rythme.\n\nOn a aussi une équipe si tu en as besoin : Awa (vente et prospection), Miriam (contenu), Serge (organisation), Roland (finances). Tout est dans "Mon équipe" — disponible quand tu es prêt.\n\nPar quoi tu veux commencer ?`;
+  }
+
+  if (profil === "salarie") {
+    return `${intro}\n\nJe connais ta contrainte principale : le temps est limité. Je suis là pour t'aider à avancer sur ce qui compte — sans te noyer.\n\nSi ton projet grandit, tu as une équipe avec toi : Awa (prospects), Miriam (contenu), Serge (organisation), Roland (finances). Dans "Mon équipe".\n\nOn commence par quoi ?`;
+  }
+
+  if (profil === "mix") {
+    return `${intro}\n\nTu jonglais entre ton emploi et ton projet — je sais que chaque heure compte. Je suis là pour que tu avances sans t'éparpiller.\n\nTon équipe complète est dans "Mon équipe" : Awa, Miriam, Serge, Roland — chacun dans son domaine.\n\nPar quoi tu veux qu'on commence ?`;
+  }
+
+  // Entrepreneur (défaut)
+  return `${intro}\n\nVoilà comment on fonctionne ensemble :\n→ Moi : ton point de contact principal. Tout ce qui est dans ta tête, tu me le dis.\n→ Awa : tes relances et messages de prospection\n→ Miriam : tes posts et présence digitale\n→ Serge : ton organisation et planning\n→ Roland : tes marges et finances\nTu les trouves dans "Mon équipe".\n\nPar quoi tu veux qu'on commence ?`;
 };
 
 // Agents verrouillés = mode passif interactif
@@ -155,6 +172,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
             ouverture:       profile?.ouverture,
             zone:            profile?.zone,
             ton_prefere:     profile?.ton_prefere,
+            profil_type:     localStorage.getItem("aa_profil") || "entrepreneur",
           },
           ppsd:          ppsd || {},
           memoire_cache: profile?.memoire_cache || "",
