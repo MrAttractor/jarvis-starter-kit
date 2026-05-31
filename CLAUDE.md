@@ -64,10 +64,19 @@ Une fois que je confirme, Claude met à jour le fichier en question et ajoute un
 ```
 .
 ├── CLAUDE.md                    # Ce fichier, chargé à chaque session
+├── .env                         # Secrets et clés d'API (JAMAIS committé)
+├── .env.example                 # Template public des variables (sans valeurs)
+├── .gitignore                   # Exclusions git (secrets, build, etc.)
 ├── context/
 │   ├── CONTEXT.md               # Qui je suis, ce que je fais, mes objectifs
 │   ├── HISTORY.md               # Journal évolutif de mes sessions
-│   └── import/                  # Documents externes à analyser
+│   └── import/                  # Documents externes à analyser (INPUTS)
+├── livrables/                   # Tout ce que Claude produit pour moi (OUTPUTS)
+│   ├── clients/                 # Web apps métiers sur mesure (1 dossier par client)
+│   ├── ecosysteme-attractor/    # Apps maison (Attractor Assists, Livraison Pro, Fidelys, pilotage)
+│   ├── commercial/              # Devis, factures, maquettes de démo, supports de vente
+│   ├── contenu/                 # Campagne de contenu (manuel, challenge 7j, scripts, calendrier)
+│   └── recherche-et-developpement/ # Idées inspirées → MVP, réutilisables en marque blanche
 ├── .claude/
 │   ├── commands/
 │   │   ├── prime.md             # /prime pour démarrer une session
@@ -82,10 +91,13 @@ Une fois que je confirme, Claude met à jour le fichier en question et ajoute un
 | Dossier | Utilité |
 |---------|---------|
 | `context/` | Tout ce qui me concerne et que Claude doit savoir |
-| `context/import/` | Documents externes (PDFs, exports, notes) à analyser |
+| `context/import/` | Documents externes (PDFs, exports, notes) à analyser. **INPUTS** |
+| `livrables/` | Tout ce que Claude produit pour moi. **OUTPUTS** |
 | `.claude/commands/` | Commandes personnalisées de mon Jarvis |
 | `.claude/skills/` | Skills (super-pouvoirs) de mon Jarvis |
 | `module-installs/` | Modules d'installation (initial et futurs) |
+
+> **Source de vérité (à respecter, ne pas réinventer) :** la grille `livrables/` ci-dessus et la liste des clés du `.env` sont canoniques. Ne jamais réintroduire de dossiers ou de clés génériques hors de cette grille (ex : `sites-web/`, `cabinet/`, `youtube/`, clés YouTube). Toute mise en place doit rester alignée sur l'activité réelle de Mr Attractor.
 
 ---
 

@@ -49,15 +49,44 @@ Garde le fichier 100% autonome (CSS et JS inline, pas de dépendance externe qui
 
 Détails sur le gabarit et comment l'adapter : voir `references/presentation.md`.
 
-## Étape 3 — Rendre la maquette présentable (le lien)
+## Étape 3 — Déployer et envoyer le lien (OBLIGATOIRE)
 
-Ne jamais livrer le `.html` brut. Transforme-le en lien. Trois niveaux, du plus rapide au plus pro. Le détail des manipulations est dans `references/presentation.md`.
+⛔ **RÈGLE DURE : le fichier .html ne s'envoie JAMAIS au client.**
+Un fichier HTML sur WhatsApp = le client ne sait pas quoi en faire = la maquette ne sera pas vue = pas de closing.
 
-1. **Immédiat (zéro configuration)** : publier l'artefact directement depuis claude.ai (bouton Publier) pour obtenir un lien partageable, ou déposer le fichier sur un hébergeur statique gratuit (Netlify Drop, Cloudflare Pages). Lien prêt en moins d'une minute.
-2. **Pro (recommandé à terme)** : héberger sur un sous-domaine de l'agence, par exemple `demo.agenceattractor.com`. Le prospect voit une démo hébergée par Mr Attractor : crédibilité maximale. À configurer une seule fois côté DNS, puis chaque maquette devient un lien.
-3. **Effet waouh** : le gabarit affiche déjà la maquette dans un cadre de smartphone, ce qui suffit la plupart du temps. Sur grand écran, ce cadre fait la démonstration tout seul.
+**Ce qui se passe avec le fichier brut :**
+Le client reçoit un fichier. Il ne sait pas l'ouvrir sur son téléphone. Il ne répond pas. Deal perdu. C'est ce qui s'est passé avec J'envoie Express.
 
-Choisis le niveau selon le temps disponible et l'importance du prospect.
+**Ce qui doit se passer à la place :**
+Mac Arthur déploie le fichier → reçoit un lien → envoie le lien sur WhatsApp → le client ouvre dans son navigateur → il navigue dans la maquette → il dit oui.
+
+---
+
+### Outil par défaut : tiiny.host (30 secondes)
+
+1. Aller sur **tiiny.host**
+2. Glisser-déposer le fichier `.html`
+3. Choisir un nom : `restaurant-awa` ou `jenvoie-express`
+4. Clic "Upload" → lien immédiat : `https://restaurant-awa.tiiny.site`
+5. Copier le lien → envoyer sur WhatsApp
+
+Gratuit. Zéro compte requis. Fonctionne depuis le téléphone de Mac Arthur.
+
+---
+
+### Alternative : Netlify Drop (si tiiny.host indisponible)
+
+1. Aller sur **app.netlify.com/drop**
+2. Glisser-déposer le fichier
+3. Lien automatique → renommer si besoin
+
+---
+
+### Cible long terme : sous-domaine agence
+
+`demo.agenceattractor.com/restaurant-awa`
+
+Crédibilité maximale — à mettre en place une fois, puis chaque maquette a son lien agence. Le prospect voit que c'est professionnel dès l'URL.
 
 ## Étape 4 — Kit de closing
 
@@ -69,14 +98,23 @@ La maquette ne vend pas seule, c'est Mac Arthur qui vend avec. Fournis-lui syst�
 Modèle de script :
 
 ```
-[Prénom], tu m'as dit que ton problème c'est [problème]. Regarde, voilà à quoi
-ressemblerait ton application : [lien]. Ouvre-la sur ton téléphone.
+[Prénom], tu m'as dit que ton problème c'est [problème].
 
-Sur le premier écran, tes clients [action clé]. Ici, toi tu vois [bénéfice].
+Regarde ce que ça donnerait pour toi :
+👉 [LIEN tiiny.host ou netlify]
 
-Pour lancer ta version, c'est [prix], avec [acompte] pour démarrer cette semaine.
-On bloque un créneau pour récupérer tes infos et je te livre le MVP sous [délai] ?
+Ouvre sur ton téléphone. C'est cliquable.
+
+Sur le premier écran : [ce que le client voit en 1 phrase].
+Ici : [bénéfice concret pour lui].
+
+Pour lancer ta version : [prix setup] + [MRR]/mois.
+Pour démarrer, c'est [acompte 50%].
+On commence cette semaine ?
 ```
+
+⚠️ **Ne jamais envoyer le script sans le lien dedans.**
+Si le lien n'est pas encore déployé, déployer d'abord, envoyer ensuite.
 
 ## Garde-fous
 

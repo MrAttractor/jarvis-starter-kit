@@ -1,5 +1,7 @@
 # Recherche & Développement
 
+Lieu de mise en route d'idées inspirées : on les transforme en MVP, pensés pour être réutilisables en **marque blanche**.
+
 ## Processus
 
 1. **Idée** : Tu as une idée d'application

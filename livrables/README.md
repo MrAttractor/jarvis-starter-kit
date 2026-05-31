@@ -1,36 +1,26 @@
-# Livrables - Organisation et Convention
+# Livrables
 
-## Règle d'Or
+Ce dossier contient **tout ce que Claude produit pour Mac Arthur (Mr Attractor)** : apps, maquettes, devis, contenus, MVP.
 
-- **Inputs** (documents que tu fournis) → `context/import/`
-- **Outputs** (ce que Claude produit pour toi) → `livrables/`
+## Règle d'or
 
-## Structure
+- **Inputs** (documents que je fournis à Claude) → `context/import/`
+- **Outputs** (ce que Claude produit pour moi) → `livrables/`
 
-```
-livrables/
-├── recherche-et-developpement/   Idées d'apps, MVP, marketplace en marque blanche
-├── sites-web/                    Sites internet
-├── applications/                 Outils, scripts, automatisations
-├── youtube/                      Briefs vidéos, scripts, hooks, calendrier éditorial
-├── cabinet/                      Livrables pour le cabinet Chatflow
-└── ecole/                        Livrables pour l'Aprenuer Académie
-```
+## Structure (ma grille)
 
-## Convention de Nommage
+| Dossier | Ce qui y va |
+|---------|-------------|
+| `clients/` | Web apps métiers sur mesure. Un sous-dossier par client (maquette, app, docs). |
+| `ecosysteme-attractor/` | Apps maison de l'écosystème : Attractor Assists, Livraison Pro, Fidelys, module de pilotage. |
+| `commercial/` | Devis, factures, maquettes de démo, supports de vente. |
+| `contenu/` | Campagne de contenu : manuel, challenge 7 jours, scripts, hooks, calendrier éditorial. |
+| `recherche-et-developpement/` | Mise en route d'idées inspirées vers des MVP, pensés pour être utilisables en marque blanche. |
 
-Pour faciliter le suivi et la recherche, utilise cette convention :
+## Convention de nommage
 
-```
-[type]_[client-ou-sujet]_[version-ou-date]_[description-courte]
-```
+- kebab-case, sans accents ni espaces : `clients/olive-mafo/`, `commercial/devis/2026-06-jenvoie-express.md`
+- Fichiers datés : préfixe `AAAA-MM` pour garder l'ordre chronologique.
+- Un client = un dossier dans `clients/`, avec à l'intérieur `maquette/`, `app/`, `docs/` selon le besoin.
 
-Exemples :
-- `site_attractor-assists_v1_homepage`
-- `app_marketplace_côte-ivoire_mvp`
-- `video_brief_youtube_q2-content-calendar`
-- `doc_chatflow_q2-proposal`
-
-## Par Dossier
-
-Chaque sous-dossier a son propre README qui décrit ce qu'il contient. Consulte-le pour comprendre l'usage spécifique.
+> Ce qui est validé ici a vocation à nourrir la refonte d'Attractor Assists : on garde l'organisation simple et reproductible.

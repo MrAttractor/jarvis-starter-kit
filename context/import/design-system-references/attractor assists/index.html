@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Attractor Assists</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          orange: { DEFAULT: "#F25C05", light: "#FF7A2E" },
+          growth: "#1E5631", amber: "#FFB300", charbon: "#1A1714",
+          g700: "#4A443E", g400: "#9A938B", g200: "#E7E1D8", sable: "#FAF6F0",
+        },
+        fontFamily: { display: ["Sora", "sans-serif"], sans: ["Inter", "sans-serif"] },
+        boxShadow: { soft: "0 2px 10px -4px rgba(26,23,20,.10)" },
+      },
+    },
+  };
+</script>
+<style>
+  html, body { margin: 0; height: 100%; background: #1a120c; font-family: "Inter", sans-serif; }
+  * { -webkit-font-smoothing: antialiased; }
+  ::-webkit-scrollbar { display: none; }
+  #root { min-height: 100vh; }
+
+  @keyframes fadeUp { from { transform: translateY(9px); } to { transform: translateY(0); } }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { transform: translateY(40px); } to { transform: translateY(0); } }
+
+  image-slot { display: block; }
+
+  /* optional dark theme — remaps key surfaces (orange unchanged) */
+  .theme-dark .bg-sable { background: #14110F !important; }
+  .theme-dark .bg-white { background: #1F1B18 !important; }
+  .theme-dark .text-charbon { color: #F5F0E8 !important; }
+  .theme-dark .text-g700 { color: #cdbfae !important; }
+  .theme-dark .text-g400 { color: #8d8071 !important; }
+  .theme-dark .border-g200 { border-color: #2e2823 !important; }
+  .theme-dark .bg-\[\#EEE7DC\] { background: #2e2823 !important; }
+  .theme-dark .lg\:bg-\[\#1a120c\] { background: #0c0907 !important; }
+</style>
+</head>
+<body style="background-color: rgb(176, 88, 23)">
+  <div id="root"></div>
+
+  <script src="image-slot.js"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="ui.jsx"></script>
+  <script type="text/babel" src="screens1.jsx"></script>
+  <script type="text/babel" src="screens2.jsx"></script>
+  <script type="text/babel" src="screens3.jsx"></script>
+  <script type="text/babel" src="screens4.jsx"></script>
+  <script type="text/babel" src="app.jsx"></script>
+</body>
+</html>

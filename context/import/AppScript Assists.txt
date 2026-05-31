@@ -1,0 +1,1524 @@
+// ============================================================
+// ATTRACTOR ASSISTS V2 — APPS SCRIPT
+// ============================================================
+
+var CONFIG = {
+  SHEET_ID: '147TUgAslZ_h1rqE3nPZiMHIVpW_Wj_ye3ugf-EX45h8',
+  CLAUDE_API_KEY: PropertiesService.getScriptProperties().getProperty('CLAUDE_API_KEY'),
+  MODEL: 'claude-haiku-4-5-20251001',
+  MAX_TOKENS: 500,
+  TIMEOUT: 25000
+};
+
+// ============================================================
+// POINT D'ENTRÉE UNIQUE
+// ============================================================
+
+function doGet(e) {
+  try {
+    var action   = e.parameter.action   || '';
+    var clientId = e.parameter.id       || '';
+    var callback = e.parameter.callback || '';
+    var _currentCallback = callback;
+
+    // PING
+    if (action === 'ping') return reponseJSON({ success: true, status: 'OK V2', timestamp: new Date().toISOString() });
+
+    // UTILISATEUR
+    if (action === 'getAssistant')       return getAssistant_HTTP(clientId);
+    if (action === 'creerEssai')         return creerEssai_HTTP(e.parameter);
+    if (action === 'updateProfil')       return updateProfil_HTTP(e.parameter);
+    if (action === 'accepterCGV')        return accepterCGV_HTTP(clientId);
+    if (action === 'validerPaiement')    return validerPaiement_HTTP(e.parameter);
+
+    // CHAT
+    if (action === 'chat')               return chat_HTTP(e.parameter);
+    if (action === 'saveMessage')        return saveMessage_HTTP(e.parameter);
+    if (action === 'sauvegarderMemoire') return sauvegarderMemoire_HTTP(clientId, e.parameter.resume || '');
+
+    // PROFIL ENRICHI
+    if (action === 'enrichirProfil')     return enrichirProfil_HTTP(e.parameter);
+    if (action === 'getProfil')          return getProfil_HTTP(clientId);
+
+    // PARCOURS IKIGAI
+    if (action === 'getParcours')        return getParcours_HTTP(clientId);
+    if (action === 'getParcoursCourant') return getParcoursCourant_HTTP(clientId);
+    if (action === 'reponseCouloir')     return reponseCouloir_HTTP(e.parameter);
+    if (action === 'calculerCouloir')    return calculerCouloir_HTTP(clientId);
+
+    // PARCOURS VENTES
+    if (action === 'getParcoursventes')  return getParcoursventes_HTTP(clientId);
+    if (action === 'coachVentes')        return coachVentes_HTTP(e.parameter);
+    if (action === 'getHistoriqueCoach') return getHistoriqueCoach_HTTP(clientId, e.parameter.module || '1');
+    if (action === 'repondreVentes')     return repondreVentes_HTTP(e.parameter);
+    if (action === 'genererPlanVentes')  return genererPlanVentes_HTTP(clientId);
+
+    // AGENDA
+    if (action === 'getAgenda')          return getAgenda_HTTP(clientId, e.parameter.date || '');
+    if (action === 'ajouterRDV')         return ajouterRDV_HTTP(e.parameter);
+    if (action === 'supprimerRDV')       return supprimerRDV_HTTP(e.parameter);
+
+    // TODO
+    if (action === 'getTodo')            return getTodo_HTTP(clientId);
+    if (action === 'ajouterTodo')        return ajouterTodo_HTTP(e.parameter);
+    if (action === 'completerTodo')      return completerTodo_HTTP(e.parameter);
+
+    // ARMOIRE
+    if (action === 'getArmoire')         return getArmoire_HTTP(clientId, e.parameter.dossier || '');
+    if (action === 'ajouterArmoire')     return ajouterArmoire_HTTP(e.parameter);
+
+    // COMMUNAUTE
+    if (action === 'getCommunaute')      return getCommunaute_HTTP();
+    if (action === 'publierCommunaute')  return publierCommunaute_HTTP(e.parameter);
+
+    // KNOWLEDGE
+    if (action === 'getKnowledge')       return getKnowledge_HTTP(e.parameter.query || '');
+
+    // ADMIN
+    if (action === 'getClients')         return getClients_HTTP();
+    if (action === 'envoyerEmail')       return envoyerEmail_HTTP(e.parameter);
+    if (action === 'getSupervision')     return getSupervision_HTTP();
+    if (action === 'resetMessages')      return resetMessages_HTTP(clientId);
+
+    return reponseJSON({ success: false, error: 'Action inconnue: ' + action });
+
+  } catch(err) {
+    Logger.log('Erreur doGet: ' + err.toString());
+    alerteSupervision('doGet', err.toString(), e.parameter.action || '');
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+// ============================================================
+// HELPER JSON
+// ============================================================
+
+function reponseJSON(obj) {
+  var json = JSON.stringify(obj);
+  var cb = typeof _currentCallback !== 'undefined' ? _currentCallback : '';
+  if (cb) {
+    return ContentService.createTextOutput(cb+'('+json+')')
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+  return ContentService.createTextOutput(json)
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+// ============================================================
+// UTILISATEUR — CRUD
+// ============================================================
+
+function getAssistant_HTTP(clientId) {
+  if (!clientId) return reponseJSON({ success: false, error: 'ID manquant' });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('ASSISTANTS');
+    var data  = sheet.getDataRange().getValues();
+
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] !== clientId) continue;
+
+      var pr = data[i];
+      return reponseJSON({
+        success:          true,
+        id:               pr[0],
+        prenom:           pr[1],
+        email:            pr[2],
+        whatsapp:         pr[3],
+        zone:             pr[4],
+        profil_situation: pr[5],
+        statut:           pr[6],
+        date_debut:       pr[8],
+        date_fin:         pr[9],
+        jours_restants:   parseInt(pr[10]) || 0,
+        formule:          pr[11],
+        quota_mensuel:    parseInt(pr[12]) || 300,
+        nb_messages:      parseInt(pr[13]) || 0,
+        ref_count:        parseInt(pr[15]) || 0,
+        url:              pr[18],
+        nom_assistant:    pr[19] || 'Attractor',
+        ton_prefere:      pr[20] || 'tutoiement',
+        theme:            pr[21] || 'sombre'
+      });
+    }
+    return reponseJSON({ success: false, error: 'Client introuvable' });
+  } catch(err) {
+    Logger.log('Erreur getAssistant: ' + err.toString());
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function creerEssai_HTTP(params) {
+  var prenom = params.prenom || '';
+  var email  = params.email  || '';
+  var wa     = params.wa     || '';
+  var zone   = params.zone   || 'CI';
+  var profil = params.profil || 'entrepreneur';
+
+  if (!prenom || !email) return reponseJSON({ success: false, error: 'Prénom et email requis' });
+
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('ASSISTANTS');
+
+    // Vérifier si email existe déjà
+    var data = sheet.getDataRange().getValues();
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][2] === email) {
+        return reponseJSON({ success: true, id: data[i][0], existing: true, url: data[i][18] });
+      }
+    }
+
+    // Générer ID unique
+    var chars  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    var suffix = '';
+    for (var j = 0; j < 5; j++) suffix += chars[Math.floor(Math.random() * chars.length)];
+    var id     = 'AA-' + prenom.replace(/\s+/g,'').substring(0,8) + '-' + suffix;
+    var url    = 'https://assists.agenceattractor.com/assistant-client.html?id=' + id;
+    var now    = new Date();
+    var dateFin = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // 30 jours
+
+    sheet.appendRow([
+      id, prenom, email, wa, zone, profil,
+      'ESSAI_GRATUIT',
+      Utilities.formatDate(now, 'GMT+1', 'dd/MM/yyyy HH:mm:ss'),
+      Utilities.formatDate(now, 'GMT+1', 'dd/MM/yyyy'),
+      Utilities.formatDate(dateFin, 'GMT+1', 'dd/MM/yyyy'),
+      30, 'GRATUIT', 300, 0,
+      Utilities.formatDate(now, 'GMT+1', 'dd/MM/yyyy'),
+      0, 0, '', url, 'Attractor', 'tutoiement', 'sombre', ''
+    ]);
+    SpreadsheetApp.flush();
+
+    // Email de bienvenue
+    try {
+      MailApp.sendEmail({
+        to: email,
+        subject: '⚡ Ton assistant Attractor est prêt, ' + prenom + ' !',
+        htmlBody: '<h2>Bienvenue ' + prenom + ' 👋</h2><p>Ton assistant personnel est configuré et t\'attend.</p><p><a href="' + url + '" style="background:#C9A84C;color:#000;padding:12px 24px;text-decoration:none;border-radius:6px;font-weight:bold;">Ouvrir mon assistant →</a></p><p>Il va faire ta connaissance et s\'adapter à toi.</p><p>Mac Arthur<br>Agence Mr Attractor</p>'
+      });
+    } catch(mailErr) { Logger.log('Email error: ' + mailErr); }
+
+    return reponseJSON({ success: true, id: id, url: url, existing: false });
+
+  } catch(err) {
+    Logger.log('Erreur creerEssai: ' + err.toString());
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function updateProfil_HTTP(params) {
+  var clientId = params.id || '';
+  if (!clientId) return reponseJSON({ success: false, error: 'ID manquant' });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('ASSISTANTS');
+    var data  = sheet.getDataRange().getValues();
+
+    var colMap = {
+      'nom_assistant': 20, 'ton_prefere': 21, 'theme': 22,
+      'profil_situation': 6, 'whatsapp': 4
+    };
+
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] !== clientId) continue;
+      for (var key in colMap) {
+        if (params[key]) {
+          sheet.getRange(i + 1, colMap[key]).setValue(decodeURIComponent(params[key]));
+        }
+      }
+      SpreadsheetApp.flush();
+      return reponseJSON({ success: true });
+    }
+    return reponseJSON({ success: false, error: 'Client introuvable' });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function accepterCGV_HTTP(clientId) {
+  if (!clientId) return reponseJSON({ success: false, error: 'ID manquant' });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('ASSISTANTS');
+    var data  = sheet.getDataRange().getValues();
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] !== clientId) continue;
+      sheet.getRange(i + 1, 18).setValue(Utilities.formatDate(new Date(), 'GMT+1', 'dd/MM/yyyy HH:mm'));
+      SpreadsheetApp.flush();
+      return reponseJSON({ success: true });
+    }
+    return reponseJSON({ success: false, error: 'Client introuvable' });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function validerPaiement_HTTP(params) {
+  var clientId = params.id      || '';
+  var formule  = params.formule || 'BRAS_DROIT';
+  if (!clientId) return reponseJSON({ success: false, error: 'ID manquant' });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('ASSISTANTS');
+    var data  = sheet.getDataRange().getValues();
+
+    var quotaMap = { 'GRATUIT': 300, 'BRAS_DROIT': 2000, 'DIGITAL_MANAGER': 10000 };
+    var quota = quotaMap[formule] || 2000;
+    var dateFin = new Date();
+    dateFin.setMonth(dateFin.getMonth() + 1);
+
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] !== clientId) continue;
+      sheet.getRange(i + 1, 7).setValue('CLIENT_ACTIF');
+      sheet.getRange(i + 1, 10).setValue(Utilities.formatDate(dateFin, 'GMT+1', 'dd/MM/yyyy'));
+      sheet.getRange(i + 1, 11).setValue(30);
+      sheet.getRange(i + 1, 12).setValue(formule);
+      sheet.getRange(i + 1, 13).setValue(quota);
+      SpreadsheetApp.flush();
+
+      // Email confirmation
+      try {
+        MailApp.sendEmail({
+          to: data[i][2],
+          subject: '✅ Paiement confirmé — Attractor Assists',
+          htmlBody: '<h2>Merci ' + data[i][1] + ' 🙏</h2><p>Ton abonnement <strong>' + formule + '</strong> est activé jusqu\'au ' + Utilities.formatDate(dateFin, 'GMT+1', 'dd/MM/yyyy') + '.</p><p><a href="' + data[i][18] + '">Accéder à mon assistant →</a></p>'
+        });
+      } catch(e) {}
+
+      return reponseJSON({ success: true, formule: formule, quota: quota });
+    }
+    return reponseJSON({ success: false, error: 'Client introuvable' });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+// ============================================================
+// CHAT PRINCIPAL
+// ============================================================
+
+function chat_HTTP(params) {
+  var clientId = params.id   || '';
+  var msg      = decodeURIComponent(params.msg  || '');
+  var histRaw  = params.hist || '[]';
+
+  if (!clientId || !msg) return reponseJSON({ success: false, error: 'Params manquants' });
+
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('ASSISTANTS');
+    var data  = sheet.getDataRange().getValues();
+
+    var pr = null;
+    var rowIdx = -1;
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] === clientId) { pr = data[i]; rowIdx = i; break; }
+    }
+    if (!pr) return reponseJSON({ success: false, error: 'Client introuvable' });
+
+    // Incrémenter nb_messages
+    var nbMsg = parseInt(pr[13]) || 0;
+    nbMsg++;
+    sheet.getRange(rowIdx + 1, 14).setValue(nbMsg);
+    SpreadsheetApp.flush();
+
+    // Construire system prompt
+    var system = construireSystemPrompt(ss, pr, clientId);
+
+    // Historique
+    var hist = [];
+    try { hist = JSON.parse(histRaw); } catch(e) {}
+    hist = hist.slice(-4);
+    hist.push({ role: 'user', content: msg });
+
+    // Appel Claude
+    var reply = appelClaude(system, hist, CONFIG.MAX_TOKENS);
+
+    // Sauvegarder
+    sauvegarderConversation(ss, clientId, 'user', msg);
+    sauvegarderConversation(ss, clientId, 'assistant', reply);
+
+    // Résumé toutes les 5 réponses
+    if (nbMsg % 5 === 0) genererResumeSilencieux(ss, clientId, pr, hist);
+
+    return reponseJSON({ success: true, reply: reply, nb_messages: nbMsg });
+
+  } catch(err) {
+    Logger.log('Erreur chat: ' + err.toString());
+    alerteSupervision('chat', err.toString(), clientId);
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function construireSystemPrompt(ss, pr, clientId) {
+  var prenom   = pr[1]  || '';
+  var zone     = pr[4]  || 'CI';
+  var profil   = pr[5]  || 'entrepreneur';
+  var formule  = pr[11] || 'GRATUIT';
+  var nomAss   = pr[19] || 'Attractor';
+  var ton      = pr[20] || 'tutoiement';
+  var memoire  = pr[21] || '';  // Memoire_Cache — non utilisé ici, colonne 22 = Theme
+
+  // Lire mémoire depuis PROFILS
+  var profilData = lireProfilClient(ss, clientId);
+  var memoireCache = profilData.memoire_cache || '';
+
+  var system = '# ' + nomAss.toUpperCase() + ' — ASSISTANT PERSONNEL\n\n';
+
+  // Ton
+  if (ton === 'vouvoiement') {
+    system += 'IMPORTANT : Tu vouvoies ' + prenom + ' (vous, votre, vos). Toujours.\n\n';
+  } else {
+    system += 'IMPORTANT : Tu tutoies ' + prenom + ' (tu, ton, tes). Toujours.\n\n';
+  }
+
+  system += '## QUI TU ES\n';
+  system += 'Tu es ' + nomAss + ', l\'assistant personnel de ' + prenom + '.\n';
+  system += 'Tu n\'es pas une IA générique. Tu connais ' + prenom + ' et tu travailles pour lui/elle.\n';
+  system += 'Tu ne mentionnes jamais Claude ni Anthropic.\n\n';
+
+  system += '## QUI EST ' + prenom.toUpperCase() + '\n';
+  system += 'Zone : ' + zone + '\n';
+  system += 'Profil : ' + profil + '\n';
+
+  // Données profil enrichi
+  if (profilData.activite) system += 'Activité : ' + profilData.activite + '\n';
+  if (profilData.secteur)  system += 'Secteur : ' + profilData.secteur + '\n';
+  if (profilData.objectif_3mois) system += 'Objectif 3 mois : ' + profilData.objectif_3mois + '\n';
+  if (profilData.manuel_process) system += 'Comment il/elle travaille : ' + profilData.manuel_process + '\n';
+
+  // Mémoire courte
+  if (memoireCache) system += '\n## CE QU\'ON A FAIT ENSEMBLE\n' + memoireCache + '\n';
+
+  // PPSD depuis PARCOURS_VENTES
+  var ppsd = lirePPSD(ss, clientId);
+  if (ppsd) system += '\n## PROFIL BUSINESS CONSTRUIT ENSEMBLE\n' + ppsd + '\n';
+
+  // KNOWLEDGE
+  system += '\n## CONNAISSANCES\n' + chargerKnowledge(ss) + '\n';
+
+  // Règles
+  system += '\n## RÈGLES ABSOLUES\n';
+  system += '- Réponds en français uniquement\n';
+  system += '- Maximum 4 phrases par réponse sauf si on te demande plus\n';
+  system += '- Une seule question à la fois si tu as besoin d\'info\n';
+  system += '- Des actions concrètes — pas juste des informations\n';
+  system += '- Formule : ' + formule + '\n';
+
+  // Adaptation selon profil
+  if (profil === 'entrepreneur') {
+    system += '- Focus : ventes, clients, visibilité, organisation business\n';
+  } else if (profil === 'salarie_side') {
+    system += '- Focus : gestion du temps entre job et projet, avancement projet\n';
+  } else if (profil === 'salarie') {
+    system += '- Focus : organisation, productivité, gestion du stress, carrière\n';
+  }
+
+  // Adaptation zone
+  if (zone === 'CI') {
+    system += '- Tu utilises des exemples concrets de la Côte d\'Ivoire\n';
+    system += '- Tu connais le contexte économique CI : Wave, mobile money, WhatsApp Business\n';
+  }
+
+  return system;
+}
+
+function lireProfilClient(ss, clientId) {
+  try {
+    var sheet = ss.getSheetByName('PROFILS');
+    if (!sheet) return {};
+    var data = sheet.getDataRange().getValues();
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] === clientId) {
+        return {
+          activite:        data[i][2]  || '',
+          secteur:         data[i][3]  || '',
+          structure:       data[i][4]  || '',
+          canal_principal: data[i][6]  || '',
+          objectif_3mois:  data[i][9]  || '',
+          objectif_12mois: data[i][10] || '',
+          ca_actuel:       data[i][11] || '',
+          manuel_process:  data[i][13] || '',
+          lien_facebook:   data[i][14] || '',
+          lien_instagram:  data[i][15] || '',
+          memoire_cache:   data[i][21] || ''
+        };
+      }
+    }
+  } catch(e) {}
+  return {};
+}
+
+function lirePPSD(ss, clientId) {
+  try {
+    var sheet = ss.getSheetByName('PARCOURS_VENTES');
+    if (!sheet) return '';
+    var data = sheet.getDataRange().getValues();
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] !== clientId) continue;
+      if (!parseInt(data[i][3])) return '';
+      var ppsd = '';
+      if (data[i][4]) ppsd += 'Cible : ' + data[i][4] + '\n';
+      if (data[i][5]) ppsd += 'Problème cible : ' + data[i][5] + '\n';
+      if (data[i][9]) ppsd += 'Message : ' + data[i][9] + '\n';
+      if (data[i][13]) ppsd += 'Offre : ' + data[i][13] + '\n';
+      if (data[i][18]) ppsd += 'Plan en cours : ' + data[i][18] + '\n';
+      return ppsd;
+    }
+  } catch(e) {}
+  return '';
+}
+
+function chargerKnowledge(ss) {
+  try {
+    var sheet = ss.getSheetByName('KNOWLEDGE');
+    if (!sheet) return '';
+    var data  = sheet.getDataRange().getValues();
+    var lines = [];
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][2] === 'OUI' && data[i][1]) {
+        lines.push(data[i][1]);
+      }
+    }
+    return lines.slice(0, 20).join('\n');
+  } catch(e) { return ''; }
+}
+
+// ============================================================
+// APPEL CLAUDE
+// ============================================================
+
+function appelClaude(system, messages, maxTokens) {
+  var options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': CONFIG.CLAUDE_API_KEY,
+      'anthropic-version': '2023-06-01'
+    },
+    payload: JSON.stringify({
+      model:      CONFIG.MODEL,
+      max_tokens: maxTokens || CONFIG.MAX_TOKENS,
+      system:     system,
+      messages:   messages
+    }),
+    muteHttpExceptions: true
+  };
+
+  var resp = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', options);
+
+  // Retry 529
+  if (resp.getResponseCode() === 529) {
+    Utilities.sleep(3000);
+    resp = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', options);
+  }
+
+  var body = JSON.parse(resp.getContentText());
+  return (body.content && body.content[0]) ? body.content[0].text.trim() : '';
+}
+
+// ============================================================
+// CONVERSATIONS
+// ============================================================
+
+function saveMessage_HTTP(params) {
+  var clientId = params.id   || '';
+  var role     = params.role || 'user';
+  var msg      = decodeURIComponent(params.msg || '');
+  if (!clientId || !msg) return reponseJSON({ success: false });
+  try {
+    var ss = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    sauvegarderConversation(ss, clientId, role, msg);
+    return reponseJSON({ success: true });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function sauvegarderConversation(ss, clientId, role, message) {
+  try {
+    var sheet = ss.getSheetByName('CONVERSATIONS');
+    if (!sheet) return;
+    var now = new Date();
+    sheet.appendRow([
+      clientId,
+      Utilities.formatDate(now, 'GMT+1', 'dd/MM/yyyy'),
+      role,
+      Utilities.formatDate(now, 'GMT+1', 'HH:mm:ss'),
+      message.substring(0, 2000)
+    ]);
+  } catch(e) { Logger.log('saveConv error: ' + e); }
+}
+
+function sauvegarderMemoire_HTTP(clientId, resume) {
+  if (!clientId) return reponseJSON({ success: false });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('PROFILS');
+    if (!sheet) return reponseJSON({ success: false });
+    var data  = sheet.getDataRange().getValues();
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] !== clientId) continue;
+      sheet.getRange(i + 1, 22).setValue(decodeURIComponent(resume));
+      SpreadsheetApp.flush();
+      return reponseJSON({ success: true });
+    }
+    // Créer la ligne profil si elle n'existe pas
+    sheet.appendRow([clientId, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', decodeURIComponent(resume)]);
+    SpreadsheetApp.flush();
+    return reponseJSON({ success: true });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function genererResumeSilencieux(ss, clientId, pr, hist) {
+  try {
+    var derniersMsgs = hist.slice(-6).map(function(m) {
+      return m.role + ': ' + (m.content || '').substring(0, 100);
+    }).join('\n');
+
+    var system = 'Résume en 2-3 phrases courtes les sujets abordés. Commence par "Dans nos échanges récents :". Sois concis.';
+    var resume = appelClaude(system, [{ role: 'user', content: derniersMsgs }], 150);
+    if (resume) sauvegarderMemoire_HTTP(clientId, encodeURIComponent(resume));
+  } catch(e) {}
+}
+
+// ============================================================
+// PROFIL ENRICHI
+// ============================================================
+
+function enrichirProfil_HTTP(params) {
+  var clientId = params.id || '';
+  if (!clientId) return reponseJSON({ success: false, error: 'ID manquant' });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('PROFILS');
+    if (!sheet) return reponseJSON({ success: false });
+
+    var data = sheet.getDataRange().getValues();
+    var colMap = {
+      'activite': 3, 'secteur': 4, 'structure': 5, 'anciennete': 6,
+      'canal_principal': 7, 'niveau_organisation': 8, 'maitrise_temps': 9,
+      'objectif_3mois': 10, 'objectif_12mois': 11, 'ca_actuel': 12,
+      'nb_clients_actifs': 13, 'manuel_process': 14,
+      'lien_facebook': 15, 'lien_instagram': 16, 'lien_tiktok': 17,
+      'lien_whatsapp_biz': 18, 'liens_concurrents': 19
+    };
+
+    // Chercher si ligne existe
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] !== clientId) continue;
+      for (var key in colMap) {
+        if (params[key]) {
+          sheet.getRange(i + 1, colMap[key]).setValue(decodeURIComponent(params[key]));
+        }
+      }
+      // Marquer anamnese complete
+      if (params.anamnese_complete) {
+        sheet.getRange(i + 1, 20).setValue('OUI');
+        sheet.getRange(i + 1, 21).setValue(Utilities.formatDate(new Date(), 'GMT+1', 'dd/MM/yyyy HH:mm'));
+      }
+      SpreadsheetApp.flush();
+      return reponseJSON({ success: true });
+    }
+
+    // Créer nouvelle ligne profil
+    var assSheet = ss.getSheetByName('ASSISTANTS');
+    var prenom = '';
+    var assData = assSheet.getDataRange().getValues();
+    for (var j = 1; j < assData.length; j++) {
+      if (assData[j][0] === clientId) { prenom = assData[j][1]; break; }
+    }
+
+    var newRow = [clientId, prenom];
+    for (var k = 2; k < 22; k++) newRow.push('');
+    sheet.appendRow(newRow);
+
+    // Puis mettre à jour
+    return enrichirProfil_HTTP(params);
+
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function getProfil_HTTP(clientId) {
+  if (!clientId) return reponseJSON({ success: false });
+  try {
+    var ss = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    return reponseJSON({ success: true, profil: lireProfilClient(ss, clientId) });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+// ============================================================
+// AGENDA
+// ============================================================
+
+function getAgenda_HTTP(clientId, dateFiltrer) {
+  if (!clientId) return reponseJSON({ success: false });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('AGENDA');
+    var data  = sheet.getDataRange().getValues();
+    var events = [];
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] !== clientId) continue;
+      if (dateFiltrer && data[i][1] !== dateFiltrer) continue;
+      if (data[i][7] === 'ANNULE') continue;
+      events.push({
+        id:          i,
+        date:        data[i][1],
+        heure_debut: data[i][2],
+        heure_fin:   data[i][3],
+        titre:       data[i][4],
+        description: data[i][5],
+        rappel:      data[i][6],
+        statut:      data[i][7]
+      });
+    }
+    events.sort(function(a,b) { return a.date > b.date ? 1 : -1; });
+    return reponseJSON({ success: true, events: events });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function ajouterRDV_HTTP(params) {
+  var clientId = params.id || '';
+  if (!clientId) return reponseJSON({ success: false });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('AGENDA');
+    sheet.appendRow([
+      clientId,
+      decodeURIComponent(params.date        || ''),
+      decodeURIComponent(params.heure_debut || ''),
+      decodeURIComponent(params.heure_fin   || ''),
+      decodeURIComponent(params.titre       || ''),
+      decodeURIComponent(params.description || ''),
+      parseInt(params.rappel) || 30,
+      'ACTIF',
+      Utilities.formatDate(new Date(), 'GMT+1', 'dd/MM/yyyy HH:mm')
+    ]);
+    SpreadsheetApp.flush();
+    return reponseJSON({ success: true });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function supprimerRDV_HTTP(params) {
+  var clientId = params.id    || '';
+  var rowId    = parseInt(params.row_id) || 0;
+  if (!clientId || !rowId) return reponseJSON({ success: false });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('AGENDA');
+    sheet.getRange(rowId + 1, 8).setValue('ANNULE');
+    SpreadsheetApp.flush();
+    return reponseJSON({ success: true });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+// ============================================================
+// TODO
+// ============================================================
+
+function getTodo_HTTP(clientId) {
+  if (!clientId) return reponseJSON({ success: false });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('TODO');
+    var data  = sheet.getDataRange().getValues();
+    var todos = [];
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] !== clientId) continue;
+      if (data[i][4] === 'COMPLETE' || data[i][4] === 'ANNULE') continue;
+      todos.push({
+        id:            i,
+        titre:         data[i][1],
+        description:   data[i][2],
+        priorite:      data[i][3],
+        statut:        data[i][4],
+        date_echeance: data[i][5]
+      });
+    }
+    return reponseJSON({ success: true, todos: todos });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function ajouterTodo_HTTP(params) {
+  var clientId = params.id || '';
+  if (!clientId) return reponseJSON({ success: false });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('TODO');
+    sheet.appendRow([
+      clientId,
+      decodeURIComponent(params.titre       || ''),
+      decodeURIComponent(params.description || ''),
+      decodeURIComponent(params.priorite    || 'NORMALE'),
+      'EN_COURS',
+      decodeURIComponent(params.date_echeance || ''),
+      Utilities.formatDate(new Date(), 'GMT+1', 'dd/MM/yyyy HH:mm'),
+      ''
+    ]);
+    SpreadsheetApp.flush();
+    return reponseJSON({ success: true });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function completerTodo_HTTP(params) {
+  var clientId = params.id    || '';
+  var rowId    = parseInt(params.row_id) || 0;
+  if (!clientId || !rowId) return reponseJSON({ success: false });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('TODO');
+    sheet.getRange(rowId + 1, 5).setValue('COMPLETE');
+    sheet.getRange(rowId + 1, 8).setValue(Utilities.formatDate(new Date(), 'GMT+1', 'dd/MM/yyyy HH:mm'));
+    SpreadsheetApp.flush();
+    return reponseJSON({ success: true });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+// ============================================================
+// ARMOIRE
+// ============================================================
+
+function getArmoire_HTTP(clientId, dossier) {
+  if (!clientId) return reponseJSON({ success: false });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('ARMOIRE');
+    var data  = sheet.getDataRange().getValues();
+    var items = [];
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] !== clientId) continue;
+      if (dossier && data[i][1] !== dossier) continue;
+      if (data[i][7] === 'ARCHIVE') continue;
+      items.push({
+        id:           i,
+        dossier:      data[i][1],
+        nom:          data[i][2],
+        type:         data[i][3],
+        contenu:      data[i][4],
+        date:         data[i][5],
+        lien_pdf:     data[i][6]
+      });
+    }
+    return reponseJSON({ success: true, items: items });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function ajouterArmoire_HTTP(params) {
+  var clientId = params.id || '';
+  if (!clientId) return reponseJSON({ success: false });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('ARMOIRE');
+    sheet.appendRow([
+      clientId,
+      decodeURIComponent(params.dossier  || 'Documents'),
+      decodeURIComponent(params.nom      || ''),
+      decodeURIComponent(params.type     || 'texte'),
+      decodeURIComponent(params.contenu  || ''),
+      Utilities.formatDate(new Date(), 'GMT+1', 'dd/MM/yyyy HH:mm'),
+      decodeURIComponent(params.lien_pdf || ''),
+      'ACTIF'
+    ]);
+    SpreadsheetApp.flush();
+    return reponseJSON({ success: true });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+// ============================================================
+// COMMUNAUTE
+// ============================================================
+
+function getCommunaute_HTTP() {
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('COMMUNAUTE');
+    var data  = sheet.getDataRange().getValues();
+    var items = [];
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][5] !== 'OUI') continue;
+      items.push({
+        id:          i,
+        prenom:      data[i][1],
+        activite:    data[i][2],
+        secteur:     data[i][3],
+        besoin:      data[i][4],
+        date:        data[i][6],
+        nb_contacts: parseInt(data[i][7]) || 0
+      });
+    }
+    return reponseJSON({ success: true, items: items });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function publierCommunaute_HTTP(params) {
+  var clientId = params.id || '';
+  if (!clientId) return reponseJSON({ success: false });
+  try {
+    var ss     = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet  = ss.getSheetByName('COMMUNAUTE');
+    var assSheet = ss.getSheetByName('ASSISTANTS');
+    var prenom = '', activite = '', secteur = '';
+
+    var assData = assSheet.getDataRange().getValues();
+    for (var j = 1; j < assData.length; j++) {
+      if (assData[j][0] === clientId) { prenom = assData[j][1]; break; }
+    }
+    var profilData = lireProfilClient(ss, clientId);
+    activite = profilData.activite || '';
+    secteur  = profilData.secteur  || '';
+
+    sheet.appendRow([
+      clientId, prenom, activite, secteur,
+      decodeURIComponent(params.besoin || ''),
+      'OUI',
+      Utilities.formatDate(new Date(), 'GMT+1', 'dd/MM/yyyy'),
+      0
+    ]);
+    SpreadsheetApp.flush();
+    return reponseJSON({ success: true });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+// ============================================================
+// KNOWLEDGE
+// ============================================================
+
+function getKnowledge_HTTP(query) {
+  try {
+    var ss = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    return reponseJSON({ success: true, knowledge: chargerKnowledge(ss) });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+// ============================================================
+// ADMIN DASHBOARD
+// ============================================================
+
+function getClients_HTTP() {
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('ASSISTANTS');
+    var data  = sheet.getDataRange().getValues();
+    var clients = [];
+    for (var i = 1; i < data.length; i++) {
+      if (!data[i][0]) continue;
+      clients.push({
+        id:             data[i][0],
+        prenom:         data[i][1],
+        email:          data[i][2],
+        whatsapp:       data[i][3],
+        zone:           data[i][4],
+        statut:         data[i][6],
+        jours_restants: parseInt(data[i][10]) || 0,
+        formule:        data[i][11],
+        nb_messages:    parseInt(data[i][13]) || 0,
+        url:            data[i][18]
+      });
+    }
+    return reponseJSON({ success: true, clients: clients });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function envoyerEmail_HTTP(params) {
+  var to      = params.to      || '';
+  var subject = decodeURIComponent(params.subject || '');
+  var body    = decodeURIComponent(params.body    || '');
+  if (!to || !subject) return reponseJSON({ success: false });
+  try {
+    MailApp.sendEmail({ to: to, subject: subject, htmlBody: body });
+    return reponseJSON({ success: true });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function getSupervision_HTTP() {
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('SUPERVISION');
+    var data  = sheet.getDataRange().getValues();
+    var logs  = [];
+    for (var i = Math.max(1, data.length - 20); i < data.length; i++) {
+      logs.push({ date: data[i][0], type: data[i][1], detail: data[i][2], contexte: data[i][3], niveau: data[i][4] });
+    }
+    return reponseJSON({ success: true, logs: logs.reverse() });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function resetMessages_HTTP(clientId) {
+  if (!clientId) return reponseJSON({ success: false });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('ASSISTANTS');
+    var data  = sheet.getDataRange().getValues();
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] !== clientId) continue;
+      sheet.getRange(i + 1, 14).setValue(0);
+      sheet.getRange(i + 1, 15).setValue(Utilities.formatDate(new Date(), 'GMT+1', 'dd/MM/yyyy'));
+      SpreadsheetApp.flush();
+      return reponseJSON({ success: true });
+    }
+    return reponseJSON({ success: false, error: 'Client introuvable' });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+// ============================================================
+// SUPERVISION
+// ============================================================
+
+function alerteSupervision(type, detail, contexte) {
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('SUPERVISION');
+    if (!sheet) return;
+    sheet.appendRow([
+      Utilities.formatDate(new Date(), 'GMT+1', 'dd/MM/yyyy HH:mm:ss'),
+      type,
+      detail.substring(0, 500),
+      contexte,
+      'ERREUR',
+      ''
+    ]);
+  } catch(e) {}
+}
+
+// ============================================================
+// PARCOURS IKIGAI — COULOIR
+// ============================================================
+
+function getParcours_HTTP(clientId) {
+  if (!clientId) return reponseJSON({ success: false });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('PARCOURS');
+    var data  = sheet.getDataRange().getValues();
+    var questions = [];
+    for (var i = 1; i < data.length; i++) {
+      if (!data[i][0]) continue;
+      questions.push({
+        id:        data[i][0],
+        dimension: data[i][1],
+        type:      data[i][2],
+        code:      data[i][3],
+        question:  data[i][4],
+        scoring:   data[i][5]
+      });
+    }
+    return reponseJSON({ success: true, questions: questions });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function getParcoursCourant_HTTP(clientId) {
+  if (!clientId) return reponseJSON({ success: false, error: 'ID manquant' });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var conv  = ss.getSheetByName('CONVERSATIONS');
+    var data  = conv.getDataRange().getValues();
+    var etape = 0;
+    var hist  = [];
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] !== clientId) continue;
+      if (data[i][2] === 'couloir_user' || data[i][2] === 'couloir_bot') {
+        hist.push({ role: data[i][2] === 'couloir_user' ? 'user' : 'assistant', content: data[i][4] });
+        etape++;
+      }
+    }
+    return reponseJSON({ success: true, etape: Math.floor(etape/2), historique: hist.slice(-10) });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function reponseCouloir_HTTP(params) {
+  var clientId = params.id      || '';
+  var reponse  = decodeURIComponent(params.reponse || '');
+  if (!clientId || !reponse) return reponseJSON({ success: false, error: 'Params manquants' });
+
+  try {
+    var ss = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+
+    // Charger contexte couloir
+    var parcours = getParcours_HTTP(clientId);
+    var courant  = getParcoursCourant_HTTP(clientId);
+    var etape    = (courant.success ? courant.etape : 0) + 1;
+    var questions = parcours.success ? parcours.questions : [];
+
+    // Sauvegarder réponse utilisateur
+    sauvegarderConversationRole(ss, clientId, 'couloir_user', reponse);
+
+    // Construire system couloir
+    var prenom = '';
+    var assSheet = ss.getSheetByName('ASSISTANTS');
+    var assData  = assSheet.getDataRange().getValues();
+    for (var j = 1; j < assData.length; j++) {
+      if (assData[j][0] === clientId) { prenom = assData[j][1]; break; }
+    }
+
+    var qActuelle = questions[etape - 1] || null;
+    var qSuivante = questions[etape]     || null;
+
+    var system = '# COACH IKIGAI — #1DANSMONCOULOIR\n\n';
+    system += 'Tu guides ' + prenom + ' dans la découverte de son Ikigai.\n';
+    system += 'Étape actuelle : ' + etape + '/22\n';
+    if (qActuelle) system += 'Dimension : ' + qActuelle.dimension + '\n';
+    system += '\nRÈGLES :\n';
+    system += '- Valide chaleureusement la réponse\n';
+    system += '- Maximum 2 phrases de commentaire\n';
+    system += '- Si c\'est la dernière question → annonce la fin avec [COULOIR_COMPLET]\n';
+    if (qSuivante) system += '- Pose ensuite naturellement : "' + qSuivante.question + '"\n';
+
+    var hist = courant.success ? courant.historique : [];
+    hist.push({ role: 'user', content: reponse });
+
+    var reply = appelClaude(system, hist, 300);
+
+    // Sauvegarder réponse bot
+    sauvegarderConversationRole(ss, clientId, 'couloir_bot', reply);
+
+    var termine = reply.indexOf('[COULOIR_COMPLET]') >= 0;
+    var replyClean = reply.replace('[COULOIR_COMPLET]', '').trim();
+
+    return reponseJSON({
+      success:  true,
+      reply:    replyClean,
+      etape:    etape,
+      termine:  termine,
+      total:    questions.length
+    });
+
+  } catch(err) {
+    Logger.log('Erreur reponseCouloir: ' + err.toString());
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function calculerCouloir_HTTP(clientId) {
+  if (!clientId) return reponseJSON({ success: false });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var conv  = ss.getSheetByName('CONVERSATIONS');
+    var data  = conv.getDataRange().getValues();
+
+    var reponses = [];
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] === clientId && data[i][2] === 'couloir_user') {
+        reponses.push(data[i][4]);
+      }
+    }
+
+    var system = '# ANALYSE IKIGAI\nAnalyse ces réponses et détermine le profil Ikigai en JSON :\n{"profil":"[nom profil]","love":70,"skill":60,"need":80,"money":50,"description":"...","couloir_final":"..."}\nRéponds UNIQUEMENT avec le JSON.';
+    var txt = appelClaude(system, [{ role: 'user', content: reponses.join('\n') }], 400);
+    txt = txt.replace(/```json/g,'').replace(/```/g,'').trim();
+    var result = JSON.parse(txt);
+
+    return reponseJSON({ success: true, result: result });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function sauvegarderConversationRole(ss, clientId, role, message) {
+  try {
+    var sheet = ss.getSheetByName('CONVERSATIONS');
+    var now   = new Date();
+    sheet.appendRow([
+      clientId,
+      Utilities.formatDate(now, 'GMT+1', 'dd/MM/yyyy'),
+      role,
+      Utilities.formatDate(now, 'GMT+1', 'HH:mm:ss'),
+      message.substring(0, 2000)
+    ]);
+  } catch(e) {}
+}
+
+// ============================================================
+// PARCOURS VENTES
+// ============================================================
+
+function getParcoursventes_HTTP(clientId) {
+  if (!clientId) return reponseJSON({ success: false, error: 'ID manquant' });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('PARCOURS_VENTES');
+    if (!sheet) return reponseJSON({ success: false, error: 'Onglet introuvable' });
+    var data  = sheet.getDataRange().getValues();
+
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] !== clientId) continue;
+      return reponseJSON({
+        success:        true,
+        module_courant: parseInt(data[i][3]) || 0,
+        spin: { situation: data[i][4]||'', probleme: data[i][5]||'', implications: data[i][6]||'', nouvelle_situation: data[i][7]||'', ou_trouver: data[i][8]||'' },
+        pasa: { probleme: data[i][9]||'', agitation: data[i][10]||'', souhait: data[i][11]||'', action: data[i][12]||'' },
+        offre: { produit: data[i][13]||'', bonus: data[i][14]||'', limiteur: data[i][15]||'', prix: data[i][16]||'' },
+        plan: { reseau: data[i][17]||'', plan30j: data[i][18]||'' },
+        engagement: data[i][19]||'',
+        pdf_genere:  data[i][22]||false,
+        statut_pdf:  data[i][23]||'gratuit'
+      });
+    }
+
+    // Créer ligne
+    var assSheet = ss.getSheetByName('ASSISTANTS');
+    var prenom = '', activite = '';
+    var assData = assSheet.getDataRange().getValues();
+    for (var j = 1; j < assData.length; j++) {
+      if (assData[j][0] === clientId) { prenom = assData[j][1]; break; }
+    }
+    var profilData = lireProfilClient(ss, clientId);
+    activite = profilData.activite || '';
+
+    sheet.appendRow([clientId, prenom, activite, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', new Date(), '', false, 'gratuit']);
+    SpreadsheetApp.flush();
+
+    return reponseJSON({ success: true, module_courant: 0, spin:{}, pasa:{}, offre:{}, plan:{}, engagement:'', pdf_genere:false, statut_pdf:'gratuit' });
+
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function getHistoriqueCoach_HTTP(clientId, module) {
+  if (!clientId) return reponseJSON({ success: false, error: 'ID manquant' });
+  try {
+    var ss        = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var convSheet = ss.getSheetByName('CONVERSATIONS');
+    var historique = [];
+    if (convSheet) {
+      var cData = convSheet.getDataRange().getValues();
+      for (var k = 1; k < cData.length; k++) {
+        if (cData[k][0] === clientId && (cData[k][2] === 'coach_user' || cData[k][2] === 'coach_bot')) {
+          historique.push({ role: cData[k][2] === 'coach_user' ? 'user' : 'assistant', content: cData[k][4] });
+        }
+      }
+      if (historique.length > 10) historique = historique.slice(historique.length - 10);
+    }
+    return reponseJSON({ success: true, historique: historique });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function coachVentes_HTTP(params) {
+  var clientId = params.id      || '';
+  var module   = parseInt(params.module) || 1;
+  var reponse  = decodeURIComponent(params.reponse || '');
+  if (!clientId || !reponse) return reponseJSON({ success: false, error: 'Params manquants' });
+
+  try {
+    var ss = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+
+    // Profil client
+    var assSheet = ss.getSheetByName('ASSISTANTS');
+    var prenom = '', zone = 'CI';
+    var assData = assSheet.getDataRange().getValues();
+    for (var j = 1; j < assData.length; j++) {
+      if (assData[j][0] === clientId) { prenom = assData[j][1]; zone = assData[j][4]; break; }
+    }
+    var profilData = lireProfilClient(ss, clientId);
+    var activite   = profilData.activite || '';
+
+    // Charger PPSD actuel
+    var pvSheet = ss.getSheetByName('PARCOURS_VENTES');
+    var ppsdActuel = {};
+    if (pvSheet) {
+      var pvData = pvSheet.getDataRange().getValues();
+      for (var p = 1; p < pvData.length; p++) {
+        if (pvData[p][0] === clientId) {
+          ppsdActuel = {
+            spin_situation: pvData[p][4]||'', spin_probleme: pvData[p][5]||'',
+            pasa_probleme: pvData[p][9]||'', offre_produit: pvData[p][13]||''
+          };
+          break;
+        }
+      }
+    }
+
+    // Charger historique coach
+    var hist = getHistoriqueCoach_HTTP(clientId, module);
+    var histCoach = hist.success ? hist.historique : [];
+
+    // System prompt selon module
+    var systemCoach = construireSystemCoach(module, prenom, activite, zone, ppsdActuel);
+
+    // Message de démarrage
+    var msgUser = reponse === '__start__' ? 'Bonjour, je suis prêt à commencer.' : reponse;
+
+    // Sauvegarder réponse utilisateur
+    if (reponse !== '__start__') {
+      sauvegarderConversationRole(ss, clientId, 'coach_user', msgUser);
+    }
+    histCoach.push({ role: 'user', content: msgUser });
+
+    // Appel Claude
+    var reply = appelClaude(systemCoach, histCoach, 400);
+
+    // Sauvegarder réponse coach
+    sauvegarderConversationRole(ss, clientId, 'coach_bot', reply);
+
+    // Détecter complétion module
+    var marqueurs = ['[PPSD_COMPLET]', '[MESSAGES_COMPLETS]', '[OFFRE_COMPLETE]', '[PLAN_VALIDE]'];
+    var moduleComplete = marqueurs.some(function(m) { return reply.indexOf(m) >= 0; });
+    var replyClean = reply.replace(/\[PPSD_COMPLET\]|\[MESSAGES_COMPLETS\]|\[OFFRE_COMPLETE\]|\[PLAN_VALIDE\]/g, '').trim();
+
+    // Avancer module si complet
+    if (moduleComplete && pvSheet) {
+      var pvData2 = pvSheet.getDataRange().getValues();
+      for (var r = 1; r < pvData2.length; r++) {
+        if (pvData2[r][0] === clientId) {
+          pvSheet.getRange(r + 1, 4).setValue(module + 1);
+          SpreadsheetApp.flush();
+          break;
+        }
+      }
+    }
+
+    return reponseJSON({
+      success:         true,
+      reply:           replyClean,
+      module_complete: moduleComplete,
+      prochain_module: moduleComplete ? module + 1 : module
+    });
+
+  } catch(err) {
+    Logger.log('Erreur coachVentes: ' + err.toString());
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function construireSystemCoach(module, prenom, activite, zone, ppsd) {
+  var base = '# COACH MÉTHODE ATTRACTOR — MODULE ' + module + '\n';
+  base += 'Tu coaches ' + prenom + ' (' + activite + ') avec bienveillance et précision.\n\n';
+  base += 'DONNÉES DÉJÀ COLLECTÉES :\n' + JSON.stringify(ppsd) + '\n\n';
+  base += 'RÈGLES :\n- Une question à la fois. Jamais deux.\n';
+  base += '- Si réponse vague ("tout le monde","les femmes") → NE PAS VALIDER → creuser encore.\n';
+  base += '- Maximum 4 phrases par réponse.\n';
+  base += '- Ton chaleureux et direct.\n\n';
+
+  if (module === 1) {
+    base += 'OBJECTIF : Portrait cible PPSD complet (5 problèmes · 5 peurs · 2-3 souhaits).\n';
+    base += 'Quand complet → synthèse + "[PPSD_COMPLET]"\n';
+  } else if (module === 2) {
+    base += 'OBJECTIF : Construire 3 messages émotionnels (Peur · Souhait · Fierté).\n';
+    base += 'Quand complet → "[MESSAGES_COMPLETS]"\n';
+  } else if (module === 3) {
+    base += 'OBJECTIF : Offre irrésistible (Produit principal · Bonus · Limiteur · Prix).\n';
+    base += 'Quand complet → "[OFFRE_COMPLETE]"\n';
+  } else if (module === 4) {
+    base += 'OBJECTIF : Plan 30 jours + engagement public.\n';
+    base += 'Quand complet → "[PLAN_VALIDE]"\n';
+  }
+
+  return base;
+}
+
+function repondreVentes_HTTP(params) {
+  var clientId = params.id    || '';
+  var champ    = params.champ || '';
+  var valeur   = decodeURIComponent(params.valeur || '');
+  if (!clientId || !champ) return reponseJSON({ success: false });
+
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('PARCOURS_VENTES');
+    var colonnes = {
+      'spin_situation':4,'spin_probleme':5,'spin_implications':6,'spin_nouvelle_situation':7,'spin_ou_trouver':8,
+      'pasa_probleme':9,'pasa_agitation':10,'pasa_souhait':11,'pasa_action':12,
+      'offre_produit':13,'offre_bonus':14,'offre_limiteur':15,'offre_prix':16,
+      'plan_reseau':17,'plan_30j':18,'engagement':19,'module_courant':3
+    };
+    var col = colonnes[champ.toLowerCase()];
+    if (!col) return reponseJSON({ success: false, error: 'Champ inconnu' });
+
+    var data = sheet.getDataRange().getValues();
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] !== clientId) continue;
+      sheet.getRange(i + 1, col).setValue(valeur);
+      SpreadsheetApp.flush();
+      return reponseJSON({ success: true });
+    }
+    return reponseJSON({ success: false, error: 'Client introuvable' });
+  } catch(err) {
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+function genererPlanVentes_HTTP(clientId) {
+  if (!clientId) return reponseJSON({ success: false });
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('PARCOURS_VENTES');
+    var data  = sheet.getDataRange().getValues();
+
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] !== clientId) continue;
+
+      var prenom   = data[i][1];
+      var activite = data[i][2];
+      var spin     = data[i][5]  || '';
+      var pasa     = data[i][9]  || '';
+      var offre    = data[i][13] || '';
+      var reseau   = data[i][17] || 'Instagram';
+
+      var system = '# PLAN 30 JOURS MÉTHODE ATTRACTOR\n'
+        + 'Client : ' + prenom + ' · Activité : ' + activite + '\n'
+        + 'Réseau : ' + reseau + '\n'
+        + 'Problème cible : ' + spin + '\n'
+        + 'Message PASA : ' + pasa + '\n'
+        + 'Offre : ' + offre + '\n\n'
+        + 'Génère un plan 30 jours en 4 semaines. JSON brut uniquement. Commence par {\n'
+        + '{"semaines":[{"semaine":1,"actions":["...","...","..."]},{"semaine":2,"actions":["...","...","..."]},{"semaine":3,"actions":["...","...","..."]},{"semaine":4,"actions":["...","...","..."]}],"engagement":"..."}';
+
+      var txt = appelClaude(system, [{ role: 'user', content: 'Génère le plan. JSON brut. Commence par {' }], 1000);
+      txt = txt.replace(/```json/g,'').replace(/```/g,'').trim();
+      var plan = JSON.parse(txt);
+
+      // Sauvegarder
+      sheet.getRange(i + 1, 19).setValue(JSON.stringify(plan.semaines));
+      sheet.getRange(i + 1, 20).setValue(plan.engagement || '');
+      sheet.getRange(i + 1, 22).setValue(new Date());
+      sheet.getRange(i + 1, 23).setValue(true);
+      SpreadsheetApp.flush();
+
+      return reponseJSON({
+        success: true, plan: plan.semaines,
+        engagement: plan.engagement,
+        prenom: prenom, activite: activite,
+        spin: spin, pasa: pasa, offre: offre
+      });
+    }
+    return reponseJSON({ success: false, error: 'Client introuvable' });
+  } catch(err) {
+    Logger.log('Erreur genererPlanVentes: ' + err.toString());
+    return reponseJSON({ success: false, error: err.toString() });
+  }
+}
+
+// ============================================================
+// TRIGGERS AUTOMATIQUES
+// ============================================================
+
+function installerDeclencheurs() {
+  // Supprimer les anciens
+  var triggers = ScriptApp.getProjectTriggers();
+  triggers.forEach(function(t) { ScriptApp.deleteTrigger(t); });
+
+  // Briefing quotidien 8h
+  ScriptApp.newTrigger('briefingQuotidien')
+    .timeBased().atHour(8).everyDays(1).create();
+
+  // Reset messages minuit
+  ScriptApp.newTrigger('resetMessagesQuotidien')
+    .timeBased().atHour(0).everyDays(1).create();
+
+  // Calcul jours restants quotidien
+  ScriptApp.newTrigger('calculerJoursRestants')
+    .timeBased().atHour(7).everyDays(1).create();
+
+  Logger.log('Triggers installés ✅');
+}
+
+function calculerJoursRestants() {
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('ASSISTANTS');
+    var data  = sheet.getDataRange().getValues();
+    var now   = new Date();
+
+    for (var i = 1; i < data.length; i++) {
+      if (!data[i][0] || !data[i][9]) continue;
+      var dateFin = new Date(data[i][9].split('/').reverse().join('-'));
+      var jours   = Math.floor((dateFin - now) / (1000 * 60 * 60 * 24));
+      sheet.getRange(i + 1, 11).setValue(jours);
+    }
+    SpreadsheetApp.flush();
+  } catch(e) { Logger.log('calculerJoursRestants error: ' + e); }
+}
+
+function resetMessagesQuotidien() {
+  try {
+    var ss    = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+    var sheet = ss.getSheetByName('ASSISTANTS');
+    var data  = sheet.getDataRange().getValues();
+    var today = Utilities.formatDate(new Date(), 'GMT+1', 'dd/MM/yyyy');
+
+    for (var i = 1; i < data.length; i++) {
+      if (!data[i][0]) continue;
+      var lastReset = data[i][14] || '';
+      if (lastReset !== today) {
+        sheet.getRange(i + 1, 14).setValue(0);
+        sheet.getRange(i + 1, 15).setValue(today);
+      }
+    }
+    SpreadsheetApp.flush();
+  } catch(e) { Logger.log('resetMessages error: ' + e); }
+}
+
+function briefingQuotidien() {
+  // À implémenter : envoyer un email de briefing à chaque utilisateur actif
+  Logger.log('Briefing quotidien exécuté : ' + new Date());
+}
+function testCleAPI() {
+  var cle = PropertiesService.getScriptProperties().getProperty('CLAUDE_API_KEY');
+  if (!cle) {
+    Logger.log('❌ Aucune clé trouvée. Vérifie le nom exact dans Propriétés du script : CLAUDE_API_KEY');
+    return;
+  }
+  Logger.log('✅ Clé trouvée : ' + cle.substring(0, 12) + '... (' + cle.length + ' caractères)');
+
+  var resp = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': cle,
+      'anthropic-version': '2023-06-01'
+    },
+    payload: JSON.stringify({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 20,
+      messages: [{ role: 'user', content: 'Réponds juste : OK' }]
+    }),
+    muteHttpExceptions: true
+  });
+
+  Logger.log('Code HTTP : ' + resp.getResponseCode());
+  Logger.log('Réponse : ' + resp.getContentText());
+}
