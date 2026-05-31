@@ -12,10 +12,11 @@ const CAPACITY_MSG = {
 };
 
 export function DashboardScreen({ go, notify, profile }) {
-  const [gamif, setGamif]         = useState(null);
-  const [usedToday, setUsedToday] = useState(0);
-  const [ppsdDone, setPpsdDone]   = useState(false);
+  const [gamif, setGamif]           = useState(null);
+  const [usedToday, setUsedToday]   = useState(0);
+  const [ppsdDone, setPpsdDone]     = useState(false);
   const [lockedSheet, setLockedSheet] = useState(null);
+  const [userCount, setUserCount]   = useState(null);
 
   const first    = profile?.prenom        || '';
   const nomAss   = profile?.nom_assistant || 'Attractor';
@@ -35,14 +36,16 @@ export function DashboardScreen({ go, notify, profile }) {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
         const today = new Date().toISOString().slice(0, 10);
-        const [gamifRes, usageRes, ppsdRes] = await Promise.all([
+        const [gamifRes, usageRes, ppsdRes, countRes] = await Promise.all([
           supabase.from('gamification').select('streak,niveau,xp').eq('user_id', user.id).maybeSingle(),
           supabase.from('usage_daily').select('nb_messages').eq('user_id', user.id).eq('jour', today).maybeSingle(),
           supabase.from('ppsd').select('user_id').eq('user_id', user.id).maybeSingle(),
+          supabase.from('profiles').select('id', { count: 'exact', head: true }),
         ]);
         if (gamifRes.data) setGamif(gamifRes.data);
         if (usageRes.data) setUsedToday(usageRes.data.nb_messages);
         if (ppsdRes.data)  setPpsdDone(true);
+        if (countRes.count) setUserCount(countRes.count);
       } catch {}
     };
     load();
