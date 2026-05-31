@@ -13,6 +13,7 @@ import { InstallGuide, detectPlatform } from './screens/InstallScreen';
 import { ActivationScreen } from './screens/ActivationScreen';
 import { BroadcastsScreen } from './screens/BroadcastsScreen';
 import { PaliersScreen } from './screens/PaliersScreen';
+import { AgendaScreen } from './screens/AgendaScreen';
 
 // 4 éléments : Accueil | FAB | Assistants | Profil
 const TABS = [
@@ -101,6 +102,7 @@ export default function App() {
     axes:        <AxesScreen go={go} notify={notify} />,
     broadcasts:  <BroadcastsScreen go={go} notify={notify} />,
     paliers:     <PaliersScreen go={go} notify={notify} />,
+    agenda:      <AgendaScreen go={go} profile={profile} />,
     install:     <InstallGuide
                    platform={detectPlatform()}
                    prenom={profile?.prenom || ''}

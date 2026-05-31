@@ -168,6 +168,20 @@ export function DashboardScreen({ go, notify, profile }) {
           </div>
         </div>
 
+        <button onClick={() => go("agenda")}
+          className="flex items-center justify-between p-4 bg-white rounded-[18px] border border-g200 shadow-soft active:scale-[.99] transition">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center">
+              <Icon name="check" size={20} className="text-orange" />
+            </div>
+            <div>
+              <p className="font-display font-bold text-[14.5px] text-charbon">Mon agenda</p>
+              <p className="text-[12px] text-g400">Tâches · priorités · suivi</p>
+            </div>
+          </div>
+          <Icon name="chevron" size={18} className="text-g300" />
+        </button>
+
         <SectionLabel action={<button onClick={() => go("assistants")} className="text-[12px] font-bold text-orange">Tout voir</button>}>
           Ton équipe
         </SectionLabel>
