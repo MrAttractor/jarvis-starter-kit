@@ -214,10 +214,12 @@ export function DashboardScreen({ go, notify, profile }) {
             <img src="/uploads/photo-community.png" alt="" className="w-full h-full object-cover" />
           </div>
           <div className="relative p-4 flex-1">
-            <h4 className="font-display font-extrabold text-[15px] leading-tight">3 240 entrepreneurs avancent avec toi</h4>
-            <p className="text-[12px] text-white/80 mt-1 leading-snug">Tu n'es plus seul·e. On construit ton couloir, ensemble.</p>
+            <h4 className="font-display font-extrabold text-[15px] leading-tight">
+              {userCount ? `${userCount} testeur${userCount > 1 ? 's' : ''} en cours` : 'Testeurs en cours'}
+            </h4>
+            <p className="text-[12px] text-white/80 mt-1 leading-snug">Tu fais partie des premiers. Merci de construire ça avec nous.</p>
             <span className="inline-flex items-center gap-1 text-[12px] font-bold text-amber mt-2">
-              Rejoindre les Bras Droits <Icon name="chevron" size={14} />
+              Voir comment on peut t'aider <Icon name="chevron" size={14} />
             </span>
           </div>
         </button>

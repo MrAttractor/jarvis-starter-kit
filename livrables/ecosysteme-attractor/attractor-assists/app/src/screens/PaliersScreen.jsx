@@ -1,9 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 import { MOCK } from '../data';
 import { Pill, Btn, Icon, Sheet, Spinner, AppHeader } from '../components/ui';
 
 export function PaliersScreen({ go, notify }) {
-  const [pay, setPay] = useState(null);
+  const [pay, setPay]           = useState(null);
+  const [userCount, setUserCount] = useState(null);
+
+  useEffect(() => {
+    supabase.from('profiles').select('id', { count: 'exact', head: true })
+      .then(({ count }) => { if (count) setUserCount(count); });
+  }, []);
 
   return (
     <div className="min-h-full bg-sable">
@@ -65,13 +72,15 @@ function ForfaitCard({ f, onPick }) {
           </li>
         ))}
       </ul>
-      <Btn
-        variant={f.current ? "ghost" : f.highlight ? "primary" : "secondary"}
-        className={`w-full mt-5 ${f.current ? "opacity-70" : ""}`}
-        iconRight={f.current ? null : "arrow"}
-        onClick={onPick}>
-        {f.current ? "Ton palier actuel" : `Passer ${f.name}`}
-      </Btn>
+      {f.current ? (
+        <div className="w-full mt-5 py-3.5 rounded-[14px] bg-growth/10 text-center">
+          <span className="text-[14px] font-bold text-growth">Ton palier actuel</span>
+        </div>
+      ) : (
+        <div className="w-full mt-5 py-3.5 rounded-[14px] bg-g100 text-center border border-g200">
+          <span className="text-[13.5px] font-bold text-g400">Bientôt disponible</span>
+        </div>
+      )}
     </div>
   );
 }

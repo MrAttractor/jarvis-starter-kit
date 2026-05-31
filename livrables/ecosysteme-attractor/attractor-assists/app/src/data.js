@@ -54,12 +54,12 @@ export const MOCK = {
     },
   ],
   forfaits: [
-    { id: "decouverte", name: "Découverte", eur: "0 €", fcfa: "0 FCFA", period: "pour toujours", tagline: "Coach passif · 20 messages/jour", current: true,
-      features: ["Coach IA passif", "20 messages / jour", "MasterSheet de base", "1 marque"] },
-    { id: "brasdroit", name: "Bras Droit", eur: "≈ 14 €", fcfa: "9 000 FCFA", period: "/ mois", tagline: "Coach proactif + Digital Manager",
-      features: ["Coach proactif", "Digital Manager", "Messages illimités", "Argumentaires AIDA / PASA"] },
-    { id: "manager", name: "Manager", eur: "29 €", eurOld: "99 €", fcfa: "≈ 19 000 FCFA", period: "/ mois", tagline: "Toute l'équipe + broadcasts", highlight: true, promo: "Promo flash",
-      features: ["Community Manager", "Chief of Staff", "DAF", "Broadcasts illimités", "Tout Bras Droit inclus"] },
+    { id: "decouverte", name: "Découverte", eur: "0 €", fcfa: "0 FCFA", period: "pour toujours", tagline: "Ton bras droit personnel — gratuit pour toujours", current: true,
+      features: ["Ton bras droit disponible 24h/24", "20 messages par jour", "Agenda et rappels de tes tâches", "Accès à la méthode ATTRACTOR"] },
+    { id: "brasdroit", name: "Bras Droit Pro", eur: "≈ 14 €", fcfa: "9 000 FCFA", period: "/ mois", tagline: "Ton bras droit qui agit à ta place",
+      features: ["Analyse tes pages et surveille les tendances de ton marché", "Te propose des actions concrètes pour booster tes ventes", "Te fait des rapports précis sur ta progression", "Messages sans limite journalière"] },
+    { id: "manager", name: "Manager", eur: "29 €", eurOld: "99 €", fcfa: "≈ 19 000 FCFA", period: "/ mois", tagline: "Ta petite agence digitale à portée de main", highlight: true, promo: "Promo flash",
+      features: ["Des agents spécialisés qui travaillent 24h/24 pour toi", "Prospection, contenu, organisation, finances — tout couvert", "Accès complet à toute l'équipe", "Tout le Bras Droit Pro inclus"] },
   ],
   milestones: [
     { id: 1, label: "Se connaître", state: "done" },
