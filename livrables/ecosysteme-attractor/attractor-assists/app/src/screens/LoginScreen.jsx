@@ -117,25 +117,46 @@ export function LoginScreen({ onAuthed }) {
             <button onClick={() => { setStep("email"); setErr(""); }} className="mb-5 inline-flex items-center gap-1.5 text-[14px] font-semibold text-white/80 hover:text-white">
               <Icon name="back" size={18} /> Retour
             </button>
-            <h2 className="font-display font-extrabold text-[28px] leading-tight">Vérifie ton email</h2>
-            <p className="text-[14px] text-white/80 mt-2 mb-5">Lien envoyé à <b className="text-white">{email}</b></p>
+            <h2 className="font-display font-extrabold text-[28px] leading-tight">Entre ton code</h2>
+            <p className="text-[14px] text-white/80 mt-2 mb-5">Code à 6 chiffres envoyé à <b className="text-white">{email}</b></p>
             <div className="bg-white rounded-[20px] p-5 text-charbon shadow-xl">
-              <div className="flex flex-col items-center gap-3 py-4 text-center">
-                <div className="w-16 h-16 rounded-full bg-orange/10 flex items-center justify-center">
-                  <Icon name="send" size={28} className="text-orange" />
-                </div>
-                <p className="text-[15px] font-semibold text-charbon">Clique sur le lien dans ton email pour entrer dans l'app.</p>
+              <div className="flex justify-center gap-2 mb-4">
+                {code.map((v, i) => (
+                  <input
+                    key={i}
+                    ref={refs[i]}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={v}
+                    onChange={(e) => onCode(i, e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Backspace" && !code[i] && i > 0) refs[i - 1].current.focus();
+                      if (e.key === "Enter" && code.join("").length === 6) verify();
+                    }}
+                    onPaste={(e) => {
+                      const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+                      if (pasted.length === 6) {
+                        const next = pasted.split("");
+                        setCode(next);
+                        refs[5].current.focus();
+                        e.preventDefault();
+                      }
+                    }}
+                    className="w-11 h-14 rounded-xl border-2 border-g200 text-center text-[22px] font-extrabold text-charbon focus:border-orange focus:outline-none transition"
+                  />
+                ))}
               </div>
-              <div className="bg-sable rounded-[14px] p-3.5 flex flex-col gap-2">
-                <p className="text-[12.5px] font-bold text-charbon">Tu ne vois pas l'email ?</p>
-                <p className="text-[12px] text-g700 leading-snug">1. Vérifie ton dossier <b>Spams</b> ou <b>Indésirables</b></p>
-                <p className="text-[12px] text-g700 leading-snug">2. Si tu le trouves dans les spams, clique <b>"Pas un spam"</b> pour le recevoir normalement la prochaine fois</p>
-                <p className="text-[12px] text-g700 leading-snug">3. L'expéditeur est <b>noreply@agenceattractor.com</b></p>
+              <div className="bg-sable rounded-[14px] p-3 mb-3">
+                <p className="text-[12px] text-g700 leading-snug">Tu ne reçois pas le code ? Vérifie tes <b>Spams</b>. L'expéditeur est <b>noreply@agenceattractor.com</b></p>
               </div>
-              {err && <p className="text-[12.5px] text-[#D64545] font-semibold mt-2 flex items-center gap-1.5"><Icon name="warn" size={14} />{err}</p>}
+              {err && <p className="text-[12.5px] text-[#D64545] font-semibold mb-3 flex items-center gap-1.5"><Icon name="warn" size={14} />{err}</p>}
+              <Btn className={`w-full ${code.join("").length < 6 ? "opacity-50 pointer-events-none" : ""}`} onClick={verify}>
+                Entrer dans l'app
+              </Btn>
               <button onClick={resend} disabled={isSending}
                 className="w-full text-center text-[13px] font-semibold text-g400 mt-3 hover:text-orange disabled:opacity-40 transition">
-                {isSending ? "Envoi en cours…" : "Renvoyer le lien"}
+                {isSending ? "Envoi en cours…" : "Renvoyer le code"}
               </button>
             </div>
           </div>
