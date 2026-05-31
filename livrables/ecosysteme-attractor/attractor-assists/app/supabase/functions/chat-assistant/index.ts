@@ -1,6 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
+const SUPABASE_URL      = Deno.env.get("SUPABASE_URL") ?? "";
+const SUPABASE_KEY      = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -142,7 +145,35 @@ serve(async (req) => {
       profile = {},
       ppsd = {},
       memoire_cache = "",
+      user_id = null,
     } = await req.json();
+
+    // Charger les mémoires long terme depuis Supabase
+    let memoriesBlock = "";
+    if (user_id) {
+      try {
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+        const { data: mems } = await supabase
+          .from("memories")
+          .select("categorie, contenu, importance")
+          .eq("user_id", user_id)
+          .order("importance", { ascending: false })
+          .order("updated_at", { ascending: false })
+          .limit(20);
+
+        if (mems && mems.length > 0) {
+          const grouped: Record<string, string[]> = {};
+          for (const m of mems) {
+            if (!grouped[m.categorie]) grouped[m.categorie] = [];
+            grouped[m.categorie].push(m.contenu);
+          }
+          const lines = Object.entries(grouped)
+            .map(([cat, items]) => `[${cat.toUpperCase()}]\n${items.map(i => `• ${i}`).join("\n")}`)
+            .join("\n\n");
+          memoriesBlock = `\n\nMÉMOIRE LONG TERME (sessions précédentes) :\n${lines}`;
+        }
+      } catch {}
+    }
 
     const systemBase = SYSTEMS[assistant_id] ?? SYSTEMS.coach;
 
@@ -177,7 +208,7 @@ serve(async (req) => {
       ? `\n\nCE QU'ON A DÉJÀ FAIT ENSEMBLE :\n${memoire_cache}`
       : "";
 
-    const system = systemBase + contextBlock + memoireBlock;
+    const system = systemBase + contextBlock + memoriesBlock + memoireBlock;
 
     const formattedMessages = (messages as Array<{ from: string; text: string }>).map((m) => ({
       role: m.from === "me" ? "user" : "assistant",

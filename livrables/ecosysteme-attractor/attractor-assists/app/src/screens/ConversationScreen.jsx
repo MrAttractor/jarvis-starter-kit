@@ -119,21 +119,37 @@ export function ConversationScreen({ go, notify, params, profile }) {
   const [typing, setTyping] = useState(false);
   const [input, setInput]   = useState("");
   const [ppsd, setPpsd]     = useState(null);
+  const [userId, setUserId] = useState(null);
   const scroller            = useRef();
   const prefillSent         = useRef(false);
+  const sessionId           = useRef(`session-${Date.now()}`);
 
-  // Charger le PPSD pour le contexte
+  // Charger le PPSD et l'user_id
   useEffect(() => {
     const load = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
+        setUserId(user.id);
         const { data } = await supabase.from("ppsd").select("*").eq("user_id", user.id).single();
         setPpsd(data);
       } catch {}
     };
     load();
   }, []);
+
+  // Extraire les mémoires quand l'utilisateur quitte la conversation (>= 4 messages)
+  useEffect(() => {
+    return () => {
+      const realMsgs = msgs.filter((m, i) => !(i === 0 && m.from === "bot"));
+      if (realMsgs.length >= 4 && userId) {
+        const formatted = realMsgs.map(m => ({ role: m.from === "me" ? "user" : "assistant", content: m.text }));
+        supabase.functions.invoke("extract-memories", {
+          body: { user_id: userId, session_id: sessionId.current, messages: formatted },
+        }).catch(() => {});
+      }
+    };
+  }, [msgs, userId]);
 
   useEffect(() => {
     if (scroller.current) scroller.current.scrollTop = scroller.current.scrollHeight;
@@ -176,6 +192,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
           },
           ppsd:          ppsd || {},
           memoire_cache: profile?.memoire_cache || "",
+          user_id:       userId,
         },
       });
 
