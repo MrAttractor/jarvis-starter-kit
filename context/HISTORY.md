@@ -7,6 +7,68 @@
 
 ---
 
+## 2026-05-31 (session 8 — refonte onboarding, bras droit proactif, agenda, vie des assistants)
+
+### Chantiers livrés
+
+**Sécurité login :** Magic link remplacé par OTP 6 chiffres. Template email brandé Attractor Assists en français. Correction bug mobile (cross-browser localStorage).
+
+**Onboarding refait :**
+- Livrable Facebook supprimé (hallucination). Remplacé par écran bienvenue honnête.
+- 5 questions conversationnelles (journée type, attente actuelle, épuisement, vision 6 mois, ville+canal) au lieu du PPSD frontal.
+- Écran bienvenue : "[nomAssistant] est prêt, [prenom]. On commence maintenant."
+
+**Activation sans hallucination :**
+- Edge Function `activation-sequence` réécrite : Claude lit tout le profil onboarding et génère un vrai mirroring avec les mots de l'utilisateur.
+- Suppression pseudo-analyse ("J'ai regardé ta page") et demande de lien réseaux sociaux.
+- Suppression victoire hardcodée ("Mission du jour : ton premier post").
+- Détection couloir client-side en fallback fiable (keywords org vs ventes).
+
+**Dashboard :** phrase "Conçu pour devenir ta doublure et te décharger mentalement". Progression basée sur usage réel (Installé / 1re session / En rythme / Pilotage auto).
+
+**Bras droit proactif :**
+- Opener visite guidée à la première conversation : présente l'équipe complète + reprend l'ouverture de l'utilisateur.
+- Opener adapté selon le profil dominant (entrepreneur / salarié / étudiant / mix).
+- Profil complet injecté dans Claude : ouverture, journée type, épuisement, vision, PPSD.
+- Coaching actif quand profil vide : Claude pose la question clé ATTRACTOR au lieu de répondre à vide.
+- Colonne `memoire_cache` créée en base (était générée mais jamais sauvegardée).
+
+**Agenda :**
+- Table Supabase `todos` créée avec RLS.
+- AgendaScreen complet : CRUD, priorités (urgente/normale/basse), sections aujourd'hui/à venir, filtre en cours/terminées.
+- Accessible depuis le dashboard.
+
+**Vie des assistants :**
+- Bras droit épinglé en tête de "Mon équipe", fond charbon, rappelle l'ouverture de l'utilisateur.
+- Teasers personnalisés par agent basés sur le profil (ouverture + activité).
+- Statuts animés : dot vert pulsé sur les actifs.
+- Agents verrouillés : photo en couleur, teaser en italique, plus de grisé.
+- Modal bio enrichie : "Ce qu'il/elle ferait pour toi là" en première position.
+
+**XPAYE :** Sandbox validé (merchant ID PP-F422), doc archivée dans `context/import/SANDBOX XPAYE.txt`.
+
+**Workflow :** branche `dev` / `master` en place. Dev = tests, master = prod.
+
+---
+
+## 2026-05-31 (session 7 — déploiement live + humanisation équipe)
+
+### Attractor Assists en production + vision équipe clarifiée
+
+- App déployée live sur `assists.agenceattractor.com` via Netlify, repo `jarvis-starter-kit` sur GitHub
+- Vision équipe définitivement clarifiée : le Bras Droit (`nom_assistant`) = décharge mentale quotidienne, accessible via le FAB partout, disponible sur tous les forfaits. Les 4 employés de l'Agence Attractor (Awa, Miriam, Serge, Roland) = homologues directs des agents Jarvis (agent-commercial, community-manager, chief-of-staff, agent-daf), passifs sans Manager, proactifs avec Manager
+- Photos CI et biographies "pro mais décalées" intégrées pour les 4 agents. Modal bio au clic sur la photo (grand portrait + biographie + aperçu mode Manager)
+- Mémoire courte auto implémentée : résumé toutes les 5 réponses, stocké dans `profiles.memoire_cache`
+- Base de connaissance ATTRACTOR injectée dans chaque conversation (PPSD, AIDA/PASA, offre irrésistible, Facebook Lyle Soboro, 3 couloirs)
+- Messages Bras Droit limités : max 350 tokens, max 3 phrases par réponse
+- Login : OTP remplacé par magic link (cohérent avec SMTP), session persistante (`persistSession`, `autoRefreshToken`, `detectSessionInUrl`), instructions spam intégrées dans l'écran
+- SMTP Resend configuré, domaine `agenceattractor.com` vérifié (3 records DNS ajoutés dans Netlify)
+- 25 utilisateurs dans Supabase (migration Apps Script réussie pour 21, 4 comptes supplémentaires)
+- Terminologie définitive : "Coach" supprimé, "Bras Droit" partout. "Assistants" remplacé par "Mon équipe"
+- 30% restants à livrer : Parcours Ventes (4 modules), Parcours #1dansmoncouloir, Agenda + Todo Serge, Triggers quotidiens
+
+---
+
 ## 2026-05-30 (session 6 — architecture UX et vision produit Attractor Assists)
 
 ### Navigation, activation, agents et philosophie produit validés
