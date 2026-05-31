@@ -7,6 +7,31 @@
 
 ---
 
+## 2026-05-31 (session 8 — suite : dark mode, forfaits, référencement)
+
+### Chantiers livrés (fin de session)
+
+**Dark mode corrigé :** Overrides CSS complets ajoutés (inputs, nav bas, bg-g200, placeholders, borders). Le texte ne reste plus noir sur fond noir.
+
+**Forfaits reformulés (zéro jargon) :**
+- Découverte : "Ton bras droit personnel — gratuit pour toujours" + features humaines
+- Bras Droit Pro : "Ton bras droit qui agit à ta place" + analyse marché, rapports, actions concrètes
+- Manager : "Ta petite agence digitale à portée de main" + agents 24h/24
+
+**Bannière communauté :** Count dynamique depuis Supabase (vrais testeurs en cours). CTA changé en "Voir comment on peut t'aider". Message honnête : "Tu fais partie des premiers."
+
+**Boutons paiement désactivés :** "Bientôt disponible" (XPAYE non encore connecté). Décision : référencement avant paiements, on est en phase test.
+
+**Système de référencement complet :**
+- DB : colonnes `referral_code`, `referred_by`, `referral_count` dans profiles
+- Codes générés pour les 25 utilisateurs existants
+- Login : capture `?ref=CODE` dès l'arrivée sur l'app
+- Onboarding : crédite le parrain (+1 filleul) à la fin du tunnel
+- Profil : section "Partager et gagner" avec lien unique, compteur filleuls, bonus messages, bouton WhatsApp natif
+- Dashboard : limite messages dynamique = base (20) + (filleuls x 5)
+
+---
+
 ## 2026-05-31 (session 8 — refonte onboarding, bras droit proactif, agenda, vie des assistants)
 
 ### Chantiers livrés
