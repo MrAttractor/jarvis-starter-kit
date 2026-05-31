@@ -10,6 +10,13 @@ export function LoginScreen({ onAuthed }) {
   const [isSending, setIsSending] = useState(false);
   const refs = [useRef(), useRef(), useRef(), useRef(), useRef(), useRef()];
 
+  // Capture le code de référencement dans l'URL (?ref=XXXXXXXX)
+  useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    if (ref) localStorage.setItem('aa_ref', ref.toUpperCase());
+  });
+
   const submitEmail = async () => {
     if (!/.+@.+\..+/.test(email)) { setErr("Entre un email valide pour recevoir ton code."); return; }
     setErr(""); setIsSending(true);

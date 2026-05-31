@@ -319,6 +319,9 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
       if (!user) throw new Error("session perdue");
       if (profil) localStorage.setItem('aa_profil', profil);
 
+      // Générer le code de référencement pour ce nouvel utilisateur
+      const referralCode = user.id.replace(/-/g, '').slice(0, 8).toUpperCase();
+
       await Promise.all([
         supabase.from("profiles").update({
           prenom: prenom.trim(),
@@ -327,6 +330,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
           canal_principal: data.canal,
           ouverture: ouverture.trim(),
           onboarding_done: true,
+          referral_code: referralCode,
         }).eq("id", user.id),
         supabase.from("ppsd").upsert({
           user_id: user.id,
@@ -336,6 +340,24 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
           updated_at: new Date().toISOString(),
         }),
       ]);
+
+      // Créditer le parrain si un code de référencement est présent
+      const refCode = localStorage.getItem('aa_ref');
+      if (refCode && refCode !== referralCode) {
+        const { data: referrer } = await supabase
+          .from('profiles')
+          .select('id, referral_count')
+          .eq('referral_code', refCode)
+          .neq('id', user.id)
+          .single();
+        if (referrer) {
+          await Promise.all([
+            supabase.from('profiles').update({ referred_by: refCode }).eq('id', user.id),
+            supabase.from('profiles').update({ referral_count: (referrer.referral_count || 0) + 1 }).eq('id', referrer.id),
+          ]);
+        }
+        localStorage.removeItem('aa_ref');
+      }
     } catch {
       setSaveErr("Une erreur est survenue. Réessaie.");
     } finally {

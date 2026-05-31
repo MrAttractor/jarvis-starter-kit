@@ -23,7 +23,8 @@ export function DashboardScreen({ go, notify, profile }) {
   const planCode = profile?.plan_code     || 'decouverte';
   const initials = first ? first.slice(0, 2).toUpperCase() : 'AA';
 
-  const msgLimit  = PLAN_MSG_LIMIT[planCode] ?? null;
+  const referralBonus = (profile?.referral_count || 0) * 5;
+  const msgLimit  = PLAN_MSG_LIMIT[planCode] != null ? PLAN_MSG_LIMIT[planCode] + referralBonus : null;
   const remaining = msgLimit !== null ? Math.max(0, msgLimit - usedToday) : null;
   const streak    = gamif?.streak  ?? 0;
   const niveau    = gamif?.niveau  ?? 1;
