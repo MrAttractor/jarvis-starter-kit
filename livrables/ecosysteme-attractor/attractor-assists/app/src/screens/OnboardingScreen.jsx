@@ -58,32 +58,32 @@ const EMPATHY_SLIDES = [
 const QUESTIONS = [
   {
     id: "activite",
-    text: "C'est quoi ton activité ? En une phrase, comme tu l'expliquerais à quelqu'un dans la rue.",
-    placeholder: "Ex : je vends des tenues wax sur commande à Abidjan",
+    text: "Décris-moi une journée type — du matin au soir. Qu'est-ce que tu fais concrètement ?",
+    placeholder: "Ex : je me lève, je réponds aux commandes WhatsApp, je prépare les livraisons, je prospecte le soir...",
     multiline: true,
   },
   {
     id: "cible",
-    text: "Et tu t'adresses à qui exactement ?",
-    placeholder: "Ex : jeunes actives d'Abidjan qui veulent être stylées sans se ruiner",
+    text: "Là, en ce moment précis — tu attends quoi ? Un client, un paiement, une réponse, une décision ?",
+    placeholder: "Ex : j'attends que mon client valide le devis, j'ai 3 relances sans réponse...",
     multiline: true,
   },
   {
     id: "probleme",
-    text: "Leur plus gros problème — ce qui les empêche de dormir — c'est quoi ?",
-    placeholder: "Ce qui les freine, ce qu'elles redoutent...",
+    text: "Ce qui te prend le plus d'énergie chaque semaine — pas ce que tu fais le plus, ce qui t'épuise le plus — c'est quoi ?",
+    placeholder: "Ex : gérer les retards, tout faire seul, ne pas savoir quoi prioriser...",
     multiline: true,
   },
   {
     id: "souhait",
-    text: "Et ce qu'elles veulent vraiment, le résultat idéal si tout marchait, c'est quoi ?",
-    placeholder: "Le changement qu'elles espèrent...",
+    text: "Dans 6 mois, si tout s'est bien passé — ta journée ressemble à quoi ? Raconte-moi.",
+    placeholder: "Ex : je me lève sans stress, j'ai des clients réguliers, je délègue les tâches répétitives...",
     multiline: true,
   },
   {
     id: "canal",
-    text: "Dernière chose. Où est-ce que ta cible passe le plus de temps ?",
-    placeholder: "Facebook / Instagram / WhatsApp / TikTok...",
+    text: "Tu es dans quelle ville en ce moment ? Et tes clients, tu les trouves surtout comment ?",
+    placeholder: "Ex : Abidjan, via Facebook et le bouche-à-oreille...",
     multiline: false,
   },
 ];
@@ -308,29 +308,18 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     }
   };
 
-  // ── SAUVEGARDE + LIVRABLE ────────────────────────────────────────────────────
+  // ── SAUVEGARDE ───────────────────────────────────────────────────────────────
 
   const finalizeOnboarding = async (data) => {
     setSaving(true);
-    setPhase("livrable");
+    setPhase("bienvenue");
 
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("session perdue");
       if (profil) localStorage.setItem('aa_profil', profil);
 
-      // Sauvegarde profil + PPSD en parallèle avec génération du livrable
-      const [postResult] = await Promise.all([
-        genererLivrable(supabase, {
-          prenom,
-          activite: data.activite,
-          cible: data.cible,
-          probleme: data.probleme,
-          souhait: data.souhait,
-          canal: data.canal,
-          ouverture,
-          profil,
-        }),
+      await Promise.all([
         supabase.from("profiles").update({
           prenom: prenom.trim(),
           nom_assistant: nomAssistant.trim(),
@@ -347,16 +336,14 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
           updated_at: new Date().toISOString(),
         }),
       ]);
-
-      setLivrable(postResult);
-    } catch (err) {
-      setSaveErr("Une erreur est survenue. Réessaie ou continue.");
+    } catch {
+      setSaveErr("Une erreur est survenue. Réessaie.");
     } finally {
       setSaving(false);
     }
   };
 
-  const handleLivrableDone = () => {
+  const handleBienvenueDone = () => {
     const platform = detectPlatform();
     if (platform === 'installed' || platform === 'desktop') {
       onDone();
@@ -364,12 +351,6 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
       setInstallPlatform(platform);
       setPhase('install');
     }
-  };
-
-  const handleCopy = () => {
-    navigator.clipboard?.writeText(livrable);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
 
   // ── RENDU ────────────────────────────────────────────────────────────────────
@@ -633,64 +614,35 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     );
   }
 
-  // ACTE 3 — Premier livrable immédiat
-  if (phase === "livrable") {
+  // ACTE 3 — Bienvenue
+  if (phase === "bienvenue") {
+    const initiales = nomAssistant.slice(0, 2).toUpperCase();
     return (
       <div className="min-h-screen flex flex-col bg-sable px-6 pt-10 pb-8">
         <Logo size="sm" />
-
-        {saving ? (
-          <div className="flex-1 flex flex-col items-center justify-center gap-4 animate-[fadeUp_.3s_ease]">
-            <Spinner className="w-10 h-10" />
-            <p className="font-display font-bold text-[16px] text-charbon">
-              {nomAssistant} analyse ce que tu viens de partager…
+        <div className="flex-1 flex flex-col justify-center items-center text-center animate-[fadeUp_.4s_ease]">
+          <div className="w-20 h-20 rounded-full bg-orange flex items-center justify-center text-white font-display font-extrabold text-[26px] shadow-[0_12px_28px_-8px_rgba(242,92,5,.5)] mb-6">
+            {initiales}
+          </div>
+          <h2 className="font-display font-extrabold text-[28px] text-charbon leading-tight">
+            {nomAssistant} est prêt,<br />{prenom}.
+          </h2>
+          <p className="text-[15px] text-g700 mt-4 leading-relaxed max-w-[290px]">
+            Ton espace est configuré. On commence maintenant — une tâche à la fois.
+          </p>
+          {saveErr && (
+            <p className="mt-4 text-[12.5px] text-[#D64545] font-semibold flex items-center gap-1.5">
+              <Icon name="warn" size={14} />{saveErr}
             </p>
+          )}
+        </div>
+        {saving ? (
+          <div className="flex items-center justify-center gap-3 py-4">
+            <Spinner className="w-5 h-5" />
+            <span className="text-[13px] text-g400">Préparation en cours…</span>
           </div>
         ) : (
-          <div className="flex-1 flex flex-col animate-[fadeUp_.4s_ease]">
-            <div className="mt-5 mb-4">
-              <p className="font-display font-bold text-[18px] text-charbon leading-snug">
-                J'ai analysé ce que tu m'as dit.
-              </p>
-              <p className="text-[13.5px] text-g400 mt-1 leading-relaxed">
-                Voici ce que j'ai appris sur ta situation — et ton premier message prêt à publier.
-                Tu peux modifier, ajouter ou retirer ce que tu veux.
-              </p>
-            </div>
-
-            <Textarea
-              rows={10}
-              value={livrable}
-              onChange={e => setLivrable(e.target.value)}
-              className="bg-white rounded-[20px] border border-g200 p-5 shadow-soft text-[14.5px] text-charbon leading-relaxed resize-none w-full"
-            />
-
-            <button
-              onClick={handleCopy}
-              className="mt-3 flex items-center gap-2 text-[13px] font-bold text-orange self-start transition active:scale-95"
-            >
-              <Icon name={copied ? "check" : "copy"} size={15} />
-              {copied ? "Copié !" : "Copier"}
-            </button>
-
-            <div className="mt-5 p-4 rounded-[18px] bg-orange/8 border border-orange/15">
-              <p className="text-[14px] text-[#a23c00] leading-relaxed">
-                <b>{nomAssistant} est prêt, {prenom}.</b> La suite se construit
-                au fil de tes besoins — une tâche à la fois.
-              </p>
-            </div>
-
-            {saveErr && (
-              <p className="mt-3 text-[12.5px] text-[#D64545] font-semibold flex items-center gap-1.5">
-                <Icon name="warn" size={14} />
-                {saveErr}
-              </p>
-            )}
-          </div>
-        )}
-
-        {!saving && (
-          <Btn onClick={handleLivrableDone} className="w-full mt-6" iconRight="arrow">
+          <Btn onClick={handleBienvenueDone} className="w-full" iconRight="arrow">
             Découvrir mon espace
           </Btn>
         )}

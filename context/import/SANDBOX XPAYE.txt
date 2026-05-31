@@ -1,0 +1,51 @@
+Documentation Technique
+Intégration WebService v2 — JSON API
+Utilisez l'endpoint suivant pour initier vos paiements. Toutes les requêtes doivent être envoyées en POST avec le header Content-Type: application/json.
+
+1. Endpoint d'Initialisation
+POST https://sandbox.paiementpro.net/webservice/onlinepayment/init/curl-init.php
+2. Liste Complète des Paramètres
+Paramètre	Type	Description
+merchantId	STRING	Votre ID Marchand (ex: PP-F324).
+amount	INT	Montant de la transaction (ex: 1000).
+description	STRING	Libellé de l'achat.
+channel	STRING	Moyen de paiement (CARD, OMCIV2, MOMOCI, WAVECI, etc).
+countryCurrencyCode	STRING	Code devise (ex: 952 pour XOF).
+referenceNumber	STRING	Référence unique de votre commande.
+customerEmail	STRING	Email du client.
+customerFirstName	STRING	Prénom du client.
+customerLastname	STRING	Nom du client.
+customerPhoneNumber	STRING	Téléphone du client.
+notificationURL	URL	URL de votre Webhook (Notification silencieuse).
+returnURL	URL	URL de redirection après paiement.
+returnContext	STRING	Données additionnelles renvoyées en fin de session.
+3. Exemple de Payload JSON
+{
+  "merchantId": "PP-F324",
+  "amount": 1000,
+  "description": "Abonnement Premium",
+  "channel": "CARD",
+  "countryCurrencyCode": "952",
+  "referenceNumber": "REF-772105",
+  "customerEmail": "test@gmail.com",
+  "customerFirstName": "Ishola",
+  "customerLastname": "Lamine",
+  "customerPhoneNumber": "01234567",
+  "notificationURL": "https://votre-site.com/webhook",
+  "returnURL": "https://votre-site.com/retour",
+  "returnContext": "{\"order_id\":\"123\", \"user\":\"88\"}"
+}
+4. Réponses du Système
+✓ INITIALISATION RÉUSSIE
+{
+  "success": true,
+  "message": "Initialisation effectuée avec succès",
+  "url": "https://sandbox.paiementpro.net/sandbox.php?sessionid=7b1a...f92"
+}
+✕ ÉCHEC D'INITIALISATION
+{
+  "success": false,
+  "message": "Echec de l'initialisation : Référence déjà utilisée"
+}
+Tester notre Sandbox maintenant
+© 2025 Paiement Pro — Support Intégration

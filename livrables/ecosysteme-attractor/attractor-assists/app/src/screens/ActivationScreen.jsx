@@ -4,9 +4,21 @@ import { Logo, Btn, Input, Spinner, Icon } from '../components/ui';
 
 // Délais pour simuler la conversation en temps réel
 const DELAY_FIRST_MSG  = 600;
-const DELAY_RESEARCH   = 900;  // entre chaque étape de recherche
-const DELAY_AFTER_RES  = 700;  // après la dernière étape avant l'insight
+const DELAY_RESEARCH   = 900;
+const DELAY_AFTER_RES  = 700;
 const DELAY_VICTOIRE   = 800;
+
+// Détection couloir côté client — source de vérité, ne dépend pas de l'Edge Function
+const detectCouloir = (ouverture = '') => {
+  const t = ouverture.toLowerCase();
+  const orgKeys = ['organis', 'procéd', 'procede', 'systèm', 'system', 'structur', 'gestion', 'agence', 'équipe', 'equipe', 'déléguer', 'deleguer', 'automatiser', 'idée', 'idee', 'ranger', 'classer', 'priorit', 'planning', 'agenda', 'tâch', 'tach', 'suivi', 'projet', 'superviser', 'industrialis'];
+  return orgKeys.some(k => t.includes(k)) ? 'organisation' : 'ventes';
+};
+
+// Validation URL — refuse tout texte libre
+const isValidUrl = (str) => {
+  return /^(https?:\/\/|www\.|facebook\.com|instagram\.com|tiktok\.com|linkedin\.com|twitter\.com|x\.com|youtube\.com)/.test(str.trim().toLowerCase());
+};
 
 // ─── Bulle de message ─────────────────────────────────────────────────────────
 
@@ -97,7 +109,7 @@ export function ActivationScreen({ profile, onDone }) {
     scroll();
   };
 
-  // ── Chargement initial : appel Edge Function activation-sequence ────────────
+  // ── Chargement initial : Claude lit les données onboarding ───────────────────
 
   useEffect(() => {
     const init = async () => {
@@ -109,32 +121,34 @@ export function ActivationScreen({ profile, onDone }) {
 
         const { data, error } = await supabase.functions.invoke("activation-sequence", {
           body: {
-            prenom: profile?.prenom,
-            ouverture: profile?.ouverture,
-            activite: profile?.activite,
-            cible: ppsd?.cible,
-            probleme: ppsd?.problemes,
-            souhait: ppsd?.souhaits,
-            canal: profile?.canal_principal,
-            profil: localStorage.getItem("aa_profil") || "entrepreneur",
+            prenom:      profile?.prenom,
+            ouverture:   profile?.ouverture,
+            activite:    ppsd?.activite || profile?.activite,
+            attente:     ppsd?.attente,
+            epuisement:  ppsd?.problemes,
+            vision:      ppsd?.souhaits,
+            ville_canal: ppsd?.ville_canal || profile?.canal_principal,
           },
         });
 
-        if (error || !data) throw new Error("Erreur activation");
-        setActivation(data);
-        setStep("mirroring");
-      } catch {
-        // Fallback si l'Edge Function échoue
+        if (error || !data?.mirroring) throw new Error("Réponse vide");
+
         setActivation({
-          couloir: "ventes",
-          mirroring: `Tu m'as dit que tu voulais avancer dans ton business. Ce que j'entends derrière ça, c'est que tu as besoin d'un système qui travaille pour toi. On commence.`,
-          research_steps: ["Analyse de ton secteur...", "Comportement de ta cible...", "Canaux les plus actifs..."],
-          insight: "Je vois une activité qui a du potentiel. On va construire ensemble ce qui te manque pour passer au niveau supérieur.",
-          victoire_label: "Donne-moi un lien — ta page Facebook, ton Instagram, ou ton site.",
-          victoire_placeholder: "facebook.com/tonbusiness",
+          couloir:  data.couloir || detectCouloir(profile?.ouverture || ''),
+          mirroring: data.mirroring,
         });
-        setStep("mirroring");
+      } catch {
+        // Fallback minimaliste si l'Edge Function est inaccessible
+        const ouverture = profile?.ouverture || '';
+        setActivation({
+          couloir:  detectCouloir(ouverture),
+          mirroring: ouverture.trim()
+            ? `Tu m'as dit que tu voulais : "${ouverture.trim()}". On commence par ça.`
+            : `Dis-moi en une phrase ce que tu aimerais que je fasse pour toi.`,
+        });
       }
+
+      setStep("mirroring");
     };
     init();
   }, []);
@@ -150,28 +164,12 @@ export function ActivationScreen({ profile, onDone }) {
     return () => clearTimeout(t);
   }, [step, activationData]);
 
-  // ── Séquence de recherche ──────────────────────────────────────────────────
+  // ── Après confirmation : action directe selon couloir ─────────────────────
 
   useEffect(() => {
-    if (step !== "research" || !activationData) return;
-    const steps = activationData.research_steps || [];
-    let count = 0;
-
-    const next = () => {
-      if (count < steps.length) {
-        count++;
-        setResearchCount(count);
-        setTimeout(next, DELAY_RESEARCH);
-      } else {
-        setTimeout(() => {
-          addMsg("bot", activationData.insight);
-          const isOrg = activationData.couloir === "organisation";
-          setTimeout(() => setStep(isOrg ? "vide_tete" : "presence_ask"), DELAY_AFTER_RES);
-        }, DELAY_AFTER_RES);
-      }
-    };
-
-    const t = setTimeout(next, 400);
+    if (step !== "action" || !activationData) return;
+    const isOrg = activationData.couloir === "organisation";
+    const t = setTimeout(() => setStep(isOrg ? "vide_tete" : "victoire"), 400);
     return () => clearTimeout(t);
   }, [step]);
 
@@ -180,11 +178,11 @@ export function ActivationScreen({ profile, onDone }) {
   const handleConfirm = (confirmed) => {
     if (confirmed) {
       addMsg("me", "C'est ça.");
-      setTimeout(() => setStep("research"), 400);
+      setTimeout(() => setStep("action"), 400);
     } else {
-      addMsg("me", "Je veux autre chose.");
+      addMsg("me", "Autre chose.");
       setTimeout(() => {
-        addMsg("bot", "Pas de problème. Dis-moi ce que tu as en tête — on s'adapte à toi.");
+        addMsg("bot", "Dis-moi ce que tu as en tête — en une phrase.");
         setStep("autre_chose");
       }, 400);
     }
@@ -194,11 +192,20 @@ export function ActivationScreen({ profile, onDone }) {
     if (userInput.trim().length < 3) return;
     addMsg("me", userInput);
     setUserInput("");
-    setTimeout(() => setStep("research"), 400);
+    setTimeout(() => setStep("action"), 400);
   };
+
+  const [presenceErr, setPresenceErr] = useState("");
 
   const handlePresence = async () => {
     if (!presenceUrl.trim()) return;
+
+    if (!isValidUrl(presenceUrl)) {
+      setPresenceErr("Entre un lien valide (ex : facebook.com/tonbusiness)");
+      return;
+    }
+
+    setPresenceErr("");
     addMsg("me", presenceUrl);
     setPresenceLoading(true);
 
@@ -207,27 +214,19 @@ export function ActivationScreen({ profile, onDone }) {
         body: {
           url: presenceUrl,
           activite: profile?.activite,
-          cible: profile?.cible,
           profil_type: activationData?.couloir || "ventes",
         },
       });
 
-      setPresenceResult(data);
-      const analysisText = data
-        ? `${data.strengths}\n\n${data.gap}\n\n${data.positioning}`
-        : "J'ai regardé ta page. Il y a des choses à corriger pour mieux toucher ta cible.";
-
-      addMsg("bot", analysisText);
-
-      // Sauvegarder l'analyse présence dans le profil
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        await supabase.from("profiles").update({
-          presence_analyse: JSON.stringify(data),
-        }).eq("id", user.id);
+      if (data?.strengths) {
+        addMsg("bot", `${data.strengths}\n\n${data.gap}\n\n${data.positioning}`);
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) await supabase.from("profiles").update({ presence_analyse: JSON.stringify(data) }).eq("id", user.id);
+      } else {
+        addMsg("bot", "Je n'ai pas pu accéder à ta page. Pas de souci — on continue sans ça.");
       }
     } catch {
-      addMsg("bot", "J'ai eu du mal à accéder à ta page. Pas de souci — on continue sans ça.");
+      addMsg("bot", "Je n'ai pas pu accéder à ta page. Pas de souci — on continue sans ça.");
     }
 
     setPresenceLoading(false);
@@ -309,14 +308,6 @@ export function ActivationScreen({ profile, onDone }) {
           </Bubble>
         ))}
 
-        {/* Étapes de recherche */}
-        {step === "research" && activationData && (
-          <ResearchSteps
-            steps={activationData.research_steps}
-            visibleCount={researchCount}
-          />
-        )}
-
         {/* Zone d'action selon l'étape */}
 
         {/* Confirmation */}
@@ -355,45 +346,6 @@ export function ActivationScreen({ profile, onDone }) {
           </div>
         )}
 
-        {/* Demande de lien présence (Ventes/Visibilité) */}
-        {step === "presence_ask" && (
-          <div className="animate-[fadeUp_.3s_ease]">
-            <Bubble from="bot">
-              <p>Donne-moi un lien maintenant.</p>
-              <p className="mt-2 text-[13px] text-white/80">Ta page Facebook, ton Instagram, ou ton site. Je regarde ce que tu projettes en ce moment.</p>
-            </Bubble>
-            <div className="mt-3">
-              <Input
-                placeholder={activationData?.victoire_placeholder || "facebook.com/tonbusiness"}
-                value={presenceUrl}
-                onChange={e => setPresenceUrl(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && handlePresence()}
-                autoFocus
-              />
-              <div className="flex gap-2 mt-2.5">
-                <Btn
-                  onClick={handlePresence}
-                  className={`flex-1 ${!presenceUrl.trim() ? "opacity-40 pointer-events-none" : ""}`}
-                  iconRight="arrow"
-                >
-                  {presenceLoading ? "Analyse en cours..." : "Analyser ma présence"}
-                </Btn>
-                <button
-                  onClick={() => setStep("victoire")}
-                  className="px-4 py-3 rounded-xl text-[13px] font-semibold text-g400 border border-g200 bg-white"
-                >
-                  Passer
-                </button>
-              </div>
-              {presenceLoading && (
-                <div className="flex items-center gap-2 mt-3 text-[12.5px] text-g400">
-                  <Spinner className="w-4 h-4" />
-                  Je regarde ta page...
-                </div>
-              )}
-            </div>
-          </div>
-        )}
 
         {/* Vide-tête (Organisation) */}
         {step === "vide_tete" && (

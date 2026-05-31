@@ -48,12 +48,11 @@ export function DashboardScreen({ go, notify, profile }) {
   }, []);
 
   const milestones = [
-    { id: 1, label: 'Se connaître',       state: 'done' },
-    { id: 2, label: 'Cible PPSD',         state: ppsdDone ? 'done' : 'now' },
-    { id: 3, label: 'Offre irré.',         state: ppsdDone ? 'now' : 'todo' },
-    { id: 4, label: 'Passer à l\'action', state: 'todo' },
+    { id: 1, label: 'Installé',        state: 'done' },
+    { id: 2, label: '1re session',     state: 'done' },
+    { id: 3, label: 'En rythme',       state: streak >= 3 ? 'done' : 'now' },
+    { id: 4, label: 'Pilotage auto',   state: streak >= 7 ? 'done' : 'todo' },
   ];
-  const nowStep = milestones.find(m => m.state === 'now');
   const progPct = (milestones.filter(m => m.state === 'done').length / milestones.length) * 100;
 
   const handleAssistant = (a) => {
@@ -92,11 +91,7 @@ export function DashboardScreen({ go, notify, profile }) {
             {nomAss} · ton bras droit
           </Pill>
           <h2 className="font-display font-extrabold text-[24px] leading-[1.16] tracking-tight mt-3">
-            On avance,{' '}
-            <span style={{ textDecoration: "underline 3px rgba(255,255,255,.5)", textUnderlineOffset: "4px" }}>
-              comme nous
-            </span>.
-            {nowStep && <><br />Aujourd'hui : {nowStep.label}.</>}
+            Conçu pour devenir ta doublure et te décharger mentalement.
           </h2>
         </div>
 
@@ -161,21 +156,12 @@ export function DashboardScreen({ go, notify, profile }) {
             style={{ background: "radial-gradient(circle,rgba(242,92,5,.35),transparent 70%)" }} />
           <div className="relative">
             <span className="text-[11px] font-bold tracking-[.1em] uppercase text-orange-light">On enchaîne</span>
-            {!ppsdDone ? (
-              <>
-                <h3 className="font-display font-extrabold text-[19px] leading-snug mt-2">Sais-tu vraiment qui tu sers ?</h3>
-                <p className="text-[13px] text-white/70 mt-2 max-w-[260px] leading-relaxed">
-                  C'est la question qui change tout.{nomAss ? ` ${nomAss} t'aide à y répondre en 10 minutes.` : ''}
-                </p>
-              </>
-            ) : (
-              <>
-                <h3 className="font-display font-extrabold text-[19px] leading-snug mt-2">Monte ton offre maintenant.</h3>
-                <p className="text-[13px] text-white/70 mt-2 max-w-[260px] leading-relaxed">
-                  Tu sais qui tu sers. Il est temps de packager ce que tu vends.{nomAss ? ` ${nomAss} te guide.` : ''}
-                </p>
-              </>
-            )}
+                <h3 className="font-display font-extrabold text-[19px] leading-snug mt-2">
+              Dis à {nomAss} ce dont tu as besoin.
+            </h3>
+            <p className="text-[13px] text-white/70 mt-2 max-w-[260px] leading-relaxed">
+              Une tâche, une question, un projet — il s'adapte à toi. Maintenant.
+            </p>
             <Btn className="w-full mt-4" iconRight="arrow" onClick={() => go("conversation", { assistant: "coach" })}>
               Lancer avec {nomAss}
             </Btn>
