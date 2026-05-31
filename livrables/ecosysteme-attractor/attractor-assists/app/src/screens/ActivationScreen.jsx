@@ -380,27 +380,12 @@ export function ActivationScreen({ profile, onDone }) {
             <Bubble from="bot">
               <p className="font-bold text-charbon">{nomAssistant} est prêt, {prenom}.</p>
               <p className="mt-2">
-                {isOrg
-                  ? "On commence par documenter ta première procédure. 20 minutes. Tu n'y repenses plus jamais."
-                  : "On crée ton premier contenu optimisé — basé sur ce que ta cible cherche vraiment."
-                }
-              </p>
-              <p className="mt-2 text-[13px] text-white/80">
-                La suite se construit au fil de tes besoins.
+                Ton espace est configuré. Dis-moi ce dont tu as besoin — on commence maintenant.
               </p>
             </Bubble>
 
-            <div className="mt-4 p-4 bg-orange/8 border border-orange/15 rounded-[18px]">
-              <p className="text-[13.5px] text-[#a23c00] font-semibold">
-                {isOrg
-                  ? "Mission du jour : ta première procédure en 5 étapes."
-                  : "Mission du jour : ton premier post optimisé pour ta cible."
-                }
-              </p>
-            </div>
-
             <Btn onClick={handleVictoire} className="w-full mt-4" iconRight="arrow">
-              Lancer avec {nomAssistant}
+              Entrer dans l'app
             </Btn>
           </div>
         )}
