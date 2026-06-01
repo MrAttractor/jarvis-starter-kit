@@ -13,10 +13,12 @@ const supabase = createClient(
 );
 
 Deno.serve(async (req) => {
-  // Vérification du secret webhook
+  // Vérification du secret — header OU query param (Netlify ne supporte pas les headers custom)
   const secret = Deno.env.get("WEBHOOK_SECRET") || "";
-  const provided = req.headers.get("x-webhook-secret") || "";
-  if (secret && provided !== secret) {
+  const url = new URL(req.url);
+  const fromHeader = req.headers.get("x-webhook-secret") || "";
+  const fromQuery  = url.searchParams.get("secret") || "";
+  if (secret && fromHeader !== secret && fromQuery !== secret) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { "Content-Type": "application/json" },
