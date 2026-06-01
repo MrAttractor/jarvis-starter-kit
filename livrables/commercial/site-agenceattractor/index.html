@@ -1110,7 +1110,7 @@ footer {
           <div class="day-card" style="grid-column:span 2"><div class="day-num">Jour 7</div><div class="day-title">Vision · Coaching offert avec Mac Arthur</div></div>
         </div>
 
-        <a href="/challenge" class="btn-light" data-track="challenge_cta" target="_blank">
+        <a href="#" class="btn-light" data-track="challenge_cta" onclick="openChallengeModal();return false;">
           Démarrer le challenge — gratuit →
         </a>
       </div>
@@ -1224,7 +1224,7 @@ footer {
   <div class="footer-links">
     <a href="https://assists.agenceattractor.com" target="_blank">Attractor Assists</a>
     <a href="/consulting">Consulting</a>
-    <a href="/challenge">Challenge 7j</a>
+    <a href="#" onclick="openChallengeModal();return false;">Challenge 7j</a>
     <a href="https://www.linkedin.com/in/macarthurkouassi/" target="_blank">LinkedIn</a>
     <a href="#cgv">CGV & RGPD</a>
   </div>
@@ -1550,6 +1550,102 @@ document.querySelectorAll('.agent-card:not(.mac),.app-card').forEach(card=>{
     card.style.transform='';
   });
 });
+</script>
+
+<!-- ═══ MODAL CHALLENGE ═══ -->
+<style>
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,10,10,.75);z-index:9000;align-items:center;justify-content:center;padding:1rem;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:#fff;border-radius:16px;padding:40px 36px;max-width:440px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.25);position:relative;}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#9A938B;line-height:1;}
+.modal-tag{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--orange);text-transform:uppercase;margin-bottom:12px;}
+.modal-h2{font-size:1.5rem;font-weight:800;color:var(--charbon);margin-bottom:8px;line-height:1.2;}
+.modal-sub{font-size:14px;color:var(--g700);line-height:1.65;margin-bottom:24px;}
+.modal-field{margin-bottom:14px;}
+.modal-field label{display:block;font-size:12px;font-weight:600;color:var(--g400);letter-spacing:.05em;margin-bottom:6px;}
+.modal-field input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:12px 14px;font-size:15px;color:var(--charbon);outline:none;transition:border-color .2s;box-sizing:border-box;}
+.modal-field input:focus{border-color:var(--orange);}
+.modal-btn{width:100%;background:var(--orange);color:#fff;border:none;border-radius:8px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s;margin-top:4px;}
+.modal-btn:hover{background:var(--orange-d);}
+.modal-btn:disabled{opacity:.6;cursor:not-allowed;}
+.modal-mention{font-size:11px;color:var(--g400);text-align:center;margin-top:10px;}
+.modal-success{text-align:center;padding:8px 0;}
+.modal-success p{font-size:15px;color:var(--charbon);line-height:1.7;margin-bottom:12px;}
+</style>
+
+<div class="modal-overlay" id="challengeModal" onclick="if(event.target===this)closeChallengeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeChallengeModal()">×</button>
+    <div id="modalForm">
+      <p class="modal-tag">Challenge — 100% gratuit</p>
+      <h2 class="modal-h2">7 jours pour bâtir ton Manuel de Procédures</h2>
+      <p class="modal-sub">Entre ton prénom et ton email. Je t'envoie l'ebook de Koffi et Awa — et le challenge commence.</p>
+      <div class="modal-field">
+        <label>Ton prénom</label>
+        <input type="text" id="modalPrenom" placeholder="Ex : Koffi" autocomplete="given-name">
+      </div>
+      <div class="modal-field">
+        <label>Ton email</label>
+        <input type="email" id="modalEmail" placeholder="ton@email.com" autocomplete="email">
+      </div>
+      <button class="modal-btn" id="modalSubmitBtn" onclick="submitChallenge()">
+        Recevoir l'ebook et démarrer →
+      </button>
+      <p class="modal-mention">Gratuit. Sans spam. Tu peux te désabonner à tout moment.</p>
+    </div>
+    <div id="modalSuccess" class="modal-success" style="display:none;">
+      <p style="font-size:2rem;margin-bottom:12px;">🎉</p>
+      <p><strong>C'est parti !</strong><br>Vérifie ta boîte mail — l'ebook t'attend.<br>Le challenge s'ouvre maintenant.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const CHALLENGE_FN = "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/challenge-register";
+
+function openChallengeModal() {
+  document.getElementById('challengeModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('modalPrenom').focus(), 100);
+  if(typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', {content_name:'Challenge 7 Jours'});
+}
+
+function closeChallengeModal() {
+  document.getElementById('challengeModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+async function submitChallenge() {
+  const prenom = document.getElementById('modalPrenom').value.trim();
+  const email  = document.getElementById('modalEmail').value.trim();
+  const btn    = document.getElementById('modalSubmitBtn');
+
+  if (!prenom) { alert('Ton prénom stp'); return; }
+  if (!email || !email.includes('@')) { alert('Un email valide stp'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Envoi en cours…';
+
+  try {
+    await fetch(CHALLENGE_FN, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prenom, email, source: 'site_main' }),
+    });
+  } catch(e) { /* silencieux — on redirige quand même */ }
+
+  if(typeof fbq !== 'undefined') fbq('track', 'Lead', {content_name:'Challenge 7 Jours'});
+
+  document.getElementById('modalForm').style.display = 'none';
+  document.getElementById('modalSuccess').style.display = 'block';
+
+  setTimeout(() => {
+    closeChallengeModal();
+    window.location.href = '/challenge.html?p=' + encodeURIComponent(prenom) + '&e=' + encodeURIComponent(email);
+  }, 2000);
+}
+
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeChallengeModal(); });
 </script>
 </body>
 </html>

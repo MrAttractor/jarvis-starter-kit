@@ -7,6 +7,80 @@
 
 ---
 
+## 2026-06-01 (session 13 — redesign agenceattractor.com + infrastructure complète)
+
+### Site agenceattractor.com redesigné et déployé
+- Design light mode : fond sable/blanc, orange signature, Sora + Space Mono
+- Hero avec image entrepreneur CI, accroche "Conçu pour soulager les entreprises."
+- Chat Mac Arthur : funnel qualification 4 questions → recommandation → Apps Script
+- Section "Ce que nos clients ne font plus seuls" : 6 cartes cliquables (veille marché, relances, app 7j, contenu, finances, plan Manager), icônes Lucide SVG
+- Équipe complète : Mac Arthur (bio coach prépa mentale, duplication IA, 100 projets), Carelle (Chief of Staff, depuis 2009), Awa/Miriam/Serge/Roland/Kofi avec catchphrases fun
+- Apps métiers : J'envoie Express (mockup browser bleu + logo), MY NUGO (mockup browser + logo + lien live https://mynugo.store/), "Et bientôt ton site intelligent"
+- Challenge 7 jours : section avec 7 étapes + photo communauté (132 participants)
+- Pixel Facebook 1225122193019269 intégré : InitiateCheckout, Lead, ViewContent + tracking comportemental (scroll depth, temps, sections)
+- Déploiement GitHub Actions (peaceiris/actions-gh-pages v4) : push master → publication automatique
+- DNS GoDaddy configurés (4 A records GitHub Pages + CNAME www) → DNS check vert
+
+### Infrastructure Attractor Assists complétée
+- SQL 0009 (methode_votes) appliqué en Supabase
+- SQL 0010 (admin_chats) appliqué en Supabase + realtime activé
+- Edge Functions notify-update + notify-auto déployées sur Supabase
+- Webhook Netlify configuré : deploy succeeded → notify-update (secret query param)
+- WEBHOOK_SECRET ajouté dans Supabase Edge Functions secrets
+- Notifications auto : déploiement → notif users, sinon pensée du jour (20 extraits écrits Mac Arthur)
+- Chat admin ↔ users : interface dans AdminScreen + réponse côté user dans NotificationsScreen
+
+### Fixes Attractor Assists (session 13)
+- Profil agents : phrase coupée Pleine puissance (overflow iOS Safari corrigé), genre dynamique (champ `genre` m/f), animations entrée stagger 65ms
+
+---
+
+## 2026-06-01 (session 12 — tableau de pilotage, dark mode, bibliothèque Méthode)
+
+### Tableau de pilotage admin (livré sur master)
+- Fix critique : `last_seen` manquant dans la requête Supabase (statuts "En ligne" jamais affichés)
+- Taux d'activation affiché sous la stat Onboarding
+- Onglet Feedbacks : liste filtrée bug/besoin/autre, badge nouveaux, marquage traité
+- Clic sur un utilisateur : Sheet de détail (profil, ouverture, mémoire, activité, conversations)
+- Migration 0006 appliquée en Supabase (policy UPDATE admin feedback)
+
+### Fix dark mode (livré sur master)
+- `color: #F5F0E8` sur `.theme-dark` = couleur de base pour tout texte sans classe
+- `color-scheme: dark` pour éléments natifs (input, select)
+- Hover `bg-white` et `bg-sable` neutralisés en mode sombre
+
+### Fix login bloqué (livré sur master)
+- Bug : `loadProfile` échouait → `setPhase("login")` no-op → LoginScreen gelé sur "On prépare ton espace"
+- Fix : `loginKey` incrémenté à chaque erreur pour forcer le remount de LoginScreen
+- `supabase.rpc().catch()` remplacé par `.then(null, () => {})` (API Supabase v2)
+
+### Bibliothèque La Méthode ATTRACTOR (livré sur master)
+- Bouton "La Méthode" dans le Dashboard
+- MéthodeScreen : 5 livres, 1 disponible (Framework), 4 "Bientôt disponible"
+- Framework ATTRACTOR lu depuis markdown structuré (`public/methode/framework.md`)
+- 6 questions PPSD progressives via marqueurs `[Q:key]` dans le markdown
+  → Sauvegarde en base : ppsd.lieux_cible, problemes, peurs, souhaits, desirs, declencheurs
+- 2 questions pratiques : canal_principal + activite (profiles)
+- Bloc "Défi" : contacter un client sur ce qu'on lui a vendu
+- Champs toujours vides, réponse existante affichée en "Déjà noté" sans pré-remplir
+- 4 ebooks "Bientôt disponible" avec teaser + vote (table methode_votes, migration 0009)
+- Zéro emoji dans l'interface, badges numérotés 01-05 CSS
+- Merge dev → master, déployé en prod sur assists.agenceattractor.com
+
+### SQL à appliquer en Supabase
+- 0009_methode_votes.sql : table `methode_votes` + policies (votes ebooks)
+
+### Chantiers planifiés (prochaines sessions)
+- Tracker source d'acquisition : param `?src=` dans URL → sauvegardé dans profiles
+- Option B Méthode : extraits visuels dans les conversations (balises `[EXTRAIT:...]`)
+- Partage WhatsApp + réseaux sociaux à la fin des ebooks avec lien tracké
+- 4 autres ebooks à rédiger en markdown dans `context/import/methode-md/`
+- Système autonome feedback-to-dev (validé session 11, à implémenter)
+- Challenge 7 jours dans Attractor Assists (ChallengeScreen, agent Monsieur S.)
+- Pixel / profilage avancé après validation du trafic
+
+---
+
 ## 2026-06-01 (session 11 — WhatsApp V1, feedback, notifications, benchmark Limova)
 
 ### Benchmark stratégique : Limova.ai
