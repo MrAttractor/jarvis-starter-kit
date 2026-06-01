@@ -350,6 +350,45 @@ section { position:relative; z-index:1; padding:100px 2.5rem; }
 .app-preview-row.orange { background:rgba(242,92,5,.3); width:60%; }
 .app-preview-row.short { width:40%; }
 
+/* Mockup mini-browser */
+.mock-browser { display:flex; flex-direction:column; width:100%; height:100%; overflow:hidden; }
+.mock-bar {
+  display:flex; align-items:center; gap:8px; padding:7px 12px;
+  background:#e8e2db; flex-shrink:0;
+}
+.mock-dots { display:flex; gap:4px; }
+.mock-dots span { width:8px; height:8px; border-radius:50%; background:#d0c9c0; }
+.mock-url {
+  flex:1; background:#fff; border-radius:4px; padding:3px 8px;
+  font-family:'Space Mono',monospace; font-size:8.5px; color:#9A938B;
+  overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+}
+.mock-app-header {
+  padding:10px 14px; display:flex; align-items:center; justify-content:space-between;
+  flex-shrink:0;
+}
+.mock-app-name { font-size:12px; font-weight:800; color:#fff; letter-spacing:.03em; }
+.mock-status { font-size:9px; color:rgba(255,255,255,.7); font-weight:600; }
+.mock-body { flex:1; padding:10px 12px; display:flex; flex-direction:column; gap:6px; overflow:hidden; }
+.mock-stat-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:4px; }
+.mock-stat-box {
+  background:rgba(255,255,255,.08); border-radius:6px; padding:7px 8px; text-align:center;
+}
+.mock-stat-num { font-family:'Space Mono',monospace; font-size:14px; font-weight:700; color:#fff; line-height:1; }
+.mock-stat-lbl { font-size:8px; color:rgba(255,255,255,.45); margin-top:2px; }
+.mock-item {
+  display:flex; align-items:center; gap:8px; padding:7px 10px;
+  background:rgba(255,255,255,.06); border-radius:7px;
+}
+.mock-pill {
+  font-size:8px; font-weight:700; padding:2px 7px; border-radius:100px; flex-shrink:0;
+  letter-spacing:.04em;
+}
+.mock-pill.green { background:rgba(30,86,49,.25); color:#3DDC84; }
+.mock-pill.orange { background:rgba(242,92,5,.25); color:#F25C05; }
+.mock-pill.gray { background:rgba(255,255,255,.08); color:rgba(255,255,255,.5); }
+.mock-item-text { font-size:10px; color:rgba(255,255,255,.7); }
+
 .app-coming {
   position:absolute; top:10px; right:10px;
   background:rgba(201,168,76,.15); border:1px solid rgba(201,168,76,.3);
@@ -946,30 +985,85 @@ footer {
 
       <!-- J'envoie Express -->
       <div class="app-card" data-track="app_jenvoie">
-        <div class="app-preview" style="background:#0a0a0a;align-items:center;justify-content:center;">
-          <img src="images/logo-jenvoie.jpg" alt="J'envoie Express"
-            style="max-width:75%;max-height:110px;object-fit:contain;border-radius:8px;">
+        <div class="app-preview" style="background:#0f0d0b;padding:0;overflow:hidden;">
+          <div class="mock-browser">
+            <div class="mock-bar">
+              <div class="mock-dots"><span></span><span></span><span></span></div>
+              <div class="mock-url">demo.agenceattractor.com/jenvoie</div>
+            </div>
+            <div class="mock-app-header" style="background:#F25C05;">
+              <div>
+                <div class="mock-app-name">J'Envoie Express</div>
+                <div class="mock-status">Paris ↔ Abidjan</div>
+              </div>
+              <img src="images/logo-jenvoie.jpg" style="height:28px;border-radius:4px;object-fit:contain;">
+            </div>
+            <div class="mock-body">
+              <div class="mock-stat-row">
+                <div class="mock-stat-box"><div class="mock-stat-num">24</div><div class="mock-stat-lbl">Colis</div></div>
+                <div class="mock-stat-box"><div class="mock-stat-num">3</div><div class="mock-stat-lbl">Voyages</div></div>
+                <div class="mock-stat-box"><div class="mock-stat-num">98%</div><div class="mock-stat-lbl">Livré</div></div>
+              </div>
+              <div class="mock-item">
+                <span class="mock-pill green">Livré</span>
+                <span class="mock-item-text">Colis #1042 · Cocody, Abidjan</span>
+              </div>
+              <div class="mock-item">
+                <span class="mock-pill orange">En route</span>
+                <span class="mock-item-text">Colis #1043 · Paris 11e</span>
+              </div>
+              <div class="mock-item">
+                <span class="mock-pill gray">Prêt</span>
+                <span class="mock-item-text">Voyage du 15 juin · 12 places</span>
+              </div>
+            </div>
+          </div>
           <span class="app-live">● Live</span>
         </div>
         <div class="app-info">
           <div class="app-name">J'Envoie Express</div>
           <div class="app-sector">Livraison colis · Paris ↔ Abidjan</div>
-          <p class="app-desc">Dashboard colis, tracking GPS, voyages, CRM clients, assistant IA intégré. Livré en 7 jours, opérationnel immédiatement.</p>
+          <p class="app-desc">Dashboard colis, tracking GPS, gestion voyages, CRM clients, assistant IA intégré. Opérationnel en 7 jours.</p>
           <a href="#" class="app-link" data-track="app_jenvoie_demo">Voir la maquette →</a>
         </div>
       </div>
 
       <!-- MY NUGO -->
       <div class="app-card" data-track="app_mynugo">
-        <div class="app-preview" style="background:#0a0a0a;align-items:center;justify-content:center;flex-direction:column;gap:8px;">
-          <div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:#fff;letter-spacing:.06em;">MY NUGO</div>
-          <div style="font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.08em;">mynugo.store</div>
-          <span class="app-live" style="position:static;">● En ligne</span>
+        <div class="app-preview" style="background:#0f0d0b;padding:0;overflow:hidden;">
+          <div class="mock-browser">
+            <div class="mock-bar">
+              <div class="mock-dots"><span></span><span></span><span></span></div>
+              <div class="mock-url">mynugo.store</div>
+            </div>
+            <div class="mock-app-header" style="background:#1A1714;border-bottom:1px solid rgba(255,255,255,.06);">
+              <div>
+                <div class="mock-app-name">MY NUGO</div>
+                <div class="mock-status">Tableau de bord</div>
+              </div>
+              <span style="font-size:9px;background:rgba(61,220,132,.15);color:#3DDC84;padding:3px 8px;border-radius:100px;font-weight:700;">● En ligne</span>
+            </div>
+            <div class="mock-body">
+              <div class="mock-stat-row">
+                <div class="mock-stat-box"><div class="mock-stat-num">142</div><div class="mock-stat-lbl">Clients</div></div>
+                <div class="mock-stat-box"><div class="mock-stat-num">89%</div><div class="mock-stat-lbl">Payés</div></div>
+                <div class="mock-stat-box"><div class="mock-stat-num">12</div><div class="mock-stat-lbl">Devis</div></div>
+              </div>
+              <div class="mock-item">
+                <span class="mock-pill green">Payée</span>
+                <span class="mock-item-text">Facture #081 · 450 000 FCFA</span>
+              </div>
+              <div class="mock-item">
+                <span class="mock-pill orange">En attente</span>
+                <span class="mock-item-text">Devis #082 · 280 000 FCFA</span>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="app-info">
           <div class="app-name">MY NUGO</div>
           <div class="app-sector">Gestion commerciale · E-commerce</div>
-          <p class="app-desc">Web app complète : suivi clients, devis, facturation, base de données, reporting mensuel. Pour PME qui veulent piloter.</p>
+          <p class="app-desc">Web app complète : clients, devis, facturation, base de données, reporting. Pour PME qui veulent piloter leurs chiffres.</p>
           <a href="https://mynugo.store/" class="app-link" target="_blank" data-track="app_mynugo_live">Voir le site live →</a>
         </div>
       </div>
@@ -977,7 +1071,7 @@ footer {
       <!-- Template prochaine maquette -->
       <div class="app-card" data-track="app_next">
         <div class="app-preview" style="align-items:center;justify-content:center;flex-direction:column;gap:8px">
-          <div style="width:48px;height:48px;border-radius:14px;background:rgba(242,92,5,.1);border:1px solid rgba(242,92,5,.2);display:flex;align-items:center;justify-content:center;font-size:22px">⚡</div>
+          <div class="xp-icon" style="background:rgba(242,92,5,.1);border-color:rgba(242,92,5,.2);"><i data-lucide="zap"></i></div>
           <div style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(250,246,240,.4);letter-spacing:.1em;text-transform:uppercase">Ton secteur ici</div>
           <span class="app-coming" style="position:static;margin-top:4px">Bientôt disponible</span>
         </div>
