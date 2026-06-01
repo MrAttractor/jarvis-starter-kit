@@ -1602,6 +1602,7 @@ document.querySelectorAll('.agent-card:not(.mac),.app-card').forEach(card=>{
 
 <script>
 const CHALLENGE_FN = "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/challenge-register";
+const SUPA_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
 
 function openChallengeModal() {
   document.getElementById('challengeModal').classList.add('open');
@@ -1629,7 +1630,7 @@ async function submitChallenge() {
   try {
     await fetch(CHALLENGE_FN, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPA_ANON },
       body: JSON.stringify({ prenom, email, source: 'site_main' }),
     });
   } catch(e) { /* silencieux — on redirige quand même */ }
