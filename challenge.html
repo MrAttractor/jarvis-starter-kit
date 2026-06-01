@@ -398,6 +398,7 @@ nav{position:sticky;top:3px;z-index:190;display:flex;align-items:center;justify-
 
 <script>
 const CHALLENGE_DAY_FN = "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/challenge-day";
+const SUPA_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
 
 const urlParams = new URLSearchParams(window.location.search);
 const PRENOM = urlParams.get('p') || localStorage.getItem('challenge_prenom') || 'Entrepreneur';
@@ -487,7 +488,7 @@ async function validerEtape(jour) {
     if(EMAIL) {
       await fetch(CHALLENGE_DAY_FN, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPA_ANON },
         body: JSON.stringify(payload),
       });
     }
