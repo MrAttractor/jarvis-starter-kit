@@ -51,7 +51,12 @@ export function LoginScreen({ onAuthed }) {
       setTimeout(() => refs[0].current && refs[0].current.focus(), 100);
       return;
     }
-    onAuthed();
+    try {
+      await onAuthed();
+    } catch {
+      setStep("otp");
+      setErr("Erreur de connexion. Réessaie.");
+    }
   };
 
   const resend = async () => {

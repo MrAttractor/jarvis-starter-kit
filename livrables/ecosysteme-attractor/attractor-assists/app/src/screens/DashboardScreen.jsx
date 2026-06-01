@@ -248,6 +248,20 @@ export function DashboardScreen({ go, notify, profile }) {
           <Icon name="chevron" size={18} className="text-g300" />
         </button>
 
+        {/* La Méthode ATTRACTOR */}
+        <button onClick={() => go("methode")}
+          className="flex items-center justify-between p-4 rounded-[18px] border border-orange/25 active:scale-[.99] transition"
+          style={{ background: "linear-gradient(135deg,#fff9f5,#fff3ec)" }}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-orange/15 flex items-center justify-center text-[20px]">📖</div>
+            <div className="text-left">
+              <div className="font-display font-extrabold text-[14px] text-charbon">La Méthode ATTRACTOR</div>
+              <div className="text-[12px] text-g400 mt-0.5">5 écrits · Accès libre</div>
+            </div>
+          </div>
+          <Icon name="arrow" size={18} className="text-orange flex-shrink-0" />
+        </button>
+
         <TipCard nomAss={nomAss} go={go} />
 
         <SectionLabel action={<button onClick={() => go("assistants")} className="text-[12px] font-bold text-orange">Tout voir</button>}>

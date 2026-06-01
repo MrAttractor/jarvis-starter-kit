@@ -1,25 +1,39 @@
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { Icon, AppHeader, Card, SectionLabel, Btn, Pill, Textarea } from '../components/ui';
+import { Icon, AppHeader, Card, SectionLabel, Btn, Pill, Textarea, Sheet } from '../components/ui';
 
 const SEGMENTS = [
-  { id: 'all',        label: 'Tous les utilisateurs',   filter: () => true },
-  { id: 'decouverte', label: 'Plan Découverte',          filter: p => p.plan_code === 'decouverte' || !p.plan_code },
-  { id: 'manager',    label: 'Plan Manager',             filter: p => p.plan_code === 'manager' },
-  { id: 'ci',         label: 'Zone Côte d\'Ivoire',      filter: p => p.zone === 'CI' },
-  { id: 'eu',         label: 'Zone Europe / diaspora',   filter: p => p.zone === 'EU' },
-  { id: 'inactive',   label: 'Inactifs (7j+)',           filter: (p, today) => {
-    if (!p.last_seen) return true;
-    return (Date.now() - new Date(p.last_seen).getTime()) > 7 * 86400000;
-  }},
+  { id: 'all',        label: 'Tous les utilisateurs',  filter: () => true },
+  { id: 'incomplete', label: 'Onboarding incomplet',   filter: p => !p.onboarding_done },
+  { id: 'decouverte', label: 'Plan Découverte',        filter: p => p.plan_code === 'decouverte' || !p.plan_code },
+  { id: 'manager',    label: 'Plan Manager',           filter: p => p.plan_code === 'manager' },
+  { id: 'ci',         label: 'Zone Côte d\'Ivoire',    filter: p => p.zone === 'CI' },
+  { id: 'eu',         label: 'Zone Europe / diaspora', filter: p => p.zone === 'EU' },
+  { id: 'inactive',   label: 'Inactifs (7j+)',         filter: p => !p.last_seen || (Date.now() - new Date(p.last_seen).getTime()) > 7 * 86400000 },
 ];
 
 const NOTIF_TYPES = [
-  { id: 'info',    label: 'Info',    color: 'bg-orange/10 text-orange' },
-  { id: 'success', label: 'Succès',  color: 'bg-growth/10 text-growth' },
-  { id: 'alert',   label: 'Alerte',  color: 'bg-amber/10 text-amber' },
-  { id: 'agent',   label: 'Agent',   color: 'bg-blue-100 text-blue-600' },
+  { id: 'info',    label: 'Info',   color: 'bg-orange/10 text-orange' },
+  { id: 'success', label: 'Succès', color: 'bg-growth/10 text-growth' },
+  { id: 'alert',   label: 'Alerte', color: 'bg-amber/10 text-amber' },
+  { id: 'agent',   label: 'Agent',  color: 'bg-blue-100 text-blue-600' },
 ];
+
+const FB_FILTERS = [
+  { id: 'all',    label: 'Tous' },
+  { id: 'bug',    label: 'Bug' },
+  { id: 'besoin', label: 'Besoin' },
+  { id: 'autre',  label: 'Autre' },
+];
+
+function isOnline(last_seen) {
+  if (!last_seen) return false;
+  return (Date.now() - new Date(last_seen).getTime()) < 5 * 60 * 1000;
+}
+function isRecent(last_seen) {
+  if (!last_seen) return false;
+  return (Date.now() - new Date(last_seen).getTime()) < 30 * 60 * 1000;
+}
 
 function timeAgo(d) {
   if (!d) return '—';
@@ -31,18 +45,29 @@ function timeAgo(d) {
 }
 
 export function AdminScreen({ go, notify }) {
-  const [users, setUsers]           = useState([]);
-  const [loading, setLoading]       = useState(true);
+  const [users, setUsers]         = useState([]);
+  const [loading, setLoading]     = useState(true);
   const [newUserAlert, setNewUserAlert] = useState(null);
+  const [section, setSection]     = useState('users'); // 'users' | 'feedbacks'
 
-  // Broadcast state
-  const [bTitle, setBTitle]   = useState('');
-  const [bBody, setBBody]     = useState('');
-  const [bType, setBType]     = useState('info');
-  const [bSeg, setBSeg]       = useState('all');
+  // Détail utilisateur
+  const [selectedUser, setSelectedUser]   = useState(null);
+  const [userDetail, setUserDetail]       = useState(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+
+  // Feedbacks
+  const [feedbacks, setFeedbacks]   = useState([]);
+  const [fbLoading, setFbLoading]   = useState(false);
+  const [fbFilter, setFbFilter]     = useState('all');
+
+  // Broadcast
+  const [bTitle, setBTitle]     = useState('');
+  const [bBody, setBBody]       = useState('');
+  const [bType, setBType]       = useState('info');
+  const [bSeg, setBSeg]         = useState('all');
   const [bSending, setBSending] = useState(false);
 
-  // Filtre liste
+  // Filtres liste
   const [filterPlan, setFilterPlan] = useState('all');
   const [search, setSearch]         = useState('');
 
@@ -53,7 +78,7 @@ export function AdminScreen({ go, notify }) {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, prenom, zone, plan_code, statut, onboarding_done, created_at, referral_count')
+        .select('id, prenom, zone, plan_code, statut, onboarding_done, created_at, referral_count, last_seen')
         .order('created_at', { ascending: false });
       if (error) throw error;
       setUsers(data || []);
@@ -64,10 +89,32 @@ export function AdminScreen({ go, notify }) {
     setLoading(false);
   };
 
+  const loadFeedbacks = async () => {
+    setFbLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('feedback')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(100);
+      if (error) throw error;
+      setFeedbacks(data || []);
+    } catch (e) {
+      console.error('feedbacks', e);
+    }
+    setFbLoading(false);
+  };
+
+  const markHandled = async (id) => {
+    const { error } = await supabase.from('feedback').update({ status: 'traité' }).eq('id', id);
+    if (error) { notify('Erreur — policy update manquante ?'); return; }
+    setFeedbacks(prev => prev.map(f => f.id === id ? { ...f, status: 'traité' } : f));
+  };
+
   useEffect(() => {
     load();
+    loadFeedbacks();
 
-    // Realtime : alerte quand nouvel utilisateur
     channelRef.current = supabase
       .channel('admin-new-users')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'profiles' }, (payload) => {
@@ -86,21 +133,11 @@ export function AdminScreen({ go, notify }) {
     setBSending(true);
     try {
       const seg = SEGMENTS.find(s => s.id === bSeg);
-      const today = new Date().toISOString().slice(0, 10);
-      const targets = users.filter(u => u.onboarding_done && seg.filter(u, today));
-
+      const targets = users.filter(u => u.onboarding_done && seg.filter(u));
       if (targets.length === 0) { notify('Aucun utilisateur dans ce segment.'); setBSending(false); return; }
-
-      const inserts = targets.map(u => ({
-        user_id: u.id,
-        type:    bType,
-        titre:   bTitle.trim(),
-        corps:   bBody.trim(),
-      }));
-
+      const inserts = targets.map(u => ({ user_id: u.id, type: bType, titre: bTitle.trim(), corps: bBody.trim() }));
       const { error } = await supabase.from('notifications').insert(inserts);
       if (error) throw error;
-
       notify(`Envoyé à ${targets.length} utilisateur${targets.length > 1 ? 's' : ''} ✓`);
       setBTitle(''); setBBody('');
     } catch {
@@ -110,23 +147,52 @@ export function AdminScreen({ go, notify }) {
   };
 
   const filteredUsers = users.filter(u => {
-    const matchPlan = filterPlan === 'all' || u.plan_code === filterPlan || (filterPlan === 'decouverte' && !u.plan_code);
+    const matchPlan =
+      filterPlan === 'all'        ? true :
+      filterPlan === 'incomplete' ? !u.onboarding_done :
+      filterPlan === 'decouverte' ? (u.plan_code === 'decouverte' || !u.plan_code) :
+      u.plan_code === filterPlan;
     const matchSearch = !search || (u.prenom || '').toLowerCase().includes(search.toLowerCase());
     return matchPlan && matchSearch;
   });
 
+  const filteredFeedbacks = fbFilter === 'all'
+    ? feedbacks
+    : feedbacks.filter(f => f.type === fbFilter);
+
+  const pendingCount = feedbacks.filter(f => f.status === 'nouveau').length;
+
   const stats = {
-    total:    users.length,
+    total:     users.length,
     onboarded: users.filter(u => u.onboarding_done).length,
-    manager:  users.filter(u => u.plan_code === 'manager').length,
-    newWeek:  users.filter(u => u.created_at && (Date.now() - new Date(u.created_at).getTime()) < 7 * 86400000).length,
+    online:    users.filter(u => isOnline(u.last_seen)).length,
+    newWeek:   users.filter(u => u.created_at && (Date.now() - new Date(u.created_at).getTime()) < 7 * 86400000).length,
+    activRate: users.length > 0 ? Math.round(users.filter(u => u.onboarding_done).length / users.length * 100) : 0,
+  };
+
+  const getUserName = (user_id) => users.find(u => u.id === user_id)?.prenom || '—';
+
+  const openDetail = async (u) => {
+    setSelectedUser(u);
+    setUserDetail(null);
+    setDetailLoading(true);
+    try {
+      const [{ data: profile }, { count }] = await Promise.all([
+        supabase.from('profiles').select('*').eq('id', u.id).single(),
+        supabase.from('conversations').select('*', { count: 'exact', head: true }).eq('user_id', u.id),
+      ]);
+      setUserDetail({ ...profile, conv_count: count ?? null });
+    } catch (e) {
+      console.error(e);
+    }
+    setDetailLoading(false);
   };
 
   return (
+    <>
     <div className="min-h-full bg-sable pb-6">
       <AppHeader title="Pilotage" sub="Vue admin — confidentiel" onBack={() => go('profil')} />
 
-      {/* Alerte nouvel utilisateur */}
       {newUserAlert && (
         <div className="mx-[18px] mb-3 flex items-center gap-3 bg-growth text-white px-4 py-3 rounded-[14px] shadow-lg animate-[fadeUp_.3s_ease]">
           <Icon name="user" size={18} />
@@ -139,10 +205,10 @@ export function AdminScreen({ go, notify }) {
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3">
           {[
-            { label: 'Total inscrits',    val: stats.total,     icon: 'user',   tone: 'bg-orange/10 text-orange' },
-            { label: 'Ont fini l\'onboarding', val: stats.onboarded, icon: 'check', tone: 'bg-growth/10 text-growth' },
-            { label: 'Plan Manager',      val: stats.manager,   icon: 'bolt',   tone: 'bg-amber/10 text-amber' },
-            { label: 'Nouveaux (7j)',     val: stats.newWeek,   icon: 'trend',  tone: 'bg-info/10 text-info' },
+            { label: 'Total inscrits',      val: stats.total,     icon: 'user',  tone: 'bg-orange/10 text-orange',       sub: null },
+            { label: 'Onboarding terminé',  val: stats.onboarded, icon: 'check', tone: 'bg-growth/10 text-growth',       sub: stats.total > 0 ? `${stats.activRate}% d'activation` : null },
+            { label: 'En ligne maintenant', val: stats.online,    icon: 'bolt',  tone: 'bg-[#25D366]/10 text-[#25D366]', sub: null },
+            { label: 'Nouveaux (7j)',        val: stats.newWeek,   icon: 'trend', tone: 'bg-info/10 text-info',           sub: null },
           ].map(s => (
             <Card key={s.label} className="p-4 flex items-center gap-3">
               <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${s.tone}`}>
@@ -151,6 +217,7 @@ export function AdminScreen({ go, notify }) {
               <div>
                 <div className="font-display font-extrabold text-[22px] leading-none">{loading ? '…' : s.val}</div>
                 <div className="text-[11px] text-g400 mt-0.5 leading-tight">{s.label}</div>
+                {s.sub && <div className="text-[10px] text-g300 mt-0.5">{s.sub}</div>}
               </div>
             </Card>
           ))}
@@ -159,7 +226,6 @@ export function AdminScreen({ go, notify }) {
         {/* Broadcast */}
         <SectionLabel>Envoyer un message</SectionLabel>
         <Card className="p-4 flex flex-col gap-3">
-          {/* Type */}
           <div className="flex gap-2 flex-wrap">
             {NOTIF_TYPES.map(t => (
               <button key={t.id} onClick={() => setBType(t.id)}
@@ -169,7 +235,6 @@ export function AdminScreen({ go, notify }) {
             ))}
           </div>
 
-          {/* Segment */}
           <select value={bSeg} onChange={e => setBSeg(e.target.value)}
             className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[14px] text-charbon outline-none focus:border-orange transition">
             {SEGMENTS.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
@@ -178,79 +243,244 @@ export function AdminScreen({ go, notify }) {
           <input value={bTitle} onChange={e => setBTitle(e.target.value)} placeholder="Titre du message"
             className="w-full bg-white border-[1.5px] border-g200 rounded-xl px-4 py-3 text-[14.5px] outline-none focus:border-orange transition" />
 
-          <Textarea rows={3} value={bBody} onChange={e => setBBody(e.target.value)}
-            placeholder="Corps du message…" />
+          <Textarea rows={3} value={bBody} onChange={e => setBBody(e.target.value)} placeholder="Corps du message…" />
 
-          {(bSeg !== 'all') && (
+          {bSeg !== 'all' && (
             <p className="text-[12px] text-g400">
-              Cible estimée : <b className="text-charbon">{users.filter(u => {
-                const seg = SEGMENTS.find(s => s.id === bSeg);
-                return u.onboarding_done && seg.filter(u);
-              }).length} utilisateurs</b>
+              Cible estimée : <b className="text-charbon">
+                {users.filter(u => u.onboarding_done && SEGMENTS.find(s => s.id === bSeg).filter(u)).length} utilisateurs
+              </b>
             </p>
           )}
 
           <Btn onClick={sendBroadcast} disabled={!bTitle.trim() || !bBody.trim() || bSending} className="w-full" icon="send">
-            {bSending ? 'Envoi en cours…' : `Envoyer la notification`}
+            {bSending ? 'Envoi en cours…' : 'Envoyer la notification'}
           </Btn>
         </Card>
 
-        {/* Liste utilisateurs */}
-        <SectionLabel>
-          Utilisateurs
-          <span className="ml-2 text-[11px] font-normal text-g400">({filteredUsers.length})</span>
-        </SectionLabel>
-
-        {/* Filtres */}
-        <div className="flex gap-2 overflow-x-auto pb-1 -mx-[18px] px-[18px]" style={{ scrollbarWidth: 'none' }}>
-          {[['all','Tous'],['decouverte','Découverte'],['manager','Manager']].map(([k,l]) => (
-            <button key={k} onClick={() => setFilterPlan(k)}
-              className={`flex-shrink-0 px-3.5 py-2 rounded-full text-[12.5px] font-bold border-[1.5px] transition ${filterPlan === k ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
-              {l}
-            </button>
-          ))}
-        </div>
-
-        <div className="bg-white border border-g200 rounded-xl px-4 py-3 flex items-center gap-2">
-          <Icon name="target" size={16} className="text-g400" />
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher un prénom…"
-            className="flex-1 text-[14px] outline-none bg-transparent placeholder:text-g400" />
-        </div>
-
-        {loading ? (
-          <div className="py-8 text-center text-[13px] text-g400">Chargement…</div>
-        ) : (
-          <div className="flex flex-col gap-2">
-            {filteredUsers.map(u => (
-              <Card key={u.id} className="px-4 py-3 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-orange/15 flex items-center justify-center font-display font-extrabold text-[13px] text-orange flex-shrink-0">
-                  {(u.prenom || '?').slice(0, 2).toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-bold text-[14px] truncate">{u.prenom || '(sans prénom)'}</div>
-                  <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                    <span className="text-[11px] text-g400">{u.zone || '—'}</span>
-                    <span className="text-g300">·</span>
-                    <span className="text-[11px] text-g400">{timeAgo(u.created_at)}</span>
-                    {u.referral_count > 0 && <span className="text-[11px] text-growth font-bold">{u.referral_count} filleuls</span>}
-                  </div>
-                </div>
-                <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                  <Pill tone={u.plan_code === 'manager' ? 'amber' : u.plan_code === 'brasdroit' ? 'growth' : 'neutral'}
-                    className="text-[10px]">
-                    {u.plan_code || 'découverte'}
-                  </Pill>
-                  {!u.onboarding_done && <span className="text-[10px] text-g400">onboarding incomplet</span>}
-                </div>
-              </Card>
-            ))}
-            {filteredUsers.length === 0 && (
-              <p className="text-center text-[13px] text-g400 py-6">Aucun utilisateur trouvé.</p>
+        {/* Onglets */}
+        <div className="flex gap-2">
+          <button onClick={() => setSection('users')}
+            className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold border-[1.5px] transition ${section === 'users' ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
+            Utilisateurs ({filteredUsers.length})
+          </button>
+          <button onClick={() => setSection('feedbacks')}
+            className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold border-[1.5px] transition relative ${section === 'feedbacks' ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
+            Feedbacks
+            {pendingCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#D64545] text-white text-[10px] font-extrabold flex items-center justify-center">
+                {pendingCount}
+              </span>
             )}
-          </div>
+          </button>
+        </div>
+
+        {/* ── Section Utilisateurs ── */}
+        {section === 'users' && (
+          <>
+            <div className="flex gap-2 overflow-x-auto pb-1 -mx-[18px] px-[18px]" style={{ scrollbarWidth: 'none' }}>
+              {[['all','Tous'],['incomplete','Incomplet'],['decouverte','Découverte'],['manager','Manager']].map(([k,l]) => (
+                <button key={k} onClick={() => setFilterPlan(k)}
+                  className={`flex-shrink-0 px-3.5 py-2 rounded-full text-[12.5px] font-bold border-[1.5px] transition ${filterPlan === k ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
+                  {l}
+                </button>
+              ))}
+            </div>
+
+            <div className="bg-white border border-g200 rounded-xl px-4 py-3 flex items-center gap-2">
+              <Icon name="target" size={16} className="text-g400" />
+              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher un prénom…"
+                className="flex-1 text-[14px] outline-none bg-transparent placeholder:text-g400" />
+            </div>
+
+            {loading ? (
+              <div className="py-8 text-center text-[13px] text-g400">Chargement…</div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {filteredUsers.map(u => {
+                  const online = isOnline(u.last_seen);
+                  const recent = isRecent(u.last_seen);
+                  return (
+                    <Card key={u.id} onClick={() => openDetail(u)} className={`px-4 py-3 flex items-center gap-3 cursor-pointer active:scale-[.99] transition ${online ? 'border-[#25D366]/40' : ''}`}>
+                      <div className="relative flex-shrink-0">
+                        <div className="w-9 h-9 rounded-full bg-orange/15 flex items-center justify-center font-display font-extrabold text-[13px] text-orange">
+                          {(u.prenom || '?').slice(0, 2).toUpperCase()}
+                        </div>
+                        {online  && <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-[#25D366] border-2 border-white" />}
+                        {!online && recent && <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-amber border-2 border-white" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-[14px] truncate">{u.prenom || '(sans prénom)'}</div>
+                        <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                          <span className="text-[11px] text-g400">{u.zone || '—'}</span>
+                          <span className="text-g300">·</span>
+                          <span className={`text-[11px] font-medium ${online ? 'text-[#25D366]' : recent ? 'text-amber' : 'text-g400'}`}>
+                            {online ? 'En ligne' : u.last_seen ? timeAgo(u.last_seen) : 'Jamais connecté'}
+                          </span>
+                          {u.referral_count > 0 && <span className="text-[11px] text-growth font-bold">{u.referral_count} filleuls</span>}
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                        <Pill tone={u.plan_code === 'manager' ? 'amber' : u.plan_code === 'brasdroit' ? 'growth' : 'neutral'} className="text-[10px]">
+                          {u.plan_code || 'découverte'}
+                        </Pill>
+                        {!u.onboarding_done && <span className="text-[10px] text-[#D64545] font-semibold">incomplet</span>}
+                      </div>
+                    </Card>
+                  );
+                })}
+                {filteredUsers.length === 0 && (
+                  <p className="text-center text-[13px] text-g400 py-6">Aucun utilisateur trouvé.</p>
+                )}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ── Section Feedbacks ── */}
+        {section === 'feedbacks' && (
+          <>
+            <div className="flex gap-2 overflow-x-auto pb-1 -mx-[18px] px-[18px]" style={{ scrollbarWidth: 'none' }}>
+              {FB_FILTERS.map(f => (
+                <button key={f.id} onClick={() => setFbFilter(f.id)}
+                  className={`flex-shrink-0 px-3.5 py-2 rounded-full text-[12.5px] font-bold border-[1.5px] transition ${fbFilter === f.id ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
+                  {f.label}
+                </button>
+              ))}
+            </div>
+
+            {fbLoading ? (
+              <div className="py-8 text-center text-[13px] text-g400">Chargement…</div>
+            ) : filteredFeedbacks.length === 0 ? (
+              <p className="text-center text-[13px] text-g400 py-8">Aucun feedback pour l'instant.</p>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {filteredFeedbacks.map(fb => {
+                  const ctx    = fb.context || {};
+                  const isPending = fb.status === 'nouveau';
+                  const typeStyle =
+                    fb.type === 'bug'    ? 'bg-red-100 text-red-600' :
+                    fb.type === 'besoin' ? 'bg-blue-100 text-blue-600' :
+                                           'bg-g100 text-g500';
+                  return (
+                    <Card key={fb.id} className={`px-4 py-3 flex flex-col gap-2 ${isPending ? 'border-orange/30' : 'opacity-60'}`}>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-2 flex-wrap min-w-0">
+                          <span className={`px-2 py-0.5 rounded-full text-[11px] font-bold flex-shrink-0 ${typeStyle}`}>{fb.type}</span>
+                          <span className="text-[12px] font-bold text-charbon truncate">{getUserName(fb.user_id)}</span>
+                          <span className="text-[11px] text-g400 flex-shrink-0">{timeAgo(fb.created_at)}</span>
+                        </div>
+                        {isPending ? (
+                          <button onClick={() => markHandled(fb.id)}
+                            className="flex-shrink-0 text-[11px] font-bold text-growth border border-growth/40 rounded-full px-2.5 py-1 hover:bg-growth/10 transition">
+                            Traité
+                          </button>
+                        ) : (
+                          <span className="text-[10px] text-g400 font-medium flex-shrink-0">traité</span>
+                        )}
+                      </div>
+                      <p className="text-[13px] text-charbon leading-snug">{fb.message}</p>
+                      {ctx.agent_id && (
+                        <p className="text-[11px] text-g400">
+                          Agent : {ctx.agent_id}{ctx.nb_messages ? ` · ${ctx.nb_messages} msg` : ''}
+                        </p>
+                      )}
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
+          </>
         )}
 
       </div>
+    </div>
+
+    {/* Sheet détail utilisateur */}
+    {selectedUser && (
+      <Sheet title={userDetail?.prenom || selectedUser.prenom || 'Utilisateur'} onClose={() => setSelectedUser(null)}>
+        {detailLoading || !userDetail ? (
+          <div className="py-10 text-center text-[13px] text-g400">Chargement…</div>
+        ) : (
+          <div className="flex flex-col gap-5">
+
+            {/* En-tête */}
+            <div className="flex items-center gap-3">
+              <div className="w-14 h-14 rounded-full bg-orange/15 flex items-center justify-center font-display font-extrabold text-[20px] text-orange flex-shrink-0">
+                {(userDetail.prenom || '?').slice(0, 2).toUpperCase()}
+              </div>
+              <div>
+                <div className="font-display font-extrabold text-[18px]">{userDetail.prenom || '—'}</div>
+                <div className="flex items-center gap-2 mt-1 flex-wrap">
+                  <Pill tone={userDetail.plan_code === 'manager' ? 'amber' : userDetail.plan_code === 'brasdroit' ? 'growth' : 'neutral'}>
+                    {userDetail.plan_code || 'découverte'}
+                  </Pill>
+                  <span className="text-[12px] text-g400">{userDetail.zone || '—'}</span>
+                  {userDetail.role === 'admin' && (
+                    <span className="text-[11px] font-bold text-orange bg-orange/10 px-2 py-0.5 rounded-full">admin</span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Activité */}
+            <div>
+              <p className="text-[11px] font-bold text-g400 uppercase tracking-wide mb-2">Activité</p>
+              <div className="flex flex-col gap-1.5">
+                <DetailRow label="Inscrit" value={userDetail.created_at ? new Date(userDetail.created_at).toLocaleDateString('fr-FR') : '—'} />
+                <DetailRow label="Dernière connexion" value={userDetail.last_seen ? timeAgo(userDetail.last_seen) : 'Jamais'} />
+                <DetailRow label="Onboarding" value={userDetail.onboarding_done ? 'Terminé' : 'Incomplet'} valueColor={userDetail.onboarding_done ? 'text-growth' : 'text-[#D64545]'} />
+                <DetailRow label="Activation" value={userDetail.activation_done ? 'Faite' : 'Non faite'} valueColor={userDetail.activation_done ? 'text-growth' : 'text-g400'} />
+                {userDetail.conv_count !== null && <DetailRow label="Conversations" value={String(userDetail.conv_count)} />}
+                {userDetail.referral_count > 0 && <DetailRow label="Filleuls" value={`${userDetail.referral_count} (code : ${userDetail.referral_code || '—'})`} />}
+              </div>
+            </div>
+
+            {/* Profil */}
+            {(userDetail.activite || userDetail.canal_principal) && (
+              <div>
+                <p className="text-[11px] font-bold text-g400 uppercase tracking-wide mb-2">Profil</p>
+                <div className="flex flex-col gap-1.5">
+                  {userDetail.activite && <DetailRow label="Activité" value={userDetail.activite} />}
+                  {userDetail.canal_principal && <DetailRow label="Canal principal" value={userDetail.canal_principal} />}
+                  {userDetail.nom_assistant && <DetailRow label="Nom assistant" value={userDetail.nom_assistant} />}
+                </div>
+              </div>
+            )}
+
+            {/* Ouverture */}
+            {userDetail.ouverture && (
+              <div>
+                <p className="text-[11px] font-bold text-g400 uppercase tracking-wide mb-2">Question d'ouverture</p>
+                <div className="bg-sable rounded-xl px-4 py-3 text-[13px] text-charbon leading-relaxed italic">
+                  "{userDetail.ouverture}"
+                </div>
+              </div>
+            )}
+
+            {/* Mémoire */}
+            {userDetail.memoire_cache && (
+              <div>
+                <p className="text-[11px] font-bold text-g400 uppercase tracking-wide mb-2">Ce que l'assistant sait</p>
+                <div className="bg-sable rounded-xl px-4 py-3 text-[12.5px] text-charbon leading-relaxed max-h-[160px] overflow-y-auto">
+                  {userDetail.memoire_cache}
+                </div>
+              </div>
+            )}
+
+          </div>
+        )}
+      </Sheet>
+    )}
+    </>
+  );
+}
+
+function DetailRow({ label, value, valueColor = 'text-charbon' }) {
+  return (
+    <div className="flex items-start justify-between gap-3">
+      <span className="text-[12.5px] text-g400 flex-shrink-0">{label}</span>
+      <span className={`text-[12.5px] font-medium text-right ${valueColor}`}>{value}</span>
     </div>
   );
 }
