@@ -261,11 +261,11 @@ function AgentBioModal({ a, profile, onClose, onAction }) {
 
           {a.proactif && (
             <div className="rounded-[16px] overflow-hidden border border-orange/20">
-              <div className="bg-orange/8 px-4 py-2.5 flex items-center gap-2">
-                <Icon name="bolt" size={14} className="text-orange" />
-                <p className="text-[11.5px] font-bold text-orange uppercase tracking-wider">Pleine puissance — Plan Manager</p>
+              <div className="bg-orange/8 px-4 py-2.5 flex items-start gap-2">
+                <Icon name="bolt" size={14} className="text-orange flex-shrink-0 mt-0.5" />
+                <p className="text-[11.5px] font-bold text-orange uppercase tracking-wider leading-snug">Pleine puissance · Plan Manager</p>
               </div>
-              <div className="bg-white px-4 py-3">
+              <div className="bg-white px-4 py-3.5">
                 <p className="text-[13.5px] text-charbon leading-relaxed">{a.proactif}</p>
               </div>
             </div>
