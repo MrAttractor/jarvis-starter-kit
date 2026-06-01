@@ -12,11 +12,12 @@ const CAPACITY_MSG = {
 };
 
 export function DashboardScreen({ go, notify, profile }) {
-  const [gamif, setGamif]           = useState(null);
-  const [usedToday, setUsedToday]   = useState(0);
-  const [ppsdDone, setPpsdDone]     = useState(false);
+  const [gamif, setGamif]             = useState(null);
+  const [usedToday, setUsedToday]     = useState(0);
+  const [ppsdDone, setPpsdDone]       = useState(false);
   const [lockedSheet, setLockedSheet] = useState(null);
-  const [userCount, setUserCount]   = useState(null);
+  const [userCount, setUserCount]     = useState(null);
+  const [unreadNotifs, setUnreadNotifs] = useState(0);
 
   const first    = profile?.prenom        || '';
   const nomAss   = profile?.nom_assistant || 'Attractor';
@@ -36,16 +37,18 @@ export function DashboardScreen({ go, notify, profile }) {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
         const today = new Date().toISOString().slice(0, 10);
-        const [gamifRes, usageRes, ppsdRes, countRes] = await Promise.all([
+        const [gamifRes, usageRes, ppsdRes, countRes, notifsRes] = await Promise.all([
           supabase.from('gamification').select('streak,niveau,xp').eq('user_id', user.id).maybeSingle(),
           supabase.from('usage_daily').select('nb_messages').eq('user_id', user.id).eq('jour', today).maybeSingle(),
           supabase.from('ppsd').select('user_id').eq('user_id', user.id).maybeSingle(),
           supabase.rpc('get_user_count'),
+          supabase.from('notifications').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('lu', false),
         ]);
         if (gamifRes.data) setGamif(gamifRes.data);
         if (usageRes.data) setUsedToday(usageRes.data.nb_messages);
         if (ppsdRes.data)  setPpsdDone(true);
         if (countRes.data) setUserCount(countRes.data);
+        setUnreadNotifs(notifsRes.count || 0);
       } catch {}
     };
     load();
@@ -85,9 +88,19 @@ export function DashboardScreen({ go, notify, profile }) {
               </div>
             </div>
           </button>
-          {streak > 0 && (
-            <Pill tone="white" icon="flame" className="backdrop-blur-sm !py-2">{streak} jours</Pill>
-          )}
+          <div className="flex items-center gap-2">
+            {streak > 0 && (
+              <Pill tone="white" icon="flame" className="backdrop-blur-sm !py-2">{streak} jours</Pill>
+            )}
+            <button onClick={() => go("notifications")} className="relative w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center active:scale-95 transition">
+              <Icon name="bolt" size={18} className="text-white" />
+              {unreadNotifs > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] rounded-full bg-[#FF3B30] border-2 border-transparent flex items-center justify-center text-[10px] font-extrabold text-white px-1">
+                  {unreadNotifs > 9 ? '9+' : unreadNotifs}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
 
         <div className="relative mt-6">

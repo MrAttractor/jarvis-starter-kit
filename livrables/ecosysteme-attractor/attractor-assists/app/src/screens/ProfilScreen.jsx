@@ -133,7 +133,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
           <ToggleRow icon="moon" label="Mode sombre" on={dark} onClick={() => setDark(!dark)} />
           <NavRow icon="medal" label="Mes paliers & forfait" onClick={() => go('paliers')} />
           {canInstall && <NavRow icon="bolt" label="Installer l'app sur mon téléphone" onClick={() => go('install')} />}
-          <NavRow icon="settings" label="Notifications" onClick={() => notify('Bientôt disponible')} />
+          <NavRow icon="settings" label="Notifications" onClick={() => go('notifications')} />
           <NavRow icon="flag" label="Un bug ou une idée ?" onClick={() => setFeedbackOpen(true)} last />
         </Card>
 
