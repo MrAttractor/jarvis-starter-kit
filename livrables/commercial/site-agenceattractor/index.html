@@ -847,6 +847,23 @@ footer {
         </div>
       </div>
 
+      <!-- Carelle -->
+      <div class="agent-card" data-track="agent_carelle" style="transition-delay:.4s">
+        <div class="agent-photo" style="background:linear-gradient(135deg,#2a1f1a,#1A1714);display:flex;align-items:center;justify-content:center;">
+          <div style="width:80px;height:80px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:#fff;box-shadow:0 0 40px rgba(242,92,5,.3);">CA</div>
+        </div>
+        <div class="agent-info">
+          <div class="agent-name">Carelle</div>
+          <div class="agent-role">Chief of Staff · Équipe fondatrice</div>
+          <p style="font-size:11px;color:var(--orange);font-style:italic;margin-bottom:.5rem;">"Elle était là quand le fondateur se cherchait encore."</p>
+          <p class="agent-desc">Née à Abidjan, toute sa vie en France. Méticuleuse, courageuse, avec un regard critique qui n'épargne personne — pas même Mac Arthur. Elle est dans l'aventure depuis 2009. Rien ne lui échappe.</p>
+          <div class="agent-status" style="color:var(--gold);">
+            <span style="width:7px;height:7px;border-radius:50%;background:var(--gold);display:inline-block;margin-right:6px;"></span>
+            Depuis 2009
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1168,8 +1185,20 @@ window.addEventListener('scroll',()=>{
 
 /* ── Intersection Observer — révélations ── */
 const io = new IntersectionObserver(es=>{
-  es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
-},{threshold:.12,rootMargin:'0px 0px -50px 0px'});
+  es.forEach(e=>{
+    if(!e.isIntersecting) return;
+    e.target.classList.add('visible');
+    // Les expertise-card ont opacity/transform en inline style → on force via JS
+    if(e.target.classList.contains('expertise-card')) {
+      const delay = parseFloat(e.target.style.transitionDelay || '0') * 1000;
+      setTimeout(()=>{
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }, delay);
+    }
+    io.unobserve(e.target);
+  });
+},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.agent-card,.app-card,.step,.testi-card,.expertise-card').forEach(el=>io.observe(el));
 
 // Hover sur expertise cards
