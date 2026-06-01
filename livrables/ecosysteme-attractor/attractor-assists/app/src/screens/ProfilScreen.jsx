@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Card, Pill, Field, Input, SectionLabel, AppHeader, Icon, Btn, Spinner } from '../components/ui';
+import { Card, Pill, Field, Input, SectionLabel, AppHeader, Icon, Btn, Spinner, Sheet, Textarea } from '../components/ui';
 import { detectPlatform } from './InstallScreen';
 
 export function ProfilScreen({ go, notify, dark, setDark, profile }) {
@@ -9,7 +9,11 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
   const [prenom, setPrenom] = useState(profile?.prenom      || '');
   const [nomAss, setNomAss] = useState(profile?.nom_assistant || 'Attractor');
   const [email, setEmail]   = useState('');
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving]           = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [feedbackType, setFeedbackType] = useState('bug');
+  const [feedbackText, setFeedbackText] = useState('');
+  const [feedbackSending, setFeedbackSending] = useState(false);
 
   const canInstall = !['installed', 'desktop'].includes(detectPlatform());
   const tons       = ['Chaleureux', 'Direct', 'Fun & rythmé', 'Pro'];
@@ -23,6 +27,29 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
       if (user?.email) setEmail(user.email);
     });
   }, []);
+
+  const sendFeedback = async () => {
+    if (!feedbackText.trim()) return;
+    setFeedbackSending(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase.from('feedback').insert({
+          user_id: user.id,
+          type:    feedbackType,
+          message: feedbackText.trim(),
+          context: { screen: 'profil', plan: profile?.plan_code, prenom: profile?.prenom },
+        });
+        setFeedbackOpen(false);
+        setFeedbackText('');
+        notify('Merci, c\'est bien reçu !');
+      }
+    } catch {
+      notify('Erreur lors de l\'envoi');
+    } finally {
+      setFeedbackSending(false);
+    }
+  };
 
   const save = async () => {
     setSaving(true);
@@ -106,8 +133,33 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
           <ToggleRow icon="moon" label="Mode sombre" on={dark} onClick={() => setDark(!dark)} />
           <NavRow icon="medal" label="Mes paliers & forfait" onClick={() => go('paliers')} />
           {canInstall && <NavRow icon="bolt" label="Installer l'app sur mon téléphone" onClick={() => go('install')} />}
-          <NavRow icon="settings" label="Notifications" onClick={() => notify('Bientôt disponible')} last />
+          <NavRow icon="settings" label="Notifications" onClick={() => notify('Bientôt disponible')} />
+          <NavRow icon="flag" label="Un bug ou une idée ?" onClick={() => setFeedbackOpen(true)} last />
         </Card>
+
+        {feedbackOpen && (
+          <Sheet title="Un bug ou une idée ?" onClose={() => setFeedbackOpen(false)}>
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-2">
+                {[['bug', 'Un bug'], ['besoin', 'Une idée']].map(([k, l]) => (
+                  <button key={k} onClick={() => setFeedbackType(k)}
+                    className={`flex-1 py-3 rounded-xl text-[13.5px] font-bold border-[1.5px] transition ${feedbackType === k ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
+                    {l}
+                  </button>
+                ))}
+              </div>
+              <Textarea
+                rows={4}
+                value={feedbackText}
+                onChange={e => setFeedbackText(e.target.value)}
+                placeholder={feedbackType === 'bug' ? "Décris ce qui ne fonctionne pas…" : "Qu'est-ce qui manque ou pourrait être mieux ?"}
+              />
+              <Btn onClick={sendFeedback} disabled={!feedbackText.trim() || feedbackSending} className="w-full">
+                {feedbackSending ? 'Envoi…' : 'Envoyer'}
+              </Btn>
+            </div>
+          </Sheet>
+        )}
 
         <button onClick={() => go('logout')}
           className="w-full py-3.5 text-[14px] font-bold text-[#D64545] rounded-xl hover:bg-[#D64545]/8 transition">

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { MOCK } from '../data';
-import { Icon, AssistGlyph, TypingDots, Card, Pill } from '../components/ui';
+import { Icon, AssistGlyph, TypingDots, Card, Pill, Sheet, Textarea } from '../components/ui';
 
 // ─── Openers par agent ───────────────────────────────────────────────────────
 
@@ -129,11 +129,13 @@ export function ConversationScreen({ go, notify, params, profile }) {
     ? buildCoachOpener(profile, isLocked ? a.name : nomAss)
     : (OPENERS_AGENTS[a.id] || OPENERS_AGENTS.awa)(first, profile);
 
-  const [msgs, setMsgs]     = useState([{ from: "bot", text: opener }]);
-  const [typing, setTyping] = useState(false);
-  const [input, setInput]   = useState("");
-  const [ppsd, setPpsd]     = useState(null);
-  const [userId, setUserId] = useState(null);
+  const [msgs, setMsgs]           = useState([{ from: "bot", text: opener }]);
+  const [typing, setTyping]       = useState(false);
+  const [input, setInput]         = useState("");
+  const [ppsd, setPpsd]           = useState(null);
+  const [userId, setUserId]       = useState(null);
+  const [flagOpen, setFlagOpen]   = useState(false);
+  const [flagText, setFlagText]   = useState("");
   const scroller            = useRef();
   const prefillSent         = useRef(false);
   const sessionId           = useRef(`session-${Date.now()}`);
@@ -177,6 +179,20 @@ export function ConversationScreen({ go, notify, params, profile }) {
       return () => clearTimeout(t);
     }
   }, []);
+
+  const sendFlag = async () => {
+    if (!flagText.trim() || !userId) return;
+    try {
+      await supabase.from('feedback').insert({
+        user_id: userId,
+        type:    'bug',
+        message: flagText.trim(),
+        context: { screen: 'conversation', agent_id: a.id, nb_messages: msgs.length },
+      });
+      setFlagOpen(false);
+      setFlagText('');
+    } catch {}
+  };
 
   const sendToWhatsApp = async (text) => {
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
@@ -271,6 +287,9 @@ export function ConversationScreen({ go, notify, params, profile }) {
             Débloquer
           </button>
         )}
+        <button onClick={() => setFlagOpen(true)} className="w-9 h-9 rounded-full hover:bg-sable flex items-center justify-center text-g400 flex-shrink-0">
+          <Icon name="flag" size={18} />
+        </button>
       </div>
 
       {/* Messages */}
@@ -321,6 +340,26 @@ export function ConversationScreen({ go, notify, params, profile }) {
             </button>
           ))}
         </div>
+      )}
+
+      {flagOpen && (
+        <Sheet title="Signaler un problème" onClose={() => setFlagOpen(false)}>
+          <div className="flex flex-col gap-4">
+            <Textarea
+              rows={3}
+              value={flagText}
+              onChange={e => setFlagText(e.target.value)}
+              placeholder="Décris ce qui ne fonctionne pas dans cette conversation…"
+            />
+            <button
+              onClick={sendFlag}
+              disabled={!flagText.trim()}
+              className="w-full py-3.5 rounded-xl bg-charbon text-white font-bold text-[15px] disabled:opacity-40 transition active:scale-[.98]"
+            >
+              Envoyer
+            </button>
+          </div>
+        </Sheet>
       )}
 
       {/* Input */}
