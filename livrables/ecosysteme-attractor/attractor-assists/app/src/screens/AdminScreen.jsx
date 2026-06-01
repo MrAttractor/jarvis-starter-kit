@@ -51,12 +51,16 @@ export function AdminScreen({ go, notify }) {
   const load = async () => {
     setLoading(true);
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('profiles')
         .select('id, prenom, zone, plan_code, statut, onboarding_done, created_at, referral_count')
         .order('created_at', { ascending: false });
+      if (error) throw error;
       setUsers(data || []);
-    } catch {}
+    } catch (e) {
+      notify('Erreur chargement — policy admin manquante ?');
+      console.error(e);
+    }
     setLoading(false);
   };
 
