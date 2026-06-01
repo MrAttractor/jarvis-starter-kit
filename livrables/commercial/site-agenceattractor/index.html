@@ -7,13 +7,24 @@
 <title>Mr Attractor — Conçu pour soulager les entreprises.</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-<!-- ██ PIXEL TRACKING — à remplacer par ton ID Facebook Pixel ██
+<!-- Facebook Pixel Code -->
 <script>
-!function(f,b,e,v,n,t,s){...}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', 'TON_PIXEL_ID');
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1225122193019269');
 fbq('track', 'PageView');
 </script>
--->
+<noscript>
+  <img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1225122193019269&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Facebook Pixel Code -->
 
 <style>
 /* ═══════════════════════════════════════
@@ -1130,9 +1141,24 @@ function track(event, data={}) {
   funnelData.events.push(entry);
   localStorage.setItem(FUNNEL_KEY, JSON.stringify(funnelData));
 
-  // Facebook Pixel custom event
-  if (typeof fbq !== 'undefined') fbq('trackCustom', event, { ...data });
+  if (typeof fbq === 'undefined') { console.log('[MA_PIXEL]', event, data); return; }
 
+  // Événements Facebook standards selon le type d'action
+  const FB_MAP = {
+    'hero_cta_mac':     () => fbq('track', 'InitiateCheckout', { content_name: 'Chat Mac Hero' }),
+    'nav_cta_chat':     () => fbq('track', 'InitiateCheckout', { content_name: 'Chat Mac Nav' }),
+    'mac_chat':         () => fbq('track', 'InitiateCheckout', { content_name: 'Chat Mac Agent' }),
+    'final_cta_mac':    () => fbq('track', 'InitiateCheckout', { content_name: 'Chat Mac Final' }),
+    'chat_open':        () => fbq('track', 'ViewContent',      { content_name: 'Chat Ouvert' }),
+    'chat_completed':   () => fbq('track', 'Lead',             { content_name: 'Prospect Qualifié', ...data }),
+    'challenge_cta':    () => fbq('track', 'ViewContent',      { content_name: 'Challenge 7j' }),
+    'app_jenvoie_demo': () => fbq('track', 'ViewContent',      { content_name: 'Demo J\'envoie' }),
+    'time_60s':         () => fbq('track', 'ViewContent',      { content_name: 'Engagement 60s' }),
+    'time_3m':          () => fbq('track', 'ViewContent',      { content_name: 'Engagement 3min' }),
+  };
+
+  if (FB_MAP[event]) FB_MAP[event]();
+  fbq('trackCustom', event, { ...data });
   console.log('[MA_PIXEL]', event, data);
 }
 
