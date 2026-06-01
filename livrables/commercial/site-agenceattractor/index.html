@@ -6,6 +6,7 @@
 <meta name="description" content="Agence Mr Attractor — Automatisation IA pour entrepreneurs de Côte d'Ivoire et la diaspora. Jusqu'à 80% des tâches automatisées.">
 <title>Mr Attractor — Conçu pour soulager les entreprises.</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
 <!-- Facebook Pixel Code -->
 <script>
@@ -647,6 +648,17 @@ footer {
 @keyframes fadeUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.5;transform:scale(1.4);} }
 
+/* Icônes expertise Lucide */
+.xp-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(242,92,5,.1); border: 1px solid rgba(242,92,5,.2);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1.1rem; flex-shrink: 0;
+}
+.xp-icon svg { width: 20px; height: 20px; stroke: var(--orange); stroke-width: 1.8; }
+.xp-icon-light { background: rgba(242,92,5,.12); border-color: rgba(242,92,5,.25); }
+.xp-icon-light svg { stroke: var(--orange); }
+
 /* WA sticky */
 .wa-btn {
   position:fixed; bottom:1.5rem; left:1.5rem; z-index:500;
@@ -878,42 +890,42 @@ footer {
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:3rem;" id="expertise-grid">
 
       <div class="expertise-card" onclick="openChat()" data-track="expertise_marche" style="background:var(--sable);border:1.5px solid var(--g200);border-radius:20px;padding:1.8rem;cursor:none;transition:all .3s;opacity:0;transform:translateY(16px);">
-        <div style="font-size:28px;margin-bottom:1rem;">🔍</div>
+        <div class="xp-icon"><i data-lucide="search"></i></div>
         <h3 style="font-size:15px;font-weight:800;margin-bottom:.6rem;">Tu veux te déployer mais tu n'as pas toutes les cartes</h3>
         <p style="font-size:13px;color:var(--g700);line-height:1.65;margin-bottom:1rem;">Notre équipe interroge les bases de données de ton secteur, analyse ce que font tes concurrents, identifie les failles. Tu reçois une carte complète de ton marché — sans lever le petit doigt. Un cadeau inestimable pour prendre des décisions éclairées.</p>
         <span style="font-size:12px;font-weight:700;color:var(--orange);">Discuter avec Mac →</span>
       </div>
 
       <div class="expertise-card" onclick="openChat()" data-track="expertise_relances" style="background:var(--sable);border:1.5px solid var(--g200);border-radius:20px;padding:1.8rem;cursor:none;transition:all .3s;opacity:0;transform:translateY(16px);transition-delay:.08s;">
-        <div style="font-size:28px;margin-bottom:1rem;">💸</div>
+        <div class="xp-icon"><i data-lucide="trending-up"></i></div>
         <h3 style="font-size:15px;font-weight:800;margin-bottom:.6rem;">Tu perds de l'argent chaque semaine sans t'en rendre compte</h3>
         <p style="font-size:13px;color:var(--g700);line-height:1.65;margin-bottom:1rem;">8 prospects par semaine, 5 non relancés dans les 48h. À 50 000 FCFA de panier moyen, c'est 1 million de FCFA qui s'évapore chaque mois. Awa les relance au bon moment, avec le bon message. Tu fermes des ventes que tu aurais perdues.</p>
         <span style="font-size:12px;font-weight:700;color:var(--orange);">Récupérer ces ventes →</span>
       </div>
 
       <div class="expertise-card" onclick="openChat()" data-track="expertise_app" style="background:var(--sable);border:1.5px solid var(--g200);border-radius:20px;padding:1.8rem;cursor:none;transition:all .3s;opacity:0;transform:translateY(16px);transition-delay:.16s;">
-        <div style="font-size:28px;margin-bottom:1rem;">📱</div>
+        <div class="xp-icon"><i data-lucide="layout-dashboard"></i></div>
         <h3 style="font-size:15px;font-weight:800;margin-bottom:.6rem;">Tu gères tout sur WhatsApp et des cahiers</h3>
         <p style="font-size:13px;color:var(--g700);line-height:1.65;margin-bottom:1rem;">En 7 jours, tu as une application sur mesure — commandes, clients, paiements, relances automatiques. Calibrée pour ton secteur, pas pour tout le monde. Conçue comme Shopify mais pour les apps métiers africaines.</p>
         <span style="font-size:12px;font-weight:700;color:var(--orange);">Voir comment ça marche →</span>
       </div>
 
       <div class="expertise-card" onclick="openChat()" data-track="expertise_contenu" style="background:var(--sable);border:1.5px solid var(--g200);border-radius:20px;padding:1.8rem;cursor:none;transition:all .3s;opacity:0;transform:translateY(16px);transition-delay:.24s;">
-        <div style="font-size:28px;margin-bottom:1rem;">📲</div>
+        <div class="xp-icon"><i data-lucide="radio"></i></div>
         <h3 style="font-size:15px;font-weight:800;margin-bottom:.6rem;">Tu postes en urgence quand tu y penses</h3>
         <p style="font-size:13px;color:var(--g700);line-height:1.65;margin-bottom:1rem;">Miriam programme ta semaine éditoriale le lundi — ta communauté te voit 7 jours sur 7 sans que tu touches ton téléphone. Ta visibilité monte. Tes concurrents se demandent comment tu fais.</p>
         <span style="font-size:12px;font-weight:700;color:var(--orange);">Automatiser ma présence →</span>
       </div>
 
       <div class="expertise-card" onclick="openChat()" data-track="expertise_finances" style="background:var(--sable);border:1.5px solid var(--g200);border-radius:20px;padding:1.8rem;cursor:none;transition:all .3s;opacity:0;transform:translateY(16px);transition-delay:.32s;">
-        <div style="font-size:28px;margin-bottom:1rem;">📊</div>
+        <div class="xp-icon"><i data-lucide="bar-chart-2"></i></div>
         <h3 style="font-size:15px;font-weight:800;margin-bottom:.6rem;">Tu travailles beaucoup mais tu ne sais pas si tu gagnes vraiment</h3>
         <p style="font-size:13px;color:var(--g700);line-height:1.65;margin-bottom:1rem;">Roland calcule tes marges par produit, par service, par client. Il t'alerte avant que ça devienne un problème. Tu arrêtes de vendre à perte sans le savoir — et tu doubles là où c'est rentable.</p>
         <span style="font-size:12px;font-weight:700;color:var(--orange);">Clarifier mes chiffres →</span>
       </div>
 
       <div class="expertise-card" onclick="openChat()" data-track="expertise_deléguer" style="background:var(--charbon);border:1.5px solid rgba(242,92,5,.2);border-radius:20px;padding:1.8rem;cursor:none;transition:all .3s;opacity:0;transform:translateY(16px);transition-delay:.4s;">
-        <div style="font-size:28px;margin-bottom:1rem;">⚡</div>
+        <div class="xp-icon xp-icon-light"><i data-lucide="users"></i></div>
         <h3 style="font-size:15px;font-weight:800;margin-bottom:.6rem;color:var(--sable);">Tu n'as pas les moyens de payer 5 spécialistes</h3>
         <p style="font-size:13px;color:rgba(250,246,240,.6);line-height:1.65;margin-bottom:1rem;">Avec le plan Manager, tu as Awa (vente), Miriam (contenu), Serge (agenda), Roland (finances) et Kofi (campagnes) — disponibles 24h/24 pour 29€/mois. Moins cher qu'une journée d'intérim. Et eux, ils ne s'absentent jamais.</p>
         <span style="font-size:12px;font-weight:700;color:var(--orange);">Voir le plan Manager →</span>
@@ -1162,6 +1174,9 @@ footer {
 
 <!-- ══════════ SCRIPTS ══════════ -->
 <script>
+/* ── Lucide icons init ── */
+lucide.createIcons();
+
 /* ── Curseur ── */
 const orb = document.getElementById('c-orb');
 const ring = document.getElementById('c-ring');
