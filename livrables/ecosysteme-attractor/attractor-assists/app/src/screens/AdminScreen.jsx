@@ -2,6 +2,20 @@ import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, AppHeader, Card, SectionLabel, Btn, Pill, Textarea, Sheet } from '../components/ui';
 
+// Détecte les utilisateurs qui méritent qu'on leur écrive
+function flagsFor(u) {
+  const flags = [];
+  const daysSince = u.last_seen
+    ? (Date.now() - new Date(u.last_seen).getTime()) / 86400000
+    : Infinity;
+  const daysSinceSignup = u.created_at
+    ? (Date.now() - new Date(u.created_at).getTime()) / 86400000
+    : 0;
+  if (!u.onboarding_done && daysSinceSignup > 2) flags.push({ label: 'Pas activé', color: 'text-[#D64545] bg-red-50' });
+  if (u.onboarding_done && daysSince > 3 && daysSince < 14) flags.push({ label: 'Inactif 3j+', color: 'text-amber bg-amber/10' });
+  return flags;
+}
+
 const SEGMENTS = [
   { id: 'all',        label: 'Tous les utilisateurs',  filter: () => true },
   { id: 'incomplete', label: 'Onboarding incomplet',   filter: p => !p.onboarding_done },
@@ -55,6 +69,14 @@ export function AdminScreen({ go, notify }) {
   const [userDetail, setUserDetail]       = useState(null);
   const [detailLoading, setDetailLoading] = useState(false);
 
+  // Chat admin ↔ user
+  const [chatMsgs, setChatMsgs]   = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatSending, setChatSending] = useState(false);
+  const [unreadFrom, setUnreadFrom]   = useState(new Set()); // user_ids ayant envoyé une réponse non lue
+  const chatChannelRef = useRef(null);
+  const chatBottomRef  = useRef(null);
+
   // Feedbacks
   const [feedbacks, setFeedbacks]   = useState([]);
   const [fbLoading, setFbLoading]   = useState(false);
@@ -70,6 +92,7 @@ export function AdminScreen({ go, notify }) {
   // Filtres liste
   const [filterPlan, setFilterPlan] = useState('all');
   const [search, setSearch]         = useState('');
+  const [watchOpen, setWatchOpen]   = useState(true);
 
   const channelRef = useRef(null);
 
@@ -111,9 +134,66 @@ export function AdminScreen({ go, notify }) {
     setFeedbacks(prev => prev.map(f => f.id === id ? { ...f, status: 'traité' } : f));
   };
 
+  // Charge les messages non lus des users (réponses à l'admin)
+  const loadUnread = async () => {
+    const { data } = await supabase
+      .from('admin_chats')
+      .select('user_id')
+      .eq('sender', 'user')
+      .eq('lu', false);
+    if (data) setUnreadFrom(new Set(data.map(m => m.user_id)));
+  };
+
+  // Ouvre le chat pour un user spécifique
+  const openChat = async (userId) => {
+    const { data } = await supabase
+      .from('admin_chats')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: true })
+      .limit(50);
+    setChatMsgs(data || []);
+    // Marquer les réponses user comme lues
+    await supabase.from('admin_chats').update({ lu: true }).eq('user_id', userId).eq('sender', 'user');
+    setUnreadFrom(prev => { const s = new Set(prev); s.delete(userId); return s; });
+
+    // Realtime pour ce chat
+    chatChannelRef.current?.unsubscribe();
+    chatChannelRef.current = supabase
+      .channel(`admin-chat-${userId}`)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'admin_chats', filter: `user_id=eq.${userId}` }, (payload) => {
+        setChatMsgs(prev => [...prev, payload.new]);
+        setTimeout(() => chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
+      })
+      .subscribe();
+  };
+
+  const sendChat = async (userId, prenom) => {
+    if (!chatInput.trim() || chatSending) return;
+    setChatSending(true);
+    const msg = chatInput.trim();
+    setChatInput('');
+    try {
+      // Insérer dans admin_chats
+      const { data: inserted } = await supabase.from('admin_chats').insert({
+        user_id: userId, sender: 'admin', message: msg,
+      }).select().single();
+      if (inserted) setChatMsgs(prev => [...prev, inserted]);
+      // Notifier l'utilisateur
+      await supabase.from('notifications').insert({
+        user_id: userId, type: 'message',
+        titre: 'Message de Mac Arthur',
+        corps: msg,
+      });
+      setTimeout(() => chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
+    } catch { notify('Erreur lors de l\'envoi'); }
+    setChatSending(false);
+  };
+
   useEffect(() => {
     load();
     loadFeedbacks();
+    loadUnread();
 
     channelRef.current = supabase
       .channel('admin-new-users')
@@ -125,7 +205,24 @@ export function AdminScreen({ go, notify }) {
       })
       .subscribe();
 
-    return () => { channelRef.current?.unsubscribe(); };
+    // Écoute les nouvelles réponses users en temps réel
+    supabase
+      .channel('admin-chat-replies')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'admin_chats', filter: 'sender=eq.user' }, (payload) => {
+        const uid = payload.new.user_id;
+        setUnreadFrom(prev => new Set([...prev, uid]));
+        // Alerte visuelle si la Sheet n'est pas ouverte sur ce user
+        setSelectedUser(prev => {
+          if (!prev || prev.id !== uid) notify(`Réponse de ${payload.new.user_id.slice(0, 6)}…`);
+          return prev;
+        });
+      })
+      .subscribe();
+
+    return () => {
+      channelRef.current?.unsubscribe();
+      chatChannelRef.current?.unsubscribe();
+    };
   }, []);
 
   const sendBroadcast = async () => {
@@ -176,16 +273,20 @@ export function AdminScreen({ go, notify }) {
     setSelectedUser(u);
     setUserDetail(null);
     setDetailLoading(true);
+    setChatMsgs([]);
+    setChatInput('');
     try {
       const [{ data: profile }, { count }] = await Promise.all([
         supabase.from('profiles').select('*').eq('id', u.id).single(),
         supabase.from('conversations').select('*', { count: 'exact', head: true }).eq('user_id', u.id),
       ]);
       setUserDetail({ ...profile, conv_count: count ?? null });
+      await openChat(u.id);
     } catch (e) {
       console.error(e);
     }
     setDetailLoading(false);
+    setTimeout(() => chatBottomRef.current?.scrollIntoView(), 100);
   };
 
   return (
@@ -278,6 +379,57 @@ export function AdminScreen({ go, notify }) {
         {/* ── Section Utilisateurs ── */}
         {section === 'users' && (
           <>
+            {/* Panneau À surveiller */}
+            {(() => {
+              const flagged = users.filter(u => flagsFor(u).length > 0 || unreadFrom.has(u.id));
+              if (flagged.length === 0) return null;
+              return (
+                <div className="rounded-[16px] border border-amber/30 overflow-hidden">
+                  <button
+                    onClick={() => setWatchOpen(o => !o)}
+                    className="w-full flex items-center justify-between px-4 py-3 bg-amber/8 text-left">
+                    <div className="flex items-center gap-2">
+                      <Icon name="bolt" size={15} className="text-amber" />
+                      <span className="text-[13px] font-bold text-charbon">À surveiller</span>
+                      <span className="bg-amber/20 text-amber text-[11px] font-extrabold px-2 py-0.5 rounded-full">{flagged.length}</span>
+                    </div>
+                    <Icon name={watchOpen ? 'close' : 'arrow'} size={14} className="text-g400" />
+                  </button>
+                  {watchOpen && (
+                    <div className="flex flex-col divide-y divide-g100">
+                      {flagged.map(u => {
+                        const flags = flagsFor(u);
+                        const hasReply = unreadFrom.has(u.id);
+                        return (
+                          <button key={u.id} onClick={() => openDetail(u)}
+                            className="flex items-center gap-3 px-4 py-2.5 bg-white text-left hover:bg-sable transition">
+                            <div className="relative flex-shrink-0">
+                              <div className="w-8 h-8 rounded-full bg-orange/10 flex items-center justify-center text-[11px] font-bold text-orange">
+                                {(u.prenom || '?').slice(0, 2).toUpperCase()}
+                              </div>
+                              {hasReply && <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#25D366] border-2 border-white" />}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <span className="text-[13px] font-bold text-charbon">{u.prenom || '—'}</span>
+                              <div className="flex gap-1 mt-0.5 flex-wrap">
+                                {hasReply && (
+                                  <span className="text-[10.5px] font-bold text-[#25D366] bg-[#25D366]/10 px-1.5 py-0.5 rounded-full">A répondu</span>
+                                )}
+                                {flags.map(f => (
+                                  <span key={f.label} className={`text-[10.5px] font-bold px-1.5 py-0.5 rounded-full ${f.color}`}>{f.label}</span>
+                                ))}
+                              </div>
+                            </div>
+                            <Icon name="send" size={13} className="text-orange flex-shrink-0" />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
             <div className="flex gap-2 overflow-x-auto pb-1 -mx-[18px] px-[18px]" style={{ scrollbarWidth: 'none' }}>
               {[['all','Tous'],['incomplete','Incomplet'],['decouverte','Découverte'],['manager','Manager']].map(([k,l]) => (
                 <button key={k} onClick={() => setFilterPlan(k)}
@@ -301,13 +453,14 @@ export function AdminScreen({ go, notify }) {
                   const online = isOnline(u.last_seen);
                   const recent = isRecent(u.last_seen);
                   return (
-                    <Card key={u.id} onClick={() => openDetail(u)} className={`px-4 py-3 flex items-center gap-3 cursor-pointer active:scale-[.99] transition ${online ? 'border-[#25D366]/40' : ''}`}>
+                    <Card key={u.id} onClick={() => openDetail(u)} className={`px-4 py-3 flex items-center gap-3 cursor-pointer active:scale-[.99] transition ${online ? 'border-[#25D366]/40' : unreadFrom.has(u.id) ? 'border-orange/40' : ''}`}>
                       <div className="relative flex-shrink-0">
                         <div className="w-9 h-9 rounded-full bg-orange/15 flex items-center justify-center font-display font-extrabold text-[13px] text-orange">
                           {(u.prenom || '?').slice(0, 2).toUpperCase()}
                         </div>
                         {online  && <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-[#25D366] border-2 border-white" />}
                         {!online && recent && <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-amber border-2 border-white" />}
+                        {unreadFrom.has(u.id) && !online && <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-orange border-2 border-white flex items-center justify-center text-[8px] text-white font-bold">!</span>}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-bold text-[14px] truncate">{u.prenom || '(sans prénom)'}</div>
@@ -467,6 +620,49 @@ export function AdminScreen({ go, notify }) {
                 </div>
               </div>
             )}
+
+            {/* Chat admin ↔ user */}
+            <div>
+              <p className="text-[11px] font-bold text-g400 uppercase tracking-wide mb-2">Échange direct</p>
+
+              {/* Historique */}
+              {chatMsgs.length > 0 && (
+                <div className="flex flex-col gap-2 mb-3 max-h-[220px] overflow-y-auto">
+                  {chatMsgs.map(m => (
+                    <div key={m.id} className={`flex ${m.sender === 'admin' ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-[80%] rounded-[14px] px-3 py-2 text-[13px] leading-snug ${
+                        m.sender === 'admin'
+                          ? 'bg-orange text-white rounded-br-[4px]'
+                          : 'bg-sable text-charbon border border-g200 rounded-bl-[4px]'
+                      }`}>
+                        {m.message}
+                        <div className={`text-[10px] mt-1 ${m.sender === 'admin' ? 'text-white/60' : 'text-g400'}`}>
+                          {timeAgo(m.created_at)}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <div ref={chatBottomRef} />
+                </div>
+              )}
+
+              {/* Input */}
+              <div className="flex gap-2 items-end">
+                <Textarea
+                  rows={2}
+                  value={chatInput}
+                  onChange={e => setChatInput(e.target.value)}
+                  placeholder={`Écrire à ${userDetail.prenom || 'cet utilisateur'}…`}
+                  className="flex-1 text-[13.5px]"
+                />
+                <button
+                  onClick={() => sendChat(selectedUser.id, userDetail.prenom)}
+                  disabled={!chatInput.trim() || chatSending}
+                  className="flex-shrink-0 w-10 h-10 rounded-xl bg-orange flex items-center justify-center disabled:opacity-40 transition">
+                  <Icon name="send" size={16} className="text-white" />
+                </button>
+              </div>
+            </div>
 
           </div>
         )}
