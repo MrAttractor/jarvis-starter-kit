@@ -15,6 +15,7 @@ import { BroadcastsScreen } from './screens/BroadcastsScreen';
 import { PaliersScreen } from './screens/PaliersScreen';
 import { AgendaScreen } from './screens/AgendaScreen';
 import { NotificationsScreen } from './screens/NotificationsScreen';
+import { AdminScreen } from './screens/AdminScreen';
 
 // 4 éléments : Accueil | FAB | Assistants | Profil
 const TABS = [
@@ -105,6 +106,7 @@ export default function App() {
     paliers:     <PaliersScreen go={go} notify={notify} />,
     agenda:        <AgendaScreen go={go} profile={profile} />,
     notifications: <NotificationsScreen go={go} />,
+    admin:         <AdminScreen go={go} notify={notify} />,
     install:     <InstallGuide
                    platform={detectPlatform()}
                    prenom={profile?.prenom || ''}

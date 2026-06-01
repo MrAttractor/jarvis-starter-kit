@@ -134,7 +134,11 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
           <NavRow icon="medal" label="Mes paliers & forfait" onClick={() => go('paliers')} />
           {canInstall && <NavRow icon="bolt" label="Installer l'app sur mon téléphone" onClick={() => go('install')} />}
           <NavRow icon="settings" label="Notifications" onClick={() => go('notifications')} />
-          <NavRow icon="flag" label="Un bug ou une idée ?" onClick={() => setFeedbackOpen(true)} last />
+          <NavRow icon="flag" label="Un bug ou une idée ?" onClick={() => setFeedbackOpen(true)} />
+          {profile?.role === 'admin' && (
+            <NavRow icon="settings" label="Tableau de pilotage" onClick={() => go('admin')} last />
+          )}
+          {profile?.role !== 'admin' && <div className="h-1" />}
         </Card>
 
         {feedbackOpen && (
