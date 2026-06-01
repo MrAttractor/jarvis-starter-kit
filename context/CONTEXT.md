@@ -55,7 +55,7 @@ Mon offre se construit autour de deux piliers, plus du contenu :
 ### Objectifs court terme (3 à 6 mois)
 
 - Atteindre **10 000 €/mois d'ici fin août 2026**.
-- Reconstruire et déployer **Attractor Assists** (sortir de la dette technique de la maquette actuelle faite from scratch).
+- ~~Reconstruire et déployer Attractor Assists~~ : **FAIT** — app déployée en production sur `assists.agenceattractor.com` avec 6 agents, 25 testeurs, login OTP, PWA installable.
 - Vendre directement les **app métiers** (piste la plus rentable) et activer la diaspora en France.
 - Lancer chaque mois une app de l'écosystème.
 
@@ -77,11 +77,14 @@ Chantiers actifs sur lesquels je veux que Claude m'aide :
 - **Générateur d'Apps Métier** : concept validé le 31/05/2026. Pipeline industrialisé de l'audit à la livraison : formulaire de collecte (Tally) → personnalisation Claude (vision + données client) → validation → déploiement Netlify. Librairie de templates en construction. 3 niveaux de personnalisation : surface (couleurs/logo/tarifs), modules (activer/désactiver), nouveau secteur (nouveau template). Stack : HTML templates + Claude API + Supabase + Netlify. Template #1 : Livraison colis (base J'Envoie Express). Objectif : 5-10 templates couvrant les principaux secteurs métiers de la cible CI/diaspora.
 - **J'envoie Express** : premier client du Générateur d'Apps Métier. Maquette HTML complète livrée (dashboard, colis, voyages, clients, demandes, tarifs, tracking, assistant IA). 6 infos manquantes envoyées par WhatsApp (logo, numéro WA business, adresses de collecte Paris/Abidjan, prochain voyage, validation couleurs). En attente de réponse client. Deal 230€, acompte 130€ le 3 juin 2026.
 - Développement en parallèle de l'**écosystème App Attractor**.
-- **Attractor Assists** : app déployée en production sur `assists.agenceattractor.com` (31/05/2026). Repo `jarvis-starter-kit` sur GitHub, Netlify connecté. 25 utilisateurs Supabase (migration Apps Script terminée). Stack : React + Vite + Tailwind + Supabase (projet `lgdgbrivnhgeupqhkckd`, Paris). Login par magic link (SMTP Resend, domaine `agenceattractor.com` vérifié). Vision équipe définitive : le Bras Droit (`nom_assistant`) = décharge mentale quotidienne, FAB partout, gratuit. Les 4 employés Agence Attractor (Awa/Prospection, Miriam/Présence digitale, Serge/Organisation, Roland/Finance) = homologues agents Jarvis, passifs sans Manager, proactifs avec Manager. Mémoire courte auto (toutes les 5 réponses dans `profiles.memoire_cache`). Base de connaissance ATTRACTOR injectée dans le chat. A faire : Parcours Ventes, Parcours #1dansmoncouloir, Agenda Serge. Détail : `decisions-produit.md`, `methode-attractor-synthese.md`.
+- **Attractor Assists** : app déployée et fonctionnelle sur `assists.agenceattractor.com`. Repo `jarvis-starter-kit` sur GitHub, Netlify connecté. 25 testeurs actifs. Stack : React + Vite + Tailwind + Supabase (projet `lgdgbrivnhgeupqhkckd`, Paris). Login OTP 6 chiffres, PWA installable (logo Attractor). 6 agents : Bras Droit (gratuit, proactif), Awa (Prospection, gratuite, proactive), Miriam (Présence digitale, Manager), Serge (Organisation, Manager), Roland (Finance, Manager), Kofi (Storytelling & Campagnes, Manager). Mémoire long terme (table `memories`) + mémoire courte auto (`memoire_cache`). Challenge 7 jours en cours de développement (agent Monsieur S., visuels J1-J7 prêts). A faire : Parcours Ventes, Parcours #1dansmoncouloir, Agenda Serge, intégration paiements XPAYE. Détail : `decisions-produit.md`, `methode-attractor-synthese.md`.
 - Construction d'un **plan clair pour ma campagne de création de contenu**.
 - **demo.agenceattractor.com** : sous-domaine dédié aux maquettes clients. Premier test avec J'envoie Express (DNS + Netlify). Chaque client reçoit un lien personnalisé, jamais un fichier HTML brut.
 - **Mini-agents Attractor Assists** (GO) : extraire 6 mini-agents des process validés (PPSD, offre irrésistible, post, relance prospect, procédure 5 étapes, cash du jour) et les injecter dans le system prompt. Effort estimé ~6h. Aucun code, aucune nouvelle UI.
-- **WhatsApp Business V1 assistée** (GO) : table Supabase `whatsapp_messages` + bouton deeplink 1 tap. Pas d'API Meta en V1. V2 (API WhatsApp Cloud) après validation utilisateurs.
+- **WhatsApp Business V1 assistée** (LIVRÉ) : table `whatsapp_messages` + bouton deeplink 1 tap sous chaque réponse assistant. V2 (API WhatsApp Cloud) après validation utilisateurs.
+- **Système de feedback** (LIVRÉ) : table `feedback` + bouton dans ProfilScreen + flag dans ConversationScreen. SQL 0005 à appliquer sur Supabase.
+- **Notifications in-app** (DEV) : cloche Dashboard avec badge, trigger bienvenue, Edge Function `notify-auto` (streak + quota). 3 actions Supabase restantes : SQL trigger + deploy function + cron `0 8 * * *`.
+- **Système autonome feedback-to-dev** (VALIDÉ, À IMPLÉMENTER) : agent débrief quotidien qui scanne feedback + conversations → résumé Mac Arthur → Programmeur exécute. Mac Arthur supervise uniquement.
 
 ---
 

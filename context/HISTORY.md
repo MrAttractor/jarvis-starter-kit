@@ -7,6 +7,70 @@
 
 ---
 
+## 2026-06-01 (session 11 — WhatsApp V1, feedback, notifications, benchmark Limova)
+
+### Benchmark stratégique : Limova.ai
+- Analyse complète de Limova (9 agents, 70-120€/mois, 28k users, Made in France Nice)
+- Avantage compétitif confirmé : différenciation culturelle CI/diaspora, méthode ATTRACTOR propriétaire, mobile money, ton Koffi/Awa
+- Limova valide le marché mais cible un segment différent (PME France, productivité pure)
+- Veille permanente à mettre en place (agent hebdo à planifier)
+
+### WhatsApp Business V1 — Deeplink (livré sur master)
+- Table `whatsapp_messages` créée en Supabase (RLS activée)
+- Bouton vert "Envoyer sur WhatsApp" sous chaque réponse assistant (non-opener, non-verrouillé)
+- Deeplink `wa.me/?text=` avec texte pré-rempli + log silencieux en base
+- Principe : l'app rédige, l'utilisateur envoie en 1 tap
+
+### Système de feedback utilisateurs (livré sur master)
+- Table `feedback` Supabase (type : bug/besoin/autre, contexte JSON, statut nouveau)
+- Bouton "Un bug ou une idée ?" dans ProfilScreen (section Application)
+- Icône drapeau dans le header ConversationScreen (signalement contextuel avec agent_id + nb_messages)
+- SQL à exécuter sur dashboard Supabase : migration 0005_feedback.sql
+
+### Profils agents — section Pleine puissance (livré sur master)
+- Textes proactif enrichis : 3 phrases concrètes par agent (Awa, Miriam, Serge, Roland, Kofi)
+- Fix CSS header : `items-start` + `flex-shrink-0` sur icône, plus de coupure sur petits écrans
+
+### Système de notifications in-app (livré sur dev, niveaux 1 + 2)
+- Cloche dans le header Dashboard avec badge rouge (count non-lu en temps réel)
+- Route `notifications` branchée dans App.jsx et ProfilScreen
+- Trigger SQL `notify_welcome` : notification bienvenue à la fin de l'onboarding
+- Edge Function `notify-auto` : streak à risque (3j sans connexion) + quota 80% atteint
+- Cron à configurer dans Supabase Dashboard : `0 8 * * *` → POST notify-auto
+- 3 actions Supabase restantes : SQL trigger + deploy Edge Function + cron job
+
+### Vision système autonome (acté, à implémenter)
+- Pipeline validé : Utilisateurs → Feedback → Agent collecte → Résumé Mac Arthur → Programmeur exécute
+- Agent débrief quotidien (scan feedback + conversations) = prochain chantier après validation notifications
+- Mac Arthur supervise uniquement : valide les décisions, le système exécute
+
+---
+
+## 2026-06-01 (session 10 — Kofi, campagne SEUL, ebook, challenge 7 jours)
+
+### Attractor Assists : agents, UX, déploiement
+
+- Kofi (Storytelling & Campagnes) : 6e agent créé, system prompt déployé, photo intégrée, teasers contextuels
+- Forfaits restructurés : features honnêtes, Awa gratuite mentionnée en Découverte, Manager -70% / 99€ barré, badge "Promo fondateurs"
+- Awa rendue proactive : opener contextuel selon profil onboarding, produit directement sans tourner autour
+- UserCount corrigé : RPC Supabase `get_user_count()` bypass RLS — les 25 vrais testeurs s'affichent
+- PWA : `manifest.json` + logo Attractor à l'installation iOS/Android, meta tags Apple ajoutés
+- Login : phrase d'accueil remplacée par "Trouve ton Couloir… et cours dedans !"
+- Agents verrouillés : section "Pleine puissance" orange dans le modal bio, CTA avec prix et mention 99€ barré
+- Table `notifications` créée en Supabase + `NotificationsScreen` ajouté
+
+### Campagne et contenu
+
+- Campagne storytelling "SEUL" produite : film 2 minutes complet (script 6 scènes), stratégie 4 semaines (reconnaissance / diagnostic / révélation / WhatsApp), hashtag #TonBrasDroit
+- Ebook "Manuel de Procédures" (Koffi et Awa) : contenu complet dans `context/import/` — 31 pages, structure narrative en 7 chapitres + plan 7 jours. Production visuelle Canva IA en cours.
+- Storytelling PDF (Franck Bayé) analysé : framework StoryBrand, Story of Self/Us/Now, schéma actanciel appliqués à la stratégie Attractor
+
+### En cours
+
+- Challenge 7 jours dans Attractor Assists : visuels J1-J7 + prologue disponibles dans import, développement en cours (agent Monsieur S., ChallengeScreen, déclencheur onboarding organisation)
+
+---
+
 ## 2026-05-31 (session 9 — Générateur d'Apps Métier + J'Envoie Express)
 
 ### Validation du concept Générateur d'Apps Métier
