@@ -5,6 +5,55 @@ import { Icon, Pill, Card, Btn, SectionLabel, Progress, AssistGlyph, Sheet } fro
 
 const PLAN_MSG_LIMIT = { decouverte: 20, decouverte_eu: 20 };
 
+const TIPS = [
+  { icon: "spark",  agent: null,     titre: "Commence toujours par \"Je veux que tu...\"",         corps: "C'est la formule magique. Dis exactement ce que tu attends, l'assistant produit sans poser 10 questions.",          action: null },
+  { icon: "trend",  agent: "awa",    titre: "Awa rédige, toi tu envoies",                           corps: "Donne-lui un nom, un secteur et un contexte. Elle te sort le message de prospection en 30 secondes. Tape sur le bouton vert pour l'envoyer directement sur WhatsApp.", action: "Essayer avec Awa" },
+  { icon: "send",   agent: null,     titre: "Le bouton vert, c'est ta nouvelle arme",               corps: "Chaque réponse de l'équipe a un bouton vert en dessous. 1 tap = WhatsApp s'ouvre avec le message prêt. Tu choisis juste à qui l'envoyer.", action: null },
+  { icon: "user",   agent: "coach",  titre: "Ton bras droit retient tout",                          corps: "Dis-lui ta situation une fois. Il construit sa mémoire de toi au fil des échanges. Plus tu parles, plus il te connaît et mieux il t'aide.", action: null },
+  { icon: "coins",  agent: "roland", titre: "Tu sais vraiment combien tu gagnes ?",                 corps: "Roland peut calculer ta marge réelle en 2 minutes. Donne-lui ton prix de vente, ton coût et ton volume. Il te dit si tu es rentable — vrai chiffre.", action: "Parler à Roland" },
+  { icon: "chat",   agent: "miriam", titre: "Miriam planifie ta semaine de contenu",                corps: "Dis-lui ton activité et ta cible. Elle te propose 3 posts pour la semaine, aux bons horaires pour ta zone. Tu valides, elle rédige.",          action: "Parler à Miriam" },
+  { icon: "flag",   agent: "serge",  titre: "Vide ta tête en 2 minutes",                           corps: "Liste tout ce qui tourne dans ta tête à Serge — tâches, RDV, relances. Il trie par priorité et organise ta semaine. Tu restes concentré sur l'essentiel.", action: "Parler à Serge" },
+  { icon: "bolt",   agent: null,     titre: "Invite 1 ami, gagne 5 messages de plus par jour",     corps: "Ton lien de parrainage est dans Profil. Chaque inscription via ton lien = +5 messages quotidiens pour toi, pour toujours.",                  action: "Voir le parrainage" },
+  { icon: "target", agent: null,     titre: "PPSD : connais ta cible mieux qu'elle se connaît",    corps: "Problèmes, Peurs, Souhaits, Désirs. Quand l'équipe connaît ton PPSD, chaque message devient précis. Complète-le dans ton profil.",            action: null },
+  { icon: "mega",   agent: "kofi",   titre: "Kofi construit ta campagne de A à Z",                 corps: "Film de marque, 7 posts séquencés, 3 broadcasts WhatsApp — tout calibré sur ton histoire et ta cible. Dis-lui ton activité et il commence.", action: "Parler à Kofi" },
+  { icon: "check",  agent: null,     titre: "L'agenda, c'est ta colonne vertébrale",               corps: "Ajoute tes tâches du jour dans l'Agenda. Classe-les par priorité. Quand tu ouvres l'app, tu sais exactement par quoi commencer.",            action: null },
+  { icon: "heart",  agent: null,     titre: "Nomme ton bras droit",                                corps: "Un assistant sans nom, c'est un outil. Un assistant avec un nom, c'est un partenaire. Va dans Profil et donne-lui un vrai nom.",               action: null },
+];
+
+function TipCard({ nomAss, go }) {
+  const idx = Math.floor(Date.now() / 86400000) % TIPS.length;
+  const tip = TIPS[idx];
+  const actionMap = {
+    "Essayer avec Awa":  () => go("conversation", { assistant: "awa" }),
+    "Parler à Roland":   () => go("conversation", { assistant: "roland" }),
+    "Parler à Miriam":   () => go("conversation", { assistant: "miriam" }),
+    "Parler à Serge":    () => go("conversation", { assistant: "serge" }),
+    "Parler à Kofi":     () => go("conversation", { assistant: "kofi" }),
+    "Voir le parrainage":() => go("profil"),
+  };
+  return (
+    <div className="rounded-[20px] overflow-hidden border border-orange/20" style={{ background: "linear-gradient(135deg,#fff9f5,#fff3ec)" }}>
+      <div className="px-4 pt-4 pb-3">
+        <div className="flex items-center gap-2 mb-2.5">
+          <div className="w-7 h-7 rounded-lg bg-orange/12 flex items-center justify-center flex-shrink-0">
+            <Icon name={tip.icon} size={15} className="text-orange" />
+          </div>
+          <span className="text-[10.5px] font-bold text-orange uppercase tracking-[.1em]">Astuce du jour</span>
+        </div>
+        <h4 className="font-display font-extrabold text-[15px] text-charbon leading-snug">{tip.titre}</h4>
+        <p className="text-[13px] text-g500 mt-1.5 leading-relaxed">{tip.corps}</p>
+      </div>
+      {tip.action && actionMap[tip.action] && (
+        <button onClick={actionMap[tip.action]}
+          className="w-full flex items-center justify-between px-4 py-3 border-t border-orange/15 bg-orange/5 active:bg-orange/10 transition">
+          <span className="text-[13px] font-bold text-orange">{tip.action}</span>
+          <Icon name="arrow" size={15} className="text-orange" />
+        </button>
+      )}
+    </div>
+  );
+}
+
 const CAPACITY_MSG = {
   miriam: (a, n) => `Pour toi, je peux rédiger tes posts de la semaine${a ? ' sur ' + a : ''}, répondre à ta communauté et envoyer tes broadcasts. ${n ? n + ' s\'en occupe' : 'Je m\'en occupe'} — tu n'as qu'à valider.`,
   serge:  (a, n) => `Pour toi, je peux organiser ta semaine${a ? ' autour de ' + a : ''} — tes priorités, tes relances en retard, tes actions urgentes. ${n ? n + ' te prépare' : 'Je te prépare'} un récap clair chaque matin.`,
@@ -198,6 +247,8 @@ export function DashboardScreen({ go, notify, profile }) {
           </div>
           <Icon name="chevron" size={18} className="text-g300" />
         </button>
+
+        <TipCard nomAss={nomAss} go={go} />
 
         <SectionLabel action={<button onClick={() => go("assistants")} className="text-[12px] font-bold text-orange">Tout voir</button>}>
           Ton équipe
