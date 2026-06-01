@@ -26,6 +26,7 @@ const TABS = [
 
 export default function App() {
   const [phase, setPhase] = useState("loading"); // loading | login | onboarding | app
+  const [loginKey, setLoginKey] = useState(0);   // force remount LoginScreen si loadProfile échoue
   const deferredPromptRef = useRef(null);
   const [profile, setProfile] = useState(null);
   const [screen, setScreen] = useState("dashboard");
@@ -37,9 +38,10 @@ export default function App() {
   const loadProfile = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { setPhase("login"); return; }
+      if (!user) { setLoginKey(k => k + 1); setPhase("login"); return; }
       const { data: prof } = await supabase.from("profiles").select("*").eq("id", user.id).single();
       setProfile(prof);
+      supabase.rpc('ping_last_seen').catch(() => {});
       if (!prof?.onboarding_done) {
         setPhase("onboarding");
       } else if (!prof?.activation_done) {
@@ -47,7 +49,9 @@ export default function App() {
       } else {
         setPhase("app");
       }
-    } catch {
+    } catch (e) {
+      console.error("loadProfile error:", e);
+      setLoginKey(k => k + 1);
       setPhase("login");
     }
   };
@@ -92,7 +96,7 @@ export default function App() {
     </Frame>
   );
 
-  if (phase === "login")      return <Frame dark={dark}><LoginScreen onAuthed={loadProfile} />{toastNode}</Frame>;
+  if (phase === "login")      return <Frame dark={dark}><LoginScreen key={loginKey} onAuthed={loadProfile} />{toastNode}</Frame>;
   if (phase === "onboarding") return <Frame dark={dark}><OnboardingScreen onDone={loadProfile} installPromptRef={deferredPromptRef} />{toastNode}</Frame>;
   if (phase === "activation") return <Frame dark={dark}><ActivationScreen profile={profile} onDone={doneActivation} />{toastNode}</Frame>;
 
