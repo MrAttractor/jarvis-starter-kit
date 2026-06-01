@@ -96,8 +96,8 @@ export function AssistantsScreen({ go, notify, profile }) {
         {actifs.length > 0 && (
           <>
             <SectionLabel>Disponibles</SectionLabel>
-            {actifs.map(a => (
-              <AgentCard key={a.id} a={a} profile={profile}
+            {actifs.map((a, i) => (
+              <AgentCard key={a.id} a={a} profile={profile} animIndex={i + 1}
                 onBio={() => setSelectedAgent(a)}
                 onAction={() => go("conversation", { assistant: a.id })} />
             ))}
@@ -109,8 +109,8 @@ export function AssistantsScreen({ go, notify, profile }) {
           <span>Disponibles avec</span>
           <span className="ml-1 px-2 py-0.5 bg-orange/10 text-orange text-[11px] font-bold rounded-full">Manager</span>
         </SectionLabel>
-        {verrous.map(a => (
-          <AgentCard key={a.id} a={a} profile={profile} locked
+        {verrous.map((a, i) => (
+          <AgentCard key={a.id} a={a} profile={profile} locked animIndex={actifs.length + i + 2}
             onBio={() => setSelectedAgent(a)}
             onAction={() => setSelectedAgent(a)} />
         ))}
@@ -135,11 +135,13 @@ export function AssistantsScreen({ go, notify, profile }) {
 
 // ─── Carte agent ──────────────────────────────────────────────────────────────
 
-function AgentCard({ a, locked, onAction, onBio, profile }) {
+function AgentCard({ a, locked, onAction, onBio, profile, animIndex = 0 }) {
   const teaser = buildTeaser(a.id, profile);
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden"
+      style={{ animation: 'fadeUp 0.4s ease both', animationDelay: `${animIndex * 65}ms` }}
+    >
       <div className="flex items-start gap-3.5 p-4">
         {/* Photo */}
         <button onClick={onBio} className="flex-shrink-0 relative">
@@ -213,11 +215,14 @@ function AgentBioModal({ a, profile, onClose, onAction }) {
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col justify-end">
-      <div className="absolute inset-0 bg-charbon/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-charbon/60 backdrop-blur-sm"
+        style={{ animation: 'fade 0.25s ease both' }}
+        onClick={onClose} />
 
-      <div className="relative bg-white rounded-t-[28px] overflow-hidden max-h-[92vh] flex flex-col">
-        {/* Photo hero */}
-        <div className="relative h-[280px] flex-shrink-0">
+      <div className="relative bg-white rounded-t-[28px] max-h-[92vh] flex flex-col"
+        style={{ animation: 'slideUp 0.35s cubic-bezier(0.22,1,0.36,1) both' }}>
+        {/* Photo hero — overflow-hidden ici uniquement pour les coins arrondis */}
+        <div className="relative h-[260px] flex-shrink-0 overflow-hidden rounded-t-[28px]">
           {a.photo ? (
             <img src={a.photo} alt={a.name} className="w-full h-full object-cover object-top" />
           ) : (
@@ -243,13 +248,13 @@ function AgentBioModal({ a, profile, onClose, onAction }) {
         </div>
 
         {/* Contenu */}
-        <div className="overflow-y-auto flex-1 px-5 py-5 flex flex-col gap-4">
+        <div className="overflow-y-auto flex-1 px-5 py-5 pb-8 flex flex-col gap-4">
 
           {/* Ce qu'il/elle ferait pour toi maintenant */}
           {teaser && (
             <div className="bg-sable rounded-[16px] p-4 border border-g200">
               <p className="text-[11.5px] font-bold text-g400 uppercase tracking-wider mb-2">
-                {["awa", "miriam"].includes(a.id) ? "Ce qu'elle ferait pour toi là" : "Ce qu'il ferait pour toi là"}
+                {a.genre === 'f' ? "Ce qu'elle ferait pour toi là" : "Ce qu'il ferait pour toi là"}
               </p>
               <p className="text-[14.5px] text-charbon leading-relaxed italic">"{teaser}"</p>
             </div>
