@@ -16,6 +16,7 @@ import { PaliersScreen } from './screens/PaliersScreen';
 import { AgendaScreen } from './screens/AgendaScreen';
 import { NotificationsScreen } from './screens/NotificationsScreen';
 import { AdminScreen } from './screens/AdminScreen';
+import { MéthodeScreen } from './screens/MéthodeScreen';
 
 // 4 éléments : Accueil | FAB | Assistants | Profil
 const TABS = [
@@ -41,7 +42,7 @@ export default function App() {
       if (!user) { setLoginKey(k => k + 1); setPhase("login"); return; }
       const { data: prof } = await supabase.from("profiles").select("*").eq("id", user.id).single();
       setProfile(prof);
-      supabase.rpc('ping_last_seen').catch(() => {});
+      supabase.rpc('ping_last_seen').then(() => {}, () => {});
       if (!prof?.onboarding_done) {
         setPhase("onboarding");
       } else if (!prof?.activation_done) {
@@ -111,6 +112,7 @@ export default function App() {
     agenda:        <AgendaScreen go={go} profile={profile} />,
     notifications: <NotificationsScreen go={go} />,
     admin:         <AdminScreen go={go} notify={notify} />,
+    methode:       <MéthodeScreen go={go} />,
     install:     <InstallGuide
                    platform={detectPlatform()}
                    prenom={profile?.prenom || ''}
