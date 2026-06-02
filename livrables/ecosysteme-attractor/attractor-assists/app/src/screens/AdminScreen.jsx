@@ -91,6 +91,12 @@ export function AdminScreen({ go, notify }) {
   const [prospectSeq, setProspectSeq]     = useState(null);
   const [seqLoading, setSeqLoading]       = useState(false);
   const [copiedIdx, setCopiedIdx]         = useState(null);
+  // Maquette closer flow
+  const [maquetteUrl, setMaquetteUrl]     = useState('');
+  const [maquettePreview, setMaquettePreview] = useState(null);
+  const [maquetteMsg, setMaquetteMsg]     = useState('');
+  const [maquetteCopied, setMaquetteCopied] = useState(false);
+  const maquetteFileRef = useRef(null);
   // Formulaire nouveau prospect
   const [pPrenom, setPPrenom]   = useState('');
   const [pActivite, setPActivite] = useState('');
@@ -99,7 +105,7 @@ export function AdminScreen({ go, notify }) {
   const [pCanal, setPCanal]         = useState('WhatsApp');
   const [pZone, setPZone]           = useState('CI');
   const [pWa, setPWa]               = useState('');
-  const [pType, setPType]           = useState('app');
+  const [pType, setPType]           = useState('A');
   const [pNbUsers, setPNbUsers]     = useState('1');
   const [pSaving, setPSaving]       = useState(false);
   const [showForm, setShowForm]     = useState(false);
@@ -226,6 +232,45 @@ export function AdminScreen({ go, notify }) {
     setDevisLoading(false);
   };
 
+  const buildMaquetteMsg = (prenom, url) => {
+    const urlPart = url?.trim() ? `\n\nVoilà à quoi ça pourrait ressembler pour ton activité → ${url.trim()}` : '';
+    return `Salut ${prenom} 👋\n\nJ'ai bossé sur quelque chose pour toi.${urlPart}\n\nTu veux qu'on en parle ? Je t'explique comment ça fonctionnerait concrètement pour ton projet.`;
+  };
+
+  const handleMaquetteFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => setMaquettePreview(ev.target.result);
+    reader.readAsDataURL(file);
+  };
+
+  const closeMaquetteSheet = () => {
+    setSelectedProspect(null);
+    setProspectSeq(null);
+    setMaquetteUrl('');
+    setMaquettePreview(null);
+    setMaquetteMsg('');
+    setMaquetteCopied(false);
+  };
+
+  const copyMaquetteMsg = async () => {
+    try {
+      await navigator.clipboard.writeText(maquetteMsg);
+      setMaquetteCopied(true);
+      setTimeout(() => setMaquetteCopied(false), 2500);
+      // Log journal : Carelle reçoit un brief
+      if (selectedProspect) {
+        await supabase.from('journal_agent').insert({
+          agent_id: 'carelle',
+          type: 'maquette_envoyee',
+          titre: `Maquette proposée à ${selectedProspect.prenom}`,
+          details: { prospect_id: selectedProspect.id, url: maquetteUrl || null },
+        }).catch(() => {});
+      }
+    } catch { notify('Impossible de copier'); }
+  };
+
   const validerDevis = async (devis_id) => {
     await supabase.from('devis_prospects').update({ statut: 'valide' }).eq('id', devis_id);
     setDevis(d => ({ ...d, statut: 'valide' }));
@@ -271,6 +316,8 @@ export function AdminScreen({ go, notify }) {
     setSelectedProspect(prospect);
     setProspectSeq(null);
     setSeqLoading(true);
+    // Pré-remplir le message maquette dès l'ouverture
+    setMaquetteMsg(buildMaquetteMsg(prospect.prenom, ''));
     try {
       const { data } = await supabase
         .from('sequences_vente').select('*')
@@ -854,9 +901,9 @@ export function AdminScreen({ go, notify }) {
                     <label className="text-[11px] font-bold text-g400 uppercase tracking-wider">Type de projet</label>
                     <select value={pType} onChange={e => setPType(e.target.value)}
                       className="w-full bg-sable border border-g200 rounded-xl px-3 py-3 text-[13.5px] text-charbon outline-none focus:border-orange transition">
-                      <option value="app">App sur mesure (Fam. A)</option>
-                      <option value="consulting">Consulting (Fam. B)</option>
-                      <option value="assists">Attractor Assists</option>
+                      <option value="A">App sur mesure (Fam. A)</option>
+                      <option value="B">Consulting (Fam. B)</option>
+                      <option value="C">Attractor Assists (Fam. C)</option>
                     </select>
                   </div>
                   <div className="flex flex-col gap-1">
@@ -1089,28 +1136,35 @@ export function AdminScreen({ go, notify }) {
           </>
         )}
 
-        {/* ── JARVIS COCKPIT — immersif ── */}
+        {/* ── JARVIS COCKPIT — plein écran immersif ── */}
         {section === 'jarvis' && (
-          <div className="-mx-[18px] -mb-6 rounded-b-[0px] overflow-hidden flex flex-col"
-            style={{ background: 'linear-gradient(180deg,#0d0b09 0%,#111009 60%,#0c0907 100%)', minHeight: '70vh' }}>
+          <div className="fixed inset-0 z-40 flex flex-col"
+            style={{ background: 'linear-gradient(180deg,#0d0b09 0%,#111009 60%,#0c0907 100%)' }}>
 
             {/* Header */}
-            <div className="px-5 pt-5 pb-3 flex items-center justify-between">
+            <div className="px-5 pt-12 pb-3 flex items-center justify-between flex-shrink-0">
               <div>
                 <p className="font-display font-extrabold text-[16px] text-white tracking-wide">JARVIS</p>
                 <p className="text-[11px] text-white/35 tracking-[.15em] uppercase mt-0.5">Mr Attractor · Système actif</p>
               </div>
-              {ttsActive && (
-                <button onClick={stopSpeech}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange/15 border border-orange/30 active:scale-95 transition">
-                  <Icon name="volume" size={13} className="text-orange animate-pulse" />
-                  <span className="text-[11px] font-bold text-orange">Stop</span>
+              <div className="flex items-center gap-2">
+                {ttsActive && (
+                  <button onClick={stopSpeech}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange/15 border border-orange/30 active:scale-95 transition">
+                    <Icon name="volume" size={13} className="text-orange animate-pulse" />
+                    <span className="text-[11px] font-bold text-orange">Stop</span>
+                  </button>
+                )}
+                <button onClick={() => setSection('users')}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/8 border border-white/12 active:scale-95 transition">
+                  <Icon name="close" size={13} className="text-white/60" />
+                  <span className="text-[11px] font-bold text-white/60">Fermer</span>
                 </button>
-              )}
+              </div>
             </div>
 
-            {/* Zone conversation */}
-            <div className="flex-1 px-5 pb-2 flex flex-col gap-3 overflow-y-auto max-h-[42vh]"
+            {/* Zone conversation — flex-1 scrollable */}
+            <div className="flex-1 px-5 pb-2 flex flex-col gap-3 overflow-y-auto"
               style={{ WebkitOverflowScrolling: 'touch' }}>
 
               {/* Suggestions si pas de conversation */}
@@ -1198,8 +1252,8 @@ export function AdminScreen({ go, notify }) {
               <div ref={jarvisBottomRef} />
             </div>
 
-            {/* Orb central + input */}
-            <div className="px-5 pt-4 pb-8 flex flex-col items-center gap-5"
+            {/* Orb central + input — épinglé en bas */}
+            <div className="flex-shrink-0 px-5 pt-4 pb-8 flex flex-col items-center gap-5"
               style={{ borderTop: '1px solid rgba(255,255,255,.06)' }}>
 
               {/* Orb micro */}
@@ -1254,32 +1308,6 @@ export function AdminScreen({ go, notify }) {
               </div>
             </div>
 
-            {/* Historique compact */}
-            {journal.filter(j => j.details?.via === 'jarvis-cockpit').length > 0 && (
-              <div className="px-5 pb-8 flex flex-col gap-2">
-                <p className="text-[10px] font-bold text-white/25 uppercase tracking-[.15em] mb-1">Historique</p>
-                {journal.filter(j => j.details?.via === 'jarvis-cockpit').slice(0, 10).map(j => {
-                  const agentBadge = {
-                    edito: 'text-[#63B3ED]', 'community-manager': 'text-amber',
-                    commercial: 'text-orange', eclaireur: 'text-growth',
-                    daf: 'text-white/50', 'programmeur-senior': 'text-[#90CDF4]',
-                  };
-                  const tc = agentBadge[j.agent_id] || 'text-white/40';
-                  return (
-                    <div key={j.id} className="rounded-[14px] px-4 py-3 flex flex-col gap-1"
-                      style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.07)' }}>
-                      <div className="flex items-center justify-between gap-2">
-                        <span className={`text-[10px] font-extrabold uppercase tracking-wider ${tc}`}>
-                          {j.agent_id || 'carelle'}
-                        </span>
-                        <span className="text-[10px] text-white/25">{timeAgo(j.created_at)}</span>
-                      </div>
-                      <p className="text-[12.5px] text-white/55 leading-snug">{j.titre}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
           </div>
         )}
 
@@ -1316,7 +1344,7 @@ export function AdminScreen({ go, notify }) {
 
     {/* Sheet séquence Awa */}
     {selectedProspect && section === 'prospects' && (
-      <Sheet title={`Séquence — ${selectedProspect.prenom}`} onClose={() => { setSelectedProspect(null); setProspectSeq(null); }}>
+      <Sheet title={selectedProspect.type_projet === 'A' ? `Closing — ${selectedProspect.prenom}` : `Séquence — ${selectedProspect.prenom}`} onClose={closeMaquetteSheet}>
         {seqLoading ? (
           <div className="py-10 text-center">
             <div className="text-[13px] text-g400 mb-2">Awa prépare la séquence…</div>
@@ -1332,6 +1360,92 @@ export function AdminScreen({ go, notify }) {
           </div>
         ) : (
           <div className="flex flex-col gap-4">
+
+            {/* ── MAQUETTE CLOSER — Famille A uniquement ── */}
+            {selectedProspect.type_projet === 'A' && (
+              <div className="flex flex-col gap-3">
+
+                {/* Bannière */}
+                <div className="flex items-center gap-2 px-3 py-2 bg-charbon rounded-xl">
+                  <span className="w-2 h-2 rounded-full bg-orange animate-pulse flex-shrink-0" />
+                  <span className="text-[12px] font-bold text-white">Mode Maquette · Famille A</span>
+                  <span className="ml-auto text-[10.5px] text-white/50">maquette d'abord → closing</span>
+                </div>
+
+                {/* Étape 1 : référence visuelle */}
+                <div className="flex flex-col gap-2">
+                  <p className="text-[11px] font-bold text-g400 uppercase tracking-wider">Étape 1 — Référence visuelle</p>
+
+                  {/* Upload fichier */}
+                  <input ref={maquetteFileRef} type="file" accept="image/*" className="hidden"
+                    onChange={handleMaquetteFile} />
+                  <button onClick={() => maquetteFileRef.current?.click()}
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-[1.5px] border-dashed border-g200 text-[13px] font-bold text-g500 hover:border-orange hover:text-orange transition active:scale-[.99]">
+                    <Icon name="image" size={16} />
+                    {maquettePreview ? 'Changer l\'image' : 'Importer une image'}
+                  </button>
+
+                  {/* Ou URL */}
+                  <input value={maquetteUrl} placeholder="Ou colle un lien — demo.agenceattractor.com/…"
+                    onChange={e => {
+                      setMaquetteUrl(e.target.value);
+                      setMaquetteMsg(buildMaquetteMsg(selectedProspect.prenom, e.target.value));
+                    }}
+                    className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[13px] outline-none focus:border-orange transition" />
+
+                  {/* Preview image */}
+                  {maquettePreview && (
+                    <div className="relative rounded-xl overflow-hidden border border-g200">
+                      <img src={maquettePreview} alt="référence" className="w-full max-h-[160px] object-cover" />
+                      <button onClick={() => { setMaquettePreview(null); if (maquetteFileRef.current) maquetteFileRef.current.value = ''; }}
+                        className="absolute top-2 right-2 w-7 h-7 rounded-full bg-charbon/70 flex items-center justify-center text-white">
+                        <Icon name="close" size={14} />
+                      </button>
+                      <div className="absolute bottom-0 left-0 right-0 bg-charbon/60 px-3 py-2">
+                        <p className="text-[11px] text-white font-bold">Envoie cette image sur WhatsApp en premier</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Étape 2 : message */}
+                <div className="flex flex-col gap-2">
+                  <p className="text-[11px] font-bold text-g400 uppercase tracking-wider">Étape 2 — Message à envoyer</p>
+                  <textarea value={maquetteMsg} rows={5}
+                    onChange={e => setMaquetteMsg(e.target.value)}
+                    className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[13.5px] leading-relaxed resize-none outline-none focus:border-orange transition" />
+                  <div className="flex gap-2">
+                    <button onClick={copyMaquetteMsg}
+                      className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[13px] font-bold transition active:scale-[.98] ${
+                        maquetteCopied ? 'bg-growth text-white' : 'bg-orange text-white'
+                      }`}>
+                      <Icon name={maquetteCopied ? 'check' : 'copy'} size={15} />
+                      {maquetteCopied ? 'Message copié ✓' : 'Copier le message'}
+                    </button>
+                    {selectedProspect.whatsapp && (
+                      <a href={`https://wa.me/${selectedProspect.whatsapp.replace(/\D/g,'')}?text=${encodeURIComponent(maquetteMsg)}`}
+                        target="_blank" rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-3 rounded-xl bg-[#25D366] text-white text-[13px] font-bold">
+                        <Icon name="send" size={14} />WA
+                      </a>
+                    )}
+                  </div>
+                  {maquettePreview && (
+                    <p className="text-[11.5px] text-amber font-medium text-center">
+                      Image uploadée — envoie-la d'abord sur WhatsApp, puis copie le message
+                    </p>
+                  )}
+                </div>
+
+                {/* Séparateur séquence de suivi */}
+                <div className="flex items-center gap-3 mt-1">
+                  <div className="flex-1 h-px bg-g200" />
+                  <span className="text-[10.5px] font-bold text-g400 uppercase tracking-wider">Suivi après la maquette</span>
+                  <div className="flex-1 h-px bg-g200" />
+                </div>
+              </div>
+            )}
+
             {/* Infos prospect */}
             <div className="bg-sable rounded-xl px-4 py-3 flex flex-col gap-1">
               {selectedProspect.activite && <p className="text-[12.5px] text-g400"><b className="text-charbon">Activité :</b> {selectedProspect.activite}</p>}

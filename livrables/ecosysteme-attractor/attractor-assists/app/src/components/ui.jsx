@@ -40,6 +40,7 @@ export function Icon({ name, className = "", size = 22, stroke = 1.9 }) {
     mic:    <><path d="M12 2a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4Z"/><path d="M19 10a7 7 0 0 1-14 0"/><path d="M12 19v3M9 22h6"/></>,
     micoff: <><path d="M2 2l20 20M12 2a4 4 0 0 1 4 4v2M12 2a4 4 0 0 0-4 4v6a4 4 0 0 0 7.7 1.6"/><path d="M19 10a7 7 0 0 1-1.2 3.9M12 19v3M9 22h6M5 10a7 7 0 0 0 .5 2.6"/></>,
     volume: <><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></>,
+    image:  <><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></>,
   }[name];
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
