@@ -351,11 +351,31 @@ serve(async (req) => {
       user_id = null,
     } = await req.json();
 
-    // Charger les mémoires long terme depuis Supabase
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // ─── Principes MIROIR — bénéficient à TOUS les utilisateurs ──────────────
+    // Chaque décision validée par Mac Arthur enrichit l'intelligence de tous les agents.
+    let miroirBlock = "";
+    try {
+      const { data: principes } = await supabase
+        .from("referentiel_actif")
+        .select("categorie, principe_detecte, referentiel")
+        .eq("confiance", "haute")
+        .order("created_at", { ascending: false })
+        .limit(15);
+
+      if (principes && principes.length > 0) {
+        const lines = principes
+          .map((p: any) => `• [${p.categorie}] ${p.principe_detecte} — ${p.referentiel}`)
+          .join("\n");
+        miroirBlock = `\n\nPRINCIPES VALIDÉS EN SITUATION RÉELLE :\nCes enseignements viennent de décisions prises sur de vrais clients et projets. Applique-les naturellement dans tes réponses quand ils s'appliquent — sans les citer explicitement, juste en les incarnant.\n${lines}`;
+      }
+    } catch {}
+
+    // ─── Mémoires long terme de l'utilisateur ────────────────────────────────
     let memoriesBlock = "";
     if (user_id) {
       try {
-        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
         const { data: mems } = await supabase
           .from("memories")
           .select("categorie, contenu, importance")
@@ -411,7 +431,7 @@ serve(async (req) => {
       ? `\n\nCE QU'ON A DÉJÀ FAIT ENSEMBLE :\n${memoire_cache}`
       : "";
 
-    const system = systemBase + contextBlock + memoriesBlock + memoireBlock;
+    const system = systemBase + contextBlock + miroirBlock + memoriesBlock + memoireBlock;
 
     const formattedMessages = (messages as Array<{ from: string; text: string }>).map((m) => ({
       role: m.from === "me" ? "user" : "assistant",
