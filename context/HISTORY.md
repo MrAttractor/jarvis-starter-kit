@@ -47,9 +47,12 @@
 - Circuit validé : son cockpit → MIROIR → tous les agents
 - Frontières agents : chacun dans son couloir, Carelle délègue la vente à Awa
 
-### Prochaine session
-- Benchmark Paperclip (outil à identifier)
-- Schéma visuel des connexions agents (utile démos B2B)
+### Benchmark Paperclip (fait en fin de session)
+- Paperclip.ing analysé : orchestration d'agents en org chart hiérarchique, open-source MIT, auto-hébergé, agnostique LLM (Claude, Codex, Gemini...)
+- Fonctionnalités : budget par agent, ticket system avec audit immuable, heartbeats (crons), gouvernance (approbation embauches agents)
+- Avantage Attractor Assists confirmé : MIROIR (moat imprenable — fondateur qui s'améliore = tous les utilisateurs qui s'améliorent), ancrage culturel CI/diaspora, méthode ATTRACTOR propriétaire, done-for-you, mobile-first PWA
+- Ce qu'ils font qu'on n'a pas encore : budget control par agent, audit trail immuable par décision
+- Schéma visuel écosystème complet (démos B2B) : outil Excalidraw chargé, à produire prochaine session
 
 ---
 
