@@ -7,6 +7,35 @@
 
 ---
 
+## 2026-06-02 (session 18 — MacCockpitScreen + demo site + circuit visiteur site)
+
+### MacCockpitScreen — tableau de bord admin sur mesure
+- Nouveau screen `MacCockpitScreen.jsx` remplace AdminScreen pour le compte admin
+- 4 onglets : Carelle (hub voix/TTS dark), Agence (31 agents + historique), Pipeline (prospects + maquette-closer), Hub (stats + broadcasts + MIROIR + feedbacks)
+- Bypass onboarding/activation pour admin : connexion directe sur Carelle
+- Carelle : format messages corrigé (chat-assistant), une question à la fois, contexte agence injecté
+- Bouton déconnexion dans Hub, suppression prospect + changement statut dans Pipeline
+- SQL 0016 exécuté : compte macarthur.nguessankouassi@gmail.com en manager + admin
+
+### demo.agenceattractor.com
+- Sous-domaine Netlify configuré (DNS en propagation)
+- Maquette J'envoie Express déployée : `demo.agenceattractor.com/jenvoie-express`
+- Structure `livrables/clients/demo-site/public/[client]/index.html` pour les prochains clients
+
+### Circuit visiteur site agenceattractor.com → Pipeline (LIVRÉ)
+- `sendProspect` branché sur Supabase REST API (remplace Apps Script Google Sheets)
+- Collecte : prénom, activité, besoin, zone, numéro WhatsApp
+- Chip "Autre" dans besoin → input texte libre
+- Suppression bouton WhatsApp sticky et lien wa.me (court-circuit manuel éliminé)
+- Message de clôture : confirmation 24h + lien demo, sans redirection vers Attractor Assists
+- Listener realtime dans le cockpit : alerte toast + prospect dans Pipeline en temps réel
+
+### Déploiements
+- Site agenceattractor.com : passage en `workflow_dispatch` uniquement (plus d'auto-deploy)
+- Fix warning Node.js 24 sur GitHub Actions
+
+---
+
 ## 2026-06-02 (session 17 — cockpit admin restructuré + pivot B2B + gardien déploiement)
 
 ### Cockpit admin — refonte complète
