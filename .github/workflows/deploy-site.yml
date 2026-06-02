@@ -1,10 +1,6 @@
 name: Deploy agenceattractor.com
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - 'livrables/commercial/site-agenceattractor/**'
   workflow_dispatch:
 
 permissions:
@@ -13,6 +9,8 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
 

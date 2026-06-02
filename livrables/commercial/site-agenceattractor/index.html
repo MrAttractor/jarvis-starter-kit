@@ -1409,7 +1409,7 @@ const FLOW = [
   {
     id:'besoin',
     text:(p)=>`Ce qui te prend le plus de temps chez ${p.activite||'toi'} en ce moment ?`,
-    opts:['Relancer mes prospects','Gérer mon agenda','Créer du contenu','Suivre mes finances','Gérer mes commandes'],
+    opts:['Relancer mes prospects','Gérer mon agenda','Créer du contenu','Suivre mes finances','Gérer mes commandes','Autre'],
     key:'besoin'
   },
   {
@@ -1472,6 +1472,15 @@ function setOpts(opts) {
 function selectOpt(val) {
   chatOpts.innerHTML = '';
   const step = FLOW[chatStep];
+  if (val === 'Autre') {
+    addMsg('Autre','user');
+    addMsg('Dis-moi en quelques mots ce qui te prend le plus de temps ?','mac');
+    chatInput.style.display = '';
+    document.getElementById('chat-send').style.display = '';
+    chatInput.placeholder = 'Ex : gérer mes fournisseurs, suivre mes stocks…';
+    chatInput.focus();
+    return;
+  }
   if(step.key) prospect[step.key]=val;
   addMsg(val,'user');
   track('chat_answer',{step:step.id,val});
