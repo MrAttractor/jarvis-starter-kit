@@ -924,6 +924,46 @@ export function AdminScreen({ go, notify }) {
           </>
         )}
 
+        {/* ── Ressources admin ── */}
+        <div className="mt-6 flex flex-col gap-2">
+          <SectionLabel>Ressources</SectionLabel>
+          {[
+            {
+              label: 'Schéma écosystème',
+              desc: 'Circuit complet — MIROIR, agents, utilisateurs',
+              url: 'https://excalidraw.com/#json=HUhhXp7GogMNe3pPmq4Vd,ZMzb0CgGja-CZe5TwDaPPA',
+              tone: 'text-orange',
+            },
+            {
+              label: 'Supabase Dashboard',
+              desc: 'BDD, Edge Functions, crons, logs',
+              url: 'https://supabase.com/dashboard/project/lgdgbrivnhgeupqhkckd',
+              tone: 'text-growth',
+            },
+            {
+              label: 'Netlify Dashboard',
+              desc: 'Déploiements, logs, domaines',
+              url: 'https://app.netlify.com',
+              tone: 'text-info',
+            },
+            {
+              label: 'Benchmark Paperclip',
+              desc: 'Concurrent identifié — orchestration agents',
+              url: 'https://paperclip.ing/',
+              tone: 'text-g400',
+            },
+          ].map(r => (
+            <a key={r.url} href={r.url} target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-3 bg-white border border-g200 rounded-[14px] px-4 py-3 active:scale-[.99] transition hover:border-orange/40">
+              <div className="flex-1 min-w-0">
+                <p className={`text-[14px] font-bold ${r.tone}`}>{r.label}</p>
+                <p className="text-[12px] text-g400 mt-0.5">{r.desc}</p>
+              </div>
+              <Icon name="send" size={14} className="text-g300 flex-shrink-0" />
+            </a>
+          ))}
+        </div>
+
       </div>
     </div>
 
