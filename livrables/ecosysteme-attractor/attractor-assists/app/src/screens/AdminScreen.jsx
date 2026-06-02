@@ -62,7 +62,7 @@ export function AdminScreen({ go, notify }) {
   const [users, setUsers]         = useState([]);
   const [loading, setLoading]     = useState(true);
   const [newUserAlert, setNewUserAlert] = useState(null);
-  const [section, setSection]     = useState('users'); // 'users' | 'feedbacks' | 'miroir'
+  const [section, setSection]     = useState('users'); // 'users' | 'feedbacks' | 'miroir' | 'prospects'
 
   // MIROIR
   const [miroir, setMiroir]           = useState([]);
@@ -71,6 +71,25 @@ export function AdminScreen({ go, notify }) {
   const [dSujet, setDSujet]           = useState('');
   const [dContexte, setDContexte]     = useState('');
   const [dSending, setDSending]       = useState(false);
+
+  // PROSPECTS
+  const [prospects, setProspects]         = useState([]);
+  const [journal, setJournal]             = useState([]);
+  const [prospectsLoading, setProspectsLoading] = useState(false);
+  const [selectedProspect, setSelectedProspect] = useState(null);
+  const [prospectSeq, setProspectSeq]     = useState(null);
+  const [seqLoading, setSeqLoading]       = useState(false);
+  const [copiedIdx, setCopiedIdx]         = useState(null);
+  // Formulaire nouveau prospect
+  const [pPrenom, setPPrenom]   = useState('');
+  const [pActivite, setPActivite] = useState('');
+  const [pBesoin, setPBesoin]   = useState('');
+  const [pContexte, setPContexte] = useState('');
+  const [pCanal, setPCanal]     = useState('WhatsApp');
+  const [pZone, setPZone]       = useState('CI');
+  const [pWa, setPWa]           = useState('');
+  const [pSaving, setPSaving]   = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
   // Détail utilisateur
   const [selectedUser, setSelectedUser]   = useState(null);
@@ -162,6 +181,83 @@ export function AdminScreen({ go, notify }) {
     setDSending(false);
   };
 
+  // ─── PROSPECTS ─────────────────────────────────────────────
+  const loadProspects = async () => {
+    setProspectsLoading(true);
+    try {
+      const [{ data: pros }, { data: jnl }] = await Promise.all([
+        supabase.from('prospects').select('*').order('created_at', { ascending: false }).limit(50),
+        supabase.from('journal_agent').select('*').order('created_at', { ascending: false }).limit(30),
+      ]);
+      setProspects(pros || []);
+      setJournal(jnl || []);
+    } catch (e) { console.error('prospects', e); }
+    setProspectsLoading(false);
+  };
+
+  const saveProspect = async () => {
+    if (!pPrenom.trim() || pSaving) return;
+    setPSaving(true);
+    const { data, error } = await supabase.from('prospects').insert({
+      prenom: pPrenom.trim(), activite: pActivite.trim(), besoin: pBesoin.trim(),
+      contexte: pContexte.trim(), canal: pCanal, zone: pZone, whatsapp: pWa.trim(),
+    }).select().single();
+    if (error) { notify('Erreur enregistrement prospect'); setPSaving(false); return; }
+    setProspects(prev => [data, ...prev]);
+    setPPrenom(''); setPActivite(''); setPBesoin(''); setPContexte(''); setPWa('');
+    setShowForm(false);
+    setPSaving(false);
+    // Déclencher immédiatement la séquence
+    generateSequence(data);
+  };
+
+  const generateSequence = async (prospect) => {
+    setSelectedProspect(prospect);
+    setProspectSeq(null);
+    setSeqLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-sequence`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify({ prospect_id: prospect.id }),
+      });
+      const d = await res.json();
+      if (d.messages) {
+        setProspectSeq(d);
+        await loadProspects();
+      } else {
+        notify('Erreur génération séquence');
+      }
+    } catch (e) { notify('Erreur réseau'); }
+    setSeqLoading(false);
+  };
+
+  const loadExistingSeq = async (prospect) => {
+    setSelectedProspect(prospect);
+    setProspectSeq(null);
+    setSeqLoading(true);
+    try {
+      const { data } = await supabase
+        .from('sequences_vente').select('*')
+        .eq('prospect_id', prospect.id)
+        .order('created_at', { ascending: false })
+        .limit(1).single();
+      if (data) setProspectSeq({ messages: data.messages });
+    } catch {}
+    setSeqLoading(false);
+  };
+
+  const copyMessage = (text, idx) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedIdx(idx);
+      setTimeout(() => setCopiedIdx(null), 1800);
+    });
+  };
+
   const resolveArbitrage = async (id) => {
     await supabase.from('methode_miroir').update({ arbitre: true }).eq('id', id);
     setMiroir(prev => prev.map(m => m.id === id ? { ...m, arbitre: true } : m));
@@ -233,6 +329,7 @@ export function AdminScreen({ go, notify }) {
     load();
     loadFeedbacks();
     loadMiroir();
+    loadProspects();
     loadUnread();
 
     channelRef.current = supabase
@@ -429,6 +526,15 @@ export function AdminScreen({ go, notify }) {
               </span>
             )}
           </button>
+          <button onClick={() => { setSection('prospects'); loadProspects(); }}
+            className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold border-[1.5px] transition relative ${section === 'prospects' ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
+            Awa
+            {prospects.filter(p => p.statut === 'nouveau').length > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-orange text-white text-[10px] font-extrabold flex items-center justify-center">
+                {prospects.filter(p => p.statut === 'nouveau').length}
+              </span>
+            )}
+          </button>
         </div>
 
         {/* ── Section Utilisateurs ── */}
@@ -541,6 +647,118 @@ export function AdminScreen({ go, notify }) {
                   <p className="text-center text-[13px] text-g400 py-6">Aucun utilisateur trouvé.</p>
                 )}
               </div>
+            )}
+          </>
+        )}
+
+        {/* ── Section PROSPECTS (Awa) ── */}
+        {section === 'prospects' && (
+          <>
+            {/* Journal agents — fil d'activité */}
+            {journal.length > 0 && (
+              <>
+                <SectionLabel>Travaux des agents</SectionLabel>
+                <div className="flex flex-col gap-2">
+                  {journal.slice(0, 6).map(j => (
+                    <div key={j.id} className="flex items-start gap-3 bg-white border border-g200 rounded-[14px] px-4 py-3">
+                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-[11px] font-bold ${
+                        j.agent_id === 'awa'    ? 'bg-orange/10 text-orange' :
+                        j.agent_id === 'miroir' ? 'bg-charbon/5 text-charbon' :
+                        j.agent_id === 'kofi'   ? 'bg-info/10 text-info' : 'bg-g100 text-g500'
+                      }`}>{(j.agent_id || 'SYS').slice(0,3).toUpperCase()}</div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] font-semibold text-charbon leading-snug">{j.titre}</p>
+                        {j.details?.synthese && (
+                          <p className="text-[11.5px] text-g400 mt-0.5 leading-snug line-clamp-2">{j.details.synthese}</p>
+                        )}
+                        {j.details?.notes && (
+                          <p className="text-[11.5px] text-g400 mt-0.5 leading-snug line-clamp-2">{j.details.notes}</p>
+                        )}
+                      </div>
+                      <span className="text-[10.5px] text-g300 flex-shrink-0">{timeAgo(j.created_at)}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Bouton ajouter prospect */}
+            <button onClick={() => setShowForm(o => !o)}
+              className={`w-full py-3 rounded-xl text-[13.5px] font-bold border-[1.5px] transition ${showForm ? 'bg-charbon text-white border-charbon' : 'bg-orange/10 text-orange border-orange/30'}`}>
+              {showForm ? 'Fermer le formulaire' : '+ Nouveau prospect → séquence Awa'}
+            </button>
+
+            {/* Formulaire nouveau prospect */}
+            {showForm && (
+              <Card className="p-4 flex flex-col gap-3">
+                <input value={pPrenom} onChange={e => setPPrenom(e.target.value)} placeholder="Prénom *"
+                  className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[14px] outline-none focus:border-orange transition" />
+                <input value={pActivite} onChange={e => setPActivite(e.target.value)} placeholder="Activité / secteur"
+                  className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[14px] outline-none focus:border-orange transition" />
+                <textarea value={pBesoin} onChange={e => setPBesoin(e.target.value)} rows={2}
+                  placeholder="Ce dont il a besoin (ex : une app métier, du coaching, visibilité…)"
+                  className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[13.5px] resize-none outline-none focus:border-orange transition" />
+                <textarea value={pContexte} onChange={e => setPContexte(e.target.value)} rows={2}
+                  placeholder="Contexte — budget, objection, historique, comment tu l'as connu…"
+                  className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[13.5px] resize-none outline-none focus:border-orange transition" />
+                <div className="grid grid-cols-2 gap-2">
+                  <select value={pCanal} onChange={e => setPCanal(e.target.value)}
+                    className="w-full bg-sable border border-g200 rounded-xl px-3 py-3 text-[13.5px] text-charbon outline-none">
+                    {['WhatsApp','Facebook','Instagram','LinkedIn','Email','Autre'].map(c => <option key={c}>{c}</option>)}
+                  </select>
+                  <select value={pZone} onChange={e => setPZone(e.target.value)}
+                    className="w-full bg-sable border border-g200 rounded-xl px-3 py-3 text-[13.5px] text-charbon outline-none">
+                    {['CI','EU','MA','SN','CM','Autre'].map(z => <option key={z}>{z}</option>)}
+                  </select>
+                </div>
+                <input value={pWa} onChange={e => setPWa(e.target.value)} placeholder="Numéro WhatsApp"
+                  className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[14px] outline-none focus:border-orange transition" />
+                <button onClick={saveProspect} disabled={!pPrenom.trim() || pSaving}
+                  className="w-full py-3 rounded-xl bg-orange text-white text-[14px] font-bold disabled:opacity-40 active:scale-[.98] transition">
+                  {pSaving ? 'Enregistrement + génération…' : 'Enregistrer et générer la séquence Awa'}
+                </button>
+              </Card>
+            )}
+
+            {/* Liste des prospects */}
+            {prospectsLoading ? (
+              <div className="py-8 text-center text-[13px] text-g400">Chargement…</div>
+            ) : prospects.length === 0 ? (
+              <Card className="p-5 text-center">
+                <p className="text-[13px] text-g400">Aucun prospect pour l'instant.</p>
+                <p className="text-[12px] text-g300 mt-1">Ajoute ton premier prospect — Awa génère la séquence complète.</p>
+              </Card>
+            ) : (
+              <>
+                <SectionLabel>Pipeline ({prospects.length})</SectionLabel>
+                <div className="flex flex-col gap-2">
+                  {prospects.map(p => {
+                    const statusStyle = {
+                      nouveau:   'bg-orange/10 text-orange',
+                      contacté:  'bg-info/10 text-info',
+                      relancé:   'bg-amber/10 text-amber',
+                      closé:     'bg-growth/10 text-growth',
+                      perdu:     'bg-g100 text-g400',
+                    }[p.statut] || 'bg-g100 text-g500';
+                    return (
+                      <Card key={p.id} onClick={() => loadExistingSeq(p)}
+                        className="px-4 py-3 flex items-center gap-3 cursor-pointer active:scale-[.99] transition">
+                        <div className="w-10 h-10 rounded-full bg-orange/10 flex items-center justify-center font-display font-extrabold text-[14px] text-orange flex-shrink-0">
+                          {p.prenom.slice(0,2).toUpperCase()}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold text-[14px]">{p.prenom}</div>
+                          <div className="text-[12px] text-g400 truncate">{p.activite || p.besoin || '—'}</div>
+                        </div>
+                        <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+                          <span className={`text-[10.5px] font-bold px-2 py-0.5 rounded-full ${statusStyle}`}>{p.statut}</span>
+                          <span className="text-[10px] text-g300">{p.canal}</span>
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </>
             )}
           </>
         )}
@@ -715,6 +933,78 @@ export function AdminScreen({ go, notify }) {
 
       </div>
     </div>
+
+    {/* Sheet séquence Awa */}
+    {selectedProspect && section === 'prospects' && (
+      <Sheet title={`Séquence — ${selectedProspect.prenom}`} onClose={() => { setSelectedProspect(null); setProspectSeq(null); }}>
+        {seqLoading ? (
+          <div className="py-10 text-center">
+            <div className="text-[13px] text-g400 mb-2">Awa prépare la séquence…</div>
+            <div className="text-[11px] text-g300">Ça prend 10-15 secondes</div>
+          </div>
+        ) : !prospectSeq ? (
+          <div className="flex flex-col gap-4">
+            <p className="text-[13px] text-g400 text-center py-4">Pas encore de séquence pour ce prospect.</p>
+            <button onClick={() => generateSequence(selectedProspect)}
+              className="w-full py-3 rounded-xl bg-orange text-white text-[14px] font-bold active:scale-[.98] transition">
+              Générer la séquence Awa
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {/* Infos prospect */}
+            <div className="bg-sable rounded-xl px-4 py-3 flex flex-col gap-1">
+              {selectedProspect.activite && <p className="text-[12.5px] text-g400"><b className="text-charbon">Activité :</b> {selectedProspect.activite}</p>}
+              {selectedProspect.besoin && <p className="text-[12.5px] text-g400"><b className="text-charbon">Besoin :</b> {selectedProspect.besoin}</p>}
+              {selectedProspect.whatsapp && <p className="text-[12.5px] text-g400"><b className="text-charbon">WA :</b> {selectedProspect.whatsapp}</p>}
+            </div>
+
+            {/* Messages */}
+            {(prospectSeq.messages || []).map((m, idx) => (
+              <div key={idx} className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-[12px] font-bold text-orange">Étape {m.etape}</span>
+                    <span className="text-[12px] text-g400 ml-2">{m.titre}</span>
+                  </div>
+                  <span className="text-[10.5px] text-g300 bg-g100 rounded-full px-2 py-0.5">{m.delai}</span>
+                </div>
+                <div className="bg-white border border-g200 rounded-[14px] px-4 py-3">
+                  <p className="text-[13.5px] text-charbon leading-relaxed whitespace-pre-wrap">{m.message}</p>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => copyMessage(m.message, idx)}
+                    className={`flex-1 py-2.5 rounded-xl text-[12.5px] font-bold border-[1.5px] transition ${
+                      copiedIdx === idx ? 'bg-growth text-white border-growth' : 'bg-white border-g200 text-g700 hover:border-orange hover:text-orange'
+                    }`}>
+                    {copiedIdx === idx ? 'Copié !' : 'Copier le message'}
+                  </button>
+                  {selectedProspect.whatsapp && (
+                    <a href={`https://wa.me/${selectedProspect.whatsapp.replace(/\D/g,'')}?text=${encodeURIComponent(m.message)}`}
+                      target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-[#25D366] text-white text-[12.5px] font-bold">
+                      <Icon name="send" size={13} />WA
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+
+            {prospectSeq.notes && (
+              <div className="bg-orange/8 border border-orange/20 rounded-xl px-4 py-3">
+                <p className="text-[11.5px] font-bold text-orange mb-1">Note d'Awa</p>
+                <p className="text-[13px] text-charbon leading-snug italic">{prospectSeq.notes}</p>
+              </div>
+            )}
+
+            <button onClick={() => generateSequence(selectedProspect)}
+              className="w-full py-2.5 rounded-xl border border-g200 text-[12.5px] font-bold text-g500 hover:border-orange hover:text-orange transition">
+              Regénérer une nouvelle séquence
+            </button>
+          </div>
+        )}
+      </Sheet>
+    )}
 
     {/* Sheet détail utilisateur */}
     {selectedUser && (
