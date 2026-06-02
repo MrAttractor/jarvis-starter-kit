@@ -264,6 +264,14 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
     return `Salut ${prenom} 👋\n\nJ'ai bossé sur quelque chose pour toi.${urlPart}\n\nTu veux qu'on en parle ? Je t'explique comment ça fonctionnerait concrètement pour ton projet.`;
   };
 
+  const deleteProspect = async (id) => {
+    const { error } = await supabase.from('prospects').delete().eq('id', id);
+    if (error) { notify('Erreur suppression'); return; }
+    setProspects(prev => prev.filter(p => p.id !== id));
+    closeMaquetteSheet();
+    notify('Prospect supprimé');
+  };
+
   const generateDevis = async (pid) => {
     setDevisProspectId(pid); setDevis(null); setDevisLoading(true);
     try {
@@ -996,6 +1004,27 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
         {/* Sheet séquence / maquette */}
         {selectedProspect && (
           <Sheet title={selectedProspect.type_projet === 'A' ? `Closing — ${selectedProspect.prenom}` : `Séquence — ${selectedProspect.prenom}`} onClose={closeMaquetteSheet}>
+            {/* Statut + suppression */}
+            <div className="flex items-center gap-2 mb-4">
+              <select
+                defaultValue={selectedProspect.statut}
+                onChange={async (e) => {
+                  const s = e.target.value;
+                  await supabase.from('prospects').update({ statut: s }).eq('id', selectedProspect.id);
+                  setProspects(prev => prev.map(p => p.id === selectedProspect.id ? { ...p, statut: s } : p));
+                  notify(`Statut → ${s}`);
+                }}
+                className="flex-1 bg-sable border border-g200 rounded-xl px-3 py-2.5 text-[13px] text-charbon outline-none focus:border-orange transition"
+              >
+                {['nouveau','contacté','relancé','closé','perdu'].map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+              </select>
+              <button
+                onClick={() => { if (window.confirm(`Supprimer ${selectedProspect.prenom} ?`)) deleteProspect(selectedProspect.id); }}
+                className="px-3 py-2.5 rounded-xl border border-[#D64545]/30 text-[#D64545] text-[12.5px] font-bold bg-[#D64545]/5 hover:bg-[#D64545]/10 transition active:scale-95 flex-shrink-0"
+              >
+                Supprimer
+              </button>
+            </div>
             {seqLoading ? (
               <div className="py-10 text-center">
                 <div className="text-[13px] text-g400 mb-2">Awa prépare la séquence…</div>
