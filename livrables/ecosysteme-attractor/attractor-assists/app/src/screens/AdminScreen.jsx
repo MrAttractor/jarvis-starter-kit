@@ -62,7 +62,8 @@ export function AdminScreen({ go, notify }) {
   const [users, setUsers]         = useState([]);
   const [loading, setLoading]     = useState(true);
   const [newUserAlert, setNewUserAlert] = useState(null);
-  const [section, setSection]     = useState('users'); // 'users' | 'feedbacks' | 'miroir' | 'prospects'
+  const [section, setSection]     = useState('users'); // 'users' | 'feedbacks' | 'miroir' | 'prospects' | 'agents'
+  const [usersExpanded, setUsersExpanded] = useState(false);
 
   // MIROIR
   const [miroir, setMiroir]           = useState([]);
@@ -454,7 +455,7 @@ export function AdminScreen({ go, notify }) {
 
   return (
     <>
-    <div className="min-h-full bg-sable pb-6">
+    <div className="min-h-screen bg-sable pb-6">
       <AppHeader title="Pilotage" sub="Vue admin — confidentiel" onBack={() => go('profil')} />
 
       {newUserAlert && (
@@ -522,39 +523,26 @@ export function AdminScreen({ go, notify }) {
           </Btn>
         </Card>
 
-        {/* Onglets */}
-        <div className="flex gap-2">
-          <button onClick={() => setSection('users')}
-            className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold border-[1.5px] transition ${section === 'users' ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
-            Users ({filteredUsers.length})
-          </button>
-          <button onClick={() => setSection('feedbacks')}
-            className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold border-[1.5px] transition relative ${section === 'feedbacks' ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
-            Feedback
-            {pendingCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#D64545] text-white text-[10px] font-extrabold flex items-center justify-center">
-                {pendingCount}
-              </span>
-            )}
-          </button>
-          <button onClick={() => { setSection('miroir'); loadMiroir(); }}
-            className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold border-[1.5px] transition relative ${section === 'miroir' ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
-            Miroir
-            {arbitrer.length > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-amber text-charbon text-[10px] font-extrabold flex items-center justify-center">
-                {arbitrer.length}
-              </span>
-            )}
-          </button>
-          <button onClick={() => { setSection('prospects'); loadProspects(); }}
-            className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold border-[1.5px] transition relative ${section === 'prospects' ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
-            Awa
-            {prospects.filter(p => p.statut === 'nouveau').length > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-orange text-white text-[10px] font-extrabold flex items-center justify-center">
-                {prospects.filter(p => p.statut === 'nouveau').length}
-              </span>
-            )}
-          </button>
+        {/* Onglets — scrollables */}
+        <div className="flex gap-2 overflow-x-auto pb-1 -mx-[18px] px-[18px]" style={{ scrollbarWidth: 'none' }}>
+          {[
+            { id: 'users',    label: `Users (${filteredUsers.length})`, badge: null },
+            { id: 'feedbacks',label: 'Feedback', badge: pendingCount > 0 ? pendingCount : null, badgeTone: 'bg-[#D64545]' },
+            { id: 'miroir',   label: 'Miroir',   badge: arbitrer.length > 0 ? arbitrer.length : null, badgeTone: 'bg-amber text-charbon' },
+            { id: 'prospects',label: 'Awa',      badge: prospects.filter(p => p.statut === 'nouveau').length > 0 ? prospects.filter(p => p.statut === 'nouveau').length : null, badgeTone: 'bg-orange' },
+            { id: 'agents',   label: 'Agents',   badge: null },
+          ].map(tab => (
+            <button key={tab.id}
+              onClick={() => { setSection(tab.id); if (tab.id === 'miroir') loadMiroir(); if (tab.id === 'prospects' || tab.id === 'agents') loadProspects(); }}
+              className={`relative flex-shrink-0 px-4 py-2.5 rounded-xl text-[13px] font-bold border-[1.5px] transition ${section === tab.id ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
+              {tab.label}
+              {tab.badge !== null && (
+                <span className={`absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full text-white text-[10px] font-extrabold flex items-center justify-center ${tab.badgeTone || 'bg-orange'}`}>
+                  {tab.badge}
+                </span>
+              )}
+            </button>
+          ))}
         </div>
 
         {/* ── Section Utilisateurs ── */}
@@ -630,7 +618,7 @@ export function AdminScreen({ go, notify }) {
               <div className="py-8 text-center text-[13px] text-g400">Chargement…</div>
             ) : (
               <div className="flex flex-col gap-2">
-                {filteredUsers.map(u => {
+                {(usersExpanded ? filteredUsers : filteredUsers.slice(0, 8)).map(u => {
                   const online = isOnline(u.last_seen);
                   const recent = isRecent(u.last_seen);
                   return (
@@ -665,6 +653,14 @@ export function AdminScreen({ go, notify }) {
                 })}
                 {filteredUsers.length === 0 && (
                   <p className="text-center text-[13px] text-g400 py-6">Aucun utilisateur trouvé.</p>
+                )}
+                {filteredUsers.length > 8 && (
+                  <button onClick={() => setUsersExpanded(e => !e)}
+                    className="w-full py-3 rounded-xl border border-g200 bg-white text-[13px] font-bold text-g500 hover:border-orange hover:text-orange transition">
+                    {usersExpanded
+                      ? 'Réduire la liste'
+                      : `Voir les ${filteredUsers.length - 8} autres utilisateurs`}
+                  </button>
                 )}
               </div>
             )}
@@ -1017,33 +1013,71 @@ export function AdminScreen({ go, notify }) {
           </>
         )}
 
+        {/* ── Section Agents ── */}
+        {section === 'agents' && (
+          <>
+            <SectionLabel>Journal d'activité — tous les agents</SectionLabel>
+            {prospectsLoading ? (
+              <div className="py-8 text-center text-[13px] text-g400">Chargement…</div>
+            ) : journal.length === 0 ? (
+              <Card className="p-5 text-center">
+                <p className="text-[13px] text-g400">Aucune activité enregistrée.</p>
+                <p className="text-[12px] text-g300 mt-1">Les agents tracent leurs actions ici automatiquement.</p>
+              </Card>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {journal.map(j => {
+                  const agentColors = {
+                    awa:    'bg-orange/10 text-orange',
+                    miroir: 'bg-charbon/8 text-charbon',
+                    kofi:   'bg-info/10 text-info',
+                    miriam: 'bg-amber/10 text-amber',
+                    serge:  'bg-growth/10 text-growth',
+                    roland: 'bg-g200 text-g700',
+                    carelle:'bg-charbon/10 text-charbon',
+                  };
+                  const col = agentColors[j.agent_id] || 'bg-g100 text-g500';
+                  return (
+                    <div key={j.id} className="flex items-start gap-3 bg-white border border-g200 rounded-[14px] px-4 py-3">
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-[11px] font-extrabold uppercase ${col}`}>
+                        {(j.agent_id || 'SYS').slice(0, 3)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-[13px] font-bold text-charbon leading-snug capitalize">{j.agent_id || 'Système'}</p>
+                          <span className="text-[10.5px] text-g300 flex-shrink-0">{timeAgo(j.created_at)}</span>
+                        </div>
+                        <p className="text-[12.5px] text-g500 mt-0.5 leading-snug">{j.titre}</p>
+                        {j.details?.synthese && (
+                          <p className="text-[11.5px] text-g400 mt-0.5 leading-snug line-clamp-2 italic">{j.details.synthese}</p>
+                        )}
+                        {j.details?.notes && (
+                          <p className="text-[11.5px] text-g400 mt-0.5 leading-snug line-clamp-2 italic">{j.details.notes}</p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
+
         {/* ── Ressources admin ── */}
         <div className="mt-6 flex flex-col gap-2">
-          <SectionLabel>Ressources</SectionLabel>
+          <SectionLabel>Accès rapide</SectionLabel>
           {[
             {
-              label: 'Schéma écosystème',
-              desc: 'Circuit complet — MIROIR, agents, utilisateurs',
-              url: 'https://excalidraw.com/#json=HUhhXp7GogMNe3pPmq4Vd,ZMzb0CgGja-CZe5TwDaPPA',
-              tone: 'text-orange',
-            },
-            {
               label: 'Supabase Dashboard',
-              desc: 'BDD, Edge Functions, crons, logs',
+              desc: 'BDD, Edge Functions, crons, logs — projet lgdgbrivnhgeupqhkckd',
               url: 'https://supabase.com/dashboard/project/lgdgbrivnhgeupqhkckd',
               tone: 'text-growth',
             },
             {
               label: 'Netlify Dashboard',
-              desc: 'Déploiements, logs, domaines',
+              desc: 'Déploiements, logs, domaines Attractor Assists',
               url: 'https://app.netlify.com',
               tone: 'text-info',
-            },
-            {
-              label: 'Benchmark Paperclip',
-              desc: 'Concurrent identifié — orchestration agents',
-              url: 'https://paperclip.ing/',
-              tone: 'text-g400',
             },
           ].map(r => (
             <a key={r.url} href={r.url} target="_blank" rel="noopener noreferrer"

@@ -32,7 +32,8 @@ export default function App() {
   const [profile, setProfile] = useState(null);
   const [screen, setScreen] = useState("dashboard");
   const [params, setParams] = useState({});
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(() => localStorage.getItem('aa-dark') === '1');
+  const handleSetDark = (val) => { localStorage.setItem('aa-dark', val ? '1' : '0'); setDark(val); };
   const [fab, setFab] = useState(false);
   const [toastNode, notify] = useToast();
 
@@ -104,7 +105,7 @@ export default function App() {
   const screens = {
     dashboard:   <DashboardScreen go={go} notify={notify} profile={profile} />,
     assistants:  <AssistantsScreen go={go} notify={notify} profile={profile} />,
-    profil:      <ProfilScreen go={go} notify={notify} dark={dark} setDark={setDark} profile={profile} />,
+    profil:      <ProfilScreen go={go} notify={notify} dark={dark} setDark={handleSetDark} profile={profile} />,
     conversation:<ConversationScreen go={go} notify={notify} params={params} profile={profile} />,
     axes:        <AxesScreen go={go} notify={notify} />,
     broadcasts:  <BroadcastsScreen go={go} notify={notify} />,

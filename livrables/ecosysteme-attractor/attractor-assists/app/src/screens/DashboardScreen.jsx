@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import { MOCK } from '../data';
 import { Icon, Pill, Card, Btn, SectionLabel, Progress, AssistGlyph, Sheet } from '../components/ui';
@@ -21,7 +21,15 @@ const TIPS = [
 ];
 
 function TipCard({ nomAss, go }) {
-  const idx = Math.floor(Date.now() / 86400000) % TIPS.length;
+  const startIdx = useMemo(() => Math.floor(Date.now() / 86400000) % TIPS.length, []);
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => setOffset(o => (o + 1) % 3), 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const idx = (startIdx + offset) % TIPS.length;
   const tip = TIPS[idx];
   const actionMap = {
     "Essayer avec Awa":  () => go("conversation", { assistant: "awa" }),
@@ -34,11 +42,20 @@ function TipCard({ nomAss, go }) {
   return (
     <div className="rounded-[20px] overflow-hidden border border-orange/20" style={{ background: "linear-gradient(135deg,#fff9f5,#fff3ec)" }}>
       <div className="px-4 pt-4 pb-3">
-        <div className="flex items-center gap-2 mb-2.5">
-          <div className="w-7 h-7 rounded-lg bg-orange/12 flex items-center justify-center flex-shrink-0">
-            <Icon name={tip.icon} size={15} className="text-orange" />
+        <div className="flex items-center justify-between mb-2.5">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-orange/12 flex items-center justify-center flex-shrink-0">
+              <Icon name={tip.icon} size={15} className="text-orange" />
+            </div>
+            <span className="text-[10.5px] font-bold text-orange uppercase tracking-[.1em]">Astuce du jour</span>
           </div>
-          <span className="text-[10.5px] font-bold text-orange uppercase tracking-[.1em]">Astuce du jour</span>
+          <div className="flex items-center gap-1.5">
+            {[0, 1, 2].map(i => (
+              <button key={i} onClick={() => setOffset(i)}
+                className={`rounded-full transition-all ${i === offset ? 'w-4 h-2 bg-orange' : 'w-2 h-2 bg-orange/30'}`}
+              />
+            ))}
+          </div>
         </div>
         <h4 className="font-display font-extrabold text-[15px] text-charbon leading-snug">{tip.titre}</h4>
         <p className="text-[13px] text-g500 mt-1.5 leading-relaxed">{tip.corps}</p>

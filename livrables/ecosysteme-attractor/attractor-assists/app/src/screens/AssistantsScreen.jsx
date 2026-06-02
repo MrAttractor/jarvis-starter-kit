@@ -222,7 +222,7 @@ function AgentBioModal({ a, profile, onClose, onAction }) {
       <div className="relative bg-white rounded-t-[28px] max-h-[92vh] flex flex-col"
         style={{ animation: 'slideUp 0.35s cubic-bezier(0.22,1,0.36,1) both' }}>
         {/* Photo hero — overflow-hidden ici uniquement pour les coins arrondis */}
-        <div className="relative h-[260px] flex-shrink-0 overflow-hidden rounded-t-[28px]">
+        <div className="relative h-[200px] flex-shrink-0 overflow-hidden rounded-t-[28px]">
           {a.photo ? (
             <img src={a.photo} alt={a.name} className="w-full h-full object-cover object-top" />
           ) : (
@@ -248,7 +248,7 @@ function AgentBioModal({ a, profile, onClose, onAction }) {
         </div>
 
         {/* Contenu */}
-        <div className="overflow-y-auto flex-1 px-5 py-5 pb-8 flex flex-col gap-4">
+        <div className="overflow-y-auto flex-1 px-5 py-5 pb-24 flex flex-col gap-4" style={{ WebkitOverflowScrolling: 'touch' }}>
 
           {/* Ce qu'il/elle ferait pour toi maintenant */}
           {teaser && (
