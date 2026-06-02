@@ -406,21 +406,31 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
     setCarelleSending(true);
     setCarelleMsgs(prev => [...prev, { role: 'user', content: msg }]);
     try {
-      const history = carelleMsgs.slice(-10).map(m => ({ role: m.role, content: m.content }));
-      // Contexte enrichi pour Carelle
+      // Contexte agence injecté dans le premier message système
       const contextDigest = [
+        `[COCKPIT MAC ARTHUR — CHEF DE CABINET]`,
         `Prospects actifs : ${prospects.filter(p => ['nouveau','contacté','relancé'].includes(p.statut)).length}`,
-        `Décisions MIROIR en attente : ${decNonTraitees}`,
+        `Décisions MIROIR en attente d'analyse : ${decNonTraitees}`,
         `Feedbacks nouveaux : ${feedbacks.filter(f => f.status === 'nouveau').length}`,
-        journal.slice(0, 3).map(j => `• ${j.titre}`).join('\n'),
-      ].join('\n');
+        journal.length > 0 ? `Dernières actions :\n${journal.slice(0, 3).map(j => `• ${j.titre}`).join('\n')}` : '',
+      ].filter(Boolean).join('\n');
+
+      // Format attendu par chat-assistant : messages = [{ from: 'me'|'assistant', text: '...' }]
+      const history = carelleMsgs.slice(-10).map(m => ({
+        from: m.role === 'user' ? 'me' : 'assistant',
+        text: m.content,
+      }));
+      const messages = [
+        ...history,
+        { from: 'me', text: `${contextDigest}\n\n${msg}` },
+      ];
+
       const { data, error } = await supabase.functions.invoke('chat-assistant', {
         body: {
-          message: msg,
-          agent_id: 'carelle',
-          history,
-          extra_context: `[COCKPIT MAC ARTHUR]\n${contextDigest}`,
+          messages,
+          assistant_id: 'carelle',
           user_id: profile?.id,
+          profile: profile || {},
         },
       });
       if (error || !data?.reply) {
@@ -429,7 +439,6 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
       } else {
         setCarelleMsgs(prev => [...prev, { role: 'assistant', content: data.reply }]);
         speakCarelle(data.reply);
-        await loadAll();
       }
     } catch { notify('Erreur réseau'); setCarelleMsgs(prev => prev.slice(0, -1)); }
     setCarelleSending(false);
@@ -1268,19 +1277,20 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
 
         {/* Accès rapide */}
         <SectionLabel>Accès rapide</SectionLabel>
-        {[
-          { label: 'Supabase Dashboard', desc: 'BDD, Edge Functions, crons — lgdgbrivnhgeupqhkckd', url: 'https://supabase.com/dashboard/project/lgdgbrivnhgeupqhkckd', tone: 'text-growth' },
-          { label: 'Netlify Dashboard',   desc: 'Déploiements, logs, domaines',                       url: 'https://app.netlify.com',                                     tone: 'text-info' },
-        ].map(r => (
-          <a key={r.url} href={r.url} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-3 bg-white border border-g200 rounded-[14px] px-4 py-3 active:scale-[.99] transition hover:border-orange/40">
-            <div className="flex-1 min-w-0">
-              <p className={`text-[14px] font-bold ${r.tone}`}>{r.label}</p>
-              <p className="text-[12px] text-g400 mt-0.5">{r.desc}</p>
-            </div>
-            <Icon name="send" size={14} className="text-g300 flex-shrink-0" />
-          </a>
-        ))}
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { label: 'Supabase', url: 'https://supabase.com/dashboard/project/lgdgbrivnhgeupqhkckd', tone: 'text-growth', icon: 'sheet' },
+            { label: 'Netlify',  url: 'https://app.netlify.com',                                     tone: 'text-info',   icon: 'bolt' },
+            { label: 'GitHub',   url: 'https://github.com/MrAttractor/jarvis-starter-kit',           tone: 'text-charbon', icon: 'code' },
+            { label: 'demo.agenceattractor.com', url: 'https://demo.agenceattractor.com',            tone: 'text-orange',  icon: 'target' },
+          ].map(r => (
+            <a key={r.url} href={r.url} target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-2.5 bg-white border border-g200 rounded-[14px] px-3 py-3 active:scale-[.99] transition hover:border-orange/30">
+              <Icon name={r.icon} size={15} className={`flex-shrink-0 ${r.tone}`} />
+              <span className={`text-[13px] font-bold ${r.tone} truncate`}>{r.label}</span>
+            </a>
+          ))}
+        </div>
 
       </div>
     </div>
