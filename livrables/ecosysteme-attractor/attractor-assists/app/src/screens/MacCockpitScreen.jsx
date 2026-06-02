@@ -204,7 +204,23 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
     setLoaded(true);
   };
 
-  useEffect(() => { loadAll(); }, []);
+  useEffect(() => {
+    loadAll();
+    // Alerte temps réel quand un visiteur du site remplit le chat
+    const channel = supabase
+      .channel('cockpit-new-leads')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'prospects' }, (payload) => {
+        setProspects(prev => [payload.new, ...prev]);
+        setJournal(prev => [{
+          id: Date.now(), agent_id: 'carelle', type: 'site_lead',
+          titre: `Nouveau lead site — ${payload.new.prenom}`,
+          created_at: new Date().toISOString(),
+        }, ...prev]);
+        notify(`Nouveau lead : ${payload.new.prenom} · ${payload.new.besoin || 'site'}`);
+      })
+      .subscribe();
+    return () => channel.unsubscribe();
+  }, []);
 
   // ─── Données dérivées ────────────────────────────────────────────────────
 

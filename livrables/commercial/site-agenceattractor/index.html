@@ -1526,15 +1526,45 @@ function nextStep() {
 }
 
 async function sendProspect(p) {
+  const SUPA_URL  = "https://lgdgbrivnhgeupqhkckd.supabase.co";
+  const SUPA_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
+  const zoneMap   = { "Côte d'Ivoire":"CI","France / Europe":"EU","Les deux":"CI" };
+  const typeMap   = { "Gérer mes commandes":"A" };
   try {
-    const url = 'https://script.google.com/macros/s/AKfycbzfwgmKWpAlQYTGJuxMv4HGVxsUt37-LUW8dezH_6V62L_AHTYT7Uv22byJVrXWKikmbA/exec';
-    const params = new URLSearchParams({
-      ...p,
-      source: 'site_chat_mac',
-      formule: 'Lead chat',
-      ts: new Date().toLocaleString('fr-FR'),
+    const payload = {
+      prenom:       p.prenom   || 'Visiteur',
+      activite:     p.activite || '',
+      besoin:       p.besoin   || '',
+      contexte:     'Lead chat site agenceattractor.com',
+      canal:        'Site web',
+      zone:         zoneMap[p.zone] || 'CI',
+      type_projet:  typeMap[p.besoin] || 'C',
+      nb_users:     '1',
+      statut:       'nouveau',
+    };
+    const headers = {
+      'Content-Type':  'application/json',
+      'apikey':        SUPA_ANON,
+      'Authorization': 'Bearer ' + SUPA_ANON,
+      'Prefer':        'return=representation',
+    };
+    const res = await fetch(SUPA_URL + '/rest/v1/prospects', {
+      method: 'POST', headers, body: JSON.stringify(payload),
     });
-    await fetch(url + '?' + params.toString(), { method:'GET', mode:'no-cors' });
+    if (res.ok) {
+      const [inserted] = await res.json();
+      if (inserted?.id) {
+        await fetch(SUPA_URL + '/rest/v1/journal_agent', {
+          method: 'POST', headers: { ...headers, 'Prefer': '' },
+          body: JSON.stringify({
+            agent_id: 'carelle',
+            type:     'site_lead',
+            titre:    'Nouveau lead site — ' + p.prenom + (p.besoin ? ' · ' + p.besoin : ''),
+            details:  { prospect_id: inserted.id, source: 'site_chat', zone: payload.zone },
+          }),
+        });
+      }
+    }
   } catch(e) { /* silencieux */ }
 }
 
