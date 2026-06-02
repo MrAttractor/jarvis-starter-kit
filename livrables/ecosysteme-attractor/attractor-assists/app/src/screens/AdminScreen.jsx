@@ -64,6 +64,8 @@ export function AdminScreen({ go, notify }) {
   const [newUserAlert, setNewUserAlert] = useState(null);
   const [section, setSection]     = useState('users'); // 'users' | 'feedbacks' | 'miroir' | 'prospects' | 'jarvis'
   const [usersExpanded, setUsersExpanded] = useState(false);
+  const [openSegments, setOpenSegments]   = useState({});
+  const toggleSegment = (id) => setOpenSegments(s => ({ ...s, [id]: !s[id] }));
 
   // Jarvis cockpit
   const [jarvisMsgs, setJarvisMsgs]       = useState([]);
@@ -652,7 +654,7 @@ export function AdminScreen({ go, notify }) {
             { id: 'users',    label: `Users (${filteredUsers.length})`, badge: null },
             { id: 'feedbacks',label: 'Feedback', badge: pendingCount > 0 ? pendingCount : null, badgeTone: 'bg-[#D64545]' },
             { id: 'miroir',   label: 'Miroir',   badge: arbitrer.length > 0 ? arbitrer.length : null, badgeTone: 'bg-amber text-charbon' },
-            { id: 'prospects',label: 'Awa',      badge: prospects.filter(p => p.statut === 'nouveau').length > 0 ? prospects.filter(p => p.statut === 'nouveau').length : null, badgeTone: 'bg-orange' },
+            { id: 'prospects',label: 'Pipeline',  badge: prospects.filter(p => p.statut === 'nouveau').length > 0 ? prospects.filter(p => p.statut === 'nouveau').length : null, badgeTone: 'bg-orange' },
             { id: 'jarvis',   label: 'Jarvis',   badge: null },
           ].map(tab => (
             <button key={tab.id}
@@ -671,188 +673,167 @@ export function AdminScreen({ go, notify }) {
         {/* ── Section Utilisateurs ── */}
         {section === 'users' && (
           <>
-            {/* Panneau À surveiller */}
-            {(() => {
-              const flagged = users.filter(u => flagsFor(u).length > 0 || unreadFrom.has(u.id));
-              if (flagged.length === 0) return null;
+            {loading ? (
+              <div className="py-8 text-center text-[13px] text-g400">Chargement…</div>
+            ) : (() => {
+              const rubriques = [
+                {
+                  id: 'watch', label: 'À surveiller', icon: 'bolt',
+                  accent: 'border-amber/30 bg-amber/5',
+                  headerAccent: 'text-amber',
+                  badgeColor: 'bg-amber/20 text-amber',
+                  users: users.filter(u => flagsFor(u).length > 0 || unreadFrom.has(u.id)),
+                },
+                {
+                  id: 'online', label: 'En ligne',  icon: 'bolt',
+                  accent: 'border-[#25D366]/25 bg-[#25D366]/5',
+                  headerAccent: 'text-[#25D366]',
+                  badgeColor: 'bg-[#25D366]/15 text-[#25D366]',
+                  users: users.filter(u => isOnline(u.last_seen)),
+                },
+                {
+                  id: 'manager', label: 'Plan Manager', icon: 'medal',
+                  accent: 'border-g200 bg-white',
+                  headerAccent: 'text-amber',
+                  badgeColor: 'bg-amber/15 text-amber',
+                  users: users.filter(u => u.plan_code === 'manager'),
+                },
+                {
+                  id: 'decouverte', label: 'Plan Découverte', icon: 'user',
+                  accent: 'border-g200 bg-white',
+                  headerAccent: 'text-charbon',
+                  badgeColor: 'bg-charbon/8 text-charbon',
+                  users: users.filter(u => !u.plan_code || u.plan_code === 'decouverte'),
+                },
+                {
+                  id: 'incomplete', label: 'Onboarding incomplet', icon: 'warn',
+                  accent: 'border-[#D64545]/20 bg-white',
+                  headerAccent: 'text-[#D64545]',
+                  badgeColor: 'bg-[#D64545]/10 text-[#D64545]',
+                  users: users.filter(u => !u.onboarding_done),
+                },
+                {
+                  id: 'inactive', label: 'Inactifs 7j+', icon: 'clock',
+                  accent: 'border-g200 bg-white',
+                  headerAccent: 'text-g400',
+                  badgeColor: 'bg-g100 text-g400',
+                  users: users.filter(u => !u.last_seen || (Date.now() - new Date(u.last_seen).getTime()) > 7 * 86400000),
+                },
+              ];
+
               return (
-                <div className="rounded-[16px] border border-amber/30 overflow-hidden">
-                  <button
-                    onClick={() => setWatchOpen(o => !o)}
-                    className="w-full flex items-center justify-between px-4 py-3 bg-amber/8 text-left">
-                    <div className="flex items-center gap-2">
-                      <Icon name="bolt" size={15} className="text-amber" />
-                      <span className="text-[13px] font-bold text-charbon">À surveiller</span>
-                      <span className="bg-amber/20 text-amber text-[11px] font-extrabold px-2 py-0.5 rounded-full">{flagged.length}</span>
-                    </div>
-                    <Icon name={watchOpen ? 'close' : 'arrow'} size={14} className="text-g400" />
-                  </button>
-                  {watchOpen && (
-                    <div className="flex flex-col divide-y divide-g100">
-                      {flagged.map(u => {
-                        const flags = flagsFor(u);
-                        const hasReply = unreadFrom.has(u.id);
-                        return (
-                          <button key={u.id} onClick={() => openDetail(u)}
-                            className="flex items-center gap-3 px-4 py-2.5 bg-white text-left hover:bg-sable transition">
-                            <div className="relative flex-shrink-0">
-                              <div className="w-8 h-8 rounded-full bg-orange/10 flex items-center justify-center text-[11px] font-bold text-orange">
-                                {(u.prenom || '?').slice(0, 2).toUpperCase()}
-                              </div>
-                              {hasReply && <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#25D366] border-2 border-white" />}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <span className="text-[13px] font-bold text-charbon">{u.prenom || '—'}</span>
-                              <div className="flex gap-1 mt-0.5 flex-wrap">
-                                {hasReply && (
-                                  <span className="text-[10.5px] font-bold text-[#25D366] bg-[#25D366]/10 px-1.5 py-0.5 rounded-full">A répondu</span>
-                                )}
-                                {flags.map(f => (
-                                  <span key={f.label} className={`text-[10.5px] font-bold px-1.5 py-0.5 rounded-full ${f.color}`}>{f.label}</span>
-                                ))}
-                              </div>
-                            </div>
-                            <Icon name="send" size={13} className="text-orange flex-shrink-0" />
-                          </button>
-                        );
-                      })}
-                    </div>
+                <div className="flex flex-col gap-2">
+                  {rubriques.map(r => {
+                    if (r.users.length === 0) return null;
+                    const isOpen = openSegments[r.id];
+                    return (
+                      <div key={r.id} className={`rounded-[16px] border overflow-hidden ${r.accent}`}>
+                        <button onClick={() => toggleSegment(r.id)}
+                          className="w-full flex items-center justify-between px-4 py-3 text-left">
+                          <div className="flex items-center gap-2">
+                            <span className={`text-[13px] font-bold ${r.headerAccent}`}>{r.label}</span>
+                            <span className={`text-[11px] font-extrabold px-2 py-0.5 rounded-full ${r.badgeColor}`}>{r.users.length}</span>
+                          </div>
+                          <Icon name={isOpen ? 'chevdown' : 'chevron'} size={14} className="text-g400" />
+                        </button>
+
+                        {isOpen && (
+                          <div className="flex flex-col divide-y divide-g100">
+                            {r.users.map(u => {
+                              const online = isOnline(u.last_seen);
+                              const recent = isRecent(u.last_seen);
+                              return (
+                                <button key={u.id} onClick={() => openDetail(u)}
+                                  className="flex items-center gap-3 px-4 py-3 bg-white text-left active:bg-sable transition">
+                                  <div className="relative flex-shrink-0">
+                                    <div className="w-9 h-9 rounded-full bg-orange/10 flex items-center justify-center font-display font-extrabold text-[13px] text-orange">
+                                      {(u.prenom || '?').slice(0, 2).toUpperCase()}
+                                    </div>
+                                    {online && <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-[#25D366] border-2 border-white" />}
+                                    {!online && recent && <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-amber border-2 border-white" />}
+                                    {unreadFrom.has(u.id) && <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-orange border-2 border-white flex items-center justify-center text-[8px] text-white font-bold">!</span>}
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="font-bold text-[14px] truncate">{u.prenom || '(sans prénom)'}</div>
+                                    <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                                      <span className="text-[11px] text-g400">{u.zone || '—'}</span>
+                                      <span className="text-g300">·</span>
+                                      <span className={`text-[11px] font-medium ${online ? 'text-[#25D366]' : recent ? 'text-amber' : 'text-g400'}`}>
+                                        {online ? 'En ligne' : u.last_seen ? timeAgo(u.last_seen) : 'Jamais connecté'}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                                    <Pill tone={u.plan_code === 'manager' ? 'amber' : u.plan_code === 'brasdroit' ? 'growth' : 'neutral'} className="text-[10px]">
+                                      {u.plan_code || 'découverte'}
+                                    </Pill>
+                                    {!u.onboarding_done && <span className="text-[10px] text-[#D64545] font-semibold">incomplet</span>}
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                  {users.length === 0 && (
+                    <p className="text-center text-[13px] text-g400 py-6">Aucun utilisateur.</p>
                   )}
                 </div>
               );
             })()}
-
-            <div className="flex gap-2 overflow-x-auto pb-1 -mx-[18px] px-[18px]" style={{ scrollbarWidth: 'none' }}>
-              {[['all','Tous'],['incomplete','Incomplet'],['decouverte','Découverte'],['manager','Manager']].map(([k,l]) => (
-                <button key={k} onClick={() => setFilterPlan(k)}
-                  className={`flex-shrink-0 px-3.5 py-2 rounded-full text-[12.5px] font-bold border-[1.5px] transition ${filterPlan === k ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
-                  {l}
-                </button>
-              ))}
-            </div>
-
-            <div className="bg-white border border-g200 rounded-xl px-4 py-3 flex items-center gap-2">
-              <Icon name="target" size={16} className="text-g400" />
-              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher un prénom…"
-                className="flex-1 text-[14px] outline-none bg-transparent placeholder:text-g400" />
-            </div>
-
-            {loading ? (
-              <div className="py-8 text-center text-[13px] text-g400">Chargement…</div>
-            ) : (
-              <div className="flex flex-col gap-2">
-                {(usersExpanded ? filteredUsers : filteredUsers.slice(0, 8)).map(u => {
-                  const online = isOnline(u.last_seen);
-                  const recent = isRecent(u.last_seen);
-                  return (
-                    <Card key={u.id} onClick={() => openDetail(u)} className={`px-4 py-3 flex items-center gap-3 cursor-pointer active:scale-[.99] transition ${online ? 'border-[#25D366]/40' : unreadFrom.has(u.id) ? 'border-orange/40' : ''}`}>
-                      <div className="relative flex-shrink-0">
-                        <div className="w-9 h-9 rounded-full bg-orange/15 flex items-center justify-center font-display font-extrabold text-[13px] text-orange">
-                          {(u.prenom || '?').slice(0, 2).toUpperCase()}
-                        </div>
-                        {online  && <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-[#25D366] border-2 border-white" />}
-                        {!online && recent && <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-amber border-2 border-white" />}
-                        {unreadFrom.has(u.id) && !online && <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-orange border-2 border-white flex items-center justify-center text-[8px] text-white font-bold">!</span>}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-bold text-[14px] truncate">{u.prenom || '(sans prénom)'}</div>
-                        <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                          <span className="text-[11px] text-g400">{u.zone || '—'}</span>
-                          <span className="text-g300">·</span>
-                          <span className={`text-[11px] font-medium ${online ? 'text-[#25D366]' : recent ? 'text-amber' : 'text-g400'}`}>
-                            {online ? 'En ligne' : u.last_seen ? timeAgo(u.last_seen) : 'Jamais connecté'}
-                          </span>
-                          {u.referral_count > 0 && <span className="text-[11px] text-growth font-bold">{u.referral_count} filleuls</span>}
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                        <Pill tone={u.plan_code === 'manager' ? 'amber' : u.plan_code === 'brasdroit' ? 'growth' : 'neutral'} className="text-[10px]">
-                          {u.plan_code || 'découverte'}
-                        </Pill>
-                        {!u.onboarding_done && <span className="text-[10px] text-[#D64545] font-semibold">incomplet</span>}
-                      </div>
-                    </Card>
-                  );
-                })}
-                {filteredUsers.length === 0 && (
-                  <p className="text-center text-[13px] text-g400 py-6">Aucun utilisateur trouvé.</p>
-                )}
-                {filteredUsers.length > 8 && (
-                  <button onClick={() => setUsersExpanded(e => !e)}
-                    className="w-full py-3 rounded-xl border border-g200 bg-white text-[13px] font-bold text-g500 hover:border-orange hover:text-orange transition">
-                    {usersExpanded
-                      ? 'Réduire la liste'
-                      : `Voir les ${filteredUsers.length - 8} autres utilisateurs`}
-                  </button>
-                )}
-              </div>
-            )}
           </>
         )}
 
-        {/* ── Section PROSPECTS (Awa) ── */}
+        {/* ── Section PIPELINE (Carelle) ── */}
         {section === 'prospects' && (
           <>
-            {/* Journal agents — fil d'activité */}
+            {/* Activité Carelle — journal récent */}
             {journal.length > 0 && (
-              <>
-                <SectionLabel>Travaux des agents</SectionLabel>
-                <div className="flex flex-col gap-2">
-                  {journal.slice(0, 6).map(j => (
-                    <div key={j.id} className="flex items-start gap-3 bg-white border border-g200 rounded-[14px] px-4 py-3">
-                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-[11px] font-bold ${
-                        j.agent_id === 'awa'    ? 'bg-orange/10 text-orange' :
-                        j.agent_id === 'miroir' ? 'bg-charbon/5 text-charbon' :
-                        j.agent_id === 'kofi'   ? 'bg-info/10 text-info' : 'bg-g100 text-g500'
-                      }`}>{(j.agent_id || 'SYS').slice(0,3).toUpperCase()}</div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[13px] font-semibold text-charbon leading-snug">{j.titre}</p>
-                        {j.details?.synthese && (
-                          <p className="text-[11.5px] text-g400 mt-0.5 leading-snug line-clamp-2">{j.details.synthese}</p>
-                        )}
-                        {j.details?.notes && (
-                          <p className="text-[11.5px] text-g400 mt-0.5 leading-snug line-clamp-2">{j.details.notes}</p>
-                        )}
-                      </div>
-                      <span className="text-[10.5px] text-g300 flex-shrink-0">{timeAgo(j.created_at)}</span>
-                    </div>
-                  ))}
-                </div>
-              </>
+              <div className="flex flex-col gap-1.5">
+                {journal.slice(0, 3).map(j => (
+                  <div key={j.id} className="flex items-center gap-2.5 px-3 py-2 bg-white border border-g200 rounded-[12px]">
+                    <span className={`text-[10.5px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${
+                      j.agent_id === 'carelle' ? 'bg-charbon/8 text-charbon' :
+                      j.agent_id === 'miroir'  ? 'bg-g100 text-g500' : 'bg-orange/10 text-orange'
+                    }`}>{(j.agent_id || 'SYS').toUpperCase().slice(0,3)}</span>
+                    <p className="text-[12px] text-g700 truncate flex-1">{j.titre}</p>
+                    <span className="text-[10px] text-g300 flex-shrink-0">{timeAgo(j.created_at)}</span>
+                  </div>
+                ))}
+              </div>
             )}
 
-            {/* Devis en cours de génération ou généré */}
+            {/* Devis flottant */}
             {(devisLoading || devis) && (
               <Card className={`p-4 flex flex-col gap-3 ${devis?.statut === 'valide' ? 'border-growth/40' : 'border-orange/30'}`}>
                 <div className="flex items-center justify-between">
                   <p className="text-[13px] font-bold text-charbon">
-                    {devisLoading ? 'Devis en cours de calcul…' : `Devis ${devis?.numero}`}
+                    {devisLoading ? 'Calcul du devis…' : `Devis ${devis?.numero}`}
                   </p>
                   {devis?.statut === 'valide' && (
                     <span className="text-[11px] font-bold text-growth bg-growth/10 px-2 py-0.5 rounded-full">Validé</span>
                   )}
                 </div>
                 {devisLoading ? (
-                  <p className="text-[12px] text-g400">Le barème est appliqué automatiquement…</p>
+                  <p className="text-[12px] text-g400">Roland applique le barème…</p>
                 ) : devis?.message_si_freemium ? (
                   <p className="text-[13px] text-g400 italic">{devis.message_si_freemium}</p>
                 ) : (
                   <>
                     <div className="bg-sable rounded-xl px-4 py-3 flex flex-col gap-1.5">
                       <div className="flex justify-between"><span className="text-[12.5px] text-g400">Famille / Niveau</span><span className="text-[13px] font-bold text-charbon">{devis?.famille} — {devis?.niveau}</span></div>
-                      {devis?.setup_ht && <div className="flex justify-between"><span className="text-[12.5px] text-g400">Setup HT</span><span className="text-[13px] font-bold text-charbon">{devis.setup_ht.toLocaleString('fr-FR')} {devis.devise}</span></div>}
-                      {devis?.mrr && <div className="flex justify-between"><span className="text-[12.5px] text-g400">MRR / mois</span><span className="text-[13px] font-bold text-charbon">{devis.mrr.toLocaleString('fr-FR')} {devis.devise}</span></div>}
+                      {devis?.setup_ht && <div className="flex justify-between"><span className="text-[12.5px] text-g400">Setup</span><span className="text-[13px] font-bold text-charbon">{devis.setup_ht.toLocaleString('fr-FR')} {devis.devise}</span></div>}
+                      {devis?.mrr && <div className="flex justify-between"><span className="text-[12.5px] text-g400">MRR</span><span className="text-[13px] font-bold text-charbon">{devis.mrr.toLocaleString('fr-FR')} {devis.devise}</span></div>}
                       <div className="border-t border-g200 my-1" />
-                      {devis?.acompte && <div className="flex justify-between"><span className="text-[12.5px] text-g400">Acompte (50%)</span><span className="text-[13px] font-bold text-orange">{devis.acompte.toLocaleString('fr-FR')} {devis.devise}</span></div>}
-                      {devis?.solde && <div className="flex justify-between"><span className="text-[12.5px] text-g400">Solde livraison</span><span className="text-[13px] font-medium text-charbon">{devis.solde.toLocaleString('fr-FR')} {devis.devise}</span></div>}
-                      {devis?.total_m1 && <div className="flex justify-between"><span className="text-[12.5px] font-bold text-charbon">Total mois 1</span><span className="text-[14px] font-extrabold text-charbon">{devis.total_m1.toLocaleString('fr-FR')} {devis.devise}</span></div>}
+                      {devis?.acompte && <div className="flex justify-between"><span className="text-[12.5px] text-g400">Acompte 50%</span><span className="text-[13px] font-bold text-orange">{devis.acompte.toLocaleString('fr-FR')} {devis.devise}</span></div>}
+                      {devis?.total_m1 && <div className="flex justify-between"><span className="text-[12.5px] font-bold text-charbon">Total M1</span><span className="text-[14px] font-extrabold text-charbon">{devis.total_m1.toLocaleString('fr-FR')} {devis.devise}</span></div>}
                     </div>
-                    {devis?.raisonnement && (
-                      <p className="text-[12px] text-g400 italic leading-snug">"{devis.raisonnement}"</p>
-                    )}
+                    {devis?.raisonnement && <p className="text-[12px] text-g400 italic">"{devis.raisonnement}"</p>}
                     {devis?.questions_manquantes && devis.questions_manquantes !== 'null' && (
                       <div className="bg-amber/10 border border-amber/20 rounded-xl px-3 py-2.5">
-                        <p className="text-[12px] font-bold text-amber mb-0.5">Info manquante</p>
+                        <p className="text-[11.5px] font-bold text-amber mb-0.5">Info manquante</p>
                         <p className="text-[12.5px] text-charbon">{devis.questions_manquantes}</p>
                       </div>
                     )}
@@ -867,13 +848,13 @@ export function AdminScreen({ go, notify }) {
               </Card>
             )}
 
-            {/* Bouton ajouter prospect */}
+            {/* Bouton nouveau prospect */}
             <button onClick={() => setShowForm(o => !o)}
               className={`w-full py-3 rounded-xl text-[13.5px] font-bold border-[1.5px] transition ${showForm ? 'bg-charbon text-white border-charbon' : 'bg-orange/10 text-orange border-orange/30'}`}>
-              {showForm ? 'Fermer le formulaire' : '+ Nouveau prospect → séquence Awa'}
+              {showForm ? 'Fermer' : '+ Nouveau prospect'}
             </button>
 
-            {/* Formulaire nouveau prospect */}
+            {/* Formulaire — minimaliste */}
             {showForm && (
               <Card className="p-4 flex flex-col gap-3">
                 <input value={pPrenom} onChange={e => setPPrenom(e.target.value)} placeholder="Prénom *"
@@ -881,10 +862,10 @@ export function AdminScreen({ go, notify }) {
                 <input value={pActivite} onChange={e => setPActivite(e.target.value)} placeholder="Activité / secteur"
                   className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[14px] outline-none focus:border-orange transition" />
                 <textarea value={pBesoin} onChange={e => setPBesoin(e.target.value)} rows={2}
-                  placeholder="Ce dont il a besoin (ex : une app métier, du coaching, visibilité…)"
+                  placeholder="Besoin exprimé"
                   className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[13.5px] resize-none outline-none focus:border-orange transition" />
                 <textarea value={pContexte} onChange={e => setPContexte(e.target.value)} rows={2}
-                  placeholder="Contexte — budget, objection, historique, comment tu l'as connu…"
+                  placeholder="Contexte — réseau, budget, opportunité…"
                   className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[13.5px] resize-none outline-none focus:border-orange transition" />
                 <div className="grid grid-cols-2 gap-2">
                   <select value={pCanal} onChange={e => setPCanal(e.target.value)}
@@ -898,73 +879,91 @@ export function AdminScreen({ go, notify }) {
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div className="flex flex-col gap-1">
-                    <label className="text-[11px] font-bold text-g400 uppercase tracking-wider">Type de projet</label>
+                    <label className="text-[11px] font-bold text-g400 uppercase tracking-wider">Famille</label>
                     <select value={pType} onChange={e => setPType(e.target.value)}
                       className="w-full bg-sable border border-g200 rounded-xl px-3 py-3 text-[13.5px] text-charbon outline-none focus:border-orange transition">
-                      <option value="A">App sur mesure (Fam. A)</option>
-                      <option value="B">Consulting (Fam. B)</option>
-                      <option value="C">Attractor Assists (Fam. C)</option>
+                      <option value="A">App sur mesure (A)</option>
+                      <option value="B">Consulting (B)</option>
+                      <option value="C">Attractor Assists (C)</option>
                     </select>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <label className="text-[11px] font-bold text-g400 uppercase tracking-wider">Nb utilisateurs</label>
+                    <label className="text-[11px] font-bold text-g400 uppercase tracking-wider">Utilisateurs</label>
                     <select value={pNbUsers} onChange={e => setPNbUsers(e.target.value)}
                       className="w-full bg-sable border border-g200 rounded-xl px-3 py-3 text-[13.5px] text-charbon outline-none focus:border-orange transition">
-                      <option value="1">1 (SOLO)</option>
-                      <option value="2-5">2 à 5 (ÉQUIPE)</option>
-                      <option value="5+">5+ (ENTERPRISE)</option>
+                      <option value="1">1 · SOLO</option>
+                      <option value="2-5">2-5 · ÉQUIPE</option>
+                      <option value="5+">5+ · ENTERPRISE</option>
                     </select>
                   </div>
                 </div>
-                <input value={pWa} onChange={e => setPWa(e.target.value)} placeholder="Numéro WhatsApp"
+                <input value={pWa} onChange={e => setPWa(e.target.value)} placeholder="WhatsApp"
                   className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[14px] outline-none focus:border-orange transition" />
                 <button onClick={saveProspect} disabled={!pPrenom.trim() || pSaving}
                   className="w-full py-3 rounded-xl bg-orange text-white text-[14px] font-bold disabled:opacity-40 active:scale-[.98] transition">
-                  {pSaving ? 'Enregistrement + génération…' : 'Enregistrer et générer la séquence Awa'}
+                  {pSaving ? 'Enregistrement…' : 'Ajouter au pipeline'}
                 </button>
               </Card>
             )}
 
-            {/* Liste des prospects */}
+            {/* Pipeline par statut — rubriques collapsibles */}
             {prospectsLoading ? (
-              <div className="py-8 text-center text-[13px] text-g400">Chargement…</div>
+              <div className="py-6 text-center text-[13px] text-g400">Chargement…</div>
             ) : prospects.length === 0 ? (
               <Card className="p-5 text-center">
-                <p className="text-[13px] text-g400">Aucun prospect pour l'instant.</p>
-                <p className="text-[12px] text-g300 mt-1">Ajoute ton premier prospect — Awa génère la séquence complète.</p>
+                <p className="text-[13px] text-g400">Pipeline vide.</p>
+                <p className="text-[12px] text-g300 mt-1">Ajoute un premier prospect pour démarrer.</p>
               </Card>
-            ) : (
-              <>
-                <SectionLabel>Pipeline ({prospects.length})</SectionLabel>
+            ) : (() => {
+              const groupes = [
+                { id: 'nouveau',  label: 'Nouveaux',   badge: 'bg-orange/15 text-orange',   border: 'border-orange/25' },
+                { id: 'contacté', label: 'Contactés',  badge: 'bg-info/10 text-info',        border: 'border-g200' },
+                { id: 'relancé',  label: 'Relancés',   badge: 'bg-amber/15 text-amber',      border: 'border-amber/25' },
+                { id: 'closé',    label: 'Closés',     badge: 'bg-growth/15 text-growth',    border: 'border-growth/25' },
+                { id: 'perdu',    label: 'Perdus',     badge: 'bg-g100 text-g400',           border: 'border-g200' },
+              ];
+              return (
                 <div className="flex flex-col gap-2">
-                  {prospects.map(p => {
-                    const statusStyle = {
-                      nouveau:   'bg-orange/10 text-orange',
-                      contacté:  'bg-info/10 text-info',
-                      relancé:   'bg-amber/10 text-amber',
-                      closé:     'bg-growth/10 text-growth',
-                      perdu:     'bg-g100 text-g400',
-                    }[p.statut] || 'bg-g100 text-g500';
+                  {groupes.map(g => {
+                    const list = prospects.filter(p => p.statut === g.id);
+                    if (list.length === 0) return null;
+                    const isOpen = openSegments[`pipeline_${g.id}`];
                     return (
-                      <Card key={p.id} onClick={() => loadExistingSeq(p)}
-                        className="px-4 py-3 flex items-center gap-3 cursor-pointer active:scale-[.99] transition">
-                        <div className="w-10 h-10 rounded-full bg-orange/10 flex items-center justify-center font-display font-extrabold text-[14px] text-orange flex-shrink-0">
-                          {p.prenom.slice(0,2).toUpperCase()}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="font-bold text-[14px]">{p.prenom}</div>
-                          <div className="text-[12px] text-g400 truncate">{p.activite || p.besoin || '—'}</div>
-                        </div>
-                        <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-                          <span className={`text-[10.5px] font-bold px-2 py-0.5 rounded-full ${statusStyle}`}>{p.statut}</span>
-                          <span className="text-[10px] text-g300">{p.canal}</span>
-                        </div>
-                      </Card>
+                      <div key={g.id} className={`rounded-[16px] border overflow-hidden ${g.border} bg-white`}>
+                        <button onClick={() => toggleSegment(`pipeline_${g.id}`)}
+                          className="w-full flex items-center justify-between px-4 py-3 text-left">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[13px] font-bold text-charbon">{g.label}</span>
+                            <span className={`text-[11px] font-extrabold px-2 py-0.5 rounded-full ${g.badge}`}>{list.length}</span>
+                          </div>
+                          <Icon name={isOpen ? 'chevdown' : 'chevron'} size={14} className="text-g400" />
+                        </button>
+                        {isOpen && (
+                          <div className="flex flex-col divide-y divide-g100">
+                            {list.map(p => (
+                              <button key={p.id} onClick={() => loadExistingSeq(p)}
+                                className="flex items-center gap-3 px-4 py-3 bg-white text-left active:bg-sable transition">
+                                <div className="w-9 h-9 rounded-full bg-orange/10 flex items-center justify-center font-display font-extrabold text-[13px] text-orange flex-shrink-0">
+                                  {p.prenom.slice(0,2).toUpperCase()}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-bold text-[14px]">{p.prenom}</div>
+                                  <div className="text-[12px] text-g400 truncate">{p.activite || p.besoin || '—'}</div>
+                                </div>
+                                <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                                  <span className="text-[10.5px] text-g400">{p.canal}</span>
+                                  {p.type_projet && <span className="text-[10px] font-bold text-orange">Fam. {p.type_projet}</span>}
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     );
                   })}
                 </div>
-              </>
-            )}
+              );
+            })()}
           </>
         )}
 

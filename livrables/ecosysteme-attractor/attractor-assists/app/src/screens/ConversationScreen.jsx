@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import { MOCK } from '../data';
 import { Icon, AssistGlyph, TypingDots, Card, Pill, Sheet, Textarea } from '../components/ui';
 
-// â”€â”€â”€ Openers par agent â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Openers par agent ─────────────────────────────────────────────────────────
 
 const OPENERS_AGENTS = {
   awa: (p, profile) => {
@@ -12,21 +12,21 @@ const OPENERS_AGENTS = {
     const txt = (ouverture + ' ' + activite).toLowerCase();
 
     if (txt.includes('relance') || txt.includes('prospect'))
-      return `Salut ${p}. Je suis Awa.\n\nJ'ai vu que tu cherches Ã  relancer des prospects. Je prÃ©pare ton message maintenant â€” dis-moi juste : c'est pour quel type de client et depuis combien de temps tu attends ?`;
+      return `Salut ${p}. Je suis Awa.\n\nJ'ai vu que tu cherches à relancer des prospects. Je prépare ton message maintenant — dis-moi juste : c'est pour quel type de client et depuis combien de temps tu attends ?`;
     if (txt.includes('client') || txt.includes('vente') || txt.includes('closing'))
-      return `Salut ${p}. Je suis Awa.\n\nTu es en phase de vente. Donne-moi le nom ou le profil du client que tu veux convaincre â€” je te prÃ©pare l'approche complÃ¨te : premier message, relance et closing.`;
+      return `Salut ${p}. Je suis Awa.\n\nTu es en phase de vente. Donne-moi le nom ou le profil du client que tu veux convaincre — je te prépare l'approche complète : premier message, relance et closing.`;
     if (txt.includes('contenu') || txt.includes('post') || txt.includes('audience'))
-      return `Salut ${p}. Je suis Awa.\n\nTu construis ton audience ? Bien. Je peux transformer tes followers en clients. Dis-moi ce que tu vends et Ã  qui â€” je commence par ton message d'approche.`;
+      return `Salut ${p}. Je suis Awa.\n\nTu construis ton audience ? Bien. Je peux transformer tes followers en clients. Dis-moi ce que tu vends et à qui — je commence par ton message d'approche.`;
 
-    return `Salut ${p}. Je suis Awa.\n\nJe ne fais pas de conseils â€” je rÃ©dige directement. Dis-moi qui tu veux convaincre et de quoi. Je prÃ©pare le message en moins d'une minute.`;
+    return `Salut ${p}. Je suis Awa.\n\nJe ne fais pas de conseils — je rédige directement. Dis-moi qui tu veux convaincre et de quoi. Je prépare le message en moins d'une minute.`;
   },
-  miriam: (p) => `Salut ${p}. Je suis Miriam. Posts, rÃ©ponses, broadcasts â€” je gÃ¨re ta prÃ©sence digitale. Par quoi on commence ?`,
-  serge:  (p) => `Salut ${p}. Je suis Serge. Dis-moi ce qui est dans ta tÃªte en ce moment â€” tÃ¢ches, rendez-vous, relances. Je trie et j'organise.`,
+  miriam: (p) => `Salut ${p}. Je suis Miriam. Posts, réponses, broadcasts — je gère ta présence digitale. Par quoi on commence ?`,
+  serge:  (p) => `Salut ${p}. Je suis Serge. Dis-moi ce qui est dans ta tête en ce moment — tâches, rendez-vous, relances. Je trie et j'organise.`,
   roland: (p) => `Salut ${p}. Je suis Roland. Parle-moi de tes prix et tes ventes. Je te dis si tu es rentable ou pas.`,
-  kofi:   (p) => `Salut ${p}. Je suis Kofi. Je transforme ce que tu fais en histoire qui vend.\n\nDis-moi : c'est quoi ton activitÃ©, et c'est qui ta cible ? Je construis ta campagne complÃ¨te.`,
+  kofi:   (p) => `Salut ${p}. Je suis Kofi. Je transforme ce que tu fais en histoire qui vend.\n\nDis-moi : c'est quoi ton activité, et c'est qui ta cible ? Je construis ta campagne complète.`,
 };
 
-// Opener bras droit â€” contextuel selon le profil dominant
+// Opener bras droit — contextuel selon le profil dominant
 const buildCoachOpener = (profile, nomAss) => {
   const prenom    = profile?.prenom        || "toi";
   const ouverture = profile?.ouverture     || "";
@@ -37,32 +37,32 @@ const buildCoachOpener = (profile, nomAss) => {
 
   // Utilisateur qui revient
   if (memoire) {
-    return `Content de te revoir, ${prenom}. ${memoire}\n\nOn continue ou tu as autre chose en tÃªte ?`;
+    return `Content de te revoir, ${prenom}. ${memoire}\n\nOn continue ou tu as autre chose en tête ?`;
   }
 
   // Intro commune
   const intro = ouverture
-    ? `Salut ${prenom}. Je suis ${nomAss} â€” ton assistant IA, disponible maintenant.\n\nTu m'as dit que tu voulais : "${ouverture}". C'est exactement pour Ã§a que je suis lÃ .`
-    : `Salut ${prenom}. Je suis ${nomAss} â€” ton assistant IA, disponible maintenant.`;
+    ? `Salut ${prenom}. Je suis ${nomAss} — ton assistant IA, disponible maintenant.\n\nTu m'as dit que tu voulais : "${ouverture}". C'est exactement pour ça que je suis là.`
+    : `Salut ${prenom}. Je suis ${nomAss} — ton assistant IA, disponible maintenant.`;
 
-  // PrÃ©sentation Ã©quipe selon le profil
+  // Présentation équipe selon le profil
   if (profil === "etudiant") {
-    return `${intro}\n\nJe suis lÃ  pour t'aider Ã  structurer tes idÃ©es, clarifier ton projet, avancer Ã  ton rythme.\n\nOn a aussi une Ã©quipe si tu en as besoin : Awa (vente et prospection), Miriam (contenu), Serge (organisation), Roland (finances). Tout est dans "Mon Ã©quipe" â€” disponible quand tu es prÃªt.\n\nPar quoi tu veux commencer ?`;
+    return `${intro}\n\nJe suis là pour t'aider à structurer tes idées, clarifier ton projet, avancer à ton rythme.\n\nOn a aussi une équipe si tu en as besoin : Awa (vente et prospection), Miriam (contenu), Serge (organisation), Roland (finances). Tout est dans "Mon équipe" — disponible quand tu es prêt.\n\nPar quoi tu veux commencer ?`;
   }
 
   if (profil === "salarie") {
-    return `${intro}\n\nJe connais ta contrainte principale : le temps est limitÃ©. Je suis lÃ  pour t'aider Ã  avancer sur ce qui compte â€” sans te noyer.\n\nSi ton projet grandit, tu as une Ã©quipe avec toi : Awa (prospects), Miriam (contenu), Serge (organisation), Roland (finances). Dans "Mon Ã©quipe".\n\nOn commence par quoi ?`;
+    return `${intro}\n\nJe connais ta contrainte principale : le temps est limité. Je suis là pour t'aider à avancer sur ce qui compte — sans te noyer.\n\nSi ton projet grandit, tu as une équipe avec toi : Awa (prospects), Miriam (contenu), Serge (organisation), Roland (finances). Dans "Mon équipe".\n\nOn commence par quoi ?`;
   }
 
   if (profil === "mix") {
-    return `${intro}\n\nTu jonglais entre ton emploi et ton projet â€” je sais que chaque heure compte. Je suis lÃ  pour que tu avances sans t'Ã©parpiller.\n\nTon Ã©quipe complÃ¨te est dans "Mon Ã©quipe" : Awa, Miriam, Serge, Roland â€” chacun dans son domaine.\n\nPar quoi tu veux qu'on commence ?`;
+    return `${intro}\n\nTu jonglais entre ton emploi et ton projet — je sais que chaque heure compte. Je suis là pour que tu avances sans t'éparpiller.\n\nTon équipe complète est dans "Mon équipe" : Awa, Miriam, Serge, Roland — chacun dans son domaine.\n\nPar quoi tu veux qu'on commence ?`;
   }
 
-  // Entrepreneur (dÃ©faut)
-  return `${intro}\n\nVoilÃ  comment on fonctionne ensemble :\nâ†’ Moi : ton point de contact principal. Tout ce qui est dans ta tÃªte, tu me le dis.\nâ†’ Awa : tes relances et messages de prospection\nâ†’ Miriam : tes posts et prÃ©sence digitale\nâ†’ Serge : ton organisation et planning\nâ†’ Roland : tes marges et finances\nTu les trouves dans "Mon Ã©quipe".\n\nPar quoi tu veux qu'on commence ?`;
+  // Entrepreneur (défaut)
+  return `${intro}\n\nVoilà comment on fonctionne ensemble :\n→ Moi : ton point de contact principal. Tout ce qui est dans ta tête, tu me le dis.\n→ Awa : tes relances et messages de prospection\n→ Miriam : tes posts et présence digitale\n→ Serge : ton organisation et planning\n→ Roland : tes marges et finances\nTu les trouves dans "Mon équipe".\n\nPar quoi tu veux qu'on commence ?`;
 };
 
-// Agents verrouillÃ©s = mode passif interactif
+// Agents verrouillés = mode passif interactif
 const LOCKED_AGENTS = ["miriam", "serge", "roland", "kofi"];
 
 // Nombre de lignes visibles avant troncature pour les agents passifs
@@ -83,7 +83,7 @@ function Bubble({ from, children }) {
   );
 }
 
-// â”€â”€â”€ Bulle tronquÃ©e avec gradient (agents passifs) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â”€â”€â”€ Bulle tronquée avec gradient (agents passifs) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function TruncatedBubble({ text, agentPlan, onUpgrade }) {
   const isLong = text.length > TRUNCATE_AFTER_CHARS;
@@ -109,7 +109,7 @@ function TruncatedBubble({ text, agentPlan, onUpgrade }) {
           className="mt-2 w-full text-left px-4 py-3 bg-orange/8 border border-orange/20 rounded-xl"
         >
           <p className="text-[13px] text-[#a23c00] font-semibold">
-            Voir la suite et travailler en profondeur â†’ Plan {agentPlan}
+            Voir la suite et travailler en profondeur → Plan {agentPlan}
           </p>
         </button>
       )}
@@ -154,7 +154,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
     load();
   }, []);
 
-  // Extraire les mÃ©moires quand l'utilisateur quitte la conversation (>= 4 messages)
+  // Extraire les mémoires quand l'utilisateur quitte la conversation (>= 4 messages)
   useEffect(() => {
     return () => {
       const realMsgs = msgs.filter((m, i) => !(i === 0 && m.from === "bot"));
@@ -171,7 +171,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
     if (scroller.current) scroller.current.scrollTop = scroller.current.scrollHeight;
   }, [msgs, typing]);
 
-  // PrÃ©fill automatique
+  // Préfill automatique
   useEffect(() => {
     if (params?.prefill && !prefillSent.current) {
       prefillSent.current = true;
@@ -239,11 +239,11 @@ export function ConversationScreen({ go, notify, params, profile }) {
         },
       });
 
-      if (error || !data?.reply) throw new Error("Pas de rÃ©ponse");
+      if (error || !data?.reply) throw new Error("Pas de réponse");
       setTyping(false);
       setMsgs(m => [...m, { from: "bot", text: data.reply, passive: isLocked }]);
 
-      // Sauvegarder la mÃ©moire courte si gÃ©nÃ©rÃ©e
+      // Sauvegarder la mémoire courte si générée
       if (data.nouveau_resume) {
         try {
           const { data: { user } } = await supabase.auth.getUser();
@@ -256,17 +256,17 @@ export function ConversationScreen({ go, notify, params, profile }) {
       }
     } catch {
       setTyping(false);
-      setMsgs(m => [...m, { from: "bot", text: "Je reviens vers toi dans un instant. RÃ©essaie." }]);
+      setMsgs(m => [...m, { from: "bot", text: "Je reviens vers toi dans un instant. Réessaie." }]);
     }
   };
 
   const suggestions =
-    a.id === "coach"  ? ["Aide-moi Ã  trouver ma cible", "Construis mon offre", "PrÃ©pare mon argumentaire AIDA"] :
-    a.id === "awa"    ? ["RÃ©dige mon message de prospection", "Aide-moi Ã  relancer un prospect", "CrÃ©e un argumentaire WhatsApp"] :
-    a.id === "miriam" ? ["RÃ©dige mon post Facebook de cette semaine", "Planifie 3 broadcasts WhatsApp", "Aide-moi Ã  rÃ©pondre Ã  ma communautÃ©"] :
-    a.id === "serge"  ? ["Organise ma semaine", "Quelles sont mes prioritÃ©s aujourd'hui ?", "J'ai des relances en retard"] :
-    a.id === "kofi"   ? ["Construis ma campagne de lancement", "Ã‰cris mon film de marque", "PrÃ©pare ma sÃ©quence WhatsApp"] :
-                        ["Mon prix est-il bon ?", "Aide-moi Ã  calculer ma marge", "Je veux augmenter mes tarifs"];
+    a.id === "coach"  ? ["Aide-moi à trouver ma cible", "Construis mon offre", "Prépare mon argumentaire AIDA"] :
+    a.id === "awa"    ? ["Rédige mon message de prospection", "Aide-moi à relancer un prospect", "Crée un argumentaire WhatsApp"] :
+    a.id === "miriam" ? ["Rédige mon post Facebook de cette semaine", "Planifie 3 broadcasts WhatsApp", "Aide-moi à répondre à ma communauté"] :
+    a.id === "serge"  ? ["Organise ma semaine", "Quelles sont mes priorités aujourd'hui ?", "J'ai des relances en retard"] :
+    a.id === "kofi"   ? ["Construis ma campagne de lancement", "Ã‰cris mon film de marque", "Prépare ma séquence WhatsApp"] :
+                        ["Mon prix est-il bon ?", "Aide-moi à calculer ma marge", "Je veux augmenter mes tarifs"];
 
   return (
     <div className="min-h-screen flex flex-col bg-sable">
@@ -279,12 +279,12 @@ export function ConversationScreen({ go, notify, params, profile }) {
         <div className="flex-1">
           <h3 className="font-display font-extrabold text-[16px] leading-tight">{a.id === "coach" ? nomAss : a.name}</h3>
           <div className={`text-[12px] font-semibold flex items-center gap-1 ${isLocked ? "text-amber" : "text-growth"}`}>
-            {isLocked ? "â— Mode aperÃ§u" : "â— En ligne"} Â· {a.role}
+            {isLocked ? "â— Mode aperçu" : "â— En ligne"} Â· {a.role}
           </div>
         </div>
         {isLocked && (
           <button onClick={() => go("paliers")} className="px-3 py-1.5 rounded-full bg-orange text-white text-[12px] font-bold">
-            DÃ©bloquer
+            Débloquer
           </button>
         )}
         <button onClick={() => setFlagOpen(true)} className="w-9 h-9 rounded-full hover:bg-sable flex items-center justify-center text-g400 flex-shrink-0">
@@ -343,13 +343,13 @@ export function ConversationScreen({ go, notify, params, profile }) {
       )}
 
       {flagOpen && (
-        <Sheet title="Signaler un problÃ¨me" onClose={() => setFlagOpen(false)}>
+        <Sheet title="Signaler un problème" onClose={() => setFlagOpen(false)}>
           <div className="flex flex-col gap-4">
             <Textarea
               rows={3}
               value={flagText}
               onChange={e => setFlagText(e.target.value)}
-              placeholder="DÃ©cris ce qui ne fonctionne pas dans cette conversationâ€¦"
+              placeholder="Décris ce qui ne fonctionne pas dans cette conversation…"
             />
             <button
               onClick={sendFlag}
@@ -368,7 +368,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === "Enter" && send(input)}
-          placeholder={`Ã‰cris Ã  ${isLocked ? a.name : nomAss}â€¦`}
+          placeholder={`Ã‰cris à ${isLocked ? a.name : nomAss}…`}
           className="flex-1 bg-sable rounded-full px-4 py-3 text-[14.5px] outline-none focus:ring-2 focus:ring-orange/20"
         />
         <button
