@@ -216,21 +216,14 @@ export function AdminScreen({ go, notify }) {
     setProspectSeq(null);
     setSeqLoading(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-sequence`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.access_token}`,
-        },
-        body: JSON.stringify({ prospect_id: prospect.id }),
+      const { data, error } = await supabase.functions.invoke('generate-sequence', {
+        body: { prospect_id: prospect.id },
       });
-      const d = await res.json();
-      if (d.messages) {
-        setProspectSeq(d);
-        await loadProspects();
-      } else {
+      if (error || !data?.messages) {
         notify('Erreur génération séquence');
+      } else {
+        setProspectSeq(data);
+        await loadProspects();
       }
     } catch (e) { notify('Erreur réseau'); }
     setSeqLoading(false);
