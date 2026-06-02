@@ -39,7 +39,9 @@ export default function App() {
 
   const loadProfile = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      // getSession() lit le localStorage sans appel réseau → fonctionne sur WiFi lent/captif
+      const { data: { session } } = await supabase.auth.getSession();
+      const user = session?.user;
       if (!user) { setLoginKey(k => k + 1); setPhase("login"); return; }
       const { data: prof } = await supabase.from("profiles").select("*").eq("id", user.id).single();
       setProfile(prof);

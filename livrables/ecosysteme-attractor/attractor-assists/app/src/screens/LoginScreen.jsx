@@ -25,7 +25,7 @@ export function LoginScreen({ onAuthed }) {
       options: { shouldCreateUser: true },
     });
     setIsSending(false);
-    if (error) { setErr("Impossible d'envoyer le code. Réessaie dans quelques secondes."); return; }
+    if (error) { setErr("Impossible d'envoyer le code. Vérifie ta connexion internet et réessaie. Sur un WiFi public, connecte-toi d'abord au portail du réseau."); return; }
     setStep("otp");
     setTimeout(() => refs[0].current && refs[0].current.focus(), 200);
   };
@@ -160,7 +160,7 @@ export function LoginScreen({ onAuthed }) {
                 ))}
               </div>
               <div className="bg-sable rounded-[14px] p-3 mb-3">
-                <p className="text-[12px] text-g700 leading-snug">Tu ne reçois pas le code ? Vérifie tes <b>Spams</b>. L'expéditeur est <b>noreply@agenceattractor.com</b></p>
+                <p className="text-[12px] text-g700 leading-snug">Tu ne reçois pas le code ? Vérifie tes <b>Spams</b>. L'expéditeur est <b>noreply@agenceattractor.com</b>. Sur WiFi public ou d'entreprise, le code peut mettre 1-2 minutes — il est valable 1 heure.</p>
               </div>
               {err && <p className="text-[12.5px] text-[#D64545] font-semibold mb-3 flex items-center gap-1.5"><Icon name="warn" size={14} />{err}</p>}
               <Btn className={`w-full ${code.join("").length < 6 ? "opacity-50 pointer-events-none" : ""}`} onClick={verify}>
