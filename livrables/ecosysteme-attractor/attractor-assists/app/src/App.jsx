@@ -16,18 +16,19 @@ import { PaliersScreen } from './screens/PaliersScreen';
 import { AgendaScreen } from './screens/AgendaScreen';
 import { NotificationsScreen } from './screens/NotificationsScreen';
 import { AdminScreen } from './screens/AdminScreen';
+import { MacCockpitScreen } from './screens/MacCockpitScreen';
 import { MéthodeScreen } from './screens/MéthodeScreen';
 
-// 4 éléments : Accueil | FAB | Assistants (ou Cockpit admin) | Profil
 const TABS_USER  = [
   { id: "dashboard",  label: "Accueil",    icon: "home" },
   { id: "assistants", label: "Mon équipe", icon: "bot" },
   { id: "profil",     label: "Profil",     icon: "user" },
 ];
 const TABS_ADMIN = [
-  { id: "dashboard",  label: "Accueil",    icon: "home" },
-  { id: "admin",      label: "Cockpit",    icon: "flag" },
-  { id: "profil",     label: "Profil",     icon: "user" },
+  { id: "carelle",  label: "Carelle",  icon: "bolt" },
+  { id: "agence",   label: "Agence",   icon: "users" },
+  { id: "pipeline", label: "Pipeline", icon: "trend" },
+  { id: "hub",      label: "Hub",      icon: "grid" },
 ];
 
 export default function App() {
@@ -51,6 +52,12 @@ export default function App() {
       const { data: prof } = await supabase.from("profiles").select("*").eq("id", user.id).single();
       setProfile(prof);
       supabase.rpc('ping_last_seen').then(() => {}, () => {});
+      // Admin : bypass onboarding/activation, cockpit direct
+      if (prof?.role === 'admin') {
+        setScreen("carelle");
+        setPhase("app");
+        return;
+      }
       if (!prof?.onboarding_done) {
         setPhase("onboarding");
       } else if (!prof?.activation_done) {
@@ -120,6 +127,10 @@ export default function App() {
     agenda:        <AgendaScreen go={go} profile={profile} />,
     notifications: <NotificationsScreen go={go} />,
     admin:         <AdminScreen go={go} notify={notify} />,
+    carelle:  <MacCockpitScreen go={go} notify={notify} section="carelle"  profile={profile} />,
+    agence:   <MacCockpitScreen go={go} notify={notify} section="agence"   profile={profile} />,
+    pipeline: <MacCockpitScreen go={go} notify={notify} section="pipeline" profile={profile} />,
+    hub:      <MacCockpitScreen go={go} notify={notify} section="hub"      profile={profile} />,
     methode:       <MéthodeScreen go={go} />,
     install:     <InstallGuide
                    platform={detectPlatform()}
@@ -149,9 +160,11 @@ export default function App() {
                 </button>
               ))}
             </nav>
-            <button onClick={() => go("conversation", { assistant: "coach" })} className="mt-6 flex items-center gap-3 px-3.5 py-3 rounded-xl bg-charbon text-white font-display font-bold text-[14.5px]">
-              <Icon name="spark" size={20} className="text-amber" /> Parler à {profile?.nom_assistant || 'mon coach'}
-            </button>
+            {!isAdmin && (
+              <button onClick={() => go("conversation", { assistant: "coach" })} className="mt-6 flex items-center gap-3 px-3.5 py-3 rounded-xl bg-charbon text-white font-display font-bold text-[14.5px]">
+                <Icon name="spark" size={20} className="text-amber" /> Parler à {profile?.nom_assistant || 'mon coach'}
+              </button>
+            )}
             {!isAdmin && (
               <div className="mt-auto">
                 <button onClick={() => go("paliers")} className="w-full rounded-xl p-4 text-left text-white" style={{ background: "linear-gradient(135deg,#FF7A2E,#F25C05)" }}>
@@ -171,13 +184,15 @@ export default function App() {
               {!isConversation && <div className="h-24 lg:h-4" />}
             </div>
 
-            {/* bottom nav mobile : Accueil | FAB | Mon équipe (ou Cockpit) | Profil */}
+            {/* bottom nav mobile */}
             {!isConversation && (
-              <div className="lg:hidden absolute bottom-0 left-0 right-0 bg-white/92 backdrop-blur-xl border-t border-g200 flex items-center justify-around px-2 pt-2 pb-6 z-30">
+              <div className={`lg:hidden absolute bottom-0 left-0 right-0 bg-white/92 backdrop-blur-xl border-t border-g200 flex items-center justify-around px-2 pt-2 pb-6 z-30 ${isAdmin ? 'gap-0' : ''}`}>
                 <NavBtn t={TABS[0]} active={activeTab === TABS[0].id} onClick={() => go(TABS[0].id)} />
-                <button onClick={() => go("conversation", { assistant: "coach" })} className="w-14 h-14 -mt-7 rounded-full bg-orange text-white flex items-center justify-center shadow-[0_10px_22px_-6px_rgba(242,92,5,.7)] border-[3px] border-sable flex-shrink-0 active:scale-95 transition">
-                  <Icon name="spark" size={24} />
-                </button>
+                {!isAdmin && (
+                  <button onClick={() => go("conversation", { assistant: "coach" })} className="w-14 h-14 -mt-7 rounded-full bg-orange text-white flex items-center justify-center shadow-[0_10px_22px_-6px_rgba(242,92,5,.7)] border-[3px] border-sable flex-shrink-0 active:scale-95 transition">
+                    <Icon name="spark" size={24} />
+                  </button>
+                )}
                 {TABS.slice(1).map(t => <NavBtn key={t.id} t={t} active={activeTab === t.id} onClick={() => go(t.id)} />)}
               </div>
             )}
