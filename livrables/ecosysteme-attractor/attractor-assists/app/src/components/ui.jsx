@@ -36,7 +36,10 @@ export function Icon({ name, className = "", size = 22, stroke = 1.9 }) {
     medal:<><circle cx="12" cy="14" r="5"/><path d="M9 9 7 3h10l-2 6"/><path d="M12 12.5v3M10.6 13.5l1.4-1 1.4 1"/></>,
     refresh:<><path d="M4 12a8 8 0 0 1 13.5-5.8L20 8M20 4v4h-4"/><path d="M20 12a8 8 0 0 1-13.5 5.8L4 16M4 20v-4h4"/></>,
     warn: <><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></>,
-    play: <><path d="M7 4v16l13-8L7 4Z"/></>,
+    play:   <><path d="M7 4v16l13-8L7 4Z"/></>,
+    mic:    <><path d="M12 2a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4Z"/><path d="M19 10a7 7 0 0 1-14 0"/><path d="M12 19v3M9 22h6"/></>,
+    micoff: <><path d="M2 2l20 20M12 2a4 4 0 0 1 4 4v2M12 2a4 4 0 0 0-4 4v6a4 4 0 0 0 7.7 1.6"/><path d="M19 10a7 7 0 0 1-1.2 3.9M12 19v3M9 22h6M5 10a7 7 0 0 0 .5 2.6"/></>,
+    volume: <><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></>,
   }[name];
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none"

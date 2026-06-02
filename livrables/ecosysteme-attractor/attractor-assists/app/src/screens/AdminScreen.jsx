@@ -66,10 +66,14 @@ export function AdminScreen({ go, notify }) {
   const [usersExpanded, setUsersExpanded] = useState(false);
 
   // Jarvis cockpit
-  const [jarvisMsgs, setJarvisMsgs]     = useState([]);
-  const [jarvisInput, setJarvisInput]   = useState('');
+  const [jarvisMsgs, setJarvisMsgs]       = useState([]);
+  const [jarvisInput, setJarvisInput]     = useState('');
   const [jarvisSending, setJarvisSending] = useState(false);
+  const [listening, setListening]         = useState(false);
+  const [transcript, setTranscript]       = useState('');
+  const [ttsActive, setTtsActive]         = useState(false);
   const jarvisBottomRef = useRef(null);
+  const recognitionRef  = useRef(null);
 
   // MIROIR
   const [miroir, setMiroir]           = useState([]);
@@ -459,28 +463,70 @@ export function AdminScreen({ go, notify }) {
     setTimeout(() => chatBottomRef.current?.scrollIntoView(), 100);
   };
 
-  const sendJarvis = async () => {
-    if (!jarvisInput.trim() || jarvisSending) return;
-    const msg = jarvisInput.trim();
-    setJarvisInput('');
+  const sendJarvis = async (msgOverride = null) => {
+    const msg = (msgOverride ?? jarvisInput).trim();
+    if (!msg || jarvisSending) return;
+    if (!msgOverride) setJarvisInput('');
     setJarvisSending(true);
-    const userMsg = { role: 'user', content: msg };
-    setJarvisMsgs(prev => [...prev, userMsg]);
+    setJarvisMsgs(prev => [...prev, { role: 'user', content: msg }]);
     try {
       const history = jarvisMsgs.slice(-8).map(m => ({ role: m.role, content: m.content }));
       const { data, error } = await supabase.functions.invoke('jarvis-cockpit', {
         body: { message: msg, history },
       });
       if (error || !data?.reply) {
-        notify('Erreur Jarvis — réessaie dans quelques secondes');
+        notify('Erreur Jarvis — réessaie');
         setJarvisMsgs(prev => prev.slice(0, -1));
       } else {
         setJarvisMsgs(prev => [...prev, { role: 'assistant', content: data.reply, agent: data.agent }]);
+        speakJarvis(data.reply);
         await loadProspects();
       }
     } catch { notify('Erreur réseau'); setJarvisMsgs(prev => prev.slice(0, -1)); }
     setJarvisSending(false);
     setTimeout(() => jarvisBottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 80);
+  };
+
+  const speakJarvis = (text) => {
+    if (!window.speechSynthesis) return;
+    speechSynthesis.cancel();
+    const clean = text.replace(/^[^\—]+— /, '').slice(0, 600);
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = 'fr-FR'; u.rate = 1.05; u.pitch = 0.95;
+    u.onstart = () => setTtsActive(true);
+    u.onend   = () => setTtsActive(false);
+    speechSynthesis.speak(u);
+  };
+
+  const stopSpeech = () => { speechSynthesis?.cancel(); setTtsActive(false); };
+
+  const toggleVoice = () => {
+    if (jarvisSending) return;
+    if (listening) {
+      recognitionRef.current?.stop();
+      setListening(false); setTranscript('');
+      return;
+    }
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { notify('Voix non supportée — utilise Chrome ou installe l\'app'); return; }
+    const rec = new SR();
+    rec.lang = 'fr-FR'; rec.continuous = false; rec.interimResults = true;
+    rec.onstart  = () => setListening(true);
+    rec.onresult = (e) => {
+      const t = Array.from(e.results).map(r => r[0].transcript).join('');
+      setTranscript(t);
+      if (e.results[e.results.length - 1].isFinal) {
+        setTranscript(''); setListening(false);
+        if (t.trim()) sendJarvis(t.trim());
+      }
+    };
+    rec.onerror = (e) => {
+      setListening(false); setTranscript('');
+      if (e.error === 'not-allowed') notify('Micro non autorisé — vérifie les permissions du navigateur');
+    };
+    rec.onend = () => { setListening(false); };
+    recognitionRef.current = rec;
+    rec.start();
   };
 
   return (
@@ -1043,124 +1089,198 @@ export function AdminScreen({ go, notify }) {
           </>
         )}
 
-        {/* ── Section Jarvis Cockpit ── */}
+        {/* ── JARVIS COCKPIT — immersif ── */}
         {section === 'jarvis' && (
-          <>
-            {/* En-tête */}
-            <div className="bg-charbon rounded-[18px] px-4 py-3.5 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-orange/20 flex items-center justify-center flex-shrink-0">
-                <Icon name="spark" size={18} className="text-orange" />
-              </div>
+          <div className="-mx-[18px] -mb-6 rounded-b-[0px] overflow-hidden flex flex-col"
+            style={{ background: 'linear-gradient(180deg,#0d0b09 0%,#111009 60%,#0c0907 100%)', minHeight: '70vh' }}>
+
+            {/* Header */}
+            <div className="px-5 pt-5 pb-3 flex items-center justify-between">
               <div>
-                <p className="font-display font-extrabold text-[14px] text-white">Jarvis — Tes agents</p>
-                <p className="text-[11.5px] text-white/55">Carelle dispatche · Edito · CM · Commercial · DAF · Eclaireur…</p>
+                <p className="font-display font-extrabold text-[16px] text-white tracking-wide">JARVIS</p>
+                <p className="text-[11px] text-white/35 tracking-[.15em] uppercase mt-0.5">Mr Attractor · Système actif</p>
               </div>
+              {ttsActive && (
+                <button onClick={stopSpeech}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange/15 border border-orange/30 active:scale-95 transition">
+                  <Icon name="volume" size={13} className="text-orange animate-pulse" />
+                  <span className="text-[11px] font-bold text-orange">Stop</span>
+                </button>
+              )}
             </div>
 
-            {/* Conversation active */}
-            {jarvisMsgs.length > 0 && (
-              <div className="flex flex-col gap-3">
-                {jarvisMsgs.map((m, i) => (
-                  <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    {m.role === 'assistant' && (
-                      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-extrabold uppercase mr-2 flex-shrink-0 mt-1 ${
-                        m.agent === 'edito'              ? 'bg-info/15 text-info' :
-                        m.agent === 'community-manager'  ? 'bg-amber/15 text-amber' :
-                        m.agent === 'commercial'         ? 'bg-orange/15 text-orange' :
-                        m.agent === 'eclaireur'          ? 'bg-growth/15 text-growth' :
-                        m.agent === 'daf'                ? 'bg-charbon/10 text-charbon' :
-                        m.agent === 'programmeur-senior' ? 'bg-info/20 text-info' :
-                        'bg-charbon/8 text-charbon'
-                      }`}>
-                        {(m.agent || 'car').slice(0, 3).toUpperCase()}
-                      </div>
-                    )}
-                    <div className={`max-w-[85%] rounded-[16px] px-3.5 py-2.5 text-[13.5px] leading-relaxed whitespace-pre-wrap ${
-                      m.role === 'user'
-                        ? 'bg-orange text-white rounded-br-[4px]'
-                        : 'bg-white border border-g200 text-charbon rounded-bl-[4px]'
-                    }`}>
-                      {m.content}
-                    </div>
-                  </div>
-                ))}
-                {jarvisSending && (
-                  <div className="flex justify-start">
-                    <div className="w-7 h-7 rounded-full bg-charbon/8 flex items-center justify-center mr-2 flex-shrink-0 mt-1">
-                      <Icon name="spark" size={13} className="text-charbon animate-pulse" />
-                    </div>
-                    <div className="bg-white border border-g200 rounded-[16px] rounded-bl-[4px] px-4 py-3">
-                      <span className="text-[13px] text-g400 italic">L'équipe travaille…</span>
-                    </div>
-                  </div>
-                )}
-                <div ref={jarvisBottomRef} />
-              </div>
-            )}
+            {/* Zone conversation */}
+            <div className="flex-1 px-5 pb-2 flex flex-col gap-3 overflow-y-auto max-h-[42vh]"
+              style={{ WebkitOverflowScrolling: 'touch' }}>
 
-            {/* Suggestions rapides (si pas encore de conversation) */}
-            {jarvisMsgs.length === 0 && (
-              <div className="flex flex-col gap-2">
-                <p className="text-[11px] font-bold text-g400 uppercase tracking-wider">Suggestions</p>
-                {[
-                  "CM, fais-moi un post Facebook pour le challenge 7 jours",
-                  "Commercial, rédige une relance WhatsApp pour J'envoie Express",
-                  "Eclaireur, quelles apps métiers marchent bien en CI en ce moment ?",
-                  "DAF, où en est mon objectif 10k€ ce mois-ci ?",
-                ].map(s => (
-                  <button key={s} onClick={() => setJarvisInput(s)}
-                    className="text-left px-4 py-3 bg-white border border-g200 rounded-[14px] text-[12.5px] text-g700 hover:border-orange hover:text-orange transition active:scale-[.99]">
-                    {s}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* Zone de saisie */}
-            <div className="flex gap-2 items-end sticky bottom-0 bg-sable pt-2 pb-1">
-              <textarea
-                rows={2}
-                value={jarvisInput}
-                onChange={e => setJarvisInput(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && jarvisInput.trim()) { e.preventDefault(); sendJarvis(); }}}
-                placeholder="Dis à l'équipe ce que tu veux…"
-                className="flex-1 bg-white border-[1.5px] border-g200 rounded-[14px] px-4 py-3 text-[13.5px] text-charbon resize-none outline-none focus:border-orange transition"
-              />
-              <button onClick={sendJarvis} disabled={!jarvisInput.trim() || jarvisSending}
-                className="flex-shrink-0 w-11 h-11 rounded-[14px] bg-orange flex items-center justify-center disabled:opacity-40 active:scale-95 transition shadow-[0_6px_14px_-4px_rgba(242,92,5,.5)]">
-                <Icon name="send" size={17} className="text-white" />
-              </button>
-            </div>
-
-            {/* Journal passé */}
-            {journal.filter(j => j.details?.via === 'jarvis-cockpit').length > 0 && (
-              <>
-                <SectionLabel className="mt-2">Historique</SectionLabel>
-                <div className="flex flex-col gap-2">
-                  {journal.filter(j => j.details?.via === 'jarvis-cockpit').map(j => (
-                    <div key={j.id} className="bg-white border border-g200 rounded-[14px] px-4 py-3 flex flex-col gap-2">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className={`text-[10.5px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
-                          j.agent_id === 'edito'             ? 'bg-info/10 text-info' :
-                          j.agent_id === 'community-manager' ? 'bg-amber/10 text-amber' :
-                          j.agent_id === 'commercial'        ? 'bg-orange/10 text-orange' :
-                          j.agent_id === 'eclaireur'         ? 'bg-growth/10 text-growth' :
-                          'bg-charbon/8 text-charbon'
-                        }`}>{j.agent_id || 'carelle'}</span>
-                        <span className="text-[10.5px] text-g300">{timeAgo(j.created_at)}</span>
-                      </div>
-                      <p className="text-[12.5px] text-g500 leading-snug">{j.titre}</p>
-                      {j.details?.output && (
-                        <p className="text-[12px] text-g400 leading-snug line-clamp-3 italic">
-                          {j.details.output.slice(0, 200)}{j.details.output.length > 200 ? '…' : ''}
-                        </p>
-                      )}
-                    </div>
+              {/* Suggestions si pas de conversation */}
+              {jarvisMsgs.length === 0 && !listening && (
+                <div className="flex flex-col gap-2 pt-2">
+                  <p className="text-[10px] font-bold text-white/25 uppercase tracking-[.15em]">Suggestions</p>
+                  {[
+                    { agent: 'CM',         text: "Fais un post Facebook pour le challenge 7 jours" },
+                    { agent: 'Commercial', text: "Relance WhatsApp pour J'envoie Express — silence depuis 3 jours" },
+                    { agent: 'Eclaireur',  text: "Quelles apps métiers cartonnent en CI en ce moment ?" },
+                    { agent: 'DAF',        text: "On en est où sur l'objectif 10k€ ce mois ?" },
+                  ].map(s => (
+                    <button key={s.text} onClick={() => sendJarvis(`${s.agent}, ${s.text}`)}
+                      className="text-left px-4 py-3 rounded-[14px] border border-white/8 bg-white/4 active:bg-white/8 transition active:scale-[.99]">
+                      <span className="text-[10.5px] font-extrabold text-orange/70 uppercase tracking-wider">{s.agent}</span>
+                      <p className="text-[13px] text-white/70 mt-0.5 leading-snug">{s.text}</p>
+                    </button>
                   ))}
                 </div>
-              </>
+              )}
+
+              {/* Messages */}
+              {jarvisMsgs.map((m, i) => {
+                const agentDot = {
+                  edito: 'bg-[#2B6CB0]/30 text-[#63B3ED]',
+                  'community-manager': 'bg-amber/20 text-amber',
+                  commercial: 'bg-orange/20 text-orange',
+                  eclaireur:  'bg-growth/20 text-growth',
+                  daf:        'bg-white/10 text-white/60',
+                  'programmeur-senior': 'bg-[#2B6CB0]/20 text-[#90CDF4]',
+                  carelle:    'bg-white/8 text-white/50',
+                };
+                const dot = agentDot[m.agent || ''] || 'bg-white/8 text-white/50';
+                return (
+                  <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start gap-2'}`}
+                    style={{ animation: 'fadeUp .3s ease both' }}>
+                    {m.role === 'assistant' && (
+                      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-extrabold uppercase flex-shrink-0 mt-1 ${dot}`}>
+                        {(m.agent || 'J').slice(0, 3).toUpperCase()}
+                      </div>
+                    )}
+                    <div className={`max-w-[84%] ${m.role === 'user'
+                      ? 'bg-orange/25 border border-orange/30 text-white rounded-[16px] rounded-br-[4px]'
+                      : 'bg-white/6 border border-white/10 text-white/88 rounded-[16px] rounded-bl-[4px]'}
+                      px-4 py-3 text-[13.5px] leading-relaxed`}>
+                      <p className="whitespace-pre-wrap">{m.content}</p>
+                      {m.role === 'assistant' && window.speechSynthesis && (
+                        <button onClick={() => speakJarvis(m.content)}
+                          className="mt-2 flex items-center gap-1 text-[11px] text-white/30 hover:text-orange/70 transition">
+                          <Icon name="volume" size={12} /> Écouter
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Loading */}
+              {jarvisSending && (
+                <div className="flex gap-2 items-center" style={{ animation: 'fadeUp .3s ease both' }}>
+                  <div className="w-7 h-7 rounded-full bg-orange/15 flex items-center justify-center">
+                    <Icon name="spark" size={13} className="text-orange animate-spin" style={{ animationDuration: '1.2s' }} />
+                  </div>
+                  <div className="bg-white/6 border border-white/10 rounded-[16px] rounded-bl-[4px] px-4 py-3">
+                    <div className="flex gap-1.5 items-center">
+                      {[0,1,2].map(i => (
+                        <span key={i} className="w-1.5 h-1.5 rounded-full bg-orange/50 animate-pulse"
+                          style={{ animationDelay: `${i * 0.18}s` }} />
+                      ))}
+                      <span className="text-[12px] text-white/35 ml-1">L'équipe traite ta demande</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Transcript en cours */}
+              {transcript && (
+                <div className="flex justify-end" style={{ animation: 'fadeUp .2s ease both' }}>
+                  <div className="max-w-[84%] bg-orange/15 border border-orange/25 rounded-[16px] rounded-br-[4px] px-4 py-3">
+                    <p className="text-[13.5px] text-white/70 italic">"{transcript}"</p>
+                  </div>
+                </div>
+              )}
+
+              <div ref={jarvisBottomRef} />
+            </div>
+
+            {/* Orb central + input */}
+            <div className="px-5 pt-4 pb-8 flex flex-col items-center gap-5"
+              style={{ borderTop: '1px solid rgba(255,255,255,.06)' }}>
+
+              {/* Orb micro */}
+              <div className="relative flex items-center justify-center">
+                {/* Anneaux */}
+                {listening && <>
+                  <div className="absolute w-[110px] h-[110px] rounded-full border border-orange/30"
+                    style={{ animation: 'orbRing 1.4s ease-out infinite' }} />
+                  <div className="absolute w-[110px] h-[110px] rounded-full border border-orange/20"
+                    style={{ animation: 'orbRing 1.4s ease-out infinite', animationDelay: '.5s' }} />
+                </>}
+
+                <button onClick={toggleVoice} disabled={jarvisSending}
+                  className="relative w-[84px] h-[84px] rounded-full flex items-center justify-center transition-all active:scale-95 disabled:opacity-40"
+                  style={{
+                    background: listening
+                      ? 'radial-gradient(circle at 40% 35%, #FF7A2E, #D94703)'
+                      : 'radial-gradient(circle at 40% 35%, #2a1a0a, #18100a)',
+                    animation: listening ? 'glowPulse 1.8s ease-in-out infinite' : undefined,
+                    boxShadow: listening
+                      ? '0 0 32px 8px rgba(242,92,5,.6)'
+                      : '0 0 22px 4px rgba(242,92,5,.28), inset 0 1px 0 rgba(255,255,255,.07)',
+                  }}>
+                  <Icon name={listening ? 'mic' : 'mic'} size={30}
+                    className={listening ? 'text-white' : 'text-orange'} />
+                </button>
+              </div>
+
+              {/* Statut */}
+              <p className="text-[12.5px] font-semibold tracking-wide"
+                style={{ color: listening ? '#FF7A2E' : jarvisSending ? 'rgba(255,255,255,.4)' : 'rgba(255,255,255,.3)' }}>
+                {listening ? 'Je t\'écoute…' : jarvisSending ? 'Traitement en cours…' : 'Appuie pour parler'}
+              </p>
+
+              {/* Input texte fallback */}
+              <div className="w-full flex gap-2 items-center">
+                <input
+                  value={jarvisInput}
+                  onChange={e => setJarvisInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter' && jarvisInput.trim()) sendJarvis(); }}
+                  placeholder="Ou écris ici…"
+                  className="flex-1 rounded-[14px] px-4 py-3 text-[13.5px] outline-none transition"
+                  style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.10)', color: 'rgba(255,255,255,.85)', caretColor: '#F25C05' }}
+                />
+                {jarvisInput.trim() && (
+                  <button onClick={() => sendJarvis()} disabled={jarvisSending}
+                    className="flex-shrink-0 w-11 h-11 rounded-[13px] bg-orange flex items-center justify-center disabled:opacity-40 active:scale-95 transition"
+                    style={{ boxShadow: '0 6px 16px -4px rgba(242,92,5,.55)' }}>
+                    <Icon name="send" size={17} className="text-white" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Historique compact */}
+            {journal.filter(j => j.details?.via === 'jarvis-cockpit').length > 0 && (
+              <div className="px-5 pb-8 flex flex-col gap-2">
+                <p className="text-[10px] font-bold text-white/25 uppercase tracking-[.15em] mb-1">Historique</p>
+                {journal.filter(j => j.details?.via === 'jarvis-cockpit').slice(0, 10).map(j => {
+                  const agentBadge = {
+                    edito: 'text-[#63B3ED]', 'community-manager': 'text-amber',
+                    commercial: 'text-orange', eclaireur: 'text-growth',
+                    daf: 'text-white/50', 'programmeur-senior': 'text-[#90CDF4]',
+                  };
+                  const tc = agentBadge[j.agent_id] || 'text-white/40';
+                  return (
+                    <div key={j.id} className="rounded-[14px] px-4 py-3 flex flex-col gap-1"
+                      style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.07)' }}>
+                      <div className="flex items-center justify-between gap-2">
+                        <span className={`text-[10px] font-extrabold uppercase tracking-wider ${tc}`}>
+                          {j.agent_id || 'carelle'}
+                        </span>
+                        <span className="text-[10px] text-white/25">{timeAgo(j.created_at)}</span>
+                      </div>
+                      <p className="text-[12.5px] text-white/55 leading-snug">{j.titre}</p>
+                    </div>
+                  );
+                })}
+              </div>
             )}
-          </>
+          </div>
         )}
 
         {/* ── Ressources admin ── */}
