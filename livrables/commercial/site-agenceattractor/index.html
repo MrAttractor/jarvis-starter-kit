@@ -1086,7 +1086,7 @@ footer {
 
     <div class="apps-note">
       <p>Les maquettes interactives de nos apps sont en cours de déploiement sur <strong>demo.agenceattractor.com</strong>.<br>
-      <a href="https://wa.me/33753902323" target="_blank">Contacte-nous sur WhatsApp</a> pour avoir accès en avant-première — ou <a href="#" onclick="openChat();return false;">demande à Mac directement.</a></p>
+      Retrouve les maquettes interactives sur <a href="https://demo.agenceattractor.com" target="_blank" style="color:var(--orange);font-weight:700;">demo.agenceattractor.com</a> — ou <a href="#" onclick="openChat();return false;">demande à Mac directement.</a></p>
     </div>
   </div>
 </section>
@@ -1262,8 +1262,7 @@ footer {
   </div>
 </div>
 
-<!-- WhatsApp sticky -->
-<a href="https://wa.me/33753902323" class="wa-btn" target="_blank" title="WhatsApp Mac Arthur">💬</a>
+<!-- WhatsApp sticky supprimé — circuit via le chat uniquement -->
 
 <!-- ══════════ SCRIPTS ══════════ -->
 <script>
@@ -1394,61 +1393,52 @@ let prospect = {};
 const FLOW = [
   {
     id:'welcome',
-    from:'mac',
-    text:'Salut ! Je suis Mac — guide de l\'écosystème Attractor. Je vais te poser 4 questions rapides pour t\'orienter vers ce qui te correspond vraiment. On commence ?',
-    opts:['Allons-y !','Oui, je veux découvrir']
+    text:'Salut ! Je suis Mac Arthur, fondateur d\'Attractor. 5 questions rapides pour voir si — et comment — je peux vraiment t\'aider. On commence ?',
+    opts:['Allons-y !','Je veux en savoir plus']
   },
   {
     id:'prenom',
-    from:'mac',
-    text:'Super. Ton prénom d\'abord ?',
-    input:true,
-    key:'prenom'
+    text:'Ton prénom ?',
+    input:true, key:'prenom'
   },
   {
     id:'activite',
-    from:'mac',
-    text:(p)=>`Enchanté ${p.prenom} ! Tu travailles sur quoi comme activité ?`,
-    input:true,
-    key:'activite'
+    text:(p)=>`${p.prenom}, tu travailles sur quoi comme activité ?`,
+    input:true, key:'activite'
   },
   {
     id:'besoin',
-    from:'mac',
-    text:(p)=>`Ce qui te prend le plus de temps en ce moment chez ${p.activite || 'toi'}, c'est quoi ?`,
-    opts:[
-      'Relancer mes prospects',
-      'Gérer mon agenda',
-      'Créer du contenu',
-      'Suivre mes finances',
-      'Gérer mes commandes'
-    ],
+    text:(p)=>`Ce qui te prend le plus de temps chez ${p.activite||'toi'} en ce moment ?`,
+    opts:['Relancer mes prospects','Gérer mon agenda','Créer du contenu','Suivre mes finances','Gérer mes commandes'],
     key:'besoin'
   },
   {
     id:'zone',
-    from:'mac',
-    text:'Tu travailles sur quelle zone ?',
+    text:'Tu opères sur quelle zone ?',
     opts:['Côte d\'Ivoire','France / Europe','Les deux'],
     key:'zone'
   },
   {
-    id:'reco',
-    from:'mac',
-    fn: recommend
+    id:'whatsapp',
+    text:'Ton numéro WhatsApp — je te réponds personnellement dans les 24h.',
+    input:true, key:'whatsapp', placeholder:'+225 07 XX XX XX XX'
+  },
+  {
+    id:'confirm',
+    fn: confirmLead
   }
 ];
 
-function recommend(p) {
-  const reco = {
-    'Relancer mes prospects': { agent:'Awa', desc:'notre spécialiste vente, peut écrire tes séquences de relance dès maintenant.', cta:'Essayer Attractor Assists →', url:'https://assists.agenceattractor.com' },
-    'Gérer mon agenda': { agent:'Serge', desc:'structure ta semaine en 2 minutes chaque lundi et ne laisse rien passer.', cta:'Essayer Attractor Assists →', url:'https://assists.agenceattractor.com' },
-    'Créer du contenu': { agent:'Kofi', desc:'peut te construire une campagne complète film + posts + WhatsApp en une session.', cta:'Essayer Attractor Assists →', url:'https://assists.agenceattractor.com' },
-    'Suivre mes finances': { agent:'Roland', desc:'fait ton point financier automatiquement et t\'alerte avant que ce soit un problème.', cta:'Essayer Attractor Assists →', url:'https://assists.agenceattractor.com' },
-    'Gérer mes commandes': { agent:'une app métier', desc:'sur mesure pour ton activité — livrée en 7 jours.', cta:'Demander un audit gratuit →', url:'#' },
+function confirmLead(p) {
+  const sujets = {
+    'Relancer mes prospects':'tes relances prospects',
+    'Gérer mon agenda':'ton organisation',
+    'Créer du contenu':'ta stratégie de contenu',
+    'Suivre mes finances':'ta rentabilité',
+    'Gérer mes commandes':'ta gestion de commandes',
   };
-  const r = reco[p.besoin] || { agent:'Attractor Assists', desc:'couvre précisément ton besoin.', cta:'Découvrir →', url:'https://assists.agenceattractor.com' };
-  return `${p.prenom}, d'après ce que tu m'as dit — <strong>${r.agent}</strong> ${r.desc}<br><br>👉 <a href="${r.url}" target="_blank" style="color:var(--orange);font-weight:700;">${r.cta}</a><br><br>Je note aussi ton profil pour que Mac Arthur puisse te recontacter personnellement. 📋`;
+  const sujet = sujets[p.besoin] || 'ton projet';
+  return `C'est noté, ${p.prenom||'toi'}.<br><br>Je reviens vers toi d'ici <strong>24h</strong> avec une solution concrète pour ${sujet}.<br><br>En attendant, tu peux voir nos apps en action ici → <a href="https://demo.agenceattractor.com" target="_blank" style="color:var(--orange);font-weight:700;">demo.agenceattractor.com</a>`;
 }
 
 function openChat() {
@@ -1504,13 +1494,13 @@ function sendMsg() {
 function nextStep() {
   if(chatStep >= FLOW.length) return;
   const step = FLOW[chatStep];
-  chatInput.style.display = step.input ? '' : 'none';
-  document.getElementById('chat-send').style.display = step.input ? '' : 'none';
+  const showInput = !!step.input;
+  chatInput.style.display = showInput ? '' : 'none';
+  document.getElementById('chat-send').style.display = showInput ? '' : 'none';
+  if(showInput && step.placeholder) chatInput.placeholder = step.placeholder;
 
-  let text;
   if (step.fn) {
-    text = step.fn(prospect);
-    // Envoyer le prospect au backend
+    const text = step.fn(prospect);
     sendProspect(prospect);
     addMsg(text,'mac');
     chatInput.style.display='none';
@@ -1519,7 +1509,7 @@ function nextStep() {
     track('chat_completed', prospect);
     return;
   }
-  text = typeof step.text === 'function' ? step.text(prospect) : step.text;
+  const text = typeof step.text === 'function' ? step.text(prospect) : step.text;
   addMsg(text,'mac');
   if(step.opts) setOpts(step.opts);
   if(!step.input) chatStep++;
@@ -1541,6 +1531,7 @@ async function sendProspect(p) {
       type_projet:  typeMap[p.besoin] || 'C',
       nb_users:     '1',
       statut:       'nouveau',
+      whatsapp:     p.whatsapp || '',
     };
     const headers = {
       'Content-Type':  'application/json',
