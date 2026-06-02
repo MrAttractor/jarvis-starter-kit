@@ -433,6 +433,7 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
       // Contexte agence injecté dans le premier message système
       const contextDigest = [
         `[COCKPIT MAC ARTHUR — CHEF DE CABINET]`,
+        `RÈGLE ABSOLUE : pose UNE seule question à la fois. Jamais deux questions dans le même message. Attends la réponse avant d'avancer.`,
         `Prospects actifs : ${prospects.filter(p => ['nouveau','contacté','relancé'].includes(p.statut)).length}`,
         `Décisions MIROIR en attente d'analyse : ${decNonTraitees}`,
         `Feedbacks nouveaux : ${feedbacks.filter(f => f.status === 'nouveau').length}`,
