@@ -62,7 +62,15 @@ export function AdminScreen({ go, notify }) {
   const [users, setUsers]         = useState([]);
   const [loading, setLoading]     = useState(true);
   const [newUserAlert, setNewUserAlert] = useState(null);
-  const [section, setSection]     = useState('users'); // 'users' | 'feedbacks'
+  const [section, setSection]     = useState('users'); // 'users' | 'feedbacks' | 'miroir'
+
+  // MIROIR
+  const [miroir, setMiroir]           = useState([]);
+  const [miroirLoading, setMiroirLoading] = useState(false);
+  const [decisions, setDecisions]     = useState([]);
+  const [dSujet, setDSujet]           = useState('');
+  const [dContexte, setDContexte]     = useState('');
+  const [dSending, setDSending]       = useState(false);
 
   // Détail utilisateur
   const [selectedUser, setSelectedUser]   = useState(null);
@@ -126,6 +134,37 @@ export function AdminScreen({ go, notify }) {
       console.error('feedbacks', e);
     }
     setFbLoading(false);
+  };
+
+  const loadMiroir = async () => {
+    setMiroirLoading(true);
+    try {
+      const [{ data: ref }, { data: dec }] = await Promise.all([
+        supabase.from('methode_miroir').select('*').order('created_at', { ascending: false }).limit(60),
+        supabase.from('decisions').select('*').order('created_at', { ascending: false }).limit(20),
+      ]);
+      setMiroir(ref || []);
+      setDecisions(dec || []);
+    } catch (e) { console.error('miroir', e); }
+    setMiroirLoading(false);
+  };
+
+  const addDecision = async (statut) => {
+    if (!dSujet.trim() || !dContexte.trim() || dSending) return;
+    setDSending(true);
+    const { error } = await supabase.from('decisions').insert({
+      sujet: dSujet.trim(), contexte: dContexte.trim(), statut,
+    });
+    if (error) { notify('Erreur — vérifie la policy decisions'); setDSending(false); return; }
+    notify(`Décision ${statut} enregistrée — MIROIR va l'analyser`);
+    setDSujet(''); setDContexte('');
+    await loadMiroir();
+    setDSending(false);
+  };
+
+  const resolveArbitrage = async (id) => {
+    await supabase.from('methode_miroir').update({ arbitre: true }).eq('id', id);
+    setMiroir(prev => prev.map(m => m.id === id ? { ...m, arbitre: true } : m));
   };
 
   const markHandled = async (id) => {
@@ -193,6 +232,7 @@ export function AdminScreen({ go, notify }) {
   useEffect(() => {
     load();
     loadFeedbacks();
+    loadMiroir();
     loadUnread();
 
     channelRef.current = supabase
@@ -258,6 +298,12 @@ export function AdminScreen({ go, notify }) {
     : feedbacks.filter(f => f.type === fbFilter);
 
   const pendingCount = feedbacks.filter(f => f.status === 'nouveau').length;
+
+  // MIROIR — données dérivées
+  const arbitrer   = miroir.filter(m => m.a_arbitrer && !m.arbitre);
+  const referentiel = miroir.filter(m => m.type !== 'CONTRADICTION' || m.arbitre);
+  const categories  = [...new Set(referentiel.map(m => m.categorie))].sort();
+  const decNonTraitees = decisions.filter(d => !d.traite).length;
 
   const stats = {
     total:     users.length,
@@ -363,14 +409,23 @@ export function AdminScreen({ go, notify }) {
         <div className="flex gap-2">
           <button onClick={() => setSection('users')}
             className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold border-[1.5px] transition ${section === 'users' ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
-            Utilisateurs ({filteredUsers.length})
+            Users ({filteredUsers.length})
           </button>
           <button onClick={() => setSection('feedbacks')}
             className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold border-[1.5px] transition relative ${section === 'feedbacks' ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
-            Feedbacks
+            Feedback
             {pendingCount > 0 && (
               <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#D64545] text-white text-[10px] font-extrabold flex items-center justify-center">
                 {pendingCount}
+              </span>
+            )}
+          </button>
+          <button onClick={() => { setSection('miroir'); loadMiroir(); }}
+            className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold border-[1.5px] transition relative ${section === 'miroir' ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
+            Miroir
+            {arbitrer.length > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-amber text-charbon text-[10px] font-extrabold flex items-center justify-center">
+                {arbitrer.length}
               </span>
             )}
           </button>
@@ -486,6 +541,118 @@ export function AdminScreen({ go, notify }) {
                   <p className="text-center text-[13px] text-g400 py-6">Aucun utilisateur trouvé.</p>
                 )}
               </div>
+            )}
+          </>
+        )}
+
+        {/* ── Section MIROIR ── */}
+        {section === 'miroir' && (
+          <>
+            {/* Stats rapides */}
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { label: 'Principes', val: referentiel.length, tone: 'bg-charbon/5 text-charbon' },
+                { label: 'En attente', val: decNonTraitees,    tone: 'bg-amber/10 text-amber' },
+                { label: 'À arbitrer', val: arbitrer.length,   tone: arbitrer.length > 0 ? 'bg-[#D64545]/10 text-[#D64545]' : 'bg-charbon/5 text-charbon' },
+              ].map(s => (
+                <Card key={s.label} className="p-3 text-center">
+                  <div className={`text-[22px] font-display font-extrabold ${s.tone.split(' ')[1]}`}>{miroirLoading ? '…' : s.val}</div>
+                  <div className="text-[10px] text-g400 mt-0.5">{s.label}</div>
+                </Card>
+              ))}
+            </div>
+
+            {/* À arbitrer — urgent */}
+            {arbitrer.length > 0 && (
+              <>
+                <SectionLabel>À arbitrer — ta décision est requise</SectionLabel>
+                {arbitrer.map(m => (
+                  <Card key={m.id} className="p-4 border-amber/30 flex flex-col gap-2.5">
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="text-[11px] font-bold text-amber uppercase tracking-wider">Contradiction détectée</span>
+                      <span className="text-[11px] text-g400">{timeAgo(m.created_at)}</span>
+                    </div>
+                    <p className="text-[13.5px] text-charbon font-semibold leading-snug">{m.principe_detecte}</p>
+                    <div className="bg-amber/8 rounded-xl px-3 py-2.5 border border-amber/15">
+                      <p className="text-[12px] font-bold text-amber mb-1">Question pour toi</p>
+                      <p className="text-[13px] text-charbon leading-snug">{m.a_arbitrer}</p>
+                    </div>
+                    <p className="text-[11.5px] text-g400 italic">Preuve : {m.preuve}</p>
+                    <button onClick={() => resolveArbitrage(m.id)}
+                      className="w-full py-2.5 rounded-xl bg-charbon text-white text-[13px] font-bold active:scale-[.98] transition">
+                      Arbitré — marquer comme résolu
+                    </button>
+                  </Card>
+                ))}
+              </>
+            )}
+
+            {/* Nouvelle décision */}
+            <SectionLabel>Nouvelle décision</SectionLabel>
+            <Card className="p-4 flex flex-col gap-3">
+              <input value={dSujet} onChange={e => setDSujet(e.target.value)}
+                placeholder="Sujet — ex : Ne pas accepter les projets sans acompte"
+                className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[14px] text-charbon outline-none focus:border-orange transition" />
+              <textarea value={dContexte} onChange={e => setDContexte(e.target.value)}
+                rows={3} placeholder="Contexte — enjeu + options + pourquoi cette décision"
+                className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[13.5px] text-charbon outline-none focus:border-orange transition resize-none" />
+              <div className="flex gap-2">
+                <button onClick={() => addDecision('VALIDE')} disabled={!dSujet.trim() || !dContexte.trim() || dSending}
+                  className="flex-1 py-3 rounded-xl bg-growth text-white text-[13px] font-bold disabled:opacity-40 active:scale-[.98] transition">
+                  Validé
+                </button>
+                <button onClick={() => addDecision('REJETE')} disabled={!dSujet.trim() || !dContexte.trim() || dSending}
+                  className="flex-1 py-3 rounded-xl bg-[#D64545] text-white text-[13px] font-bold disabled:opacity-40 active:scale-[.98] transition">
+                  Rejeté
+                </button>
+              </div>
+              {decNonTraitees > 0 && (
+                <p className="text-[11.5px] text-g400 text-center">{decNonTraitees} décision{decNonTraitees > 1 ? 's' : ''} en attente d'analyse MIROIR (réveil toutes les 30 min)</p>
+              )}
+            </Card>
+
+            {/* Référentiel actif */}
+            {miroirLoading ? (
+              <div className="py-8 text-center text-[13px] text-g400">Chargement…</div>
+            ) : referentiel.length === 0 ? (
+              <Card className="p-5 text-center">
+                <p className="text-[13px] text-g400">Référentiel vide — commence par ajouter des décisions.</p>
+                <p className="text-[12px] text-g300 mt-1">MIROIR les analysera au prochain réveil.</p>
+              </Card>
+            ) : (
+              <>
+                <SectionLabel>Référentiel actif ({referentiel.length} principes)</SectionLabel>
+                {categories.map(cat => (
+                  <div key={cat} className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="h-px flex-1 bg-g200" />
+                      <span className="text-[10px] font-bold text-g400 uppercase tracking-widest px-2">{cat}</span>
+                      <div className="h-px flex-1 bg-g200" />
+                    </div>
+                    {referentiel.filter(m => m.categorie === cat).map(m => (
+                      <Card key={m.id} className="px-4 py-3 flex flex-col gap-1.5">
+                        <div className="flex items-start justify-between gap-2">
+                          <p className="text-[13.5px] text-charbon font-semibold leading-snug flex-1">{m.principe_detecte}</p>
+                          <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                              m.type === 'NOUVEAU'       ? 'bg-orange/10 text-orange' :
+                              m.type === 'CONFIRMATION'  ? 'bg-growth/10 text-growth' :
+                              m.type === 'NUANCE'        ? 'bg-info/10 text-info' :
+                                                           'bg-amber/10 text-amber'
+                            }`}>{m.type}</span>
+                            <span className={`text-[10px] font-medium ${
+                              m.confiance === 'haute' ? 'text-growth' :
+                              m.confiance === 'faible' ? 'text-[#D64545]' : 'text-g400'
+                            }`}>{m.confiance}</span>
+                          </div>
+                        </div>
+                        <p className="text-[12px] text-g400 leading-snug">{m.referentiel}</p>
+                        {m.preuve && <p className="text-[11px] text-g300 italic leading-snug">"{m.preuve.slice(0, 100)}{m.preuve.length > 100 ? '…' : ''}"</p>}
+                      </Card>
+                    ))}
+                  </div>
+                ))}
+              </>
             )}
           </>
         )}
