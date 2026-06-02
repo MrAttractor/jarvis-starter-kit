@@ -1304,6 +1304,12 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
           </div>
         )}
 
+        {/* Déconnexion */}
+        <button onClick={() => supabase.auth.signOut()}
+          className="w-full py-3 rounded-xl border-[1.5px] border-g200 text-[13.5px] font-bold text-g400 hover:border-[#D64545]/40 hover:text-[#D64545] transition active:scale-[.98]">
+          Se déconnecter
+        </button>
+
         {/* Accès rapide */}
         <SectionLabel>Accès rapide</SectionLabel>
         <div className="grid grid-cols-2 gap-2">
