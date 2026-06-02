@@ -62,8 +62,14 @@ export function AdminScreen({ go, notify }) {
   const [users, setUsers]         = useState([]);
   const [loading, setLoading]     = useState(true);
   const [newUserAlert, setNewUserAlert] = useState(null);
-  const [section, setSection]     = useState('users'); // 'users' | 'feedbacks' | 'miroir' | 'prospects' | 'agents'
+  const [section, setSection]     = useState('users'); // 'users' | 'feedbacks' | 'miroir' | 'prospects' | 'jarvis'
   const [usersExpanded, setUsersExpanded] = useState(false);
+
+  // Jarvis cockpit
+  const [jarvisMsgs, setJarvisMsgs]     = useState([]);
+  const [jarvisInput, setJarvisInput]   = useState('');
+  const [jarvisSending, setJarvisSending] = useState(false);
+  const jarvisBottomRef = useRef(null);
 
   // MIROIR
   const [miroir, setMiroir]           = useState([]);
@@ -453,6 +459,30 @@ export function AdminScreen({ go, notify }) {
     setTimeout(() => chatBottomRef.current?.scrollIntoView(), 100);
   };
 
+  const sendJarvis = async () => {
+    if (!jarvisInput.trim() || jarvisSending) return;
+    const msg = jarvisInput.trim();
+    setJarvisInput('');
+    setJarvisSending(true);
+    const userMsg = { role: 'user', content: msg };
+    setJarvisMsgs(prev => [...prev, userMsg]);
+    try {
+      const history = jarvisMsgs.slice(-8).map(m => ({ role: m.role, content: m.content }));
+      const { data, error } = await supabase.functions.invoke('jarvis-cockpit', {
+        body: { message: msg, history },
+      });
+      if (error || !data?.reply) {
+        notify('Erreur Jarvis — réessaie dans quelques secondes');
+        setJarvisMsgs(prev => prev.slice(0, -1));
+      } else {
+        setJarvisMsgs(prev => [...prev, { role: 'assistant', content: data.reply, agent: data.agent }]);
+        await loadProspects();
+      }
+    } catch { notify('Erreur réseau'); setJarvisMsgs(prev => prev.slice(0, -1)); }
+    setJarvisSending(false);
+    setTimeout(() => jarvisBottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 80);
+  };
+
   return (
     <>
     <div className="min-h-screen bg-sable pb-6">
@@ -530,10 +560,10 @@ export function AdminScreen({ go, notify }) {
             { id: 'feedbacks',label: 'Feedback', badge: pendingCount > 0 ? pendingCount : null, badgeTone: 'bg-[#D64545]' },
             { id: 'miroir',   label: 'Miroir',   badge: arbitrer.length > 0 ? arbitrer.length : null, badgeTone: 'bg-amber text-charbon' },
             { id: 'prospects',label: 'Awa',      badge: prospects.filter(p => p.statut === 'nouveau').length > 0 ? prospects.filter(p => p.statut === 'nouveau').length : null, badgeTone: 'bg-orange' },
-            { id: 'agents',   label: 'Agents',   badge: null },
+            { id: 'jarvis',   label: 'Jarvis',   badge: null },
           ].map(tab => (
             <button key={tab.id}
-              onClick={() => { setSection(tab.id); if (tab.id === 'miroir') loadMiroir(); if (tab.id === 'prospects' || tab.id === 'agents') loadProspects(); }}
+              onClick={() => { setSection(tab.id); if (tab.id === 'miroir') loadMiroir(); if (tab.id === 'prospects' || tab.id === 'jarvis') loadProspects(); }}
               className={`relative flex-shrink-0 px-4 py-2.5 rounded-xl text-[13px] font-bold border-[1.5px] transition ${section === tab.id ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
               {tab.label}
               {tab.badge !== null && (
@@ -1013,52 +1043,122 @@ export function AdminScreen({ go, notify }) {
           </>
         )}
 
-        {/* ── Section Agents ── */}
-        {section === 'agents' && (
+        {/* ── Section Jarvis Cockpit ── */}
+        {section === 'jarvis' && (
           <>
-            <SectionLabel>Journal d'activité — tous les agents</SectionLabel>
-            {prospectsLoading ? (
-              <div className="py-8 text-center text-[13px] text-g400">Chargement…</div>
-            ) : journal.length === 0 ? (
-              <Card className="p-5 text-center">
-                <p className="text-[13px] text-g400">Aucune activité enregistrée.</p>
-                <p className="text-[12px] text-g300 mt-1">Les agents tracent leurs actions ici automatiquement.</p>
-              </Card>
-            ) : (
-              <div className="flex flex-col gap-2">
-                {journal.map(j => {
-                  const agentColors = {
-                    awa:    'bg-orange/10 text-orange',
-                    miroir: 'bg-charbon/8 text-charbon',
-                    kofi:   'bg-info/10 text-info',
-                    miriam: 'bg-amber/10 text-amber',
-                    serge:  'bg-growth/10 text-growth',
-                    roland: 'bg-g200 text-g700',
-                    carelle:'bg-charbon/10 text-charbon',
-                  };
-                  const col = agentColors[j.agent_id] || 'bg-g100 text-g500';
-                  return (
-                    <div key={j.id} className="flex items-start gap-3 bg-white border border-g200 rounded-[14px] px-4 py-3">
-                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-[11px] font-extrabold uppercase ${col}`}>
-                        {(j.agent_id || 'SYS').slice(0, 3)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2">
-                          <p className="text-[13px] font-bold text-charbon leading-snug capitalize">{j.agent_id || 'Système'}</p>
-                          <span className="text-[10.5px] text-g300 flex-shrink-0">{timeAgo(j.created_at)}</span>
-                        </div>
-                        <p className="text-[12.5px] text-g500 mt-0.5 leading-snug">{j.titre}</p>
-                        {j.details?.synthese && (
-                          <p className="text-[11.5px] text-g400 mt-0.5 leading-snug line-clamp-2 italic">{j.details.synthese}</p>
-                        )}
-                        {j.details?.notes && (
-                          <p className="text-[11.5px] text-g400 mt-0.5 leading-snug line-clamp-2 italic">{j.details.notes}</p>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
+            {/* En-tête */}
+            <div className="bg-charbon rounded-[18px] px-4 py-3.5 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-orange/20 flex items-center justify-center flex-shrink-0">
+                <Icon name="spark" size={18} className="text-orange" />
               </div>
+              <div>
+                <p className="font-display font-extrabold text-[14px] text-white">Jarvis — Tes agents</p>
+                <p className="text-[11.5px] text-white/55">Carelle dispatche · Edito · CM · Commercial · DAF · Eclaireur…</p>
+              </div>
+            </div>
+
+            {/* Conversation active */}
+            {jarvisMsgs.length > 0 && (
+              <div className="flex flex-col gap-3">
+                {jarvisMsgs.map((m, i) => (
+                  <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    {m.role === 'assistant' && (
+                      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-extrabold uppercase mr-2 flex-shrink-0 mt-1 ${
+                        m.agent === 'edito'              ? 'bg-info/15 text-info' :
+                        m.agent === 'community-manager'  ? 'bg-amber/15 text-amber' :
+                        m.agent === 'commercial'         ? 'bg-orange/15 text-orange' :
+                        m.agent === 'eclaireur'          ? 'bg-growth/15 text-growth' :
+                        m.agent === 'daf'                ? 'bg-charbon/10 text-charbon' :
+                        m.agent === 'programmeur-senior' ? 'bg-info/20 text-info' :
+                        'bg-charbon/8 text-charbon'
+                      }`}>
+                        {(m.agent || 'car').slice(0, 3).toUpperCase()}
+                      </div>
+                    )}
+                    <div className={`max-w-[85%] rounded-[16px] px-3.5 py-2.5 text-[13.5px] leading-relaxed whitespace-pre-wrap ${
+                      m.role === 'user'
+                        ? 'bg-orange text-white rounded-br-[4px]'
+                        : 'bg-white border border-g200 text-charbon rounded-bl-[4px]'
+                    }`}>
+                      {m.content}
+                    </div>
+                  </div>
+                ))}
+                {jarvisSending && (
+                  <div className="flex justify-start">
+                    <div className="w-7 h-7 rounded-full bg-charbon/8 flex items-center justify-center mr-2 flex-shrink-0 mt-1">
+                      <Icon name="spark" size={13} className="text-charbon animate-pulse" />
+                    </div>
+                    <div className="bg-white border border-g200 rounded-[16px] rounded-bl-[4px] px-4 py-3">
+                      <span className="text-[13px] text-g400 italic">L'équipe travaille…</span>
+                    </div>
+                  </div>
+                )}
+                <div ref={jarvisBottomRef} />
+              </div>
+            )}
+
+            {/* Suggestions rapides (si pas encore de conversation) */}
+            {jarvisMsgs.length === 0 && (
+              <div className="flex flex-col gap-2">
+                <p className="text-[11px] font-bold text-g400 uppercase tracking-wider">Suggestions</p>
+                {[
+                  "CM, fais-moi un post Facebook pour le challenge 7 jours",
+                  "Commercial, rédige une relance WhatsApp pour J'envoie Express",
+                  "Eclaireur, quelles apps métiers marchent bien en CI en ce moment ?",
+                  "DAF, où en est mon objectif 10k€ ce mois-ci ?",
+                ].map(s => (
+                  <button key={s} onClick={() => setJarvisInput(s)}
+                    className="text-left px-4 py-3 bg-white border border-g200 rounded-[14px] text-[12.5px] text-g700 hover:border-orange hover:text-orange transition active:scale-[.99]">
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Zone de saisie */}
+            <div className="flex gap-2 items-end sticky bottom-0 bg-sable pt-2 pb-1">
+              <textarea
+                rows={2}
+                value={jarvisInput}
+                onChange={e => setJarvisInput(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && jarvisInput.trim()) { e.preventDefault(); sendJarvis(); }}}
+                placeholder="Dis à l'équipe ce que tu veux…"
+                className="flex-1 bg-white border-[1.5px] border-g200 rounded-[14px] px-4 py-3 text-[13.5px] text-charbon resize-none outline-none focus:border-orange transition"
+              />
+              <button onClick={sendJarvis} disabled={!jarvisInput.trim() || jarvisSending}
+                className="flex-shrink-0 w-11 h-11 rounded-[14px] bg-orange flex items-center justify-center disabled:opacity-40 active:scale-95 transition shadow-[0_6px_14px_-4px_rgba(242,92,5,.5)]">
+                <Icon name="send" size={17} className="text-white" />
+              </button>
+            </div>
+
+            {/* Journal passé */}
+            {journal.filter(j => j.details?.via === 'jarvis-cockpit').length > 0 && (
+              <>
+                <SectionLabel className="mt-2">Historique</SectionLabel>
+                <div className="flex flex-col gap-2">
+                  {journal.filter(j => j.details?.via === 'jarvis-cockpit').map(j => (
+                    <div key={j.id} className="bg-white border border-g200 rounded-[14px] px-4 py-3 flex flex-col gap-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className={`text-[10.5px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
+                          j.agent_id === 'edito'             ? 'bg-info/10 text-info' :
+                          j.agent_id === 'community-manager' ? 'bg-amber/10 text-amber' :
+                          j.agent_id === 'commercial'        ? 'bg-orange/10 text-orange' :
+                          j.agent_id === 'eclaireur'         ? 'bg-growth/10 text-growth' :
+                          'bg-charbon/8 text-charbon'
+                        }`}>{j.agent_id || 'carelle'}</span>
+                        <span className="text-[10.5px] text-g300">{timeAgo(j.created_at)}</span>
+                      </div>
+                      <p className="text-[12.5px] text-g500 leading-snug">{j.titre}</p>
+                      {j.details?.output && (
+                        <p className="text-[12px] text-g400 leading-snug line-clamp-3 italic">
+                          {j.details.output.slice(0, 200)}{j.details.output.length > 200 ? '…' : ''}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </>
             )}
           </>
         )}
