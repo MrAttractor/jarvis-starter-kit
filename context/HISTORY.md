@@ -47,6 +47,34 @@
 - Circuit validé : son cockpit → MIROIR → tous les agents
 - Frontières agents : chacun dans son couloir, Carelle délègue la vente à Awa
 
+### Devis automatique + vérification système 100% live
+
+**generate-devis Edge Function (déployée) :**
+- Barème officiel Attractor embarqué (Famille A/B/C, SOLO/EQUIPE/ENTERPRISE, EUR/FCFA)
+- Classification automatique selon type_projet + nb_users + zone du prospect
+- Calcul : setup HT, MRR, acompte (50%), solde, total M1, numéro ATR-2026-NNNN
+- Jamais de prix hors barème — si info manquante, question posée plutôt que devis inventé
+- Devis affiché pour validation Mac Arthur avant tout envoi
+
+**Formulaire prospect enrichi :**
+- 2 nouveaux champs : Type de projet (Fam. A/B/C) + Nb utilisateurs (1 / 2-5 / 5+)
+- A la création : séquence Awa + devis générés en parallèle automatiquement
+
+**Tables Supabase créées (toutes actives) :**
+- prospects, sequences_vente, journal_agent, insights_users, devis_prospects (31 tables total)
+
+**Vérification système 100% live :**
+- 13 Edge Functions ACTIVE : generate-livrable, activation-sequence, analyze-presence, chat-assistant (v14), extract-memories, notify-update, notify-auto, challenge-register, challenge-day, miroir, generate-sequence, collect-insights, generate-devis
+- 3 crons actifs : miroir-reveil (*/30min), notify-auto-matin (8h), collect-insights-matin (7h)
+- 31 tables Supabase en production
+- Schéma B2B Excalidraw publié
+
+**Section Ressources dans cockpit admin :**
+- Liens directs : schéma Excalidraw + Supabase + Netlify + Paperclip
+
+**Prochain sujet identifié :**
+- Générateur d'Apps Métier (modèle Shopify, copies à l'infini) + partenariats stratégiques
+
 ### Benchmark Paperclip (fait en fin de session)
 - Paperclip.ing analysé : orchestration d'agents en org chart hiérarchique, open-source MIT, auto-hébergé, agnostique LLM (Claude, Codex, Gemini...)
 - Fonctionnalités : budget par agent, ticket system avec audit immuable, heartbeats (crons), gouvernance (approbation embauches agents)
