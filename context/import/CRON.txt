@@ -1,0 +1,46 @@
+-- ============================================================
+-- MIROIR — Réveil automatique (le "permanent")
+-- Utilise pg_cron + pg_net pour appeler l'Edge Function à intervalle régulier.
+-- À exécuter dans Supabase > SQL Editor.
+-- ============================================================
+
+-- 1) Activer les extensions (une seule fois)
+create extension if not exists pg_cron;
+create extension if not exists pg_net;
+
+-- 2) Programmer le réveil de MIROIR
+--    Ici : toutes les 30 minutes. MIROIR ne consomme que s'il y a des décisions non traitées.
+--    Ajuste la fréquence selon ton volume (voir notes).
+--
+--    Remplace :
+--      <PROJECT_REF>  par la référence de ton projet Supabase
+--      <ANON_OR_SERVICE_KEY> par une clé autorisée à invoquer la fonction
+--
+select cron.schedule(
+  'reveil-miroir',
+  '*/30 * * * *',  -- toutes les 30 min (format cron)
+  $$
+  select net.http_post(
+    url     := 'https://<PROJECT_REF>.supabase.co/functions/v1/miroir',
+    headers := jsonb_build_object(
+      'Content-Type',  'application/json',
+      'Authorization', 'Bearer <ANON_OR_SERVICE_KEY>'
+    ),
+    body    := '{}'::jsonb
+  );
+  $$
+);
+
+-- Pour voir les tâches programmées :
+--   select * from cron.job;
+-- Pour supprimer le réveil :
+--   select cron.unschedule('reveil-miroir');
+
+-- ------------------------------------------------------------
+-- NOTES DE FRÉQUENCE (coût)
+-- MIROIR ne fait un appel Claude QUE s'il y a des décisions non traitées.
+-- Un réveil "à vide" ne coûte rien (juste une requête SQL).
+-- '*/30 * * * *'  = toutes les 30 min  (réactif)
+-- '0 * * * *'     = toutes les heures
+-- '0 8,20 * * *'  = 2x/jour (8h et 20h) — suffisant au démarrage
+-- ------------------------------------------------------------

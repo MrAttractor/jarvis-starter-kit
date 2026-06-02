@@ -301,7 +301,7 @@ export function MéthodeScreen({ go }) {
   /* ── Lecture ── */
   if (reading) {
     return (
-      <div className="min-h-full bg-sable flex flex-col">
+      <div className="min-h-screen bg-sable flex flex-col">
         <div className="sticky top-0 z-10 bg-white/95 backdrop-blur border-b border-g200">
           <div className="px-[18px] pt-5 pb-3 flex items-center gap-3">
             <button onClick={() => setReading(null)} className="w-9 h-9 rounded-full bg-sable flex items-center justify-center flex-shrink-0">
@@ -388,7 +388,7 @@ export function MéthodeScreen({ go }) {
 
   /* ── Liste des livres ── */
   return (
-    <div className="min-h-full bg-sable pb-6">
+    <div className="min-h-screen bg-sable pb-6">
       <AppHeader title="La Méthode" sub="Écrits de Mac Arthur · Accès libre" onBack={() => go('dashboard')} />
 
       <div className="px-[18px] flex flex-col gap-3">

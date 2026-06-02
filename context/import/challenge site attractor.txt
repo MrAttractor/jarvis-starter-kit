@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Challenge 7 Jours — Méthode ATTRACTOR</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--gold-dim:#8a6f2e;--gold-l:rgba(201,168,76,0.1);--black:#0A0A0A;--card:#161616;--card2:#1E1E1E;--border:rgba(201,168,76,0.18);--text:#F2EDE4;--muted:#888;--green:#3DDC84;--red:#FF6B6B;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(201,168,76,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+
+/* PROGRESS BAR */
+.progress-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:3px;background:rgba(255,255,255,0.06);}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-dim));transition:width 0.5s ease;}
+
+/* NAV */
+nav{position:sticky;top:3px;z-index:190;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(10,10,10,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--black);}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-name{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;}
+.nav-step{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);}
+
+/* MAIN */
+.main{max-width:680px;margin:0 auto;padding:3rem 2rem 6rem;position:relative;z-index:1;}
+
+/* INTRO */
+.intro{text-align:center;margin-bottom:3rem;}
+.intro-tag{display:inline-flex;align-items:center;gap:8px;background:var(--gold-l);border:1px solid var(--border);border-radius:3px;padding:4px 14px;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.2rem;}
+.intro-h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;line-height:1.1;margin-bottom:0.8rem;}
+.intro-h1 em{font-style:italic;color:var(--gold);}
+.intro-p{font-size:14px;color:var(--muted);line-height:1.75;max-width:500px;margin:0 auto;}
+
+/* JOURS NAVIGATION */
+.jours-nav{display:flex;gap:8px;margin-bottom:2.5rem;flex-wrap:wrap;justify-content:center;}
+.jour-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--card);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;position:relative;}
+.jour-btn:disabled{cursor:not-allowed;opacity:0.4;}
+.jour-btn.current{border-color:var(--gold);color:var(--gold);background:var(--gold-l);}
+.jour-btn.done{border-color:var(--green);color:var(--green);background:rgba(61,220,132,0.08);}
+.jour-btn.done::after{content:'✓';position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--green);color:var(--black);border-radius:50%;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700;}
+
+/* ÉTAPE */
+.etape{display:none;animation:fadeUp 0.4s ease;}
+.etape.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+/* HEADER ÉTAPE */
+.etape-header{background:linear-gradient(135deg,rgba(201,168,76,0.07),rgba(201,168,76,0.02));border:1px solid var(--border);border-radius:10px;padding:1.8rem 2rem;margin-bottom:1.5rem;}
+.etape-num{font-family:'Space Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.5rem;}
+.etape-titre{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;margin-bottom:0.5rem;}
+.etape-titre em{font-style:italic;color:var(--gold);}
+.etape-sub{font-size:13px;color:var(--muted);line-height:1.65;}
+
+/* CONTEXTE */
+.contexte{background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;}
+.ctx-icon{font-size:1.5rem;margin-bottom:0.6rem;}
+.ctx-quote{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:var(--gold);line-height:1.65;margin-bottom:0.5rem;}
+.ctx-attr{font-size:11px;color:var(--muted);}
+
+/* EXERCICE */
+.exercice{margin-bottom:1.5rem;}
+.ex-label{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.8rem;display:flex;align-items:center;gap:8px;}
+.ex-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.ex-instructions{font-size:14px;color:rgba(242,237,228,0.8);line-height:1.75;margin-bottom:1rem;}
+.ex-instructions strong{color:var(--text);}
+
+/* CHAMPS */
+.field{margin-bottom:1rem;}
+.field-label{display:block;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;}
+.field-textarea{width:100%;background:var(--card2);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:12px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;resize:none;min-height:100px;line-height:1.7;}
+.field-textarea:focus{border-color:var(--gold);}
+.field-textarea::placeholder{color:rgba(136,136,136,0.5);font-style:italic;}
+.field-input{width:100%;background:var(--card2);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:11px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;}
+.field-input:focus{border-color:var(--gold);}
+
+/* BTN VALIDER */
+.btn-valider{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--black);border:none;border-radius:6px;padding:14px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:0.5rem;}
+.btn-valider:hover{box-shadow:0 8px 24px rgba(201,168,76,0.3);transform:translateY(-1px);}
+.btn-valider:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.etape-mention{text-align:center;font-size:11px;color:var(--muted);margin-top:8px;}
+
+/* CONFIRMATION ÉTAPE */
+.etape-done{background:rgba(61,220,132,0.06);border:1px solid rgba(61,220,132,0.2);border-radius:8px;padding:1.2rem 1.5rem;margin-top:1rem;display:none;}
+.etape-done.show{display:block;}
+.ed-icon{font-size:1.5rem;margin-bottom:6px;}
+.ed-title{font-size:14px;font-weight:600;color:var(--green);margin-bottom:4px;}
+.ed-text{font-size:13px;color:var(--muted);line-height:1.6;}
+.btn-next{background:transparent;border:1px solid var(--border);border-radius:6px;padding:10px 20px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:10px;transition:all 0.2s;}
+.btn-next:hover{border-color:var(--gold);color:var(--gold);}
+
+/* ÉTAPE FINALE J7 */
+.finale{text-align:center;padding:3rem 1rem;animation:fadeUp 0.5s ease;}
+.finale-icon{font-size:4rem;margin-bottom:1.5rem;}
+.finale-h2{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;margin-bottom:1rem;}
+.finale-h2 em{font-style:italic;color:var(--gold);}
+.finale-p{font-size:14px;color:var(--muted);line-height:1.75;max-width:480px;margin:0 auto 2rem;}
+.btn-coaching{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--black);text-decoration:none;padding:16px 32px;border-radius:6px;font-weight:700;font-size:15px;animation:pulse-gold 2s infinite;}
+@keyframes pulse-gold{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0.4)}50%{box-shadow:0 0 0 12px rgba(201,168,76,0)}}
+.finale-mention{font-size:12px;color:var(--muted);margin-top:1rem;}
+.trophee{background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(201,168,76,0.04));border:1px solid var(--border);border-radius:10px;padding:1.5rem 2rem;margin:2rem auto;max-width:420px;text-align:left;}
+.tr-title{font-family:'Space Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;}
+.tr-item{font-size:13px;color:var(--text);display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.tr-item::before{content:'✓';color:var(--gold);font-weight:700;}
+
+.toast{position:fixed;bottom:2rem;right:2rem;z-index:999;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 18px;font-size:13px;transform:translateY(80px);opacity:0;transition:all 0.4s;pointer-events:none;max-width:300px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{background:rgba(61,220,132,0.12);border-color:rgba(61,220,132,0.3);color:var(--green);}
+.toast.error{background:rgba(255,107,107,0.12);border-color:rgba(255,107,107,0.3);color:var(--red);}
+
+@media(max-width:600px){nav{padding:0.8rem 1.2rem;}.main{padding:2rem 1.2rem 5rem;}}
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+<nav>
+  <a href="/" class="nav-brand">
+    <div class="nav-mark">MA</div>
+    <div><div class="nav-name">Mr Attractor</div></div>
+  </a>
+  <div class="nav-step" id="navStep">Challenge 7 Jours — Jour 1</div>
+</nav>
+
+<div class="main">
+
+  <!-- INTRO -->
+  <div class="intro" id="introBlock">
+    <div class="intro-tag">Challenge — Méthode ATTRACTOR</div>
+    <h1 class="intro-h1">7 jours pour bâtir<br>votre <em>Manuel de Procédures</em></h1>
+    <p class="intro-p">Chaque jour, un exercice concret. Vous validez — je vous envoie un conseil personnalisé basé sur votre réalité. Au bout de 7 jours : une session de coaching offerte.</p>
+  </div>
+
+  <!-- NAVIGATION JOURS -->
+  <div class="jours-nav" id="joursNav">
+    <button class="jour-btn current" id="btn-j1" onclick="goJour(1)">J1</button>
+    <button class="jour-btn" id="btn-j2" onclick="goJour(2)" disabled>J2</button>
+    <button class="jour-btn" id="btn-j3" onclick="goJour(3)" disabled>J3</button>
+    <button class="jour-btn" id="btn-j4" onclick="goJour(4)" disabled>J4</button>
+    <button class="jour-btn" id="btn-j5" onclick="goJour(5)" disabled>J5</button>
+    <button class="jour-btn" id="btn-j6" onclick="goJour(6)" disabled>J6</button>
+    <button class="jour-btn" id="btn-j7" onclick="goJour(7)" disabled>J7</button>
+  </div>
+
+  <!-- JOUR 1 -->
+  <div class="etape active" id="j1">
+    <div class="etape-header">
+      <div class="etape-num">Jour 1 — Inventaire</div>
+      <div class="etape-titre">Listez tout ce que vous <em>répétez.</em></div>
+      <div class="etape-sub">Koffi a commencé par là. En 20 minutes, il a réalisé qu'il répétait les mêmes 8 tâches tous les jours. Ces répétitions cachent vos fuites.</div>
+    </div>
+    <div class="contexte">
+      <div class="ctx-icon">💡</div>
+      <div class="ctx-quote">"Ce qui reste dans ta tête t'enchaîne. Ce qui est écrit te libère."</div>
+      <div class="ctx-attr">— Monsieur S., Méthode ATTRACTOR</div>
+    </div>
+    <div class="exercice">
+      <div class="ex-label">Votre exercice du jour</div>
+      <div class="ex-instructions">Listez <strong>toutes les tâches que vous répétez</strong> dans votre activité. Ne filtrez pas. Ne jugez pas. Écrivez tout ce qui vous vient. Cherchez les répétitions — elles cachent vos fuites de temps et d'argent.</div>
+      <div class="field">
+        <label class="field-label">Mes tâches répétitives (une par ligne)</label>
+        <textarea class="field-textarea" id="j1-taches" rows="6" placeholder="Ex: Répondre aux questions WhatsApp sur les prix&#10;Confirmer chaque commande manuellement&#10;Rappeler les clients qui n'ont pas payé&#10;Briefer mes assistantes chaque matin..."></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Quelle tâche vous prend le plus de temps inutilement ?</label>
+        <textarea class="field-textarea" id="j1-pire" rows="3" placeholder="Décrivez la tâche et estimez combien d'heures elle vous coûte par semaine..."></textarea>
+      </div>
+    </div>
+    <button class="btn-valider" onclick="validerEtape(1)">✅ Valider le Jour 1 →</button>
+    <div class="etape-mention">Mac Arthur reçoit votre réponse et vous envoie un conseil personnalisé</div>
+    <div class="etape-done" id="done-j1">
+      <div class="ed-icon">🎉</div>
+      <div class="ed-title">Jour 1 validé — Bravo !</div>
+      <div class="ed-text">Mac Arthur analyse vos réponses et vous envoie un conseil personnalisé sous 24h. Revenez demain pour le Jour 2.</div>
+      <button class="btn-next" onclick="goJour(2)">Continuer — Jour 2 →</button>
+    </div>
+  </div>
+
+  <!-- JOUR 2 -->
+  <div class="etape" id="j2">
+    <div class="etape-header">
+      <div class="etape-num">Jour 2 — Procédure</div>
+      <div class="etape-titre">Documentez votre<br><em>tâche principale.</em></div>
+      <div class="etape-sub">Monsieur S. a fait parler Koffi pendant 20 minutes. Il a écrit. À la fin : la première procédure de l'entreprise.</div>
+    </div>
+    <div class="contexte">
+      <div class="ctx-icon">📋</div>
+      <div class="ctx-quote">"Tu viens de créer la première procédure de ton entreprise. En 20 minutes."</div>
+      <div class="ctx-attr">— Monsieur S. à Koffi, Chapitre 4</div>
+    </div>
+    <div class="exercice">
+      <div class="ex-label">Votre exercice du jour</div>
+      <div class="ex-instructions">Prenez la tâche la plus répétée identifiée hier. Décrivez-la <strong>étape par étape</strong> (5 à 8 étapes). Imaginez que vous l'expliquez à quelqu'un qui ne connaît rien à votre activité.</div>
+      <div class="field">
+        <label class="field-label">Nom de la tâche</label>
+        <input class="field-input" id="j2-tache" type="text" placeholder="Ex: Traitement d'une commande client">
+      </div>
+      <div class="field">
+        <label class="field-label">Les étapes (numérotées, une par ligne)</label>
+        <textarea class="field-textarea" id="j2-etapes" rows="8" placeholder="1. Le client envoie sa commande sur WhatsApp&#10;2. Je vérifie la disponibilité en stock&#10;3. Je confirme le prix et le délai&#10;4. ..."></textarea>
+      </div>
+    </div>
+    <button class="btn-valider" onclick="validerEtape(2)">✅ Valider le Jour 2 →</button>
+    <div class="etape-mention">Votre procédure devient la base de votre manuel d'organisation</div>
+    <div class="etape-done" id="done-j2">
+      <div class="ed-icon">🎉</div>
+      <div class="ed-title">Jour 2 validé — Vous avancez !</div>
+      <div class="ed-text">Vous venez de créer votre première procédure écrite. Mac Arthur vous envoie ses observations sous 24h.</div>
+      <button class="btn-next" onclick="goJour(3)">Continuer — Jour 3 →</button>
+    </div>
+  </div>
+
+  <!-- JOUR 3 -->
+  <div class="etape" id="j3">
+    <div class="etape-header">
+      <div class="etape-num">Jour 3 — Clients</div>
+      <div class="etape-titre">Standardisez votre<br><em>parcours client.</em></div>
+      <div class="etape-sub">De la première prise de contact jusqu'à la vente — chaque étape doit être claire, prévisible, et ne plus dépendre de votre mémoire.</div>
+    </div>
+    <div class="contexte">
+      <div class="ctx-icon">👥</div>
+      <div class="ctx-quote">"Les ventes perdues ne font pas de bruit. C'est pour ça qu'elles sont si dangereuses."</div>
+      <div class="ctx-attr">— Monsieur S., Chapitre 3</div>
+    </div>
+    <div class="exercice">
+      <div class="ex-label">Votre exercice du jour</div>
+      <div class="ex-instructions">Décrivez le parcours d'un client dans votre activité — <strong>depuis le moment où il vous contacte</strong> jusqu'au moment où il achète (et au-delà). Où perdez-vous des clients dans ce parcours ?</div>
+      <div class="field">
+        <label class="field-label">Comment un client vous contacte-t-il ?</label>
+        <input class="field-input" id="j3-contact" type="text" placeholder="WhatsApp, Instagram, bouche-à-oreille...">
+      </div>
+      <div class="field">
+        <label class="field-label">Les étapes de votre parcours client</label>
+        <textarea class="field-textarea" id="j3-parcours" rows="6" placeholder="1. Premier contact&#10;2. Présentation de l'offre&#10;3. Confirmation commande&#10;4. Paiement&#10;5. Livraison&#10;6. Suivi post-achat..."></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">À quelle étape perdez-vous le plus de clients ?</label>
+        <textarea class="field-textarea" id="j3-perte" rows="3" placeholder="Décrivez où et pourquoi vous pensez perdre des clients..."></textarea>
+      </div>
+    </div>
+    <button class="btn-valider" onclick="validerEtape(3)">✅ Valider le Jour 3 →</button>
+    <div class="etape-mention">Mac Arthur identifie vos fuites et vous propose des solutions</div>
+    <div class="etape-done" id="done-j3">
+      <div class="ed-icon">🎉</div>
+      <div class="ed-title">Jour 3 validé !</div>
+      <div class="ed-text">Vous avez cartographié votre parcours client. C'est une étape clé que peu d'entrepreneurs font.</div>
+      <button class="btn-next" onclick="goJour(4)">Continuer — Jour 4 →</button>
+    </div>
+  </div>
+
+  <!-- JOUR 4 -->
+  <div class="etape" id="j4">
+    <div class="etape-header">
+      <div class="etape-num">Jour 4 — Relances</div>
+      <div class="etape-titre">Créez un système de<br><em>relance automatique.</em></div>
+      <div class="etape-sub">Koffi relançait de mémoire. Résultat : 5 prospects sur 8 non relancés en 48h. Soit 1 000 000 FCFA perdus par mois.</div>
+    </div>
+    <div class="contexte">
+      <div class="ctx-icon">🔔</div>
+      <div class="ctx-quote">"8 prospects par semaine. 5 non relancés dans les 48h. Panier moyen 50 000 FCFA. 1 000 000 FCFA perdus par mois."</div>
+      <div class="ctx-attr">— Les chiffres de Koffi, Chapitre 1</div>
+    </div>
+    <div class="exercice">
+      <div class="ex-label">Votre exercice du jour</div>
+      <div class="ex-instructions">Calculez vos pertes réelles. Puis définissez <strong>quand et comment</strong> vous allez relancer vos prospects et clients — sans que ça dépende de votre mémoire.</div>
+      <div class="field">
+        <label class="field-label">Combien de prospects non relancés cette semaine ?</label>
+        <input class="field-input" id="j4-nb" type="text" placeholder="Ex: 4 prospects">
+      </div>
+      <div class="field">
+        <label class="field-label">Votre panier moyen estimé</label>
+        <input class="field-input" id="j4-panier" type="text" placeholder="Ex: 25 000 FCFA ou 50€">
+      </div>
+      <div class="field">
+        <label class="field-label">Votre plan de relance (qui relance, quand, comment)</label>
+        <textarea class="field-textarea" id="j4-plan" rows="5" placeholder="Ex: J+1 : Message WhatsApp de confirmation&#10;J+3 : Relance si pas de réponse&#10;J+7 : Dernier contact..."></textarea>
+      </div>
+    </div>
+    <button class="btn-valider" onclick="validerEtape(4)">✅ Valider le Jour 4 →</button>
+    <div class="etape-mention">Mac Arthur calcule vos pertes réelles et vous propose un plan adapté</div>
+    <div class="etape-done" id="done-j4">
+      <div class="ed-icon">🎉</div>
+      <div class="ed-title">Jour 4 validé !</div>
+      <div class="ed-text">Votre plan de relance est posé. Plus aucune vente perdue par oubli.</div>
+      <button class="btn-next" onclick="goJour(5)">Continuer — Jour 5 →</button>
+    </div>
+  </div>
+
+  <!-- JOUR 5 -->
+  <div class="etape" id="j5">
+    <div class="etape-header">
+      <div class="etape-num">Jour 5 — Système</div>
+      <div class="etape-titre">Installez votre<br><em>premier assistant.</em></div>
+      <div class="etape-sub">Un bon système ne remplace pas les humains. Il les libère pour ce qu'ils font vraiment bien. Aujourd'hui : on identifie ce qui peut être délégué ou automatisé.</div>
+    </div>
+    <div class="contexte">
+      <div class="ctx-icon">⚡</div>
+      <div class="ctx-quote">"Tu paies des gens pour confirmer des commandes et répondre aux mêmes questions chaque jour."</div>
+      <div class="ctx-attr">— Monsieur S., Chapitre 5</div>
+    </div>
+    <div class="exercice">
+      <div class="ex-label">Votre exercice du jour</div>
+      <div class="ex-instructions">Parmi les tâches identifiées les jours précédents — lesquelles pourraient être gérées par <strong>un assistant, un outil ou un système</strong> ? Répartissez vos tâches entre ce que VOUS devez faire vs ce qui peut être délégué.</div>
+      <div class="field">
+        <label class="field-label">Tâches que JE dois absolument faire (vos 20%)</label>
+        <textarea class="field-textarea" id="j5-moi" rows="4" placeholder="Les décisions stratégiques, la relation client clé, la créativité..."></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Tâches à déléguer ou automatiser (les 80%)</label>
+        <textarea class="field-textarea" id="j5-deleguer" rows="4" placeholder="Les confirmations de commandes, les rappels de paiement, les réponses FAQ..."></textarea>
+      </div>
+    </div>
+    <button class="btn-valider" onclick="validerEtape(5)">✅ Valider le Jour 5 →</button>
+    <div class="etape-mention">Mac Arthur vous propose les outils adaptés à votre réalité</div>
+    <div class="etape-done" id="done-j5">
+      <div class="ed-icon">🎉</div>
+      <div class="ed-title">Jour 5 validé !</div>
+      <div class="ed-text">Vous savez maintenant quoi garder et quoi déléguer. La clarté arrive.</div>
+      <button class="btn-next" onclick="goJour(6)">Continuer — Jour 6 →</button>
+    </div>
+  </div>
+
+  <!-- JOUR 6 -->
+  <div class="etape" id="j6">
+    <div class="etape-header">
+      <div class="etape-num">Jour 6 — Mesure</div>
+      <div class="etape-titre">Combien avez-vous<br><em>récupéré ?</em></div>
+      <div class="etape-sub">Koffi a récupéré 18h par semaine et multiplié par 11 le nombre de prospects relancés. Aujourd'hui : on mesure vos progrès réels.</div>
+    </div>
+    <div class="contexte">
+      <div class="ctx-icon">📊</div>
+      <div class="ctx-quote">"18h récupérées. ×11 prospects relancés. 6/7 nuits sans message professionnel."</div>
+      <div class="ctx-attr">— Les résultats de Koffi après 6 semaines</div>
+    </div>
+    <div class="exercice">
+      <div class="ex-label">Votre exercice du jour</div>
+      <div class="ex-instructions">Regardez en arrière. Qu'est-ce qui a changé depuis le Jour 1 ? Combien de temps récupéré ? Combien de tâches documentées ? Qu'est-ce qui vous pèse encore ?</div>
+      <div class="field">
+        <label class="field-label">Ce qui a changé depuis le Jour 1</label>
+        <textarea class="field-textarea" id="j6-changes" rows="4" placeholder="Ex: J'ai documenté 3 procédures. J'ai mis en place un plan de relance. J'ai récupéré environ 4h par semaine..."></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Ce qui vous pèse encore</label>
+        <textarea class="field-textarea" id="j6-reste" rows="3" placeholder="Qu'est-ce qui résiste encore ? Qu'est-ce qui est difficile à déléguer ou documenter ?"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Votre plus grande prise de conscience cette semaine</label>
+        <textarea class="field-textarea" id="j6-insight" rows="3" placeholder="Qu'avez-vous compris sur votre façon de fonctionner ?"></textarea>
+      </div>
+    </div>
+    <button class="btn-valider" onclick="validerEtape(6)">✅ Valider le Jour 6 →</button>
+    <div class="etape-mention">Dernière étape demain — et votre session de coaching offerte</div>
+    <div class="etape-done" id="done-j6">
+      <div class="ed-icon">🎉</div>
+      <div class="ed-title">Jour 6 validé !</div>
+      <div class="ed-text">Demain c'est le Jour 7 — la vision. Et votre session de coaching offerte vous attend.</div>
+      <button class="btn-next" onclick="goJour(7)">Dernier jour — Jour 7 →</button>
+    </div>
+  </div>
+
+  <!-- JOUR 7 -->
+  <div class="etape" id="j7">
+    <div class="etape-header">
+      <div class="etape-num">Jour 7 — Vision</div>
+      <div class="etape-titre">L'entreprise que vous<br><em>avez imaginée.</em></div>
+      <div class="etape-sub">Koffi est rentré à 17h. Ses enfants étaient encore debout. Awa a souri. C'est ça que vous venez de bâtir.</div>
+    </div>
+    <div class="contexte">
+      <div class="ctx-icon">🌟</div>
+      <div class="ctx-quote">"Il ne gère plus les urgences. Il voit les opportunités."</div>
+      <div class="ctx-attr">— Chapitre 7, Méthode ATTRACTOR</div>
+    </div>
+    <div class="exercice">
+      <div class="ex-label">Votre exercice final</div>
+      <div class="ex-instructions">Vous avez traversé 7 jours d'exercices concrets. Maintenant : projetez-vous. Dans <strong>90 jours</strong>, si vous appliquez ce que vous avez construit cette semaine — à quoi ressemble votre vie ?</div>
+      <div class="field">
+        <label class="field-label">Vos 2 décisions stratégiques que vous pouvez enfin prendre</label>
+        <textarea class="field-textarea" id="j7-decisions" rows="4" placeholder="Maintenant que vous avez du temps et de la clarté — quelles décisions importantes avez-vous enfin le temps de prendre ?"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Comment ressemble votre journée idéale dans 90 jours ?</label>
+        <textarea class="field-textarea" id="j7-vision" rows="5" placeholder="Décrivez votre journée de travail idéale. Que faites-vous ? À quelle heure rentrez-vous ? Qu'est-ce qui a changé ?"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Un message à Mac Arthur</label>
+        <textarea class="field-textarea" id="j7-message" rows="3" placeholder="Qu'est-ce que vous voulez lui dire ? Une question, une hésitation, une chose sur laquelle vous voulez aller plus loin ?"></textarea>
+      </div>
+    </div>
+    <button class="btn-valider" id="btnJ7" onclick="validerEtape(7)">🏆 Terminer le Challenge →</button>
+    <div class="etape-mention">Vous êtes à une étape de votre session de coaching offerte</div>
+    <div class="etape-done" id="done-j7" style="display:none;"></div>
+  </div>
+
+  <!-- FINALE -->
+  <div id="finaleBlock" style="display:none;">
+    <div class="finale">
+      <div class="finale-icon">🏆</div>
+      <h2 class="finale-h2">Vous venez de gagner<br>une <em>session de coaching</em><br>avec Mac Arthur.</h2>
+      <p class="finale-p">Vous avez fait ce que 95% des entrepreneurs ne font jamais. Vous avez mis par écrit, structuré, mesuré. Cette session de 45 minutes est faite pour aller encore plus loin — ensemble.</p>
+      <div class="trophee">
+        <div class="tr-title">Ce que vous avez accompli</div>
+        <div class="tr-item">Inventaire complet de vos tâches répétitives</div>
+        <div class="tr-item">Première procédure documentée</div>
+        <div class="tr-item">Parcours client cartographié</div>
+        <div class="tr-item">Plan de relance défini</div>
+        <div class="tr-item">Tâches à déléguer identifiées</div>
+        <div class="tr-item">Vision à 90 jours posée</div>
+      </div>
+      <a href="https://wa.me/33753902323?text=Challenge+7+Jours+terminé+✅+Je+veux+réserver+ma+session+de+coaching+offerte" class="btn-coaching" target="_blank">
+        🎯 Réserver ma session de coaching offerte
+      </a>
+      <div class="finale-mention">Session 45 min · Offerte · Réservation via WhatsApp</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbzYF6P3s_0-U7Q8Q2ZK1ibENtjhuT64bPV_B2HOZ4_nTxdOPTgP5FW1HodMtOFD_RbXpA/exec";
+
+// Récupérer les infos du prospect depuis l'URL ou localStorage
+const urlParams = new URLSearchParams(window.location.search);
+const PRENOM = urlParams.get('p') || localStorage.getItem('challenge_prenom') || 'Entrepreneur';
+const EMAIL  = urlParams.get('e') || localStorage.getItem('challenge_email') || '';
+
+// Jours complétés (persistance localStorage)
+let joursCompletes = JSON.parse(localStorage.getItem('challenge_done') || '[]');
+let currentJour = 1;
+
+// Init
+window.addEventListener('DOMContentLoaded', () => {
+  // Restaurer l'état
+  joursCompletes.forEach(j => {
+    const btn = document.getElementById('btn-j' + j);
+    if(btn){ btn.classList.remove('current'); btn.classList.add('done'); btn.disabled = false; }
+    const done = document.getElementById('done-j' + j);
+    if(done){ done.classList.add('show'); }
+  });
+
+  // Débloquer le prochain jour
+  const nextJour = joursCompletes.length + 1;
+  if(nextJour <= 7){
+    const nextBtn = document.getElementById('btn-j' + nextJour);
+    if(nextBtn){ nextBtn.disabled = false; nextBtn.classList.add('current'); }
+  }
+
+  // Si tout complété
+  if(joursCompletes.length >= 7){ showFinale(); }
+
+  // Aller au dernier jour actif
+  const jActive = Math.min(joursCompletes.length + 1, 7);
+  goJour(jActive, true);
+  updateProgress();
+});
+
+function goJour(n, silent) {
+  document.querySelectorAll('.etape').forEach(e => e.classList.remove('active'));
+  const etape = document.getElementById('j' + n);
+  if(etape){ etape.classList.add('active'); }
+  currentJour = n;
+  document.getElementById('navStep').textContent = 'Challenge 7 Jours — Jour ' + n;
+  if(!silent) window.scrollTo({top:0, behavior:'smooth'});
+  updateProgress();
+}
+
+function updateProgress() {
+  const pct = Math.round((joursCompletes.length / 7) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function getVal(id){ const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
+async function validerEtape(jour) {
+  let payload = { prenom: PRENOM, email: EMAIL, jour: 'Jour ' + jour };
+  let valid = true;
+
+  if(jour === 1){
+    payload.taches = getVal('j1-taches');
+    payload.tache_pire = getVal('j1-pire');
+    if(!payload.taches){ showToast('Listez au moins une tâche répétitive', 'error'); valid=false; }
+  } else if(jour === 2){
+    payload.nom_procedure = getVal('j2-tache');
+    payload.etapes_procedure = getVal('j2-etapes');
+    if(!payload.etapes_procedure){ showToast('Décrivez les étapes de votre procédure', 'error'); valid=false; }
+  } else if(jour === 3){
+    payload.canal_contact = getVal('j3-contact');
+    payload.parcours_client = getVal('j3-parcours');
+    payload.etape_perte = getVal('j3-perte');
+    if(!payload.parcours_client){ showToast('Décrivez votre parcours client', 'error'); valid=false; }
+  } else if(jour === 4){
+    payload.prospects_non_relances = getVal('j4-nb');
+    payload.panier_moyen = getVal('j4-panier');
+    payload.plan_relance = getVal('j4-plan');
+    if(!payload.plan_relance){ showToast('Définissez votre plan de relance', 'error'); valid=false; }
+  } else if(jour === 5){
+    payload.taches_moi = getVal('j5-moi');
+    payload.taches_deleguer = getVal('j5-deleguer');
+    if(!payload.taches_moi){ showToast('Listez les tâches que vous devez garder', 'error'); valid=false; }
+  } else if(jour === 6){
+    payload.changements = getVal('j6-changes');
+    payload.ce_qui_reste = getVal('j6-reste');
+    payload.insight = getVal('j6-insight');
+    if(!payload.changements){ showToast('Décrivez ce qui a changé', 'error'); valid=false; }
+  } else if(jour === 7){
+    payload.decisions = getVal('j7-decisions');
+    payload.vision_90j = getVal('j7-vision');
+    payload.message_ma = getVal('j7-message');
+    if(!payload.vision_90j){ showToast('Décrivez votre vision dans 90 jours', 'error'); valid=false; }
+  }
+
+  if(!valid) return;
+
+  const btn = jour === 7 ? document.getElementById('btnJ7') : document.querySelector('#j' + jour + ' .btn-valider');
+  if(btn){ btn.disabled = true; btn.textContent = '⏳ Envoi en cours…'; }
+
+  try {
+    payload.source = 'challenge-j' + jour;
+    payload.formule = 'Challenge 7 Jours — Étape ' + jour;
+    const params = new URLSearchParams(payload).toString();
+    await fetch(APPS_SCRIPT + '?' + params, {method:'GET', mode:'no-cors'});
+    await new Promise(r => setTimeout(r, 1200));
+
+    // Marquer comme complété
+    if(!joursCompletes.includes(jour)) joursCompletes.push(jour);
+    localStorage.setItem('challenge_done', JSON.stringify(joursCompletes));
+
+    // UI
+    const doneEl = document.getElementById('done-j' + jour);
+    if(doneEl){ doneEl.classList.add('show'); doneEl.style.display = 'block'; }
+
+    const currentBtn = document.getElementById('btn-j' + jour);
+    if(currentBtn){ currentBtn.classList.remove('current'); currentBtn.classList.add('done'); }
+
+    if(jour < 7){
+      const nextBtn = document.getElementById('btn-j' + (jour + 1));
+      if(nextBtn){ nextBtn.disabled = false; nextBtn.classList.add('current'); }
+    }
+
+    updateProgress();
+    showToast('✅ Jour ' + jour + ' validé !', 'success');
+
+    if(jour === 7){ setTimeout(showFinale, 1500); }
+
+  } catch(err) {
+    showToast('Erreur réseau — réessayez', 'error');
+    if(btn){ btn.disabled = false; btn.textContent = jour === 7 ? '🏆 Terminer le Challenge →' : '✅ Valider le Jour ' + jour + ' →'; }
+  }
+}
+
+function showFinale() {
+  document.querySelectorAll('.etape').forEach(e => e.classList.remove('active'));
+  document.getElementById('introBlock').style.display = 'none';
+  document.getElementById('joursNav').style.display = 'none';
+  document.getElementById('finaleBlock').style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+  document.getElementById('progressFill').style.width = '100%';
+}
+
+function showToast(msg, type){
+  const t = document.getElementById('toast');
+  t.className = 'toast ' + (type||'');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>

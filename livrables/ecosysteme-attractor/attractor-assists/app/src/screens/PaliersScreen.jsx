@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { MOCK } from '../data';
 import { Pill, Btn, Icon, Sheet, Spinner, AppHeader } from '../components/ui';
@@ -13,8 +13,8 @@ export function PaliersScreen({ go, notify }) {
   }, []);
 
   return (
-    <div className="min-h-full bg-sable">
-      <AppHeader title="Tes paliers" sub="Monte d'un cran, débloque ton équipe" onBack={() => go("dashboard")} />
+    <div className="min-h-screen bg-sable">
+      <AppHeader title="Tes paliers" sub="Monte d'un cran, dÃ©bloque ton Ã©quipe" onBack={() => go("dashboard")} />
       <div className="px-[18px] pb-4 flex flex-col gap-4">
         <div className="relative overflow-hidden rounded-[20px]" style={{ minHeight: 150 }}>
           <div className="absolute inset-0">
@@ -28,11 +28,11 @@ export function PaliersScreen({ go, notify }) {
         </div>
 
         {MOCK.forfaits.map(f => (
-          <ForfaitCard key={f.id} f={f} userCount={userCount} onPick={() => f.current ? notify("C'est déjà ton palier") : setPay(f)} />
+          <ForfaitCard key={f.id} f={f} userCount={userCount} onPick={() => f.current ? notify("C'est dÃ©jÃ  ton palier") : setPay(f)} />
         ))}
 
         <div className="flex items-center justify-center gap-2 text-[12px] text-g400 mt-1">
-          <Icon name="check" size={15} className="text-growth" /> Sans frais d'installation · résiliable à tout moment
+          <Icon name="check" size={15} className="text-growth" /> Sans frais d'installation Â· rÃ©siliable Ã  tout moment
         </div>
         <p className="text-center text-[11px] text-g400 px-6">TVA non applicable, art. 293 B du CGI.</p>
       </div>
@@ -73,10 +73,10 @@ function ForfaitCard({ f, onPick, userCount }) {
       </div>
       {f.eurOld && (
         <div className="text-[12px] text-white/50 mt-0.5">
-          Prix habituel : <span className="line-through">{f.eurOld}{f.period}</span> · Promo fondateurs
+          Prix habituel : <span className="line-through">{f.eurOld}{f.period}</span> Â· Promo fondateurs
         </div>
       )}
-      <div className={`text-[13px] font-semibold mt-0.5 ${f.highlight ? "text-amber" : "text-growth"}`}>{f.fcfa} {f.eur !== "0 €" ? f.period : ""}</div>
+      <div className={`text-[13px] font-semibold mt-0.5 ${f.highlight ? "text-amber" : "text-growth"}`}>{f.fcfa} {f.eur !== "0 â‚¬" ? f.period : ""}</div>
       <ul className="mt-4 space-y-2.5">
         {f.features.map((x, i) => (
           <li key={i} className={`flex gap-2.5 text-[13.5px] ${f.highlight ? "text-white/90" : "text-g700"}`}>
@@ -90,7 +90,7 @@ function ForfaitCard({ f, onPick, userCount }) {
         </div>
       ) : (
         <div className="w-full mt-5 py-3.5 rounded-[14px] bg-g100 text-center border border-g200">
-          <span className="text-[13.5px] font-bold text-g400">Bientôt disponible</span>
+          <span className="text-[13.5px] font-bold text-g400">BientÃ´t disponible</span>
         </div>
       )}
     </div>
@@ -104,11 +104,11 @@ function PaymentSheet({ f, onClose, notify }) {
   const methods = [
     { id: "wave", label: "Wave", desc: "Mobile money", color: "#1DC4F2", fg: "#053a4a" },
     { id: "mtn",  label: "MTN MoMo", desc: "Mobile money", color: "#FFCC00", fg: "#3a3000" },
-    { id: "card", label: "Carte bancaire", desc: "Visa · Mastercard", color: "#E7E1D8", fg: "#1A1714" },
+    { id: "card", label: "Carte bancaire", desc: "Visa Â· Mastercard", color: "#E7E1D8", fg: "#1A1714" },
   ];
 
   return (
-    <Sheet onClose={onClose} title={state === "done" ? "Bienvenue ! 🎉" : `Passer ${f.name}`}>
+    <Sheet onClose={onClose} title={state === "done" ? "Bienvenue ! ðŸŽ‰" : `Passer ${f.name}`}>
       {state === "choose" && (
         <div className="flex flex-col gap-4">
           <div className="bg-sable rounded-xl p-4 flex items-center justify-between">
@@ -134,24 +134,25 @@ function PaymentSheet({ f, onClose, notify }) {
               </button>
             ))}
           </div>
-          <p className="text-center text-[11px] text-g400">Sans frais d'installation · TVA non applicable, art. 293 B du CGI.</p>
+          <p className="text-center text-[11px] text-g400">Sans frais d'installation Â· TVA non applicable, art. 293 B du CGI.</p>
         </div>
       )}
       {state === "loading" && (
         <div className="py-10 flex flex-col items-center gap-3 text-center">
           <Spinner className="w-11 h-11" />
-          <p className="font-display font-bold text-[15px]">Confirmation via {method.label}…</p>
-          <p className="text-[13px] text-g400">Valide la demande sur ton téléphone.</p>
+          <p className="font-display font-bold text-[15px]">Confirmation via {method.label}â€¦</p>
+          <p className="text-[13px] text-g400">Valide la demande sur ton tÃ©lÃ©phone.</p>
         </div>
       )}
       {state === "done" && (
         <div className="py-6 flex flex-col items-center gap-3 text-center">
           <div className="w-16 h-16 rounded-full bg-growth/12 flex items-center justify-center text-growth"><Icon name="check" size={34} stroke={2.5} /></div>
           <h3 className="font-display font-extrabold text-[20px]">Tu es {f.name} !</h3>
-          <p className="text-[13.5px] text-g700 max-w-[280px]">Ton équipe est débloquée. On passe à la vitesse supérieure, comme nous. 🔥</p>
+          <p className="text-[13.5px] text-g700 max-w-[280px]">Ton Ã©quipe est dÃ©bloquÃ©e. On passe Ã  la vitesse supÃ©rieure, comme nous. ðŸ”¥</p>
           <Btn className="w-full mt-2" iconRight="arrow" onClick={onClose}>C'est parti</Btn>
         </div>
       )}
     </Sheet>
   );
 }
+

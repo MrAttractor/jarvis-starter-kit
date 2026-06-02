@@ -65,7 +65,7 @@ export function AssistantsScreen({ go, notify, profile }) {
   const verrous   = MOCK.assistants.filter(a => a.id !== "coach" && a.status === "verrouillé");
 
   return (
-    <div className="min-h-full bg-sable pb-6">
+    <div className="min-h-screen bg-sable pb-6">
       <AppHeader title="Mon équipe" sub="Chaque spécialiste à sa place." />
 
       <div className="px-[18px] flex flex-col gap-4">

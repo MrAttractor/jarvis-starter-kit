@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { AppHeader, Icon } from '../components/ui';
 
@@ -13,7 +13,7 @@ const TYPE_CONFIG = {
 function timeAgo(dateStr) {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 1)   return "À l'instant";
+  if (mins < 1)   return "Ã€ l'instant";
   if (mins < 60)  return `Il y a ${mins} min`;
   const hrs = Math.floor(mins / 60);
   if (hrs < 24)   return `Il y a ${hrs}h`;
@@ -23,7 +23,7 @@ function timeAgo(dateStr) {
 export function NotificationsScreen({ go }) {
   const [notifs, setNotifs]         = useState([]);
   const [loading, setLoading]       = useState(true);
-  const [replyId, setReplyId]       = useState(null); // id notif en cours de réponse
+  const [replyId, setReplyId]       = useState(null); // id notif en cours de rÃ©ponse
   const [replyText, setReplyText]   = useState('');
   const [replySending, setReplySending] = useState(false);
   const currentUserId = useRef(null);
@@ -63,11 +63,11 @@ export function NotificationsScreen({ go }) {
   };
 
   return (
-    <div className="min-h-full bg-sable">
+    <div className="min-h-screen bg-sable">
       <AppHeader title="Notifications" onBack={() => go('dashboard')} />
       <div className="px-[18px] flex flex-col gap-2 pb-4">
         {loading && (
-          <div className="flex items-center justify-center py-16 text-g400 text-[14px]">Chargement…</div>
+          <div className="flex items-center justify-center py-16 text-g400 text-[14px]">Chargementâ€¦</div>
         )}
         {!loading && notifs.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
@@ -75,7 +75,7 @@ export function NotificationsScreen({ go }) {
               <Icon name="bolt" size={22} className="text-g300" />
             </div>
             <p className="font-display font-bold text-[15px] text-charbon">Aucune notification</p>
-            <p className="text-[13px] text-g400 max-w-[220px]">Ton équipe te préviendra ici quand quelque chose mérite ton attention.</p>
+            <p className="text-[13px] text-g400 max-w-[220px]">Ton Ã©quipe te prÃ©viendra ici quand quelque chose mÃ©rite ton attention.</p>
           </div>
         )}
         {notifs.map(n => {
@@ -97,7 +97,7 @@ export function NotificationsScreen({ go }) {
                 </div>
               </div>
 
-              {/* Répondre — uniquement pour les messages admin */}
+              {/* RÃ©pondre â€” uniquement pour les messages admin */}
               {isAdminMsg && (
                 <div className="border-t border-g100">
                   {replyId === n.id ? (
@@ -107,7 +107,7 @@ export function NotificationsScreen({ go }) {
                         rows={2}
                         value={replyText}
                         onChange={e => setReplyText(e.target.value)}
-                        placeholder="Ta réponse…"
+                        placeholder="Ta rÃ©ponseâ€¦"
                         className="flex-1 resize-none rounded-xl bg-sable border border-g200 px-3 py-2 text-[13px] text-charbon outline-none focus:border-charbon transition"
                       />
                       <button
@@ -122,7 +122,7 @@ export function NotificationsScreen({ go }) {
                       onClick={() => { setReplyId(n.id); setReplyText(''); }}
                       className="w-full flex items-center justify-center gap-1.5 py-2.5 text-[12.5px] font-bold text-charbon hover:bg-sable transition">
                       <Icon name="send" size={13} />
-                      Répondre à Mac Arthur
+                      RÃ©pondre Ã  Mac Arthur
                     </button>
                   )}
                 </div>
@@ -145,3 +145,4 @@ export async function getUnreadCount(userId) {
     .eq('lu', false);
   return count || 0;
 }
+

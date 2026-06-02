@@ -73,7 +73,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
   };
 
   return (
-    <div className="min-h-full bg-sable">
+    <div className="min-h-screen bg-sable">
       <AppHeader title="Profil" sub="Ton espace, à ton image" />
       <div className="px-[18px] pb-4 flex flex-col gap-4">
         <Card className="p-5 flex items-center gap-4">

@@ -1,0 +1,110 @@
+# ATTRACTOR VOICE — Couche voix pour Attractor Assists
+
+Transforme l'intake de « je remplis un formulaire » en « **je parle et mon assistant fait** ».
+Conçu pour **fusionner** avec ton process existant dans VS Code, sans le réécrire.
+
+Promesse Attractor Assists conservée : aider chacun à **trouver son couloir et devenir #1**. La voix assouplit l'intake — l'utilisateur parle librement, l'assistant extrait et agit.
+
+---
+
+## Deux chemins, un seul point d'intégration
+
+| Chemin | Fichiers | Quand l'utiliser | Coût |
+|---|---|---|---|
+| **LÉGER** (recommandé pour démarrer) | `voice-input.js` | Reconnaissance native du navigateur. Marche bien sur Chrome/Android. | Gratuit |
+| **ROBUSTE** (upgrade) | `whisper-client.js` + `whisper-edge-function.ts` | iOS Safari, accents, qualité maximale. | Whisper (~0,006 $/min) |
+
+**Le point d'intégration est identique pour les deux** : un callback `onFinal(texte)`. Tu branches ton envoi une seule fois, et tu peux changer de chemin sans toucher au reste.
+
+---
+
+## Fusion dans le process existant (3 branchements)
+
+Ouvre ta page d'intake actuelle (ex : `attractor-chat.html` / `assistant-client.html`) dans VS Code.
+
+### 1. Charger le module
+```html
+<script src="voice-input.js"></script>
+```
+
+### 2. Brancher le micro sur TON envoi existant
+```js
+const voix = new AttractorVoice({
+  lang: "fr-FR",
+  onInterim: (txt) => { /* afficher le texte en cours, optionnel */ },
+  onFinal:   (txt) => {
+     // >>> remplace par TA fonction d'envoi actuelle <<<
+     envoyerMessage(txt);   // ex: ton fetch GET vers Apps Script
+  },
+  onState:   (s) => { /* animer le bouton micro */ },
+});
+monBoutonMicro.addEventListener("click", () => voix.toggle());
+```
+
+### 3. (Optionnel) Envoi automatique = effet « je parle, il fait »
+Dans `onFinal`, appelle directement ton envoi (pas besoin que l'utilisateur tape sur Entrée). Mets une option `autoSend` si tu veux parfois laisser relire.
+
+C'est tout. **Ton backend ne change pas** : le module produit juste du texte, exactement comme si l'utilisateur l'avait tapé. Ton fetch GET vers Apps Script (ou ton client Supabase) reçoit la même chaîne.
+
+---
+
+## Voir ça marcher tout de suite
+
+Ouvre `attractor-voice-demo.html` (charge `voice-input.js` à côté).
+C'est une démo complète, identité Attractor, qui montre l'effet. Les **3 points d'intégration** y sont commentés `POINT D'INTÉGRATION 1/2/3` — copie ce câblage dans ta vraie page, remplace la fonction `envoyerMessage` par ton appel réel, et supprime la `reponseDemo`.
+
+---
+
+## Passer au chemin Whisper (quand tu veux la robustesse iOS)
+
+1. Déploie l'Edge Function :
+   ```bash
+   supabase functions new transcribe
+   # coller whisper-edge-function.ts
+   supabase secrets set OPENAI_KEY=sk-...
+   supabase functions deploy transcribe
+   ```
+2. Dans ta page, remplace le module léger par le client Whisper :
+   ```html
+   <script src="whisper-client.js"></script>
+   ```
+   ```js
+   const voix = new AttractorWhisper({
+     endpoint: "https://<PROJECT_REF>.supabase.co/functions/v1/transcribe",
+     anonKey:  "<SUPABASE_ANON_KEY>",
+     onFinal:  (txt) => envoyerMessage(txt),   // MÊME point d'intégration
+     onState:  (s) => { /* "recording" | "transcribing" | "idle" */ },
+   });
+   monBoutonMicro.addEventListener("click", () => voix.toggle());
+   ```
+Le reste de ton code est inchangé — c'est le même `onFinal`.
+
+---
+
+## Assouplir l'intake conversationnel (le vrai changement)
+
+La voix change ta logique d'intake : au lieu de poser des questions rigides (J1→J3 figées), l'assistant invite à **parler librement**, puis extrait ce dont il a besoin.
+
+Côté prompt système d'Attractor Assists, ajuste l'intention :
+- Avant : « Pose les questions de l'étape J1 une par une. »
+- Après : « L'utilisateur parle librement (voix). Écoute, reformule l'essentiel, et ne demande que ce qui manque vraiment pour cerner son couloir. Reste fluide, jamais un interrogatoire. »
+
+La voix + un prompt plus souple = l'intake devient une conversation, pas un formulaire.
+
+---
+
+## Notes techniques honnêtes
+
+- **iOS Safari** : la reconnaissance native (`voice-input.js`) y est capricieuse (démarrage sur geste utilisateur obligatoire, coupures). Si beaucoup d'utilisateurs iPhone → passe au chemin Whisper.
+- **Permission micro** : toujours déclenchée par un tap (déjà le cas avec le bouton).
+- **HTTPS obligatoire** : le micro ne marche que sur https (Netlify le fournit) ou localhost.
+- **Sécurité** : en prod, restreins le CORS de l'Edge Function à ton domaine Netlify (remplace `*`). La clé Whisper reste côté Edge Function, jamais dans le navigateur.
+
+---
+
+## Fichiers livrés
+- `voice-input.js` — module voix léger (Web Speech API), drop-in.
+- `attractor-voice-demo.html` — démo fonctionnelle + câblage commenté.
+- `whisper-client.js` — client navigateur pour le chemin robuste.
+- `whisper-edge-function.ts` — transcription Whisper côté Supabase.
+- `README.md` — ce fichier.

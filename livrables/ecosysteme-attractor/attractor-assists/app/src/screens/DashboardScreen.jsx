@@ -136,7 +136,7 @@ export function DashboardScreen({ go, notify, profile }) {
   };
 
   return (
-    <div className="min-h-full bg-sable pb-2">
+    <div className="min-h-screen bg-sable pb-2">
       {/* warm header */}
       <div className="relative overflow-hidden text-white rounded-b-[26px] px-5 pt-7 pb-7"
         style={{ background: "linear-gradient(150deg,#FF7A2E 0%,#F25C05 52%,#D94703 100%)" }}>

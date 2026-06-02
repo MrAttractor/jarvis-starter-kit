@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { MOCK } from '../data';
 import { Card, Btn, Pill, SectionLabel, AppHeader, Icon } from '../components/ui';
 
@@ -8,9 +8,9 @@ export function MasterSheetScreen({ go, notify }) {
   const tabs = [{ id: "cible", label: "Ta cible" }, { id: "marque", label: "Ta marque" }, { id: "offre", label: "Ton offre" }];
 
   return (
-    <div className="min-h-full bg-sable">
-      <AppHeader title="MasterSheet" sub="Tout ce qu'on sait, rangé proprement"
-        right={<button onClick={() => notify("Export simulé ✓")} className="w-10 h-10 rounded-full bg-white border border-g200 flex items-center justify-center text-charbon shadow-soft"><Icon name="copy" size={18} /></button>} />
+    <div className="min-h-screen bg-sable">
+      <AppHeader title="MasterSheet" sub="Tout ce qu'on sait, rangÃ© proprement"
+        right={<button onClick={() => notify("Export simulÃ© âœ“")} className="w-10 h-10 rounded-full bg-white border border-g200 flex items-center justify-center text-charbon shadow-soft"><Icon name="copy" size={18} /></button>} />
 
       <div className="px-[18px] sticky top-0 z-10 bg-sable/95 backdrop-blur pb-2 pt-1">
         <div className="flex gap-1.5 bg-white p-1 rounded-xl border border-g200">
@@ -24,21 +24,21 @@ export function MasterSheetScreen({ go, notify }) {
       <div className="px-[18px] pt-3 pb-4 flex flex-col gap-4">
         {tab === "cible" && (
           <>
-            <PpsdCard tone="error" icon="warn" title="Problèmes" items={p.problemes} />
+            <PpsdCard tone="error" icon="warn" title="ProblÃ¨mes" items={p.problemes} />
             <PpsdCard tone="amber" icon="bolt" title="Peurs" items={p.peurs} />
             <PpsdCard tone="info" icon="heart" title="Souhaits" items={p.souhaits} />
-            <PpsdCard tone="growth" icon="spark" title="Désirs" items={p.desirs} />
+            <PpsdCard tone="growth" icon="spark" title="DÃ©sirs" items={p.desirs} />
             <div className="grid grid-cols-2 gap-3">
-              <MiniCard icon="target" title="Où la trouver" items={p.ou} />
-              <MiniCard icon="bolt" title="Déclencheurs" items={p.declencheurs} />
+              <MiniCard icon="target" title="OÃ¹ la trouver" items={p.ou} />
+              <MiniCard icon="bolt" title="DÃ©clencheurs" items={p.declencheurs} />
             </div>
           </>
         )}
         {tab === "marque" && (
           <Card className="p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-display font-extrabold text-[17px]">Identité de marque</h3>
-              <button onClick={() => notify("Édition simulée")} className="text-orange"><Icon name="edit" size={18} /></button>
+              <h3 className="font-display font-extrabold text-[17px]">IdentitÃ© de marque</h3>
+              <button onClick={() => notify("Ã‰dition simulÃ©e")} className="text-orange"><Icon name="edit" size={18} /></button>
             </div>
             <Row label="Nom" value={b.name} />
             <Row label="Secteur" value={b.secteur} />
@@ -62,7 +62,7 @@ export function MasterSheetScreen({ go, notify }) {
               <div className="flex items-center gap-2 text-orange font-display font-bold text-[14px] mb-1.5"><Icon name="clock" size={18} /> Limiteur d'urgence</div>
               <p className="text-[14px] text-[#a23c00] leading-relaxed">{o.urgence}</p>
             </div>
-            <Btn variant="ghost" className="w-full" icon="spark" onClick={() => go("axes")}>Générer un argumentaire depuis ça</Btn>
+            <Btn variant="ghost" className="w-full" icon="spark" onClick={() => go("axes")}>GÃ©nÃ©rer un argumentaire depuis Ã§a</Btn>
           </>
         )}
       </div>
@@ -90,7 +90,7 @@ function MiniCard({ icon, title, items }) {
   return (
     <Card className="p-4">
       <div className="flex items-center gap-2 mb-2.5 text-charbon"><Icon name={icon} size={16} className="text-orange" /><h4 className="font-display font-bold text-[13px]">{title}</h4></div>
-      <ul className="space-y-1.5">{items.map((x, i) => <li key={i} className="text-[12.5px] text-g700 leading-snug">· {x}</li>)}</ul>
+      <ul className="space-y-1.5">{items.map((x, i) => <li key={i} className="text-[12.5px] text-g700 leading-snug">Â· {x}</li>)}</ul>
     </Card>
   );
 }
@@ -103,3 +103,4 @@ function Row({ label, value, last }) {
     </div>
   );
 }
+

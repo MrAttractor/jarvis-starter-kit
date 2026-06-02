@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Nos solutions : Modules techniques (Site, Chatbot, Dashboard) et Accompagnements stratégiques (STARTER, RUNNER, EAGLE, CONSULTANCE). Détails complets.">
+    <title>Nos Solutions — Système ATTRACTOR</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* TABS NAVIGATION */
+        .tabs-nav {
+            display: flex;
+            gap: 0;
+            margin-bottom: var(--spacing-xl);
+            border-bottom: 1px solid var(--color-border);
+            overflow-x: auto;
+        }
+        
+        .tab-button {
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: none;
+            border: none;
+            color: var(--color-text-alt);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            color: var(--color-gold);
+        }
+        
+        .tab-button.active {
+            color: var(--color-gold);
+            border-bottom-color: var(--color-gold);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* SOLUTION DETAILS */
+        .solution-detail {
+            background: rgba(26, 21, 0, 0.3);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .solution-detail:hover {
+            border-color: var(--color-gold);
+        }
+        
+        .solution-header {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .solution-icon {
+            font-size: 48px;
+        }
+        
+        .solution-title-block h2 {
+            font-size: 28px;
+            color: var(--color-text);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .solution-tagline {
+            font-size: 16px;
+            color: var(--color-text-alt);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .solution-price-block {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+        
+        .solution-price {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--color-gold);
+        }
+        
+        .solution-delivery {
+            font-size: 14px;
+            color: var(--color-text-dim);
+        }
+        
+        .solution-includes {
+            margin: var(--spacing-lg) 0;
+        }
+        
+        .solution-includes h3 {
+            font-size: 18px;
+            color: var(--color-text);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .includes-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            gap: var(--spacing-sm);
+        }
+        
+        .includes-list li {
+            padding: var(--spacing-sm);
+            padding-left: 32px;
+            position: relative;
+            background: rgba(201, 168, 76, 0.05);
+            border-radius: 6px;
+            color: var(--color-text-alt);
+            font-size: 14px;
+        }
+        
+        .includes-list li:before {
+            content: "✓";
+            position: absolute;
+            left: var(--spacing-sm);
+            color: var(--color-gold);
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .solution-ideal {
+            background: var(--color-bg-alt);
+            border-left: 3px solid var(--color-gold);
+            padding: var(--spacing-md);
+            border-radius: 6px;
+            margin: var(--spacing-lg) 0;
+        }
+        
+        .solution-ideal strong {
+            color: var(--color-gold);
+            font-size: 14px;
+        }
+        
+        .solution-ideal p {
+            color: var(--color-text-alt);
+            font-size: 14px;
+            margin-top: var(--spacing-xs);
+        }
+        
+        .solution-cta {
+            margin-top: var(--spacing-lg);
+        }
+        
+        /* PACKAGE FEATURED */
+        .solution-detail.featured {
+            background: var(--color-bg-alt);
+            border: 2px solid var(--color-gold);
+            position: relative;
+        }
+        
+        .featured-badge {
+            position: absolute;
+            top: -15px;
+            right: var(--spacing-lg);
+            background: var(--color-gold);
+            color: #0A0A0A;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        @media (min-width: 768px) {
+            .solution-header {
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: space-between;
+            }
+            
+            .includes-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <span class="logo-text">MA</span>
+                    <div class="logo-label">
+                        <span>Mr Attractor</span>
+                        <small>Système ATTRACTOR</small>
+                    </div>
+                </a>
+                
+                <nav class="nav-desktop">
+                    <a href="/#modules">Modules techniques</a>
+                    <a href="/#accompagnements">Accompagnements</a>
+                    <a href="/#processus">Comment ça marche</a>
+                    <a href="/lead-magnet">Guide offert</a>
+                    <a href="/notre-histoire">Notre histoire</a>
+                </nav>
+                
+                <a href="/audit" class="btn btn-primary">Démarrer mon audit →</a>
+                
+                <button class="menu-toggle" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+        
+        <nav class="nav-mobile">
+            <a href="/">🏠 Accueil</a>
+            <a href="/#modules">🔧 Modules techniques</a>
+            <a href="/#accompagnements">🧠 Accompagnements</a>
+            <a href="/#processus">⚡ Comment ça marche</a>
+            <a href="/lead-magnet">📖 Guide offert</a>
+            <a href="/notre-histoire">📖 Notre histoire</a>
+            <a href="/audit" class="btn-mobile">Démarrer mon audit →</a>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" style="padding: var(--spacing-xl) 0;">
+        <div class="container">
+            <div class="hero-content">
+                <p class="hero-label">Nos solutions</p>
+                <h1 class="hero-title" style="font-size: clamp(28px, 4vw, 42px);">
+                    Tout ce que nous <em>proposons.</em>
+                </h1>
+                <p class="hero-subtitle">Modules techniques ou accompagnement stratégique. Choisissez ce dont vous avez besoin.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TABS -->
+    <section class="section">
+        <div class="container">
+            <!-- Tabs Navigation -->
+            <div class="tabs-nav">
+                <button class="tab-button active" data-tab="modules">
+                    🔧 Modules techniques
+                </button>
+                <button class="tab-button" data-tab="accompagnements">
+                    🧠 Accompagnements stratégiques
+                </button>
+            </div>
+            
+            <!-- TAB 1 — MODULES TECHNIQUES -->
+            <div id="modules" class="tab-content active">
+                <div class="section-header">
+                    <h2 class="section-title">Modules techniques. <em>Sur mesure.</em></h2>
+                    <p class="section-subtitle">Système clé en main. On installe. Vous pilotez.</p>
+                </div>
+                
+                <!-- Site web -->
+                <div class="solution-detail">
+                    <div class="solution-header">
+                        <div style="display: flex; gap: var(--spacing-md); align-items: flex-start;">
+                            <div class="solution-icon">🌐</div>
+                            <div class="solution-title-block">
+                                <h2>Site web professionnel</h2>
+                                <p class="solution-tagline">Votre vitrine en ligne. Design sur mesure. Mobile-first.</p>
+                            </div>
+                        </div>
+                        <div class="solution-price-block">
+                            <div class="solution-price">350€ <span class="price-alt">/ 230 000 FCFA</span></div>
+                            <div class="solution-delivery">Livré en 7 jours ouvrés</div>
+                        </div>
+                    </div>
+                    
+                    <div class="solution-includes">
+                        <h3>Ce qui est inclus :</h3>
+                        <ul class="includes-list">
+                            <li>Design sur mesure adapté à votre activité</li>
+                            <li>Responsive mobile-first (80% de vos visiteurs sont sur téléphone)</li>
+                            <li>Hébergement inclus 1 an (Netlify ou équivalent)</li>
+                            <li>Référencement SEO de base (titres, descriptions, structure)</li>
+                            <li>Formulaire de contact fonctionnel</li>
+                            <li>Certificat SSL (https sécurisé)</li>
+                            <li>Formation prise en main 30 min</li>
+                            <li>Modifications mineures pendant 30 jours</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="solution-ideal">
+                        <strong>💡 Idéal pour :</strong>
+                        <p>Entrepreneurs solos, commerçants, consultants qui ont besoin d'une présence professionnelle en ligne. Vous vendez vos services ou produits et vous avez besoin qu'on vous trouve sur Google.</p>
+                    </div>
+                    
+                    <div class="solution-cta">
+                        <a href="/audit" class="btn btn-primary-large">Démarrer mon audit →</a>
+                    </div>
+                </div>
+                
+                <!-- Chatbot -->
+                <div class="solution-detail">
+                    <div class="solution-header">
+                        <div style="display: flex; gap: var(--spacing-md); align-items: flex-start;">
+                            <div class="solution-icon">🤖</div>
+                            <div class="solution-title-block">
+                                <h2>Chatbot intelligent 24h/24</h2>
+                                <p class="solution-tagline">Répond à vos clients automatiquement. WhatsApp & site web.</p>
+                            </div>
+                        </div>
+                        <div class="solution-price-block">
+                            <div class="solution-price">+350€ <span class="price-alt">/ +230 000 FCFA</span></div>
+                            <div class="solution-delivery">Livré en 5 jours</div>
+                        </div>
+                    </div>
+                    
+                    <div class="solution-includes">
+                        <h3>Ce qui est inclus :</h3>
+                        <ul class="includes-list">
+                            <li>Chatbot configuré sur WhatsApp Business</li>
+                            <li>Widget chat intégré sur votre site</li>
+                            <li>Qualification automatique des prospects</li>
+                            <li>Réponses aux questions fréquentes (FAQ personnalisée)</li>
+                            <li>Prise de RDV automatique (si agenda connecté)</li>
+                            <li>Redirection intelligente vers vous si nécessaire</li>
+                            <li>Formation complète 1h</li>
+                            <li>Ajustements pendant 30 jours</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="solution-ideal">
+                        <strong>💡 Idéal pour :</strong>
+                        <p>Vous recevez beaucoup de questions similaires. Vous perdez des clients parce que vous ne répondez pas assez vite. Vous voulez qualifier les prospects avant de leur parler.</p>
+                    </div>
+                    
+                    <div class="solution-cta">
+                        <a href="/audit" class="btn btn-primary-large">Démarrer mon audit →</a>
+                    </div>
+                </div>
+                
+                <!-- Dashboard -->
+                <div class="solution-detail">
+                    <div class="solution-header">
+                        <div style="display: flex; gap: var(--spacing-md); align-items: flex-start;">
+                            <div class="solution-icon">📊</div>
+                            <div class="solution-title-block">
+                                <h2>Dashboard dynamique</h2>
+                                <p class="solution-tagline">Pilotez votre activité en temps réel. CA, clients, performance.</p>
+                            </div>
+                        </div>
+                        <div class="solution-price-block">
+                            <div class="solution-price">+400€ <span class="price-alt">/ +265 000 FCFA</span></div>
+                            <div class="solution-delivery">Livré en 7 jours</div>
+                        </div>
+                    </div>
+                    
+                    <div class="solution-includes">
+                        <h3>Ce qui est inclus :</h3>
+                        <ul class="includes-list">
+                            <li>Tableau de bord Google Sheets personnalisé</li>
+                            <li>Suivi CA mensuel, hebdomadaire, quotidien</li>
+                            <li>Liste clients avec statuts (prospect, actif, terminé)</li>
+                            <li>Indicateurs de performance (taux conversion, CA moyen)</li>
+                            <li>Alertes automatiques (paiements dus, relances à faire)</li>
+                            <li>Graphiques visuels automatiques</li>
+                            <li>Accessible téléphone & ordinateur</li>
+                            <li>Formation complète 1h</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="solution-ideal">
+                        <strong>💡 Idéal pour :</strong>
+                        <p>Vous ne savez pas exactement où vous en êtes financièrement. Vous oubliez des relances. Vous voulez savoir en un coup d'œil si vous êtes sur la bonne trajectoire.</p>
+                    </div>
+                    
+                    <div class="solution-cta">
+                        <a href="/audit" class="btn btn-primary-large">Démarrer mon audit →</a>
+                    </div>
+                </div>
+                
+                <!-- Lead magnet -->
+                <div class="solution-detail">
+                    <div class="solution-header">
+                        <div style="display: flex; gap: var(--spacing-md); align-items: flex-start;">
+                            <div class="solution-icon">🎯</div>
+                            <div class="solution-title-block">
+                                <h2>Lead magnet + Stratégie acquisition</h2>
+                                <p class="solution-tagline">Captez des prospects qualifiés automatiquement.</p>
+                            </div>
+                        </div>
+                        <div class="solution-price-block">
+                            <div class="solution-price">+200€ <span class="price-alt">/ +130 000 FCFA</span></div>
+                            <div class="solution-delivery">Livré en 14 jours</div>
+                        </div>
+                    </div>
+                    
+                    <div class="solution-includes">
+                        <h3>Ce qui est inclus :</h3>
+                        <ul class="includes-list">
+                            <li>Création du guide offert personnalisé (PDF 15-30 pages)</li>
+                            <li>Design professionnel adapté à votre image</li>
+                            <li>Page de capture sur votre site</li>
+                            <li>Email automatique de livraison</li>
+                            <li>Séquence de nurturing 7 jours (optionnel)</li>
+                            <li>Stratégie de diffusion (réseaux, partenaires)</li>
+                            <li>Formation mise en ligne 30 min</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="solution-ideal">
+                        <strong>💡 Idéal pour :</strong>
+                        <p>Vous voulez attirer des prospects qualifiés sans prospecter activement. Vous avez une expertise à partager. Vous voulez que les clients viennent à vous.</p>
+                    </div>
+                    
+                    <div class="solution-cta">
+                        <a href="/audit" class="btn btn-primary-large">Démarrer mon audit →</a>
+                    </div>
+                </div>
+                
+                <!-- SYSTÈME COMPLET -->
+                <div class="solution-detail featured">
+                    <div class="featured-badge">💎 RECOMMANDÉ</div>
+                    <div class="solution-header">
+                        <div style="display: flex; gap: var(--spacing-md); align-items: flex-start;">
+                            <div class="solution-icon">💎</div>
+                            <div class="solution-title-block">
+                                <h2>SYSTÈME COMPLET</h2>
+                                <p class="solution-tagline">Site + Chatbot + Dashboard + Lead magnet — Tout ce qu'il faut.</p>
+                            </div>
+                        </div>
+                        <div class="solution-price-block">
+                            <div style="margin-bottom: var(--spacing-xs);">
+                                <s style="color: var(--color-text-dim); font-size: 18px;">1300€ / 855 000 FCFA</s>
+                            </div>
+                            <div class="solution-price">1200€ <span class="price-alt">/ 790 000 FCFA</span></div>
+                            <div style="color: #3DDC84; font-weight: 600; font-size: 14px; margin-top: var(--spacing-xs);">Économisez 100€ / 65 000 FCFA</div>
+                            <div class="solution-delivery">Livré en 3 semaines</div>
+                        </div>
+                    </div>
+                    
+                    <div class="solution-includes">
+                        <h3>Tout ce qui est inclus :</h3>
+                        <ul class="includes-list">
+                            <li>✅ Tous les avantages du Site web professionnel</li>
+                            <li>✅ Tous les avantages du Chatbot intelligent</li>
+                            <li>✅ Tous les avantages du Dashboard dynamique</li>
+                            <li>✅ Tous les avantages du Lead magnet</li>
+                            <li>📞 Session stratégique 1h (orientation & priorisation)</li>
+                            <li>🎯 Accompagnement installation complet</li>
+                            <li>📚 Formation globale 2h (système complet)</li>
+                            <li>🔄 Support prioritaire 60 jours (au lieu de 30)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="solution-ideal">
+                        <strong>💡 Idéal pour :</strong>
+                        <p>Vous voulez un système complet qui tourne. Vous en avez marre de bricoler. Vous voulez libérer votre temps et scaler votre activité sans vous épuiser. C'est la solution la plus rentable.</p>
+                    </div>
+                    
+                    <div class="solution-cta">
+                        <a href="/audit" class="btn btn-primary-large">Démarrer mon audit →</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TAB 2 — ACCOMPAGNEMENTS STRATÉGIQUES -->
+            <div id="accompagnements" class="tab-content">
+                <div class="section-header">
+                    <h2 class="section-title">Accompagnement <em>stratégique.</em></h2>
+                    <p class="section-subtitle">Mac Arthur vous accompagne personnellement. Cadrage. Structuration. Coaching.</p>
+                </div>
+                
+                <!-- STARTER -->
+                <div class="solution-detail">
+                    <div class="solution-header">
+                        <div style="display: flex; gap: var(--spacing-md); align-items: flex-start;">
+                            <div class="solution-icon">🎯</div>
+                            <div class="solution-title-block">
+                                <h2>STARTER</h2>
+                                <p class="solution-tagline">Cadrage projet + Recommandation stratégique</p>
+                            </div>
+                        </div>
+                        <div class="solution-price-block">
+                            <div class="solution-price">150€ <span class="price-alt">/ 100 000 FCFA</span></div>
+                            <div class="solution-delivery">2h → Livraison 48h</div>
+                        </div>
+                    </div>
+                    
+                    <div class="solution-includes">
+                        <h3>Ce qui est inclus :</h3>
+                        <ul class="includes-list">
+                            <li>Call découverte 15 min offert (valeur 80€)</li>
+                            <li>Analyse complète de votre situation</li>
+                            <li>Recommandation stratégique personnalisée (document Word)</li>
+                            <li>Document de cadrage complet</li>
+                            <li>Roadmap 90 jours</li>
+                            <li>Identification des points urgents vs importants</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="solution-ideal">
+                        <strong>💡 Idéal pour :</strong>
+                        <p>Vous démarrez. Vous êtes dans le flou. Vous avez besoin de clarté sur votre positionnement, votre offre ou votre cible. Vous voulez savoir par où commencer.</p>
+                    </div>
+                    
+                    <div class="solution-cta">
+                        <a href="/audit" class="btn btn-primary-large">Démarrer mon audit →</a>
+                    </div>
+                </div>
+                
+                <!-- RUNNER -->
+                <div class="solution-detail">
+                    <div class="solution-header">
+                        <div style="display: flex; gap: var(--spacing-md); align-items: flex-start;">
+                            <div class="solution-icon">🚀</div>
+                            <div class="solution-title-block">
+                                <h2>RUNNER</h2>
+                                <p class="solution-tagline">Structuration complète + Stratégie Marketing</p>
+                            </div>
+                        </div>
+                        <div class="solution-price-block">
+                            <div class="solution-price">350€ <span class="price-alt">/ 230 000 FCFA</span></div>
+                            <div class="solution-delivery">6h → Livraison 72h</div>
+                        </div>
+                    </div>
+                    
+                    <div class="solution-includes">
+                        <h3>Ce qui est inclus :</h3>
+                        <ul class="includes-list">
+                            <li>✅ Tout ce qui est inclus dans STARTER</li>
+                            <li>Plan de communication complet</li>
+                            <li>Stratégie d'acquisition clients</li>
+                            <li>Structuration offre & positionnement</li>
+                            <li>Canaux recommandés (LinkedIn, Instagram, Facebook, TikTok...)</li>
+                            <li>Calendrier éditorial 30 jours</li>
+                            <li>Templates de contenu</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="solution-ideal">
+                        <strong>💡 Idéal pour :</strong>
+                        <p>Vous avez déjà une activité mais elle ne décolle pas. Vous ne savez pas comment vous faire connaître. Vous avez besoin d'une stratégie marketing claire et applicable.</p>
+                    </div>
+                    
+                    <div class="solution-cta">
+                        <a href="/audit" class="btn btn-primary-large">Démarrer mon audit →</a>
+                    </div>
+                </div>
+                
+                <!-- EAGLE -->
+                <div class="solution-detail featured">
+                    <div class="featured-badge">⭐ RECOMMANDÉ</div>
+                    <div class="solution-header">
+                        <div style="display: flex; gap: var(--spacing-md); align-items: flex-start;">
+                            <div class="solution-icon">🦅</div>
+                            <div class="solution-title-block">
+                                <h2>EAGLE</h2>
+                                <p class="solution-tagline">Coaching CEO + Tableau de bord pilotage</p>
+                            </div>
+                        </div>
+                        <div class="solution-price-block">
+                            <div class="solution-price">800€ <span class="price-alt">/ 525 000 FCFA</span></div>
+                            <div class="solution-delivery">10h → Suivi 8 semaines</div>
+                        </div>
+                    </div>
+                    
+                    <div class="solution-includes">
+                        <h3>Ce qui est inclus :</h3>
+                        <ul class="includes-list">
+                            <li>✅ Tout ce qui est inclus dans RUNNER</li>
+                            <li>4 sessions de coaching stratégique (S2, S4, S6, S8)</li>
+                            <li>Tableau de bord pilotage personnalisé Google Sheets</li>
+                            <li>Suivi personnalisé entre les sessions</li>
+                            <li>Accès direct Mac Arthur via WhatsApp</li>
+                            <li>Ajustements en temps réel selon vos avancées</li>
+                            <li>Rapport final + recommandations pour la suite</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="solution-ideal">
+                        <strong>💡 Idéal pour :</strong>
+                        <p>Vous voulez une vision stratégique claire + un accompagnement dans la durée. Vous avez besoin de piloter avec des indicateurs. Vous voulez être sûr d'avancer dans la bonne direction.</p>
+                    </div>
+                    
+                    <div class="solution-cta">
+                        <a href="/audit" class="btn btn-primary-large">Démarrer mon audit →</a>
+                    </div>
+                </div>
+                
+                <!-- CONSULTANCE -->
+                <div class="solution-detail">
+                    <div class="solution-header">
+                        <div style="display: flex; gap: var(--spacing-md); align-items: flex-start;">
+                            <div class="solution-icon">🏢</div>
+                            <div class="solution-title-block">
+                                <h2>CONSULTANCE</h2>
+                                <p class="solution-tagline">Organisation & Structuration entreprise</p>
+                            </div>
+                        </div>
+                        <div class="solution-price-block">
+                            <div class="solution-price">Sur devis</div>
+                            <div class="solution-delivery">1 500€+ / 1 000 000 FCFA+</div>
+                        </div>
+                    </div>
+                    
+                    <div class="solution-includes">
+                        <h3">Ce qui est inclus :</h3>
+                        <ul class="includes-list">
+                            <li>Audit complet de votre organisation</li>
+                            <li>Structuration process & équipes</li>
+                            <li>Manuel de procédures personnalisé</li>
+                            <li>Formation de vos équipes</li>
+                            <li>Suivi de la mise en œuvre</li>
+                            <li>Accompagnement sur mesure adapté à votre secteur</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="solution-ideal">
+                        <strong>💡 Idéal pour :</strong>
+                        <p>Vous avez une entreprise avec plusieurs collaborateurs. Vous voulez structurer l'organisation pour scaler. Vous avez besoin d'un accompagnement sur mesure adapté à votre réalité.</p>
+                    </div>
+                    
+                    <div class="solution-cta">
+                        <a href="/audit" class="btn btn-primary-large">Nous contacter →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="section cta-final-section">
+        <div class="container">
+            <div class="cta-final-content">
+                <p class="cta-final-label">⚡ Audit gratuit — Call offert · Valeur 80€</p>
+                <h2 class="cta-final-title">Prêt à <em>démarrer ?</em></h2>
+                <p class="cta-final-text">10 minutes pour décrire votre réalité. On prépare votre système ou accompagnement sur mesure.</p>
+                <a href="/audit" class="btn btn-primary-xlarge">Démarrer mon audit gratuit →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <span class="logo-text">MA</span>
+                        <div class="logo-label">
+                            <span>Mr Attractor</span>
+                            <small>Système ATTRACTOR</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="/notre-histoire">Notre histoire</a>
+                    <a href="/lead-magnet">Guide offert</a>
+                    <a href="/solutions">Solutions</a>
+                    <a href="https://www.linkedin.com/in/macarthurkouassi/" target="_blank">LinkedIn</a>
+                    <a href="#cgv-modal">CGV & RGPD</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 Mr Attractor — Mac Arthur KOUASSI</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL CGV -->
+    <div id="cgv-modal" class="modal">
+        <div class="modal-content">
+            <a href="#" class="modal-close">✕</a>
+            <h2>CGV & RGPD</h2>
+            <p><strong>Prestataire :</strong> Mac Arthur KOUASSI — Mr Attractor. myattractor1@gmail.com · +337.53.90.23.23 · Paris.</p>
+            <p><strong>Paiement :</strong> Intégral avant démarrage. Aucun remboursement après démarrage sauf défaut prouvé du prestataire.</p>
+            <p><strong>RGPD :</strong> Données utilisées exclusivement dans la relation commerciale. Jamais revendues. Conservation 3 ans. myattractor1@gmail.com</p>
+            <p><strong>Droit applicable :</strong> Droit français · Tribunaux de Paris.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // TABS SWITCHING
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetTab = this.dataset.tab;
+                
+                // Update buttons
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Update content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(targetTab).classList.add('active');
+            });
+        });
+        
+        // URL hash navigation
+        if (window.location.hash) {
+            const hash = window.location.hash.substring(1);
+            const tabButton = document.querySelector(`[data-tab="${hash}"]`);
+            if (tabButton) {
+                tabButton.click();
+            }
+        }
+    </script>
+</body>
+</html>
