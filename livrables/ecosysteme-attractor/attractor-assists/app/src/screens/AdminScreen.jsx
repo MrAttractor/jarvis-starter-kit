@@ -85,11 +85,17 @@ export function AdminScreen({ go, notify }) {
   const [pActivite, setPActivite] = useState('');
   const [pBesoin, setPBesoin]   = useState('');
   const [pContexte, setPContexte] = useState('');
-  const [pCanal, setPCanal]     = useState('WhatsApp');
-  const [pZone, setPZone]       = useState('CI');
-  const [pWa, setPWa]           = useState('');
-  const [pSaving, setPSaving]   = useState(false);
-  const [showForm, setShowForm] = useState(false);
+  const [pCanal, setPCanal]         = useState('WhatsApp');
+  const [pZone, setPZone]           = useState('CI');
+  const [pWa, setPWa]               = useState('');
+  const [pType, setPType]           = useState('app');
+  const [pNbUsers, setPNbUsers]     = useState('1');
+  const [pSaving, setPSaving]       = useState(false);
+  const [showForm, setShowForm]     = useState(false);
+  // Devis
+  const [devis, setDevis]           = useState(null);
+  const [devisLoading, setDevisLoading] = useState(false);
+  const [devisProspectId, setDevisProspectId] = useState(null);
 
   // Détail utilisateur
   const [selectedUser, setSelectedUser]   = useState(null);
@@ -195,20 +201,41 @@ export function AdminScreen({ go, notify }) {
     setProspectsLoading(false);
   };
 
+  const generateDevis = async (pid) => {
+    setDevisProspectId(pid);
+    setDevis(null);
+    setDevisLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-devis', {
+        body: { prospect_id: pid },
+      });
+      if (error || !data) { notify('Erreur génération devis'); }
+      else { setDevis(data); await loadProspects(); }
+    } catch { notify('Erreur réseau'); }
+    setDevisLoading(false);
+  };
+
+  const validerDevis = async (devis_id) => {
+    await supabase.from('devis_prospects').update({ statut: 'valide' }).eq('id', devis_id);
+    setDevis(d => ({ ...d, statut: 'valide' }));
+    notify('Devis validé');
+  };
+
   const saveProspect = async () => {
     if (!pPrenom.trim() || pSaving) return;
     setPSaving(true);
     const { data, error } = await supabase.from('prospects').insert({
       prenom: pPrenom.trim(), activite: pActivite.trim(), besoin: pBesoin.trim(),
       contexte: pContexte.trim(), canal: pCanal, zone: pZone, whatsapp: pWa.trim(),
+      type_projet: pType, nb_users: pNbUsers,
     }).select().single();
     if (error) { notify('Erreur enregistrement prospect'); setPSaving(false); return; }
     setProspects(prev => [data, ...prev]);
     setPPrenom(''); setPActivite(''); setPBesoin(''); setPContexte(''); setPWa('');
     setShowForm(false);
     setPSaving(false);
-    // Déclencher immédiatement la séquence
     generateSequence(data);
+    generateDevis(data.id);
   };
 
   const generateSequence = async (prospect) => {
@@ -675,6 +702,52 @@ export function AdminScreen({ go, notify }) {
               </>
             )}
 
+            {/* Devis en cours de génération ou généré */}
+            {(devisLoading || devis) && (
+              <Card className={`p-4 flex flex-col gap-3 ${devis?.statut === 'valide' ? 'border-growth/40' : 'border-orange/30'}`}>
+                <div className="flex items-center justify-between">
+                  <p className="text-[13px] font-bold text-charbon">
+                    {devisLoading ? 'Devis en cours de calcul…' : `Devis ${devis?.numero}`}
+                  </p>
+                  {devis?.statut === 'valide' && (
+                    <span className="text-[11px] font-bold text-growth bg-growth/10 px-2 py-0.5 rounded-full">Validé</span>
+                  )}
+                </div>
+                {devisLoading ? (
+                  <p className="text-[12px] text-g400">Le barème est appliqué automatiquement…</p>
+                ) : devis?.message_si_freemium ? (
+                  <p className="text-[13px] text-g400 italic">{devis.message_si_freemium}</p>
+                ) : (
+                  <>
+                    <div className="bg-sable rounded-xl px-4 py-3 flex flex-col gap-1.5">
+                      <div className="flex justify-between"><span className="text-[12.5px] text-g400">Famille / Niveau</span><span className="text-[13px] font-bold text-charbon">{devis?.famille} — {devis?.niveau}</span></div>
+                      {devis?.setup_ht && <div className="flex justify-between"><span className="text-[12.5px] text-g400">Setup HT</span><span className="text-[13px] font-bold text-charbon">{devis.setup_ht.toLocaleString('fr-FR')} {devis.devise}</span></div>}
+                      {devis?.mrr && <div className="flex justify-between"><span className="text-[12.5px] text-g400">MRR / mois</span><span className="text-[13px] font-bold text-charbon">{devis.mrr.toLocaleString('fr-FR')} {devis.devise}</span></div>}
+                      <div className="border-t border-g200 my-1" />
+                      {devis?.acompte && <div className="flex justify-between"><span className="text-[12.5px] text-g400">Acompte (50%)</span><span className="text-[13px] font-bold text-orange">{devis.acompte.toLocaleString('fr-FR')} {devis.devise}</span></div>}
+                      {devis?.solde && <div className="flex justify-between"><span className="text-[12.5px] text-g400">Solde livraison</span><span className="text-[13px] font-medium text-charbon">{devis.solde.toLocaleString('fr-FR')} {devis.devise}</span></div>}
+                      {devis?.total_m1 && <div className="flex justify-between"><span className="text-[12.5px] font-bold text-charbon">Total mois 1</span><span className="text-[14px] font-extrabold text-charbon">{devis.total_m1.toLocaleString('fr-FR')} {devis.devise}</span></div>}
+                    </div>
+                    {devis?.raisonnement && (
+                      <p className="text-[12px] text-g400 italic leading-snug">"{devis.raisonnement}"</p>
+                    )}
+                    {devis?.questions_manquantes && devis.questions_manquantes !== 'null' && (
+                      <div className="bg-amber/10 border border-amber/20 rounded-xl px-3 py-2.5">
+                        <p className="text-[12px] font-bold text-amber mb-0.5">Info manquante</p>
+                        <p className="text-[12.5px] text-charbon">{devis.questions_manquantes}</p>
+                      </div>
+                    )}
+                    {devis?.statut !== 'valide' && (
+                      <button onClick={() => validerDevis(devis.devis_id || devis.id)}
+                        className="w-full py-3 rounded-xl bg-growth text-white text-[14px] font-bold active:scale-[.98] transition">
+                        Valider ce devis
+                      </button>
+                    )}
+                  </>
+                )}
+              </Card>
+            )}
+
             {/* Bouton ajouter prospect */}
             <button onClick={() => setShowForm(o => !o)}
               className={`w-full py-3 rounded-xl text-[13.5px] font-bold border-[1.5px] transition ${showForm ? 'bg-charbon text-white border-charbon' : 'bg-orange/10 text-orange border-orange/30'}`}>
@@ -703,6 +776,26 @@ export function AdminScreen({ go, notify }) {
                     className="w-full bg-sable border border-g200 rounded-xl px-3 py-3 text-[13.5px] text-charbon outline-none">
                     {['CI','EU','MA','SN','CM','Autre'].map(z => <option key={z}>{z}</option>)}
                   </select>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] font-bold text-g400 uppercase tracking-wider">Type de projet</label>
+                    <select value={pType} onChange={e => setPType(e.target.value)}
+                      className="w-full bg-sable border border-g200 rounded-xl px-3 py-3 text-[13.5px] text-charbon outline-none focus:border-orange transition">
+                      <option value="app">App sur mesure (Fam. A)</option>
+                      <option value="consulting">Consulting (Fam. B)</option>
+                      <option value="assists">Attractor Assists</option>
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] font-bold text-g400 uppercase tracking-wider">Nb utilisateurs</label>
+                    <select value={pNbUsers} onChange={e => setPNbUsers(e.target.value)}
+                      className="w-full bg-sable border border-g200 rounded-xl px-3 py-3 text-[13.5px] text-charbon outline-none focus:border-orange transition">
+                      <option value="1">1 (SOLO)</option>
+                      <option value="2-5">2 à 5 (ÉQUIPE)</option>
+                      <option value="5+">5+ (ENTERPRISE)</option>
+                    </select>
+                  </div>
                 </div>
                 <input value={pWa} onChange={e => setPWa(e.target.value)} placeholder="Numéro WhatsApp"
                   className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[14px] outline-none focus:border-orange transition" />
