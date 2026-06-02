@@ -7,6 +7,90 @@
 
 ---
 
+## 2026-06-02 (session 17 — cockpit admin restructuré + pivot B2B + gardien déploiement)
+
+### Cockpit admin — refonte complète
+- Nav conditionnelle : admin voit "Cockpit" dans la nav (AdminScreen), users voient "Mon équipe" (AssistantsScreen). Basé sur `profile?.role === 'admin'`
+- Onglet "Awa" renommé "Pipeline" — workflow Carelle par statut (Nouveau/Contacté/Relancé/Closé/Perdu), chaque groupe collapsible
+- Section Users : liste plate → 6 rubriques collapsibles (À surveiller, En ligne, Manager, Découverte, Onboarding incomplet, Inactifs)
+- ProfilScreen : bouton "Tableau de pilotage" supprimé (plantait, rendu obsolète par la nav Cockpit)
+
+### Mon équipe vivant
+- Badges Supabase live : nb prospects actifs pour Awa (count), dot vert/orange selon journal_agent et dernière interaction
+- Teasers dynamiques par heure (matin/après-midi/soir/nuit) + override si données réelles disponibles
+- Strip activité horizontal en haut de l'écran (journal agents + prospects en attente)
+- Quick actions contextuelles par agent : 2 chips cliquables qui ouvrent la conversation avec message pré-rempli
+
+### Maquette closer flow (Famille A)
+- Sheet prospect Famille A : bannière "Mode Maquette", upload image ou URL référence, preview, message Awa pré-rédigé éditable
+- Guide 2 étapes vendeur : "Envoie l'image d'abord → Copie le message"
+- Au copy : Carelle reçoit automatiquement un brief dans journal_agent ("Maquette proposée à [Prénom]")
+
+### Fix encodage ConversationScreen
+- Tous les caractères garbled (Ã©, â€", etc.) corrigés dans ConversationScreen.jsx
+- Bug présent depuis l'origine : les agents s'exprimaient en mojibake dans toutes les conversations
+
+### Fix devis
+- type_projet 'app'/'consulting' → 'A'/'B'/'C' dans le formulaire prospect (mismatch avec l'Edge Function generate-devis)
+
+### Gardien de déploiement (nouveau)
+- Script `.claude/hooks/deploy-guard.js` créé
+- Hook PostToolUse sur Bash : déclenché après chaque `git push`
+- Vérifie : imports App.jsx → screens existants, encodage garbled, cohérence routes
+- Exit 0 toujours — signale sans bloquer
+
+### Pivot stratégique B2B (décision clé)
+- Mac Arthur est le vendeur B2B, pas Awa. Awa n'écrit plus de messages de prospection pour lui
+- Le Pipeline est le cockpit de closing personnel de Mac Arthur
+- Awa observe les patterns de vente de Mac Arthur et les réapplique dans l'interface des utilisateurs Attractor Assists
+- Carelle = coordinatrice : Famille A → maquette first ; Famille B → séquence consulting
+
+### Prospect Rukayatou (cas pratique)
+- Package : Attractor Assists marque blanche (Fam. A ÉQUIPE, 520€ setup + 180€/mois) + consulting visibilité (Fam. B RUNNER, 350€). Total M1 : 1 050€
+- Partenariat XPaye : agent commercial pour son réseau d'entrepreneurs CI
+- Livrables produits manuellement : message collecte info, brief Programmeur, devis draft, cahier des charges
+- Bloquant : logo + couleurs + nom de l'outil à récupérer
+
+### SQL en attente
+- 0016 : passer macarthur.nguessankouassi@gmail.com en plan_code='manager' + role='admin' (à exécuter dans Supabase dashboard)
+
+---
+
+## 2026-06-02 (session 16 — corrections UX + Jarvis cockpit smartphone + voix)
+
+### Corrections Attractor Assists (livrées en production)
+- Dark mode persistant : état sauvegardé en localStorage, plus de reset au relaunch
+- Fix écran noir généralisé : `min-h-full` → `min-h-screen` sur tous les screens (Dashboard, Assistants, Profil, Agenda, Méthode, Paliers, Notifications, Conversation, Axes, Broadcasts, MasterSheet) + body background fixé en sable au lieu de noir
+- Fix connexion WiFi : `getUser()` → `getSession()` dans loadProfile (lecture localStorage sans appel réseau, résout les blocages sur WiFi lent/captif/entreprise)
+- Astuces du jour : carousel 3 tips rotatif avec dots et auto-rotation 5s
+- Pleine puissance AgentBioModal : photo hero 260→200px, scroll iOS amélioré (pb-24, WebkitOverflowScrolling)
+- AdminScreen : liste utilisateurs paginée (8 + "Voir les X autres"), onglets scrollables
+- Resources admin : Excalidraw (lien mort) et Paperclip (login requis) supprimés, remplacés par accès Supabase + Netlify uniquement
+- Messages d'erreur login enrichis (portail captif, délai OTP WiFi)
+
+### SQL à exécuter dans Supabase (pas encore fait)
+- Passer le compte macarthur.nguessankouassi@gmail.com en `plan_code = 'manager'` + `role = 'admin'`
+
+### Jarvis Cockpit — piloter les agents depuis le smartphone
+- Nouvelle Edge Function `jarvis-cockpit` déployée sur Supabase : Carelle incarne tous les agents Jarvis (Edito, CM, Commercial, DAF, Eclaireur, Analyste, Chef de projet, Ambassadeur, Boussole, Programmeur) via un seul point de contact
+- Onglet "Jarvis" dans AdminScreen : interface dark immersive (fond #0d0b09), orbe central animé (arc reactor style), anneaux orbRing CSS, animations glowPulse
+- Voix : Web Speech API fr-FR, reconnaissance en temps réel, transcript visible, envoi automatique à la fin de phrase
+- TTS : Jarvis lit les réponses à voix haute (SpeechSynthesis fr-FR), bouton "Écouter" par réponse, bouton "Stop" en header
+- Suggestions rapides cliquables (CM, Commercial, Eclaireur, DAF)
+- Input texte en fallback discret sous l'orbe
+- Historique compact en bas avec codes couleur par agent
+- Compatibilité : Android Chrome (parfait), PWA iOS (ok), Safari iOS (fallback texte)
+
+### Décision actée : circuit visiteur site → Carelle
+- Principe validé : chat qualification sur agenceattractor.com → Supabase table `prospects` → notification cockpit → Carelle génère séquence Awa → Mac Arthur envoie sur WhatsApp en 1 tap
+- À implémenter en prochaine session dédiée
+
+### Prochaine session
+- Exécuter le SQL compte admin Manager
+- Implémenter le circuit visiteur site agenceattractor.com → Supabase → Carelle
+
+---
+
 ## 2026-06-02 (session 15 — vie aux agents + infrastructure complète)
 
 ### Agents Attractor Assists enrichis (personnalités complètes)
