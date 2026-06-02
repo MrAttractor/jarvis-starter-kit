@@ -58,6 +58,12 @@ export const MOCK = {
       bio: "Adjamé. Son grand-père était griot. Kofi a grandi avec les histoires comme d'autres grandissent avec les mathématiques. Il ne sait pas expliquer un concept sans en faire une histoire. \"Mon grand-père disait : une vérité bien racontée vaut mieux que dix vérités bien prouvées.\" Il ne fait pas des posts. Il construit des récits qui créent de la loyauté.",
       proactif: "Il construit ta campagne complète en 3 phases : film de marque personnelle (script 5 actes), séquence de posts espacés dans le temps, broadcasts WhatsApp prêts à envoyer. Chaque message est ancré dans ton histoire réelle. Il te donne aussi ta signature narrative — le récit que les gens retiennent après t'avoir lu une seule fois.",
     },
+    {
+      id: "carelle", genre: "f", name: "Carelle", role: "Chief of Staff · Direction", plan: "Manager", status: "verrouillé", accent: "charbon", icon: "flag", photo: "/uploads/agents/carelle.jpg",
+      desc: "Elle voit tout, coordonne tout. Quand tu as trop de fronts ouverts, c'est elle qui remet de l'ordre.",
+      bio: "Bras droit de Mac Arthur depuis 2009. Elle connaît chaque recoin de la méthode Attractor, chaque agent de l'équipe, chaque type de client. Elle ne travaille pas dans l'ombre — elle travaille en amont. Avant que tu te poses la question, elle a déjà la réponse. \"Un projet qui tourne bien, c'est une préparation invisible.\"",
+      proactif: "Elle pilote ton portefeuille de projets en entier : priorise, synchronise, évite les collisions entre Awa, Miriam, Serge et Roland. Elle te prépare des briefings hebdomadaires : ce qui avance, ce qui bloque, ce qui doit être décidé. Quand tu es dispersé, elle te ramène au seul truc qui compte cette semaine.",
+    },
   ],
   forfaits: [
     {

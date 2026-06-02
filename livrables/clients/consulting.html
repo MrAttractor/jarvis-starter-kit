@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consulting Stratégique — Méthode ATTRACTOR — Mr Attractor</title>
+<meta name="description" content="Accompagnement stratégique pour entrepreneurs. Clarté, positionnement, plan d'action — recommandation personnalisée sous 48h. Mac Arthur KOUASSI.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--gold-light:#E8C97A;--gold-dim:#8a6f2e;--black:#0A0A0A;--dark:#111111;--card:#161616;--card2:#1E1E1E;--border:rgba(201,168,76,0.18);--text:#F2EDE4;--muted:#888;--green:#3DDC84;--red:#FF6B6B;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(201,168,76,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(10,10,10,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--black);}
+.nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.nav-name{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;}
+.nav-sub{font-size:10px;color:var(--muted);}
+.nav-actions{display:flex;align-items:center;gap:12px;}
+.nav-back{font-size:12px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.2s;}
+.nav-back:hover{color:var(--gold);}
+.nav-cta{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--black);font-size:11px;font-weight:700;padding:8px 18px;border-radius:4px;text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:144px 2.5rem 80px;position:relative;z-index:1;max-width:900px;margin:0 auto;}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:3px;padding:4px 14px;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.8rem;width:fit-content;}
+.hero-sub{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.8rem;}
+.hero-h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,4.2rem);font-weight:900;line-height:1.05;letter-spacing:-0.02em;margin-bottom:1.5rem;}
+.hero-h1 em{font-style:italic;font-weight:400;color:var(--gold);}
+.hero-p{font-size:1.05rem;color:var(--muted);line-height:1.8;max-width:640px;margin-bottom:2.5rem;}
+.hero-p strong{color:var(--text);font-weight:500;}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:3rem;}
+.btn-g{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--black);border:none;border-radius:4px;padding:13px 26px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;transition:all 0.2s;}
+.btn-g:hover{box-shadow:0 8px 24px rgba(201,168,76,0.35);transform:translateY(-2px);}
+.btn-gh{background:transparent;color:var(--text);border:1px solid var(--border);border-radius:4px;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;display:inline-block;transition:all 0.2s;}
+.btn-gh:hover{border-color:var(--gold);color:var(--gold);}
+.hero-stats{display:flex;gap:3rem;}
+.hs-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold);}
+.hs-lbl{font-size:11px;color:var(--muted);margin-top:3px;}
+
+/* SECTIONS */
+.section{position:relative;z-index:1;padding:80px 2.5rem;}
+.section-inner{max-width:900px;margin:0 auto;}
+.sec-label{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1rem;}
+.sec-h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;line-height:1.1;letter-spacing:-0.02em;margin-bottom:1rem;}
+.sec-h2 em{font-style:italic;color:var(--gold);}
+.sec-p{font-size:0.98rem;color:var(--muted);line-height:1.75;margin-bottom:2.5rem;}
+
+/* STORYTELLING */
+.story-section{background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.story-inner{max-width:760px;margin:0 auto;padding:80px 2.5rem;}
+.story-text{font-size:1.05rem;color:rgba(242,237,228,0.8);line-height:1.9;margin-bottom:1.4rem;}
+.story-text strong{color:var(--text);font-weight:500;}
+.story-quote{border-left:2px solid var(--gold);padding-left:1.5rem;margin:2rem 0;font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;color:var(--gold);line-height:1.6;}
+
+/* CIBLES */
+.cibles-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:2rem;}
+.cible-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.5rem;transition:border-color 0.2s;}
+.cible-card:hover{border-color:var(--gold);}
+.cible-icon{font-size:1.8rem;margin-bottom:0.8rem;}
+.cible-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:0.6rem;}
+.cible-desc{font-size:13px;color:var(--muted);line-height:1.65;}
+
+/* PROCESS */
+.process-steps{display:flex;flex-direction:column;gap:16px;margin-top:2rem;}
+.ps{display:flex;gap:1.5rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.5rem;}
+.ps-num{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--gold);background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);border-radius:4px;padding:4px 10px;flex-shrink:0;margin-top:2px;}
+.ps-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.ps-desc{font-size:13px;color:var(--muted);line-height:1.6;}
+.ps-time{display:inline-block;margin-top:8px;font-family:'Space Mono',monospace;font-size:10px;color:var(--gold);background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.15);border-radius:3px;padding:3px 10px;}
+
+/* FORMULES */
+.formules-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:2rem;}
+.fc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.8rem;position:relative;transition:all 0.2s;}
+.fc:hover{border-color:var(--gold);}
+.fc.featured{border-color:var(--gold);background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.02));}
+.fc-badge{position:absolute;top:-1px;right:16px;background:var(--gold);color:var(--black);font-size:9px;font-weight:700;padding:3px 10px;border-radius:0 0 6px 6px;letter-spacing:0.08em;text-transform:uppercase;}
+.fc-name{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;}
+.fc-price{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--gold);margin-bottom:4px;line-height:1;}
+.fc-desc{font-size:12px;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+.fc-items{display:flex;flex-direction:column;gap:6px;}
+.fc-item{font-size:12px;color:var(--text);display:flex;align-items:center;gap:8px;}
+.fc-item::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0;}
+.fc-full{grid-column:1/-1;}
+
+/* VIDEO OPTION */
+.video-option{background:linear-gradient(135deg,rgba(201,168,76,0.06),rgba(201,168,76,0.02));border:1px solid var(--border);border-radius:10px;padding:1.5rem 2rem;margin-top:1rem;display:flex;align-items:flex-start;gap:1.5rem;}
+.vo-icon{font-size:2rem;flex-shrink:0;}
+.vo-title{font-size:14px;font-weight:600;color:var(--gold);margin-bottom:4px;}
+.vo-desc{font-size:13px;color:var(--muted);line-height:1.6;}
+.vo-badge{display:inline-block;background:rgba(201,168,76,0.1);border:1px solid var(--border);border-radius:20px;padding:2px 10px;font-size:10px;color:var(--gold);margin-top:8px;}
+
+/* FORMULAIRE */
+.form-section{background:var(--card);border-top:1px solid var(--border);}
+.form-inner{max-width:760px;margin:0 auto;padding:80px 2.5rem;}
+.form-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:2.5rem;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.form-group{margin-bottom:1rem;}
+.form-label{display:block;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;}
+.form-label .req{color:var(--red);}
+.form-input{width:100%;background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;}
+.form-input:focus{border-color:var(--gold);}
+.form-input.error{border-color:var(--red);}
+.form-select{width:100%;background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-color:var(--card);}
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{padding:6px 14px;border:1px solid rgba(255,255,255,0.1);border-radius:20px;font-size:12px;color:var(--muted);cursor:pointer;transition:all 0.15s;background:var(--card);}
+.chip:hover,.chip.sel{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08);}
+/* ACCORDION FORMULES */
+.acc-formule{border:1px solid rgba(255,255,255,0.08);border-radius:10px;overflow:hidden;margin-bottom:8px;transition:border-color 0.2s;}
+.acc-formule.open{border-color:var(--gold);}
+.acc-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;background:var(--card);transition:background 0.2s;gap:12px;}
+.acc-formule.open .acc-header{background:rgba(201,168,76,0.06);}
+.acc-header:hover{background:rgba(201,168,76,0.04);}
+.acc-left{display:flex;align-items:center;gap:12px;flex:1;}
+.acc-radio{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,0.2);flex-shrink:0;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
+.acc-formule.open .acc-radio{border-color:var(--gold);background:var(--gold);}
+.acc-formule.open .acc-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--black);}
+.acc-name{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);transition:color 0.2s;}
+.acc-formule.open .acc-name{color:var(--gold);}
+.acc-price{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--gold);}
+.acc-badge{font-size:9px;font-weight:700;background:var(--gold);color:var(--black);padding:2px 8px;border-radius:10px;letter-spacing:0.06em;text-transform:uppercase;}
+.acc-arrow{font-size:11px;color:var(--muted);transition:transform 0.25s;flex-shrink:0;}
+.acc-formule.open .acc-arrow{transform:rotate(180deg);color:var(--gold);}
+.acc-body{max-height:0;overflow:hidden;transition:max-height 0.35s ease;}
+.acc-formule.open .acc-body{max-height:600px;}
+.acc-content{padding:0 18px 18px;border-top:1px solid rgba(201,168,76,0.1);}
+.acc-desc{font-size:13px;color:var(--muted);line-height:1.7;margin:14px 0 12px;}
+.acc-items{display:flex;flex-direction:column;gap:7px;margin-bottom:12px;}
+.acc-item{font-size:12px;color:var(--text);display:flex;align-items:flex-start;gap:8px;line-height:1.5;}
+.acc-item::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0;margin-top:1px;}
+.acc-timing{display:inline-flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-size:9px;color:var(--gold);background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:4px;padding:3px 10px;margin-top:4px;}
+
+.urgency-bar{display:flex;gap:6px;margin-top:6px;}
+.ub{flex:1;padding:8px;border:1px solid rgba(255,255,255,0.08);border-radius:6px;background:var(--card);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;text-align:center;transition:all 0.15s;}
+.ub.sel{background:rgba(201,168,76,0.12);border-color:var(--gold);color:var(--gold);font-weight:700;}
+.captcha{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:1rem;}
+.captcha-check{width:18px;height:18px;border:1px solid var(--muted);border-radius:3px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;}
+.captcha-check.checked{background:var(--gold);border-color:var(--gold);color:var(--black);}
+.captcha-label{font-size:13px;color:var(--muted);}
+.form-submit{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--black);border:none;border-radius:6px;padding:14px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:0.5rem;}
+.form-submit:hover{box-shadow:0 8px 24px rgba(201,168,76,0.3);}
+.form-submit:disabled{opacity:0.6;cursor:not-allowed;}
+.form-mention{text-align:center;font-size:11px;color:var(--muted);margin-top:10px;}
+.rgpd-note{font-size:11px;color:rgba(136,136,136,0.6);margin-top:12px;line-height:1.6;}
+
+/* PAIEMENT */
+.pay-section{padding:60px 2.5rem;border-top:1px solid var(--border);position:relative;z-index:1;}
+.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:2rem;}
+.pay-zone{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.5rem;}
+.pay-zt{font-family:'Space Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1rem;}
+.pay-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--card2);border-radius:6px;margin-bottom:8px;}
+.pay-name{font-size:13px;font-weight:600;color:var(--text);}
+.pay-det{font-size:12px;color:var(--muted);}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;z-index:999;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 18px;font-size:13px;transform:translateY(80px);opacity:0;transition:all 0.4s;pointer-events:none;max-width:340px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{background:rgba(61,220,132,0.12);border-color:rgba(61,220,132,0.3);color:var(--green);}
+.toast.error{background:rgba(255,107,107,0.12);border-color:rgba(255,107,107,0.3);color:var(--red);}
+
+/* STICKY CTA */
+.sticky-cta{position:fixed;bottom:0;left:0;right:0;z-index:150;background:rgba(10,10,10,0.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:12px 2.5rem;display:flex;align-items:center;justify-content:space-between;transform:translateY(100px);transition:transform 0.3s;}
+.sticky-cta.show{transform:translateY(0);}
+.sticky-text{font-size:13px;color:var(--muted);}
+.sticky-text strong{color:var(--text);}
+.sticky-btns{display:flex;gap:10px;}
+
+footer{padding:2.5rem 2.5rem;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;position:relative;z-index:1;}
+.ft-links{display:flex;gap:18px;flex-wrap:wrap;}
+.ft-l{font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.ft-l:hover{color:var(--gold);}
+.ft-rgpd{font-size:10px;color:rgba(136,136,136,0.4);}
+
+@media(max-width:768px){
+  nav{padding:0.8rem 1.2rem;}
+  .hero,.section,.story-inner,.form-inner,.pay-section{padding:60px 1.2rem;}
+  .hero{padding-top:80px;}
+  .cibles-grid,.formules-grid,.pay-grid{grid-template-columns:1fr;}
+  .fc-full{grid-column:1;}
+  .form-row{grid-template-columns:1fr;}
+  footer{padding:2rem 1.2rem;flex-direction:column;}
+  .sticky-cta{padding:12px 1.2rem;}
+}
+
+/* ════ TABS DE NAVIGATION ════ */
+.page-tabs{position:fixed;top:64px;left:0;right:0;z-index:190;display:flex;align-items:center;background:rgba(10,10,10,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.1);padding:0 2.5rem;}
+.page-tab{display:flex;align-items:center;gap:8px;padding:0.75rem 1.4rem;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;color:var(--muted);border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap;}
+.page-tab:hover{color:var(--text);}
+.page-tab.active-g{color:var(--gold);border-bottom-color:var(--gold);}
+.page-tab.active-gr{color:var(--green);border-bottom-color:var(--green);}
+.page-tab.active-home{color:var(--gold);border-bottom-color:var(--gold);}
+.page-tab-sep{width:1px;height:20px;background:rgba(255,255,255,0.08);margin:0 4px;}
+.page-tab-cta{margin-left:auto;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--black);font-family:'Space Mono',monospace;font-size:10px;font-weight:700;padding:6px 16px;border-radius:4px;text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;}
+@media(max-width:768px){
+  .page-tabs{padding:0 0.8rem;overflow-x:auto;}
+  .page-tab{padding:0.65rem 0.8rem;font-size:9px;}
+}
+
+</style>
+
+</head>
+<body>
+
+<nav style="position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(10,10,10,0.96);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,0.18);">
+  <a href="/" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
+    <div style="width:36px;height:36px;background:linear-gradient(135deg,#C9A84C,#8a6f2e);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#0A0A0A;">MA</div>
+    <div><div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#C9A84C;letter-spacing:0.12em;text-transform:uppercase;">Mr Attractor</div><div style="font-size:10px;color:#777;">Méthode ATTRACTOR</div></div>
+  </a>
+  <div style="display:flex;align-items:center;gap:4px;">
+    <a href="/consulting" style="font-size:12px;color:#C9A84C;text-decoration:none;padding:6px 14px;border-radius:4px;background:rgba(201,168,76,0.08);">Consulting</a>
+    <a href="/assistant-ia-pro" style="font-size:12px;color:#777;text-decoration:none;padding:6px 14px;border-radius:4px;transition:all 0.2s;">Site IA</a>
+    <a href="/chatbot" style="font-size:12px;color:#777;text-decoration:none;padding:6px 14px;border-radius:4px;">Chatbot</a>
+    <a href="/notre-histoire" style="font-size:12px;color:#777;text-decoration:none;padding:6px 14px;border-radius:4px;">Notre histoire</a>
+    <a href="#formulaire" style="background:linear-gradient(135deg,#C9A84C,#8a6f2e);color:#0A0A0A;font-size:11px;font-weight:700;padding:8px 18px;border-radius:4px;text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;">Diagnostic gratuit</a>
+  </div>
+</nav>
+
+<div class="page-tabs">
+  <a href="/" class="page-tab">🏠 Accueil</a>
+  <div class="page-tab-sep"></div>
+  <a href="/consulting" class="page-tab active-g">🎯 Consulting</a>
+  <div class="page-tab-sep"></div>
+  <a href="/assistant-ia-pro" class="page-tab">⚡ Assistant IA Pro</a>
+  <div class="page-tab-sep"></div>
+  <a href="/chatbot" class="page-tab">🤖 Chatbot</a>
+  <div class="page-tab-sep"></div>
+  <a href="/notre-histoire" class="page-tab">📖 Notre histoire</a>
+  <div class="page-tab-sep"></div>
+  <a href="#formulaire" class="page-tab">📝 Audit gratuit</a>
+  <a href="https://wa.me/33753902323" class="page-tab-cta">📱 Call gratuit</a>
+</div>
+  <a href="/consulting" class="page-tab active-g">🎯 Coaching</a>
+  <div class="page-tab-sep"></div>
+  <a href="/assistant-ia-pro" class="page-tab">⚡ Assistant IA Pro</a>
+  <div class="page-tab-sep"></div>
+  <a href="#formulaire" class="page-tab">📝 Audit gratuit</a>
+  <a href="https://wa.me/33753902323" class="page-tab-cta">📱 Call gratuit</a>
+</div>
+
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag"><span style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite;display:inline-block;"></span>Consulting Stratégique</div>
+  <div class="hero-sub">Le héros, c'est vous.</div>
+  <h1 class="hero-h1">Vous avez tout pour réussir.<br>Il vous manque<br><em>la clarté et le système.</em></h1>
+  <!-- Hero decoration -->
+  <div style="margin-bottom:2rem;display:flex;align-items:center;gap:1.5rem;">
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+      <circle cx="40" cy="40" r="36" fill="rgba(201,168,76,0.04)" stroke="rgba(201,168,76,0.15)" stroke-width="1.5"/>
+      <circle cx="40" cy="40" r="24" stroke="rgba(201,168,76,0.1)" stroke-width="1" stroke-dasharray="4 3"/>
+      <!-- Nord -->
+      <polygon points="40,18 44,40 40,37 36,40" fill="rgba(201,168,76,0.85)"/>
+      <!-- Sud -->
+      <polygon points="40,62 44,40 40,43 36,40" fill="rgba(201,168,76,0.2)"/>
+      <circle cx="40" cy="40" r="4" fill="#C9A84C"/>
+      <line x1="16" y1="40" x2="64" y2="40" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <text x="36" y="14" font-size="8" fill="rgba(201,168,76,0.5)" font-family="monospace">N</text>
+    </svg>
+    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);line-height:1.8;">
+      <div style="color:rgba(201,168,76,0.6);">Vous avez le talent.</div>
+      <div>Il manque la boussole.</div>
+    </div>
+  </div>
+  <p class="hero-p"><strong>73% des entrepreneurs qui stagnent ont un problème de positionnement — pas de produit.</strong> Ils vendent à tout le monde. Donc à personne. En 48h, vous repartez avec un plan d'action opérationnel, une cible clarifiée et un positionnement qui convertit.</p>
+  <div class="hero-ctas">
+    <a href="#formulaire" class="btn-g">Démarrer mon audit gratuit →</a>
+    <a href="https://wa.me/33753902323" class="btn-gh">📱 WhatsApp</a>
+  </div>
+  <div class="hero-stats">
+    <div><div class="hs-num">48h</div><div class="hs-lbl">Recommandation livrée</div></div>
+    <div><div class="hs-num">4</div><div class="hs-lbl">Clients max / mois</div></div>
+    <div><div class="hs-num">80€</div><div class="hs-lbl">Call découverte offert</div></div>
+  </div>
+</div>
+
+<!-- STORYTELLING -->
+<div class="story-section">
+  <div class="story-inner">
+    <div class="sec-label">Pourquoi ce cabinet existe</div>
+    <p class="story-text">J'ai passé des années à aider des entrepreneurs à performer. Par vocation — pas par obligation. Mais j'ai observé quelque chose qui me préoccupait profondément : <strong>des entrepreneurs brillants, avec de vrais produits, qui stagnaient.</strong> Pas parce qu'ils manquaient de talent. Parce qu'ils manquaient de clarté.</p>
+    <p class="story-text">Ils construisaient sans boussole. Ils vendaient à tout le monde — donc à personne. Ils travaillaient 60 heures par semaine et s'épuisaient sans que leur CA avance. <strong>Je me suis épuisé moi aussi à les aider sans système.</strong></p>
+    <div class="story-quote">"À l'ère du digital, il est possible de réaliser ce qu'on veut vraiment. Il suffit d'avoir la clarté sur où on va — et un système qui travaille pour nous."</div>
+    <p class="story-text">Aujourd'hui, l'Agence Mr Attractor n'est pas seulement un cabinet de conseil. C'est un <strong>adjuvant</strong> — celui qui accompagne le héros (vous) dans sa quête. Pas pour faire à votre place. Pour vous donner les armes, la carte et la direction. Pour que vous puissiez enfin profiter de votre vie tout en construisant un business rentable.</p>
+  </div>
+</div>
+
+<!-- CIBLES -->
+<div class="section">
+  <div class="section-inner">
+    <div class="sec-label">Pour qui ?</div>
+    <h2 class="sec-h2">Vous vous <em>reconnaissez</em> ici ?</h2>
+    <div class="cibles-grid">
+      <div class="cible-card">
+        <div style="margin-bottom:0.8rem;">
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="20" fill="rgba(201,168,76,0.05)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+            <path d="M14 30 L22 12 L30 30" stroke="rgba(201,168,76,0.6)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="16" y1="25" x2="28" y2="25" stroke="rgba(201,168,76,0.3)" stroke-width="1.5"/>
+            <circle cx="22" cy="12" r="3" fill="rgba(201,168,76,0.8)"/>
+          </svg>
+        </div>
+        <div class="cible-title">L'entrepreneur en démarrage</div>
+        <p class="cible-desc">Vous avez une idée, une activité en lancement ou voulez vous repositionner. Vous êtes dans le flou sur votre offre, votre cible ou votre stratégie. Vous cherchez à structurer pour avancer avec confiance.</p>
+      </div>
+      <div class="cible-card">
+        <div style="margin-bottom:0.8rem;">
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="20" fill="rgba(201,168,76,0.05)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+            <polyline points="10,30 16,28 20,28 24,28 30,28 34,28" stroke="rgba(201,168,76,0.3)" stroke-width="2" stroke-linecap="round"/>
+            <polyline points="10,24 15,20 20,22 25,16 30,14 34,12" stroke="rgba(201,168,76,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="34" cy="12" r="3" fill="#C9A84C"/>
+          </svg>
+        </div>
+        <div class="cible-title">L'entreprise existante qui stagne</div>
+        <p class="cible-desc">Votre activité existe mais elle peine à être rentable, visible ou organisée. Vous avez déjà essayé des choses sans les résultats attendus. Vous avez besoin d'un regard extérieur structurant.</p>
+      </div>
+      <div class="cible-card">
+        <div style="margin-bottom:0.8rem;">
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="20" fill="rgba(201,168,76,0.05)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+            <rect x="10" y="16" width="24" height="16" rx="3" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+            <rect x="13" y="19" width="8" height="5" rx="1" fill="rgba(201,168,76,0.15)"/>
+            <rect x="23" y="19" width="8" height="5" rx="1" fill="rgba(201,168,76,0.15)"/>
+            <rect x="13" y="26" width="18" height="3" rx="1" fill="rgba(201,168,76,0.1)"/>
+            <line x1="22" y1="14" x2="22" y2="16" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="cible-title">Le dirigeant qui veut piloter</div>
+        <p class="cible-desc">Vous avez une vision mais pas de tableau de bord. Vous prenez des décisions dans le flou. Vous voulez un outil de pilotage stratégique pour diriger avec des données, pas des intuitions.</p>
+      </div>
+      <div class="cible-card">
+        <div style="margin-bottom:0.8rem;">
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="20" fill="rgba(201,168,76,0.05)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+            <ellipse cx="22" cy="22" rx="9" ry="16" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+            <line x1="6" y1="22" x2="38" y2="22" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+            <line x1="8" y1="16" x2="36" y2="16" stroke="rgba(201,168,76,0.1)" stroke-width="1"/>
+            <line x1="8" y1="28" x2="36" y2="28" stroke="rgba(201,168,76,0.1)" stroke-width="1"/>
+            <circle cx="22" cy="22" r="3" fill="rgba(201,168,76,0.6)"/>
+          </svg>
+        </div>
+        <div class="cible-title">L'entrepreneur de la diaspora</div>
+        <p class="cible-desc">Entre deux marchés, deux cultures, deux ambitions. Vous voulez structurer un projet qui a du sens — en Afrique, en Europe, ou les deux. Vous avez besoin d'un consultant qui comprend ces deux mondes.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESS -->
+<div class="section" style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="section-inner">
+    <div class="sec-label">Comment ça se passe</div>
+    <h2 class="sec-h2">Le <em>processus</em> en 4 étapes</h2>
+    <div class="process-steps">
+      <div class="ps">
+        <div class="ps-num">01</div>
+        <div>
+          <div class="ps-title">Call découverte — 15 min offert</div>
+          <p class="ps-desc">On se parle. Je comprends votre situation, votre projet, vos blocages. Pas de script. Une vraie conversation stratégique. Vous repartez avec une clarté immédiate sur les prochaines étapes — même si vous ne devenez pas client.</p>
+          <span class="ps-time">⏱ 15 min · Offert · Valeur 80€</span>
+        </div>
+      </div>
+      <div class="ps">
+        <div class="ps-num">02</div>
+        <div>
+          <div class="ps-title">Audit & analyse de votre profil</div>
+          <p class="ps-desc">Je cartographie votre situation : positionnement, cible, canaux, forces, failles. Je compare avec ce que le marché attend. J'identifie les 3 leviers les plus rapides pour débloquer votre croissance.</p>
+          <span class="ps-time">⏱ 24h · Inclus dans chaque formule</span>
+        </div>
+      </div>
+      <div class="ps">
+        <div class="ps-num">03</div>
+        <div>
+          <div class="ps-title">Recommandation stratégique personnalisée</div>
+          <p class="ps-desc">Un document Word livré sous 48h. Pas un template. Un document construit pour vous, avec votre contexte, vos mots, votre marché. Il contient : votre diagnostic, votre plan de communication, votre planning sur 8 semaines, les 3 questions que vous devez résoudre.</p>
+          <span class="ps-time">⏱ 48h · Document Word professionnel</span>
+        </div>
+      </div>
+      <div class="ps">
+        <div class="ps-num">04</div>
+        <div>
+          <div class="ps-title">Accompagnement & suivi (selon formule)</div>
+          <p class="ps-desc">Selon la formule choisie, je vous accompagne sur 2h, 6h ou 10h de consulting stratégique. 4 meetings structurés, des livrables à chaque étape, et un tableau de bord de pilotage que vous conservez pour toujours.</p>
+          <span class="ps-time">⏱ 2h à 10h selon formule · Meetings en visio</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORMULES -->
+<div class="section" id="formules">
+  <div class="section-inner">
+    <div class="sec-label">Les formules</div>
+    <h2 class="sec-h2">Choisissez votre <em>niveau d'engagement</em></h2>
+    <div class="formules-grid">
+      <div class="fc">
+        <div class="fc-name">Starter</div>
+        <div class="fc-price">150€</div>
+        <div class="fc-desc">Cadrage + Recommandation stratégique · 2h</div>
+        <div class="fc-items">
+          <div class="fc-item">Call découverte 15 min</div>
+          <div class="fc-item">Audit de votre profil</div>
+          <div class="fc-item">Recommandation Word sous 48h</div>
+          <div class="fc-item">Feuille de route opérationnelle</div>
+        </div>
+      </div>
+      <div class="fc featured">
+        <div class="fc-badge">Populaire</div>
+        <div class="fc-name">Runner</div>
+        <div class="fc-price">350€</div>
+        <div class="fc-desc">Structuration complète + Stratégie Marketing · 6h</div>
+        <div class="fc-items">
+          <div class="fc-item">Tout le Starter inclus</div>
+          <div class="fc-item">Plan de communication complet</div>
+          <div class="fc-item">Stratégie canaux sur mesure</div>
+          <div class="fc-item">Planning 8 semaines agile</div>
+          <div class="fc-item">2 meetings de suivi</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-name">Eagle</div>
+        <div class="fc-price">800€</div>
+        <div class="fc-desc">Coaching CEO + Tableau de bord pilotage · 10h</div>
+        <div class="fc-items">
+          <div class="fc-item">Tout le Runner inclus</div>
+          <div class="fc-item">Coaching décisionnel CEO</div>
+          <div class="fc-item">Tableau de bord pilotage</div>
+          <div class="fc-item">4 meetings stratégiques</div>
+          <div class="fc-item">Livrables à chaque étape</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-name">Consultance</div>
+        <div class="fc-price" style="font-size:1.6rem;">Sur devis</div>
+        <div class="fc-desc">Organisation & Structuration d'entreprise · Sur mesure</div>
+        <div class="fc-items">
+          <div class="fc-item">Audit organisationnel complet</div>
+          <div class="fc-item">Restructuration stratégique</div>
+          <div class="fc-item">Plan de transformation</div>
+          <div class="fc-item">Accompagnement long terme</div>
+          <div class="fc-item">Objectif : 100% atteints</div>
+        </div>
+      </div>
+      <div class="fc fc-full">
+        <div class="fc-name">Conseil horaire</div>
+        <div class="fc-price">80€/h</div>
+        <div class="fc-desc">Une problématique précise à traiter. Sans engagement, sans formule.</div>
+        <div class="fc-items" style="flex-direction:row;flex-wrap:wrap;gap:12px;">
+          <div class="fc-item">Conseil ponctuel</div>
+          <div class="fc-item">Relecture de stratégie</div>
+          <div class="fc-item">Arbitrage décisionnel</div>
+          <div class="fc-item">Devis sur mesure</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION VIDEO -->
+    <div class="video-option">
+      <div class="vo-icon">🎬</div>
+      <div>
+        <div class="vo-title">Option Production Vidéo — en supplément</div>
+        <p class="vo-desc">Vos offres de consultance ont besoin d'être vues. L'option Production Vidéo vous permet d'intégrer une vidéo de présentation professionnelle, un témoignage client filmé ou un contenu de marque — pour soutenir et amplifier votre stratégie de communication.</p>
+        <div class="vo-badge">Disponible en complément de toute formule · Devis sur demande</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAIEMENT -->
+<div class="pay-section" id="paiement">
+  <div style="max-width:900px;margin:0 auto;">
+    <div class="sec-label">Paiement sécurisé</div>
+    <h2 class="sec-h2" style="font-size:1.8rem;">Tous les <em>moyens de paiement</em></h2>
+    <div class="pay-grid">
+      <div class="pay-zone">
+        <div class="pay-zt">🌍 Côte d'Ivoire & Afrique</div>
+        <div class="pay-item"><span>📱</span><div><div class="pay-name">Wave</div><div class="pay-det">+225.05.76.87.70.70</div></div></div>
+        <div class="pay-item"><span>💜</span><div><div class="pay-name">Djamo</div><div class="pay-det">+225.05.76.87.70.70</div></div></div>
+        <div class="pay-item"><span>📲</span><div><div class="pay-name">MTN Money</div><div class="pay-det">+225.05.76.87.70.70</div></div></div>
+        <div class="pay-item"><span>🟡</span><div><div class="pay-name">Orange Money</div><div class="pay-det">Sur demande</div></div></div>
+      </div>
+      <div class="pay-zone">
+        <div class="pay-zt">🇫🇷 France & Europe</div>
+        <div class="pay-item"><span>💙</span><div><div class="pay-name">PayPal</div><div class="pay-det">@Myattractor</div></div></div>
+        <div class="pay-item"><span>🟢</span><div><div class="pay-name">Wero / Revolut</div><div class="pay-det">+33 7 53 90 23 23</div></div></div>
+        <div class="pay-item"><span>🌍</span><div><div class="pay-name">MoneyGram / Western Union</div><div class="pay-det">KOUASSI N'Guessan Arsène — Paris</div></div></div>
+        <div class="pay-item"><span>🔐</span><div><div class="pay-name">Virement bancaire</div><div class="pay-det">Sur demande</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORMULAIRE -->
+<div class="form-section" id="formulaire">
+  <div class="form-inner">
+    <div class="sec-label">Démarrer</div>
+    <h2 class="sec-h2" style="font-size:2rem;">Votre audit <em>gratuit</em></h2>
+    <p class="sec-p" style="margin-bottom:2rem;">Remplissez ce formulaire — je vous envoie une recommandation personnalisée sous 48h et vous contacte pour organiser votre call découverte.</p>
+    <div class="form-card">
+
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Prénom <span class="req">*</span></label>
+          <input class="form-input" id="f-prenom" type="text" placeholder="Marie">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Nom <span class="req">*</span></label>
+          <input class="form-input" id="f-nom" type="text" placeholder="Koné">
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:1rem;">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">📱 WhatsApp <span class="req">*</span></label>
+          <input class="form-input" id="f-whatsapp" type="tel" placeholder="+33 7 00 00 00 00">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">✉️ Email <span class="req">*</span></label>
+          <input class="form-input" id="f-email" type="email" placeholder="marie@email.com">
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-top:1rem;">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Entreprise / Projet</label>
+          <input class="form-input" id="f-entreprise" type="text" placeholder="Nom ou projet">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Secteur d'activité <span class="req">*</span></label>
+          <input class="form-input" id="f-secteur" type="text" placeholder="Ex: restauration, mode, conseil...">
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-top:1rem;">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Pays / Ville</label>
+          <input class="form-input" id="f-pays" type="text" placeholder="Paris, Abidjan...">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Budget disponible</label>
+          <select class="form-select" id="f-budget">
+            <option value="">Sélectionner</option>
+            <option>Moins de 200€</option>
+            <option>200 – 500€</option>
+            <option>500 – 1 000€</option>
+            <option>Plus de 1 000€</option>
+            <option>À discuter</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:1rem;">
+        <label class="form-label">Votre situation actuelle <span class="req">*</span></label>
+        <div class="chips" id="chips-profil">
+          <div class="chip" onclick="toggleChip(this)">🚀 Je démarre un projet</div>
+          <div class="chip" onclick="toggleChip(this)">🔧 J'ai une activité qui stagne</div>
+          <div class="chip" onclick="toggleChip(this)">👑 Je veux piloter stratégiquement</div>
+          <div class="chip" onclick="toggleChip(this)">🌍 Projet diaspora</div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:1rem;">
+        <label class="form-label">Ce qui vous bloque le plus en ce moment</label>
+        <div class="chips" id="chips-blocage">
+          <div class="chip" onclick="toggleChip(this)">Clarté sur mon offre</div>
+          <div class="chip" onclick="toggleChip(this)">Définir ma cible</div>
+          <div class="chip" onclick="toggleChip(this)">Visibilité / trafic</div>
+          <div class="chip" onclick="toggleChip(this)">Conversion clients</div>
+          <div class="chip" onclick="toggleChip(this)">Organisation interne</div>
+          <div class="chip" onclick="toggleChip(this)">Rentabilité</div>
+          <div class="chip" onclick="toggleChip(this)">Confiance / mental</div>
+          <div class="chip" onclick="toggleChip(this)">Financement</div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:1rem;">
+        <label class="form-label">Ce que vous voulez accomplir (votre désir profond)</label>
+        <textarea class="form-input" id="f-desir" style="min-height:80px;resize:vertical;line-height:1.6;" placeholder="Au-delà du chiffre d'affaires, qu'est-ce que vous voulez vraiment construire ?"></textarea>
+      </div>
+
+      <div class="form-group" style="margin-top:1rem;">
+        <label class="form-label">Autres informations que vous souhaitez partager</label>
+        <textarea class="form-input" id="f-autres" style="min-height:70px;resize:vertical;line-height:1.6;" placeholder="Contexte particulier, délais, situation spécifique, tentatives passées..."></textarea>
+      </div>
+
+      <div class="form-group" style="margin-top:1rem;">
+        <label class="form-label">Formule qui vous intéresse <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">— Cliquez pour voir le détail</span></label>
+        <div id="acc-formules">
+
+          <!-- STARTER -->
+          <div class="acc-formule" data-value="Starter — 150€" onclick="toggleAcc(this)">
+            <div class="acc-header">
+              <div class="acc-left">
+                <div class="acc-radio"></div>
+                <div class="acc-name">Starter</div>
+              </div>
+              <div class="acc-price">150€</div>
+              <div class="acc-arrow">▼</div>
+            </div>
+            <div class="acc-body">
+              <div class="acc-content">
+                <div class="acc-desc">Le point de départ. 2 heures pour poser les bases de votre stratégie et comprendre votre situation exacte.</div>
+                <div class="acc-items">
+                  <div class="acc-item">Audit de votre marché et de votre positionnement</div>
+                  <div class="acc-item">Ciblage PPSD — Profil, Problème, Solution, Désir</div>
+                  <div class="acc-item">Votre argumentaire de vente (PASA + AIDA)</div>
+                  <div class="acc-item">Recommandation Word personnalisée livrée sous 48h</div>
+                  <div class="acc-item">Call découverte 15 min offert avant démarrage</div>
+                </div>
+                <div class="acc-timing">⏱ 2h · Livraison sous 48h · Paiement intégral</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RUNNER -->
+          <div class="acc-formule open" data-value="Runner — 350€" onclick="toggleAcc(this)">
+            <div class="acc-header">
+              <div class="acc-left">
+                <div class="acc-radio"></div>
+                <div class="acc-name">Runner</div>
+                <div class="acc-badge">Populaire</div>
+              </div>
+              <div class="acc-price">350€</div>
+              <div class="acc-arrow">▼</div>
+            </div>
+            <div class="acc-body">
+              <div class="acc-content">
+                <div class="acc-desc">Pour aller plus loin. 6 heures d'accompagnement complet avec plan d'action, offre irrésistible et plan de CA journalier.</div>
+                <div class="acc-items">
+                  <div class="acc-item">Tout le Starter inclus</div>
+                  <div class="acc-item">Construction de votre offre irrésistible</div>
+                  <div class="acc-item">Stratégie Meta Ads — structure de campagne</div>
+                  <div class="acc-item">Plan de CA journalier — formule CA = 3 × charges</div>
+                  <div class="acc-item">4 sessions structurées en visio</div>
+                  <div class="acc-item">Recommandation Word complète livrée sous 48h</div>
+                </div>
+                <div class="acc-timing">⏱ 6h · 4 sessions · Paiement intégral</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- EAGLE -->
+          <div class="acc-formule" data-value="Eagle — 800€" onclick="toggleAcc(this)">
+            <div class="acc-header">
+              <div class="acc-left">
+                <div class="acc-radio"></div>
+                <div class="acc-name">Eagle</div>
+              </div>
+              <div class="acc-price">800€</div>
+              <div class="acc-arrow">▼</div>
+            </div>
+            <div class="acc-body">
+              <div class="acc-content">
+                <div class="acc-desc">L'accompagnement complet. 10 heures pour transformer votre entreprise en profondeur — stratégie, système et pilotage.</div>
+                <div class="acc-items">
+                  <div class="acc-item">Tout le Runner inclus</div>
+                  <div class="acc-item">Audit complet de votre organisation actuelle</div>
+                  <div class="acc-item">Mise en place de vos procédures clés</div>
+                  <div class="acc-item">Stratégie de contenu et présence digitale</div>
+                  <div class="acc-item">Tableau de bord de pilotage — conservé à vie</div>
+                  <div class="acc-item">Accès prioritaire WhatsApp pendant 30 jours</div>
+                </div>
+                <div class="acc-timing">⏱ 10h · Paiement 50/50 · Démarrage prioritaire</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONSULTANCE -->
+          <div class="acc-formule" data-value="Consultance — Sur devis" onclick="toggleAcc(this)">
+            <div class="acc-header">
+              <div class="acc-left">
+                <div class="acc-radio"></div>
+                <div class="acc-name">Consultance</div>
+              </div>
+              <div class="acc-price" style="font-size:0.9rem;">Sur devis</div>
+              <div class="acc-arrow">▼</div>
+            </div>
+            <div class="acc-body">
+              <div class="acc-content">
+                <div class="acc-desc">Pour les projets complexes ou les missions longues durée. Devis personnalisé selon vos besoins spécifiques.</div>
+                <div class="acc-items">
+                  <div class="acc-item">Mission sur mesure — durée et périmètre définis ensemble</div>
+                  <div class="acc-item">Accompagnement de direction ou de projet</div>
+                  <div class="acc-item">Rapport et livrables adaptés à votre contexte</div>
+                  <div class="acc-item">Paiement selon calendrier convenu</div>
+                </div>
+                <div class="acc-timing">⏱ Durée sur mesure · Devis sous 48h</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONSEIL HORAIRE -->
+          <div class="acc-formule" data-value="Conseil horaire — 80€/h" onclick="toggleAcc(this)">
+            <div class="acc-header">
+              <div class="acc-left">
+                <div class="acc-radio"></div>
+                <div class="acc-name">Conseil horaire</div>
+              </div>
+              <div class="acc-price">80€/h</div>
+              <div class="acc-arrow">▼</div>
+            </div>
+            <div class="acc-body">
+              <div class="acc-content">
+                <div class="acc-desc">Une problématique précise à traiter. Sans engagement, sans formule. Une heure, un sujet, une solution.</div>
+                <div class="acc-items">
+                  <div class="acc-item">Conseil ponctuel sur une problématique ciblée</div>
+                  <div class="acc-item">Réponse rapide — session planifiée sous 24h</div>
+                  <div class="acc-item">Compte rendu écrit de la session</div>
+                  <div class="acc-item">Sans engagement — à la carte</div>
+                </div>
+                <div class="acc-timing">⏱ 1h · Paiement avant session · Sans engagement</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- OPTION VIDÉO -->
+          <div class="acc-formule" data-value="+ Option Vidéo" onclick="toggleAcc(this)">
+            <div class="acc-header">
+              <div class="acc-left">
+                <div class="acc-radio"></div>
+                <div class="acc-name">+ Option Vidéo</div>
+              </div>
+              <div class="acc-price" style="font-size:0.9rem;">Devis</div>
+              <div class="acc-arrow">▼</div>
+            </div>
+            <div class="acc-body">
+              <div class="acc-content">
+                <div class="acc-desc">En complément de toute formule. Production vidéo professionnelle pour votre marque ou vos contenus.</div>
+                <div class="acc-items">
+                  <div class="acc-item">Vidéo de présentation de votre offre ou activité</div>
+                  <div class="acc-item">Contenu de marque — storytelling et image</div>
+                  <div class="acc-item">Témoignages filmés de clients</div>
+                  <div class="acc-item">Disponible en Île-de-France · Sur demande ailleurs</div>
+                </div>
+                <div class="acc-timing">⏱ Devis sous 48h · Disponible en complément</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <input type="hidden" id="selected-formule" value="Runner — 350€">
+      </div>
+
+      <div class="form-group" style="margin-top:1rem;">
+        <label class="form-label">Niveau d'urgence (1 = réflexion → 5 = maintenant 🔥)</label>
+        <div class="urgency-bar">
+          <button class="ub" onclick="setUrgence(this,'1')">1</button>
+          <button class="ub" onclick="setUrgence(this,'2')">2</button>
+          <button class="ub sel" onclick="setUrgence(this,'3')">3</button>
+          <button class="ub" onclick="setUrgence(this,'4')">4</button>
+          <button class="ub" onclick="setUrgence(this,'5')">5 🔥</button>
+        </div>
+      </div>
+
+      <!-- CAPTCHA anti-robot -->
+      <div class="captcha" style="margin-top:1.2rem;">
+        <div class="captcha-check" id="captchaBox" onclick="toggleCaptcha()"></div>
+        <div class="captcha-label">Je confirme ne pas être un robot et accepte que mes données soient utilisées dans le cadre de la relation commerciale avec l'Agence Mr Attractor.</div>
+      </div>
+
+      <button class="form-submit" id="btnSubmit" onclick="submitCoaching()">
+        ✨ Envoyer mon audit — Recommandation sous 48h
+      </button>
+      <div class="form-mention">Call découverte offert · Valeur 80€ · Sans engagement</div>
+      <p class="rgpd-note">Vos données sont traitées conformément au RGPD et ne seront jamais revendues. <a href="#" onclick="document.getElementById('cgv-modal').style.display='block';return false;" style="color:var(--gold);">Voir notre politique de confidentialité.</a></p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="nav-mark">MA</div>
+    <div><div class="nav-name">Mr Attractor</div><div style="font-size:10px;color:var(--muted);">Conseils & Consultance Stratégie</div></div>
+  </div>
+  <div class="ft-links">
+    <a href="/" class="ft-l">← Accueil</a>
+    <a href="/assistant-ia-pro" class="ft-l">Assistant IA Pro</a>
+    <a href="#paiement" class="ft-l">Paiement</a>
+    <a href="https://www.linkedin.com/in/mac-arthur-kouassi" target="_blank" class="ft-l">LinkedIn</a>
+  </div>
+  <div class="ft-rgpd">© 2025 Agence Mr Attractor · <a href="#" onclick="document.getElementById('cgv-modal').style.display='block';return false;" style="color:var(--gold);text-decoration:none;">CGV & RGPD</a></div>
+</footer>
+
+<!-- CGV MODAL -->
+<div id="cgv-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;overflow-y:auto;padding:2rem;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="max-width:700px;margin:2rem auto;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2.5rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;">CGV & Politique RGPD</h2>
+      <button onclick="document.getElementById('cgv-modal').style.display='none'" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'DM Sans',sans-serif;">✕</button>
+    </div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.8;">
+      <p><strong style="color:var(--gold);">Prestataire :</strong> Mac Arthur KOUASSI — Agence Mr Attractor. myattractor1@gmail.com · +337.53.90.23.23 · Paris.</p>
+      <p style="margin-top:12px;"><strong style="color:var(--gold);">Paiement :</strong> Exigible à la commande. EAGLE/CONSULTANCE : 50% au démarrage, solde à mi-parcours. Aucun remboursement après démarrage sauf défaut prouvé.</p>
+      <p style="margin-top:12px;"><strong style="color:var(--gold);">RGPD :</strong> Données utilisées exclusivement dans le cadre de la relation commerciale. Jamais revendues. Droit d'accès, rectification, suppression : myattractor1@gmail.com. Conservation : 3 ans.</p>
+      <p style="margin-top:12px;"><strong style="color:var(--gold);">Droit applicable :</strong> Droit français · Tribunaux de Paris.</p>
+    </div>
+  </div>
+</div>
+
+<!-- STICKY CTA -->
+<div class="sticky-cta" id="stickyCta">
+  <div class="sticky-text"><strong>Agence Mr Attractor</strong> — Conseils & Consultance · Call 15 min offert</div>
+  <div class="sticky-btns">
+    <a href="#formulaire" class="btn-g" style="font-size:12px;padding:10px 20px;">Démarrer mon audit →</a>
+    <a href="https://wa.me/33753902323" class="btn-gh" style="font-size:12px;padding:10px 16px;">📱 WhatsApp</a>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const APPS_SCRIPT_CONSULTING = "https://script.google.com/macros/s/AKfycbzfwgmKWpAlQYTGJuxMv4HGVxsUt37-LUW8dezH_6V62L_AHTYT7Uv22byJVrXWKikmbA/exec";
+let selectedUrgence = "3";
+let captchaChecked = false;
+
+function toggleChip(el) { el.classList.toggle('sel'); }
+function toggleChipSingle(el) {
+  el.closest('.chips').querySelectorAll('.chip').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function setUrgence(el, val) {
+  selectedUrgence = val;
+  document.querySelectorAll('.ub').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function toggleCaptcha() {
+  captchaChecked = !captchaChecked;
+  const box = document.getElementById('captchaBox');
+  box.classList.toggle('checked', captchaChecked);
+  box.textContent = captchaChecked ? '✓' : '';
+}
+function getChips(id) {
+  return Array.from(document.querySelectorAll('#'+id+' .chip.sel')).map(c => c.textContent.trim()).join(', ');
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.className = 'toast ' + (type||'');
+  t.textContent = msg;
+  t.classList.add('show');
+  if (type !== 'loading') setTimeout(() => t.classList.remove('show'), 4500);
+}
+
+async function submitCoaching() {
+  if (!captchaChecked) { showToast('⚠️ Veuillez confirmer que vous n\'êtes pas un robot', 'error'); return; }
+  const prenom = document.getElementById('f-prenom').value.trim();
+  const nom = document.getElementById('f-nom').value.trim();
+  const whatsapp = document.getElementById('f-whatsapp').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const secteur = document.getElementById('f-secteur').value.trim();
+  if (!prenom || !nom || !whatsapp || !email || !secteur) {
+    document.querySelectorAll('#f-prenom,#f-nom,#f-whatsapp,#f-email,#f-secteur').forEach(el => {
+      if (!el.value.trim()) el.classList.add('error'); else el.classList.remove('error');
+    });
+    showToast('⚠️ Remplissez les champs obligatoires (*)', 'error');
+    return;
+  }
+  const payload = {
+    prenom, nom, whatsapp, email,
+    entreprise: document.getElementById('f-entreprise').value.trim(),
+    secteur,
+    pays: document.getElementById('f-pays').value.trim(),
+    budget: document.getElementById('f-budget').value,
+    profil: getChips('chips-profil'),
+    blocage: getChips('chips-blocage'),
+    desir: document.getElementById('f-desir').value.trim(),
+    autres: document.getElementById('f-autres').value.trim(),
+    formule: document.getElementById('selected-formule').value || 'Runner — 350€',
+    motivation: selectedUrgence,
+    source: 'consulting'
+  };
+  const btn = document.getElementById('btnSubmit');
+  btn.disabled = true; btn.textContent = '⏳ Envoi en cours…';
+  showToast('Enregistrement de votre demande…');
+  try {
+    const params = new URLSearchParams(payload).toString();
+    await fetch(APPS_SCRIPT_CONSULTING + '?' + params, { method: 'GET', mode: 'no-cors' });
+    await new Promise(r => setTimeout(r, 2000));
+    showToast('✅ Demande envoyée ! Recommandation sous 48h.', 'success');
+    btn.textContent = '✅ Demande envoyée !';
+  } catch(err) {
+    showToast('❌ Erreur. Contactez-nous sur WhatsApp.', 'error');
+    btn.disabled = false; btn.textContent = '✨ Envoyer mon audit';
+  }
+}
+
+// Sticky CTA
+window.addEventListener('scroll', () => {
+  const sticky = document.getElementById('stickyCta');
+  sticky.classList.toggle('show', window.scrollY > window.innerHeight * 0.5);
+});
+
+// Animations
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';} });
+},{threshold:0.1});
+document.querySelectorAll('.cible-card,.ps,.fc,.pay-zone').forEach(el => {
+  el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity 0.5s ease,transform 0.5s ease';obs.observe(el);
+});
+
+// ── ACCORDION FORMULES ──
+function toggleAcc(el) {
+  const isOpen = el.classList.contains('open');
+  // Fermer tous
+  document.querySelectorAll('.acc-formule').forEach(a => a.classList.remove('open'));
+  // Ouvrir celui cliqué si pas déjà ouvert
+  if (!isOpen) {
+    el.classList.add('open');
+    document.getElementById('selected-formule').value = el.dataset.value;
+  } else {
+    document.getElementById('selected-formule').value = '';
+  }
+}
+</script>
+</body>
+</html>

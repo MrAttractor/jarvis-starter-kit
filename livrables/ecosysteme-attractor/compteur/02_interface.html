@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>COMPTEUR · Pilotage</title>
+<style>
+  :root{
+    --noir:#0D0D0D;--noir-2:#161616;--carte:#1C1C1E;
+    --or:#C9A84C;--or-clair:#D4A843;--bordeaux:#8B2020;
+    --vert:#2E7D5B;--gris:#8A8A8E;--blanc:#F4F1EA;--bleu:#3A6EA5;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{background:var(--noir);color:var(--blanc);
+    font-family:"Georgia","Times New Roman",serif;min-height:100vh;padding:24px 16px 48px;
+    background-image:radial-gradient(circle at 50% 0%,#1a1a1a 0%,var(--noir) 60%);}
+  .head{display:flex;align-items:baseline;justify-content:space-between;
+    border-bottom:1px solid #2a2a2a;padding-bottom:16px;}
+  .head .brand{font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--gris);
+    font-family:"Helvetica Neue",sans-serif;font-weight:600;}
+  .head h1{font-size:28px;color:var(--or);font-weight:normal;letter-spacing:1px;}
+
+  /* Jauge objectif */
+  .gauge{background:var(--carte);border:1px solid #2a2a2a;border-radius:18px;
+    padding:22px 20px;margin:20px 0;position:relative;overflow:hidden;}
+  .gauge::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+    background:linear-gradient(var(--or),var(--bordeaux));}
+  .gauge .obj-label{font-family:"Helvetica Neue",sans-serif;font-size:11px;letter-spacing:2px;
+    text-transform:uppercase;color:var(--gris);}
+  .gauge .montant{font-size:42px;color:var(--or);margin:6px 0 2px;}
+  .gauge .montant small{font-size:18px;color:var(--gris);}
+  .gauge .cible{font-family:"Helvetica Neue",sans-serif;font-size:13px;color:var(--gris);margin-bottom:16px;}
+  .bar{height:12px;background:var(--noir-2);border-radius:8px;overflow:hidden;}
+  .bar > div{height:100%;background:linear-gradient(90deg,var(--bordeaux),var(--or));
+    border-radius:8px;transition:width .8s ease;}
+  .bar-pct{font-family:"Helvetica Neue",sans-serif;font-size:12px;color:var(--gris);
+    margin-top:6px;text-align:right;}
+
+  /* Cartes répartition */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+  .stat{background:var(--carte);border:1px solid #2a2a2a;border-radius:14px;padding:16px;}
+  .stat .l{font-family:"Helvetica Neue",sans-serif;font-size:10px;letter-spacing:1.5px;
+    text-transform:uppercase;color:var(--gris);margin-bottom:6px;}
+  .stat .v{font-size:22px;color:var(--blanc);}
+  .stat .v.or{color:var(--or-clair);}
+  .stat .v.vert{color:#5FBF92;}
+
+  /* Stabilité */
+  .stab{border-radius:16px;padding:18px;margin-bottom:20px;
+    font-family:"Helvetica Neue",sans-serif;}
+  .stab.ok{background:rgba(46,125,91,.15);border:1px solid rgba(46,125,91,.5);}
+  .stab.no{background:rgba(58,58,60,.3);border:1px solid #2a2a2a;}
+  .stab h2{font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;
+    font-family:"Helvetica Neue",sans-serif;}
+  .stab.ok h2{color:#5FBF92;} .stab.no h2{color:var(--gris);}
+  .stab .msg{font-size:14px;line-height:1.5;color:#D8D8DC;}
+  .stab .mois{display:flex;gap:6px;margin-top:12px;}
+  .stab .m{flex:1;text-align:center;padding:8px 4px;border-radius:8px;background:var(--noir-2);
+    font-size:11px;}
+  .stab .m.good{background:rgba(46,125,91,.25);}
+  .stab .m .dot{font-size:14px;}
+
+  .section-title{font-family:"Helvetica Neue",sans-serif;font-size:11px;letter-spacing:2px;
+    text-transform:uppercase;color:var(--gris);margin:24px 2px 12px;}
+
+  .add{width:100%;background:transparent;border:1px dashed #3a3a3a;color:var(--or);
+    border-radius:12px;padding:14px;font-family:"Helvetica Neue",sans-serif;font-size:14px;
+    letter-spacing:1px;cursor:pointer;margin-bottom:14px;}
+  .form{display:none;} .form.open{display:block;margin-bottom:18px;}
+  .form input,.form select{width:100%;background:var(--noir-2);border:1px solid #2a2a2a;
+    border-radius:10px;color:var(--blanc);padding:12px 14px;margin-bottom:10px;
+    font-family:"Helvetica Neue",sans-serif;font-size:14px;}
+  .btn{width:100%;border:none;border-radius:11px;padding:14px 0;background:var(--vert);color:#fff;
+    font-family:"Helvetica Neue",sans-serif;font-size:14px;font-weight:700;letter-spacing:.5px;
+    text-transform:uppercase;cursor:pointer;}
+  .btn:active{transform:scale(.97);}
+
+  .row{display:flex;justify-content:space-between;align-items:center;
+    background:var(--carte);border:1px solid #2a2a2a;border-radius:12px;padding:13px 16px;margin-bottom:9px;}
+  .row .lib{font-family:"Helvetica Neue",sans-serif;font-size:14px;}
+  .row .tag{font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;
+    border-radius:10px;margin-left:8px;}
+  .tag.PRODUIT{background:rgba(58,110,165,.2);color:#7FB0E0;}
+  .tag.MRR{background:rgba(201,168,76,.2);color:var(--or-clair);}
+  .row .mt{font-family:"Helvetica Neue",sans-serif;font-size:15px;color:var(--or-clair);font-weight:600;}
+
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(80px);
+    background:var(--or);color:var(--noir);padding:12px 22px;border-radius:30px;
+    font-family:"Helvetica Neue",sans-serif;font-size:14px;font-weight:700;transition:transform .3s;z-index:50;}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+  <div class="head">
+    <div><div class="brand">Attractor · Finance</div><h1>Compteur</h1></div>
+  </div>
+
+  <!-- Jauge objectif (mois en cours) -->
+  <div class="gauge">
+    <div class="obj-label">CA du mois en cours</div>
+    <div class="montant" id="caMois">— <small>€</small></div>
+    <div class="cible" id="cible">Objectif : — € · cible —</div>
+    <div class="bar"><div id="barFill" style="width:0%"></div></div>
+    <div class="bar-pct" id="barPct">—</div>
+  </div>
+
+  <!-- Répartition + types -->
+  <div class="grid">
+    <div class="stat"><div class="l">Produits</div><div class="v" id="sProd">— €</div></div>
+    <div class="stat"><div class="l">MRR (récurrent)</div><div class="v or" id="sMrr">— €</div></div>
+    <div class="stat"><div class="l">Part charges</div><div class="v" id="sCharges">— €</div></div>
+    <div class="stat"><div class="l">Part campagne</div><div class="v" id="sCamp">— €</div></div>
+    <div class="stat"><div class="l">Part marge</div><div class="v vert" id="sMarge">— €</div></div>
+    <div class="stat"><div class="l">MRR / objectif</div><div class="v" id="sMrrPct">— %</div></div>
+  </div>
+
+  <!-- Stabilité Fibonacci -->
+  <div class="stab no" id="stabBox">
+    <h2 id="stabTitle">Stabilité</h2>
+    <div class="msg" id="stabMsg">Chargement…</div>
+    <div class="mois" id="stabMois"></div>
+  </div>
+
+  <!-- Ajout encaissement -->
+  <div class="section-title">Encaissements</div>
+  <button class="add" id="addToggle">+ Enregistrer un encaissement</button>
+  <div class="form" id="form">
+    <input id="eLib" placeholder="Libellé (ex : Pro IA - client Koffi)" />
+    <input id="eMontant" type="number" inputmode="decimal" placeholder="Montant en €" />
+    <select id="eType">
+      <option value="PRODUIT">Produit (one-shot)</option>
+      <option value="MRR">MRR (récurrent)</option>
+    </select>
+    <select id="ePilier">
+      <option value="CONVERTIR">Convertir (Site IA)</option>
+      <option value="ATTIRER">Attirer (Consulting)</option>
+      <option value="STRUCTURER">Structurer (Bot)</option>
+      <option value="ASSISTS">Attractor Assists</option>
+      <option value="AUTRE">Autre</option>
+    </select>
+    <button class="btn" onclick="ajouter()">Enregistrer</button>
+  </div>
+  <div id="listeEnc"></div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  // ====== CONFIG ======
+  const SUPABASE_URL="https://<PROJECT_REF>.supabase.co";
+  const SUPABASE_ANON_KEY="<SUPABASE_ANON_KEY>";
+  const REST=`${SUPABASE_URL}/rest/v1`;
+  const HEADERS={apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`,"Content-Type":"application/json"};
+
+  const toastEl=document.getElementById("toast");
+  function toast(m){toastEl.textContent=m;toastEl.classList.add("show");setTimeout(()=>toastEl.classList.remove("show"),1800);}
+  const eur=n=>Number(n||0).toLocaleString("fr-FR",{maximumFractionDigits:0});
+  function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));}
+
+  let CONFIG=null;
+
+  async function chargerConfig(){
+    const r=await fetch(`${REST}/config_finance?id=eq.1`,{headers:HEADERS});
+    const d=await r.json(); CONFIG=(d&&d[0])||null;
+  }
+
+  async function chargerSynthese(){
+    // mois en cours
+    const moisCourant=new Date(); moisCourant.setDate(1);
+    const moisISO=moisCourant.toISOString().slice(0,10);
+    const r=await fetch(`${REST}/synthese_mensuelle?mois=eq.${moisISO}`,{headers:HEADERS});
+    const d=await r.json(); const m=(d&&d[0])||null;
+
+    const obj=CONFIG?Number(CONFIG.objectif_actuel):10000;
+    const ca=m?Number(m.ca_total):0;
+    const pct=Math.min(100,Math.round(ca/obj*100));
+    document.getElementById("caMois").innerHTML=`${eur(ca)} <small>€</small>`;
+    document.getElementById("cible").textContent=`Objectif : ${eur(obj)} € · cible ${CONFIG?CONFIG.date_cible:"—"}`;
+    document.getElementById("barFill").style.width=pct+"%";
+    document.getElementById("barPct").textContent=pct+"% de l'objectif";
+
+    document.getElementById("sProd").textContent=eur(m?m.ca_produits:0)+" €";
+    document.getElementById("sMrr").textContent=eur(m?m.ca_mrr:0)+" €";
+    document.getElementById("sCharges").textContent=eur(m?m.part_charges:0)+" €";
+    document.getElementById("sCamp").textContent=eur(m?m.part_campagne:0)+" €";
+    document.getElementById("sMarge").textContent=eur(m?m.part_marge:0)+" €";
+    const mrrPct=obj>0?Math.round((m?m.ca_mrr:0)/obj*100):0;
+    document.getElementById("sMrrPct").textContent=mrrPct+" %";
+  }
+
+  async function chargerStabilite(){
+    try{
+      const r=await fetch(`${REST}/statut_stabilite`,{headers:HEADERS});
+      const d=await r.json(); const s=(d&&d[0])||null;
+      const box=document.getElementById("stabBox");
+      const title=document.getElementById("stabTitle");
+      const msg=document.getElementById("stabMsg");
+      const moisDiv=document.getElementById("stabMois");
+      if(!s){msg.textContent="Pas encore de données.";return;}
+
+      if(s.stabilise){
+        box.className="stab ok"; title.textContent="✦ Palier stabilisé";
+        msg.innerHTML=`Tu peux déclencher le palier Fibonacci suivant. Conditions réunies sur ${s.mois_requis} mois.`;
+      }else{
+        box.className="stab no"; title.textContent="Stabilité en cours";
+        msg.innerHTML=`Objectif : ${s.mois_requis} mois consécutifs avec CA ≥ palier, marge positive, et MRR suffisant. ${s.mois_evalues}/${s.mois_requis} mois évalués.`;
+      }
+      const detail=Array.isArray(s.detail)?s.detail:[];
+      moisDiv.innerHTML=detail.map(x=>`
+        <div class="m ${x.ok?'good':''}">
+          <div class="dot">${x.ok?'✓':'·'}</div>
+          ${new Date(x.mois).toLocaleDateString("fr-FR",{month:'short'})}<br>${eur(x.ca)}€
+        </div>`).join("")||"";
+    }catch(e){/* silencieux */}
+  }
+
+  async function chargerListe(){
+    const r=await fetch(`${REST}/encaissements?order=date_encaiss.desc&limit=15`,{headers:HEADERS});
+    const d=await r.json()||[];
+    document.getElementById("listeEnc").innerHTML=d.map(e=>`
+      <div class="row">
+        <div class="lib">${esc(e.libelle)}<span class="tag ${e.type}">${e.type}</span></div>
+        <div class="mt">${eur(e.montant)} €</div>
+      </div>`).join("")||`<div style="color:#8A8A8E;font-family:'Helvetica Neue',sans-serif;font-size:13px;padding:10px 2px">Aucun encaissement enregistré.</div>`;
+  }
+
+  async function ajouter(){
+    const libelle=document.getElementById("eLib").value.trim();
+    const montant=parseFloat(document.getElementById("eMontant").value);
+    const type=document.getElementById("eType").value;
+    const pilier=document.getElementById("ePilier").value;
+    if(!libelle||!montant){toast("Libellé + montant requis");return;}
+    try{
+      await fetch(`${REST}/encaissements`,{method:"POST",
+        headers:{...HEADERS,"Prefer":"return=minimal"},
+        body:JSON.stringify({libelle,montant,type,pilier})});
+      document.getElementById("eLib").value="";document.getElementById("eMontant").value="";
+      document.getElementById("form").classList.remove("open");
+      toast("Encaissement enregistré");
+      await tout();
+    }catch(e){toast("Erreur réseau");}
+  }
+
+  async function tout(){ await chargerConfig(); await chargerSynthese(); await chargerStabilite(); await chargerListe(); }
+
+  document.getElementById("addToggle").addEventListener("click",()=>document.getElementById("form").classList.toggle("open"));
+  tout();
+  setInterval(tout,45000);
+</script>
+</body>
+</html>
