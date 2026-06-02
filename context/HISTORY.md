@@ -7,6 +7,75 @@
 
 ---
 
+## 2026-06-02 (session 15 — vie aux agents + infrastructure complète)
+
+### Agents Attractor Assists enrichis (personnalités complètes)
+- System prompts enrichis avec origine, tics, phrases signature, backstory de la bible des personnages : Awa (Treichville, règle 48h), Miriam (847k vues attiéké, horaires CI), Serge (14 cahiers Oxford, 8h pile), Roland (Grand-Bassam / Bordeaux, métaphores pêche), Kofi (Adjamé, grand-père griot — bio corrigée)
+- Carelle ajoutée comme 7e agent (Chief of Staff / Coordination, Manager) avec frontières explicites : délègue toute demande de vente à Awa, jamais de recouvrement
+- Nouvelles photos agents (AWA.png, MIRIAM.jpg, SERGE.jpg, ROLAND.jpg, Kofi.jpg) copiées en production
+- Bible des personnages archivée : `livrables/contenu/bible-personnages-attractor-office.md`
+
+### MIROIR — déployé et actif
+- Edge Function `miroir` déployée sur Supabase (Deno, Claude Haiku 4.5)
+- Tables SQL créées : `decisions`, `methode_miroir`, vue `referentiel_actif`
+- Secret `CLAUDE_KEY` configuré
+- Anti-hallucination : preuve obligatoire, contradictions remontées dans `a_arbitrer`
+- Onglet Miroir dans le cockpit admin : référentiel actif + ajouter décisions VALIDÉ/REJETÉ + arbitrage au pouce
+- Injection live : chaque appel `chat-assistant` charge les principes haute confiance et les injecte dans tous les agents de tous les utilisateurs
+
+### Infrastructure crons (3 jobs actifs)
+- `miroir-reveil` : toutes les 30 min — analyse décisions non traitées
+- `notify-auto-matin` : 8h chaque jour — streak + quota utilisateurs
+- `collect-insights-matin` : 7h chaque jour — conversations 24h → thèmes → décision MIROIR
+
+### CRM Prospects + Journal agents
+- Table `prospects` (pipeline Mac Arthur), `sequences_vente`, `journal_agent`, `insights_users`
+- Edge Function `generate-sequence` : Awa génère une séquence 3 messages (premier contact, relance 48h, closing 96h) prêts à copier/envoyer WA
+- Edge Function `collect-insights` : analyse conversations 24h, extrait thèmes récurrents, pousse vers MIROIR
+- Onglet "Awa" dans cockpit admin : formulaire prospect + séquence générée + copier/WA direct + pipeline statuts
+
+### Skill Attractor Office créé
+- Nouveau skill Jarvis `/attractor-office` : scénariste de la série, connaît les 7 personnages, scènes canoniques, 5 formats de contenu, règles éditoriales
+
+### Modules archivés
+- COMPTEUR financier : SQL + interface HTML + README → `livrables/ecosysteme-attractor/compteur/`
+- Module voix : voice-input.js + whisper-client.js + Edge Function + démo → `modules/voix/`
+- Page consulting HTML → `livrables/clients/`
+
+### Règles architecturales gravées dans CONTEXT.md
+- Mac Arthur = seul décideur de ce qui est injecté chez les utilisateurs
+- Circuit validé : son cockpit → MIROIR → tous les agents
+- Frontières agents : chacun dans son couloir, Carelle délègue la vente à Awa
+
+### Prochaine session
+- Benchmark Paperclip (outil à identifier)
+- Schéma visuel des connexions agents (utile démos B2B)
+
+---
+
+## 2026-06-01 (session 14 — déploiement site + challenge 7 jours flow complet)
+
+### DNS et déploiement agenceattractor.com
+- DNS GoDaddy corrigés (4 A records GitHub Pages — anciens records pointaient vers AWS/autre hébergeur)
+- Branche `gh-pages` déployée via GitHub Actions (CLI Supabase utilisé pour débloquer)
+- Site nouvelle version confirmé live en navigation privée mobile
+
+### Challenge 7 jours — flow complet livré
+- `challenge.html` : page des 7 jours branchée Supabase (design sable/charbon/orange, Sora)
+- Modal de capture prénom + email sur le site principal (remplace href /challenge mort)
+- Edge Function `challenge-register` : upsert lead + envoi ebook via Resend (testé OK, mail reçu)
+- Edge Function `challenge-day` : sauvegarde réponse jour + email nurturing (7 emails Koffi/Awa/Monsieur S.)
+- SQL `0011_challenge.sql` appliqué : tables `challenge_leads` + `challenge_responses`
+- Déploiement CLI `--no-verify-jwt` (dashboard ne déployait pas le code correctement)
+- Ebook PDF : `https://drive.google.com/uc?export=download&id=1Gh-lZjJVK_Q-HTV0s4-fV4zxRShHP-jc`
+- WA coaching : +225 05 76 87 70 70
+- Clé anon Supabase ajoutée dans les fetch HTML (architecture publique sans auth)
+
+### Prochaine session
+- Préparation campagne digitale (contenu, ads, séquences)
+
+---
+
 ## 2026-06-01 (session 13 — redesign agenceattractor.com + infrastructure complète)
 
 ### Site agenceattractor.com redesigné et déployé
