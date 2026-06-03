@@ -24,6 +24,7 @@ const OPENERS_AGENTS = {
   serge:  (p) => `Salut ${p}. Je suis Serge. Dis-moi ce qui est dans ta tête en ce moment — tâches, rendez-vous, relances. Je trie et j'organise.`,
   roland: (p) => `Salut ${p}. Je suis Roland. Parle-moi de tes prix et tes ventes. Je te dis si tu es rentable ou pas.`,
   kofi:   (p) => `Salut ${p}. Je suis Kofi. Je transforme ce que tu fais en histoire qui vend.\n\nDis-moi : c'est quoi ton activité, et c'est qui ta cible ? Je construis ta campagne complète.`,
+  maryline: (p) => `Salut ${p} ! Je suis Maryline.\n\nJe suis là pour t'aider à comprendre tout ce qu'on peut faire ensemble ici — et trouver ce qui est vraiment utile pour toi.\n\nDis-moi : là maintenant, tu cherches à quoi exactement — t'organiser, te faire connaître, ou vendre plus ?`,
 };
 
 // Opener bras droit — contextuel selon le profil dominant
