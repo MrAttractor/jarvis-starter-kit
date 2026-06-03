@@ -135,14 +135,26 @@ function ForfaitCard({ f, userCount, onPick }) {
           )}
         </div>
 
-        {/* Prix */}
+        {/* Prix — FCFA primaire, EUR optionnel */}
         {!isPersonnalise ? (
-          <div className="flex items-baseline gap-2 mt-4 mb-0.5">
-            <span className={`font-display font-extrabold text-[34px] leading-none ${f.id === 'team' ? 'text-orange-light' : 'text-charbon'}`}>{f.eur}</span>
-            <span className={`text-[13px] ${isDark ? 'text-white/50' : 'text-g400'}`}>{f.period}</span>
-            {f.eurOld && (
-              <span className="ml-1 bg-amber text-charbon text-[11px] font-extrabold px-2 py-0.5 rounded-full">-60%</span>
-            )}
+          <div className="mt-4 mb-0.5">
+            {/* FCFA en grand */}
+            <div className="flex items-baseline gap-2">
+              <span className={`font-display font-extrabold text-[34px] leading-none ${f.id === 'team' ? 'text-amber' : f.id === 'growth' ? 'text-orange' : 'text-charbon'}`}>
+                {f.fcfa}
+              </span>
+              <span className={`text-[13px] ${isDark ? 'text-white/50' : 'text-g400'}`}>{f.period}</span>
+              {f.eurOld && (
+                <span className="ml-1 bg-amber text-charbon text-[11px] font-extrabold px-2 py-0.5 rounded-full">-60%</span>
+              )}
+            </div>
+            {/* EUR en option */}
+            <div className="flex items-center gap-1.5 mt-1">
+              <span className={`text-[12px] ${isDark ? 'text-white/35' : 'text-g400'}`}>{f.eur}{f.period}</span>
+              {f.eurOld && (
+                <span className={`text-[11px] line-through ${isDark ? 'text-white/25' : 'text-g300'}`}>{f.eurOld}{f.period}</span>
+              )}
+            </div>
           </div>
         ) : (
           <div className="mt-4 mb-0.5">
@@ -152,11 +164,8 @@ function ForfaitCard({ f, userCount, onPick }) {
 
         {f.eurOld && (
           <div className={`text-[12px] mb-0.5 ${isDark ? 'text-white/40' : 'text-g400'}`}>
-            Prix habituel : <span className="line-through">{f.eurOld}{f.period}</span> · Promo fondateurs
+            Promo fondateurs · prix habituel <span className="line-through">{f.eurOld}{f.period}</span>
           </div>
-        )}
-        {f.fcfa && !isPersonnalise && (
-          <div className={`text-[13px] font-semibold ${f.id === 'team' ? 'text-amber' : 'text-growth'}`}>{f.fcfa} {f.period}</div>
         )}
         {isPersonnalise && (
           <div className="text-[12px] text-orange/70 font-semibold">{f.fcfa}</div>
@@ -331,9 +340,9 @@ function PaymentSheet({ f, onClose, notify, profile }) {
             </div>
             <div className="text-right">
               <div className="font-display font-extrabold text-[20px] text-charbon">
-                {f.eur}<span className="text-[12px] text-g400 font-normal">{f.period}</span>
+                {f.fcfa}<span className="text-[12px] text-g400 font-normal"> {f.period}</span>
               </div>
-              <div className="text-[12px] text-growth font-semibold">{f.fcfa}</div>
+              <div className="text-[12px] text-g400">{f.eur}{f.period}</div>
             </div>
           </div>
 
