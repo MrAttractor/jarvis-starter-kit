@@ -265,7 +265,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
     a.id === "awa"    ? ["Rédige mon message de prospection", "Aide-moi à relancer un prospect", "Crée un argumentaire WhatsApp"] :
     a.id === "miriam" ? ["Rédige mon post Facebook de cette semaine", "Planifie 3 broadcasts WhatsApp", "Aide-moi à répondre à ma communauté"] :
     a.id === "serge"  ? ["Organise ma semaine", "Quelles sont mes priorités aujourd'hui ?", "J'ai des relances en retard"] :
-    a.id === "kofi"   ? ["Construis ma campagne de lancement", "Ã‰cris mon film de marque", "Prépare ma séquence WhatsApp"] :
+    a.id === "kofi"   ? ["Construis ma campagne de lancement", "Écris mon film de marque", "Prépare ma séquence WhatsApp"] :
                         ["Mon prix est-il bon ?", "Aide-moi à calculer ma marge", "Je veux augmenter mes tarifs"];
 
   return (
@@ -279,7 +279,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
         <div className="flex-1">
           <h3 className="font-display font-extrabold text-[16px] leading-tight">{a.id === "coach" ? nomAss : a.name}</h3>
           <div className={`text-[12px] font-semibold flex items-center gap-1 ${isLocked ? "text-amber" : "text-growth"}`}>
-            {isLocked ? "â— Mode aperçu" : "â— En ligne"} Â· {a.role}
+            {isLocked ? "● Mode aperçu" : "● En ligne"} · {a.role}
           </div>
         </div>
         {isLocked && (
@@ -368,7 +368,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === "Enter" && send(input)}
-          placeholder={`Ã‰cris à ${isLocked ? a.name : nomAss}…`}
+          placeholder={`Écris à ${isLocked ? a.name : nomAss}…`}
           className="flex-1 bg-sable rounded-full px-4 py-3 text-[14.5px] outline-none focus:ring-2 focus:ring-orange/20"
         />
         <button

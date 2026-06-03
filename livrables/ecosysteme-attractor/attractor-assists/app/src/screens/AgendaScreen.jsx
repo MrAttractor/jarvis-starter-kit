@@ -32,7 +32,7 @@ function TodoItem({ todo, onToggle, onDelete }) {
           </span>
           {todo.date_echeance && (
             <span className="text-[11.5px] text-g400 font-medium">
-              Â· {new Date(todo.date_echeance + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+              · {new Date(todo.date_echeance + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
             </span>
           )}
         </div>
@@ -66,7 +66,7 @@ function AddForm({ onAdd, onClose }) {
     <div className="fixed inset-0 bg-charbon/40 z-50 flex items-end" onClick={onClose}>
       <div className="w-full bg-white rounded-t-[24px] p-5 pb-8" onClick={e => e.stopPropagation()}>
         <div className="w-10 h-1 bg-g200 rounded-full mx-auto mb-5" />
-        <h3 className="font-display font-extrabold text-[18px] text-charbon mb-4">Nouvelle tÃ¢che</h3>
+        <h3 className="font-display font-extrabold text-[18px] text-charbon mb-4">Nouvelle tâche</h3>
 
         <input
           type="text"
@@ -105,7 +105,7 @@ function AddForm({ onAdd, onClose }) {
         />
 
         <Btn onClick={submit} className={`w-full ${(!titre.trim() || saving) ? 'opacity-40 pointer-events-none' : ''}`} iconRight="arrow">
-          {saving ? 'Ajout en coursâ€¦' : 'Ajouter'}
+          {saving ? 'Ajout en cours…' : 'Ajouter'}
         </Btn>
       </div>
     </div>
@@ -171,7 +171,7 @@ export function AgendaScreen({ go, profile }) {
           <div className="flex-1">
             <h1 className="font-display font-extrabold text-[20px] text-charbon leading-tight">Mon agenda</h1>
             <p className="text-[12px] text-g400 font-medium">
-              {todos.filter(t => t.statut !== 'done').length} tÃ¢che{todos.filter(t=>t.statut!=='done').length!==1?'s':''} en cours
+              {todos.filter(t => t.statut !== 'done').length} tâche{todos.filter(t=>t.statut!=='done').length!==1?'s':''} en cours
             </p>
           </div>
           <button
@@ -184,7 +184,7 @@ export function AgendaScreen({ go, profile }) {
 
         {/* Filtre */}
         <div className="flex gap-2">
-          {[['todo','En cours'],['done','TerminÃ©es']].map(([val, label]) => (
+          {[['todo','En cours'],['done','Terminées']].map(([val, label]) => (
             <button key={val} onClick={() => setFilter(val)}
               className={`flex-1 py-2 rounded-[10px] text-[13px] font-bold transition ${
                 filter === val ? 'bg-charbon text-white' : 'bg-sable text-g700'
@@ -206,10 +206,10 @@ export function AgendaScreen({ go, profile }) {
               <Icon name="check" size={28} className="text-orange" />
             </div>
             <p className="font-display font-bold text-[16px] text-charbon">
-              {filter === 'done' ? 'Rien de terminÃ© pour l\'instant' : 'Tout est clair'}
+              {filter === 'done' ? 'Rien de terminé pour l\'instant' : 'Tout est clair'}
             </p>
             <p className="text-[13px] text-g400 mt-2">
-              {filter === 'done' ? 'Les tÃ¢ches cochÃ©es apparaÃ®tront ici' : 'Ajoute ta premiÃ¨re tÃ¢che avec le + en haut'}
+              {filter === 'done' ? 'Les tâches cochées apparaîtront ici' : 'Ajoute ta première tâche avec le + en haut'}
             </p>
           </div>
         )}
@@ -235,7 +235,7 @@ export function AgendaScreen({ go, profile }) {
         {reste.length > 0 && (
           <div>
             <p className="text-[11.5px] font-extrabold text-g400 uppercase tracking-widest mb-2">
-              {filter === 'done' ? 'TerminÃ©es' : 'Ã€ venir'}
+              {filter === 'done' ? 'Terminées' : 'À venir'}
             </p>
             <div className="flex flex-col gap-2">
               {reste.map(t => <TodoItem key={t.id} todo={t} onToggle={handleToggle} onDelete={handleDelete} />)}
