@@ -39,6 +39,7 @@ export default function App() {
   const [phase, setPhase] = useState("loading"); // loading | login | onboarding | app
   const [loginKey, setLoginKey] = useState(0);   // force remount LoginScreen si loadProfile échoue
   const deferredPromptRef = useRef(null);
+  const paymentReturnRef = useRef<string | null>(null); // plan_id si retour paiement
   const [profile, setProfile] = useState(null);
   const [screen, setScreen] = useState("dashboard");
   const [params, setParams] = useState({});
@@ -47,6 +48,15 @@ export default function App() {
   const [fab, setFab] = useState(false);
   const [toastNode, notify] = useToast();
   const [navBadges, setNavBadges] = useState({ assistants: 0, marketplace: 0 });
+
+  // Toast de confirmation paiement après chargement du profil
+  useEffect(() => {
+    if (phase === 'app' && paymentReturnRef.current) {
+      const plan = paymentReturnRef.current;
+      paymentReturnRef.current = null;
+      notify(`Paiement confirmé. Bienvenue sur ${plan} !`);
+    }
+  }, [phase]);
 
   const loadProfile = async () => {
     try {
@@ -90,6 +100,12 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    // Détection retour paiement XPaye (?payment_done=1&plan=growth)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment_done') === '1') {
+      paymentReturnRef.current = urlParams.get('plan') ?? 'nouveau palier';
+      window.history.replaceState({}, '', window.location.pathname);
+    }
     loadProfile();
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_IN") loadProfile();

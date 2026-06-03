@@ -272,32 +272,48 @@ export function PaliersScreen({ go, notify, profile }) {
         </div>
       </div>
 
-      {pay && <PaymentSheet f={pay} onClose={() => setPay(null)} notify={notify} />}
+      {pay && <PaymentSheet f={pay} onClose={() => setPay(null)} notify={notify} profile={profile} />}
     </div>
   );
 }
 
 // ─── Sheet de paiement ────────────────────────────────────────────────────────
 
-function PaymentSheet({ f, onClose, notify }) {
-  const [method, setMethod] = useState(null);
-  const [state, setState]   = useState('choose');
+// Mapping méthode → channel PaiementPro
+const CHANNEL_MAP: Record<string, string> = {
+  wave:  'WAVECI',
+  mtn:   'MOMOCI',
+  xpaye: 'OMCIV2',
+  card:  'CARD',
+};
 
-  const pay = (m) => {
-    if (m.id === 'xpaye') {
-      notify('XPaye en cours d\'intégration — bientôt disponible !');
-      return;
-    }
-    setMethod(m);
+function PaymentSheet({ f, onClose, notify, profile }) {
+  const [state, setState]   = useState('choose'); // choose | loading | done | error
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const pay = async (m) => {
     setState('loading');
-    setTimeout(() => setState('done'), 1700);
+    setErrorMsg('');
+    try {
+      const { data, error } = await supabase.functions.invoke('init-payment', {
+        body: { plan_id: f.id, channel: CHANNEL_MAP[m.id] ?? m.id },
+      });
+      if (error || !data?.url) {
+        throw new Error(data?.error ?? error?.message ?? 'Erreur de paiement');
+      }
+      // Redirige vers la page de paiement XPaye
+      window.location.href = data.url;
+    } catch (e) {
+      setErrorMsg(e.message ?? 'Une erreur est survenue.');
+      setState('error');
+    }
   };
 
   const methods = [
-    { id: 'wave',  label: 'Wave',          desc: 'Mobile money CI',          color: '#1DC4F2', fg: '#053a4a' },
-    { id: 'mtn',   label: 'MTN MoMo',      desc: 'Mobile money CI',          color: '#FFCC00', fg: '#3a3000' },
-    { id: 'xpaye', label: 'XPaye',         desc: 'Paiement mobile CI · Bientôt', color: '#F25C05', fg: '#fff' },
-    { id: 'card',  label: 'Carte bancaire',desc: 'Visa · Mastercard',         color: '#E7E1D8', fg: '#1A1714' },
+    { id: 'wave',  label: 'Wave',          desc: 'Mobile money CI',     color: '#1DC4F2', fg: '#053a4a' },
+    { id: 'mtn',   label: 'MTN MoMo',      desc: 'Mobile money CI',     color: '#FFCC00', fg: '#3a3000' },
+    { id: 'xpaye', label: 'Orange Money',  desc: 'Mobile money CI',     color: '#FF7A00', fg: '#fff'    },
+    { id: 'card',  label: 'Carte bancaire',desc: 'Visa · Mastercard',    color: '#E7E1D8', fg: '#1A1714' },
   ];
 
   return (
@@ -329,22 +345,16 @@ function PaymentSheet({ f, onClose, notify }) {
           <div className="flex flex-col gap-2.5">
             {methods.map(m => (
               <button key={m.id} onClick={() => pay(m)}
-                className={`flex items-center gap-3.5 p-3.5 rounded-[16px] border-[1.5px] transition text-left ${
-                  m.id === 'xpaye' ? 'border-orange/30 opacity-70' : 'border-g200 hover:border-orange active:scale-[.99]'
-                }`}>
+                className="flex items-center gap-3.5 p-3.5 rounded-[16px] border-[1.5px] border-g200 hover:border-orange active:scale-[.99] transition text-left">
                 <div className="w-12 h-12 rounded-[12px] flex items-center justify-center font-display font-extrabold text-[12px] flex-shrink-0"
                   style={{ background: m.color, color: m.fg }}>
-                  {m.id === 'xpaye' ? 'XP' : m.label.split(' ')[0].slice(0, 4)}
+                  {m.label.split(' ')[0].slice(0, 4)}
                 </div>
                 <div className="flex-1">
                   <div className="font-display font-bold text-[15px]">{m.label}</div>
                   <div className="text-[12px] text-g400">{m.desc}</div>
                 </div>
-                {m.id === 'xpaye' ? (
-                  <span className="text-[10px] font-bold text-orange bg-orange/10 px-2 py-0.5 rounded-full">Bientôt</span>
-                ) : (
-                  <Icon name="chevron" size={18} className="text-g400" />
-                )}
+                <Icon name="chevron" size={18} className="text-g400" />
               </button>
             ))}
           </div>
@@ -356,21 +366,19 @@ function PaymentSheet({ f, onClose, notify }) {
       {state === 'loading' && (
         <div className="py-10 flex flex-col items-center gap-3 text-center">
           <Spinner className="w-11 h-11" />
-          <p className="font-display font-bold text-[15px]">Confirmation via {method?.label}…</p>
-          <p className="text-[13px] text-g400">Valide la demande sur ton téléphone.</p>
+          <p className="font-display font-bold text-[15px]">Connexion au paiement…</p>
+          <p className="text-[13px] text-g400">Tu vas être redirigé vers la page de paiement sécurisée.</p>
         </div>
       )}
 
-      {state === 'done' && (
-        <div className="py-6 flex flex-col items-center gap-3 text-center">
-          <div className="w-16 h-16 rounded-full bg-growth/12 flex items-center justify-center text-growth">
-            <Icon name="check" size={34} stroke={2.5} />
+      {state === 'error' && (
+        <div className="py-8 flex flex-col items-center gap-4 text-center">
+          <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center">
+            <Icon name="close" size={28} className="text-red-500" />
           </div>
-          <h3 className="font-display font-extrabold text-[20px]">Tu es {f.name} !</h3>
-          <p className="text-[13.5px] text-g700 max-w-[280px]">
-            Ton équipe est débloquée. On passe à la vitesse supérieure, comme nous.
-          </p>
-          <Btn className="w-full mt-2" iconRight="arrow" onClick={onClose}>C'est parti</Btn>
+          <h3 className="font-display font-extrabold text-[18px]">Une erreur est survenue</h3>
+          <p className="text-[13px] text-g400 max-w-[260px]">{errorMsg}</p>
+          <Btn className="w-full mt-1" onClick={() => setState('choose')}>Réessayer</Btn>
         </div>
       )}
     </Sheet>
