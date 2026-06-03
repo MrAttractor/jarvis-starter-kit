@@ -7,6 +7,69 @@
 
 ---
 
+## 2026-06-03 (session 24 — Marketplace Attractor v2 + agent Hawa)
+
+### Marketplace Attractor v2 (refonte complète de l'onglet "Experts")
+
+**Architecture :**
+- Onglet renommé "Experts" → "Marketplace" dans la nav
+- 3 familles visuelles avec photos CI réelles :
+  - Services (entrepreneur B2B bureau) : consultant, infographiste, vidéaste, photographe, formateur, développeur
+  - E-commerçants (scène coworking kente) : cosmétique, bien-être, couture, produits divers
+  - Food (table plats africains — attiéké, alloco, poulet braisé) : restaurant, traiteur, produits alimentaires
+- Hero Marketplace : portrait studio Mac Arthur Baobab (#1 dans mon couloir) cadré à droite
+- Gradient overlay réduit (15%→82%) pour que les photos CI restent visibles
+- Sous-catégories filtrables par chips sous chaque famille
+
+**Tarification :**
+- Choix prestataire : detail (montant + unité, recommandé) ou "sur devis"
+
+**CGV v1.0 et contrat signé électroniquement :**
+- InscriptionFlow 4 étapes : catégorie → infos pro → tarification → CGV
+- CGV complètes : engagement qualité, fausses promesses, RGPD (loi française + ARTCI CI), droit de retrait, clause signature art. 1366 Code civil
+- Accepter = signer : contrat HTML complet envoyé par email (Resend) avec date et nom du signataire
+- Edge Function `marketplace-signup` déployée sur Supabase
+- Migration SQL 0020 : colonnes ajoutées (categorie_principale, sous_categorie, pricing_type, pricing_details, email, cgv_accepted_at, cgv_version)
+
+**Navigation enrichie :**
+- Badges live sur tous les onglets : nb agents actifs (Mon équipe) + nb prestataires visibles (Marketplace)
+- Même pattern desktop (sidebar) et mobile (bottom nav)
+
+### Agent Hawa — Guide & Découverte (8e agent, plan Gratuit)
+
+**Profil :**
+- Bouaké, fille de commerçante. Mémorise ce que les gens disent, ne disent pas, et veulent vraiment.
+- Photo : hawa.jpg déployée dans public/uploads/agents/
+
+**Rôle et comportement :**
+- Accessible depuis le plan Gratuit (comme Coach et Awa)
+- Détection de profil proactive : lit couloir dominant (organisation/visibilité/ventes), plan, zone (CI/EU), profil dominant
+- Connaissance des 13 fonctionnalités complètes + 4 plans avec vrais prix CI et EU
+- Pédagogie pas à pas : 1 fonctionnalité à la fois, expliquée en situation réelle ("par exemple si un client est inactif depuis 3 semaines...")
+- Propositions commerciales naturelles uniquement quand la feature du plan supérieur résout ce que l'utilisateur vient d'exprimer
+- HAWA_SYSTEM injecté dans chat-assistant, redéployé sur Supabase
+
+**Badge mis à jour :** AssistantsScreen "6 experts" → "7 experts"
+
+### Test utilisateur — points de vérification
+
+**Parcours complet validé :**
+- Onboarding : narrative CoS, carnet quick win, décharge vocale
+- Dashboard : hero immersif, quick actions, conseil clients inactifs
+- Mon équipe : hero avatars, carousel 7 spécialistes (Coach épinglé + 7 slides), gating par plan
+- Hawa : slide visible, accessible Gratuit, ouverture avec détection de profil
+- Carelle : demo Gratuit (4 questions + maquette auto), full Growth+
+- Marketplace : hero fondateur, 3 cards photos CI, sous-catégories, InscriptionFlow 4 étapes, CGV
+- Profil : dark mode, parrainage, méthode ATTRACTOR
+
+**Chantiers identifiés pour la prochaine session :**
+- Mini-agents (6 process validés à injecter dans le system prompt, ~6h, zéro code)
+- Awa qualification flow (questions avant séquence de vente)
+- Paiements XPAYE en production (sandbox PP-F422 validé)
+- Campagne de contenu (plan éditorial + lancement)
+
+---
+
 ## 2026-06-03 (session 23 — Phase 4 : agents dynamiques + démo Carelle + Marketplace)
 
 ### Phase 4 livrée
