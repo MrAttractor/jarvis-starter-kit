@@ -370,20 +370,17 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
     if (alerteLoading) return;
     setAlerteLoading(true);
 
-    // 1. Sauvegarder le contexte additionnel si renseigné
+    // Fire-and-forget — aucun await, UI débloquée immédiatement
     if (addContext.trim()) {
       const newCtx = `${prospect.contexte || ''}\n[Additionnel] ${addContext}`.trim();
-      await supabase.from('prospects').update({ contexte: newCtx }).eq('id', prospect.id).catch(() => {});
+      supabase.from('prospects').update({ contexte: newCtx }).eq('id', prospect.id);
     }
-
-    // 2. Écrire les journal entries — toujours, même si Carelle ne répond pas
-    await supabase.from('journal_agent').insert([
+    supabase.from('journal_agent').insert([
       { agent_id: 'eclaireur',          type: 'brief_prod', titre: `Analyser ref visuelle — ${prospect.prenom}`, details: { prospect_id: prospect.id, ref_url: refUrl || null } },
       { agent_id: 'programmeur-senior', type: 'brief_prod', titre: `Préparer maquette — ${prospect.prenom}`,     details: { prospect_id: prospect.id, ref_url: refUrl || null } },
       { agent_id: 'maquette',           type: 'brief_prod', titre: `Maquette closer — ${prospect.prenom}`,       details: { prospect_id: prospect.id, ref_url: refUrl || null } },
-    ]).catch(() => {});
+    ]);
 
-    // 3. Débloquer le bouton "Lancer la production" immédiatement
     setAlerteDone(true);
     setAlerteLoading(false);
 
