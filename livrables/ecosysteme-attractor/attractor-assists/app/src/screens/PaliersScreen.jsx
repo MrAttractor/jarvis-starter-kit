@@ -280,7 +280,7 @@ export function PaliersScreen({ go, notify, profile }) {
 // ─── Sheet de paiement ────────────────────────────────────────────────────────
 
 // Mapping méthode → channel PaiementPro
-const CHANNEL_MAP: Record<string, string> = {
+const CHANNEL_MAP = {
   wave:  'WAVECI',
   mtn:   'MOMOCI',
   xpaye: 'OMCIV2',

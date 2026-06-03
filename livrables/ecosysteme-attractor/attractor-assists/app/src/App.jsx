@@ -39,7 +39,7 @@ export default function App() {
   const [phase, setPhase] = useState("loading"); // loading | login | onboarding | app
   const [loginKey, setLoginKey] = useState(0);   // force remount LoginScreen si loadProfile échoue
   const deferredPromptRef = useRef(null);
-  const paymentReturnRef = useRef<string | null>(null); // plan_id si retour paiement
+  const paymentReturnRef = useRef(null); // plan_id si retour paiement
   const [profile, setProfile] = useState(null);
   const [screen, setScreen] = useState("dashboard");
   const [params, setParams] = useState({});
