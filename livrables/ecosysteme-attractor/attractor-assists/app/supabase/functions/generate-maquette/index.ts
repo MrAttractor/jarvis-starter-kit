@@ -11,7 +11,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
+const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? Deno.env.get("CLAUDE_KEY") ?? "";
 const SUPABASE_URL      = Deno.env.get("SUPABASE_URL") ?? "";
 const SERVICE_KEY       = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
@@ -40,7 +40,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
 
   try {
-    const { prospect_id, ref_url, add_context } = await req.json();
+    const { prospect_id, ref_url, add_context, image_b64, image_type } = await req.json();
     if (!prospect_id) return json({ error: "prospect_id requis" }, 400);
 
     const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
@@ -70,6 +70,18 @@ serve(async (req) => {
       `4 écrans : Accueil (stats + agent IA actif), Agent commercial IA (chat), Réseau/Clients, Résultats.`,
     ].filter(Boolean).join("\n");
 
+    // Construire le contenu du message (vision si image fournie)
+    const userContent: unknown[] = [];
+    if (image_b64 && image_type) {
+      userContent.push({
+        type: "image",
+        source: { type: "base64", media_type: image_type, data: image_b64 },
+      });
+      userContent.push({ type: "text", text: `${brief}\n\nL'image ci-dessus est la référence visuelle du prospect. Extrais les couleurs dominantes, le style et l'ambiance pour orienter la maquette.` });
+    } else {
+      userContent.push({ type: "text", text: brief });
+    }
+
     // Appel Claude
     const apiRes = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -82,7 +94,7 @@ serve(async (req) => {
         model: "claude-haiku-4-5-20251001",
         max_tokens: 4096,
         system: MAQUETTE_PROMPT,
-        messages: [{ role: "user", content: brief }],
+        messages: [{ role: "user", content: userContent }],
       }),
     });
 

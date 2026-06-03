@@ -109,11 +109,6 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
   const [prospectSeq,      setProspectSeq]      = useState(null);
   const [seqLoading,       setSeqLoading]       = useState(false);
   const [copiedIdx,        setCopiedIdx]        = useState(null);
-  const [maquetteUrl,      setMaquetteUrl]      = useState('');
-  const [maquettePreview,  setMaquettePreview]  = useState(null);
-  const [maquetteMsg,      setMaquetteMsg]      = useState('');
-  const [maquetteCopied,   setMaquetteCopied]   = useState(false);
-  const maquetteFileRef = useRef(null);
   const [pPrenom,    setPPrenom]   = useState('');
   const [pActivite,  setPActivite] = useState('');
   const [pBesoin,    setPBesoin]   = useState('');
@@ -134,10 +129,12 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
   const [addContext,         setAddContext]         = useState('');
   const [alerteLoading,      setAlerteLoading]      = useState(false);
   const [alerteDone,         setAlerteDone]         = useState(false);
-  const [showAddContext,     setShowAddContext]     = useState(false);
   const [maquetteGenerating, setMaquetteGenerating] = useState(false);
   const [generatedUrl,       setGeneratedUrl]       = useState('');
   const [urlCopied,          setUrlCopied]          = useState(false);
+  const [imagePreview,       setImagePreview]       = useState(null);
+  const [imageFile,          setImageFile]          = useState(null);
+  const imageFileRef = useRef(null);
 
   // ── MIROIR ──
   const [dSujet,   setDSujet]   = useState('');
@@ -286,10 +283,6 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
 
   // ─── Actions pipeline ────────────────────────────────────────────────────
 
-  const buildMaquetteMsg = (prenom, url) => {
-    const urlPart = url?.trim() ? `\n\nVoilà à quoi ça pourrait ressembler pour ton activité : ${url.trim()}` : '';
-    return `Salut ${prenom} 👋\n\nJ'ai bossé sur quelque chose pour toi.${urlPart}\n\nTu veux qu'on en parle ? Je t'explique comment ça fonctionnerait concrètement pour ton projet.`;
-  };
 
   const deleteProspect = async (id) => {
     const { error } = await supabase.from('prospects').delete().eq('id', id);
@@ -413,8 +406,16 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
     if (maquetteGenerating) return;
     setMaquetteGenerating(true);
     try {
+      const imageB64   = imagePreview ? imagePreview.split(',')[1] : null;
+      const imageType  = imageFile    ? imageFile.type              : null;
       const { data, error } = await supabase.functions.invoke('generate-maquette', {
-        body: { prospect_id: prospect.id, ref_url: refUrl || null, add_context: addContext || null },
+        body: {
+          prospect_id: prospect.id,
+          ref_url:     refUrl      || null,
+          add_context: addContext  || null,
+          image_b64:   imageB64    || null,
+          image_type:  imageType   || null,
+        },
       });
       if (error || !data?.url) { notify('Erreur génération maquette — vérifie la Edge Function'); }
       else {
@@ -434,9 +435,20 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
     } catch { notify('Impossible de copier'); }
   };
 
+  const openFamASheet = (prospect) => {
+    setSelectedProspect(prospect);
+    setProspectSeq({});
+    setSeqLoading(false);
+    setGeneratedUrl(prospect.maquette_url || '');
+    setAlerteDone(false);
+    setRefUrl('');
+    setAddContext('');
+    setImagePreview(null);
+    setImageFile(null);
+  };
+
   const loadExistingSeq = async (prospect) => {
     setSelectedProspect(prospect); setProspectSeq(null); setSeqLoading(true);
-    setMaquetteMsg(buildMaquetteMsg(prospect.prenom, ''));
     try {
       const { data } = await supabase.from('sequences_vente').select('*')
         .eq('prospect_id', prospect.id).order('created_at', { ascending: false }).limit(1).single();
@@ -445,36 +457,22 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
     setSeqLoading(false);
   };
 
-  const closeMaquetteSheet = () => {
-    setSelectedProspect(null); setProspectSeq(null);
-    setMaquetteUrl(''); setMaquettePreview(null);
-    setMaquetteMsg(''); setMaquetteCopied(false);
-    setRefUrl(''); setAddContext(''); setAlerteDone(false);
-    setShowAddContext(false); setGeneratedUrl(''); setUrlCopied(false);
-  };
-
-  const handleMaquetteFile = (e) => {
+  const handleImageFile = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    setImageFile(file);
     const reader = new FileReader();
-    reader.onload = (ev) => setMaquettePreview(ev.target.result);
+    reader.onload = (ev) => setImagePreview(ev.target.result);
     reader.readAsDataURL(file);
   };
 
-  const copyMaquetteMsg = async () => {
-    try {
-      await navigator.clipboard.writeText(maquetteMsg);
-      setMaquetteCopied(true);
-      setTimeout(() => setMaquetteCopied(false), 2500);
-      if (selectedProspect) {
-        await supabase.from('journal_agent').insert({
-          agent_id: 'carelle', type: 'maquette_envoyee',
-          titre: `Maquette proposée à ${selectedProspect.prenom}`,
-          details: { prospect_id: selectedProspect.id, url: maquetteUrl || null },
-        }).catch(() => {});
-      }
-    } catch { notify('Impossible de copier'); }
+  const closeMaquetteSheet = () => {
+    setSelectedProspect(null); setProspectSeq(null);
+    setRefUrl(''); setAddContext(''); setAlerteDone(false);
+    setGeneratedUrl(''); setUrlCopied(false);
+    setImagePreview(null); setImageFile(null);
   };
+
 
   const validerDevis = async (devis_id) => {
     await supabase.from('devis_prospects').update({ statut: 'valide' }).eq('id', devis_id);
@@ -1129,7 +1127,7 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
                     {isOpen && (
                       <div className="flex flex-col divide-y divide-g100">
                         {list.map(p => (
-                          <button key={p.id} onClick={() => loadExistingSeq(p)}
+                          <button key={p.id} onClick={() => p.type_projet === 'A' ? openFamASheet(p) : loadExistingSeq(p)}
                             className="flex items-center gap-3 px-4 py-3 bg-white text-left active:bg-sable transition">
                             <div className="w-9 h-9 rounded-full bg-orange/10 flex items-center justify-center font-display font-extrabold text-[13px] text-orange flex-shrink-0">
                               {p.prenom.slice(0,2).toUpperCase()}
@@ -1224,10 +1222,28 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
 
                     {/* Référence visuelle */}
                     <p className="text-[11px] font-bold text-g400 uppercase tracking-wider mt-1">Référence visuelle</p>
+
+                    {/* Upload image */}
+                    <input type="file" accept="image/*" ref={imageFileRef} onChange={handleImageFile} className="hidden" />
+                    <button onClick={() => imageFileRef.current?.click()}
+                      className="w-full flex items-center gap-2 px-4 py-3 bg-sable border border-g200 rounded-xl text-[13px] text-g400 active:border-orange/40 transition">
+                      <Icon name="image" size={15} className="flex-shrink-0 text-g300" />
+                      {imageFile ? imageFile.name : 'Uploader une image (screenshot, logo…)'}
+                    </button>
+                    {imagePreview && (
+                      <div className="relative">
+                        <img src={imagePreview} alt="preview" className="w-full rounded-xl object-cover max-h-[120px]" />
+                        <button onClick={() => { setImagePreview(null); setImageFile(null); if (imageFileRef.current) imageFileRef.current.value = ''; }}
+                          className="absolute top-2 right-2 w-6 h-6 rounded-full bg-charbon/70 text-white text-[11px] font-bold flex items-center justify-center">×</button>
+                      </div>
+                    )}
+
+                    {/* OU — URL */}
+                    <p className="text-[10px] font-bold text-g300 text-center uppercase tracking-wider">ou</p>
                     <input
                       value={refUrl}
                       onChange={e => setRefUrl(e.target.value)}
-                      placeholder="Site ou réseaux du prospect (optionnel)"
+                      placeholder="URL site / réseaux du prospect"
                       className="w-full bg-sable border border-g200 rounded-xl px-3 py-3 text-[13px] outline-none focus:border-orange transition"
                     />
 
@@ -1250,7 +1266,7 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
                     ) : (
                       <div className="flex items-center gap-2 px-3 py-2 bg-growth/10 border border-growth/20 rounded-xl">
                         <span className="text-[12px] font-bold text-growth">Agents briefés ✓</span>
-                        <button onClick={() => { setAlerteDone(false); setShowAddContext(true); }}
+                        <button onClick={() => setAlerteDone(false)}
                           className="ml-auto text-[11px] text-g400 underline">+ Ajouter contexte</button>
                       </div>
                     )}
