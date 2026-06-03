@@ -7,6 +7,97 @@
 
 ---
 
+## 2026-06-03 (session 23 — Phase 4 : agents dynamiques + démo Carelle + Marketplace)
+
+### Phase 4 livrée
+
+**Module 1 — Accès agents dynamiques :**
+- `agentGating.js` créé : `resolveAgentStatus()` calcule l'accès selon le `plan_code` réel de l'utilisateur
+- Gratuit : Coach + Awa actifs, Carelle en mode "Essai gratuit", 4 autres verrouillés "Plan Team"
+- Growth : Carelle pleinement active, 4 autres verrouillés
+- Team : tous les 6 agents actifs
+- Correction "Manager" → "Team" dans toute l'interface (badges, textes, system prompts)
+
+**Module 2 — Démo Carelle (accessible depuis plan Gratuit) :**
+- CTA "Voir ma démo gratuite" (amber) sur le slide Carelle en mode `demo`
+- ConversationScreen : mode démo détecté via `params.mode === 'demo'`, opener Carelle dédié
+- Bouton flottant jaune "Générer ma maquette" apparaît après 4 échanges utilisateur
+- Maquette générée automatiquement via Edge Function `generate-maquette` (sans intervention Mac Arthur)
+- Card résultat dans la conversation : lien démo + 2 CTA upgrade (hébergé Attractor Growth / personnalisé Famille A)
+- Prospect créé automatiquement en base (`type_projet='C'`, `statut='nouveau'`) au premier message pour tracking Mac Arthur dans le Pipeline Cockpit
+- `chat-assistant` redéployé : `CARELLE_DEMO_SUFFIX` injecté en mode démo, Carelle sans `PASSIVE_SUFFIX` pour Growth+
+
+**Module 3 — Marketplace :**
+- Onglet "Experts" ajouté en 3e position dans la nav (4 onglets total : Accueil / Mon équipe / Experts / Profil), FAB coach centré entre onglets 2 et 3
+- `MarketplaceScreen.jsx` créé : hero charbon, filtres par catégorie (Tous/Dev/Design/Marketing/Finance/Logistique/Autre), cards prestataires avec contact WhatsApp direct
+- Formulaire d'inscription prestataire : WhatsApp obligatoire (format international) pour vérification avant validation
+- Migration SQL `0019_prestataires.sql` appliquée : table `prestataires` (RLS public read+insert, admin update)
+- Hub MacCockpit : section "Marketplace — prestataires en attente" avec Valider/Rejeter + lien WA de vérification
+
+---
+
+## 2026-06-03 (session 22 — Phase 3 : Hero UI, carousel agents, PaliersScreen 4 tiers)
+
+### Phase 3 livrée
+
+**PaliersScreen — 4 tiers :**
+- Hero charbon avec barre de progression visuelle 4 étapes (Gratuit → Growth → Team → Personnalisé)
+- Gratuit (0€), Attractor Growth (15€/9 900 FCFA), Attractor Team (39€/~25 500 FCFA), Application Personnalisée (sur devis, Barème Famille A)
+- Features dépliables : 2 affichées par défaut, chaque feature avec titre + ligne d'explication
+- XPAYE ajouté dans la PaymentSheet (stub "Bientôt disponible", sandbox PP-F422)
+- CTA "Parler à Carelle" pour l'Application Personnalisée
+
+**AssistantsScreen — hero + carousel :**
+- Hero charbon : titre "Ton équipe.", avatars circulaires scrollables, glow orange animé, badge "6 spécialistes en ligne"
+- Carousel horizontal 6 slides (Awa, Miriam, Serge, Roland, Kofi, Carelle) : CSS snap scroll, swipe natif, dots + flèches
+- Chaque slide : photo portrait plein écran, gradient overlay, rôle + nom grand format, teaser vivant, quick actions, CTA orange/amber
+- Coach (Bras Droit) épinglé séparément au-dessus du carousel
+- Tap sur un avatar du hero → scroll automatique vers le slide correspondant
+
+**DashboardScreen — hero immersif :**
+- Hero 260px : image de fond `/uploads/photo-paliers.jpg` à 18% + dégradé orange→charbon sur 165°
+- Double halo lumineux (blanc haut-droit + orange bas-gauche)
+- Salutation contextuelle selon l'heure (Bonjour / Bonne après-midi / Bonne soirée / Bonne nuit) + jour de la semaine
+- Tagline "Qu'est-ce qu'on règle aujourd'hui ?" + sous-titre "Dis, dicte ou tape — l'équipe est prête."
+- Barre messages redessinée : fond dark blur, plus discrète
+
+**Autres corrections :**
+- Onglet "Mon équipe" : icône `bot` (robot) remplacée par `users` (groupe de personnes)
+- Fix encodage : 6 fichiers corrigés (AgendaScreen, AxesScreen, BroadcastsScreen, ConversationScreen, MasterSheetScreen, NotificationsScreen) — garbled UTF-8 via Windows-1252 éliminés
+- Script `fix-encoding.js` conservé à la racine pour usage futur
+
+### Décision prix confirmée
+- Attractor Team : 39€/mois (~25 500 FCFA) — définitif
+
+---
+
+## 2026-06-03 (session 21 — Refonte stratégique Attractor Assists : Phase 1 + Phase 2)
+
+### Décision de refonte stratégique
+- Vision validée : Attractor Assists devient le Chief of Staff numérique des entrepreneurs africains (Mr Attractor)
+- Nouvelle architecture 4 tiers : Gratuit / Attractor Growth (9 900 FCFA CI | €15 EU) / Attractor Team (~€29-49) / App Personnalisée (barème Famille A)
+- Plan `prancy-strolling-tide.md` approuvé, exécution par phases
+- Décisions validées : Whisper API pour la voix, Carnet V1 clients+prospects, séquençage phase par phase, prix zone-based
+
+### Phase 1 livrée (onboarding + carnet d'affaires)
+- OnboardingScreen réécrit : narrative Mr Attractor Chief of Staff, 1 slide typewriter, prénom, secteur chips, 3 questions CoS, quick win (premier client dans le carnet pendant l'onboarding), présentation équipe 3 niveaux
+- CarnetAffairesScreen créé : CRM léger utilisateur (clients + prospects), ajout/édition/suppression, deeplink WhatsApp, alerte inactivité 14 jours
+- DashboardScreen : support plan_code gratuit/growth, bouton décharge vocale dark en accès prioritaire, quick actions Carnet + Agenda, conseil automatique clients inactifs
+- InstallScreen : icône Attractor visible + message "Mr Attractor en 1 tap, tout le temps"
+- Migrations SQL 0017 (carnet_affaires) + 0018 (plan_codes) appliquées sur Supabase
+
+### Phase 2 livrée (décharge vocale)
+- DechargeVocaleScreen : micro (appui) → Whisper transcrit → Claude Haiku extrait tâches/clients/rappels/idées → cartes cochables → sauvegarde sélective (tâches/rappels → agenda, clients → carnet, idées affichées seulement)
+- Edge Function `process-dump` déployée sur Supabase (`lgdgbrivnhgeupqhkckd`)
+- Clé `OPENAI_API_KEY` ajoutée dans Supabase Secrets (crédit OpenAI : 4,27$, expire juillet 2026)
+- 3 commits poussés sur master, déploiement Netlify déclenché automatiquement
+
+### Prochains chantiers
+- Phase 3 : PaliersScreen 4 tiers + XPAYE (sandbox PP-F422 déjà validé)
+- Phase 4 : Attractor Team agents redéfinis + Application Personnalisée pipeline
+
+---
+
 ## 2026-06-03 (session 20 — Cockpit MacCockpitScreen : generate-maquette + hero Carelle + Pipeline 2 phases)
 
 ### Edge Function generate-maquette
