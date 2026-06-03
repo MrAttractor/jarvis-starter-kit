@@ -342,7 +342,7 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
         `Nb utilisateurs : ${prospect.nb_users || '1'}`,
         prospect.whatsapp ? `WhatsApp : ${prospect.whatsapp}` : '',
         '',
-        `Famille A = maquette first. Lis ce dossier et réponds à Mac Arthur en 3 points : 1) ce que tu retiens de ce prospect, 2) quelle maquette produire, 3) si une info manque, pose la question. Sois directe et concise.`,
+        `Famille A = maquette first. Lis ce dossier et réponds à Mac Arthur en 3 points : 1) ce que tu retiens de ce prospect, 2) quelle maquette produire, 3) s'il manque une info, pose UNE SEULE question. Jamais deux questions dans le même message.`,
       ].filter(Boolean).join('\n');
 
       const { data, error } = await supabase.functions.invoke('chat-assistant', {
@@ -393,7 +393,7 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
       refUrl.trim()     ? `Référence visuelle : ${refUrl}` : '',
       `Zone : ${prospect.zone || '—'} · ${prospect.nb_users || '1'} utilisateur(s)`,
       '',
-      `Ta mission Carelle : briefer les agents de production en 3 points courts. Si une info manque, liste-la.`,
+      `Ta mission Carelle : briefer les agents en 3 points courts. S'il manque une info, pose UNE SEULE question — jamais deux dans le même message.`,
     ].filter(Boolean).join('\n');
 
     try {
