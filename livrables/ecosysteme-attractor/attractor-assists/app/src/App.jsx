@@ -23,10 +23,10 @@ import { DechargeVocaleScreen } from './screens/DechargeVocaleScreen';
 import { MarketplaceScreen } from './screens/MarketplaceScreen';
 
 const TABS_USER  = [
-  { id: "dashboard",   label: "Accueil",      icon: "home" },
-  { id: "assistants",  label: "Mon équipe",   icon: "users" },
-  { id: "marketplace", label: "Marketplace",  icon: "grid" },
-  { id: "profil",      label: "Profil",       icon: "user" },
+  { id: "dashboard",   label: "Accueil",        icon: "home" },
+  { id: "assistants",  label: "Mon équipe",     icon: "users" },
+  { id: "marketplace", label: "Marketplace",    icon: "grid" },
+  { id: "profil",      label: "Profil",         icon: "user" },
 ];
 const TABS_ADMIN = [
   { id: "carelle",  label: "Carelle",  icon: "bolt" },

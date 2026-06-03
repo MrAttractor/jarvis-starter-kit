@@ -8,7 +8,7 @@ const PLAN_MSG_LIMIT = { decouverte: 20, decouverte_eu: 20, gratuit: 20, growth:
 
 const TIPS = [
   { icon: "spark",  agent: null,     titre: "Commence toujours par \"Je veux que tu...\"",         corps: "C'est la formule magique. Dis exactement ce que tu attends, l'assistant produit sans poser 10 questions.",          action: null },
-  { icon: "trend",  agent: "awa",    titre: "Awa rédige, toi tu envoies",                           corps: "Donne-lui un nom, un secteur et un contexte. Elle te sort le message de prospection en 30 secondes. Tape sur le bouton vert pour l'envoyer directement sur WhatsApp.", action: "Essayer avec Awa" },
+  { icon: "trend",  agent: "coach",  titre: "Dis à Mr Attractor qui tu veux convaincre",            corps: "Donne-lui un nom, un secteur et un contexte. Il te sort le message de prospection en 30 secondes. Tape sur le bouton vert pour l'envoyer directement sur WhatsApp.", action: "Parler à Mr Attractor" },
   { icon: "send",   agent: null,     titre: "Le bouton vert, c'est ta nouvelle arme",               corps: "Chaque réponse de l'équipe a un bouton vert en dessous. 1 tap = WhatsApp s'ouvre avec le message prêt. Tu choisis juste à qui l'envoyer.", action: null },
   { icon: "user",   agent: "coach",  titre: "Ton bras droit retient tout",                          corps: "Dis-lui ta situation une fois. Il construit sa mémoire de toi au fil des échanges. Plus tu parles, plus il te connaît et mieux il t'aide.", action: null },
   { icon: "coins",  agent: "roland", titre: "Tu sais vraiment combien tu gagnes ?",                 corps: "Roland peut calculer ta marge réelle en 2 minutes. Donne-lui ton prix de vente, ton coût et ton volume. Il te dit si tu es rentable — vrai chiffre.", action: "Parler à Roland" },
@@ -33,12 +33,12 @@ function TipCard({ nomAss, go }) {
   const idx = (startIdx + offset) % TIPS.length;
   const tip = TIPS[idx];
   const actionMap = {
-    "Essayer avec Awa":  () => go("conversation", { assistant: "awa" }),
-    "Parler à Roland":   () => go("conversation", { assistant: "roland" }),
-    "Parler à Miriam":   () => go("conversation", { assistant: "miriam" }),
-    "Parler à Serge":    () => go("conversation", { assistant: "serge" }),
-    "Parler à Kofi":     () => go("conversation", { assistant: "kofi" }),
-    "Voir le parrainage":() => go("profil"),
+    "Parler à Mr Attractor": () => go("conversation", { assistant: "coach" }),
+    "Parler à Roland":       () => go("conversation", { assistant: "roland" }),
+    "Parler à Miriam":       () => go("conversation", { assistant: "miriam" }),
+    "Parler à Serge":        () => go("conversation", { assistant: "serge" }),
+    "Parler à Kofi":         () => go("conversation", { assistant: "kofi" }),
+    "Voir le parrainage":    () => go("profil"),
   };
   return (
     <div className="rounded-[20px] overflow-hidden border border-orange/20" style={{ background: "linear-gradient(135deg,#fff9f5,#fff3ec)" }}>
@@ -293,24 +293,35 @@ export function DashboardScreen({ go, notify, profile }) {
           </div>
         </Card>
 
-        <SectionLabel>Prochaine action</SectionLabel>
-        <div className="relative overflow-hidden rounded-[20px] p-5 text-white"
-          style={{ background: "linear-gradient(135deg,#1F1B18,#2a2320)" }}>
-          <div className="absolute -right-8 -bottom-10 w-40 h-40 rounded-full"
-            style={{ background: "radial-gradient(circle,rgba(242,92,5,.35),transparent 70%)" }} />
-          <div className="relative">
-            <span className="text-[11px] font-bold tracking-[.1em] uppercase text-orange-light">On enchaîne</span>
-                <h3 className="font-display font-extrabold text-[19px] leading-snug mt-2">
-              Dis à {nomAss} ce dont tu as besoin.
-            </h3>
-            <p className="text-[13px] text-white/70 mt-2 max-w-[260px] leading-relaxed">
-              Une tâche, une question, un projet — il s'adapte à toi. Maintenant.
-            </p>
-            <Btn className="w-full mt-4" iconRight="arrow" onClick={() => go("conversation", { assistant: "coach" })}>
-              Lancer avec {nomAss}
-            </Btn>
+        {/* ── Bloc micro central ─────────────────────────────────────── */}
+        <button
+          onClick={() => go('dump')}
+          className="w-full text-left relative overflow-hidden rounded-[24px] px-5 py-6 text-white active:scale-[.99] transition"
+          style={{ background: "linear-gradient(135deg,#1F1B18,#2a2320)" }}
+        >
+          {/* Glow orange animé */}
+          <div className="absolute -right-6 -bottom-8 w-40 h-40 rounded-full pointer-events-none"
+            style={{ background: "radial-gradient(circle,rgba(242,92,5,.4),transparent 70%)", animation: "glowPulse 3s ease-in-out infinite" }} />
+          <div className="relative flex items-center gap-5">
+            {/* Icône micro */}
+            <div className="w-16 h-16 rounded-full bg-orange/20 flex items-center justify-center flex-shrink-0"
+              style={{ boxShadow: "0 0 0 6px rgba(242,92,5,.12), 0 0 0 12px rgba(242,92,5,.06)", animation: "glowPulse 3s ease-in-out infinite" }}>
+              <Icon name="mic" size={28} className="text-orange" />
+            </div>
+            <div>
+              <p className="font-display font-extrabold text-[18px] leading-snug">
+                Besoin de te vider la tête ?
+              </p>
+              <p className="text-[13px] text-white/60 mt-1 leading-relaxed">
+                Parle à {nomAss} — il va gérer.
+              </p>
+              <div className="flex items-center gap-1.5 mt-2.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-orange animate-pulse" />
+                <span className="text-[11.5px] font-bold text-orange">Appuyer pour parler</span>
+              </div>
+            </div>
           </div>
-        </div>
+        </button>
 
         {/* Conseil automatique : clients inactifs */}
         {staleCount > 0 && (
@@ -329,20 +340,7 @@ export function DashboardScreen({ go, notify, profile }) {
           </button>
         )}
 
-        {/* Quick actions : Décharge vocale + Carnet + Agenda */}
-        <button onClick={() => go('dump')}
-          className="flex items-center gap-4 p-4 rounded-[20px] text-white active:scale-[.99] transition"
-          style={{ background: "linear-gradient(135deg,#1F1B18,#2a2320)" }}>
-          <div className="w-12 h-12 rounded-full bg-orange/20 flex items-center justify-center flex-shrink-0">
-            <Icon name="mic" size={22} className="text-orange" />
-          </div>
-          <div className="text-left">
-            <p className="font-display font-extrabold text-[16px] text-white">Décharge vocale</p>
-            <p className="text-[12px] text-white/60 mt-0.5">Parlez, Mr Attractor organise</p>
-          </div>
-          <Icon name="arrow" size={18} className="text-white/40 ml-auto" />
-        </button>
-
+        {/* Quick actions : Suivi Clients + Agenda */}
         <div className="grid grid-cols-2 gap-3">
           <button onClick={() => go('carnet')}
             className="flex flex-col gap-2 p-4 bg-white rounded-[18px] border border-g200 shadow-soft active:scale-[.98] transition text-left">
@@ -350,7 +348,7 @@ export function DashboardScreen({ go, notify, profile }) {
               <Icon name="users" size={20} className="text-orange" />
             </div>
             <div>
-              <p className="font-display font-bold text-[14px] text-charbon">Carnet</p>
+              <p className="font-display font-bold text-[14px] text-charbon">Suivi Clients</p>
               <p className="text-[11.5px] text-g400">{carnetCount} contact{carnetCount !== 1 ? 's' : ''}</p>
             </div>
           </button>
@@ -362,7 +360,7 @@ export function DashboardScreen({ go, notify, profile }) {
             </div>
             <div>
               <p className="font-display font-bold text-[14px] text-charbon">Agenda</p>
-              <p className="text-[11.5px] text-g400">Tâches · priorités</p>
+              <p className="text-[11.5px] text-g400">Calendrier · priorités</p>
             </div>
           </button>
         </div>

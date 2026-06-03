@@ -8,13 +8,13 @@ const PLAN_RANK = {
 // Retourne 'actif' | 'demo' | 'verrouille'
 export function resolveAgentStatus(agentId, planCode) {
   const rank = PLAN_RANK[planCode] ?? 0
-  if (agentId === 'coach' || agentId === 'awa' || agentId === 'maryline') return 'actif'
+  if (agentId === 'coach' || agentId === 'maryline') return 'actif'
   if (agentId === 'carelle') {
     if (rank >= 1) return 'actif'
     return 'demo'                // Gratuit : démo uniquement
   }
-  // miriam passe à Growth
-  if (agentId === 'miriam') {
+  // miriam et awa passent à Growth
+  if (agentId === 'miriam' || agentId === 'awa') {
     if (rank >= 1) return 'actif'
     return 'verrouille'
   }

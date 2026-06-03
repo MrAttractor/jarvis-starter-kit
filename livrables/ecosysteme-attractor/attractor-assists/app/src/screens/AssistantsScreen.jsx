@@ -6,10 +6,12 @@ import { Card, SectionLabel, Icon, AppHeader, Btn } from '../components/ui';
 
 // Prix par agent verrouillé — FCFA en primaire
 const AGENT_PLAN_INFO = {
-  miriam: { planLabel: 'Growth',  fcfa: '9 900 FCFA',    eur: '15 €'  },
-  serge:  { planLabel: 'Team',    fcfa: '≈ 25 500 FCFA', eur: '39 €'  },
-  roland: { planLabel: 'Team',    fcfa: '≈ 25 500 FCFA', eur: '39 €'  },
-  kofi:   { planLabel: 'Team',    fcfa: '≈ 25 500 FCFA', eur: '39 €'  },
+  carelle: { planLabel: 'Growth',  fcfa: '9 900 FCFA',    eur: '15 €'  },
+  miriam:  { planLabel: 'Growth',  fcfa: '9 900 FCFA',    eur: '15 €'  },
+  awa:     { planLabel: 'Growth',  fcfa: '9 900 FCFA',    eur: '15 €'  },
+  serge:   { planLabel: 'Team',    fcfa: '≈ 25 500 FCFA', eur: '39 €'  },
+  roland:  { planLabel: 'Team',    fcfa: '≈ 25 500 FCFA', eur: '39 €'  },
+  kofi:    { planLabel: 'Team',    fcfa: '≈ 25 500 FCFA', eur: '39 €'  },
 };
 
 // ─── Helpers temps ─────────────────────────────────────────────────────────────
@@ -392,7 +394,7 @@ function AgentSlide({ a, activity, onTalk, onUnlock, onBio, width }) {
               className="w-full py-3.5 rounded-[14px] text-charbon font-display font-extrabold text-[14px] active:scale-[.99] transition flex items-center justify-center gap-2"
               style={{ background: 'linear-gradient(135deg,#FFC107,#FFB300)', boxShadow: '0 8px 20px -6px rgba(255,193,7,.5)' }}>
               <Icon name="spark" size={15} />
-              Voir ma démo gratuite
+              Voir mon app personnalisée
             </button>
           ) : (
             <button onClick={() => onTalk()}
@@ -532,7 +534,8 @@ export function AssistantsScreen({ go, notify, profile }) {
   const coach          = resolvedAssistants.find(a => a.id === 'coach');
   const carelle        = resolvedAssistants.find(a => a.id === 'carelle');
   const specialists    = resolvedAssistants.filter(a => a.id !== 'coach' && a.id !== 'maryline');
-  const carouselAgents = resolvedAssistants.filter(a => !['coach', 'maryline', 'carelle'].includes(a.id));
+  // Carousel : tous sauf coach et maryline (carelle en premier, déjà grâce à l'ordre de data.js)
+  const carouselAgents = resolvedAssistants.filter(a => !['coach', 'maryline'].includes(a.id));
 
   const handleTalk = (agentId, prefill, mode) => {
     localStorage.setItem(`aa_last_contact_${agentId}`, new Date().toISOString());
@@ -628,7 +631,7 @@ export function AssistantsScreen({ go, notify, profile }) {
                   {carelle.status === 'demo' ? (
                     <span className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-[12px] font-display font-extrabold text-[13px] text-charbon"
                       style={{ background: 'linear-gradient(135deg,#FFC107,#FFB300)' }}>
-                      <Icon name="spark" size={13} /> Démo gratuite
+                      <Icon name="spark" size={13} /> Voir mon app personnalisée
                     </span>
                   ) : carelle.status === 'actif' ? (
                     <span className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-[12px] bg-orange font-display font-extrabold text-[13px] text-white">
@@ -650,7 +653,7 @@ export function AssistantsScreen({ go, notify, profile }) {
           <div className="px-[18px] mb-3">
             <SectionLabel>
               <span>Ton équipe de spécialistes</span>
-              <span className="ml-2 px-2 py-0.5 bg-orange/10 text-orange text-[10.5px] font-bold rounded-full">5 experts</span>
+              <span className="ml-2 px-2 py-0.5 bg-orange/10 text-orange text-[10.5px] font-bold rounded-full">{carouselAgents.length} experts</span>
             </SectionLabel>
             <p className="text-[12px] text-g400 mt-1">Swipe pour découvrir chaque spécialiste.</p>
           </div>
@@ -801,7 +804,7 @@ function AgentBioModal({ a, activity, onClose, onAction }) {
             className="w-full mt-1"
             iconRight={locked ? 'arrow' : 'send'}
             onClick={() => onAction(isDemo ? "Je veux voir une démo d'application pour mon activité." : undefined, isDemo ? 'demo' : undefined)}>
-            {locked ? 'Voir la formule' : isDemo ? 'Voir ma démo gratuite' : `Parler à ${a.name}`}
+            {locked ? 'Voir la formule' : isDemo ? 'Voir mon app personnalisée' : `Parler à ${a.name}`}
           </Btn>
         </div>
       </div>

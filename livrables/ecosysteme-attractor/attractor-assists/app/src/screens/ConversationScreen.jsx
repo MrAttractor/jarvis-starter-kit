@@ -24,7 +24,7 @@ const OPENERS_AGENTS = {
   serge:  (p) => `Salut ${p}. Je suis Serge. Dis-moi ce qui est dans ta tête en ce moment — tâches, rendez-vous, relances. Je trie et j'organise.`,
   roland: (p) => `Salut ${p}. Je suis Roland. Parle-moi de tes prix et tes ventes. Je te dis si tu es rentable ou pas.`,
   kofi:   (p) => `Salut ${p}. Je suis Kofi. Je transforme ce que tu fais en histoire qui vend.\n\nDis-moi : c'est quoi ton activité, et c'est qui ta cible ? Je construis ta campagne complète.`,
-  maryline: (p) => `Salut ${p} ! Je suis Maryline.\n\nJe suis là pour t'aider à comprendre tout ce qu'on peut faire ensemble ici — et trouver ce qui est vraiment utile pour toi.\n\nDis-moi : là maintenant, tu cherches à quoi exactement — t'organiser, te faire connaître, ou vendre plus ?`,
+  maryline: (p) => `Salut ${p} ! Moi c'est Maryline.\n\nMon rôle : t'emmener par la main dans tout ce qu'on peut faire ici — une fonctionnalité à la fois, jusqu'à ce que ça clique vraiment pour toi. Pas de mode d'emploi, pas de liste.\n\nT'as une question sur quelque chose que t'as vu dans l'app, ou tu veux qu'on commence par ce qui peut t'aider le plus en ce moment ?`,
 };
 
 // Opener bras droit — contextuel selon le profil dominant
@@ -345,12 +345,14 @@ export function ConversationScreen({ go, notify, params, profile }) {
   };
 
   const suggestions =
-    a.id === "coach"  ? ["Aide-moi à trouver ma cible", "Construis mon offre", "Prépare mon argumentaire AIDA"] :
-    a.id === "awa"    ? ["Rédige mon message de prospection", "Aide-moi à relancer un prospect", "Crée un argumentaire WhatsApp"] :
-    a.id === "miriam" ? ["Rédige mon post Facebook de cette semaine", "Planifie 3 broadcasts WhatsApp", "Aide-moi à répondre à ma communauté"] :
-    a.id === "serge"  ? ["Organise ma semaine", "Quelles sont mes priorités aujourd'hui ?", "J'ai des relances en retard"] :
-    a.id === "kofi"   ? ["Construis ma campagne de lancement", "Écris mon film de marque", "Prépare ma séquence WhatsApp"] :
-                        ["Mon prix est-il bon ?", "Aide-moi à calculer ma marge", "Je veux augmenter mes tarifs"];
+    a.id === "coach"   ? ["Aide-moi à trouver ma cible", "Construis mon offre irrésistible", "Prépare mon argumentaire AIDA"] :
+    a.id === "awa"     ? ["Rédige mon message de prospection", "Aide-moi à relancer un prospect", "Crée une séquence de closing"] :
+    a.id === "miriam"  ? ["Rédige mon post Facebook de cette semaine", "Planifie 3 broadcasts WhatsApp", "Aide-moi à répondre à ma communauté"] :
+    a.id === "serge"   ? ["Organise ma semaine", "Quelles sont mes priorités aujourd'hui ?", "J'ai des relances en retard"] :
+    a.id === "kofi"    ? ["Construis ma campagne de lancement", "Écris mon film de marque", "Prépare ma séquence WhatsApp"] :
+    a.id === "carelle" ? ["Fais le point sur mes projets", "Génère une maquette pour mon activité", "Priorise mes chantiers du mois"] :
+    a.id === "maryline"? ["Montre-moi ce que l'app peut faire", "J'ai une question sur une fonctionnalité", "Par où commencer ?"] :
+                         ["Mon prix est-il bon ?", "Aide-moi à calculer ma marge", "Je veux augmenter mes tarifs"];
 
   return (
     <div className="min-h-screen flex flex-col bg-sable">
