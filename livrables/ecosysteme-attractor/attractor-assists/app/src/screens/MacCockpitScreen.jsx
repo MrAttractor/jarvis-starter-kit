@@ -369,36 +369,44 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
   const alerteAgents = async (prospect) => {
     if (alerteLoading) return;
     setAlerteLoading(true);
-    try {
-      if (addContext.trim()) {
-        const newCtx = `${prospect.contexte || ''}\n[Additionnel] ${addContext}`.trim();
-        await supabase.from('prospects').update({ contexte: newCtx }).eq('id', prospect.id);
-      }
-      const msg = [
-        `Prospect Famille A confirmé : ${prospect.prenom}${prospect.activite ? ` (${prospect.activite})` : ''}.`,
-        prospect.besoin   ? `Besoin : ${prospect.besoin}` : '',
-        prospect.contexte ? `Contexte : ${prospect.contexte}` : '',
-        addContext.trim() ? `Infos additionnelles : ${addContext}` : '',
-        refUrl.trim()     ? `Référence visuelle (site ou réseaux) : ${refUrl}` : '',
-        `Zone : ${prospect.zone || '—'} · ${prospect.nb_users || '1'} utilisateur(s)`,
-        '',
-        `Ta mission Carelle : briefer les agents de production. Dis-moi ce que chacun doit faire. Si des infos manquent avant de lancer la prod, liste-les clairement.`,
-      ].filter(Boolean).join('\n');
 
-      const { data, error } = await supabase.functions.invoke('chat-assistant', {
+    // 1. Sauvegarder le contexte additionnel si renseigné
+    if (addContext.trim()) {
+      const newCtx = `${prospect.contexte || ''}\n[Additionnel] ${addContext}`.trim();
+      await supabase.from('prospects').update({ contexte: newCtx }).eq('id', prospect.id).catch(() => {});
+    }
+
+    // 2. Écrire les journal entries — toujours, même si Carelle ne répond pas
+    await supabase.from('journal_agent').insert([
+      { agent_id: 'eclaireur',          type: 'brief_prod', titre: `Analyser ref visuelle — ${prospect.prenom}`, details: { prospect_id: prospect.id, ref_url: refUrl || null } },
+      { agent_id: 'programmeur-senior', type: 'brief_prod', titre: `Préparer maquette — ${prospect.prenom}`,     details: { prospect_id: prospect.id, ref_url: refUrl || null } },
+      { agent_id: 'maquette',           type: 'brief_prod', titre: `Maquette closer — ${prospect.prenom}`,       details: { prospect_id: prospect.id, ref_url: refUrl || null } },
+    ]).catch(() => {});
+
+    // 3. Débloquer le bouton "Lancer la production" immédiatement
+    setAlerteDone(true);
+
+    // 4. Appel Carelle — en bonus, sans bloquer le flow
+    const msg = [
+      `Prospect Famille A confirmé : ${prospect.prenom}${prospect.activite ? ` (${prospect.activite})` : ''}.`,
+      prospect.besoin   ? `Besoin : ${prospect.besoin}` : '',
+      prospect.contexte ? `Contexte : ${prospect.contexte}` : '',
+      addContext.trim() ? `Infos additionnelles : ${addContext}` : '',
+      refUrl.trim()     ? `Référence visuelle : ${refUrl}` : '',
+      `Zone : ${prospect.zone || '—'} · ${prospect.nb_users || '1'} utilisateur(s)`,
+      '',
+      `Ta mission Carelle : briefer les agents de production en 3 points courts. Si une info manque, liste-la.`,
+    ].filter(Boolean).join('\n');
+
+    try {
+      const { data } = await supabase.functions.invoke('chat-assistant', {
         body: { messages: [{ from: 'me', text: msg }], assistant_id: 'carelle', user_id: profile?.id, profile: profile || {} },
       });
-
-      await supabase.from('journal_agent').insert([
-        { agent_id: 'eclaireur',          type: 'brief_prod', titre: `Analyser ref visuelle — ${prospect.prenom}`, details: { prospect_id: prospect.id, ref_url: refUrl || null } },
-        { agent_id: 'programmeur-senior', type: 'brief_prod', titre: `Préparer maquette — ${prospect.prenom}`,     details: { prospect_id: prospect.id, ref_url: refUrl || null } },
-        { agent_id: 'maquette',           type: 'brief_prod', titre: `Maquette closer — ${prospect.prenom}`,       details: { prospect_id: prospect.id, ref_url: refUrl || null } },
-      ]).catch(() => {});
-
-      setAlerteDone(true);
       if (data?.reply) setProspectSeq(prev => ({ ...prev, carelle_orchestration: data.reply }));
-      else notify('Agents briefés — Carelle n\'a pas répondu');
-    } catch { notify('Erreur réseau — agents non alertés'); }
+    } catch {
+      // Carelle indisponible — les agents sont quand même briefés via le journal
+    }
+
     setAlerteLoading(false);
   };
 
