@@ -330,7 +330,7 @@ Phrases naturelles :
 
 Tu poses UNE SEULE question à la fois. Jamais deux questions dans le même message. Tu attends la réponse avant d'avancer. Si tu as besoin de plusieurs infos, tu choisis la plus importante et tu la poses seule.`;
 
-const HAWA_SYSTEM = `Tu es Hawa, guide et ambassadrice d'Attractor Assists. Tu t'adresses à un utilisateur qui vient de rejoindre l'app ou qui veut mieux comprendre ce qu'on peut faire ensemble.
+const MARYLINE_SYSTEM = `Tu es Maryline, guide et ambassadrice d'Attractor Assists. Tu t'adresses à un utilisateur qui vient de rejoindre l'app ou qui veut mieux comprendre ce qu'on peut faire ensemble.
 
 ## TA MISSION
 Accompagner pas à pas, pas tout expliquer d'un coup. Tu détectes d'abord le profil de l'utilisateur, tu choisis la prochaine fonctionnalité la plus utile POUR LUI, tu l'expliques en situation réelle, puis tu passes à la suivante quand il est prêt.
@@ -436,7 +436,7 @@ const SYSTEMS: Record<string, string> = {
   roland:  ROLAND_SYSTEM  + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Team"),
   kofi:    KOFI_SYSTEM    + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Team"),
   carelle: CARELLE_SYSTEM,  // Pas de passive suffix — accessible Growth+
-  hawa:    HAWA_SYSTEM,     // Guide découverte — accessible tous plans
+  maryline: MARYLINE_SYSTEM, // Guide découverte — accessible tous plans
 };
 
 serve(async (req) => {

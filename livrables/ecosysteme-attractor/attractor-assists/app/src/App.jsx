@@ -104,7 +104,7 @@ export default function App() {
         const [{ count: mktCount }] = await Promise.all([
           supabase.from('prestataires').select('id', { count: 'exact', head: true }).eq('statut', 'visible'),
         ]);
-        setNavBadges(b => ({ ...b, assistants: 7, marketplace: mktCount || 0 }));
+        setNavBadges(b => ({ ...b, assistants: 6, marketplace: mktCount || 0 }));
       } catch {}
     };
     loadBadges();
@@ -259,6 +259,7 @@ export default function App() {
           </div>
         </Sheet>
       )}
+      {screen !== 'conversation' && !isAdmin && <MarylineBubble go={go} />}
       {toastNode}
     </Frame>
   );
@@ -277,6 +278,41 @@ function NavBtn({ t, active, onClick, badge }) {
       </div>
       <span className="text-[10px] font-bold">{t.label}</span>
     </button>
+  );
+}
+
+function MarylineBubble({ go }) {
+  const [dismissed, setDismissed] = useState(false);
+  if (dismissed) return null;
+  return (
+    <div style={{ position: 'fixed', bottom: 90, right: 16, zIndex: 40, maxWidth: 270 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8 }}>
+        {/* Avatar */}
+        <div style={{ width: 38, height: 38, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: '2px solid #F25C05', boxShadow: '0 2px 8px rgba(242,92,5,.3)' }}>
+          <img src="/uploads/agents/hawa.jpg" alt="Maryline" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
+        </div>
+        {/* Bulle style WhatsApp message reçu */}
+        <div style={{ position: 'relative', flex: 1 }}>
+          {/* Queue de la bulle */}
+          <div style={{ position: 'absolute', bottom: 10, left: -6, width: 0, height: 0, borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderRight: '8px solid #FFFFFF', filter: 'drop-shadow(-1px 1px 0px rgba(0,0,0,.06))' }} />
+          <button
+            onClick={() => go('conversation', { assistant: 'maryline' })}
+            style={{ display: 'block', width: '100%', background: '#FFFFFF', border: '1px solid #E8E2D9', borderRadius: '18px 18px 18px 6px', padding: '10px 14px', textAlign: 'left', boxShadow: '0 4px 20px -4px rgba(26,23,20,.18)', cursor: 'pointer' }}
+          >
+            <div style={{ fontWeight: 700, fontSize: 11.5, color: '#F25C05', marginBottom: 4 }}>Maryline</div>
+            <div style={{ fontSize: 13, color: '#1A1714', lineHeight: 1.5 }}>
+              Si tu as le moindre soucis ou si tu veux savoir tout ce qu'on peut faire ensemble ... demande moi
+            </div>
+            <div style={{ fontSize: 11, color: '#9CA3AF', textAlign: 'right', marginTop: 4 }}>maintenant</div>
+          </button>
+          {/* Fermer */}
+          <button
+            onClick={(e) => { e.stopPropagation(); setDismissed(true); }}
+            style={{ position: 'absolute', top: -8, right: -8, width: 22, height: 22, borderRadius: '50%', background: '#6B7280', color: 'white', border: '2px solid white', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', lineHeight: 1 }}
+          >×</button>
+        </div>
+      </div>
+    </div>
   );
 }
 

@@ -243,7 +243,7 @@ function ActivityStrip({ activity }) {
 // ─── Hero section ─────────────────────────────────────────────────────────────
 
 function TeamHero({ agents, onAvatarClick }) {
-  const specialists = agents.filter(a => a.id !== 'coach');
+  const specialists = agents.filter(a => a.id !== 'coach' && a.id !== 'maryline');
   const activeCount = specialists.filter(a => a.status === 'actif').length;
 
   return (
@@ -522,7 +522,7 @@ export function AssistantsScreen({ go, notify, profile }) {
   }));
 
   const coach      = resolvedAssistants.find(a => a.id === 'coach');
-  const specialists = resolvedAssistants.filter(a => a.id !== 'coach');
+  const specialists = resolvedAssistants.filter(a => a.id !== 'coach' && a.id !== 'maryline');
 
   const handleTalk = (agentId, prefill, mode) => {
     localStorage.setItem(`aa_last_contact_${agentId}`, new Date().toISOString());
@@ -594,7 +594,7 @@ export function AssistantsScreen({ go, notify, profile }) {
           <div className="px-[18px] mb-3">
             <SectionLabel>
               <span>Ton équipe de spécialistes</span>
-              <span className="ml-2 px-2 py-0.5 bg-orange/10 text-orange text-[10.5px] font-bold rounded-full">7 experts</span>
+              <span className="ml-2 px-2 py-0.5 bg-orange/10 text-orange text-[10.5px] font-bold rounded-full">6 experts</span>
             </SectionLabel>
             <p className="text-[12px] text-g400 mt-1">Swipe pour découvrir chaque spécialiste.</p>
           </div>
