@@ -96,17 +96,19 @@ function CategoryCard({ cat, active, onClick }) {
         className="absolute inset-0 w-full h-full object-cover"
         onError={e => { e.currentTarget.style.display = 'none'; }}
       />
-      <div className="absolute inset-0" style={{ background: cat.bg, opacity: 0.88 }} />
+      {/* Gradient léger pour lisibilité du texte — l'image reste visible */}
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,23,20,0.82) 0%, rgba(26,23,20,0.35) 55%, rgba(26,23,20,0.15) 100%)' }} />
+      {/* Fallback CSS si image absente */}
+      <div className="absolute inset-0 -z-10" style={{ background: cat.bg }} />
 
       {active && (
         <div className="absolute inset-0 rounded-[18px] pointer-events-none"
           style={{ boxShadow: `0 0 0 2.5px ${cat.accent} inset` }} />
       )}
 
-      <div className="relative z-10 flex flex-col items-center justify-center h-full p-3 gap-2">
-        <cat.Icon />
-        <div className="text-center">
-          <p className="font-display font-extrabold text-white text-[13px] leading-none">{cat.label}</p>
+      <div className="relative z-10 flex flex-col items-end justify-end h-full p-3 gap-1 w-full">
+        <div className="text-left w-full">
+          <p className="font-display font-extrabold text-white text-[13px] leading-none drop-shadow">{cat.label}</p>
           <p className="text-white/55 text-[10px] mt-1 leading-tight">{cat.tagline}</p>
         </div>
       </div>
@@ -544,26 +546,41 @@ export function MarketplaceScreen({ go, notify }) {
     <div className="min-h-screen bg-sable pb-6">
 
       {/* Hero */}
-      <div className="relative overflow-hidden bg-charbon px-[18px] pt-5 pb-6">
-        <div className="absolute bottom-0 right-0 w-48 h-48 rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(242,92,5,0.25) 0%, transparent 65%)', animation: 'glowPulse 3s ease-in-out infinite' }} />
-        <div className="absolute top-4 right-[18px]">
-          <span className="text-[10px] font-bold px-3 py-1 rounded-full border border-growth/40 text-growth bg-growth/10">
-            Gratuit
-          </span>
-        </div>
-        <p className="text-[11px] font-bold text-orange/80 uppercase tracking-[.12em] mb-2">Marketplace Attractor</p>
-        <h2 className="font-display font-extrabold text-[26px] leading-none text-white mb-2">
-          Trouve les bons acteurs.
-        </h2>
-        <p className="text-[13px] text-white/50 leading-snug">
-          Services, e-commerce et food — des profils vérifiés, prêts à intervenir.
-        </p>
-        <div className="flex items-center gap-1.5 mt-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-growth animate-pulse" />
-          <span className="text-[11px] text-white/50">
-            {prestataires.length} profil{prestataires.length !== 1 ? 's' : ''} disponible{prestataires.length !== 1 ? 's' : ''}
-          </span>
+      <div className="relative overflow-hidden bg-charbon" style={{ minHeight: 160 }}>
+        {/* Photo Mac Arthur cadrée à droite */}
+        <img
+          src="/marketplace/hero-founder.jpg"
+          alt="Mac Arthur"
+          className="absolute right-0 top-0 h-full object-cover object-top"
+          style={{ width: '52%', opacity: 0.55 }}
+          onError={e => { e.currentTarget.style.display = 'none'; }}
+        />
+        {/* Gradient de gauche pour lisibilité */}
+        <div className="absolute inset-0"
+          style={{ background: 'linear-gradient(to right, #1A1714 45%, rgba(26,23,20,0.6) 75%, rgba(26,23,20,0.1) 100%)' }} />
+        {/* Glow orange bas-gauche */}
+        <div className="absolute bottom-0 left-4 w-32 h-32 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(242,92,5,0.3) 0%, transparent 70%)', animation: 'glowPulse 3s ease-in-out infinite' }} />
+
+        <div className="relative z-10 px-[18px] pt-5 pb-6">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-[11px] font-bold text-orange/80 uppercase tracking-[.12em]">Marketplace Attractor</p>
+            <span className="text-[10px] font-bold px-3 py-1 rounded-full border border-growth/40 text-growth bg-growth/10">
+              Gratuit
+            </span>
+          </div>
+          <h2 className="font-display font-extrabold text-[26px] leading-none text-white mb-2">
+            Trouve les bons acteurs.
+          </h2>
+          <p className="text-[13px] text-white/50 leading-snug max-w-[200px]">
+            Services, e-commerce et food — profils vérifiés.
+          </p>
+          <div className="flex items-center gap-1.5 mt-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-growth animate-pulse" />
+            <span className="text-[11px] text-white/50">
+              {prestataires.length} profil{prestataires.length !== 1 ? 's' : ''} disponible{prestataires.length !== 1 ? 's' : ''}
+            </span>
+          </div>
         </div>
       </div>
 
