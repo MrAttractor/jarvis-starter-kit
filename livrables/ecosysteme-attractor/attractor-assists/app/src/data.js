@@ -64,6 +64,12 @@ export const MOCK = {
       bio: "Bras droit de Mac Arthur depuis 2009. Elle connaît chaque recoin de la méthode Attractor, chaque agent de l'équipe, chaque type de client. Elle ne travaille pas dans l'ombre — elle travaille en amont. Avant que tu te poses la question, elle a déjà la réponse. \"Un projet qui tourne bien, c'est une préparation invisible.\"",
       proactif: "Elle pilote ton portefeuille de projets en entier : priorise, synchronise, évite les collisions entre Awa, Miriam, Serge et Roland. Elle te prépare des briefings hebdomadaires : ce qui avance, ce qui bloque, ce qui doit être décidé. Quand tu es dispersé, elle te ramène au seul truc qui compte cette semaine.",
     },
+    {
+      id: "hawa", genre: "f", name: "Hawa", role: "Guide & Découverte", plan: "Découverte", status: "actif", accent: "amber", icon: "compass", photo: "/uploads/agents/hawa.jpg",
+      desc: "Tu ne sais pas encore tout ce qu'on peut faire ensemble. Elle t'accompagne pas à pas — et elle sait déjà ce dont tu as besoin.",
+      bio: "Bouaké, fille de commerçante. Hawa a grandi dans un environnement où comprendre l'autre avant de parler était une question de survie commerciale. Elle mémorise en 2 minutes ce que les gens ont dit, ce qu'ils n'ont pas dit, et ce qu'ils voulaient vraiment. Elle ne donne pas de mode d'emploi — elle t'emmène par la main jusqu'à ce que ça clique. \"On ne lit pas un guide. On se le fait raconter.\"",
+      proactif: "Elle lit ton profil dès que tu arrives. Elle sait quel est ton couloir (organisation / visibilité / ventes), ton plan, où tu en es dans ton parcours. Elle ne te donne pas tout en une fois — elle choisit la prochaine fonctionnalité qui va changer ton quotidien, te l'explique en situation réelle, puis passe à la suivante. Quand c'est le bon moment, elle te présente les offres qui correspondent exactement à ce que tu viens de vivre.",
+    },
   ],
   forfaits: [
     {
