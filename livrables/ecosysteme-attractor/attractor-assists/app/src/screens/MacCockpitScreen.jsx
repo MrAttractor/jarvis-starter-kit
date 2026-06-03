@@ -1272,72 +1272,85 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
                 {selectedProspect.type_projet === 'A' && (
                   <div className="flex flex-col gap-3">
 
-                    {/* Référence visuelle */}
-                    <p className="text-[11px] font-bold text-g400 uppercase tracking-wider mt-1">Référence visuelle</p>
+                    {/* ── PHASE 1 : collecte avant l'alerte ── */}
+                    {!alerteDone && (
+                      <>
+                        <p className="text-[11px] font-bold text-g400 uppercase tracking-wider mt-1">Référence visuelle</p>
 
-                    {/* Upload image */}
-                    <input type="file" accept="image/*" ref={imageFileRef} onChange={handleImageFile} className="hidden" />
-                    <button onClick={() => imageFileRef.current?.click()}
-                      className="w-full flex items-center gap-2 px-4 py-3 bg-sable border border-g200 rounded-xl text-[13px] text-g400 active:border-orange/40 transition">
-                      <Icon name="image" size={15} className="flex-shrink-0 text-g300" />
-                      {imageFile ? imageFile.name : 'Uploader une image (screenshot, logo…)'}
-                    </button>
-                    {imagePreview && (
-                      <div className="relative">
-                        <img src={imagePreview} alt="preview" className="w-full rounded-xl object-cover max-h-[120px]" />
-                        <button onClick={() => { setImagePreview(null); setImageFile(null); if (imageFileRef.current) imageFileRef.current.value = ''; }}
-                          className="absolute top-2 right-2 w-6 h-6 rounded-full bg-charbon/70 text-white text-[11px] font-bold flex items-center justify-center">×</button>
-                      </div>
+                        <input type="file" accept="image/*" ref={imageFileRef} onChange={handleImageFile} className="hidden" />
+                        <button onClick={() => imageFileRef.current?.click()}
+                          className="w-full flex items-center gap-2 px-4 py-3 bg-sable border border-g200 rounded-xl text-[13px] text-g400 active:border-orange/40 transition">
+                          <Icon name="image" size={15} className="flex-shrink-0 text-g300" />
+                          {imageFile ? imageFile.name : 'Uploader une image (screenshot, logo…)'}
+                        </button>
+                        {imagePreview && (
+                          <div className="relative">
+                            <img src={imagePreview} alt="preview" className="w-full rounded-xl object-cover max-h-[120px]" />
+                            <button onClick={() => { setImagePreview(null); setImageFile(null); if (imageFileRef.current) imageFileRef.current.value = ''; }}
+                              className="absolute top-2 right-2 w-6 h-6 rounded-full bg-charbon/70 text-white text-[11px] font-bold flex items-center justify-center">×</button>
+                          </div>
+                        )}
+
+                        <p className="text-[10px] font-bold text-g300 text-center uppercase tracking-wider">ou</p>
+                        <input value={refUrl} onChange={e => setRefUrl(e.target.value)}
+                          placeholder="URL site / réseaux du prospect"
+                          className="w-full bg-sable border border-g200 rounded-xl px-3 py-3 text-[13px] outline-none focus:border-orange transition" />
+
+                        <p className="text-[11px] font-bold text-g400 uppercase tracking-wider">Ce que tu sais déjà</p>
+                        <textarea value={addContext} onChange={e => setAddContext(e.target.value)}
+                          placeholder="Couleurs souhaitées, nom de l'app, contraintes, budget…"
+                          rows={3}
+                          className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[13px] resize-none outline-none focus:border-orange transition" />
+
+                        <button onClick={() => alerteAgents(selectedProspect)} disabled={alerteLoading}
+                          className="w-full py-3 rounded-xl bg-charbon text-white text-[14px] font-bold active:scale-[.98] transition disabled:opacity-50">
+                          {alerteLoading ? 'Alerte en cours…' : 'Alerter les agents de production'}
+                        </button>
+                      </>
                     )}
 
-                    {/* OU — URL */}
-                    <p className="text-[10px] font-bold text-g300 text-center uppercase tracking-wider">ou</p>
-                    <input
-                      value={refUrl}
-                      onChange={e => setRefUrl(e.target.value)}
-                      placeholder="URL site / réseaux du prospect"
-                      className="w-full bg-sable border border-g200 rounded-xl px-3 py-3 text-[13px] outline-none focus:border-orange transition"
-                    />
-
-                    {/* Contexte additionnel */}
-                    <p className="text-[11px] font-bold text-g400 uppercase tracking-wider">Infos complémentaires</p>
-                    <textarea
-                      value={addContext}
-                      onChange={e => setAddContext(e.target.value)}
-                      placeholder="Couleurs souhaitées, nom de l'app, contraintes..."
-                      rows={3}
-                      className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[13px] resize-none outline-none focus:border-orange transition"
-                    />
-
-                    {/* Bouton Alerter les agents */}
-                    {!alerteDone ? (
-                      <button onClick={() => alerteAgents(selectedProspect)} disabled={alerteLoading}
-                        className="w-full py-3 rounded-xl bg-charbon text-white text-[14px] font-bold active:scale-[.98] transition disabled:opacity-50">
-                        {alerteLoading ? 'Alerte en cours…' : 'Alerter les agents de production'}
-                      </button>
-                    ) : (
-                      <div className="flex items-center gap-2 px-3 py-2 bg-growth/10 border border-growth/20 rounded-xl">
-                        <span className="text-[12px] font-bold text-growth">Agents briefés ✓</span>
-                        <button onClick={() => setAlerteDone(false)}
-                          className="ml-auto text-[11px] text-g400 underline">+ Ajouter contexte</button>
-                      </div>
-                    )}
-
-                    {/* Réponse orchestration Carelle */}
-                    {prospectSeq?.carelle_orchestration && (
-                      <div className="bg-white border border-g200 rounded-xl px-4 py-3">
-                        <p className="text-[10.5px] font-bold text-orange uppercase tracking-wider mb-1.5">Carelle — Plan de prod</p>
-                        <p className="text-[12.5px] text-charbon leading-relaxed whitespace-pre-wrap">{prospectSeq.carelle_orchestration}</p>
-                      </div>
-                    )}
-
-                    {/* Lancer la production */}
+                    {/* ── PHASE 2 : après alerte — lire Carelle, compléter, lancer ── */}
                     {alerteDone && (
-                      <button onClick={() => generateMaquette(selectedProspect)} disabled={maquetteGenerating}
-                        className="w-full py-3.5 rounded-xl bg-orange text-white text-[15px] font-extrabold active:scale-[.98] transition disabled:opacity-50"
-                        style={{ boxShadow: '0 6px 20px -4px rgba(242,92,5,.4)' }}>
-                        {maquetteGenerating ? 'Génération en cours…' : 'Lancer la production →'}
-                      </button>
+                      <>
+                        {/* Agents briefés */}
+                        <div className="flex items-center justify-between px-3 py-2 bg-growth/10 border border-growth/20 rounded-xl">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-growth flex-shrink-0" />
+                            <span className="text-[12px] font-bold text-growth">Agents briefés</span>
+                          </div>
+                          <button onClick={() => { setAlerteDone(false); }}
+                            className="text-[11px] text-g400 underline">Recommencer</button>
+                        </div>
+
+                        {/* Plan Carelle */}
+                        {!prospectSeq?.carelle_orchestration ? (
+                          <div className="flex items-center gap-2 px-4 py-3 bg-white border border-g200 rounded-xl">
+                            <span className="w-1.5 h-1.5 rounded-full bg-orange animate-pulse flex-shrink-0" />
+                            <span className="text-[12.5px] text-g400">Carelle prépare son plan…</span>
+                          </div>
+                        ) : (
+                          <div className="bg-white border border-g200 rounded-xl px-4 py-3 flex flex-col gap-2">
+                            <p className="text-[10.5px] font-bold text-orange uppercase tracking-wider">Carelle — Plan de prod</p>
+                            <p className="text-[12.5px] text-charbon leading-relaxed whitespace-pre-wrap">{prospectSeq.carelle_orchestration}</p>
+                          </div>
+                        )}
+
+                        {/* Réponses aux questions de Carelle */}
+                        <p className="text-[11px] font-bold text-g400 uppercase tracking-wider">
+                          {prospectSeq?.carelle_orchestration ? 'Répondre aux questions de Carelle' : 'Infos supplémentaires'}
+                        </p>
+                        <textarea value={addContext} onChange={e => setAddContext(e.target.value)}
+                          placeholder="Logo, couleurs, nom de l'app, contraintes demandées par Carelle…"
+                          rows={4}
+                          className="w-full bg-sable border border-g200 rounded-xl px-4 py-3 text-[13px] resize-none outline-none focus:border-orange transition" />
+
+                        {/* Lancer la production */}
+                        <button onClick={() => generateMaquette(selectedProspect)} disabled={maquetteGenerating}
+                          className="w-full py-3.5 rounded-xl bg-orange text-white text-[15px] font-extrabold active:scale-[.98] transition disabled:opacity-50"
+                          style={{ boxShadow: '0 6px 20px -4px rgba(242,92,5,.4)' }}>
+                          {maquetteGenerating ? 'Génération en cours…' : 'Lancer la production →'}
+                        </button>
+                      </>
                     )}
 
                     {/* Lien généré */}
