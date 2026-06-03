@@ -628,41 +628,89 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
     return (
       <div className="flex flex-col h-full bg-sable">
 
-        {/* ── Hero charbon ── */}
-        <div className="flex-shrink-0 px-5 pt-12 pb-5" style={{ background: '#1A1714' }}>
-          <div className="flex items-start justify-between mb-3">
-            <div>
-              <p className="font-display font-extrabold text-[24px] text-white leading-tight">Pilotage</p>
-              <p className="text-[11px] text-white/40 font-mono uppercase tracking-[.14em] mt-0.5">Carelle · Chief of Staff</p>
-            </div>
+        {/* ── Hero Carelle — style agenceattractor.com ── */}
+        <div className="flex-shrink-0 relative overflow-hidden" style={{ minHeight: 260 }}>
+
+          {/* Photo Carelle en fond */}
+          <div className="absolute inset-0"
+            style={{
+              backgroundImage: "url('/uploads/agents/carelle.jpg')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center 15%',
+            }}
+          />
+
+          {/* Gradient bas → transparent (même recette agenceattractor.com, adaptée mobile) */}
+          <div className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(to top, #1A1714 0%, rgba(26,23,20,.82) 38%, rgba(26,23,20,.35) 65%, rgba(26,23,20,.08) 100%)',
+            }}
+          />
+
+          {/* Glow orange — coin bas droit */}
+          <div className="absolute bottom-0 right-0 w-56 h-56 pointer-events-none"
+            style={{
+              background: 'radial-gradient(circle at 80% 80%, rgba(242,92,5,.22) 0%, transparent 65%)',
+              animation: 'glow 7s ease-in-out infinite',
+            }}
+          />
+
+          {/* Contenu */}
+          <div className="relative z-10 px-5 pt-14 pb-6 flex flex-col">
+
+            {/* Stop TTS */}
             {ttsActive && (
-              <button onClick={stopSpeech} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange/20 border border-orange/30 active:scale-95 transition">
-                <Icon name="volume" size={13} className="text-orange animate-pulse" />
-                <span className="text-[11px] font-bold text-orange">Stop</span>
-              </button>
+              <div className="flex justify-end mb-3">
+                <button onClick={stopSpeech}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border active:scale-95 transition"
+                  style={{ background: 'rgba(242,92,5,.18)', borderColor: 'rgba(242,92,5,.35)' }}>
+                  <Icon name="volume" size={13} className="text-orange animate-pulse" />
+                  <span className="text-[11px] font-bold text-orange">Stop</span>
+                </button>
+              </div>
             )}
-          </div>
 
-          {/* Chips contextuelles */}
-          <div className="flex gap-2 flex-wrap mb-4">
-            <span className="px-3 py-1 rounded-full text-[11px] font-semibold" style={{ background: 'rgba(255,255,255,.08)', color: 'rgba(255,255,255,.65)' }}>
-              {prospectActifs} prospect{prospectActifs !== 1 ? 's' : ''} actifs
-            </span>
-            {dernierJournal && (
-              <span className="px-3 py-1 rounded-full text-[11px] font-semibold" style={{ background: 'rgba(255,255,255,.08)', color: 'rgba(255,255,255,.65)' }}>
-                {dernierJournal.titre?.slice(0, 28)}{dernierJournal.titre?.length > 28 ? '…' : ''}
+            {/* Pill badge */}
+            <div className="inline-flex items-center gap-2 self-start px-3 py-1.5 rounded-full mb-4"
+              style={{ background: 'rgba(255,255,255,.12)', border: '1px solid rgba(255,255,255,.18)', backdropFilter: 'blur(6px)' }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-orange flex-shrink-0" style={{ animation: 'glowPulse 2s ease-in-out infinite' }} />
+              <span className="text-[11px] font-bold uppercase tracking-[.13em]" style={{ color: 'rgba(255,255,255,.75)' }}>
+                Chief of Staff · Coordination
               </span>
-            )}
-          </div>
+            </div>
 
-          {/* Bouton principal */}
-          <button
-            onClick={() => { setTimeout(() => carelleInputRef.current?.focus(), 80); carelleBottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-[10px] bg-orange text-white text-[14px] font-bold active:scale-[.98] transition"
-            style={{ boxShadow: '0 6px 20px -4px rgba(242,92,5,.5)' }}>
-            <Icon name="mic" size={16} className="text-white" />
-            Parler à Carelle
-          </button>
+            {/* Titre */}
+            <p className="font-display font-extrabold text-[34px] text-white leading-[1.03] mb-1">
+              Pilotage
+            </p>
+            <p className="text-[14px] mb-5" style={{ color: 'rgba(255,255,255,.55)' }}>
+              Ton agence, coordonnée par{' '}
+              <span className="text-orange font-semibold">Carelle</span>.
+            </p>
+
+            {/* Chips contextuelles */}
+            <div className="flex gap-2 flex-wrap mb-5">
+              <span className="px-3 py-1 rounded-full text-[11px] font-semibold"
+                style={{ background: 'rgba(255,255,255,.1)', color: 'rgba(255,255,255,.7)', border: '1px solid rgba(255,255,255,.12)' }}>
+                {prospectActifs} prospect{prospectActifs !== 1 ? 's' : ''} actifs
+              </span>
+              {dernierJournal && (
+                <span className="px-3 py-1 rounded-full text-[11px] font-semibold"
+                  style={{ background: 'rgba(255,255,255,.1)', color: 'rgba(255,255,255,.7)', border: '1px solid rgba(255,255,255,.12)' }}>
+                  {dernierJournal.titre?.slice(0, 30)}{dernierJournal.titre?.length > 30 ? '…' : ''}
+                </span>
+              )}
+            </div>
+
+            {/* CTA principal */}
+            <button
+              onClick={() => { setTimeout(() => carelleInputRef.current?.focus(), 80); carelleBottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }}
+              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-[12px] text-white text-[14px] font-bold active:scale-[.98] transition"
+              style={{ background: '#F25C05', boxShadow: '0 8px 24px -4px rgba(242,92,5,.55)' }}>
+              <Icon name="mic" size={16} className="text-white" />
+              Parler à Carelle
+            </button>
+          </div>
         </div>
 
         {/* ── Zone conversation (fond sable) ── */}
