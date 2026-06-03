@@ -4,6 +4,14 @@ import { supabase } from '../lib/supabase';
 import { resolveAgentStatus } from '../lib/agentGating';
 import { Card, SectionLabel, Icon, AppHeader, Btn } from '../components/ui';
 
+// Prix par agent verrouillé — FCFA en primaire
+const AGENT_PLAN_INFO = {
+  miriam: { planLabel: 'Growth',  fcfa: '9 900 FCFA',    eur: '15 €'  },
+  serge:  { planLabel: 'Team',    fcfa: '≈ 25 500 FCFA', eur: '39 €'  },
+  roland: { planLabel: 'Team',    fcfa: '≈ 25 500 FCFA', eur: '39 €'  },
+  kofi:   { planLabel: 'Team',    fcfa: '≈ 25 500 FCFA', eur: '39 €'  },
+};
+
 // ─── Helpers temps ─────────────────────────────────────────────────────────────
 
 function getSlot() {
@@ -725,8 +733,8 @@ function AgentBioModal({ a, activity, onClose, onAction }) {
             <div className="bg-charbon rounded-[16px] p-4 flex items-start gap-3">
               <Icon name="lock" size={16} className="text-amber flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-[13px] font-bold text-white">Disponible avec le plan Team</p>
-                <p className="text-[12px] text-white/60 mt-0.5">39 €/mois · Promo fondateurs</p>
+                <p className="text-[13px] font-bold text-white">Disponible avec le plan {AGENT_PLAN_INFO[a.id]?.planLabel || 'Team'}</p>
+                <p className="text-[12px] text-white/60 mt-0.5">{AGENT_PLAN_INFO[a.id]?.fcfa || '≈ 25 500 FCFA'} / mois · {AGENT_PLAN_INFO[a.id]?.eur || '39 €'}</p>
               </div>
             </div>
           )}
@@ -745,7 +753,7 @@ function AgentBioModal({ a, activity, onClose, onAction }) {
             className="w-full mt-1"
             iconRight={locked ? 'arrow' : 'send'}
             onClick={() => onAction(isDemo ? "Je veux voir une démo d'application pour mon activité." : undefined, isDemo ? 'demo' : undefined)}>
-            {locked ? `Débloquer ${a.name} — 39 €/mois` : isDemo ? 'Voir ma démo gratuite' : `Parler à ${a.name}`}
+            {locked ? `Débloquer ${a.name} — ${AGENT_PLAN_INFO[a.id]?.fcfa || '≈ 25 500 FCFA'} / mois` : isDemo ? 'Voir ma démo gratuite' : `Parler à ${a.name}`}
           </Btn>
         </div>
       </div>

@@ -372,7 +372,7 @@ Tâches avec priorités (urgente / normale / basse), sections Aujourd'hui / À v
 **8. Notifications et parrainage** (Gratuit)
 Cloche en haut du Dashboard. Tu peux parrainer des amis : +5 messages/jour par ami qui s'inscrit avec ton lien. Accessible dans ton profil.
 
-**9. Miriam — Présence digitale** (Team)
+**9. Miriam — Présence digitale** (Growth)
 Posts, calendrier éditorial, broadcasts WhatsApp, gestion de ta communauté. Elle connaît les heures où ta cible CI scrolle.
 
 **10. Serge — Organisation** (Team)
@@ -392,11 +392,11 @@ Coordonne tous tes projets, pilote l'équipe, te prépare des briefings hebdomad
 **Gratuit — 0 €** (toujours disponible)
 Coach illimité + Awa (messages de vente) + Agenda + Méthode ATTRACTOR + 20 messages/jour (extensibles par parrainage). C'est déjà un bras droit professionnel dans ta poche.
 
-**Attractor Growth — 15 €/mois (9 900 FCFA CI)**
-Ce qui change vraiment : messages illimités, mémoire long terme (le bras droit te connaît vraiment entre les sessions), Carnet d'affaires CRM, Décharge vocale Whisper, Carelle en mode complet. Pour quelqu'un qui utilise l'app tous les jours, le retour sur investissement est immédiat.
+**Attractor Growth — 9 900 FCFA/mois (15 €)**
+Ce qui change vraiment : messages illimités, mémoire long terme (le bras droit te connaît vraiment entre les sessions), Carnet d'affaires CRM, Décharge vocale Whisper, Carelle en mode complet, Miriam (présence digitale). Pour quelqu'un qui utilise l'app tous les jours, le retour sur investissement est immédiat.
 
-**Attractor Team — 39 €/mois (≈ 25 500 FCFA CI)**
-L'équipe complète débloquée : Miriam, Serge, Roland, Kofi + tout le Growth. C'est une petite agence digitale sans les charges. Promo fondateurs : 99 € barré → 39 €. Réservé aux 100 premiers.
+**Attractor Team — ≈ 25 500 FCFA/mois (39 €)**
+L'équipe complète débloquée : Serge, Roland, Kofi + tout le Growth. C'est une petite agence digitale sans les charges. Promo fondateurs : prix habituel 99 € → 39 €. Réservé aux 100 premiers.
 
 **Application Personnalisée — Sur devis (Famille A)**
 Une app métier développée sur mesure aux couleurs de ton business. Dashboard, gestion clients, assistant IA intégré. Déployée en 48h. Parle à Carelle pour commencer.
@@ -431,7 +431,7 @@ RÈGLES ABSOLUES : Ne parle PAS de prix. Ne propose pas d'autres agents. Ne fais
 const SYSTEMS: Record<string, string> = {
   coach:   COACH_SYSTEM,
   awa:     AWA_SYSTEM,
-  miriam:  MIRIAM_SYSTEM  + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Team"),
+  miriam:  MIRIAM_SYSTEM  + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Growth"),
   serge:   SERGE_SYSTEM   + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Team"),
   roland:  ROLAND_SYSTEM  + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Team"),
   kofi:    KOFI_SYSTEM    + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Team"),

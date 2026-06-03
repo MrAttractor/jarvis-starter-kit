@@ -13,7 +13,12 @@ export function resolveAgentStatus(agentId, planCode) {
     if (rank >= 1) return 'actif'
     return 'demo'                // Gratuit : démo uniquement
   }
-  // miriam, serge, roland, kofi
+  // miriam passe à Growth
+  if (agentId === 'miriam') {
+    if (rank >= 1) return 'actif'
+    return 'verrouille'
+  }
+  // serge, roland, kofi restent Team
   if (rank >= 2) return 'actif'
   return 'verrouille'
 }
