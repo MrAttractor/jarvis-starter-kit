@@ -734,7 +734,7 @@ function AgentBioModal({ a, activity, onClose, onAction }) {
           <div className="absolute bottom-4 left-5">
             <div className="text-[12px] font-bold text-white/70 uppercase tracking-wider">{a.role}</div>
             <h2 className="font-display font-extrabold text-[32px] text-white leading-tight">{a.name}</h2>
-            {a.status !== 'verrouillé' && (
+            {a.status !== 'verrouille' && (
               <span className="flex items-center gap-1 text-[12px] font-bold text-growth mt-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-growth animate-pulse" />En ligne
               </span>

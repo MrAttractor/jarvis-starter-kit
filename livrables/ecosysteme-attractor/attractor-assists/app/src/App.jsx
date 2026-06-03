@@ -156,7 +156,7 @@ export default function App() {
     conversation:<ConversationScreen go={go} notify={notify} params={params} profile={profile} />,
     axes:        <AxesScreen go={go} notify={notify} />,
     broadcasts:  <BroadcastsScreen go={go} notify={notify} />,
-    paliers:     <PaliersScreen go={go} notify={notify} />,
+    paliers:     <PaliersScreen go={go} notify={notify} profile={profile} />,
     agenda:        <AgendaScreen go={go} profile={profile} />,
     notifications: <NotificationsScreen go={go} />,
     admin:         <AdminScreen go={go} notify={notify} />,
