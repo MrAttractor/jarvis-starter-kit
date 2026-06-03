@@ -771,14 +771,6 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: rgba(91,184,245,0.3); border-radius: 2px; }
 
-  /* ── RESPONSIVE NOTE ── */
-  .responsive-note {
-    text-align: center;
-    padding: 2rem;
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.4);
-  }
-
   .footer-bar {
     grid-column: 1 / -1;
     background: rgba(0,10,30,0.8);
@@ -790,15 +782,138 @@
     justify-content: space-between;
     align-items: center;
   }
+
+  /* ── HAMBURGER ── */
+  .hamburger {
+    display: none;
+    background: none;
+    border: 1px solid rgba(91,184,245,0.3);
+    border-radius: 8px;
+    color: var(--sky);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.3rem 0.5rem;
+    line-height: 1;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sidebar-close {
+    display: none;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-left: auto;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 50;
+  }
+
+  @keyframes slideInLeft {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(0); }
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 767px) {
+    .hamburger { display: flex; }
+    .sidebar-close { display: block; }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: 260px;
+      z-index: 100;
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+      grid-row: unset;
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
+    }
+
+    .sidebar-backdrop.open { display: block; }
+
+    .logo-zone {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar {
+      width: 100%;
+      padding: 0.7rem 1rem;
+    }
+
+    .topbar-title { font-size: 0.82rem; }
+
+    .main {
+      flex: 1;
+      padding: 0.9rem;
+      width: 100%;
+    }
+
+    .kpi-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.7rem;
+    }
+
+    .kpi { padding: 0.9rem; }
+    .kpi-val { font-size: 1.4rem; }
+    .kpi-icon { font-size: 1.2rem; }
+
+    .two-cols,
+    .three-cols { grid-template-columns: 1fr; }
+
+    .tarif-grid { grid-template-columns: 1fr; }
+
+    .form-grid { grid-template-columns: 1fr; }
+    .full-width { grid-column: auto; }
+
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { min-width: 540px; }
+
+    .chat-container { height: 400px; }
+
+    .page-tabs {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .footer-bar { display: none; }
+
+    .section-header { flex-wrap: wrap; gap: 0.5rem; }
+
+    .whatsapp-btn .wa-label { display: none; }
+  }
 </style>
 </head>
 <body>
 
+<div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
+
 <div class="app">
 
   <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <aside class="sidebar" id="main-sidebar">
     <div class="logo-zone">
+      <button class="sidebar-close" onclick="closeSidebar()">✕</button>
       <div class="logo-box">
         <span>J'<span class="accent">ENVOIE</span></span>
         <span style="font-size:1rem;">EXPRESS 📦</span>
@@ -855,6 +970,7 @@
 
   <!-- TOPBAR -->
   <header class="topbar">
+    <button class="hamburger" onclick="openSidebar()">☰</button>
     <div class="topbar-title">J'Envoie <span>Express</span> — Plateforme Pro</div>
     <div class="topbar-right">
       <div class="notif-btn">🔔</div>
@@ -1684,6 +1800,19 @@ function showView(id) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   event.currentTarget.classList.add('active');
+  closeSidebar();
+}
+
+function openSidebar() {
+  document.getElementById('main-sidebar').classList.add('open');
+  document.getElementById('sidebar-backdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSidebar() {
+  document.getElementById('main-sidebar').classList.remove('open');
+  document.getElementById('sidebar-backdrop').classList.remove('open');
+  document.body.style.overflow = '';
 }
 </script>
 </body>
