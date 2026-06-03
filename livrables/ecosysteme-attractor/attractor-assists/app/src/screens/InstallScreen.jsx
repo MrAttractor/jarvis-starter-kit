@@ -223,23 +223,29 @@ export function InstallGuide({ platform, prenom, nomAssistant, installPromptRef,
     <div className="min-h-screen flex flex-col bg-sable px-6 pt-10 pb-8">
       <Logo size="sm" />
 
-      <div className="flex-1 flex flex-col mt-7 animate-[fadeUp_.4s_ease]">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange/10 rounded-full mb-4 self-start">
-          <span className="w-1.5 h-1.5 rounded-full bg-orange" />
-          <span className="text-[12px] font-bold text-orange">{config.badge}</span>
+      <div className="flex-1 flex flex-col mt-5 animate-[fadeUp_.4s_ease]">
+        {/* App icon hero */}
+        <div className="flex items-center gap-4 mb-6 p-4 bg-white rounded-[20px] border border-g200 shadow-soft">
+          <img src="/icon-192.png" alt="Attractor" className="w-16 h-16 rounded-[18px] shadow-[0_6px_20px_-4px_rgba(242,92,5,.4)]" />
+          <div>
+            <p className="font-display font-extrabold text-[18px] text-charbon">Attractor</p>
+            <p className="text-[12.5px] text-g400 mt-0.5">Votre Chief of Staff numérique</p>
+            <div className="flex items-center gap-1.5 mt-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-orange" />
+              <span className="text-[11.5px] font-bold text-orange">{config.badge}</span>
+            </div>
+          </div>
         </div>
 
         <h2 className="font-display font-extrabold text-[24px] leading-[1.2] text-charbon">
-          Dernière étape, {prenom}.
+          Une dernière étape, {prenom}.
         </h2>
-        <p className="text-[15px] text-g700 mt-2 leading-relaxed">
-          Ajoute <span className="font-bold text-charbon">{nomAssistant}</span> sur ton
-          écran d'accueil.{' '}
-          <span className="font-bold text-charbon">2 minutes chrono.</span>{' '}
-          Il sera là, tout le temps.
+        <p className="text-[15px] text-g700 mt-2 mb-6 leading-relaxed">
+          Installe l'app sur ton écran d'accueil.{' '}
+          <span className="font-bold text-charbon">Mr Attractor sera disponible en 1 tap, tout le temps.</span>
         </p>
 
-        <div className="flex justify-center my-7 overflow-x-auto">
+        <div className="flex justify-center mb-6 overflow-x-auto">
           <PhoneIllustration platform={platform} />
         </div>
 
