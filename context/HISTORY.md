@@ -7,6 +7,38 @@
 
 ---
 
+## 2026-06-03 (session 20 — Cockpit MacCockpitScreen : generate-maquette + hero Carelle + Pipeline 2 phases)
+
+### Edge Function generate-maquette
+- Fix déploiement : la fonction devait être lancée depuis `livrables/.../app/`, pas depuis la racine du workspace
+- Fix clé API : `ANTHROPIC_API_KEY` → fallback `CLAUDE_KEY` (secret déjà configuré en base)
+- Ajout support vision Claude Haiku : image uploadée (base64) envoyée dans le message pour extraire les couleurs et le style
+- Upload image dans la Sheet Fam. A : bouton + preview + suppression, en plus du champ URL
+
+### Nettoyage code mort MacCockpitScreen
+- Suppression des états et fonctions de l'ancienne flow "upload image + message WhatsApp" : `buildMaquetteMsg`, `copyMaquetteMsg`, `showAddContext`, `maquetteMsg`, `maquetteCopied`
+- `openFamASheet` : cliquer sur un prospect Fam. A ouvre directement l'orchestration (plus de query `sequences_vente`). Si `maquette_url` existe sur le prospect, le lien est pré-rempli
+
+### Hero Pilotage — photo Carelle
+- Photo `carelle.jpg` en fond plein écran, cadrée haut
+- Gradient bas → transparent (même recette agenceattractor.com, adapté mobile vertical)
+- Glow orange animé coin bas droit
+- Pill badge "Chief of Staff · Coordination" avec point orange pulsé
+- Titre "Pilotage" 34px + sous-titre avec "Carelle" en orange
+- Chips contextuelles + CTA "Parler à Carelle"
+
+### Pipeline Fam. A — 2 phases distinctes
+- Phase 1 (avant alerte) : ref visuelle (upload image + URL), textarea "Ce que tu sais déjà", bouton "Alerter les agents"
+- Phase 2 (après alerte) : badge "Agents briefés", plan Carelle (ou indicateur de chargement), textarea "Répondre aux questions de Carelle", bouton "Lancer la production →"
+- Fix spinner : `alerteLoading(false)` déclenché immédiatement après les journal entries, sans attendre Carelle
+- Fix resilience : toutes les opérations DB sont fire-and-forget, Carelle répond en arrière-plan
+
+### Carelle — une question à la fois
+- Règle ajoutée dans `CARELLE_SYSTEM` du fichier `chat-assistant/index.ts` et redéployée
+- Règle aussi ajoutée dans les messages de `carelleBriefProspect` et `alerteAgents`
+
+---
+
 ## 2026-06-03 (session 19 — Pilotage + orchestration Fam. A + maquette Rukayatou)
 
 ### DNS demo.agenceattractor.com
