@@ -7,6 +7,63 @@
 
 ---
 
+## 2026-06-04 (session 28 — Refonte UX : Mr Attractor central + Suivi Clients + Calendrier)
+
+### Audit UX/UI complet (16 problèmes identifiés)
+- 2 bugs critiques corrigés et pushés : `profile` manquant dans PaliersScreen + typo `'verrouillé'` vs `'verrouille'` dans AgentBioModal
+- 13 problèmes UX/design restants à traiter en prochaine session (text-g500, \n non rendu, planLabel brut, dark mode Maryline, activeTab hors-nav, icône toggle PaliersScreen, amber tokens mixtes, emoji solitaire, "5 experts" hardcodé — déjà fixé, TeamHero statuts bruts, label profil incorrect, header ConversationScreen AssistGlyph au lieu de photo)
+
+### Opener Maryline corrigé
+- Ancienne question finale = "t'organiser, te faire connaître, ou vendre plus ?" (territoire d'Awa)
+- Nouveau : "T'as une question sur quelque chose que t'as vu dans l'app, ou tu veux qu'on commence par ce qui peut t'aider le plus en ce moment ?" (guide, pas commerciale)
+
+### Mr Attractor central — refonte architecture agents
+- Awa verrouillée (plan Growth requis) — plus jamais active sur le plan Gratuit
+- Agents réordonnés dans data.js : Mr Attractor → Maryline → Carelle → Miriam → Serge → Roland → Kofi → Awa
+- Carelle CTA : "Voir mon app personnalisée" (plus "Voir ma démo gratuite")
+- Badge "X experts" dans Mon équipe désormais dynamique
+- agentGating.js : Awa rejoint le groupe Miriam (verrouillé si rank < 1)
+- Forfaits mis à jour : "Awa incluse" retiré du Gratuit, features Growth et Team reformulées
+
+### Bloc micro central Dashboard
+- Card "Prochaine action" supprimée (redondante)
+- Bouton "Décharge vocale" isolé supprimé des quick actions
+- Nouveau bloc pleine largeur : micro animé (glow orange) + "Besoin de te vider la tête ? Parle à Mr Attractor — il va gérer." → DechargeVocale
+- Quick actions réduits à 2 : Suivi Clients + Agenda
+
+### Suivi Clients (ex-Carnet d'affaires)
+- Renommé partout : "Suivi Clients" en UI, route interne 'carnet' inchangée
+- Section "Mes produits / services" : ajout/suppression, prix, unité (unité/heure/mois/projet)
+- Fiche client : affiche "Dernier achat : [produit] · [date]" ou "Aucun achat enregistré"
+- Historique achats : liste des achats + ajout (sélecteur produit ou texte libre + date + montant)
+- Flow Mr Attractor : bouton → conversation avec prefill "Je veux enregistrer un achat pour [client]"
+- Migration SQL 0022 appliquée : tables `produits_user` + `client_purchases`
+
+### Agenda → Vue Calendrier
+- Grille mensuelle (lun→dim), navigation mois précédent/suivant
+- Points colorés sous chaque date : rouge (urgente), orange (normale), gris (basse)
+- Tap sur un jour → Sheet avec tâches du jour + bouton "+" (pré-remplit la date)
+- Liste groupée (Urgentes / Aujourd'hui / À venir) conservée sous le calendrier
+- Pas de changement BDD (todos existant avec date_echeance suffisant)
+
+### Suggestions ConversationScreen enrichies
+- Cases `carelle` et `maryline` ajoutées
+- Awa : suggestions reformulées (closing, séquences) sans redirection vers coach
+
+---
+
+## 2026-06-04 (session 27 — XPAYE production activé)
+
+### Passage en production des paiements XPaye
+
+- Correction `init-payment` : `isSandbox` découpé du merchant ID. Avant : `merchantId === "PP-F422"` (couplage fragile). Après : `Deno.env.get("XPAYE_SANDBOX") === "true"` (contrôle indépendant)
+- Confirmation : PP-F422 est le vrai merchant ID production de Mac Arthur (Lead Holding Sarl)
+- Secret `XPAYE_SANDBOX=false` posé dans Supabase (projet lgdgbrivnhgeupqhkckd)
+- Fonction `init-payment` redéployée — pointe maintenant vers `www.paiementpro.net` (prod)
+- Les paiements Attractor Assists (Wave, MTN, Orange Money, Carte) sont désormais réels
+
+---
+
 ## 2026-06-03 (session 26 — UX Mon équipe + FCFA primaire + Maryline fix)
 
 ### Fix opener Maryline
