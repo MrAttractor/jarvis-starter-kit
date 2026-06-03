@@ -66,12 +66,12 @@ Deno.serve(async (req) => {
       .eq("id", user.id)
       .maybeSingle();
 
-    const isCIChannel  = CI_CHANNELS.includes(channel);
-    const amount       = isCIChannel ? plan.amount_xof : plan.amount_eur;
-    const currencyCode = isCIChannel ? "952" : "978";
+    // PaiementPro est un gateway CI — toujours en FCFA (XOF), canal CARD inclus
+    const amount       = plan.amount_xof;
+    const currencyCode = "952"; // XOF
     const reference    = `ATR-${Date.now()}-${user.id.slice(0, 8).toUpperCase()}`;
     const merchantId   = Deno.env.get("XPAYE_MERCHANT_ID") ?? "PP-F422";
-    const isSandbox    = merchantId.startsWith("PP-F") && merchantId !== "PP-F422" ? false : true;
+    const isSandbox    = merchantId === "PP-F422";
     const ppURL        = isSandbox ? PP_SANDBOX_URL : PP_PROD_URL;
     const notifURL     = `${Deno.env.get("SUPABASE_URL")}/functions/v1/payment-webhook`;
 
@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
       reference,
       channel,
       amount,
-      currency: isCIChannel ? "XOF" : "EUR",
+      currency: "XOF",
       status:   "pending",
     });
     if (insertErr) console.error("payments insert:", insertErr.message);
