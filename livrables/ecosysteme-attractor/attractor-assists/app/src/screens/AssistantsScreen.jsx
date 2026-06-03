@@ -384,8 +384,8 @@ function AgentSlide({ a, activity, onTalk, onUnlock, onBio, width }) {
           {locked ? (
             <button onClick={onUnlock}
               className="w-full py-3.5 rounded-[14px] bg-amber text-charbon font-display font-extrabold text-[14px] active:scale-[.99] transition flex items-center justify-center gap-2">
-              <Icon name="lock" size={15} />
-              Débloquer {a.name} — {AGENT_PLAN_INFO[a.id]?.fcfa || '≈ 25 500 FCFA'} / mois
+              <Icon name="bolt" size={15} />
+              Voir la formule
             </button>
           ) : isDemo ? (
             <button onClick={() => onTalk("Je veux voir une démo d'application pour mon activité.", 'demo')}
@@ -529,8 +529,10 @@ export function AssistantsScreen({ go, notify, profile }) {
     status: resolveAgentStatus(a.id, planCode),
   }));
 
-  const coach      = resolvedAssistants.find(a => a.id === 'coach');
-  const specialists = resolvedAssistants.filter(a => a.id !== 'coach' && a.id !== 'maryline');
+  const coach          = resolvedAssistants.find(a => a.id === 'coach');
+  const carelle        = resolvedAssistants.find(a => a.id === 'carelle');
+  const specialists    = resolvedAssistants.filter(a => a.id !== 'coach' && a.id !== 'maryline');
+  const carouselAgents = resolvedAssistants.filter(a => !['coach', 'maryline', 'carelle'].includes(a.id));
 
   const handleTalk = (agentId, prefill, mode) => {
     localStorage.setItem(`aa_last_contact_${agentId}`, new Date().toISOString());
@@ -597,18 +599,64 @@ export function AssistantsScreen({ go, notify, profile }) {
           </div>
         )}
 
-        {/* Carousel des 6 spécialistes */}
+        {/* Carelle — épinglée */}
+        {carelle && (
+          <div className="px-[18px]">
+            <SectionLabel className="mb-3">Chief of Staff</SectionLabel>
+            <button
+              onClick={() => {
+                if (carelle.status === 'demo') handleTalk('carelle', "Je veux voir une démo d'application pour mon activité.", 'demo');
+                else if (carelle.status === 'actif') handleTalk('carelle');
+                else go('paliers');
+              }}
+              className="relative w-full rounded-[22px] overflow-hidden active:scale-[.99] transition text-left"
+              style={{ minHeight: 130 }}>
+              {carelle.photo && (
+                <img src={carelle.photo} alt="Carelle" className="absolute inset-0 w-full h-full object-cover object-top" />
+              )}
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(100deg, rgba(26,23,20,.92) 45%, rgba(26,23,20,.45) 100%)' }} />
+              <div className="relative p-5 flex items-center justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10.5px] font-bold text-amber uppercase tracking-[.12em] mb-1">{carelle.role}</p>
+                  <h3 className="font-display font-extrabold text-[22px] text-white leading-none mb-2">Carelle</h3>
+                  <p className="text-[12px] text-white/60 leading-snug line-clamp-2">
+                    {carelle.proactif?.slice(0, 80) || 'Coordonne tes projets, pilote l'équipe, te prépare des briefings.'}
+                    {(carelle.proactif?.length || 0) > 80 ? '…' : ''}
+                  </p>
+                </div>
+                <div className="flex-shrink-0">
+                  {carelle.status === 'demo' ? (
+                    <span className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-[12px] font-display font-extrabold text-[13px] text-charbon"
+                      style={{ background: 'linear-gradient(135deg,#FFC107,#FFB300)' }}>
+                      <Icon name="spark" size={13} /> Démo gratuite
+                    </span>
+                  ) : carelle.status === 'actif' ? (
+                    <span className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-[12px] bg-orange font-display font-extrabold text-[13px] text-white">
+                      <Icon name="send" size={13} /> Parler
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-[12px] bg-amber/20 border border-amber/40 font-display font-extrabold text-[13px] text-amber">
+                      <Icon name="lock" size={13} /> Voir la formule
+                    </span>
+                  )}
+                </div>
+              </div>
+            </button>
+          </div>
+        )}
+
+        {/* Carousel des 5 autres spécialistes */}
         <div id="team-carousel">
           <div className="px-[18px] mb-3">
             <SectionLabel>
               <span>Ton équipe de spécialistes</span>
-              <span className="ml-2 px-2 py-0.5 bg-orange/10 text-orange text-[10.5px] font-bold rounded-full">6 experts</span>
+              <span className="ml-2 px-2 py-0.5 bg-orange/10 text-orange text-[10.5px] font-bold rounded-full">5 experts</span>
             </SectionLabel>
             <p className="text-[12px] text-g400 mt-1">Swipe pour découvrir chaque spécialiste.</p>
           </div>
 
           <AgentCarousel
-            agents={specialists}
+            agents={carouselAgents}
             activity={activity}
             onTalk={handleTalk}
             onUnlock={(a) => { setSelectedAgent(a); }}
@@ -733,8 +781,8 @@ function AgentBioModal({ a, activity, onClose, onAction }) {
             <div className="bg-charbon rounded-[16px] p-4 flex items-start gap-3">
               <Icon name="lock" size={16} className="text-amber flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-[13px] font-bold text-white">Disponible avec le plan {AGENT_PLAN_INFO[a.id]?.planLabel || 'Team'}</p>
-                <p className="text-[12px] text-white/60 mt-0.5">{AGENT_PLAN_INFO[a.id]?.fcfa || '≈ 25 500 FCFA'} / mois · {AGENT_PLAN_INFO[a.id]?.eur || '39 €'}</p>
+                <p className="text-[13px] font-bold text-white">Dispo dans le plan {AGENT_PLAN_INFO[a.id]?.planLabel || 'Team'}</p>
+                <p className="text-[12px] text-white/60 mt-0.5">Découvre la formule pour débloquer {a.name}.</p>
               </div>
             </div>
           )}
@@ -753,7 +801,7 @@ function AgentBioModal({ a, activity, onClose, onAction }) {
             className="w-full mt-1"
             iconRight={locked ? 'arrow' : 'send'}
             onClick={() => onAction(isDemo ? "Je veux voir une démo d'application pour mon activité." : undefined, isDemo ? 'demo' : undefined)}>
-            {locked ? `Débloquer ${a.name} — ${AGENT_PLAN_INFO[a.id]?.fcfa || '≈ 25 500 FCFA'} / mois` : isDemo ? 'Voir ma démo gratuite' : `Parler à ${a.name}`}
+            {locked ? 'Voir la formule' : isDemo ? 'Voir ma démo gratuite' : `Parler à ${a.name}`}
           </Btn>
         </div>
       </div>
