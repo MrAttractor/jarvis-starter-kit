@@ -7,6 +7,32 @@
 
 ---
 
+## 2026-06-03 (session 26 — UX Mon équipe + FCFA primaire + Maryline fix)
+
+### Fix opener Maryline
+- Maryline tombait sur le fallback d'Awa ("je ne fais pas de conseils") faute d'opener défini dans OPENERS_AGENTS
+- Nouvel opener : accueil guide, question de profil directe ("t'organiser, te faire connaître, ou vendre plus ?")
+
+### Miriam débloquée au plan Growth
+- `agentGating.js` : Miriam passe de rank >= 2 (Team) à rank >= 1 (Growth)
+- PASSIVE_SUFFIX de Miriam mis à jour : "c'est dans le plan Growth"
+- MARYLINE_SYSTEM : prix Growth et Team écrits FCFA en primaire, euros entre parenthèses
+- Miriam ajoutée dans la liste des inclus du plan Growth
+
+### FCFA en primaire dans "Mon équipe"
+- `AGENT_PLAN_INFO` mapping créé : Miriam (9 900 FCFA / 15 €), Serge / Roland / Kofi (≈ 25 500 FCFA / 39 €)
+- Badge carousel verrouillé : "Plan Growth" ou "Plan Team", sans montant
+- CTA carousel verrouillé : "Voir la formule" (plus de prix affiché)
+- Modal bio verrouillée : "Dispo dans le plan X · Découvre la formule pour débloquer [nom]"
+
+### Carelle épinglée — restructuration de l'écran
+- Carelle sort du carousel, devient une carte fixe entre Coach et le carousel
+- Carte photo plein-fond + gradient, CTA contextuel : "Démo gratuite" / "Parler" / "Voir la formule"
+- Carousel réduit à 5 agents : Awa, Miriam, Serge, Roland, Kofi
+- Logique validée : projection d'abord, prix uniquement sur PaliersScreen
+
+---
+
 ## 2026-06-03 (session 25 — Maryline bulle flottante + XPAYE sandbox validé)
 
 ### Maryline (ex-Hawa) — bulle flottante WhatsApp-style
