@@ -336,7 +336,7 @@ function AgentSlide({ a, activity, onTalk, onUnlock, onBio, width }) {
         <div className="absolute top-4 left-4">
           {locked ? (
             <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-charbon/70 backdrop-blur-sm border border-amber/30 text-amber text-[11px] font-bold">
-              <Icon name="lock" size={10} /> Plan Team
+              <Icon name="lock" size={10} /> Plan {AGENT_PLAN_INFO[a.id]?.planLabel || 'Team'}
             </span>
           ) : isDemo ? (
             <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber/20 backdrop-blur-sm border border-amber/50 text-amber text-[11px] font-bold">
@@ -385,7 +385,7 @@ function AgentSlide({ a, activity, onTalk, onUnlock, onBio, width }) {
             <button onClick={onUnlock}
               className="w-full py-3.5 rounded-[14px] bg-amber text-charbon font-display font-extrabold text-[14px] active:scale-[.99] transition flex items-center justify-center gap-2">
               <Icon name="lock" size={15} />
-              Débloquer {a.name} — Plan Team
+              Débloquer {a.name} — {AGENT_PLAN_INFO[a.id]?.fcfa || '≈ 25 500 FCFA'} / mois
             </button>
           ) : isDemo ? (
             <button onClick={() => onTalk("Je veux voir une démo d'application pour mon activité.", 'demo')}
