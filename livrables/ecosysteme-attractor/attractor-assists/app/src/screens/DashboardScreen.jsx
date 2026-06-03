@@ -279,7 +279,20 @@ export function DashboardScreen({ go, notify, profile }) {
           </button>
         )}
 
-        {/* Quick actions : Carnet + Agenda */}
+        {/* Quick actions : Décharge vocale + Carnet + Agenda */}
+        <button onClick={() => go('dump')}
+          className="flex items-center gap-4 p-4 rounded-[20px] text-white active:scale-[.99] transition"
+          style={{ background: "linear-gradient(135deg,#1F1B18,#2a2320)" }}>
+          <div className="w-12 h-12 rounded-full bg-orange/20 flex items-center justify-center flex-shrink-0">
+            <Icon name="mic" size={22} className="text-orange" />
+          </div>
+          <div className="text-left">
+            <p className="font-display font-extrabold text-[16px] text-white">Décharge vocale</p>
+            <p className="text-[12px] text-white/60 mt-0.5">Parlez, Mr Attractor organise</p>
+          </div>
+          <Icon name="arrow" size={18} className="text-white/40 ml-auto" />
+        </button>
+
         <div className="grid grid-cols-2 gap-3">
           <button onClick={() => go('carnet')}
             className="flex flex-col gap-2 p-4 bg-white rounded-[18px] border border-g200 shadow-soft active:scale-[.98] transition text-left">

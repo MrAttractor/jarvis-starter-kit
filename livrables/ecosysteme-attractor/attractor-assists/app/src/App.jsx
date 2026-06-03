@@ -19,6 +19,7 @@ import { AdminScreen } from './screens/AdminScreen';
 import { MacCockpitScreen } from './screens/MacCockpitScreen';
 import { MéthodeScreen } from './screens/MéthodeScreen';
 import { CarnetAffairesScreen } from './screens/CarnetAffairesScreen';
+import { DechargeVocaleScreen } from './screens/DechargeVocaleScreen';
 
 const TABS_USER  = [
   { id: "dashboard",  label: "Accueil",    icon: "home" },
@@ -134,6 +135,7 @@ export default function App() {
     hub:      <MacCockpitScreen go={go} notify={notify} section="hub"      profile={profile} />,
     methode:       <MéthodeScreen go={go} />,
     carnet:        <CarnetAffairesScreen go={go} />,
+    dump:          <DechargeVocaleScreen go={go} profile={profile} />,
     install:     <InstallGuide
                    platform={detectPlatform()}
                    prenom={profile?.prenom || ''}
