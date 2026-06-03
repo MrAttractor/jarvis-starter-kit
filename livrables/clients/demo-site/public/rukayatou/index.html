@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XPaye Pro — Maquette</title>
+<style>
+:root{
+  --brand:#FF6B00;
+  --brand-2:#1A1A1A;
+  --ink:#1A1F2B;
+  --muted:#6B7280;
+  --bg:#F7F5F2;
+  --card:#FFFFFF;
+  --radius:18px;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:linear-gradient(160deg,#0d0d0d,#2a1a0a);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px;color:var(--ink)}
+.stage{display:flex;gap:52px;flex-wrap:wrap;align-items:center;justify-content:center}
+.pitch{max-width:300px;color:#e8edf5}
+.pitch .kicker{color:var(--brand);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px}
+.pitch h1{font-size:28px;margin:10px 0 14px;line-height:1.15}
+.pitch p{color:#aab4c5;line-height:1.55;font-size:15px;margin-bottom:20px}
+.pitch .feature{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.pitch .feature .dot{width:8px;height:8px;border-radius:50%;background:var(--brand);flex-shrink:0;margin-top:5px}
+.pitch .feature span{font-size:13.5px;color:#c8d0dc;line-height:1.4}
+.phone{width:340px;height:720px;background:#000;border-radius:46px;padding:12px;box-shadow:0 30px 80px rgba(0,0,0,.65)}
+.screen{position:relative;width:100%;height:100%;background:var(--bg);border-radius:36px;overflow:hidden;display:flex;flex-direction:column}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:140px;height:26px;background:#000;border-radius:0 0 18px 18px;z-index:5}
+.topbar{background:var(--brand);color:#fff;padding:46px 18px 14px;display:flex;align-items:center;gap:10px}
+.logo{width:36px;height:36px;border-radius:10px;background:rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;letter-spacing:-.5px}
+.topbar h2{font-size:16px;font-weight:700}
+.topbar small{display:block;opacity:.85;font-weight:400;font-size:11px}
+.content{flex:1;overflow-y:auto;padding:16px;scrollbar-width:none}
+.content::-webkit-scrollbar{display:none}
+.view{display:none}
+.view.active{display:block;animation:fade .22s}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1}}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,var(--brand),#c24e00);color:#fff;border-radius:var(--radius);padding:18px;margin-bottom:12px}
+.hero h3{font-size:17px;margin-bottom:5px}
+.hero p{font-size:12.5px;opacity:.92;line-height:1.45}
+
+/* Cards */
+.card{background:var(--card);border-radius:var(--radius);padding:15px;margin-bottom:12px;box-shadow:0 3px 14px rgba(20,30,50,.06)}
+.card h3{font-size:14px;font-weight:700;margin-bottom:5px}
+.card p{font-size:12.5px;color:var(--muted);line-height:1.45}
+.row{display:flex;align-items:center;gap:12px}
+.thumb{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--brand),#c24e00);flex:none;display:flex;align-items:center;justify-content:center;font-size:18px}
+.btn{display:block;width:100%;text-align:center;background:var(--brand);color:#fff;border:none;padding:13px;border-radius:12px;font-size:14px;font-weight:700;margin-top:10px;cursor:pointer}
+.btn.dark{background:var(--brand-2)}
+.btn.ghost{background:transparent;border:1.5px solid var(--brand);color:var(--brand)}
+
+/* Stats */
+.stat{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #eef1f6}
+.stat:last-child{border:none}
+.stat span{font-size:12.5px;color:var(--muted)}
+.stat b{color:var(--brand);font-size:18px;font-weight:800}
+
+/* Tags */
+.tag{display:inline-block;background:rgba(255,107,0,.1);color:var(--brand);font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;margin:0 5px 5px 0}
+
+/* Status badges */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:10px}
+.badge.chaud{background:rgba(239,68,68,.12);color:#dc2626}
+.badge.tiede{background:rgba(245,158,11,.12);color:#d97706}
+.badge.actif{background:rgba(16,185,129,.12);color:#059669}
+
+/* Chat */
+.chat-area{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.msg{max-width:82%;padding:9px 12px;border-radius:12px;font-size:12.5px;line-height:1.45}
+.msg.bot{background:rgba(255,107,0,.08);border:1px solid rgba(255,107,0,.18);align-self:flex-start;border-bottom-left-radius:4px}
+.msg.me{background:var(--brand);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chip-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.chip{background:rgba(255,107,0,.1);border:1px solid rgba(255,107,0,.25);border-radius:16px;padding:4px 10px;font-size:11px;color:var(--brand);font-weight:600;cursor:pointer}
+
+/* Prospect rows */
+.prospect{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eef1f6}
+.prospect:last-child{border:none}
+.prospect .info h4{font-size:13px;font-weight:700;margin-bottom:2px}
+.prospect .info p{font-size:11.5px;color:var(--muted)}
+.mini-btn{background:rgba(255,107,0,.1);color:var(--brand);border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer}
+
+/* Input zone */
+.input-row{display:flex;gap:6px;margin-top:8px}
+.chat-input{flex:1;background:#fff;border:1.5px solid #e5e7eb;border-radius:20px;padding:8px 13px;font-size:12.5px;outline:none;font-family:var(--font)}
+.send-btn{width:34px;height:34px;border-radius:50%;background:var(--brand);border:none;color:#fff;font-size:14px;cursor:pointer;flex-shrink:0}
+
+/* Tabbar */
+.tabbar{display:flex;background:var(--card);border-top:1px solid #eef1f6}
+.tab{flex:1;padding:9px 4px;text-align:center;font-size:10.5px;color:var(--muted);border:none;background:none;cursor:pointer}
+.tab.active{color:var(--brand);font-weight:700}
+.tab .ic{display:block;font-size:17px;margin-bottom:1px}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <!-- Pitch côté gauche -->
+  <div class="pitch">
+    <div class="kicker">Fintech · XPaye</div>
+    <h1>XPaye Pro</h1>
+    <p>Ton agent commercial IA pour activer ton réseau d'entrepreneurs CI et booster les souscriptions XPaye — sans effort manuel.</p>
+    <div class="feature"><div class="dot"></div><span>Agent commercial IA qui prospecte pour toi 24h/24</span></div>
+    <div class="feature"><div class="dot"></div><span>Pipeline de ton réseau CI avec relances automatiques</span></div>
+    <div class="feature"><div class="dot"></div><span>Scripts de vente XPaye calibrés sur ta cible</span></div>
+    <div class="feature"><div class="dot"></div><span>Résultats en temps réel — conversations, activations, revenus</span></div>
+  </div>
+
+  <!-- Téléphone -->
+  <div class="phone"><div class="screen">
+    <div class="notch"></div>
+    <div class="topbar">
+      <div class="logo">XP</div>
+      <div><h2>XPaye Pro</h2><small>Ton agent commercial est actif ✓</small></div>
+    </div>
+
+    <div class="content">
+
+      <!-- ÉCRAN 1 : Accueil -->
+      <section class="view active" id="v1">
+        <div class="hero">
+          <h3>Bonjour Rukayatou 👋</h3>
+          <p>Ton agent a repéré 3 contacts chauds dans ton réseau. Il a préparé leurs messages. Tu n'as qu'à valider.</p>
+        </div>
+        <div class="card">
+          <h3>Ce que ton agent a fait aujourd'hui</h3>
+          <div class="stat"><span>Entrepreneurs contactés</span><b>7</b></div>
+          <div class="stat"><span>Réponses reçues</span><b>4</b></div>
+          <div class="stat"><span>XPaye activés ce mois</span><b>12</b></div>
+        </div>
+        <div class="card row">
+          <div class="thumb">🔥</div>
+          <div>
+            <h3>Kofi Assi — Contact chaud</h3>
+            <p>Intéressé par XPaye pour son restaurant. Message prêt à envoyer.</p>
+          </div>
+        </div>
+        <button class="btn" onclick="go('v2',document.querySelectorAll('.tab')[1])">Voir mon agent commercial →</button>
+      </section>
+
+      <!-- ÉCRAN 2 : Agent commercial -->
+      <section class="view" id="v2">
+        <div class="chat-area">
+          <div class="msg bot">
+            Bonjour Rukayatou 💼 J'ai analysé ton réseau. Kofi Assi n'a pas encore activé XPaye — son secteur (restauration) correspond exactement à votre cible. Je t'ai préparé un message.
+            <div class="chip-row">
+              <span class="chip">Voir le message</span>
+              <span class="chip">Prochains départs</span>
+            </div>
+          </div>
+          <div class="msg me">Génère le script pour Kofi</div>
+          <div class="msg bot">
+            Voici ton message WhatsApp pour Kofi :<br><br>
+            <em>"Kofi, avec XPaye tu peux encaisser tes clients en 10 secondes, Wave et Orange Money inclus. Tes ventes du soir ne traînent plus. Je t'offre 30 jours gratuits. On essaie ?"</em><br><br>
+            Taux de réponse estimé : <strong style="color:var(--brand)">68%</strong>
+          </div>
+        </div>
+        <div class="input-row">
+          <input class="chat-input" placeholder="Parle à ton agent…">
+          <button class="send-btn">➤</button>
+        </div>
+      </section>
+
+      <!-- ÉCRAN 3 : Mon réseau -->
+      <section class="view" id="v3">
+        <div class="card">
+          <h3>Ton réseau CI</h3>
+          <div class="prospect">
+            <div class="info"><h4>Kofi Assi</h4><p>Restaurant · Abidjan</p></div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="badge chaud">🔥 Chaud</span>
+              <button class="mini-btn">Écrire</button>
+            </div>
+          </div>
+          <div class="prospect">
+            <div class="info"><h4>Awa Touré</h4><p>Boutique mode · Paris 13e</p></div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="badge tiede">⏳ Tiède</span>
+              <button class="mini-btn">Relancer</button>
+            </div>
+          </div>
+          <div class="prospect">
+            <div class="info"><h4>Serge Koffi</h4><p>Traiteur · Lyon</p></div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="badge actif">✓ XPaye actif</span>
+              <button class="mini-btn">Voir</button>
+            </div>
+          </div>
+          <div class="prospect">
+            <div class="info"><h4>Mariam Bamba</h4><p>Coiffure · Montreuil</p></div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="badge tiede">⏳ Tiède</span>
+              <button class="mini-btn">Relancer</button>
+            </div>
+          </div>
+        </div>
+        <button class="btn dark" onclick="go('v2',document.querySelectorAll('.tab')[1])">Demander un script à l'agent</button>
+      </section>
+
+      <!-- ÉCRAN 4 : Résultats -->
+      <section class="view" id="v4">
+        <div class="card">
+          <h3>Performance ce mois</h3>
+          <div class="stat"><span>XPaye activés</span><b>12</b></div>
+          <div class="stat"><span>Conversations ouvertes</span><b>34</b></div>
+          <div class="stat"><span>Taux de conversion</span><b>35%</b></div>
+          <div class="stat"><span>Commission générée</span><b>480€</b></div>
+        </div>
+        <div class="card">
+          <h3>Ton profil commercial</h3>
+          <p style="margin-bottom:10px">Spécialisée entrepreneurs CI/diaspora. Réseau actif sur Paris, Lyon, Abidjan.</p>
+          <span class="tag">Restauration</span>
+          <span class="tag">Beauté & mode</span>
+          <span class="tag">Commerce</span>
+          <span class="tag">Diaspora FR</span>
+        </div>
+        <button class="btn ghost">Télécharger mon rapport</button>
+      </section>
+
+    </div>
+
+    <nav class="tabbar">
+      <button class="tab active" onclick="go('v1',this)"><span class="ic">🏠</span>Accueil</button>
+      <button class="tab" onclick="go('v2',this)"><span class="ic">🤖</span>Agent</button>
+      <button class="tab" onclick="go('v3',this)"><span class="ic">👥</span>Réseau</button>
+      <button class="tab" onclick="go('v4',this)"><span class="ic">📊</span>Résultats</button>
+    </nav>
+
+  </div></div>
+</div>
+
+<script>
+function go(id,el){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.querySelector('.content').scrollTop=0;
+}
+</script>
+</body>
+</html>
