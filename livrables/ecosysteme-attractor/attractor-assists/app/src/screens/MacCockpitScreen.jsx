@@ -385,8 +385,9 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
 
     // 3. Débloquer le bouton "Lancer la production" immédiatement
     setAlerteDone(true);
+    setAlerteLoading(false);
 
-    // 4. Appel Carelle — en bonus, sans bloquer le flow
+    // 4. Appel Carelle — fire and forget, sans bloquer le flow
     const msg = [
       `Prospect Famille A confirmé : ${prospect.prenom}${prospect.activite ? ` (${prospect.activite})` : ''}.`,
       prospect.besoin   ? `Besoin : ${prospect.besoin}` : '',
@@ -406,8 +407,6 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
     } catch {
       // Carelle indisponible — les agents sont quand même briefés via le journal
     }
-
-    setAlerteLoading(false);
   };
 
   const generateMaquette = async (prospect) => {
