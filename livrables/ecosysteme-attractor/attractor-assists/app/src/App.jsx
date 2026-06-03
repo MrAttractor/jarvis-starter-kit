@@ -23,10 +23,10 @@ import { DechargeVocaleScreen } from './screens/DechargeVocaleScreen';
 import { MarketplaceScreen } from './screens/MarketplaceScreen';
 
 const TABS_USER  = [
-  { id: "dashboard",   label: "Accueil",    icon: "home" },
-  { id: "assistants",  label: "Mon équipe", icon: "users" },
-  { id: "marketplace", label: "Experts",    icon: "grid" },
-  { id: "profil",      label: "Profil",     icon: "user" },
+  { id: "dashboard",   label: "Accueil",      icon: "home" },
+  { id: "assistants",  label: "Mon équipe",   icon: "users" },
+  { id: "marketplace", label: "Marketplace",  icon: "grid" },
+  { id: "profil",      label: "Profil",       icon: "user" },
 ];
 const TABS_ADMIN = [
   { id: "carelle",  label: "Carelle",  icon: "bolt" },
@@ -46,6 +46,7 @@ export default function App() {
   const handleSetDark = (val) => { localStorage.setItem('aa-dark', val ? '1' : '0'); setDark(val); };
   const [fab, setFab] = useState(false);
   const [toastNode, notify] = useToast();
+  const [navBadges, setNavBadges] = useState({ assistants: 0, marketplace: 0 });
 
   const loadProfile = async () => {
     try {
@@ -95,6 +96,18 @@ export default function App() {
       if (event === "SIGNED_OUT") { setProfile(null); setPhase("login"); setScreen("dashboard"); }
     });
     return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const loadBadges = async () => {
+      try {
+        const [{ count: mktCount }] = await Promise.all([
+          supabase.from('prestataires').select('id', { count: 'exact', head: true }).eq('statut', 'visible'),
+        ]);
+        setNavBadges(b => ({ ...b, assistants: 7, marketplace: mktCount || 0 }));
+      } catch {}
+    };
+    loadBadges();
   }, []);
 
   const go = (s, p = {}) => {
@@ -160,12 +173,23 @@ export default function App() {
           <div className="bg-white rounded-[24px] border border-g200 shadow-soft p-5 flex flex-col h-full">
             <div className="px-1 mb-7"><Logo size="md" /></div>
             <nav className="flex flex-col gap-1.5">
-              {TABS.map(t => (
-                <button key={t.id} onClick={() => go(t.id)}
-                  className={`flex items-center gap-3 px-3.5 py-3 rounded-xl font-display font-bold text-[14.5px] transition ${activeTab === t.id ? "bg-orange text-white shadow-[0_8px_18px_-7px_rgba(242,92,5,.6)]" : "text-g700 hover:bg-sable"}`}>
-                  <Icon name={t.icon} size={20} />{t.label}
-                </button>
-              ))}
+              {TABS.map(t => {
+                const badge = !isAdmin && navBadges[t.id];
+                return (
+                  <button key={t.id} onClick={() => go(t.id)}
+                    className={`flex items-center gap-3 px-3.5 py-3 rounded-xl font-display font-bold text-[14.5px] transition ${activeTab === t.id ? "bg-orange text-white shadow-[0_8px_18px_-7px_rgba(242,92,5,.6)]" : "text-g700 hover:bg-sable"}`}>
+                    <div className="relative flex-shrink-0">
+                      <Icon name={t.icon} size={20} />
+                      {badge > 0 && (
+                        <span className={`absolute -top-1.5 -right-2 min-w-[16px] h-4 rounded-full text-[9px] font-bold flex items-center justify-center px-1 leading-none ${activeTab === t.id ? "bg-white text-orange" : "bg-orange text-white"}`}>
+                          {badge > 99 ? '99+' : badge}
+                        </span>
+                      )}
+                    </div>
+                    {t.label}
+                  </button>
+                );
+              })}
             </nav>
             {!isAdmin && (
               <button onClick={() => go("conversation", { assistant: "coach" })} className="mt-6 flex items-center gap-3 px-3.5 py-3 rounded-xl bg-charbon text-white font-display font-bold text-[14.5px]">
@@ -199,12 +223,12 @@ export default function App() {
                   : (
                     <>
                       <NavBtn t={TABS[0]} active={activeTab === TABS[0].id} onClick={() => go(TABS[0].id)} />
-                      <NavBtn t={TABS[1]} active={activeTab === TABS[1].id} onClick={() => go(TABS[1].id)} />
+                      <NavBtn t={TABS[1]} active={activeTab === TABS[1].id} onClick={() => go(TABS[1].id)} badge={navBadges.assistants} />
                       {/* FAB coach — au centre */}
                       <button onClick={() => go("conversation", { assistant: "coach" })} className="w-14 h-14 -mt-7 rounded-full bg-orange text-white flex items-center justify-center shadow-[0_10px_22px_-6px_rgba(242,92,5,.7)] border-[3px] border-sable flex-shrink-0 active:scale-95 transition">
                         <Icon name="spark" size={24} />
                       </button>
-                      <NavBtn t={TABS[2]} active={activeTab === TABS[2].id} onClick={() => go(TABS[2].id)} />
+                      <NavBtn t={TABS[2]} active={activeTab === TABS[2].id} onClick={() => go(TABS[2].id)} badge={navBadges.marketplace} />
                       <NavBtn t={TABS[3]} active={activeTab === TABS[3].id} onClick={() => go(TABS[3].id)} />
                     </>
                   )
@@ -240,10 +264,17 @@ export default function App() {
   );
 }
 
-function NavBtn({ t, active, onClick }) {
+function NavBtn({ t, active, onClick, badge }) {
   return (
     <button onClick={onClick} className={`flex flex-col items-center gap-1 flex-1 ${active ? "text-orange" : "text-g400"}`}>
-      <Icon name={t.icon} size={22} stroke={active ? 2.2 : 1.9} />
+      <div className="relative">
+        <Icon name={t.icon} size={22} stroke={active ? 2.2 : 1.9} />
+        {badge > 0 && (
+          <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 rounded-full bg-orange text-white text-[9px] font-bold flex items-center justify-center px-1 leading-none">
+            {badge > 99 ? '99+' : badge}
+          </span>
+        )}
+      </div>
       <span className="text-[10px] font-bold">{t.label}</span>
     </button>
   );
