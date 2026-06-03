@@ -102,7 +102,7 @@ Deno.serve(async (req) => {
         customerEmail:       user.email ?? "",
         customerFirstName:   profile?.prenom ?? "Client",
         customerLastname:    "Attractor",
-        customerPhoneNumber: profile?.phone ?? "",
+        customerPhoneNumber: profile?.phone ?? "00000000",
         notificationURL:     notifURL,
         returnURL:           `${RETURN_URL}&plan=${plan_id}`,
         returnContext:       JSON.stringify({ reference, plan_id }),
