@@ -310,7 +310,8 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
     setProspects(prev => [data, ...prev]);
     setPPrenom(''); setPActivite(''); setPBesoin(''); setPContexte(''); setPWa('');
     setShowForm(false); setPSaving(false);
-    generateSequence(data);
+    if (data.type_projet === 'A') carelleBriefProspect(data);
+    else generateSequence(data);
     generateDevis(data.id);
   };
 
@@ -320,6 +321,43 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
       const { data, error } = await supabase.functions.invoke('generate-sequence', { body: { prospect_id: prospect.id } });
       if (error || !data?.messages) { notify('Erreur génération séquence'); }
       else { setProspectSeq(data); await loadAll(); }
+    } catch { notify('Erreur réseau'); }
+    setSeqLoading(false);
+  };
+
+  const carelleBriefProspect = async (prospect) => {
+    setSelectedProspect(prospect); setProspectSeq(null); setSeqLoading(true);
+    try {
+      const lines = [
+        `Nouveau prospect Famille A dans le pipeline :`,
+        `Prénom : ${prospect.prenom}`,
+        prospect.activite ? `Activité : ${prospect.activite}` : '',
+        prospect.besoin   ? `Besoin : ${prospect.besoin}` : '',
+        prospect.contexte ? `Contexte : ${prospect.contexte}` : '',
+        `Zone : ${prospect.zone || '—'}`,
+        `Nb utilisateurs : ${prospect.nb_users || '1'}`,
+        prospect.whatsapp ? `WhatsApp : ${prospect.whatsapp}` : '',
+        '',
+        `Famille A = maquette first. Lis ce dossier et réponds à Mac Arthur en 3 points : 1) ce que tu retiens de ce prospect, 2) quelle maquette produire, 3) si une info manque, pose la question. Sois directe et concise.`,
+      ].filter(Boolean).join('\n');
+
+      const { data, error } = await supabase.functions.invoke('chat-assistant', {
+        body: {
+          messages: [{ from: 'me', text: lines }],
+          assistant_id: 'carelle',
+          user_id: profile?.id,
+          profile: profile || {},
+        },
+      });
+      if (error || !data?.reply) { notify('Erreur brief Carelle'); }
+      else {
+        setProspectSeq({ carelle_brief: data.reply });
+        await supabase.from('journal_agent').insert({
+          agent_id: 'carelle', type: 'brief_prospect',
+          titre: `Brief Fam. A — ${prospect.prenom}`,
+          details: { prospect_id: prospect.id },
+        }).catch(() => {});
+      }
     } catch { notify('Erreur réseau'); }
     setSeqLoading(false);
   };
@@ -1044,19 +1082,45 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
             </div>
             {seqLoading ? (
               <div className="py-10 text-center">
-                <div className="text-[13px] text-g400 mb-2">Awa prépare la séquence…</div>
+                <div className="text-[13px] text-g400 mb-2">
+                  {selectedProspect?.type_projet === 'A' ? 'Carelle lit le dossier…' : 'Awa prépare la séquence…'}
+                </div>
                 <div className="text-[11px] text-g300">10-15 secondes</div>
               </div>
             ) : !prospectSeq ? (
               <div className="flex flex-col gap-4">
-                <p className="text-[13px] text-g400 text-center py-4">Pas encore de séquence.</p>
-                <button onClick={() => generateSequence(selectedProspect)}
-                  className="w-full py-3 rounded-xl bg-orange text-white text-[14px] font-bold active:scale-[.98] transition">
-                  Générer la séquence Awa
-                </button>
+                <p className="text-[13px] text-g400 text-center py-4">
+                  {selectedProspect?.type_projet === 'A' ? 'Pas encore de brief Carelle.' : 'Pas encore de séquence.'}
+                </p>
+                {selectedProspect?.type_projet === 'A' ? (
+                  <button onClick={() => carelleBriefProspect(selectedProspect)}
+                    className="w-full py-3 rounded-xl bg-charbon text-white text-[14px] font-bold active:scale-[.98] transition">
+                    Brief Carelle — Maquette first
+                  </button>
+                ) : (
+                  <button onClick={() => generateSequence(selectedProspect)}
+                    className="w-full py-3 rounded-xl bg-orange text-white text-[14px] font-bold active:scale-[.98] transition">
+                    Générer la séquence Awa
+                  </button>
+                )}
               </div>
             ) : (
               <div className="flex flex-col gap-4">
+                {/* Brief Carelle — Famille A */}
+                {prospectSeq.carelle_brief && (
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2 px-3 py-2 bg-charbon rounded-xl">
+                      <span className="w-2 h-2 rounded-full bg-white/60 flex-shrink-0" />
+                      <span className="text-[12px] font-bold text-white">Carelle — Brief Fam. A</span>
+                    </div>
+                    <p className="text-[13.5px] text-charbon leading-relaxed whitespace-pre-wrap bg-sable rounded-[12px] px-4 py-3">{prospectSeq.carelle_brief}</p>
+                    <button onClick={() => carelleBriefProspect(selectedProspect)}
+                      className="w-full py-2.5 rounded-xl border border-charbon/20 text-charbon text-[13px] font-bold active:scale-[.98] transition">
+                      Relancer Carelle
+                    </button>
+                  </div>
+                )}
+
                 {/* Maquette closer — Famille A */}
                 {selectedProspect.type_projet === 'A' && (
                   <div className="flex flex-col gap-3">
@@ -1078,7 +1142,7 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
                     {maquettePreview && (
                       <img src={maquettePreview} alt="preview" className="w-full rounded-xl object-cover max-h-[160px]" />
                     )}
-                    <p className="text-[11px] font-bold text-g400 uppercase tracking-wider">Étape 2 — Message Awa</p>
+                    <p className="text-[11px] font-bold text-g400 uppercase tracking-wider">Étape 2 — Message d'accompagnement</p>
                     <textarea
                       value={maquetteMsg}
                       onChange={e => setMaquetteMsg(e.target.value)}
