@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import { MOCK } from '../data';
+import { resolveAgentStatus } from '../lib/agentGating';
 import { Icon, Pill, Card, Btn, SectionLabel, Progress, AssistGlyph, Sheet } from '../components/ui';
 
 const PLAN_MSG_LIMIT = { decouverte: 20, decouverte_eu: 20, gratuit: 20, growth: 100, growth_eu: 100 };
@@ -139,8 +140,14 @@ export function DashboardScreen({ go, notify, profile }) {
   ];
   const progPct = (milestones.filter(m => m.state === 'done').length / milestones.length) * 100;
 
+  const resolvedAssistants = MOCK.assistants.map(a => ({
+    ...a,
+    status: resolveAgentStatus(a.id, planCode),
+  }));
+
   const handleAssistant = (a) => {
-    if (a.status !== 'verrouillé') { go('conversation', { assistant: a.id }); return; }
+    if (a.status === 'actif')    { go('conversation', { assistant: a.id }); return; }
+    if (a.status === 'demo')     { go('conversation', { assistant: a.id, mode: 'demo', prefill: "Je veux voir une démo d'application pour mon activité." }); return; }
     const msgFn = CAPACITY_MSG[a.id];
     if (msgFn) setLockedSheet({ assistant: a, msg: msgFn(activite, nomAss) });
     else go('paliers');
@@ -380,8 +387,9 @@ export function DashboardScreen({ go, notify, profile }) {
           Ton équipe
         </SectionLabel>
         <div className="flex gap-3 overflow-x-auto pb-1.5 -mx-[18px] px-[18px]" style={{ scrollbarWidth: "none" }}>
-          {MOCK.assistants.slice(0, 4).map(a => {
-            const locked = a.status === "verrouillé";
+          {resolvedAssistants.slice(0, 4).map(a => {
+            const locked = a.status === "verrouille";
+            const isDemo = a.status === "demo";
             const displayName = a.id === "coach" ? nomAss : a.name;
             return (
               <button key={a.id} onClick={() => handleAssistant(a)}
@@ -392,8 +400,8 @@ export function DashboardScreen({ go, notify, profile }) {
                 }
                 <h4 className="font-display font-bold text-[14px] mt-2.5">{displayName}</h4>
                 <div className="text-[11.5px] text-g400">{a.role}</div>
-                <div className={`text-[11px] font-bold mt-2 flex items-center gap-1 ${locked ? "text-g400" : "text-growth"}`}>
-                  {locked ? <><Icon name="lock" size={12} /> {a.plan}</> : <>● Actif</>}
+                <div className={`text-[11px] font-bold mt-2 flex items-center gap-1 ${locked ? "text-g400" : isDemo ? "text-amber" : "text-growth"}`}>
+                  {locked ? <><Icon name="lock" size={12} /> Plan Team</> : isDemo ? <><Icon name="spark" size={12} /> Démo gratuite</> : <>● Actif</>}
                 </div>
               </button>
             );

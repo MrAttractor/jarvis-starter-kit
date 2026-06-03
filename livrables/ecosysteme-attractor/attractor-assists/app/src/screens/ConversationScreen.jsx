@@ -65,6 +65,44 @@ const buildCoachOpener = (profile, nomAss) => {
 // Agents verrouillés = mode passif interactif
 const LOCKED_AGENTS = ["miriam", "serge", "roland", "kofi"];
 
+// Card résultat démo maquette
+function DemoResultCard({ url, onGrowth, onFamilleA }) {
+  return (
+    <div className="self-start max-w-[90%] animate-[fadeUp_.3s_ease]">
+      <div className="bg-charbon rounded-[20px] overflow-hidden shadow-[0_12px_32px_-10px_rgba(26,23,20,.5)]">
+        <div className="px-4 pt-4 pb-3">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="w-2 h-2 rounded-full bg-growth animate-pulse" />
+            <span className="text-[11px] font-bold text-growth uppercase tracking-[.1em]">Ta maquette est prête</span>
+          </div>
+          <a href={url} target="_blank" rel="noreferrer"
+            className="flex items-center justify-between px-4 py-3 bg-white/10 rounded-[12px] border border-white/15 mb-3 active:bg-white/15 transition">
+            <span className="text-[13.5px] font-bold text-white truncate mr-2">Voir ma démo</span>
+            <Icon name="arrow" size={16} className="text-orange flex-shrink-0" />
+          </a>
+          <p className="text-[11.5px] text-white/50 mb-3">Deux options pour aller plus loin :</p>
+        </div>
+        <button onClick={onGrowth}
+          className="w-full flex items-center justify-between px-4 py-3.5 bg-orange/15 border-t border-white/10 active:bg-orange/25 transition">
+          <div className="text-left">
+            <p className="text-[13px] font-bold text-orange">Hébergé chez nous</p>
+            <p className="text-[11.5px] text-white/50">Branding Attractor · forfait d'entrée + MRR</p>
+          </div>
+          <Icon name="chevron" size={16} className="text-orange" />
+        </button>
+        <button onClick={onFamilleA}
+          className="w-full flex items-center justify-between px-4 py-3.5 border-t border-white/10 active:bg-white/5 transition">
+          <div className="text-left">
+            <p className="text-[13px] font-bold text-white">Tes couleurs, ton nom</p>
+            <p className="text-[11.5px] text-white/50">Application personnalisée · sur devis</p>
+          </div>
+          <Icon name="chevron" size={16} className="text-white/40" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // Nombre de lignes visibles avant troncature pour les agents passifs
 const TRUNCATE_AFTER_CHARS = 320;
 
@@ -120,25 +158,37 @@ function TruncatedBubble({ text, agentPlan, onUpgrade }) {
 // â”€â”€â”€ Composant principal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function ConversationScreen({ go, notify, params, profile }) {
-  const a        = MOCK.assistants.find(x => x.id === (params?.assistant)) || MOCK.assistants[0];
-  const first    = profile?.prenom        || "Champion";
-  const nomAss   = profile?.nom_assistant || a.name;
-  const isLocked = LOCKED_AGENTS.includes(a.id);
+  const a          = MOCK.assistants.find(x => x.id === (params?.assistant)) || MOCK.assistants[0];
+  const first      = profile?.prenom        || "Champion";
+  const nomAss     = profile?.nom_assistant || a.name;
+  const isLocked   = LOCKED_AGENTS.includes(a.id);
+  const isDemoMode = params?.mode === 'demo' && a.id === 'carelle';
 
-  const opener = a.id === "coach"
-    ? buildCoachOpener(profile, isLocked ? a.name : nomAss)
-    : (OPENERS_AGENTS[a.id] || OPENERS_AGENTS.awa)(first, profile);
+  const demoOpener = `Salut ${first} ! Je suis Carelle.\n\nJe vais générer une maquette personnalisée de ton application en quelques minutes. Je te pose 4 questions rapides.\n\nCommençons : ton activité exacte et ta ville ?`;
 
-  const [msgs, setMsgs]           = useState([{ from: "bot", text: opener }]);
-  const [typing, setTyping]       = useState(false);
-  const [input, setInput]         = useState("");
-  const [ppsd, setPpsd]           = useState(null);
-  const [userId, setUserId]       = useState(null);
-  const [flagOpen, setFlagOpen]   = useState(false);
-  const [flagText, setFlagText]   = useState("");
+  const opener = isDemoMode
+    ? demoOpener
+    : a.id === "coach"
+      ? buildCoachOpener(profile, isLocked ? a.name : nomAss)
+      : (OPENERS_AGENTS[a.id] || OPENERS_AGENTS.awa)(first, profile);
+
+  const [msgs, setMsgs]               = useState([{ from: "bot", text: opener }]);
+  const [typing, setTyping]           = useState(false);
+  const [input, setInput]             = useState("");
+  const [ppsd, setPpsd]               = useState(null);
+  const [userId, setUserId]           = useState(null);
+  const [flagOpen, setFlagOpen]       = useState(false);
+  const [flagText, setFlagText]       = useState("");
+  const [demoProspectId, setDemoProspectId] = useState(null);
+  const [demoGenerating, setDemoGenerating] = useState(false);
+  const [demoUrl, setDemoUrl]         = useState(null);
   const scroller            = useRef();
   const prefillSent         = useRef(false);
+  const demoProspectCreated = useRef(false);
   const sessionId           = useRef(`session-${Date.now()}`);
+
+  // Nombre de messages envoyés par l'utilisateur (hors opener)
+  const userMsgCount = msgs.filter(m => m.from === 'me').length;
 
   // Charger le PPSD et l'user_id
   useEffect(() => {
@@ -207,6 +257,45 @@ export function ConversationScreen({ go, notify, params, profile }) {
     }
   };
 
+  // Créer le prospect en base au premier message démo
+  const createDemoProspect = async (uid) => {
+    if (demoProspectCreated.current) return;
+    demoProspectCreated.current = true;
+    try {
+      const { data } = await supabase.from('prospects').insert({
+        prenom:       profile?.prenom || 'Inconnu',
+        activite:     profile?.activite || '',
+        besoin:       "Démo app — via Attractor Assists",
+        zone:         profile?.zone || 'CI',
+        type_projet:  'C',
+        statut:       'nouveau',
+        contexte:     `user_id:${uid}`,
+      }).select('id').single();
+      if (data?.id) setDemoProspectId(data.id);
+    } catch {}
+  };
+
+  // Générer la maquette et afficher la card résultat
+  const generateDemoMaquette = async () => {
+    if (!demoProspectId || demoGenerating) return;
+    setDemoGenerating(true);
+    try {
+      // Injecter le résumé conversation dans le contexte du prospect
+      const convSummary = msgs.filter(m => m.from === 'me').map(m => m.text).join(' | ');
+      await supabase.from('prospects').update({ contexte: convSummary }).eq('id', demoProspectId);
+
+      const { data, error } = await supabase.functions.invoke('generate-maquette', {
+        body: { prospect_id: demoProspectId },
+      });
+      if (error || !data?.url) throw new Error('Génération échouée');
+      setDemoUrl(data.url);
+    } catch {
+      notify("Génération en cours, réessaie dans un instant.");
+    } finally {
+      setDemoGenerating(false);
+    }
+  };
+
   const send = async (text) => {
     if (!text?.trim()) return;
 
@@ -216,6 +305,11 @@ export function ConversationScreen({ go, notify, params, profile }) {
     setInput("");
     setTyping(true);
 
+    // Tracking : créer le prospect au premier message en mode démo
+    if (isDemoMode && userId && !demoProspectCreated.current) {
+      createDemoProspect(userId);
+    }
+
     try {
       const history = newMsgs.filter((m, i) => !(i === 0 && m.from === "bot"));
 
@@ -223,6 +317,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
         body: {
           messages: history,
           assistant_id: a.id,
+          ...(isDemoMode ? { mode: 'demo' } : {}),
           profile: {
             prenom:          profile?.prenom,
             nom_assistant:   profile?.nom_assistant,
@@ -278,8 +373,8 @@ export function ConversationScreen({ go, notify, params, profile }) {
         <AssistGlyph accent={a.accent} icon={a.icon} size={42} />
         <div className="flex-1">
           <h3 className="font-display font-extrabold text-[16px] leading-tight">{a.id === "coach" ? nomAss : a.name}</h3>
-          <div className={`text-[12px] font-semibold flex items-center gap-1 ${isLocked ? "text-amber" : "text-growth"}`}>
-            {isLocked ? "● Mode aperçu" : "● En ligne"} · {a.role}
+          <div className={`text-[12px] font-semibold flex items-center gap-1 ${isLocked ? "text-amber" : isDemoMode ? "text-amber" : "text-growth"}`}>
+            {isLocked ? "● Mode aperçu" : isDemoMode ? "● Mode Démo" : "● En ligne"} · {a.role}
           </div>
         </div>
         {isLocked && (
@@ -329,7 +424,33 @@ export function ConversationScreen({ go, notify, params, profile }) {
             <TypingDots />
           </div>
         )}
+
+        {/* Card résultat démo */}
+        {isDemoMode && demoUrl && (
+          <DemoResultCard
+            url={demoUrl}
+            onGrowth={() => go('paliers')}
+            onFamilleA={() => go('conversation', { assistant: 'carelle', prefill: "Je veux une application personnalisée avec mes propres couleurs et mon logo." })}
+          />
+        )}
       </div>
+
+      {/* Bouton flottant "Générer ma maquette" — mode démo, ≥4 échanges, maquette pas encore générée */}
+      {isDemoMode && userMsgCount >= 4 && !demoUrl && (
+        <div className="px-4 pb-2">
+          <button
+            onClick={generateDemoMaquette}
+            disabled={demoGenerating || !demoProspectId}
+            className="w-full py-3.5 rounded-[14px] font-display font-extrabold text-[14px] text-charbon flex items-center justify-center gap-2 active:scale-[.99] transition disabled:opacity-60"
+            style={{ background: 'linear-gradient(135deg,#FFC107,#FFB300)', boxShadow: '0 8px 20px -6px rgba(255,193,7,.5)' }}
+          >
+            {demoGenerating
+              ? <><span className="w-4 h-4 rounded-full border-2 border-charbon/30 border-t-charbon animate-spin" /> Carelle prépare ta maquette…</>
+              : <><Icon name="spark" size={16} /> Générer ma maquette</>
+            }
+          </button>
+        </div>
+      )}
 
       {/* Suggestions (premier message uniquement) */}
       {msgs.length <= 1 && (

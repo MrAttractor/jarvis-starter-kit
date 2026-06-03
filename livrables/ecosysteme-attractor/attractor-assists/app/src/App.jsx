@@ -20,11 +20,13 @@ import { MacCockpitScreen } from './screens/MacCockpitScreen';
 import { MéthodeScreen } from './screens/MéthodeScreen';
 import { CarnetAffairesScreen } from './screens/CarnetAffairesScreen';
 import { DechargeVocaleScreen } from './screens/DechargeVocaleScreen';
+import { MarketplaceScreen } from './screens/MarketplaceScreen';
 
 const TABS_USER  = [
-  { id: "dashboard",  label: "Accueil",    icon: "home" },
-  { id: "assistants", label: "Mon équipe", icon: "users" },
-  { id: "profil",     label: "Profil",     icon: "user" },
+  { id: "dashboard",   label: "Accueil",    icon: "home" },
+  { id: "assistants",  label: "Mon équipe", icon: "users" },
+  { id: "marketplace", label: "Experts",    icon: "grid" },
+  { id: "profil",      label: "Profil",     icon: "user" },
 ];
 const TABS_ADMIN = [
   { id: "carelle",  label: "Carelle",  icon: "bolt" },
@@ -136,6 +138,7 @@ export default function App() {
     methode:       <MéthodeScreen go={go} />,
     carnet:        <CarnetAffairesScreen go={go} />,
     dump:          <DechargeVocaleScreen go={go} profile={profile} />,
+    marketplace:   <MarketplaceScreen go={go} notify={notify} />,
     install:     <InstallGuide
                    platform={detectPlatform()}
                    prenom={profile?.prenom || ''}
@@ -172,8 +175,8 @@ export default function App() {
             {!isAdmin && (
               <div className="mt-auto">
                 <button onClick={() => go("paliers")} className="w-full rounded-xl p-4 text-left text-white" style={{ background: "linear-gradient(135deg,#FF7A2E,#F25C05)" }}>
-                  <div className="font-display font-extrabold text-[14px]">Passe Manager</div>
-                  <div className="text-[12px] text-white/85 mt-0.5">Toute ton équipe IA · −70 %</div>
+                  <div className="font-display font-extrabold text-[14px]">Passe Team</div>
+                  <div className="text-[12px] text-white/85 mt-0.5">Toute ton équipe IA · −60 %</div>
                 </button>
               </div>
             )}
@@ -190,14 +193,22 @@ export default function App() {
 
             {/* bottom nav mobile */}
             {!isConversation && (
-              <div className={`lg:hidden absolute bottom-0 left-0 right-0 bg-white/92 backdrop-blur-xl border-t border-g200 flex items-center justify-around px-2 pt-2 pb-6 z-30 ${isAdmin ? 'gap-0' : ''}`}>
-                <NavBtn t={TABS[0]} active={activeTab === TABS[0].id} onClick={() => go(TABS[0].id)} />
-                {!isAdmin && (
-                  <button onClick={() => go("conversation", { assistant: "coach" })} className="w-14 h-14 -mt-7 rounded-full bg-orange text-white flex items-center justify-center shadow-[0_10px_22px_-6px_rgba(242,92,5,.7)] border-[3px] border-sable flex-shrink-0 active:scale-95 transition">
-                    <Icon name="spark" size={24} />
-                  </button>
-                )}
-                {TABS.slice(1).map(t => <NavBtn key={t.id} t={t} active={activeTab === t.id} onClick={() => go(t.id)} />)}
+              <div className={`lg:hidden absolute bottom-0 left-0 right-0 bg-white/92 backdrop-blur-xl border-t border-g200 flex items-center justify-around px-2 pt-2 pb-6 z-30`}>
+                {isAdmin
+                  ? TABS.map(t => <NavBtn key={t.id} t={t} active={activeTab === t.id} onClick={() => go(t.id)} />)
+                  : (
+                    <>
+                      <NavBtn t={TABS[0]} active={activeTab === TABS[0].id} onClick={() => go(TABS[0].id)} />
+                      <NavBtn t={TABS[1]} active={activeTab === TABS[1].id} onClick={() => go(TABS[1].id)} />
+                      {/* FAB coach — au centre */}
+                      <button onClick={() => go("conversation", { assistant: "coach" })} className="w-14 h-14 -mt-7 rounded-full bg-orange text-white flex items-center justify-center shadow-[0_10px_22px_-6px_rgba(242,92,5,.7)] border-[3px] border-sable flex-shrink-0 active:scale-95 transition">
+                        <Icon name="spark" size={24} />
+                      </button>
+                      <NavBtn t={TABS[2]} active={activeTab === TABS[2].id} onClick={() => go(TABS[2].id)} />
+                      <NavBtn t={TABS[3]} active={activeTab === TABS[3].id} onClick={() => go(TABS[3].id)} />
+                    </>
+                  )
+                }
               </div>
             )}
           </div>

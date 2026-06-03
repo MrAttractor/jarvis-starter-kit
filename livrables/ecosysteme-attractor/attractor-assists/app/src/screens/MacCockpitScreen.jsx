@@ -151,6 +151,9 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
   // ── Feedbacks ──
   const [fbFilter, setFbFilter] = useState('all');
 
+  // ── Marketplace — prestataires en attente ──
+  const [prestaEnAttente, setPrestaEnAttente] = useState([]);
+
   // ── Carelle chat ──
   const [carelleMsgs,    setCarelleMsgs]    = useState([]);
   const [carelleInput,   setCarelleInput]   = useState('');
@@ -187,6 +190,14 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
       setDecisions(dec || []);
       setFeedbacks(fb || []);
       setUsers(uList || []);
+
+      // Prestataires en attente
+      const { data: presta } = await supabase
+        .from('prestataires')
+        .select('*')
+        .eq('statut', 'en_attente')
+        .order('created_at', { ascending: false });
+      setPrestaEnAttente(presta || []);
     } catch (e) {
       console.error('MacCockpit loadAll', e);
     }
@@ -507,6 +518,15 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
   const resolveArbitrage = async (id) => {
     await supabase.from('methode_miroir').update({ arbitre: true }).eq('id', id);
     setMiroir(prev => prev.map(m => m.id === id ? { ...m, arbitre: true } : m));
+  };
+
+  // ─── Prestataires Marketplace ────────────────────────────────────────────
+
+  const validatePresta = async (id, statut) => {
+    const { error } = await supabase.from('prestataires').update({ statut }).eq('id', id);
+    if (error) { notify('Erreur — vérifie la policy admin.'); return; }
+    setPrestaEnAttente(prev => prev.filter(p => p.id !== id));
+    notify(statut === 'visible' ? 'Prestataire validé — visible dans le catalogue.' : 'Prestataire rejeté.');
   };
 
   // ─── Actions feedbacks ───────────────────────────────────────────────────
@@ -1601,6 +1621,56 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
                 </Card>
               );
             })}
+          </div>
+        )}
+
+        {/* Marketplace — prestataires en attente */}
+        <SectionLabel>
+          Marketplace — prestataires en attente
+          {prestaEnAttente.length > 0 && (
+            <span className="ml-1.5 bg-amber text-charbon text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">
+              {prestaEnAttente.length}
+            </span>
+          )}
+        </SectionLabel>
+
+        {prestaEnAttente.length === 0 ? (
+          <p className="text-center text-[13px] text-g400 py-4">Aucun prestataire en attente.</p>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {prestaEnAttente.map(p => (
+              <Card key={p.id} className="p-4 flex flex-col gap-2.5 border-amber/30">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="font-display font-bold text-[14px] text-charbon">{p.nom}</p>
+                    <p className="text-[12px] text-g400">{p.categorie} · {p.zone}</p>
+                  </div>
+                  <span className="text-[10px] font-bold bg-amber/15 text-amber px-2 py-0.5 rounded-full flex-shrink-0">en attente</span>
+                </div>
+                {p.specialite && <p className="text-[12.5px] text-charbon">{p.specialite}</p>}
+                {p.presentation && <p className="text-[12px] text-g500 leading-snug">{p.presentation.slice(0, 100)}…</p>}
+                <div className="flex items-center gap-3 text-[12px] text-g400">
+                  <span>WA : {p.whatsapp}</span>
+                  {p.tarif_indicatif && <span>Tarif : {p.tarif_indicatif}</span>}
+                </div>
+                {p.whatsapp && (
+                  <a href={`https://wa.me/${p.whatsapp.replace(/[^0-9+]/g, '')}`} target="_blank" rel="noreferrer"
+                    className="flex items-center gap-1.5 text-[12.5px] font-bold text-[#25D366] active:opacity-70 transition">
+                    Contacter sur WhatsApp pour vérifier
+                  </a>
+                )}
+                <div className="flex gap-2 mt-1">
+                  <button onClick={() => validatePresta(p.id, 'visible')}
+                    className="flex-1 py-2.5 rounded-xl bg-growth text-white text-[13px] font-bold active:scale-[.98] transition">
+                    Valider
+                  </button>
+                  <button onClick={() => validatePresta(p.id, 'suspendu')}
+                    className="flex-1 py-2.5 rounded-xl bg-g200 text-g500 text-[13px] font-bold active:scale-[.98] transition">
+                    Rejeter
+                  </button>
+                </div>
+              </Card>
+            ))}
           </div>
         )}
 

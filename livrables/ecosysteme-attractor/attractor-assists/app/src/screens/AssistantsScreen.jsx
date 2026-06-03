@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { MOCK } from '../data';
 import { supabase } from '../lib/supabase';
+import { resolveAgentStatus } from '../lib/agentGating';
 import { Card, SectionLabel, Icon, AppHeader, Btn } from '../components/ui';
 
 // ─── Helpers temps ─────────────────────────────────────────────────────────────
@@ -268,7 +269,7 @@ function TeamHero({ agents, onAvatarClick }) {
         {specialists.map(a => (
           <button key={a.id} onClick={() => onAvatarClick(a)}
             className="flex-shrink-0 flex flex-col items-center gap-1.5 active:scale-95 transition">
-            <div className={`relative w-12 h-12 rounded-full overflow-hidden border-2 ${a.status === 'verrouillé' ? 'border-amber/50 opacity-60' : 'border-orange/70'}`}>
+            <div className={`relative w-12 h-12 rounded-full overflow-hidden border-2 ${a.status === 'verrouille' ? 'border-amber/50 opacity-60' : a.status === 'demo' ? 'border-amber/70' : 'border-orange/70'}`}>
               {a.photo ? (
                 <img src={a.photo} alt={a.name} className="w-full h-full object-cover object-top" />
               ) : (
@@ -276,9 +277,14 @@ function TeamHero({ agents, onAvatarClick }) {
                   {a.name.slice(0, 2).toUpperCase()}
                 </div>
               )}
-              {a.status === 'verrouillé' && (
+              {a.status === 'verrouille' && (
                 <div className="absolute inset-0 flex items-center justify-center bg-charbon/50">
                   <Icon name="lock" size={10} className="text-amber" />
+                </div>
+              )}
+              {a.status === 'demo' && (
+                <div className="absolute inset-0 flex items-center justify-center bg-amber/20">
+                  <Icon name="spark" size={10} className="text-amber" />
                 </div>
               )}
             </div>
@@ -294,9 +300,10 @@ function TeamHero({ agents, onAvatarClick }) {
 
 function AgentSlide({ a, activity, onTalk, onUnlock, onBio, width }) {
   const teaser    = getLivingTeaser(a.id, activity);
-  const badge     = a.status !== 'verrouillé' ? computeBadge(a.id, activity) : null;
-  const actions   = a.status !== 'verrouillé' ? (QUICK_ACTIONS[a.id] || []) : [];
-  const locked    = a.status === 'verrouillé';
+  const locked    = a.status === 'verrouille';
+  const isDemo    = a.status === 'demo';
+  const badge     = !locked ? computeBadge(a.id, activity) : null;
+  const actions   = !locked && !isDemo ? (QUICK_ACTIONS[a.id] || []) : [];
 
   return (
     <div style={{ width, flexShrink: 0, scrollSnapAlign: 'start' }} className="px-[18px]">
@@ -321,7 +328,11 @@ function AgentSlide({ a, activity, onTalk, onUnlock, onBio, width }) {
         <div className="absolute top-4 left-4">
           {locked ? (
             <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-charbon/70 backdrop-blur-sm border border-amber/30 text-amber text-[11px] font-bold">
-              <Icon name="lock" size={10} /> Manager
+              <Icon name="lock" size={10} /> Plan Team
+            </span>
+          ) : isDemo ? (
+            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber/20 backdrop-blur-sm border border-amber/50 text-amber text-[11px] font-bold">
+              <Icon name="spark" size={10} /> Essai gratuit
             </span>
           ) : badge?.type === 'count' ? (
             <span className="px-3 py-1.5 rounded-full bg-orange text-white text-[11px] font-extrabold shadow">
@@ -367,6 +378,13 @@ function AgentSlide({ a, activity, onTalk, onUnlock, onBio, width }) {
               className="w-full py-3.5 rounded-[14px] bg-amber text-charbon font-display font-extrabold text-[14px] active:scale-[.99] transition flex items-center justify-center gap-2">
               <Icon name="lock" size={15} />
               Débloquer {a.name} — Plan Team
+            </button>
+          ) : isDemo ? (
+            <button onClick={() => onTalk("Je veux voir une démo d'application pour mon activité.", 'demo')}
+              className="w-full py-3.5 rounded-[14px] text-charbon font-display font-extrabold text-[14px] active:scale-[.99] transition flex items-center justify-center gap-2"
+              style={{ background: 'linear-gradient(135deg,#FFC107,#FFB300)', boxShadow: '0 8px 20px -6px rgba(255,193,7,.5)' }}>
+              <Icon name="spark" size={15} />
+              Voir ma démo gratuite
             </button>
           ) : (
             <button onClick={() => onTalk()}
@@ -429,9 +447,9 @@ function AgentCarousel({ agents, activity, onTalk, onUnlock, onBio }) {
             a={a}
             activity={activity}
             width={slideWidth || '100%'}
-            onTalk={(prefill) => {
+            onTalk={(prefill, mode) => {
               localStorage.setItem(`aa_last_contact_${a.id}`, new Date().toISOString());
-              onTalk(a.id, prefill);
+              onTalk(a.id, prefill, mode);
             }}
             onUnlock={() => onUnlock(a)}
             onBio={() => onBio(a)}
@@ -497,12 +515,22 @@ export function AssistantsScreen({ go, notify, profile }) {
   const [selectedAgent, setSelectedAgent] = useState(null);
   const activity = useAgentActivity();
 
-  const coach      = MOCK.assistants.find(a => a.id === 'coach');
-  const specialists = MOCK.assistants.filter(a => a.id !== 'coach');
+  const planCode   = profile?.plan_code || 'gratuit';
+  const resolvedAssistants = MOCK.assistants.map(a => ({
+    ...a,
+    status: resolveAgentStatus(a.id, planCode),
+  }));
 
-  const handleTalk = (agentId, prefill) => {
+  const coach      = resolvedAssistants.find(a => a.id === 'coach');
+  const specialists = resolvedAssistants.filter(a => a.id !== 'coach');
+
+  const handleTalk = (agentId, prefill, mode) => {
     localStorage.setItem(`aa_last_contact_${agentId}`, new Date().toISOString());
-    go('conversation', { assistant: agentId, ...(prefill ? { prefill } : {}) });
+    go('conversation', {
+      assistant: agentId,
+      ...(prefill ? { prefill } : {}),
+      ...(mode    ? { mode }   : {}),
+    });
   };
 
   const scrollToCarousel = () => {
@@ -588,10 +616,10 @@ export function AssistantsScreen({ go, notify, profile }) {
           a={selectedAgent}
           activity={activity}
           onClose={() => setSelectedAgent(null)}
-          onAction={(prefill) => {
+          onAction={(prefill, mode) => {
             setSelectedAgent(null);
-            if (selectedAgent.status === 'verrouillé') go('paliers');
-            else handleTalk(selectedAgent.id, prefill);
+            if (selectedAgent.status === 'verrouille') go('paliers');
+            else handleTalk(selectedAgent.id, prefill, mode);
           }}
         />
       )}
@@ -603,8 +631,10 @@ export function AssistantsScreen({ go, notify, profile }) {
 
 function AgentBioModal({ a, activity, onClose, onAction }) {
   const teaser      = getLivingTeaser(a.id, activity);
-  const badge       = a.status !== 'verrouillé' ? computeBadge(a.id, activity) : null;
-  const quickActions = a.status !== 'verrouillé' ? (QUICK_ACTIONS[a.id] || []) : [];
+  const locked      = a.status === 'verrouille';
+  const isDemo      = a.status === 'demo';
+  const badge       = !locked ? computeBadge(a.id, activity) : null;
+  const quickActions = (!locked && !isDemo) ? (QUICK_ACTIONS[a.id] || []) : [];
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col justify-end">
@@ -691,7 +721,7 @@ function AgentBioModal({ a, activity, onClose, onAction }) {
             </div>
           )}
 
-          {a.status === 'verrouillé' && (
+          {locked && (
             <div className="bg-charbon rounded-[16px] p-4 flex items-start gap-3">
               <Icon name="lock" size={16} className="text-amber flex-shrink-0 mt-0.5" />
               <div>
@@ -701,9 +731,21 @@ function AgentBioModal({ a, activity, onClose, onAction }) {
             </div>
           )}
 
-          <Btn className="w-full mt-1" iconRight={a.status === 'verrouillé' ? 'arrow' : 'send'}
-            onClick={() => onAction()}>
-            {a.status === 'verrouillé' ? `Débloquer ${a.name} — 39 €/mois` : `Parler à ${a.name}`}
+          {isDemo && (
+            <div className="bg-amber/10 border border-amber/30 rounded-[16px] p-4 flex items-start gap-3">
+              <Icon name="spark" size={16} className="text-amber flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-[13px] font-bold text-charbon">Démo gratuite disponible</p>
+                <p className="text-[12px] text-g500 mt-0.5">Carelle génère une maquette personnalisée pour ton activité. Gratuit, sans engagement.</p>
+              </div>
+            </div>
+          )}
+
+          <Btn
+            className="w-full mt-1"
+            iconRight={locked ? 'arrow' : 'send'}
+            onClick={() => onAction(isDemo ? "Je veux voir une démo d'application pour mon activité." : undefined, isDemo ? 'demo' : undefined)}>
+            {locked ? `Débloquer ${a.name} — 39 €/mois` : isDemo ? 'Voir ma démo gratuite' : `Parler à ${a.name}`}
           </Btn>
         </div>
       </div>

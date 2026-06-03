@@ -337,14 +337,27 @@ Tu peux répondre à toutes les questions générales dans ton domaine.
 Quand la demande touche quelque chose de très spécifique qui nécessite l'accès complet au profil de l'utilisateur pour un résultat vraiment personnalisé : réponds partiellement puis ajoute "Pour aller jusqu'au bout avec ton activité spécifique, c'est dans le plan [PLAN_NAME]."
 Ne refuse pas. Commence toujours par apporter de la valeur.`;
 
+const CARELLE_DEMO_SUFFIX = `
+
+--- MODE DÉMO ACTIVÉ ---
+Tu guides cet utilisateur pour générer sa maquette d'application personnalisée. C'est gratuit, sans engagement.
+Questions à poser dans cet ordre STRICT (UNE SEULE à la fois) :
+1. Son activité exacte et sa ville
+2. Le problème principal qu'il veut résoudre avec une app
+3. Combien d'utilisateurs auront accès (juste lui / une petite équipe)
+4. Il a un logo ou des couleurs de marque ? (optionnel — dis-lui que ce n'est pas obligatoire)
+Après avoir obtenu les réponses aux 4 points (ou si l'utilisateur dit qu'il n'a pas de logo), dis-lui : "Parfait. Ta maquette est en cours de génération — appuie sur le bouton jaune pour la lancer."
+RÈGLES ABSOLUES : Ne parle PAS de prix. Ne propose pas d'autres agents. Ne fais pas de coaching. Reste dans ce couloir de collecte d'infos.
+---`;
+
 const SYSTEMS: Record<string, string> = {
   coach:   COACH_SYSTEM,
   awa:     AWA_SYSTEM,
-  miriam:  MIRIAM_SYSTEM  + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Manager"),
-  serge:   SERGE_SYSTEM   + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Manager"),
-  roland:  ROLAND_SYSTEM  + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Manager"),
-  kofi:    KOFI_SYSTEM    + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Manager"),
-  carelle: CARELLE_SYSTEM + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Manager"),
+  miriam:  MIRIAM_SYSTEM  + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Team"),
+  serge:   SERGE_SYSTEM   + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Team"),
+  roland:  ROLAND_SYSTEM  + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Team"),
+  kofi:    KOFI_SYSTEM    + PASSIVE_SUFFIX.replace("[PLAN_NAME]", "Team"),
+  carelle: CARELLE_SYSTEM,  // Pas de passive suffix — accessible Growth+
 };
 
 serve(async (req) => {
@@ -356,6 +369,7 @@ serve(async (req) => {
     const {
       messages,
       assistant_id = "coach",
+      mode = null,
       profile = {},
       ppsd = {},
       memoire_cache = "",
@@ -409,7 +423,10 @@ serve(async (req) => {
       } catch {}
     }
 
-    const systemBase = SYSTEMS[assistant_id] ?? SYSTEMS.coach;
+    const isDemoMode = mode === 'demo' && assistant_id === 'carelle';
+    const systemBase = isDemoMode
+      ? CARELLE_SYSTEM + CARELLE_DEMO_SUFFIX
+      : (SYSTEMS[assistant_id] ?? SYSTEMS.coach);
 
     // Contexte profil complet
     const profil_type = (profile as Record<string, string>).profil_type ||
