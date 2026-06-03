@@ -7,6 +7,53 @@
 
 ---
 
+## 2026-06-03 (session 19 — Pilotage + orchestration Fam. A + maquette Rukayatou)
+
+### DNS demo.agenceattractor.com
+- CNAME `demo` ajouté dans GoDaddy → `inspiring-frangipane-9631b1.netlify.app`
+- Sous-domaine propagé et opérationnel
+
+### J'envoie Express — mobile-first
+- Sidebar cachée sur mobile, hamburger ☰ + drawer overlay
+- KPI grid 2 colonnes, grilles en colonne unique, tableaux scrollables horizontalement
+
+### Bug fix — Pipeline Fam. A
+- `saveProspect` appelait `generateSequence` (Awa) pour tous les types
+- Fix : Fam. A → `carelleBriefProspect` (Carelle), Fam. B/C → `generateSequence` (Awa)
+- Texte chargement et bouton différenciés selon le type
+- `await loadAll()` retiré de `generateSequence` (cascade setState bugguée)
+
+### Maquette Rukayatou Saka
+- Maquette "XPaye Pro" produite et déployée : `demo.agenceattractor.com/rukayatou`
+- 4 écrans : Accueil, Agent commercial IA, Réseau CI, Résultats
+- Script de closing rédigé (lien + prix + acompte)
+
+### Redesign Carelle → "Pilotage"
+- Écran Carelle renommé "Pilotage"
+- Hero charbon en haut : titre, sous-titre Sora/mono, chips contextuelles (prospects actifs, dernière action)
+- Bouton "Parler à Carelle" orange → scroll vers chat + focus input
+- Chat passé en light mode : fond sable, messages user orange, messages bot blanc/g200
+- Orb micro conservé marron-noir + glow orange (contraste premium sur fond blanc)
+- Input : fond sable, border g200, texte charbon
+
+### Pipeline Fam. A — Orchestration complète
+- Suppression upload image → champ URL référence visuelle (site/réseaux du prospect)
+- Textarea "Infos complémentaires" avec append automatique dans `prospects.contexte`
+- Bouton "Alerter les agents" → Carelle orchestre via `chat-assistant` + journal_agent écrit pour Éclaireur, Programmeur Senior, Maquette Closer
+- Bouton "Lancer la production →" (orange) → Edge Function `generate-maquette`
+- Affichage lien généré + Copier + Mettre à jour (même URL, contenu régénéré)
+
+### Edge Function generate-maquette (nouvelle)
+- Fichier : `supabase/functions/generate-maquette/index.ts`
+- Flow : charge prospect → construit brief → Claude Haiku génère HTML maquette → upload Supabase Storage bucket `maquettes` → retourne URL publique
+- SQL à appliquer : `ALTER TABLE prospects ADD COLUMN IF NOT EXISTS maquette_url TEXT;` + création bucket `maquettes`
+- Déployée via `npx supabase functions deploy generate-maquette --project-ref lgdgbrivnhgeupqhkckd --no-verify-jwt`
+
+### Note stratégique actée
+- Refonte complète d'Attractor Assists prévue avec changement de modèle économique — à planifier en session dédiée
+
+---
+
 ## 2026-06-02 (session 18 — MacCockpitScreen + demo site + circuit visiteur site)
 
 ### MacCockpitScreen — tableau de bord admin sur mesure
