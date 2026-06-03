@@ -146,60 +146,103 @@ export function DashboardScreen({ go, notify, profile }) {
     else go('paliers');
   };
 
+  // Salutation selon l'heure
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bonne après-midi' : hour < 22 ? 'Bonne soirée' : 'Bonne nuit';
+  const dayLabel = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'][new Date().getDay()];
+
   return (
     <div className="min-h-screen bg-sable pb-2">
-      {/* warm header */}
-      <div className="relative overflow-hidden text-white rounded-b-[26px] px-5 pt-7 pb-7"
-        style={{ background: "linear-gradient(150deg,#FF7A2E 0%,#F25C05 52%,#D94703 100%)" }}>
-        <div className="absolute -right-16 -top-12 w-52 h-52 rounded-full" style={{ background: "radial-gradient(circle,rgba(255,255,255,.16),transparent 70%)" }} />
-        <div className="relative flex items-center justify-between">
-          <button onClick={() => go("profil")} className="flex items-center gap-3 text-left">
-            <div className="w-12 h-12 rounded-full border-2 border-white/60 flex items-center justify-center font-display font-extrabold text-[17px]"
-              style={{ background: "repeating-linear-gradient(45deg,#c95a1a,#c95a1a 6px,#b54f15 6px,#b54f15 12px)" }}>
-              {initials}
-            </div>
-            <div>
-              <div className="text-[13px] opacity-90 font-medium">Bonjour</div>
-              <div className="font-display font-extrabold text-[19px] leading-tight whitespace-nowrap">
-                {first || 'Entrepreneur'}
+
+      {/* ── Hero immersif ───────────────────────────────────────────── */}
+      <div className="relative overflow-hidden rounded-b-[32px]" style={{ minHeight: 260 }}>
+
+        {/* Image de fond (texture humaine, apaisante) */}
+        <img
+          src="/uploads/photo-paliers.jpg"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover object-center"
+          style={{ opacity: 0.18 }}
+        />
+
+        {/* Dégradé principal : orange chaud en haut → charbon profond en bas */}
+        <div className="absolute inset-0" style={{
+          background: 'linear-gradient(165deg, #FF7A2E 0%, #F25C05 30%, #c94e04 55%, #1A1714 100%)'
+        }} />
+
+        {/* Halo lumineux droit (respiration) */}
+        <div className="absolute -right-12 -top-10 w-60 h-60 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(255,255,255,.12) 0%, transparent 65%)' }} />
+
+        {/* Halo bas-gauche (ancre chaleureuse) */}
+        <div className="absolute -left-8 bottom-0 w-44 h-44 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(255,122,46,.25) 0%, transparent 70%)' }} />
+
+        {/* Contenu */}
+        <div className="relative px-5 pt-7 pb-8 text-white flex flex-col gap-0">
+
+          {/* Barre top : avatar + notifs */}
+          <div className="flex items-center justify-between">
+            <button onClick={() => go('profil')} className="flex items-center gap-3 text-left">
+              <div className="w-11 h-11 rounded-full border-[1.5px] border-white/50 flex items-center justify-center font-display font-extrabold text-[16px] bg-white/15 backdrop-blur-sm">
+                {initials}
               </div>
-            </div>
-          </button>
-          <div className="flex items-center gap-2">
-            {streak > 0 && (
-              <Pill tone="white" icon="flame" className="backdrop-blur-sm !py-2">{streak} jours</Pill>
-            )}
-            <button onClick={() => go("notifications")} className="relative w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center active:scale-95 transition">
-              <Icon name="bolt" size={18} className="text-white" />
-              {unreadNotifs > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] rounded-full bg-[#FF3B30] border-2 border-transparent flex items-center justify-center text-[10px] font-extrabold text-white px-1">
-                  {unreadNotifs > 9 ? '9+' : unreadNotifs}
-                </span>
-              )}
+              <div>
+                <div className="text-[11px] text-white/65 font-medium tracking-wide">{dayLabel} · {greeting}</div>
+                <div className="font-display font-extrabold text-[17px] leading-tight">
+                  {first || 'Entrepreneur'}
+                </div>
+              </div>
             </button>
+
+            <div className="flex items-center gap-2">
+              {streak > 0 && (
+                <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/20">
+                  <Icon name="flame" size={13} className="text-amber" />
+                  <span className="text-[11.5px] font-bold text-white">{streak}j</span>
+                </div>
+              )}
+              <button onClick={() => go('notifications')}
+                className="relative w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm border border-white/15 flex items-center justify-center active:scale-95 transition">
+                <Icon name="bolt" size={17} className="text-white" />
+                {unreadNotifs > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] rounded-full bg-[#FF3B30] border-2 border-transparent flex items-center justify-center text-[10px] font-extrabold text-white px-1">
+                    {unreadNotifs > 9 ? '9+' : unreadNotifs}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div className="relative mt-6">
-          <Pill tone="white" icon="bolt" className="backdrop-blur-sm">
-            {nomAss} · ton bras droit
-          </Pill>
-          <h2 className="font-display font-extrabold text-[24px] leading-[1.16] tracking-tight mt-3">
-            Conçu pour devenir ta doublure et te décharger mentalement.
-          </h2>
-        </div>
+          {/* Message principal — espace mental */}
+          <div className="mt-7">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-white/60 animate-pulse" />
+              <span className="text-[11px] font-bold text-white/65 uppercase tracking-[.12em]">{nomAss} · ton bras droit</span>
+            </div>
+            <h2 className="font-display font-extrabold text-[26px] leading-[1.18] tracking-tight">
+              Qu'est-ce qu'on règle<br />aujourd'hui ?
+            </h2>
+            <p className="text-[13px] text-white/55 mt-2 leading-relaxed">
+              Dis, dicte ou tape — l'équipe est prête.
+            </p>
+          </div>
 
-        {msgLimit !== null && (
-          <button onClick={() => go("paliers")} className="relative w-full text-left mt-5 bg-charbon/20 rounded-xl px-3.5 py-3 active:scale-[.99] transition">
-            <div className="flex justify-between items-baseline text-[12.5px] font-semibold">
-              <span>Messages du jour</span>
-              <span><b className="font-display text-[14px]">{remaining}</b> / {msgLimit} restants</span>
-            </div>
-            <div className="h-[7px] bg-white/25 rounded-full mt-2.5 overflow-hidden">
-              <div className="h-full bg-white rounded-full transition-[width]" style={{ width: `${(remaining / msgLimit) * 100}%` }} />
-            </div>
-          </button>
-        )}
+          {/* Barre messages si plan limité */}
+          {msgLimit !== null && (
+            <button onClick={() => go('paliers')}
+              className="mt-5 w-full text-left bg-black/20 backdrop-blur-sm rounded-[14px] px-3.5 py-3 border border-white/10 active:scale-[.99] transition">
+              <div className="flex justify-between items-baseline text-[12px] font-semibold">
+                <span className="text-white/70">Messages du jour</span>
+                <span className="text-white"><b className="font-display text-[13.5px]">{remaining}</b><span className="text-white/50"> / {msgLimit}</span></span>
+              </div>
+              <div className="h-[5px] bg-white/20 rounded-full mt-2 overflow-hidden">
+                <div className="h-full bg-white/80 rounded-full transition-[width]"
+                  style={{ width: `${(remaining / msgLimit) * 100}%` }} />
+              </div>
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="px-[18px] pt-5 flex flex-col gap-4">

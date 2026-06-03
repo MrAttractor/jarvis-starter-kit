@@ -23,7 +23,7 @@ import { DechargeVocaleScreen } from './screens/DechargeVocaleScreen';
 
 const TABS_USER  = [
   { id: "dashboard",  label: "Accueil",    icon: "home" },
-  { id: "assistants", label: "Mon équipe", icon: "bot" },
+  { id: "assistants", label: "Mon équipe", icon: "users" },
   { id: "profil",     label: "Profil",     icon: "user" },
 ];
 const TABS_ADMIN = [
