@@ -7,6 +7,34 @@
 
 ---
 
+## 2026-06-03 (session 25 — Maryline bulle flottante + XPAYE sandbox validé)
+
+### Maryline (ex-Hawa) — bulle flottante WhatsApp-style
+
+- Renommage complet Hawa → Maryline dans data.js, agentGating.js, system prompt (`MARYLINE_SYSTEM`), edge function redéployée
+- Maryline retirée du carousel et des avatars AssistantsScreen (badge "6 experts")
+- Devient une bulle flottante fixe (bottom-right, z-40) : avatar + nom orange + message "Si tu as le moindre soucis ou si tu veux savoir tout ce qu'on peut faire ensemble ... demande moi" + timestamp "maintenant" + bouton × pour fermer
+- Style WhatsApp message reçu : fond blanc, bordure sable, coins `18px 18px 18px 6px`, queue CSS gauche
+- Visible sur tous les écrans sauf la conversation et l'admin. Tap → conversation Maryline
+
+### Intégration XPAYE / PaiementPro — sandbox validé (PP-F422)
+
+- Migration SQL 0021 : table `payments` (user_id, plan_id, reference, channel, amount, currency, status, gateway_response)
+- Edge Function `init-payment` : auth via `getUser(token)`, insert référence en base, appel PaiementPro sandbox, retourne URL de paiement. Sandbox PP-F422, prod = `www.paiementpro.net` (auto-détecté selon merchant ID)
+- Edge Function `payment-webhook` : notification silencieuse PaiementPro → update payments.status + profiles.plan_code si succès
+- PaliersScreen PaymentSheet : 4 boutons (Wave=WAVECI, MTN=MOMOCI, Orange Money=OMCIV2, Carte=CARD) branchés sur `init-payment`, redirect vers URL PaiementPro, état error avec message réel + retry
+- App.jsx : détecte `?payment_done=1` au retour, toast confirmation + reload profil pour afficher le nouveau plan
+- Toujours FCFA (XOF/952) pour PaiementPro — gateway CI uniquement
+- Bugs corrigés en cours : CORS (apikey manquant), numéro téléphone vide, montant EUR envoyé à la place du FCFA
+- Pour passer en production : remplacer `XPAYE_MERCHANT_ID=PP-F422` par l'ID live dans les secrets Supabase
+
+### Autres corrections
+
+- Prix FCFA en grand (primaire), euros en option discrète — PaliersScreen et PaymentSheet
+- Lien WhatsApp mort supprimé de ConversationScreen (bouton "Envoyer sur WhatsApp" + fonction `sendToWhatsApp`)
+
+---
+
 ## 2026-06-03 (session 24 — Marketplace Attractor v2 + agent Hawa)
 
 ### Marketplace Attractor v2 (refonte complète de l'onglet "Experts")
