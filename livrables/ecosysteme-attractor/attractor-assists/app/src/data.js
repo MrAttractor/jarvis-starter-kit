@@ -67,35 +67,50 @@ export const MOCK = {
   ],
   forfaits: [
     {
-      id: "decouverte", name: "Découverte", eur: "0 €", fcfa: "0 FCFA", period: "pour toujours",
-      tagline: "Commence sans rien payer. Ton premier bras droit IA.", current: true,
+      id: "gratuit", name: "Gratuit", eur: "0 €", fcfa: "0 FCFA", period: "pour toujours",
+      tagline: "Ton premier bras droit IA. Sans rien payer.", current: true,
       features: [
-        "Bras droit IA disponible 24h/24 — répond en quelques secondes",
-        "Awa incluse : tes messages de prospection et relances prêts à envoyer",
-        "20 messages/jour · +5 par ami invité grâce au parrainage",
-        "Agenda intelligent : tâches, priorités, suivi de tes relances",
-        "Méthode ATTRACTOR complète : PPSD, offre irrésistible, couloir de croissance",
+        { titre: "Bras droit IA disponible 24h/24", detail: "Répond en quelques secondes. Disponible même à 3h du matin." },
+        { titre: "Awa incluse — Prospection & vente", detail: "Rédige tes messages de relance et de closing. Tu envoies en 1 tap." },
+        { titre: "20 messages/jour", detail: "+5 messages par ami invité grâce à ton lien de parrainage." },
+        { titre: "Agenda intelligent", detail: "Tâches, priorités, suivi de tes relances — tout organisé." },
+        { titre: "Méthode ATTRACTOR complète", detail: "PPSD, offre irrésistible, couloir de croissance. Ton cerveau en app." },
       ]
     },
     {
-      id: "brasdroit", name: "Bras Droit Pro", eur: "≈ 14 €", fcfa: "9 000 FCFA", period: "/ mois",
-      tagline: "Ton bras droit passe à l'action — plus de limites.",
+      id: "growth", name: "Attractor Growth", eur: "15 €", fcfa: "9 900 FCFA", period: "/ mois",
+      tagline: "Plus de limites. Ton bras droit passe à l'action.",
+      badge: "Débloque la vitesse",
       features: [
-        "Messages illimités avec ton bras droit et Awa — plus de compteur",
-        "Mémoire long terme : ton bras droit se souvient de tout entre les sessions",
-        "Awa en mode avancé : séquences de closing et suivi de prospects",
-        "Priorité de réponse — jamais en attente",
+        { titre: "Messages illimités", detail: "Avec ton bras droit et Awa. Plus de compteur, plus de blocage." },
+        { titre: "Mémoire long terme", detail: "Ton bras droit se souvient de tout entre les sessions. Il te connaît vraiment." },
+        { titre: "Awa en mode avancé", detail: "Séquences de closing complètes, suivi de prospects, relances automatiques." },
+        { titre: "Carnet d'affaires", detail: "CRM léger pour tes clients et prospects, avec alertes inactivité 14 jours." },
+        { titre: "Décharge vocale", detail: "Parle à l'app. Whisper transcrit, l'IA extrait tâches, rappels et idées." },
       ]
     },
     {
-      id: "manager", name: "Manager", eur: "29 €", eurOld: "99 €", fcfa: "≈ 19 000 FCFA", period: "/ mois",
-      tagline: "5 experts dans ta poche. Une agence sans les charges.", highlight: true, promo: "Promo fondateurs",
+      id: "team", name: "Attractor Team", eur: "39 €", eurOld: "99 €", fcfa: "≈ 25 500 FCFA", period: "/ mois",
+      tagline: "6 experts dans ta poche. Une agence sans les charges.", highlight: true, promo: "Promo fondateurs",
       features: [
-        "Awa (vente), Miriam (contenu), Serge (agenda), Roland (finances), Kofi (campagnes)",
-        "Campagnes complètes scénarisées par Kofi — film, posts, WhatsApp en 3 phases",
-        "Messages illimités avec toute l'équipe — disponible à 3h du matin",
-        "Tout le plan Bras Droit Pro inclus",
-        "Économise 70€/mois · Promo réservée aux 100 premiers",
+        { titre: "Équipe complète débloquée", detail: "Miriam (contenu), Serge (agenda), Roland (finances), Kofi (campagnes), Carelle (Chief of Staff)." },
+        { titre: "Campagnes scénarisées par Kofi", detail: "Film de marque, 7 posts séquencés, 3 broadcasts WhatsApp — calibrés sur ton histoire." },
+        { titre: "Coordination par Carelle", detail: "Elle pilote tous tes projets, priorise et synchronise l'équipe pour toi." },
+        { titre: "Tout le plan Growth inclus", detail: "Messages illimités, mémoire long terme, Awa avancée." },
+        { titre: "Économise 60 €/mois", detail: "Promo réservée aux 100 premiers fondateurs. Prix habituel : 99 €." },
+      ]
+    },
+    {
+      id: "personnalise", name: "Application Personnalisée", eur: "Sur devis", fcfa: "Barème Famille A", period: "",
+      tagline: "Ton app métier sur mesure, aux couleurs de ton business.",
+      badge: "Famille A",
+      cta: "Parler à Carelle",
+      features: [
+        { titre: "App métier développée pour toi", detail: "Dashboard, gestion clients, suivi commandes, assistant IA intégré." },
+        { titre: "Déployée en 48h", detail: "Maquette validée → développement → livraison. Pipeline industrialisé." },
+        { titre: "Tes couleurs, ton logo, ton nom", detail: "L'app porte ta marque. Pas celle d'Attractor." },
+        { titre: "MRR mensuel", detail: "Maintenance, mises à jour et support inclus chaque mois." },
+        { titre: "Accompagnement Carelle", detail: "Chief of Staff coordonne la livraison de A à Z." },
       ]
     },
   ],

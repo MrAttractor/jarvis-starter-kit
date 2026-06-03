@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { MOCK } from '../data';
 import { supabase } from '../lib/supabase';
 import { Card, SectionLabel, Icon, AppHeader, Btn } from '../components/ui';
@@ -18,7 +18,7 @@ function daysSince(iso) {
   return Math.floor((Date.now() - new Date(iso)) / 86400000);
 }
 
-// ─── Teasers vivants (temps + données) ─────────────────────────────────────────
+// ─── Teasers vivants ────────────────────────────────────────────────────────────
 
 const TEASERS = {
   awa: {
@@ -50,16 +50,13 @@ const TEASERS = {
     morning: [
       "Un post publié avant midi touche 40% de plus. J'ai des idées pour aujourd'hui.",
       "Ta communauté est réveillée. Qu'est-ce qu'on leur raconte ce matin ?",
-      "Planifie ta semaine éditoriale maintenant — c'est le meilleur moment.",
     ],
     afternoon: [
       "L'heure de pointe de scroll commence dans 2h. Ton post est prêt ?",
-      "Un broadcast WhatsApp bien calibré en milieu d'après-midi, c'est maintenant.",
       "Qu'est-ce qu'on publie aujourd'hui ? Dis-moi ton actualité, je construis le post.",
     ],
     evening: [
       "Le soir, les gens scrollent le plus longtemps. Moment idéal pour un post émotionnel.",
-      "Qu'est-ce qu'on célèbre cette semaine ? Je transforme ça en contenu qui fidélise.",
     ],
     night: [
       "Tu réfléchis à ta stratégie contenu ? Je planifie ta semaine, toi tu valides.",
@@ -73,36 +70,29 @@ const TEASERS = {
     morning: [
       "Nouvelle journée. Donne-moi ce qui est dans ta tête — je trie les vraies urgences.",
       "Brief du jour prêt dès que tu veux. Dis-moi tes chantiers en cours.",
-      "Lundi, c'est le jour de trier. Ta liste ? Je te sors les 3 vraies priorités.",
     ],
     afternoon: [
       "T'as combien de trucs en tête là ? Donne-les moi, je trie en 2 minutes.",
-      "Audit rapide : qu'est-ce qui était prévu ce matin et n'a pas été fait ?",
     ],
     evening: [
       "Avant de fermer la journée : qu'est-ce qui traîne depuis hier ?",
-      "Demain matin, tu veux commencer sur quoi ? Je te prépare le brief ce soir.",
     ],
     night: [
       "T'as des tâches en suspens. Je les classe, tu dors tranquille.",
     ],
     default: [
       "T'as des tâches qui traînent. Je sais comment trier ça sans te noyer.",
-      "Dis-moi ce qui brûle. Je trie en ordre de priorité.",
     ],
   },
   roland: {
     morning: [
       "Début de semaine — c'est le bon moment de faire le point sur les marges.",
-      "Tu sais combien tu as gagné la semaine dernière, net ? Je calcule ça.",
     ],
     afternoon: [
       "Tu vends à combien là ? Je te dis si tu es rentable — vrai chiffre.",
-      "Mi-mois : projection de CA. Donne-moi tes ventes actuelles, je projette.",
     ],
     evening: [
-      "Vendredi soir ? Bilan de semaine. Chiffres, marges, projection du mois.",
-      "Avant de clore : tu veux savoir si tu es rentable cette semaine ?",
+      "Bilan de semaine. Chiffres, marges, projection du mois.",
     ],
     night: [
       "Les bonnes décisions financières se préparent au calme. Qu'est-ce qu'on analyse ?",
@@ -115,15 +105,12 @@ const TEASERS = {
   kofi: {
     morning: [
       "Une histoire racontée le matin reste toute la journée. Ta narrative du jour ?",
-      "Tu veux lancer quelque chose ? Je construis la campagne avant que ta journée commence.",
     ],
     afternoon: [
-      "L'après-midi, les gens lisent les histoires. Ton récit de marque est prêt ?",
       "Campagne complète en 3 phases : script, posts, WhatsApp. Par où on commence ?",
     ],
     evening: [
       "Le soir, les émotions priment. C'est le moment du contenu qui crée de la loyauté.",
-      "Ta campagne de lancement — si tu la voulais pour cette semaine, on commence ce soir.",
     ],
     night: [
       "Mon grand-père disait : une vérité bien racontée vaut mieux que dix prouvées.",
@@ -136,15 +123,12 @@ const TEASERS = {
   carelle: {
     morning: [
       "Brief de la semaine : quels projets sont en cours et lequel brûle le plus ?",
-      "Lundi coordination : dis-moi ce qui est ouvert, je priorise pour toi.",
     ],
     afternoon: [
-      "Point mi-journée : qu'est-ce qui devait être fait ce matin et qui bloque ?",
       "Trop de fronts ouverts ? Dis-moi tout. Je trie et je synchronise l'équipe.",
     ],
     evening: [
       "Bilan du jour : qu'est-ce qu'on ferme ce soir et qu'est-ce qu'on reporte ?",
-      "Brief de demain. Qu'est-ce qui est critique pour demain matin ?",
     ],
     night: [
       "Je vois tout, je coordonne tout. Dis-moi où tu en es.",
@@ -157,88 +141,45 @@ const TEASERS = {
 };
 
 function getLivingTeaser(agentId, activity) {
-  // Override data-aware : Awa avec prospects en attente
   if (agentId === 'awa' && activity.pendingProspects > 0) {
     const n = activity.pendingProspects;
     return `Tu as ${n} prospect${n > 1 ? 's' : ''} en attente. Je peux préparer les relances maintenant.`;
   }
-  // Journal récent pour cet agent
   const journalEntries = activity.journalByAgent?.[agentId] || [];
-  if (journalEntries.length > 0) {
-    return journalEntries[0].titre;
-  }
-  // Time-aware
+  if (journalEntries.length > 0) return journalEntries[0].titre;
   const slot = getSlot();
   const pool = TEASERS[agentId]?.[slot] || TEASERS[agentId]?.default || [];
   if (!pool.length) return null;
-  // Stable dans la journée, change chaque jour
   const seed = new Date().getDate() + new Date().getMonth() * 31 + (agentId?.charCodeAt(0) || 0);
   return pool[seed % pool.length];
 }
 
-// ─── Badge logic ──────────────────────────────────────────────────────────────
-
 function computeBadge(agentId, activity) {
   if (agentId === 'coach') return null;
-
-  // Awa : nb prospects actifs
-  if (agentId === 'awa' && activity.pendingProspects > 0) {
-    return { type: 'count', value: activity.pendingProspects };
-  }
-  // Journal récent pour cet agent (il a agi)
+  if (agentId === 'awa' && activity.pendingProspects > 0) return { type: 'count', value: activity.pendingProspects };
   const journalEntries = activity.journalByAgent?.[agentId] || [];
-  if (journalEntries.length > 0) {
-    return { type: 'dot', color: 'growth' };
-  }
-  // Pas contacté depuis 3+ jours ou jamais → nudge orange
+  if (journalEntries.length > 0) return { type: 'dot', color: 'growth' };
   const last = activity.lastContactByAgent?.[agentId];
   const d = daysSince(last);
-  if (d === null || d >= 3) {
-    return { type: 'dot', color: 'orange' };
-  }
+  if (d === null || d >= 3) return { type: 'dot', color: 'orange' };
   return null;
 }
 
-// ─── Actions rapides par agent ────────────────────────────────────────────────
-
 const QUICK_ACTIONS = {
-  awa: [
-    { label: "Écrire une relance", prefill: "Aide-moi à écrire une relance pour un prospect." },
-    { label: "Closer un deal", prefill: "J'ai un prospect chaud. Aide-moi à le closer." },
-  ],
-  miriam: [
-    { label: "Créer un post", prefill: "Crée-moi un post percutant pour aujourd'hui." },
-    { label: "Planifier la semaine", prefill: "Planifie ma semaine éditoriale sur les réseaux." },
-  ],
-  serge: [
-    { label: "Trier mes priorités", prefill: "J'ai plusieurs choses en tête. Aide-moi à trier mes priorités." },
-    { label: "Brief du jour", prefill: "Prépare mon brief du jour et mes 3 priorités." },
-  ],
-  roland: [
-    { label: "Suis-je rentable ?", prefill: "Aide-moi à vérifier si mon activité est rentable." },
-    { label: "Projeter mon CA", prefill: "Aide-moi à projeter mon chiffre d'affaires du mois." },
-  ],
-  kofi: [
-    { label: "Ma campagne", prefill: "Je veux lancer quelque chose. Construis ma campagne complète en 3 phases." },
-    { label: "Mon récit de marque", prefill: "Construis ma signature narrative — le récit que les gens retiennent après m'avoir lu une seule fois." },
-  ],
-  carelle: [
-    { label: "Point projets", prefill: "Fais-moi un point sur tous mes projets en cours." },
-    { label: "Prioriser", prefill: "J'ai trop de fronts ouverts. Aide-moi à prioriser." },
-  ],
+  awa:    [{ label: "Écrire une relance", prefill: "Aide-moi à écrire une relance pour un prospect." }, { label: "Closer un deal", prefill: "J'ai un prospect chaud. Aide-moi à le closer." }],
+  miriam: [{ label: "Créer un post", prefill: "Crée-moi un post percutant pour aujourd'hui." }, { label: "Planifier la semaine", prefill: "Planifie ma semaine éditoriale sur les réseaux." }],
+  serge:  [{ label: "Trier mes priorités", prefill: "J'ai plusieurs choses en tête. Aide-moi à trier mes priorités." }, { label: "Brief du jour", prefill: "Prépare mon brief du jour et mes 3 priorités." }],
+  roland: [{ label: "Suis-je rentable ?", prefill: "Aide-moi à vérifier si mon activité est rentable." }, { label: "Projeter mon CA", prefill: "Aide-moi à projeter mon chiffre d'affaires du mois." }],
+  kofi:   [{ label: "Ma campagne", prefill: "Je veux lancer quelque chose. Construis ma campagne complète en 3 phases." }, { label: "Mon récit de marque", prefill: "Construis ma signature narrative." }],
+  carelle:[{ label: "Point projets", prefill: "Fais-moi un point sur tous mes projets en cours." }, { label: "Prioriser", prefill: "J'ai trop de fronts ouverts. Aide-moi à prioriser." }],
 };
 
 // ─── Hook activité agents ─────────────────────────────────────────────────────
 
 function useAgentActivity() {
-  const [activity, setActivity] = useState({
-    pendingProspects: 0,
-    journalByAgent: {},
-    lastContactByAgent: {},
-  });
+  const [activity, setActivity] = useState({ pendingProspects: 0, journalByAgent: {}, lastContactByAgent: {} });
 
   useEffect(() => {
-    // Last contact depuis localStorage (immédiat)
     const lastContactByAgent = {};
     MOCK.assistants.forEach(a => {
       const v = localStorage.getItem(`aa_last_contact_${a.id}`);
@@ -246,39 +187,21 @@ function useAgentActivity() {
     });
     setActivity(prev => ({ ...prev, lastContactByAgent }));
 
-    // Data Supabase
     const load = async () => {
       try {
         const since = new Date();
         since.setDate(since.getDate() - 7);
-
         const [journalRes, prospectRes] = await Promise.all([
-          supabase
-            .from('journal_agent')
-            .select('agent_id, type, titre, created_at')
-            .gte('created_at', since.toISOString())
-            .order('created_at', { ascending: false })
-            .limit(20),
-          supabase
-            .from('prospects')
-            .select('id', { count: 'exact', head: true })
-            .in('statut', ['nouveau', 'contacté', 'relancé']),
+          supabase.from('journal_agent').select('agent_id, type, titre, created_at').gte('created_at', since.toISOString()).order('created_at', { ascending: false }).limit(20),
+          supabase.from('prospects').select('id', { count: 'exact', head: true }).in('statut', ['nouveau', 'contacté', 'relancé']),
         ]);
-
         const journalByAgent = {};
         journalRes.data?.forEach(j => {
           if (!journalByAgent[j.agent_id]) journalByAgent[j.agent_id] = [];
           journalByAgent[j.agent_id].push(j);
         });
-
-        setActivity(prev => ({
-          ...prev,
-          journalByAgent,
-          pendingProspects: prospectRes.count || 0,
-        }));
-      } catch {
-        // Graceful degradation : teasers time-aware fonctionnent sans data
-      }
+        setActivity(prev => ({ ...prev, journalByAgent, pendingProspects: prospectRes.count || 0 }));
+      } catch { /* graceful degradation */ }
     };
     load();
   }, []);
@@ -286,41 +209,269 @@ function useAgentActivity() {
   return activity;
 }
 
-// ─── Strip d'activité en haut ─────────────────────────────────────────────────
+// ─── Strip d'activité ─────────────────────────────────────────────────────────
 
 function ActivityStrip({ activity }) {
   const items = [];
-
   if (activity.pendingProspects > 0) {
     const n = activity.pendingProspects;
-    items.push({
-      label: 'Awa',
-      text: `${n} prospect${n > 1 ? 's' : ''} en attente`,
-      urgent: true,
-    });
+    items.push({ label: 'Awa', text: `${n} prospect${n > 1 ? 's' : ''} en attente`, urgent: true });
   }
-
   Object.entries(activity.journalByAgent || {}).forEach(([agentId, entries]) => {
     if (entries.length > 0) {
       const name = MOCK.assistants.find(a => a.id === agentId)?.name || agentId;
       items.push({ label: name, text: entries[0].titre, urgent: false });
     }
   });
-
   if (!items.length) return null;
 
   return (
     <div className="overflow-x-auto flex gap-2 px-[18px] pb-1" style={{ scrollbarWidth: 'none' }}>
       {items.map((item, i) => (
-        <div key={i} className={`flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-[12px] border shadow-soft ${
-          item.urgent ? 'bg-orange/5 border-orange/25' : 'bg-white border-g200'
-        }`}>
+        <div key={i} className={`flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-[12px] border shadow-soft ${item.urgent ? 'bg-orange/5 border-orange/25' : 'bg-white border-g200'}`}>
           <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${item.urgent ? 'bg-orange animate-pulse' : 'bg-growth'}`} />
           <span className={`text-[11.5px] font-bold ${item.urgent ? 'text-orange' : 'text-charbon'}`}>{item.label}</span>
           <span className="text-[11px] text-g400">·</span>
           <span className="text-[11.5px] text-g400 max-w-[140px] truncate">{item.text}</span>
         </div>
       ))}
+    </div>
+  );
+}
+
+// ─── Hero section ─────────────────────────────────────────────────────────────
+
+function TeamHero({ agents, onAvatarClick }) {
+  const specialists = agents.filter(a => a.id !== 'coach');
+  const activeCount = specialists.filter(a => a.status === 'actif').length;
+
+  return (
+    <div className="relative overflow-hidden bg-charbon px-[18px] pt-6 pb-8">
+      {/* Glow orange bas-droite */}
+      <div
+        className="absolute bottom-0 right-0 w-48 h-48 rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(242,92,5,0.35) 0%, transparent 70%)', animation: 'glowPulse 3s ease-in-out infinite' }}
+      />
+
+      {/* Pill statut */}
+      <div className="flex items-center gap-1.5 mb-4">
+        <span className="w-2 h-2 rounded-full bg-growth animate-pulse" />
+        <span className="text-[11.5px] font-bold text-growth uppercase tracking-[.1em]">{activeCount} spécialistes en ligne</span>
+      </div>
+
+      {/* Titre */}
+      <h2 className="font-display font-extrabold text-[30px] leading-none text-white mb-1">Ton équipe.</h2>
+      <p className="text-[14px] text-white/60 mb-5">Chaque expert à sa place. Disponible 24h/24.</p>
+
+      {/* Avatars circulaires scrollables */}
+      <div className="overflow-x-auto flex gap-3 pb-1" style={{ scrollbarWidth: 'none' }}>
+        {specialists.map(a => (
+          <button key={a.id} onClick={() => onAvatarClick(a)}
+            className="flex-shrink-0 flex flex-col items-center gap-1.5 active:scale-95 transition">
+            <div className={`relative w-12 h-12 rounded-full overflow-hidden border-2 ${a.status === 'verrouillé' ? 'border-amber/50 opacity-60' : 'border-orange/70'}`}>
+              {a.photo ? (
+                <img src={a.photo} alt={a.name} className="w-full h-full object-cover object-top" />
+              ) : (
+                <div className="w-full h-full bg-orange flex items-center justify-center font-display font-extrabold text-white text-[14px]">
+                  {a.name.slice(0, 2).toUpperCase()}
+                </div>
+              )}
+              {a.status === 'verrouillé' && (
+                <div className="absolute inset-0 flex items-center justify-center bg-charbon/50">
+                  <Icon name="lock" size={10} className="text-amber" />
+                </div>
+              )}
+            </div>
+            <span className="text-[10px] font-bold text-white/70">{a.name}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Slide agent ──────────────────────────────────────────────────────────────
+
+function AgentSlide({ a, activity, onTalk, onUnlock, onBio, width }) {
+  const teaser    = getLivingTeaser(a.id, activity);
+  const badge     = a.status !== 'verrouillé' ? computeBadge(a.id, activity) : null;
+  const actions   = a.status !== 'verrouillé' ? (QUICK_ACTIONS[a.id] || []) : [];
+  const locked    = a.status === 'verrouillé';
+
+  return (
+    <div style={{ width, flexShrink: 0, scrollSnapAlign: 'start' }} className="px-[18px]">
+      <div className="relative rounded-[24px] overflow-hidden" style={{ minHeight: 400 }}>
+
+        {/* Photo background */}
+        {a.photo ? (
+          <img src={a.photo} alt={a.name} className="absolute inset-0 w-full h-full object-cover object-top" />
+        ) : (
+          <div className="absolute inset-0 bg-orange flex items-center justify-center">
+            <span className="text-white font-display font-extrabold text-[80px] opacity-30">{a.name.slice(0, 1)}</span>
+          </div>
+        )}
+
+        {/* Gradient overlay bas */}
+        <div className="absolute inset-0 bg-gradient-to-t from-charbon via-charbon/60 to-transparent" />
+
+        {/* Overlay amber si verrouillé */}
+        {locked && <div className="absolute inset-0 bg-charbon/40" />}
+
+        {/* Badge haut gauche */}
+        <div className="absolute top-4 left-4">
+          {locked ? (
+            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-charbon/70 backdrop-blur-sm border border-amber/30 text-amber text-[11px] font-bold">
+              <Icon name="lock" size={10} /> Manager
+            </span>
+          ) : badge?.type === 'count' ? (
+            <span className="px-3 py-1.5 rounded-full bg-orange text-white text-[11px] font-extrabold shadow">
+              {badge.value} en attente
+            </span>
+          ) : (
+            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-charbon/70 backdrop-blur-sm border border-growth/30 text-growth text-[11px] font-bold">
+              <span className="w-1.5 h-1.5 rounded-full bg-growth animate-pulse" /> En ligne
+            </span>
+          )}
+        </div>
+
+        {/* Contenu bas */}
+        <div className="absolute bottom-0 left-0 right-0 p-5">
+          {/* Rôle + Nom */}
+          <p className="text-[11px] font-bold text-white/60 uppercase tracking-[.12em] mb-1">{a.role}</p>
+          <h3 className="font-display font-extrabold text-[30px] leading-none text-white mb-3">{a.name}</h3>
+
+          {/* Teaser ou proactif */}
+          {(teaser || a.proactif) && (
+            <div className="bg-white/10 backdrop-blur-sm rounded-[14px] px-4 py-3 mb-3 border border-white/15">
+              <p className="text-[12.5px] text-white/90 leading-snug italic">
+                "{teaser || a.proactif?.slice(0, 100)}{(!teaser && a.proactif?.length > 100) ? '…' : ''}"
+              </p>
+            </div>
+          )}
+
+          {/* Quick actions */}
+          {actions.length > 0 && (
+            <div className="flex gap-2 flex-wrap mb-3">
+              {actions.map((qa, i) => (
+                <button key={i} onClick={() => onTalk(qa.prefill)}
+                  className="text-[11.5px] font-bold text-white bg-white/15 backdrop-blur-sm border border-white/25 px-3 py-1.5 rounded-full active:scale-95 transition">
+                  {qa.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* CTA principal */}
+          {locked ? (
+            <button onClick={onUnlock}
+              className="w-full py-3.5 rounded-[14px] bg-amber text-charbon font-display font-extrabold text-[14px] active:scale-[.99] transition flex items-center justify-center gap-2">
+              <Icon name="lock" size={15} />
+              Débloquer {a.name} — Plan Team
+            </button>
+          ) : (
+            <button onClick={() => onTalk()}
+              className="w-full py-3.5 rounded-[14px] bg-orange text-white font-display font-extrabold text-[14px] active:scale-[.99] transition flex items-center justify-center gap-2"
+              style={{ boxShadow: '0 8px 20px -6px rgba(242,92,5,.6)' }}>
+              <Icon name="send" size={15} />
+              Parler à {a.name}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Carousel agents ──────────────────────────────────────────────────────────
+
+function AgentCarousel({ agents, activity, onTalk, onUnlock, onBio }) {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const scrollRef = useRef(null);
+  const containerRef = useRef(null);
+  const [slideWidth, setSlideWidth] = useState(0);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      setSlideWidth(containerRef.current.offsetWidth);
+    }
+    const observer = new ResizeObserver(entries => {
+      setSlideWidth(entries[0].contentRect.width);
+    });
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const goTo = useCallback((idx) => {
+    if (!scrollRef.current || !slideWidth) return;
+    scrollRef.current.scrollTo({ left: idx * slideWidth, behavior: 'smooth' });
+    setActiveIdx(idx);
+  }, [slideWidth]);
+
+  const handleScroll = useCallback(() => {
+    if (!scrollRef.current || !slideWidth) return;
+    const idx = Math.round(scrollRef.current.scrollLeft / slideWidth);
+    setActiveIdx(idx);
+  }, [slideWidth]);
+
+  return (
+    <div ref={containerRef} className="w-full">
+      {/* Slides */}
+      <div
+        id="carousel-scroll"
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="flex overflow-x-auto"
+        style={{ scrollSnapType: 'x mandatory', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}
+      >
+        {agents.map((a, i) => (
+          <AgentSlide
+            key={a.id}
+            a={a}
+            activity={activity}
+            width={slideWidth || '100%'}
+            onTalk={(prefill) => {
+              localStorage.setItem(`aa_last_contact_${a.id}`, new Date().toISOString());
+              onTalk(a.id, prefill);
+            }}
+            onUnlock={() => onUnlock(a)}
+            onBio={() => onBio(a)}
+          />
+        ))}
+      </div>
+
+      {/* Dots + navigation */}
+      <div className="flex items-center justify-center gap-3 mt-4 px-[18px]">
+        <button
+          onClick={() => goTo(Math.max(0, activeIdx - 1))}
+          className="w-8 h-8 rounded-full bg-white border border-g200 shadow-soft flex items-center justify-center active:scale-95 transition disabled:opacity-30"
+          disabled={activeIdx === 0}
+        >
+          <Icon name="chevron" size={14} className="text-charbon rotate-180" />
+        </button>
+
+        <div className="flex items-center gap-1.5">
+          {agents.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              className={`rounded-full transition-all ${i === activeIdx ? 'w-6 h-2.5 bg-orange' : 'w-2.5 h-2.5 bg-g200'}`}
+            />
+          ))}
+        </div>
+
+        <button
+          onClick={() => goTo(Math.min(agents.length - 1, activeIdx + 1))}
+          className="w-8 h-8 rounded-full bg-white border border-g200 shadow-soft flex items-center justify-center active:scale-95 transition disabled:opacity-30"
+          disabled={activeIdx === agents.length - 1}
+        >
+          <Icon name="chevron" size={14} className="text-charbon" />
+        </button>
+      </div>
+
+      {/* Nom de l'agent actif */}
+      <p className="text-center text-[12px] text-g400 mt-2 font-medium">
+        {agents[activeIdx]?.name} · {agents[activeIdx]?.role}
+      </p>
     </div>
   );
 }
@@ -337,9 +488,7 @@ function AgentBadge({ badge }) {
     );
   }
   const color = badge.color === 'growth' ? 'bg-growth' : 'bg-orange';
-  return (
-    <div className={`absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full ${color} border-2 border-sable animate-pulse`} />
-  );
+  return <div className={`absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full ${color} border-2 border-sable animate-pulse`} />;
 }
 
 // ─── Composant principal ──────────────────────────────────────────────────────
@@ -348,27 +497,47 @@ export function AssistantsScreen({ go, notify, profile }) {
   const [selectedAgent, setSelectedAgent] = useState(null);
   const activity = useAgentActivity();
 
-  const coach   = MOCK.assistants.find(a => a.id === 'coach');
-  const actifs  = MOCK.assistants.filter(a => a.id !== 'coach' && a.status === 'actif');
-  const verrous = MOCK.assistants.filter(a => a.id !== 'coach' && a.status === 'verrouillé');
+  const coach      = MOCK.assistants.find(a => a.id === 'coach');
+  const specialists = MOCK.assistants.filter(a => a.id !== 'coach');
 
   const handleTalk = (agentId, prefill) => {
     localStorage.setItem(`aa_last_contact_${agentId}`, new Date().toISOString());
     go('conversation', { assistant: agentId, ...(prefill ? { prefill } : {}) });
   };
 
+  const scrollToCarousel = () => {
+    document.getElementById('team-carousel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <div className="min-h-screen bg-sable pb-6">
-      <AppHeader title="Mon équipe" sub="Chaque spécialiste à sa place." />
 
-      <div className="flex flex-col gap-4">
+      {/* Hero + avatars */}
+      <TeamHero
+        agents={MOCK.assistants}
+        onAvatarClick={(a) => {
+          scrollToCarousel();
+          // scroll carousel to this agent's slide
+          const idx = specialists.findIndex(s => s.id === a.id);
+          if (idx >= 0) {
+            setTimeout(() => {
+              const el = document.getElementById('carousel-scroll');
+              const w = el?.offsetWidth;
+              if (el && w) el.scrollTo({ left: idx * w, behavior: 'smooth' });
+            }, 300);
+          }
+        }}
+      />
 
+      <div className="flex flex-col gap-5 pt-5">
+
+        {/* ActivityStrip */}
         <ActivityStrip activity={activity} />
 
-        <div className="px-[18px] flex flex-col gap-4">
-
-          {/* Bras droit */}
-          {coach && (
+        {/* Bras droit épinglé */}
+        {coach && (
+          <div className="px-[18px]">
+            <SectionLabel className="mb-3">Ton bras droit</SectionLabel>
             <button onClick={() => handleTalk('coach')}
               className="w-full flex items-center gap-4 p-4 bg-charbon text-white rounded-[20px] shadow-[0_10px_28px_-10px_rgba(26,23,20,.5)] active:scale-[.99] transition text-left">
               <div className="w-14 h-14 rounded-xl bg-orange flex items-center justify-center font-display font-extrabold text-[18px] flex-shrink-0 shadow-[0_6px_16px_-4px_rgba(242,92,5,.6)]">
@@ -389,32 +558,31 @@ export function AssistantsScreen({ go, notify, profile }) {
               </div>
               <Icon name="send" size={18} className="text-orange flex-shrink-0" />
             </button>
-          )}
+          </div>
+        )}
 
-          {actifs.length > 0 && (
-            <>
-              <SectionLabel>Disponibles</SectionLabel>
-              {actifs.map((a, i) => (
-                <AgentCard key={a.id} a={a} activity={activity} animIndex={i + 1}
-                  onBio={() => setSelectedAgent(a)}
-                  onAction={(prefill) => handleTalk(a.id, prefill)} />
-              ))}
-            </>
-          )}
+        {/* Carousel des 6 spécialistes */}
+        <div id="team-carousel">
+          <div className="px-[18px] mb-3">
+            <SectionLabel>
+              <span>Ton équipe de spécialistes</span>
+              <span className="ml-2 px-2 py-0.5 bg-orange/10 text-orange text-[10.5px] font-bold rounded-full">6 experts</span>
+            </SectionLabel>
+            <p className="text-[12px] text-g400 mt-1">Swipe pour découvrir chaque spécialiste.</p>
+          </div>
 
-          <SectionLabel className="mt-1">
-            <span>Disponibles avec</span>
-            <span className="ml-1 px-2 py-0.5 bg-orange/10 text-orange text-[11px] font-bold rounded-full">Manager</span>
-          </SectionLabel>
-          {verrous.map((a, i) => (
-            <AgentCard key={a.id} a={a} activity={activity} locked animIndex={actifs.length + i + 2}
-              onBio={() => setSelectedAgent(a)}
-              onAction={() => setSelectedAgent(a)} />
-          ))}
-
+          <AgentCarousel
+            agents={specialists}
+            activity={activity}
+            onTalk={handleTalk}
+            onUnlock={(a) => { setSelectedAgent(a); }}
+            onBio={(a) => setSelectedAgent(a)}
+          />
         </div>
+
       </div>
 
+      {/* Modal bio */}
       {selectedAgent && (
         <AgentBioModal
           a={selectedAgent}
@@ -431,98 +599,7 @@ export function AssistantsScreen({ go, notify, profile }) {
   );
 }
 
-// ─── Carte agent ──────────────────────────────────────────────────────────────
-
-function AgentCard({ a, locked, onAction, onBio, activity, animIndex = 0 }) {
-  const teaser      = getLivingTeaser(a.id, activity);
-  const badge       = locked ? null : computeBadge(a.id, activity);
-  const quickActions = locked ? [] : (QUICK_ACTIONS[a.id] || []);
-
-  return (
-    <Card className="overflow-hidden"
-      style={{ animation: 'fadeUp 0.4s ease both', animationDelay: `${animIndex * 65}ms` }}>
-      <div className="flex items-start gap-3.5 p-4">
-
-        {/* Photo + badge */}
-        <button onClick={onBio} className="flex-shrink-0 relative">
-          <div className="w-[56px] h-[56px] rounded-[14px] overflow-hidden">
-            {a.photo ? (
-              <img src={a.photo} alt={a.name} className="w-full h-full object-cover object-top" />
-            ) : (
-              <div className="w-full h-full bg-orange flex items-center justify-center text-white font-display font-extrabold text-[16px]">
-                {a.name.slice(0, 2).toUpperCase()}
-              </div>
-            )}
-          </div>
-          {locked ? (
-            <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-charbon border-2 border-sable flex items-center justify-center">
-              <Icon name="lock" size={10} className="text-white" />
-            </div>
-          ) : (
-            <AgentBadge badge={badge} />
-          )}
-        </button>
-
-        {/* Infos */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-2">
-            <div>
-              <h4 className="font-display font-extrabold text-[15px] text-charbon">{a.name}</h4>
-              <p className="text-[11.5px] text-g400 font-medium">{a.role}</p>
-            </div>
-            {locked ? (
-              <span className="flex-shrink-0 text-[11px] font-bold text-amber bg-amber/10 px-2.5 py-1 rounded-full">Manager</span>
-            ) : (
-              <span className="flex-shrink-0 flex items-center gap-1 text-[11px] font-bold text-growth">
-                <span className="w-1.5 h-1.5 rounded-full bg-growth animate-pulse" />En ligne
-              </span>
-            )}
-          </div>
-
-          {/* Teaser vivant */}
-          {teaser && (
-            <div className={`mt-2.5 rounded-[12px] px-3 py-2.5 ${locked ? 'bg-amber/8 border border-amber/15' : 'bg-orange/8 border border-orange/15'}`}>
-              <p className={`text-[12.5px] leading-snug font-medium italic ${locked ? 'text-[#8a6200]' : 'text-[#a23c00]'}`}>
-                "{teaser}"
-              </p>
-            </div>
-          )}
-
-          {/* Quick actions — agents actifs seulement */}
-          {quickActions.length > 0 && (
-            <div className="flex gap-2 mt-2.5 flex-wrap">
-              {quickActions.map((qa, i) => (
-                <button key={i} onClick={() => onAction(qa.prefill)}
-                  className="text-[11px] font-bold text-orange bg-orange/8 border border-orange/20 px-2.5 py-1.5 rounded-full active:scale-95 transition">
-                  {qa.label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Action bar */}
-      <div className={`flex border-t ${locked ? 'border-g100' : 'border-orange/10'}`}>
-        <button onClick={onBio}
-          className="flex-1 flex items-center justify-center gap-1.5 py-3 text-[12.5px] font-bold text-g400 hover:text-charbon transition">
-          <Icon name="user" size={14} />
-          Voir le profil
-        </button>
-        <div className="w-px bg-g100" />
-        <button onClick={() => onAction()}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-[12.5px] font-bold transition ${
-            locked ? 'text-amber hover:text-[#8a6200]' : 'text-orange hover:text-[#D94703]'
-          }`}>
-          <Icon name={locked ? 'lock' : 'send'} size={14} />
-          {locked ? 'Débloquer' : 'Parler'}
-        </button>
-      </div>
-    </Card>
-  );
-}
-
-// ─── Modal bio ────────────────────────────────────────────────────────────────
+// ─── Modal bio (inchangée) ────────────────────────────────────────────────────
 
 function AgentBioModal({ a, activity, onClose, onAction }) {
   const teaser      = getLivingTeaser(a.id, activity);
@@ -553,19 +630,12 @@ function AgentBioModal({ a, activity, onClose, onAction }) {
             <Icon name="close" size={18} />
           </button>
 
-          {/* Badge dans la photo */}
           {badge && (
             <div className="absolute top-4 left-4">
               {badge.type === 'count' ? (
-                <span className="bg-orange text-white text-[11px] font-extrabold px-2.5 py-1 rounded-full shadow">
-                  {badge.value} en attente
-                </span>
+                <span className="bg-orange text-white text-[11px] font-extrabold px-2.5 py-1 rounded-full shadow">{badge.value} en attente</span>
               ) : (
-                <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${
-                  badge.color === 'growth'
-                    ? 'bg-growth/20 text-growth'
-                    : 'bg-orange/20 text-orange'
-                }`}>
+                <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${badge.color === 'growth' ? 'bg-growth/20 text-growth' : 'bg-orange/20 text-orange'}`}>
                   {badge.color === 'growth' ? 'Action récente' : 'Disponible'}
                 </span>
               )}
@@ -595,11 +665,17 @@ function AgentBioModal({ a, activity, onClose, onAction }) {
             </div>
           )}
 
+          {a.proactif && (
+            <div>
+              <p className="text-[11.5px] font-bold text-g400 uppercase tracking-wider mb-2">Ce que je fais pour toi</p>
+              <p className="text-[14px] text-charbon leading-relaxed">{a.proactif}</p>
+            </div>
+          )}
+
           {a.bio && (
             <p className="text-[14.5px] text-charbon leading-relaxed">{a.bio}</p>
           )}
 
-          {/* Actions rapides dans la modal */}
           {quickActions.length > 0 && (
             <div>
               <p className="text-[11.5px] font-bold text-g400 uppercase tracking-wider mb-3">Actions rapides</p>
@@ -619,17 +695,15 @@ function AgentBioModal({ a, activity, onClose, onAction }) {
             <div className="bg-charbon rounded-[16px] p-4 flex items-start gap-3">
               <Icon name="lock" size={16} className="text-amber flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-[13px] font-bold text-white">Disponible avec le plan Manager</p>
-                <p className="text-[12px] text-white/60 mt-0.5">
-                  29€/mois · <span className="line-through text-white/40">99€</span> · Promo fondateurs
-                </p>
+                <p className="text-[13px] font-bold text-white">Disponible avec le plan Team</p>
+                <p className="text-[12px] text-white/60 mt-0.5">39 €/mois · Promo fondateurs</p>
               </div>
             </div>
           )}
 
           <Btn className="w-full mt-1" iconRight={a.status === 'verrouillé' ? 'arrow' : 'send'}
             onClick={() => onAction()}>
-            {a.status === 'verrouillé' ? `Débloquer ${a.name} — 29€/mois` : `Parler à ${a.name}`}
+            {a.status === 'verrouillé' ? `Débloquer ${a.name} — 39 €/mois` : `Parler à ${a.name}`}
           </Btn>
         </div>
       </div>
