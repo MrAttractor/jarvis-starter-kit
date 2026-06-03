@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import { MOCK } from '../data';
 import { Icon, Pill, Card, Btn, SectionLabel, Progress, AssistGlyph, Sheet } from '../components/ui';
 
-const PLAN_MSG_LIMIT = { decouverte: 20, decouverte_eu: 20 };
+const PLAN_MSG_LIMIT = { decouverte: 20, decouverte_eu: 20, gratuit: 20, growth: 100, growth_eu: 100 };
 
 const TIPS = [
   { icon: "spark",  agent: null,     titre: "Commence toujours par \"Je veux que tu...\"",         corps: "C'est la formule magique. Dis exactement ce que tu attends, l'assistant produit sans poser 10 questions.",          action: null },
@@ -84,6 +84,8 @@ export function DashboardScreen({ go, notify, profile }) {
   const [lockedSheet, setLockedSheet] = useState(null);
   const [userCount, setUserCount]     = useState(null);
   const [unreadNotifs, setUnreadNotifs] = useState(0);
+  const [carnetCount, setCarnetCount] = useState(0);
+  const [staleCount, setStaleCount]   = useState(0);
 
   const first    = profile?.prenom        || '';
   const nomAss   = profile?.nom_assistant || 'Attractor';
@@ -103,18 +105,27 @@ export function DashboardScreen({ go, notify, profile }) {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
         const today = new Date().toISOString().slice(0, 10);
-        const [gamifRes, usageRes, ppsdRes, countRes, notifsRes] = await Promise.all([
+        const [gamifRes, usageRes, ppsdRes, countRes, notifsRes, carnetRes] = await Promise.all([
           supabase.from('gamification').select('streak,niveau,xp').eq('user_id', user.id).maybeSingle(),
           supabase.from('usage_daily').select('nb_messages').eq('user_id', user.id).eq('jour', today).maybeSingle(),
           supabase.from('ppsd').select('user_id').eq('user_id', user.id).maybeSingle(),
           supabase.rpc('get_user_count'),
           supabase.from('notifications').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('lu', false),
+          supabase.from('carnet_affaires').select('id,statut,type,derniere_interaction').eq('user_id', user.id),
         ]);
         if (gamifRes.data) setGamif(gamifRes.data);
         if (usageRes.data) setUsedToday(usageRes.data.nb_messages);
         if (ppsdRes.data)  setPpsdDone(true);
         if (countRes.data) setUserCount(countRes.data);
         setUnreadNotifs(notifsRes.count || 0);
+        if (carnetRes.data) {
+          setCarnetCount(carnetRes.data.length);
+          const cutoff = Date.now() - 14 * 86400000;
+          setStaleCount(carnetRes.data.filter(e =>
+            e.type === 'client' && e.statut === 'actif' &&
+            new Date(e.derniere_interaction).getTime() < cutoff
+          ).length);
+        }
       } catch {}
     };
     load();
@@ -251,19 +262,47 @@ export function DashboardScreen({ go, notify, profile }) {
           </div>
         </div>
 
-        <button onClick={() => go("agenda")}
-          className="flex items-center justify-between p-4 bg-white rounded-[18px] border border-g200 shadow-soft active:scale-[.99] transition">
-          <div className="flex items-center gap-3">
+        {/* Conseil automatique : clients inactifs */}
+        {staleCount > 0 && (
+          <button onClick={() => go('carnet')}
+            className="flex items-center gap-3 p-4 rounded-[18px] border border-amber-200 bg-amber-50 active:scale-[.99] transition">
+            <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+              <Icon name="clock" size={20} className="text-amber-600" />
+            </div>
+            <div className="flex-1 text-left">
+              <p className="font-display font-bold text-[14px] text-charbon">
+                {staleCount} client{staleCount > 1 ? 's' : ''} à relancer
+              </p>
+              <p className="text-[12px] text-amber-600 font-medium">Pas de contact depuis 14+ jours</p>
+            </div>
+            <Icon name="chevron" size={18} className="text-amber-400" />
+          </button>
+        )}
+
+        {/* Quick actions : Carnet + Agenda */}
+        <div className="grid grid-cols-2 gap-3">
+          <button onClick={() => go('carnet')}
+            className="flex flex-col gap-2 p-4 bg-white rounded-[18px] border border-g200 shadow-soft active:scale-[.98] transition text-left">
+            <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center">
+              <Icon name="users" size={20} className="text-orange" />
+            </div>
+            <div>
+              <p className="font-display font-bold text-[14px] text-charbon">Carnet</p>
+              <p className="text-[11.5px] text-g400">{carnetCount} contact{carnetCount !== 1 ? 's' : ''}</p>
+            </div>
+          </button>
+
+          <button onClick={() => go('agenda')}
+            className="flex flex-col gap-2 p-4 bg-white rounded-[18px] border border-g200 shadow-soft active:scale-[.98] transition text-left">
             <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center">
               <Icon name="check" size={20} className="text-orange" />
             </div>
             <div>
-              <p className="font-display font-bold text-[14.5px] text-charbon">Mon agenda</p>
-              <p className="text-[12px] text-g400">Tâches · priorités · suivi</p>
+              <p className="font-display font-bold text-[14px] text-charbon">Agenda</p>
+              <p className="text-[11.5px] text-g400">Tâches · priorités</p>
             </div>
-          </div>
-          <Icon name="chevron" size={18} className="text-g300" />
-        </button>
+          </button>
+        </div>
 
         {/* La Méthode ATTRACTOR */}
         <button onClick={() => go("methode")}

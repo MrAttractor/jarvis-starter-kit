@@ -18,6 +18,7 @@ import { NotificationsScreen } from './screens/NotificationsScreen';
 import { AdminScreen } from './screens/AdminScreen';
 import { MacCockpitScreen } from './screens/MacCockpitScreen';
 import { MéthodeScreen } from './screens/MéthodeScreen';
+import { CarnetAffairesScreen } from './screens/CarnetAffairesScreen';
 
 const TABS_USER  = [
   { id: "dashboard",  label: "Accueil",    icon: "home" },
@@ -132,6 +133,7 @@ export default function App() {
     pipeline: <MacCockpitScreen go={go} notify={notify} section="pipeline" profile={profile} />,
     hub:      <MacCockpitScreen go={go} notify={notify} section="hub"      profile={profile} />,
     methode:       <MéthodeScreen go={go} />,
+    carnet:        <CarnetAffairesScreen go={go} />,
     install:     <InstallGuide
                    platform={detectPlatform()}
                    prenom={profile?.prenom || ''}
