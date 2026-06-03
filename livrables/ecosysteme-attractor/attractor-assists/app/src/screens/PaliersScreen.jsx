@@ -298,10 +298,13 @@ function PaymentSheet({ f, onClose, notify, profile }) {
       const { data, error } = await supabase.functions.invoke('init-payment', {
         body: { plan_id: f.id, channel: CHANNEL_MAP[m.id] ?? m.id },
       });
-      if (error || !data?.url) {
-        throw new Error(data?.error ?? error?.message ?? 'Erreur de paiement');
+      if (error) {
+        // Extraire le vrai message depuis le corps de la réponse
+        let msg = error.message;
+        try { const b = await error.context?.json?.(); if (b?.error) msg = b.error; } catch {}
+        throw new Error(msg);
       }
-      // Redirige vers la page de paiement XPaye
+      if (!data?.url) throw new Error(data?.error ?? 'URL de paiement non reçue');
       window.location.href = data.url;
     } catch (e) {
       setErrorMsg(e.message ?? 'Une erreur est survenue.');
