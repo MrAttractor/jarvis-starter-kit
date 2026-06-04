@@ -383,11 +383,59 @@ export function DashboardScreen({ go, notify, profile }) {
 
         <TipCard nomAss={nomAss} go={go} />
 
+        {/* Carelle — carte démo / Chief of Staff */}
+        {(() => {
+          const carelle = resolvedAssistants.find(a => a.id === 'carelle');
+          if (!carelle) return null;
+          return (
+            <button
+              onClick={() => {
+                if (carelle.status === 'demo') go('conversation', { assistant: 'carelle', mode: 'demo', prefill: "Je veux voir une démo d'application pour mon activité." });
+                else if (carelle.status === 'actif') go('conversation', { assistant: 'carelle' });
+                else go('paliers');
+              }}
+              className="relative w-full rounded-[22px] overflow-hidden active:scale-[.99] transition text-left"
+              style={{ minHeight: 130 }}>
+              {carelle.photo && (
+                <img src={carelle.photo} alt="Carelle" className="absolute inset-0 w-full h-full object-cover object-top" />
+              )}
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(100deg, rgba(26,23,20,.92) 45%, rgba(26,23,20,.45) 100%)' }} />
+              <div className="relative p-5 flex items-center justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10.5px] font-bold text-amber uppercase tracking-[.12em] mb-1">{carelle.role}</p>
+                  <h3 className="font-display font-extrabold text-[22px] text-white leading-none mb-2">Carelle</h3>
+                  <p className="text-[12px] text-white/60 leading-snug line-clamp-2">
+                    {carelle.status === 'demo'
+                      ? "Vois à quoi ressemblerait ton app — maquette gratuite en 2 min."
+                      : carelle.proactif?.slice(0, 80) || "Coordonne tes projets, pilote l'équipe, te prépare des briefings."}
+                  </p>
+                </div>
+                <div className="flex-shrink-0">
+                  {carelle.status === 'demo' ? (
+                    <span className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-[12px] font-display font-extrabold text-[13px] text-charbon"
+                      style={{ background: 'linear-gradient(135deg,#FFC107,#FFB300)' }}>
+                      <Icon name="spark" size={13} /> Voir mon app
+                    </span>
+                  ) : carelle.status === 'actif' ? (
+                    <span className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-[12px] bg-orange font-display font-extrabold text-[13px] text-white">
+                      <Icon name="send" size={13} /> Parler
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-[12px] bg-amber/20 border border-amber/40 font-display font-extrabold text-[13px] text-amber">
+                      <Icon name="lock" size={13} /> Voir la formule
+                    </span>
+                  )}
+                </div>
+              </div>
+            </button>
+          );
+        })()}
+
         <SectionLabel action={<button onClick={() => go("assistants")} className="text-[12px] font-bold text-orange">Tout voir</button>}>
           Ton équipe
         </SectionLabel>
         <div className="flex gap-3 overflow-x-auto pb-1.5 -mx-[18px] px-[18px]" style={{ scrollbarWidth: "none" }}>
-          {resolvedAssistants.slice(0, 4).map(a => {
+          {resolvedAssistants.filter(a => !['carelle', 'maryline'].includes(a.id)).slice(0, 4).map(a => {
             const locked = a.status === "verrouille";
             const isDemo = a.status === "demo";
             const displayName = a.id === "coach" ? nomAss : a.name;

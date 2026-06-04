@@ -66,10 +66,10 @@ const buildCoachOpener = (profile, nomAss) => {
 // Agents verrouillés = mode passif interactif
 const LOCKED_AGENTS = ["miriam", "serge", "roland", "kofi"];
 
-// Card résultat démo maquette
-function DemoResultCard({ url, onGrowth, onFamilleA }) {
+// Card résultat démo maquette — 2 axes commerciaux
+function DemoResultCard({ url, onSousHerberge, onFamilleA }) {
   return (
-    <div className="self-start max-w-[90%] animate-[fadeUp_.3s_ease]">
+    <div className="self-start max-w-[92%] animate-[fadeUp_.3s_ease]">
       <div className="bg-charbon rounded-[20px] overflow-hidden shadow-[0_12px_32px_-10px_rgba(26,23,20,.5)]">
         <div className="px-4 pt-4 pb-3">
           <div className="flex items-center gap-2 mb-2">
@@ -81,23 +81,33 @@ function DemoResultCard({ url, onGrowth, onFamilleA }) {
             <span className="text-[13.5px] font-bold text-white truncate mr-2">Voir ma démo</span>
             <Icon name="arrow" size={16} className="text-orange flex-shrink-0" />
           </a>
-          <p className="text-[11.5px] text-white/50 mb-3">Deux options pour aller plus loin :</p>
+          <p className="text-[11.5px] text-white/50 mb-2">Choisis ton niveau :</p>
         </div>
-        <button onClick={onGrowth}
-          className="w-full flex items-center justify-between px-4 py-3.5 bg-orange/15 border-t border-white/10 active:bg-orange/25 transition">
+
+        {/* Axe 1 — Sous hébergé */}
+        <button onClick={onSousHerberge}
+          className="w-full flex items-center justify-between px-4 py-4 bg-orange/15 border-t border-white/10 active:bg-orange/25 transition">
           <div className="text-left">
-            <p className="text-[13px] font-bold text-orange">Hébergé chez nous</p>
-            <p className="text-[11.5px] text-white/50">Branding Attractor · forfait d'entrée + MRR</p>
+            <p className="text-[13px] font-bold text-orange">L'app hébergée chez nous</p>
+            <p className="text-[11.5px] text-white/60 mt-0.5">Nos couleurs · déployée en 48h</p>
+            <p className="text-[11px] font-bold text-amber mt-1">À partir de 9 900 FCFA / 15€ / mois</p>
           </div>
-          <Icon name="chevron" size={16} className="text-orange" />
+          <div className="flex-shrink-0 ml-3 px-2.5 py-1.5 rounded-[10px] bg-orange text-white text-[11px] font-bold">
+            L'avoir
+          </div>
         </button>
+
+        {/* Axe 2 — App à son effigie */}
         <button onClick={onFamilleA}
-          className="w-full flex items-center justify-between px-4 py-3.5 border-t border-white/10 active:bg-white/5 transition">
+          className="w-full flex items-center justify-between px-4 py-4 border-t border-white/10 active:bg-white/5 transition">
           <div className="text-left">
-            <p className="text-[13px] font-bold text-white">Tes couleurs, ton nom</p>
-            <p className="text-[11.5px] text-white/50">Application personnalisée · sur devis</p>
+            <p className="text-[13px] font-bold text-amber">L'app à tes couleurs</p>
+            <p className="text-[11.5px] text-white/60 mt-0.5">Ton logo · ta marque · tes agents</p>
+            <p className="text-[11px] font-bold text-white/40 mt-1">Sur devis · Famille A</p>
           </div>
-          <Icon name="chevron" size={16} className="text-white/40" />
+          <div className="flex-shrink-0 ml-3 px-2.5 py-1.5 rounded-[10px] bg-amber/20 border border-amber/40 text-amber text-[11px] font-bold">
+            En parler
+          </div>
         </button>
       </div>
     </div>
@@ -181,7 +191,8 @@ export function ConversationScreen({ go, notify, params, profile }) {
   const first      = profile?.prenom        || "Champion";
   const nomAss     = profile?.nom_assistant || a.name;
   const isLocked   = LOCKED_AGENTS.includes(a.id);
-  const isDemoMode = params?.mode === 'demo' && a.id === 'carelle';
+  const isDemoMode     = params?.mode === 'demo'      && a.id === 'carelle';
+  const isFamilleAMode = params?.mode === 'famille-a' && a.id === 'carelle';
 
   const demoOpener = `Salut ${first} ! Je suis Carelle.\n\nJe vais générer une maquette personnalisée de ton application en quelques minutes. Je te pose 4 questions rapides.\n\nCommençons : ton activité exacte et ta ville ?`;
 
@@ -201,13 +212,12 @@ export function ConversationScreen({ go, notify, params, profile }) {
   const [demoProspectId, setDemoProspectId] = useState(null);
   const [demoGenerating, setDemoGenerating] = useState(false);
   const [demoUrl, setDemoUrl]         = useState(null);
+  const [maquetteReady, setMaquetteReady]   = useState(false);
   const scroller            = useRef();
   const prefillSent         = useRef(false);
   const demoProspectCreated = useRef(false);
   const sessionId           = useRef(`session-${Date.now()}`);
 
-  // Nombre de messages envoyés par l'utilisateur (hors opener)
-  const userMsgCount = msgs.filter(m => m.from === 'me').length;
 
   // Charger le PPSD et l'user_id
   useEffect(() => {
@@ -282,6 +292,11 @@ export function ConversationScreen({ go, notify, params, profile }) {
     } catch {}
   };
 
+  const saveDemoUrl = (url) => {
+    if (!userId) return;
+    supabase.from('profiles').update({ demo_url: url }).eq('id', userId).catch(() => {});
+  };
+
   // Générer la maquette et afficher la card résultat
   const generateDemoMaquette = async () => {
     if (!demoProspectId || demoGenerating) return;
@@ -296,6 +311,22 @@ export function ConversationScreen({ go, notify, params, profile }) {
       });
       if (error || !data?.url) throw new Error('Génération échouée');
       setDemoUrl(data.url);
+
+      // Brief automatique des agents backend (fire-and-forget)
+      supabase.from('journal_agent').insert([
+        {
+          agent_id: 'programmeur_senior',
+          type: 'brief_maquette',
+          contenu: `BRIEF MAQUETTE AUTO\nProspect: ${profile?.prenom || 'Inconnu'} | ${profile?.activite || 'N/C'}\nConversation: ${convSummary}\nMaquette: ${data.url}`,
+          prospect_id: demoProspectId,
+        },
+        {
+          agent_id: 'awa',
+          type: 'prospect_qualifie',
+          contenu: `Prospect via demo gratuite: ${profile?.prenom || 'Inconnu'}. Maquette livree (${data.url}). Pret pour sequence commerciale.`,
+          prospect_id: demoProspectId,
+        },
+      ]).catch(() => {});
     } catch {
       notify("Génération en cours, réessaie dans un instant.");
     } finally {
@@ -317,14 +348,34 @@ export function ConversationScreen({ go, notify, params, profile }) {
       createDemoProspect(userId);
     }
 
+    // Mode famille-a : scraper l'URL si l'utilisateur en envoie une
+    if (isFamilleAMode) {
+      const urlMatch = text.trim().match(/https?:\/\/[^\s]+/);
+      if (urlMatch) {
+        supabase.functions.invoke('analyze-presence', {
+          body: { url: urlMatch[0], user_id: userId },
+        }).then(({ data: presData }) => {
+          if (presData?.analyse) {
+            setMsgs(m => [...m, {
+              from: 'bot',
+              text: `[ANALYSE SITE] ${presData.analyse}`,
+              ts: Date.now(),
+            }]);
+          }
+        }).catch(() => {});
+      }
+    }
+
     try {
       const history = newMsgs.filter((m, i) => !(i === 0 && m.from === "bot"));
+
+      const chatMode = isDemoMode ? 'demo' : isFamilleAMode ? 'famille-a' : undefined;
 
       const { data, error } = await supabase.functions.invoke("chat-assistant", {
         body: {
           messages: history,
           assistant_id: a.id,
-          ...(isDemoMode ? { mode: 'demo' } : {}),
+          ...(chatMode ? { mode: chatMode } : {}),
           profile: {
             prenom:          profile?.prenom,
             nom_assistant:   profile?.nom_assistant,
@@ -343,7 +394,13 @@ export function ConversationScreen({ go, notify, params, profile }) {
 
       if (error || !data?.reply) throw new Error("Pas de réponse");
       setTyping(false);
-      setMsgs(m => [...m, { from: "bot", text: data.reply, passive: isLocked }]);
+      // Détecter et stripper le marker [[PRÊTE]] (fin du diagnostic démo)
+      let replyText = data.reply;
+      if (isDemoMode && replyText.includes('[[PRÊTE]]')) {
+        replyText = replyText.replace('[[PRÊTE]]', '').trim();
+        setMaquetteReady(true);
+      }
+      setMsgs(m => [...m, { from: "bot", text: replyText, passive: isLocked }]);
 
       // Sauvegarder la mémoire courte si générée
       if (data.nouveau_resume) {
@@ -430,14 +487,14 @@ export function ConversationScreen({ go, notify, params, profile }) {
         {isDemoMode && demoUrl && (
           <DemoResultCard
             url={demoUrl}
-            onGrowth={() => go('paliers')}
-            onFamilleA={() => go('conversation', { assistant: 'carelle', prefill: "Je veux une application personnalisée avec mes propres couleurs et mon logo." })}
+            onSousHerberge={() => { saveDemoUrl(demoUrl); go('mon-app'); }}
+            onFamilleA={() => go('conversation', { assistant: 'carelle', mode: 'famille-a', prefill: "Je veux une application personnalisée avec mes propres couleurs et mon logo." })}
           />
         )}
       </div>
 
-      {/* Bouton flottant "Générer ma maquette" — mode démo, ≥4 échanges, maquette pas encore générée */}
-      {isDemoMode && userMsgCount >= 4 && !demoUrl && (
+      {/* Bouton flottant "Générer ma maquette" — apparaît uniquement quand Carelle signale [[PRÊTE]] */}
+      {isDemoMode && maquetteReady && !demoUrl && (
         <div className="px-4 pb-2">
           <button
             onClick={generateDemoMaquette}

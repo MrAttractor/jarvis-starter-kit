@@ -424,8 +424,24 @@ Questions à poser dans cet ordre STRICT (UNE SEULE à la fois) :
 2. Le problème principal qu'il veut résoudre avec une app
 3. Combien d'utilisateurs auront accès (juste lui / une petite équipe)
 4. Il a un logo ou des couleurs de marque ? (optionnel — dis-lui que ce n'est pas obligatoire)
-Après avoir obtenu les réponses aux 4 points (ou si l'utilisateur dit qu'il n'a pas de logo), dis-lui : "Parfait. Ta maquette est en cours de génération — appuie sur le bouton jaune pour la lancer."
+Après avoir obtenu les réponses aux 4 points (ou si l'utilisateur dit qu'il n'a pas de logo), conclus EXACTEMENT avec cette phrase (rien d'autre après) :
+"Parfait. J'ai tout ce qu'il me faut. Clique sur le bouton jaune ci-dessous pour lancer ta maquette.[[PRÊTE]]"
+Le marker [[PRÊTE]] est OBLIGATOIRE à la fin de ce message uniquement. Ne l'utilise JAMAIS ailleurs dans la conversation.
 RÈGLES ABSOLUES : Ne parle PAS de prix. Ne propose pas d'autres agents. Ne fais pas de coaching. Reste dans ce couloir de collecte d'infos.
+---`;
+
+const CARELLE_FAMILLE_A_SUFFIX = `
+
+--- MODE FAMILLE A — CLOSING PERSONNALISÉ ---
+Tu vas closer cette vente. L'utilisateur a déjà vu sa maquette démo et veut une application à ses couleurs.
+Étapes dans cet ordre STRICT (UNE SEULE question à la fois) :
+1. "Pour personnaliser ton app à tes couleurs, tu as un logo ou une identité visuelle ?" — Si oui, demande le lien ou dis-lui qu'il peut l'envoyer directement. Si non, passe à la question suivante.
+2. "Tu as un site web ou des réseaux sociaux qu'on peut regarder ?" — Si oui, note l'URL et dis-lui que tu vas analyser ça. Si non, dis que c'est pas grave.
+3. Si tu as reçu une analyse visuelle (préfixe [ANALYSE SITE]) : résume ce que tu as capté (couleurs, ton, activité) et valide avec l'utilisateur.
+4. Une fois que tu as : activité + nb users + logo/couleurs (même partiellement) → génère la proposition commerciale :
+   "Voilà ce qu'on peut livrer pour toi : une application [activité] personnalisée [avec tes couleurs/branding analysé]. Setup : [X FCFA / €]. Mensuel : [Y FCFA / €]. Je transmets ça à Mac Arthur pour validation — il te recontacte sous 24h."
+   Puis conclus avec : "On démarre ?[[CLOSING_READY]]"
+RÈGLES ABSOLUES : Utilise le barème Famille A (setup + MRR). Ne chiffre jamais hors barème. Un seul close — pas de pression répétée.
 ---`;
 
 const SYSTEMS: Record<string, string> = {
@@ -502,10 +518,13 @@ serve(async (req) => {
       } catch {}
     }
 
-    const isDemoMode = mode === 'demo' && assistant_id === 'carelle';
+    const isDemoMode     = mode === 'demo'      && assistant_id === 'carelle';
+    const isFamilleAMode = mode === 'famille-a' && assistant_id === 'carelle';
     const systemBase = isDemoMode
       ? CARELLE_SYSTEM + CARELLE_DEMO_SUFFIX
-      : (SYSTEMS[assistant_id] ?? SYSTEMS.coach);
+      : isFamilleAMode
+        ? CARELLE_SYSTEM + CARELLE_FAMILLE_A_SUFFIX
+        : (SYSTEMS[assistant_id] ?? SYSTEMS.coach);
 
     // Contexte profil complet
     const profil_type = (profile as Record<string, string>).profil_type ||

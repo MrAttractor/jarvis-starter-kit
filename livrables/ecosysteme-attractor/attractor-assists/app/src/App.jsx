@@ -21,12 +21,19 @@ import { MéthodeScreen } from './screens/MéthodeScreen';
 import { CarnetAffairesScreen } from './screens/CarnetAffairesScreen';
 import { DechargeVocaleScreen } from './screens/DechargeVocaleScreen';
 import { MarketplaceScreen } from './screens/MarketplaceScreen';
+import MonAppScreen from './screens/MonAppScreen';
 
-const TABS_USER  = [
-  { id: "dashboard",   label: "Accueil",        icon: "home" },
-  { id: "assistants",  label: "Mon équipe",     icon: "users" },
-  { id: "marketplace", label: "Marketplace",    icon: "grid" },
-  { id: "profil",      label: "Profil",         icon: "user" },
+const TABS_USER_BASE = [
+  { id: "dashboard",   label: "Accueil",     icon: "home"  },
+  { id: "assistants",  label: "Mon équipe",  icon: "users" },
+  { id: "marketplace", label: "Marketplace", icon: "grid"  },
+  { id: "profil",      label: "Profil",      icon: "user"  },
+];
+const TABS_USER_MONAPP = [
+  { id: "dashboard",  label: "Accueil",    icon: "home"  },
+  { id: "assistants", label: "Mon équipe", icon: "users" },
+  { id: "mon-app",    label: "Mon App",    icon: "spark" },
+  { id: "profil",     label: "Profil",     icon: "user"  },
 ];
 const TABS_ADMIN = [
   { id: "dashboard",   label: "Accueil",    icon: "home"   },
@@ -171,6 +178,7 @@ export default function App() {
     carnet:        <CarnetAffairesScreen go={go} />,
     dump:          <DechargeVocaleScreen go={go} profile={profile} />,
     marketplace:   <MarketplaceScreen go={go} notify={notify} />,
+    'mon-app':     <MonAppScreen go={go} profile={profile} />,
     install:     <InstallGuide
                    platform={detectPlatform()}
                    prenom={profile?.prenom || ''}
@@ -179,14 +187,16 @@ export default function App() {
                    onDone={() => go('profil')}
                  />,
   };
-  const isAdmin = profile?.role === 'admin';
-  const TABS = isAdmin ? TABS_ADMIN : TABS_USER;
+  const isAdmin   = profile?.role === 'admin';
+  const hasDemoUrl = !isAdmin && !!profile?.demo_url;
+  const TABS = isAdmin ? TABS_ADMIN : hasDemoUrl ? TABS_USER_MONAPP : TABS_USER_BASE;
   const isConversation = screen === "conversation";
   const COCKPIT_SECTIONS = ['carelle', 'pipeline', 'hub', 'veille', 'intel'];
   const SUBSCREEN_PARENT = {
     paliers: 'profil', methode: 'profil', notifications: 'profil', install: 'profil',
     agenda: 'dashboard', carnet: 'dashboard', dump: 'dashboard',
     axes: 'dashboard', broadcasts: 'dashboard',
+    'mon-app': 'dashboard',
   };
   const activeTab = TABS.find(t => t.id === screen)
     ? screen
@@ -256,7 +266,7 @@ export default function App() {
                       <button onClick={() => go("conversation", { assistant: "coach" })} className="w-14 h-14 -mt-7 rounded-full bg-orange text-white flex items-center justify-center shadow-[0_10px_22px_-6px_rgba(242,92,5,.7)] border-[3px] border-sable flex-shrink-0 active:scale-95 transition">
                         <Icon name="spark" size={24} />
                       </button>
-                      <NavBtn t={TABS[2]} active={activeTab === TABS[2].id} onClick={() => go(TABS[2].id)} badge={navBadges.marketplace} />
+                      <NavBtn t={TABS[2]} active={activeTab === TABS[2].id} onClick={() => go(TABS[2].id)} badge={TABS[2].id === 'marketplace' ? navBadges.marketplace : 0} />
                       <NavBtn t={TABS[3]} active={activeTab === TABS[3].id} onClick={() => go(TABS[3].id)} />
                     </>
                   )
