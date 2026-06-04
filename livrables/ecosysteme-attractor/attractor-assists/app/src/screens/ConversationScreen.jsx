@@ -312,11 +312,17 @@ export function ConversationScreen({ go, notify, params, profile }) {
         console.error('generate-maquette error:', error);
         throw error;
       }
-      if (!data?.url) {
-        console.error('generate-maquette no url. data:', data);
-        throw new Error(data?.error || 'Génération échouée — aucune URL retournée');
+      if (!data?.url && !data?.html) {
+        console.error('generate-maquette no url/html. data:', data);
+        throw new Error(data?.error || 'Génération échouée');
       }
-      setDemoUrl(data.url);
+      // Utiliser l'URL persistante si dispo, sinon blob URL (fallback sans migration SQL)
+      let maquetteUrl = data.url;
+      if (!maquetteUrl && data.html) {
+        const blob = new Blob([data.html], { type: 'text/html' });
+        maquetteUrl = URL.createObjectURL(blob);
+      }
+      setDemoUrl(maquetteUrl);
 
       // Brief automatique des agents backend (fire-and-forget)
       supabase.from('journal_agent').insert([

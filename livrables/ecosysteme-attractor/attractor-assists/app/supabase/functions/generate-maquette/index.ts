@@ -120,22 +120,20 @@ serve(async (req) => {
       return json({ error: "HTML invalide généré par Claude", raw: html.slice(0, 300) }, 502);
     }
 
-    // Sauvegarder l'HTML dans profiles.demo_html (bypass Storage)
+    // Sauvegarder l'HTML dans profiles.demo_html (fire-and-forget — ne bloque pas si colonne absente)
+    let serveUrl: string | null = null;
     if (user_id) {
       const { error: saveErr } = await supabase
         .from("profiles")
         .update({ demo_html: html, demo_url: "generated" })
         .eq("id", user_id);
       if (saveErr) {
-        console.error("Save profiles error:", saveErr.message);
-        return json({ error: `Sauvegarde profil: ${saveErr.message}` }, 500);
+        console.error("Save profiles error (non-bloquant):", saveErr.message);
+        // On continue quand même — le front-end utilisera le HTML brut comme fallback
+      } else {
+        serveUrl = `${SUPABASE_URL}/functions/v1/serve-maquette?uid=${user_id}`;
       }
     }
-
-    // URL de la maquette via serve-maquette
-    const serveUrl = user_id
-      ? `${SUPABASE_URL}/functions/v1/serve-maquette?uid=${user_id}`
-      : null;
 
     // Journaliser
     await supabase.from("journal_agent").insert({
@@ -145,7 +143,8 @@ serve(async (req) => {
       details: { prospect_id, url: serveUrl, ref_url: ref_url ?? null },
     }).catch(() => {});
 
-    return json({ url: serveUrl, html: html.slice(0, 50) + "..." });
+    // Retourner l'HTML complet pour le fallback blob URL côté front-end
+    return json({ url: serveUrl, html });
   } catch (e) {
     return json({ error: String(e) }, 500);
   }
