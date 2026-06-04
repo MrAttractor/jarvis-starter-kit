@@ -623,7 +623,7 @@ export function AssistantsScreen({ go, notify, profile }) {
                   <p className="text-[10.5px] font-bold text-amber uppercase tracking-[.12em] mb-1">{carelle.role}</p>
                   <h3 className="font-display font-extrabold text-[22px] text-white leading-none mb-2">Carelle</h3>
                   <p className="text-[12px] text-white/60 leading-snug line-clamp-2">
-                    {carelle.proactif?.slice(0, 80) || 'Coordonne tes projets, pilote l'équipe, te prépare des briefings.'}
+                    {carelle.proactif?.slice(0, 80) || "Coordonne tes projets, pilote l'équipe, te prépare des briefings."}
                     {(carelle.proactif?.length || 0) > 80 ? '…' : ''}
                   </p>
                 </div>
