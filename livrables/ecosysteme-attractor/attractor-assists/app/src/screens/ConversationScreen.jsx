@@ -414,9 +414,10 @@ export function ConversationScreen({ go, notify, params, profile }) {
       const blobUrl = URL.createObjectURL(blob);
       setDemoUrl(blobUrl);
 
-      // Sauvegarder en base si la colonne demo_html existe (fire-and-forget)
+      // Sauvegarder en base — demo_url séparé de demo_html pour éviter l'échec global si SQL 0025 pas encore appliqué
       if (userId) {
-        supabase.from('profiles').update({ demo_url: 'generated', demo_html: html }).eq('id', userId).catch(() => {});
+        supabase.from('profiles').update({ demo_url: 'generated' }).eq('id', userId).catch(() => {});
+        supabase.from('profiles').update({ demo_html: html }).eq('id', userId).catch(() => {});
       }
 
       // Journal prospect (fire-and-forget)
@@ -592,8 +593,8 @@ export function ConversationScreen({ go, notify, params, profile }) {
         )}
       </div>
 
-      {/* Bouton flottant "Générer ma maquette" — apparaît uniquement quand Carelle signale [[PRÊTE]] */}
-      {isDemoMode && maquetteReady && !demoUrl && (
+      {/* Bouton flottant "Générer ma maquette" — [[PRÊTE]] en primaire, fallback après 5 msgs utilisateur */}
+      {isDemoMode && (maquetteReady || (msgs.filter(m => m.from === 'me').length >= 5 && !typing)) && !demoUrl && (
         <div className="px-4 pb-2">
           <button
             onClick={generateDemoMaquette}
