@@ -164,10 +164,12 @@ function DemoResultCard({ url, onSousHerberge, onFamilleA, onShowWA }) {
             <span className="text-[13.5px] font-bold text-white truncate mr-2">Voir ma démo</span>
             <Icon name="arrow" size={16} className="text-orange flex-shrink-0" />
           </a>
-          {/* Texte de vente */}
-          <p className="text-[12.5px] text-white/75 leading-relaxed mb-3">
-            Pendant que tes concurrents gèrent tout à la main, toi tu as un outil qui travaille pour toi : clients, relances, tableau de bord. Tout ça, déployé en 48h.
-          </p>
+          {/* Texte de vente — résultat, pas l'app */}
+          <div className="mb-3 flex flex-col gap-1.5">
+            <p className="text-[12.5px] text-white/60 leading-relaxed">WhatsApp vous permet de parler à vos clients.</p>
+            <p className="text-[12.5px] text-white/90 font-semibold leading-relaxed">Assist vous aide à les convertir, les suivre, les fidéliser et développer votre entreprise.</p>
+            <p className="text-[12px] text-white/50 leading-relaxed italic">Ne changez pas vos habitudes. Ajoutez simplement l'intelligence qui manquait à WhatsApp.</p>
+          </div>
           {/* Lien "Pourquoi pas WhatsApp ?" */}
           <button onClick={onShowWA}
             className="flex items-center gap-1.5 mb-2 active:opacity-70 transition">
