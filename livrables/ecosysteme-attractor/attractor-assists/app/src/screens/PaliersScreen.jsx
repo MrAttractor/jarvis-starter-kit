@@ -98,7 +98,7 @@ function ForfaitCard({ f, userCount, onPick }) {
   const isDark = f.id === 'team' || isPersonnalise;
 
   return (
-    <div className={`relative rounded-[22px] overflow-hidden ${cardStyle}`} style={personnaliseGradient}>
+    <div className={`relative rounded-[22px] ${cardStyle}`} style={personnaliseGradient}>
 
       {/* Badge promo en haut */}
       {(f.promo || f.badge) && (
@@ -268,7 +268,9 @@ export function PaliersScreen({ go, notify, profile }) {
 
       <div className="px-[18px] pb-6 flex flex-col gap-5 pt-4">
         {MOCK.forfaits.map(f => (
-          <ForfaitCard key={f.id} f={f} userCount={userCount} onPick={() => handlePick(f)} />
+          <div key={f.id} className={(f.promo || f.badge) ? 'pt-3' : ''}>
+            <ForfaitCard f={f} userCount={userCount} onPick={() => handlePick(f)} />
+          </div>
         ))}
 
         {/* Garanties */}
