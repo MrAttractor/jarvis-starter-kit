@@ -2,13 +2,16 @@ import { Icon } from '../components/ui';
 
 const PLAN_RANK = { gratuit: 0, decouverte: 0, decouverte_eu: 0, growth: 1, growth_eu: 1, team: 2, personnalise: 3 };
 
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
+
 export default function MonAppScreen({ go, profile }) {
-  const demoUrl  = profile?.demo_url;
+  const hasMaquette = profile?.demo_url === 'generated' || (profile?.demo_url && profile.demo_url.startsWith('http'));
+  const maquetteUrl = profile?.id ? `${SUPABASE_URL}/functions/v1/serve-maquette?uid=${profile.id}` : null;
   const planCode = profile?.plan_code || 'gratuit';
   const isPaid   = (PLAN_RANK[planCode] ?? 0) >= 1;
   const prenom   = profile?.prenom || '';
 
-  if (!demoUrl) {
+  if (!hasMaquette) {
     return (
       <div className="min-h-screen bg-sable flex flex-col items-center justify-center px-6 gap-6 text-center">
         <div className="w-16 h-16 rounded-2xl bg-orange/10 flex items-center justify-center">
@@ -37,7 +40,7 @@ export default function MonAppScreen({ go, profile }) {
 
         <div className="w-full" style={{ height: 'calc(100vh - 200px)' }}>
           <iframe
-            src={demoUrl}
+            src={maquetteUrl}
             title="Mon App"
             className="w-full h-full border-0"
             allow="fullscreen"
@@ -82,7 +85,7 @@ export default function MonAppScreen({ go, profile }) {
       {/* Iframe maquette */}
       <div className="flex-1 mx-4 rounded-[16px] overflow-hidden border border-white/10" style={{ minHeight: 400 }}>
         <iframe
-          src={demoUrl}
+          src={maquetteUrl}
           title="Aperçu maquette"
           className="w-full h-full border-0"
           style={{ minHeight: 400 }}

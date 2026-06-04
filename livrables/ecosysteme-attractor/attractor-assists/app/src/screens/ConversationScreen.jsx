@@ -292,9 +292,8 @@ export function ConversationScreen({ go, notify, params, profile }) {
     } catch {}
   };
 
-  const saveDemoUrl = (url) => {
-    if (!userId) return;
-    supabase.from('profiles').update({ demo_url: url }).eq('id', userId).catch(() => {});
+  const saveDemoUrl = (_url) => {
+    // La sauvegarde (demo_url + demo_html) est faite dans generate-maquette — rien à faire ici
   };
 
   // Générer la maquette et afficher la card résultat
@@ -307,7 +306,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
       await supabase.from('prospects').update({ contexte: convSummary }).eq('id', demoProspectId);
 
       const { data, error } = await supabase.functions.invoke('generate-maquette', {
-        body: { prospect_id: demoProspectId },
+        body: { prospect_id: demoProspectId, user_id: userId },
       });
       if (error) {
         console.error('generate-maquette error:', error);

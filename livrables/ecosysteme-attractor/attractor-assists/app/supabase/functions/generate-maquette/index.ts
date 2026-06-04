@@ -40,7 +40,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
 
   try {
-    const { prospect_id, ref_url, add_context, image_b64, image_type } = await req.json();
+    const { prospect_id, user_id, ref_url, add_context, image_b64, image_type } = await req.json();
     if (!prospect_id) return json({ error: "prospect_id requis" }, 400);
 
     const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
@@ -120,44 +120,32 @@ serve(async (req) => {
       return json({ error: "HTML invalide généré par Claude", raw: html.slice(0, 300) }, 502);
     }
 
-    // Nom de fichier safe (UUID uniquement, pas de caractères spéciaux)
-    const filename = `maquette-${prospect_id}.html`;
-
-    // Encoder en Uint8Array (plus fiable que string brut dans Deno)
-    const htmlBytes = new TextEncoder().encode(html);
-
-    // S'assurer que le bucket existe (création auto si absent)
-    const bucketRes = await supabase.storage.createBucket("maquettes", { public: true });
-    if (bucketRes.error && !bucketRes.error.message.includes("already exists")) {
-      console.error("createBucket error:", bucketRes.error.message);
+    // Sauvegarder l'HTML dans profiles.demo_html (bypass Storage)
+    if (user_id) {
+      const { error: saveErr } = await supabase
+        .from("profiles")
+        .update({ demo_html: html, demo_url: "generated" })
+        .eq("id", user_id);
+      if (saveErr) {
+        console.error("Save profiles error:", saveErr.message);
+        return json({ error: `Sauvegarde profil: ${saveErr.message}` }, 500);
+      }
     }
 
-    // Upload dans Supabase Storage
-    const { error: uploadErr } = await supabase.storage
-      .from("maquettes")
-      .upload(filename, htmlBytes, {
-        contentType: "text/html; charset=utf-8",
-        upsert: true,
-      });
-
-    if (uploadErr) {
-      console.error("Storage upload error:", uploadErr.message);
-      return json({ error: `Upload Storage: ${uploadErr.message}` }, 500);
-    }
-
-    // URL publique
-    const pubData = supabase.storage.from("maquettes").getPublicUrl(filename);
-    const publicUrl = pubData.data.publicUrl;
+    // URL de la maquette via serve-maquette
+    const serveUrl = user_id
+      ? `${SUPABASE_URL}/functions/v1/serve-maquette?uid=${user_id}`
+      : null;
 
     // Journaliser
     await supabase.from("journal_agent").insert({
       agent_id: "maquette",
       type: "maquette_generee",
       titre: `Maquette générée — ${prospect.prenom}`,
-      details: { prospect_id, url: publicUrl, ref_url: ref_url ?? null },
+      details: { prospect_id, url: serveUrl, ref_url: ref_url ?? null },
     }).catch(() => {});
 
-    return json({ url: publicUrl, slug: filename });
+    return json({ url: serveUrl, html: html.slice(0, 50) + "..." });
   } catch (e) {
     return json({ error: String(e) }, 500);
   }
