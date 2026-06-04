@@ -2,6 +2,7 @@
 import { supabase } from '../lib/supabase';
 import { MOCK } from '../data';
 import { Icon, AssistGlyph, TypingDots, Card, Pill, Sheet, Textarea } from '../components/ui';
+import { generateDemoHtml } from '../lib/demoTemplate';
 
 // ─── Openers par agent ─────────────────────────────────────────────────────────
 
@@ -66,51 +67,146 @@ const buildCoachOpener = (profile, nomAss) => {
 // Agents verrouillés = mode passif interactif
 const LOCKED_AGENTS = ["miriam", "serge", "roland", "kofi"];
 
-// Card résultat démo maquette — 2 axes commerciaux
-function DemoResultCard({ url, onSousHerberge, onFamilleA }) {
+// Modal WhatsApp vs Attractor Assists
+function WhatsAppModal({ onClose, onCTA }) {
+  const avantages = [
+    { icon: '🤖', titre: 'Agent IA intégré', desc: 'Répond à tes clients automatiquement, 24h/24, même quand tu dors.' },
+    { icon: '📊', titre: 'Tableau de bord', desc: 'Tes chiffres, tes clients, tes commandes — tout en un coup d\'oeil.' },
+    { icon: '🔔', titre: 'Relances automatiques', desc: 'Plus jamais un client oublié. L\'app relance à ta place.' },
+    { icon: '📦', titre: 'Gestion métier', desc: 'Commandes, livraisons, dossiers — organisés et suivis automatiquement.' },
+  ];
+  const limites = [
+    'Messages perdus dans les groupes',
+    'Impossible de retrouver un ancien client',
+    'Pas de suivi des paiements',
+    'Tu gères tout manuellement',
+    'Zéro statistique sur ton activité',
+  ];
   return (
-    <div className="self-start max-w-[92%] animate-[fadeUp_.3s_ease]">
-      <div className="bg-charbon rounded-[20px] overflow-hidden shadow-[0_12px_32px_-10px_rgba(26,23,20,.5)]">
-        <div className="px-4 pt-4 pb-3">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-2 h-2 rounded-full bg-growth animate-pulse" />
-            <span className="text-[11px] font-bold text-growth uppercase tracking-[.1em]">Ta maquette est prête</span>
-          </div>
-          <a href={url} target="_blank" rel="noreferrer"
-            className="flex items-center justify-between px-4 py-3 bg-white/10 rounded-[12px] border border-white/15 mb-3 active:bg-white/15 transition">
-            <span className="text-[13.5px] font-bold text-white truncate mr-2">Voir ma démo</span>
-            <Icon name="arrow" size={16} className="text-orange flex-shrink-0" />
-          </a>
-          <p className="text-[11.5px] text-white/50 mb-2">Choisis ton niveau :</p>
+    <div className="fixed inset-0 z-50 flex items-end" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div className="relative w-full bg-sable rounded-t-[28px] max-h-[90vh] overflow-y-auto pb-8"
+        onClick={e => e.stopPropagation()}>
+        {/* Handle */}
+        <div className="flex justify-center pt-3 pb-2">
+          <div className="w-10 h-1 rounded-full bg-g200" />
         </div>
-
-        {/* Axe 1 — Sous hébergé */}
-        <button onClick={onSousHerberge}
-          className="w-full flex items-center justify-between px-4 py-4 bg-orange/15 border-t border-white/10 active:bg-orange/25 transition">
-          <div className="text-left">
-            <p className="text-[13px] font-bold text-orange">L'app hébergée chez nous</p>
-            <p className="text-[11.5px] text-white/60 mt-0.5">Nos couleurs · déployée en 48h</p>
-            <p className="text-[11px] font-bold text-amber mt-1">À partir de 9 900 FCFA / 15€ / mois</p>
+        {/* Header */}
+        <div className="px-5 pb-4 border-b border-g200">
+          <p className="text-[11px] font-bold text-orange uppercase tracking-widest mb-1">Pourquoi pas WhatsApp ?</p>
+          <h2 className="font-display font-extrabold text-[20px] text-charbon leading-tight">
+            WhatsApp gère des messages.<br/>
+            <span className="text-orange">Ton app gère ton business.</span>
+          </h2>
+        </div>
+        {/* Limites WA */}
+        <div className="px-5 pt-4 pb-3">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-[18px]">💬</span>
+            <p className="text-[12px] font-bold text-g400 uppercase tracking-wider">Avec WhatsApp seul</p>
           </div>
-          <div className="flex-shrink-0 ml-3 px-2.5 py-1.5 rounded-[10px] bg-orange text-white text-[11px] font-bold">
-            L'avoir
+          <div className="flex flex-col gap-2">
+            {limites.map((l, i) => (
+              <div key={i} className="flex items-center gap-2.5">
+                <span className="text-[14px] flex-shrink-0">✗</span>
+                <p className="text-[13px] text-g500">{l}</p>
+              </div>
+            ))}
           </div>
-        </button>
-
-        {/* Axe 2 — App à son effigie */}
-        <button onClick={onFamilleA}
-          className="w-full flex items-center justify-between px-4 py-4 border-t border-white/10 active:bg-white/5 transition">
-          <div className="text-left">
-            <p className="text-[13px] font-bold text-amber">L'app à tes couleurs</p>
-            <p className="text-[11.5px] text-white/60 mt-0.5">Ton logo · ta marque · tes agents</p>
-            <p className="text-[11px] font-bold text-white/40 mt-1">Sur devis · Famille A</p>
+        </div>
+        {/* Avantages */}
+        <div className="px-5 pt-2 pb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-[18px]">⚡</span>
+            <p className="text-[12px] font-bold text-orange uppercase tracking-wider">Avec ton app Attractor</p>
           </div>
-          <div className="flex-shrink-0 ml-3 px-2.5 py-1.5 rounded-[10px] bg-amber/20 border border-amber/40 text-amber text-[11px] font-bold">
-            En parler
+          <div className="flex flex-col gap-3">
+            {avantages.map((a, i) => (
+              <div key={i} className="flex items-start gap-3 bg-white rounded-[14px] p-3 shadow-[0_1px_4px_rgba(0,0,0,.06)]">
+                <span className="text-[22px] flex-shrink-0">{a.icon}</span>
+                <div>
+                  <p className="text-[13px] font-bold text-charbon">{a.titre}</p>
+                  <p className="text-[12px] text-g400 mt-0.5 leading-relaxed">{a.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
-        </button>
+        </div>
+        {/* CTA */}
+        <div className="px-5">
+          <button onClick={onCTA}
+            className="w-full py-4 rounded-[16px] bg-orange text-white font-display font-extrabold text-[15px] flex items-center justify-center gap-2 shadow-[0_8px_20px_-6px_rgba(242,92,5,.5)]">
+            <Icon name="spark" size={18} /> Activer mon app
+          </button>
+          <button onClick={onClose}
+            className="w-full py-3 mt-2 text-[13px] text-g400 font-medium">
+            Fermer
+          </button>
+        </div>
       </div>
     </div>
+  );
+}
+
+// Card résultat démo maquette — 2 axes commerciaux
+function DemoResultCard({ url, onSousHerberge, onFamilleA }) {
+  const [showWAModal, setShowWAModal] = useState(false);
+  return (
+    <>
+      {showWAModal && (
+        <WhatsAppModal
+          onClose={() => setShowWAModal(false)}
+          onCTA={() => { setShowWAModal(false); onSousHerberge(); }}
+        />
+      )}
+      <div className="self-start max-w-[92%] animate-[fadeUp_.3s_ease]">
+        <div className="bg-charbon rounded-[20px] overflow-hidden shadow-[0_12px_32px_-10px_rgba(26,23,20,.5)]">
+          <div className="px-4 pt-4 pb-3">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 rounded-full bg-growth animate-pulse" />
+              <span className="text-[11px] font-bold text-growth uppercase tracking-[.1em]">Ta démo est prête</span>
+            </div>
+            <a href={url} target="_blank" rel="noreferrer"
+              className="flex items-center justify-between px-4 py-3 bg-white/10 rounded-[12px] border border-white/15 mb-3 active:bg-white/15 transition">
+              <span className="text-[13.5px] font-bold text-white truncate mr-2">Voir ma démo</span>
+              <Icon name="arrow" size={16} className="text-orange flex-shrink-0" />
+            </a>
+            {/* Lien "Pourquoi pas WhatsApp ?" */}
+            <button onClick={() => setShowWAModal(true)}
+              className="flex items-center gap-1.5 mb-2 active:opacity-70 transition">
+              <span className="text-[12px] text-white/40 underline underline-offset-2">Pourquoi pas WhatsApp ?</span>
+            </button>
+            <p className="text-[11.5px] text-white/50 mb-2">Choisis ton niveau :</p>
+          </div>
+
+          {/* Axe 1 — Sous hébergé */}
+          <button onClick={onSousHerberge}
+            className="w-full flex items-center justify-between px-4 py-4 bg-orange/15 border-t border-white/10 active:bg-orange/25 transition">
+            <div className="text-left">
+              <p className="text-[13px] font-bold text-orange">L'app hébergée chez nous</p>
+              <p className="text-[11.5px] text-white/60 mt-0.5">Nos couleurs · déployée en 48h</p>
+              <p className="text-[11px] font-bold text-amber mt-1">À partir de 9 900 FCFA / 15€ / mois</p>
+            </div>
+            <div className="flex-shrink-0 ml-3 px-2.5 py-1.5 rounded-[10px] bg-orange text-white text-[11px] font-bold">
+              L'avoir
+            </div>
+          </button>
+
+          {/* Axe 2 — App à son effigie */}
+          <button onClick={onFamilleA}
+            className="w-full flex items-center justify-between px-4 py-4 border-t border-white/10 active:bg-white/5 transition">
+            <div className="text-left">
+              <p className="text-[13px] font-bold text-amber">L'app à tes couleurs</p>
+              <p className="text-[11.5px] text-white/60 mt-0.5">Ton logo · ta marque · tes agents</p>
+              <p className="text-[11px] font-bold text-white/40 mt-1">Sur devis · Famille A</p>
+            </div>
+            <div className="flex-shrink-0 ml-3 px-2.5 py-1.5 rounded-[10px] bg-amber/20 border border-amber/40 text-amber text-[11px] font-bold">
+              En parler
+            </div>
+          </button>
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -296,53 +392,34 @@ export function ConversationScreen({ go, notify, params, profile }) {
     // La sauvegarde (demo_url + demo_html) est faite dans generate-maquette — rien à faire ici
   };
 
-  // Générer la maquette et afficher la card résultat
+  // Générer la maquette localement (pas d'API — template JS personnalisé)
   const generateDemoMaquette = async () => {
-    if (!demoProspectId || demoGenerating) return;
+    if (demoGenerating) return;
     setDemoGenerating(true);
     try {
-      // Injecter le résumé conversation dans le contexte du prospect
-      const convSummary = msgs.filter(m => m.from === 'me').map(m => m.text).join(' | ');
-      await supabase.from('prospects').update({ contexte: convSummary }).eq('id', demoProspectId);
-
-      const { data, error } = await supabase.functions.invoke('generate-maquette', {
-        body: { prospect_id: demoProspectId, user_id: userId },
+      const html = generateDemoHtml({
+        prenom:   profile?.prenom   || 'Vous',
+        activite: profile?.activite || 'votre activité',
+        zone:     profile?.zone     || 'CI',
       });
-      if (error) {
-        console.error('generate-maquette error:', error);
-        throw error;
-      }
-      if (!data?.url && !data?.html) {
-        console.error('generate-maquette no url/html. data:', data);
-        throw new Error(data?.error || 'Génération échouée');
-      }
-      // Utiliser l'URL persistante si dispo, sinon blob URL (fallback sans migration SQL)
-      let maquetteUrl = data.url;
-      if (!maquetteUrl && data.html) {
-        const blob = new Blob([data.html], { type: 'text/html' });
-        maquetteUrl = URL.createObjectURL(blob);
-      }
-      setDemoUrl(maquetteUrl);
+      const blob = new Blob([html], { type: 'text/html' });
+      const blobUrl = URL.createObjectURL(blob);
+      setDemoUrl(blobUrl);
 
-      // Brief automatique des agents backend (fire-and-forget)
-      supabase.from('journal_agent').insert([
-        {
-          agent_id: 'programmeur_senior',
-          type: 'brief_maquette',
-          contenu: `BRIEF MAQUETTE AUTO\nProspect: ${profile?.prenom || 'Inconnu'} | ${profile?.activite || 'N/C'}\nConversation: ${convSummary}\nMaquette: ${data.url}`,
-          prospect_id: demoProspectId,
-        },
-        {
-          agent_id: 'awa',
-          type: 'prospect_qualifie',
-          contenu: `Prospect via demo gratuite: ${profile?.prenom || 'Inconnu'}. Maquette livree (${data.url}). Pret pour sequence commerciale.`,
-          prospect_id: demoProspectId,
-        },
-      ]).catch(() => {});
+      // Sauvegarder en base si la colonne demo_html existe (fire-and-forget)
+      if (userId) {
+        supabase.from('profiles').update({ demo_url: 'generated', demo_html: html }).eq('id', userId).catch(() => {});
+      }
+
+      // Journal prospect (fire-and-forget)
+      if (demoProspectId) {
+        supabase.from('journal_agent').insert([
+          { agent_id: 'awa', type: 'prospect_qualifie', contenu: `Demo générée pour ${profile?.prenom || 'Inconnu'} (${profile?.activite || 'N/C'}).`, prospect_id: demoProspectId },
+        ]).catch(() => {});
+      }
     } catch (err) {
       console.error('generateDemoMaquette failed:', err);
-      const detail = err?.message || err?.context?.message || JSON.stringify(err)?.slice(0, 120) || 'erreur inconnue';
-      setMsgs(m => [...m, { from: 'bot', text: `Erreur génération : ${detail}` }]);
+      setMsgs(m => [...m, { from: 'bot', text: `Oops, la génération a échoué. Réessaie dans un instant.` }]);
     } finally {
       setDemoGenerating(false);
     }
@@ -512,7 +589,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
         <div className="px-4 pb-2">
           <button
             onClick={generateDemoMaquette}
-            disabled={demoGenerating || !demoProspectId}
+            disabled={demoGenerating}
             className="w-full py-3.5 rounded-[14px] font-display font-extrabold text-[14px] text-charbon flex items-center justify-center gap-2 active:scale-[.99] transition disabled:opacity-60"
             style={{ background: 'linear-gradient(135deg,#FFC107,#FFB300)', boxShadow: '0 8px 20px -6px rgba(255,193,7,.5)' }}
           >
