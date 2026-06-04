@@ -7,6 +7,128 @@
 
 ---
 
+## 2026-06-04 (session 33 — Fix génération maquette + chat WhatsApp-style)
+
+### Génération maquette — bypass Storage complet
+
+- **Problème racine** : `generate-maquette` edge function retournait 500 à cause de Supabase Storage inaccessible (bucket jamais créé ou permissions). Plusieurs tentatives de fix Storage (Uint8Array, bucket autocreation, serve-maquette) ont toutes échoué avec 500 constant.
+- **Solution finale** : génération 100% locale côté navigateur via `src/lib/demoTemplate.js`. Template HTML complet généré en JS avec les données du profil (prenom, activite, zone). Zéro API, zéro edge function, zéro Storage. Instantané.
+- Template adapte le contenu selon le secteur détecté (food / livraison / services) : labels, icônes, données fictives cohérentes.
+- 4 onglets navigables : Accueil (KPIs), Agent IA (chat simulé), Clients, Résultats.
+- Blob URL créé dans le navigateur, sauvegarde `demo_html` + `demo_url='generated'` dans profiles (fire-and-forget, SQL 0025 à appliquer).
+- **Edge functions déployées mais non utilisées** : `generate-maquette` (mise à jour), `serve-maquette` (nouvelle) — conservées pour le flow Famille A cockpit.
+- Bouton "Générer" : guard `!demoProspectId` retiré (plus nécessaire).
+
+### Modal "Pourquoi pas WhatsApp ?"
+- Lien discret sous "Voir ma démo" dans `DemoResultCard`.
+- Sheet bottom : 5 limites WhatsApp vs 4 avantages Attractor Assists (agent IA 24h/24, tableau de bord, relances auto, gestion métier).
+- CTA "Activer mon app" → `onSousHerberge`.
+
+### Chat UX — style WhatsApp
+- **Layout** : `height: 100dvh` + `overflow-hidden` — input fixe, ne bouge plus au clavier.
+- **Fond** : `#EAE4D9` (beige chaud, wallpaper WhatsApp).
+- **Bulles** : police système (`-apple-system`), 15px, poids 400, coins asymétriques (queue droite envoyé / queue gauche reçu), ombre légère.
+- **Input bar** : fond `#f0f2f5`, champ blanc arrondi, placeholder `"Message..."`, bouton send orange.
+- Commits pushés sur master : `4347fa3`, `0b608a7`.
+
+### SQL à appliquer (non bloquant)
+```sql
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS demo_html text;
+```
+
+---
+
+## 2026-06-04 (session 32 — Refonte flow démo maquette + onglet Mon App)
+
+### Architecture flow démo — refondue de bout en bout
+
+- **Double Carelle corrigée** : retirée du carousel "Mon équipe", carte héro déplacée sur l'Accueil (photo plein-fond, CTA adapté au statut démo/actif/verrouillé). Équipe de l'Accueil filtrée sans Carelle ni Maryline.
+- **Timing bouton "Générer"** : plus de comptage de messages (`userMsgCount >= 4` supprimé). Le bouton apparaît uniquement quand Carelle envoie le marker `[[PRÊTE]]` en fin de diagnostic, strippé avant affichage. CARELLE_DEMO_SUFFIX mis à jour dans `chat-assistant` (déployé).
+- **DemoResultCard 2 axes** : redesign complet — Axe 1 "L'app hébergée chez nous" (orange, 9 900 FCFA / 15€/mois, ouvre Mon App), Axe 2 "L'app à tes couleurs" (amber, sur devis Famille A, ouvre Carelle en mode famille-a).
+- **Mobilisation backend auto** : à la génération réussie, 2 entrées `journal_agent` créées fire-and-forget (programmeur_senior + awa) avec résumé conversation et URL maquette.
+- **Mode famille-a** : nouveau mode Carelle dans `chat-assistant` — collecte logo/URL, scraping automatique via `analyze-presence` si URL détectée dans le message, proposition commerciale closing avec pricing Famille A + marker `[[CLOSING_READY]]`.
+- **Onglet Mon App** : tab dynamique qui remplace Marketplace quand `profile.demo_url` est set (TABS_USER_MONAPP). Nouveau `MonAppScreen` : mode démo (iframe + bannière "données fictives" + CTA activer) ou mode Growth+ (iframe + actions agents). Route `mon-app` ajoutée dans App.jsx.
+- **SQL 0024 appliqué** : `ALTER TABLE profiles ADD COLUMN IF NOT EXISTS demo_url TEXT`.
+- **Commit** `8344a10` pushé sur master, Netlify redéployé.
+
+### Prochains chantiers identifiés
+- Vérifier la signature de `analyze-presence` au premier test famille-a avec un vrai lien
+- Passer XPaye en production si pas encore fait
+
+---
+
+## 2026-06-04 (session 31 — Fix 13 bugs UX/design session 28)
+
+### Tous les bugs traités et pushés en production
+
+- **text-g500** : token manquant ajouté dans `index.css` — `--color-g500: #6b6057` (warm gray cohérent avec la palette)
+- **\n non rendu** : `renderText()` branché sur toutes les bulles + `ts={m.ts}` pour les timestamps
+- **planLabel brut** : mapping complet dans ProfilScreen (`growth` → "Attractor Growth", `team` → "Attractor Team", etc.)
+- **dark mode Maryline** : MarylineBubble reçoit prop `dark`, bg/border/text adaptatifs
+- **activeTab hors-nav** : `SUBSCREEN_PARENT` map dans App.jsx (`paliers`/`methode`/`notifications` → `profil`, `agenda`/`carnet`/`dump` → `dashboard`)
+- **icône toggle PaliersScreen** : `chevdown` + `rotate-180` (smooth) au lieu de `chevron` + `rotate-90`
+- **amber tokens mixtes** : DashboardScreen — `amber-200`/`amber-50`/`amber-600` remplacés par tokens design (`amber/30`, `amber/8`, `text-amber`)
+- **emoji solitaire** : `📖` remplacé par `<Icon name="sheet" />` dans DashboardScreen
+- **TeamHero statuts bruts** : `resolvedAssistants` passé au lieu de `MOCK.assistants`
+- **label profil incorrect** : "Ton préféré de ton assistant" → "Ton de communication"
+- **header ConversationScreen** : photo agent au lieu d'AssistGlyph (commit précédent inclus)
+- **bulles WhatsApp-style + timestamps** : renderText, coins différenciés, heure affichée (commit précédent inclus)
+
+### Résultat
+- 1 commit pushé sur master (`d5100a2`), Netlify redéployé
+- Build propre : 0 erreur, 0 warning critique
+- Toutes les 13 anomalies de la session 28 sont soldées
+
+---
+
+## 2026-06-04 (session 30 — Cockpit admin redesigné + Veille écosystème + Intel)
+
+### Routine CCR veille quotidienne
+- Document "Ecosysteme vivant Attractor.txt" lu et intégré (9 piliers de vision)
+- Routine remote agent créée : `trig_017NC3D7NQnGoRWuZJ9wrH3u`, tourne chaque jour à 7h Paris (5h UTC)
+- Écrit dans Supabase (table `veille_rapports`) via Edge Function `save-veille-rapport` (no-verify-jwt, déployée)
+- SQL 0023 appliqué : table `veille_rapports` avec RLS admin uniquement
+
+### Cockpit admin redesigné
+- Admin arrive désormais sur le Dashboard normal (même interface que les utilisateurs)
+- Onglet "Cockpit" dédié dans la nav admin (5e position) avec landing page 5 tiles
+- Tiles : Carelle / Pipeline / Hub / Intel / Veille — boutons retour sur chaque sous-section
+- Tile "Agence" supprimée : agents visibles uniquement via leurs rapports dans Intel
+
+### Section Intel (nouvelle)
+- Stats utilisation : 4 métriques (inscrits, onboarding, en ligne, nouveaux 7j)
+- Tendances conversations 30j par agent (barre de progression)
+- Journal agents : accordéon collapsible par agent (Awa, Carelle, Miriam, Serge, Roland, Kofi)
+- Séquences Awa : prompts générés par prospect, collapsibles, copie 1-tap
+- Tickets et remontées utilisateurs filtrables (bug / besoin / autre), marquage traité
+
+### Section Veille (nouvelle)
+- Affiche dernier rapport quotidien : état des 9 piliers (livré / en cours / à faire), 3 priorités, signaux faibles
+- Historique 7 rapports précédents avec résumé statuts
+
+### Chantiers restants identifiés
+- 13 bugs UX/design session 28 toujours en attente (prochaine session dédiée)
+- Passer XPAYE en production (merchant ID live dans secrets Supabase)
+- Mini-agents Attractor Assists (~6h, aucun code)
+
+---
+
+## 2026-06-04 (session 29 — Hotfixes build + UI)
+
+### Build Netlify cassé corrigé
+- Apostrophe typographique (`'`) dans `AssistantsScreen.jsx` ligne 626 interprétée comme fermeture de string JS : build échouait silencieusement depuis la session 28
+- Corrigé : guillemets doubles autour de la string fallback de Carelle
+
+### Bug UI PaliersScreen corrigé
+- `overflow-hidden` sur les cartes coupait les badges promo positionnés à `-top-3`
+- Corrigé : `overflow-hidden` retiré de la carte + wrapper `pt-3` ajouté pour les cartes avec badge
+
+### Résultat
+- 2 commits pushés sur master, Netlify redéployé
+- App à jour sur assists.agenceattractor.com
+
+---
+
 ## 2026-06-04 (session 28 — Refonte UX : Mr Attractor central + Suivi Clients + Calendrier)
 
 ### Audit UX/UI complet (16 problèmes identifiés)
