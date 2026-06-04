@@ -109,15 +109,31 @@ const TRUNCATE_AFTER_CHARS = 320;
 
 // â”€â”€â”€ Composant bulle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-function Bubble({ from, children }) {
+function renderText(text) {
+  return text.split("\n\n").map((p, j) => (
+    <p key={j} className={j > 0 ? "mt-2" : ""}>
+      {p.split("\n").map((line, k) => k === 0 ? line : [<br key={k} />, line])}
+    </p>
+  ));
+}
+
+function Bubble({ from, children, ts }) {
   const me = from === "me";
+  const time = ts ? new Date(ts).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '';
   return (
-    <div className={`max-w-[82%] px-4 py-3 text-[14.5px] leading-relaxed shadow-soft animate-[fadeUp_.25s_ease] ${
-      me
-        ? "self-end bg-orange text-white rounded-2xl rounded-br-md"
-        : "self-start bg-white text-charbon border border-g200 rounded-2xl rounded-bl-md"
-    }`}>
-      {children}
+    <div className={`max-w-[82%] text-[14.5px] leading-relaxed animate-[fadeUp_.25s_ease] ${me ? "self-end" : "self-start"}`}>
+      <div className={`px-4 pt-3 pb-2 ${
+        me
+          ? "bg-orange text-white rounded-[18px] rounded-br-[5px] shadow-[0_1px_4px_rgba(0,0,0,.18)]"
+          : "bg-white text-charbon border border-g200/60 rounded-[18px] rounded-bl-[5px] shadow-[0_1px_4px_rgba(0,0,0,.10)]"
+      }`}>
+        {children}
+        {time && (
+          <div className={`text-[10.5px] mt-1.5 text-right leading-none ${me ? 'text-white/60' : 'text-g400'}`}>
+            {time}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -130,10 +146,12 @@ function TruncatedBubble({ text, agentPlan, onUpgrade }) {
 
   return (
     <div className="self-start max-w-[82%] animate-[fadeUp_.25s_ease]">
-      <div className="relative bg-white text-charbon border border-g200 rounded-2xl rounded-bl-md overflow-hidden shadow-soft">
+      <div className="relative bg-white text-charbon border border-g200/60 rounded-[18px] rounded-bl-[5px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,.10)]">
         <div className="px-4 py-3 text-[14.5px] leading-relaxed">
           {visible.split("\n\n").map((p, i) => (
-            <p key={i} className={i > 0 ? "mt-2" : ""}>{p}</p>
+            <p key={i} className={i > 0 ? "mt-2" : ""}>
+              {p.split("\n").map((line, k) => k === 0 ? line : [<br key={k} />, line])}
+            </p>
           ))}
         </div>
         {isLong && (
@@ -173,7 +191,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
       ? buildCoachOpener(profile, isLocked ? a.name : nomAss)
       : (OPENERS_AGENTS[a.id] || OPENERS_AGENTS.awa)(first, profile);
 
-  const [msgs, setMsgs]               = useState([{ from: "bot", text: opener }]);
+  const [msgs, setMsgs]               = useState([{ from: "bot", text: opener, ts: Date.now() }]);
   const [typing, setTyping]           = useState(false);
   const [input, setInput]             = useState("");
   const [ppsd, setPpsd]               = useState(null);
@@ -288,7 +306,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
   const send = async (text) => {
     if (!text?.trim()) return;
 
-    const userMsg = { from: "me", text: text.trim() };
+    const userMsg = { from: "me", text: text.trim(), ts: Date.now() };
     const newMsgs = [...msgs, userMsg];
     setMsgs(newMsgs);
     setInput("");
@@ -361,7 +379,13 @@ export function ConversationScreen({ go, notify, params, profile }) {
         <button onClick={() => go("assistants")} className="w-10 h-10 rounded-full hover:bg-sable flex items-center justify-center text-charbon">
           <Icon name="back" size={20} />
         </button>
-        <AssistGlyph accent={a.accent} icon={a.icon} size={42} />
+        {a.photo ? (
+          <div className="w-[42px] h-[42px] rounded-full overflow-hidden border-2 border-orange/30 flex-shrink-0">
+            <img src={a.photo} alt={a.name} className="w-full h-full object-cover object-top" />
+          </div>
+        ) : (
+          <AssistGlyph accent={a.accent} icon={a.icon} size={42} />
+        )}
         <div className="flex-1">
           <h3 className="font-display font-extrabold text-[16px] leading-tight">{a.id === "coach" ? nomAss : a.name}</h3>
           <div className={`text-[12px] font-semibold flex items-center gap-1 ${isLocked ? "text-amber" : isDemoMode ? "text-amber" : "text-growth"}`}>
@@ -390,10 +414,8 @@ export function ConversationScreen({ go, notify, params, profile }) {
               />
             : (
               <div key={i} className={`flex flex-col gap-1 w-full ${m.from === "me" ? "items-end" : "items-start"}`}>
-                <Bubble from={m.from}>
-                  {m.text.split("\n\n").map((p, j) => (
-                    <p key={j} className={j > 0 ? "mt-2" : ""}>{p}</p>
-                  ))}
+                <Bubble from={m.from} ts={m.ts}>
+                  {renderText(m.text)}
                 </Bubble>
               </div>
             )

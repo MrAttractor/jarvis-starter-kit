@@ -18,9 +18,12 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
   const canInstall = !['installed', 'desktop'].includes(detectPlatform());
   const tons       = ['Chaleureux', 'Direct', 'Fun & rythmé', 'Pro'];
   const initials   = prenom ? prenom.slice(0, 2).toUpperCase() : 'AA';
-  const planLabel  = profile?.plan_code === 'decouverte' || !profile?.plan_code
-    ? 'Découverte · Gratuit'
-    : profile?.plan_code;
+  const PLAN_LABELS = {
+    decouverte: 'Découverte · Gratuit', gratuit: 'Découverte · Gratuit',
+    growth: 'Attractor Growth', team: 'Attractor Team', manager: 'Attractor Team',
+    personnalise: 'Application Personnalisée',
+  };
+  const planLabel = PLAN_LABELS[profile?.plan_code] || 'Découverte · Gratuit';
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -105,7 +108,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
             </div>
           </div>
           <div>
-            <span className="block font-semibold text-[13.5px] mb-2">Ton préféré de ton assistant</span>
+            <span className="block font-semibold text-[13.5px] mb-2">Ton de communication</span>
             <div className="flex flex-wrap gap-2">
               {tons.map(t => (
                 <button key={t} onClick={() => setTon(t)}

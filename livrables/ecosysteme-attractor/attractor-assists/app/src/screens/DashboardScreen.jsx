@@ -59,7 +59,7 @@ function TipCard({ nomAss, go }) {
           </div>
         </div>
         <h4 className="font-display font-extrabold text-[15px] text-charbon leading-snug">{tip.titre}</h4>
-        <p className="text-[13px] text-g500 mt-1.5 leading-relaxed">{tip.corps}</p>
+        <p className="text-[13px] text-g400 mt-1.5 leading-relaxed">{tip.corps}</p>
       </div>
       {tip.action && actionMap[tip.action] && (
         <button onClick={actionMap[tip.action]}
@@ -326,17 +326,17 @@ export function DashboardScreen({ go, notify, profile }) {
         {/* Conseil automatique : clients inactifs */}
         {staleCount > 0 && (
           <button onClick={() => go('carnet')}
-            className="flex items-center gap-3 p-4 rounded-[18px] border border-amber-200 bg-amber-50 active:scale-[.99] transition">
-            <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
-              <Icon name="clock" size={20} className="text-amber-600" />
+            className="flex items-center gap-3 p-4 rounded-[18px] border border-amber/30 bg-amber/8 active:scale-[.99] transition">
+            <div className="w-10 h-10 rounded-xl bg-amber/15 flex items-center justify-center flex-shrink-0">
+              <Icon name="clock" size={20} className="text-amber" />
             </div>
             <div className="flex-1 text-left">
               <p className="font-display font-bold text-[14px] text-charbon">
                 {staleCount} client{staleCount > 1 ? 's' : ''} à relancer
               </p>
-              <p className="text-[12px] text-amber-600 font-medium">Pas de contact depuis 14+ jours</p>
+              <p className="text-[12px] text-amber font-medium">Pas de contact depuis 14+ jours</p>
             </div>
-            <Icon name="chevron" size={18} className="text-amber-400" />
+            <Icon name="chevron" size={18} className="text-amber/70" />
           </button>
         )}
 
@@ -370,7 +370,9 @@ export function DashboardScreen({ go, notify, profile }) {
           className="flex items-center justify-between p-4 rounded-[18px] border border-orange/25 active:scale-[.99] transition"
           style={{ background: "linear-gradient(135deg,#fff9f5,#fff3ec)" }}>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-orange/15 flex items-center justify-center text-[20px]">📖</div>
+            <div className="w-10 h-10 rounded-xl bg-orange/15 flex items-center justify-center text-orange">
+              <Icon name="sheet" size={20} />
+            </div>
             <div className="text-left">
               <div className="font-display font-extrabold text-[14px] text-charbon">La Méthode ATTRACTOR</div>
               <div className="text-[12px] text-g400 mt-0.5">5 écrits · Accès libre</div>

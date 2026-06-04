@@ -555,7 +555,7 @@ export function AssistantsScreen({ go, notify, profile }) {
 
       {/* Hero + avatars */}
       <TeamHero
-        agents={MOCK.assistants}
+        agents={resolvedAssistants}
         onAvatarClick={(a) => {
           scrollToCarousel();
           // scroll carousel to this agent's slide

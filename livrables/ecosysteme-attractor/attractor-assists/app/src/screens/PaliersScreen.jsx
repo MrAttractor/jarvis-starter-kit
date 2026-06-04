@@ -178,7 +178,7 @@ function ForfaitCard({ f, userCount, onPick }) {
             onClick={() => setOpen(o => !o)}
           >
             <span className="text-[11.5px] font-bold uppercase tracking-[.08em]">Ce qui est inclus</span>
-            <Icon name={open ? 'chevdown' : 'chevron'} size={14} className={open ? 'rotate-90' : ''} />
+            <Icon name="chevdown" size={14} className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
           </button>
 
           {/* Toujours 2 features visibles, les autres dépliables */}

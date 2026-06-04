@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
     const currencyCode = "952"; // XOF
     const reference    = `ATR-${Date.now()}-${user.id.slice(0, 8).toUpperCase()}`;
     const merchantId   = Deno.env.get("XPAYE_MERCHANT_ID") ?? "PP-F422";
-    const isSandbox    = merchantId === "PP-F422";
+    const isSandbox    = Deno.env.get("XPAYE_SANDBOX") === "true";
     const ppURL        = isSandbox ? PP_SANDBOX_URL : PP_PROD_URL;
     const notifURL     = `${Deno.env.get("SUPABASE_URL")}/functions/v1/payment-webhook`;
 
