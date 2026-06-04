@@ -161,7 +161,7 @@ export default function App() {
     dashboard:   <DashboardScreen go={go} notify={notify} profile={profile} />,
     assistants:  <AssistantsScreen go={go} notify={notify} profile={profile} />,
     profil:      <ProfilScreen go={go} notify={notify} dark={dark} setDark={handleSetDark} profile={profile} />,
-    conversation:<ConversationScreen go={go} notify={notify} params={params} profile={profile} />,
+    conversation:<ConversationScreen key={`${params?.assistant||'coach'}-${params?.mode||'default'}`} go={go} notify={notify} params={params} profile={profile} />,
     axes:        <AxesScreen go={go} notify={notify} />,
     broadcasts:  <BroadcastsScreen go={go} notify={notify} />,
     paliers:     <PaliersScreen go={go} notify={notify} profile={profile} />,

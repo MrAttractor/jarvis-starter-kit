@@ -149,35 +149,32 @@ function WhatsAppModal({ onClose, onCTA }) {
 }
 
 // Card résultat démo maquette — 2 axes commerciaux
-function DemoResultCard({ url, onSousHerberge, onFamilleA }) {
-  const [showWAModal, setShowWAModal] = useState(false);
+// showWAModal est géré au niveau parent pour éviter le clipping du fixed modal dans un overflow container
+function DemoResultCard({ url, onSousHerberge, onFamilleA, onShowWA }) {
   return (
-    <>
-      {showWAModal && (
-        <WhatsAppModal
-          onClose={() => setShowWAModal(false)}
-          onCTA={() => { setShowWAModal(false); onSousHerberge(); }}
-        />
-      )}
-      <div className="self-start max-w-[92%] animate-[fadeUp_.3s_ease]">
-        <div className="bg-charbon rounded-[20px] overflow-hidden shadow-[0_12px_32px_-10px_rgba(26,23,20,.5)]">
-          <div className="px-4 pt-4 pb-3">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-2 h-2 rounded-full bg-growth animate-pulse" />
-              <span className="text-[11px] font-bold text-growth uppercase tracking-[.1em]">Ta démo est prête</span>
-            </div>
-            <a href={url} target="_blank" rel="noreferrer"
-              className="flex items-center justify-between px-4 py-3 bg-white/10 rounded-[12px] border border-white/15 mb-3 active:bg-white/15 transition">
-              <span className="text-[13.5px] font-bold text-white truncate mr-2">Voir ma démo</span>
-              <Icon name="arrow" size={16} className="text-orange flex-shrink-0" />
-            </a>
-            {/* Lien "Pourquoi pas WhatsApp ?" */}
-            <button onClick={() => setShowWAModal(true)}
-              className="flex items-center gap-1.5 mb-2 active:opacity-70 transition">
-              <span className="text-[12px] text-white/40 underline underline-offset-2">Pourquoi pas WhatsApp ?</span>
-            </button>
-            <p className="text-[11.5px] text-white/50 mb-2">Choisis ton niveau :</p>
+    <div className="self-start max-w-[92%] animate-[fadeUp_.3s_ease]">
+      <div className="bg-charbon rounded-[20px] overflow-hidden shadow-[0_12px_32px_-10px_rgba(26,23,20,.5)]">
+        <div className="px-4 pt-4 pb-3">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="w-2 h-2 rounded-full bg-growth animate-pulse" />
+            <span className="text-[11px] font-bold text-growth uppercase tracking-[.1em]">Ta démo est prête</span>
           </div>
+          <a href={url} target="_blank" rel="noreferrer"
+            className="flex items-center justify-between px-4 py-3 bg-white/10 rounded-[12px] border border-white/15 mb-3 active:bg-white/15 transition">
+            <span className="text-[13.5px] font-bold text-white truncate mr-2">Voir ma démo</span>
+            <Icon name="arrow" size={16} className="text-orange flex-shrink-0" />
+          </a>
+          {/* Texte de vente */}
+          <p className="text-[12.5px] text-white/75 leading-relaxed mb-3">
+            Pendant que tes concurrents gèrent tout à la main, toi tu as un outil qui travaille pour toi : clients, relances, tableau de bord. Tout ça, déployé en 48h.
+          </p>
+          {/* Lien "Pourquoi pas WhatsApp ?" */}
+          <button onClick={onShowWA}
+            className="flex items-center gap-1.5 mb-2 active:opacity-70 transition">
+            <span className="text-[12px] text-white/40 underline underline-offset-2">Pourquoi pas WhatsApp ?</span>
+          </button>
+          <p className="text-[11.5px] text-white/50 mb-2">Choisis ton niveau :</p>
+        </div>
 
           {/* Axe 1 — Sous hébergé */}
           <button onClick={onSousHerberge}
@@ -204,9 +201,8 @@ function DemoResultCard({ url, onSousHerberge, onFamilleA }) {
               En parler
             </div>
           </button>
-        </div>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -317,6 +313,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
   const [demoGenerating, setDemoGenerating] = useState(false);
   const [demoUrl, setDemoUrl]         = useState(null);
   const [maquetteReady, setMaquetteReady]   = useState(false);
+  const [showWAModal, setShowWAModal]       = useState(false);
   const scroller            = useRef();
   const prefillSent         = useRef(false);
   const demoProspectCreated = useRef(false);
@@ -589,6 +586,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
             url={demoUrl}
             onSousHerberge={() => { saveDemoUrl(demoUrl); go('mon-app'); }}
             onFamilleA={() => go('conversation', { assistant: 'carelle', mode: 'famille-a', prefill: "Je veux une application personnalisée avec mes propres couleurs et mon logo." })}
+            onShowWA={() => setShowWAModal(true)}
           />
         )}
       </div>
@@ -662,6 +660,14 @@ export function ConversationScreen({ go, notify, params, profile }) {
           <Icon name="send" size={20} />
         </button>
       </div>
+
+      {/* Modal WhatsApp — rendu à la racine pour éviter le clipping dans overflow containers */}
+      {showWAModal && (
+        <WhatsAppModal
+          onClose={() => setShowWAModal(false)}
+          onCTA={() => { setShowWAModal(false); saveDemoUrl(demoUrl); go('mon-app'); }}
+        />
+      )}
     </div>
   );
 }
