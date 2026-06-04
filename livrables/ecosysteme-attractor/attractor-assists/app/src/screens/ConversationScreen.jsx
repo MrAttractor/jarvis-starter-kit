@@ -227,15 +227,23 @@ function Bubble({ from, children, ts }) {
   const me = from === "me";
   const time = ts ? new Date(ts).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '';
   return (
-    <div className={`max-w-[82%] text-[14.5px] leading-relaxed animate-[fadeUp_.25s_ease] ${me ? "self-end" : "self-start"}`}>
-      <div className={`px-4 pt-3 pb-2 ${
-        me
-          ? "bg-orange text-white rounded-[18px] rounded-br-[5px] shadow-[0_1px_4px_rgba(0,0,0,.18)]"
-          : "bg-white text-charbon border border-g200/60 rounded-[18px] rounded-bl-[5px] shadow-[0_1px_4px_rgba(0,0,0,.10)]"
-      }`}>
+    <div className={`max-w-[82%] animate-[fadeUp_.25s_ease] ${me ? "self-end" : "self-start"}`}>
+      <div
+        className={me ? "text-white" : "text-charbon"}
+        style={{
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+          fontSize: 15,
+          fontWeight: 400,
+          lineHeight: 1.45,
+          padding: '8px 12px 6px',
+          borderRadius: me ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+          background: me ? '#F25C05' : '#ffffff',
+          boxShadow: '0 1px 2px rgba(0,0,0,.12)',
+        }}
+      >
         {children}
         {time && (
-          <div className={`text-[10.5px] mt-1.5 text-right leading-none ${me ? 'text-white/60' : 'text-g400'}`}>
+          <div style={{ fontSize: 11, marginTop: 3, textAlign: 'right', opacity: me ? 0.7 : 0.45, lineHeight: 1 }}>
             {time}
           </div>
         )}
@@ -521,7 +529,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
                          ["Mon prix est-il bon ?", "Aide-moi à calculer ma marge", "Je veux augmenter mes tarifs"];
 
   return (
-    <div className="min-h-screen flex flex-col bg-sable">
+    <div className="flex flex-col bg-sable overflow-hidden" style={{ height: '100dvh' }}>
       {/* Header */}
       <div className="flex items-center gap-3 px-4 pt-6 pb-3 bg-white border-b border-g200 sticky top-0 z-10">
         <button onClick={() => go("assistants")} className="w-10 h-10 rounded-full hover:bg-sable flex items-center justify-center text-charbon">
@@ -551,7 +559,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
       </div>
 
       {/* Messages */}
-      <div ref={scroller} className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-3" style={{ scrollbarWidth: "none" }}>
+      <div ref={scroller} className="flex-1 overflow-y-auto px-3 py-4 flex flex-col gap-2" style={{ scrollbarWidth: "none", background: '#EAE4D9' }}>
         {msgs.map((m, i) =>
           m.passive && m.from === "bot"
             ? <TruncatedBubble
@@ -632,21 +640,25 @@ export function ConversationScreen({ go, notify, params, profile }) {
         </Sheet>
       )}
 
-      {/* Input */}
-      <div className="px-4 py-3 bg-white border-t border-g200 flex items-center gap-2.5">
-        <input
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && send(input)}
-          placeholder={`Écris à ${isLocked ? a.name : nomAss}…`}
-          className="flex-1 bg-sable rounded-full px-4 py-3 text-[14.5px] outline-none focus:ring-2 focus:ring-orange/20"
-        />
+      {/* Input — style WhatsApp */}
+      <div className="flex-shrink-0 px-3 py-2 flex items-end gap-2" style={{ background: '#f0f2f5', paddingBottom: 'max(8px, env(safe-area-inset-bottom))' }}>
+        <div className="flex-1 bg-white rounded-[24px] flex items-center px-4" style={{ minHeight: 46, boxShadow: '0 1px 3px rgba(0,0,0,.08)' }}>
+          <input
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && send(input)}
+            placeholder="Message..."
+            className="flex-1 bg-transparent py-3 text-[15px] outline-none text-charbon placeholder-g400"
+            style={{ fontWeight: 400, fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+          />
+        </div>
         <button
           onClick={() => send(input)}
           disabled={!input.trim() || typing}
-          className="w-11 h-11 rounded-full bg-orange text-white flex items-center justify-center shadow-[0_6px_16px_-5px_rgba(242,92,5,.6)] active:scale-95 transition flex-shrink-0 disabled:opacity-40"
+          className="w-[46px] h-[46px] rounded-full bg-orange text-white flex items-center justify-center flex-shrink-0 disabled:opacity-40 active:scale-95 transition"
+          style={{ boxShadow: '0 2px 8px rgba(242,92,5,.4)' }}
         >
-          <Icon name="send" size={19} />
+          <Icon name="send" size={20} />
         </button>
       </div>
     </div>
