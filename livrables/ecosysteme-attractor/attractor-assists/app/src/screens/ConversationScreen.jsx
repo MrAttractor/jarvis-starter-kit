@@ -336,7 +336,8 @@ export function ConversationScreen({ go, notify, params, profile }) {
       ]).catch(() => {});
     } catch (err) {
       console.error('generateDemoMaquette failed:', err);
-      notify("La génération a échoué — réessaie ou contacte le support.");
+      const detail = err?.message || err?.context?.message || JSON.stringify(err)?.slice(0, 120) || 'erreur inconnue';
+      setMsgs(m => [...m, { from: 'bot', text: `Erreur génération : ${detail}` }]);
     } finally {
       setDemoGenerating(false);
     }

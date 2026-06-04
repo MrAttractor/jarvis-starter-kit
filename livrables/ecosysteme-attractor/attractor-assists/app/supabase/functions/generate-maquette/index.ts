@@ -124,6 +124,9 @@ serve(async (req) => {
     const slug = `${prospect.prenom.toLowerCase().replace(/\s+/g, '-')}-${prospect_id.slice(0, 8)}`;
     const filename = `${slug}.html`;
 
+    // S'assurer que le bucket existe (création auto si absent)
+    await supabase.storage.createBucket("maquettes", { public: true }).catch(() => {});
+
     // Upload dans Supabase Storage
     const { error: uploadErr } = await supabase.storage
       .from("maquettes")
@@ -132,7 +135,10 @@ serve(async (req) => {
         upsert: true,
       });
 
-    if (uploadErr) return json({ error: `Upload Storage: ${uploadErr.message}` }, 500);
+    if (uploadErr) {
+      console.error("Storage upload error:", uploadErr.message);
+      return json({ error: `Upload Storage: ${uploadErr.message}` }, 500);
+    }
 
     // URL publique
     const { data: { publicUrl } } = supabase.storage
