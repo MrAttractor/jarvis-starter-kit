@@ -154,6 +154,9 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
   // ── Marketplace — prestataires en attente ──
   const [prestaEnAttente, setPrestaEnAttente] = useState([]);
 
+  // ── Veille écosystème ──
+  const [veilleRapports, setVeilleRapports] = useState([]);
+
   // ── Carelle chat ──
   const [carelleMsgs,    setCarelleMsgs]    = useState([]);
   const [carelleInput,   setCarelleInput]   = useState('');
@@ -198,6 +201,13 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
         .eq('statut', 'en_attente')
         .order('created_at', { ascending: false });
       setPrestaEnAttente(presta || []);
+
+      const { data: veilles } = await supabase
+        .from('veille_rapports')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(7);
+      setVeilleRapports(veilles || []);
     } catch (e) {
       console.error('MacCockpit loadAll', e);
     }
@@ -644,6 +654,83 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
 
   // ─── RENDU ───────────────────────────────────────────────────────────────
 
+  // ── Section Cockpit (landing) ────────────────────────────────────────────
+
+  if (section === 'cockpit') {
+    const prospectActifs = prospects.filter(p => !['closé','perdu'].includes(p.statut)).length;
+    const feedbacksPending = feedbacks.filter(f => f.status === 'nouveau').length;
+    const dernierVeille = veilleRapports[0];
+
+    const tiles = [
+      { id: 'carelle',  icon: 'bolt',  label: 'Carelle',  sub: 'Chef de Cabinet · Coordination',                              dark: true,  badge: null },
+      { id: 'agence',   icon: 'users', label: 'Agence',   sub: `${ALL_AGENTS.length} agents actifs`,                          dark: false, badge: null },
+      { id: 'pipeline', icon: 'trend', label: 'Pipeline', sub: `${prospectActifs} prospect${prospectActifs !== 1 ? 's' : ''} actifs`, dark: false, badge: prospectActifs > 0 ? prospectActifs : null },
+      { id: 'hub',      icon: 'grid',  label: 'Hub',      sub: 'Métriques · MIROIR · Feedbacks',                              dark: false, badge: feedbacksPending > 0 ? feedbacksPending : null },
+      { id: 'veille',   icon: 'spark', label: 'Veille',   sub: dernierVeille ? dernierVeille.titre.slice(0, 28) + (dernierVeille.titre.length > 28 ? '…' : '') : 'Rapport quotidien', dark: false, badge: null },
+    ];
+
+    return (
+      <div className="min-h-screen bg-sable pb-6">
+        <div className="px-[18px] pt-14 pb-4">
+          <p className="font-display font-extrabold text-[22px] text-charbon">Cockpit</p>
+          <p className="text-[12.5px] text-g400 mt-0.5">Tableau de bord admin · Mac Arthur</p>
+        </div>
+
+        {/* Quick stats */}
+        <div className="px-[18px] flex gap-2 mb-5">
+          {[
+            { label: 'Prospects', val: prospectActifs, tone: 'text-orange' },
+            { label: 'Feedbacks', val: feedbacksPending, tone: feedbacksPending > 0 ? 'text-[#D64545]' : 'text-charbon' },
+            { label: 'À arbitrer', val: arbitrer.length, tone: arbitrer.length > 0 ? 'text-amber' : 'text-charbon' },
+            { label: 'Inscrits', val: stats.total, tone: 'text-charbon' },
+          ].map(s => (
+            <div key={s.label} className="flex-1 bg-white border border-g200 rounded-[14px] px-2 py-3 text-center">
+              <div className={`font-display font-extrabold text-[20px] leading-none ${s.tone}`}>{!loaded ? '…' : s.val}</div>
+              <div className="text-[9.5px] font-bold text-g400 mt-1 leading-tight">{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Tiles */}
+        <div className="px-[18px] grid grid-cols-2 gap-3 mb-5">
+          {tiles.map(tile => (
+            <button key={tile.id} onClick={() => go(tile.id)}
+              className={`flex flex-col gap-3 p-4 rounded-[18px] text-left active:scale-[.98] transition ${tile.dark ? 'bg-charbon' : 'bg-white border border-g200'}`}>
+              <div className="flex items-center justify-between">
+                <Icon name={tile.icon} size={20} className={tile.dark ? 'text-orange' : 'text-g400'} />
+                {tile.badge != null && (
+                  <span className="text-[10px] font-extrabold bg-orange text-white px-2 py-0.5 rounded-full">{tile.badge}</span>
+                )}
+              </div>
+              <div>
+                <p className={`font-display font-extrabold text-[16px] leading-tight ${tile.dark ? 'text-white' : 'text-charbon'}`}>{tile.label}</p>
+                <p className={`text-[11.5px] mt-0.5 leading-snug ${tile.dark ? 'text-white/50' : 'text-g400'}`}>{tile.sub}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* Dernière activité */}
+        {journal.length > 0 && (
+          <div className="px-[18px]">
+            <p className="text-[11px] font-bold text-g400 uppercase tracking-[.15em] mb-2">Dernière activité agents</p>
+            <div className="flex flex-col gap-1.5">
+              {journal.slice(0, 5).map(j => (
+                <div key={j.id} className="flex items-center gap-2.5 bg-white border border-g200 rounded-[12px] px-3 py-2.5">
+                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-orange/10 text-orange flex-shrink-0">
+                    {(j.agent_id || 'SYS').toUpperCase().slice(0, 3)}
+                  </span>
+                  <p className="text-[12.5px] text-g700 truncate flex-1">{j.titre}</p>
+                  <span className="text-[10px] text-g300 flex-shrink-0">{timeAgo(j.created_at)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   // ── Section Carelle ──────────────────────────────────────────────────────
 
   if (section === 'carelle') {
@@ -873,6 +960,9 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
     return (
       <div className="min-h-screen bg-sable pb-6">
         <div className="px-[18px] pt-14 pb-3">
+          <button onClick={() => go('cockpit')} className="flex items-center gap-1.5 text-g400 text-[12px] font-bold mb-3 active:text-orange transition">
+            <Icon name="back" size={14} /> Cockpit
+          </button>
           <p className="font-display font-extrabold text-[20px] text-charbon">L'Agence</p>
           <p className="text-[12.5px] text-g400 mt-0.5">{ALL_AGENTS.length} agents — clic pour fiche + historique</p>
         </div>
@@ -1053,6 +1143,9 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
     return (
       <div className="min-h-screen bg-sable pb-6">
         <div className="px-[18px] pt-14 pb-3">
+          <button onClick={() => go('cockpit')} className="flex items-center gap-1.5 text-g400 text-[12px] font-bold mb-3 active:text-orange transition">
+            <Icon name="back" size={14} /> Cockpit
+          </button>
           <p className="font-display font-extrabold text-[20px] text-charbon">Pipeline</p>
           <p className="text-[12.5px] text-g400 mt-0.5">{prospects.length} prospects · {prospects.filter(p => p.statut === 'closé').length} closés</p>
         </div>
@@ -1419,11 +1512,131 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
     );
   }
 
+  // ── Section Veille ───────────────────────────────────────────────────────
+
+  if (section === 'veille') {
+    const dernierRapport = veilleRapports[0];
+    const statutStyles = {
+      'livré':    { bg: 'bg-growth/10', text: 'text-growth', dot: 'bg-growth' },
+      'en cours': { bg: 'bg-amber/10',  text: 'text-amber',  dot: 'bg-amber' },
+      'à faire':  { bg: 'bg-g100',      text: 'text-g500',   dot: 'bg-g400' },
+    };
+    return (
+      <div className="min-h-screen bg-sable pb-6">
+        <div className="px-[18px] pt-14 pb-4">
+          <button onClick={() => go('cockpit')} className="flex items-center gap-1.5 text-g400 text-[12px] font-bold mb-3 active:text-orange transition">
+            <Icon name="back" size={14} /> Cockpit
+          </button>
+          <p className="font-display font-extrabold text-[20px] text-charbon">Veille écosystème</p>
+          <p className="text-[12px] text-g400 mt-0.5">Rapport quotidien · {veilleRapports.length} rapport{veilleRapports.length !== 1 ? 's' : ''}</p>
+        </div>
+
+        <div className="px-[18px] flex flex-col gap-4">
+          {!loaded ? (
+            <p className="text-center text-[13px] text-g400 py-8">Chargement…</p>
+          ) : veilleRapports.length === 0 ? (
+            <div className="bg-white border border-g200 rounded-[18px] p-6 text-center">
+              <div className="w-12 h-12 bg-orange/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Icon name="spark" size={22} className="text-orange" />
+              </div>
+              <p className="font-display font-bold text-[15px] text-charbon mb-1">Aucun rapport encore</p>
+              <p className="text-[13px] text-g400 leading-relaxed">La routine tourne chaque jour à 7h. Le premier rapport apparaîtra demain matin.</p>
+            </div>
+          ) : (
+            <>
+              {/* Dernier rapport */}
+              <div className="bg-white border border-g200 rounded-[18px] overflow-hidden">
+                <div className="px-4 pt-4 pb-3 border-b border-g200">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="w-2 h-2 rounded-full bg-growth flex-shrink-0" style={{ animation: 'glowPulse 2s ease-in-out infinite' }} />
+                    <span className="text-[10.5px] font-bold text-growth uppercase tracking-wider">Dernier rapport</span>
+                  </div>
+                  <p className="font-display font-bold text-[15px] text-charbon">{dernierRapport.titre}</p>
+                  <p className="text-[12px] text-g400 mt-0.5">
+                    {new Date(dernierRapport.date_rapport).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                  </p>
+                </div>
+
+                {/* Piliers */}
+                {Array.isArray(dernierRapport.piliers) && dernierRapport.piliers.length > 0 && (
+                  <div className="px-4 py-3 border-b border-g200">
+                    <p className="text-[10.5px] font-bold text-g400 uppercase tracking-wider mb-2.5">État des piliers</p>
+                    <div className="flex flex-col gap-2">
+                      {dernierRapport.piliers.map((p, i) => {
+                        const st = statutStyles[p.statut] || statutStyles['à faire'];
+                        return (
+                          <div key={i} className="flex items-center justify-between gap-3">
+                            <p className="text-[13px] text-charbon flex-1 leading-snug">{p.nom}</p>
+                            <span className={`flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold ${st.bg} ${st.text}`}>
+                              <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`} />{p.statut}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Priorités */}
+                {Array.isArray(dernierRapport.priorites) && dernierRapport.priorites.length > 0 && (
+                  <div className="px-4 py-3 border-b border-g200">
+                    <p className="text-[10.5px] font-bold text-g400 uppercase tracking-wider mb-2.5">Prochains chantiers</p>
+                    <div className="flex flex-col gap-2">
+                      {dernierRapport.priorites.map((p, i) => (
+                        <div key={i} className="flex items-start gap-2.5">
+                          <span className="w-5 h-5 rounded-full bg-orange text-white text-[10px] font-extrabold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                          <p className="text-[13px] text-charbon leading-snug flex-1">{p}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Signaux faibles */}
+                {dernierRapport.signaux_faibles && (
+                  <div className="px-4 py-3">
+                    <p className="text-[10.5px] font-bold text-g400 uppercase tracking-wider mb-1.5">Signaux faibles</p>
+                    <p className="text-[13px] text-charbon leading-relaxed">{dernierRapport.signaux_faibles}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Historique */}
+              {veilleRapports.length > 1 && (
+                <div className="flex flex-col gap-2">
+                  <p className="text-[11px] font-bold text-g400 uppercase tracking-[.15em]">Rapports précédents</p>
+                  {veilleRapports.slice(1).map(r => {
+                    const livres  = (r.piliers || []).filter(p => p.statut === 'livré').length;
+                    const enCours = (r.piliers || []).filter(p => p.statut === 'en cours').length;
+                    return (
+                      <div key={r.id} className="flex items-center gap-3 bg-white border border-g200 rounded-[14px] px-4 py-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-[13.5px] text-charbon truncate">{r.titre}</p>
+                          <p className="text-[11.5px] text-g400 mt-0.5">
+                            {new Date(r.date_rapport).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+                            {r.piliers?.length > 0 && ` · ${livres} livrés, ${enCours} en cours`}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   // ── Section Hub ──────────────────────────────────────────────────────────
 
   return (
     <div className="min-h-screen bg-sable pb-6">
       <div className="px-[18px] pt-14 pb-3">
+        <button onClick={() => go('cockpit')} className="flex items-center gap-1.5 text-g400 text-[12px] font-bold mb-3 active:text-orange transition">
+          <Icon name="back" size={14} /> Cockpit
+        </button>
         <p className="font-display font-extrabold text-[20px] text-charbon">Hub</p>
         <p className="text-[12.5px] text-g400 mt-0.5">Métriques · Broadcasts · MIROIR · Feedbacks</p>
       </div>

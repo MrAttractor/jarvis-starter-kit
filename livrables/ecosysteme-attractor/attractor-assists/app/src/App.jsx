@@ -29,10 +29,11 @@ const TABS_USER  = [
   { id: "profil",      label: "Profil",         icon: "user" },
 ];
 const TABS_ADMIN = [
-  { id: "carelle",  label: "Carelle",  icon: "bolt" },
-  { id: "agence",   label: "Agence",   icon: "users" },
-  { id: "pipeline", label: "Pipeline", icon: "trend" },
-  { id: "hub",      label: "Hub",      icon: "grid" },
+  { id: "dashboard",   label: "Accueil",    icon: "home"   },
+  { id: "assistants",  label: "Mon équipe", icon: "users"  },
+  { id: "marketplace", label: "Marketplace",icon: "grid"   },
+  { id: "cockpit",     label: "Cockpit",    icon: "bolt"   },
+  { id: "profil",      label: "Profil",     icon: "user"   },
 ];
 
 export default function App() {
@@ -67,9 +68,9 @@ export default function App() {
       const { data: prof } = await supabase.from("profiles").select("*").eq("id", user.id).single();
       setProfile(prof);
       supabase.rpc('ping_last_seen').then(() => {}, () => {});
-      // Admin : bypass onboarding/activation, cockpit direct
+      // Admin : bypass onboarding/activation, dashboard direct
       if (prof?.role === 'admin') {
-        setScreen("carelle");
+        setScreen("dashboard");
         setPhase("app");
         return;
       }
@@ -160,10 +161,12 @@ export default function App() {
     agenda:        <AgendaScreen go={go} profile={profile} />,
     notifications: <NotificationsScreen go={go} />,
     admin:         <AdminScreen go={go} notify={notify} />,
+    cockpit:  <MacCockpitScreen go={go} notify={notify} section="cockpit"  profile={profile} />,
     carelle:  <MacCockpitScreen go={go} notify={notify} section="carelle"  profile={profile} />,
     agence:   <MacCockpitScreen go={go} notify={notify} section="agence"   profile={profile} />,
     pipeline: <MacCockpitScreen go={go} notify={notify} section="pipeline" profile={profile} />,
     hub:      <MacCockpitScreen go={go} notify={notify} section="hub"      profile={profile} />,
+    veille:   <MacCockpitScreen go={go} notify={notify} section="veille"   profile={profile} />,
     methode:       <MéthodeScreen go={go} />,
     carnet:        <CarnetAffairesScreen go={go} />,
     dump:          <DechargeVocaleScreen go={go} profile={profile} />,
@@ -179,7 +182,10 @@ export default function App() {
   const isAdmin = profile?.role === 'admin';
   const TABS = isAdmin ? TABS_ADMIN : TABS_USER;
   const isConversation = screen === "conversation";
-  const activeTab = TABS.find(t => t.id === screen) ? screen : "dashboard";
+  const COCKPIT_SECTIONS = ['carelle', 'agence', 'pipeline', 'hub', 'veille'];
+  const activeTab = TABS.find(t => t.id === screen)
+    ? screen
+    : (isAdmin && COCKPIT_SECTIONS.includes(screen) ? 'cockpit' : 'dashboard');
 
   return (
     <Frame dark={dark}>
