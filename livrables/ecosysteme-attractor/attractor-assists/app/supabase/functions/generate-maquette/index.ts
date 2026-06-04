@@ -120,17 +120,22 @@ serve(async (req) => {
       return json({ error: "HTML invalide généré par Claude", raw: html.slice(0, 300) }, 502);
     }
 
-    // Nom du fichier : slug prospect
-    const slug = `${prospect.prenom.toLowerCase().replace(/\s+/g, '-')}-${prospect_id.slice(0, 8)}`;
-    const filename = `${slug}.html`;
+    // Nom de fichier safe (UUID uniquement, pas de caractères spéciaux)
+    const filename = `maquette-${prospect_id}.html`;
+
+    // Encoder en Uint8Array (plus fiable que string brut dans Deno)
+    const htmlBytes = new TextEncoder().encode(html);
 
     // S'assurer que le bucket existe (création auto si absent)
-    await supabase.storage.createBucket("maquettes", { public: true }).catch(() => {});
+    const bucketRes = await supabase.storage.createBucket("maquettes", { public: true });
+    if (bucketRes.error && !bucketRes.error.message.includes("already exists")) {
+      console.error("createBucket error:", bucketRes.error.message);
+    }
 
     // Upload dans Supabase Storage
     const { error: uploadErr } = await supabase.storage
       .from("maquettes")
-      .upload(filename, html, {
+      .upload(filename, htmlBytes, {
         contentType: "text/html; charset=utf-8",
         upsert: true,
       });
@@ -141,9 +146,8 @@ serve(async (req) => {
     }
 
     // URL publique
-    const { data: { publicUrl } } = supabase.storage
-      .from("maquettes")
-      .getPublicUrl(filename);
+    const pubData = supabase.storage.from("maquettes").getPublicUrl(filename);
+    const publicUrl = pubData.data.publicUrl;
 
     // Journaliser
     await supabase.from("journal_agent").insert({
@@ -153,7 +157,7 @@ serve(async (req) => {
       details: { prospect_id, url: publicUrl, ref_url: ref_url ?? null },
     }).catch(() => {});
 
-    return json({ url: publicUrl, slug });
+    return json({ url: publicUrl, slug: filename });
   } catch (e) {
     return json({ error: String(e) }, 500);
   }
