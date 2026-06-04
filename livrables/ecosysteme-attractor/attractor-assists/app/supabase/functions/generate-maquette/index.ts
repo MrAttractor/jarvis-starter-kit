@@ -92,21 +92,32 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
-        max_tokens: 4096,
+        max_tokens: 8192,
         system: MAQUETTE_PROMPT,
         messages: [{ role: "user", content: userContent }],
       }),
     });
 
+    if (!apiRes.ok) {
+      const errBody = await apiRes.text();
+      console.error("Anthropic API error:", apiRes.status, errBody);
+      return json({ error: `Anthropic API error ${apiRes.status}`, detail: errBody.slice(0, 300) }, 502);
+    }
+
     const apiData = await apiRes.json();
-    const html = (apiData?.content ?? [])
+    const rawText = (apiData?.content ?? [])
       .filter((b: any) => b.type === "text")
       .map((b: any) => b.text)
       .join("")
       .trim();
 
+    // Extraire le HTML même si Claude a ajouté du texte avant le doctype
+    const doctypeIdx = rawText.search(/<!doctype\s+html/i);
+    const html = doctypeIdx >= 0 ? rawText.slice(doctypeIdx) : rawText;
+
     if (!html.startsWith("<!doctype") && !html.startsWith("<!DOCTYPE")) {
-      return json({ error: "HTML invalide généré par Claude", raw: html.slice(0, 200) }, 502);
+      console.error("HTML invalide. Début reçu:", html.slice(0, 300));
+      return json({ error: "HTML invalide généré par Claude", raw: html.slice(0, 300) }, 502);
     }
 
     // Nom du fichier : slug prospect

@@ -309,7 +309,14 @@ export function ConversationScreen({ go, notify, params, profile }) {
       const { data, error } = await supabase.functions.invoke('generate-maquette', {
         body: { prospect_id: demoProspectId },
       });
-      if (error || !data?.url) throw new Error('Génération échouée');
+      if (error) {
+        console.error('generate-maquette error:', error);
+        throw error;
+      }
+      if (!data?.url) {
+        console.error('generate-maquette no url. data:', data);
+        throw new Error(data?.error || 'Génération échouée — aucune URL retournée');
+      }
       setDemoUrl(data.url);
 
       // Brief automatique des agents backend (fire-and-forget)
@@ -327,8 +334,9 @@ export function ConversationScreen({ go, notify, params, profile }) {
           prospect_id: demoProspectId,
         },
       ]).catch(() => {});
-    } catch {
-      notify("Génération en cours, réessaie dans un instant.");
+    } catch (err) {
+      console.error('generateDemoMaquette failed:', err);
+      notify("La génération a échoué — réessaie ou contacte le support.");
     } finally {
       setDemoGenerating(false);
     }
