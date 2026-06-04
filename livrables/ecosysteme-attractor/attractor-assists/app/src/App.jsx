@@ -163,10 +163,10 @@ export default function App() {
     admin:         <AdminScreen go={go} notify={notify} />,
     cockpit:  <MacCockpitScreen go={go} notify={notify} section="cockpit"  profile={profile} />,
     carelle:  <MacCockpitScreen go={go} notify={notify} section="carelle"  profile={profile} />,
-    agence:   <MacCockpitScreen go={go} notify={notify} section="agence"   profile={profile} />,
     pipeline: <MacCockpitScreen go={go} notify={notify} section="pipeline" profile={profile} />,
     hub:      <MacCockpitScreen go={go} notify={notify} section="hub"      profile={profile} />,
     veille:   <MacCockpitScreen go={go} notify={notify} section="veille"   profile={profile} />,
+    intel:    <MacCockpitScreen go={go} notify={notify} section="intel"    profile={profile} />,
     methode:       <MéthodeScreen go={go} />,
     carnet:        <CarnetAffairesScreen go={go} />,
     dump:          <DechargeVocaleScreen go={go} profile={profile} />,
@@ -182,7 +182,7 @@ export default function App() {
   const isAdmin = profile?.role === 'admin';
   const TABS = isAdmin ? TABS_ADMIN : TABS_USER;
   const isConversation = screen === "conversation";
-  const COCKPIT_SECTIONS = ['carelle', 'agence', 'pipeline', 'hub', 'veille'];
+  const COCKPIT_SECTIONS = ['carelle', 'pipeline', 'hub', 'veille', 'intel'];
   const activeTab = TABS.find(t => t.id === screen)
     ? screen
     : (isAdmin && COCKPIT_SECTIONS.includes(screen) ? 'cockpit' : 'dashboard');

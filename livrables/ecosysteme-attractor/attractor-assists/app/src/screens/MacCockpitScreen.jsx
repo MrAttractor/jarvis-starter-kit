@@ -157,6 +157,9 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
   // ── Veille écosystème ──
   const [veilleRapports, setVeilleRapports] = useState([]);
 
+  // ── Intel ──
+  const [sequences,   setSequences]  = useState([]);
+
   // ── Carelle chat ──
   const [carelleMsgs,    setCarelleMsgs]    = useState([]);
   const [carelleInput,   setCarelleInput]   = useState('');
@@ -208,6 +211,13 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
         .order('created_at', { ascending: false })
         .limit(7);
       setVeilleRapports(veilles || []);
+
+      const { data: seqs } = await supabase
+        .from('sequences_vente')
+        .select('*, prospects(prenom, activite, canal)')
+        .order('created_at', { ascending: false })
+        .limit(20);
+      setSequences(seqs || []);
     } catch (e) {
       console.error('MacCockpit loadAll', e);
     }
@@ -662,11 +672,11 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
     const dernierVeille = veilleRapports[0];
 
     const tiles = [
-      { id: 'carelle',  icon: 'bolt',  label: 'Carelle',  sub: 'Chef de Cabinet · Coordination',                              dark: true,  badge: null },
-      { id: 'agence',   icon: 'users', label: 'Agence',   sub: `${ALL_AGENTS.length} agents actifs`,                          dark: false, badge: null },
-      { id: 'pipeline', icon: 'trend', label: 'Pipeline', sub: `${prospectActifs} prospect${prospectActifs !== 1 ? 's' : ''} actifs`, dark: false, badge: prospectActifs > 0 ? prospectActifs : null },
-      { id: 'hub',      icon: 'grid',  label: 'Hub',      sub: 'Métriques · MIROIR · Feedbacks',                              dark: false, badge: feedbacksPending > 0 ? feedbacksPending : null },
-      { id: 'veille',   icon: 'spark', label: 'Veille',   sub: dernierVeille ? dernierVeille.titre.slice(0, 28) + (dernierVeille.titre.length > 28 ? '…' : '') : 'Rapport quotidien', dark: false, badge: null },
+      { id: 'carelle',  icon: 'bolt',   label: 'Carelle',  sub: 'Chef de Cabinet · Coordination',                                         dark: true,  badge: null },
+      { id: 'pipeline', icon: 'trend',  label: 'Pipeline', sub: `${prospectActifs} prospect${prospectActifs !== 1 ? 's' : ''} actifs`,      dark: false, badge: prospectActifs > 0 ? prospectActifs : null },
+      { id: 'hub',      icon: 'grid',   label: 'Hub',      sub: 'MIROIR · Broadcasts · Marketplace',                                       dark: false, badge: null },
+      { id: 'intel',    icon: 'target', label: 'Intel',    sub: 'Rapports agents · Awa · Tickets · Stats',                                 dark: false, badge: feedbacksPending > 0 ? feedbacksPending : null },
+      { id: 'veille',   icon: 'spark',  label: 'Veille',   sub: dernierVeille ? dernierVeille.titre.slice(0, 28) + (dernierVeille.titre.length > 28 ? '…' : '') : 'Rapport quotidien', dark: false, badge: null },
     ];
 
     return (
@@ -1508,6 +1518,209 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
             )}
           </Sheet>
         )}
+      </div>
+    );
+  }
+
+  // ── Section Intel ────────────────────────────────────────────────────────
+
+  if (section === 'intel') {
+    // Journal groupé par agent
+    const agentsAvecJournal = AGENTS_APP.map(a => ({
+      ...a,
+      entries: journal.filter(j => j.agent_id === a.id),
+    })).filter(a => a.entries.length > 0);
+
+    // Séquences Awa : dernier message de chaque prospect
+    const sequencesParProspect = sequences.reduce((acc, s) => {
+      if (!acc[s.prospect_id]) acc[s.prospect_id] = s;
+      return acc;
+    }, {});
+    const seqList = Object.values(sequencesParProspect).slice(0, 10);
+
+    return (
+      <div className="min-h-screen bg-sable pb-6">
+        <div className="px-[18px] pt-14 pb-4">
+          <button onClick={() => go('cockpit')} className="flex items-center gap-1.5 text-g400 text-[12px] font-bold mb-3 active:text-orange transition">
+            <Icon name="back" size={14} /> Cockpit
+          </button>
+          <p className="font-display font-extrabold text-[20px] text-charbon">Intel</p>
+          <p className="text-[12.5px] text-g400 mt-0.5">Rapports agents · Séquences Awa · Tickets · Statistiques</p>
+        </div>
+
+        <div className="px-[18px] flex flex-col gap-5">
+
+          {/* Stats usage */}
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { label: 'Inscrits total',     val: stats.total,     tone: 'bg-orange/10 text-orange',   icon: 'user'  },
+              { label: 'Onboarding terminé', val: stats.onboarded, tone: 'bg-growth/10 text-growth',   icon: 'check' },
+              { label: 'En ligne (<5min)',   val: stats.online,    tone: 'bg-[#25D366]/10 text-[#25D366]', icon: 'bolt' },
+              { label: 'Nouveaux (7j)',      val: stats.newWeek,   tone: 'bg-info/10 text-info',        icon: 'trend' },
+            ].map(s => (
+              <Card key={s.label} className="p-4 flex items-center gap-3">
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${s.tone}`}>
+                  <Icon name={s.icon} size={17} />
+                </div>
+                <div>
+                  <div className="font-display font-extrabold text-[22px] leading-none">{!loaded ? '…' : s.val}</div>
+                  <div className="text-[11px] text-g400 mt-0.5 leading-tight">{s.label}</div>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          {/* Tendances conversations par agent */}
+          {agentStats.length > 0 && (
+            <>
+              <SectionLabel>Tendances utilisation — 30 jours</SectionLabel>
+              <Card className="p-4 flex flex-col gap-3">
+                {agentStats.map(s => (
+                  <div key={s.id} className="flex items-center gap-3">
+                    <span className="text-[12.5px] font-bold text-charbon w-[80px] flex-shrink-0 capitalize">{s.id}</span>
+                    <div className="flex-1 bg-g100 rounded-full h-2 overflow-hidden">
+                      <div className="h-full bg-orange rounded-full transition-all"
+                        style={{ width: `${Math.round((s.count / maxStatCount) * 100)}%` }} />
+                    </div>
+                    <span className="text-[11.5px] font-bold text-g400 w-[30px] text-right flex-shrink-0">{s.count}</span>
+                  </div>
+                ))}
+                <p className="text-[11px] text-g300 text-right">conversations / agent</p>
+              </Card>
+            </>
+          )}
+
+          {/* Rapports agents (journal groupé) */}
+          <SectionLabel>Rapports agents</SectionLabel>
+          {agentsAvecJournal.length === 0 ? (
+            <p className="text-center text-[13px] text-g400 py-3">Aucun rapport agent enregistré.</p>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {agentsAvecJournal.map(agent => {
+                const isOpen = openSegments[`intel_${agent.id}`];
+                return (
+                  <div key={agent.id} className={`rounded-[16px] border bg-white overflow-hidden ${isOpen ? 'border-orange/20' : 'border-g200'}`}>
+                    <button onClick={() => toggleSeg(`intel_${agent.id}`)}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-left">
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-[11px] font-extrabold ${agent.accent}`}>
+                        {agent.nom.slice(0,3).toUpperCase()}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-display font-bold text-[14px] text-charbon">{agent.nom}</p>
+                        <p className="text-[11.5px] text-g400 truncate">{agent.role} · {agent.entries.length} action{agent.entries.length > 1 ? 's' : ''}</p>
+                      </div>
+                      <Icon name={isOpen ? 'chevdown' : 'chevron'} size={14} className="text-g300 flex-shrink-0" />
+                    </button>
+                    {isOpen && (
+                      <div className="flex flex-col divide-y divide-g100 border-t border-g200">
+                        {agent.entries.slice(0, 8).map(j => (
+                          <div key={j.id} className="flex items-start gap-2.5 px-4 py-3">
+                            <div className="w-1.5 h-1.5 rounded-full bg-orange mt-1.5 flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[13px] text-charbon leading-snug">{j.titre}</p>
+                              {j.type && <p className="text-[11px] text-g400 mt-0.5">{j.type}</p>}
+                            </div>
+                            <span className="text-[10px] text-g300 flex-shrink-0 mt-0.5">{timeAgo(j.created_at)}</span>
+                          </div>
+                        ))}
+                        {agent.entries.length > 8 && (
+                          <p className="text-center text-[11.5px] text-g400 py-2">+{agent.entries.length - 8} autres</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Séquences Awa */}
+          <SectionLabel>Séquences & prompts Awa</SectionLabel>
+          {seqList.length === 0 ? (
+            <p className="text-center text-[13px] text-g400 py-3">Aucune séquence générée.</p>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {seqList.map(seq => {
+                const prospect = seq.prospects;
+                const msgs = Array.isArray(seq.messages) ? seq.messages : [];
+                const isOpen = openSegments[`seq_${seq.id}`];
+                return (
+                  <div key={seq.id} className={`rounded-[16px] border bg-white overflow-hidden ${isOpen ? 'border-info/20' : 'border-g200'}`}>
+                    <button onClick={() => toggleSeg(`seq_${seq.id}`)}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-left">
+                      <div className="w-9 h-9 rounded-full bg-info/10 flex items-center justify-center font-display font-extrabold text-[12px] text-info flex-shrink-0">
+                        {prospect?.prenom ? prospect.prenom.slice(0,2).toUpperCase() : 'AW'}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-display font-bold text-[14px] text-charbon">{prospect?.prenom || 'Prospect'}</p>
+                        <p className="text-[11.5px] text-g400 truncate">{prospect?.activite || '—'} · {msgs.length} message{msgs.length > 1 ? 's' : ''} · {timeAgo(seq.created_at)}</p>
+                      </div>
+                      <Icon name={isOpen ? 'chevdown' : 'chevron'} size={14} className="text-g300 flex-shrink-0" />
+                    </button>
+                    {isOpen && (
+                      <div className="flex flex-col gap-3 px-4 pb-4 border-t border-g200 pt-3">
+                        {msgs.map((msg, idx) => (
+                          <div key={idx} className="flex flex-col gap-1.5">
+                            <p className="text-[11px] font-bold text-g400 uppercase tracking-wider">{msg.titre || `Message ${idx + 1}`}</p>
+                            <div className="bg-sable rounded-[12px] px-3 py-2.5">
+                              <p className="text-[12.5px] text-charbon leading-relaxed whitespace-pre-wrap">{msg.message}</p>
+                            </div>
+                            <button
+                              onClick={() => navigator.clipboard.writeText(msg.message).then(() => notify('Copié !'))}
+                              className="self-start text-[11.5px] font-bold text-g400 flex items-center gap-1 hover:text-orange transition">
+                              <Icon name="copy" size={12} /> Copier
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Feedbacks & Tickets */}
+          <SectionLabel>Tickets & remontées utilisateurs {feedbacks.filter(f => f.status === 'nouveau').length > 0 && <span className="ml-1.5 bg-[#D64545] text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">{feedbacks.filter(f => f.status === 'nouveau').length}</span>}</SectionLabel>
+          <div className="flex gap-2 overflow-x-auto pb-1 -mx-[18px] px-[18px]" style={{ scrollbarWidth: 'none' }}>
+            {FB_FILTERS.map(f => (
+              <button key={f.id} onClick={() => setFbFilter(f.id)}
+                className={`flex-shrink-0 px-3.5 py-2 rounded-full text-[12.5px] font-bold border-[1.5px] transition ${fbFilter === f.id ? 'bg-charbon text-white border-charbon' : 'bg-white border-g200 text-g700'}`}>
+                {f.label}
+              </button>
+            ))}
+          </div>
+          {filteredFeedbacks.length === 0 ? (
+            <p className="text-center text-[13px] text-g400 py-3">Aucun feedback.</p>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {filteredFeedbacks.slice(0, 15).map(fb => {
+                const ctx = fb.context || {};
+                const isPending = fb.status === 'nouveau';
+                const typeStyle = fb.type === 'bug' ? 'bg-red-100 text-red-600' : fb.type === 'besoin' ? 'bg-blue-100 text-blue-600' : 'bg-g100 text-g500';
+                return (
+                  <Card key={fb.id} className={`px-4 py-3 flex flex-col gap-2 ${isPending ? 'border-orange/30' : 'opacity-60'}`}>
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2 flex-wrap min-w-0">
+                        <span className={`px-2 py-0.5 rounded-full text-[11px] font-bold flex-shrink-0 ${typeStyle}`}>{fb.type}</span>
+                        <span className="text-[11px] text-g400 flex-shrink-0">{timeAgo(fb.created_at)}</span>
+                      </div>
+                      {isPending && (
+                        <button onClick={() => markHandled(fb.id)}
+                          className="flex-shrink-0 text-[11px] font-bold text-growth border border-growth/40 rounded-full px-2.5 py-1 hover:bg-growth/10 transition">
+                          Traité
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-[13px] text-charbon leading-snug">{fb.message}</p>
+                    {ctx.agent_id && <p className="text-[11px] text-g400">Agent : {ctx.agent_id}{ctx.nb_messages ? ` · ${ctx.nb_messages} msg` : ''}</p>}
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+
+        </div>
       </div>
     );
   }
