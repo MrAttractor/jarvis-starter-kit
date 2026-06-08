@@ -1,6 +1,6 @@
 ---
 name: maquette-closer
-description: Transforme une conversation avec un prospect en maquette d'application cliquable aux couleurs du client, prête à présenter via un simple lien web (fini l'enregistrement d'écran d'un fichier HTML brut). Utilise cette skill dès que Mac Arthur parle d'un prospect, d'un client à convaincre, d'une démo ou d'une maquette à préparer, même s'il ne dit pas explicitement le mot "maquette". Exemples de déclencheurs : "j'ai un nouveau prospect dans la restauration", "prépare une démo pour Olive", "montre-lui à quoi ressemblerait son app", "maquette pour [client]", "/maquette-closer". C'est le mécanisme de vente "maquette-first" prouvé de l'agence Mr Attractor : montrer une maquette concrète déclenche l'intérêt et le closing.
+description: Transforme un prospect (conversation, audit, notes) en 3 livrables de closing personnalisés — une interface cliquable aux couleurs du client, une simulation du parcours de SES clients, et un PDF de synthèse à laisser — prêts à présenter via un simple lien web (fini l'enregistrement d'écran d'un fichier HTML brut). Utilise cette skill dès que Mac Arthur parle d'un prospect, d'un client à convaincre, d'une démo ou d'une maquette à préparer, même s'il ne dit pas explicitement le mot "maquette". Exemples de déclencheurs : "j'ai un nouveau prospect dans la restauration", "prépare une démo pour Olive", "montre-lui à quoi ressemblerait son app", "maquette pour [client]", "/maquette-closer". C'est le mécanisme de vente "maquette-first" prouvé de l'agence Mr Attractor : montrer une maquette concrète déclenche l'intérêt et le closing.
 ---
 
 # Maquette-Closer
@@ -9,31 +9,34 @@ description: Transforme une conversation avec un prospect en maquette d'applicat
 
 Le mécanisme de vente le plus efficace de l'agence est simple et prouvé sur le terrain : pendant un échange avec un prospect, lui montrer une maquette concrète de SON application déclenche l'intérêt et le closing, là où un discours seul échoue. Un client accompagné pendant 4 ans a acheté le jour où il a vu une maquette.
 
-Cette skill industrialise ce mécanisme. Elle doit produire deux choses, vite :
-1. Une maquette cliquable et crédible, aux couleurs du client.
-2. Un moyen de la présenter proprement, c'est-à-dire un lien web, jamais un fichier HTML brut envoyé tel quel.
+Cette skill industrialise ce mécanisme et produit, à partir d'un seul prospect, **3 livrables personnalisés** :
+1. **L'interface** : une maquette cliquable et crédible, aux couleurs et au métier du client — ce que LUI voit et pilote.
+2. **Le parcours client** : une simulation de ce que vivent SES PROPRES clients (découverte, questions, commande, suivi) — c'est ce qui fait dire au prospect "ça, c'est exactement ce qui me prend mon temps aujourd'hui".
+3. **Le PDF** : un document de synthèse à laisser, qui résume le problème, la solution montrée et l'offre chiffrée — pour que le prospect garde une trace et puisse en parler à son associé ou son conjoint.
 
-Le point de douleur à éliminer : avant, Claude générait un fichier HTML que Mac Arthur n'osait pas envoyer, donc il filmait son écran. Ce n'est pas vendeur. La maquette doit devenir un lien que le prospect ouvre sur son téléphone et qu'il peut toucher.
+Le tout présenté via un lien web propre, jamais un fichier brut envoyé tel quel.
 
-Garde en tête en permanence : c'est un outil de CLOSING, pas un projet de développement. L'objectif est de déclencher un "oui" et un acompte, pas de livrer l'app finale. Reste rapide, crédible, simple.
+Le point de douleur à éliminer : avant, Claude générait un fichier HTML que Mac Arthur n'osait pas envoyer, donc il filmait son écran. Ce n'est pas vendeur. Tout ce qui sort de cette skill doit devenir un lien que le prospect ouvre sur son téléphone et touche directement.
 
-## Étape 1 — Brief express
+Garde en tête en permanence : c'est un outil de CLOSING, pas un projet de développement. L'objectif est de déclencher un "oui" et un acompte, pas de livrer l'app finale. Reste rapide, crédible, simple — sur les 3 livrables comme sur un seul.
 
-Avant de coder, il faut le strict nécessaire. Extrais d'abord tout ce que tu peux de la conversation en cours (le prospect a souvent déjà été décrit). Ne pose ensuite que les questions qui manquent, une à la fois, pour ne pas casser le rythme.
+## Étape 1 — Remplir la fiche prospect
 
-Informations à réunir :
-- **Nom du client et du projet/app** (et un nom d'appli accrocheur si pas encore défini).
-- **Secteur et cible** : à qui s'adresse le service, qui sont ses clients.
-- **Problème n°1** que l'app résout pour lui.
-- **Promesse en une phrase** (ce que le client gagne).
-- **3 à 5 écrans/fonctions clés** seulement. Pas plus : une maquette de closing reste simple.
-- **Couleurs de marque** : si un logo ou un site est fourni, extrais-en les couleurs toi-même. Sinon, demande la couleur principale, ou propose une palette adaptée au secteur et fais valider.
-- **Logo** si disponible.
-- **Ton** (pro, chaleureux, premium, jeune...).
+Avant de construire quoi que ce soit, structure ce que tu sais déjà dans une fiche prospect. C'est l'entrée commune aux 3 livrables : la remplir une fois évite de tout reconstruire de mémoire à chaque étape, et donne à Mac Arthur une trace réutilisable.
 
-Si le client ne sait pas, propose des valeurs par défaut crédibles pour son secteur et avance. Mieux vaut une maquette à ajuster qu'une page blanche.
+Gabarit complet : `references/fiche-prospect.md`. Il tient en 4 blocs :
+1. Identité & marque (nom, secteur précis, logo/couleurs, ton)
+2. Le client de mon client (qui ils sont, ce qu'ils achètent vraiment, leurs questions avant achat)
+3. Le quotidien de mon client (sa vraie douleur dans ses mots, ce qu'il veut déléguer, son volume réel)
+4. Proposition commerciale (prix, scope, acompte)
 
-## Étape 2 — Construire la maquette
+**Comment la remplir vite :**
+- Si tu as déjà un dump brut (export WhatsApp, notes en bloc-notes comme Mac Arthur en produit pour son réseau personnel) : extrais toi-même les 4 blocs depuis ce texte. Ne pose des questions que pour ce qui manque vraiment.
+- Si tu pars de zéro : pose les questions une à la fois, dans l'ordre des blocs, pour ne pas casser le rythme d'un échange.
+- Le bloc 2 (le client de mon client) est le plus important : c'est lui qui rend la démo crédible — le prospect doit se reconnaître, pas reconnaître un template.
+- Tu n'as pas besoin d'une fiche à 100% pour avancer. Dès que les blocs 1 et 2 ont de la matière, même partielle, complète intelligemment avec du **fictif crédible** pour le reste (vrais types de produits du secteur, prénoms locaux, montants plausibles) et avance. Marque dans la fiche ce qui est fictif : ça se remplace par du réel après validation du prospect, jamais avant.
+
+## Étape 2 — Construire l'interface (la maquette)
 
 Pars du gabarit fourni : `assets/template-maquette.html`. C'est une maquette mobile-first autonome, déjà mise dans un cadre de smartphone, avec une navigation par onglets qui fonctionne, et des variables CSS pour les couleurs. Copie-le et remplis-le.
 
@@ -49,51 +52,54 @@ Garde le fichier 100% autonome (CSS et JS inline, pas de dépendance externe qui
 
 Détails sur le gabarit et comment l'adapter : voir `references/presentation.md`.
 
-## Étape 3 — Déployer et envoyer le lien (OBLIGATOIRE)
+## Étape 3 — Simuler le parcours client
 
-⛔ **RÈGLE DURE : le fichier .html ne s'envoie JAMAIS au client.**
-Un fichier HTML sur WhatsApp = le client ne sait pas quoi en faire = la maquette ne sera pas vue = pas de closing.
+C'est le 2e livrable, et souvent celui qui déclenche le déclic le plus fort : le prospect ne voit plus seulement "son tableau de bord", il voit ce que vivent SES clients à lui — et réalise que ça, justement, c'est ce qui le fatigue aujourd'hui.
 
-**Ce qui se passe avec le fichier brut :**
-Le client reçoit un fichier. Il ne sait pas l'ouvrir sur son téléphone. Il ne répond pas. Deal perdu. C'est ce qui s'est passé avec J'envoie Express.
+**Comment l'intégrer concrètement :** ajoute une 2e perspective dans la même maquette (un toggle ou un onglet "Vue cliente" en plus de la "Vue [Prénom du client]"), plutôt que de construire un fichier séparé. Même gabarit, même cadre téléphone, juste une autre suite d'écrans :
 
-**Ce qui doit se passer à la place :**
-Mac Arthur déploie le fichier → reçoit un lien → envoie le lien sur WhatsApp → le client ouvre dans son navigateur → il navigue dans la maquette → il dit oui.
+1. **Découverte** : le client final tombe sur le catalogue / les produits via WhatsApp ou l'app.
+2. **Questions à l'assistant** : reprends les VRAIES questions identifiées dans le bloc 2 de la fiche prospect ("c'est adapté à l'âge de mon enfant ?", "vous livrez où ?"...). C'est ce qui rend la simulation crédible — un assistant qui répond à des questions génériques ne convainc personne.
+3. **Commande** : l'assistant prend la commande, confirme, encaisse (mentionne le moyen de paiement réel du client si connu — XPaye, Wave...).
+4. **Suivi / SAV** : confirmation, suivi, et — si la douleur du prospect est le SAV (comme pour C'Real) — montre explicitement comment l'assistant absorbe cette charge : retour d'expérience demandé automatiquement, note collectée, rien ne remonte au prospect sauf ce qui exige sa décision.
 
----
+Reste sur 3-4 écrans pour cette vue, dans le même esprit que l'interface : montrer juste assez pour déclencher "ah oui, exactement ça".
 
-### Outil par défaut : tiiny.host (30 secondes)
+## Étape 4 — Préparer le PDF
 
-1. Aller sur **tiiny.host**
-2. Glisser-déposer le fichier `.html`
-3. Choisir un nom : `restaurant-awa` ou `jenvoie-express`
-4. Clic "Upload" → lien immédiat : `https://restaurant-awa.tiiny.site`
-5. Copier le lien → envoyer sur WhatsApp
+C'est le 3e livrable : un document à laisser, que le prospect garde, montre à son associé ou son conjoint, relit à tête reposée. Une démo cliquable convainc dans l'instant ; un PDF prolonge la conviction après que la conversation s'est arrêtée.
 
-Gratuit. Zéro compte requis. Fonctionne depuis le téléphone de Mac Arthur.
+**Reste simple — un HTML imprimable, pas un outil de génération PDF :**
+- Construis une page HTML autonome, une seule page, aux couleurs du client (mêmes `--brand`/`--brand-2` que la maquette, pour que les 3 livrables se ressemblent).
+- Structure en 4 blocs courts : (1) le problème du prospect dans SES mots — repris du bloc 3 de la fiche, (2) ce que l'app fait pour lui résoudre — 3 puces concrètes maximum, (3) le lien vers la démo cliquable, (4) l'offre chiffrée — prix, MRR, acompte, prochaine étape (bloc 4 de la fiche).
+- Le prospect (ou Mac Arthur) l'exporte en PDF via Ctrl+P → "Enregistrer en PDF" depuis le navigateur. Aucune dépendance, aucun compte, ça marche partout.
 
----
+⚠️ Ne construis ce livrable que si le bloc 4 de la fiche prospect (proposition commerciale) est rempli. Un PDF sans prix ni étape suivante est un gadget, pas un outil de closing.
 
-### Alternative : Netlify Drop (si tiiny.host indisponible)
+## Étape 5 — Déployer et envoyer le lien (OBLIGATOIRE)
 
-1. Aller sur **app.netlify.com/drop**
-2. Glisser-déposer le fichier
-3. Lien automatique → renommer si besoin
+⛔ **RÈGLE DURE : aucun fichier (.html ou .pdf) ne s'envoie JAMAIS brut au client.**
+Un fichier sur WhatsApp = le client ne sait pas quoi en faire = il ne sera pas vu = pas de closing. C'est ce qui s'est passé avec J'envoie Express : fichier reçu, jamais ouvert, deal qui traîne.
 
----
+**Le chemin est unique désormais — le sous-domaine agence est en place et automatisé :**
 
-### Cible long terme : sous-domaine agence
+1. Dépose le fichier dans `livrables/clients/demo-site/public/[nom-client]/index.html` (la maquette ; pour le PDF, génère-le dans le même dossier ou indique simplement le lien de la page imprimable — le prospect imprime lui-même en PDF s'il veut le garder).
+2. Commit + push sur `master`.
+3. Netlify redéploie automatiquement → le lien est prêt en ~2 minutes : `demo.agenceattractor.com/[nom-client]`.
+4. Copier le lien → envoyer sur WhatsApp.
 
-`demo.agenceattractor.com/restaurant-awa`
+Crédibilité maximale dès l'URL : le prospect voit que c'est l'agence qui l'héberge, pas un outil tiers.
 
-Crédibilité maximale — à mettre en place une fois, puis chaque maquette a son lien agence. Le prospect voit que c'est professionnel dès l'URL.
+**Filet de sécurité uniquement** (si le repo ou Netlify est inaccessible) : tiiny.host (glisser-déposer sur tiiny.host → lien `https://[nom].tiiny.site` en 30 secondes, zéro compte) ou app.netlify.com/drop. À utiliser en dépannage, jamais comme premier choix : ça casse la cohérence de marque que le sous-domaine agence apporte.
 
-## Étape 4 — Kit de closing
+## Étape 6 — Kit de closing
 
-La maquette ne vend pas seule, c'est Mac Arthur qui vend avec. Fournis-lui systématiquement, en plus du lien :
+Les livrables ne vendent pas seuls, c'est Mac Arthur qui vend avec. Fournis-lui systématiquement, en plus du ou des liens :
 
-- **Un script de présentation court** (3 à 5 phrases) qui suit cette logique : rappeler le problème du prospect, montrer comment l'app le résout, pointer 1 ou 2 écrans clés, puis proposer l'étape suivante.
+- **Un script de présentation court** (3 à 5 phrases) qui suit cette logique : rappeler le problème du prospect, montrer comment l'app le résout (pointer la maquette ET, si elle existe, la vue "parcours client" — c'est souvent elle qui fait le déclic), proposer l'étape suivante.
 - **L'étape suivante claire et chiffrée** : ce que le prospect obtient s'il dit oui, le prix, et l'acompte pour démarrer. Toujours finir sur une action concrète, pas sur "dis-moi ce que tu en penses".
+
+Si les 3 livrables sont prêts, le script les enchaîne dans cet ordre : la maquette d'abord (l'effet waouh immédiat), le parcours client ensuite (le déclic "ça me soulage"), le PDF en dernier (ce qu'il garde après la conversation).
 
 Modèle de script :
 
@@ -101,7 +107,7 @@ Modèle de script :
 [Prénom], tu m'as dit que ton problème c'est [problème].
 
 Regarde ce que ça donnerait pour toi :
-👉 [LIEN tiiny.host ou netlify]
+👉 [LIEN demo.agenceattractor.com/nom-client]
 
 Ouvre sur ton téléphone. C'est cliquable.
 
@@ -118,6 +124,7 @@ Si le lien n'est pas encore déployé, déployer d'abord, envoyer ensuite.
 
 ## Garde-fous
 
-- Reste un outil rapide. Si tu passes trop de temps, tu as raté l'objectif.
-- Ne promets jamais dans la maquette des fonctions impossibles à livrer ensuite. Ce que tu montres doit pouvoir être construit.
-- Toujours finir par le lien + le script + l'étape suivante. Une maquette sans appel à l'action ne close pas.
+- Reste un outil rapide, sur les 3 livrables comme sur un seul. Si tu passes trop de temps, tu as raté l'objectif — un seul livrable bien fait vaut mieux que trois bâclés. La maquette (interface) est le minimum non négociable ; parcours client et PDF s'ajoutent quand la fiche prospect a la matière pour les rendre crédibles, pas avant.
+- Ne promets jamais, dans la maquette ou le parcours client, des fonctions impossibles à livrer ensuite. Ce que tu montres doit pouvoir être construit.
+- Le fictif est un point de départ, jamais une fin. Toute donnée fictive insérée pour avancer vite doit être marquée dans la fiche prospect et remplacée par du réel une fois le prospect validé — jamais avant, pour ne jamais lui montrer une fausse info comme si elle était vraie.
+- Toujours finir par le ou les liens + le script + l'étape suivante chiffrée. Un livrable sans appel à l'action ne close pas.
