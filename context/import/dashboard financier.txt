@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEO Dashboard — Mr Attractor</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --noir: #070707;
+  --blanc: #f0ece3;
+  --or: #c9a84c;
+  --or2: #e8c97a;
+  --or-dim: rgba(201,168,76,0.1);
+  --or-border: rgba(201,168,76,0.2);
+  --vert: #3ddc84;
+  --vert-dim: rgba(61,220,132,0.1);
+  --rouge: #ff5252;
+  --rouge-dim: rgba(255,82,82,0.1);
+  --bleu: #6dbbf4;
+  --bleu-dim: rgba(109,187,244,0.1);
+  --orange: #ffb347;
+  --orange-dim: rgba(255,179,71,0.1);
+  --card: #111111;
+  --card2: #181818;
+  --border: rgba(255,255,255,0.06);
+  --text-muted: #555;
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--noir);
+  color: var(--blanc);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* GRAIN */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* NAV */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(7,7,7,0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--or);
+  letter-spacing: -0.02em;
+}
+
+.nav-logo span { color: var(--blanc); }
+
+.nav-center {
+  display: flex;
+  gap: 4px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 4px;
+}
+
+.nav-tab {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  border: none;
+  background: transparent;
+}
+
+.nav-tab.active { background: var(--or); color: var(--noir); font-weight: 700; }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.nav-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--vert);
+}
+
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--vert);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* MAIN */
+.main {
+  position: relative;
+  z-index: 1;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* PAGES */
+.page { display: none; }
+.page.active { display: block; }
+
+/* KPI ROW */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.kpi {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.kpi:hover { border-color: var(--or-border); }
+
+.kpi-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.kpi-value {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.kpi-value.or { color: var(--or); }
+.kpi-value.vert { color: var(--vert); }
+.kpi-value.rouge { color: var(--rouge); }
+.kpi-value.bleu { color: var(--bleu); }
+
+.kpi-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.kpi-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--border);
+}
+
+.kpi-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.8s ease;
+}
+
+/* GRID 2COL */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-full { margin-bottom: 16px; }
+
+/* CARD */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.card-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 10px;
+  letter-spacing: 0.06em;
+}
+
+.badge-or { background: var(--or-dim); color: var(--or); }
+.badge-vert { background: var(--vert-dim); color: var(--vert); }
+.badge-rouge { background: var(--rouge-dim); color: var(--rouge); }
+.badge-bleu { background: var(--bleu-dim); color: var(--bleu); }
+.badge-orange { background: var(--orange-dim); color: var(--orange); }
+
+/* TABLE */
+.table { width: 100%; border-collapse: collapse; }
+.table th {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: left;
+  padding: 0 0 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.table td {
+  font-size: 0.82rem;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.table tr:last-child td { border-bottom: none; }
+
+.table .amount { font-family: 'DM Mono', monospace; font-weight: 500; }
+.amount.positif { color: var(--vert); }
+.amount.negatif { color: var(--rouge); }
+
+/* PROGRESS BAR */
+.progress-wrap { margin-bottom: 12px; }
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.progress-label { font-size: 0.78rem; }
+.progress-pct {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.progress-track {
+  height: 4px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+/* REPARTITION */
+.repart-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+
+.repart-item {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  text-align: center;
+}
+
+.repart-pct {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.repart-label { font-size: 0.7rem; color: var(--text-muted); line-height: 1.3; }
+.repart-amount {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  margin-top: 6px;
+}
+
+/* ALERT */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.alert-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+.alert.warning { background: var(--orange-dim); border: 1px solid rgba(255,179,71,0.2); color: var(--orange); }
+.alert.danger { background: var(--rouge-dim); border: 1px solid rgba(255,82,82,0.2); color: var(--rouge); }
+.alert.success { background: var(--vert-dim); border: 1px solid rgba(61,220,132,0.2); color: var(--vert); }
+.alert.info { background: var(--bleu-dim); border: 1px solid rgba(109,187,244,0.2); color: var(--bleu); }
+
+/* STACK ITEM */
+.stack-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.stack-item:last-child { border-bottom: none; }
+
+.stack-left { display: flex; align-items: center; gap: 10px; }
+
+.stack-icon {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.stack-name { font-size: 0.85rem; font-weight: 500; }
+.stack-cycle { font-size: 0.7rem; color: var(--text-muted); margin-top: 1px; }
+
+.stack-right { text-align: right; }
+.stack-cost {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--rouge);
+}
+
+.stack-renewal {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.stack-renewal.soon { color: var(--orange); }
+
+/* TACHE */
+.tache-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.tache-item:last-child { border-bottom: none; }
+
+.tache-check {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.tache-check.done { background: var(--vert); border-color: var(--vert); }
+.tache-check.done::after { content: '✓'; font-size: 0.65rem; color: var(--noir); font-weight: 700; }
+
+.tache-content { flex: 1; }
+.tache-title { font-size: 0.85rem; }
+.tache-title.done { text-decoration: line-through; color: var(--text-muted); }
+.tache-meta { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+
+.tache-priority {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.priority-high { background: var(--rouge-dim); color: var(--rouge); }
+.priority-mid { background: var(--orange-dim); color: var(--orange); }
+.priority-low { background: var(--vert-dim); color: var(--vert); }
+
+/* ACTION ITEM */
+.action-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.action-item:last-child { border-bottom: none; }
+
+.action-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.action-name { font-size: 0.85rem; font-weight: 500; }
+.action-status {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  padding: 3px 8px;
+  border-radius: 10px;
+}
+
+.action-track { height: 3px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 4px; }
+.action-fill { height: 100%; border-radius: 3px; }
+.action-meta { font-size: 0.7rem; color: var(--text-muted); }
+
+/* FORMS */
+.form-section { margin-top: 16px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.form-full { margin-bottom: 12px; }
+
+.form-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--or);
+  display: block;
+  margin-bottom: 6px;
+}
+
+input, select, textarea {
+  width: 100%;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 11px 12px;
+  color: var(--blanc);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+
+input:focus, select:focus, textarea:focus { border-color: var(--or); }
+input::placeholder, textarea::placeholder { color: #333; }
+
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23c9a84c' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-color: var(--card2);
+  padding-right: 32px;
+  cursor: pointer;
+}
+
+select option { background: #111; }
+
+.btn {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 11px 20px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.btn-or { background: var(--or); color: var(--noir); }
+.btn-or:hover { background: var(--or2); }
+.btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+.btn-ghost:hover { border-color: var(--or); color: var(--or); }
+.btn-danger { background: var(--rouge-dim); border: 1px solid rgba(255,82,82,0.3); color: var(--rouge); }
+
+.btn-row { display: flex; gap: 10px; margin-top: 14px; }
+
+/* DIVIDER */
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+/* SECTION TITLE */
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 14px;
+}
+
+/* MINI BUSINESS PLAN */
+.mbp-section {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 12px;
+}
+
+.mbp-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--or);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+
+.mbp-content { font-size: 0.82rem; line-height: 1.6; color: rgba(240,236,227,0.8); }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .nav-center { display: none; }
+  .kpi-row { grid-template-columns: 1fr 1fr; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .repart-grid { grid-template-columns: 1fr 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .main { padding: 16px; }
+}
+
+/* MOBILE NAV */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(7,7,7,0.97);
+  border-top: 1px solid var(--border);
+  padding: 10px 20px;
+  z-index: 200;
+  justify-content: space-around;
+}
+
+.mobile-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+  border: none;
+  background: transparent;
+}
+
+.mobile-tab-icon { font-size: 1.1rem; }
+.mobile-tab-label { font-family: 'DM Mono', monospace; font-size: 0.55rem; color: var(--text-muted); letter-spacing: 0.06em; }
+.mobile-tab.active .mobile-tab-label { color: var(--or); }
+
+@media (max-width: 768px) {
+  .mobile-nav { display: flex; }
+  body { padding-bottom: 70px; }
+}
+
+/* EMPTY STATE */
+.empty {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.empty-icon { font-size: 2rem; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">Mr<span>Attractor</span></div>
+  <div class="nav-center">
+    <button class="nav-tab active" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-tab" onclick="showPage('finances')">Finances</button>
+    <button class="nav-tab" onclick="showPage('stack')">Stack</button>
+    <button class="nav-tab" onclick="showPage('actions')">Actions</button>
+    <button class="nav-tab" onclick="showPage('taches')">Tâches</button>
+    <button class="nav-tab" onclick="showPage('mbp')">Business Plan</button>
+  </div>
+  <div class="nav-right">
+    <div class="nav-date" id="nav-date"></div>
+    <div class="nav-status"><div class="status-dot"></div>Actif</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- ============ DASHBOARD ============ -->
+<div class="page active" id="page-dashboard">
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-label">CA ce mois</div>
+      <div class="kpi-value or" id="kpi-ca">0 €</div>
+      <div class="kpi-sub" id="kpi-ca-sub">Objectif : <span id="kpi-obj">305 €</span></div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-ca" style="width:0%;background:var(--or)"></div></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Disponible net</div>
+      <div class="kpi-value vert" id="kpi-dispo">0 €</div>
+      <div class="kpi-sub">Après URSSAF + provisions</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-dispo" style="width:0%;background:var(--vert)"></div></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Charges stack</div>
+      <div class="kpi-value rouge" id="kpi-charges">67 €</div>
+      <div class="kpi-sub" id="kpi-charges-sub">3 outils actifs</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-charges" style="width:22%;background:var(--rouge)"></div></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Provision URSSAF</div>
+      <div class="kpi-value bleu" id="kpi-urssaf">0 €</div>
+      <div class="kpi-sub">22% du CA encaissé</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-urssaf" style="width:0%;background:var(--bleu)"></div></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Alertes -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">⚡ Alertes & Priorités</div>
+        <div class="card-badge badge-orange" id="alert-count">0</div>
+      </div>
+      <div id="alerts-container">
+        <div class="alert warning">
+          <div class="alert-icon">⏰</div>
+          <div>n8n gratuit expire dans <strong>14 jours</strong>. Décision d'achat requise. À 20€/mois, tu dois générer 60€/mois minimum pour le justifier.</div>
+        </div>
+        <div class="alert info">
+          <div class="alert-icon">🎯</div>
+          <div>Objectif mensuel : <strong>305€</strong>. Avec 1 Starter (150€) + 1 Runner (350€) tu es déjà à 500€. Ferme ton premier client.</div>
+        </div>
+        <div class="alert success">
+          <div class="alert-icon">✅</div>
+          <div>Système Starter opérationnel. Formulaire live sur Netlify. Workflow n8n actif.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Répartition -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">💰 Clé de répartition</div>
+        <div class="card-badge badge-or">Auto</div>
+      </div>
+      <div class="repart-grid" id="repart-grid">
+        <div class="repart-item">
+          <div class="repart-pct" style="color:var(--bleu)">22%</div>
+          <div class="repart-label">URSSAF</div>
+          <div class="repart-amount" style="color:var(--bleu)" id="r-urssaf">0 €</div>
+        </div>
+        <div class="repart-item">
+          <div class="repart-pct" style="color:var(--or)">15%</div>
+          <div class="repart-label">Réinvestissement</div>
+          <div class="repart-amount" style="color:var(--or)" id="r-reinvest">0 €</div>
+        </div>
+        <div class="repart-item">
+          <div class="repart-pct" style="color:var(--orange)">10%</div>
+          <div class="repart-label">Trésorerie</div>
+          <div class="repart-amount" style="color:var(--orange)" id="r-treso">0 €</div>
+        </div>
+        <div class="repart-item">
+          <div class="repart-pct" style="color:var(--vert)">53%</div>
+          <div class="repart-label">Revenu net</div>
+          <div class="repart-amount" style="color:var(--vert)" id="r-net">0 €</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:0.72rem;color:var(--text-muted)">Basé sur le CA encaissé ce mois</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Dernières transactions -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📋 Dernières transactions</div>
+        <button class="btn btn-ghost" style="font-size:0.7rem;padding:6px 12px" onclick="showPage('finances')">Voir tout</button>
+      </div>
+      <div id="dash-transactions">
+        <div class="empty"><div class="empty-icon">📭</div>Aucune transaction ce mois</div>
+      </div>
+    </div>
+
+    <!-- Tâches urgentes -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">✅ Tâches prioritaires</div>
+        <button class="btn btn-ghost" style="font-size:0.7rem;padding:6px 12px" onclick="showPage('taches')">Voir tout</button>
+      </div>
+      <div id="dash-taches"></div>
+    </div>
+  </div>
+
+  <!-- Prévision -->
+  <div class="card grid-full">
+    <div class="card-header">
+      <div class="card-title">📈 Prévision fin de mois</div>
+      <div class="card-badge badge-or" id="prevision-badge">En calcul...</div>
+    </div>
+    <div id="prevision-content">
+      <div class="alert info">
+        <div class="alert-icon">📊</div>
+        <div>Enregistre tes premières transactions pour activer les prévisions automatiques.</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="section-title">Déclaration URSSAF</div>
+    <div id="urssaf-info">
+      <div class="alert warning">
+        <div class="alert-icon">🏛️</div>
+        <div>Auto-entrepreneur France — Taux URSSAF : <strong>22%</strong>. Prochaine déclaration : vérifier sur autoentrepreneur.urssaf.fr. Pense à déclarer même si CA = 0.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FINANCES ============ -->
+<div class="page" id="page-finances">
+  <div class="grid-2">
+    <!-- Ajouter transaction -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">+ Nouvelle transaction</div>
+      </div>
+      <div class="form-section">
+        <div class="form-row">
+          <div>
+            <label class="form-label">Type</label>
+            <select id="tx-type" onchange="toggleTxType()">
+              <option value="entree">💚 Entrée (paiement reçu)</option>
+              <option value="sortie">🔴 Sortie (dépense)</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Devise</label>
+            <select id="tx-devise">
+              <option value="EUR">€ Euro</option>
+              <option value="XOF">FCFA</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label class="form-label">Montant</label>
+            <input type="number" id="tx-montant" placeholder="Ex: 150">
+          </div>
+          <div>
+            <label class="form-label">Date</label>
+            <input type="date" id="tx-date">
+          </div>
+        </div>
+        <div class="form-full">
+          <label class="form-label">Description</label>
+          <input type="text" id="tx-desc" placeholder="Ex: Consulting Starter — Jean Kouamé">
+        </div>
+        <div class="form-full" id="tx-client-wrap">
+          <label class="form-label">Client (si entrée)</label>
+          <input type="text" id="tx-client" placeholder="Prénom Nom du client">
+        </div>
+        <div class="form-full">
+          <label class="form-label">Catégorie</label>
+          <select id="tx-categorie">
+            <option value="consulting">Consulting</option>
+            <option value="site-ia">Site IA Pro</option>
+            <option value="chatbot">Chatbot</option>
+            <option value="outil">Outil / Stack</option>
+            <option value="marketing">Marketing</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-or" onclick="ajouterTransaction()">Enregistrer</button>
+          <button class="btn btn-ghost" onclick="resetTxForm()">Réinitialiser</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Résumé mensuel -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Résumé mensuel</div>
+        <div class="card-badge badge-or" id="mois-label"></div>
+      </div>
+      <div style="margin-bottom:16px">
+        <div class="progress-wrap">
+          <div class="progress-header">
+            <span class="progress-label">CA vs Objectif</span>
+            <span class="progress-pct" id="prog-ca-pct">0%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="prog-ca-fill" style="width:0%;background:var(--or)"></div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-header">
+            <span class="progress-label">Charges vs CA</span>
+            <span class="progress-pct" id="prog-charges-pct">0%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="prog-charges-fill" style="width:0%;background:var(--rouge)"></div></div>
+        </div>
+      </div>
+      <table class="table">
+        <tr><td>Entrées totales</td><td class="amount positif" id="sum-entrees">0 €</td></tr>
+        <tr><td>Sorties totales</td><td class="amount negatif" id="sum-sorties">0 €</td></tr>
+        <tr><td>Solde net</td><td class="amount" id="sum-solde" style="color:var(--or)">0 €</td></tr>
+        <tr><td>Provision URSSAF (22%)</td><td class="amount" id="sum-urssaf" style="color:var(--bleu)">0 €</td></tr>
+        <tr><td>Disponible réel</td><td class="amount positif" id="sum-dispo">0 €</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Historique -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Historique des transactions</div>
+      <div style="display:flex;gap:8px">
+        <select id="filter-mois" onchange="renderTransactions()" style="font-size:0.75rem;padding:6px 10px">
+          <option value="all">Tous les mois</option>
+        </select>
+        <select id="filter-type" onchange="renderTransactions()" style="font-size:0.75rem;padding:6px 10px">
+          <option value="all">Tout</option>
+          <option value="entree">Entrées</option>
+          <option value="sortie">Sorties</option>
+        </select>
+      </div>
+    </div>
+    <div id="tx-list">
+      <div class="empty"><div class="empty-icon">📭</div>Aucune transaction enregistrée</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STACK ============ -->
+<div class="page" id="page-stack">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🛠️ Mes outils actifs</div>
+        <div class="card-badge badge-rouge" id="stack-total-badge">67 €/mois</div>
+      </div>
+      <div id="stack-list">
+        <!-- Généré par JS -->
+      </div>
+      <div class="divider"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:0.8rem;color:var(--text-muted)">Total mensuel</span>
+        <span style="font-family:'DM Mono',monospace;font-size:0.95rem;color:var(--rouge);font-weight:500" id="stack-total">67 €</span>
+      </div>
+    </div>
+
+    <div>
+      <!-- Ajouter outil -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header">
+          <div class="card-title">+ Ajouter un outil</div>
+        </div>
+        <div class="form-section">
+          <div class="form-row">
+            <div>
+              <label class="form-label">Nom de l'outil</label>
+              <input type="text" id="stack-nom" placeholder="Ex: Canva Pro">
+            </div>
+            <div>
+              <label class="form-label">Coût</label>
+              <input type="number" id="stack-cout" placeholder="Ex: 13">
+            </div>
+          </div>
+          <div class="form-row">
+            <div>
+              <label class="form-label">Cycle</label>
+              <select id="stack-cycle">
+                <option value="mensuel">Mensuel</option>
+                <option value="annuel">Annuel</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Prochain renouvellement</label>
+              <input type="date" id="stack-renewal">
+            </div>
+          </div>
+          <div class="form-full">
+            <label class="form-label">Emoji / Icône</label>
+            <input type="text" id="stack-icon" placeholder="Ex: 🎨" maxlength="4">
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-or" onclick="ajouterStack()">Ajouter</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conseil ROI -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">💡 Conseil avant d'acheter</div>
+        </div>
+        <div id="roi-conseil">
+          <div class="alert info">
+            <div class="alert-icon">🧮</div>
+            <div><strong>Règle avant tout achat :</strong> Un outil se justifie si son coût représente moins de 10% de ton CA mensuel OU s'il te fait gagner du temps valorisable à 80€/h.</div>
+          </div>
+          <div class="alert warning">
+            <div class="alert-icon">⏰</div>
+            <div><strong>n8n gratuit</strong> expire dans ~14 jours. Plan payant à partir de 20€/mois. Décision : attends ton premier client pour valider l'achat.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ACTIONS ============ -->
+<div class="page" id="page-actions">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">+ Nouvelle action</div>
+      </div>
+      <div class="form-section">
+        <div class="form-full">
+          <label class="form-label">Nom de l'action</label>
+          <input type="text" id="action-nom" placeholder="Ex: Prospection WhatsApp — 20 contacts">
+        </div>
+        <div class="form-row">
+          <div>
+            <label class="form-label">Date de lancement</label>
+            <input type="date" id="action-date">
+          </div>
+          <div>
+            <label class="form-label">Statut</label>
+            <select id="action-statut">
+              <option value="en-cours">En cours</option>
+              <option value="terminee">Terminée</option>
+              <option value="suspendue">Suspendue</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label class="form-label">Taux d'aboutissement (%)</label>
+            <input type="number" id="action-taux" placeholder="Ex: 65" min="0" max="100">
+          </div>
+          <div>
+            <label class="form-label">Catégorie</label>
+            <select id="action-categorie">
+              <option value="prospection">Prospection</option>
+              <option value="contenu">Contenu</option>
+              <option value="publicite">Publicité</option>
+              <option value="partenariat">Partenariat</option>
+              <option value="produit">Produit</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-full">
+          <label class="form-label">Notes / Observations</label>
+          <textarea id="action-notes" placeholder="Ce qui fonctionne, ce qui bloque..." style="min-height:70px"></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-or" onclick="ajouterAction()">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📊 Taux moyen d'aboutissement</div>
+        <div class="card-badge badge-or" id="taux-moyen-badge">—</div>
+      </div>
+      <div id="taux-chart">
+        <div class="empty"><div class="empty-icon">📈</div>Lance tes premières actions pour voir les stats</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Toutes mes actions</div>
+      <div class="card-badge badge-or" id="actions-count">0</div>
+    </div>
+    <div id="actions-list">
+      <div class="empty"><div class="empty-icon">🚀</div>Aucune action enregistrée</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TACHES ============ -->
+<div class="page" id="page-taches">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">+ Nouvelle tâche</div>
+      </div>
+      <div class="form-section">
+        <div class="form-full">
+          <label class="form-label">Intitulé de la tâche</label>
+          <input type="text" id="tache-titre" placeholder="Ex: Appeler prospect Kouamé">
+        </div>
+        <div class="form-row">
+          <div>
+            <label class="form-label">Priorité</label>
+            <select id="tache-priority">
+              <option value="high">🔴 Haute</option>
+              <option value="mid">🟡 Moyenne</option>
+              <option value="low">🟢 Basse</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Échéance</label>
+            <input type="date" id="tache-date">
+          </div>
+        </div>
+        <div class="form-full">
+          <label class="form-label">Catégorie</label>
+          <select id="tache-cat">
+            <option value="client">Client</option>
+            <option value="prospection">Prospection</option>
+            <option value="admin">Administratif</option>
+            <option value="contenu">Contenu</option>
+            <option value="finance">Finance</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-or" onclick="ajouterTache()">Ajouter</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Progression</div>
+      </div>
+      <div id="taches-stats">
+        <div class="progress-wrap">
+          <div class="progress-header">
+            <span class="progress-label">Tâches complétées</span>
+            <span class="progress-pct" id="taches-pct">0%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="taches-fill" style="width:0%;background:var(--vert)"></div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px">
+          <div class="repart-item"><div class="repart-pct" style="color:var(--rouge);font-size:1.4rem" id="count-high">0</div><div class="repart-label">Haute priorité</div></div>
+          <div class="repart-item"><div class="repart-pct" style="color:var(--orange);font-size:1.4rem" id="count-mid">0</div><div class="repart-label">Moyenne</div></div>
+          <div class="repart-item"><div class="repart-pct" style="color:var(--vert);font-size:1.4rem" id="count-done">0</div><div class="repart-label">Complétées</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Ma liste de tâches</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" style="font-size:0.7rem;padding:6px 12px" onclick="filterTaches('all')">Toutes</button>
+        <button class="btn btn-ghost" style="font-size:0.7rem;padding:6px 12px" onclick="filterTaches('pending')">En cours</button>
+        <button class="btn btn-ghost" style="font-size:0.7rem;padding:6px 12px" onclick="filterTaches('done')">Faites</button>
+      </div>
+    </div>
+    <div id="taches-list">
+      <div class="empty"><div class="empty-icon">✅</div>Aucune tâche — bien joué !</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MINI BUSINESS PLAN ============ -->
+<div class="page" id="page-mbp">
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header">
+      <div class="card-title">📋 Mini Business Plan — Mr Attractor</div>
+      <button class="btn btn-or" onclick="exportMBP()">Exporter PDF</button>
+    </div>
+    <div class="alert info">
+      <div class="alert-icon">💼</div>
+      <div>Ce document est généré automatiquement à partir de tes données. Il est conçu pour être présenté à un partenaire financier ou investisseur potentiel.</div>
+    </div>
+  </div>
+
+  <div id="mbp-content">
+    <div class="mbp-section">
+      <div class="mbp-title">1. Présentation de l'entreprise</div>
+      <div class="mbp-content">
+        <strong>Agence Mr Attractor</strong> — fondée et dirigée par Mac Arthur KOUASSI.<br>
+        Statut : Auto-entrepreneur | Domiciliation : France<br>
+        Activité : Conseil en stratégie marketing, développement de sites IA, déploiement de chatbots.<br>
+        Méthode propriétaire : La <strong>Méthode ATTRACTOR</strong> — 3 piliers : Attirer · Convertir · Structurer.
+      </div>
+    </div>
+
+    <div class="mbp-section">
+      <div class="mbp-title">2. Proposition de valeur</div>
+      <div class="mbp-content" id="mbp-valeur">
+        Conçu pour soulager les entreprises en automatisant 80% des tâches qui leur coûtent trop de temps, d'argent et d'énergie.<br><br>
+        <strong>Cible :</strong> TPE/PME et entrepreneurs en Afrique de l'Ouest (Côte d'Ivoire, Sénégal, Bénin) et en Europe (France).<br>
+        <strong>Différenciation :</strong> Méthodologie propriétaire structurée, maximum 4 clients consulting/mois (qualité vs volume), livrables sous 48h.
+      </div>
+    </div>
+
+    <div class="mbp-section">
+      <div class="mbp-title">3. Offres & Tarification</div>
+      <div class="mbp-content">
+        <strong>Pilier Attirer (Consulting)</strong><br>
+        Starter 150€ · Runner 350€ · Eagle 800€ · Conseil 80€/h<br><br>
+        <strong>Pilier Convertir (Site IA Pro)</strong><br>
+        Starter IA 250€ · Pro IA 450€ · Premium IA 800€ · Maintenance 80€/mois<br><br>
+        <strong>Pilier Structurer (Chatbot)</strong><br>
+        Bot Texte 350€ · Bot Connecté 900€+80€/mois · Bot Sur-Mesure 1800€+120€/mois
+      </div>
+    </div>
+
+    <div class="mbp-section">
+      <div class="mbp-title">4. Objectifs financiers</div>
+      <div class="mbp-content" id="mbp-financier">
+        Chargement des données financières...
+      </div>
+    </div>
+
+    <div class="mbp-section">
+      <div class="mbp-title">5. Structure de coûts</div>
+      <div class="mbp-content" id="mbp-couts">
+        Chargement de la stack...
+      </div>
+    </div>
+
+    <div class="mbp-section">
+      <div class="mbp-title">6. Projection à 6 mois</div>
+      <div class="mbp-content" id="mbp-projection">
+        <strong>Mois 1-2 :</strong> Stabilisation — 1 à 2 clients Starter/mois. CA cible : 300-500€/mois.<br>
+        <strong>Mois 3-4 :</strong> Montée en puissance — mix Starter + Runner. CA cible : 700-1200€/mois.<br>
+        <strong>Mois 5-6 :</strong> Récurrence — abonnements maintenance + chatbots. CA cible : 1500-2500€/mois.<br><br>
+        <strong>Point d'équilibre :</strong> <span id="mbp-break">305€/mois</span> (3× charges fixes).<br>
+        <strong>Taux de cotisation URSSAF :</strong> 22% du CA encaissé.
+      </div>
+    </div>
+
+    <div class="mbp-section">
+      <div class="mbp-title">7. Contact & Coordonnées</div>
+      <div class="mbp-content">
+        Mac Arthur KOUASSI — Fondateur & Consultant Senior<br>
+        📧 myattractor1@gmail.com<br>
+        📱 +337.53.90.23.23<br>
+        🌐 mrattractor.netlify.app<br>
+        💼 linkedin.com/in/macarthurkouassi/
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+  <button class="mobile-tab active" onclick="showPage('dashboard')">
+    <span class="mobile-tab-icon">📊</span>
+    <span class="mobile-tab-label">Dashboard</span>
+  </button>
+  <button class="mobile-tab" onclick="showPage('finances')">
+    <span class="mobile-tab-icon">💰</span>
+    <span class="mobile-tab-label">Finances</span>
+  </button>
+  <button class="mobile-tab" onclick="showPage('stack')">
+    <span class="mobile-tab-icon">🛠️</span>
+    <span class="mobile-tab-label">Stack</span>
+  </button>
+  <button class="mobile-tab" onclick="showPage('actions')">
+    <span class="mobile-tab-icon">🚀</span>
+    <span class="mobile-tab-label">Actions</span>
+  </button>
+  <button class="mobile-tab" onclick="showPage('taches')">
+    <span class="mobile-tab-icon">✅</span>
+    <span class="mobile-tab-label">Tâches</span>
+  </button>
+</nav>
+
+<script>
+// ============ STATE ============
+let state = JSON.parse(localStorage.getItem('mra-ceo') || '{}');
+if (!state.transactions) state.transactions = [];
+if (!state.stack) state.stack = [
+  { id: 1, nom: 'Netlify', cout: 25, cycle: 'mensuel', renewal: '', icon: '🌐' },
+  { id: 2, nom: 'Claude Pro #1', cout: 21, cycle: 'mensuel', renewal: '', icon: '🤖' },
+  { id: 3, nom: 'Claude Pro #2', cout: 21, cycle: 'mensuel', renewal: '', icon: '🤖' }
+];
+if (!state.actions) state.actions = [];
+if (!state.taches) state.taches = [
+  { id: 1, titre: 'Lancer le premier appel prospect Starter', priority: 'high', date: '', cat: 'prospection', done: false },
+  { id: 2, titre: 'Vérifier la date de déclaration URSSAF sur autoentrepreneur.urssaf.fr', priority: 'high', date: '', cat: 'finance', done: false },
+  { id: 3, titre: 'Décider du plan n8n avant expiration (14 jours)', priority: 'mid', date: '', cat: 'finance', done: false },
+  { id: 4, titre: 'Tester le formulaire audit-starter.html avec un vrai client', priority: 'mid', date: '', cat: 'client', done: false },
+  { id: 5, titre: 'Ajouter le dashboard au raccourci téléphone', priority: 'low', date: '', cat: 'admin', done: false }
+];
+
+function save() { localStorage.setItem('mra-ceo', JSON.stringify(state)); }
+
+// ============ NAV ============
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    if (t.textContent.toLowerCase().includes(page.substring(0,4).toLowerCase()) ||
+        (page === 'mbp' && t.textContent.includes('Plan')) ||
+        (page === 'dashboard' && t.textContent.includes('Dashboard'))) {
+      t.classList.add('active');
+    }
+  });
+  document.querySelectorAll('.mobile-tab').forEach(t => {
+    const icon = t.querySelector('.mobile-tab-icon').textContent;
+    const map = { dashboard:'📊', finances:'💰', stack:'🛠️', actions:'🚀', taches:'✅' };
+    if (map[page] === icon) t.classList.add('active');
+  });
+  if (page === 'dashboard') updateDashboard();
+  if (page === 'finances') renderTransactions();
+  if (page === 'stack') renderStack();
+  if (page === 'actions') renderActions();
+  if (page === 'taches') renderTaches();
+  if (page === 'mbp') updateMBP();
+}
+
+// ============ DATE ============
+function updateDate() {
+  const now = new Date();
+  const opts = { weekday:'long', day:'numeric', month:'long' };
+  document.getElementById('nav-date').textContent = now.toLocaleDateString('fr-FR', opts);
+  const today = now.toISOString().split('T')[0];
+  document.querySelectorAll('input[type="date"]').forEach(d => { if (!d.value) d.value = today; });
+}
+
+// ============ FINANCES ============
+function getMoisActuel() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+}
+
+function getMoisLabel() {
+  const now = new Date();
+  return now.toLocaleDateString('fr-FR', { month:'long', year:'numeric' });
+}
+
+function getCA() {
+  const mois = getMoisActuel();
+  return state.transactions
+    .filter(t => t.type === 'entree' && t.date.startsWith(mois))
+    .reduce((s, t) => s + (t.devise === 'XOF' ? t.montant/655 : t.montant), 0);
+}
+
+function getChargesStack() {
+  return state.stack.reduce((s, t) => s + (t.cycle === 'annuel' ? t.cout/12 : t.cout), 0);
+}
+
+function ajouterTransaction() {
+  const type = document.getElementById('tx-type').value;
+  const montant = parseFloat(document.getElementById('tx-montant').value);
+  const date = document.getElementById('tx-date').value;
+  const desc = document.getElementById('tx-desc').value.trim();
+  const client = document.getElementById('tx-client').value.trim();
+  const devise = document.getElementById('tx-devise').value;
+  const cat = document.getElementById('tx-categorie').value;
+
+  if (!montant || !date || !desc) { alert('Montant, date et description requis.'); return; }
+
+  const tx = {
+    id: Date.now(),
+    type, montant, date, desc, client, devise, cat,
+    mois: date.substring(0,7)
+  };
+
+  state.transactions.unshift(tx);
+  save();
+  resetTxForm();
+  renderTransactions();
+  updateDashboard();
+}
+
+function resetTxForm() {
+  document.getElementById('tx-montant').value = '';
+  document.getElementById('tx-desc').value = '';
+  document.getElementById('tx-client').value = '';
+}
+
+function toggleTxType() {
+  const type = document.getElementById('tx-type').value;
+  document.getElementById('tx-client-wrap').style.display = type === 'entree' ? 'block' : 'none';
+  const cats = document.getElementById('tx-categorie');
+  if (type === 'sortie') {
+    cats.innerHTML = '<option value="outil">Outil / Stack</option><option value="marketing">Marketing</option><option value="formation">Formation</option><option value="autre">Autre</option>';
+  } else {
+    cats.innerHTML = '<option value="consulting">Consulting</option><option value="site-ia">Site IA Pro</option><option value="chatbot">Chatbot</option><option value="autre">Autre</option>';
+  }
+}
+
+function renderTransactions() {
+  const filterMois = document.getElementById('filter-mois')?.value || 'all';
+  const filterType = document.getElementById('filter-type')?.value || 'all';
+
+  // Populate mois filter
+  const moisSet = [...new Set(state.transactions.map(t => t.mois))].sort().reverse();
+  const moisEl = document.getElementById('filter-mois');
+  if (moisEl) {
+    const current = moisEl.value;
+    moisEl.innerHTML = '<option value="all">Tous les mois</option>' +
+      moisSet.map(m => `<option value="${m}" ${m===current?'selected':''}>${m}</option>`).join('');
+  }
+
+  let txs = [...state.transactions];
+  if (filterMois !== 'all') txs = txs.filter(t => t.mois === filterMois);
+  if (filterType !== 'all') txs = txs.filter(t => t.type === filterType);
+
+  const container = document.getElementById('tx-list');
+  if (!txs.length) { container.innerHTML = '<div class="empty"><div class="empty-icon">📭</div>Aucune transaction</div>'; }
+  else {
+    container.innerHTML = `<table class="table">
+      <thead><tr><th>Date</th><th>Description</th><th>Catégorie</th><th>Montant</th><th></th></tr></thead>
+      <tbody>${txs.map(t => `<tr>
+        <td style="color:var(--text-muted);white-space:nowrap">${new Date(t.date).toLocaleDateString('fr-FR')}</td>
+        <td>${t.desc}${t.client ? '<br><span style="font-size:0.7rem;color:var(--text-muted)">'+t.client+'</span>' : ''}</td>
+        <td><span style="font-size:0.7rem;background:var(--card2);padding:2px 8px;border-radius:10px">${t.cat}</span></td>
+        <td class="amount ${t.type==='entree'?'positif':'negatif'}">${t.type==='entree'?'+':'-'}${t.montant.toLocaleString('fr-FR')} ${t.devise==='XOF'?'FCFA':'€'}</td>
+        <td><button onclick="supprimerTx(${t.id})" style="background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-size:0.8rem">✕</button></td>
+      </tr>`).join('')}</tbody>
+    </table>`;
+  }
+
+  // Update résumé
+  const moisLabel = document.getElementById('mois-label');
+  if (moisLabel) moisLabel.textContent = getMoisLabel();
+
+  const moisTxs = state.transactions.filter(t => t.mois === getMoisActuel());
+  const entrees = moisTxs.filter(t => t.type==='entree').reduce((s,t) => s + (t.devise==='XOF'?t.montant/655:t.montant), 0);
+  const sorties = moisTxs.filter(t => t.type==='sortie').reduce((s,t) => s + (t.devise==='XOF'?t.montant/655:t.montant), 0);
+  const urssaf = entrees * 0.22;
+  const dispo = entrees - sorties - urssaf;
+  const charges = getChargesStack();
+  const objectif = charges * 3;
+
+  const fmt = n => n.toLocaleString('fr-FR', {maximumFractionDigits:0}) + ' €';
+
+  document.getElementById('sum-entrees').textContent = fmt(entrees);
+  document.getElementById('sum-sorties').textContent = '-' + fmt(sorties);
+  document.getElementById('sum-solde').textContent = fmt(entrees - sorties);
+  document.getElementById('sum-urssaf').textContent = fmt(urssaf);
+  document.getElementById('sum-dispo').textContent = fmt(Math.max(0, dispo));
+
+  const pctCA = objectif > 0 ? Math.min(100, (entrees/objectif)*100) : 0;
+  const pctCharges = entrees > 0 ? Math.min(100, (sorties/entrees)*100) : 0;
+  document.getElementById('prog-ca-fill').style.width = pctCA + '%';
+  document.getElementById('prog-ca-pct').textContent = Math.round(pctCA) + '%';
+  document.getElementById('prog-charges-fill').style.width = pctCharges + '%';
+  document.getElementById('prog-charges-pct').textContent = Math.round(pctCharges) + '%';
+}
+
+function supprimerTx(id) {
+  state.transactions = state.transactions.filter(t => t.id !== id);
+  save();
+  renderTransactions();
+  updateDashboard();
+}
+
+// ============ DASHBOARD ============
+function updateDashboard() {
+  const ca = getCA();
+  const charges = getChargesStack();
+  const objectif = charges * 3;
+  const urssaf = ca * 0.22;
+  const reinvest = ca * 0.15;
+  const treso = ca * 0.10;
+  const net = ca * 0.53;
+  const dispo = ca - urssaf;
+
+  const fmt = n => n.toLocaleString('fr-FR', {maximumFractionDigits:0}) + ' €';
+  const pct = objectif > 0 ? Math.min(100, (ca/objectif)*100) : 0;
+
+  document.getElementById('kpi-ca').textContent = fmt(ca);
+  document.getElementById('kpi-obj').textContent = fmt(objectif);
+  document.getElementById('bar-ca').style.width = pct + '%';
+  document.getElementById('kpi-dispo').textContent = fmt(Math.max(0, dispo));
+  document.getElementById('bar-dispo').style.width = (ca > 0 ? Math.min(100, (dispo/ca)*100) : 0) + '%';
+  document.getElementById('kpi-charges').textContent = fmt(charges);
+  document.getElementById('kpi-urssaf').textContent = fmt(urssaf);
+
+  document.getElementById('r-urssaf').textContent = fmt(urssaf);
+  document.getElementById('r-reinvest').textContent = fmt(reinvest);
+  document.getElementById('r-treso').textContent = fmt(treso);
+  document.getElementById('r-net').textContent = fmt(net);
+
+  // Dernières transactions dashboard
+  const recent = state.transactions.slice(0, 4);
+  const dashTx = document.getElementById('dash-transactions');
+  if (!recent.length) { dashTx.innerHTML = '<div class="empty"><div class="empty-icon">📭</div>Aucune transaction</div>'; }
+  else {
+    dashTx.innerHTML = recent.map(t => `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-size:0.82rem">${t.desc}</div>
+        <div style="font-size:0.68rem;color:var(--text-muted)">${new Date(t.date).toLocaleDateString('fr-FR')} · ${t.cat}</div>
+      </div>
+      <div class="amount ${t.type==='entree'?'positif':'negatif'}" style="font-family:'DM Mono',monospace;font-size:0.82rem">${t.type==='entree'?'+':'-'}${t.montant} ${t.devise==='XOF'?'FCFA':'€'}</div>
+    </div>`).join('');
+  }
+
+  // Prévision
+  const joursDuMois = new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).getDate();
+  const jourActuel = new Date().getDate();
+  const projectionCA = jourActuel > 0 ? (ca / jourActuel) * joursDuMois : 0;
+  const prevEl = document.getElementById('prevision-content');
+  const prevBadge = document.getElementById('prevision-badge');
+
+  if (ca === 0) {
+    prevEl.innerHTML = '<div class="alert info"><div class="alert-icon">📊</div><div>Enregistre tes premières transactions pour activer les prévisions.</div></div>';
+    prevBadge.textContent = 'En attente';
+  } else {
+    const onTrack = projectionCA >= objectif;
+    prevBadge.textContent = onTrack ? '✅ En bonne voie' : '⚠️ En dessous';
+    prevBadge.className = 'card-badge ' + (onTrack ? 'badge-vert' : 'badge-rouge');
+    prevEl.innerHTML = `<div class="alert ${onTrack?'success':'danger'}">
+      <div class="alert-icon">${onTrack?'📈':'⚠️'}</div>
+      <div>Projection fin de mois : <strong>${fmt(projectionCA)}</strong> (objectif : ${fmt(objectif)}). 
+      ${onTrack ? 'Tu es sur la bonne trajectoire !' : 'Il te faut '+fmt(objectif-ca)+' supplémentaires pour atteindre l\'objectif.'}</div>
+    </div>`;
+  }
+
+  // Tâches dashboard
+  const urgentes = state.taches.filter(t => !t.done && t.priority === 'high').slice(0, 4);
+  const dashT = document.getElementById('dash-taches');
+  if (!urgentes.length) { dashT.innerHTML = '<div class="empty"><div class="empty-icon">🎉</div>Aucune tâche urgente</div>'; }
+  else {
+    dashT.innerHTML = urgentes.map(t => `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div class="tache-check ${t.done?'done':''}" onclick="toggleTache(${t.id})"></div>
+      <div style="flex:1;font-size:0.82rem;${t.done?'text-decoration:line-through;color:var(--text-muted)':''}">${t.titre}</div>
+      <span class="tache-priority priority-high">URGENT</span>
+    </div>`).join('');
+  }
+}
+
+// ============ STACK ============
+function renderStack() {
+  const list = document.getElementById('stack-list');
+  const total = getChargesStack();
+  document.getElementById('stack-total').textContent = total.toLocaleString('fr-FR', {maximumFractionDigits:0}) + ' €';
+  document.getElementById('stack-total-badge').textContent = total.toLocaleString('fr-FR', {maximumFractionDigits:0}) + ' €/mois';
+
+  list.innerHTML = state.stack.map(s => {
+    const cout = s.cycle === 'annuel' ? (s.cout/12).toFixed(0) + ' €/mois (' + s.cout + '€/an)' : s.cout + ' €/mois';
+    const today = new Date();
+    let renewalClass = '';
+    let renewalText = s.renewal || 'Date non renseignée';
+    if (s.renewal) {
+      const diff = Math.ceil((new Date(s.renewal) - today) / (1000*60*60*24));
+      if (diff <= 30) renewalClass = 'soon';
+      renewalText = 'Renouvellement dans ' + diff + ' jours';
+    }
+    return `<div class="stack-item">
+      <div class="stack-left">
+        <div class="stack-icon" style="background:var(--or-dim)">${s.icon||'🔧'}</div>
+        <div>
+          <div class="stack-name">${s.nom}</div>
+          <div class="stack-cycle">${s.cycle}</div>
+        </div>
+      </div>
+      <div class="stack-right">
+        <div class="stack-cost">-${cout}</div>
+        <div class="stack-renewal ${renewalClass}">${renewalText}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function ajouterStack() {
+  const nom = document.getElementById('stack-nom').value.trim();
+  const cout = parseFloat(document.getElementById('stack-cout').value);
+  const cycle = document.getElementById('stack-cycle').value;
+  const renewal = document.getElementById('stack-renewal').value;
+  const icon = document.getElementById('stack-icon').value || '🔧';
+  if (!nom || !cout) { alert('Nom et coût requis.'); return; }
+  state.stack.push({ id: Date.now(), nom, cout, cycle, renewal, icon });
+  save();
+  renderStack();
+  document.getElementById('stack-nom').value = '';
+  document.getElementById('stack-cout').value = '';
+  document.getElementById('stack-icon').value = '';
+}
+
+// ============ ACTIONS ============
+function ajouterAction() {
+  const nom = document.getElementById('action-nom').value.trim();
+  const date = document.getElementById('action-date').value;
+  const statut = document.getElementById('action-statut').value;
+  const taux = parseInt(document.getElementById('action-taux').value) || 0;
+  const cat = document.getElementById('action-categorie').value;
+  const notes = document.getElementById('action-notes').value.trim();
+  if (!nom) { alert('Nom requis.'); return; }
+  state.actions.unshift({ id: Date.now(), nom, date, statut, taux, cat, notes });
+  save();
+  renderActions();
+  document.getElementById('action-nom').value = '';
+  document.getElementById('action-taux').value = '';
+  document.getElementById('action-notes').value = '';
+}
+
+function renderActions() {
+  const list = document.getElementById('actions-list');
+  const count = document.getElementById('actions-count');
+  count.textContent = state.actions.length;
+
+  if (!state.actions.length) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">🚀</div>Aucune action enregistrée</div>';
+    document.getElementById('taux-chart').innerHTML = '<div class="empty"><div class="empty-icon">📈</div>Lance tes premières actions pour voir les stats</div>';
+    return;
+  }
+
+  const tauxMoyen = state.actions.reduce((s,a) => s+a.taux, 0) / state.actions.length;
+  document.getElementById('taux-moyen-badge').textContent = Math.round(tauxMoyen) + '%';
+
+  // Chart
+  const chart = document.getElementById('taux-chart');
+  chart.innerHTML = state.actions.slice(0,5).map(a => `
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span class="progress-label" style="font-size:0.75rem">${a.nom}</span>
+        <span class="progress-pct">${a.taux}%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:${a.taux}%;background:${a.taux>=70?'var(--vert)':a.taux>=40?'var(--orange)':'var(--rouge)'}"></div></div>
+    </div>`).join('');
+
+  const statusColors = { 'en-cours': 'badge-or', 'terminee': 'badge-vert', 'suspendue': 'badge-rouge' };
+  const statusLabels = { 'en-cours': 'En cours', 'terminee': 'Terminée', 'suspendue': 'Suspendue' };
+
+  list.innerHTML = state.actions.map(a => `<div class="action-item">
+    <div class="action-header">
+      <div class="action-name">${a.nom}</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="action-status card-badge ${statusColors[a.statut]}">${statusLabels[a.statut]}</span>
+        <button onclick="supprimerAction(${a.id})" style="background:transparent;border:none;color:var(--text-muted);cursor:pointer">✕</button>
+      </div>
+    </div>
+    <div class="action-track"><div class="action-fill" style="width:${a.taux}%;background:${a.taux>=70?'var(--vert)':a.taux>=40?'var(--orange)':'var(--rouge)'}"></div></div>
+    <div class="action-meta">${a.taux}% aboutissement · ${a.cat}${a.date?' · '+new Date(a.date).toLocaleDateString('fr-FR'):''}${a.notes?'<br>'+a.notes:''}</div>
+  </div>`).join('');
+}
+
+function supprimerAction(id) {
+  state.actions = state.actions.filter(a => a.id !== id);
+  save();
+  renderActions();
+}
+
+// ============ TACHES ============
+let tacheFilter = 'all';
+
+function ajouterTache() {
+  const titre = document.getElementById('tache-titre').value.trim();
+  const priority = document.getElementById('tache-priority').value;
+  const date = document.getElementById('tache-date').value;
+  const cat = document.getElementById('tache-cat').value;
+  if (!titre) { alert('Titre requis.'); return; }
+  state.taches.unshift({ id: Date.now(), titre, priority, date, cat, done: false });
+  save();
+  renderTaches();
+  document.getElementById('tache-titre').value = '';
+}
+
+function toggleTache(id) {
+  const t = state.taches.find(t => t.id === id);
+  if (t) { t.done = !t.done; save(); renderTaches(); updateDashboard(); }
+}
+
+function filterTaches(f) { tacheFilter = f; renderTaches(); }
+
+function renderTaches() {
+  let taches = [...state.taches];
+  if (tacheFilter === 'pending') taches = taches.filter(t => !t.done);
+  if (tacheFilter === 'done') taches = taches.filter(t => t.done);
+
+  const total = state.taches.length;
+  const done = state.taches.filter(t => t.done).length;
+  const pct = total > 0 ? Math.round((done/total)*100) : 0;
+
+  document.getElementById('taches-pct').textContent = pct + '%';
+  document.getElementById('taches-fill').style.width = pct + '%';
+  document.getElementById('count-high').textContent = state.taches.filter(t => t.priority==='high' && !t.done).length;
+  document.getElementById('count-mid').textContent = state.taches.filter(t => t.priority==='mid' && !t.done).length;
+  document.getElementById('count-done').textContent = done;
+
+  const list = document.getElementById('taches-list');
+  if (!taches.length) { list.innerHTML = '<div class="empty"><div class="empty-icon">✅</div>Aucune tâche ici</div>'; return; }
+
+  const priorityClass = { high:'priority-high', mid:'priority-mid', low:'priority-low' };
+  const priorityLabel = { high:'URGENT', mid:'MOYEN', low:'BAS' };
+
+  list.innerHTML = taches.map(t => `<div class="tache-item">
+    <div class="tache-check ${t.done?'done':''}" onclick="toggleTache(${t.id})"></div>
+    <div class="tache-content">
+      <div class="tache-title ${t.done?'done':''}">${t.titre}</div>
+      <div class="tache-meta">${t.cat}${t.date?' · '+new Date(t.date).toLocaleDateString('fr-FR'):''}</div>
+    </div>
+    <span class="tache-priority ${priorityClass[t.priority]}">${priorityLabel[t.priority]}</span>
+    <button onclick="supprimerTache(${t.id})" style="background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-size:0.8rem;flex-shrink:0">✕</button>
+  </div>`).join('');
+}
+
+function supprimerTache(id) {
+  state.taches = state.taches.filter(t => t.id !== id);
+  save();
+  renderTaches();
+}
+
+// ============ MBP ============
+function updateMBP() {
+  const ca = getCA();
+  const charges = getChargesStack();
+  const objectif = charges * 3;
+  const fmt = n => n.toLocaleString('fr-FR', {maximumFractionDigits:0}) + ' €';
+
+  document.getElementById('mbp-financier').innerHTML = `
+    CA encaissé ce mois : <strong>${fmt(ca)}</strong><br>
+    Objectif mensuel (3× charges) : <strong>${fmt(objectif)}</strong><br>
+    Provision URSSAF (22%) : <strong>${fmt(ca*0.22)}</strong><br>
+    Trésorerie de sécurité (10%) : <strong>${fmt(ca*0.10)}</strong><br>
+    Revenu net disponible (53%) : <strong>${fmt(ca*0.53)}</strong><br>
+    Charges stack mensuelles : <strong style="color:var(--rouge)">${fmt(charges)}</strong>
+  `;
+
+  document.getElementById('mbp-couts').innerHTML = state.stack.map(s =>
+    `${s.icon||'🔧'} <strong>${s.nom}</strong> : ${s.cout}€/${s.cycle}`
+  ).join('<br>') + `<br><br>Total mensuel : <strong>${fmt(charges)}</strong>`;
+
+  document.getElementById('mbp-break').textContent = fmt(objectif);
+}
+
+function exportMBP() {
+  window.print();
+}
+
+// ============ INIT ============
+updateDate();
+updateDashboard();
+renderStack();
+renderTaches();
+</script>
+</body>
+</html>

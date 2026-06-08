@@ -1,0 +1,261 @@
+Voici une spécification technique exploitable par une équipe dev pour structurer ton système autour de :
+
+/schedule (orchestration)
+Agents IA (Carelle, Awa, Serge, Roland, Maryline)
+Events (event-driven system)
+Logs (observabilité + apprentissage)
+
+L’objectif est de construire une machine autonome pilotable + apprenante + mesurable.
+
+1. ARCHITECTURE GLOBALE
+Paradigme
+
+Event-Driven + Agent-Based System + Scheduler Orchestration
+
+Tout est déclenché par des événements ou des routines planifiées.
+
+Composants
+1. Event Bus (cœur du système)
+
+Tous les systèmes publient et consomment des événements.
+
+Kafka / RabbitMQ / Supabase Realtime (MVP)
+2. Agent Layer
+
+Agents autonomes :
+
+Carelle (Organisation)
+Awa (Marketing / contenu)
+Serge (Sales)
+Roland (Automation)
+Maryline (CRM / fidélisation)
+
+Chaque agent :
+
+reçoit events
+analyse contexte
+génère actions
+écrit logs + recommandations
+3. Scheduler Engine (/schedule)
+
+Orchestration des tâches planifiées :
+
+daily
+hourly
+real-time triggers
+per-user triggers
+4. Logging & Memory Layer
+
+Deux types :
+
+Logs opérationnels (debug + tracking)
+Memory IA (apprentissage long terme)
+2. MODÈLE DE DONNÉES (CORE)
+USER
+{
+  "user_id": "uuid",
+  "business_type": "commerce | service | creator | franchise",
+  "channels": {
+    "whatsapp": "+225...",
+    "email": "",
+    "app_id": ""
+  },
+  "status": "active | churn_risk | inactive"
+}
+EVENT (cœur du système)
+{
+  "event_id": "uuid",
+  "type": "whatsapp_message | ad_click | sale | app_action | agent_recommendation",
+  "user_id": "uuid",
+  "timestamp": "ISO_DATE",
+  "payload": {},
+  "source": "whatsapp | meta_ads | app | agent"
+}
+AGENT ACTION
+{
+  "action_id": "uuid",
+  "agent": "awa | serge | carelle | roland | maryline",
+  "user_id": "uuid",
+  "type": "recommendation | automation | alert | content | follow_up",
+  "input_event_ids": [],
+  "output": {},
+  "status": "pending | executed | ignored | failed"
+}
+LOG
+{
+  "log_id": "uuid",
+  "level": "info | warning | critical",
+  "module": "agent | scheduler | whatsapp | ads",
+  "message": "",
+  "context": {},
+  "timestamp": ""
+}
+3. SYSTEME /SCHEDULE (ORCHESTRATION)
+Format de base
+/schedule:
+  name: "daily_ceo_report"
+  frequency: "daily"
+  time: "07:00"
+  triggers:
+    - event: "end_of_day"
+    - event: "meta_ads_refresh"
+    - event: "whatsapp_summary_ready"
+
+  pipeline:
+    - collect_events
+    - aggregate_metrics
+    - run_agents_analysis
+    - generate_insights
+    - send_report_to_ceo
+Types de schedules
+1. Daily CEO Report
+KPI business
+revenus
+acquisition
+anomalies
+opportunités
+2. Agent Activation Loop
+/schedule:
+  name: "agent_proactive_loop"
+  frequency: "hourly"
+  pipeline:
+    - scan_user_activity
+    - detect_blockers
+    - trigger_agent_actions
+3. WhatsApp Intelligence Loop
+/schedule:
+  name: "whatsapp_processing"
+  frequency: "real_time"
+  trigger: "new_message"
+4. Ads Learning Loop
+/schedule:
+  name: "meta_ads_optimizer"
+  frequency: "daily"
+  pipeline:
+    - collect_ads_data
+    - compute_performance
+    - generate_insights
+    - update_campaign_recommendations
+4. EVENT SYSTEM (CŒUR INTELLIGENT)
+Types d’événements
+WhatsApp
+message_received
+message_replied
+conversation_abandoned
+lead_created
+Ads
+ad_impression
+ad_click
+lead_generated
+conversion
+App
+app_opened
+workflow_started
+workflow_abandoned
+action_completed
+Agent
+recommendation_generated
+recommendation_accepted
+recommendation_ignored
+5. AGENT FRAMEWORK
+Agent Core Loop
+
+Chaque agent fonctionne comme ceci :
+
+on_event(event):
+
+  context = fetch_user_context(event.user_id)
+
+  insights = analyze(event + context + memory)
+
+  if opportunity_detected:
+      action = generate_action(insights)
+
+      log(action)
+
+      emit(action_event)
+Proactive mode (clé stratégique)
+
+Chaque agent peut aussi fonctionner sans event :
+
+proactive_scan:
+  frequency: "every_2h"
+  scope: "all_active_users"
+Exemple AWA (Marketing)
+détecte absence de contenu
+propose posts
+génère scripts vidéo
+déclenche production IA
+Exemple SERGE (Sales)
+détecte leads non relancés
+propose messages WhatsApp
+génère relances automatiques
+6. LOGICIEL D’APPRENTISSAGE (MEMORY LOOP)
+Transformation logs → knowledge
+daily_job:
+
+  logs = fetch_logs()
+
+  patterns = detect_patterns(logs)
+
+  if pattern_validated:
+      update_knowledge_base(pattern)
+      propagate_to_agents(pattern)
+Exemple
+
+Si 100 utilisateurs échouent sur WhatsApp à la même étape :
+
+→ système crée une règle automatique :
+
+"Ajouter relance automatique après 2h d’inactivité"
+
+7. DASHBOARD CEO (OUTPUT FINAL)
+Endpoint
+
+GET /ceo/daily-summary
+
+Structure
+{
+  "date": "",
+  "business_health": {},
+  "revenue": {},
+  "acquisition": {},
+  "whatsapp": {},
+  "agents": {},
+  "opportunities": [],
+  "risks": [],
+  "alerts": []
+}
+8. STACK TECH SUGGÉRÉE (PRAGMATIQUE)
+MVP
+Backend : Node.js / NestJS
+DB : PostgreSQL (Supabase OK)
+Event system : Redis Streams ou Supabase Realtime
+Scheduler : BullMQ / Cron service
+AI layer : OpenAI / API agents
+Storage logs : Postgres + S3
+Scale
+Kafka (event streaming)
+Vector DB (Pinecone / Weaviate)
+Observability (Datadog / OpenTelemetry)
+Microservices agents
+9. RÈGLE D’OR DU SYSTÈME
+
+Tout doit respecter :
+
+1 event = 1 compréhension = 1 action possible
+
+Et :
+
+aucune donnée ne doit exister sans possibilité d’action agent.
+
+10. VISION PRODUIT
+
+Ce système devient :
+
+un CRM intelligent
+un assistant WhatsApp
+une plateforme marketing
+une usine à contenu
+un système de vente autonome
+un moteur d’apprentissage collectif
