@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C'Real Assists — Maquette</title>
+<style>
+:root{
+  --brand:#3E8E7E;
+  --brand-2:#E8A33D;
+  --ink:#1A1F2B;
+  --muted:#6B7280;
+  --bg:#F6F7F2;
+  --card:#FFFFFF;
+  --radius:18px;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:linear-gradient(160deg,#0e1a16,#1d3128);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px;color:var(--ink)}
+.stage{display:flex;gap:52px;flex-wrap:wrap;align-items:center;justify-content:center}
+.pitch{max-width:300px;color:#e8edf5}
+.pitch .kicker{color:var(--brand-2);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px}
+.pitch h1{font-size:28px;margin:10px 0 14px;line-height:1.15}
+.pitch p{color:#bcd0c8;line-height:1.55;font-size:15px;margin-bottom:20px}
+.pitch .feature{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.pitch .feature .dot{width:8px;height:8px;border-radius:50%;background:var(--brand-2);flex-shrink:0;margin-top:5px}
+.pitch .feature span{font-size:13.5px;color:#cfe0d9;line-height:1.4}
+.phone{width:340px;height:720px;background:#000;border-radius:46px;padding:12px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.screen{position:relative;width:100%;height:100%;background:var(--bg);border-radius:36px;overflow:hidden;display:flex;flex-direction:column}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:140px;height:26px;background:#000;border-radius:0 0 18px 18px;z-index:5}
+.topbar{background:var(--brand);color:#fff;padding:46px 18px 14px;display:flex;align-items:center;gap:10px}
+.logo{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+.topbar h2{font-size:16px;font-weight:700}
+.topbar small{display:block;opacity:.85;font-weight:400;font-size:11px}
+.content{flex:1;overflow-y:auto;padding:16px;scrollbar-width:none}
+.content::-webkit-scrollbar{display:none}
+.view{display:none}
+.view.active{display:block;animation:fade .22s}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1}}
+.hero{background:linear-gradient(135deg,var(--brand),#69BBA8);color:#fff;border-radius:var(--radius);padding:18px;margin-bottom:12px}
+.hero h3{font-size:17px;margin-bottom:5px}
+.hero p{font-size:12.5px;opacity:.92;line-height:1.45}
+.card{background:var(--card);border-radius:var(--radius);padding:15px;margin-bottom:12px;box-shadow:0 3px 14px rgba(30,50,40,.07)}
+.card h3{font-size:14px;font-weight:700;margin-bottom:5px}
+.card p{font-size:12.5px;color:var(--muted);line-height:1.45}
+.row{display:flex;align-items:center;gap:12px}
+.thumb{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--brand-2));flex:none;display:flex;align-items:center;justify-content:center;font-size:20px}
+.btn{display:block;width:100%;text-align:center;background:var(--brand);color:#fff;border:none;padding:13px;border-radius:12px;font-size:14px;font-weight:700;margin-top:10px;cursor:pointer}
+.btn.alt{background:var(--brand-2)}
+.stat{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #eaeee7}
+.stat:last-child{border:none}
+.stat span{font-size:12.5px;color:var(--muted)}
+.stat b{color:var(--brand);font-size:18px;font-weight:800}
+.tag{display:inline-block;background:rgba(62,142,126,.1);color:var(--brand);font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;margin:0 5px 5px 0}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:10px}
+.badge.attente{background:rgba(232,163,61,.16);color:#a36a14}
+.badge.encours{background:rgba(62,142,126,.14);color:#2c6657}
+.badge.resolu{background:rgba(16,185,129,.14);color:#059669}
+.order-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eaeee7}
+.order-row:last-child{border:none}
+.order-row .info h4{font-size:13px;font-weight:700;margin-bottom:2px}
+.order-row .info p{font-size:11px;color:var(--muted)}
+.chat-area{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.msg{max-width:84%;padding:9px 12px;border-radius:12px;font-size:12.5px;line-height:1.45}
+.msg.bot{background:rgba(62,142,126,.09);border:1px solid rgba(62,142,126,.2);align-self:flex-start;border-bottom-left-radius:4px}
+.msg.me{background:var(--brand);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chip-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.chip{background:rgba(62,142,126,.1);border:1px solid rgba(62,142,126,.25);border-radius:16px;padding:4px 10px;font-size:11px;color:var(--brand);font-weight:600}
+.tabbar{display:flex;background:var(--card);border-top:1px solid #eaeee7}
+.tab{flex:1;padding:9px 4px;text-align:center;font-size:10.5px;color:var(--muted);border:none;background:none;cursor:pointer}
+.tab.active{color:var(--brand);font-weight:700}
+.tab .ic{display:block;font-size:17px;margin-bottom:1px}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="pitch">
+    <div class="kicker">Agro-alimentaire · C'Real</div>
+    <h1>C'Real Assists</h1>
+    <p>Ton assistant qui prend les commandes de farine infantile, répond à tes clientes et gère ton SAV — pendant que tu te concentres sur ta production.</p>
+    <div class="feature"><div class="dot"></div><span>Commandes prises et suivies automatiquement, jour et nuit</span></div>
+    <div class="feature"><div class="dot"></div><span>SAV et réclamations traités sans que tu sois dérangée</span></div>
+    <div class="feature"><div class="dot"></div><span>FAQ sur tes produits répondue instantanément aux mamans</span></div>
+    <div class="feature"><div class="dot"></div><span>Toi, alertée seulement quand ta décision est vraiment nécessaire</span></div>
+  </div>
+
+  <div class="phone"><div class="screen">
+    <div class="notch"></div>
+    <div class="topbar">
+      <div class="logo">CR</div>
+      <div><h2>C'Real Assists</h2><small>Bonjour Aminata — 12 commandes aujourd'hui</small></div>
+    </div>
+
+    <div class="content">
+
+      <section class="view active" id="v1">
+        <div class="hero">
+          <h3>Bonjour Aminata 👋</h3>
+          <p>Ton assistant a déjà traité 9 commandes et répondu à 14 questions ce matin. 2 réclamations attendent ta validation.</p>
+        </div>
+        <div class="card">
+          <h3>Aujourd'hui</h3>
+          <div class="stat"><span>Commandes prises</span><b>12</b></div>
+          <div class="stat"><span>Questions répondues</span><b>21</b></div>
+          <div class="stat"><span>Réclamations en cours</span><b>2</b></div>
+        </div>
+        <div class="card row">
+          <div class="thumb">🌾</div>
+          <div><h3>Stock à surveiller</h3><p>Farine 1er âge "Bébé Vital" : il reste 8 sachets. Penser au réassort.</p></div>
+        </div>
+        <button class="btn" onclick="go('v2',document.querySelectorAll('.tab')[1])">Voir les commandes</button>
+      </section>
+
+      <section class="view" id="v2">
+        <div class="card"><h3>Commandes du jour</h3><p>Prises et confirmées par ton assistant.</p></div>
+
+        <div class="order-row">
+          <div class="info">
+            <h4>Mariam K. — Cocody</h4>
+            <p>2x Farine 1er âge "Bébé Vital" · 9 000 FCFA</p>
+          </div>
+          <span class="badge encours">À livrer</span>
+        </div>
+        <div class="order-row">
+          <div class="info">
+            <h4>Josiane A. — Yopougon</h4>
+            <p>1x Farine 2e âge "Croissance+" · 5 500 FCFA</p>
+          </div>
+          <span class="badge resolu">Livrée</span>
+        </div>
+        <div class="order-row">
+          <div class="info">
+            <h4>Affoué T. — Marcory</h4>
+            <p>3x Farine 1er âge "Bébé Vital" · 13 500 FCFA</p>
+          </div>
+          <span class="badge attente">Paiement en attente</span>
+        </div>
+        <div class="order-row">
+          <div class="info">
+            <h4>Ramata D. — Abobo</h4>
+            <p>1x Pack découverte (3 farines) · 12 000 FCFA</p>
+          </div>
+          <span class="badge encours">À livrer</span>
+        </div>
+
+        <button class="btn alt">+ Ajouter une commande</button>
+      </section>
+
+      <section class="view" id="v3">
+        <div class="card"><h3>SAV — réclamations en cours</h3><p>Ton assistant a déjà qualifié ces dossiers, à toi de trancher.</p></div>
+        <div class="order-row">
+          <div class="info">
+            <h4>Sarah B. — sachet abîmé à la livraison</h4>
+            <p>Commande #2241 · proposition assistant : renvoi gratuit</p>
+          </div>
+          <span class="badge attente">À valider</span>
+        </div>
+        <div class="order-row">
+          <div class="info">
+            <h4>Nadège K. — délai de livraison dépassé</h4>
+            <p>Commande #2238 · proposition assistant : geste commercial -10%</p>
+          </div>
+          <span class="badge attente">À valider</span>
+        </div>
+        <div class="card">
+          <h3>FAQ traitée automatiquement cette semaine</h3>
+          <span class="tag">Conservation du produit</span>
+          <span class="tag">Âge recommandé</span>
+          <span class="tag">Zones de livraison</span>
+          <span class="tag">Modes de paiement</span>
+        </div>
+      </section>
+
+      <section class="view" id="v4">
+        <div class="card"><h3>Discuter avec une cliente</h3><p>Aperçu d'une conversation gérée par ton assistant.</p></div>
+        <div class="chat-area">
+          <div class="msg bot">Bonjour ! Je suis l'assistant C'Real 🌾 Comment puis-je vous aider avec nos farines infantiles aujourd'hui ?</div>
+          <div class="msg me">Bonjour, ma fille a 7 mois, quelle farine me conseillez-vous ?</div>
+          <div class="msg bot">À 7 mois, je vous recommande "Croissance+" (2e âge), riche en fer et en céréales locales. Le sachet de 400g est à 5 500 FCFA. Voulez-vous que je prenne votre commande ?</div>
+          <div class="msg me">Oui, livrable à Marcory cette semaine ?</div>
+          <div class="msg bot">Parfait, c'est noté ✅ Livraison prévue jeudi. Je vous envoie la confirmation et les détails de paiement par WhatsApp.</div>
+        </div>
+        <div class="chip-row">
+          <span class="chip">Conseil produit</span>
+          <span class="chip">Prise de commande</span>
+          <span class="chip">Confirmation livraison</span>
+        </div>
+      </section>
+
+    </div>
+
+    <nav class="tabbar">
+      <button class="tab active" onclick="go('v1',this)"><span class="ic">🏠</span>Accueil</button>
+      <button class="tab" onclick="go('v2',this)"><span class="ic">📦</span>Commandes</button>
+      <button class="tab" onclick="go('v3',this)"><span class="ic">🛟</span>SAV</button>
+      <button class="tab" onclick="go('v4',this)"><span class="ic">💬</span>Assistant</button>
+    </nav>
+
+  </div></div>
+</div>
+
+<script>
+function go(id, el){
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.querySelector('.content').scrollTop = 0;
+}
+</script>
+</body>
+</html>
