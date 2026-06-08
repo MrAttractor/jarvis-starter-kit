@@ -33,12 +33,9 @@ Que chaque projet client se déroule dans les temps, dans le scope, et sans mauv
 
 ---
 
-## Projets connus (à mettre à jour)
+## Pipeline clients — source de vérité
 
-| Projet | Client | Phase | Prochain jalon | Deadline |
-|---|---|---|---|---|
-| J'envoie Express | Client MVP | Développement | Livraison MVP + solde 100€ | À confirmer |
-| MY NUGO | Client | Déploiement | Basculement compte pro myattractor1 | En cours |
+Le statut, les montants et la prochaine action de chaque client/prospect sont dans `livrables/commercial/suivi-clients.md` — c'est le tableau de référence unique, mis à jour à chaque session où un projet avance. Le consulter avant tout point de situation ou compte-rendu, et le mettre à jour après toute évolution (signature, paiement, livraison, blocage).
 
 ---
 
