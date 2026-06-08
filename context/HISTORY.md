@@ -7,6 +7,100 @@
 
 ---
 
+## 2026-06-09 (session 36 — Mise à plat concept Attractor Assists V3)
+
+### Déclic
+
+Mac Arthur exprime être perdu, demande à simplifier au maximum. Le déclic : son Jarvis personnel (ce workspace) est le **prototype vivant** d'Attractor Assists. Pas une app multi-agents complexe, mais un Jarvis personnel chargé de la méthode Attractor, dupliqué chez chaque entrepreneur pour distiller le mindset Mac Arthur.
+
+### 8 décisions cadrées (une question à la fois)
+
+1. **Pour qui** : entrepreneur + ses clients (2 publics, 1 cerveau)
+2. **Surfaces** : Entrepreneur PWA / Client mini-site web (lien partagé via WhatsApp)
+3. **Promesse entrepreneur** : "Je te vide la tête"
+4. **Promesse client** : "Je prends ta commande de A à Z"
+5. **Onboarding** : vidéo Mac Arthur (5 min) + conversation Jarvis (10-15 min)
+6. **Catalogue** : photo → IA extrait → entrepreneur valide. Claude design extrait les couleurs et génère le thème de la boutique.
+7. **Commandes** : alerte WhatsApp + gestion dans la PWA
+8. **Domaine** : démarrage gratuit avec `assists.agenceattractor.com/b/[slug]`, achat domaine court (`attractor.ci` ~15 €/an) reporté
+
+### Pivot vs V2 : suppression du chantier WhatsApp Cloud API
+
+Initialement, on partait sur WhatsApp Cloud API pour la promesse client. Mac Arthur a recadré : approche plus simple via lien partagé. Le client clique le lien dans le message d'accueil WhatsApp de la boutique → atterrit sur un mini-site personnalisé avec assistant de vente intégré.
+
+Gain : 1-2 semaines de dev supprimées, 0 € de coûts Meta récurrents, 0 friction setup côté entrepreneur, branding propre (chaque boutique a son lien).
+
+### Inventaire de l'existant (tri honnête)
+
+- **Écrans** (23) : 4 gardés / 9 simplifiés / 10 jetés / 1 à créer
+- **Edge Functions** (23) : 9 gardées / 4 transformées / 10 jetées / 4 à créer
+- **Tables SQL** (~28) : 8 gardées / 3 simplifiées / 7 jetées / 4 à créer
+
+Verdict : on jette ~40% du code, on simplifie ~30%, on garde ~30%, on ajoute ~10 briques nouvelles ciblées.
+
+### Livrables
+
+- `livrables/ecosysteme-attractor/attractor-assists/concept-v3.md` créé (source de vérité produit, remplace les concepts V1 et V2)
+- Inventaire complet écrans/functions/tables avec verdict de tri inclus dans le document
+
+### Prochaines sessions (à reprendre au choix)
+
+1. Définir à quoi ressemble concrètement le mini-site boutique (écrans + flow commande)
+2. Plan d'exécution (semaine 1 / semaine 2 / etc.)
+3. Migration des 25 testeurs actuels
+4. Pricing V3
+
+---
+
+## 2026-06-08 (session 35 — Mise à jour CONTEXT.md : nettoyage et nouveau CONTEXTE MAÎTRE)
+
+### Nettoyage de CONTEXT.md
+
+- Bullet Attractor Assists simplifié : historique de sessions retiré, état actuel + refonte V2 synthétisés
+- 10 sous-bullets "livrés" supprimés (Mini-agents, WhatsApp V1, Feedback, Notifications, MIROIR, CRM, Cockpit, Gardien, Prochains chantiers)
+- Notes obsolètes supprimées (Navigation Assists, Modèle Coach, Design assets agents, Frontières agents)
+- Note "Chantier futur" remplacée par "Refonte V2 en cours" à jour
+- XPaye mis à jour dans les moyens de paiement (désormais actif en production)
+- Description Attractor Assists dans "Ce que je fais" simplifiée et renvoyée vers le CONTEXTE MAÎTRE
+
+### Nouveau CONTEXTE MAÎTRE — ATTRACTOR ASSISTS
+
+- Manifeste Produit V2 (ancien, historique) remplacé par le document "MISE A JOUR ASSISTS.txt"
+- Cerveau Attractor mis à jour : 14 niveaux (vs 10 précédemment), ajout Processus métier / Digitalisation / Application métier / Entreprise autonome assistée par IA
+- Nouvelles sections ajoutées : ERREUR DE LA V1 (confirmation du retour à la source), ANAMNÈSE (jumeau opérationnel), ASSISTANT CLIENT, PROACTIVITÉ, PERSONNALISATION, DIGITALISATION, APPLICATIONS MÉTIERS
+- Architecture agents clarifiée : spécialisations internes du cerveau Attractor, pas des produits séparés
+
+---
+
+## 2026-06-05 (session 34 — Refonte Assists : décision validée + mission fondatrice capturée)
+
+### Décision stratégique : refonte complète d'Attractor Assists
+
+- **Déclencheur** : lecture du document `REFONTE ASSISTS.txt` en import
+- **Pivot fondamental** : Attractor Assists cesse d'être une plateforme multi-agents pour l'entrepreneur. Elle devient un générateur d'assistant IA que l'entrepreneur partage à SES clients.
+- **Suppression définitive** : volet "Mon équipe" (8 agents) disparaît de l'UI utilisateur
+- **Nouveau flow** : anamnèse business → génération assistant personnalisé → lien public client → flow commerce (commande / preuve paiement / tracking / satisfaction)
+- **Verdict Pilote R&D** : GO sous conditions — valider les 5 questions ouvertes avant développement
+- **Faisabilité** : oui sur la stack actuelle (React + Supabase + Netlify). Effort V1 : 3 sessions P0 + 2 sessions P1
+
+### 5 questions ouvertes (à valider avant développement)
+1. Slug : l'entrepreneur choisit son lien ou on le génère ?
+2. Anonymat client : clients laissent nom/numéro ou totalement anonymes ?
+3. Pricing : Gratuit = X commandes/mois ? Growth = illimité + stats + Fidelys ?
+4. Migration 25 testeurs : nouvel onboarding forcé ou configuration manuelle ?
+5. Multi-produits : un seul assistant ou plusieurs profils par entrepreneur ?
+
+### Mission fondatrice capturée (décision clé)
+
+Ce n'est pas un pivot. C'est un retour à la source. La v1 originale était déjà dans ce modèle, mais la découverte de Claude puis de VS Code a déclenché une sur-construction : trop de personnages, trop de portes conversationnelles, objectif dilué dans la complexité.
+
+**La phrase fondatrice validée et capturée dans CONTEXT.md :**
+> "Un bras droit intelligent qui soulage les gens des tâches quotidiennes, tout en les aidant à devenir numéro 1 dans leur couloir."
+
+L'app doit incarner Mac Arthur dupliqué. Pas une agence. Lui.
+
+---
+
 ## 2026-06-04 (session 33 — Fix génération maquette + chat WhatsApp-style)
 
 ### Génération maquette — bypass Storage complet

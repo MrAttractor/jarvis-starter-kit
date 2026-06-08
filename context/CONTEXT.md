@@ -14,6 +14,32 @@
 
 ---
 
+## Mission fondatrice — Pourquoi Attractor Assists existe
+
+> Capturé le 05/06/2026. C'est la boussole de chaque décision produit. Quand on hésite sur une feature, on revient à ce texte.
+
+Il y a 23 ans, un jeune entrepreneur ivoirien a commencé sa carrière sous le soleil. Il est passé par des étapes, des échecs, des reconstructions. Il a testé, ajusté, recommencé. Au bout de ce chemin, une méthode : la méthode ATTRACTOR. Une manière unique d'aider les gens à trouver leur couloir et à y courir pour devenir numéro 1.
+
+Ce n'est pas une méthode de consultant. C'est une méthode de vie, construite sur la durée, dans la vraie vie.
+
+Aujourd'hui, l'objectif est simple : aider des milliers de personnes. Des gens qui ont les mêmes challenges qu'il a traversés. Une charge mentale intensive qui les rend malades et qui les tue à petit feu. Des rêves réels, mais pas de système pour les porter.
+
+L'app est le passage de flambeau. Pas un produit SaaS. Un bras droit intelligent, nourri de 23 ans d'expérience, qui tourne 24h/24 à la place de Mac Arthur.
+
+**La phrase fondatrice :**
+
+> "Un bras droit intelligent qui soulage les gens des tâches quotidiennes, tout en les aidant à devenir numéro 1 dans leur couloir."
+
+**Ce que l'app doit incarner :** Mac Arthur dupliqué. Pas une agence avec 8 employés. Pas des features. Lui.
+
+**Ce qui s'est passé avec la v1 :** La découverte de Claude, puis de VS Code, a déclenché une excitation qui a mené à la sur-construction. Trop de personnages, trop de portes d'entrée conversationnelles, trop de "joli". L'objectif a été dilué dans la complexité. La refonte de juin 2026 est un retour à la source, pas un pivot.
+
+**En septembre 2026 :** certification de coach en préparation mentale — qui vient confirmer et légitimer ce que l'app incarne déjà.
+
+**Au soir de sa vie :** avoir vécu heureux, avoir aidé des milliers de personnes à trouver leur couloir.
+
+---
+
 ## Ce que je fais
 
 ### Activité principale
@@ -23,7 +49,7 @@ Je professionnalise une passion de longue date : j'ai fondé une agence de busin
 Mon offre se construit autour de deux piliers, plus du contenu :
 
 1. **L'écosystème d'apps maison ATTRACTOR** (modèle freemium : gratuit + MRR), conçu pour couvrir tous les paliers de structuration d'un entrepreneur et vivre avec l'utilisateur :
-   - **Attractor Assists** : depuis mai 2026, le produit est calqué sur le modèle Jarvis. C'est Mac Arthur **dupliqué** en coach individuel, nourri de ses 10 ans d'écrits et de la méthode ATTRACTOR (framework PPSD, AIDA/PASA, offre irrésistible, formation BOOST TA MARQUE). Logique **done-for-you** (l'assistant produit à la place de l'utilisateur : argumentaires, posts, offres, plans), ludique, fun et rythmée. La cible ne veut pas creuser, donc pas de posture de formateur. Façade **utilité d'abord** (ton bras droit IA gratuit), avec le mouvement Attractor en couche profonde : trouver son couloir d'appel et y courir pour DEVENIR le #1. Fondation biblique **silencieuse** (Romains 8.19, la révélation des fils de Dieu) : valeurs et vocabulaire infusés, aucun verset visible. Détail : `livrables/ecosysteme-attractor/attractor-assists/methode-attractor-synthese.md`.
+   - **Attractor Assists** : la duplication numérique de Mac Arthur. Assistant IA personnalisé que chaque entrepreneur configure et partage à SES clients. Logique done-for-you, ancrage méthode ATTRACTOR (PPSD, offre irrésistible, DMV). Détail dans la section CONTEXTE MAÎTRE ci-dessous.
    - **Livraison Pro** : marketplace mettant en relation des livreurs moto indépendants certifiés (vérification) et des e-commerçants qui veulent travailler en direct. Résout le point logistique : données traçables, suivi, tracking GPS, relation client.
    - **Fidelys** : outil intégré de gestion de toutes les interactions utilisateur / clients. Approche conversationnelle qui collecte de la donnée brute, l'organise et nourrit l'amélioration continue des performances. Pensé du novice total à l'expert.
    - **Module de pilotage / reporting** : performances, capacités d'évolution, rapports simples ou détaillés pour aider l'utilisateur à décider.
@@ -78,23 +104,12 @@ Chantiers actifs sur lesquels je veux que Claude m'aide :
 - **J'envoie Express** : premier client du Générateur d'Apps Métier. Maquette HTML complète livrée (dashboard, colis, voyages, clients, demandes, tarifs, tracking, assistant IA). 6 infos manquantes envoyées par WhatsApp (logo, numéro WA business, adresses de collecte Paris/Abidjan, prochain voyage, validation couleurs). En attente de réponse client. Deal 230€, acompte 130€ le 3 juin 2026.
 - **Rukayatou** (prospect identifié, 02/06/2026) : package marque blanche Attractor Assists (Fam. A, ÉQUIPE) + consulting visibilité (Fam. B, RUNNER). Partenariat XPaye — elle veut un agent commercial pour booster XPaye + réseau d'entrepreneurs CI à activer. Livrables produits manuellement en session : message de collecte info Awa, brief Programmeur, devis draft (1 050 €/700 000 FCFA), cahier des charges. En attente : logo + couleurs + nom de l'outil. À créer dans le Pipeline Cockpit.
 - Développement en parallèle de l'**écosystème App Attractor**.
-- **Attractor Assists** : app déployée sur `assists.agenceattractor.com`. Repo `jarvis-starter-kit` sur GitHub, Netlify auto-deploy. 25 testeurs actifs. Stack : React + Vite + Tailwind + Supabase (projet `lgdgbrivnhgeupqhkckd`, Paris). Login OTP 6 chiffres, PWA installable. **8 agents** : Coach/Bras Droit (gratuit), Awa (Prospection), Miriam (Contenu, Growth), Serge (Organisation, Team), Roland (Finance, Team), Kofi (Campagnes, Team), Carelle (Chief of Staff, Growth), **Maryline (Guide & Découverte, gratuit)**. Mémoire long terme + MIROIR actif (crons 30min/7h/8h). MacCockpitScreen admin (4 onglets : Carelle, Agence, Pipeline, Hub). **REFONTE STRATÉGIQUE TERMINÉE (03/06/2026)** : plateforme Chief of Staff numérique pour entrepreneurs africains. Architecture 4 tiers : Gratuit / Attractor Growth (9 900 FCFA CI | €15 EU) / Attractor Team (≈ 25 500 FCFA CI | 39 € EU) / Application Personnalisée (barème Famille A). Phases 1 à 4 livrées. **Phase 1 LIVRÉE** : OnboardingScreen CoS, CarnetAffairesScreen CRM léger, DashboardScreen restructuré. SQL 0017+0018. **Phase 2 LIVRÉE** : DechargeVocaleScreen Whisper, Edge Function `process-dump`. **Phase 3 LIVRÉE** : PaliersScreen 4 tiers, carousel 7 agents (snap CSS), DashboardScreen hero immersif. **Phase 4 LIVRÉE** : agentGating.js, démo Carelle Gratuit, Marketplace v1. **Session 24 (03/06/2026) — Marketplace v2 + Maryline** : onglet renommé "Marketplace" (était "Experts"), 3 familles (Services / E-commerçants / Food) avec sous-catégories, tarification detail/devis, InscriptionFlow 4 étapes avec CGV v1.0 signée électroniquement, Edge Function `marketplace-signup`, migration SQL 0020, photos CI réelles, badges live nav. **Maryline** (8e agent, Gratuit, anciennement Hawa) : retirée du carousel, devient une bulle flottante WhatsApp-style (avatar + message + queue CSS) visible sur tous les écrans sauf conversation, tap ouvre la conversation. Badge AssistantsScreen : "6 experts". **Session 25 (03/06/2026) — XPAYE + CFA + Maryline bulle** : paiements XPaye/PaiementPro intégrés en sandbox (PP-F422 validé) — Edge Functions `init-payment` + `payment-webhook`, migration SQL 0021 (table `payments`), boutons PaliersScreen branchés sur API réelle, redirect vers PaiementPro, retour app avec toast confirmation et activation plan automatique. Prix FCFA en grand (primaire), euros en option discrète. Lien WhatsApp mort supprimé de ConversationScreen. Pour passer en prod : remplacer `XPAYE_MERCHANT_ID` dans les secrets Supabase par le merchant ID live. **Session 26 (03/06/2026) — UX Mon équipe + FCFA primaire** : opener Maryline corrigé (tombait sur fallback Awa), Miriam débloquée au plan Growth, FCFA en primaire dans AssistantsScreen, Carelle épinglée en carte fixe au-dessus du carousel (5 agents restants dans le carousel), CTA agents verrouillés → "Voir la formule" sans prix. **Session 28 (04/06/2026) — Refonte UX majeure** : Mr Attractor = seul interlocuteur direct (Awa verrouillée Growth), agents réordonnés (Mr Attractor → Maryline → Carelle → Miriam → Serge → Roland → Kofi → Awa), Carelle CTA "Voir mon app personnalisée", bloc micro central Dashboard ("Besoin de te vider la tête ? Parle à Mr Attractor"), Carnet → "Suivi Clients" (produits + historique achats + flow Mr Attractor), Agenda → vue calendrier mensuelle avec points colorés par priorité, migration SQL 0022 (`produits_user` + `client_purchases`). 2 bugs critiques corrigés (profile PaliersScreen + typo statut verrouille). **13 bugs UX/design restants** à traiter en prochaine session.
+- **Attractor Assists** : déployée sur `assists.agenceattractor.com`. Repo `jarvis-starter-kit` sur GitHub, Netlify auto-deploy. Stack : React + Vite + Tailwind + Supabase (projet `lgdgbrivnhgeupqhkckd`, Paris). Login OTP 6 chiffres, PWA installable. 25 testeurs actifs. Infrastructure active : MIROIR (principes injectés dans tous les agents, cron 30min), MacCockpitScreen (Pipeline / Intel / Veille / Hub), XPaye en production, crons collect-insights (7h) + notify-auto (8h), 14+ Edge Functions. **CONCEPT V3 CADRÉ (session 36, 09/06/2026)** : 8 décisions clés posées dans `livrables/ecosysteme-attractor/attractor-assists/concept-v3.md` (source de vérité produit). Concept : 1 cerveau unique (Claude + business entrepreneur + méthode Attractor) branché sur 2 surfaces (PWA entrepreneur + mini-site client) avec 2 promesses ("Je te vide la tête" côté entrepreneur / "Je prends ta commande de A à Z" côté client). Approche "lien partagé via WhatsApp" (assists.agenceattractor.com/b/[slug]) qui supprime tout le chantier WhatsApp Cloud API. Tri inventaire : ~40% du code jeté, ~30% simplifié, ~30% gardé, ~10 briques nouvelles à créer. Reste à cadrer : mini-site boutique en détail, plan d'exécution, migration 25 testeurs, pricing V3.
 - **Awa Influenceuse IA** (LANCÉ, 03/06/2026) : stratégie de lancement Côte d'Ivoire avec Awa Coulibaly comme personnage focal. Compte @awa.treichville à créer sur TikTok, Instagram, Facebook, WhatsApp Canal. Production vidéo IA via Magnific + CapCut. Roadmap 20 vidéos : Série 1 (vie réelle, zéro produit) → Série 2 (diagnostic) → Série 3 (l'outil révélé à la V11) → Série 4 (communauté). Rythme : 3 vidéos/semaine. Livrables dans `livrables/contenu/awa-influenceuse/`. Script V01 "On croit que je ne fais rien" prêt à produire. Modèle Apple Misunderstood : le public tombe amoureux du personnage avant de découvrir Attractor Assists. Awa présentée comme une vraie personne.
 - Construction d'un **plan clair pour ma campagne de création de contenu**.
-- **demo.agenceattractor.com** (ACTIF, DNS en propagation 02/06/2026) : sous-domaine Netlify configuré. Maquette J'envoie Express disponible sur `demo.agenceattractor.com/jenvoie-express`. Structure `livrables/clients/demo-site/public/[client]/index.html`. Déploiement auto via Netlify sur push master. Chaque nouveau client = dossier + commit + lien prêt en 2 min.
-- **Mini-agents Attractor Assists** (GO) : extraire 6 mini-agents des process validés (PPSD, offre irrésistible, post, relance prospect, procédure 5 étapes, cash du jour) et les injecter dans le system prompt. Effort estimé ~6h. Aucun code, aucune nouvelle UI.
-- **WhatsApp Business V1 assistée** (LIVRÉ) : table `whatsapp_messages` + bouton deeplink 1 tap sous chaque réponse assistant. V2 (API WhatsApp Cloud) après validation utilisateurs.
-- **Système de feedback** (LIVRÉ) : table `feedback` + bouton dans ProfilScreen + flag dans ConversationScreen. SQL 0005 à appliquer sur Supabase.
-- **Notifications in-app** (DEV) : cloche Dashboard avec badge, trigger bienvenue, Edge Function `notify-auto` (streak + quota). 3 actions Supabase restantes : SQL trigger + deploy function + cron `0 8 * * *`.
-- **Système autonome feedback-to-dev** (VALIDÉ, À IMPLÉMENTER) : agent débrief quotidien qui scanne feedback + conversations → résumé Mac Arthur → Programmeur exécute. Mac Arthur supervise uniquement.
-- **MIROIR** (LIVRÉ et ACTIF, 02/06/2026) : Edge Function déployée, tables `decisions` + `methode_miroir` + vue `referentiel_actif` créées. Cron réveil toutes les 30 min. Principes haute confiance injectés live dans tous les agents via `chat-assistant`. Interface dans cockpit admin onglet Miroir.
-- **CRM Prospects + Devis automatique** (LIVRÉ, 02/06/2026) : tables `prospects` + `sequences_vente` + `journal_agent` + `devis_prospects`. Edge Functions : `generate-sequence` (Awa, 3 messages calibrés), `generate-devis` (barème officiel embarqué, classification SOLO/EQUIPE/ENTERPRISE, calcul acompte/solde/total M1, numérotation ATR-2026-NNNN). Formulaire prospect : type_projet (A/B/C) + nb_users (1/2-5/5+). Devis affiché pour validation avant envoi, jamais de prix hors barème. `collect-insights` (cron 7h, conversations → MIROIR).
-- **Cockpit admin** : remplacé par MacCockpitScreen (voir ci-dessus). L'ancien AdminScreen (5 onglets) reste dans le code mais n'est plus utilisé par le compte admin.
-- **Gardien de déploiement** (LIVRÉ, 02/06/2026) : script `.claude/hooks/deploy-guard.js` déclenché sur chaque `git push` via hook PostToolUse. Vérifie imports App.jsx, encodage, cohérence routes. Signale sans bloquer.
-- **Prochains chantiers identifiés** : Awa qualification flow (questions avant séquence), Parcours Ventes, **XPAYE production** (remplacer merchant ID sandbox PP-F422 par ID live dans secrets Supabase), Parcours #1dansmoncouloir, Carelle → Programmeur → Maquette automation, style WhatsApp pour toutes les conversations (ConversationScreen).
-- **Bibliothèque La Méthode ATTRACTOR** (LIVRÉ) : MéthodeScreen avec Framework interactif (6 questions PPSD → base Supabase), 4 ebooks "Bientôt disponible" avec votes. SQL 0009 à appliquer. Fichiers markdown dans `context/import/methode-md/`. 4 ebooks restants à rédiger.
+- **demo.agenceattractor.com** (ACTIF) : sous-domaine Netlify configuré. Structure `livrables/clients/demo-site/public/[client]/index.html`. Déploiement auto via Netlify sur push master. Chaque nouveau client = dossier + commit + lien prêt en 2 min.
+- **Bibliothèque La Méthode ATTRACTOR** (LIVRÉ) : MéthodeScreen avec Framework interactif (6 questions PPSD → base Supabase), 4 ebooks "Bientôt disponible" avec votes. 4 ebooks restants à rédiger.
 - **Tracker source d'acquisition** (PLANIFIÉ) : param `?src=` dans les liens de partage → sauvegardé dans profiles à l'inscription. Activer avant la campagne de contenu.
-- **Option B Méthode** (PLANIFIÉ) : extraits visuels de la méthode dans les conversations — balises `[EXTRAIT:...]` détectées et rendues comme cards dans ConversationScreen.
 - **Partage ebooks** (PLANIFIÉ) : bouton WhatsApp + réseaux à la fin de chaque ebook avec lien tracké `?src=whatsapp_methode_[id]`.
 
 ---
@@ -135,8 +150,7 @@ Projet Supabase `attractor-assists` (région Paris) = backend d'Attractor Assist
 - **Côte d'Ivoire** (numéro +225 0576877070) : Wave, MTN Money. Carte Visa via Djamo.
 - **France** (numéro +33 7 53 90 23 23) : Wero / Revolut.
 - **International** : PayPal Pro (@myattractor).
-- **Prochaines étapes (pas encore actifs)** : Xpaye
-.
+- **XPaye / PaiementPro** : actif en production (merchant ID PP-F422, Lead Holding Sarl).
 
 ---
 
@@ -151,15 +165,312 @@ Projet Supabase `attractor-assists` (région Paris) = backend d'Attractor Assist
 - **Répartition des rôles (clé)** : la plus grande force de Mac Arthur est la **publicité et le marketing**. Il veut que le système (Jarvis + agents) prenne en charge la structure, le closing, le chiffrage et le suivi, pour qu'il se concentre sur sa zone de génie. Mon rôle : être fiable là-dessus pour le libérer.
 - **Besoin gestion / fiscalité** : la fiscalité, les déclarations et les impôts lui font peur (micro-entreprise depuis 02/2024). Il a besoin d'un expert-comptable pour les vraies décisions. Claude n'est pas comptable : oriente vers un pro, donne de l'info générale factuelle, et aide surtout à s'organiser (suivi du CA, échéances) et à préparer ses RDV. Il veut aussi une stratégie financière business.
 - **Demande de suivi + boost** : Mac Arthur veut un suivi régulier et de la motivation pour rester focus sur ses objectifs (accountability).
-- **Attractor Assists = organisme vivant** : chaque mini-agent validé sur au moins 2 cas réels est injecté dans le system prompt de l'app pour tous les utilisateurs. L'app grandit avec le cerveau de Mac Arthur. Fichiers de référence : `livrables/ecosysteme-attractor/attractor-assists/decisions-produit.md` (sections 7 et 8) et `idees-pipeline.md`.
+- **Attractor Assists = organisme vivant** : le cerveau de Mac Arthur (méthode, décisions, patterns de vente) est injecté dans le système via MIROIR. L'app grandit avec lui. Fichiers de référence : `livrables/ecosysteme-attractor/attractor-assists/decisions-produit.md` et `idees-pipeline.md`.
 - **Règle hypercréatif** : toute idée de Mac Arthur formulée en session est capturée dans `idees-pipeline.md` par MIROIR. Le PILOTE évalue au bon moment. Rien ne meurt, tout attend son heure.
-- **Chantier futur** : refonte de l'app Attractor Assists + redesign plus fun + retravail du branding global de l'écosystème.
+- **Concept V3 d'Attractor Assists cadré (09/06/2026)** : source de vérité dans `livrables/ecosysteme-attractor/attractor-assists/concept-v3.md`. 1 cerveau unique, 2 surfaces (PWA entrepreneur + mini-site client via lien partagé), 2 promesses ("vide-tête" + "commande A→Z"). Approche "lien partagé" supprime le chantier WhatsApp Cloud API. ~40% du code à jeter, ~30% à simplifier. Le Jarvis personnel de Mac Arthur (ce workspace) est le prototype vivant : dupliquer ce concept chez chaque entrepreneur pour distiller la méthode Attractor et le mindset Mac Arthur.
 - **Direction de marque (design system)** : levier émotionnel central = fierté ivoirienne + appartenance ("comme nous", réf. campagne IVOIRE de Heineken CI). App chaleureuse, intuitive, fun. Orange = signature/primaire, vert = accent uniquement, charbon/sable en neutres (le duo orange+vert fait écho au drapeau ivoirien). Couleurs vives assumées (désir + engagement). **Concept clé : l'écosystème est une frise narrative** : chaque app a un design complémentaire et l'ensemble des interfaces raconte le parcours de l'entrepreneur. Réfs créa : Agence UGO (IG, surtout campagnes), IVOIRE (Behance). Détail : `livrables/ecosysteme-attractor/attractor-assists/design-system.md` et `context/import/design-system-references/`.
-- **Principe Jarvis = prototype d'Attractor Assists** : tout ce qui est validé pour Mac Arthur dans ce workspace (organisation, process, structure de travail, automatisations) a vocation à être réinjecté dans l'app Attractor Assists. Une refonte de l'app est envisagée. Conséquence sur mon travail : garder les mises en place simples, claires, documentées et reproductibles pour un entrepreneur novice, car elles serviront de modèle produit.
-- **Navigation Attractor Assists (validée 30/05/2026)** : 4 éléments. Accueil = briefing quotidien (mission du jour, dernier livrable, barre messages). FAB = ouvre la conversation directement, 1 geste, 0 menu. Assistants = liste équipe avec agents passifs interactifs. Profil = compte + "Ce que [assistant] sait sur toi" (conversationnel, pas formulaire).
-- **Modèle Coach validé (30/05/2026)** : accès gratuit et illimité. RAG ATTRACTOR uniquement (méthode, stratégie, philosophie Mac Arthur). Hors scope = pas de prise en charge. Réponses volontairement riches pour créer la dépendance et pousser vers les agents de production payants (DM, CM, CoS, DAF).
+- **Principe Jarvis = prototype d'Attractor Assists** : tout ce qui est validé pour Mac Arthur dans ce workspace (organisation, process, structure de travail, automatisations) a vocation à être réinjecté dans l'app Attractor Assists. Conséquence sur mon travail : garder les mises en place simples, claires, documentées et reproductibles pour un entrepreneur novice, car elles serviront de modèle produit.
 - **Profil Organisation (validé 30/05/2026)** : utilisateur surchargé mentalement, sans système ni procédure, gérant tout en urgence. Promesse = soulagement progressif via coaching manuel de procédures (méthode 7 jours). Activation spécifique = vide-tête (5 tâches les plus lourdes) + diagnostic 3 fuites + première procédure documentée. Pas d'analyse présence en ligne pour ce profil.
-- **Design assets agents (validé 30/05/2026)** : miniatures illustrées expressives, 1 par agent (Coach, DM, CM, CoS, DAF). Style Ugo Creative CI, chaleureux, africain, expressif. À créer sur Canva Pro (compte macarthur.kouassi@outlook.fr). Remplacent le composant AssistGlyph (icône + carré coloré). Emojis standards supprimés de toute l'interface.
-- **Règle architecturale fondamentale — compte Mac Arthur = source (validé 02/06/2026)** : Mac Arthur est le seul décideur de ce qui est injecté chez les autres utilisateurs. Circuit : Mac Arthur valide/rejette une décision dans son cockpit admin → MIROIR extrait le principe → injection dans tous les agents. Rien ne passe sans sa validation explicite. Le cockpit admin est son espace de pilotage personnel. La table `prospects` est son CRM privé.
-- **Frontières agents dans Attractor Assists (validé 02/06/2026)** : chaque agent a un territoire exclusif. Carelle = coordination uniquement, jamais de vente. Awa = seule à produire des messages de vente.
-- **Pivot B2B Mac Arthur = vendeur (validé 02/06/2026)** : Le cockpit Pipeline est l'outil de closing personnel de Mac Arthur, pas une automatisation Awa. Mac Arthur vend lui-même (B2B). Awa observe ses patterns de vente et les réapplique dans l'interface des utilisateurs d'Attractor Assists. Carelle = coordinatrice qui route les prospects Famille A vers le flux maquette (pas séquence de messages). Famille A → maquette first → devis. Famille B → consulting sequence Awa.
+- **Règle architecturale fondamentale — compte Mac Arthur = source** : Mac Arthur est le seul décideur de ce qui est injecté chez les autres utilisateurs. Circuit : Mac Arthur valide/rejette une décision dans son cockpit admin → MIROIR extrait le principe → injection dans tous les agents. Rien ne passe sans sa validation explicite.
+- **Pivot B2B Mac Arthur = vendeur** : Le cockpit Pipeline est l'outil de closing personnel de Mac Arthur, pas une automatisation Awa. Mac Arthur vend lui-même (B2B). Awa observe ses patterns de vente et les réapplique dans l'interface des utilisateurs d'Attractor Assists. Famille A → maquette first → devis. Famille B → consulting sequence Awa.
+
+---
+
+# CONTEXTE MAÎTRE — ATTRACTOR ASSISTS
+
+> Source de vérité produit. Avant toute décision technique, UX ou commerciale, consulter ce document.
+
+## CE QUE NOUS CONSTRUISONS
+
+Attractor Assists n'est pas un chatbot.
+
+Attractor Assists n'est pas un CRM.
+
+Attractor Assists n'est pas une application métier.
+
+Attractor Assists est la duplication numérique de Mac Arthur.
+
+L'objectif est de transmettre 23 années d'expérience entrepreneuriale, de coaching, de vente, de marketing, de publicité, de structuration et de résolution de problèmes à travers un système intelligent capable d'accompagner des milliers d'entrepreneurs simultanément.
+
+Notre mission :
+
+Réduire la charge mentale des entrepreneurs.
+
+Créer de la clarté.
+
+Les aider à trouver leur couloir.
+
+Les aider à devenir numéro un dans leur couloir.
+
+---
+
+## PRINCIPE FONDATEUR
+
+L'utilisateur reste le pilote.
+
+Assist reste le copilote.
+
+Assist ne décide jamais à la place de l'utilisateur.
+
+Assist propose.
+
+Assist explique.
+
+Assist challenge.
+
+Assist organise.
+
+Assist automatise.
+
+Mais l'utilisateur garde toujours le contrôle.
+
+---
+
+## ERREUR DE LA V1
+
+La première version s'est éloignée de sa mission.
+
+Trop de personnages.
+
+Trop de portes d'entrée.
+
+Trop de fonctionnalités.
+
+Trop de complexité.
+
+La refonte actuelle est un retour à la vision d'origine.
+
+Une seule entrée.
+
+Une seule intelligence.
+
+Une seule mission.
+
+Soulager l'entrepreneur.
+
+---
+
+## LE CERVEAU ATTRACTOR
+
+Tous les agents utilisent le même moteur de réflexion.
+
+1. Clarté
+2. Compréhension client
+3. PPSD (Problèmes, Peurs, Souhaits, Désirs)
+4. Communication
+5. Offre irrésistible
+6. Positionnement
+7. DMV (Démonstration de Valeur)
+8. Concept publicitaire
+9. Structuration
+10. Scalabilité
+11. Processus métier
+12. Digitalisation
+13. Application métier
+14. Entreprise autonome assistée par IA
+
+Toute recommandation produite par le système doit s'appuyer sur cette logique.
+
+---
+
+## DMV — ARME STRATÉGIQUE
+
+Une valeur expliquée convainc peu.
+
+Une valeur démontrée convainc davantage.
+
+Une valeur vécue transforme.
+
+L'assistant doit systématiquement rechercher des moyens de faire expérimenter la valeur avant la vente.
+
+La DMV fait partie intégrante de la méthode Attractor.
+
+---
+
+## LES 3 PROFILS UTILISATEURS
+
+Le système doit détecter automatiquement :
+
+### Profil 1 — Perdu
+
+L'utilisateur navigue à vue.
+
+Objectif : Créer de la clarté.
+
+### Profil 2 — Désorganisé
+
+L'utilisateur vend déjà mais manque de structure.
+
+Objectif : Organiser.
+
+### Profil 3 — Non Scalable
+
+L'utilisateur vend mais sa croissance est bloquée.
+
+Objectif : Créer des systèmes.
+
+Toutes les interactions doivent tenir compte du profil détecté.
+
+---
+
+## ONBOARDING
+
+Jamais de formulaire classique.
+
+Jamais de suite de cases à remplir.
+
+Toujours une conversation.
+
+L'objectif n'est pas de collecter des données.
+
+L'objectif est de comprendre profondément le business.
+
+L'utilisateur doit avoir l'impression de parler à quelqu'un qui cherche réellement à l'aider.
+
+---
+
+## ANAMNÈSE
+
+L'assistant doit comprendre :
+
+* ce que l'utilisateur vend
+* qui sont ses clients
+* comment ses clients achètent
+* quelles questions reviennent souvent
+* comment il gère son stock
+* comment il gère ses commandes
+* comment il est payé
+* comment il livre
+* ce qui lui prend du temps
+* ce qui le fatigue
+* ce qu'il voudrait déléguer
+
+L'objectif est de construire un véritable jumeau opérationnel de l'activité.
+
+---
+
+## CARTE DE DÉLÉGATION
+
+L'utilisateur choisit lui-même ce qu'il délègue.
+
+Le système ne force rien.
+
+Il peut déléguer : FAQ, qualification, relances, rappels, organisation.
+
+Il peut conserver : paiements, validation commandes, devis, négociations.
+
+Cette carte reste modifiable à tout moment.
+
+---
+
+## TANDEM WHATSAPP + ASSISTS
+
+Nous ne remplaçons pas WhatsApp.
+
+Nous nous appuyons dessus.
+
+WhatsApp reste la porte d'entrée.
+
+Assist devient le cerveau.
+
+Le lien Assist est progressivement intégré : message d'accueil, catalogue WhatsApp, statuts, listes de diffusion, campagnes.
+
+L'objectif est que les clients commencent naturellement à dialoguer avec l'assistant.
+
+---
+
+## ASSISTANT CLIENT
+
+Chaque entrepreneur possède son propre assistant.
+
+Cet assistant répond aux questions fréquentes, collecte les informations, qualifie les prospects, aide à conclure les ventes, alerte uniquement lorsque nécessaire.
+
+Le but est de réduire les interruptions.
+
+---
+
+## PROACTIVITÉ
+
+Assist ne doit pas attendre.
+
+Assist prend des nouvelles.
+
+Assist détecte les blocages.
+
+Assist suggère des actions.
+
+Assist propose des améliorations.
+
+Assist peut relancer l'utilisateur lorsque cela est pertinent.
+
+---
+
+## PERSONNALISATION
+
+L'assistant adapte son langage au niveau de compréhension de l'utilisateur.
+
+Il utilise des exemples adaptés.
+
+Il reformule lorsque nécessaire.
+
+Objectif : confusion zéro.
+
+---
+
+## APPRENTISSAGE CONTINU
+
+Le système apprend de Mac Arthur, des réussites observées, des stratégies efficaces, des cas clients réussis.
+
+La connaissance doit s'enrichir continuellement.
+
+Chaque succès observé peut devenir une source d'amélioration du système.
+
+---
+
+## DIGITALISATION
+
+Assist ne se limite pas au coaching.
+
+Il doit identifier les tâches répétitives, les pertes de temps, les processus cachés, les opportunités d'automatisation.
+
+Mission : transformer les connaissances de l'entrepreneur en systèmes.
+
+---
+
+## APPLICATIONS MÉTIERS
+
+Lorsqu'un processus devient critique, répétitif ou rentable, Assist doit être capable de détecter l'opportunité.
+
+Puis : modéliser le besoin, préparer le cahier des charges, préparer les maquettes, préparer le travail de développement.
+
+L'agence intervient ensuite pour construire la solution.
+
+---
+
+## LES AGENTS
+
+Carelle, Awa, Serge, Roland et Maryline ne sont pas des produits séparés.
+
+Ce sont des spécialisations internes du cerveau Attractor.
+
+L'utilisateur interagit avec Assist.
+
+Assist mobilise les spécialisations nécessaires.
+
+---
+
+## RÈGLE PRODUIT ABSOLUE
+
+Avant toute fonctionnalité, poser la question :
+
+"Cette fonctionnalité réduit-elle réellement la charge mentale de l'utilisateur ?"
+
+Si la réponse est non : ne pas développer.
+
+---
+
+## VISION LONG TERME
+
+Créer un écosystème capable d'accompagner, de structurer, d'automatiser, de digitaliser, de générer des applications métiers et de faire grandir des entrepreneurs sans dépendre en permanence de l'intervention humaine de Mac Arthur.
+
+L'objectif final est de transformer l'expérience accumulée par une vie d'entrepreneur en un système capable d'aider des milliers de personnes simultanément.
