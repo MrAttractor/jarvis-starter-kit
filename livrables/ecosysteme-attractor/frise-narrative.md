@@ -10,7 +10,7 @@
 
 ## Panneau 1 — Attractor Assists · *Penser*
 
-- **Rôle :** le bras droit qui est avec toi. Il te décharge mentalement et te donne les tips pour mieux penser business (visibilité et argent).
+- **Rôle :** le bras droit qui est avec toi. Il te décharge mentalement et te donne les tips pour mieux penser business (organisation, visibilité et argent).
 - **Moment du parcours :** le début. L'entrepreneur est seul et surchargé. On structure sa pensée, sa cible, ses argumentaires.
 - **Émotion :** soulagement, clarté, "je ne suis plus seul".
 - **Mood visuel :** le plus chaud. Orange dominant (énergie, démarrage, action).
