@@ -1,0 +1,112 @@
+# KIT MULTI-ANGLES AWA — Face / Profil / Dos
+*Objectif : étoffer la référence avec 3 vues alignées pour pouvoir générer ensuite n'importe quelle scène avec cohérence garantie.*
+*Référence visage : 00_master/AWA_MASTER_4K.png (upload en Character Reference, weight 90%).*
+
+---
+
+## 🎯 APPROCHE 1 (recommandée) — Character Sheet en UNE image
+
+### Prompt
+
+```
+Professional character reference sheet of Awa Coulibaly, 27-year-old Ivorian woman from Treichville Abidjan, deep dark skin with warm radiant undertone, high natural afro bun with subtle orange highlights, large gold creole hoop earrings, open orange and grey wax-print shirt over a fitted black crop top, real human proportions, photorealistic, ultra-detailed skin texture, authentic West African beauty, same exact face as reference image.
+
+Three full-body views of the SAME person aligned side by side on a single image:
+[LEFT] front view facing the camera, arms relaxed by her sides, neutral confident expression,
+[CENTER] left side profile view, hands at her sides, looking straight ahead,
+[RIGHT] back view showing the afro bun from behind, shoulders and wax shirt visible.
+
+Same character, same outfit, same hairstyle, same earrings in all three views. Consistent body proportions. Studio character turnaround sheet style.
+
+Dark moody brown background, even soft cinematic lighting from above with subtle warm orange rim light, no harsh shadows, neutral standing pose, full body visible from head to mid-thigh, ultra-detailed, photorealistic, 8K resolution, professional reference photography.
+```
+
+### Negative prompt
+
+```
+multiple different people, different outfits, different hairstyles, inconsistent face, three different women, cartoon, 3D render, plastic skin, over-smoothed, deformed hands, extra fingers, text, watermark, logo, lowres, blurry, oversaturated, fashion magazine glamour, uncanny valley
+```
+
+### Réglages Magnific Mystic
+
+| Param | Valeur |
+|---|---|
+| Model | Mystic 2.5 |
+| Aspect ratio | 16:9 (horizontal) |
+| Style | Realism |
+| Character Reference | AWA_MASTER_4K.png weight 90% |
+| Creativity | 4/10 |
+
+---
+
+## 🎯 APPROCHE 2 (plan B) — 3 images séparées
+
+Si l'approche 1 produit 3 visages différents, faire 3 générations indépendantes.
+Garder le même SEED si Magnific le propose.
+
+### Base commune (BLOC 1 — master)
+
+```
+Awa Coulibaly, 27-year-old Ivorian woman from Treichville Abidjan,
+deep dark skin with warm radiant undertone, high natural afro bun
+with subtle orange highlights, large gold creole hoop earrings,
+open orange and grey wax-print shirt over a fitted black crop top,
+real human proportions, photorealistic, ultra-detailed skin texture,
+authentic West African beauty, same exact face as reference image
+```
+
+### BLOC 2 — variable selon la vue
+
+**Vue de face :**
+```
+front view facing the camera, full body standing,
+arms relaxed by her sides, neutral confident expression,
+dark moody studio background, full body visible from head to mid-thigh
+```
+
+**Vue de profil (gauche) :**
+```
+left side profile view, full body standing,
+hands at her sides, looking straight ahead,
+dark moody studio background, full body visible from head to mid-thigh
+```
+
+**Vue de dos :**
+```
+back view of the same woman, full body standing,
+afro bun fully visible from behind,
+wax shirt and shoulders in frame,
+dark moody studio background, full body visible from head to mid-thigh
+```
+
+### BLOC 3 — Tech (commun aux 3)
+
+```
+shot on 50mm lens, even soft cinematic lighting from above,
+subtle warm orange rim light, no harsh shadows,
+9:16 vertical portrait composition, full body shot,
+candid documentary feel, high dynamic range, film grain,
+color grading orange and teal, 8K resolution, professional reference photography
+```
+
+### Réglages
+
+| Param | Valeur |
+|---|---|
+| Model | Mystic 2.5 |
+| Aspect ratio | 9:16 (vertical) |
+| Character Reference | AWA_MASTER_4K.png weight 90% |
+| Creativity | 4/10 |
+
+---
+
+## 📁 Une fois validées, ranger dans :
+
+```
+01_poses-studio/
+├── AWA_STUDIO_01_face.png
+├── AWA_STUDIO_02_profil.png
+└── AWA_STUDIO_03_dos.png
+```
+
+Et logger dans `prompts/log-generations.md`.
