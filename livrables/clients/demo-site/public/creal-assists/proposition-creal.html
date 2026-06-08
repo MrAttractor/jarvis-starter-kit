@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>C'Real — Proposition Mr Attractor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{ --brand:#1A1714; --brand-2:#F2A33D; --ink:#1A1714; --muted:#6B7280; --line:#E7E1D8; --font-display:'Sora',system-ui,-apple-system,sans-serif; --font:'Inter',system-ui,-apple-system,sans-serif; }
+*{box-sizing:border-box;margin:0;padding:0}
+h1,h2,h3{font-family:var(--font-display)}
+body{font-family:var(--font);color:var(--ink);background:#f0f2f5;padding:24px;line-height:1.55}
+.page{width:210mm;min-height:297mm;margin:0 auto 24px auto;background:#fff;padding:18mm 16mm;box-shadow:0 6px 30px rgba(0,0,0,.12)}
+.head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--brand-2);padding-bottom:16px}
+.brand h1{color:var(--brand);font-size:22px;letter-spacing:.02em}
+.brand .tag{color:var(--muted);font-size:12px;margin-top:2px}
+.docmeta{text-align:right;font-size:13px}
+.docmeta .t{color:var(--brand-2);font-weight:700;font-size:18px;letter-spacing:.06em;text-transform:uppercase}
+.docmeta div{color:var(--muted)}
+.brandchip{display:inline-flex;align-items:center;background:#0c0a08;border:1.5px solid var(--brand-2);border-radius:8px;padding:4px 11px;font-family:var(--font-display);font-weight:800;font-size:14px;letter-spacing:.01em;text-shadow:0 0 5px rgba(242,163,61,.6);margin:3px 0}
+.docmeta .brandchip{color:#fff}
+.brandchip span{color:var(--brand-2)}
+h2{color:var(--brand);font-size:17px;margin-top:26px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{color:var(--brand);font-size:14px;margin-top:16px;margin-bottom:4px}
+p{font-size:13px;margin-bottom:8px}
+.lead{font-size:14px;color:var(--ink)}
+.muted{color:var(--muted)}
+ul{margin:6px 0 6px 20px;font-size:13px}
+li{margin-bottom:3px}
+.intro-box{background:#FAF6F0;border-left:3px solid var(--brand-2);padding:14px 16px;margin:14px 0;font-size:13px}
+.quote{background:rgba(26,23,20,.04);border-left:3px solid var(--brand-2);border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0;font-size:13.5px;font-style:italic;color:#3a332c}
+.quote span{display:block;margin-top:6px;font-style:normal;font-size:11.5px;color:var(--muted)}
+
+/* Visual interface previews — mini screens, pas des captures d'écran réelles */
+.previews{display:flex;gap:18px;margin:16px 0;flex-wrap:wrap}
+.previewcol{flex:1;min-width:200px}
+.previewcol h3{margin-top:0}
+.preview{border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.07);background:#fff}
+.preview .bar{background:var(--brand);color:#fff;font-size:11px;font-weight:700;padding:8px 12px}
+.preview .body{padding:10px;background:#fafbfa}
+.mini-stats{display:flex;gap:6px;margin-bottom:8px}
+.mini-stats div{flex:1;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:9.5px;color:var(--muted)}
+.mini-stats div b{display:block;color:var(--brand);font-size:13px}
+.mini-row{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 9px;margin-bottom:6px;font-size:10px}
+.mini-row .dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px}
+.dot.green{background:#2E7D32}.dot.amber{background:#F2A33D}.dot.red{background:#D9534F}
+.mini-card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 9px;margin-bottom:6px;font-size:10px;display:flex;justify-content:space-between}
+.mini-card b{color:var(--brand)}
+.mini-chat{display:flex;flex-direction:column;gap:6px}
+.mini-bubble{max-width:78%;border-radius:10px;padding:6px 9px;font-size:9.5px}
+.mini-bubble.in{background:#fff;border:1px solid var(--line);align-self:flex-start}
+.mini-bubble.out{background:var(--brand);color:#fff;align-self:flex-end}
+.preview .caption{font-size:10.5px;color:var(--muted);text-align:center;padding:6px 8px 10px}
+
+.step{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:10px 0}
+.step .num{display:inline-block;background:var(--brand);color:#fff;font-size:11px;font-weight:700;letter-spacing:.05em;padding:3px 9px;border-radius:4px;margin-bottom:6px}
+.step h3{margin-top:0}
+.step .obj{color:var(--brand-2);font-weight:600;font-size:12.5px;margin-bottom:6px}
+.linkbox{background:#FAF6F0;border:1px dashed var(--brand-2);border-radius:10px;padding:14px 16px;margin:14px 0;text-align:center}
+.linkbox a{color:var(--brand);font-weight:700;font-size:14px;text-decoration:none}
+.linkbox p{margin:4px 0 0;font-size:11.5px;color:var(--muted)}
+.invest{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
+.invest .card{flex:1;min-width:150px;border:1px solid var(--line);border-radius:8px;padding:12px;font-size:12.5px}
+.invest .card b{color:var(--brand);display:block;margin-bottom:4px;font-size:13px}
+.invest .card .amt{color:var(--brand-2);font-weight:800;font-size:17px}
+.cta{background:var(--brand);color:#fff;border-radius:8px;padding:18px 20px;margin-top:20px;font-size:13.5px}
+.cta b{color:#fff5e0}
+.foot{margin-top:24px;border-top:1px solid var(--line);padding-top:10px;font-size:10.5px;color:var(--muted);text-align:center;line-height:1.6}
+@media print{ body{background:#fff;padding:0} .page{box-shadow:none;margin:0;width:auto;min-height:auto;page-break-after:always} .page:last-child{page-break-after:auto} }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 — Constat -->
+<div class="page">
+  <div class="head">
+    <div class="brand">
+      <h1>Mr Attractor</h1>
+      <div class="tag">Conception d'applications métier &amp; systèmes intelligents</div>
+    </div>
+    <div class="docmeta">
+      <div class="t">Proposition</div>
+      <div class="brandchip">C'<span>Real</span></div>
+      <div>Pour Kezey</div>
+    </div>
+  </div>
+
+  <h2>Notre constat partagé</h2>
+  <p class="lead">C'Real vend une farine infantile de qualité, et ça marche : les commandes arrivent par WhatsApp, les questions aussi, le service après-vente aussi. Le problème n'est pas le produit, c'est que tout repose sur toi, en continu, sans filet.</p>
+  <div class="quote">
+    « C'est le SAV qui me fatigue, je n'arrive pas à le faire jusqu'au bout. Je commence, je ne termine jamais. »
+    <span>— Kezey</span>
+  </div>
+  <div class="intro-box">
+    Notre proposition : un assistant qui prend en charge tes clientes du premier message jusqu'à l'avis après achat — pour que le SAV cesse d'être ce qui te fatigue, et devienne ce qui te distingue.
+  </div>
+
+  <h2>Ce que ça change concrètement pour toi</h2>
+  <ul>
+    <li><b>Tes clientes ont des réponses immédiates</b> — variétés, âge recommandé, conservation, livraison — sans que tu retapes la même chose chaque jour.</li>
+    <li><b>Le SAV se gère presque seul</b> — la réclamation est qualifiée, une solution est proposée, tu valides en un geste au lieu de tout porter.</li>
+    <li><b>Rien ne tombe dans l'oubli</b> — chaque commande déclenche un suivi automatique : livraison, avis, note, suggestions — jusqu'au bout, sans que tu y penses.</li>
+  </ul>
+
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015<br>
+    myattractor1@gmail.com — agenceattractor.com — Page 1/3
+  </div>
+</div>
+
+<!-- PAGE 2 — Les deux interfaces -->
+<div class="page">
+  <div class="head">
+    <div class="brand">
+      <h1>Mr Attractor</h1>
+      <div class="tag">Conception d'applications métier &amp; systèmes intelligents</div>
+    </div>
+    <div class="docmeta">
+      <div class="t">Proposition</div>
+      <div class="brandchip">C'<span>Real</span></div>
+      <div>Pour Kezey</div>
+    </div>
+  </div>
+
+  <h2>À quoi ressemble ton futur outil</h2>
+  <p>Une seule app, deux visages : ce que <b>toi</b> tu pilotes au quotidien, et ce que vivent <b>tes clientes</b> de leur côté. Aperçu ci-dessous — la version cliquable et complète est à l'écran, lien en bas de page.</p>
+
+  <div class="previews">
+    <div class="previewcol">
+      <h3>Ton tableau de bord</h3>
+      <div class="preview">
+        <div class="bar">C'Real · Bonjour Kezey 👋</div>
+        <div class="body">
+          <div class="mini-stats">
+            <div><b>9</b>commandes / jour</div>
+            <div><b>31k</b>FCFA aujourd'hui</div>
+            <div><b>2</b>SAV en attente</div>
+          </div>
+          <div class="mini-row"><span><span class="dot green"></span>Aïcha — Pack prise de poids</span><span>Livrée</span></div>
+          <div class="mini-row"><span><span class="dot amber"></span>Mariam — Mes premières C'real</span><span>En cours</span></div>
+          <div class="mini-row"><span><span class="dot red"></span>Réclamation — sachet abîmé</span><span>À traiter</span></div>
+        </div>
+        <div class="caption">Vue Kezey — pilotage, commandes, SAV, en un coup d'œil</div>
+      </div>
+    </div>
+    <div class="previewcol">
+      <h3>Ce que vit une cliente</h3>
+      <div class="preview">
+        <div class="bar">C'Real · Boutique &amp; Assistant</div>
+        <div class="body">
+          <div class="mini-card"><span>🍼 Mes premières C'real (300g)</span><b>1 500 F</b></div>
+          <div class="mini-card"><span>🌾 Multicreal enrichi Soja (200g)</span><b>1 500 F</b></div>
+          <div class="mini-chat">
+            <div class="mini-bubble in">C'est adapté à partir de quel âge pour mon bébé ?</div>
+            <div class="mini-bubble out">"Mes premières C'real" (riz-sorgho) est pensée pour les débuts de bébé 🍼 Tu veux que je te montre le pack prise de poids ?</div>
+          </div>
+        </div>
+        <div class="caption">Vue cliente — découverte, questions, commande, suivi et avis</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="muted">Ces aperçus sont construits avec des données réalistes du secteur (produits, prix, questions types) — la version finale reprend tes vrais produits, tes vrais tarifs et tes vraies clientes une fois validée avec toi.</p>
+
+  <div class="linkbox">
+    <a href="https://demo.agenceattractor.com/creal-assists">👉 Ouvrir la démo cliquable C'Real Assists</a>
+    <p>demo.agenceattractor.com/creal-assists — à ouvrir et toucher sur ton téléphone, bascule entre les deux vues en un tap</p>
+  </div>
+
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015<br>
+    myattractor1@gmail.com — agenceattractor.com — Page 2/3
+  </div>
+</div>
+
+<!-- PAGE 3 — Next steps -->
+<div class="page">
+  <div class="head">
+    <div class="brand">
+      <h1>Mr Attractor</h1>
+      <div class="tag">Conception d'applications métier &amp; systèmes intelligents</div>
+    </div>
+    <div class="docmeta">
+      <div class="t">Proposition</div>
+      <div class="brandchip">C'<span>Real</span></div>
+      <div>Pour Kezey</div>
+    </div>
+  </div>
+
+  <h2>Comment on avance, étape par étape</h2>
+  <div class="step">
+    <span class="num">ÉTAPE 1</span>
+    <h3>Validation de la démo</h3>
+    <div class="obj">Objectif : que tu te reconnaisses dans l'outil avant tout engagement</div>
+    <p>Tu ouvres le lien, tu testes les deux vues, tu me dis ce qui te parle et ce qu'on ajuste. Rien ne se construit en vrai avant que tu valides.</p>
+  </div>
+  <div class="step">
+    <span class="num">ÉTAPE 2</span>
+    <h3>Construction de ta version réelle</h3>
+    <div class="obj">Objectif : transformer la démo en outil que tes clientes utilisent vraiment</div>
+    <p>On reprend tes vrais produits, tes vrais tarifs, ton catalogue actuel, et on connecte les paiements via XPaye comme tu le fais déjà. Mise en ligne sur ton lien à toi.</p>
+  </div>
+  <div class="step">
+    <span class="num">ÉTAPE 3</span>
+    <h3>Mise en service &amp; ajustements</h3>
+    <div class="obj">Objectif : un outil qui te soulage dès le premier jour</div>
+    <p>Tu l'utilises avec tes vraies clientes, on observe ensemble ce qui marche, et on ajuste ce qui doit l'être — sans surprise, à ton rythme.</p>
+  </div>
+
+  <h2>Pour démarrer</h2>
+  <div class="invest">
+    <div class="card"><b>Frais techniques (tarif réseau)</b><span class="amt">50 000 FCFA</span><br>Un site de ce calibre vaut normalement autour de 250 €. Ce tarif est celui que je te propose, en direct.</div>
+    <div class="card"><b>Abonnement mensuel</b>Hébergement, maintenance et évolutions de ton outil une fois en service — on le cadre ensemble une fois le scope final aligné.</div>
+  </div>
+
+  <div class="cta">
+    <b>Prochaine étape proposée :</b> tu regardes la démo, tu me dis ce que tu en penses, et si c'est bon pour toi, on démarre cette semaine.
+  </div>
+
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015 — Immatriculée le 01/02/2024<br>
+    TVA non applicable, article 293 B du CGI — myattractor1@gmail.com — +33 7 53 90 23 23 — agenceattractor.com — Page 3/3
+  </div>
+</div>
+
+</body>
+</html>
