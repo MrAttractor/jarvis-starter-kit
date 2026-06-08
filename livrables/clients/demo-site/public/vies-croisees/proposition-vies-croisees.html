@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Vies Croisées — Proposition Mr Attractor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{ --brand:#131A2C; --brand-2:#C9A24A; --ink:#1B2236; --muted:#6B7280; --line:#E7E1D2; --font-display:'Playfair Display',Georgia,serif; --font:'Inter',system-ui,-apple-system,sans-serif; }
+*{box-sizing:border-box;margin:0;padding:0}
+h1,h2,h3{font-family:var(--font-display)}
+body{font-family:var(--font);color:var(--ink);background:#f0f1f3;padding:24px;line-height:1.55}
+.page{width:210mm;min-height:297mm;margin:0 auto 24px auto;background:#fff;padding:18mm 16mm;box-shadow:0 6px 30px rgba(0,0,0,.12)}
+.head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--brand-2);padding-bottom:16px}
+.brand h1{color:var(--brand);font-size:22px;letter-spacing:.02em}
+.brand .tag{color:var(--muted);font-size:12px;margin-top:2px}
+.docmeta{text-align:right;font-size:13px}
+.docmeta .t{color:var(--brand-2);font-weight:700;font-size:18px;letter-spacing:.06em;text-transform:uppercase}
+.docmeta div{color:var(--muted)}
+.brandchip{display:inline-flex;align-items:center;background:#0c1322;border:1.5px solid var(--brand-2);border-radius:8px;padding:4px 11px;font-family:var(--font-display);font-weight:800;font-size:14px;letter-spacing:.01em;text-shadow:0 0 5px rgba(201,162,74,.6);margin:3px 0}
+.docmeta .brandchip{color:#fff}
+.brandchip span{color:var(--brand-2)}
+h2{color:var(--brand);font-size:17px;margin-top:26px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{color:var(--brand);font-size:14px;margin-top:16px;margin-bottom:4px}
+p{font-size:13px;margin-bottom:8px}
+.lead{font-size:14px;color:var(--ink)}
+.muted{color:var(--muted)}
+ul{margin:6px 0 6px 20px;font-size:13px}
+li{margin-bottom:3px}
+.intro-box{background:#F7F3EA;border-left:3px solid var(--brand-2);padding:14px 16px;margin:14px 0;font-size:13px}
+.quote{background:rgba(19,26,44,.04);border-left:3px solid var(--brand-2);border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0;font-size:13.5px;font-style:italic;color:#2c3346}
+.quote span{display:block;margin-top:6px;font-style:normal;font-size:11.5px;color:var(--muted)}
+
+/* Aperçus d'interface — mini-écrans, pas des captures réelles */
+.previews{display:flex;gap:18px;margin:16px 0;flex-wrap:wrap}
+.previewcol{flex:1;min-width:200px}
+.previewcol h3{margin-top:0}
+.preview{border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.07);background:#fff}
+.preview .bar{background:var(--brand);color:#fff;font-size:11px;font-weight:700;padding:8px 12px}
+.preview .body{padding:10px;background:#fafaf8}
+.mini-stats{display:flex;gap:6px;margin-bottom:8px}
+.mini-stats div{flex:1;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:9.5px;color:var(--muted)}
+.mini-stats div b{display:block;color:var(--brand);font-size:13px}
+.mini-row{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 9px;margin-bottom:6px;font-size:10px}
+.mini-row .dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px}
+.dot.green{background:#2E7D32}.dot.amber{background:#C9A24A}.dot.red{background:#8A6A1F}
+.mini-card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 9px;margin-bottom:6px;font-size:10px;display:flex;justify-content:space-between;align-items:center}
+.mini-card b{color:var(--brand)}
+.mini-quote{border-left:2px solid var(--brand-2);padding:6px 0 6px 9px;font-size:10px;font-style:italic;color:#3a3f52}
+.preview .caption{font-size:10.5px;color:var(--muted);text-align:center;padding:6px 8px 10px}
+
+.step{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:10px 0}
+.step .num{display:inline-block;background:var(--brand);color:#fff;font-size:11px;font-weight:700;letter-spacing:.05em;padding:3px 9px;border-radius:4px;margin-bottom:6px}
+.step h3{margin-top:0}
+.step .obj{color:#8A6A1F;font-weight:600;font-size:12.5px;margin-bottom:6px}
+.linkbox{background:#F7F3EA;border:1px dashed var(--brand-2);border-radius:10px;padding:14px 16px;margin:14px 0;text-align:center}
+.linkbox a{color:var(--brand);font-weight:700;font-size:14px;text-decoration:none}
+.linkbox p{margin:4px 0 0;font-size:11.5px;color:var(--muted)}
+.channels{margin:10px 0}
+.channels li{margin-bottom:7px}
+.channels b{color:var(--brand)}
+.invest{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
+.invest .card{flex:1;min-width:150px;border:1px solid var(--line);border-radius:8px;padding:12px;font-size:12.5px}
+.invest .card b{color:var(--brand);display:block;margin-bottom:4px;font-size:13px}
+.invest .card .amt{color:#8A6A1F;font-weight:800;font-size:15px}
+.cta{background:var(--brand);color:#fff;border-radius:8px;padding:18px 20px;margin-top:20px;font-size:13.5px}
+.cta b{color:#f0d9a3}
+.foot{margin-top:24px;border-top:1px solid var(--line);padding-top:10px;font-size:10.5px;color:var(--muted);text-align:center;line-height:1.6}
+@media print{ body{background:#fff;padding:0} .page{box-shadow:none;margin:0;width:auto;min-height:auto;page-break-after:always} .page:last-child{page-break-after:auto} }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 — D'où on part -->
+<div class="page">
+  <div class="head">
+    <div class="brand">
+      <h1>Mr Attractor</h1>
+      <div class="tag">Conception d'applications métier &amp; systèmes intelligents</div>
+    </div>
+    <div class="docmeta">
+      <div class="t">Proposition</div>
+      <div class="brandchip">V<span>C</span></div>
+      <div>Pour Andréa</div>
+    </div>
+  </div>
+
+  <h2>D'où on part</h2>
+  <p class="lead">Vies Croisées est une idée forte, déjà écrite, déjà pensée : donner la parole à ceux qui ont traversé quelque chose, pour que d'autres se sentent moins seuls sur leur propre chemin. Mais aujourd'hui, cette idée n'a pas encore d'endroit à elle. Pas de site, pas de chaîne active, pas de blog : le projet part de zéro.</p>
+  <div class="quote">
+    « On parle souvent d'arrivée. Rarement du chemin. Pourtant, c'est là que tout se joue. »
+    <span>— le manifeste de Vies Croisées</span>
+  </div>
+  <div class="intro-box">
+    Notre proposition : construire le site qui devient la maison de l'émission — l'endroit où chaque teaser, chaque épisode complet et chaque article trouve sa place et continue à vivre après la diffusion. Et poser avec toi, dans la foulée, le plan pour faire connaître cette maison : quels canaux créer, dans quel ordre, à quel rythme.
+  </div>
+
+  <h2>Ce que ça change concrètement pour toi</h2>
+  <ul>
+    <li><b>Tu as un endroit à toi à montrer dès le premier épisode</b> — pas un projet encore brouillon, un univers déjà posé et cohérent.</li>
+    <li><b>Ton audience garde le fil entre deux diffusions</b> — le blog prolonge chaque histoire au lieu de laisser l'attention retomber.</li>
+    <li><b>Tu sais quoi publier, où, et quand</b> — un cap clair plutôt que dix idées de canaux lancées en même temps.</li>
+    <li><b>Chaque témoignage que tu reçois trouve sa place</b> — centralisé, au lieu de se perdre dans des messages épars.</li>
+  </ul>
+
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015<br>
+    myattractor1@gmail.com — agenceattractor.com — Page 1/3
+  </div>
+</div>
+
+<!-- PAGE 2 — Les deux visages -->
+<div class="page">
+  <div class="head">
+    <div class="brand">
+      <h1>Mr Attractor</h1>
+      <div class="tag">Conception d'applications métier &amp; systèmes intelligents</div>
+    </div>
+    <div class="docmeta">
+      <div class="t">Proposition</div>
+      <div class="brandchip">V<span>C</span></div>
+      <div>Pour Andréa</div>
+    </div>
+  </div>
+
+  <h2>À quoi ressemble Vies Croisées, vu des deux côtés</h2>
+  <p>Un seul site, deux visages : ce que <b>toi</b> tu pilotes au quotidien, et ce que vit <b>ton audience</b> en arrivant chez toi. Aperçu ci-dessous — la version cliquable et complète est à l'écran, lien en bas de page.</p>
+
+  <div class="previews">
+    <div class="previewcol">
+      <h3>Ton espace</h3>
+      <div class="preview">
+        <div class="bar">Vies Croisées · Bonjour Andréa</div>
+        <div class="body">
+          <div class="mini-stats">
+            <div><b>2</b>épisodes programmés</div>
+            <div><b>1</b>article en rédaction</div>
+            <div><b>7</b>messages en attente</div>
+          </div>
+          <div class="mini-row"><span><span class="dot amber"></span>Partir ou rester : 3 destins croisés</span><span>Vendredi 18h</span></div>
+          <div class="mini-row"><span><span class="dot red"></span>Le jour où j'ai tout reconstruit</span><span>À tourner</span></div>
+          <div class="mini-row"><span><span class="dot green"></span>Et si leur chemin éclairait le tien ?</span><span>Publié</span></div>
+        </div>
+        <div class="caption">Vue Andréa — calendrier éditorial, audience, communauté, en un coup d'œil</div>
+      </div>
+    </div>
+    <div class="previewcol">
+      <h3>Ce que vit ton audience</h3>
+      <div class="preview">
+        <div class="bar">Vies Croisées · le site</div>
+        <div class="body">
+          <div class="mini-card"><span>Entre Force et Vulnérabilité</span><b>Teaser · 1 min 30</b></div>
+          <div class="mini-card"><span>Partir ou rester : 3 destins croisés</span><b>Bientôt</b></div>
+          <div class="mini-quote">« Et si leur chemin éclairait le tien ? »</div>
+        </div>
+        <div class="caption">Vue spectateur — teasers, épisodes complets, blog, témoignages</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="muted">Ces aperçus reprennent les textes et thèmes déjà écrits pour Vies Croisées — la version finale s'enrichit avec tes vraies images et tes futurs épisodes, au fil de leur sortie.</p>
+
+  <div class="linkbox">
+    <a href="https://demo.agenceattractor.com/vies-croisees">Ouvrir la démo cliquable Vies Croisées</a>
+    <p>demo.agenceattractor.com/vies-croisees — à ouvrir et toucher sur ton téléphone, bascule entre les deux vues en un tap</p>
+  </div>
+
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015<br>
+    myattractor1@gmail.com — agenceattractor.com — Page 2/3
+  </div>
+</div>
+
+<!-- PAGE 3 — Next steps : partir de zéro -->
+<div class="page">
+  <div class="head">
+    <div class="brand">
+      <h1>Mr Attractor</h1>
+      <div class="tag">Conception d'applications métier &amp; systèmes intelligents</div>
+    </div>
+    <div class="docmeta">
+      <div class="t">Proposition</div>
+      <div class="brandchip">V<span>C</span></div>
+      <div>Pour Andréa</div>
+    </div>
+  </div>
+
+  <h2>Comment on avance, étape par étape — en partant de zéro</h2>
+  <div class="step">
+    <span class="num">ÉTAPE 1</span>
+    <h3>Validation de la direction</h3>
+    <div class="obj">Objectif : que tu te reconnaisses dans cet univers avant tout engagement</div>
+    <p>Tu ouvres le lien, tu testes les deux vues, tu me dis ce qui te parle et ce qu'on ajuste dans le ton, les couleurs, les mots. Rien ne se construit en vrai avant que tu valides la direction.</p>
+  </div>
+  <div class="step">
+    <span class="num">ÉTAPE 2</span>
+    <h3>Construction du site réel et choix des canaux à activer</h3>
+    <div class="obj">Objectif : poser les fondations, dans le bon ordre</div>
+    <p>On construit ta version réelle du site avec tes vrais épisodes et ton vrai contenu. En parallèle, on définit ensemble quels canaux créer en priorité — chaîne vidéo, Instagram, newsletter — et dans quel ordre les lancer, pour ne pas s'éparpiller dès le départ.</p>
+  </div>
+  <div class="step">
+    <span class="num">ÉTAPE 3</span>
+    <h3>Lancement et premier rythme de publication</h3>
+    <div class="obj">Objectif : démarrer avec un cap clair, pas dans l'urgence</div>
+    <p>On cale ensemble un calendrier de sortie réaliste — combien d'épisodes, à quel rythme, avec quels articles en miroir — pour que le lancement ait un socle solide dès le premier jour, sans courir après le contenu.</p>
+  </div>
+
+  <h2>Les canaux à poser, dans l'ordre</h2>
+  <ol class="channels">
+    <li><b>Le site</b> — la maison de l'émission, celle vers qui tout finit toujours par ramener.</li>
+    <li><b>La chaîne vidéo</b> — teasers courts pour donner envie, épisodes complets pour aller au bout du chemin.</li>
+    <li><b>Instagram</b> — extraits, citations du manifeste, coulisses : de quoi faire vivre l'émission entre deux sorties.</li>
+    <li><b>La newsletter / le blog</b> — pour garder le lien avec ceux qui veulent aller plus loin que l'écran.</li>
+  </ol>
+  <p class="muted">On ne lance pas tout en même temps : chaque canal s'ajoute quand le précédent tient debout, pour que la qualité ne se dilue jamais.</p>
+
+  <h2>Pour démarrer</h2>
+  <div class="invest">
+    <div class="card"><b>Construction du site</b><span class="amt">À cadrer ensemble</span><br>Le tarif dépend du périmètre exact retenu avec toi (le site seul, ou le site et un accompagnement sur le lancement des canaux).</div>
+    <div class="card"><b>Abonnement mensuel</b>Hébergement, maintenance et évolutions du site une fois en ligne — posé une fois le scope final aligné.</div>
+  </div>
+
+  <div class="cta">
+    <b>Prochaine étape proposée :</b> tu regardes la démo, tu me dis ce qui te parle, et on pose ensemble, dans la foulée, le plan de lancement complet.
+  </div>
+
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015 — Immatriculée le 01/02/2024<br>
+    TVA non applicable, article 293 B du CGI — myattractor1@gmail.com — +33 7 53 90 23 23 — agenceattractor.com — Page 3/3
+  </div>
+</div>
+
+</body>
+</html>

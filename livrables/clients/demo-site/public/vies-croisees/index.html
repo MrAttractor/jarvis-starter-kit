@@ -3,33 +3,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vies Croisées Studio — Maquette</title>
+<title>Vies Croisées — Maquette</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --brand:#5B3CC4;
-  --brand-2:#FF7A45;
-  --ink:#1A1F2B;
+  --brand:#131A2C;
+  --brand-2:#C9A24A;
+  --ink:#1B2236;
   --muted:#6B7280;
-  --bg:#F6F4FB;
+  --bg:#F7F3EA;
   --card:#FFFFFF;
   --radius:18px;
-  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+  --font-display:'Playfair Display',Georgia,serif;
+  --font:'Inter',system-ui,-apple-system,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font);background:linear-gradient(160deg,#15101f,#2a1a35);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px;color:var(--ink)}
+h1,h2,h3,h4{font-family:var(--font-display)}
+body{font-family:var(--font);background:linear-gradient(160deg,#0a0e18,#1c2840);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px;color:var(--ink)}
 .stage{display:flex;gap:52px;flex-wrap:wrap;align-items:center;justify-content:center}
 .pitch{max-width:300px;color:#e8edf5}
 .pitch .kicker{color:var(--brand-2);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px}
 .pitch h1{font-size:28px;margin:10px 0 14px;line-height:1.15}
-.pitch p{color:#c9c2da;line-height:1.55;font-size:15px;margin-bottom:20px}
+.pitch p{color:#c7cedb;line-height:1.55;font-size:15px;margin-bottom:20px}
 .pitch .feature{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
 .pitch .feature .dot{width:8px;height:8px;border-radius:50%;background:var(--brand-2);flex-shrink:0;margin-top:5px}
-.pitch .feature span{font-size:13.5px;color:#d6d1e4;line-height:1.4}
+.pitch .feature span{font-size:13.5px;color:#d3d9e4;line-height:1.4}
 .phone{width:340px;height:720px;background:#000;border-radius:46px;padding:12px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
 .screen{position:relative;width:100%;height:100%;background:var(--bg);border-radius:36px;overflow:hidden;display:flex;flex-direction:column}
 .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:140px;height:26px;background:#000;border-radius:0 0 18px 18px;z-index:5}
 .topbar{background:var(--brand);color:#fff;padding:46px 18px 14px;display:flex;align-items:center;gap:10px}
-.logo{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+.wordmark{width:46px;height:46px;border-radius:14px;background:#0c1322;border:1.5px solid var(--brand-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:15px;color:#fff;text-shadow:0 0 6px rgba(201,162,74,.6);flex:none}
+.wordmark span{color:var(--brand-2)}
 .topbar h2{font-size:16px;font-weight:700}
 .topbar small{display:block;opacity:.85;font-weight:400;font-size:11px}
 .content{flex:1;overflow-y:auto;padding:16px;scrollbar-width:none}
@@ -37,106 +42,296 @@ body{font-family:var(--font);background:linear-gradient(160deg,#15101f,#2a1a35);
 .view{display:none}
 .view.active{display:block;animation:fade .22s}
 @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1}}
-.hero{background:linear-gradient(135deg,var(--brand),#9B6BFF);color:#fff;border-radius:var(--radius);padding:18px;margin-bottom:12px}
-.hero h3{font-size:17px;margin-bottom:5px}
-.hero p{font-size:12.5px;opacity:.92;line-height:1.45}
-.card{background:var(--card);border-radius:var(--radius);padding:15px;margin-bottom:12px;box-shadow:0 3px 14px rgba(40,20,60,.07)}
+.herohead{margin:0 0 10px;min-height:48px;transition:opacity .25s ease}
+.herohead b{display:block;font-family:var(--font-display);font-size:16px;color:var(--ink);margin-bottom:2px}
+.herohead span{display:block;font-size:12px;line-height:1.45;color:var(--muted)}
+.heroslider{position:relative;height:170px;border-radius:var(--radius);overflow:hidden;margin-bottom:12px;box-shadow:0 6px 22px rgba(19,26,44,.25)}
+.heroslider .slide{position:absolute;inset:0;opacity:0;transform:scale(1.04);transition:opacity .7s ease, transform 6s ease;display:flex;align-items:center;justify-content:center}
+.heroslider .slide.active{opacity:1;transform:scale(1)}
+.heroslider .dots{position:absolute;bottom:12px;right:14px;display:flex;gap:5px;z-index:2}
+.heroslider .dots i{display:block;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 1px 4px rgba(0,0,0,.2);transition:all .35s ease}
+.heroslider .dots i.active{background:var(--brand-2);width:18px;border-radius:5px}
+.heroslider .badge-pill{position:absolute;top:13px;left:14px;z-index:2;background:rgba(15,18,30,.55);backdrop-filter:blur(2px);color:#fff;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:5px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.25)}
+.card{background:var(--card);border-radius:var(--radius);padding:15px;margin-bottom:12px;box-shadow:0 3px 14px rgba(19,26,44,.08)}
 .card h3{font-size:14px;font-weight:700;margin-bottom:5px}
 .card p{font-size:12.5px;color:var(--muted);line-height:1.45}
+.quote{border-left:3px solid var(--brand-2);padding-left:12px;font-style:italic;color:var(--ink);font-size:12.5px;line-height:1.55}
 .row{display:flex;align-items:center;gap:12px}
 .thumb{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--brand-2));flex:none;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff}
+.thumb svg{width:21px;height:21px}
+.ric{width:13px;height:13px;vertical-align:-2px;margin-right:5px;color:var(--muted);flex:none}
+.bic{width:13px;height:13px;vertical-align:-2px;margin-right:4px}
 .btn{display:block;width:100%;text-align:center;background:var(--brand);color:#fff;border:none;padding:13px;border-radius:12px;font-size:14px;font-weight:700;margin-top:10px;cursor:pointer}
-.btn.alt{background:var(--brand-2)}
-.stat{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #ece8f4}
+.btn.alt{background:var(--brand-2);color:#3A2D09}
+.ep-actions{display:flex;gap:8px;margin-top:10px}
+.btn-sm{flex:1;text-align:center;border:1.5px solid var(--brand);background:transparent;color:var(--brand);padding:9px 6px;border-radius:10px;font-size:10.5px;font-weight:700;cursor:pointer}
+.btn-sm.alt{background:var(--brand);color:#fff}
+.stat{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #ece6d8}
 .stat:last-child{border:none}
 .stat span{font-size:12.5px;color:var(--muted)}
 .stat b{color:var(--brand);font-size:18px;font-weight:800}
-.tag{display:inline-block;background:rgba(91,60,196,.1);color:var(--brand);font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;margin:0 5px 5px 0}
+.tag{display:inline-block;background:rgba(201,162,74,.16);color:#8A6A1F;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;margin:0 5px 5px 0}
 .badge{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:10px}
-.badge.programme{background:rgba(255,122,69,.14);color:#c1490f}
+.badge.nouveau{background:rgba(201,162,74,.22);color:#7D5F17}
+.badge.programme{background:rgba(201,162,74,.16);color:#8A6A1F}
 .badge.brouillon{background:rgba(107,114,128,.14);color:#4b5563}
 .badge.publie{background:rgba(16,185,129,.14);color:#059669}
-.plan-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #ece8f4}
-.plan-row:last-child{border:none}
-.plan-row .info h4{font-size:13px;font-weight:700;margin-bottom:2px}
-.plan-row .info p{font-size:11px;color:var(--muted)}
+.order-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #ece6d8}
+.order-row:last-child{border:none}
+.order-row .info h4{font-size:13px;font-weight:700;margin-bottom:2px}
+.order-row .info p{font-size:11px;color:var(--muted)}
 .msg{max-width:84%;padding:9px 12px;border-radius:12px;font-size:12px;line-height:1.4;margin-bottom:8px}
-.msg.them{background:#fff;border:1px solid #ece8f4;align-self:flex-start;border-bottom-left-radius:4px}
+.msg.them{background:#fff;border:1px solid #ece6d8;align-self:flex-start;border-bottom-left-radius:4px}
 .msg-wrap{display:flex;flex-direction:column}
 .msg-wrap .who{font-size:11px;font-weight:700;color:var(--brand);margin-bottom:3px}
-.tabbar{display:flex;background:var(--card);border-top:1px solid #ece8f4}
+.modeswitch{display:flex;gap:6px;padding:10px 16px;background:var(--brand)}
+.modeswitch button{flex:1;padding:8px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.14);color:#fff;font-size:11px;font-weight:700;cursor:pointer}
+.modeswitch button.active{background:#fff;color:var(--brand)}
+.tabbar{display:flex;background:var(--card);border-top:1px solid #ece6d8}
 .tab{flex:1;padding:9px 4px;text-align:center;font-size:10.5px;color:var(--muted);border:none;background:none;cursor:pointer}
 .tab.active{color:var(--brand);font-weight:700}
-.tab .ic{display:block;font-size:17px;margin-bottom:1px}
+.tab .ic{display:block;width:19px;height:19px;margin:0 auto 3px}
 </style>
 </head>
 <body>
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+  <defs>
+    <symbol id="ic-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 11.5 12 4l8 7.5"/>
+      <path d="M6 10v8.5a1 1 0 0 0 1 1h3.5v-5h3v5H17a1 1 0 0 0 1-1V10"/>
+    </symbol>
+    <symbol id="ic-film" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3.5" y="5.5" width="17" height="13" rx="3"/>
+      <path d="M10.5 9.7v4.6l4-2.3z" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="ic-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4.5 19.5h3.2L18.6 8.6a2 2 0 0 0-2.9-2.9L4.8 16.6z"/>
+      <path d="M13.2 7.4l3.4 3.4"/>
+    </symbol>
+    <symbol id="ic-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9.2" cy="8.4" r="2.9"/>
+      <path d="M3.8 18.7c.5-2.7 2.6-4.3 5.4-4.3s4.9 1.6 5.4 4.3"/>
+      <circle cx="16.6" cy="8.9" r="2.3"/>
+      <path d="M15.3 14.6c1.9.3 3.4 1.6 3.8 3.9"/>
+    </symbol>
+    <symbol id="ic-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3.6" y="5.2" width="16.8" height="14.6" rx="2.6"/>
+      <path d="M3.6 9.6h16.8M8 3.4v3.4M16 3.4v3.4"/>
+      <circle cx="8.2" cy="13.6" r=".95" fill="currentColor" stroke="none"/>
+      <circle cx="12" cy="13.6" r=".95" fill="currentColor" stroke="none"/>
+      <circle cx="15.8" cy="13.6" r=".95" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="ic-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 20V12.5M9.3 20V6.2M14.6 20v-8M20 20H4"/>
+    </symbol>
+    <symbol id="ic-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3.4" y="4.4" width="17.2" height="12.4" rx="3.4"/>
+      <path d="M8 16.8v3.6l4-3.6"/>
+    </symbol>
+    <symbol id="ic-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="8.6"/>
+      <path d="M10.1 8.7v6.6l5.6-3.3z" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="ic-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9.2" y="3.4" width="5.6" height="10.4" rx="2.8"/>
+      <path d="M6.4 11a5.6 5.6 0 0 0 11.2 0"/>
+      <path d="M12 16.6v3.4M9 20h6"/>
+    </symbol>
+  </defs>
+</svg>
 <div class="stage">
 
   <div class="pitch">
-    <div class="kicker">Média · Vies Croisées</div>
-    <h1>Vies Croisées Studio</h1>
-    <p>Ton studio pour piloter ta chaîne vidéo et ton blog depuis un seul endroit, sans jongler entre dix outils.</p>
-    <div class="feature"><div class="dot"></div><span>Calendrier éditorial unique : vidéos et articles au même endroit</span></div>
-    <div class="feature"><div class="dot"></div><span>Audience consolidée — YouTube, blog, Instagram, en un coup d'œil</span></div>
-    <div class="feature"><div class="dot"></div><span>Messages et commentaires de ta communauté centralisés</span></div>
-    <div class="feature"><div class="dot"></div><span>Idées de sujets et titres suggérés selon ce qui marche</span></div>
+    <div class="kicker">Média · Émission · Vies Croisées</div>
+    <h1>Vies Croisées — le site</h1>
+    <p>Le site qui prolonge ton émission au-delà de la diffusion : tes spectateurs y retrouvent les teasers, les épisodes complets et tes articles, pendant que toi tu pilotes tout depuis ton espace, sans jongler entre dix outils.</p>
+    <div class="feature"><div class="dot"></div><span>Teasers et épisodes complets, classés par thème, accessibles en un geste</span></div>
+    <div class="feature"><div class="dot"></div><span>Un blog qui prolonge chaque épisode entre deux diffusions</span></div>
+    <div class="feature"><div class="dot"></div><span>Les témoignages de ceux qui veulent partager leur chemin, centralisés</span></div>
+    <div class="feature"><div class="dot"></div><span>Bascule en un tap pour voir ce que vivent tes spectateurs : de la découverte au partage</span></div>
   </div>
 
   <div class="phone"><div class="screen">
     <div class="notch"></div>
     <div class="topbar">
-      <div class="logo">VC</div>
-      <div><h2>Vies Croisées Studio</h2><small>Bonjour Aïcha — 3 publications cette semaine</small></div>
+      <div class="wordmark">V<span>C</span></div>
+      <div><h2>Vies Croisées</h2><small>par Andréa Koné — nouvel épisode chaque semaine</small></div>
+    </div>
+
+    <div class="modeswitch">
+      <button class="active" onclick="setMode('viewer', this)">Le site (vue spectateur)</button>
+      <button onclick="setMode('andrea', this)">Espace Andréa</button>
     </div>
 
     <div class="content">
 
       <section class="view active" id="v1">
-        <div class="hero">
-          <h3>Bonjour Aïcha 👋</h3>
-          <p>Ton épisode "Partir ou rester : 3 destins croisés" est prévu vendredi. Le script est prêt à relire.</p>
+        <div class="herohead" id="herohead-viewer">
+          <b>Vies Croisées</b>
+          <span>La puissance du chemin comme voie de transformation profonde. Et si leur chemin éclairait le tien ?</span>
+        </div>
+        <div class="heroslider" id="hero-viewer">
+          <span class="badge-pill">Vies Croisées · par Andréa Koné</span>
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div class="slide active" data-title="Vies Croisées" data-text="La puissance du chemin comme voie de transformation profonde. Et si leur chemin éclairait le tien ?" style="background:linear-gradient(135deg,#1B2438,#2C3A5C)"></div>
+          <div class="slide" data-title="Épisode 1 — Entre Force et Vulnérabilité" data-text="« Se cacher derrière la force fatigue. S'autoriser à être vulnérable libère. » Le teaser est en ligne." style="background:linear-gradient(135deg,#21283F,#5B4A26)"></div>
+          <div class="slide" data-title="Ta vulnérabilité n'est pas une faiblesse" data-text="C'est une porte vers ta transformation. Découvre les chemins de celles et ceux qui ont traversé." style="background:linear-gradient(135deg,#1B2438,#3C3656)"></div>
+        </div>
+        <div class="card">
+          <h3>Le socle de l'émission</h3>
+          <p class="quote">« On parle souvent d'arrivée. Rarement du chemin. Pourtant, c'est là que tout se joue. »</p>
+        </div>
+        <div class="card row">
+          <div class="thumb"><svg><use href="#ic-play"/></svg></div>
+          <div><h3>Dernier épisode</h3><p>"Entre Force et Vulnérabilité" — elle se livre sans masque sur ce qui l'a vraiment transformée.</p></div>
+        </div>
+        <button class="btn" onclick="go('v2',document.querySelectorAll('#tabbar-viewer .tab')[1])">Voir tous les épisodes</button>
+      </section>
+
+      <section class="view" id="v2">
+        <div class="card"><h3>Épisodes</h3><p>Le teaser pour donner envie, l'épisode complet pour aller au bout du chemin.</p></div>
+
+        <div class="card">
+          <div class="row">
+            <div class="thumb"><svg><use href="#ic-film"/></svg></div>
+            <div><h3>Entre Force et Vulnérabilité</h3><p>Avec Aïcha M. — sur la force que cache la vulnérabilité</p></div>
+          </div>
+          <span class="tag">Transformation</span><span class="tag">Authenticité</span><span class="badge nouveau">Nouveau</span>
+          <div class="ep-actions">
+            <button class="btn-sm"><svg class="bic"><use href="#ic-play"/></svg>Teaser · 1 min 30</button>
+            <button class="btn-sm alt"><svg class="bic"><use href="#ic-film"/></svg>Épisode complet · 42 min</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="row">
+            <div class="thumb"><svg><use href="#ic-film"/></svg></div>
+            <div><h3>Partir ou rester : 3 destins croisés</h3><p>Avec Karim S., Fatou B. et Yves D. — trois chemins, trois choix de vie</p></div>
+          </div>
+          <span class="tag">Diaspora</span><span class="tag">Choix de vie</span><span class="badge programme">Vendredi 18h</span>
+          <div class="ep-actions">
+            <button class="btn-sm"><svg class="bic"><use href="#ic-play"/></svg>Teaser · 1 min 45</button>
+            <button class="btn-sm alt"><svg class="bic"><use href="#ic-film"/></svg>Épisode complet · bientôt</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="row">
+            <div class="thumb"><svg><use href="#ic-film"/></svg></div>
+            <div><h3>Le jour où j'ai tout reconstruit</h3><p>Avec Moussa K. — recommencer après avoir tout perdu</p></div>
+          </div>
+          <span class="tag">Résilience</span><span class="tag">Recommencement</span><span class="badge brouillon">À tourner</span>
+          <div class="ep-actions">
+            <button class="btn-sm"><svg class="bic"><use href="#ic-play"/></svg>Teaser · à venir</button>
+            <button class="btn-sm alt"><svg class="bic"><use href="#ic-film"/></svg>Épisode complet · à venir</button>
+          </div>
+        </div>
+
+        <button class="btn alt" onclick="go('v4',document.querySelectorAll('#tabbar-viewer .tab')[3])">Proposer mon témoignage</button>
+      </section>
+
+      <section class="view" id="v3">
+        <div class="card"><h3>Le blog</h3><p>Des textes qui vont plus loin que l'écran, pour prolonger chaque chemin entre deux diffusions.</p></div>
+
+        <div class="order-row">
+          <div class="info">
+            <h4><svg class="ric"><use href="#ic-pen"/></svg>Ta vulnérabilité n'est pas une faiblesse. C'est une porte.</h4>
+            <p>Lié à l'épisode "Entre Force et Vulnérabilité" · 4 min de lecture</p>
+          </div>
+          <span class="badge nouveau">Nouveau</span>
+        </div>
+        <div class="order-row">
+          <div class="info">
+            <h4><svg class="ric"><use href="#ic-pen"/></svg>Et si leur chemin éclairait le tien ?</h4>
+            <p>Réflexion · 3 min de lecture</p>
+          </div>
+          <span class="badge publie">Publié</span>
+        </div>
+        <div class="order-row">
+          <div class="info">
+            <h4><svg class="ric"><use href="#ic-pen"/></svg>5 questions à te poser avant de tout changer</h4>
+            <p>Guide · 5 min de lecture</p>
+          </div>
+          <span class="badge brouillon">À paraître</span>
+        </div>
+
+        <button class="btn">Lire le dernier article</button>
+      </section>
+
+      <section class="view" id="v4">
+        <div class="card">
+          <h3>Et si ton chemin éclairait celui d'un autre ?</h3>
+          <p class="quote">« Parler de son chemin, c'est tendre la main à quelqu'un d'autre. »</p>
+        </div>
+        <div class="card row">
+          <div class="thumb"><svg><use href="#ic-mic"/></svg></div>
+          <div><h3>Proposer mon témoignage</h3><p>Tu as traversé quelque chose qui pourrait éclairer le chemin d'un autre ? Raconte-le ici, en quelques lignes.</p></div>
+        </div>
+        <div class="card"><h3>Ce que dit la communauté</h3><p>7 messages et commentaires cette semaine.</p></div>
+        <div class="msg-wrap">
+          <span class="who">Marc-Aurèle K. — commentaire YouTube</span>
+          <div class="msg them">« Cet épisode m'a parlé direct, j'ai vécu exactement ça. Vous devriez creuser le sujet du retour au pays après plusieurs années. »</div>
+          <span class="who">Fatim D. — message Instagram</span>
+          <div class="msg them">« Est-ce que je peux proposer mon témoignage pour une prochaine vidéo ? Je suis partie d'Abidjan il y a 6 ans. »</div>
+          <span class="who">Yves B. — commentaire blog</span>
+          <div class="msg them">« Article juste et sans filtre. Merci de mettre des mots sur ce qu'on vit tous en silence. »</div>
+        </div>
+        <button class="btn alt">Suivre · YouTube, Instagram, newsletter</button>
+      </section>
+
+      <!-- Espace Andréa — comment elle pilote le site et son émission au quotidien -->
+      <section class="view" id="a1">
+        <div class="herohead" id="herohead-andrea">
+          <b>Bonjour Andréa</b>
+          <span>Ton épisode "Partir ou rester : 3 destins croisés" est prévu vendredi. Le teaser est prêt à publier.</span>
+        </div>
+        <div class="heroslider" id="hero-andrea">
+          <span class="badge-pill">Espace Andréa</span>
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div class="slide active" data-title="Bonjour Andréa" data-text="Ton épisode 'Partir ou rester : 3 destins croisés' est prévu vendredi. Le teaser est prêt à publier." style="background:linear-gradient(135deg,#1B2438,#2C3A5C)"></div>
+          <div class="slide" data-title="Ton calendrier, déjà prêt" data-text="Teasers, épisodes et articles classés par date de sortie, sans ressaisie ni double gestion." style="background:linear-gradient(135deg,#21283F,#5B4A26)"></div>
+          <div class="slide" data-title="Ta communauté, centralisée" data-text="Les commentaires et messages de tes spectateurs, au même endroit, prêts à recevoir une réponse." style="background:linear-gradient(135deg,#1B2438,#3C3656)"></div>
         </div>
         <div class="card">
           <h3>Cette semaine</h3>
-          <div class="stat"><span>Vidéos programmées</span><b>2</b></div>
+          <div class="stat"><span>Épisodes programmés</span><b>2</b></div>
           <div class="stat"><span>Articles en rédaction</span><b>1</b></div>
           <div class="stat"><span>Messages en attente</span><b>7</b></div>
         </div>
         <div class="card row">
-          <div class="thumb">▶</div>
+          <div class="thumb"><svg><use href="#ic-play"/></svg></div>
           <div><h3>Prochaine publication</h3><p>"Partir ou rester : 3 destins croisés" — vendredi 18h</p></div>
         </div>
-        <button class="btn" onclick="go('v2',document.querySelectorAll('.tab')[1])">Voir le calendrier éditorial</button>
+        <button class="btn" onclick="go('a2',document.querySelectorAll('#tabbar-andrea .tab')[1])">Voir le calendrier éditorial</button>
       </section>
 
-      <section class="view" id="v2">
-        <div class="card"><h3>Calendrier éditorial</h3><p>Vidéos et articles, classés par date de sortie.</p></div>
+      <section class="view" id="a2">
+        <div class="card"><h3>Calendrier éditorial</h3><p>Teasers, épisodes et articles, classés par date de sortie.</p></div>
 
-        <div class="plan-row">
+        <div class="order-row">
           <div class="info">
-            <h4>🎬 Partir ou rester : 3 destins croisés</h4>
-            <p>Vidéo · YouTube · Vendredi 12 juin</p>
+            <h4><svg class="ric"><use href="#ic-film"/></svg>Partir ou rester : 3 destins croisés</h4>
+            <p>Teaser + épisode · YouTube · Vendredi 12 juin</p>
           </div>
           <span class="badge programme">Programmé</span>
         </div>
-        <div class="plan-row">
+        <div class="order-row">
           <div class="info">
-            <h4>✍️ Ces Ivoiriens qui ont tout quitté pour Montreuil</h4>
+            <h4><svg class="ric"><use href="#ic-pen"/></svg>Ta vulnérabilité n'est pas une faiblesse</h4>
             <p>Article · Blog · Lundi 15 juin</p>
           </div>
           <span class="badge brouillon">Brouillon</span>
         </div>
-        <div class="plan-row">
+        <div class="order-row">
           <div class="info">
-            <h4>🎬 Maman au pays, fille à Paris : leur histoire</h4>
-            <p>Vidéo · YouTube · Mercredi 17 juin</p>
+            <h4><svg class="ric"><use href="#ic-film"/></svg>Le jour où j'ai tout reconstruit</h4>
+            <p>Tournage · Mercredi 17 juin</p>
           </div>
           <span class="badge brouillon">À tourner</span>
         </div>
-        <div class="plan-row">
+        <div class="order-row">
           <div class="info">
-            <h4>✍️ 5 questions que se posent ceux qui hésitent à rentrer</h4>
+            <h4><svg class="ric"><use href="#ic-pen"/></svg>Et si leur chemin éclairait le tien ?</h4>
             <p>Article · Blog · Vendredi 5 juin</p>
           </div>
           <span class="badge publie">Publié</span>
@@ -145,7 +340,7 @@ body{font-family:var(--font);background:linear-gradient(160deg,#15101f,#2a1a35);
         <button class="btn alt">+ Programmer un contenu</button>
       </section>
 
-      <section class="view" id="v3">
+      <section class="view" id="a3">
         <div class="card">
           <h3>Audience — 7 derniers jours</h3>
           <div class="stat"><span>Vues YouTube</span><b>18 400</b></div>
@@ -154,21 +349,21 @@ body{font-family:var(--font);background:linear-gradient(160deg,#15101f,#2a1a35);
           <div class="stat"><span>Partages Instagram</span><b>540</b></div>
         </div>
         <div class="card">
-          <h3>Ce qui cartonne en ce moment</h3>
-          <p>"Ces Ivoiriens qui ont réussi en France et sont rentrés au pays" continue de générer des vues 3 semaines après sa sortie. Un format à reproduire ?</p>
-          <span class="tag">Diaspora</span>
+          <h3>Ce qui résonne le plus en ce moment</h3>
+          <p>Le teaser "Entre Force et Vulnérabilité" continue de tourner 3 semaines après sa sortie. Les commentaires parlent tous de la même chose : se reconnaître dans une histoire qu'on n'osait pas raconter.</p>
+          <span class="tag">Transformation</span>
+          <span class="tag">Authenticité</span>
           <span class="tag">Témoignage</span>
-          <span class="tag">Retour au pays</span>
         </div>
       </section>
 
-      <section class="view" id="v4">
+      <section class="view" id="a4">
         <div class="card"><h3>Messages de ta communauté</h3><p>7 messages et commentaires à traiter.</p></div>
         <div class="msg-wrap">
           <span class="who">Marc-Aurèle K. — commentaire YouTube</span>
-          <div class="msg them">« Cet épisode m'a parlé direct, j'ai vécu exactement ça en arrivant à Bruxelles. Vous devriez faire un épisode sur la suite, le retour au pays après 10 ans. »</div>
+          <div class="msg them">« Cet épisode m'a parlé direct, j'ai vécu exactement ça. Vous devriez creuser le sujet du retour au pays après plusieurs années. »</div>
           <span class="who">Fatim D. — message Instagram</span>
-          <div class="msg them">« Bonsoir, est-ce que je peux proposer mon témoignage pour une prochaine vidéo ? Je suis partie d'Abidjan il y a 6 ans. »</div>
+          <div class="msg them">« Est-ce que je peux proposer mon témoignage pour une prochaine vidéo ? Je suis partie d'Abidjan il y a 6 ans. »</div>
           <span class="who">Yves B. — commentaire blog</span>
           <div class="msg them">« Article juste et sans filtre. Merci de mettre des mots sur ce qu'on vit tous en silence. »</div>
         </div>
@@ -177,11 +372,18 @@ body{font-family:var(--font);background:linear-gradient(160deg,#15101f,#2a1a35);
 
     </div>
 
-    <nav class="tabbar">
-      <button class="tab active" onclick="go('v1',this)"><span class="ic">🏠</span>Accueil</button>
-      <button class="tab" onclick="go('v2',this)"><span class="ic">🗓️</span>Calendrier</button>
-      <button class="tab" onclick="go('v3',this)"><span class="ic">📊</span>Audience</button>
-      <button class="tab" onclick="go('v4',this)"><span class="ic">💬</span>Communauté</button>
+    <nav class="tabbar" id="tabbar-viewer">
+      <button class="tab active" onclick="go('v1',this)"><svg class="ic"><use href="#ic-home"/></svg>Accueil</button>
+      <button class="tab" onclick="go('v2',this)"><svg class="ic"><use href="#ic-film"/></svg>Épisodes</button>
+      <button class="tab" onclick="go('v3',this)"><svg class="ic"><use href="#ic-pen"/></svg>Blog</button>
+      <button class="tab" onclick="go('v4',this)"><svg class="ic"><use href="#ic-users"/></svg>Rejoindre</button>
+    </nav>
+
+    <nav class="tabbar" id="tabbar-andrea" style="display:none">
+      <button class="tab active" onclick="go('a1',this)"><svg class="ic"><use href="#ic-home"/></svg>Accueil</button>
+      <button class="tab" onclick="go('a2',this)"><svg class="ic"><use href="#ic-calendar"/></svg>Calendrier</button>
+      <button class="tab" onclick="go('a3',this)"><svg class="ic"><use href="#ic-chart"/></svg>Audience</button>
+      <button class="tab" onclick="go('a4',this)"><svg class="ic"><use href="#ic-chat"/></svg>Communauté</button>
     </nav>
 
   </div></div>
@@ -194,6 +396,41 @@ function go(id, el){
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   if(el) el.classList.add('active');
   document.querySelector('.content').scrollTop = 0;
+}
+function startSlider(rootId, headId, ms){
+  var root = document.getElementById(rootId);
+  if(!root) return;
+  var head = document.getElementById(headId);
+  var slides = root.querySelectorAll('.slide');
+  var dots = root.querySelectorAll('.dots i');
+  var i = 0;
+  function writeHead(idx){
+    if(!head) return;
+    head.querySelector('b').textContent = slides[idx].getAttribute('data-title');
+    head.querySelector('span').textContent = slides[idx].getAttribute('data-text');
+  }
+  setInterval(function(){
+    slides[i].classList.remove('active');
+    dots[i].classList.remove('active');
+    i = (i + 1) % slides.length;
+    slides[i].classList.add('active');
+    dots[i].classList.add('active');
+    if(head){
+      head.style.opacity = 0;
+      setTimeout(function(){ writeHead(i); head.style.opacity = 1; }, 220);
+    }
+  }, ms);
+}
+startSlider('hero-viewer', 'herohead-viewer', 4200);
+startSlider('hero-andrea', 'herohead-andrea', 4700);
+function setMode(mode, btn){
+  document.querySelectorAll('.modeswitch button').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.getElementById('tabbar-viewer').style.display = (mode === 'viewer') ? 'flex' : 'none';
+  document.getElementById('tabbar-andrea').style.display = (mode === 'andrea') ? 'flex' : 'none';
+  var firstViewId = (mode === 'viewer') ? 'v1' : 'a1';
+  var firstTabbar = document.getElementById(mode === 'viewer' ? 'tabbar-viewer' : 'tabbar-andrea');
+  go(firstViewId, firstTabbar.querySelector('.tab'));
 }
 </script>
 </body>
