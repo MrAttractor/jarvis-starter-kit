@@ -469,9 +469,76 @@ serve(async (req) => {
       ppsd = {},
       memoire_cache = "",
       user_id = null,
+      slug = null,
+      client_contact = null,
+      conversation_id = null,
     } = await req.json();
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // ─── Mode public — assistant CLIENT généré par un entrepreneur ───────────
+    // Pas d'authentification : le visiteur discute avec l'assistant que
+    // l'entrepreneur a généré pour SES clients (system = client_assistant_prompt)
+    if (mode === "public") {
+      if (!slug) return new Response(JSON.stringify({ error: "slug requis" }), { status: 400, headers: { "Content-Type": "application/json", ...CORS } });
+
+      const { data: owner } = await supabase
+        .from("profiles")
+        .select("id, client_assistant_prompt, client_assistant_ready")
+        .eq("public_slug", slug)
+        .eq("client_assistant_ready", true)
+        .single();
+
+      if (!owner?.client_assistant_prompt) return new Response(JSON.stringify({ error: "Assistant introuvable" }), { status: 404, headers: { "Content-Type": "application/json", ...CORS } });
+
+      const formattedPublicMessages = (messages as Array<{ from: string; text: string }>).map((m) => ({
+        role: m.from === "me" ? "user" : "assistant",
+        content: m.text,
+      }));
+
+      const publicRes = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": ANTHROPIC_API_KEY,
+          "anthropic-version": "2023-06-01",
+        },
+        body: JSON.stringify({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 500,
+          system: owner.client_assistant_prompt,
+          messages: formattedPublicMessages,
+        }),
+      });
+
+      const publicData = await publicRes.json();
+      const publicReply = publicData?.content?.[0]?.text?.trim() ?? "Je reviens vers toi dans un instant.";
+
+      // Journal de la conversation côté entrepreneur — fire-and-forget
+      let convId = conversation_id;
+      try {
+        if (!convId) {
+          const { data: conv } = await supabase.from("conversations").insert({
+            user_id: owner.id,
+            titre: client_contact ? `Client — ${client_contact}` : "Conversation client",
+            is_public: true,
+            client_contact: client_contact || null,
+          }).select("id").single();
+          convId = conv?.id ?? null;
+        }
+        if (convId) {
+          const lastUser = formattedPublicMessages[formattedPublicMessages.length - 1];
+          await supabase.from("messages").insert([
+            { conversation_id: convId, user_id: owner.id, role: "user", contenu: lastUser?.content ?? "", is_public: true },
+            { conversation_id: convId, user_id: owner.id, role: "assistant", contenu: publicReply, is_public: true },
+          ]);
+        }
+      } catch { /* non-bloquant */ }
+
+      return new Response(JSON.stringify({ reply: publicReply, conversation_id: convId }), {
+        headers: { "Content-Type": "application/json", ...CORS },
+      });
+    }
 
     // ─── Principes MIROIR — bénéficient à TOUS les utilisateurs ──────────────
     // Chaque décision validée par Mac Arthur enrichit l'intelligence de tous les agents.

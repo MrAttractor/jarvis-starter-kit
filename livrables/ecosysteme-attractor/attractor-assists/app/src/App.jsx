@@ -22,6 +22,7 @@ import { CarnetAffairesScreen } from './screens/CarnetAffairesScreen';
 import { DechargeVocaleScreen } from './screens/DechargeVocaleScreen';
 import { MarketplaceScreen } from './screens/MarketplaceScreen';
 import MonAppScreen from './screens/MonAppScreen';
+import { PublicAssistantScreen } from './screens/PublicAssistantScreen';
 
 const TABS_USER_BASE = [
   { id: "dashboard",   label: "Accueil",     icon: "home"  },
@@ -45,6 +46,7 @@ const TABS_ADMIN = [
 
 export default function App() {
   const [phase, setPhase] = useState("loading"); // loading | login | onboarding | app
+  const [publicSlug, setPublicSlug] = useState(null); // ?c={slug} → assistant client public, sans auth
   const [loginKey, setLoginKey] = useState(0);   // force remount LoginScreen si loadProfile échoue
   const deferredPromptRef = useRef(null);
   const paymentReturnRef = useRef(null); // plan_id si retour paiement
@@ -108,8 +110,12 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // Détection retour paiement XPaye (?payment_done=1&plan=growth)
+    // Lien public assistant client (?c={slug}) — bascule AVANT toute logique d'auth
     const urlParams = new URLSearchParams(window.location.search);
+    const c = urlParams.get('c');
+    if (c) { setPublicSlug(c); return; }
+
+    // Détection retour paiement XPaye (?payment_done=1&plan=growth)
     if (urlParams.get('payment_done') === '1') {
       paymentReturnRef.current = urlParams.get('plan') ?? 'nouveau palier';
       window.history.replaceState({}, '', window.location.pathname);
@@ -141,6 +147,9 @@ export default function App() {
     const scroller = document.getElementById("aa-scroll");
     if (scroller) scroller.scrollTop = 0;
   };
+
+  // Lien public assistant client — écran isolé, sans auth ni navigation interne
+  if (publicSlug) return <Frame dark={false}><PublicAssistantScreen slug={publicSlug} /></Frame>;
 
   if (phase === "loading") return (
     <Frame dark={false}>
