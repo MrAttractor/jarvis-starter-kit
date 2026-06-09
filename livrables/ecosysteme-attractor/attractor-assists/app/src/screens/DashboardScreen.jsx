@@ -87,6 +87,8 @@ export function DashboardScreen({ go, notify, profile }) {
   const [unreadNotifs, setUnreadNotifs] = useState(0);
   const [carnetCount, setCarnetCount] = useState(0);
   const [staleCount, setStaleCount]   = useState(0);
+  const [dmvToday, setDmvToday]       = useState(null);
+  const [dmvCopied, setDmvCopied]     = useState(null);
 
   const first    = profile?.prenom        || '';
   const nomAss   = profile?.nom_assistant || 'Attractor';
@@ -106,13 +108,14 @@ export function DashboardScreen({ go, notify, profile }) {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
         const today = new Date().toISOString().slice(0, 10);
-        const [gamifRes, usageRes, ppsdRes, countRes, notifsRes, carnetRes] = await Promise.all([
+        const [gamifRes, usageRes, ppsdRes, countRes, notifsRes, carnetRes, dmvRes] = await Promise.all([
           supabase.from('gamification').select('streak,niveau,xp').eq('user_id', user.id).maybeSingle(),
           supabase.from('usage_daily').select('nb_messages').eq('user_id', user.id).eq('jour', today).maybeSingle(),
           supabase.from('ppsd').select('user_id').eq('user_id', user.id).maybeSingle(),
           supabase.rpc('get_user_count'),
           supabase.from('notifications').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('lu', false),
           supabase.from('carnet_affaires').select('id,statut,type,derniere_interaction').eq('user_id', user.id),
+          supabase.from('dmv_queue').select('insight,message_wa,contenu,question,secteur').eq('user_id', user.id).eq('jour', today).maybeSingle(),
         ]);
         if (gamifRes.data) setGamif(gamifRes.data);
         if (usageRes.data) setUsedToday(usageRes.data.nb_messages);
@@ -127,6 +130,7 @@ export function DashboardScreen({ go, notify, profile }) {
             new Date(e.derniere_interaction).getTime() < cutoff
           ).length);
         }
+        if (dmvRes.data) setDmvToday(dmvRes.data);
       } catch {}
     };
     load();
@@ -322,6 +326,116 @@ export function DashboardScreen({ go, notify, profile }) {
             </div>
           </div>
         </button>
+
+        {/* ── Action du jour (DMV) ───────────────────────────────────── */}
+        {(() => {
+          const isFree = ['decouverte', 'decouverte_eu', 'gratuit'].includes(planCode);
+          const copyField = (text, key) => {
+            navigator.clipboard.writeText(text).then(() => {
+              setDmvCopied(key);
+              setTimeout(() => setDmvCopied(null), 2000);
+            });
+          };
+
+          if (isFree) {
+            return (
+              <div className="rounded-[20px] overflow-hidden border border-growth/25"
+                style={{ background: 'linear-gradient(150deg,#f0faf3,#e8f5ec)' }}>
+                <div className="px-4 pt-4 pb-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-7 h-7 rounded-lg bg-growth/15 flex items-center justify-center flex-shrink-0">
+                      <Icon name="trend" size={15} className="text-growth" />
+                    </div>
+                    <span className="text-[10.5px] font-bold text-growth uppercase tracking-[.1em]">Action du jour</span>
+                  </div>
+                  <h4 className="font-display font-extrabold text-[15px] text-charbon leading-snug mb-2">
+                    {nomAss} a préparé ton action du matin
+                  </h4>
+                  <div className="rounded-[14px] bg-white/60 backdrop-blur-sm border border-growth/15 px-4 py-3 mb-3 select-none">
+                    <p className="text-[13px] text-g400 blur-sm leading-relaxed select-none">
+                      Ce matin les clients cherchent X dans ton secteur. Voici le message WhatsApp à envoyer maintenant...
+                    </p>
+                  </div>
+                  <button onClick={() => go('paliers')}
+                    className="w-full flex items-center justify-between px-4 py-3 rounded-[14px] bg-growth text-white active:opacity-85 transition">
+                    <span className="text-[13px] font-bold">Activer Growth pour voir</span>
+                    <Icon name="arrow" size={15} className="text-white" />
+                  </button>
+                </div>
+              </div>
+            );
+          }
+
+          if (!dmvToday) return null;
+
+          return (
+            <div className="rounded-[20px] overflow-hidden border border-growth/20"
+              style={{ background: 'linear-gradient(150deg,#f0faf3,#fafff8)' }}>
+              <div className="px-4 pt-4 pb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-growth/15 flex items-center justify-center flex-shrink-0">
+                      <Icon name="trend" size={15} className="text-growth" />
+                    </div>
+                    <span className="text-[10.5px] font-bold text-growth uppercase tracking-[.1em]">Action du jour</span>
+                  </div>
+                  {dmvToday.secteur && (
+                    <span className="text-[10px] font-semibold text-g400 bg-white/70 rounded-full px-2.5 py-1 border border-growth/15">
+                      {dmvToday.secteur}
+                    </span>
+                  )}
+                </div>
+
+                {/* Insight */}
+                {dmvToday.insight && (
+                  <p className="text-[13.5px] font-semibold text-charbon leading-snug mb-3">
+                    {dmvToday.insight}
+                  </p>
+                )}
+
+                {/* Message WA */}
+                {dmvToday.message_wa && (
+                  <div className="rounded-[14px] bg-white border border-growth/15 px-3.5 py-3 mb-2.5">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[10.5px] font-bold text-growth uppercase tracking-[.08em]">Message WhatsApp</span>
+                      <button
+                        onClick={() => copyField(dmvToday.message_wa, 'wa')}
+                        className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-growth/10 text-growth text-[10.5px] font-bold active:opacity-70 transition">
+                        <Icon name={dmvCopied === 'wa' ? 'check' : 'copy'} size={11} />
+                        {dmvCopied === 'wa' ? 'Copié' : 'Copier'}
+                      </button>
+                    </div>
+                    <p className="text-[12.5px] text-g700 leading-relaxed">{dmvToday.message_wa}</p>
+                  </div>
+                )}
+
+                {/* Contenu post */}
+                {dmvToday.contenu && (
+                  <div className="rounded-[14px] bg-white border border-growth/15 px-3.5 py-3 mb-2.5">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[10.5px] font-bold text-growth uppercase tracking-[.08em]">Post / Statut</span>
+                      <button
+                        onClick={() => copyField(dmvToday.contenu, 'post')}
+                        className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-growth/10 text-growth text-[10.5px] font-bold active:opacity-70 transition">
+                        <Icon name={dmvCopied === 'post' ? 'check' : 'copy'} size={11} />
+                        {dmvCopied === 'post' ? 'Copié' : 'Copier'}
+                      </button>
+                    </div>
+                    <p className="text-[12.5px] text-g700 leading-relaxed">{dmvToday.contenu}</p>
+                  </div>
+                )}
+
+                {/* Question client */}
+                {dmvToday.question && (
+                  <div className="flex items-start gap-2.5 px-3.5 py-3 rounded-[14px] bg-orange/8 border border-orange/15">
+                    <Icon name="spark" size={15} className="text-orange flex-shrink-0 mt-0.5" />
+                    <p className="text-[12.5px] font-semibold text-charbon leading-snug">{dmvToday.question}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Conseil automatique : clients inactifs */}
         {staleCount > 0 && (

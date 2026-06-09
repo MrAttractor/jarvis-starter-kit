@@ -125,6 +125,37 @@ Deno.serve(async () => {
       }
     }
 
+    // DMV du jour : notif pour les utilisateurs Growth+ qui ont une DMV non livrée
+    const today = new Date().toISOString().slice(0, 10);
+    const { data: pendingDmvs } = await supabase
+      .from("dmv_queue")
+      .select("user_id, insight")
+      .eq("jour", today)
+      .eq("delivered", false);
+
+    for (const dmv of pendingDmvs ?? []) {
+      const prof = (profiles ?? []).find((p) => p.id === dmv.user_id);
+      if (!prof) continue;
+      if (notifiedUserIds.has(dmv.user_id)) continue;
+      inserts.push({
+        user_id: dmv.user_id,
+        type: "agent",
+        titre: `Ton action du jour est prête`,
+        corps: dmv.insight ?? "Awa a préparé une action personnalisée pour toi ce matin.",
+      });
+      notifiedUserIds.add(dmv.user_id);
+    }
+
+    // Marquer les DMV comme livrées
+    if ((pendingDmvs ?? []).length > 0) {
+      const ids = (pendingDmvs ?? []).map((d) => d.user_id);
+      await supabase
+        .from("dmv_queue")
+        .update({ delivered: true })
+        .in("user_id", ids)
+        .eq("jour", today);
+    }
+
     if (inserts.length > 0) {
       await supabase.from("notifications").insert(inserts);
     }
