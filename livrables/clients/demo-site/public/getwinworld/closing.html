@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GetWinWorld — Proposition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --terra: #8C3520;
+      --terra-d: rgba(140,53,32,0.07);
+      --ink: #1A1614;
+      --ink2: #3D3330;
+      --muted: #9A8E87;
+      --border: #E6DED6;
+      --bg3: #F4F0EB;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Space Grotesk',sans-serif;
+      color:var(--ink);
+      background:#fff;
+      max-width:680px;
+      margin:0 auto;
+      padding:40px 32px 60px;
+      line-height:1.6;
+    }
+
+    /* HEADER */
+    .doc-header { display:flex; align-items:center; justify-content:space-between; padding-bottom:24px; border-bottom:2px solid var(--terra); margin-bottom:32px; }
+    .doc-brand { display:flex; align-items:center; gap:10px; }
+    .doc-mark { width:36px; height:36px; background:var(--terra); display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Spectral',serif; font-size:14px; font-weight:600; }
+    .doc-name { font-family:'Spectral',serif; font-size:20px; font-weight:600; }
+    .doc-sub { font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-top:1px; }
+    .doc-meta { text-align:right; font-size:12px; color:var(--muted); }
+    .doc-meta strong { color:var(--ink); display:block; font-size:13px; margin-bottom:2px; }
+
+    /* HERO SECTION */
+    .doc-hero { background:var(--terra); color:#fff; padding:28px 28px 24px; margin-bottom:32px; }
+    .doc-hero-label { font-size:10px; letter-spacing:0.16em; text-transform:uppercase; opacity:0.7; margin-bottom:8px; }
+    .doc-hero-title { font-family:'Spectral',serif; font-size:26px; font-weight:300; line-height:1.25; margin-bottom:8px; }
+    .doc-hero-title em { font-style:italic; }
+    .doc-hero-sub { font-size:13px; opacity:0.85; line-height:1.55; }
+
+    /* SECTIONS */
+    .section { margin-bottom:32px; }
+    .section-num { font-size:10px; color:var(--terra); letter-spacing:0.16em; text-transform:uppercase; font-weight:600; margin-bottom:6px; }
+    .section-title { font-family:'Spectral',serif; font-size:19px; font-weight:400; margin-bottom:12px; }
+    .section-text { font-size:13px; color:var(--ink2); line-height:1.7; }
+
+    /* COMPARE */
+    .compare { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px; }
+    .compare-col { padding:14px 16px; }
+    .compare-col.before { background:var(--bg3); border:1px solid var(--border); }
+    .compare-col.after { background:var(--terra-d); border:1px solid rgba(140,53,32,0.2); }
+    .compare-head { font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; }
+    .compare-head.red { color:#C0392B; }
+    .compare-head.green { color:#2E7D52; }
+    .compare-item { font-size:12px; color:var(--ink2); padding:4px 0; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; gap:7px; }
+    .compare-item:last-child { border-bottom:none; }
+    .compare-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+    .compare-dot.red { background:#C0392B; }
+    .compare-dot.green { background:#2E7D52; }
+
+    /* FEATURES */
+    .features { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+    .feature { padding:14px 16px; border:1px solid var(--border); background:#fff; }
+    .feature-title { font-size:13px; font-weight:600; color:var(--ink); margin-bottom:4px; }
+    .feature-desc { font-size:12px; color:var(--muted); line-height:1.5; }
+
+    /* PRICE */
+    .price-block { background:var(--terra); color:#fff; padding:22px 24px; margin-top:14px; }
+    .price-row { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px; }
+    .price-row:last-child { margin-bottom:0; padding-top:10px; border-top:1px solid rgba(255,255,255,0.2); }
+    .price-item { font-size:13px; opacity:0.85; }
+    .price-val { font-family:'Spectral',serif; font-size:20px; font-weight:400; }
+    .price-note { font-size:11px; opacity:0.7; margin-top:6px; }
+
+    /* STEPS */
+    .steps { margin-top:14px; counter-reset:step; }
+    .step { display:flex; align-items:flex-start; gap:14px; padding:14px 0; border-bottom:1px solid var(--border); }
+    .step:last-child { border-bottom:none; }
+    .step-num { width:28px; height:28px; background:var(--terra); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; flex-shrink:0; font-family:'Spectral',serif; }
+    .step-content { }
+    .step-title { font-size:14px; font-weight:600; color:var(--ink); margin-bottom:3px; }
+    .step-desc { font-size:12px; color:var(--muted); }
+
+    /* FOOTER */
+    .doc-footer { margin-top:40px; padding-top:20px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+    .footer-brand { font-size:12px; color:var(--muted); }
+    .footer-brand strong { color:var(--ink); }
+    .footer-valid { font-size:11px; color:var(--muted); text-align:right; }
+
+    /* PRINT */
+    @media print {
+      body { padding:24px 28px; }
+      .no-print { display:none; }
+    }
+
+    /* CTA PRINT */
+    .print-btn {
+      position:fixed; bottom:24px; right:24px;
+      background:var(--terra); color:#fff; border:none;
+      padding:12px 20px; font-family:'Space Grotesk',sans-serif;
+      font-size:13px; font-weight:600; cursor:pointer; letter-spacing:0.03em;
+      display:flex; align-items:center; gap:8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="doc-brand">
+      <div class="doc-mark">GW</div>
+      <div>
+        <div class="doc-name">GetWinWorld</div>
+        <div class="doc-sub">Personal Shopper</div>
+      </div>
+    </div>
+    <div class="doc-meta">
+      <strong>Proposition commerciale</strong>
+      Préparée pour Charles<br>
+      Juin 2026 · Réf. GWW-PROP-001
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="doc-hero">
+    <div class="doc-hero-label">Votre espace client digital</div>
+    <div class="doc-hero-title">Fini les 90 photos WhatsApp.<br><em>Vos clients méritent mieux.</em></div>
+    <div class="doc-hero-sub">Un lien unique partagé sur WhatsApp. Vos clients naviguent, choisissent, commandent — vous êtes notifié.</div>
+  </div>
+
+  <!-- SECTION 1 : LE CONSTAT -->
+  <div class="section">
+    <div class="section-num">01 · Le constat</div>
+    <div class="section-title">Ce qui coûte du temps et des ventes</div>
+    <div class="section-text">Aujourd'hui, chaque nouvelle collection signifie des dizaines de photos à envoyer manuellement sur WhatsApp. Les clients ne retrouvent plus les références, les commandes se perdent dans les conversations, et le suivi repose entièrement sur votre mémoire.</div>
+    <div class="compare">
+      <div class="compare-col before">
+        <div class="compare-head red">Aujourd'hui</div>
+        <div class="compare-item"><div class="compare-dot red"></div>90 photos envoyées manuellement</div>
+        <div class="compare-item"><div class="compare-dot red"></div>Clients perdus dans la conversation</div>
+        <div class="compare-item"><div class="compare-dot red"></div>Commandes non tracées</div>
+        <div class="compare-item"><div class="compare-dot red"></div>SAV géré par vocal WhatsApp</div>
+        <div class="compare-item"><div class="compare-dot red"></div>Aucun historique client</div>
+      </div>
+      <div class="compare-col after">
+        <div class="compare-head green">Avec GetWinWorld</div>
+        <div class="compare-item"><div class="compare-dot green"></div>Catalogue navigable en 1 lien</div>
+        <div class="compare-item"><div class="compare-dot green"></div>Client autonome, commande seul</div>
+        <div class="compare-item"><div class="compare-dot green"></div>Chaque commande référencée</div>
+        <div class="compare-item"><div class="compare-dot green"></div>SAV intégré, structuré</div>
+        <div class="compare-item"><div class="compare-dot green"></div>Historique et préférences sauvegardés</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 : CE QUI EST INCLUS -->
+  <div class="section">
+    <div class="section-num">02 · Ce qui est inclus</div>
+    <div class="section-title">Votre espace client en 4 modules</div>
+    <div class="section-text">Une application web accessible depuis n'importe quel téléphone, sans téléchargement. Un lien, partagé sur WhatsApp.</div>
+    <div class="features">
+      <div class="feature">
+        <div class="feature-title">Vitrine catalogue</div>
+        <div class="feature-desc">Photos produits organisées par catégorie, fiche détaillée, demande de pièce en 1 tap.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-title">Conseiller IA</div>
+        <div class="feature-desc">Assistant disponible 24h/24 — répond aux questions, guide le choix de taille, suggère des pièces selon l'occasion.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-title">Suivi des commandes</div>
+        <div class="feature-desc">Le client voit l'état de sa commande en temps réel. Vous êtes notifié à chaque nouvelle demande.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-title">Espace client + SAV</div>
+        <div class="feature-desc">Préférences style, adresses de livraison, historique d'achats, retours et réclamations structurés.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 : INVESTISSEMENT -->
+  <div class="section">
+    <div class="section-num">03 · L'investissement</div>
+    <div class="section-title">Transparent, sans surprise</div>
+    <div class="section-text">Paiement en deux fois à la signature et à la livraison. Aucun frais caché.</div>
+    <div class="price-block">
+      <div class="price-row">
+        <span class="price-item">Mise en place (site + catalogue + IA)</span>
+        <span class="price-val">350 €</span>
+      </div>
+      <div class="price-row">
+        <span class="price-item">Abonnement mensuel (hébergement + mises à jour)</span>
+        <span class="price-val">65 €/mois</span>
+      </div>
+      <div class="price-row">
+        <span class="price-item">Acompte au démarrage (50%)</span>
+        <span class="price-val">175 €</span>
+      </div>
+      <div class="price-note">Paiement par virement, Wave, ou mobile money · TVA non applicable, art. 293B CGI</div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 : DÉMARRAGE -->
+  <div class="section">
+    <div class="section-num">04 · Pour démarrer</div>
+    <div class="section-title">4 étapes, 7 jours ouvrés</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Confirmation par WhatsApp</div>
+          <div class="step-desc">Vous répondez "GO" à ce message. L'acompte de 175 € est réglé.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Envoi des photos et infos produits</div>
+          <div class="step-desc">Vous nous transmettez les photos de votre catalogue, noms, prix (optionnel), catégories.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Production et validation</div>
+          <div class="step-desc">Nous construisons votre espace en 5 jours. Vous validez avant la mise en ligne.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Mise en ligne et remise du lien</div>
+          <div class="step-desc">Votre lien est prêt. Solde réglé. Vous l'envoyez à vos clients dès aujourd'hui.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    <div class="footer-brand">Préparé par <strong>Mac-Arthur Kouassi</strong><br>Agence Mr Attractor · agenceattractor.com</div>
+    <div class="footer-valid">Valable 30 jours · Juin 2026<br>Réf. GWW-PROP-001</div>
+  </div>
+
+  <button class="print-btn no-print" onclick="window.print()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Imprimer / Enregistrer PDF
+  </button>
+
+</body>
+</html>
