@@ -201,3 +201,53 @@ Au choix selon l'énergie :
 Ce concept est la traduction directe de ce que Mac Arthur vit dans son Jarvis (ce workspace). Les 4 ingrédients d'un Jarvis (fichier "qui je suis" + mémoire qui grandit + skills + cerveau Claude) sont dupliqués chez chaque entrepreneur, avec son business à lui, le tout chargé du mindset Mac Arthur et de la méthode Attractor.
 
 **Principe** : tout ce qui est validé pour Mac Arthur dans son Jarvis (organisation, process, structure, automatisations) a vocation à être réinjecté dans Attractor Assists. Conséquence : garder les mises en place simples, claires, documentées et reproductibles pour un entrepreneur novice.
+
+---
+
+## Principe Architectural Central (non négociable)
+
+> **Chaque entrepreneur a son propre CLAUDE.md, construit dynamiquement.**
+
+### L'analogie directe
+
+| Jarvis Mac Arthur (ce workspace) | Jarvis Entrepreneur (Attractor Assists V3) |
+|---|---|
+| `CLAUDE.md` | System prompt dynamique chargé à chaque conversation |
+| `CONTEXT.md` | Profil entrepreneur (activité, clients, style, offre) |
+| `HISTORY.md` | Mémoire conversationnelle (`memoire_cache`) |
+| `context/import/` | Catalogue photos, messages exemples, documents uploadés |
+| `/prime` | L'anamnèse d'onboarding (la conversation de jour 1) |
+| `/update` | "Mets à jour mon profil" via conversation |
+| `/morning` | DMV quotidienne (action du jour générée chaque matin) |
+| `skills/` | Modules actifs : Fidelys, Veille, Commandes, Media Buyer |
+
+### Ce que le cerveau doit faire au démarrage de chaque conversation
+
+```
+1. Charger le profil entrepreneur (table profiles) → son CONTEXT.md à lui
+2. Charger ses 5 dernières mémoires (memoire_cache) → son HISTORY.md à lui
+3. Charger ses modules actifs (Fidelys activé ? Veille activée ?) → ses skills
+4. Injecter la base de connaissance Attractor → la méthode, le ton, les repères
+5. Construire le system prompt final → il sait qui il aide avant le premier mot
+```
+
+**La différence entre un chatbot générique et un vrai bras droit : le bras droit sait qui il est avant que tu parles.**
+
+### L'appartement vide
+
+Quand l'entrepreneur installe l'app, le Jarvis est vide. Il ne connaît rien. L'anamnèse de jour 1 est le moment où l'entrepreneur meuble son appartement : il nourrit son Jarvis de ses informations, son style, ses clients, son offre. Ce n'est pas un formulaire. C'est une première conversation qui construit le `CONTEXT.md` de l'entrepreneur.
+
+Chaque échange suivant enrichit sa mémoire. Le Jarvis apprend progressivement à l'anticiper, à écrire comme lui, à connaître ses habitudes. La complicité se construit dans le temps.
+
+### La base de connaissance (le socle immuable)
+
+En plus du profil de l'entrepreneur, chaque Jarvis est chargé de la **base de connaissance Attractor** :
+la méthode, les frameworks, le mindset, les repères de croissance, le ton.
+
+Source de vérité : `context/import/methode-md/BASE_CONNAISSANCE_ASSISTS.md`
+
+Cette base est commune à tous les entrepreneurs. Elle ne change pas selon l'utilisateur. Elle est le "Mac Arthur dupliqué" dans chaque Jarvis — ce qui fait qu'Assists n'est pas un outil générique mais un bras droit formé à une méthode précise.
+
+### Résumé en une phrase
+
+> Le system prompt de chaque Jarvis = Base de connaissance Attractor (fixe) + Profil de l'entrepreneur (dynamique) + Mémoire des échanges (croissante) + Modules actifs (contextuels).
