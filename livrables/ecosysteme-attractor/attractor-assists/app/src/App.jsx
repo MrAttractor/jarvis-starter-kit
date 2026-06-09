@@ -23,12 +23,13 @@ import { DechargeVocaleScreen } from './screens/DechargeVocaleScreen';
 import { MarketplaceScreen } from './screens/MarketplaceScreen';
 import MonAppScreen from './screens/MonAppScreen';
 import { PublicAssistantScreen } from './screens/PublicAssistantScreen';
+import { FidelysScreen } from './screens/FidelysScreen';
 
 const TABS_USER_BASE = [
-  { id: "dashboard",   label: "Accueil",     icon: "home"  },
-  { id: "assistants",  label: "Mon équipe",  icon: "users" },
-  { id: "marketplace", label: "Marketplace", icon: "grid"  },
-  { id: "profil",      label: "Profil",      icon: "user"  },
+  { id: "dashboard", label: "Accueil",   icon: "home"  },
+  { id: "assistants", label: "Mon équipe", icon: "users" },
+  { id: "fidelys",   label: "Fidelys",   icon: "star"  },
+  { id: "profil",    label: "Profil",    icon: "user"  },
 ];
 const TABS_USER_MONAPP = [
   { id: "dashboard",  label: "Accueil",    icon: "home"  },
@@ -186,6 +187,7 @@ export default function App() {
     methode:       <MéthodeScreen go={go} />,
     carnet:        <CarnetAffairesScreen go={go} />,
     dump:          <DechargeVocaleScreen go={go} profile={profile} />,
+    fidelys:       <FidelysScreen go={go} notify={notify} profile={profile} />,
     marketplace:   <MarketplaceScreen go={go} notify={notify} />,
     'mon-app':     <MonAppScreen go={go} profile={profile} />,
     install:     <InstallGuide
