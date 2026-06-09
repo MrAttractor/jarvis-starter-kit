@@ -7,6 +7,133 @@
 
 ---
 
+## 2026-06-09 (sessions 41-42 — V3 Chantier 2 + Architecture cerveau + Base de connaissance)
+
+### Chantier 2 livré — Agent Veille & Prospection (DMV quotidienne)
+
+- Edge functions déployées sur Supabase : `receive-veille` (webhook n8n → stocke les articles RSS) et `process-veille` (génère DMV personnalisée via Claude Haiku pour chaque utilisateur Growth+)
+- Migration SQL `0027_veille.sql` créée (tables `veille_tendances`, `dmv_queue`, `user_rss_config`) — à appliquer manuellement dans le dashboard Supabase
+- `DashboardScreen.jsx` mis à jour : card "Action du jour" affiche insight + message WA copiable + idée de post + question client (preview bloquée pour plan gratuit, CTA Growth)
+- `notify-auto` mis à jour : livre la DMV via notification agent à 8h, marque delivered=true
+- SOP n8n créé : `.claude/skills/veille-setup/SOP_n8n.md` (guide complet pour l'assistante, 5 étapes, URLs RSS par secteur, checklist test)
+
+### Architecture V3 — Principe du CLAUDE.md dynamique documenté
+
+- Principe central cadré et ajouté à `concept-v3.md` : chaque entrepreneur a son propre CLAUDE.md construit dynamiquement (profil + mémoire + modules actifs + base de connaissance)
+- Analogie directe : CONTEXT.md = table profiles, HISTORY.md = memoire_cache, /prime = anamnèse, /morning = DMV quotidienne, skills/ = modules Fidelys/Veille/Commandes
+- Le system prompt de chaque Jarvis = Base de connaissance Attractor (fixe) + Profil entrepreneur (dynamique) + Mémoire des échanges (croissante) + Modules actifs (contextuels)
+- Chantier technique suivant identifié : câbler ce principe dans `chat-assistant/index.ts` (chargement dynamique profil + mémoire + base à chaque conversation)
+
+### Base de connaissance Attractor créée
+
+- Fichier : `context/import/methode-md/BASE_CONNAISSANCE_ASSISTS.md`
+- Contenu : méthode ATTRACTOR complète (PPSD, AIDA/PASA, offre irrésistible, 4 étapes), mindset et phrases clés Mac Arthur, protocoles d'accompagnement selon situation, ton et registre, 3 paliers de croissance, logique appartement vivant
+- Ce fichier sera injecté dans le cerveau de chaque Jarvis entrepreneur comme socle commun immuable
+
+### Wireframes V3 — Claude Design
+
+- Prompts générés pour Claude Design : écrans PWA entrepreneur (Dashboard Jarvis, Conversation, Boutique, Onboarding), mini-site boutique client (Splash, Catalogue, Chat commande)
+- Concept onboarding "appartement vide" cadré : anamnèse conversationnelle + phase apprentissage style + complicité progressive (taquin semaine 3+)
+- Humanisation Assists : le Jarvis apprend à écrire comme l'utilisateur, s'adapte progressivement, ne plaisante pas avant d'avoir créé la complicité
+
+### Modèle économique — Réflexion
+
+- 3 modèles analysés : SaaS pur / Hybride abonnement+services / Commission transactions
+- Recommandation : Modèle B (Hybride) comme socle + Modèle C (Commission XPaye) comme upside Phase 2
+- Gratuit : mini-site boutique fonctionnel + Jarvis 20 msg. Bras Droit 12€/mois : Jarvis illimité + DMV + Fidelys + Veille
+- Mac Arthur continue la réflexion avant décision finale
+
+### Décision naming
+
+- "Jarvis" → "Assists" dans le produit Attractor Assists
+- Motivation : cohérence de marque, pas de perte des utilisateurs existants, "Assists" est le nom du produit et le nom de l'assistant
+
+---
+
+## 2026-06-09 (session 40 — LivraisonPro : design system + hero illustration)
+
+### LivraisonPro — refonte typographie + illustration hero
+
+- Polices remplacées : Syne → Plus Jakarta Sans (titres), DM Sans → Inter (body) — benchmark Yango/Uber Eats
+- Tous les font-weight:800 → 700 dans l'app et la landing (800 = marketing, 700 = UI pro)
+- Boutons/cards passés à weight 600 — plus léger, meilleure lisibilité mobile
+- Hero landing page : silhouette moto livreur SVG inline (zéro requête réseau) + double gradient orange/vert + overlay fondu noir
+- Redéployé sur Vercel — `https://livraisonpro-demo.vercel.app`
+- `livraison.agenceattractor.com` — DNS CNAME en propagation
+
+---
+
+## 2026-06-09 (session 39 — LivraisonPro : refacto + déploiement prod)
+
+### LivraisonPro — restructuration complète + mise en prod
+
+- Projet : marketplace livraison certifiée CI (livreur vérifié ↔ marchand)
+- Concept : livreur s'inscrit + se fait vérifier → accès réseau marchands ; marchand trouve un livreur en urgence ; GPS tracking = plan Pro (2000 FCFA/mois)
+- Refacto complète depuis fichier monolithique 1005 lignes → architecture multi-fichiers
+- Fichiers créés : `css/tokens.css`, `css/components.css`, `js/config.js`, `js/data.js`, `js/utils.js`, `js/app.js` (~700 lignes), `app.html`, `index.html` (landing marketplace), `manifest.json` (PWA), `vercel.json`
+- Backend : migration Supabase appliquée (6 tables : users, missions, bons, alertes, avis, tracking\_gps) sur projet `jwucinmwrksqfrmkymds.supabase.co`
+- Déploiement : Vercel — `https://livraisonpro-demo.vercel.app` (live)
+- Domaine : `livraison.agenceattractor.com` — CNAME ajouté chez GoDaddy, propagation en cours
+- Note : actions Supabase côté JS à brancher (actuellement legacy API GAS en fallback) — suffisant pour démo
+
+---
+
+## 2026-06-09 (session 38 — Prospect Elise / Racines + dossier commercial + tableau de pilotage)
+
+### Prospect Elise — Racines (app rencontres diaspora)
+
+- Projet identifié : app de rencontres pour interconnecter la diaspora africaine
+- Nom interne dans le workspace : Racines / InterCéli
+- Maquette existante : `demo.agenceattractor.com/racines` (rose/violet — à refaire en Noir & Or)
+- Document technique importé : `context/import/SITE DE RENCONTRE.txt` (cahier InterCéli V1, 8 modules, 4 sprints)
+- Features clés V1 : vérification vidéo KYC (liveness detection), matching IA (embeddings), RGPD lourd
+- Features V2 prévues : conciergerie (organisation RDV, chat), photos/vocaux, abonnement premium
+- Direction design : Noir & Or chaleureux, prestige, aucune référence "IA" ou "tech"
+- Elise basée en France, budget non connu, attend un point
+- Devis ATR-2026-0005 cadré en 4 phases progressives :
+  - Phase 1 Identité : 800 € (architecture + auth + RGPD + design system)
+  - Phase 2 Confiance : 700 € (KYC vidéo)
+  - Phase 3 Rencontre : 1 350 € (matching IA + découverte + mise en relation)
+  - Phase 4 Communauté : 650 € (messagerie + back-office modération)
+  - Total V1 : 3 500 € setup + 250 €/mois MRR
+- Dossier créé dans Notion CRM : statut "En contact", prochaine action "Attendre feedback devis 4 phases"
+
+### Dossier commercial créé
+
+Nouveau dossier `livrables/commercial/process-vente/` avec :
+- `PROCESS.md` : pipeline de vente complet en 8 étapes (détection → livraison), infos à collecter, messages WA templates, règles non négociables
+- `template-devis.md` : structure officielle avec mentions légales
+- `template-facture-acompte.md` : facture 50% à la commande
+- `template-facture-solde.md` : facture solde à la livraison
+- `template-bon-de-commande.md` : validation scope, verrouille le périmètre
+
+### Tableau de pilotage global Notion créé
+
+- Page : https://app.notion.com/p/37a4257524c681b39c20da2dd45c3dee
+- Contient : objectif CA, pipeline actif, projets internes, rappel process de vente, compteur devis ATR-2026-0001 à 0005, liens utiles
+
+### /prime mis à jour
+
+- Ajout d'une étape 2 : lecture du CRM Notion (collection Dossiers) à chaque démarrage de session
+- L'état réel du pipeline est désormais chargé automatiquement, qu'il ait été mis à jour par Mac Arthur ou par Claude
+
+---
+
+## 2026-06-09 (session 37 — CRM Notion agence créé)
+
+### CRM Mr Attractor dans Notion
+
+- Page hub créée : **"CRM — Mr Attractor"** (compte macarthur.nguessankouassi@gmail.com, pages privées)
+- Base de données **"Dossiers"** créée avec 15 champs : Nom, ID auto (ATR-xxx), Type, Famille, Statut, Zone, Setup HT, MRR, Prochaine action, Date action, WhatsApp, Email, Notes, Créé le, Modifié le
+- 8 dossiers pré-remplis depuis le contexte : J'envoie Express (Client, Acompte reçu), Rukayatou Saka (Prospect, Devis envoyé), MY NUGO (Client, En production), Andréa Koné — Vies Croisées (Prospect, Devis envoyé), Beracca Mastery Group (Prospect, Devis envoyé), Attractor Assists (Interne), Awa Influenceuse IA (Interne), Agent Commercial (Interne)
+- Vue **"Pipeline"** (Kanban groupé par Statut) ajoutée à la base
+- Confirmé : Claude peut lire et mettre à jour le CRM Notion directement depuis le Jarvis (MCP branché)
+
+### Lien direct
+https://app.notion.com/p/37a4257524c681e6a510c98e53210ffe
+
+---
+
 ## 2026-06-09 (session 36 — Mise à plat concept Attractor Assists V3)
 
 ### Déclic
