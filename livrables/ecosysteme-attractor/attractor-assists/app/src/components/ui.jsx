@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 export function Icon({ name, className = "", size = 22, stroke = 1.9 }) {
   const paths = {
@@ -43,6 +43,11 @@ export function Icon({ name, className = "", size = 22, stroke = 1.9 }) {
     volume: <><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></>,
     image:  <><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></>,
     star:   <><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></>,
+    package:<><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><line x1="12" y1="22.08" x2="12" y2="12"/></>,
+    bell:   <><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></>,
+    book:   <><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></>,
+    video:  <><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></>,
+    camera: <><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></>,
   }[name];
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
@@ -221,5 +226,51 @@ export function AppHeader({ title, sub, right, onBack }) {
       </div>
       {right}
     </div>
+  );
+}
+
+// Bouton micro inline pour saisie vocale dans les inputs (Web Speech API, pas de serveur)
+export function VoiceMic({ onTranscript, className = "" }) {
+  const [listening, setListening] = useState(false);
+  const recognitionRef = useRef(null);
+  const SR = typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition);
+
+  if (!SR) return null;
+
+  const toggle = () => {
+    if (listening) {
+      recognitionRef.current?.stop();
+      setListening(false);
+      return;
+    }
+    const recognition = new SR();
+    recognition.lang = 'fr-FR';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.onresult = (e) => {
+      const text = e.results[0][0].transcript;
+      onTranscript(text);
+      setListening(false);
+    };
+    recognition.onerror = () => setListening(false);
+    recognition.onend = () => setListening(false);
+    recognitionRef.current = recognition;
+    recognition.start();
+    setListening(true);
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      title={listening ? 'Arrêter' : 'Dicter'}
+      className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition active:scale-95 ${
+        listening
+          ? 'bg-orange text-white shadow-[0_4px_12px_-4px_rgba(242,92,5,.55)] animate-pulse'
+          : 'bg-g100 text-g500 hover:bg-g200'
+      } ${className}`}
+    >
+      <Icon name={listening ? 'micoff' : 'mic'} size={16} stroke={2} />
+    </button>
   );
 }

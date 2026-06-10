@@ -365,14 +365,33 @@ export function DechargeVocaleScreen({ go, profile }) {
                 </div>
               </>
             ) : (
-              <div className="flex flex-col items-center gap-4 py-8 text-center">
-                <p className="font-display font-bold text-[16px] text-charbon">Aucune entité détectée</p>
-                <p className="text-[13.5px] text-g400 max-w-[260px] leading-relaxed">
-                  {transcript
-                    ? "Mr Attractor n'a pas identifié de tâches, clients ou rappels dans votre message."
-                    : "Rien entendu. Assurez-vous de parler clairement."}
-                </p>
-                <Btn onClick={reset} variant="ghost">Réessayer</Btn>
+              <div className="flex flex-col gap-4 animate-[fadeUp_.4s_ease]">
+                {transcript ? (
+                  <>
+                    <div className="p-4 bg-white rounded-[16px] border border-g200">
+                      <p className="text-[11px] font-bold text-g400 uppercase tracking-wide mb-2">Tu as dit</p>
+                      <p className="text-[13.5px] text-g600 leading-relaxed italic">"{transcript}"</p>
+                    </div>
+                    <div className="p-4 bg-orange/6 rounded-[16px] border border-orange/15">
+                      <p className="text-[13px] font-semibold text-charbon mb-1">Assists n'a pas détecté de tâches ou clients.</p>
+                      <p className="text-[12.5px] text-g500 leading-relaxed">Tu peux envoyer ce message directement à Assists pour qu'il t'aide à le structurer.</p>
+                    </div>
+                    <div className="flex flex-col gap-2.5 pb-6">
+                      <Btn onClick={() => go('conversation', { assistant: 'coach', prefill: transcript })} iconRight="arrow" className="w-full">
+                        Envoyer à Assists
+                      </Btn>
+                      <button onClick={reset} className="text-center text-[13px] text-g400 font-semibold py-2">
+                        Recommencer
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center gap-4 py-8 text-center">
+                    <p className="font-display font-bold text-[16px] text-charbon">Rien entendu</p>
+                    <p className="text-[13.5px] text-g400 max-w-[260px] leading-relaxed">Assure-toi de parler clairement et de tenir le téléphone près de ta bouche.</p>
+                    <Btn onClick={reset} variant="ghost">Réessayer</Btn>
+                  </div>
+                )}
               </div>
             )}
           </div>

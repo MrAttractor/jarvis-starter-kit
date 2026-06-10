@@ -26,6 +26,7 @@ import { PublicAssistantScreen } from './screens/PublicAssistantScreen';
 import { FidelysScreen } from './screens/FidelysScreen';
 import { CatalogueScreen } from './screens/CatalogueScreen';
 import { CommandesScreen } from './screens/CommandesScreen';
+import { FormationScreen } from './screens/FormationScreen';
 
 const TABS_V3 = [
   { id: "dashboard",  label: "Assists",   icon: "chat"    },
@@ -183,6 +184,7 @@ export default function App() {
     veille:   <MacCockpitScreen go={go} notify={notify} section="veille"   profile={profile} />,
     intel:    <MacCockpitScreen go={go} notify={notify} section="intel"    profile={profile} />,
     methode:       <MéthodeScreen go={go} />,
+    formation:     <FormationScreen go={go} />,
     carnet:        <CarnetAffairesScreen go={go} />,
     dump:          <DechargeVocaleScreen go={go} profile={profile} />,
     fidelys:       <FidelysScreen go={go} notify={notify} profile={profile} />,
@@ -202,7 +204,7 @@ export default function App() {
   const COCKPIT_SECTIONS = ['carelle', 'pipeline', 'hub', 'veille', 'intel'];
   const SUBSCREEN_PARENT = {
     paliers: 'profil', methode: 'profil', notifications: 'profil', install: 'profil',
-    fidelys: 'profil', agenda: 'profil', carnet: 'profil',
+    fidelys: 'profil', agenda: 'profil', carnet: 'profil', formation: 'profil',
     conversation: 'dashboard', dump: 'dashboard',
     axes: 'dashboard', broadcasts: 'dashboard',
   };

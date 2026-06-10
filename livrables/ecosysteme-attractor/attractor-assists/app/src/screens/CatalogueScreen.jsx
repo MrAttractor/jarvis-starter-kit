@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Icon, Spinner } from '../components/ui';
+import { Icon, Spinner, VoiceMic } from '../components/ui';
 
 export function CatalogueScreen({ go, notify, profile }) {
   const [produits, setProduits] = useState([]);
@@ -33,20 +33,26 @@ export function CatalogueScreen({ go, notify, profile }) {
 
   const handleSave = async () => {
     if (!form.nom.trim()) return;
-    const { data: { user } } = await supabase.auth.getUser();
-    await supabase.from('produits_user').insert({
-      user_id: user.id,
-      nom: form.nom.trim(),
-      prix: parseInt(form.prix) || 0,
-      unite: form.unite,
-      categorie: form.categorie,
-      photo_url: form.photo_url,
-      actif: true,
-    });
-    setForm({ nom: '', prix: '', unite: 'unité', categorie: '', photo_url: '' });
-    setShowSheet(false);
-    notify('Produit ajouté');
-    loadProduits();
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { notify('Session expirée, reconnecte-toi'); return; }
+      const { error } = await supabase.from('produits_user').insert({
+        user_id: user.id,
+        nom: form.nom.trim(),
+        prix: parseInt(form.prix) || 0,
+        unite: form.unite,
+        categorie: form.categorie,
+        photo_url: form.photo_url,
+        actif: true,
+      });
+      if (error) throw error;
+      setForm({ nom: '', prix: '', unite: 'unité', categorie: '', photo_url: '' });
+      setShowSheet(false);
+      notify('Produit ajouté');
+      loadProduits();
+    } catch (e) {
+      notify(e?.message || "Erreur lors de l'ajout du produit");
+    }
   };
 
   const activeCount = produits.filter(p => p.actif !== false).length;
@@ -135,20 +141,23 @@ export function CatalogueScreen({ go, notify, profile }) {
             <div className="w-10 h-1 rounded-full bg-g200 mx-auto mb-1" />
             <div className="font-display font-bold text-[17px] text-charbon">Nouveau produit</div>
             {[
-              { label: 'Nom du produit *', key: 'nom', placeholder: 'Ex : Attiéké poisson' },
+              { label: 'Nom du produit *', key: 'nom', placeholder: 'Ex : Attiéké poisson', voice: true },
               { label: 'Prix (FCFA)', key: 'prix', placeholder: 'Ex : 2000', type: 'number' },
-              { label: 'Catégorie', key: 'categorie', placeholder: 'Ex : Plats, Jus, Desserts' },
+              { label: 'Catégorie', key: 'categorie', placeholder: 'Ex : Plats, Jus, Desserts', voice: true },
               { label: 'Lien photo (URL)', key: 'photo_url', placeholder: 'https://…' },
             ].map(f => (
               <div key={f.key}>
                 <label className="text-[12px] font-bold text-g500 block mb-1.5">{f.label}</label>
-                <input
-                  type={f.type || 'text'}
-                  placeholder={f.placeholder}
-                  value={form[f.key]}
-                  onChange={e => setForm(x => ({ ...x, [f.key]: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-g200 bg-sable text-[14px] text-charbon outline-none focus:border-orange"
-                />
+                <div className="flex gap-2">
+                  <input
+                    type={f.type || 'text'}
+                    placeholder={f.placeholder}
+                    value={form[f.key]}
+                    onChange={e => setForm(x => ({ ...x, [f.key]: e.target.value }))}
+                    className="flex-1 px-4 py-3 rounded-xl border border-g200 bg-sable text-[14px] text-charbon outline-none focus:border-orange"
+                  />
+                  {f.voice && <VoiceMic onTranscript={t => setForm(x => ({ ...x, [f.key]: t }))} className="self-center" />}
+                </div>
               </div>
             ))}
             <div>

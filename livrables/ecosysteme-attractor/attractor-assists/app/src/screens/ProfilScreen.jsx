@@ -55,7 +55,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
   const isPaid      = PLAN_IS_PAID.includes(planCode);
   const initials    = (profile?.prenom || 'AA').slice(0, 2).toUpperCase();
   const slug        = profile?.public_slug;
-  const boutiqueUrl = slug ? `${window.location.origin}?c=${slug}` : null;
+  const boutiqueUrl = slug ? `${window.location.origin}/b/${slug}` : null;
   const refCode     = profile?.referral_code;
   const refCount    = profile?.referral_count || 0;
 
@@ -139,7 +139,9 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
           <Divider />
           <PRow label="Mes clients" sub="Carnet de suivi" onClick={() => go('carnet')} />
           <Divider />
-          <PRow label="La Méthode" sub="5 écrits · Accès libre" onClick={() => go('methode')} />
+          <PRow label="Ma formation" sub="5 modules · À ton rythme" onClick={() => go('formation')} />
+          <Divider />
+          <PRow label="La Méthode" sub="Framework interactif" onClick={() => go('methode')} />
         </div>
 
         {/* Configuration */}

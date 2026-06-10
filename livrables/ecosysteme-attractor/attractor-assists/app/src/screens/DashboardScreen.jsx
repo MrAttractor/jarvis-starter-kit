@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { Icon } from '../components/ui';
+import { Icon, VoiceMic } from '../components/ui';
 
 const PLAN_MSG_LIMIT = { decouverte: 20, decouverte_eu: 20, gratuit: 20, growth: 100, growth_eu: 100, bras_droit: null };
 
@@ -118,14 +118,22 @@ export function DashboardScreen({ go, notify, profile }) {
         </button>
       </div>
 
+      {/* Bandeau défilant vert */}
+      <div className="overflow-hidden bg-[#1E5631] text-white text-[11.5px] font-bold py-1.5 px-0 flex-shrink-0" style={{ whiteSpace: 'nowrap' }}>
+        <span className="inline-block animate-[marquee_28s_linear_infinite]">
+          &nbsp;&nbsp;&nbsp;🟢 Partage ton lien boutique chaque matin · Réponds aux commandes dans les 2h · Une action = un client de plus · Ta boutique tourne même quand tu dors · Mets à jour ton catalogue régulièrement · &nbsp;&nbsp;&nbsp;🟢 Partage ton lien boutique chaque matin · Réponds aux commandes dans les 2h · Une action = un client de plus · Ta boutique tourne même quand tu dors · Mets à jour ton catalogue régulièrement ·
+        </span>
+        <style>{`@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }`}</style>
+      </div>
+
       {/* Scroll area */}
       <div className="flex-1 overflow-y-auto px-4 pb-4 flex flex-col gap-4" style={{ scrollbarWidth: 'none' }}>
 
-        {/* Card "On fait quoi aujourd'hui boss ?" */}
+        {/* Card "Action marketing à la demande" */}
         <div className="bg-white rounded-2xl border border-g200 p-4 shadow-[var(--shadow-card,0_6px_20px_-10px_rgba(26,23,20,.22))]">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[10.5px] font-bold text-orange uppercase tracking-[.12em]">
-              On fait quoi aujourd'hui boss ?
+              Action marketing à la demande
             </span>
             {dmvToday?.secteur && (
               <span className="text-[10.5px] font-semibold px-2.5 py-1 rounded-full bg-orange/8 text-orange border border-orange/15">
@@ -162,16 +170,21 @@ export function DashboardScreen({ go, notify, profile }) {
               </div>
             </>
           ) : (
-            <div className="py-3 text-center">
-              <p className="text-[13.5px] text-g500">
-                {nomAss} prépare ton action du jour…
-              </p>
-              <button
-                onClick={() => go('conversation', { assistant: 'coach', prefill: 'Donne-moi mon action du jour pour booster mes ventes.' })}
-                className="mt-3 px-4 py-2 rounded-xl bg-orange text-white text-[13px] font-bold active:opacity-80 transition"
-              >
-                Demander à {nomAss}
-              </button>
+            <div className="flex flex-col gap-2.5">
+              {[
+                { label: 'Génère-moi un post pour aujourd\'hui', prefill: 'Génère-moi un post engageant pour aujourd\'hui adapté à mon activité.' },
+                { label: 'Message promo à envoyer maintenant', prefill: 'Rédige-moi un message promotionnel à envoyer à mes clients WhatsApp maintenant.' },
+                { label: 'Idée de contenu cette semaine', prefill: 'Donne-moi 3 idées de contenu pour cette semaine qui vont attirer des clients.' },
+              ].map((s, i) => (
+                <button
+                  key={i}
+                  onClick={() => go('conversation', { assistant: 'coach', prefill: s.prefill })}
+                  className="flex items-center gap-2.5 px-3.5 py-3 rounded-xl bg-sable border border-g200 text-left active:bg-g100 transition"
+                >
+                  <span className="w-5 h-5 rounded-full bg-orange/12 text-orange text-[10px] font-bold flex items-center justify-center flex-shrink-0">→</span>
+                  <span className="text-[13px] font-semibold text-charbon">{s.label}</span>
+                </button>
+              ))}
             </div>
           )}
         </div>
@@ -235,6 +248,7 @@ export function DashboardScreen({ go, notify, profile }) {
               placeholder="Dis-moi…"
               className="flex-1 px-4 py-3 rounded-xl bg-sable border border-g200 text-[14px] text-charbon placeholder:text-g400 outline-none focus:border-orange transition"
             />
+            <VoiceMic onTranscript={t => { setInputText(t); submitInput(t); }} />
             <button
               onClick={() => go('dump')}
               className="w-11 h-11 rounded-xl bg-orange text-white flex items-center justify-center flex-shrink-0 active:opacity-80 transition shadow-[0_4px_12px_-4px_rgba(242,92,5,.5)]"
@@ -254,23 +268,40 @@ export function DashboardScreen({ go, notify, profile }) {
 
         {/* Lien boutique rapide */}
         {profile?.public_slug && (
-          <button
-            onClick={() => {
-              const url = `${window.location.origin}?c=${profile.public_slug}`;
-              navigator.clipboard.writeText(url);
-              notify('Lien copié !');
-            }}
-            className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-g200 shadow-soft active:bg-g100 transition text-left"
-          >
-            <div className="w-10 h-10 rounded-xl bg-vert/10 flex items-center justify-center flex-shrink-0">
-              <Icon name="send" size={18} className="text-vert" />
+          <div className="bg-white rounded-2xl border border-g200 shadow-soft p-4">
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-[10.5px] font-bold text-g400 uppercase tracking-[.1em]">Mon lien boutique</span>
+              <span className="text-[10.5px] font-bold px-2 py-0.5 rounded-full bg-vert/10 text-vert">Actif</span>
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="font-display font-bold text-[13.5px] text-charbon">Mon lien boutique</div>
-              <div className="text-[12px] text-vert truncate">/b/{profile.public_slug}</div>
+            <div className="flex items-center gap-2 px-3 py-2.5 bg-sable rounded-xl border border-g200 mb-3">
+              <Icon name="bolt" size={13} className="text-vert flex-shrink-0" />
+              <span className="text-[12.5px] font-bold text-charbon truncate flex-1">
+                assists.agenceattractor.com/b/{profile.public_slug}
+              </span>
             </div>
-            <Icon name="copy" size={16} className="text-g400 flex-shrink-0" />
-          </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(`${window.location.origin}/b/${profile.public_slug}`);
+                  notify('Lien copié !');
+                }}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-charbon text-white text-[12.5px] font-bold active:opacity-80 transition"
+              >
+                <Icon name="copy" size={13} /> Copier
+              </button>
+              <button
+                onClick={() => {
+                  const url = `${window.location.origin}/b/${profile.public_slug}`;
+                  const text = encodeURIComponent(`Commande ici 👇\n${url}`);
+                  window.open(`https://wa.me/?text=${text}`, '_blank');
+                }}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-g200 text-charbon text-[12.5px] font-bold active:bg-g100 transition"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Partager WA
+              </button>
+            </div>
+          </div>
         )}
 
         {/* Upgrade Bras Droit (plan Gratuit) */}
