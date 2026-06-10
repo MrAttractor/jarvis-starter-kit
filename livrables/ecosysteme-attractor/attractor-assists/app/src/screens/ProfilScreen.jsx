@@ -192,7 +192,17 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
               </div>
             </div>
           ) : (
-            <PRow label="Mon lien boutique" sub="Finalise l'onboarding pour obtenir ton lien" />
+            <div className="px-4 py-3.5">
+              <div className="text-[11px] font-bold text-g500 uppercase tracking-[.08em] mb-1.5">Mon lien boutique</div>
+              <p className="text-[12.5px] text-g400 mb-3 leading-relaxed">Crée ton assistant client pour recevoir des commandes par lien.</p>
+              <button
+                onClick={() => go('mon-app')}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-orange text-white text-[13px] font-bold active:opacity-80 transition shadow-[0_4px_12px_-4px_rgba(242,92,5,.5)]"
+              >
+                <Icon name="bolt" size={14} />
+                Créer ma boutique
+              </button>
+            </div>
           )}
           <Divider />
 
