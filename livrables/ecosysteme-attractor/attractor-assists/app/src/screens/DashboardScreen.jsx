@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon } from '../components/ui';
 
@@ -9,13 +9,13 @@ const HERO_CARDS = [
     img: '/uploads/agents/carelle.jpg',
     overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(242,92,5,0.72) 52%, rgba(200,50,0,0.95) 100%)',
     badge: 'Intelligence IA',
-    title: 'Un assistant qui\nrépond à ta place',
+    title: 'Un assistant qui\nrÃ©pond Ã  ta place',
   },
   {
     img: '/marketplace/ecommerce.jpg',
     overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(21,128,61,0.72) 52%, rgba(14,90,40,0.95) 100%)',
     badge: 'Commerce digital',
-    title: 'Ta boutique vend\nmême quand tu dors',
+    title: 'Ta boutique vend\nmÃªme quand tu dors',
   },
   {
     img: '/uploads/photo-community.png',
@@ -26,14 +26,14 @@ const HERO_CARDS = [
   {
     img: '/marketplace/services.jpg',
     overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(146,64,14,0.72) 52%, rgba(110,45,5,0.95) 100%)',
-    badge: 'Fidélisation',
-    title: 'Tes clients reviennent\nd\'eux-mêmes',
+    badge: 'FidÃ©lisation',
+    title: 'Tes clients reviennent\nd\'eux-mÃªmes',
   },
   {
     img: '/marketplace/hero-founder.jpg',
     overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(91,33,182,0.72) 52%, rgba(60,15,140,0.95) 100%)',
     badge: 'Automatisation',
-    title: 'Réponds instantanément\nà toutes les demandes',
+    title: 'RÃ©ponds instantanÃ©ment\nÃ  toutes les demandes',
   },
 ];
 
@@ -68,11 +68,11 @@ export function DashboardScreen({ go, notify, profile }) {
   const remaining  = msgLimit !== null ? Math.max(0, msgLimit - usedToday) : null;
   const isGratuit  = msgLimit !== null;
 
-  // Suggestions proactivité selon contexte
+  // Suggestions proactivitÃ© selon contexte
   const proSuggestions = [
     ordersCount > 0 && { label: `Traiter les ${ordersCount} commande${ordersCount > 1 ? 's' : ''} en attente`, go: 'commandes', params: {} },
-    staleCount > 0  && { label: `Relancer ${staleCount} client${staleCount > 1 ? 's' : ''} inactif${staleCount > 1 ? 's' : ''}`, go: 'conversation', params: { assistant: 'coach', prefill: 'Aide-moi à relancer mes clients inactifs avec un message sympa.' } },
-    { label: 'Préparer un message promo pour aujourd\'hui', go: 'conversation', params: { assistant: 'coach', prefill: 'Aide-moi à préparer un message de promotion pour aujourd\'hui.' } },
+    staleCount > 0  && { label: `Relancer ${staleCount} client${staleCount > 1 ? 's' : ''} inactif${staleCount > 1 ? 's' : ''}`, go: 'conversation', params: { assistant: 'coach', prefill: 'Aide-moi Ã  relancer mes clients inactifs avec un message sympa.' } },
+    { label: 'PrÃ©parer un message promo pour aujourd\'hui', go: 'conversation', params: { assistant: 'coach', prefill: 'Aide-moi Ã  prÃ©parer un message de promotion pour aujourd\'hui.' } },
   ].filter(Boolean).slice(0, 3);
 
   useEffect(() => {
@@ -119,7 +119,7 @@ export function DashboardScreen({ go, notify, profile }) {
   const copyMessage = (text) => {
     navigator.clipboard.writeText(text).then(() => {
       setDmvCopied(true);
-      notify('Message copié');
+      notify('Message copiÃ©');
       setTimeout(() => setDmvCopied(false), 2000);
     });
   };
@@ -144,7 +144,7 @@ export function DashboardScreen({ go, notify, profile }) {
           <div className="font-display font-bold text-[17px] text-charbon leading-tight truncate">
             Bonjour {first}
           </div>
-          <div className="text-[12px] text-g500">{fmtDay()} · {time}</div>
+          <div className="text-[12px] text-g500">{fmtDay()} Â· {time}</div>
         </div>
         <button
           onClick={() => go('notifications')}
@@ -212,71 +212,34 @@ export function DashboardScreen({ go, notify, profile }) {
       {/* Scroll area */}
       <div className="flex-1 overflow-y-auto px-4 pb-4 flex flex-col gap-4" style={{ scrollbarWidth: 'none' }}>
 
-        {/* Card "Action marketing à la demande" */}
-        <div className="bg-white rounded-2xl border border-g200 p-4 shadow-[var(--shadow-card,0_6px_20px_-10px_rgba(26,23,20,.22))]">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-[10.5px] font-bold text-orange uppercase tracking-[.12em]">
-              Action marketing à la demande
-            </span>
-            {dmvToday?.secteur && (
-              <span className="text-[10.5px] font-semibold px-2.5 py-1 rounded-full bg-orange/8 text-orange border border-orange/15">
-                {dmvToday.secteur}
-              </span>
-            )}
+        {/* Astuces WhatsApp Business â€” permanent */}
+        <div className="bg-white rounded-2xl border border-g200 shadow-soft overflow-hidden">
+          <div className="flex items-center gap-2.5 px-4 pt-3.5 pb-2.5 border-b border-g200">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366" className="flex-shrink-0">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            <span className="text-[10.5px] font-bold text-g500 uppercase tracking-[.1em]">Vendre avec WhatsApp Business</span>
           </div>
-
-          {dmvToday?.insight ? (
-            <>
-              <p className="text-[14px] leading-snug text-charbon font-semibold mb-3">
-                {dmvToday.insight}
-              </p>
-              {dmvToday.message_wa && (
-                <div className="border border-g200 rounded-xl p-3 mb-3 bg-sable">
-                  <div className="text-[10.5px] font-bold text-g500 mb-1.5">Message prêt</div>
-                  <p className="text-[13px] text-g700 leading-relaxed">{dmvToday.message_wa}</p>
-                </div>
-              )}
-              <div className="flex gap-2">
-                <button
-                  onClick={() => dmvToday.message_wa && copyMessage(dmvToday.message_wa)}
-                  className="flex-1 py-2.5 rounded-xl bg-orange text-white text-[13px] font-bold flex items-center justify-center gap-2 active:opacity-80 transition shadow-[0_4px_12px_-4px_rgba(242,92,5,.5)]"
-                >
-                  <Icon name={dmvCopied ? 'check' : 'copy'} size={14} />
-                  {dmvCopied ? 'Copié !' : 'Copier le message'}
-                </button>
-                <button
-                  onClick={() => go('conversation', { assistant: 'coach', prefill: 'Modifier le message : ' + (dmvToday.message_wa || '') })}
-                  className="px-4 py-2.5 rounded-xl border border-g200 text-[13px] font-bold text-g700 active:bg-g100 transition"
-                >
-                  Modifier
-                </button>
+          <div className="px-4 py-3 flex flex-col gap-3">
+            {[
+              { n: '1', t: 'Obtiens ton lien boutique â†’ onglet Profil si ce n\'est pas encore fait' },
+              { n: '2', t: 'Colle ce lien dans ton message d\'accueil WhatsApp Business' },
+              { n: '3', t: 'Active le message automatique WA : "Salut ! Commande ici ðŸ‘‡ [lien]"' },
+              { n: '4', t: 'Tes clientes commandent, Assists gÃ¨re les rÃ©ponses pour toi' },
+            ].map(item => (
+              <div key={item.n} className="flex items-start gap-3">
+                <span className="w-5 h-5 rounded-full bg-[#25D366]/12 text-[#1a9e4e] text-[11px] font-extrabold flex items-center justify-center flex-shrink-0 mt-0.5">{item.n}</span>
+                <p className="text-[13px] text-charbon leading-snug">{item.t}</p>
               </div>
-            </>
-          ) : (
-            <div className="flex flex-col gap-2.5">
-              {[
-                { label: 'Génère-moi un post pour aujourd\'hui', prefill: 'Génère-moi un post engageant pour aujourd\'hui adapté à mon activité.' },
-                { label: 'Message promo à envoyer maintenant', prefill: 'Rédige-moi un message promotionnel à envoyer à mes clients WhatsApp maintenant.' },
-                { label: 'Idée de contenu cette semaine', prefill: 'Donne-moi 3 idées de contenu pour cette semaine qui vont attirer des clients.' },
-              ].map((s, i) => (
-                <button
-                  key={i}
-                  onClick={() => go('conversation', { assistant: 'coach', prefill: s.prefill })}
-                  className="flex items-center gap-2.5 px-3.5 py-3 rounded-xl bg-sable border border-g200 text-left active:bg-g100 transition"
-                >
-                  <span className="w-5 h-5 rounded-full bg-orange/12 text-orange text-[10px] font-bold flex items-center justify-center flex-shrink-0">→</span>
-                  <span className="text-[13px] font-semibold text-charbon">{s.label}</span>
-                </button>
-              ))}
-            </div>
-          )}
+            ))}
+          </div>
         </div>
 
-        {/* Card proactivité (plan Gratuit uniquement) */}
+        {/* Card proactivitÃ© (plan Gratuit uniquement) */}
         {isGratuit && remaining !== null && remaining <= msgLimit * 0.4 && proSuggestions.length > 0 && (
           <div className="bg-white rounded-2xl border border-g200 p-4 shadow-soft">
             <p className="text-[12.5px] font-bold text-g500 mb-2.5">
-              Il te reste <span className="text-charbon font-extrabold">{remaining}</span> message{remaining !== 1 ? 's' : ''} aujourd'hui. Voici ce que je te suggère :
+              Il te reste <span className="text-charbon font-extrabold">{remaining}</span> message{remaining !== 1 ? 's' : ''} aujourd'hui. Voici ce que je te suggÃ¨re :
             </p>
             <div className="flex flex-col gap-2">
               {proSuggestions.map((s, i) => (
@@ -285,7 +248,7 @@ export function DashboardScreen({ go, notify, profile }) {
                   onClick={() => go(s.go, s.params)}
                   className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-sable border border-g200 text-left active:bg-g100 transition"
                 >
-                  <span className="w-5 h-5 rounded-full bg-orange/10 text-orange text-[10px] font-bold flex items-center justify-center flex-shrink-0">→</span>
+                  <span className="w-5 h-5 rounded-full bg-orange/10 text-orange text-[10px] font-bold flex items-center justify-center flex-shrink-0">â†’</span>
                   <span className="text-[12.5px] font-semibold text-charbon">{s.label}</span>
                 </button>
               ))}
@@ -314,13 +277,13 @@ export function DashboardScreen({ go, notify, profile }) {
               <div className="font-display font-extrabold text-[24px] text-charbon leading-none">{staleCount}</div>
               {staleCount > 0 && <span className="w-2 h-2 rounded-full bg-amber mt-1.5 flex-shrink-0" />}
             </div>
-            <div className="text-[12px] text-g500 mt-1.5 font-medium">Clientes à relancer</div>
+            <div className="text-[12px] text-g500 mt-1.5 font-medium">Clientes Ã  relancer</div>
           </button>
         </div>
 
         {/* Input Assists */}
         <div className="bg-white rounded-2xl border border-g200 p-4 shadow-soft">
-          <div className="font-display font-bold text-[14.5px] text-charbon mb-3">Qu'est-ce qu'on règle aujourd'hui ?</div>
+          <div className="font-display font-bold text-[14.5px] text-charbon mb-3">Qu'est-ce qu'on rÃ¨gle aujourd'hui ?</div>
           <div className="flex gap-2">
             <input
               ref={inputRef}
@@ -328,7 +291,7 @@ export function DashboardScreen({ go, notify, profile }) {
               value={inputText}
               onChange={e => setInputText(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && submitInput(inputText)}
-              placeholder="Dis-moi…"
+              placeholder="Dis-moiâ€¦"
               className="flex-1 px-4 py-3 rounded-xl bg-sable border border-g200 text-[14px] text-charbon placeholder:text-g400 outline-none focus:border-orange transition"
             />
             <button
@@ -343,7 +306,7 @@ export function DashboardScreen({ go, notify, profile }) {
               onClick={() => submitInput(inputText)}
               className="w-full mt-2.5 py-2.5 rounded-xl bg-charbon text-white text-[13px] font-bold active:opacity-80 transition"
             >
-              Envoyer à {nomAss}
+              Envoyer Ã  {nomAss}
             </button>
           )}
         </div>
@@ -365,7 +328,7 @@ export function DashboardScreen({ go, notify, profile }) {
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(`${window.location.origin}/b/${profile.public_slug}`);
-                  notify('Lien copié !');
+                  notify('Lien copiÃ© !');
                 }}
                 className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-charbon text-white text-[12.5px] font-bold active:opacity-80 transition"
               >
@@ -374,7 +337,7 @@ export function DashboardScreen({ go, notify, profile }) {
               <button
                 onClick={() => {
                   const url = `${window.location.origin}/b/${profile.public_slug}`;
-                  const text = encodeURIComponent(`Commande ici 👇\n${url}`);
+                  const text = encodeURIComponent(`Commande ici ðŸ‘‡\n${url}`);
                   window.open(`https://wa.me/?text=${text}`, '_blank');
                 }}
                 className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-g200 text-charbon text-[12.5px] font-bold active:bg-g100 transition"
@@ -385,30 +348,6 @@ export function DashboardScreen({ go, notify, profile }) {
             </div>
           </div>
         )}
-
-        {/* Astuces WhatsApp Business — permanent */}
-        <div className="bg-white rounded-2xl border border-g200 shadow-soft overflow-hidden">
-          <div className="flex items-center gap-2.5 px-4 pt-3.5 pb-2.5 border-b border-g200">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366" className="flex-shrink-0">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-            <span className="text-[10.5px] font-bold text-g500 uppercase tracking-[.1em]">Vendre avec WhatsApp Business</span>
-          </div>
-          <div className="px-4 py-3 flex flex-col gap-3">
-            {[
-              { n: '1', t: 'Obtiens ton lien boutique → onglet Profil si ce n\'est pas encore fait' },
-              { n: '2', t: 'Colle ce lien dans ton message d\'accueil WhatsApp Business' },
-              { n: '3', t: 'Active le message automatique WA : "Salut ! Commande ici 👇 [lien]"' },
-              { n: '4', t: 'Tes clientes commandent, Assists gère les réponses pour toi' },
-            ].map(item => (
-              <div key={item.n} className="flex items-start gap-3">
-                <span className="w-5 h-5 rounded-full bg-[#25D366]/12 text-[#1a9e4e] text-[11px] font-extrabold flex items-center justify-center flex-shrink-0 mt-0.5">{item.n}</span>
-                <p className="text-[13px] text-charbon leading-snug">{item.t}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Upgrade Bras Droit (plan Gratuit) */}
         {isGratuit && (
           <button
@@ -417,7 +356,7 @@ export function DashboardScreen({ go, notify, profile }) {
             style={{ background: 'linear-gradient(135deg,#FF7A2E,#F25C05)' }}
           >
             <div className="font-display font-extrabold text-[15px]">Passer au Bras Droit</div>
-            <div className="text-[12.5px] text-white/80 mt-0.5">Assists illimité · DMV · Fidelys · 9 900 FCFA/mois</div>
+            <div className="text-[12.5px] text-white/80 mt-0.5">Assists illimitÃ© Â· DMV Â· Fidelys Â· 9 900 FCFA/mois</div>
           </button>
         )}
       </div>
