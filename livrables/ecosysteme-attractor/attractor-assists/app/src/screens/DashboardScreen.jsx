@@ -68,6 +68,23 @@ export function DashboardScreen({ go, notify, profile }) {
   const remaining  = msgLimit !== null ? Math.max(0, msgLimit - usedToday) : null;
   const isGratuit  = msgLimit !== null;
 
+  const trialExpiresAt = profile?.trial_expires_at ? new Date(profile.trial_expires_at) : null;
+  const isTrial = !!profile?.trial_activated_at && trialExpiresAt && trialExpiresAt > new Date();
+  const trialDaysLeft = isTrial ? Math.ceil((trialExpiresAt - new Date()) / 86400000) : 0;
+
+  const trialDayNum = profile?.trial_activated_at
+    ? Math.min(30, Math.floor((Date.now() - new Date(profile.trial_activated_at).getTime()) / 86400000) + 1)
+    : 1;
+
+  const TRIAL_TIPS = [
+    { icon: 'chat', title: 'Assists illimité', desc: 'Pose autant de questions que tu veux. Coach, rédacteur, vendeur - il est là 24h/24.' },
+    { icon: 'target', title: 'DMV quotidienne', desc: 'Chaque matin, une action concrète adaptée à ton activité. Va dans Profil > La Méthode.' },
+    { icon: 'star', title: 'Programme Fidelys', desc: 'Crée un programme de points pour tes clients. Ils reviennent, tu vends plus.' },
+    { icon: 'compass', title: 'Veille & Prospection', desc: 'Reçois chaque semaine les tendances de ton secteur et des pistes de nouveaux clients.' },
+    { icon: 'bolt', title: 'Boutique connectée', desc: 'Ton lien boutique peut aller dans ta bio, ton message WA, partout. Active-le dans Profil.' },
+  ];
+  const trialTip = TRIAL_TIPS[(trialDayNum - 1) % TRIAL_TIPS.length];
+
   // Suggestions proactivité selon contexte
   const proSuggestions = [
     ordersCount > 0 && { label: `Traiter les ${ordersCount} commande${ordersCount > 1 ? 's' : ''} en attente`, go: 'commandes', params: {} },
@@ -212,7 +229,7 @@ export function DashboardScreen({ go, notify, profile }) {
       {/* Scroll area */}
       <div className="flex-1 overflow-y-auto px-4 pb-4 flex flex-col gap-4" style={{ scrollbarWidth: 'none' }}>
 
-        {/* Astuces WhatsApp Business â€” permanent */}
+        {/* Astuces WhatsApp Business - permanent */}
         <div className="bg-white rounded-2xl border border-g200 shadow-soft overflow-hidden">
           <div className="flex items-center gap-2.5 px-4 pt-3.5 pb-2.5 border-b border-g200">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366" className="flex-shrink-0">
@@ -222,9 +239,9 @@ export function DashboardScreen({ go, notify, profile }) {
           </div>
           <div className="px-4 py-3 flex flex-col gap-3">
             {[
-              { n: '1', t: 'Obtiens ton lien boutique â†’ onglet Profil si ce n\'est pas encore fait' },
+              { n: '1', t: 'Obtiens ton lien boutique > onglet Profil si ce n\'est pas encore fait' },
               { n: '2', t: 'Colle ce lien dans ton message d\'accueil WhatsApp Business' },
-              { n: '3', t: 'Active le message automatique WA : "Salut ! Commande ici ðŸ‘‡ [lien]"' },
+              { n: '3', t: 'Active le message automatique WA : "Salut ! Commande ici [lien]"' },
               { n: '4', t: 'Tes clientes commandent, Assists gère les réponses pour toi' },
             ].map(item => (
               <div key={item.n} className="flex items-start gap-3">
@@ -248,7 +265,7 @@ export function DashboardScreen({ go, notify, profile }) {
                   onClick={() => go(s.go, s.params)}
                   className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-sable border border-g200 text-left active:bg-g100 transition"
                 >
-                  <span className="w-5 h-5 rounded-full bg-orange/10 text-orange text-[10px] font-bold flex items-center justify-center flex-shrink-0">â†’</span>
+                  <span className="w-5 h-5 rounded-full bg-orange/10 text-orange text-[10px] font-bold flex items-center justify-center flex-shrink-0">></span>
                   <span className="text-[12.5px] font-semibold text-charbon">{s.label}</span>
                 </button>
               ))}
@@ -291,7 +308,7 @@ export function DashboardScreen({ go, notify, profile }) {
               value={inputText}
               onChange={e => setInputText(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && submitInput(inputText)}
-              placeholder="Dis-moiâ€¦"
+              placeholder="Dis-moi…"
               className="flex-1 px-4 py-3 rounded-xl bg-sable border border-g200 text-[14px] text-charbon placeholder:text-g400 outline-none focus:border-orange transition"
             />
             <button
@@ -337,7 +354,7 @@ export function DashboardScreen({ go, notify, profile }) {
               <button
                 onClick={() => {
                   const url = `${window.location.origin}/b/${profile.public_slug}`;
-                  const text = encodeURIComponent(`Commande ici ðŸ‘‡\n${url}`);
+                  const text = encodeURIComponent(`Commande ici \n${url}`);
                   window.open(`https://wa.me/?text=${text}`, '_blank');
                 }}
                 className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-g200 text-charbon text-[12.5px] font-bold active:bg-g100 transition"
@@ -348,8 +365,29 @@ export function DashboardScreen({ go, notify, profile }) {
             </div>
           </div>
         )}
-        {/* Upgrade Bras Droit (plan Gratuit) */}
-        {isGratuit && (
+        {/* Card tip essai (trial actif) */}
+        {isTrial && trialTip && (
+          <div className="rounded-2xl overflow-hidden" style={{ background: 'linear-gradient(135deg,#1A1714,#2a2018)' }}>
+            <div className="p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-[10px] font-bold text-white/50 uppercase tracking-[.12em]">Essai gratuit</span>
+                <span className="text-[10px] font-bold text-orange bg-orange/20 px-2 py-0.5 rounded-full">{trialDaysLeft}j restants</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-xl bg-orange/20 flex items-center justify-center flex-shrink-0">
+                  <Icon name={trialTip.icon} size={17} className="text-orange" />
+                </div>
+                <div className="flex-1">
+                  <div className="font-display font-bold text-[14px] text-white">{trialTip.title}</div>
+                  <p className="text-[12.5px] text-white/65 mt-0.5 leading-snug">{trialTip.desc}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Upgrade Bras Droit (plan Gratuit sans essai) */}
+        {isGratuit && !isTrial && (
           <button
             onClick={() => go('paliers')}
             className="w-full rounded-2xl p-4 text-left text-white active:opacity-90 transition"

@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, Sheet, Spinner } from '../components/ui';
 
+// Mettre à false quand la période de lancement est terminée
+const LANCEMENT_ACTIF = true;
+
 // Numéro WhatsApp Mac Arthur (France) — à mettre à jour si besoin
 const MA_WA = '2250576877070';
 
@@ -167,13 +170,109 @@ function PaymentSheet({ onClose, notify }) {
   );
 }
 
+// ─── Sheet essai gratuit ──────────────────────────────────────────────────────
+
+const TRIAL_FEATURES = [
+  { icon: 'chat', text: 'Assists illimité — pose autant de questions que tu veux' },
+  { icon: 'target', text: 'DMV quotidienne — une action concrète chaque matin' },
+  { icon: 'star', text: 'Fidelys — programme de fidélité pour tes clients' },
+  { icon: 'compass', text: 'Agent Veille & Prospection' },
+  { icon: 'bolt', text: 'Mini-site boutique complet' },
+];
+
+function TrialSheet({ onClose, notify, onActivated }) {
+  const [state, setState] = useState('offer'); // offer | loading | success
+
+  const activate = async () => {
+    setState('loading');
+    try {
+      const { data, error } = await supabase.functions.invoke('activate-trial', { body: {} });
+      if (error || data?.error) throw new Error(data?.error || error?.message);
+      setState('success');
+      setTimeout(() => { onActivated?.(); onClose(); }, 2200);
+    } catch (e) {
+      notify(e?.message || 'Erreur lors de l\'activation');
+      setState('offer');
+    }
+  };
+
+  return (
+    <Sheet onClose={onClose} title="">
+      {state === 'offer' && (
+        <div className="flex flex-col gap-5">
+          {/* Header */}
+          <div className="flex flex-col items-center gap-2 text-center pb-1">
+            <div
+              className="w-16 h-16 rounded-2xl flex items-center justify-center text-white mb-1"
+              style={{ background: 'linear-gradient(135deg,#FF7A2E,#F25C05)' }}
+            >
+              <Icon name="bolt" size={28} />
+            </div>
+            <div className="font-display font-extrabold text-[22px] text-charbon">Bras Droit OFFERT</div>
+            <p className="text-[13.5px] text-g500 max-w-[280px] leading-relaxed">
+              Toutes les fonctionnalités débloquées pendant <strong className="text-charbon">30 jours</strong> — sans carte bancaire.
+            </p>
+          </div>
+
+          {/* Features */}
+          <div className="bg-sable rounded-2xl p-4 flex flex-col gap-3">
+            {TRIAL_FEATURES.map((f, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-orange/10 flex items-center justify-center flex-shrink-0">
+                  <Icon name={f.icon} size={15} className="text-orange" />
+                </div>
+                <span className="text-[13px] text-charbon font-medium">{f.text}</span>
+              </div>
+            ))}
+          </div>
+
+          <button
+            onClick={activate}
+            className="w-full py-4 rounded-2xl bg-orange text-white font-display font-extrabold text-[16px] shadow-[0_8px_20px_-6px_rgba(242,92,5,.6)] active:opacity-85 transition"
+            style={{ background: 'linear-gradient(135deg,#FF7A2E,#F25C05)' }}
+          >
+            Activer maintenant — GRATUIT
+          </button>
+
+          <p className="text-center text-[11px] text-g400 leading-relaxed px-2">
+            Après 30 jours, tu repasses automatiquement sur le plan gratuit.
+            Aucun prélèvement automatique.
+          </p>
+        </div>
+      )}
+
+      {state === 'loading' && (
+        <div className="py-12 flex flex-col items-center gap-3 text-center">
+          <Spinner className="w-10 h-10" />
+          <p className="font-display font-bold text-[15px] text-charbon">Activation en cours…</p>
+        </div>
+      )}
+
+      {state === 'success' && (
+        <div className="py-10 flex flex-col items-center gap-4 text-center">
+          <div className="w-16 h-16 rounded-full bg-vert/10 flex items-center justify-center">
+            <Icon name="check" size={32} className="text-vert" />
+          </div>
+          <div className="font-display font-extrabold text-[20px] text-charbon">Bras Droit activé !</div>
+          <p className="text-[13.5px] text-g500 max-w-[260px] leading-relaxed">
+            Toutes les fonctionnalités sont débloquées pour 30 jours. Profites-en.
+          </p>
+        </div>
+      )}
+    </Sheet>
+  );
+}
+
 // ─── Screen principal ─────────────────────────────────────────────────────────
 
-export function PaliersScreen({ go, notify, profile }) {
+export function PaliersScreen({ go, notify, profile, onPlanChange }) {
   const [showPayment, setShowPayment] = useState(false);
+  const [showTrial, setShowTrial] = useState(false);
 
   const currentPlan = profile?.plan_code || 'gratuit';
-  const isBrasDroit = currentPlan === 'bras_droit';
+  const isBrasDroit = ['bras_droit', 'growth', 'growth_eu', 'team', 'manager', 'personnalise'].includes(currentPlan);
+  const isTrial     = !!profile?.trial_activated_at && !profile?.trial_expires_at?.passed;
+  const alreadyTrialed = !!profile?.trial_activated_at;
 
   return (
     <div className="flex flex-col bg-sable" style={{ minHeight: '100dvh' }}>
@@ -245,67 +344,89 @@ export function PaliersScreen({ go, notify, profile }) {
         })}
 
         {/* Plan Bras Droit */}
-        {PLANS.filter(p => p.id === 'bras_droit').map(plan => {
-          const isCurrent = currentPlan === plan.id;
-          return (
-            <div key={plan.id} className="relative pt-3">
-              {/* Badge */}
-              <div className="absolute -top-0 left-5 z-10">
+        {PLANS.filter(p => p.id === 'bras_droit').map(plan => (
+          <div key={plan.id} className="relative pt-3">
+            {/* Badge */}
+            <div className="absolute -top-0 left-5 z-10">
+              {LANCEMENT_ACTIF && !isBrasDroit && !alreadyTrialed ? (
+                <span className="bg-vert text-white text-[11px] font-extrabold px-3 py-1 rounded-full shadow-md tracking-wide">
+                  OFFERT
+                </span>
+              ) : (
                 <span className="bg-orange text-white text-[11px] font-extrabold px-3 py-1 rounded-full shadow-md">
                   {plan.badge}
                 </span>
+              )}
+            </div>
+
+            <div
+              className="rounded-2xl p-5 text-white overflow-hidden relative"
+              style={{ background: 'linear-gradient(135deg, #FF7A2E 0%, #F25C05 60%, #C24700 100%)', boxShadow: '0 12px 32px -12px rgba(242,92,5,.55)' }}
+            >
+              <div className="absolute right-3 bottom-3 w-32 h-32 rounded-full opacity-15"
+                style={{ background: 'radial-gradient(circle, #fff 0%, transparent 70%)' }} />
+
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <h3 className="font-display font-extrabold text-[18px] text-white">{plan.name}</h3>
+                  <p className="text-[12px] text-white/70 mt-0.5">{plan.tagline}</p>
+                </div>
+                {isBrasDroit && (
+                  <span className="flex-shrink-0 text-[11px] font-bold text-white bg-white/20 px-2.5 py-1 rounded-full border border-white/30">
+                    Plan actuel
+                  </span>
+                )}
               </div>
 
-              <div
-                className="rounded-2xl p-5 text-white overflow-hidden relative"
-                style={{ background: 'linear-gradient(135deg, #FF7A2E 0%, #F25C05 60%, #C24700 100%)', boxShadow: '0 12px 32px -12px rgba(242,92,5,.55)' }}
-              >
-                <div className="absolute right-3 bottom-3 w-32 h-32 rounded-full opacity-15"
-                  style={{ background: 'radial-gradient(circle, #fff 0%, transparent 70%)' }} />
-
-                <div className="flex items-start justify-between mb-3">
+              {/* Prix — OFFERT pendant le lancement */}
+              {LANCEMENT_ACTIF && !isBrasDroit && !alreadyTrialed ? (
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="font-display font-extrabold text-[34px] text-white leading-none">OFFERT</span>
                   <div>
-                    <h3 className="font-display font-extrabold text-[18px] text-white">{plan.name}</h3>
-                    <p className="text-[12px] text-white/70 mt-0.5">{plan.tagline}</p>
+                    <div className="text-[11px] text-white/70 line-through">{plan.fcfa}/mois</div>
+                    <div className="text-[11px] text-white/90 font-bold">pendant 1 mois</div>
                   </div>
-                  {isCurrent && (
-                    <span className="flex-shrink-0 text-[11px] font-bold text-white bg-white/20 px-2.5 py-1 rounded-full border border-white/30">
-                      Plan actuel
-                    </span>
-                  )}
                 </div>
-
+              ) : (
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className="font-display font-extrabold text-[30px] text-white leading-none">{plan.fcfa}</span>
                   <span className="text-[12px] text-white/70">{plan.period}</span>
                   <span className="text-[12px] text-white/50 ml-1">({plan.eur}{plan.period})</span>
                 </div>
+              )}
 
-                <ul className="space-y-2 mb-4">
-                  {plan.features.map((f, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <Icon name="check" size={15} className="text-white flex-shrink-0 mt-0.5" />
-                      <span className="text-[13px] text-white/90">{f}</span>
-                    </li>
-                  ))}
-                </ul>
+              <ul className="space-y-2 mb-4">
+                {plan.features.map((f, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <Icon name="check" size={15} className="text-white flex-shrink-0 mt-0.5" />
+                    <span className="text-[13px] text-white/90">{f}</span>
+                  </li>
+                ))}
+              </ul>
 
-                {isCurrent ? (
-                  <div className="py-3 rounded-xl bg-white/20 text-center text-[14px] font-bold text-white">
-                    Ton plan actuel
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => setShowPayment(true)}
-                    className="w-full py-3.5 rounded-xl bg-white text-orange font-display font-extrabold text-[15px] active:opacity-85 transition shadow-[0_4px_12px_rgba(0,0,0,.15)]"
-                  >
-                    Passer au Bras Droit
-                  </button>
-                )}
-              </div>
+              {isBrasDroit ? (
+                <div className="py-3 rounded-xl bg-white/20 text-center text-[14px] font-bold text-white">
+                  Ton plan actuel
+                </div>
+              ) : LANCEMENT_ACTIF && !alreadyTrialed ? (
+                <button
+                  onClick={() => setShowTrial(true)}
+                  className="w-full py-3.5 rounded-xl bg-white font-display font-extrabold text-[15px] active:opacity-85 transition shadow-[0_4px_12px_rgba(0,0,0,.15)]"
+                  style={{ color: '#22c55e' }}
+                >
+                  Activer gratuitement — 1 mois offert
+                </button>
+              ) : (
+                <button
+                  onClick={() => setShowPayment(true)}
+                  className="w-full py-3.5 rounded-xl bg-white text-orange font-display font-extrabold text-[15px] active:opacity-85 transition shadow-[0_4px_12px_rgba(0,0,0,.15)]"
+                >
+                  Passer au Bras Droit
+                </button>
+              )}
             </div>
-          );
-        })}
+          </div>
+        ))}
 
         {/* Upsells sur mesure */}
         <div className="mt-2">
@@ -346,6 +467,13 @@ export function PaliersScreen({ go, notify, profile }) {
       </div>
 
       {showPayment && <PaymentSheet onClose={() => setShowPayment(false)} notify={notify} />}
+      {showTrial && (
+        <TrialSheet
+          onClose={() => setShowTrial(false)}
+          notify={notify}
+          onActivated={() => { notify('Bras Droit activé — 30 jours offerts !'); go('dashboard'); }}
+        />
+      )}
     </div>
   );
 }
