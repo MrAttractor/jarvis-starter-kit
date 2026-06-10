@@ -7,33 +7,33 @@ const PLAN_MSG_LIMIT = { decouverte: 20, decouverte_eu: 20, gratuit: 20, growth:
 const HERO_CARDS = [
   {
     img: '/uploads/agents/carelle.jpg',
-    overlay: 'linear-gradient(to bottom, rgba(242,92,5,0.35) 0%, rgba(242,92,5,0.92) 55%)',
+    overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(242,92,5,0.72) 52%, rgba(200,50,0,0.95) 100%)',
     badge: 'Intelligence IA',
-    title: 'Un assistant\nqui répond\n24h/24',
+    title: 'Un assistant qui\nrépond à ta place',
   },
   {
     img: '/marketplace/ecommerce.jpg',
-    overlay: 'linear-gradient(to bottom, rgba(21,128,61,0.3) 0%, rgba(21,128,61,0.92) 55%)',
+    overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(21,128,61,0.72) 52%, rgba(14,90,40,0.95) 100%)',
     badge: 'Commerce digital',
-    title: 'Ta boutique\nvend même\nquand tu dors',
+    title: 'Ta boutique vend\nmême quand tu dors',
   },
   {
     img: '/uploads/photo-community.png',
-    overlay: 'linear-gradient(to bottom, rgba(29,78,216,0.3) 0%, rgba(29,78,216,0.92) 55%)',
+    overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(29,78,216,0.72) 52%, rgba(20,50,180,0.95) 100%)',
     badge: 'Carnet client',
-    title: 'Tes clients\nsuivis sans\nExcel ni papier',
+    title: 'Tes clients suivis\nsans Excel ni papier',
   },
   {
     img: '/marketplace/services.jpg',
-    overlay: 'linear-gradient(to bottom, rgba(146,64,14,0.3) 0%, rgba(180,83,9,0.92) 55%)',
+    overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(146,64,14,0.72) 52%, rgba(110,45,5,0.95) 100%)',
     badge: 'Fidélisation',
-    title: 'Tes clients\nreviennent\nd\'eux-mêmes',
+    title: 'Tes clients reviennent\nd\'eux-mêmes',
   },
   {
     img: '/marketplace/hero-founder.jpg',
-    overlay: 'linear-gradient(to bottom, rgba(91,33,182,0.3) 0%, rgba(91,33,182,0.92) 55%)',
+    overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(91,33,182,0.72) 52%, rgba(60,15,140,0.95) 100%)',
     badge: 'Automatisation',
-    title: 'Réponds\ninstantané-\nment à tout',
+    title: 'Réponds instantanément\nà toutes les demandes',
   },
 ];
 
@@ -55,6 +55,7 @@ export function DashboardScreen({ go, notify, profile }) {
   const [usedToday, setUsedToday]     = useState(0);
   const [inputText, setInputText]     = useState('');
   const [time, setTime]               = useState(fmtTime());
+  const [heroIdx, setHeroIdx]         = useState(0);
   const inputRef = useRef(null);
 
   const first    = profile?.prenom        || 'toi';
@@ -77,6 +78,11 @@ export function DashboardScreen({ go, notify, profile }) {
   useEffect(() => {
     const timer = setInterval(() => setTime(fmtTime()), 30000);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const t = setInterval(() => setHeroIdx(i => (i + 1) % HERO_CARDS.length), 4500);
+    return () => clearInterval(t);
   }, []);
 
   useEffect(() => {
@@ -151,51 +157,56 @@ export function DashboardScreen({ go, notify, profile }) {
         </button>
       </div>
 
-      {/* Hero défilant */}
-      <div className="overflow-hidden flex-shrink-0" style={{ position: 'relative', paddingTop: 12, paddingBottom: 4 }}>
-        <div
-          style={{
-            display: 'flex',
-            paddingLeft: 16,
-            animation: 'heroSlide 24s linear infinite',
-            width: 'max-content',
-            willChange: 'transform',
-          }}
-        >
-          {[...HERO_CARDS, ...HERO_CARDS].map((card, i) => (
-            <div
-              key={i}
-              style={{
-                width: 192,
-                height: 130,
-                borderRadius: 20,
-                marginRight: 12,
-                flexShrink: 0,
-                position: 'relative',
-                overflow: 'hidden',
-                boxShadow: '0 6px 20px -6px rgba(0,0,0,0.32)',
-              }}
-            >
+      {/* Hero slideshow */}
+      <div style={{ position: 'relative', height: 224, overflow: 'hidden', flexShrink: 0 }}>
+        {/* Track */}
+        <div style={{
+          display: 'flex',
+          width: `${HERO_CARDS.length * 100}%`,
+          height: '100%',
+          transform: `translateX(-${heroIdx * (100 / HERO_CARDS.length)}%)`,
+          transition: 'transform 0.65s cubic-bezier(.4,0,.2,1)',
+        }}>
+          {HERO_CARDS.map((card, i) => (
+            <div key={i} style={{ width: `${100 / HERO_CARDS.length}%`, height: '100%', position: 'relative', flexShrink: 0 }}>
               <img
                 src={card.img}
                 alt=""
                 style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
               />
               <div style={{ position: 'absolute', inset: 0, background: card.overlay }} />
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 14px 14px' }}>
-                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.65)', marginBottom: 4 }}>
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 20px 22px' }}>
+                <div style={{ display: 'inline-block', fontSize: 10, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.75)', background: 'rgba(255,255,255,0.14)', borderRadius: 20, padding: '3px 10px', marginBottom: 9, backdropFilter: 'blur(6px)' }}>
                   {card.badge}
                 </div>
-                <div style={{ fontSize: 14, fontWeight: 800, color: 'white', lineHeight: 1.25, whiteSpace: 'pre-line' }}>
+                <div style={{ fontSize: 21, fontWeight: 800, color: 'white', lineHeight: 1.2, whiteSpace: 'pre-line', textShadow: '0 1px 6px rgba(0,0,0,0.25)' }}>
                   {card.title}
                 </div>
               </div>
             </div>
           ))}
         </div>
-        <div style={{ position: 'absolute', top: 0, left: 0, width: 32, height: '100%', background: 'linear-gradient(to right, var(--color-sable,#FAF6F0), transparent)', pointerEvents: 'none', zIndex: 2 }} />
-        <div style={{ position: 'absolute', top: 0, right: 0, width: 32, height: '100%', background: 'linear-gradient(to left, var(--color-sable,#FAF6F0), transparent)', pointerEvents: 'none', zIndex: 2 }} />
-        <style>{`@keyframes heroSlide { 0% { transform: translateX(0); } 100% { transform: translateX(-1020px); } }`}</style>
+        {/* Dots */}
+        <div style={{ position: 'absolute', bottom: 16, right: 18, display: 'flex', gap: 5, alignItems: 'center' }}>
+          {HERO_CARDS.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setHeroIdx(i)}
+              style={{
+                width: i === heroIdx ? 22 : 6,
+                height: 6,
+                borderRadius: 3,
+                background: 'white',
+                opacity: i === heroIdx ? 1 : 0.4,
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0,
+                transition: 'all 0.35s ease',
+                flexShrink: 0,
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Scroll area */}
