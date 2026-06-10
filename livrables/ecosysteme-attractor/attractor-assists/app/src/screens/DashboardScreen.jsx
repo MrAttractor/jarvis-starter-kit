@@ -4,6 +4,69 @@ import { Icon } from '../components/ui';
 
 const PLAN_MSG_LIMIT = { decouverte: 20, decouverte_eu: 20, gratuit: 20, growth: 100, growth_eu: 100, bras_droit: null };
 
+const HERO_CARDS = [
+  {
+    gradient: 'linear-gradient(135deg,#F25C05 0%,#FF9A3C 100%)',
+    badge: 'Intelligence IA',
+    title: 'Un assistant\nqui répond\n24h/24',
+    svg: (
+      <svg width="96" height="96" viewBox="0 0 80 80" fill="none">
+        <path d="M46 10 L28 42 H38 L34 70 L52 38 H42 Z" fill="white" fillOpacity="0.22" stroke="white" strokeOpacity="0.5" strokeWidth="1.5" strokeLinejoin="round"/>
+        <circle cx="62" cy="18" r="6" fill="white" fillOpacity="0.14" stroke="white" strokeOpacity="0.4" strokeWidth="1.5"/>
+        <circle cx="18" cy="62" r="4" fill="white" fillOpacity="0.12" stroke="white" strokeOpacity="0.3" strokeWidth="1.5"/>
+      </svg>
+    ),
+  },
+  {
+    gradient: 'linear-gradient(135deg,#15803d 0%,#4ade80 100%)',
+    badge: 'Commerce digital',
+    title: 'Ta boutique\nvend même\nquand tu dors',
+    svg: (
+      <svg width="96" height="96" viewBox="0 0 80 80" fill="none">
+        <path d="M16 36 L22 20 H58 L64 36 Z" fill="white" fillOpacity="0.18" stroke="white" strokeOpacity="0.4" strokeWidth="1.5"/>
+        <rect x="16" y="36" width="48" height="30" rx="6" fill="white" fillOpacity="0.14" stroke="white" strokeOpacity="0.4" strokeWidth="1.5"/>
+        <path d="M32 36 Q32 50 40 50 Q48 50 48 36" stroke="white" strokeOpacity="0.6" strokeWidth="2" fill="none"/>
+      </svg>
+    ),
+  },
+  {
+    gradient: 'linear-gradient(135deg,#1d4ed8 0%,#60a5fa 100%)',
+    badge: 'Carnet client',
+    title: 'Tes clients\nsuivis sans\nExcel ni papier',
+    svg: (
+      <svg width="96" height="96" viewBox="0 0 80 80" fill="none">
+        <circle cx="30" cy="28" r="13" fill="white" fillOpacity="0.18" stroke="white" strokeOpacity="0.4" strokeWidth="1.5"/>
+        <path d="M6 70 Q6 50 30 50 Q54 50 54 70" fill="white" fillOpacity="0.12" stroke="white" strokeOpacity="0.35" strokeWidth="1.5"/>
+        <circle cx="57" cy="30" r="9" fill="white" fillOpacity="0.12" stroke="white" strokeOpacity="0.28" strokeWidth="1.5"/>
+        <path d="M48 66 Q48 52 57 52 Q66 52 66 66" fill="white" fillOpacity="0.08" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
+      </svg>
+    ),
+  },
+  {
+    gradient: 'linear-gradient(135deg,#92400e 0%,#fbbf24 100%)',
+    badge: 'Fidélisation',
+    title: 'Tes clients\nreviennent\nd\'eux-mêmes',
+    svg: (
+      <svg width="96" height="96" viewBox="0 0 80 80" fill="none">
+        <path d="M40 10 L47 30 H68 L52 42 L58 62 L40 50 L22 62 L28 42 L12 30 H33 Z" fill="white" fillOpacity="0.2" stroke="white" strokeOpacity="0.45" strokeWidth="1.5" strokeLinejoin="round"/>
+      </svg>
+    ),
+  },
+  {
+    gradient: 'linear-gradient(135deg,#5b21b6 0%,#a78bfa 100%)',
+    badge: 'Automatisation',
+    title: 'Réponds\ninstantané-\nment à tout',
+    svg: (
+      <svg width="96" height="96" viewBox="0 0 80 80" fill="none">
+        <rect x="8" y="12" width="44" height="30" rx="12" fill="white" fillOpacity="0.18" stroke="white" strokeOpacity="0.4" strokeWidth="1.5"/>
+        <path d="M20 42 L12 56" stroke="white" strokeOpacity="0.5" strokeWidth="2" strokeLinecap="round"/>
+        <rect x="28" y="36" width="44" height="28" rx="12" fill="white" fillOpacity="0.14" stroke="white" strokeOpacity="0.35" strokeWidth="1.5"/>
+        <path d="M56 64 L64 76" stroke="white" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+];
+
 function fmtTime() {
   return new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 }
@@ -118,12 +181,51 @@ export function DashboardScreen({ go, notify, profile }) {
         </button>
       </div>
 
-      {/* Bandeau défilant vert */}
-      <div className="overflow-hidden bg-[#1E5631] text-white text-[11.5px] font-bold py-1.5 px-0 flex-shrink-0" style={{ whiteSpace: 'nowrap' }}>
-        <span className="inline-block animate-[marquee_28s_linear_infinite]">
-          &nbsp;&nbsp;&nbsp;🟢 Partage ton lien boutique chaque matin · Réponds aux commandes dans les 2h · Une action = un client de plus · Ta boutique tourne même quand tu dors · Mets à jour ton catalogue régulièrement · &nbsp;&nbsp;&nbsp;🟢 Partage ton lien boutique chaque matin · Réponds aux commandes dans les 2h · Une action = un client de plus · Ta boutique tourne même quand tu dors · Mets à jour ton catalogue régulièrement ·
-        </span>
-        <style>{`@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }`}</style>
+      {/* Hero défilant */}
+      <div className="overflow-hidden flex-shrink-0" style={{ position: 'relative', paddingTop: 12, paddingBottom: 4 }}>
+        <div
+          style={{
+            display: 'flex',
+            paddingLeft: 16,
+            animation: 'heroSlide 24s linear infinite',
+            width: 'max-content',
+            willChange: 'transform',
+          }}
+        >
+          {[...HERO_CARDS, ...HERO_CARDS].map((card, i) => (
+            <div
+              key={i}
+              style={{
+                width: 192,
+                height: 130,
+                borderRadius: 20,
+                background: card.gradient,
+                padding: '14px 14px 14px 16px',
+                marginRight: 12,
+                flexShrink: 0,
+                position: 'relative',
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                boxShadow: '0 6px 20px -6px rgba(0,0,0,0.28)',
+              }}
+            >
+              <div style={{ position: 'absolute', top: -6, right: -6, pointerEvents: 'none' }}>
+                {card.svg}
+              </div>
+              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)', marginBottom: 4, position: 'relative', zIndex: 1 }}>
+                {card.badge}
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 800, color: 'white', lineHeight: 1.25, position: 'relative', zIndex: 1, whiteSpace: 'pre-line' }}>
+                {card.title}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ position: 'absolute', top: 0, left: 0, width: 32, height: '100%', background: 'linear-gradient(to right, var(--color-sable,#FAF6F0), transparent)', pointerEvents: 'none', zIndex: 2 }} />
+        <div style={{ position: 'absolute', top: 0, right: 0, width: 32, height: '100%', background: 'linear-gradient(to left, var(--color-sable,#FAF6F0), transparent)', pointerEvents: 'none', zIndex: 2 }} />
+        <style>{`@keyframes heroSlide { 0% { transform: translateX(0); } 100% { transform: translateX(-1020px); } }`}</style>
       </div>
 
       {/* Scroll area */}
