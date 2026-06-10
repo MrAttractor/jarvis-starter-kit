@@ -257,15 +257,15 @@ export default function App() {
 
         {/* main column */}
         <div className="relative w-full lg:max-w-[460px] flex-shrink-0">
-          <div className="bg-sable lg:rounded-[28px] lg:overflow-hidden lg:border lg:border-g200 lg:shadow-[0_24px_60px_-30px_rgba(26,23,20,.35)] h-screen lg:h-[calc(100vh-3rem)] flex flex-col overflow-hidden">
-            <div id="aa-scroll" className="flex-1 overflow-y-auto" style={{ scrollbarWidth: "none" }}>
+          <div className="bg-sable lg:rounded-[28px] lg:overflow-hidden lg:border lg:border-g200 lg:shadow-[0_24px_60px_-30px_rgba(26,23,20,.35)] h-[100dvh] lg:h-[calc(100dvh-3rem)] flex flex-col overflow-hidden">
+            <div id="aa-scroll" className={`flex-1 ${isConversation ? 'overflow-hidden' : 'overflow-y-auto'}`} style={{ scrollbarWidth: "none" }}>
               {screens[screen]}
-              {!isConversation && <div className="h-24 lg:h-4" />}
+              {!isConversation && <div className="h-4" />}
             </div>
 
-            {/* bottom nav mobile */}
+            {/* bottom nav mobile — dans le flux flex, pas absolute */}
             {!isConversation && (
-              <div className={`lg:hidden absolute bottom-0 left-0 right-0 bg-white/92 backdrop-blur-xl border-t border-g200 flex items-center justify-around px-2 pt-2 pb-6 z-30`}>
+              <div className="lg:hidden flex-shrink-0 bg-white/92 backdrop-blur-xl border-t border-g200 flex items-center justify-around px-2 pt-2" style={{ paddingBottom: 'max(16px, env(safe-area-inset-bottom))' }}>
                 {TABS.map(t => (
                   <NavBtn key={t.id} t={t} active={activeTab === t.id} onClick={() => go(t.id)} />
                 ))}

@@ -31,7 +31,7 @@ const OPENERS_AGENTS = {
 // Opener bras droit — contextuel selon le profil dominant
 const buildCoachOpener = (profile, nomAss) => {
   const prenom    = profile?.prenom        || "toi";
-  const ouverture = profile?.ouverture     || "";
+  const ouverture = (profile?.ouverture && profile?.ouverture !== 'null' && profile?.ouverture !== 'undefined') ? profile.ouverture : "";
   const memoire   = profile?.memoire_cache || "";
   const profil    = typeof window !== "undefined"
     ? (localStorage.getItem("aa_profil") || "entrepreneur")
@@ -230,8 +230,8 @@ function Bubble({ from, children, ts }) {
         className={me ? "text-white" : "text-charbon"}
         style={{
           fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
-          fontSize: 15,
-          fontWeight: 400,
+          fontSize: 16,
+          fontWeight: 500,
           lineHeight: 1.45,
           padding: '8px 12px 6px',
           borderRadius: me ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
@@ -307,6 +307,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
   const [msgs, setMsgs]               = useState([{ from: "bot", text: opener, ts: Date.now() }]);
   const [typing, setTyping]           = useState(false);
   const [input, setInput]             = useState("");
+  const textareaRef                   = useRef();
   const [ppsd, setPpsd]               = useState(null);
   const [userId, setUserId]           = useState(null);
   const [flagOpen, setFlagOpen]       = useState(false);
@@ -476,13 +477,13 @@ export function ConversationScreen({ go, notify, params, profile }) {
           assistant_id: a.id,
           ...(chatMode ? { mode: chatMode } : {}),
           profile: {
-            prenom:          profile?.prenom,
-            nom_assistant:   profile?.nom_assistant,
-            activite:        profile?.activite,
-            canal_principal: profile?.canal_principal,
-            ouverture:       profile?.ouverture,
-            zone:            profile?.zone,
-            ton_prefere:     profile?.ton_prefere,
+            prenom:          profile?.prenom          || undefined,
+            nom_assistant:   profile?.nom_assistant   || undefined,
+            activite:        profile?.activite        || undefined,
+            canal_principal: profile?.canal_principal || undefined,
+            ouverture:       (profile?.ouverture && profile?.ouverture !== 'null' && profile?.ouverture !== 'undefined') ? profile.ouverture : undefined,
+            zone:            profile?.zone            || undefined,
+            ton_prefere:     profile?.ton_prefere     || undefined,
             profil_type:     localStorage.getItem("aa_profil") || "entrepreneur",
           },
           ppsd:          ppsd || {},
@@ -529,7 +530,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
                          ["Mon prix est-il bon ?", "Aide-moi à calculer ma marge", "Je veux augmenter mes tarifs"];
 
   return (
-    <div className="flex flex-col bg-sable overflow-hidden" style={{ height: '100dvh' }}>
+    <div className="flex flex-col bg-sable overflow-hidden" style={{ height: '100%' }}>
       {/* Header */}
       <div className="flex items-center gap-3 px-4 pt-6 pb-3 bg-white border-b border-g200 sticky top-0 z-10">
         <button onClick={() => go("assistants")} className="w-10 h-10 rounded-full hover:bg-sable flex items-center justify-center text-charbon">
