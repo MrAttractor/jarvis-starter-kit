@@ -78,17 +78,6 @@ serve(async (req) => {
 
     await supabase.from("memories").insert(rows);
 
-    // Sauvegarder les messages dans conversations
-    if (session_id) {
-      const convRows = messages.map((m: { role: string; content: string }) => ({
-        user_id,
-        session_id,
-        role:    m.role,
-        content: m.content.substring(0, 2000),
-      }));
-      await supabase.from("conversations").insert(convRows);
-    }
-
     return new Response(JSON.stringify({ ok: true, extracted: rows.length }), {
       headers: { ...CORS, "Content-Type": "application/json" },
     });

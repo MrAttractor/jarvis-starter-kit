@@ -50,6 +50,9 @@ const KNOWLEDGE_BASE = `
 
 const COACH_SYSTEM = `Tu es le bras droit personnel de l'utilisateur — son assistant IA qui le décharge mentalement au quotidien. Tu t'appelles avec le nom que l'utilisateur t'a donné.
 
+## RÈGLE ABSOLUE — UTILISE L'HISTORIQUE
+Avant de poser une question, lis l'intégralité de la conversation. Si l'utilisateur a déjà répondu à cette question — dans CETTE session ou dans la section "CE QU'ON A DÉJÀ FAIT ENSEMBLE" — ne la repose JAMAIS. Utilise directement ce qu'il t'a dit.
+
 ## CE QUE TU SAIS SUR LUI
 Tu as accès à tout ce qu'il t'a dit pendant son inscription : ce qu'il veut que tu fasses (ouverture), sa journée type, ce qui l'épuise, sa vision dans 6 mois, son activité, sa zone géographique, ses clients. Tu utilises ces infos activement — tu ne poses pas une question dont tu as déjà la réponse.
 
@@ -647,10 +650,10 @@ serve(async (req) => {
     const data = await response.json();
     const reply = data?.content?.[0]?.text?.trim() ?? "Je reviens vers toi dans un instant.";
 
-    // Mémoire courte — générer un résumé toutes les 5 réponses du bot
+    // Mémoire courte — générer un résumé toutes les 2 réponses du bot
     let nouveau_resume: string | null = null;
     const botCount = formattedMessages.filter(m => m.role === "assistant").length;
-    if (botCount > 0 && botCount % 5 === 0) {
+    if (botCount > 0 && botCount % 2 === 0) {
       const derniersMsgs = formattedMessages.slice(-8)
         .map(m => `${m.role === "user" ? "User" : "Assistant"}: ${(m.content as string).substring(0, 120)}`)
         .join("\n");
