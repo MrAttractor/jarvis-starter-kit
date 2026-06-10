@@ -7,6 +7,71 @@
 
 ---
 
+## 2026-06-10 (session 43 — Attractor Assists V3 : refonte complète deployée en prod)
+
+### V3 deployée à 18h55
+
+- **Navigation V3** : 4 onglets (Assists / Catalogue / Commandes / Profil), ancien système supprimé
+- **DashboardScreen** : "On fait quoi aujourd'hui boss ?", card proactivité (plan Gratuit), StatStrip commandes/relances
+- **CatalogueScreen** : nouveau — grille 2 colonnes, chips catégories, gestion actif/inactif
+- **CommandesScreen** : nouveau — stats CA du jour, tabs En attente/En cours/Livrées
+- **ProfilScreen** : section Outils + Configuration (lien boutique, nom assistant, plan badge)
+- **OnboardingScreen** : 9 étapes, baptême mutuel (2 questions : prénom + nom de l'assistant)
+- **PublicAssistantScreen** : machine à 5 états (splash → catalogue → chat → paiement → confirmation)
+- **PaliersScreen** : 2 plans uniquement (Gratuit 0 F / Bras Droit 9 900 FCFA) + 2 upsells sur mesure avec CTA WA
+- **Migration SQL** : table `orders` créée (0028_orders.sql)
+- **Process upsells** : `livrables/commercial/process-vente/PROCESS_UPSELLS_SUR_MESURE.md`
+- Commit `4d87f89` pushé sur master, build propre, deploy Netlify confirmé
+
+---
+
+## 2026-06-10 (session 44 — Club Élévia : NDA signé + Maquette V2 + Process closing)
+
+### NDA Club Élévia signé avec Elise CAPEL
+
+- NDA créé, ajusté (Mac Arthur KOUASSI, Paris, Auto-entrepreneur, signature électronique) et envoyé via Yousign
+- Signé et validé le 10/06/2026 — fichier dans `livrables/clients/club-elevia/`
+- App repositionnée : ouverte à toutes nationalités (pas uniquement diaspora africaine)
+- En attente du document détaillé d'Elise (à poser dans `context/import/`) pour mise à jour contenu maquette
+
+### Maquette Club Élévia V2 structurée
+
+- Ancienne maquette "Racines" (V1, diaspora, rose/violet) supprimée
+- Maquette V2 générée via Claude Design (rebrandée Club Élévia) sauvegardée dans `livrables/clients/club-elevia/maquette-club-elevia-v2.html`
+- Contenus provisoires marqués `<!-- PLACEHOLDER -->` pour mise à jour après réception doc Elise
+- Dossier club-elevia contient désormais : NDA signé + maquette V2 cliquable
+
+### Process commercial grands clients — formalisation en cours
+
+- Séquence validée : NDA signé → maquette V2 annotée + cliquable → PDF éducatif phases → point contenu/UX → dev
+- PDF éducatif sur les phases de déploiement prévu (fond noir/doré, premium) — en attente GO de Mac Arthur
+- Clients d'envergure (Club Élévia, Beracca) = NDA obligatoire avant tout brief détaillé
+- **Prochain chantier identifié :** automatiser l'envoi du NDA à signer via Yousign
+
+---
+
+## 2026-06-09 (session 43 — Nouveaux modules V3 + Branding Assists acté)
+
+### Branding JARVIS → ASSISTS acté définitivement
+
+- "Jarvis" remplacé par "Assists" dans tout le workspace (CLAUDE.md, CONTEXT.md)
+- Le workspace de Mac Arthur EST l'Assists de Mr Attractor — prototype vivant et source de vérité
+- Cohérence totale : même nom dans le produit et dans le workspace personnel
+
+### 4 nouveaux modules V3 ajoutés dans `context/import/`
+
+- `ANAMNESE.txt` : squelette CONTEXT.md entrepreneur — template que l'anamnèse conversationnelle va remplir lors de l'onboarding de chaque entrepreneur dans Assists
+- `DECLENCHEUR.txt` : commande /prime simplifiée pour les entrepreneurs Assists (sans étape CRM Notion — juste charger le contexte + résumer)
+- `CHASSEUR DINFOS.txt` : skill de veille contextualisée complète — module "Chasseur d'infos" pour Assists (filtre les actualités selon le profil entrepreneur)
+- `FIDELYS.txt` : HTML complet Fidelys — 3 interfaces livrées : dashboard entrepreneur (Noir/Or), espace client fidélité (personnalisable aux couleurs de l'entrepreneur), landing inscription
+
+### GetWinWorld — nouveau dossier dans `context/import/`
+
+- 47 photos produit d'une boutique de chaussures luxe/premium (mocassins python, intérieur orange, style prestige)
+- Statut : prospect à qualifier ou template démo secteur mode/luxe
+
+---
+
 ## 2026-06-09 (sessions 41-42 — V3 Chantier 2 + Architecture cerveau + Base de connaissance)
 
 ### Chantier 2 livré — Agent Veille & Prospection (DMV quotidienne)
