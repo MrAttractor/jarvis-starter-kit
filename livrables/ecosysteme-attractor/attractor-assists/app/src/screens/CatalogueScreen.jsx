@@ -7,6 +7,7 @@ export function CatalogueScreen({ go, notify, profile }) {
   const [loading, setLoading] = useState(true);
   const [filterCat, setFilterCat] = useState('Tout');
   const [showSheet, setShowSheet] = useState(false);
+  const [editProduct, setEditProduct] = useState(null);
   const [form, setForm] = useState({ nom: '', prix: '', unite: 'unité', categorie: '', photo_url: '' });
 
   const loadProduits = async () => {
@@ -31,28 +32,63 @@ export function CatalogueScreen({ go, notify, profile }) {
     loadProduits();
   };
 
+  const openNew = () => {
+    setEditProduct(null);
+    setForm({ nom: '', prix: '', unite: 'unité', categorie: '', photo_url: '' });
+    setShowSheet(true);
+  };
+
+  const openEdit = (p) => {
+    setEditProduct(p);
+    setForm({ nom: p.nom || '', prix: String(p.prix || ''), unite: p.unite || 'unité', categorie: p.categorie || '', photo_url: p.photo_url || '' });
+    setShowSheet(true);
+  };
+
+  const closeSheet = () => { setShowSheet(false); setEditProduct(null); };
+
   const handleSave = async () => {
     if (!form.nom.trim()) return;
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { notify('Session expirée, reconnecte-toi'); return; }
-      const { error } = await supabase.from('produits_user').insert({
-        user_id: user.id,
-        nom: form.nom.trim(),
-        prix: parseInt(form.prix) || 0,
-        unite: form.unite,
-        categorie: form.categorie,
-        photo_url: form.photo_url,
-        actif: true,
-      });
-      if (error) throw error;
-      setForm({ nom: '', prix: '', unite: 'unité', categorie: '', photo_url: '' });
-      setShowSheet(false);
-      notify('Produit ajouté');
+      if (editProduct) {
+        const { error } = await supabase.from('produits_user').update({
+          nom: form.nom.trim(),
+          prix: parseInt(form.prix) || 0,
+          unite: form.unite,
+          categorie: form.categorie,
+          photo_url: form.photo_url,
+        }).eq('id', editProduct.id);
+        if (error) throw error;
+        notify('Produit modifié');
+      } else {
+        const { error } = await supabase.from('produits_user').insert({
+          user_id: user.id,
+          nom: form.nom.trim(),
+          prix: parseInt(form.prix) || 0,
+          unite: form.unite,
+          categorie: form.categorie,
+          photo_url: form.photo_url,
+          actif: true,
+        });
+        if (error) throw error;
+        notify('Produit ajouté');
+      }
+      closeSheet();
       loadProduits();
     } catch (e) {
-      notify(e?.message || "Erreur lors de l'ajout du produit");
+      notify(e?.message || 'Erreur');
     }
+  };
+
+  const handleDelete = async () => {
+    if (!editProduct) return;
+    try {
+      await supabase.from('produits_user').delete().eq('id', editProduct.id);
+      closeSheet();
+      loadProduits();
+      notify('Produit supprimé');
+    } catch { notify('Erreur lors de la suppression'); }
   };
 
   const activeCount = produits.filter(p => p.actif !== false).length;
@@ -66,7 +102,7 @@ export function CatalogueScreen({ go, notify, profile }) {
           <div className="text-[12.5px] text-g500 mt-0.5">{activeCount} produit{activeCount !== 1 ? 's' : ''} actif{activeCount !== 1 ? 's' : ''}</div>
         </div>
         <button
-          onClick={() => setShowSheet(true)}
+          onClick={openNew}
           className="w-10 h-10 rounded-full bg-orange text-white flex items-center justify-center shadow-[0_6px_16px_-4px_rgba(242,92,5,.55)] active:scale-95 transition"
         >
           <Icon name="plus" size={18} />
@@ -106,11 +142,17 @@ export function CatalogueScreen({ go, notify, profile }) {
           <div className="grid grid-cols-2 gap-3">
             {filtered.map(p => (
               <div key={p.id} className={`bg-white rounded-2xl border border-g200 overflow-hidden shadow-soft ${p.actif === false ? 'opacity-50' : ''}`}>
-                <div className="w-full aspect-square bg-g100 flex items-center justify-center">
+                <div className="w-full aspect-square bg-g100 flex items-center justify-center relative">
                   {p.photo_url
                     ? <img src={p.photo_url} alt={p.nom} className="w-full h-full object-cover" />
                     : <Icon name="camera" size={28} className="text-g400" />
                   }
+                  <button
+                    onClick={() => openEdit(p)}
+                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm border border-g200 flex items-center justify-center shadow-sm active:bg-g100 transition"
+                  >
+                    <Icon name="edit" size={13} className="text-charbon" />
+                  </button>
                 </div>
                 <div className="p-2.5">
                   <div className="font-display font-bold text-[13px] text-charbon leading-tight">{p.nom}</div>
@@ -136,10 +178,19 @@ export function CatalogueScreen({ go, notify, profile }) {
 
       {/* Sheet ajout produit */}
       {showSheet && (
-        <div className="fixed inset-0 z-50 flex items-end" style={{ background: 'rgba(0,0,0,.45)' }} onClick={() => setShowSheet(false)}>
+        <div className="fixed inset-0 z-50 flex items-end" style={{ background: 'rgba(0,0,0,.45)' }} onClick={closeSheet}>
           <div className="w-full bg-white rounded-t-[28px] p-6 pb-10 flex flex-col gap-4" onClick={e => e.stopPropagation()}>
             <div className="w-10 h-1 rounded-full bg-g200 mx-auto mb-1" />
-            <div className="font-display font-bold text-[17px] text-charbon">Nouveau produit</div>
+            <div className="flex items-center justify-between">
+              <div className="font-display font-bold text-[17px] text-charbon">
+                {editProduct ? 'Modifier le produit' : 'Nouveau produit'}
+              </div>
+              {editProduct && (
+                <button onClick={handleDelete} className="text-[12.5px] font-bold text-red-500 active:opacity-70 transition">
+                  Supprimer
+                </button>
+              )}
+            </div>
             {[
               { label: 'Nom du produit *', key: 'nom', placeholder: 'Ex : Attiéké poisson', voice: true },
               { label: 'Prix (FCFA)', key: 'prix', placeholder: 'Ex : 2000', type: 'number' },
@@ -176,7 +227,7 @@ export function CatalogueScreen({ go, notify, profile }) {
               onClick={handleSave}
               className="w-full py-4 rounded-2xl bg-orange text-white font-display font-bold text-[15px] shadow-[0_8px_20px_-6px_rgba(242,92,5,.6)] mt-1"
             >
-              Ajouter le produit
+              {editProduct ? 'Enregistrer les modifications' : 'Ajouter le produit'}
             </button>
           </div>
         </div>
