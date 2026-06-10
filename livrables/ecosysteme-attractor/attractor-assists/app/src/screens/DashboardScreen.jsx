@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { Icon, VoiceMic } from '../components/ui';
+import { Icon } from '../components/ui';
 
 const PLAN_MSG_LIMIT = { decouverte: 20, decouverte_eu: 20, gratuit: 20, growth: 100, growth_eu: 100, bras_droit: null };
 
@@ -248,7 +248,6 @@ export function DashboardScreen({ go, notify, profile }) {
               placeholder="Dis-moi…"
               className="flex-1 px-4 py-3 rounded-xl bg-sable border border-g200 text-[14px] text-charbon placeholder:text-g400 outline-none focus:border-orange transition"
             />
-            <VoiceMic onTranscript={t => { setInputText(t); submitInput(t); }} />
             <button
               onClick={() => go('dump')}
               className="w-11 h-11 rounded-xl bg-orange text-white flex items-center justify-center flex-shrink-0 active:opacity-80 transition shadow-[0_4px_12px_-4px_rgba(242,92,5,.5)]"

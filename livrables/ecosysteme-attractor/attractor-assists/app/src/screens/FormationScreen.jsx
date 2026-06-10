@@ -136,7 +136,29 @@ export function FormationScreen({ go }) {
               {loading ? (
                 <div className="flex justify-center py-12"><Spinner className="w-8 h-8" /></div>
               ) : (
-                <pre className="text-[13.5px] text-charbon leading-relaxed whitespace-pre-wrap font-sans">{content}</pre>
+                <div className="space-y-3">
+                  {content.split(/\n{2,}/).map((para, i) => {
+                    const trimmed = para.trim();
+                    if (!trimmed) return null;
+                    const isHeading = /^#{1,3}\s/.test(trimmed);
+                    if (isHeading) {
+                      const level = (trimmed.match(/^(#+)/) || ['', ''])[1].length;
+                      const text = trimmed.replace(/^#+\s*/, '');
+                      return (
+                        <p key={i} className={`font-display font-extrabold text-charbon mt-2 ${level === 1 ? 'text-[18px]' : level === 2 ? 'text-[15.5px] text-orange' : 'text-[14px]'}`}>
+                          {text}
+                        </p>
+                      );
+                    }
+                    return (
+                      <p key={i} className="text-[14px] text-charbon leading-[1.65]">
+                        {trimmed.split('\n').map((line, k) => (
+                          <span key={k}>{line}{k < trimmed.split('\n').length - 1 && <br />}</span>
+                        ))}
+                      </p>
+                    );
+                  })}
+                </div>
               )}
             </div>
 
