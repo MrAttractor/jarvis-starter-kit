@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { MOCK } from '../data';
 import { Icon, AssistGlyph, TypingDots, Card, Pill, Sheet, Textarea } from '../components/ui';

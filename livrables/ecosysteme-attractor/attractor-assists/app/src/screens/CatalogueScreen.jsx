@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, Spinner, VoiceMic } from '../components/ui';
 
@@ -9,6 +9,8 @@ export function CatalogueScreen({ go, notify, profile }) {
   const [showSheet, setShowSheet] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [form, setForm] = useState({ nom: '', prix: '', unite: 'unité', categorie: '', photo_url: '' });
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef(null);
 
   const loadProduits = async () => {
     setLoading(true);
@@ -45,6 +47,24 @@ export function CatalogueScreen({ go, notify, profile }) {
   };
 
   const closeSheet = () => { setShowSheet(false); setEditProduct(null); };
+
+  const handlePhotoUpload = async (file) => {
+    if (!file) return;
+    setUploading(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { notify('Session expirée'); return; }
+      const ext = file.name.split('.').pop();
+      const path = `${user.id}/${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from('catalogue-photos').upload(path, file, { upsert: true });
+      if (upErr) throw upErr;
+      const { data: { publicUrl } } = supabase.storage.from('catalogue-photos').getPublicUrl(path);
+      setForm(x => ({ ...x, photo_url: publicUrl }));
+    } catch (e) {
+      notify(e?.message || 'Erreur upload photo');
+    }
+    setUploading(false);
+  };
 
   const handleSave = async () => {
     if (!form.nom.trim()) return;
@@ -176,7 +196,7 @@ export function CatalogueScreen({ go, notify, profile }) {
         )}
       </div>
 
-      {/* Sheet ajout produit */}
+      {/* Sheet ajout/modif produit */}
       {showSheet && (
         <div className="fixed inset-0 z-50 flex items-end" style={{ background: 'rgba(0,0,0,.45)' }} onClick={closeSheet}>
           <div className="w-full bg-white rounded-t-[28px] p-6 pb-10 flex flex-col gap-4" onClick={e => e.stopPropagation()}>
@@ -191,11 +211,42 @@ export function CatalogueScreen({ go, notify, profile }) {
                 </button>
               )}
             </div>
+
+            {/* Photo */}
+            <div>
+              <label className="text-[12px] font-bold text-g500 block mb-1.5">Photo du produit</label>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={e => handlePhotoUpload(e.target.files?.[0])}
+              />
+              <div className="flex gap-3 items-center">
+                <div
+                  className="w-16 h-16 rounded-xl bg-g100 border border-g200 flex items-center justify-center overflow-hidden flex-shrink-0"
+                >
+                  {form.photo_url
+                    ? <img src={form.photo_url} alt="" className="w-full h-full object-cover" />
+                    : <Icon name="camera" size={22} className="text-g400" />
+                  }
+                </div>
+                <button
+                  type="button"
+                  onClick={() => fileRef.current?.click()}
+                  disabled={uploading}
+                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-[1.5px] border-dashed border-g300 text-[13px] font-bold text-g600 bg-sable active:bg-g100 transition disabled:opacity-60"
+                >
+                  {uploading ? <Spinner className="w-4 h-4" /> : <Icon name="camera" size={15} />}
+                  {uploading ? 'Chargement…' : form.photo_url ? 'Changer la photo' : 'Ajouter une photo'}
+                </button>
+              </div>
+            </div>
+
             {[
               { label: 'Nom du produit *', key: 'nom', placeholder: 'Ex : Attiéké poisson', voice: true },
               { label: 'Prix (FCFA)', key: 'prix', placeholder: 'Ex : 2000', type: 'number' },
               { label: 'Catégorie', key: 'categorie', placeholder: 'Ex : Plats, Jus, Desserts', voice: true },
-              { label: 'Lien photo (URL)', key: 'photo_url', placeholder: 'https://…' },
             ].map(f => (
               <div key={f.key}>
                 <label className="text-[12px] font-bold text-g500 block mb-1.5">{f.label}</label>

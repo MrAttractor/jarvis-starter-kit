@@ -10,32 +10,24 @@ const PLAN_LABELS = {
 };
 const PLAN_IS_PAID = ['growth', 'growth_eu', 'bras_droit', 'team', 'manager', 'personnalise'];
 
-function PRow({ label, sub, action, actionLabel, children, onClick }) {
-  const content = (
-    <div className="flex items-center gap-3 px-4 py-3.5 w-full text-left">
-      <div className="flex-1 min-w-0">
-        <div className="text-[11px] font-bold text-g500 uppercase tracking-[.08em] mb-0.5">{label}</div>
-        {sub && <div className="text-[13.5px] font-semibold text-charbon">{sub}</div>}
-        {children}
-      </div>
-      {actionLabel && (
-        <span className="text-[13px] font-bold text-orange flex-shrink-0">{actionLabel}</span>
-      )}
-      {action && !actionLabel && (
-        <Icon name="chev" size={18} className="text-g400 flex-shrink-0" />
-      )}
-    </div>
-  );
-  if (onClick) return (
-    <button onClick={onClick} className="w-full active:bg-g100 transition rounded-xl">
-      {content}
-    </button>
-  );
-  return <div>{content}</div>;
-}
-
 function Divider() {
   return <div className="h-px bg-g200 mx-4" />;
+}
+
+function SettingRow({ label, sub, value, actionLabel, onClick, children }) {
+  return (
+    <button onClick={onClick} className="w-full flex items-center gap-3 px-4 py-3.5 active:bg-g100 transition rounded-xl text-left">
+      <div className="flex-1 min-w-0">
+        <div className="text-[11px] font-bold text-g400 uppercase tracking-[.08em]">{label}</div>
+        {sub && <div className="text-[13.5px] font-semibold text-charbon mt-0.5">{sub}</div>}
+        {children}
+      </div>
+      {actionLabel
+        ? <span className="text-[13px] font-bold text-orange flex-shrink-0">{actionLabel}</span>
+        : <Icon name="chevron" size={18} className="text-g300 flex-shrink-0" />
+      }
+    </button>
+  );
 }
 
 export function ProfilScreen({ go, notify, dark, setDark, profile }) {
@@ -44,7 +36,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
   const [activite, setActivite] = useState(profile?.activite || '');
   const [email, setEmail]     = useState('');
   const [saving, setSaving]   = useState(false);
-  const [sheetOpen, setSheetOpen] = useState(null); // 'bras_droit' | 'activite' | 'feedback'
+  const [sheetOpen, setSheetOpen] = useState(null);
   const [feedbackType, setFeedbackType] = useState('bug');
   const [feedbackText, setFeedbackText] = useState('');
   const [feedbackSending, setFeedbackSending] = useState(false);
@@ -110,38 +102,130 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
   return (
     <div className="flex flex-col min-h-full bg-sable pb-10">
 
-      {/* Header avatar */}
-      <div className="flex flex-col items-center gap-2 pt-14 pb-5 px-4">
-        <div
-          className="w-[66px] h-[66px] rounded-[22px] flex items-center justify-center font-display font-extrabold text-[22px] text-white flex-shrink-0"
-          style={{ background: 'linear-gradient(135deg,#FF7A2E,#F25C05)' }}
-        >
-          {initials}
+      {/* Hero profil */}
+      <div className="relative px-4 pt-14 pb-4">
+        <div className="flex items-center gap-4">
+          <div
+            className="w-[60px] h-[60px] rounded-[20px] flex items-center justify-center font-display font-extrabold text-[20px] text-white flex-shrink-0"
+            style={{ background: 'linear-gradient(135deg,#FF7A2E,#F25C05)' }}
+          >
+            {initials}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="font-display font-bold text-[19px] text-charbon leading-tight">{profile?.prenom || 'Mon profil'}</div>
+            <div className="text-[12.5px] text-g400 mt-0.5 truncate">{profile?.activite || 'Ton activité'}</div>
+          </div>
+          <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full flex-shrink-0 ${isPaid ? 'bg-vert/10 text-vert' : 'bg-g100 text-g500'}`}>
+            {isPaid ? 'Bras Droit' : 'Gratuit'}
+          </span>
         </div>
-        <div className="font-display font-bold text-[18px] text-charbon">{profile?.prenom || 'Mon profil'}</div>
-        <span className={`text-[11.5px] font-bold px-3 py-1 rounded-full ${isPaid ? 'bg-vert/10 text-vert' : 'bg-g100 text-g500'}`}>
-          {planLabel}
-        </span>
+      </div>
+
+      {/* Raccourcis rapides */}
+      <div className="px-4 mb-3">
+        <div className="grid grid-cols-4 gap-2">
+          {[
+            { icon: 'chat', label: 'Assists', screen: 'conversation' },
+            { icon: 'package', label: 'Catalogue', screen: 'catalogue' },
+            { icon: 'users', label: 'Clients', screen: 'carnet' },
+            { icon: 'star', label: 'Fidelys', screen: 'fidelys' },
+          ].map(({ icon, label, screen }) => (
+            <button
+              key={screen}
+              onClick={() => go(screen)}
+              className="flex flex-col items-center gap-1.5 py-3 bg-white rounded-2xl border border-g200 shadow-soft active:scale-95 transition"
+            >
+              <div className="w-9 h-9 rounded-xl bg-orange/10 flex items-center justify-center">
+                <Icon name={icon} size={18} className="text-orange" />
+              </div>
+              <span className="text-[11px] font-bold text-charbon">{label}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="px-4 flex flex-col gap-3">
 
+        {/* Carte boutique */}
+        {boutiqueUrl ? (
+          <div className="bg-white rounded-2xl border border-g200 shadow-soft overflow-hidden">
+            <div className="px-4 pt-3.5 pb-2 flex items-center justify-between">
+              <div>
+                <div className="text-[10px] font-bold text-g400 uppercase tracking-[.1em]">Ma boutique</div>
+                <div className="text-[13px] font-bold text-orange mt-0.5 truncate">/b/{slug}</div>
+              </div>
+              <div className="w-8 h-8 rounded-xl bg-vert/10 flex items-center justify-center">
+                <Icon name="check" size={16} className="text-vert" />
+              </div>
+            </div>
+            <div className="flex gap-2 px-4 pb-3.5">
+              <button
+                onClick={copyBoutique}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-g200 text-[12.5px] font-bold text-charbon bg-sable active:bg-g100 transition"
+              >
+                <Icon name="copy" size={13} /> Copier
+              </button>
+              <button
+                onClick={shareWA}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-g200 text-[12.5px] font-bold text-charbon bg-sable active:bg-g100 transition"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                WA
+              </button>
+              <button
+                onClick={() => go('mon-app')}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-orange/30 text-[12.5px] font-bold text-orange bg-orange/5 active:bg-orange/10 transition"
+              >
+                <Icon name="settings" size={13} /> Modifier
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={() => go('mon-app')}
+            className="w-full rounded-2xl overflow-hidden shadow-soft active:scale-[.98] transition"
+            style={{ background: 'linear-gradient(135deg,#FF7A2E,#F25C05)' }}
+          >
+            <div className="p-4 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+                <Icon name="bolt" size={22} className="text-white" />
+              </div>
+              <div className="flex-1 text-left">
+                <div className="font-display font-extrabold text-[15px] text-white">Créer ma boutique</div>
+                <div className="text-[12px] text-white/75 mt-0.5">Reçois des commandes par lien WhatsApp</div>
+              </div>
+              <Icon name="chevron" size={18} className="text-white/60 flex-shrink-0" />
+            </div>
+          </button>
+        )}
+
+        {/* Plan + upgrade */}
+        {!isPaid && (
+          <button
+            onClick={() => go('paliers')}
+            className="w-full rounded-2xl border border-orange/25 px-4 py-3.5 flex items-center gap-3 bg-orange/5 active:bg-orange/10 transition"
+          >
+            <div className="w-9 h-9 rounded-xl bg-orange/15 flex items-center justify-center flex-shrink-0">
+              <Icon name="bolt" size={18} className="text-orange" />
+            </div>
+            <div className="flex-1 text-left">
+              <div className="font-display font-bold text-[14px] text-charbon">Passer en Bras Droit</div>
+              <div className="text-[12px] text-g500 mt-0.5">Assists illimité · 9 900 FCFA/mois</div>
+            </div>
+            <span className="text-[12px] font-bold text-orange bg-orange/10 px-2.5 py-1 rounded-full flex-shrink-0">Upgrader</span>
+          </button>
+        )}
+
         {/* Outils */}
         <div className="bg-white rounded-2xl border border-g200 overflow-hidden shadow-soft">
           <div className="px-4 pt-3 pb-1">
-            <span className="text-[10px] font-bold text-g400 uppercase tracking-[.1em]">Mes outils</span>
+            <span className="text-[10px] font-bold text-g400 uppercase tracking-[.1em]">Formation & méthode</span>
           </div>
-          <PRow label="Fidelys" sub="Programme de fidélité" onClick={() => go('fidelys')}>
-            <Icon name="star" size={14} className="text-amber mt-0.5 inline mr-1" />
-          </PRow>
+          <SettingRow label="Ma formation" sub="5 modules · À ton rythme" onClick={() => go('formation')} />
           <Divider />
-          <PRow label="Mon agenda" sub="Calendrier & priorités" onClick={() => go('agenda')} />
+          <SettingRow label="La Méthode" sub="Framework interactif" onClick={() => go('methode')} />
           <Divider />
-          <PRow label="Mes clients" sub="Carnet de suivi" onClick={() => go('carnet')} />
-          <Divider />
-          <PRow label="Ma formation" sub="5 modules · À ton rythme" onClick={() => go('formation')} />
-          <Divider />
-          <PRow label="La Méthode" sub="Framework interactif" onClick={() => go('methode')} />
+          <SettingRow label="Mon agenda" sub="Calendrier & priorités" onClick={() => go('agenda')} />
         </div>
 
         {/* Configuration */}
@@ -150,94 +234,45 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
             <span className="text-[10px] font-bold text-g400 uppercase tracking-[.1em]">Configuration</span>
           </div>
 
-          <PRow
+          <SettingRow
             label="Mon activité"
-            onClick={() => setSheetOpen('activite')}
             actionLabel="Modifier"
+            onClick={() => setSheetOpen('activite')}
           >
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-g100 text-[12.5px] font-semibold text-charbon mt-1">
               {profile?.activite || 'Non défini'}
             </span>
-          </PRow>
+          </SettingRow>
           <Divider />
 
-          <PRow
+          <SettingRow
             label="Mon bras droit"
             sub={profile?.nom_assistant || 'Non nommé'}
-            onClick={() => setSheetOpen('bras_droit')}
             actionLabel="Renommer"
+            onClick={() => setSheetOpen('bras_droit')}
           />
           <Divider />
 
-          {boutiqueUrl ? (
-            <div className="px-4 py-3.5">
-              <div className="text-[11px] font-bold text-g500 uppercase tracking-[.08em] mb-1.5">Mon lien boutique</div>
-              <div className="text-[13px] font-semibold text-orange truncate mb-2">
-                /b/{slug}
-              </div>
-              <div className="flex gap-2 flex-wrap">
-                <button
-                  onClick={copyBoutique}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-g200 text-[12.5px] font-bold text-charbon bg-sable active:bg-g100 transition"
-                >
-                  <Icon name="copy" size={13} /> Copier
-                </button>
-                <button
-                  onClick={shareWA}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-g200 text-[12.5px] font-bold text-charbon bg-sable active:bg-g100 transition"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                  WA Business
-                </button>
-                <button
-                  onClick={() => go('mon-app')}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-g200 text-[12.5px] font-bold text-charbon bg-sable active:bg-g100 transition"
-                >
-                  <Icon name="settings" size={13} /> Modifier
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="px-4 py-3.5">
-              <div className="text-[11px] font-bold text-g500 uppercase tracking-[.08em] mb-1.5">Mon lien boutique</div>
-              <p className="text-[12.5px] text-g400 mb-3 leading-relaxed">Crée ton assistant client pour recevoir des commandes par lien.</p>
-              <button
-                onClick={() => go('mon-app')}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-orange text-white text-[13px] font-bold active:opacity-80 transition shadow-[0_4px_12px_-4px_rgba(242,92,5,.5)]"
-              >
-                <Icon name="bolt" size={14} />
-                Créer ma boutique
-              </button>
-            </div>
+          {isPaid && (
+            <SettingRow label="Mon plan" sub={planLabel} onClick={() => go('paliers')} />
           )}
-          <Divider />
-
-          <PRow
-            label="Mon plan"
-            onClick={() => go('paliers')}
-          >
-            <div className="flex items-center gap-2 mt-1">
-              <span className={`text-[12.5px] font-bold ${isPaid ? 'text-vert' : 'text-g500'}`}>{planLabel}</span>
-              {!isPaid && (
-                <span className="text-[11.5px] font-bold text-orange bg-orange/8 px-2 py-0.5 rounded-full">Upgrader</span>
-              )}
-            </div>
-          </PRow>
-          <Divider />
 
           {refCode && (
-            <PRow
-              label="Parrainage"
-              onClick={() => {
-                const link = `${window.location.origin}?ref=${refCode}`;
-                navigator.clipboard.writeText(link);
-                notify('Lien de parrainage copié !');
-              }}
-            >
-              <div className="text-[12.5px] font-semibold text-charbon mt-0.5">
-                {refCount} filleul{refCount !== 1 ? 's' : ''} · gagne 1 mois Bras Droit
-              </div>
-            </PRow>
+            <>
+              {isPaid && <Divider />}
+              <SettingRow
+                label="Parrainage"
+                onClick={() => {
+                  const link = `${window.location.origin}?ref=${refCode}`;
+                  navigator.clipboard.writeText(link);
+                  notify('Lien de parrainage copié !');
+                }}
+              >
+                <div className="text-[12.5px] font-semibold text-charbon mt-0.5">
+                  {refCount} filleul{refCount !== 1 ? 's' : ''} · gagne 1 mois Bras Droit
+                </div>
+              </SettingRow>
+            </>
           )}
         </div>
 
@@ -246,7 +281,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
           <div className="px-4 pt-3 pb-1">
             <span className="text-[10px] font-bold text-g400 uppercase tracking-[.1em]">Application</span>
           </div>
-          <div className="px-4 py-3.5 flex items-center justify-between">
+          <div className="flex items-center justify-between px-4 py-3.5">
             <span className="text-[13.5px] font-semibold text-charbon">Mode sombre</span>
             <button
               onClick={() => setDark(!dark)}
@@ -258,13 +293,13 @@ export function ProfilScreen({ go, notify, dark, setDark, profile }) {
           <Divider />
           {canInstall && (
             <>
-              <PRow label="Installer l'app" sub="Ajouter à l'écran d'accueil" onClick={() => go('install')} />
+              <SettingRow label="Installer l'app" sub="Ajouter à l'écran d'accueil" onClick={() => go('install')} />
               <Divider />
             </>
           )}
-          <PRow label="Notifications" onClick={() => go('notifications')} />
+          <SettingRow label="Notifications" onClick={() => go('notifications')} />
           <Divider />
-          <PRow label="Un bug ou une idée ?" onClick={() => setSheetOpen('feedback')} />
+          <SettingRow label="Un bug ou une idée ?" onClick={() => setSheetOpen('feedback')} />
         </div>
 
         <button

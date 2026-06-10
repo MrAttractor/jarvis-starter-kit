@@ -260,19 +260,23 @@ export function MéthodeScreen({ go }) {
   }, []);
 
   const loadVotes = async () => {
-    const { data } = await supabase.from('methode_votes').select('book_id, count').then(r => r).catch(() => ({ data: null }));
+    const { data } = await supabase.from('methode_votes').select('book_id').catch(() => ({ data: null }));
     if (data) {
       const map = {};
-      data.forEach(v => { map[v.book_id] = v.count; });
+      data.forEach(v => { map[v.book_id] = (map[v.book_id] || 0) + 1; });
       setVotes(map);
     }
   };
 
   const vote = async (bookId) => {
-    if (!userId || voting) return;
+    if (voting) return;
     setVoting(bookId);
-    await supabase.from('methode_votes').upsert({ user_id: userId, book_id: bookId }, { onConflict: 'user_id,book_id' }).catch(() => {});
-    setVotes(v => ({ ...v, [bookId]: (v[bookId] || 0) + 1 }));
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { setVoting(null); return; }
+    const { error } = await supabase.from('methode_votes').upsert({ user_id: user.id, book_id: bookId }, { onConflict: 'user_id,book_id' });
+    if (!error) {
+      setVotes(v => ({ ...v, [bookId]: (v[bookId] || 0) + 1 }));
+    }
     setVoting(null);
   };
 

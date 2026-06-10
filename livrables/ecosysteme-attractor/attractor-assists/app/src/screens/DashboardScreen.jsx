@@ -9,13 +9,13 @@ const HERO_CARDS = [
     img: '/uploads/agents/carelle.jpg',
     overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(242,92,5,0.72) 52%, rgba(200,50,0,0.95) 100%)',
     badge: 'Intelligence IA',
-    title: 'Un assistant qui\nrÃ©pond Ã  ta place',
+    title: 'Un assistant qui\nrépond à ta place',
   },
   {
     img: '/marketplace/ecommerce.jpg',
     overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(21,128,61,0.72) 52%, rgba(14,90,40,0.95) 100%)',
     badge: 'Commerce digital',
-    title: 'Ta boutique vend\nmÃªme quand tu dors',
+    title: 'Ta boutique vend\nmême quand tu dors',
   },
   {
     img: '/uploads/photo-community.png',
@@ -26,14 +26,14 @@ const HERO_CARDS = [
   {
     img: '/marketplace/services.jpg',
     overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(146,64,14,0.72) 52%, rgba(110,45,5,0.95) 100%)',
-    badge: 'FidÃ©lisation',
-    title: 'Tes clients reviennent\nd\'eux-mÃªmes',
+    badge: 'Fidélisation',
+    title: 'Tes clients reviennent\nd\'eux-mêmes',
   },
   {
     img: '/marketplace/hero-founder.jpg',
     overlay: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(91,33,182,0.72) 52%, rgba(60,15,140,0.95) 100%)',
     badge: 'Automatisation',
-    title: 'RÃ©ponds instantanÃ©ment\nÃ  toutes les demandes',
+    title: 'Réponds instantanément\nà toutes les demandes',
   },
 ];
 
@@ -68,11 +68,11 @@ export function DashboardScreen({ go, notify, profile }) {
   const remaining  = msgLimit !== null ? Math.max(0, msgLimit - usedToday) : null;
   const isGratuit  = msgLimit !== null;
 
-  // Suggestions proactivitÃ© selon contexte
+  // Suggestions proactivité selon contexte
   const proSuggestions = [
     ordersCount > 0 && { label: `Traiter les ${ordersCount} commande${ordersCount > 1 ? 's' : ''} en attente`, go: 'commandes', params: {} },
-    staleCount > 0  && { label: `Relancer ${staleCount} client${staleCount > 1 ? 's' : ''} inactif${staleCount > 1 ? 's' : ''}`, go: 'conversation', params: { assistant: 'coach', prefill: 'Aide-moi Ã  relancer mes clients inactifs avec un message sympa.' } },
-    { label: 'PrÃ©parer un message promo pour aujourd\'hui', go: 'conversation', params: { assistant: 'coach', prefill: 'Aide-moi Ã  prÃ©parer un message de promotion pour aujourd\'hui.' } },
+    staleCount > 0  && { label: `Relancer ${staleCount} client${staleCount > 1 ? 's' : ''} inactif${staleCount > 1 ? 's' : ''}`, go: 'conversation', params: { assistant: 'coach', prefill: 'Aide-moi à relancer mes clients inactifs avec un message sympa.' } },
+    { label: 'Préparer un message promo pour aujourd\'hui', go: 'conversation', params: { assistant: 'coach', prefill: 'Aide-moi à préparer un message de promotion pour aujourd\'hui.' } },
   ].filter(Boolean).slice(0, 3);
 
   useEffect(() => {
@@ -119,7 +119,7 @@ export function DashboardScreen({ go, notify, profile }) {
   const copyMessage = (text) => {
     navigator.clipboard.writeText(text).then(() => {
       setDmvCopied(true);
-      notify('Message copiÃ©');
+      notify('Message copié');
       setTimeout(() => setDmvCopied(false), 2000);
     });
   };
@@ -144,7 +144,7 @@ export function DashboardScreen({ go, notify, profile }) {
           <div className="font-display font-bold text-[17px] text-charbon leading-tight truncate">
             Bonjour {first}
           </div>
-          <div className="text-[12px] text-g500">{fmtDay()} Â· {time}</div>
+          <div className="text-[12px] text-g500">{fmtDay()} · {time}</div>
         </div>
         <button
           onClick={() => go('notifications')}
@@ -225,7 +225,7 @@ export function DashboardScreen({ go, notify, profile }) {
               { n: '1', t: 'Obtiens ton lien boutique â†’ onglet Profil si ce n\'est pas encore fait' },
               { n: '2', t: 'Colle ce lien dans ton message d\'accueil WhatsApp Business' },
               { n: '3', t: 'Active le message automatique WA : "Salut ! Commande ici ðŸ‘‡ [lien]"' },
-              { n: '4', t: 'Tes clientes commandent, Assists gÃ¨re les rÃ©ponses pour toi' },
+              { n: '4', t: 'Tes clientes commandent, Assists gère les réponses pour toi' },
             ].map(item => (
               <div key={item.n} className="flex items-start gap-3">
                 <span className="w-5 h-5 rounded-full bg-[#25D366]/12 text-[#1a9e4e] text-[11px] font-extrabold flex items-center justify-center flex-shrink-0 mt-0.5">{item.n}</span>
@@ -235,11 +235,11 @@ export function DashboardScreen({ go, notify, profile }) {
           </div>
         </div>
 
-        {/* Card proactivitÃ© (plan Gratuit uniquement) */}
+        {/* Card proactivité (plan Gratuit uniquement) */}
         {isGratuit && remaining !== null && remaining <= msgLimit * 0.4 && proSuggestions.length > 0 && (
           <div className="bg-white rounded-2xl border border-g200 p-4 shadow-soft">
             <p className="text-[12.5px] font-bold text-g500 mb-2.5">
-              Il te reste <span className="text-charbon font-extrabold">{remaining}</span> message{remaining !== 1 ? 's' : ''} aujourd'hui. Voici ce que je te suggÃ¨re :
+              Il te reste <span className="text-charbon font-extrabold">{remaining}</span> message{remaining !== 1 ? 's' : ''} aujourd'hui. Voici ce que je te suggère :
             </p>
             <div className="flex flex-col gap-2">
               {proSuggestions.map((s, i) => (
@@ -277,13 +277,13 @@ export function DashboardScreen({ go, notify, profile }) {
               <div className="font-display font-extrabold text-[24px] text-charbon leading-none">{staleCount}</div>
               {staleCount > 0 && <span className="w-2 h-2 rounded-full bg-amber mt-1.5 flex-shrink-0" />}
             </div>
-            <div className="text-[12px] text-g500 mt-1.5 font-medium">Clientes Ã  relancer</div>
+            <div className="text-[12px] text-g500 mt-1.5 font-medium">Clientes à relancer</div>
           </button>
         </div>
 
         {/* Input Assists */}
         <div className="bg-white rounded-2xl border border-g200 p-4 shadow-soft">
-          <div className="font-display font-bold text-[14.5px] text-charbon mb-3">Qu'est-ce qu'on rÃ¨gle aujourd'hui ?</div>
+          <div className="font-display font-bold text-[14.5px] text-charbon mb-3">Qu'est-ce qu'on règle aujourd'hui ?</div>
           <div className="flex gap-2">
             <input
               ref={inputRef}
@@ -306,7 +306,7 @@ export function DashboardScreen({ go, notify, profile }) {
               onClick={() => submitInput(inputText)}
               className="w-full mt-2.5 py-2.5 rounded-xl bg-charbon text-white text-[13px] font-bold active:opacity-80 transition"
             >
-              Envoyer Ã  {nomAss}
+              Envoyer à {nomAss}
             </button>
           )}
         </div>
@@ -328,7 +328,7 @@ export function DashboardScreen({ go, notify, profile }) {
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(`${window.location.origin}/b/${profile.public_slug}`);
-                  notify('Lien copiÃ© !');
+                  notify('Lien copié !');
                 }}
                 className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-charbon text-white text-[12.5px] font-bold active:opacity-80 transition"
               >
@@ -356,7 +356,7 @@ export function DashboardScreen({ go, notify, profile }) {
             style={{ background: 'linear-gradient(135deg,#FF7A2E,#F25C05)' }}
           >
             <div className="font-display font-extrabold text-[15px]">Passer au Bras Droit</div>
-            <div className="text-[12.5px] text-white/80 mt-0.5">Assists illimitÃ© Â· DMV Â· Fidelys Â· 9 900 FCFA/mois</div>
+            <div className="text-[12.5px] text-white/80 mt-0.5">Assists illimité · DMV · Fidelys · 9 900 FCFA/mois</div>
           </button>
         )}
       </div>

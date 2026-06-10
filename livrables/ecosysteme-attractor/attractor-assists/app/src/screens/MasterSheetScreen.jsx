@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { MOCK } from '../data';
 import { Card, Btn, Pill, SectionLabel, AppHeader, Icon } from '../components/ui';
 
