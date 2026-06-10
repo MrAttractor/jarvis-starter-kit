@@ -24,18 +24,14 @@ import { MarketplaceScreen } from './screens/MarketplaceScreen';
 import MonAppScreen from './screens/MonAppScreen';
 import { PublicAssistantScreen } from './screens/PublicAssistantScreen';
 import { FidelysScreen } from './screens/FidelysScreen';
+import { CatalogueScreen } from './screens/CatalogueScreen';
+import { CommandesScreen } from './screens/CommandesScreen';
 
-const TABS_USER_BASE = [
-  { id: "dashboard", label: "Accueil",   icon: "home"  },
-  { id: "assistants", label: "Mon équipe", icon: "users" },
-  { id: "fidelys",   label: "Fidelys",   icon: "star"  },
-  { id: "profil",    label: "Profil",    icon: "user"  },
-];
-const TABS_USER_MONAPP = [
-  { id: "dashboard",  label: "Accueil",    icon: "home"  },
-  { id: "assistants", label: "Mon équipe", icon: "users" },
-  { id: "mon-app",    label: "Mon App",    icon: "spark" },
-  { id: "profil",     label: "Profil",     icon: "user"  },
+const TABS_V3 = [
+  { id: "dashboard",  label: "Assists",   icon: "chat"    },
+  { id: "catalogue",  label: "Catalogue", icon: "grid"    },
+  { id: "commandes",  label: "Commandes", icon: "package" },
+  { id: "profil",     label: "Profil",    icon: "user"    },
 ];
 const TABS_ADMIN = [
   { id: "dashboard",   label: "Accueil",    icon: "home"   },
@@ -169,7 +165,9 @@ export default function App() {
 
   const screens = {
     dashboard:   <DashboardScreen go={go} notify={notify} profile={profile} />,
-    assistants:  <AssistantsScreen go={go} notify={notify} profile={profile} />,
+    assistants:  <DashboardScreen go={go} notify={notify} profile={profile} />,
+    catalogue:   <CatalogueScreen go={go} notify={notify} profile={profile} />,
+    commandes:   <CommandesScreen go={go} notify={notify} profile={profile} />,
     profil:      <ProfilScreen go={go} notify={notify} dark={dark} setDark={handleSetDark} profile={profile} />,
     conversation:<ConversationScreen key={`${params?.assistant||'coach'}-${params?.mode||'default'}`} go={go} notify={notify} params={params} profile={profile} />,
     axes:        <AxesScreen go={go} notify={notify} />,
@@ -199,15 +197,14 @@ export default function App() {
                  />,
   };
   const isAdmin   = profile?.role === 'admin';
-  const hasDemoUrl = !isAdmin && !!profile?.demo_url;
-  const TABS = isAdmin ? TABS_ADMIN : hasDemoUrl ? TABS_USER_MONAPP : TABS_USER_BASE;
+  const TABS = isAdmin ? TABS_ADMIN : TABS_V3;
   const isConversation = screen === "conversation";
   const COCKPIT_SECTIONS = ['carelle', 'pipeline', 'hub', 'veille', 'intel'];
   const SUBSCREEN_PARENT = {
     paliers: 'profil', methode: 'profil', notifications: 'profil', install: 'profil',
-    agenda: 'dashboard', carnet: 'dashboard', dump: 'dashboard',
+    fidelys: 'profil', agenda: 'profil', carnet: 'profil',
+    conversation: 'dashboard', dump: 'dashboard',
     axes: 'dashboard', broadcasts: 'dashboard',
-    'mon-app': 'dashboard',
   };
   const activeTab = TABS.find(t => t.id === screen)
     ? screen
@@ -242,14 +239,14 @@ export default function App() {
             </nav>
             {!isAdmin && (
               <button onClick={() => go("conversation", { assistant: "coach" })} className="mt-6 flex items-center gap-3 px-3.5 py-3 rounded-xl bg-charbon text-white font-display font-bold text-[14.5px]">
-                <Icon name="spark" size={20} className="text-amber" /> Parler à {profile?.nom_assistant || 'mon coach'}
+                <Icon name="spark" size={20} className="text-amber" /> Parler à {profile?.nom_assistant || 'mon Assists'}
               </button>
             )}
-            {!isAdmin && (
+            {!isAdmin && profile?.plan_code !== 'bras_droit' && (
               <div className="mt-auto">
                 <button onClick={() => go("paliers")} className="w-full rounded-xl p-4 text-left text-white" style={{ background: "linear-gradient(135deg,#FF7A2E,#F25C05)" }}>
-                  <div className="font-display font-extrabold text-[14px]">Passe Team</div>
-                  <div className="text-[12px] text-white/85 mt-0.5">Toute ton équipe IA · −60 %</div>
+                  <div className="font-display font-extrabold text-[14px]">Passer au Bras Droit</div>
+                  <div className="text-[12px] text-white/85 mt-0.5">Assists illimité · 9 900 FCFA/mois</div>
                 </button>
               </div>
             )}
@@ -267,21 +264,9 @@ export default function App() {
             {/* bottom nav mobile */}
             {!isConversation && (
               <div className={`lg:hidden absolute bottom-0 left-0 right-0 bg-white/92 backdrop-blur-xl border-t border-g200 flex items-center justify-around px-2 pt-2 pb-6 z-30`}>
-                {isAdmin
-                  ? TABS.map(t => <NavBtn key={t.id} t={t} active={activeTab === t.id} onClick={() => go(t.id)} />)
-                  : (
-                    <>
-                      <NavBtn t={TABS[0]} active={activeTab === TABS[0].id} onClick={() => go(TABS[0].id)} />
-                      <NavBtn t={TABS[1]} active={activeTab === TABS[1].id} onClick={() => go(TABS[1].id)} badge={navBadges.assistants} />
-                      {/* FAB coach — au centre */}
-                      <button onClick={() => go("conversation", { assistant: "coach" })} className="w-14 h-14 -mt-7 rounded-full bg-orange text-white flex items-center justify-center shadow-[0_10px_22px_-6px_rgba(242,92,5,.7)] border-[3px] border-sable flex-shrink-0 active:scale-95 transition">
-                        <Icon name="spark" size={24} />
-                      </button>
-                      <NavBtn t={TABS[2]} active={activeTab === TABS[2].id} onClick={() => go(TABS[2].id)} badge={TABS[2].id === 'marketplace' ? navBadges.marketplace : 0} />
-                      <NavBtn t={TABS[3]} active={activeTab === TABS[3].id} onClick={() => go(TABS[3].id)} />
-                    </>
-                  )
-                }
+                {TABS.map(t => (
+                  <NavBtn key={t.id} t={t} active={activeTab === t.id} onClick={() => go(t.id)} />
+                ))}
               </div>
             )}
           </div>
