@@ -231,7 +231,7 @@ function Bubble({ from, children, ts }) {
         style={{
           fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
           fontSize: 16,
-          fontWeight: 500,
+          fontWeight: 600,
           lineHeight: 1.45,
           padding: '8px 12px 6px',
           borderRadius: me ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
@@ -651,7 +651,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
             onKeyDown={e => e.key === "Enter" && send(input)}
             placeholder="Message..."
             className="flex-1 bg-transparent py-3 text-[15px] outline-none text-charbon placeholder-g400"
-            style={{ fontWeight: 400, fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+            style={{ fontWeight: 500, fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
           />
         </div>
         <button
