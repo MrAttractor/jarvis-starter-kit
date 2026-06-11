@@ -4,7 +4,6 @@ import { Icon, Logo, useToast, Sheet, Spinner } from './components/ui';
 import { LoginScreen } from './screens/LoginScreen';
 import { OnboardingScreen } from './screens/OnboardingScreen';
 import { DashboardScreen } from './screens/DashboardScreen';
-import { MasterSheetScreen } from './screens/MasterSheetScreen';
 import { ProfilScreen } from './screens/ProfilScreen';
 import { AssistantsScreen } from './screens/AssistantsScreen';
 import { ConversationScreen } from './screens/ConversationScreen';

@@ -614,6 +614,19 @@ serve(async (req) => {
       });
     }
 
+    // ─── Validation JWT — user_id doit correspondre au token ────────────────
+    if (user_id) {
+      const authHeader = req.headers.get("Authorization");
+      const token = authHeader?.replace("Bearer ", "") ?? "";
+      const { data: { user: jwtUser }, error: jwtError } = await supabase.auth.getUser(token);
+      if (jwtError || !jwtUser || jwtUser.id !== user_id) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401,
+          headers: { "Content-Type": "application/json", ...CORS },
+        });
+      }
+    }
+
     // ─── Chargement dynamique du profil depuis Supabase ─────────────────────
     // Le profil est toujours chargé depuis la DB si user_id est fourni.
     // Le profileFromFrontend ne sert que de fallback si la DB échoue.
