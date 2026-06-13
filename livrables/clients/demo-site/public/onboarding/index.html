@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bienvenue — Mr Attractor</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --orange: #FF6B2B;
+      --orange-light: #FF8C55;
+      --charcoal: #111117;
+      --charcoal-2: #1C1C26;
+      --charcoal-3: #252530;
+      --sand: #F5F0E8;
+      --sand-muted: #C8C0B0;
+      --white: #FFFFFF;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--charcoal);
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    /* ── DECK CONTAINER ── */
+    .deck {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 80px;
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: all;
+    }
+    .slide.exit {
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+
+    /* ── PROGRESS BAR ── */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--charcoal-3);
+      z-index: 100;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--orange);
+      transition: width 0.4s ease;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      z-index: 100;
+    }
+    .nav-btn {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.05);
+      color: var(--white);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      backdrop-filter: blur(8px);
+    }
+    .nav-btn:hover { background: rgba(255,107,43,0.2); border-color: var(--orange); }
+    .nav-btn:disabled { opacity: 0.25; cursor: default; }
+    .nav-btn svg { width: 18px; height: 18px; }
+
+    .dots {
+      display: flex; gap: 8px; align-items: center;
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .dot.active {
+      background: var(--orange);
+      width: 20px;
+      border-radius: 3px;
+    }
+
+    /* ── SLIDE COUNTER ── */
+    .counter {
+      position: fixed;
+      top: 20px; right: 28px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.5px;
+      z-index: 100;
+    }
+
+    /* ── LOGO BADGE ── */
+    .logo-badge {
+      position: fixed;
+      top: 16px; left: 28px;
+      display: flex; align-items: center; gap: 10px;
+      z-index: 100;
+    }
+    .logo-mark {
+      width: 32px; height: 32px;
+      background: var(--orange);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-mark svg { width: 18px; height: 18px; fill: white; }
+    .logo-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.3px;
+    }
+
+    /* ══════════════════════════════
+       SLIDE 1 — COUVERTURE
+    ══════════════════════════════ */
+    .s1-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 80% 50%, rgba(255,107,43,0.12) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 50% at 20% 20%, rgba(255,107,43,0.06) 0%, transparent 60%),
+                  var(--charcoal);
+    }
+    .s1-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 800px;
+    }
+    .s1-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border: 1px solid rgba(255,107,43,0.4);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--orange);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .s1-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); }
+    .s1-title {
+      font-size: clamp(42px, 6vw, 72px);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--white);
+      margin-bottom: 20px;
+      letter-spacing: -1.5px;
+    }
+    .s1-title span { color: var(--orange); }
+    .s1-subtitle {
+      font-size: 18px;
+      color: var(--sand-muted);
+      line-height: 1.6;
+      max-width: 540px;
+      margin: 0 auto 40px;
+    }
+    .s1-author {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      background: var(--charcoal-2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+    }
+    .s1-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--orange);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 16px; color: white;
+    }
+    .s1-author-info { text-align: left; }
+    .s1-author-name { font-size: 14px; font-weight: 600; color: var(--white); }
+    .s1-author-role { font-size: 12px; color: var(--sand-muted); }
+
+    /* ══════════════════════════════
+       SLIDE 2 — VISION
+    ══════════════════════════════ */
+    .s2-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      max-width: 1000px;
+      width: 100%;
+    }
+    .s2-left { display: flex; flex-direction: column; justify-content: center; }
+    .slide-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 16px;
+    }
+    .slide-title {
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.8px;
+      color: var(--white);
+      margin-bottom: 20px;
+    }
+    .slide-body {
+      font-size: 15px;
+      color: var(--sand-muted);
+      line-height: 1.75;
+    }
+    .quote-block {
+      margin-top: 28px;
+      padding: 20px 24px;
+      border-left: 3px solid var(--orange);
+      background: var(--charcoal-2);
+      border-radius: 0 12px 12px 0;
+    }
+    .quote-text {
+      font-size: 16px;
+      font-style: italic;
+      color: var(--sand);
+      line-height: 1.65;
+    }
+
+    .s2-right {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: center;
+    }
+    .pillar-card {
+      padding: 18px 20px;
+      background: var(--charcoal-2);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: border-color 0.2s;
+    }
+    .pillar-card:hover { border-color: rgba(255,107,43,0.3); }
+    .pillar-icon {
+      width: 40px; height: 40px; min-width: 40px;
+      border-radius: 10px;
+      background: rgba(255,107,43,0.12);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pillar-icon svg { width: 20px; height: 20px; stroke: var(--orange); fill: none; stroke-width: 1.8; }
+    .pillar-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 2px; }
+    .pillar-desc { font-size: 12px; color: var(--sand-muted); }
+
+    /* ══════════════════════════════
+       SLIDE 3 — ÉCOSYSTÈME
+    ══════════════════════════════ */
+    .s3-header {
+      text-align: center;
+      margin-bottom: 44px;
+    }
+    .s3-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 1100px;
+      width: 100%;
+    }
+    .app-card {
+      padding: 28px 22px;
+      background: var(--charcoal-2);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      text-align: center;
+      transition: transform 0.2s, border-color 0.2s;
+      cursor: default;
+    }
+    .app-card:hover { transform: translateY(-4px); border-color: rgba(255,107,43,0.3); }
+    .app-card.featured { border-color: rgba(255,107,43,0.4); background: linear-gradient(145deg, rgba(255,107,43,0.08), var(--charcoal-2)); }
+    .app-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .app-icon svg { width: 26px; height: 26px; stroke-width: 1.8; fill: none; }
+    .app-icon.orange { background: rgba(255,107,43,0.15); }
+    .app-icon.orange svg { stroke: var(--orange); }
+    .app-icon.blue { background: rgba(59,130,246,0.12); }
+    .app-icon.blue svg { stroke: #60A5FA; }
+    .app-icon.green { background: rgba(34,197,94,0.1); }
+    .app-icon.green svg { stroke: #4ADE80; }
+    .app-icon.purple { background: rgba(168,85,247,0.12); }
+    .app-icon.purple svg { stroke: #C084FC; }
+    .app-name { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+    .app-tagline { font-size: 12px; color: var(--sand-muted); line-height: 1.5; }
+    .app-badge {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .badge-live { background: rgba(34,197,94,0.15); color: #4ADE80; }
+    .badge-soon { background: rgba(255,255,255,0.06); color: var(--sand-muted); }
+
+    /* ══════════════════════════════
+       SLIDE 4 — MISSION
+    ══════════════════════════════ */
+    .s4-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      max-width: 1050px;
+      width: 100%;
+      align-items: start;
+    }
+    .mission-header { margin-bottom: 28px; }
+    .mission-col-title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .mission-col-title.clients { color: var(--orange); }
+    .mission-col-title.ops { color: #60A5FA; }
+    .mission-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .mission-item:last-child { border-bottom: none; }
+    .mission-check {
+      width: 22px; height: 22px; min-width: 22px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 1px;
+    }
+    .mission-check.orange { background: rgba(255,107,43,0.15); }
+    .mission-check.blue { background: rgba(59,130,246,0.12); }
+    .mission-check svg { width: 12px; height: 12px; stroke-width: 2.5; fill: none; }
+    .mission-check.orange svg { stroke: var(--orange); }
+    .mission-check.blue svg { stroke: #60A5FA; }
+    .mission-text { font-size: 14px; color: var(--sand); line-height: 1.5; }
+    .mission-text strong { color: var(--white); display: block; font-weight: 600; margin-bottom: 2px; }
+
+    .s4-center-bar {
+      width: 1px;
+      background: rgba(255,255,255,0.08);
+      align-self: stretch;
+    }
+
+    /* ══════════════════════════════
+       SLIDE 5 — OUTILS
+    ══════════════════════════════ */
+    .s5-header { text-align: center; margin-bottom: 40px; }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      max-width: 900px;
+      width: 100%;
+    }
+    .tool-card {
+      padding: 22px 20px;
+      background: var(--charcoal-2);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      transition: border-color 0.2s;
+    }
+    .tool-card:hover { border-color: rgba(255,107,43,0.25); }
+    .tool-icon {
+      width: 42px; height: 42px; min-width: 42px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .tool-icon svg { width: 22px; height: 22px; stroke-width: 1.8; fill: none; }
+    .tool-name { font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+    .tool-use { font-size: 12px; color: var(--sand-muted); line-height: 1.5; }
+
+    /* ══════════════════════════════
+       SLIDE 6 — COMMENT ON TRAVAILLE
+    ══════════════════════════════ */
+    .s6-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      max-width: 1000px;
+      width: 100%;
+    }
+    .s6-left { display: flex; flex-direction: column; justify-content: center; }
+    .s6-right {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      justify-content: center;
+    }
+    .value-card {
+      padding: 16px 20px;
+      background: var(--charcoal-2);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .value-num {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--orange);
+      opacity: 0.4;
+      min-width: 36px;
+      line-height: 1;
+    }
+    .value-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 2px; }
+    .value-desc { font-size: 12px; color: var(--sand-muted); }
+
+    .cta-block {
+      margin-top: 32px;
+      padding: 24px 28px;
+      background: linear-gradient(135deg, rgba(255,107,43,0.15), rgba(255,107,43,0.05));
+      border: 1px solid rgba(255,107,43,0.3);
+      border-radius: 16px;
+    }
+    .cta-title { font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+    .cta-sub { font-size: 13px; color: var(--sand-muted); line-height: 1.5; }
+
+    /* Keyboard hint */
+    .kb-hint {
+      position: fixed;
+      bottom: 36px;
+      right: 28px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .kb-hint kbd {
+      padding: 2px 6px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<!-- Logo -->
+<div class="logo-badge">
+  <div class="logo-mark">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+  </div>
+  <span class="logo-name">Mr Attractor</span>
+</div>
+
+<!-- Slide counter -->
+<div class="counter" id="slideCounter">1 / 6</div>
+
+<!-- ══ DECK ══ -->
+<div class="deck" id="deck">
+
+  <!-- ─── SLIDE 1 : COUVERTURE ─── -->
+  <div class="slide active" data-index="0">
+    <div class="s1-bg"></div>
+    <div class="s1-content">
+      <div class="s1-eyebrow">
+        <div class="s1-dot"></div>
+        Présentation équipe
+      </div>
+      <h1 class="s1-title">
+        Bienvenue dans<br><span>Mr Attractor</span>
+      </h1>
+      <p class="s1-subtitle">
+        Tu rejoins un projet qui aide des entrepreneurs à trouver leur couloir et à y devenir numéro 1. Ce deck te présente la vision, ce qu'on construit, et ta place dans le système.
+      </p>
+      <div class="s1-author">
+        <div class="s1-avatar">M</div>
+        <div class="s1-author-info">
+          <div class="s1-author-name">Mac Arthur Kouassi</div>
+          <div class="s1-author-role">Fondateur — Mr Attractor</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 2 : VISION ─── -->
+  <div class="slide" data-index="1">
+    <div class="s2-layout">
+      <div class="s2-left">
+        <div class="slide-label">01 — Vision</div>
+        <h2 class="slide-title">Pourquoi Mr Attractor existe</h2>
+        <p class="slide-body">
+          Depuis 23 ans, j'accompagne des entrepreneurs à structurer leur activité, clarifier leur positionnement, et passer à l'échelle. Cette expérience, je veux la rendre accessible à des milliers de personnes, simultanément, sans être présent à chaque fois.
+        </p>
+        <div class="quote-block">
+          <p class="quote-text">"Un bras droit intelligent qui soulage les entrepreneurs des tâches quotidiennes, tout en les aidant à devenir numéro 1 dans leur couloir."</p>
+        </div>
+      </div>
+      <div class="s2-right">
+        <div class="pillar-card">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" stroke="none" fill="currentColor"/></svg>
+          </div>
+          <div>
+            <div class="pillar-title">Réduire la charge mentale</div>
+            <div class="pillar-desc">L'entrepreneur pense, le système exécute et organise</div>
+          </div>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div>
+            <div class="pillar-title">Créer de la clarté</div>
+            <div class="pillar-desc">Aider chaque entrepreneur à trouver et tenir son couloir</div>
+          </div>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div>
+            <div class="pillar-title">Scaler sans se démultiplier</div>
+            <div class="pillar-desc">Accompagner des milliers de personnes via un système intelligent</div>
+          </div>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div>
+            <div class="pillar-title">Cible principale</div>
+            <div class="pillar-desc">Entrepreneurs en Côte d'Ivoire et diaspora africaine en France</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 3 : ÉCOSYSTÈME ─── -->
+  <div class="slide" data-index="2">
+    <div class="s3-header">
+      <div class="slide-label">02 — L'écosystème</div>
+      <h2 class="slide-title">Ce qu'on construit</h2>
+    </div>
+    <div class="s3-grid">
+      <div class="app-card featured">
+        <div class="app-icon orange">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="app-name">Attractor Assists</div>
+        <div class="app-tagline">La duplication numérique de Mac Arthur. Assistant IA personnalisé pour chaque entrepreneur.</div>
+        <span class="app-badge badge-live">Live — 25 testeurs</span>
+      </div>
+      <div class="app-card">
+        <div class="app-icon blue">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+        </div>
+        <div class="app-name">Livraison Pro</div>
+        <div class="app-tagline">Marketplace livreurs certifiés et e-commerçants. Tracking GPS, suivi, relation client.</div>
+        <span class="app-badge badge-live">Déployé</span>
+      </div>
+      <div class="app-card">
+        <div class="app-icon green">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="app-name">Fidelys</div>
+        <div class="app-tagline">Gestion fidélité et interactions clients. Collecte de data, amélioration continue.</div>
+        <span class="app-badge badge-live">Module livré</span>
+      </div>
+      <div class="app-card">
+        <div class="app-icon purple">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <div class="app-name">Apps Métiers</div>
+        <div class="app-tagline">Web apps sur mesure pour PME et solopreneurs. Conception + MRR. Secteurs CI / diaspora.</div>
+        <span class="app-badge badge-live">Clients actifs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 4 : MISSION ─── -->
+  <div class="slide" data-index="3">
+    <div style="text-align:center;margin-bottom:36px;">
+      <div class="slide-label">03 — Ta mission</div>
+      <h2 class="slide-title">Ton rôle dans le système</h2>
+    </div>
+    <div class="s4-layout">
+      <div>
+        <div class="mission-col-title clients">Volet Clients</div>
+        <div class="mission-item">
+          <div class="mission-check orange">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="mission-text">
+            <strong>Suivi pipeline commercial</strong>
+            Relances prospects, mise à jour CRM Notion, coordination devis et contrats
+          </div>
+        </div>
+        <div class="mission-item">
+          <div class="mission-check orange">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="mission-text">
+            <strong>Coordination livrables clients</strong>
+            Suivi des étapes de production, communication avec les clients, archivage Google Drive
+          </div>
+        </div>
+        <div class="mission-item">
+          <div class="mission-check orange">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="mission-text">
+            <strong>Préparation documents</strong>
+            Devis, contrats, reçus, suivi signatures Yousign
+          </div>
+        </div>
+        <div class="mission-item">
+          <div class="mission-check orange">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="mission-text">
+            <strong>Support onboarding clients</strong>
+            Accompagner les nouveaux clients dans leur prise en main des apps
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="mission-col-title ops">Volet Opérations</div>
+        <div class="mission-item">
+          <div class="mission-check blue">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="mission-text">
+            <strong>Coordination projets internes</strong>
+            Attractor Assists, n8n, Livraison Pro — suivi des chantiers en cours
+          </div>
+        </div>
+        <div class="mission-item">
+          <div class="mission-check blue">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="mission-text">
+            <strong>Organisation agence</strong>
+            Agenda, priorités hebdo, briefs, comptes-rendus de sessions
+          </div>
+        </div>
+        <div class="mission-item">
+          <div class="mission-check blue">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="mission-text">
+            <strong>Veille et recherche</strong>
+            Actualités secteur CI / diaspora, benchmarks, collecte d'insights
+          </div>
+        </div>
+        <div class="mission-item">
+          <div class="mission-check blue">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="mission-text">
+            <strong>Reporting hebdomadaire</strong>
+            Synthèse avancement pipeline + projets internes pour Mac Arthur
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 5 : OUTILS ─── -->
+  <div class="slide" data-index="4">
+    <div class="s5-header">
+      <div class="slide-label">04 — Tes outils</div>
+      <h2 class="slide-title">La stack de l'agence</h2>
+    </div>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(255,107,43,0.12);">
+          <svg viewBox="0 0 24 24" style="stroke:var(--orange)"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div>
+          <div class="tool-name">Attractor Assists</div>
+          <div class="tool-use">Ton assistant IA principal. Gestion tâches, accès pipeline, agents spécialisés.</div>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(255,255,255,0.06);">
+          <svg viewBox="0 0 24 24" style="stroke:#E0E0E0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <div>
+          <div class="tool-name">Notion CRM</div>
+          <div class="tool-use">Pipeline clients, statuts dossiers, prochaines actions, suivi projets internes.</div>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(66,133,244,0.12);">
+          <svg viewBox="0 0 24 24" style="stroke:#60A5FA"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.39 2 2 0 0 1 3.58 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.73a16 16 0 0 0 6.29 6.29l1.87-1.87a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div>
+          <div class="tool-name">WhatsApp Business</div>
+          <div class="tool-use">Communication clients, relances pipeline, envoi liens maquettes.</div>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(234,67,53,0.1);">
+          <svg viewBox="0 0 24 24" style="stroke:#F87171"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div>
+          <div class="tool-name">Gmail</div>
+          <div class="tool-use">Échanges formels clients, envoi devis et contrats, coordination Yousign.</div>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(66,133,244,0.1);">
+          <svg viewBox="0 0 24 24" style="stroke:#60A5FA"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div>
+          <div class="tool-name">Google Drive</div>
+          <div class="tool-use">Archivage documents clients signés, dossiers par projet, partage sécurisé.</div>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(255,166,0,0.1);">
+          <svg viewBox="0 0 24 24" style="stroke:#FCD34D"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div>
+          <div class="tool-name">Google Agenda</div>
+          <div class="tool-use">Planification RDV clients, suivi échéances, synchronisation équipe.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 6 : COMMENT ON TRAVAILLE ─── -->
+  <div class="slide" data-index="5">
+    <div class="s6-layout">
+      <div class="s6-left">
+        <div class="slide-label">05 — Façon de travailler</div>
+        <h2 class="slide-title">Les principes<br>de l'équipe</h2>
+        <p class="slide-body">
+          Mr Attractor est une agence qui vise à tourner de façon semi-autonome. Ton rôle est de libérer Mac Arthur pour qu'il se concentre sur sa zone de génie : la publicité, le marketing, et les décisions stratégiques.
+        </p>
+        <div class="cta-block">
+          <div class="cta-title">L'objectif d'ici fin août 2026</div>
+          <div class="cta-sub">Atteindre 10 000 €/mois de revenus récurrents pour l'agence. Chaque dossier closé nous en rapproche.</div>
+        </div>
+      </div>
+      <div class="s6-right">
+        <div class="value-card">
+          <div class="value-num">01</div>
+          <div>
+            <div class="value-title">Clarté avant vitesse</div>
+            <div class="value-desc">Un brief bien compris vaut 10 itérations. On pose les questions avant d'exécuter.</div>
+          </div>
+        </div>
+        <div class="value-card">
+          <div class="value-num">02</div>
+          <div>
+            <div class="value-title">CRM = colonne vertébrale</div>
+            <div class="value-desc">Tout ce qui concerne un client vit dans Notion. Pas de mémoire personnelle, tout est tracé.</div>
+          </div>
+        </div>
+        <div class="value-card">
+          <div class="value-num">03</div>
+          <div>
+            <div class="value-title">Proactivité assumée</div>
+            <div class="value-desc">On n'attend pas d'être sollicité. Si quelque chose bloque, on signale et on propose une solution.</div>
+          </div>
+        </div>
+        <div class="value-card">
+          <div class="value-num">04</div>
+          <div>
+            <div class="value-title">Honnêteté directe</div>
+            <div class="value-desc">Pas de rapport embelli. Bonne ou mauvaise nouvelle, elle arrive telle quelle, rapidement.</div>
+          </div>
+        </div>
+        <div class="value-card">
+          <div class="value-num">05</div>
+          <div>
+            <div class="value-title">On grandit ensemble</div>
+            <div class="value-desc">Ce système est un organisme vivant. Tes retours améliorent l'agence pour tout le monde.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nav-btn" id="prevBtn" disabled>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+</div>
+
+<div class="kb-hint">
+  <kbd>←</kbd><kbd>→</kbd> pour naviguer
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.getElementById('dots');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const progressFill = document.getElementById('progressFill');
+  const slideCounter = document.getElementById('slideCounter');
+  const total = slides.length;
+  let current = 0;
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dots.appendChild(d);
+  });
+
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    setTimeout(() => slides[current].classList.remove('exit'), 400);
+    current = n;
+    slides[current].classList.add('active');
+    update();
+  }
+
+  function update() {
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+    progressFill.style.width = ((current + 1) / total * 100) + '%';
+    slideCounter.textContent = (current + 1) + ' / ' + total;
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goTo(current - 1);
+  });
+
+  // Swipe support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].clientX, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) goTo(current + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+
+  update();
+</script>
+</body>
+</html>
