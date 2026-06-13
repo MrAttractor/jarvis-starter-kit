@@ -961,55 +961,80 @@ const CaisseScreen = ({ orders }) => {
    CLIENT VIEW — Parcours commande côté client
    ============================================================ */
 
+const CLIENT_PRODUCTS = [
+  { id: 'soutra', name: 'Formule SOUTRA', desc: '165 boules · 300-320 g ch.', badge: 'Best-seller', price: 28500, img: 'imgs/soutra.jpg' },
+  { id: 'eco',    name: 'Formule ECO',    desc: '135 boules · 400-420 g ch.', badge: null,          price: 34000, img: 'imgs/eco.jpg' },
+  { id: 'family', name: 'Formule Family', desc: '30 boules · 1,8-1,9 kg ch.', badge: 'Famille',    price: 41000, img: 'imgs/family.jpg' },
+  { id: 'pro',    name: 'Formule Pro',    desc: 'Le Pack · 27 à 30 kg',        badge: 'Pro',         price: 52000, img: 'imgs/pro.jpg' },
+];
+
 const ZONES_LIV = ['Adjamé', 'Cocody', 'Yopougon', 'Koumassi', 'Plateau', 'Abobo', 'Bouaké'];
 
-const calcTotal = (cart) => Object.entries(cart).reduce((s, [fid, q]) => {
-  for (const p of CATALOG) for (const f of p.formats) if (f.id === fid) return s + f.price * q;
-  return s;
-}, 0);
+const calcTotal = (cart) => CLIENT_PRODUCTS.reduce((s, p) => s + p.price * (cart[p.id] || 0), 0);
 
 const ClientCatalog = ({ cart, setCart, onNext }) => {
   const totalItems = Object.values(cart).reduce((s, q) => s + q, 0);
-  const total = calcTotal(cart);
-  const qtyOf = (fid) => cart[fid] || 0;
-  const setQty = (fid, q) => setCart(prev => { const n = { ...prev }; if (q <= 0) delete n[fid]; else n[fid] = q; return n; });
+  const totalPrice = calcTotal(cart);
+  const setQty = (pid, q) => setCart(prev => { const n = { ...prev }; if (q <= 0) delete n[pid]; else n[pid] = q; return n; });
   return (
     <Fragment>
-      <div style={{ background: 'linear-gradient(135deg,#F08C32 0%,#CC5C08 100%)', padding: '20px 18px 18px', color: '#fff', flexShrink: 0 }}>
-        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', opacity: .8, marginBottom: 7 }}>Beracca Mastery Group</div>
-        <div style={{ fontSize: 21, fontWeight: 800, lineHeight: 1.2 }}>Commandez votre<br />TOP Attiéké</div>
-        <div style={{ fontSize: 12, opacity: .75, marginTop: 6, lineHeight: 1.45 }}>Livraison Abidjan & Bouaké · Paiement mobile</div>
+      <div style={{ background: '#fff', borderBottom: '1px solid var(--line)', padding: '11px 18px 9px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+        <div>
+          <div style={{ fontSize: 10, fontWeight: 800, color: 'var(--accent)', letterSpacing: 1, textTransform: 'uppercase' }}>TOP ATTIÉKÉ</div>
+          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink)', marginTop: 1 }}>Beracca Mastery Group</div>
+        </div>
+        <div style={{ position: 'relative', cursor: totalItems > 0 ? 'pointer' : 'default' }} onClick={totalItems > 0 ? onNext : undefined}>
+          <Icon n="pkg" s={26} c={totalItems > 0 ? 'var(--accent)' : 'var(--faint)'} w={2} />
+          {totalItems > 0 && <span style={{ position: 'absolute', top: -5, right: -6, width: 18, height: 18, borderRadius: 50, background: 'var(--accent)', color: '#fff', fontSize: 10, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{totalItems}</span>}
+        </div>
       </div>
-      <div className="hf-scroll">
-        <div className="hf-pad col g16" style={{ paddingTop: 14, paddingBottom: totalItems > 0 ? 88 : 16 }}>
-          {CATALOG.map((p, pi) => (
-            <div key={p.id} className="col g8 anim-up" style={{ animationDelay: (pi * 55) + 'ms' }}>
-              <div className="row center g8">
-                <span style={{ width: 9, height: 9, borderRadius: 50, background: p.color }} />
-                <span className="b t-sm">{p.name}</span>
-                <span className="t-xs mut">{p.desc}</span>
-              </div>
-              {p.formats.map(f => {
-                const q = qtyOf(f.id);
-                const on = q > 0;
-                return (
-                  <div key={f.id} className="card row center between" style={{ padding: '12px 13px', borderColor: on ? 'var(--accent)' : 'var(--line)', background: on ? 'var(--accent-tint)' : '#fff' }}>
-                    <div className="col grow">
-                      <span className="b t-sm">{f.label}</span>
-                      <span className="num t-xs mut">{fmt(f.price)} FCFA{on ? ' · total ' + fmt(f.price * q) : ''}</span>
-                    </div>
-                    <Stepper value={q} onChange={v => setQty(f.id, v)} />
+      <div style={{ position: 'relative', height: 126, flexShrink: 0, overflow: 'hidden' }}>
+        <img src="imgs/cover.jpg" alt="TOP Attiéké" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg,rgba(204,92,8,.78) 0%,rgba(0,0,0,.04) 65%)' }} />
+        <div style={{ position: 'absolute', left: 18, top: '50%', transform: 'translateY(-50%)' }}>
+          <div style={{ color: '#fff', fontSize: 15, fontWeight: 800, lineHeight: 1.3, textShadow: '0 1px 6px rgba(0,0,0,.25)' }}>Commandez votre<br />attiéké directement</div>
+          <div style={{ color: 'rgba(255,255,255,.85)', fontSize: 10.5, marginTop: 5, fontWeight: 600 }}>Livraison Abidjan · Bouaké</div>
+        </div>
+      </div>
+      <div className="hf-scroll" style={{ paddingBottom: totalItems > 0 ? 84 : 0 }}>
+        <div style={{ padding: '13px 18px 7px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+          <span className="t-h3">Nos formules</span>
+          <span className="t-xs mut">100% manioc local</span>
+        </div>
+        <div style={{ display: 'flex', overflowX: 'auto', gap: 13, padding: '4px 18px 12px', scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          {CLIENT_PRODUCTS.map(p => {
+            const q = cart[p.id] || 0;
+            return (
+              <div key={p.id} style={{ flex: '0 0 208px', scrollSnapAlign: 'start', borderRadius: 18, overflow: 'hidden', background: '#fff', transition: 'box-shadow .18s', boxShadow: q > 0 ? '0 0 0 2.5px var(--accent), 0 6px 20px rgba(238,124,31,.2)' : '0 2px 14px rgba(0,0,0,.09)' }}>
+                <div style={{ height: 168, overflow: 'hidden', position: 'relative' }}>
+                  <img src={p.img} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  {p.badge && <span style={{ position: 'absolute', top: 10, left: 10, background: 'var(--accent)', color: '#fff', fontSize: 10, fontWeight: 800, padding: '4px 9px', borderRadius: 100 }}>{p.badge}</span>}
+                </div>
+                <div style={{ padding: '12px 13px 13px' }}>
+                  <div className="b t-sm">{p.name}</div>
+                  <div className="t-xs mut" style={{ marginTop: 3, lineHeight: 1.4 }}>{p.desc}</div>
+                  <div className="row between center" style={{ marginTop: 11 }}>
+                    <div className="num" style={{ fontSize: 16, fontWeight: 800 }}>{fmt(p.price)}<span style={{ fontWeight: 600, fontSize: 10, marginLeft: 2, color: 'var(--muted)' }}> F</span></div>
+                    <Stepper value={q} onChange={v => setQty(p.id, v)} />
                   </div>
-                );
-              })}
-            </div>
-          ))}
+                </div>
+              </div>
+            );
+          })}
+          <div style={{ flex: '0 0 6px' }} />
+        </div>
+        <div className="hf-pad" style={{ paddingTop: 4, paddingBottom: 16 }}>
+          <div className="card col g8" style={{ padding: '13px 14px', background: 'var(--field)', borderColor: 'var(--line2)' }}>
+            <div className="row center g8 t-xs"><Icon n="truck" s={13} c="var(--green)" w={2.2} /> Livraison incluse · Abidjan & Bouaké</div>
+            <div className="row center g8 t-xs"><Icon n="phone" s={13} c="var(--green)" w={2.2} /> Confirmation WhatsApp sous 30 min</div>
+            <div className="row center g8 t-xs"><Icon n="card" s={13} c="var(--green)" w={2.2} /> Wave · Orange Money · MTN MoMo · Espèces</div>
+          </div>
         </div>
       </div>
       {totalItems > 0 && (
         <div style={{ position: 'absolute', left: 18, right: 18, bottom: 16, zIndex: 15 }}>
           <button className="btn block anim-up" onClick={onNext} style={{ boxShadow: '0 10px 24px rgba(204,92,8,.34)' }}>
-            <Icon n="pkg" s={18} w={2.3} c="#fff" /> Panier · {totalItems} art. · {fmt(total)} F
+            <Icon n="pkg" s={18} w={2.3} c="#fff" /> Panier · {totalItems} formule{totalItems > 1 ? 's' : ''} · {fmt(totalPrice)} F
           </button>
         </div>
       )}
@@ -1018,29 +1043,33 @@ const ClientCatalog = ({ cart, setCart, onNext }) => {
 };
 
 const ClientCart = ({ cart, setCart, onNext, onBack }) => {
-  const lines = [];
-  let total = 0;
-  for (const p of CATALOG) for (const f of p.formats) {
-    const q = cart[f.id] || 0;
-    if (q > 0) { lines.push({ name: p.name, f, q, sub: f.price * q }); total += f.price * q; }
-  }
-  const setQty = (fid, q) => setCart(prev => { const n = { ...prev }; if (q <= 0) delete n[fid]; else n[fid] = q; return n; });
+  const lines = CLIENT_PRODUCTS.filter(p => (cart[p.id] || 0) > 0).map(p => ({ ...p, q: cart[p.id] }));
+  const total = calcTotal(cart);
+  const setQty = (pid, q) => setCart(prev => { const n = { ...prev }; if (q <= 0) delete n[pid]; else n[pid] = q; return n; });
   return (
     <Fragment>
       <div className="hf-appbar" style={{ paddingTop: 4 }}>
         <div className="iconbtn" onClick={onBack}><Icon n="back" s={20} /></div>
         <span className="t-h3 grow">Mon panier</span>
-        <span className="t-sm mut">{lines.length} produit{lines.length > 1 ? 's' : ''}</span>
+        <span className="t-sm mut">{lines.length} formule{lines.length > 1 ? 's' : ''}</span>
       </div>
       <div className="hf-scroll">
-        <div className="hf-pad col g9" style={{ paddingTop: 4, paddingBottom: 96 }}>
+        <div className="hf-pad col g10" style={{ paddingTop: 8, paddingBottom: 96 }}>
           {lines.map((l, i) => (
-            <div key={l.f.id} className="card row center between anim-up" style={{ padding: '12px 13px', animationDelay: (i * 40) + 'ms' }}>
-              <div className="col grow" style={{ minWidth: 0 }}>
-                <span className="b t-sm truncate">{l.name} · {l.f.label}</span>
-                <span className="t-xs mut num">{fmt(l.f.price)} × {l.q} = {fmt(l.sub)} F</span>
+            <div key={l.id} className="card anim-up" style={{ padding: 0, overflow: 'hidden', animationDelay: (i * 45) + 'ms' }}>
+              <div className="row" style={{ alignItems: 'stretch' }}>
+                <img src={l.img} alt={l.name} style={{ width: 90, height: 86, objectFit: 'cover', flexShrink: 0 }} />
+                <div className="col grow" style={{ padding: '10px 13px', minWidth: 0, justifyContent: 'space-between' }}>
+                  <div>
+                    <span className="b t-sm truncate" style={{ display: 'block' }}>{l.name}</span>
+                    <span className="t-xs mut" style={{ marginTop: 2 }}>{l.desc}</span>
+                  </div>
+                  <div className="row between center" style={{ marginTop: 8 }}>
+                    <span className="b num" style={{ fontSize: 14 }}>{fmt(l.price * l.q)} F</span>
+                    <Stepper value={l.q} onChange={v => setQty(l.id, v)} min={0} />
+                  </div>
+                </div>
               </div>
-              <Stepper value={l.q} onChange={v => setQty(l.f.id, v)} min={0} />
             </div>
           ))}
           {lines.length === 0 && <div className="card mut t-sm" style={{ padding: 20, textAlign: 'center' }}>Votre panier est vide.</div>}
