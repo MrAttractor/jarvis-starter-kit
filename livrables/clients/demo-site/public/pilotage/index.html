@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pilotage — Mr Attractor</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body,#root{height:100%;background:#0C0A08;font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+  #boot{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0C0A08;color:#7A746C;font-family:system-ui;}
+</style>
+</head>
+<body>
+<div id="boot">Chargement…</div>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, Fragment } = React;
+
+/* ── TOKENS ──────────────────────────────────────────── */
+const T = `
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+:root{
+  --bg:#0C0A08;--sur:#181410;--card:#1F1B16;--card2:#252018;
+  --bdr:rgba(255,255,255,.08);--bdr2:rgba(255,255,255,.05);
+  --ink:#F0EDE8;--ink2:#B8B0A5;--mut:#7A746C;--faint:#4A4540;
+  --acc:#EE7C1F;--acc-d:#CC5C08;--acc-s:rgba(238,124,31,.14);
+  --grn:#22A55A;--grn-s:rgba(34,165,90,.14);
+  --red:#E05050;--red-s:rgba(224,80,80,.14);
+  --blu:#4A9FE0;--blu-s:rgba(74,159,224,.14);
+  --r:14px;--r-sm:10px;--r-lg:18px;
+  --sh:0 2px 12px rgba(0,0,0,.35);
+}
+body{background:var(--bg);color:var(--ink);}
+.app{display:flex;flex-direction:column;min-height:100dvh;max-width:520px;margin:0 auto;padding:0 0 32px;}
+.hdr{padding:20px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;}
+.hdr-left .label{font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--mut);margin-bottom:4px;}
+.hdr-left .title{font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.4px;}
+.hdr-right{font-size:11px;color:var(--mut);font-weight:600;text-align:right;line-height:1.5;margin-top:4px;}
+.tabs{display:flex;gap:8px;padding:18px 20px 0;}
+.tab{flex:1;padding:10px 4px;border-radius:var(--r-sm);border:1.5px solid var(--bdr);background:var(--card);color:var(--mut);font-size:12.5px;font-weight:700;cursor:pointer;text-align:center;transition:.15s;font-family:inherit;}
+.tab.on{border-color:var(--acc);background:var(--acc-s);color:var(--acc);}
+.content{padding:16px 20px 0;display:flex;flex-direction:column;gap:14px;}
+.card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);box-shadow:var(--sh);}
+.card2{background:var(--card2);border:1px solid var(--bdr2);border-radius:var(--r);}
+.sect-label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--mut);margin-bottom:10px;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:8px;font-size:11px;font-weight:700;white-space:nowrap;}
+.badge .dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
+.badge.org{background:var(--acc-s);color:var(--acc);}
+.badge.grn{background:var(--grn-s);color:var(--grn);}
+.badge.red{background:var(--red-s);color:var(--red);}
+.badge.blu{background:var(--blu-s);color:var(--blu);}
+.badge.neu{background:rgba(255,255,255,.06);color:var(--ink2);}
+.row{display:flex;align-items:center;}
+.col{display:flex;flex-direction:column;}
+.between{justify-content:space-between;}
+.g4{gap:4px}.g6{gap:6px}.g8{gap:8px}.g10{gap:10px}.g12{gap:12px}
+.grow{flex:1 1 auto;min-width:0;}
+.b{font-weight:700;}.xb{font-weight:800;}.sb{font-weight:600;}
+.mut{color:var(--mut);}
+.t-sm{font-size:13px;}.t-xs{font-size:11.5px;}.t-lg{font-size:17px;}.t-xl{font-size:24px;}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.3px;}
+.truncate{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.divider{height:1px;background:var(--bdr);margin:0 -1px;}
+@keyframes up{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.anim{animation:up .28s cubic-bezier(.2,.7,.3,1) both;}
+`;
+(function(){ const s=document.createElement('style'); s.textContent=T; document.head.appendChild(s); })();
+
+/* ── DATA ─────────────────────────────────────────────── */
+const TODAY = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+
+const CAP = {
+  objectif: 10000,
+  confirme: 0,        // revenus agence récurrents signés (€/mois)
+  pipeline: 3750,     // Club Élévia 3500 setup→250/mois + autres qualifiés
+  dateObjectif: 'Août 2026',
+  note: 'Club Élévia : 250€/mois récurrent dès signature',
+};
+
+const FOCUS = [
+  { id:1, texte:'Récupérer retour Bérénice Kouadio sur la démo Beracca', tag:'Pipeline', urgent:false },
+  { id:2, texte:'Relancer Club Élévia — signature Yousign + solde 50€', tag:'Pipeline', urgent:true },
+  { id:3, texte:'Préparer session Assists V3 — corriger agentGating.js', tag:'Projet', urgent:false },
+];
+
+const PIPELINE = [
+  {
+    id:'ATR-10', nom:'Club Élévia', type:'App Métier',
+    statut:'Contrat envoyé', sc:'org',
+    setup: 3500, mensuel: 250,
+    prochaine:'Signature Yousign en attente · récupérer solde acompte 50€',
+    date:'14/06', urgent:true,
+    contact:'Élise',
+  },
+  {
+    id:'ATR-5', nom:'Beracca Mastery Group', type:'App Métier',
+    statut:'Démo envoyée', sc:'blu',
+    setup: null, mensuel: null,
+    prochaine:'Attendre retour sur la démo · relance le 15/06 si silence',
+    date:'15/06', urgent:false,
+    contact:'Bérénice Kouadio',
+  },
+];
+
+const PROJETS = [
+  {
+    id:'assists-v3', nom:'Attractor Assists V3', tag:'Produit phare',
+    statut:'En cours', avancement:45,
+    prochaine:'Corriger bugs + simplifier agentGating.js',
+    etapes:['Fidelys module','Veille / RSS','WhatsApp API','Media Buyer','Conversion','Pricing'],
+    blocage:null,
+  },
+  {
+    id:'whatsapp-mvp', nom:'WhatsApp MVP', tag:'Distribution',
+    statut:'Infrastructure posée', avancement:30,
+    prochaine:'Railway + extraction Claude + campagne Meta',
+    etapes:['Infra Railway','Extraction Claude','Mini CRM','Campagne Meta'],
+    blocage:null,
+  },
+  {
+    id:'agent-commercial', nom:'Agent Commercial', tag:'Revenus',
+    statut:'En design', avancement:15,
+    prochaine:'Brief matin + relances pipeline + inbound auto',
+    etapes:['Brief matin','Relances pipeline','Inbound auto'],
+    blocage:'Dépend de Assists V3',
+  },
+  {
+    id:'fidelys', nom:'Fidelys', tag:'App freemium',
+    statut:'En attente', avancement:20,
+    prochaine:'Planifier après Assists V3 core stable',
+    etapes:['Carte fidélité QR','Dashboard commerçant','App client'],
+    blocage:'Après V3',
+  },
+];
+
+/* ── COMPOSANTS ───────────────────────────────────────── */
+const fmt = (n) => n == null ? '—' : n.toLocaleString('fr-FR') + ' €';
+
+function CapCard() {
+  const pct_conf = Math.min(100, (CAP.confirme / CAP.objectif) * 100);
+  const pct_pipe = Math.min(100 - pct_conf, (CAP.pipeline / CAP.objectif) * 100);
+  const moisRestants = Math.ceil((new Date('2026-08-31') - new Date()) / (1000*60*60*24*30));
+  return (
+    <div className="card" style={{ padding:'18px 18px 16px', background:'linear-gradient(135deg,#1A1208 0%,#201508 100%)', borderColor:'rgba(238,124,31,.18)' }}>
+      <div className="row between" style={{ marginBottom:14 }}>
+        <div>
+          <div className="t-xs mut sb" style={{ marginBottom:3 }}>CAP MENSUEL</div>
+          <div className="row g8" style={{ alignItems:'baseline' }}>
+            <span className="xb num t-xl" style={{ color:'var(--acc)' }}>{fmt(CAP.objectif)}</span>
+            <span className="t-xs mut">/mois · {CAP.dateObjectif}</span>
+          </div>
+        </div>
+        <div style={{ textAlign:'right' }}>
+          <div className="t-xs mut" style={{ marginBottom:2 }}>Dans</div>
+          <div className="xb" style={{ fontSize:20, color:'var(--ink)', letterSpacing:'-.5px' }}>{moisRestants}<span className="t-xs mut xb"> mois</span></div>
+        </div>
+      </div>
+
+      {/* Gauge */}
+      <div style={{ height:8, borderRadius:100, background:'rgba(255,255,255,.07)', overflow:'hidden', marginBottom:12 }}>
+        <div style={{ height:'100%', display:'flex', borderRadius:100, overflow:'hidden' }}>
+          {pct_conf > 0 && <div style={{ width: pct_conf+'%', background:'var(--grn)', transition:'.6s' }} />}
+          <div style={{ width: pct_pipe+'%', background:'var(--acc)', opacity:.85, transition:'.6s' }} />
+        </div>
+      </div>
+
+      <div className="row g12">
+        <div className="col g4 grow">
+          <div className="row g5" style={{ alignItems:'center' }}>
+            <span style={{ width:7,height:7,borderRadius:2,background:'var(--grn)',flexShrink:0 }} />
+            <span className="t-xs mut">Confirmé</span>
+          </div>
+          <span className="b num" style={{ fontSize:14, color: CAP.confirme > 0 ? 'var(--grn)' : 'var(--faint)' }}>{CAP.confirme > 0 ? fmt(CAP.confirme) : '—'}</span>
+        </div>
+        <div style={{ width:1, background:'var(--bdr)' }} />
+        <div className="col g4 grow">
+          <div className="row g5" style={{ alignItems:'center' }}>
+            <span style={{ width:7,height:7,borderRadius:2,background:'var(--acc)',flexShrink:0 }} />
+            <span className="t-xs mut">Pipeline qualifié</span>
+          </div>
+          <span className="b num" style={{ fontSize:14, color:'var(--acc)' }}>{fmt(CAP.pipeline)}</span>
+        </div>
+        <div style={{ width:1, background:'var(--bdr)' }} />
+        <div className="col g4 grow">
+          <div className="row g5" style={{ alignItems:'center' }}>
+            <span style={{ width:7,height:7,borderRadius:2,background:'var(--faint)',flexShrink:0 }} />
+            <span className="t-xs mut">Reste à trouver</span>
+          </div>
+          <span className="b num" style={{ fontSize:14, color:'var(--mut)' }}>{fmt(CAP.objectif - CAP.confirme - CAP.pipeline)}</span>
+        </div>
+      </div>
+
+      {CAP.note && (
+        <div style={{ marginTop:12, padding:'8px 11px', borderRadius:8, background:'rgba(238,124,31,.08)', borderLeft:'2.5px solid var(--acc)' }}>
+          <span className="t-xs" style={{ color:'rgba(240,237,232,.65)' }}>{CAP.note}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FocusItem({ item, i }) {
+  const tagColor = item.tag === 'Pipeline' ? 'var(--acc)' : 'var(--blu)';
+  return (
+    <div className="anim row g12" style={{ padding:'13px 0', borderBottom:'1px solid var(--bdr)', animationDelay:(i*60)+'ms', alignItems:'flex-start' }}>
+      <div style={{ width:22, height:22, borderRadius:8, background: item.urgent ? 'var(--red-s)' : 'rgba(255,255,255,.06)',
+        display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginTop:1 }}>
+        <span style={{ width:7,height:7,borderRadius:50,background: item.urgent ? 'var(--red)' : 'var(--faint)' }} />
+      </div>
+      <div className="col grow g4">
+        <span className="t-sm sb" style={{ lineHeight:1.4 }}>{item.texte}</span>
+        <span style={{ fontSize:10.5, fontWeight:700, color:tagColor }}>{item.tag}{item.urgent ? ' · URGENT' : ''}</span>
+      </div>
+    </div>
+  );
+}
+
+function TabAujourdHui() {
+  return (
+    <Fragment>
+      <CapCard />
+      <div className="card" style={{ padding:'16px 18px' }}>
+        <div className="sect-label">Focus du jour</div>
+        {FOCUS.map((f,i) => <FocusItem key={f.id} item={f} i={i} />)}
+      </div>
+    </Fragment>
+  );
+}
+
+function DossierCard({ d, i }) {
+  return (
+    <div className="card anim col" style={{ overflow:'hidden', animationDelay:(i*70)+'ms' }}>
+      <div style={{ padding:'14px 16px 12px' }}>
+        <div className="row between" style={{ marginBottom:10 }}>
+          <div className="col g4">
+            <span className="t-xs mut">{d.id} · {d.type}</span>
+            <span className="b" style={{ fontSize:15 }}>{d.nom}</span>
+          </div>
+          <span className={'badge '+d.sc}><span className="dot" />{d.statut}</span>
+        </div>
+        <div className="row g10" style={{ marginBottom:12 }}>
+          {d.setup != null && (
+            <div className="col g3 grow">
+              <span className="t-xs mut">Setup</span>
+              <span className="b num" style={{ fontSize:14 }}>{fmt(d.setup)}</span>
+            </div>
+          )}
+          {d.mensuel != null && (
+            <div className="col g3 grow">
+              <span className="t-xs mut">Récurrent</span>
+              <span className="b num" style={{ fontSize:14, color:'var(--grn)' }}>{fmt(d.mensuel)}<span className="t-xs mut">/mois</span></span>
+            </div>
+          )}
+          {d.setup == null && d.mensuel == null && (
+            <div className="col g3 grow">
+              <span className="t-xs mut">Budget</span>
+              <span className="mut" style={{ fontSize:13 }}>À qualifier</span>
+            </div>
+          )}
+          <div className="col g3" style={{ alignItems:'flex-end' }}>
+            <span className="t-xs mut">Action le</span>
+            <span className="b" style={{ fontSize:13, color: d.urgent ? 'var(--red)' : 'var(--acc)' }}>{d.date}</span>
+          </div>
+        </div>
+        <div style={{ padding:'10px 12px', borderRadius:10, background:'rgba(255,255,255,.04)', borderLeft:'2px solid rgba(255,255,255,.1)' }}>
+          <span className="t-xs" style={{ color:'var(--ink2)', lineHeight:1.5 }}>
+            <span className="b" style={{ color:'var(--mut)' }}>→ </span>{d.prochaine}
+          </span>
+        </div>
+      </div>
+      <div style={{ padding:'10px 16px', borderTop:'1px solid var(--bdr)', background:'rgba(0,0,0,.15)' }}>
+        <span className="t-xs mut">Contact · </span><span className="t-xs sb">{d.contact}</span>
+      </div>
+    </div>
+  );
+}
+
+function TabPipeline() {
+  const totalSetup = PIPELINE.reduce((s,d) => s + (d.setup||0), 0);
+  const totalMensuel = PIPELINE.reduce((s,d) => s + (d.mensuel||0), 0);
+  return (
+    <Fragment>
+      <div className="card" style={{ padding:'14px 16px' }}>
+        <div className="row between center">
+          <div>
+            <div className="t-xs mut" style={{ marginBottom:3 }}>{PIPELINE.length} dossiers actifs</div>
+            <div className="row g10">
+              <span className="b num" style={{ fontSize:15 }}>{fmt(totalSetup)} setup</span>
+              <span className="mut">·</span>
+              <span className="b num" style={{ fontSize:15, color:'var(--grn)' }}>{fmt(totalMensuel)}/mois</span>
+            </div>
+          </div>
+          <span className="badge org">{PIPELINE.filter(d=>d.urgent).length} urgent{PIPELINE.filter(d=>d.urgent).length>1?'s':''}</span>
+        </div>
+      </div>
+      {PIPELINE.map((d,i) => <DossierCard key={d.id} d={d} i={i} />)}
+    </Fragment>
+  );
+}
+
+function ProjetCard({ p, i }) {
+  const avcColor = p.avancement >= 60 ? 'var(--grn)' : p.avancement >= 30 ? 'var(--acc)' : 'var(--mut)';
+  return (
+    <div className="card anim col" style={{ overflow:'hidden', animationDelay:(i*70)+'ms' }}>
+      <div style={{ padding:'14px 16px 13px' }}>
+        <div className="row between" style={{ marginBottom:8 }}>
+          <div className="col g4">
+            <span style={{ fontSize:10.5, fontWeight:700, color:'var(--blu)' }}>{p.tag}</span>
+            <span className="b" style={{ fontSize:15 }}>{p.nom}</span>
+          </div>
+          <span className={'badge '+(p.avancement>=60?'grn':p.avancement>=30?'org':'neu')}>{p.statut}</span>
+        </div>
+
+        {/* Progress bar */}
+        <div style={{ marginBottom:12 }}>
+          <div className="row between" style={{ marginBottom:6 }}>
+            <span className="t-xs mut">Avancement</span>
+            <span className="t-xs b num" style={{ color:avcColor }}>{p.avancement}%</span>
+          </div>
+          <div style={{ height:5, borderRadius:100, background:'rgba(255,255,255,.07)', overflow:'hidden' }}>
+            <div style={{ height:'100%', width:p.avancement+'%', background:avcColor, borderRadius:100, transition:'.5s' }} />
+          </div>
+        </div>
+
+        {/* Prochaine étape */}
+        <div style={{ padding:'9px 12px', borderRadius:10, background:'rgba(255,255,255,.04)', borderLeft:'2px solid rgba(255,255,255,.1)', marginBottom: p.etapes ? 10 : 0 }}>
+          <div className="t-xs mut" style={{ marginBottom:3, fontWeight:700 }}>PROCHAINE ÉTAPE</div>
+          <span className="t-xs sb" style={{ color:'var(--ink)', lineHeight:1.5 }}>{p.prochaine}</span>
+        </div>
+
+        {/* Étapes restantes */}
+        {p.etapes && (
+          <div className="row" style={{ flexWrap:'wrap', gap:6, marginTop:10 }}>
+            {p.etapes.map((e,j) => (
+              <span key={j} style={{ fontSize:10.5, fontWeight:600, padding:'3px 9px', borderRadius:7,
+                background:'rgba(255,255,255,.05)', color:'var(--ink2)', border:'1px solid var(--bdr)' }}>{e}</span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {p.blocage && (
+        <div style={{ padding:'9px 16px', borderTop:'1px solid var(--bdr)', background:'var(--red-s)' }}>
+          <span className="t-xs" style={{ color:'var(--red)', fontWeight:700 }}>BLOCAGE · </span>
+          <span className="t-xs" style={{ color:'var(--red)' }}>{p.blocage}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TabProjets() {
+  return (
+    <Fragment>
+      <div className="card" style={{ padding:'14px 16px' }}>
+        <div className="row between center">
+          <div>
+            <div className="t-xs mut" style={{ marginBottom:3 }}>{PROJETS.length} projets suivis</div>
+            <span className="b" style={{ fontSize:14 }}>
+              {PROJETS.filter(p=>!p.blocage).length} actifs · <span style={{ color:'var(--red)' }}>{PROJETS.filter(p=>p.blocage).length} bloqué{PROJETS.filter(p=>p.blocage).length>1?'s':''}</span>
+            </span>
+          </div>
+          <div className="col" style={{ alignItems:'flex-end', gap:3 }}>
+            <span className="t-xs mut">Moy. avancement</span>
+            <span className="xb num" style={{ fontSize:18, color:'var(--acc)' }}>
+              {Math.round(PROJETS.reduce((s,p)=>s+p.avancement,0)/PROJETS.length)}%
+            </span>
+          </div>
+        </div>
+      </div>
+      {PROJETS.map((p,i) => <ProjetCard key={p.id} p={p} i={i} />)}
+    </Fragment>
+  );
+}
+
+/* ── APP ──────────────────────────────────────────────── */
+const TABS = [
+  { id:'today', label:"Aujourd'hui" },
+  { id:'pipeline', label:'Pipeline' },
+  { id:'projets', label:'Projets' },
+];
+
+function App() {
+  const [tab, setTab] = useState('today');
+  const heure = new Date().getHours();
+  const salut = heure < 12 ? 'Bonjour' : heure < 18 ? 'Bon après-midi' : 'Bonsoir';
+
+  return (
+    <div className="app">
+      <div className="hdr">
+        <div className="hdr-left">
+          <div className="label">Mr Attractor · Pilotage</div>
+          <div className="title">{salut}, Mac Arthur</div>
+        </div>
+        <div className="hdr-right">
+          {TODAY}
+        </div>
+      </div>
+
+      <div className="tabs">
+        {TABS.map(t => (
+          <button key={t.id} className={'tab'+(tab===t.id?' on':'')} onClick={() => setTab(t.id)}>{t.label}</button>
+        ))}
+      </div>
+
+      <div className="content">
+        {tab === 'today'    && <TabAujourdHui />}
+        {tab === 'pipeline' && <TabPipeline />}
+        {tab === 'projets'  && <TabProjets />}
+      </div>
+    </div>
+  );
+}
+
+document.getElementById('boot').remove();
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
