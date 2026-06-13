@@ -148,6 +148,9 @@ WhatsApp : +33 7 53 90 23 23
 Email : myattractor1@gmail.com  
 Site : agenceattractor.com
 
+**Contact principal XPaye Africa :** Mme Saka Rukayatou  
+Deck de présentation pour réunion : `demo.agenceattractor.com/xpaye-partenariat/`
+
 ---
 
 *Document de travail interne — version 1.0 du 13/06/2026*  
