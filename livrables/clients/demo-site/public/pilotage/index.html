@@ -17,11 +17,19 @@
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" crossorigin="anonymous"></script>
 
 <script type="text/babel" data-presets="react">
-const { useState, Fragment } = React;
+const { useState, useEffect, useRef, Fragment } = React;
 
-/* ── TOKENS ──────────────────────────────────────────── */
+/* ── SUPABASE ─────────────────────────────────────────── */
+const { createClient } = supabase;
+const SB = createClient(
+  'https://lgdgbrivnhgeupqhkckd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk'
+);
+
+/* ── TOKENS ──────────────────────────────────────────────── */
 const T = `
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 :root{
@@ -69,118 +77,91 @@ body{background:var(--bg);color:var(--ink);}
 .divider{height:1px;background:var(--bdr);margin:0 -1px;}
 @keyframes up{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
 .anim{animation:up .28s cubic-bezier(.2,.7,.3,1) both;}
+.edit-input{background:rgba(238,124,31,.1);border:1px solid var(--acc);border-radius:6px;padding:4px 8px;color:var(--ink);font-family:inherit;font-size:inherit;font-weight:inherit;width:100%;outline:none;resize:none;}
+.edit-hint{font-size:9.5px;color:var(--acc);opacity:.7;margin-top:3px;}
 `;
 (function(){ const s=document.createElement('style'); s.textContent=T; document.head.appendChild(s); })();
 
-/* ── DATA ─────────────────────────────────────────────── */
+/* ── UTILS ─────────────────────────────────────────────── */
 const TODAY = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
-
-const CAP = {
-  objectif: 10000,
-  confirme: 0,        // revenus agence récurrents signés (€/mois)
-  pipeline: 3750,     // Club Élévia 3500 setup→250/mois + autres qualifiés
-  dateObjectif: 'Août 2026',
-  note: 'Club Élévia : 250€/mois récurrent dès signature',
-};
-
-const FOCUS = [
-  { id:1, texte:'Récupérer retour Bérénice Kouadio sur la démo Beracca', tag:'Pipeline', urgent:false },
-  { id:2, texte:'Relancer Club Élévia — signature Yousign + solde 50€', tag:'Pipeline', urgent:true },
-  { id:3, texte:'Préparer session Assists V3 — corriger agentGating.js', tag:'Projet', urgent:false },
-];
-
-const PIPELINE = [
-  {
-    id:'ATR-10', nom:'Club Élévia', type:'App Métier',
-    statut:'Contrat envoyé', sc:'org',
-    setup: 3500, mensuel: 250,
-    prochaine:'Signature Yousign en attente · récupérer solde acompte 50€',
-    date:'14/06', urgent:true,
-    contact:'Élise',
-  },
-  {
-    id:'ATR-5', nom:'Beracca Mastery Group', type:'App Métier',
-    statut:'Démo envoyée', sc:'blu',
-    setup: null, mensuel: null,
-    prochaine:'Attendre retour sur la démo · relance le 15/06 si silence',
-    date:'15/06', urgent:false,
-    contact:'Bérénice Kouadio',
-  },
-  {
-    id:'ATR-6', nom:"J'envoie Express", type:'App Métier',
-    statut:'Démo prête', sc:'neu',
-    setup: null, mensuel: null,
-    prochaine:'Identifier prospect cible · envoyer lien démo pour qualifier',
-    date:'À planifier', urgent:false,
-    contact:'À identifier',
-  },
-  {
-    id:'ATR-8', nom:'Vies Croisées', type:'Site émission',
-    statut:'Proposition envoyée', sc:'blu',
-    setup: null, mensuel: null,
-    prochaine:'Attendre retour Andréa Koné sur la proposition',
-    date:'À relancer', urgent:false,
-    contact:'Andréa Koné',
-  },
-];
-
-const DEMOS = [
-  { id:'beracca',       nom:'Beracca Mastery Group', type:'Commandes attiéké',   url:'/beracca',         statut:'Envoyée client', sc:'blu' },
-  { id:'jenvoie',       nom:"J'envoie Express",       type:'Livraison express',   url:'/jenvoie-express', statut:'En vitrine',     sc:'neu' },
-  { id:'rukayatou',     nom:'Rukayatou',               type:'App métier',          url:'/rukayatou',       statut:'En vitrine',     sc:'neu' },
-  { id:'vies-croisees', nom:'Vies Croisées',           type:'Site émission',       url:'/vies-croisees',   statut:'Envoyée client', sc:'blu' },
-  { id:'getwinworld',   nom:'GetWinWorld',             type:'App gaming/portail',  url:'/getwinworld',     statut:'En vitrine',     sc:'neu' },
-  { id:'creal',         nom:"C'Real Assists",          type:'Commandes WhatsApp',  url:'/creal-assists',   statut:'Concept',        sc:'neu' },
-  { id:'xpaye',         nom:'XPaye Africa',            type:'Deck partenariat',    url:'/xpaye-partenariat', statut:'En vitrine',   sc:'neu' },
-  { id:'onboarding',    nom:'Onboarding Flow',         type:'Process interne',     url:'/onboarding',      statut:'Interne',        sc:'neu' },
-];
-
-const PROJETS = [
-  {
-    id:'assists-v3', nom:'Attractor Assists V3', tag:'Produit phare',
-    statut:'En cours', avancement:45,
-    prochaine:'Corriger bugs + simplifier agentGating.js',
-    etapes:['Fidelys module','Veille / RSS','WhatsApp API','Media Buyer','Conversion','Pricing'],
-    blocage:null,
-  },
-  {
-    id:'whatsapp-mvp', nom:'WhatsApp MVP', tag:'Distribution',
-    statut:'Infrastructure posée', avancement:30,
-    prochaine:'Railway + extraction Claude + campagne Meta',
-    etapes:['Infra Railway','Extraction Claude','Mini CRM','Campagne Meta'],
-    blocage:null,
-  },
-  {
-    id:'agent-commercial', nom:'Agent Commercial', tag:'Revenus',
-    statut:'En design', avancement:15,
-    prochaine:'Brief matin + relances pipeline + inbound auto',
-    etapes:['Brief matin','Relances pipeline','Inbound auto'],
-    blocage:'Dépend de Assists V3',
-  },
-  {
-    id:'fidelys', nom:'Fidelys', tag:'App freemium',
-    statut:'En attente', avancement:20,
-    prochaine:'Planifier après Assists V3 core stable',
-    etapes:['Carte fidélité QR','Dashboard commerçant','App client'],
-    blocage:'Après V3',
-  },
-];
-
-/* ── COMPOSANTS ───────────────────────────────────────── */
 const fmt = (n) => n == null ? '—' : n.toLocaleString('fr-FR') + ' €';
 
-function CapCard() {
-  const pct_conf = Math.min(100, (CAP.confirme / CAP.objectif) * 100);
-  const pct_pipe = Math.min(100 - pct_conf, (CAP.pipeline / CAP.objectif) * 100);
+/* ── EDITABLE FIELD ───────────────────────────────────── */
+function EditField({ value, onSave, style, multiline }) {
+  const [editing, setEditing] = useState(false);
+  const [val, setVal] = useState(value);
+  const ref = useRef();
+  useEffect(() => setVal(value), [value]);
+
+  const save = () => {
+    setEditing(false);
+    const trimmed = (val || '').trim();
+    if (trimmed && trimmed !== value) onSave(trimmed);
+    else setVal(value);
+  };
+
+  if (editing) {
+    const shared = {
+      ref, value: val, autoFocus: true,
+      onChange: e => setVal(e.target.value),
+      onBlur: save,
+      onKeyDown: e => { if (!multiline && e.key === 'Enter') { e.preventDefault(); save(); } if (e.key === 'Escape') { setEditing(false); setVal(value); } },
+      className: 'edit-input',
+      style,
+    };
+    return multiline
+      ? <textarea {...shared} rows={3} />
+      : <input {...shared} />;
+  }
+  return (
+    <span
+      onClick={() => { setEditing(true); }}
+      title="Cliquer pour modifier"
+      style={{ ...style, cursor:'text', borderBottom:'1px dashed rgba(255,255,255,.18)', paddingBottom:1 }}
+    >{val || '—'}</span>
+  );
+}
+
+/* ── DEMOS (static) ───────────────────────────────────── */
+const DEMOS = [
+  { id:'beracca',       nom:'Beracca Mastery Group', type:'Commandes attiéké',   url:'/beracca',           statut:'Envoyée client', sc:'blu' },
+  { id:'jenvoie',       nom:"J'envoie Express",       type:'Livraison express',   url:'/jenvoie-express',   statut:'En vitrine',     sc:'neu' },
+  { id:'rukayatou',     nom:'Rukayatou',               type:'App métier',          url:'/rukayatou',         statut:'En vitrine',     sc:'neu' },
+  { id:'vies-croisees', nom:'Vies Croisées',           type:'Site émission',       url:'/vies-croisees',     statut:'Envoyée client', sc:'blu' },
+  { id:'getwinworld',   nom:'GetWinWorld',             type:'App gaming/portail',  url:'/getwinworld',       statut:'En vitrine',     sc:'neu' },
+  { id:'creal',         nom:"C'Real Assists",          type:'Commandes WhatsApp',  url:'/creal-assists',     statut:'Concept',        sc:'neu' },
+  { id:'xpaye',         nom:'XPaye Africa',            type:'Deck partenariat',    url:'/xpaye-partenariat', statut:'En vitrine',     sc:'neu' },
+  { id:'onboarding',    nom:'Onboarding Flow',         type:'Process interne',     url:'/onboarding',        statut:'Interne',        sc:'neu' },
+];
+
+/* ── CAP CARD ─────────────────────────────────────────── */
+function CapCard({ cap, onChange }) {
+  if (!cap) return null;
+  const pct_conf = Math.min(100, (cap.confirme / cap.objectif) * 100);
+  const pct_pipe = Math.min(100 - pct_conf, (cap.pipeline_val / cap.objectif) * 100);
   const moisRestants = Math.ceil((new Date('2026-08-31') - new Date()) / (1000*60*60*24*30));
+
+  const saveConfirme = async (raw) => {
+    const n = parseInt(raw.replace(/\s/g,''), 10);
+    if (isNaN(n)) return;
+    onChange({ ...cap, confirme: n });
+    await SB.from('pilotage_cap').update({ confirme: n }).eq('id', cap.id);
+  };
+  const savePipeline = async (raw) => {
+    const n = parseInt(raw.replace(/\s/g,''), 10);
+    if (isNaN(n)) return;
+    onChange({ ...cap, pipeline_val: n });
+    await SB.from('pilotage_cap').update({ pipeline_val: n }).eq('id', cap.id);
+  };
+
   return (
     <div className="card" style={{ padding:'18px 18px 16px', background:'linear-gradient(135deg,#1A1208 0%,#201508 100%)', borderColor:'rgba(238,124,31,.18)' }}>
       <div className="row between" style={{ marginBottom:14 }}>
         <div>
           <div className="t-xs mut sb" style={{ marginBottom:3 }}>CAP MENSUEL</div>
           <div className="row g8" style={{ alignItems:'baseline' }}>
-            <span className="xb num t-xl" style={{ color:'var(--acc)' }}>{fmt(CAP.objectif)}</span>
-            <span className="t-xs mut">/mois · {CAP.dateObjectif}</span>
+            <span className="xb num t-xl" style={{ color:'var(--acc)' }}>{fmt(cap.objectif)}</span>
+            <span className="t-xs mut">/mois · {cap.date_objectif}</span>
           </div>
         </div>
         <div style={{ textAlign:'right' }}>
@@ -189,11 +170,10 @@ function CapCard() {
         </div>
       </div>
 
-      {/* Gauge */}
       <div style={{ height:8, borderRadius:100, background:'rgba(255,255,255,.07)', overflow:'hidden', marginBottom:12 }}>
         <div style={{ height:'100%', display:'flex', borderRadius:100, overflow:'hidden' }}>
-          {pct_conf > 0 && <div style={{ width: pct_conf+'%', background:'var(--grn)', transition:'.6s' }} />}
-          <div style={{ width: pct_pipe+'%', background:'var(--acc)', opacity:.85, transition:'.6s' }} />
+          {pct_conf > 0 && <div style={{ width:pct_conf+'%', background:'var(--grn)', transition:'.6s' }} />}
+          <div style={{ width:pct_pipe+'%', background:'var(--acc)', opacity:.85, transition:'.6s' }} />
         </div>
       </div>
 
@@ -203,7 +183,11 @@ function CapCard() {
             <span style={{ width:7,height:7,borderRadius:2,background:'var(--grn)',flexShrink:0 }} />
             <span className="t-xs mut">Confirmé</span>
           </div>
-          <span className="b num" style={{ fontSize:14, color: CAP.confirme > 0 ? 'var(--grn)' : 'var(--faint)' }}>{CAP.confirme > 0 ? fmt(CAP.confirme) : '—'}</span>
+          <EditField
+            value={cap.confirme > 0 ? String(cap.confirme) : '0'}
+            onSave={saveConfirme}
+            style={{ fontSize:14, fontWeight:700, color: cap.confirme > 0 ? 'var(--grn)' : 'var(--faint)' }}
+          />
         </div>
         <div style={{ width:1, background:'var(--bdr)' }} />
         <div className="col g4 grow">
@@ -211,7 +195,11 @@ function CapCard() {
             <span style={{ width:7,height:7,borderRadius:2,background:'var(--acc)',flexShrink:0 }} />
             <span className="t-xs mut">Pipeline qualifié</span>
           </div>
-          <span className="b num" style={{ fontSize:14, color:'var(--acc)' }}>{fmt(CAP.pipeline)}</span>
+          <EditField
+            value={String(cap.pipeline_val)}
+            onSave={savePipeline}
+            style={{ fontSize:14, fontWeight:700, color:'var(--acc)' }}
+          />
         </div>
         <div style={{ width:1, background:'var(--bdr)' }} />
         <div className="col g4 grow">
@@ -219,48 +207,63 @@ function CapCard() {
             <span style={{ width:7,height:7,borderRadius:2,background:'var(--faint)',flexShrink:0 }} />
             <span className="t-xs mut">Reste à trouver</span>
           </div>
-          <span className="b num" style={{ fontSize:14, color:'var(--mut)' }}>{fmt(CAP.objectif - CAP.confirme - CAP.pipeline)}</span>
+          <span className="b num" style={{ fontSize:14, color:'var(--mut)' }}>{fmt(cap.objectif - cap.confirme - cap.pipeline_val)}</span>
         </div>
       </div>
 
-      {CAP.note && (
+      {cap.note && (
         <div style={{ marginTop:12, padding:'8px 11px', borderRadius:8, background:'rgba(238,124,31,.08)', borderLeft:'2.5px solid var(--acc)' }}>
-          <span className="t-xs" style={{ color:'rgba(240,237,232,.65)' }}>{CAP.note}</span>
+          <span className="t-xs" style={{ color:'rgba(240,237,232,.65)' }}>{cap.note}</span>
         </div>
       )}
     </div>
   );
 }
 
-function FocusItem({ item, i }) {
+/* ── FOCUS ITEM ───────────────────────────────────────── */
+function FocusItem({ item, i, onToggle, onEdit }) {
   const tagColor = item.tag === 'Pipeline' ? 'var(--acc)' : 'var(--blu)';
   return (
-    <div className="anim row g12" style={{ padding:'13px 0', borderBottom:'1px solid var(--bdr)', animationDelay:(i*60)+'ms', alignItems:'flex-start' }}>
-      <div style={{ width:22, height:22, borderRadius:8, background: item.urgent ? 'var(--red-s)' : 'rgba(255,255,255,.06)',
-        display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginTop:1 }}>
-        <span style={{ width:7,height:7,borderRadius:50,background: item.urgent ? 'var(--red)' : 'var(--faint)' }} />
+    <div className="anim row g12" style={{ padding:'13px 0', borderBottom:'1px solid var(--bdr)', animationDelay:(i*60)+'ms', alignItems:'flex-start', opacity: item.done ? .45 : 1 }}>
+      <div
+        onClick={() => onToggle(item)}
+        style={{ width:22, height:22, borderRadius:8,
+          background: item.done ? 'var(--grn-s)' : item.urgent ? 'var(--red-s)' : 'rgba(255,255,255,.06)',
+          display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, marginTop:1, cursor:'pointer' }}>
+        {item.done
+          ? <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--grn)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          : <span style={{ width:7,height:7,borderRadius:50,background: item.urgent ? 'var(--red)' : 'var(--faint)' }} />
+        }
       </div>
       <div className="col grow g4">
-        <span className="t-sm sb" style={{ lineHeight:1.4 }}>{item.texte}</span>
+        <EditField
+          value={item.description}
+          onSave={v => onEdit(item, v)}
+          style={{ fontSize:13, fontWeight:600, lineHeight:1.4, textDecoration: item.done ? 'line-through' : 'none' }}
+          multiline
+        />
         <span style={{ fontSize:10.5, fontWeight:700, color:tagColor }}>{item.tag}{item.urgent ? ' · URGENT' : ''}</span>
       </div>
     </div>
   );
 }
 
-function TabAujourdHui() {
+function TabAujourdHui({ cap, focus, onCapChange, onFocusToggle, onFocusEdit }) {
   return (
     <Fragment>
-      <CapCard />
+      <CapCard cap={cap} onChange={onCapChange} />
       <div className="card" style={{ padding:'16px 18px' }}>
         <div className="sect-label">Focus du jour</div>
-        {FOCUS.map((f,i) => <FocusItem key={f.id} item={f} i={i} />)}
+        {focus.map((f,i) => (
+          <FocusItem key={f.id} item={f} i={i} onToggle={onFocusToggle} onEdit={onFocusEdit} />
+        ))}
       </div>
     </Fragment>
   );
 }
 
-function DossierCard({ d, i }) {
+/* ── PIPELINE ─────────────────────────────────────────── */
+function DossierCard({ d, i, onEditProchaine }) {
   return (
     <div className="card anim col" style={{ overflow:'hidden', animationDelay:(i*70)+'ms' }}>
       <div style={{ padding:'14px 16px 12px' }}>
@@ -269,7 +272,7 @@ function DossierCard({ d, i }) {
             <span className="t-xs mut">{d.id} · {d.type}</span>
             <span className="b" style={{ fontSize:15 }}>{d.nom}</span>
           </div>
-          <span className={'badge '+d.sc}><span className="dot" />{d.statut}</span>
+          <span className={'badge '+(d.statut_color||'neu')}><span className="dot" />{d.statut}</span>
         </div>
         <div className="row g10" style={{ marginBottom:12 }}>
           {d.setup != null && (
@@ -292,13 +295,17 @@ function DossierCard({ d, i }) {
           )}
           <div className="col g3" style={{ alignItems:'flex-end' }}>
             <span className="t-xs mut">Action le</span>
-            <span className="b" style={{ fontSize:13, color: d.urgent ? 'var(--red)' : 'var(--acc)' }}>{d.date}</span>
+            <span className="b" style={{ fontSize:13, color: d.urgent ? 'var(--red)' : 'var(--acc)' }}>{d.date_action}</span>
           </div>
         </div>
         <div style={{ padding:'10px 12px', borderRadius:10, background:'rgba(255,255,255,.04)', borderLeft:'2px solid rgba(255,255,255,.1)' }}>
-          <span className="t-xs" style={{ color:'var(--ink2)', lineHeight:1.5 }}>
-            <span className="b" style={{ color:'var(--mut)' }}>→ </span>{d.prochaine}
-          </span>
+          <div className="t-xs mut b" style={{ marginBottom:4 }}>→ PROCHAINE ACTION</div>
+          <EditField
+            value={d.prochaine}
+            onSave={v => onEditProchaine(d, v)}
+            style={{ fontSize:11.5, color:'var(--ink2)', lineHeight:1.5 }}
+            multiline
+          />
         </div>
       </div>
       <div style={{ padding:'10px 16px', borderTop:'1px solid var(--bdr)', background:'rgba(0,0,0,.15)' }}>
@@ -308,30 +315,31 @@ function DossierCard({ d, i }) {
   );
 }
 
-function TabPipeline() {
-  const totalSetup = PIPELINE.reduce((s,d) => s + (d.setup||0), 0);
-  const totalMensuel = PIPELINE.reduce((s,d) => s + (d.mensuel||0), 0);
+function TabPipeline({ pipeline, onEditProchaine }) {
+  const totalSetup = pipeline.reduce((s,d) => s + (d.setup||0), 0);
+  const totalMensuel = pipeline.reduce((s,d) => s + (d.mensuel||0), 0);
   return (
     <Fragment>
       <div className="card" style={{ padding:'14px 16px' }}>
         <div className="row between center">
           <div>
-            <div className="t-xs mut" style={{ marginBottom:3 }}>{PIPELINE.length} dossiers actifs</div>
+            <div className="t-xs mut" style={{ marginBottom:3 }}>{pipeline.length} dossiers actifs</div>
             <div className="row g10">
               <span className="b num" style={{ fontSize:15 }}>{fmt(totalSetup)} setup</span>
               <span className="mut">·</span>
               <span className="b num" style={{ fontSize:15, color:'var(--grn)' }}>{fmt(totalMensuel)}/mois</span>
             </div>
           </div>
-          <span className="badge org">{PIPELINE.filter(d=>d.urgent).length} urgent{PIPELINE.filter(d=>d.urgent).length>1?'s':''}</span>
+          <span className="badge org">{pipeline.filter(d=>d.urgent).length} urgent{pipeline.filter(d=>d.urgent).length>1?'s':''}</span>
         </div>
       </div>
-      {PIPELINE.map((d,i) => <DossierCard key={d.id} d={d} i={i} />)}
+      {pipeline.map((d,i) => <DossierCard key={d.id} d={d} i={i} onEditProchaine={onEditProchaine} />)}
     </Fragment>
   );
 }
 
-function ProjetCard({ p, i }) {
+/* ── PROJETS ──────────────────────────────────────────── */
+function ProjetCard({ p, i, onEditProchaine }) {
   const avcColor = p.avancement >= 60 ? 'var(--grn)' : p.avancement >= 30 ? 'var(--acc)' : 'var(--mut)';
   return (
     <div className="card anim col" style={{ overflow:'hidden', animationDelay:(i*70)+'ms' }}>
@@ -344,7 +352,6 @@ function ProjetCard({ p, i }) {
           <span className={'badge '+(p.avancement>=60?'grn':p.avancement>=30?'org':'neu')}>{p.statut}</span>
         </div>
 
-        {/* Progress bar */}
         <div style={{ marginBottom:12 }}>
           <div className="row between" style={{ marginBottom:6 }}>
             <span className="t-xs mut">Avancement</span>
@@ -355,13 +362,16 @@ function ProjetCard({ p, i }) {
           </div>
         </div>
 
-        {/* Prochaine étape */}
         <div style={{ padding:'9px 12px', borderRadius:10, background:'rgba(255,255,255,.04)', borderLeft:'2px solid rgba(255,255,255,.1)', marginBottom: p.etapes ? 10 : 0 }}>
           <div className="t-xs mut" style={{ marginBottom:3, fontWeight:700 }}>PROCHAINE ÉTAPE</div>
-          <span className="t-xs sb" style={{ color:'var(--ink)', lineHeight:1.5 }}>{p.prochaine}</span>
+          <EditField
+            value={p.prochaine_action}
+            onSave={v => onEditProchaine(p, v)}
+            style={{ fontSize:11.5, fontWeight:600, color:'var(--ink)', lineHeight:1.5 }}
+            multiline
+          />
         </div>
 
-        {/* Étapes restantes */}
         {p.etapes && (
           <div className="row" style={{ flexWrap:'wrap', gap:6, marginTop:10 }}>
             {p.etapes.map((e,j) => (
@@ -382,30 +392,31 @@ function ProjetCard({ p, i }) {
   );
 }
 
-function TabProjets() {
+function TabProjets({ projets, onEditProchaine }) {
   return (
     <Fragment>
       <div className="card" style={{ padding:'14px 16px' }}>
         <div className="row between center">
           <div>
-            <div className="t-xs mut" style={{ marginBottom:3 }}>{PROJETS.length} projets suivis</div>
+            <div className="t-xs mut" style={{ marginBottom:3 }}>{projets.length} projets suivis</div>
             <span className="b" style={{ fontSize:14 }}>
-              {PROJETS.filter(p=>!p.blocage).length} actifs · <span style={{ color:'var(--red)' }}>{PROJETS.filter(p=>p.blocage).length} bloqué{PROJETS.filter(p=>p.blocage).length>1?'s':''}</span>
+              {projets.filter(p=>!p.blocage).length} actifs · <span style={{ color:'var(--red)' }}>{projets.filter(p=>p.blocage).length} bloqué{projets.filter(p=>p.blocage).length>1?'s':''}</span>
             </span>
           </div>
           <div className="col" style={{ alignItems:'flex-end', gap:3 }}>
             <span className="t-xs mut">Moy. avancement</span>
             <span className="xb num" style={{ fontSize:18, color:'var(--acc)' }}>
-              {Math.round(PROJETS.reduce((s,p)=>s+p.avancement,0)/PROJETS.length)}%
+              {Math.round(projets.reduce((s,p)=>s+p.avancement,0)/projets.length)}%
             </span>
           </div>
         </div>
       </div>
-      {PROJETS.map((p,i) => <ProjetCard key={p.id} p={p} i={i} />)}
+      {projets.map((p,i) => <ProjetCard key={p.id} p={p} i={i} onEditProchaine={onEditProchaine} />)}
     </Fragment>
   );
 }
 
+/* ── DEMOS ────────────────────────────────────────────── */
 function TabDemos() {
   const envoyees = DEMOS.filter(d => d.sc === 'blu').length;
   return (
@@ -431,9 +442,7 @@ function TabDemos() {
             </div>
             <span className="b" style={{ fontSize:13, color:'var(--ink)', lineHeight:1.3, marginBottom:4 }}>{d.nom}</span>
             <span className="t-xs mut">{d.type}</span>
-            <div style={{ marginTop:10, fontSize:10, color:'var(--acc)', fontWeight:700, letterSpacing:.3 }}>
-              Ouvrir →
-            </div>
+            <div style={{ marginTop:10, fontSize:10, color:'var(--acc)', fontWeight:700, letterSpacing:.3 }}>Ouvrir →</div>
           </a>
         ))}
       </div>
@@ -450,9 +459,56 @@ const TABS = [
 ];
 
 function App() {
-  const [tab, setTab] = useState('today');
+  const [tab, setTab]         = useState('today');
+  const [cap, setCap]         = useState(null);
+  const [focus, setFocus]     = useState([]);
+  const [pipeline, setPipeline] = useState([]);
+  const [projets, setProjets] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      SB.from('pilotage_cap').select('*').single(),
+      SB.from('pilotage_focus').select('*').order('ordre'),
+      SB.from('pilotage_pipeline').select('*').order('priorite'),
+      SB.from('pilotage_projets').select('*').order('priorite'),
+    ]).then(([capR, focusR, pipeR, projR]) => {
+      if (capR.data)   setCap(capR.data);
+      if (focusR.data) setFocus(focusR.data);
+      if (pipeR.data)  setPipeline(pipeR.data);
+      if (projR.data)  setProjets(projR.data);
+      setLoading(false);
+      document.getElementById('boot')?.remove();
+    });
+  }, []);
+
+  /* Focus handlers */
+  const handleFocusToggle = async (item) => {
+    const updated = !item.done;
+    setFocus(prev => prev.map(f => f.id === item.id ? { ...f, done: updated } : f));
+    await SB.from('pilotage_focus').update({ done: updated }).eq('id', item.id);
+  };
+  const handleFocusEdit = async (item, val) => {
+    setFocus(prev => prev.map(f => f.id === item.id ? { ...f, description: val } : f));
+    await SB.from('pilotage_focus').update({ description: val }).eq('id', item.id);
+  };
+
+  /* Pipeline handlers */
+  const handlePipeProchaine = async (d, val) => {
+    setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, prochaine: val } : p));
+    await SB.from('pilotage_pipeline').update({ prochaine: val }).eq('id', d.id);
+  };
+
+  /* Projets handlers */
+  const handleProjetProchaine = async (p, val) => {
+    setProjets(prev => prev.map(pr => pr.id === p.id ? { ...pr, prochaine_action: val } : pr));
+    await SB.from('pilotage_projets').update({ prochaine_action: val }).eq('id', p.id);
+  };
+
   const heure = new Date().getHours();
   const salut = heure < 12 ? 'Bonjour' : heure < 18 ? 'Bon après-midi' : 'Bonsoir';
+
+  if (loading) return null;
 
   return (
     <div className="app">
@@ -461,9 +517,7 @@ function App() {
           <div className="label">Mr Attractor · Pilotage</div>
           <div className="title">{salut}, Mac Arthur</div>
         </div>
-        <div className="hdr-right">
-          {TODAY}
-        </div>
+        <div className="hdr-right">{TODAY}</div>
       </div>
 
       <div className="tabs">
@@ -473,16 +527,15 @@ function App() {
       </div>
 
       <div className="content">
-        {tab === 'today'    && <TabAujourdHui />}
-        {tab === 'pipeline' && <TabPipeline />}
-        {tab === 'projets'  && <TabProjets />}
+        {tab === 'today'    && <TabAujourdHui cap={cap} focus={focus} onCapChange={setCap} onFocusToggle={handleFocusToggle} onFocusEdit={handleFocusEdit} />}
+        {tab === 'pipeline' && <TabPipeline pipeline={pipeline} onEditProchaine={handlePipeProchaine} />}
+        {tab === 'projets'  && <TabProjets projets={projets} onEditProchaine={handleProjetProchaine} />}
         {tab === 'demos'    && <TabDemos />}
       </div>
     </div>
   );
 }
 
-document.getElementById('boot').remove();
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>
 </body>
