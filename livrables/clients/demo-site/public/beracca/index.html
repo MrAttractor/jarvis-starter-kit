@@ -376,7 +376,7 @@ const HomeScreen = ({ orders, go, setTab, notifCount = 0, clearNotifs }) => {
   return (
     <Fragment>
       <div className="hf-scroll">
-        <div className="hf-pad col g16" style={{ paddingTop: 54, paddingBottom: 196 }}>
+        <div className="hf-pad col g16" style={{ paddingTop: 54, paddingBottom: 24 }}>
           <div className="row between center" style={{ paddingTop: 6 }}>
             <div className="col">
               <span className="t-sm mut sb">Bonjour 👋</span>
@@ -452,13 +452,6 @@ const HomeScreen = ({ orders, go, setTab, notifCount = 0, clearNotifs }) => {
         </div>
       </div>
 
-      <div style={{ position: 'absolute', left: 18, right: 18, bottom: 88, zIndex: 15 }}>
-        <button className="btn block anim-up" style={{ boxShadow: '0 10px 24px rgba(204,92,8,.34)' }}
-          onClick={() => go({ name: 'order' })}>
-          <Icon n="plus" s={20} w={2.4} c="#fff" /> Saisir une commande
-        </button>
-        <div className="t-xs mut" style={{ textAlign: 'center', marginTop: 7, fontWeight: 600 }}>Commande reçue par appel ou WhatsApp</div>
-      </div>
     </Fragment>
   );
 };
@@ -1276,13 +1269,25 @@ function App({ onClientOrder: _unused, injectOrder }) {
             )}
           </div>
           {showNav && !fullOverlay && top === null && (
-            <div className="hf-nav">
-              {TABS.map(x => (
-                <div key={x.id} className={'it ' + (tab === x.id ? 'on' : '')} onClick={() => { setTab(x.id); setStack([]); }}>
-                  <Icon n={x.icon} s={23} w={tab === x.id ? 2.3 : 1.9} />
-                  {x.label}
-                </div>
-              ))}
+            <div className="hf-nav" style={{ alignItems: 'flex-end', paddingBottom: 20 }}>
+              <div className={'it ' + (tab === 'home' ? 'on' : '')} onClick={() => { setTab('home'); setStack([]); }}>
+                <Icon n="home" s={23} w={tab === 'home' ? 2.3 : 1.9} />
+                Accueil
+              </div>
+              <div style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: '0 6px' }}>
+                <button onClick={() => go({ name: 'order' })} style={{
+                  width: 56, height: 56, borderRadius: 18, background: 'var(--accent)', border: 'none', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 6px 22px rgba(204,92,8,.42)', transform: 'translateY(-14px)', flexShrink: 0
+                }}>
+                  <Icon n="plus" s={26} w={2.5} c="#fff" />
+                </button>
+                <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', marginTop: -10, letterSpacing: .2 }}>Saisir</span>
+              </div>
+              <div className={'it ' + (tab === 'caisse' ? 'on' : '')} onClick={() => { setTab('caisse'); setStack([]); }}>
+                <Icon n="wallet" s={23} w={tab === 'caisse' ? 2.3 : 1.9} />
+                Caisse
+              </div>
             </div>
           )}
         </div>
