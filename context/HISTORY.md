@@ -7,6 +7,139 @@
 
 ---
 
+## 2026-06-13 (session 53 — Tableau de bord Pilotage connecté Supabase)
+
+### Dashboard Pilotage opérationnel
+
+- Prototype statique converti en app connectée Supabase (4 tables : `pilotage_cap`, `pilotage_pipeline`, `pilotage_focus`, `pilotage_projets`)
+- Données chargées au démarrage via `@supabase/supabase-js` CDN — plus de hardcode
+- Édition inline sur tous les champs clés : prochaine action (pipeline + projets), focus (description + toggle done), cap confirmé + pipeline qualifié
+- Toutes les modifications persistent en base au blur/Entrée
+- Démos responsive : 2 colonnes tablette, 1 colonne mobile < 400px
+- Fix majeur : colonne `priorite` manquante dans pilotage_pipeline causait une query Supabase silencieuse → pipeline affichait 0€. Colonne créée + noms accentués restaurés (Club Élévia, Vies Croisées)
+- Fix layout : remplacement inputs/textareas par `contentEditable` pour édition sans décalage de contenu
+- Déployé sur `demo.agenceattractor.com/pilotage`
+
+### Référence dashboard inspirante notée
+
+- `https://dashboardbusiness.netlify.app/` : bonne base pour futures features (log transactions, charges outils, alertes expiration) — design moins avancé que le nôtre mais idées utiles
+
+---
+
+## 2026-06-13 (session 52 — Démo Beracca Mastery Group produite et envoyée)
+
+### Maquette hi-fi TOP Attiéké V1 livrée
+
+- Prototype React 18 + Babel standalone déployé sur `demo.agenceattractor.com/beracca`
+- Vue manager (Bérénice Kouadio) : dashboard trésorerie, FAB "Saisir une commande" entre Accueil et Caisse, notifications en temps réel, liste commandes + timeline statuts
+- Vue client : catalogue 2×2 avec photos produits réelles (4 formules : SOUTRA / ECO / Family / Pro), panier avec vignettes, formulaire coordonnées + zone + paiement, confirmation
+- Simulation live : commande saisie côté client → apparaît instantanément dans le dashboard manager (badge cloche rouge + toast + ordre en tête de liste)
+- Design mobile-first : plein écran sur téléphone, toggle Client/Beracca en haut de l'écran
+- **Prix à confirmer avec Bérénice** (valeurs issues du fichier design, pas validées)
+- Lien envoyé à Bérénice Kouadio le 13/06/2026 — en attente de feedback
+
+---
+
+## 2026-06-13 (session 51 — Dossier Club Élévia : NDA V2 + Devis + Contrat)
+
+### Documents Club Élévia produits et archivés
+
+- NDA V1 refusé par Élise (léger, non signé) : 6 points d'amélioration remontés par la cliente. NDA V2 produit avec toutes les corrections : PI exclusive Élise (nom, concept, business model, marque, stratégie), durée illimitée pour les secrets commerciaux, non-concurrence 24 mois, clause restitution/destruction des données, Tribunal Judiciaire de Paris explicite
+- Reçu REÇ-2026-001 : 200€ Wero reçus le 10/06/2026 à 12h24, solde 50€ restants
+- Devis ATR-2026-0005 : 3 500€ setup en 4 phases progressives (Identité 800€ / Confiance 700€ / Rencontre 1 350€ / Communauté 650€) + Plan de continuité 250€/mois. Paiement 50/50 par phase, acompte 250€ déduit du démarrage Phase 1 (150€ net)
+- Contrat CONTRAT-ATR-2026-0005 : 18 articles complets (objet, périmètre cadré inclus/exclus/complémentaire, obligations réciproques, paiement, recette + 2 rounds révisions inclus, PI cession complète par phase, Plan de continuité, garantie 2 mois, confidentialité, limitation responsabilité plafonnée, résiliation équilibrée 3 cas, force majeure, TJ Paris)
+- Google Drive structuré sur macarthur.nguessankouassi@gmail.com : `Clients/Club Élévia — ATR-2026-0005/` avec sous-dossiers Documents signés / Documents de travail / Échanges
+- Notion CRM mis à jour (fiche ATR-10 : notes + prochaine action + liens Drive intégrés)
+- Message WhatsApp préparé pour envoi des 4 documents via Yousign
+
+### Feedback rigueur juridique acté
+
+- Claude doit présenter une checklist des clauses critiques AVANT toute rédaction juridique — mémorisé dans la mémoire persistante
+
+---
+
+## 2026-06-12 (session 50 — MVP WhatsApp + clarification tandem Assists)
+
+### Compréhension tandem WhatsApp x Attractor Assists
+
+- Logique de fond documentée : 5 scénarios d'adoption, complexité par palier (45/100 MVP, 160/200 industrialisé), modèle pricing MVP (150€ setup + 49€/mois)
+- Étude de cas C'Real (Kezey) : option B retenue = mini-site HTML C'Real comme interface cliente réelle, Assists en backend invisible
+- Document de référence créé : `context/import/tandem-whatsapp-assists.md`
+- Insight clé : la maquette-closer = 80% de l'anamnèse, même travail sert deux fois
+
+### Infrastructure MVP WhatsApp posée
+
+- n8n déployé sur Railway : `https://n8n-production-3bfc.up.railway.app`
+- Workflow WhatsApp importé, clé Anthropic + token Meta configurés
+- Nœud "Extraire Message" adapté pour reconnaître les deux formats (Twilio + Meta)
+- Workflow publié et actif
+
+### Blocage restant : canal WhatsApp
+
+- Numéro CI +22576877070 : conversations supprimées par erreur (inutilement), numéro recréé en WhatsApp Business. Migration vers API bloquée : SIM CI inaccessible depuis la France
+- Twilio Sandbox : sandbox ne répondait plus en fin de session
+- **Prochaine étape :** soit présence physique en CI avec la SIM pour migrer le vrai numéro (15 min), soit Twilio numéro virtuel payant (~2€/mois) pour tester depuis la France
+
+---
+
+## 2026-06-11 (session 49 — Point financier stack)
+
+### Bilan financier complet établi
+
+- Stack coûts réels clarifiés : Claude Max 100,07€/mois (renouvellement le 10), Anthropic API ~10€/mois (usage), GoDaddy ~20€/an (renouvellement 05/05/2027), Canva gratuit. Total mensuel réel : ~110€/mois
+- Double facturation détectée et réglée : Claude Pro (21,60€) était en doublon avec Claude Max — annulé automatiquement par Anthropic au passage sur Max. Dernier prélèvement Pro : 21/05/2026
+- Page Finances créée dans Notion CRM : https://app.notion.com/p/37c4257524c681bf83b1c3bf730de3df (charges, encaissements mensuels, MRR cible vs réel, pipeline, solde net)
+- Agent de veille renouvellements activé (chaque lundi 7h UTC, routine `trig_016usiPjAAsTi783K197qCNH`) : lit le tableau Notion et crée un rappel Google Calendar J-2 avant chaque échéance
+
+### CRM mis à jour
+
+- Club Élévia : 1er acompte 200€ reçu le 10/06/2026. 2e versement 50€ attendu le 11/06
+- J'envoie Express : acompte 130€ non reçu, RDV reporté semaine du 16/06
+
+---
+
+## 2026-06-11 (session 48 — Security review + fixes + campagne testeurs)
+
+### Sécurité
+- Security review exécuté sur commit `c869373` (CLAUDE.md dynamique + migrations 0034/0035)
+- 4 vulnérabilités confirmées et corrigées en prod :
+  - VUL-02/03 (HIGH) : JWT validation ajoutée dans `chat-assistant/index.ts` — user_id vérifié contre le token avant toute opération
+  - VUL-05 (MEDIUM) : policy `notifications INSERT` restreinte à `auth.uid() = user_id`
+  - VUL-06 (MEDIUM) : policy `devis_service_all` supprimée — accès direct frontend fermé
+- Migration `0036_security_fixes.sql` créée et appliquée en prod
+- Edge function `chat-assistant` redéployée
+- Commit `5c20a45`
+
+### Stratégie
+- Décision : focus 3 semaines sur acquisition de testeurs gratuits (Facebook groupes, LinkedIn, TikTok)
+- Campagne contenu rédigée et sauvegardée : `livrables/contenu/campagne-testeurs-juin2026.md`
+- 3 semaines : problème → preuve → urgence ; formats : texte long, post court, scripts vidéo 30-45s
+
+---
+
+## 2026-06-11 (session 47 — n8n activé + Agent Commercial en construction)
+
+- Docker Desktop découvert et utilisé pour la première fois, n8n lancé en local via docker-compose
+- Workflow "Veille Quotidienne" créé et activé (cron 6h30, RSS 5 secteurs CI/diaspora/food/beauté/business, pipeline complet vers Supabase)
+- Données confirmées dans veille_tendances, process-veille prêt à générer les DMV dès les premiers utilisateurs Growth+
+- Workflow "Agent Commercial — Brief Matin" démarré : connexion Notion CRM établie (base Dossiers, intégration n8n-attractor créée)
+
+---
+
+## 2026-06-10 (session 46 — Corrections V3 + Offre lancement 1 mois gratuit)
+
+### Bugs corrigés et nouvelles features deployées en prod
+
+- **Encodage UTF-8 corrigé** : 27 caractères double-encodés (é, à, ê, è, ·) réparés en binaire dans DashboardScreen, + BOM retiré sur 6 fichiers JSX (Axes, Broadcasts, Conversation, MasterSheet, Notifications, ConversationScreen)
+- **Vote méthode** : `loadVotes()` corrigé (comptage client-side), `vote()` récupère le userId en live plutôt qu'en state — le bouton "Je veux ce livre en premier" fonctionne maintenant
+- **ProfilScreen redesigné** : raccourcis rapides (Assists, Catalogue, Clients, Fidelys), boutique en hero card orange si pas de slug, layout plus engageant et cliquable
+- **CatalogueScreen** : upload photo depuis le téléphone via Supabase Storage (plus besoin de coller une URL), bucket `catalogue-photos` créé (migration 0032)
+- **Offre lancement** : badge "OFFERT" dans PaliersScreen, TrialSheet avec confirmation + liste des features, edge function `activate-trial` (set plan_code=bras_droit +30j + notif in-app), migration 0033 (colonnes trial_activated_at / trial_expires_at)
+- **Dashboard** : card tip quotidienne rotative pour les utilisateurs en essai (feature du jour + jours restants), banniere upgrade masquee pendant l'essai
+- Migrations 0032 et 0033 appliquees en prod, commits `e5c1159` et `481e622` pushes
+
+---
+
 ## 2026-06-10 (session 43 — Attractor Assists V3 : refonte complète deployée en prod)
 
 ### V3 deployée à 18h55
