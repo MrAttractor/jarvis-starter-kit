@@ -1,0 +1,1071 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TOP Attiéké — Beracca Mastery Group</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #e6e0d5; }
+  #boot { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: #efeae1; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #938C81; z-index: 99; }
+</style>
+</head>
+<body>
+<div id="boot">Chargement…</div>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useRef, useEffect, useCallback, Fragment } = React;
+
+/* ============================================================
+   TWEAKS PANEL
+   ============================================================ */
+const __TWEAKS_STYLE = `
+  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
+    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
+    transform:scale(var(--dc-inv-zoom,1));transform-origin:bottom right;
+    background:rgba(250,249,247,.78);color:#29261b;
+    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
+    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;
+    padding:10px 8px 10px 14px;cursor:move;user-select:none}
+  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
+  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
+    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
+  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
+  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
+    overflow-y:auto;overflow-x:hidden;min-height:0;scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}
+  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;color:rgba(41,38,27,.72)}
+  .twk-lbl>span:first-child{font-weight:500}
+  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:rgba(41,38,27,.45);padding:10px 0 0}
+  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;background:rgba(0,0,0,.06);user-select:none}
+  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;
+    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);
+    transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}
+  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;
+    background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;
+    border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2}
+`;
+
+function useTweaks(defaults) {
+  const [values, setValues] = useState(defaults);
+  const setTweak = useCallback((keyOrEdits, val) => {
+    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null ? keyOrEdits : { [keyOrEdits]: val };
+    setValues(prev => ({ ...prev, ...edits }));
+  }, []);
+  return [values, setTweak];
+}
+
+function TweaksPanel({ title = 'Tweaks', children }) {
+  const [open, setOpen] = useState(false);
+  const dragRef = useRef(null);
+  const offsetRef = useRef({ x: 16, y: 16 });
+
+  useEffect(() => {
+    const onMsg = (e) => {
+      const t = e?.data?.type;
+      if (t === '__activate_edit_mode') setOpen(true);
+      else if (t === '__deactivate_edit_mode') setOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  if (!open) return null;
+  return (
+    <>
+      <style>{__TWEAKS_STYLE}</style>
+      <div ref={dragRef} className="twk-panel" style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
+        <div className="twk-hd">
+          <b>{title}</b>
+          <button className="twk-x" onClick={() => setOpen(false)}>✕</button>
+        </div>
+        <div className="twk-body">{children}</div>
+      </div>
+    </>
+  );
+}
+
+function TweakSection({ label }) {
+  return <div className="twk-sect">{label}</div>;
+}
+
+function TweakRadio({ label, value, options, onChange }) {
+  const idx = Math.max(0, options.indexOf(value));
+  const n = options.length;
+  return (
+    <div className="twk-row">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <div className="twk-seg">
+        <div className="twk-seg-thumb" style={{ left: `calc(2px + ${idx} * (100% - 4px) / ${n})`, width: `calc((100% - 4px) / ${n})` }} />
+        {options.map(o => (
+          <button key={o} type="button" onClick={() => onChange(o)}>{o}</button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   HI-FI BASE — tokens, styles, shell, composants
+   ============================================================ */
+(function injectStyles() {
+  if (document.getElementById('hf-styles')) return;
+  const s = document.createElement('style');
+  s.id = 'hf-styles';
+  s.textContent = `
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+  :root{
+    --paper:#FBF9F3;--card:#FFFFFF;--ink:#221F1A;--ink2:#534D44;
+    --muted:#938C81;--faint:#B7B0A4;--line:#ECE7DC;--line2:#E0D9CC;
+    --field:#F4F1EA;
+    --orange:#EE7C1F;--orange-d:#D5650C;--orange-soft:#FCEBD7;--orange-tint:#FBF3E8;
+    --green:#1F8A4C;--green-soft:#DCEFE1;--green-tint:#EFF6F0;
+    --red:#C8442E;--red-soft:#F6E0DA;
+    --blue:#2A6FB0;
+    --shadow:0 1px 2px rgba(40,30,15,.04),0 6px 18px rgba(60,45,20,.07);
+    --shadow-lg:0 8px 30px rgba(50,35,15,.14);
+    --accent:var(--orange);--accent-d:var(--orange-d);--accent-soft:var(--orange-soft);--accent-tint:var(--orange-tint);
+    --r-lg:20px;--r:15px;--r-sm:11px;--r-xs:8px;
+    --fs:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+  }
+  .hf-accent-green{--accent:var(--green);--accent-d:#16723d;--accent-soft:var(--green-soft);--accent-tint:var(--green-tint);}
+  .hf,.hf *{box-sizing:border-box;}
+  .hf{font-family:var(--fs);color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  .hf-stage{position:fixed;inset:0;background:radial-gradient(120% 90% at 50% -10%,#fff6ea 0%,#efeae1 46%,#e6e0d5 100%);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .hf-phone{position:relative;width:390px;height:844px;background:var(--paper);border-radius:46px;box-shadow:var(--shadow-lg),0 0 0 11px #14110d,0 0 0 13px #2b261f;overflow:hidden;display:flex;flex-direction:column;}
+  .hf-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:148px;height:30px;background:#14110d;border-radius:0 0 18px 18px;z-index:40;}
+  .hf-status{flex:0 0 auto;height:50px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 7px;font-size:14px;font-weight:700;color:var(--ink);z-index:30;}
+  .hf-status .r{display:flex;gap:6px;align-items:center;}
+  .hf-scroll{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;position:relative;scrollbar-width:none;}
+  .hf-scroll::-webkit-scrollbar{display:none;}
+  .hf-pad{padding:6px 18px 26px;}
+  .t-h1{font-size:25px;font-weight:800;letter-spacing:-.5px;line-height:1.12;}
+  .t-h2{font-size:19px;font-weight:700;letter-spacing:-.3px;}
+  .t-h3{font-size:16px;font-weight:700;letter-spacing:-.2px;}
+  .t-lbl{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);}
+  .t-sm{font-size:13px;}.t-xs{font-size:11.5px;}
+  .mut{color:var(--muted);}.ink2{color:var(--ink2);}
+  .b{font-weight:700;}.sb{font-weight:600;}.xb{font-weight:800;}
+  .ac{color:var(--accent);}.grn{color:var(--green);}.rd{color:var(--red);}
+  .num{font-variant-numeric:tabular-nums;letter-spacing:-.4px;}
+  .row{display:flex;align-items:center;}.col{display:flex;flex-direction:column;}
+  .between{justify-content:space-between;}.center{align-items:center;}
+  .jc{justify-content:center;}.wrap{flex-wrap:wrap;}
+  .grow{flex:1 1 auto;min-width:0;}.mta{margin-top:auto;}
+  .g4{gap:4px}.g6{gap:6px}.g8{gap:8px}.g10{gap:10px}.g12{gap:12px}.g14{gap:14px}.g16{gap:16px}
+  .truncate{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);}
+  .badge{display:inline-flex;align-items:center;gap:5px;padding:4px 9px 4px 8px;border-radius:9px;font-size:11.5px;font-weight:700;white-space:nowrap;}
+  .badge .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+  .badge.neu{background:var(--field);color:var(--ink2);}
+  .badge.org{background:var(--orange-soft);color:var(--orange-d);}
+  .badge.grn{background:var(--green-soft);color:var(--green);}
+  .badge.red{background:var(--red-soft);color:var(--red);}
+  .badge.blu{background:#E1ECF6;color:var(--blue);}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:8px 13px;border:1.5px solid var(--line2);border-radius:12px;font-size:13.5px;font-weight:600;background:var(--card);color:var(--ink2);cursor:pointer;transition:.15s;}
+  .chip.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-d);}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 18px;border-radius:14px;font-family:var(--fs);font-size:15px;font-weight:700;border:1.5px solid transparent;cursor:pointer;transition:.15s;background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(213,101,12,.22);}
+  .btn:active{transform:translateY(1px);}
+  .btn.block{width:100%;}
+  .btn.ghost{background:var(--card);color:var(--ink);border-color:var(--line2);box-shadow:none;}
+  .btn.soft{background:var(--accent-soft);color:var(--accent-d);box-shadow:none;}
+  .btn.sm{padding:9px 13px;font-size:13.5px;border-radius:11px;}
+  .ava{flex:0 0 auto;border-radius:13px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;letter-spacing:-.3px;}
+  .hf-nav{flex:0 0 auto;display:flex;padding:9px 14px 24px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-top:1px solid var(--line);position:relative;z-index:20;}
+  .hf-nav .it{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--faint);font-size:10.5px;font-weight:700;cursor:pointer;transition:.15s;}
+  .hf-nav .it.on{color:var(--accent);}
+  .field{width:100%;background:var(--field);border:1.5px solid transparent;border-radius:13px;padding:13px 14px;font-family:var(--fs);font-size:14.5px;color:var(--ink);outline:none;}
+  .field:focus{border-color:var(--accent);background:#fff;}
+  .stp{display:flex;align-items:center;gap:2px;background:var(--field);border-radius:12px;padding:3px;}
+  .stp button{width:32px;height:32px;border:0;background:transparent;border-radius:9px;font-size:19px;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .stp button:active{background:#fff;}
+  .stp .v{min-width:30px;text-align:center;font-weight:800;font-size:15px;}
+  @keyframes hf-slide{from{transform:translateX(24px);}to{transform:none;}}
+  @keyframes hf-up{from{transform:translateY(12px);}to{transform:none;}}
+  .anim-slide{animation:hf-slide .26s cubic-bezier(.2,.7,.3,1);}
+  .anim-up{animation:hf-up .26s cubic-bezier(.2,.7,.3,1);}
+  @media(prefers-reduced-motion:reduce){.anim-slide,.anim-up{animation:none;}}
+  .hf-appbar{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:4px 16px 10px;}
+  .iconbtn{width:40px;height:40px;border-radius:12px;border:1px solid var(--line2);background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto;}
+  `;
+  document.head.appendChild(s);
+})();
+
+const ICONS = {
+  home:'M3 10.5 12 3l9 7.5M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5',
+  list:'M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01',
+  users:'M16 19v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM22 19v-1a4 4 0 0 0-3-3.87M16 4.13A4 4 0 0 1 16 11.87',
+  wallet:'M3 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v0H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-3M16 13h4v3h-4a1.5 1.5 0 0 1 0-3Z',
+  plus:'M12 5v14M5 12h14',
+  search:'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM21 21l-4.3-4.3',
+  back:'M15 19l-7-7 7-7',
+  fwd:'M9 5l7 7-7 7',
+  down:'M6 9l6 6 6-6',
+  check:'M20 6 9 17l-5-5',
+  clock:'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 7v5l3 2',
+  truck:'M3 6a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v9H3V6ZM15 8h3.6a1 1 0 0 1 .9.55L21 12v3h-6V8ZM7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17.5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z',
+  phone:'M5 4h3l1.5 5-2 1.5a12 12 0 0 0 6 6l1.5-2 5 1.5v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z',
+  more:'M12 6h.01M12 12h.01M12 18h.01',
+  scale:'M12 3v3M7 6h10M6 6l-3 7a3 3 0 0 0 6 0L6 6ZM18 6l-3 7a3 3 0 0 0 6 0l-3-7ZM9 21h6M12 6v15',
+  x:'M18 6 6 18M6 6l12 12',
+  edit:'M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3ZM13.5 6.5l3 3',
+  bell:'M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0',
+  doc:'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5ZM14 3v5h5M9 13h6M9 17h6',
+  card:'M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7ZM3 10h18M7 15h3',
+  pin:'M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11ZM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z',
+  cal:'M7 3v3M17 3v3M4 8h16M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z',
+  trend:'M3 17l5-5 4 4 8-8M16 8h5v5',
+  arrow:'M5 12h14M13 6l6 6-6 6',
+  pkg:'M21 8 12 3 3 8l9 5 9-5ZM3 8v8l9 5 9-5V8M12 13v8',
+  receipt:'M5 3h14v18l-2.5-1.5L14 21l-2-1.5L10 21l-2.5-1.5L5 21V3ZM9 8h6M9 12h6',
+};
+
+const Icon = ({ n, s = 22, c = 'currentColor', w = 1.9, style }) => (
+  <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c}
+    strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" style={style}>
+    {(ICONS[n] || '').split('M').filter(Boolean).map((d, i) => <path key={i} d={'M' + d} />)}
+  </svg>
+);
+
+const Phone = ({ children }) => (
+  <div className="hf-phone">
+    <div className="hf-notch" />
+    <div className="hf-status">
+      <span className="num">9:41</span>
+      <span className="r">
+        <Icon n="trend" s={15} w={2.4} />
+        <span style={{ fontSize: 12, fontWeight: 800 }}>Bouaké</span>
+        <span style={{ display: 'inline-flex', gap: 2, alignItems: 'flex-end', marginLeft: 2 }}>
+          {[6, 9, 12, 8].map((h, i) => <i key={i} style={{ width: 3, height: h, borderRadius: 1, background: i < 3 ? 'var(--ink)' : 'var(--faint)', display: 'block' }} />)}
+        </span>
+      </span>
+    </div>
+    {children}
+  </div>
+);
+
+const Stage = ({ children }) => <div className="hf-stage hf">{children}</div>;
+
+const Avatar = ({ name, size = 42, color }) => {
+  const palette = ['#EE7C1F', '#1F8A4C', '#2A6FB0', '#B0532A', '#7A5BB0', '#C8442E'];
+  const initials = name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+  const c = color || palette[name.charCodeAt(0) % palette.length];
+  return <div className="ava" style={{ width: size, height: size, fontSize: size * 0.36, background: c }}>{initials}</div>;
+};
+
+const Badge = ({ status }) => {
+  const map = { 'Reçue': 'neu', 'Préparée': 'blu', 'En route': 'org', 'Livrée': 'grn', 'Payée': 'grn', 'Retard': 'red', 'Partiel': 'org' };
+  return <span className={'badge ' + (map[status] || 'neu')}><span className="dot" />{status}</span>;
+};
+
+const Stepper = ({ value, onChange, min = 0 }) => (
+  <div className="stp" onClick={e => e.stopPropagation()}>
+    <button onClick={() => onChange(Math.max(min, value - 1))}>−</button>
+    <span className="v num">{value}</span>
+    <button onClick={() => onChange(value + 1)} style={{ color: 'var(--accent)' }}>＋</button>
+  </div>
+);
+
+const fmt = (n) => Math.round(n).toLocaleString('fr-FR').replace(/ |,/g, ' ');
+const F = ({ v, unit = 'FCFA', size, weak }) => (
+  <span className="num" style={{ fontWeight: 800, fontSize: size }}>
+    {fmt(v)}{unit && <span style={{ fontWeight: 600, fontSize: size ? size * 0.42 : '.7em', color: weak ? 'var(--muted)' : 'inherit', marginLeft: 4 }}>{unit}</span>}
+  </span>
+);
+
+/* ============================================================
+   DATA
+   ============================================================ */
+const CATALOG = [
+  { id: 'fin', name: 'Attiéké fin', desc: 'Le classique, grain fin', color: '#EE7C1F',
+    formats: [
+      { id: 'fin-1', label: '1 kg', kg: 1, price: 1200 },
+      { id: 'fin-05', label: '500 g', kg: 0.5, price: 700 },
+      { id: 'fin-025', label: '250 g', kg: 0.25, price: 400 },
+    ] },
+  { id: 'garba', name: 'Attiéké garba', desc: 'Gros grain, pour le garba', color: '#1F8A4C',
+    formats: [
+      { id: 'garba-1', label: '1 kg', kg: 1, price: 1100 },
+      { id: 'garba-05', label: '500 g', kg: 0.5, price: 650 },
+    ] },
+  { id: 'prem', name: 'Attiéké premium', desc: 'Sélection export', color: '#7A5BB0',
+    formats: [
+      { id: 'prem-2', label: '2 kg', kg: 2, price: 2800 },
+      { id: 'prem-1', label: '1 kg', kg: 1, price: 1500 },
+    ] },
+  { id: 'vrac', name: 'Attiéké vrac', desc: 'Sac pro 25 kg', color: '#B0532A',
+    formats: [
+      { id: 'vrac-25', label: 'sac 25 kg', kg: 25, price: 22000 },
+    ] },
+];
+
+const CLIENTS = [
+  { id: 'c1', name: 'Maquis Chez Tante', type: 'Entreprise', zone: 'Adjamé', phone: '07 08 11 22 33', since: '2024', orders: 38, due: 0 },
+  { id: 'c2', name: 'Awa Koné', type: 'Revendeuse', zone: 'Adjamé', phone: '05 64 90 18 02', since: '2023', orders: 124, due: 24500 },
+  { id: 'c3', name: 'Hôtel Ivoire', type: 'Entreprise', zone: 'Cocody', phone: '27 22 48 26 00', since: '2025', orders: 16, due: 32000 },
+  { id: 'c4', name: 'Cantine Lycée Moderne', type: 'Entreprise', zone: 'Yopougon', phone: '01 02 55 66 77', since: '2025', orders: 9, due: 16500 },
+  { id: 'c5', name: 'Boutique Koumassi', type: 'Revendeuse', zone: 'Koumassi', phone: '07 79 33 44 55', since: '2024', orders: 52, due: 0 },
+  { id: 'c6', name: 'Mariam Touré', type: 'Revendeuse', zone: 'Yopougon', phone: '05 41 22 88 99', since: '2023', orders: 88, due: 24500 },
+  { id: 'c7', name: 'Kouassi Jean', type: 'Particulier', zone: 'Cocody', phone: '07 11 02 93 84', since: '2026', orders: 3, due: 0 },
+];
+
+const ORDERS_SEED = [
+  { id: 1042, client: 'Maquis Chez Tante', kg: 40, total: 48000, paid: 48000, pay: 'Wave', status: 'Livrée', time: '08:30', zone: 'Adjamé', lines: [['Attiéké fin · 1 kg', 40, 48000]] },
+  { id: 1041, client: 'Awa Koné', kg: 12.5, total: 14000, paid: 14000, pay: 'Espèces', status: 'Préparée', time: '11:00', zone: 'Adjamé', lines: [['Attiéké garba · 500 g', 20, 13000], ['Attiéké fin · 250 g', 2, 800]] },
+  { id: 1040, client: 'Hôtel Ivoire', kg: 60, total: 62000, paid: 30000, pay: 'Virement', status: 'En route', time: '14:00', zone: 'Cocody', lines: [['Attiéké fin · 1 kg', 40, 48000], ['Attiéké garba · 1 kg', 14, 14000]] },
+  { id: 1039, client: 'Cantine Lycée Moderne', kg: 30, total: 33000, paid: 16500, pay: 'Partiel', status: 'Reçue', time: '15:15', zone: 'Yopougon', lines: [['Attiéké fin · 1 kg', 30, 33000]] },
+  { id: 1038, client: 'Boutique Koumassi', kg: 18, total: 21600, paid: 21600, pay: 'Orange Money', status: 'Payée', time: '16:40', zone: 'Koumassi', lines: [['Attiéké premium · 2 kg', 9, 21600]] },
+  { id: 1037, client: 'Mariam Touré', kg: 22, total: 24500, paid: 0, pay: 'Wave', status: 'Retard', time: 'Hier', zone: 'Yopougon', lines: [['Attiéké garba · 1 kg', 22, 24500]] },
+];
+
+const PAY_METHODS = ['Wave', 'Orange Money', 'MTN MoMo', 'Espèces', 'Virement', 'Partiel'];
+const STATUS_FLOW = ['Reçue', 'Préparée', 'En route', 'Livrée'];
+
+const todayStats = (orders) => {
+  const enc = orders.filter(o => o.status !== 'Retard').reduce((s, o) => s + o.paid, 0);
+  const due = orders.reduce((s, o) => s + (o.total - o.paid), 0);
+  const dueCount = orders.filter(o => o.total - o.paid > 0).length;
+  const late = orders.filter(o => o.status === 'Retard').length;
+  return { enc, due, dueCount, late, count: orders.length };
+};
+
+/* ============================================================
+   SCREEN HOME
+   ============================================================ */
+const Sparkline = ({ data, w = 150, h = 46 }) => {
+  const max = Math.max(...data), min = Math.min(...data);
+  const nx = (i) => (i / (data.length - 1)) * w;
+  const ny = (v) => h - ((v - min) / (max - min || 1)) * (h - 6) - 3;
+  const pts = data.map((v, i) => [nx(i), ny(v)]);
+  const line = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+  const area = line + ` L${w} ${h} L0 ${h} Z`;
+  return (
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{ overflow: 'visible' }}>
+      <defs>
+        <linearGradient id="spark" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#fff" stopOpacity=".5" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={area} fill="url(#spark)" />
+      <path d={line} fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx={pts[pts.length - 1][0]} cy={pts[pts.length - 1][1]} r="3.6" fill="#fff" />
+    </svg>
+  );
+};
+
+const MiniStat = ({ value, label, sub, tone }) => (
+  <div className="card grow anim-up" style={{ padding: '12px 13px' }}>
+    <div className="xb num" style={{ fontSize: 22, color: tone === 'red' ? 'var(--red)' : tone === 'org' ? 'var(--orange-d)' : 'var(--ink)' }}>{value}</div>
+    <div className="t-sm b" style={{ marginTop: 1 }}>{label}</div>
+    <div className="t-xs mut">{sub}</div>
+  </div>
+);
+
+const HomeScreen = ({ orders, go, setTab }) => {
+  const s = todayStats(orders);
+  const pending = orders.filter(o => o.total - o.paid > 0);
+  const week = [920, 1150, 760, 1340, 980, 1620, 1720];
+
+  return (
+    <Fragment>
+      <div className="hf-scroll">
+        <div className="hf-pad col g16">
+          <div className="row between center" style={{ paddingTop: 6 }}>
+            <div className="col">
+              <span className="t-sm mut sb">Bonjour 👋</span>
+              <span className="t-h2">Tante Affoué</span>
+            </div>
+            <div className="row g10">
+              <div className="iconbtn" style={{ position: 'relative' }}>
+                <Icon n="bell" s={20} />
+                <span style={{ position: 'absolute', top: 9, right: 10, width: 8, height: 8, borderRadius: 50, background: 'var(--red)', border: '2px solid #fff' }} />
+              </div>
+              <Avatar name="Tante Affoué" size={40} />
+            </div>
+          </div>
+
+          <div className="anim-up" style={{ borderRadius: 'var(--r-lg)', padding: '18px 20px 20px',
+            background: 'linear-gradient(150deg,#F08C32 0%,#E16A0E 60%,#CC5C08 100%)',
+            color: '#fff', boxShadow: '0 12px 26px rgba(204,92,8,.32)', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', right: -30, top: -30, width: 130, height: 130, borderRadius: 50, background: 'rgba(255,255,255,.08)' }} />
+            <div className="row between center">
+              <span style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', opacity: .9 }}>Encaissé aujourd'hui</span>
+              <span className="badge" style={{ background: 'rgba(255,255,255,.22)', color: '#fff' }}>
+                <Icon n="trend" s={13} w={2.6} />+18%</span>
+            </div>
+            <div style={{ marginTop: 8 }}><F v={s.enc} size={38} /></div>
+            <div className="row between center" style={{ marginTop: 14 }}>
+              <Sparkline data={week} />
+              <div className="col" style={{ alignItems: 'flex-end' }}>
+                <span style={{ fontSize: 11.5, opacity: .85 }}>7 derniers jours</span>
+                <span className="xb num" style={{ fontSize: 17 }}>1,72 M</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="row g10">
+            <MiniStat value={s.count} label="Commandes" sub="du jour" />
+            <MiniStat value={fmt(s.due / 1000) + ' k'} label="À encaisser" sub={s.dueCount + ' clients'} tone="org" />
+            <MiniStat value={s.late} label="Retards" sub="livraison" tone="red" />
+          </div>
+
+          <div className="col g10">
+            <div className="row between center">
+              <span className="t-h3">Paiements en attente</span>
+              <span className="t-sm ac b" onClick={() => setTab('caisse')} style={{ cursor: 'pointer' }}>Tout voir</span>
+            </div>
+            <div className="col g8">
+              {pending.map((o, i) => {
+                const reste = o.total - o.paid;
+                const urgent = o.status === 'Retard';
+                return (
+                  <div key={o.id} className="card anim-up row center between" style={{ padding: '11px 13px', animationDelay: (i * 40) + 'ms', cursor: 'pointer' }}
+                    onClick={() => go({ name: 'order-detail', id: o.id })}>
+                    <div className="row center g10 grow">
+                      <Avatar name={o.client} size={40} />
+                      <div className="col grow" style={{ minWidth: 0 }}>
+                        <span className="b t-sm truncate">{o.client}</span>
+                        <span className="t-xs mut">{o.pay}{o.pay === 'Partiel' ? ' · reste dû' : ''}</span>
+                      </div>
+                    </div>
+                    <div className="col" style={{ alignItems: 'flex-end', gap: 4 }}>
+                      <span className="b num t-sm">{fmt(reste)}</span>
+                      {urgent
+                        ? <span className="badge red" style={{ padding: '3px 8px' }}>relancer</span>
+                        : <span className="t-xs mut">FCFA</span>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ position: 'absolute', left: 18, right: 18, bottom: 96, zIndex: 15 }}>
+        <button className="btn block anim-up" style={{ boxShadow: '0 10px 24px rgba(204,92,8,.34)' }}
+          onClick={() => go({ name: 'order' })}>
+          <Icon n="plus" s={20} w={2.4} c="#fff" /> Nouvelle commande
+        </button>
+      </div>
+    </Fragment>
+  );
+};
+
+/* ============================================================
+   SCREEN ORDER (assistant 3 étapes)
+   ============================================================ */
+const StepDots = ({ step }) => {
+  const labels = ['Client', 'Produits', 'Paiement'];
+  return (
+    <div className="row center" style={{ padding: '2px 4px 12px' }}>
+      {labels.map((l, i) => {
+        const done = i < step, on = i === step;
+        return (
+          <Fragment key={i}>
+            <div className="col center" style={{ gap: 5, flex: '0 0 auto' }}>
+              <div style={{ width: 30, height: 30, borderRadius: 50, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontWeight: 800, fontSize: 14, transition: '.2s',
+                background: on ? 'var(--accent)' : done ? 'var(--accent-soft)' : 'var(--field)',
+                color: on ? '#fff' : done ? 'var(--accent-d)' : 'var(--faint)' }}>
+                {done ? <Icon n="check" s={16} w={2.8} c="var(--accent-d)" /> : i + 1}
+              </div>
+              <span className="t-xs b" style={{ color: (done || on) ? 'var(--ink)' : 'var(--faint)' }}>{l}</span>
+            </div>
+            {i < 2 && <div style={{ flex: 1, height: 2.5, borderRadius: 2, margin: '0 6px', marginBottom: 18, background: done ? 'var(--accent)' : 'var(--line2)', transition: '.2s' }} />}
+          </Fragment>
+        );
+      })}
+    </div>
+  );
+};
+
+const StepClient = ({ value, onPick }) => {
+  const [q, setQ] = useState('');
+  const list = CLIENTS.filter(c => c.name.toLowerCase().includes(q.toLowerCase()));
+  return (
+    <div className="col g12 anim-slide">
+      <div style={{ position: 'relative' }}>
+        <span style={{ position: 'absolute', left: 13, top: 13 }}><Icon n="search" s={19} c="var(--muted)" /></span>
+        <input className="field" placeholder="Chercher une cliente…" value={q} onChange={e => setQ(e.target.value)} style={{ paddingLeft: 40 }} />
+      </div>
+      <button className="btn ghost block" style={{ justifyContent: 'flex-start', gap: 12 }}>
+        <span style={{ width: 34, height: 34, borderRadius: 11, background: 'var(--accent-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Icon n="plus" s={19} c="var(--accent-d)" w={2.4} /></span>
+        Nouvelle cliente
+      </button>
+      <div className="col g8">
+        {list.map(c => {
+          const on = value && value.id === c.id;
+          return (
+            <div key={c.id} className="card row center between" onClick={() => onPick(c)}
+              style={{ padding: '11px 13px', cursor: 'pointer', borderColor: on ? 'var(--accent)' : 'var(--line)', background: on ? 'var(--accent-tint)' : '#fff' }}>
+              <div className="row center g10">
+                <Avatar name={c.name} size={40} />
+                <div className="col">
+                  <span className="b t-sm">{c.name}</span>
+                  <span className="t-xs mut">{c.type} · {c.zone}</span>
+                </div>
+              </div>
+              {on
+                ? <span style={{ width: 24, height: 24, borderRadius: 50, background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon n="check" s={15} w={3} c="#fff" /></span>
+                : <Icon n="fwd" s={18} c="var(--faint)" />}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const StepProducts = ({ cart, setCart }) => {
+  const qtyOf = (fid) => cart[fid] || 0;
+  const setQty = (fid, q) => setCart(prev => { const n = { ...prev }; if (q <= 0) delete n[fid]; else n[fid] = q; return n; });
+  return (
+    <div className="col g14 anim-slide">
+      {CATALOG.map(p => (
+        <div key={p.id} className="col g8">
+          <div className="row center g8">
+            <span style={{ width: 8, height: 8, borderRadius: 50, background: p.color }} />
+            <span className="b t-sm">{p.name}</span>
+            <span className="t-xs mut">· {p.desc}</span>
+          </div>
+          {p.formats.map(f => {
+            const q = qtyOf(f.id);
+            const on = q > 0;
+            return (
+              <div key={f.id} className="card row center between" style={{ padding: '10px 12px', borderColor: on ? 'var(--accent)' : 'var(--line)' }}>
+                <div className="col grow">
+                  <span className="t-sm sb">{f.label}</span>
+                  <span className="t-xs mut num">{fmt(f.price)} FCFA · {f.kg} kg</span>
+                  {on && <span className="t-xs ac b num" style={{ marginTop: 2 }}>⚖ {(f.kg * q).toLocaleString('fr-FR')} kg réels · {fmt(f.price * q)} F</span>}
+                </div>
+                <Stepper value={q} onChange={(v) => setQty(f.id, v)} />
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const StepPay = ({ pay, setPay, partial, setPartial, total, slot, setSlot, zone, setZone }) => (
+  <div className="col g14 anim-slide">
+    <div className="col g8">
+      <span className="t-lbl">Moyen de paiement</span>
+      <div className="row wrap g8">
+        {PAY_METHODS.map(m => (
+          <span key={m} className={'chip ' + (pay === m ? 'on' : '')} onClick={() => setPay(m)}>{m}</span>
+        ))}
+      </div>
+    </div>
+    {pay === 'Partiel' && (
+      <div className="card anim-up col g10" style={{ padding: '13px 14px' }}>
+        <span className="t-lbl">Montant payé maintenant</span>
+        <div className="row center g8">
+          <input className="field grow num" value={partial} onChange={e => setPartial(e.target.value.replace(/\D/g, ''))} inputMode="numeric" />
+          <span className="b mut">FCFA</span>
+        </div>
+        <div className="row between t-sm">
+          <span className="mut">Reste dû</span>
+          <span className="b rd num">{fmt(Math.max(0, total - (+partial || 0)))} FCFA</span>
+        </div>
+      </div>
+    )}
+    <div className="col g8">
+      <span className="t-lbl">Livraison</span>
+      <div className="row g8">
+        <div className="field grow row center between" style={{ cursor: 'pointer' }} onClick={() => setSlot(slot === 'Lundi 10' ? 'Mardi 11' : 'Lundi 10')}>
+          <span className="row center g8"><Icon n="cal" s={18} c="var(--muted)" />{slot}</span>
+          <Icon n="down" s={16} c="var(--faint)" />
+        </div>
+        <div className="field grow row center between" style={{ cursor: 'pointer' }} onClick={() => setZone(zone === 'Abidjan – Cocody' ? 'Abidjan – Adjamé' : 'Abidjan – Cocody')}>
+          <span className="row center g8 truncate"><Icon n="truck" s={18} c="var(--muted)" />{zone}</span>
+          <Icon n="down" s={16} c="var(--faint)" />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const OrderScreen = ({ go, onCreate }) => {
+  const [step, setStep] = useState(0);
+  const [client, setClient] = useState(null);
+  const [cart, setCart] = useState({});
+  const [pay, setPay] = useState('Wave');
+  const [partial, setPartial] = useState('');
+  const [slot, setSlot] = useState('Lundi 10');
+  const [zone, setZone] = useState('Abidjan – Cocody');
+
+  const items = [];
+  let total = 0, kg = 0;
+  CATALOG.forEach(p => p.formats.forEach(f => {
+    const q = cart[f.id]; if (q) { items.push({ p, f, q }); total += f.price * q; kg += f.kg * q; }
+  }));
+  const canNext = step === 0 ? !!client : step === 1 ? items.length > 0 : true;
+  const titles = ['Choisir la cliente', 'Ajouter les produits', 'Paiement & livraison'];
+
+  const finish = () => {
+    const paid = pay === 'Partiel' ? (+partial || 0) : total;
+    onCreate({ client: client.name, kg, total, paid, pay, status: 'Reçue', time: 'À l\'instant', zone: zone.replace('Abidjan – ', ''), lines: items.map(it => [`${it.p.name} · ${it.f.label}`, it.q, it.f.price * it.q]) });
+  };
+
+  return (
+    <Fragment>
+      <div className="hf-appbar" style={{ paddingTop: 4 }}>
+        <div className="iconbtn" onClick={() => step === 0 ? go({ name: 'home' }) : setStep(step - 1)}>
+          <Icon n="back" s={20} />
+        </div>
+        <div className="col grow">
+          <span className="t-h3">{titles[step]}</span>
+          <span className="t-xs mut">Nouvelle commande · étape {step + 1}/3</span>
+        </div>
+        <div className="iconbtn" onClick={() => go({ name: 'home' })}><Icon n="x" s={19} /></div>
+      </div>
+      <div style={{ padding: '0 18px' }}><StepDots step={step} /></div>
+      {step > 0 && client && (
+        <div style={{ padding: '0 18px 8px' }}>
+          <div className="row center between" style={{ padding: '8px 12px', borderRadius: 12, background: 'var(--accent-tint)', border: '1px solid var(--accent-soft)' }}>
+            <div className="row center g8"><Avatar name={client.name} size={30} /><span className="t-sm b">{client.name}</span></div>
+            <span className="t-xs ac b" style={{ cursor: 'pointer' }} onClick={() => setStep(0)}>changer</span>
+          </div>
+        </div>
+      )}
+      <div className="hf-scroll">
+        <div className="hf-pad" style={{ paddingTop: 4, paddingBottom: 150 }}>
+          {step === 0 && <StepClient value={client} onPick={(c) => { setClient(c); setTimeout(() => setStep(1), 220); }} />}
+          {step === 1 && <StepProducts cart={cart} setCart={setCart} />}
+          {step === 2 && <StepPay {...{ pay, setPay, partial, setPartial, total, slot, setSlot, zone, setZone }} />}
+        </div>
+      </div>
+      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: '14px 18px 26px',
+        background: 'linear-gradient(180deg,rgba(251,249,243,0) 0%,var(--paper) 22%)', zIndex: 15 }}>
+        <div className="card row center between" style={{ padding: '12px 16px', boxShadow: 'var(--shadow-lg)' }}>
+          <div className="col">
+            <span className="t-xs mut">{items.length ? `${items.length} article${items.length > 1 ? 's' : ''} · ${kg.toLocaleString('fr-FR')} kg réels` : 'Panier vide'}</span>
+            <F v={total} size={23} />
+          </div>
+          {step < 2
+            ? <button className="btn" disabled={!canNext} style={{ opacity: canNext ? 1 : .4 }} onClick={() => canNext && setStep(step + 1)}>Suivant <Icon n="fwd" s={17} w={2.4} c="#fff" /></button>
+            : <button className="btn" onClick={finish}><Icon n="check" s={18} w={2.6} c="#fff" /> Valider</button>}
+        </div>
+      </div>
+    </Fragment>
+  );
+};
+
+/* ============================================================
+   SCREEN ORDERS (liste + détail)
+   ============================================================ */
+const FILTERS = ['Toutes', 'À préparer', 'En route', 'Livrées'];
+const matchFilter = (o, f) => f === 'Toutes' ? true
+  : f === 'À préparer' ? (o.status === 'Reçue' || o.status === 'Préparée')
+  : f === 'En route' ? o.status === 'En route'
+  : (o.status === 'Livrée' || o.status === 'Payée');
+
+const OrdersScreen = ({ orders, go }) => {
+  const [f, setF] = useState('Toutes');
+  const list = orders.filter(o => matchFilter(o, f));
+  return (
+    <Fragment>
+      <div className="hf-pad" style={{ paddingBottom: 8 }}>
+        <div className="row between center" style={{ paddingTop: 8 }}>
+          <span className="t-h1">Commandes</span>
+          <div className="iconbtn" onClick={() => go({ name: 'order' })} style={{ background: 'var(--accent)', borderColor: 'var(--accent)' }}>
+            <Icon n="plus" s={20} w={2.4} c="#fff" /></div>
+        </div>
+      </div>
+      <div className="row g8 wrap" style={{ padding: '0 18px 12px' }}>
+        {FILTERS.map(x => <span key={x} className={'chip ' + (f === x ? 'on' : '')} onClick={() => setF(x)}>{x}</span>)}
+      </div>
+      <div className="hf-scroll">
+        <div className="hf-pad col g10" style={{ paddingTop: 2 }}>
+          {list.map((o, i) => {
+            const reste = o.total - o.paid;
+            return (
+              <div key={o.id} className="card anim-up" style={{ padding: '13px 14px', animationDelay: (i * 35) + 'ms', cursor: 'pointer' }}
+                onClick={() => go({ name: 'order-detail', id: o.id })}>
+                <div className="row between center">
+                  <div className="row center g8">
+                    <span className="t-xs b mut num">#{o.id}</span>
+                    <span className="b t-sm">{o.client}</span>
+                  </div>
+                  <Badge status={o.status} />
+                </div>
+                <div className="row between center" style={{ marginTop: 10 }}>
+                  <div className="row center g6 mut t-xs">
+                    <Icon n="scale" s={14} c="var(--muted)" /><span className="num b" style={{ color: 'var(--ink2)' }}>{o.kg.toLocaleString('fr-FR')} kg</span>
+                    <span style={{ opacity: .4 }}>•</span>
+                    <Icon n="pin" s={14} c="var(--muted)" />{o.zone}
+                  </div>
+                  <div className="col" style={{ alignItems: 'flex-end', gap: 3 }}>
+                    <span className="b num t-sm" style={{ whiteSpace: 'nowrap' }}>{fmt(o.total)} F</span>
+                    {reste > 0 && <span className="badge red" style={{ padding: '2px 7px', fontSize: 10.5, whiteSpace: 'nowrap' }}>reste {fmt(reste)}</span>}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          {list.length === 0 && <div className="mut t-sm" style={{ textAlign: 'center', padding: 30 }}>Aucune commande dans ce filtre.</div>}
+        </div>
+      </div>
+    </Fragment>
+  );
+};
+
+const Timeline = ({ status }) => {
+  const idx = STATUS_FLOW.indexOf(status === 'Payée' ? 'Livrée' : status);
+  const isLate = status === 'Retard';
+  return (
+    <div className="col" style={{ paddingLeft: 4 }}>
+      {STATUS_FLOW.map((st, i) => {
+        const done = i <= idx && !isLate, on = i === idx && !isLate;
+        return (
+          <div key={st} className="row" style={{ gap: 12 }}>
+            <div className="col center" style={{ width: 22 }}>
+              <span style={{ width: on ? 18 : 14, height: on ? 18 : 14, borderRadius: 50, transition: '.2s',
+                background: done ? 'var(--accent)' : 'var(--field)', border: done ? '0' : '2px solid var(--line2)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {done && i < idx && <Icon n="check" s={10} w={3.4} c="#fff" />}
+              </span>
+              {i < STATUS_FLOW.length - 1 && <span style={{ width: 2.5, flex: 1, minHeight: 26, background: i < idx ? 'var(--accent)' : 'var(--line2)' }} />}
+            </div>
+            <div style={{ paddingBottom: 18, marginTop: -2 }}>
+              <div className="t-sm b" style={{ color: done ? 'var(--ink)' : 'var(--faint)' }}>{st}</div>
+              {on && <div className="t-xs ac b">en cours</div>}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const OrderDetail = ({ order, go, onAdvance, onPay }) => {
+  if (!order) return null;
+  const reste = order.total - order.paid;
+  const next = STATUS_FLOW[STATUS_FLOW.indexOf(order.status === 'Payée' ? 'Livrée' : order.status) + 1];
+  return (
+    <Fragment>
+      <div className="hf-appbar" style={{ paddingTop: 4 }}>
+        <div className="iconbtn" onClick={() => go({ name: 'back' })}><Icon n="back" s={20} /></div>
+        <div className="col grow"><span className="t-h3">Commande #{order.id}</span><span className="t-xs mut">{order.time}</span></div>
+        <Badge status={order.status} />
+      </div>
+      <div className="hf-scroll">
+        <div className="hf-pad col g14" style={{ paddingTop: 4, paddingBottom: 130 }}>
+          <div className="card row center between" style={{ padding: '12px 14px' }}>
+            <div className="row center g10">
+              <Avatar name={order.client} size={42} />
+              <div className="col"><span className="b t-sm">{order.client}</span><span className="t-xs mut row center g4"><Icon n="pin" s={13} c="var(--muted)" />{order.zone}</span></div>
+            </div>
+            <div className="iconbtn"><Icon n="phone" s={18} c="var(--accent-d)" /></div>
+          </div>
+          <div className="card col" style={{ padding: 0, overflow: 'hidden' }}>
+            <div className="t-lbl" style={{ padding: '13px 14px 8px' }}>Produits · {order.kg.toLocaleString('fr-FR')} kg réels</div>
+            {order.lines.map((l, i) => (
+              <div key={i} className="row center between" style={{ padding: '10px 14px', borderTop: '1px solid var(--line)' }}>
+                <span className="t-sm grow">{l[0]}</span>
+                <span className="t-sm mut num" style={{ margin: '0 12px' }}>×{l[1]}</span>
+                <span className="t-sm b num">{fmt(l[2])}</span>
+              </div>
+            ))}
+            <div className="row center between" style={{ padding: '12px 14px', borderTop: '1.5px solid var(--line2)', background: 'var(--field)' }}>
+              <span className="b t-sm">Total</span><F v={order.total} size={18} />
+            </div>
+          </div>
+          <div className="card col g8" style={{ padding: '13px 14px' }}>
+            <div className="row between center"><span className="t-lbl" style={{ padding: 0 }}>Paiement</span><span className="badge neu">{order.pay}</span></div>
+            <div className="row between t-sm"><span className="mut">Payé</span><span className="b grn num">{fmt(order.paid)} FCFA</span></div>
+            {reste > 0 && <div className="row between t-sm"><span className="mut">Reste dû</span><span className="b rd num">{fmt(reste)} FCFA</span></div>}
+            {reste > 0 && <button className="btn soft sm" style={{ marginTop: 4 }} onClick={() => onPay(order.id)}>Encaisser le reste</button>}
+          </div>
+          <div className="card col g6" style={{ padding: '14px 14px 4px' }}>
+            <span className="t-lbl" style={{ padding: 0 }}>Suivi de livraison</span>
+            <Timeline status={order.status} />
+          </div>
+          <div className="row g8">
+            <button className="btn ghost grow sm"><Icon n="doc" s={17} c="var(--ink2)" /> Facture</button>
+            <button className="btn ghost grow sm"><Icon n="receipt" s={17} c="var(--ink2)" /> Bon de livraison</button>
+          </div>
+        </div>
+      </div>
+      {next && order.status !== 'Retard' && (
+        <div style={{ position: 'absolute', left: 18, right: 18, bottom: 26, zIndex: 15 }}>
+          <button className="btn block" onClick={() => onAdvance(order.id)}>
+            <Icon n="arrow" s={18} w={2.4} c="#fff" /> Marquer « {next} »
+          </button>
+        </div>
+      )}
+    </Fragment>
+  );
+};
+
+/* ============================================================
+   SCREEN CLIENTS + CAISSE
+   ============================================================ */
+const TYPE_TONE = { 'Entreprise': 'blu', 'Revendeuse': 'org', 'Particulier': 'neu' };
+
+const ClientsScreen = ({ orders, go }) => {
+  const [q, setQ] = useState('');
+  const list = CLIENTS.filter(c => c.name.toLowerCase().includes(q.toLowerCase()));
+  return (
+    <Fragment>
+      <div className="hf-pad" style={{ paddingBottom: 10 }}>
+        <div className="row between center" style={{ paddingTop: 8 }}>
+          <span className="t-h1">Clients</span>
+          <span className="t-sm mut sb">{CLIENTS.length} fiches</span>
+        </div>
+        <div style={{ position: 'relative', marginTop: 14 }}>
+          <span style={{ position: 'absolute', left: 13, top: 13 }}><Icon n="search" s={19} c="var(--muted)" /></span>
+          <input className="field" placeholder="Chercher un client…" value={q} onChange={e => setQ(e.target.value)} style={{ paddingLeft: 40 }} />
+        </div>
+      </div>
+      <div className="hf-scroll">
+        <div className="hf-pad col g8" style={{ paddingTop: 2 }}>
+          {list.map((c, i) => (
+            <div key={c.id} className="card anim-up row center between" style={{ padding: '11px 13px', animationDelay: (i * 30) + 'ms', cursor: 'pointer' }}
+              onClick={() => go({ name: 'client-detail', id: c.id })}>
+              <div className="row center g10 grow">
+                <Avatar name={c.name} size={42} />
+                <div className="col grow" style={{ minWidth: 0 }}>
+                  <span className="b t-sm truncate">{c.name}</span>
+                  <span className="row center g6" style={{ marginTop: 2 }}>
+                    <span className={'badge ' + TYPE_TONE[c.type]} style={{ padding: '2px 7px', fontSize: 10 }}>{c.type}</span>
+                    <span className="t-xs mut">{c.zone}</span>
+                  </span>
+                </div>
+              </div>
+              {c.due > 0
+                ? <div className="col" style={{ alignItems: 'flex-end' }}><span className="t-xs mut">doit</span><span className="b rd num t-sm">{fmt(c.due)}</span></div>
+                : <Icon n="fwd" s={18} c="var(--faint)" />}
+            </div>
+          ))}
+        </div>
+      </div>
+    </Fragment>
+  );
+};
+
+const ClientDetail = ({ client, orders, go }) => {
+  if (!client) return null;
+  const hist = orders.filter(o => o.client === client.name);
+  return (
+    <Fragment>
+      <div className="hf-appbar" style={{ paddingTop: 4 }}>
+        <div className="iconbtn" onClick={() => go({ name: 'back' })}><Icon n="back" s={20} /></div>
+        <span className="t-h3 grow">Fiche client</span>
+        <div className="iconbtn"><Icon n="edit" s={18} /></div>
+      </div>
+      <div className="hf-scroll">
+        <div className="hf-pad col g14" style={{ paddingTop: 4 }}>
+          <div className="col center g8" style={{ textAlign: 'center', padding: '6px 0 2px' }}>
+            <Avatar name={client.name} size={66} />
+            <div className="col"><span className="t-h2">{client.name}</span>
+              <span className="row center g6 jc" style={{ marginTop: 4 }}>
+                <span className={'badge ' + TYPE_TONE[client.type]}>{client.type}</span>
+                <span className="t-sm mut row center g4"><Icon n="pin" s={14} c="var(--muted)" />{client.zone}</span>
+              </span>
+            </div>
+          </div>
+          <div className="row g8">
+            <button className="btn soft grow sm"><Icon n="phone" s={17} c="var(--accent-d)" /> Appeler</button>
+            <button className="btn grow sm" onClick={() => go({ name: 'order' })}><Icon n="plus" s={17} c="#fff" w={2.3} /> Commande</button>
+          </div>
+          <div className="row g10">
+            <div className="card grow col center" style={{ padding: '13px 8px' }}><span className="xb num" style={{ fontSize: 22 }}>{client.orders}</span><span className="t-xs mut">commandes</span></div>
+            <div className="card grow col center" style={{ padding: '13px 8px' }}><span className="xb num" style={{ fontSize: 22, color: client.due ? 'var(--red)' : 'var(--green)' }}>{client.due ? fmt(client.due / 1000) + 'k' : '0'}</span><span className="t-xs mut">{client.due ? 'à devoir' : 'à jour'}</span></div>
+            <div className="card grow col center" style={{ padding: '13px 8px' }}><span className="xb num" style={{ fontSize: 22 }}>{client.since}</span><span className="t-xs mut">cliente</span></div>
+          </div>
+          <div className="col g8">
+            <span className="t-lbl" style={{ padding: 0 }}>Historique</span>
+            {hist.length ? hist.map(o => (
+              <div key={o.id} className="card row center between" style={{ padding: '11px 13px', cursor: 'pointer' }} onClick={() => go({ name: 'order-detail', id: o.id })}>
+                <div className="col"><span className="t-sm b">#{o.id} · {o.kg.toLocaleString('fr-FR')} kg</span><span className="t-xs mut">{o.time}</span></div>
+                <div className="row center g8" style={{ flex: '0 0 auto' }}><span className="b num t-sm" style={{ whiteSpace: 'nowrap' }}>{fmt(o.total)} F</span><Badge status={o.status} /></div>
+              </div>
+            )) : <div className="card mut t-sm" style={{ padding: '16px', textAlign: 'center' }}>Pas de commande aujourd'hui.</div>}
+          </div>
+        </div>
+      </div>
+    </Fragment>
+  );
+};
+
+const CaisseScreen = ({ orders }) => {
+  const s = todayStats(orders);
+  const byPay = {};
+  orders.forEach(o => { if (o.paid > 0) { const k = o.pay === 'Partiel' ? 'Partiel' : o.pay; byPay[k] = (byPay[k] || 0) + o.paid; } });
+  const totalEnc = Object.values(byPay).reduce((a, b) => a + b, 0);
+  const colors = { 'Wave': '#1DC8CD', 'Orange Money': '#FF7900', 'MTN MoMo': '#FFCB05', 'Espèces': '#1F8A4C', 'Virement': '#2A6FB0', 'Partiel': '#B0532A' };
+  const impayes = orders.filter(o => o.total - o.paid > 0);
+  return (
+    <Fragment>
+      <div className="hf-pad" style={{ paddingBottom: 6 }}>
+        <span className="t-h1" style={{ display: 'block', paddingTop: 8 }}>Caisse</span>
+      </div>
+      <div className="hf-scroll">
+        <div className="hf-pad col g14" style={{ paddingTop: 4 }}>
+          <div className="card col g4 anim-up" style={{ padding: '15px 16px' }}>
+            <span className="t-lbl" style={{ padding: 0 }}>Encaissé aujourd'hui</span>
+            <F v={s.enc} size={32} />
+            <div className="row" style={{ height: 10, borderRadius: 6, overflow: 'hidden', marginTop: 8 }}>
+              {Object.entries(byPay).map(([k, v]) => <span key={k} style={{ width: (v / totalEnc * 100) + '%', background: colors[k] || 'var(--muted)' }} />)}
+            </div>
+            <div className="col g6" style={{ marginTop: 10 }}>
+              {Object.entries(byPay).sort((a, b) => b[1] - a[1]).map(([k, v]) => (
+                <div key={k} className="row center between t-sm">
+                  <span className="row center g8"><span style={{ width: 10, height: 10, borderRadius: 3, background: colors[k] || 'var(--muted)' }} />{k}</span>
+                  <span className="b num">{fmt(v)} <span className="mut" style={{ fontWeight: 600, fontSize: 11 }}>FCFA</span></span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="col g8">
+            <div className="row between center"><span className="t-h3">À recouvrer</span><span className="badge red">{fmt(s.due)} F</span></div>
+            {impayes.map(o => {
+              const reste = o.total - o.paid;
+              return (
+                <div key={o.id} className="card row center between" style={{ padding: '11px 13px' }}>
+                  <div className="row center g10 grow" style={{ minWidth: 0 }}><Avatar name={o.client} size={38} />
+                    <div className="col grow" style={{ minWidth: 0 }}><span className="b t-sm truncate">{o.client}</span><span className="t-xs mut">{o.status === 'Retard' ? 'en retard' : o.pay}</span></div>
+                  </div>
+                  <div className="row center g8" style={{ flex: '0 0 auto' }}>
+                    <span className="b rd num t-sm" style={{ whiteSpace: 'nowrap' }}>{fmt(reste)}</span>
+                    <button className="btn soft sm" style={{ padding: '7px 11px' }}><Icon n="phone" s={15} c="var(--accent-d)" /></button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </Fragment>
+  );
+};
+
+/* ============================================================
+   APP ROOT
+   ============================================================ */
+const TWEAK_DEFAULTS = { "accent": "Orange" };
+
+const TABS = [
+  { id: 'home', icon: 'home', label: 'Accueil' },
+  { id: 'orders', icon: 'list', label: 'Commandes' },
+  { id: 'clients', icon: 'users', label: 'Clients' },
+  { id: 'caisse', icon: 'wallet', label: 'Caisse' },
+];
+
+function App() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [tab, setTab] = useState('home');
+  const [stack, setStack] = useState([]);
+  const [orders, setOrders] = useState(ORDERS_SEED.map(o => ({ ...o })));
+  const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('hf-accent-green', t.accent === 'Vert');
+  }, [t.accent]);
+
+  const top = stack[stack.length - 1] || null;
+  const go = (scr) => {
+    if (scr.name === 'back') { setStack(s => s.slice(0, -1)); return; }
+    if (scr.name === 'home') { setStack([]); setTab('home'); return; }
+    setStack(s => [...s, scr]);
+  };
+  const flash = (msg) => { setToast(msg); setTimeout(() => setToast(null), 2200); };
+
+  const createOrder = (data) => {
+    const id = Math.max(...orders.map(o => o.id)) + 1;
+    setOrders(prev => [{ id, ...data }, ...prev]);
+    setStack([]); setTab('orders');
+    flash('Commande #' + id + ' enregistrée ✓');
+  };
+  const advance = (id) => setOrders(prev => prev.map(o => {
+    if (o.id !== id) return o;
+    const cur = o.status === 'Payée' ? 'Livrée' : o.status;
+    const ni = STATUS_FLOW.indexOf(cur) + 1;
+    return ni < STATUS_FLOW.length ? { ...o, status: STATUS_FLOW[ni] } : o;
+  }));
+  const payRest = (id) => { setOrders(prev => prev.map(o => o.id === id ? { ...o, paid: o.total, pay: o.pay === 'Partiel' ? 'Espèces' : o.pay } : o)); flash('Paiement encaissé ✓'); };
+
+  const orderById = (id) => orders.find(o => o.id === id);
+  const clientById = (id) => CLIENTS.find(c => c.id === id);
+
+  const renderTab = () => {
+    if (tab === 'home') return <HomeScreen orders={orders} go={go} setTab={(x) => { setTab(x); setStack([]); }} />;
+    if (tab === 'orders') return <OrdersScreen orders={orders} go={go} />;
+    if (tab === 'clients') return <ClientsScreen orders={orders} go={go} />;
+    if (tab === 'caisse') return <CaisseScreen orders={orders} />;
+  };
+
+  const renderTop = () => {
+    if (!top) return null;
+    if (top.name === 'order') return <OrderScreen go={go} onCreate={createOrder} />;
+    if (top.name === 'order-detail') return <OrderDetail order={orderById(top.id)} go={go} onAdvance={advance} onPay={payRest} />;
+    if (top.name === 'client-detail') return <ClientDetail client={clientById(top.id)} orders={orders} go={go} />;
+    return null;
+  };
+
+  const showNav = !top || top.name === 'order-detail' || top.name === 'client-detail';
+  const fullOverlay = top && top.name === 'order';
+
+  return (
+    <Stage>
+      <Phone>
+        <div className="col" style={{ position: 'absolute', inset: 0, top: 50, display: 'flex' }}>
+          <div className="col grow" style={{ minHeight: 0, position: 'relative' }}>
+            {!fullOverlay && (
+              <div key={tab} className="col grow" style={{ minHeight: 0 }}>{renderTab()}</div>
+            )}
+            {top && (
+              <div key={stack.length + top.name} className="col anim-slide" style={{ position: 'absolute', inset: 0, background: 'var(--paper)', zIndex: 10, display: 'flex' }}>
+                {renderTop()}
+              </div>
+            )}
+          </div>
+          {showNav && !fullOverlay && top === null && (
+            <div className="hf-nav">
+              {TABS.map(x => (
+                <div key={x.id} className={'it ' + (tab === x.id ? 'on' : '')} onClick={() => { setTab(x.id); setStack([]); }}>
+                  <Icon n={x.icon} s={23} w={tab === x.id ? 2.3 : 1.9} />
+                  {x.label}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        {toast && (
+          <div className="anim-up" style={{ position: 'absolute', left: 18, right: 18, bottom: 104, zIndex: 60,
+            background: '#221F1A', color: '#fff', padding: '13px 16px', borderRadius: 14, fontWeight: 700,
+            fontSize: 14, textAlign: 'center', boxShadow: 'var(--shadow-lg)' }}>{toast}</div>
+        )}
+      </Phone>
+
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Apparence" />
+        <TweakRadio label="Couleur d'accent" value={t.accent} options={['Orange', 'Vert']}
+          onChange={(v) => setTweak('accent', v)} />
+      </TweaksPanel>
+    </Stage>
+  );
+}
+
+document.getElementById('boot').remove();
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
