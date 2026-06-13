@@ -958,6 +958,198 @@ const CaisseScreen = ({ orders }) => {
 };
 
 /* ============================================================
+   CLIENT VIEW — Parcours commande côté client
+   ============================================================ */
+
+const ZONES_LIV = ['Adjamé', 'Cocody', 'Yopougon', 'Koumassi', 'Plateau', 'Abobo', 'Bouaké'];
+
+const calcTotal = (cart) => Object.entries(cart).reduce((s, [fid, q]) => {
+  for (const p of CATALOG) for (const f of p.formats) if (f.id === fid) return s + f.price * q;
+  return s;
+}, 0);
+
+const ClientCatalog = ({ cart, setCart, onNext }) => {
+  const totalItems = Object.values(cart).reduce((s, q) => s + q, 0);
+  const total = calcTotal(cart);
+  const qtyOf = (fid) => cart[fid] || 0;
+  const setQty = (fid, q) => setCart(prev => { const n = { ...prev }; if (q <= 0) delete n[fid]; else n[fid] = q; return n; });
+  return (
+    <Fragment>
+      <div style={{ background: 'linear-gradient(135deg,#F08C32 0%,#CC5C08 100%)', padding: '20px 18px 18px', color: '#fff', flexShrink: 0 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', opacity: .8, marginBottom: 7 }}>Beracca Mastery Group</div>
+        <div style={{ fontSize: 21, fontWeight: 800, lineHeight: 1.2 }}>Commandez votre<br />TOP Attiéké</div>
+        <div style={{ fontSize: 12, opacity: .75, marginTop: 6, lineHeight: 1.45 }}>Livraison Abidjan & Bouaké · Paiement mobile</div>
+      </div>
+      <div className="hf-scroll">
+        <div className="hf-pad col g16" style={{ paddingTop: 14, paddingBottom: totalItems > 0 ? 88 : 16 }}>
+          {CATALOG.map((p, pi) => (
+            <div key={p.id} className="col g8 anim-up" style={{ animationDelay: (pi * 55) + 'ms' }}>
+              <div className="row center g8">
+                <span style={{ width: 9, height: 9, borderRadius: 50, background: p.color }} />
+                <span className="b t-sm">{p.name}</span>
+                <span className="t-xs mut">{p.desc}</span>
+              </div>
+              {p.formats.map(f => {
+                const q = qtyOf(f.id);
+                const on = q > 0;
+                return (
+                  <div key={f.id} className="card row center between" style={{ padding: '12px 13px', borderColor: on ? 'var(--accent)' : 'var(--line)', background: on ? 'var(--accent-tint)' : '#fff' }}>
+                    <div className="col grow">
+                      <span className="b t-sm">{f.label}</span>
+                      <span className="num t-xs mut">{fmt(f.price)} FCFA{on ? ' · total ' + fmt(f.price * q) : ''}</span>
+                    </div>
+                    <Stepper value={q} onChange={v => setQty(f.id, v)} />
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+      {totalItems > 0 && (
+        <div style={{ position: 'absolute', left: 18, right: 18, bottom: 16, zIndex: 15 }}>
+          <button className="btn block anim-up" onClick={onNext} style={{ boxShadow: '0 10px 24px rgba(204,92,8,.34)' }}>
+            <Icon n="pkg" s={18} w={2.3} c="#fff" /> Panier · {totalItems} art. · {fmt(total)} F
+          </button>
+        </div>
+      )}
+    </Fragment>
+  );
+};
+
+const ClientCart = ({ cart, setCart, onNext, onBack }) => {
+  const lines = [];
+  let total = 0;
+  for (const p of CATALOG) for (const f of p.formats) {
+    const q = cart[f.id] || 0;
+    if (q > 0) { lines.push({ name: p.name, f, q, sub: f.price * q }); total += f.price * q; }
+  }
+  const setQty = (fid, q) => setCart(prev => { const n = { ...prev }; if (q <= 0) delete n[fid]; else n[fid] = q; return n; });
+  return (
+    <Fragment>
+      <div className="hf-appbar" style={{ paddingTop: 4 }}>
+        <div className="iconbtn" onClick={onBack}><Icon n="back" s={20} /></div>
+        <span className="t-h3 grow">Mon panier</span>
+        <span className="t-sm mut">{lines.length} produit{lines.length > 1 ? 's' : ''}</span>
+      </div>
+      <div className="hf-scroll">
+        <div className="hf-pad col g9" style={{ paddingTop: 4, paddingBottom: 96 }}>
+          {lines.map((l, i) => (
+            <div key={l.f.id} className="card row center between anim-up" style={{ padding: '12px 13px', animationDelay: (i * 40) + 'ms' }}>
+              <div className="col grow" style={{ minWidth: 0 }}>
+                <span className="b t-sm truncate">{l.name} · {l.f.label}</span>
+                <span className="t-xs mut num">{fmt(l.f.price)} × {l.q} = {fmt(l.sub)} F</span>
+              </div>
+              <Stepper value={l.q} onChange={v => setQty(l.f.id, v)} min={0} />
+            </div>
+          ))}
+          {lines.length === 0 && <div className="card mut t-sm" style={{ padding: 20, textAlign: 'center' }}>Votre panier est vide.</div>}
+          <div className="card row between center" style={{ padding: '13px 15px', background: 'var(--field)', borderColor: 'var(--line2)' }}>
+            <span className="b t-sm">Total commande</span>
+            <F v={total} size={17} />
+          </div>
+        </div>
+      </div>
+      {lines.length > 0 && (
+        <div style={{ position: 'absolute', left: 18, right: 18, bottom: 16, zIndex: 15 }}>
+          <button className="btn block" onClick={onNext} style={{ boxShadow: '0 10px 24px rgba(204,92,8,.34)' }}>
+            Continuer <Icon n="fwd" s={18} w={2.3} c="#fff" />
+          </button>
+        </div>
+      )}
+    </Fragment>
+  );
+};
+
+const ClientForm = ({ total, onBack, onSubmit }) => {
+  const [nom, setNom] = useState('');
+  const [tel, setTel] = useState('');
+  const [zone, setZone] = useState('Cocody');
+  const [pay, setPay] = useState('Wave');
+  const ok = nom.trim().length > 1 && tel.replace(/\D/g, '').length >= 8;
+  return (
+    <Fragment>
+      <div className="hf-appbar" style={{ paddingTop: 4 }}>
+        <div className="iconbtn" onClick={onBack}><Icon n="back" s={20} /></div>
+        <span className="t-h3 grow">Mes coordonnées</span>
+      </div>
+      <div className="hf-scroll">
+        <div className="hf-pad col g13" style={{ paddingTop: 6, paddingBottom: 96 }}>
+          <div className="col g7">
+            <span className="t-lbl">Nom complet</span>
+            <input className="field" placeholder="Ex : Awa Koné" value={nom} onChange={e => setNom(e.target.value)} />
+          </div>
+          <div className="col g7">
+            <span className="t-lbl">Téléphone</span>
+            <input className="field" placeholder="07 XX XX XX XX" value={tel} onChange={e => setTel(e.target.value)} inputMode="tel" />
+          </div>
+          <div className="col g7">
+            <span className="t-lbl">Zone de livraison</span>
+            <div className="row wrap g7">{ZONES_LIV.map(z => (
+              <span key={z} className={'chip ' + (zone === z ? 'on' : '')} onClick={() => setZone(z)}>{z}</span>
+            ))}</div>
+          </div>
+          <div className="col g7">
+            <span className="t-lbl">Paiement à la livraison</span>
+            <div className="row wrap g7">{['Wave', 'Orange Money', 'MTN MoMo', 'Espèces'].map(m => (
+              <span key={m} className={'chip ' + (pay === m ? 'on' : '')} onClick={() => setPay(m)}>{m}</span>
+            ))}</div>
+          </div>
+          <div className="card col g6" style={{ padding: '13px 14px', background: 'var(--field)', borderColor: 'var(--line2)' }}>
+            <div className="row between t-sm"><span className="mut">Montant total</span><F v={total} size={14} /></div>
+            <div className="row between t-sm"><span className="mut">Livraison</span><span className="b t-sm grn">Incluse</span></div>
+          </div>
+        </div>
+      </div>
+      <div style={{ position: 'absolute', left: 18, right: 18, bottom: 16, zIndex: 15 }}>
+        <button className="btn block" onClick={() => ok && onSubmit({ nom, tel, zone, pay })}
+          style={{ opacity: ok ? 1 : 0.42, boxShadow: ok ? '0 10px 24px rgba(204,92,8,.34)' : 'none' }}>
+          <Icon n="pkg" s={18} w={2.3} c="#fff" /> Envoyer · {fmt(total)} FCFA
+        </button>
+      </div>
+    </Fragment>
+  );
+};
+
+const ClientDone = ({ nom, total, onRestart }) => (
+  <div className="col" style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: '24px 22px', gap: 22, textAlign: 'center' }}>
+    <div className="anim-up" style={{ width: 80, height: 80, borderRadius: 50, background: 'linear-gradient(135deg,#1F8A4C,#27A85E)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Icon n="check" s={40} w={2.6} c="#fff" />
+    </div>
+    <div className="col anim-up" style={{ gap: 10, animationDelay: '80ms' }}>
+      <div style={{ fontSize: 22, fontWeight: 800 }}>Commande envoyée !</div>
+      <div className="t-sm mut" style={{ lineHeight: 1.55 }}>Merci {nom}. Beracca vous contacte sous<br />30 min via WhatsApp pour confirmer.</div>
+    </div>
+    <div className="card col g8 anim-up" style={{ padding: '14px 16px', width: '100%', textAlign: 'left', animationDelay: '140ms' }}>
+      <div className="row between center t-sm"><span className="mut">Montant</span><F v={total} size={15} /></div>
+      <div className="row between center t-sm"><span className="mut">Statut</span><span className="badge grn"><span className="dot" />En traitement</span></div>
+    </div>
+    <button className="btn soft block anim-up" style={{ animationDelay: '200ms' }} onClick={onRestart}>
+      <Icon n="plus" s={17} w={2.3} c="var(--accent-d)" /> Nouvelle commande
+    </button>
+  </div>
+);
+
+function ClientViewStage() {
+  const [screen, setScreen] = useState('catalog');
+  const [cart, setCart] = useState({});
+  const [doneInfo, setDoneInfo] = useState(null);
+  const total = calcTotal(cart);
+  return (
+    <Stage>
+      <Phone>
+        <div key={screen} className="col anim-slide" style={{ position: 'absolute', inset: 0, top: 50 }}>
+          {screen === 'catalog' && <ClientCatalog cart={cart} setCart={setCart} onNext={() => setScreen('cart')} />}
+          {screen === 'cart' && <ClientCart cart={cart} setCart={setCart} onNext={() => setScreen('form')} onBack={() => setScreen('catalog')} />}
+          {screen === 'form' && <ClientForm total={total} onBack={() => setScreen('cart')} onSubmit={info => { setDoneInfo(info); setScreen('done'); }} />}
+          {screen === 'done' && <ClientDone nom={(doneInfo && doneInfo.nom) || ''} total={total} onRestart={() => { setCart({}); setDoneInfo(null); setScreen('catalog'); }} />}
+        </div>
+      </Phone>
+    </Stage>
+  );
+}
+
+/* ============================================================
    APP ROOT
    ============================================================ */
 const TWEAK_DEFAULTS = { "accent": "Orange" };
@@ -1064,8 +1256,32 @@ function App() {
   );
 }
 
+function Root() {
+  const [view, setView] = useState('manager');
+  return (
+    <>
+      {view === 'manager' ? <App /> : <ClientViewStage />}
+      <div style={{ position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 9999,
+        display: 'flex', alignItems: 'center', gap: 3,
+        background: 'rgba(34,31,26,.92)', backdropFilter: 'blur(16px)',
+        borderRadius: 100, padding: '4px 5px', boxShadow: '0 4px 24px rgba(0,0,0,.45)' }}>
+        <span style={{ fontSize: 9.5, fontWeight: 700, letterSpacing: .8, color: 'rgba(255,255,255,.32)',
+          padding: '0 8px 0 6px', textTransform: 'uppercase' }}>Vue</span>
+        {[['manager', 'Beracca'], ['client', 'Client']].map(([v, label]) => (
+          <button key={v} onClick={() => setView(v)} style={{
+            padding: '8px 17px', borderRadius: 100, border: 'none', cursor: 'pointer',
+            fontWeight: 700, fontSize: 12, letterSpacing: .1,
+            background: view === v ? '#EE7C1F' : 'transparent',
+            color: view === v ? '#fff' : 'rgba(255,255,255,.42)'
+          }}>{label}</button>
+        ))}
+      </div>
+    </>
+  );
+}
+
 document.getElementById('boot').remove();
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
 </script>
 </body>
 </html>
