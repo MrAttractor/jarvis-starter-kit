@@ -77,8 +77,10 @@ body{background:var(--bg);color:var(--ink);}
 .divider{height:1px;background:var(--bdr);margin:0 -1px;}
 @keyframes up{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
 .anim{animation:up .28s cubic-bezier(.2,.7,.3,1) both;}
-.edit-input{background:rgba(238,124,31,.1);border:1px solid var(--acc);border-radius:6px;padding:4px 8px;color:var(--ink);font-family:inherit;font-size:inherit;font-weight:inherit;width:100%;outline:none;resize:none;}
-.edit-hint{font-size:9.5px;color:var(--acc);opacity:.7;margin-top:3px;}
+[contenteditable]:focus{outline:none;border-bottom:1.5px solid var(--acc) !important;}
+[contenteditable]:empty:before{content:attr(data-ph);color:var(--faint);}
+.demos-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:400px){.demos-grid{grid-template-columns:1fr;}}
 `;
 (function(){ const s=document.createElement('style'); s.textContent=T; document.head.appendChild(s); })();
 
@@ -86,39 +88,31 @@ body{background:var(--bg);color:var(--ink);}
 const TODAY = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
 const fmt = (n) => n == null ? '—' : n.toLocaleString('fr-FR') + ' €';
 
-/* ── EDITABLE FIELD ───────────────────────────────────── */
-function EditField({ value, onSave, style, multiline }) {
-  const [editing, setEditing] = useState(false);
-  const [val, setVal] = useState(value);
+/* ── EDITABLE FIELD (contentEditable, pas de layout shift) */
+function EditField({ value, onSave, style }) {
   const ref = useRef();
-  useEffect(() => setVal(value), [value]);
+  useEffect(() => {
+    if (ref.current && ref.current !== document.activeElement) {
+      ref.current.innerText = value || '';
+    }
+  }, [value]);
 
   const save = () => {
-    setEditing(false);
-    const trimmed = (val || '').trim();
-    if (trimmed && trimmed !== value) onSave(trimmed);
-    else setVal(value);
+    const txt = (ref.current?.innerText || '').trim();
+    if (txt && txt !== value) onSave(txt);
+    else if (ref.current) ref.current.innerText = value || '';
   };
 
-  if (editing) {
-    const shared = {
-      ref, value: val, autoFocus: true,
-      onChange: e => setVal(e.target.value),
-      onBlur: save,
-      onKeyDown: e => { if (!multiline && e.key === 'Enter') { e.preventDefault(); save(); } if (e.key === 'Escape') { setEditing(false); setVal(value); } },
-      className: 'edit-input',
-      style,
-    };
-    return multiline
-      ? <textarea {...shared} rows={3} />
-      : <input {...shared} />;
-  }
   return (
     <span
-      onClick={() => { setEditing(true); }}
-      title="Cliquer pour modifier"
-      style={{ ...style, cursor:'text', borderBottom:'1px dashed rgba(255,255,255,.18)', paddingBottom:1 }}
-    >{val || '—'}</span>
+      ref={ref}
+      contentEditable
+      suppressContentEditableWarning
+      data-ph="Cliquer pour modifier…"
+      onBlur={save}
+      onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); ref.current?.blur(); } if (e.key === 'Escape') { if (ref.current) ref.current.innerText = value || ''; ref.current?.blur(); } }}
+      style={{ ...style, cursor:'text', borderBottom:'1px dashed rgba(255,255,255,.15)', paddingBottom:1, display:'block', minWidth:20 }}
+    />
   );
 }
 
@@ -142,13 +136,13 @@ function CapCard({ cap, onChange }) {
   const moisRestants = Math.ceil((new Date('2026-08-31') - new Date()) / (1000*60*60*24*30));
 
   const saveConfirme = async (raw) => {
-    const n = parseInt(raw.replace(/\s/g,''), 10);
+    const n = parseInt((raw||'').replace(/[^\d]/g,''), 10);
     if (isNaN(n)) return;
     onChange({ ...cap, confirme: n });
     await SB.from('pilotage_cap').update({ confirme: n }).eq('id', cap.id);
   };
   const savePipeline = async (raw) => {
-    const n = parseInt(raw.replace(/\s/g,''), 10);
+    const n = parseInt((raw||'').replace(/[^\d]/g,''), 10);
     if (isNaN(n)) return;
     onChange({ ...cap, pipeline_val: n });
     await SB.from('pilotage_cap').update({ pipeline_val: n }).eq('id', cap.id);
@@ -227,20 +221,19 @@ function FocusItem({ item, i, onToggle, onEdit }) {
     <div className="anim row g12" style={{ padding:'13px 0', borderBottom:'1px solid var(--bdr)', animationDelay:(i*60)+'ms', alignItems:'flex-start', opacity: item.done ? .45 : 1 }}>
       <div
         onClick={() => onToggle(item)}
-        style={{ width:22, height:22, borderRadius:8,
+        style={{ width:22, height:22, borderRadius:8, flexShrink:0, marginTop:2, cursor:'pointer',
           background: item.done ? 'var(--grn-s)' : item.urgent ? 'var(--red-s)' : 'rgba(255,255,255,.06)',
-          display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, marginTop:1, cursor:'pointer' }}>
+          display:'flex', alignItems:'center', justifyContent:'center' }}>
         {item.done
-          ? <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--grn)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          : <span style={{ width:7,height:7,borderRadius:50,background: item.urgent ? 'var(--red)' : 'var(--faint)' }} />
+          ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--grn)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          : <span style={{ width:6,height:6,borderRadius:50,background: item.urgent ? 'var(--red)' : 'var(--faint)' }} />
         }
       </div>
-      <div className="col grow g4">
+      <div className="col grow g4" style={{ minWidth:0 }}>
         <EditField
           value={item.description}
           onSave={v => onEdit(item, v)}
-          style={{ fontSize:13, fontWeight:600, lineHeight:1.4, textDecoration: item.done ? 'line-through' : 'none' }}
-          multiline
+          style={{ fontSize:13, fontWeight:600, lineHeight:1.4, textDecoration: item.done ? 'line-through' : 'none', wordBreak:'break-word' }}
         />
         <span style={{ fontSize:10.5, fontWeight:700, color:tagColor }}>{item.tag}{item.urgent ? ' · URGENT' : ''}</span>
       </div>
@@ -433,11 +426,11 @@ function TabDemos() {
           <span className="badge neu">demo.agenceattractor.com</span>
         </div>
       </div>
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+      <div className="demos-grid">
         {DEMOS.map((d,i) => (
           <a key={d.id} href={'https://demo.agenceattractor.com'+d.url} target="_blank" rel="noreferrer"
             className="card anim col" style={{ padding:'13px 13px 11px', textDecoration:'none', cursor:'pointer', animationDelay:(i*50)+'ms' }}>
-            <div className="row between" style={{ marginBottom:7 }}>
+            <div style={{ marginBottom:7 }}>
               <span className={'badge '+d.sc} style={{ fontSize:10, padding:'2px 7px' }}><span className="dot" />{d.statut}</span>
             </div>
             <span className="b" style={{ fontSize:13, color:'var(--ink)', lineHeight:1.3, marginBottom:4 }}>{d.nom}</span>
