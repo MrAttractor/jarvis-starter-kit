@@ -25,7 +25,20 @@ export function LoginScreen({ onAuthed }) {
       options: { shouldCreateUser: true },
     });
     setIsSending(false);
-    if (error) { setErr("Impossible d'envoyer le code. Vérifie ta connexion internet et réessaie. Sur un WiFi public, connecte-toi d'abord au portail du réseau."); return; }
+    if (error) {
+      console.error("[OTP] signInWithOtp error:", error.status, error.message, error);
+      const msg = error.message?.toLowerCase() ?? "";
+      if (msg.includes("rate limit") || msg.includes("too many") || msg.includes("429") || error.status === 429) {
+        setErr("Trop de demandes de code en peu de temps. Attends 60 secondes et réessaie.");
+      } else if (msg.includes("unable to validate") || msg.includes("email") && msg.includes("not")) {
+        setErr("Adresse email non acceptée. Vérifie l'orthographe et réessaie.");
+      } else if (msg.includes("network") || msg.includes("fetch") || !navigator.onLine) {
+        setErr("Pas de connexion internet. Vérifie ton réseau et réessaie.");
+      } else {
+        setErr(`Envoi du code impossible (${error.message ?? error.status ?? "erreur inconnue"}). Réessaie dans quelques secondes.`);
+      }
+      return;
+    }
     setStep("otp");
     setTimeout(() => refs[0].current && refs[0].current.focus(), 200);
   };
