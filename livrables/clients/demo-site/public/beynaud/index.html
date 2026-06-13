@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BEYNAUD ARMY — Présentation Exclusive</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --noir:#070707;--noir-2:#101010;--noir-3:#1A1A1A;
+      --rouge:#CC0000;--rouge-vif:#E8000B;
+      --chrome:#C8C8C8;--chrome-2:#E8E8E8;
+      --blanc:#FFFFFF;--muted:rgba(255,255,255,0.4);
+    }
+    html,body{height:100%;width:100%;background:var(--noir);color:var(--blanc);
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;overflow:hidden;}
+
+    /* ── DECK ── */
+    .deck{width:100%;height:100vh;position:relative;}
+    .slide{
+      position:absolute;inset:0;
+      display:flex;flex-direction:column;justify-content:center;align-items:center;
+      opacity:0;transform:translateX(60px);
+      transition:opacity .5s ease,transform .5s ease;
+      pointer-events:none;overflow:hidden;
+    }
+    .slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
+    .slide.exit{opacity:0;transform:translateX(-60px);}
+
+    /* ── CHROME UI ── */
+    .progress-bar{position:fixed;top:0;left:0;right:0;height:2px;background:rgba(255,255,255,0.07);z-index:200;}
+    .progress-fill{height:100%;background:var(--rouge);transition:width .5s ease;}
+    .counter{position:fixed;top:20px;right:28px;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.22);z-index:200;text-transform:uppercase;}
+    .logo-badge{position:fixed;top:16px;left:24px;display:flex;align-items:center;gap:10px;z-index:200;}
+    .logo-mark{width:30px;height:30px;background:var(--rouge);border-radius:6px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:10px;font-weight:800;color:#fff;letter-spacing:.5px;}
+    .logo-name{font-size:12px;font-weight:600;color:rgba(255,255,255,0.45);letter-spacing:1.5px;text-transform:uppercase;}
+    .key-hint{position:fixed;bottom:78px;left:50%;transform:translateX(-50%);
+      font-size:11px;color:rgba(255,255,255,0.18);letter-spacing:1px;text-transform:uppercase;z-index:200;}
+
+    /* ── NAV ── */
+    .nav{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+      display:flex;align-items:center;gap:18px;z-index:200;}
+    .nav-btn{width:40px;height:40px;border-radius:50%;
+      border:1.5px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);
+      color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;
+      transition:all .2s;backdrop-filter:blur(8px);}
+    .nav-btn:hover{background:rgba(204,0,0,0.2);border-color:var(--rouge);}
+    .nav-btn:disabled{opacity:.2;cursor:default;}
+    .dots{display:flex;gap:7px;align-items:center;}
+    .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.2);cursor:pointer;transition:all .3s;}
+    .dot.active{background:var(--rouge);width:18px;border-radius:3px;}
+
+    /* ── PULSE ANIMATION ── */
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.7);}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes travel{from{left:0;opacity:0;}20%{opacity:1;}80%{opacity:1;}to{left:calc(100% - 8px);opacity:0;}}
+
+    /* ────────────────────────────────────
+       SLIDE 1 — COVER
+    ──────────────────────────────────── */
+    .s1-bg{position:absolute;inset:0;
+      background-image:url('./serge-concert.jpg');
+      background-size:cover;background-position:center top;
+      filter:brightness(.45) grayscale(10%);
+      transform:scale(1.06);transition:transform 8s ease;}
+    .slide.active .s1-bg{transform:scale(1);}
+    .s1-overlay{position:absolute;inset:0;
+      background:linear-gradient(108deg,rgba(7,7,7,.92) 0%,rgba(7,7,7,.6) 42%,rgba(180,0,0,.18) 68%,rgba(7,7,7,.85) 100%);}
+    .s1-wm{position:absolute;bottom:8%;right:4%;opacity:.04;pointer-events:none;z-index:0;}
+    .s1-content{position:relative;z-index:2;padding:0 80px;max-width:920px;}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;
+      border:1px solid rgba(204,0,0,.45);border-radius:2px;
+      padding:6px 14px;font-size:11px;font-weight:600;
+      color:var(--rouge);letter-spacing:3px;text-transform:uppercase;margin-bottom:28px;}
+    .pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--rouge);animation:pulse 1.5s infinite;}
+    .s1-title{font-size:clamp(56px,8.5vw,116px);font-weight:900;line-height:.9;
+      letter-spacing:-4px;text-transform:uppercase;color:var(--blanc);margin-bottom:6px;}
+    .s1-title-outline{font-size:clamp(56px,8.5vw,116px);font-weight:900;line-height:.9;
+      letter-spacing:-4px;text-transform:uppercase;color:transparent;
+      -webkit-text-stroke:1.5px rgba(200,200,200,.28);margin-bottom:32px;}
+    .s1-desc{font-size:18px;color:rgba(255,255,255,.55);line-height:1.65;max-width:460px;margin-bottom:44px;}
+    .btn-primary{display:inline-flex;align-items:center;gap:12px;
+      background:var(--rouge);color:#fff;padding:16px 32px;border-radius:3px;
+      font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+      border:none;cursor:pointer;transition:all .2s;}
+    .btn-primary:hover{background:var(--rouge-vif);transform:translateY(-2px);}
+    .btn-primary svg{width:15px;height:15px;}
+
+    /* ────────────────────────────────────
+       SLIDE 2 — PROBLÈME
+    ──────────────────────────────────── */
+    .s2-inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
+      max-width:1100px;width:100%;padding:0 80px;}
+    .slide-tag{font-size:11px;letter-spacing:3px;color:var(--rouge);
+      text-transform:uppercase;margin-bottom:18px;font-weight:600;}
+    .slide-title{font-size:clamp(36px,4vw,54px);font-weight:900;line-height:1;
+      letter-spacing:-2px;margin-bottom:22px;}
+    .slide-title .accent{color:var(--rouge);}
+    .s2-text{font-size:15px;color:rgba(255,255,255,.52);line-height:1.75;margin-bottom:28px;}
+    .s2-quote{border-left:3px solid var(--rouge);padding-left:20px;
+      font-size:16px;font-style:italic;color:rgba(255,255,255,.8);line-height:1.55;}
+    .pain-cards{display:flex;flex-direction:column;gap:14px;}
+    .pain-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+      border-radius:8px;padding:18px 20px;display:flex;align-items:flex-start;gap:14px;}
+    .pain-icon{width:34px;height:34px;border-radius:8px;background:rgba(204,0,0,.12);
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .pain-icon svg{width:16px;height:16px;stroke:var(--rouge);fill:none;stroke-width:2;}
+    .pain-title{font-size:13px;font-weight:700;margin-bottom:3px;}
+    .pain-desc{font-size:12px;color:rgba(255,255,255,.4);line-height:1.55;}
+
+    /* ────────────────────────────────────
+       SLIDE 3 — SOLUTION
+    ──────────────────────────────────── */
+    .s3-inner{max-width:1000px;width:100%;padding:0 80px;}
+    .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:44px 0;}
+    .pillar{border-top:2px solid rgba(255,255,255,.07);padding-top:22px;}
+    .pillar.red{border-top-color:var(--rouge);}
+    .pillar-num{font-size:11px;letter-spacing:2px;color:rgba(255,255,255,.28);
+      text-transform:uppercase;margin-bottom:10px;}
+    .pillar-title{font-size:20px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px;}
+    .pillar-desc{font-size:13px;color:rgba(255,255,255,.42);line-height:1.65;}
+    .calc-box{background:rgba(204,0,0,.08);border:1px solid rgba(204,0,0,.2);
+      border-radius:8px;padding:26px 34px;display:flex;align-items:center;gap:40px;}
+    .calc-formula{font-size:15px;color:rgba(255,255,255,.55);line-height:2.1;}
+    .calc-formula strong{color:#fff;}
+    .calc-result{margin-left:auto;text-align:right;}
+    .calc-num{font-size:46px;font-weight:900;color:var(--rouge);letter-spacing:-2px;line-height:1;}
+    .calc-label{font-size:11px;color:rgba(255,255,255,.35);letter-spacing:1px;
+      text-transform:uppercase;margin-top:4px;}
+
+    /* ────────────────────────────────────
+       PHONE SLIDES (4-7)
+    ──────────────────────────────────── */
+    .phone-slide-inner{display:grid;grid-template-columns:1fr 300px;gap:80px;
+      align-items:center;max-width:1060px;width:100%;padding:0 80px;}
+    .phone-expl-tag{font-size:11px;letter-spacing:3px;color:var(--rouge);
+      text-transform:uppercase;margin-bottom:14px;font-weight:600;}
+    .phone-expl-title{font-size:clamp(30px,3.5vw,48px);font-weight:900;
+      letter-spacing:-2px;line-height:1.05;margin-bottom:18px;}
+    .phone-expl-desc{font-size:15px;color:rgba(255,255,255,.52);
+      line-height:1.75;margin-bottom:28px;}
+    .insight-box{background:rgba(204,0,0,.08);border-left:3px solid var(--rouge);
+      padding:14px 18px;border-radius:0 6px 6px 0;}
+    .insight-box p{font-size:13px;color:rgba(255,255,255,.75);line-height:1.65;}
+    .phone-col{display:flex;flex-direction:column;align-items:center;}
+    .phone-label{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.3);
+      text-transform:uppercase;margin-bottom:10px;}
+
+    /* iPhone frame */
+    .phone{width:260px;height:528px;background:#141414;
+      border-radius:38px;border:2.5px solid rgba(255,255,255,.1);
+      box-shadow:0 0 0 1px rgba(255,255,255,.04),0 40px 80px rgba(0,0,0,.65),
+        inset 0 0 0 1.5px rgba(255,255,255,.03);
+      position:relative;overflow:hidden;flex-shrink:0;}
+    .phone::before{content:'';position:absolute;top:11px;left:50%;
+      transform:translateX(-50%);width:56px;height:4px;
+      background:rgba(255,255,255,.14);border-radius:2px;z-index:20;}
+    .phone-screen{position:absolute;inset:0;overflow:hidden;}
+
+    /* ── App: Splash ── */
+    .app-splash{width:100%;height:100%;
+      display:flex;flex-direction:column;align-items:center;
+      justify-content:flex-end;padding:24px 20px 32px;position:relative;}
+    .app-splash-bg{position:absolute;inset:0;
+      background-image:url('./serge-concert.jpg');
+      background-size:cover;background-position:center top;
+      opacity:.3;filter:grayscale(30%);}
+    .app-splash-ov{position:absolute;inset:0;
+      background:linear-gradient(to bottom,rgba(0,0,0,.2) 0%,rgba(0,0,0,.85) 55%,rgba(0,0,0,.97) 100%);}
+    .app-splash-content{position:relative;z-index:2;text-align:center;width:100%;}
+    .app-badge{display:inline-flex;align-items:center;gap:5px;
+      border:1px solid rgba(204,0,0,.55);border-radius:2px;
+      padding:4px 10px;font-size:9px;font-weight:700;
+      color:var(--rouge);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;}
+    .app-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--rouge);animation:pulse 1.5s infinite;}
+    .app-name{font-size:10px;letter-spacing:4px;color:rgba(255,255,255,.45);text-transform:uppercase;margin-bottom:4px;}
+    .app-title-solid{font-size:28px;font-weight:900;letter-spacing:-2px;
+      line-height:.9;text-transform:uppercase;color:#fff;}
+    .app-title-outline{font-size:28px;font-weight:900;letter-spacing:-2px;
+      line-height:.9;text-transform:uppercase;color:transparent;
+      -webkit-text-stroke:1px rgba(200,200,200,.35);margin-bottom:20px;}
+    .app-desc{font-size:10px;color:rgba(255,255,255,.38);line-height:1.6;margin-bottom:22px;}
+    .app-btn{background:var(--rouge);color:#fff;padding:11px 0;border-radius:3px;
+      font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+      border:none;cursor:pointer;width:100%;transition:background .2s;}
+    .app-btn:hover{background:var(--rouge-vif);}
+    .app-btn-ghost{background:transparent;color:rgba(255,255,255,.45);
+      padding:9px 0;border-radius:3px;font-size:9px;font-weight:600;
+      letter-spacing:1.5px;text-transform:uppercase;
+      border:1px solid rgba(255,255,255,.1);cursor:pointer;width:100%;
+      margin-top:7px;transition:all .2s;}
+    .app-btn-ghost:hover{border-color:rgba(255,255,255,.35);color:#fff;}
+
+    /* ── App: Fan Club ── */
+    .app-fanclub{width:100%;height:100%;background:var(--noir-2);
+      display:flex;flex-direction:column;padding:26px 14px 14px;gap:9px;overflow-y:auto;}
+    .app-h{font-size:12px;font-weight:800;letter-spacing:-.3px;margin-bottom:2px;}
+    .app-sub{font-size:9px;color:rgba(255,255,255,.38);margin-bottom:10px;line-height:1.5;}
+    .tier{border:1px solid rgba(255,255,255,.07);border-radius:9px;
+      padding:12px;cursor:pointer;transition:all .2s;position:relative;}
+    .tier:hover{border-color:rgba(204,0,0,.35);background:rgba(204,0,0,.04);}
+    .tier.selected{border-color:var(--rouge);background:rgba(204,0,0,.07);}
+    .tier.featured{border-color:rgba(204,0,0,.25);}
+    .tier-badge{position:absolute;top:-7px;right:10px;background:var(--rouge);
+      color:#fff;font-size:7px;font-weight:700;letter-spacing:1px;
+      padding:3px 7px;border-radius:2px;text-transform:uppercase;}
+    .tier-name{font-size:10px;font-weight:800;letter-spacing:.5px;
+      text-transform:uppercase;margin-bottom:3px;}
+    .tier-price{font-size:16px;font-weight:900;letter-spacing:-1px;margin-bottom:7px;}
+    .tier-price .cu{font-size:9px;font-weight:500;color:rgba(255,255,255,.4);}
+    .tier ul{list-style:none;display:flex;flex-direction:column;gap:3px;}
+    .tier li{font-size:9px;color:rgba(255,255,255,.5);
+      display:flex;align-items:center;gap:5px;}
+    .tier li::before{content:'✓';color:var(--rouge);font-size:8px;font-weight:800;}
+
+    /* ── App: Boutique ── */
+    .app-boutique{width:100%;height:100%;background:var(--noir-2);
+      display:flex;flex-direction:column;padding:26px 14px 14px;}
+    .boutique-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px;flex:1;}
+    .prod{border-radius:8px;overflow:hidden;background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:border-color .2s;}
+    .prod:hover{border-color:rgba(204,0,0,.25);}
+    .prod-img{width:100%;height:80px;display:flex;align-items:center;
+      justify-content:center;font-size:26px;
+      background:linear-gradient(135deg,rgba(204,0,0,.08),rgba(255,255,255,.02));}
+    .prod-info{padding:9px;}
+    .prod-name{font-size:9px;font-weight:700;margin-bottom:3px;}
+    .prod-price{font-size:10px;color:var(--rouge);font-weight:800;}
+    .prod-add{width:100%;padding:5px;background:rgba(204,0,0,.12);
+      border:none;border-radius:4px;color:var(--rouge);
+      font-size:8px;font-weight:700;cursor:pointer;margin-top:5px;transition:all .2s;}
+    .prod-add:hover,.prod-add.added{background:var(--rouge);color:#fff;}
+
+    /* ── App: Dashboard ── */
+    .app-dash{width:100%;height:100%;background:var(--noir-2);
+      display:flex;flex-direction:column;padding:26px 14px 14px;gap:9px;}
+    .dash-hdr{display:flex;align-items:center;justify-content:space-between;}
+    .dash-h{font-size:12px;font-weight:800;}
+    .live-badge{display:flex;align-items:center;gap:4px;font-size:9px;
+      color:var(--rouge);font-weight:700;letter-spacing:1px;}
+    .live-dot{width:5px;height:5px;border-radius:50%;background:var(--rouge);animation:pulse 1s infinite;}
+    .dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+    .dstat{background:rgba(255,255,255,.03);border-radius:7px;padding:9px;
+      border:1px solid rgba(255,255,255,.05);}
+    .dstat-val{font-size:15px;font-weight:900;letter-spacing:-.5px;}
+    .dstat-val.red{color:var(--rouge);}
+    .dstat-lbl{font-size:8px;color:rgba(255,255,255,.32);text-transform:uppercase;
+      letter-spacing:.5px;margin-top:2px;}
+    .dash-feed{flex:1;background:rgba(255,255,255,.02);border-radius:7px;
+      border:1px solid rgba(255,255,255,.04);padding:9px;overflow:hidden;}
+    .feed-title{font-size:9px;font-weight:700;letter-spacing:1px;
+      color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:7px;}
+    .feed-row{display:flex;align-items:center;gap:7px;padding:5px 0;
+      border-bottom:1px solid rgba(255,255,255,.04);font-size:9px;}
+    .feed-avatar{width:18px;height:18px;border-radius:50%;background:rgba(204,0,0,.18);
+      display:flex;align-items:center;justify-content:center;
+      font-size:8px;font-weight:700;color:var(--rouge);flex-shrink:0;}
+    .feed-name{font-weight:600;flex:1;}
+    .feed-amt{color:var(--rouge);font-weight:800;}
+    .dash-cta-btn{background:var(--rouge);border:none;border-radius:7px;padding:11px;
+      color:#fff;font-size:10px;font-weight:800;letter-spacing:.5px;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;gap:7px;
+      transition:background .2s;width:100%;}
+    .dash-cta-btn:hover{background:var(--rouge-vif);}
+
+    /* ────────────────────────────────────
+       SLIDE 8 — SIMULATION LIVE
+    ──────────────────────────────────── */
+    .s8-inner{display:flex;flex-direction:column;align-items:center;width:100%;padding:0 60px;}
+    .s8-hdr{text-align:center;margin-bottom:36px;}
+    .s8-title{font-size:clamp(32px,4vw,52px);font-weight:900;letter-spacing:-2px;text-transform:uppercase;}
+    .sim-phones{display:flex;align-items:center;gap:48px;}
+    .sim-arrow{display:flex;flex-direction:column;align-items:center;gap:7px;margin-top:32px;}
+    .arrow-lbl{font-size:10px;color:rgba(255,255,255,.25);letter-spacing:1px;text-align:center;}
+    .arrow-line{width:56px;height:1px;
+      background:linear-gradient(to right,rgba(204,0,0,.3),var(--rouge),rgba(204,0,0,.3));
+      position:relative;}
+    .arrow-dot{width:8px;height:8px;border-radius:50%;background:var(--rouge);
+      position:absolute;top:-3.5px;left:0;
+      animation:travel 1.5s ease-in-out infinite;display:none;}
+    .notif-toast{position:absolute;top:28px;left:10px;right:10px;
+      background:rgba(28,0,0,.96);border:1px solid var(--rouge);
+      border-radius:10px;padding:9px 11px;
+      display:flex;align-items:center;gap:9px;
+      transform:translateY(-80px);opacity:0;
+      transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s ease;
+      z-index:30;backdrop-filter:blur(10px);}
+    .notif-toast.show{transform:translateY(0);opacity:1;}
+    .notif-icon{width:26px;height:26px;background:var(--rouge);border-radius:6px;
+      display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+    .notif-title{font-size:9px;font-weight:700;}
+    .notif-body{font-size:8px;color:rgba(255,255,255,.5);margin-top:1px;}
+    .sim-hint{margin-top:18px;font-size:11px;color:rgba(255,255,255,.22);
+      letter-spacing:.5px;text-align:center;}
+
+    /* ────────────────────────────────────
+       SLIDE 9 — LES CHIFFRES
+    ──────────────────────────────────── */
+    .s9-inner{max-width:880px;width:100%;padding:0 80px;}
+    .s9-title{font-size:clamp(38px,5vw,58px);font-weight:900;letter-spacing:-2px;margin-bottom:44px;}
+    .s9-title .accent{color:var(--rouge);}
+    .s9-table{width:100%;border-collapse:collapse;margin-bottom:28px;}
+    .s9-table tr{border-bottom:1px solid rgba(255,255,255,.05);}
+    .s9-table td{padding:15px 0;}
+    .s9-table .lbl{font-size:14px;color:rgba(255,255,255,.48);width:60%;}
+    .s9-table .val{font-size:19px;font-weight:900;letter-spacing:-.5px;text-align:right;}
+    .s9-table .val.big{font-size:34px;color:var(--rouge);}
+    .s9-sep{height:2px;background:linear-gradient(to right,var(--rouge),transparent);margin:6px 0;}
+    .s9-note{font-size:13px;color:rgba(255,255,255,.32);font-style:italic;}
+
+    /* ────────────────────────────────────
+       SLIDE 10 — CLOSING
+    ──────────────────────────────────── */
+    .s10-bg{position:absolute;inset:0;
+      background-image:url('./serge-concert.jpg');
+      background-size:cover;background-position:center;
+      filter:brightness(.12) grayscale(40%);}
+    .s10-overlay{position:absolute;inset:0;
+      background:radial-gradient(ellipse 55% 70% at 50% 50%,rgba(204,0,0,.1) 0%,transparent 70%);}
+    .s10-content{position:relative;z-index:2;text-align:center;padding:60px;max-width:780px;}
+    .s10-eyebrow{font-size:11px;letter-spacing:4px;color:var(--rouge);
+      text-transform:uppercase;margin-bottom:22px;}
+    .s10-title{font-size:clamp(50px,7.5vw,96px);font-weight:900;
+      letter-spacing:-5px;line-height:.88;text-transform:uppercase;margin-bottom:36px;}
+    .s10-desc{font-size:17px;color:rgba(255,255,255,.5);line-height:1.7;
+      max-width:480px;margin:0 auto 44px;}
+    .s10-btns{display:flex;gap:14px;justify-content:center;}
+    .btn-sec{background:transparent;color:rgba(255,255,255,.55);
+      padding:16px 34px;border-radius:3px;
+      font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+      border:1px solid rgba(255,255,255,.18);cursor:pointer;transition:all .2s;}
+    .btn-sec:hover{border-color:rgba(255,255,255,.5);color:#fff;}
+    .s10-sig{margin-top:52px;font-size:12px;color:rgba(255,255,255,.18);letter-spacing:2px;}
+  </style>
+</head>
+<body>
+
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  <div class="counter" id="counter"></div>
+  <div class="logo-badge">
+    <div class="logo-mark">BA</div>
+    <span class="logo-name">Beynaud Army</span>
+  </div>
+  <div class="key-hint">← → pour naviguer · Espace pour avancer</div>
+
+  <div class="deck">
+
+    <!-- ═══ SLIDE 1 : COVER ═══ -->
+    <div class="slide active" data-index="0">
+      <div class="s1-bg"></div>
+      <div class="s1-overlay"></div>
+      <svg class="s1-wm" width="420" height="110" viewBox="0 0 420 110">
+        <text x="10" y="88" font-family="Georgia,'Times New Roman',serif" font-size="64" fill="white" font-style="italic">Serge Beynaud</text>
+      </svg>
+      <div class="s1-content">
+        <div class="eyebrow">
+          <div class="pulse-dot"></div>
+          Beynaud Army · Présentation exclusive
+        </div>
+        <div class="s1-title">Tes fans</div>
+        <div class="s1-title-outline">T'appartiennent.</div>
+        <p class="s1-desc">Plus jamais de censure. Plus jamais de restriction.<br>Ta communauté. Ton argent. Tes règles.</p>
+        <button class="btn-primary" onclick="navigate(1)">
+          Découvrir le concept
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 2 : PROBLÈME ═══ -->
+    <div class="slide" data-index="1">
+      <div class="s2-inner">
+        <div>
+          <div class="slide-tag">Le problème</div>
+          <h2 class="slide-title">Tu construis sur<br><span class="accent">du sable.</span></h2>
+          <p class="s2-text">Facebook, Instagram, TikTok. Des millions de fans qui t'adorent. Mais tu ne les contrôles pas. L'algorithme change. Le compte se fait restreindre. Et du jour au lendemain, tu disparais.</p>
+          <div class="s2-quote">"Tu as vécu la restriction Facebook.<br>Tu sais ce que ça coûte vraiment."</div>
+        </div>
+        <div class="pain-cards">
+          <div class="pain-card">
+            <div class="pain-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M4.93 4.93l14.14 14.14"/></svg></div>
+            <div>
+              <div class="pain-title">Restriction & suspension</div>
+              <div class="pain-desc">Un compte restreint = silence total. Tes fans ne te voient plus. Tu n'existes plus.</div>
+            </div>
+          </div>
+          <div class="pain-card">
+            <div class="pain-icon"><svg viewBox="0 0 24 24"><path d="M3 3h18v18H3zM9 9h6v6H9z"/></svg></div>
+            <div>
+              <div class="pain-title">Algorithme imprévisible</div>
+              <div class="pain-desc">Reach en chute libre. Tes posts touchent 2% de tes abonnés. Les 98% autres ne te voient jamais.</div>
+            </div>
+          </div>
+          <div class="pain-card">
+            <div class="pain-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg></div>
+            <div>
+              <div class="pain-title">Zéro revenu direct</div>
+              <div class="pain-desc">2 millions de fans. Combien t'ont payé directement ce mois ? Leur argent va ailleurs.</div>
+            </div>
+          </div>
+          <div class="pain-card">
+            <div class="pain-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+            <div>
+              <div class="pain-title">Tes fans n'existent pas chez toi</div>
+              <div class="pain-desc">Tu n'as pas leur contact. Pas leur nom. Ils appartiennent à Facebook, pas à toi.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 3 : SOLUTION ═══ -->
+    <div class="slide" data-index="2">
+      <div class="s3-inner">
+        <div class="slide-tag">La solution</div>
+        <h2 class="slide-title" style="font-size:clamp(44px,5.5vw,72px);">
+          Ta communauté.<br><span class="accent">Ton argent.</span><br>Tes règles.
+        </h2>
+        <div class="pillars">
+          <div class="pillar red">
+            <div class="pillar-num">01</div>
+            <div class="pillar-title">Propriété</div>
+            <div class="pillar-desc">Tes fans s'inscrivent dans TON système. Leurs contacts t'appartiennent. Personne ne peut te les enlever.</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">02</div>
+            <div class="pillar-title">Monétisation</div>
+            <div class="pillar-desc">Fan Club payant, boutique officielle, contenu exclusif. Revenus récurrents. 0% de commission intermédiaire.</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">03</div>
+            <div class="pillar-title">Contact direct</div>
+            <div class="pillar-desc">Un bouton : "Envoyer à toute mon armée." 100% de tes fans reçoivent. Pas d'algorithme. Pas de censure.</div>
+          </div>
+        </div>
+        <div class="calc-box">
+          <div class="calc-formula">
+            <strong>2 000 000</strong> fans actifs × <strong>1%</strong> qui rejoignent l'armée = <strong>20 000 membres</strong><br>
+            × <strong>2 000 FCFA</strong> / mois (Fan Club VIP)
+          </div>
+          <div class="calc-result">
+            <div class="calc-num">40M FCFA</div>
+            <div class="calc-label">par mois · récurrents</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 4 : DÉMO — SPLASH FAN ═══ -->
+    <div class="slide" data-index="3">
+      <div class="phone-slide-inner">
+        <div>
+          <div class="phone-expl-tag">Vue Fan · Écran 1/3</div>
+          <h2 class="phone-expl-title">L'entrée dans ton univers</h2>
+          <p class="phone-expl-desc">Ton fan reçoit un lien sur WhatsApp ou Instagram. Il clique. Il arrive ici. Ton nom. Ton image. Ta couleur. Il sait immédiatement que c'est officiel.</p>
+          <div class="insight-box">
+            <p>Aucune appli à télécharger. Aucun compte créé d'abord. Le fan entre et découvre. La friction est nulle — c'est clé pour la conversion.</p>
+          </div>
+        </div>
+        <div class="phone-col">
+          <div class="phone-label">Ce que voit ton fan</div>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="app-splash">
+                <div class="app-splash-bg"></div>
+                <div class="app-splash-ov"></div>
+                <div class="app-splash-content">
+                  <div class="app-badge"><div class="app-badge-dot"></div>Officiel</div>
+                  <div class="app-name">Serge Beynaud</div>
+                  <div class="app-title-solid">Beynaud</div>
+                  <div class="app-title-outline">Army</div>
+                  <p class="app-desc">L'univers officiel et exclusif.<br>Accès direct à Serge.</p>
+                  <button class="app-btn" onclick="navigate(1)">Rejoindre l'armée</button>
+                  <button class="app-btn-ghost">Explorer d'abord</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 5 : DÉMO — FAN CLUB ═══ -->
+    <div class="slide" data-index="4">
+      <div class="phone-slide-inner">
+        <div>
+          <div class="phone-expl-tag">Vue Fan · Écran 2/3</div>
+          <h2 class="phone-expl-title">Le Fan Club officiel</h2>
+          <p class="phone-expl-desc">Trois niveaux d'appartenance. Le fan choisit son engagement. Gratuit pour entrer dans la communauté. Payant pour l'exclusivité.</p>
+          <div class="insight-box">
+            <p><strong>2 000 FCFA/mois</strong> c'est le prix d'un café. Si 1% de tes fans l'acceptent, c'est <strong>40M FCFA récurrents chaque mois</strong>. Sans concert. Sans tournée.</p>
+          </div>
+        </div>
+        <div class="phone-col">
+          <div class="phone-label">Choix du niveau</div>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="app-fanclub">
+                <div class="app-h">Choisir ton niveau</div>
+                <div class="app-sub">L'univers exclusif de Serge Beynaud t'attend</div>
+                <div class="tier" onclick="pickTier(this)">
+                  <div class="tier-name">Fan</div>
+                  <div class="tier-price">Gratuit <span class="cu">pour toujours</span></div>
+                  <ul><li>Actualités officielles</li><li>Accès communauté</li><li>Boutique (prix standard)</li></ul>
+                </div>
+                <div class="tier featured" onclick="pickTier(this)">
+                  <div class="tier-badge">Populaire</div>
+                  <div class="tier-name" style="color:var(--rouge)">VIP</div>
+                  <div class="tier-price">2 000 <span class="cu">FCFA / mois</span></div>
+                  <ul><li>Backstage & coulisses</li><li>Clips en avant-première</li><li>Réductions boutique 15%</li><li>Message direct Serge</li></ul>
+                </div>
+                <div class="tier" onclick="pickTier(this)">
+                  <div class="tier-name">Elite</div>
+                  <div class="tier-price">5 000 <span class="cu">FCFA / mois</span></div>
+                  <ul><li>Tout VIP inclus</li><li>Rencontre virtuelle / an</li><li>Nom dans le prochain album</li></ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 6 : DÉMO — BOUTIQUE ═══ -->
+    <div class="slide" data-index="5">
+      <div class="phone-slide-inner">
+        <div>
+          <div class="phone-expl-tag">Vue Fan · Écran 3/3</div>
+          <h2 class="phone-expl-title">La boutique officielle</h2>
+          <p class="phone-expl-desc">Tu vends déjà des articles à ton effigie. Aujourd'hui ça passe par des intermédiaires. Ici c'est direct. La commande arrive dans ta main. Le paiement aussi.</p>
+          <div class="insight-box">
+            <p>Paiement Wave, MTN, Orange Money — ce que ton fan utilise déjà. <strong>0 intermédiaire. 0 commission.</strong> Chaque vente va directement chez toi.</p>
+          </div>
+        </div>
+        <div class="phone-col">
+          <div class="phone-label">Boutique Beynaud</div>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="app-boutique">
+                <div class="app-h">Boutique Officielle</div>
+                <div class="app-sub">Articles exclusifs Serge Beynaud</div>
+                <div class="boutique-grid">
+                  <div class="prod">
+                    <div class="prod-img">👕</div>
+                    <div class="prod-info">
+                      <div class="prod-name">T-Shirt CREATAIR</div>
+                      <div class="prod-price">8 500 FCFA</div>
+                      <button class="prod-add" onclick="addCart(this)">Ajouter</button>
+                    </div>
+                  </div>
+                  <div class="prod">
+                    <div class="prod-img">🧢</div>
+                    <div class="prod-info">
+                      <div class="prod-name">Cap Army</div>
+                      <div class="prod-price">5 000 FCFA</div>
+                      <button class="prod-add" onclick="addCart(this)">Ajouter</button>
+                    </div>
+                  </div>
+                  <div class="prod">
+                    <div class="prod-img">💿</div>
+                    <div class="prod-info">
+                      <div class="prod-name">Album CREATAIR</div>
+                      <div class="prod-price">3 000 FCFA</div>
+                      <button class="prod-add" onclick="addCart(this)">Ajouter</button>
+                    </div>
+                  </div>
+                  <div class="prod">
+                    <div class="prod-img">📸</div>
+                    <div class="prod-info">
+                      <div class="prod-name">Photo dédicacée</div>
+                      <div class="prod-price">2 500 FCFA</div>
+                      <button class="prod-add" onclick="addCart(this)">Ajouter</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 7 : DASHBOARD ARTISTE ═══ -->
+    <div class="slide" data-index="6">
+      <div class="phone-slide-inner">
+        <div>
+          <div class="phone-expl-tag">Vue Artiste</div>
+          <h2 class="phone-expl-title">Ce que toi, tu vois</h2>
+          <p class="phone-expl-desc">Ton tableau de bord en temps réel. Combien de membres. Combien de revenus ce mois. Et surtout — ce bouton que personne d'autre ne peut t'offrir.</p>
+          <div class="insight-box">
+            <p>Le bouton <strong>"Envoyer à mon armée"</strong> touche tous tes membres directement. Pas d'algorithme. Pas de portée limitée. <strong>100% de tes fans</strong> reçoivent le message. Instantanément.</p>
+          </div>
+        </div>
+        <div class="phone-col">
+          <div class="phone-label">Ton tableau de bord</div>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="app-dash">
+                <div class="dash-hdr">
+                  <div class="dash-h">Bonjour Serge</div>
+                  <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+                </div>
+                <div class="dash-stats">
+                  <div class="dstat"><div class="dstat-val red">847</div><div class="dstat-lbl">Membres</div></div>
+                  <div class="dstat"><div class="dstat-val">1.7M</div><div class="dstat-lbl">FCFA / mois</div></div>
+                  <div class="dstat"><div class="dstat-val">23</div><div class="dstat-lbl">Commandes</div></div>
+                </div>
+                <div class="dash-feed">
+                  <div class="feed-title">Activités récentes</div>
+                  <div class="feed-row"><div class="feed-avatar">A</div><div class="feed-name">Awa K. — VIP</div><div class="feed-amt">+2 000 F</div></div>
+                  <div class="feed-row"><div class="feed-avatar">K</div><div class="feed-name">Kofi M. — T-Shirt</div><div class="feed-amt">+8 500 F</div></div>
+                  <div class="feed-row"><div class="feed-avatar">D</div><div class="feed-name">Diane B. — Elite</div><div class="feed-amt">+5 000 F</div></div>
+                </div>
+                <button class="dash-cta-btn" onclick="msgArmy()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+                  Envoyer à mon armée
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 8 : SIMULATION LIVE ═══ -->
+    <div class="slide" data-index="7">
+      <div class="s8-inner">
+        <div class="s8-hdr">
+          <div class="slide-tag" style="margin-bottom:10px">Simulation en direct</div>
+          <h2 class="s8-title">Regarde ce qui se passe</h2>
+        </div>
+        <div class="sim-phones">
+
+          <!-- Fan phone -->
+          <div class="phone-col">
+            <div class="phone-label">Fan · clique "Rejoindre"</div>
+            <div class="phone" style="width:220px;height:448px;">
+              <div class="phone-screen">
+                <div class="app-splash" style="justify-content:flex-end;padding-bottom:32px;">
+                  <div class="app-splash-bg"></div>
+                  <div class="app-splash-ov"></div>
+                  <div class="app-splash-content" style="position:relative;z-index:2;">
+                    <div class="app-name" style="font-size:9px">Serge Beynaud</div>
+                    <div class="app-title-solid" style="font-size:22px">Beynaud</div>
+                    <div class="app-title-outline" style="font-size:22px;margin-bottom:16px">Army</div>
+                    <button class="app-btn" id="sim-btn" onclick="launchSim()" style="font-size:9px">Rejoindre l'armée</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="sim-arrow">
+            <div class="arrow-lbl">EN TEMPS<br>RÉEL</div>
+            <div class="arrow-line"><div class="arrow-dot" id="sim-dot"></div></div>
+            <div class="arrow-lbl" style="font-size:9px">INSTANTANÉ</div>
+          </div>
+
+          <!-- Artiste phone -->
+          <div class="phone-col">
+            <div class="phone-label">Serge · notification live</div>
+            <div class="phone" style="width:220px;height:448px;position:relative;">
+              <div class="notif-toast" id="sim-notif">
+                <div class="notif-icon">🔥</div>
+                <div>
+                  <div class="notif-title">Nouveau membre VIP</div>
+                  <div class="notif-body">+2 000 FCFA récurrents ajoutés</div>
+                </div>
+              </div>
+              <div class="phone-screen">
+                <div class="app-dash">
+                  <div class="dash-hdr">
+                    <div class="dash-h" style="font-size:11px">Tableau de bord</div>
+                    <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+                  </div>
+                  <div class="dash-stats">
+                    <div class="dstat"><div class="dstat-val red" id="sim-count" style="font-size:13px">847</div><div class="dstat-lbl">Membres</div></div>
+                    <div class="dstat"><div class="dstat-val" id="sim-rev" style="font-size:13px">1.7M</div><div class="dstat-lbl">FCFA / mois</div></div>
+                    <div class="dstat"><div class="dstat-val" style="font-size:13px">23</div><div class="dstat-lbl">Commandes</div></div>
+                  </div>
+                  <div class="dash-feed" style="flex:1">
+                    <div class="feed-title">Activités récentes</div>
+                    <div class="feed-row"><div class="feed-avatar">A</div><div class="feed-name">Awa K. — VIP</div><div class="feed-amt">+2 000 F</div></div>
+                    <div class="feed-row"><div class="feed-avatar">K</div><div class="feed-name">Kofi M. — T-Shirt</div><div class="feed-amt">+8 500 F</div></div>
+                    <div class="feed-row" id="sim-row" style="opacity:0;transition:opacity .3s;background:rgba(204,0,0,.05)">
+                      <div class="feed-avatar" style="background:rgba(204,0,0,.4);color:#fff;animation:pulse 1s infinite">N</div>
+                      <div class="feed-name" style="color:#fff;font-weight:800">Nouveau — VIP 🔥</div>
+                      <div class="feed-amt">+2 000 F</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sim-hint">Clique sur "Rejoindre l'armée" pour voir la simulation →</div>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 9 : LES CHIFFRES ═══ -->
+    <div class="slide" data-index="8">
+      <div class="s9-inner">
+        <div class="slide-tag">Le potentiel réel</div>
+        <h2 class="s9-title">Si <span class="accent">1%</span> de tes fans rejoignent l'armée</h2>
+        <table class="s9-table">
+          <tr><td class="lbl">Fans actifs sur tes réseaux</td><td class="val">2 000 000</td></tr>
+          <tr><td class="lbl">Membres Fan Club (1% d'adoption)</td><td class="val">20 000</td></tr>
+          <tr><td class="lbl">Abonnement VIP moyen</td><td class="val">2 000 FCFA / mois</td></tr>
+          <tr><td class="lbl" style="padding-top:4px"></td><td></td></tr>
+          <tr>
+            <td class="lbl"><strong style="color:#fff;font-size:15px">Revenu Fan Club mensuel récurrent</strong></td>
+            <td class="val big">40M FCFA</td>
+          </tr>
+        </table>
+        <div class="s9-sep"></div>
+        <p class="s9-note">
+          Hors boutique officielle. Hors billets de concert. Hors contenu exclusif.<br>
+          Si <strong style="color:rgba(255,255,255,.65)">2% d'adoption → 80M FCFA récurrents / mois.</strong>
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══ SLIDE 10 : CLOSING ═══ -->
+    <div class="slide" data-index="9">
+      <div class="s10-bg"></div>
+      <div class="s10-overlay"></div>
+      <div class="s10-content">
+        <div class="s10-eyebrow">● Prochaine étape</div>
+        <h2 class="s10-title">On le<br>construit.</h2>
+        <p class="s10-desc">En 3 semaines, BEYNAUD ARMY est en ligne. Ton lien. Ta communauté. Tes revenus récurrents. Personne ne peut te le retirer.</p>
+        <div class="s10-btns">
+          <button class="btn-primary" onclick="alert('Parfait ! Mr Attractor va revenir vers vous pour démarrer.')">
+            Démarrer maintenant
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </button>
+          <button class="btn-sec">Poser une question</button>
+        </div>
+        <div class="s10-sig">Présenté par Mr Attractor · agenceattractor.com</div>
+      </div>
+    </div>
+
+  </div><!-- /deck -->
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <button class="nav-btn" id="prev" onclick="navigate(-1)" disabled>
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12L6 8l4-4"/></svg>
+    </button>
+    <div class="dots" id="dots"></div>
+    <button class="nav-btn" id="next" onclick="navigate(1)">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4l4 4-4 4"/></svg>
+    </button>
+  </nav>
+
+  <script>
+    const TOTAL = 10;
+    let cur = 0, simDone = false;
+
+    function init() {
+      const d = document.getElementById('dots');
+      for (let i = 0; i < TOTAL; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === 0 ? ' active' : '');
+        dot.onclick = () => goTo(i);
+        d.appendChild(dot);
+      }
+      render();
+    }
+
+    function render() {
+      document.getElementById('progress').style.width = ((cur+1)/TOTAL*100)+'%';
+      document.getElementById('counter').textContent = (cur+1)+' / '+TOTAL;
+      document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i===cur));
+      document.getElementById('prev').disabled = cur===0;
+      document.getElementById('next').disabled = cur===TOTAL-1;
+    }
+
+    function goTo(n) {
+      if (n < 0 || n >= TOTAL || n === cur) return;
+      const slides = document.querySelectorAll('.slide');
+      slides[cur].classList.remove('active');
+      slides[cur].classList.add('exit');
+      const prev = cur;
+      cur = n;
+      setTimeout(() => slides[prev].classList.remove('exit'), 500);
+      slides[cur].classList.add('active');
+      render();
+    }
+
+    function navigate(d) { goTo(cur + d); }
+
+    document.addEventListener('keydown', e => {
+      if (e.key==='ArrowRight'||e.key===' ') { e.preventDefault(); navigate(1); }
+      if (e.key==='ArrowLeft') navigate(-1);
+    });
+
+    function pickTier(el) {
+      document.querySelectorAll('.tier').forEach(t => t.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function addCart(btn) {
+      btn.textContent = '✓ Ajouté';
+      btn.classList.add('added');
+      setTimeout(() => { btn.textContent='Ajouter'; btn.classList.remove('added'); }, 2000);
+    }
+
+    function msgArmy() {
+      alert('🔥 Message envoyé à 847 membres de l\'armée Beynaud !');
+    }
+
+    function launchSim() {
+      if (simDone) {
+        // reset
+        simDone = false;
+        document.getElementById('sim-btn').textContent = 'Rejoindre l\'armée';
+        document.getElementById('sim-btn').style.background = '';
+        document.getElementById('sim-count').textContent = '847';
+        document.getElementById('sim-rev').textContent = '1.7M';
+        document.getElementById('sim-row').style.opacity = '0';
+        document.getElementById('sim-notif').classList.remove('show');
+        document.getElementById('sim-dot').style.display = 'none';
+        return;
+      }
+      simDone = true;
+      const btn = document.getElementById('sim-btn');
+      btn.textContent = '✓ Rejoint !';
+      btn.style.background = '#005500';
+
+      const dot = document.getElementById('sim-dot');
+      dot.style.display = 'block';
+
+      setTimeout(() => {
+        document.getElementById('sim-notif').classList.add('show');
+        document.getElementById('sim-count').textContent = '848';
+        document.getElementById('sim-rev').textContent = '1.702M';
+        document.getElementById('sim-row').style.opacity = '1';
+        dot.style.display = 'none';
+      }, 1400);
+
+      setTimeout(() => {
+        document.getElementById('sim-notif').classList.remove('show');
+      }, 5000);
+    }
+
+    init();
+  </script>
+</body>
+</html>
