@@ -41,8 +41,9 @@ body{background:var(--bg);color:var(--ink);}
 .hdr-left .label{font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--mut);margin-bottom:4px;}
 .hdr-left .title{font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.4px;}
 .hdr-right{font-size:11px;color:var(--mut);font-weight:600;text-align:right;line-height:1.5;margin-top:4px;}
-.tabs{display:flex;gap:8px;padding:18px 20px 0;}
-.tab{flex:1;padding:10px 4px;border-radius:var(--r-sm);border:1.5px solid var(--bdr);background:var(--card);color:var(--mut);font-size:12.5px;font-weight:700;cursor:pointer;text-align:center;transition:.15s;font-family:inherit;}
+.tabs{display:flex;gap:8px;padding:18px 20px 0;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex:0 0 auto;padding:10px 16px;border-radius:var(--r-sm);border:1.5px solid var(--bdr);background:var(--card);color:var(--mut);font-size:12.5px;font-weight:700;cursor:pointer;text-align:center;transition:.15s;font-family:inherit;white-space:nowrap;}
 .tab.on{border-color:var(--acc);background:var(--acc-s);color:var(--acc);}
 .content{padding:16px 20px 0;display:flex;flex-direction:column;gap:14px;}
 .card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);box-shadow:var(--sh);}
@@ -105,6 +106,33 @@ const PIPELINE = [
     date:'15/06', urgent:false,
     contact:'Bérénice Kouadio',
   },
+  {
+    id:'ATR-6', nom:"J'envoie Express", type:'App Métier',
+    statut:'Démo prête', sc:'neu',
+    setup: null, mensuel: null,
+    prochaine:'Identifier prospect cible · envoyer lien démo pour qualifier',
+    date:'À planifier', urgent:false,
+    contact:'À identifier',
+  },
+  {
+    id:'ATR-8', nom:'Vies Croisées', type:'Site émission',
+    statut:'Proposition envoyée', sc:'blu',
+    setup: null, mensuel: null,
+    prochaine:'Attendre retour Andréa Koné sur la proposition',
+    date:'À relancer', urgent:false,
+    contact:'Andréa Koné',
+  },
+];
+
+const DEMOS = [
+  { id:'beracca',       nom:'Beracca Mastery Group', type:'Commandes attiéké',   url:'/beracca',         statut:'Envoyée client', sc:'blu' },
+  { id:'jenvoie',       nom:"J'envoie Express",       type:'Livraison express',   url:'/jenvoie-express', statut:'En vitrine',     sc:'neu' },
+  { id:'rukayatou',     nom:'Rukayatou',               type:'App métier',          url:'/rukayatou',       statut:'En vitrine',     sc:'neu' },
+  { id:'vies-croisees', nom:'Vies Croisées',           type:'Site émission',       url:'/vies-croisees',   statut:'Envoyée client', sc:'blu' },
+  { id:'getwinworld',   nom:'GetWinWorld',             type:'App gaming/portail',  url:'/getwinworld',     statut:'En vitrine',     sc:'neu' },
+  { id:'creal',         nom:"C'Real Assists",          type:'Commandes WhatsApp',  url:'/creal-assists',   statut:'Concept',        sc:'neu' },
+  { id:'xpaye',         nom:'XPaye Africa',            type:'Deck partenariat',    url:'/xpaye-partenariat', statut:'En vitrine',   sc:'neu' },
+  { id:'onboarding',    nom:'Onboarding Flow',         type:'Process interne',     url:'/onboarding',      statut:'Interne',        sc:'neu' },
 ];
 
 const PROJETS = [
@@ -378,11 +406,47 @@ function TabProjets() {
   );
 }
 
+function TabDemos() {
+  const envoyees = DEMOS.filter(d => d.sc === 'blu').length;
+  return (
+    <Fragment>
+      <div className="card" style={{ padding:'14px 16px' }}>
+        <div className="row between center">
+          <div>
+            <div className="t-xs mut" style={{ marginBottom:3 }}>{DEMOS.length} démos déployées</div>
+            <span className="b" style={{ fontSize:14 }}>
+              <span style={{ color:'var(--blu)' }}>{envoyees} envoyées</span>
+              {' · '}{DEMOS.length - envoyees} en vitrine
+            </span>
+          </div>
+          <span className="badge neu">demo.agenceattractor.com</span>
+        </div>
+      </div>
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+        {DEMOS.map((d,i) => (
+          <a key={d.id} href={'https://demo.agenceattractor.com'+d.url} target="_blank" rel="noreferrer"
+            className="card anim col" style={{ padding:'13px 13px 11px', textDecoration:'none', cursor:'pointer', animationDelay:(i*50)+'ms' }}>
+            <div className="row between" style={{ marginBottom:7 }}>
+              <span className={'badge '+d.sc} style={{ fontSize:10, padding:'2px 7px' }}><span className="dot" />{d.statut}</span>
+            </div>
+            <span className="b" style={{ fontSize:13, color:'var(--ink)', lineHeight:1.3, marginBottom:4 }}>{d.nom}</span>
+            <span className="t-xs mut">{d.type}</span>
+            <div style={{ marginTop:10, fontSize:10, color:'var(--acc)', fontWeight:700, letterSpacing:.3 }}>
+              Ouvrir →
+            </div>
+          </a>
+        ))}
+      </div>
+    </Fragment>
+  );
+}
+
 /* ── APP ──────────────────────────────────────────────── */
 const TABS = [
-  { id:'today', label:"Aujourd'hui" },
+  { id:'today',    label:"Aujourd'hui" },
   { id:'pipeline', label:'Pipeline' },
-  { id:'projets', label:'Projets' },
+  { id:'projets',  label:'Projets' },
+  { id:'demos',    label:'Démos' },
 ];
 
 function App() {
@@ -412,6 +476,7 @@ function App() {
         {tab === 'today'    && <TabAujourdHui />}
         {tab === 'pipeline' && <TabPipeline />}
         {tab === 'projets'  && <TabProjets />}
+        {tab === 'demos'    && <TabDemos />}
       </div>
     </div>
   );
