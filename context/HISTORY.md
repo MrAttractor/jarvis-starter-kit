@@ -7,6 +7,53 @@
 
 ---
 
+## 2026-06-14 (session 54 — Nouveau prospect Serge Beynaud · Maquette BEYNAUD ARMY)
+
+### Prospect qualifié : Serge Beynaud (artiste coupé-décalé, icône ivoirienne)
+
+- Profil : 2M+ fans, figure nationale CI, marque lifestyle forte, fondateur (fondation jeunesse), a vécu une restriction Facebook (douleur vécue = hook central de la vente)
+- Proposition : app "BEYNAUD ARMY" — Fan Operating System (Fan Club payant 3 niveaux, boutique officielle directe, lives + vidéos exclusives, contact direct 100% de l'armée)
+- Calcul potentiel présenté : 1% adoption × 2 000 FCFA × 2M fans = **40M FCFA/mois récurrents**
+
+### Maquette BEYNAUD ARMY produite (11 slides)
+
+- Déployée sur `demo.agenceattractor.com/beynaud`
+- Design mobile-first, palette Noir/Rouge/Chrome déduite de l'identité visuelle de l'artiste
+- Structure : Cover / Problème / Solution / App fan (splash + fan club + boutique) / Lives & vidéos exclusives / Dashboard artiste / Simulation live (fan clique → notification temps réel artiste) / Chiffres / Closing
+- Contenu exclusif verrouillé par niveau (Fan / VIP / Elite), player live simulé avec badge LIVE
+- Swipe mobile ajouté, navigation clavier, simulation interactive
+- Décision stratégie : montrer QUOI (produit), garder COMMENT (architecture, code, intégrations) — lien non public, présenter en live uniquement
+
+### Business model défini
+
+- Modèle recommandé : hybride — 1 500€ setup + 150€/mois + 3% revenue share Fan Club
+- Logique : setup couvre la prod, mensuel = récurrent stable, rev share = alignement sur la croissance du fan club
+- Piloté dans Supabase : ATR-9, priorité 1
+
+### Risques techniques analysés
+
+- Vidéos / lives : déléguer à CDN (Mux / Cloudflare Stream) — pas de gestion maison des flux
+- BDD sous charge : Supabase Pro + connection pooling suffit jusqu'à 10 000 simultanés
+- Fuite du lien vidéo : signed URLs temporaires (Mux / Cloudflare natif)
+- Paiements Wave/MTN instables : retry + statut "en attente" en base
+- Pic exceptionnel (50K+ simultanés) : architecture event à facturer séparément
+
+### Garanties légales cadrées
+
+- Avant présentation : démo en live uniquement, pas de lien envoyé par écrit
+- Si intérêt : NDA 1 page (Yousign mobile), couvre aussi l'entourage de l'artiste (manager, équipe digitale)
+- Si accord : devis signé + 40% acompte avant tout démarrage
+- PI : le code appartient à Mac Arthur jusqu'au paiement intégral
+- Revenue share : formalisé contractuellement (% + base de calcul + vérification)
+- À faire dès maintenant : dépôt Enveloppe Soleau INPI (10€) pour horodater le concept et le code
+
+### Pilotage mis à jour
+
+- Supabase : ATR-9 inséré dans `pilotage_pipeline` (statut "Demo prete", prochaine action NDA + présentation live, semaine 17/06)
+- Démo Beynaud Army ajoutée dans l'onglet Démos du pilotage
+
+---
+
 ## 2026-06-13 (session 53 — Tableau de bord Pilotage connecté Supabase)
 
 ### Dashboard Pilotage opérationnel
