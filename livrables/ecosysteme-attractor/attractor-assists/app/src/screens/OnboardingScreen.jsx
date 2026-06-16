@@ -1,9 +1,7 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { Icon, Spinner } from '../components/ui';
+import { Icon } from '../components/ui';
 import { InstallGuide, detectPlatform } from './InstallScreen';
-
-// ── Composant barre de progression (étapes 5-8) ──────────────────────────────
 
 function ProgressBar({ step, total = 4 }) {
   return (
@@ -15,14 +13,14 @@ function ProgressBar({ step, total = 4 }) {
   );
 }
 
-// ── Bulle chat Assists ────────────────────────────────────────────────────────
-
 function AssistBubble({ text, avatar = 'A' }) {
   return (
     <div className="flex items-start gap-2.5">
-      <div className="w-8 h-8 rounded-full bg-charbon text-white flex items-center justify-center font-display font-bold text-[12px] flex-shrink-0">
-        {avatar}
-      </div>
+      <img
+        src="/uploads/agents/carelle.jpg"
+        alt="Assists"
+        className="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-g200"
+      />
       <div className="bg-white px-4 py-3 rounded-[18px] rounded-tl-[4px] max-w-[82%] shadow-soft border border-g200">
         <p className="text-[14.5px] text-charbon leading-relaxed">{text}</p>
       </div>
@@ -40,8 +38,6 @@ function UserBubble({ text }) {
   );
 }
 
-// ── Bouton principal ──────────────────────────────────────────────────────────
-
 function PrimaryBtn({ onClick, disabled, children, className = '' }) {
   return (
     <button
@@ -54,42 +50,38 @@ function PrimaryBtn({ onClick, disabled, children, className = '' }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-
 export function OnboardingScreen({ onDone, installPromptRef }) {
-  const [phase, setPhase]       = useState('welcome');  // welcome|training|install|bapteme|anamnese|style|upload|validation|pret
-  const [nomAss, setNomAss]     = useState('');
-  const [prenom, setPrenom]     = useState('');
-  const [baptemeQ, setBaptemeQ] = useState(0); // 0=attente prenom 1=attente nom_ass 2=done
-  const [inputVal, setInputVal] = useState('');
-  const [chatHistory, setChatHistory] = useState([]); // [{role:'assist'|'user', text}]
-  const [anamnQ, setAnamnQ]     = useState(0); // 0..2
+  const [phase, setPhase]         = useState('welcome'); // welcome|install|bapteme|profil_type|anamnese|upload|pret
+  const [nomAss, setNomAss]       = useState('');
+  const [prenom, setPrenom]       = useState('');
+  const [baptemeQ, setBaptemeQ]   = useState(0); // 0=prenom 1=nom_ass 2=done
+  const [inputVal, setInputVal]   = useState('');
+  const [chatHistory, setChatHistory] = useState([]);
+  const [profilType, setProfilType]   = useState('');
+  const [anamnQ, setAnamnQ]       = useState(0);
   const [anamnData, setAnamnData] = useState({});
-  const [styleMsg, setStyleMsg]   = useState('');
-  const [produits, setProduits]   = useState([]); // [{nom, prix, actif}]
+  const [produits, setProduits]   = useState([]);
   const [newProd, setNewProd]     = useState({ nom: '', prix: '' });
   const [saving, setSaving]       = useState(false);
   const [saveErr, setSaveErr]     = useState('');
   const inputRef = useRef(null);
   const chatRef  = useRef(null);
 
-  // Questions anamnèse
   const ANAMN_QUESTIONS = [
-    'Tu fais quoi exactement ? Décris-moi ton activité en quelques mots.',
-    'Tu travailles où ? (Ville, quartier, ou tu livres partout ?)',
-    'Tes clientes, elles commandent comment en ce moment ? (WhatsApp, en direct, réseaux sociaux…)',
+    'Tu fais quoi exactement ? Dis-moi ton activité en quelques mots.',
+    'Tu travailles où ? Ville, quartier, ou tu livres partout ?',
   ];
-  const ANAMN_KEYS = ['activite', 'zone', 'clients'];
+  const ANAMN_KEYS = ['activite', 'zone'];
 
   const assistName = nomAss || 'Assists';
 
-  useEffect(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTop = chatRef.current.scrollHeight;
-    }
-  }, [chatHistory, phase]);
+  const scrollChat = () => {
+    setTimeout(() => {
+      if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }, 50);
+  };
 
-  // ── Sauvegarde finale ─────────────────────────────────────────────────────────
+  // ── Sauvegarde finale ──────────────────────────────────────────────────────────
 
   const handleSave = async () => {
     setSaving(true);
@@ -101,21 +93,21 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
       const referralCode = user.id.replace(/-/g, '').slice(0, 8).toUpperCase();
 
       await supabase.from('profiles').update({
-        prenom: prenom.trim() || null,
-        nom_assistant: (nomAss || 'Assists').trim(),
-        activite: anamnData.activite || null,
-        zone: anamnData.zone || null,
+        prenom:         prenom.trim() || null,
+        nom_assistant:  (nomAss || 'Assists').trim(),
+        activite:       anamnData.activite || null,
+        zone:           anamnData.zone || null,
+        profil_type:    profilType || 'entrepreneur',
         onboarding_done: true,
-        referral_code: referralCode,
+        referral_code:  referralCode,
       }).eq('id', user.id);
 
-      if (Object.keys(anamnData).length > 0 || styleMsg) {
+      if (anamnData.activite) {
         await supabase.from('business_anamnese').upsert({
-          user_id: user.id,
-          clients: anamnData.clients || null,
-          ce_quil_vend: styleMsg || null,
-          activite_detectee: anamnData.activite || null,
-          updated_at: new Date().toISOString(),
+          user_id:             user.id,
+          ce_quil_vend:        anamnData.activite || null,
+          activite_detectee:   anamnData.activite || null,
+          updated_at:          new Date().toISOString(),
         }, { onConflict: 'user_id' });
       }
 
@@ -124,9 +116,10 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
         await supabase.from('produits_user').insert(
           actifsOnly.map(p => ({
             user_id: user.id,
-            nom: p.nom.trim(),
-            prix: parseInt(p.prix) || 0,
-            actif: true,
+            nom:     p.nom.trim(),
+            prix:    parseInt(p.prix) || 0,
+            unite:   'FCFA',
+            actif:   true,
           }))
         );
       }
@@ -156,115 +149,52 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     }
   };
 
-  // ── 1. Welcome ───────────────────────────────────────────────────────────────
+  // ── 1. Welcome ─────────────────────────────────────────────────────────────────
 
   if (phase === 'welcome') return (
-    <div className="min-h-screen flex flex-col bg-sable px-5 pt-14 pb-10">
-      <div className="flex-1 flex flex-col justify-center gap-6">
-        <div className="w-14 h-14 rounded-2xl bg-charbon flex items-center justify-center">
-          <Icon name="spark" size={26} className="text-orange" />
-        </div>
-        <div>
-          <p className="text-[11.5px] font-bold text-orange uppercase tracking-[.12em] mb-3">
-            Bienvenue dans Attractor Assists
-          </p>
-          <h1 className="font-display font-extrabold text-[28px] text-charbon leading-[1.2] mb-4">
-            Ton bras droit IA est là.
-          </h1>
-          <div className="flex flex-col gap-3">
-            {[
-              { icon: 'chat',  text: 'Tu parles, il gère. Commandes, relances, messages — en 1 clic.' },
-              { icon: 'send',  text: 'Tes clientes commandent sur ta boutique en ligne. Tu n\'as rien à faire.' },
-              { icon: 'spark', text: 'Il apprend ton style et travaille exactement comme toi, en mieux.' },
-            ].map((item, i) => (
-              <div key={i} className="flex items-start gap-3 p-3.5 bg-white rounded-xl border border-g200">
-                <div className="w-8 h-8 rounded-lg bg-orange/10 flex items-center justify-center flex-shrink-0">
-                  <Icon name={item.icon} size={16} className="text-orange" />
-                </div>
-                <p className="text-[13.5px] text-charbon leading-snug">{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-      <PrimaryBtn onClick={() => setPhase('training')}>
-        Allons-y →
-      </PrimaryBtn>
-    </div>
-  );
-
-  // ── 2. Training WA + Assists ──────────────────────────────────────────────────
-
-  if (phase === 'training') return (
     <div className="min-h-screen flex flex-col bg-sable">
-      <div className="px-5 pt-14 pb-4">
-        <p className="text-[11.5px] font-bold text-orange uppercase tracking-[.12em] mb-2">Le tandem qui gagne</p>
-        <h2 className="font-display font-extrabold text-[24px] text-charbon leading-[1.2]">
-          WhatsApp + Assists,<br/>c'est ça la magie.
-        </h2>
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-5 pb-4 flex flex-col gap-4" style={{ scrollbarWidth: 'none' }}>
-        {/* Comparatif WA vs Assists */}
-        <div className="bg-white rounded-2xl border border-g200 overflow-hidden shadow-soft">
-          <div className="px-4 py-3 border-b border-g200 bg-g100">
-            <p className="text-[12px] font-bold text-g500 uppercase tracking-[.08em]">WhatsApp seul</p>
-          </div>
-          {[
-            'Tu perds des commandes la nuit (tu dors, les clientes commandent)',
-            'Tu réponds manuellement à chaque message',
-            'Tu ne te souviens pas de tout',
-          ].map((t, i) => (
-            <div key={i} className="flex items-start gap-2.5 px-4 py-2.5 border-b border-g100 last:border-0">
-              <span className="text-[14px] text-[#D64545] flex-shrink-0 mt-0.5">✕</span>
-              <p className="text-[13px] text-g700">{t}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="bg-white rounded-2xl border border-vert/30 overflow-hidden shadow-soft">
-          <div className="px-4 py-3 border-b border-vert/15 bg-vert/5">
-            <p className="text-[12px] font-bold text-vert uppercase tracking-[.08em]">WhatsApp + Assists</p>
-          </div>
-          {[
-            'Assists prend les commandes 24h/24 — même quand tu dors',
-            'Il relance automatiquement les clientes inactives',
-            'Il mémorise chaque cliente, chaque commande',
-            'Tu ouvres l\'app le matin : tout est prêt',
-          ].map((t, i) => (
-            <div key={i} className="flex items-start gap-2.5 px-4 py-2.5 border-b border-vert/10 last:border-0">
-              <span className="text-[14px] text-vert flex-shrink-0 mt-0.5">✓</span>
-              <p className="text-[13px] text-charbon">{t}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Mini tuto */}
-        <div className="bg-charbon rounded-2xl p-4 text-white">
-          <p className="text-[11.5px] font-bold text-orange uppercase tracking-[.1em] mb-3">Comment faire</p>
-          {[
-            { n: '1', t: 'Termine cet onboarding → ton lien boutique est prêt' },
-            { n: '2', t: 'Copie ce lien dans ton message d\'accueil WhatsApp Business' },
-            { n: '3', t: 'Active le message auto WA : "Salut ! Commande ici 👇"' },
-            { n: '4', t: 'Tes clientes commandent, Assists gère tout' },
-          ].map((item) => (
-            <div key={item.n} className="flex items-start gap-3 mb-3 last:mb-0">
-              <span className="w-6 h-6 rounded-full bg-orange text-white text-[11.5px] font-bold flex items-center justify-center flex-shrink-0">{item.n}</span>
-              <p className="text-[13px] text-white/85 leading-snug">{item.t}</p>
-            </div>
-          ))}
+      {/* Hero Carelle */}
+      <div className="relative w-full flex-shrink-0 overflow-hidden" style={{ height: 300 }}>
+        <img
+          src="/uploads/agents/carelle.jpg"
+          alt=""
+          className="w-full h-full object-cover object-top"
+        />
+        <div
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(to bottom, rgba(26,23,20,0) 30%, rgba(26,23,20,0.85) 100%)' }}
+        />
+        <div className="absolute bottom-0 left-0 px-5 pb-5">
+          <p className="text-[11px] font-bold text-white/60 uppercase tracking-[.14em] mb-1">Attractor Assists</p>
+          <h1 className="font-display font-extrabold text-[30px] text-white leading-[1.15]">
+            Ton bras droit IA.
+          </h1>
         </div>
       </div>
 
-      <div className="px-5 pb-10 pt-3">
+      <div className="flex-1 px-5 pt-5 pb-10 flex flex-col gap-4">
+        <div className="flex flex-col gap-2.5">
+          {[
+            { icon: 'chat',  text: 'Parle-lui comme à un collaborateur. Il gère tes commandes, relances et messages.' },
+            { icon: 'send',  text: 'Tes clients commandent sur ton lien boutique. Tu reçois les alertes — sans effort manuel.' },
+            { icon: 'spark', text: 'Plus tu l\'utilises, plus il comprend ton activité et anticipe ce dont tu as besoin.' },
+          ].map((item, i) => (
+            <div key={i} className="flex items-start gap-3 p-3.5 bg-white rounded-xl border border-g200 shadow-soft">
+              <div className="w-8 h-8 rounded-lg bg-orange/10 flex items-center justify-center flex-shrink-0">
+                <Icon name={item.icon} size={16} className="text-orange" />
+              </div>
+              <p className="text-[13.5px] text-charbon leading-snug">{item.text}</p>
+            </div>
+          ))}
+        </div>
         <PrimaryBtn onClick={() => setPhase('install')}>
-          Continuer
+          Commencer
         </PrimaryBtn>
       </div>
     </div>
   );
 
-  // ── 3. Install guide ──────────────────────────────────────────────────────────
+  // ── 2. Install ─────────────────────────────────────────────────────────────────
 
   if (phase === 'install') {
     const platform = detectPlatform();
@@ -284,10 +214,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
           />
         </div>
         <div className="px-5 pb-10">
-          <button
-            onClick={() => setPhase('bapteme')}
-            className="w-full py-3 text-[13px] font-semibold text-g500"
-          >
+          <button onClick={() => setPhase('bapteme')} className="w-full py-3 text-[13px] font-semibold text-g500">
             Passer cette étape
           </button>
         </div>
@@ -295,43 +222,41 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     );
   }
 
-  // ── 4. Baptême mutuel ─────────────────────────────────────────────────────────
+  // ── 3. Baptême ─────────────────────────────────────────────────────────────────
 
   const handleBaptemeSubmit = () => {
     if (!inputVal.trim()) return;
+    const val = inputVal.trim();
     if (baptemeQ === 0) {
-      // Prenom
-      const val = inputVal.trim();
       setPrenom(val);
       setChatHistory(h => [...h,
         { role: 'user', text: val },
-        { role: 'assist', text: `Bien reçu, ${val} ! Et toi, tu veux m'appeler comment ? Donne-moi un petit nom — c'est toi le patron.` }
+        { role: 'assist', text: `${val}, c'est noté. Et toi, tu veux m'appeler comment ? Donne-moi un nom — c'est toi le patron.` },
       ]);
       setInputVal('');
       setBaptemeQ(1);
+      scrollChat();
     } else if (baptemeQ === 1) {
-      // Nom assistant
-      const val = inputVal.trim();
       setNomAss(val);
       setChatHistory(h => [...h,
         { role: 'user', text: val },
-        { role: 'assist', text: `${val}, j'adore ! On va faire du bon travail ensemble. Maintenant dis-moi tout sur ton activité — je vais m'adapter à toi.` }
+        { role: 'assist', text: `${val}. On va bien s'entendre. Dis-moi maintenant ce que tu fais comme activité.` },
       ]);
       setInputVal('');
       setBaptemeQ(2);
+      scrollChat();
     }
   };
 
   if (phase === 'bapteme') {
-    const initHistory = chatHistory.length === 0 ? [
-      { role: 'assist', text: 'Bonjour ! Je suis ton nouveau bras droit. Avant de commencer, j\'ai besoin de te connaître. Comment tu veux que je t\'appelle ?' }
-    ] : chatHistory;
+    const initHistory = chatHistory.length === 0
+      ? [{ role: 'assist', text: `C'est quoi ton prénom ?` }]
+      : chatHistory;
 
     return (
-      <div className="min-h-screen flex flex-col bg-chatbg">
-        {/* AppBar */}
+      <div className="min-h-screen flex flex-col" style={{ background: '#EAE4D9' }}>
         <div className="flex items-center gap-3 px-4 pt-12 pb-3 bg-white border-b border-g200">
-          <div className="w-9 h-9 rounded-full bg-charbon text-white flex items-center justify-center font-display font-bold text-[13px] flex-shrink-0">A</div>
+          <img src="/uploads/agents/carelle.jpg" alt="Assists" className="w-9 h-9 rounded-full object-cover border border-g200 flex-shrink-0" />
           <div>
             <div className="font-display font-bold text-[15px] text-charbon">Assists</div>
             <div className="text-[11.5px] text-vert font-semibold flex items-center gap-1">
@@ -340,18 +265,16 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
           </div>
         </div>
 
-        {/* Chat */}
-        <div ref={chatRef} className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-3" style={{ scrollbarWidth: 'none', background: '#EAE4D9' }}>
+        <div ref={chatRef} className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-3" style={{ scrollbarWidth: 'none' }}>
           {initHistory.map((m, i) => (
             m.role === 'assist'
               ? <AssistBubble key={i} text={m.text} />
               : <UserBubble key={i} text={m.text} />
           ))}
-
           {baptemeQ === 2 && (
             <div className="flex justify-center mt-2">
               <button
-                onClick={() => { setPhase('anamnese'); setAnamnQ(0); setChatHistory([]); }}
+                onClick={() => setPhase('profil_type')}
                 className="px-6 py-3 rounded-2xl bg-orange text-white font-bold text-[14px] shadow-[0_6px_16px_-4px_rgba(242,92,5,.55)] active:opacity-80 transition"
               >
                 Continuer
@@ -360,7 +283,6 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
           )}
         </div>
 
-        {/* Input */}
         {baptemeQ < 2 && (
           <div className="px-4 pb-8 pt-3 bg-white border-t border-g200 flex gap-2">
             <input
@@ -369,7 +291,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
               value={inputVal}
               onChange={e => setInputVal(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleBaptemeSubmit()}
-              placeholder={baptemeQ === 0 ? 'Mon prénom ou surnom…' : 'Le nom de mon Assists…'}
+              placeholder="Tape ta réponse…"
               className="flex-1 px-4 py-3 rounded-xl bg-sable border border-g200 text-[14px] text-charbon outline-none focus:border-orange"
               autoFocus
             />
@@ -386,46 +308,96 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     );
   }
 
-  // ── 5. Anamnèse ───────────────────────────────────────────────────────────────
+  // ── 4. Profil type ─────────────────────────────────────────────────────────────
+
+  if (phase === 'profil_type') return (
+    <div className="min-h-screen flex flex-col bg-sable px-5 pt-12 pb-10">
+      <div className="mb-8">
+        <p className="text-[11.5px] font-bold text-orange uppercase tracking-[.12em] mb-2">Une question rapide</p>
+        <h2 className="font-display font-extrabold text-[22px] text-charbon leading-[1.25]">
+          Tu es dans quelle situation ?
+        </h2>
+        <p className="text-[13px] text-g500 mt-1.5">Ça m'aide à adapter mes conseils à ta réalité.</p>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        {[
+          { key: 'entrepreneur', label: 'J\'ai une activité qui tourne',     sub: 'Ventes actives, clients en cours' },
+          { key: 'mix',          label: 'Salarié avec un projet à côté',      sub: 'Je construis quelque chose en parallèle' },
+          { key: 'etudiant',     label: 'Je développe mon projet',            sub: 'En démarrage ou phase de test' },
+        ].map(opt => (
+          <button
+            key={opt.key}
+            onClick={() => setProfilType(opt.key)}
+            className={`flex items-center gap-4 p-4 rounded-2xl border-2 text-left transition ${
+              profilType === opt.key
+                ? 'border-orange bg-orange/5 shadow-[0_0_0_3px_rgba(242,92,5,.12)]'
+                : 'border-g200 bg-white'
+            }`}
+          >
+            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+              profilType === opt.key ? 'border-orange' : 'border-g300'
+            }`}>
+              {profilType === opt.key && <div className="w-2.5 h-2.5 rounded-full bg-orange" />}
+            </div>
+            <div>
+              <div className="font-display font-bold text-[14.5px] text-charbon">{opt.label}</div>
+              <div className="text-[12px] text-g500 mt-0.5">{opt.sub}</div>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-auto pt-8">
+        <PrimaryBtn onClick={() => { setAnamnQ(0); setChatHistory([]); setPhase('anamnese'); }} disabled={!profilType}>
+          Continuer
+        </PrimaryBtn>
+      </div>
+    </div>
+  );
+
+  // ── 5. Anamnèse ────────────────────────────────────────────────────────────────
 
   const handleAnamnSubmit = () => {
     if (!inputVal.trim()) return;
-    const key = ANAMN_KEYS[anamnQ];
     const val = inputVal.trim();
+    const key  = ANAMN_KEYS[anamnQ];
     const newData = { ...anamnData, [key]: val };
     setAnamnData(newData);
 
-    const newHistory = [...chatHistory, { role: 'user', text: val }];
-
-    if (anamnQ < ANAMN_QUESTIONS.length - 1) {
-      newHistory.push({ role: 'assist', text: ANAMN_QUESTIONS[anamnQ + 1] });
-      setChatHistory(newHistory);
-      setAnamnQ(anamnQ + 1);
+    const nextQ = anamnQ + 1;
+    if (nextQ < ANAMN_QUESTIONS.length) {
+      setChatHistory(h => [...h,
+        { role: 'user', text: val },
+        { role: 'assist', text: ANAMN_QUESTIONS[nextQ] },
+      ]);
+      setAnamnQ(nextQ);
     } else {
-      // Anamnèse done
-      newHistory.push({ role: 'assist', text: `Parfait ! Maintenant montre-moi comment tu écris. Envoie-moi un vrai message que tu enverrais à une cliente — comme si c'était WhatsApp.` });
-      setChatHistory(newHistory);
-      setPhase('style');
+      setChatHistory(h => [...h,
+        { role: 'user', text: val },
+        { role: 'assist', text: `Bien reçu. Maintenant montre-moi ce que tu vends — je vais configurer ta boutique.` },
+      ]);
+      setAnamnQ(nextQ);
     }
     setInputVal('');
+    scrollChat();
   };
 
   if (phase === 'anamnese') {
-    const initHistory = chatHistory.length === 0 ? [
-      { role: 'assist', text: ANAMN_QUESTIONS[0] }
-    ] : chatHistory;
+    const initHistory = chatHistory.length === 0
+      ? [{ role: 'assist', text: ANAMN_QUESTIONS[0] }]
+      : chatHistory;
+    const done = anamnQ >= ANAMN_QUESTIONS.length;
 
     return (
       <div className="min-h-screen flex flex-col" style={{ background: '#EAE4D9' }}>
         <div className="px-4 pt-12 pb-3 bg-white border-b border-g200">
           <ProgressBar step={1} />
           <div className="flex items-center gap-3 mt-3">
-            <div className="w-8 h-8 rounded-full bg-charbon text-white flex items-center justify-center font-display font-bold text-[12px] flex-shrink-0">
-              {(nomAss || 'A').slice(0, 1).toUpperCase()}
-            </div>
+            <img src="/uploads/agents/carelle.jpg" alt="" className="w-8 h-8 rounded-full object-cover border border-g200 flex-shrink-0" />
             <div>
               <div className="font-display font-bold text-[14px] text-charbon">{assistName}</div>
-              <div className="text-[11px] text-g400">Question {anamnQ + 1}/{ANAMN_QUESTIONS.length}</div>
+              <div className="text-[11px] text-g400">Question {Math.min(anamnQ + 1, ANAMN_QUESTIONS.length)}/{ANAMN_QUESTIONS.length}</div>
             </div>
           </div>
         </div>
@@ -433,95 +405,35 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
         <div ref={chatRef} className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3" style={{ scrollbarWidth: 'none' }}>
           {initHistory.map((m, i) => (
             m.role === 'assist'
-              ? <AssistBubble key={i} text={m.text} avatar={(nomAss || 'A').slice(0, 1).toUpperCase()} />
+              ? <AssistBubble key={i} text={m.text} />
               : <UserBubble key={i} text={m.text} />
           ))}
-        </div>
-
-        <div className="px-4 pb-8 pt-3 bg-white border-t border-g200 flex gap-2">
-          <input
-            ref={inputRef}
-            type="text"
-            value={inputVal}
-            onChange={e => setInputVal(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleAnamnSubmit()}
-            placeholder="Réponds librement…"
-            className="flex-1 px-4 py-3 rounded-xl bg-sable border border-g200 text-[14px] text-charbon outline-none focus:border-orange"
-            autoFocus
-          />
-          <button
-            onClick={handleAnamnSubmit}
-            disabled={!inputVal.trim()}
-            className="w-11 h-11 rounded-xl bg-orange text-white flex items-center justify-center disabled:opacity-40 active:opacity-80 transition"
-          >
-            <Icon name="send" size={18} />
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // ── 6. Style ──────────────────────────────────────────────────────────────────
-
-  if (phase === 'style') {
-    const styleHistory = chatHistory.length > 0 ? chatHistory : [
-      { role: 'assist', text: `Je vais apprendre à écrire comme toi, ${prenom}. Envoie-moi un vrai message que tu enverrais à une cliente — comme si c'était WhatsApp.` }
-    ];
-
-    const submitStyle = () => {
-      if (!inputVal.trim()) return;
-      const val = inputVal.trim();
-      setStyleMsg(val);
-      setChatHistory([...styleHistory, { role: 'user', text: val }, {
-        role: 'assist', text: `Top ! J'ai capté ton style. Maintenant, montre-moi ce que tu vends — je vais créer ta boutique.`
-      }]);
-      setInputVal('');
-    };
-
-    return (
-      <div className="min-h-screen flex flex-col" style={{ background: '#EAE4D9' }}>
-        <div className="px-4 pt-12 pb-3 bg-white border-b border-g200">
-          <ProgressBar step={2} />
-          <div className="flex items-center gap-3 mt-3">
-            <div className="w-8 h-8 rounded-full bg-charbon text-white flex items-center justify-center font-display font-bold text-[12px] flex-shrink-0">
-              {(nomAss || 'A').slice(0, 1).toUpperCase()}
-            </div>
-            <div className="font-display font-bold text-[14px] text-charbon">{assistName}</div>
-          </div>
-        </div>
-
-        <div ref={chatRef} className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3" style={{ scrollbarWidth: 'none' }}>
-          {styleHistory.map((m, i) => (
-            m.role === 'assist'
-              ? <AssistBubble key={i} text={m.text} avatar={(nomAss || 'A').slice(0, 1).toUpperCase()} />
-              : <UserBubble key={i} text={m.text} />
-          ))}
-          {styleMsg && (
+          {done && (
             <div className="flex justify-center mt-2">
               <button
-                onClick={() => { setPhase('upload'); setChatHistory([]); }}
+                onClick={() => { setProduits([]); setPhase('upload'); }}
                 className="px-6 py-3 rounded-2xl bg-orange text-white font-bold text-[14px] shadow-[0_6px_16px_-4px_rgba(242,92,5,.55)] active:opacity-80 transition"
               >
-                Créer ma boutique →
+                Créer ma boutique
               </button>
             </div>
           )}
         </div>
 
-        {!styleMsg && (
+        {!done && (
           <div className="px-4 pb-8 pt-3 bg-white border-t border-g200 flex gap-2">
             <input
               ref={inputRef}
               type="text"
               value={inputVal}
               onChange={e => setInputVal(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && submitStyle()}
-              placeholder="Ecris comme tu écrirais à ta cliente…"
+              onKeyDown={e => e.key === 'Enter' && handleAnamnSubmit()}
+              placeholder="Réponds librement…"
               className="flex-1 px-4 py-3 rounded-xl bg-sable border border-g200 text-[14px] text-charbon outline-none focus:border-orange"
               autoFocus
             />
             <button
-              onClick={submitStyle}
+              onClick={handleAnamnSubmit}
               disabled={!inputVal.trim()}
               className="w-11 h-11 rounded-xl bg-orange text-white flex items-center justify-center disabled:opacity-40 active:opacity-80 transition"
             >
@@ -533,7 +445,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     );
   }
 
-  // ── 7. Upload catalogue ───────────────────────────────────────────────────────
+  // ── 6. Upload catalogue ────────────────────────────────────────────────────────
 
   const addProduit = () => {
     if (!newProd.nom.trim()) return;
@@ -545,8 +457,8 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     <div className="min-h-screen flex flex-col bg-sable">
       <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
         <ProgressBar step={3} />
-        <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Crée ta boutique</h2>
-        <p className="text-[12.5px] text-g500 mt-0.5">Ajoute tes produits ou services.</p>
+        <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Tes produits</h2>
+        <p className="text-[12.5px] text-g500 mt-0.5">Ajoute ce que tu vends. Tu pourras compléter après.</p>
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3" style={{ scrollbarWidth: 'none' }}>
@@ -557,8 +469,14 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
               {p.prix && <div className="text-[12.5px] text-orange font-semibold">{parseInt(p.prix).toLocaleString('fr-FR')} F</div>}
             </div>
             <button
+              onClick={() => setProduits(ps => ps.map((item, j) => j === i ? { ...item, actif: !item.actif } : item))}
+              className={`px-3 py-1.5 rounded-lg text-[12px] font-bold transition mr-1 ${p.actif ? 'bg-vert/10 text-vert' : 'bg-g100 text-g400'}`}
+            >
+              {p.actif ? 'Actif' : 'Off'}
+            </button>
+            <button
               onClick={() => setProduits(ps => ps.filter((_, j) => j !== i))}
-              className="w-8 h-8 rounded-lg bg-g100 flex items-center justify-center text-g400 active:bg-g200"
+              className="w-8 h-8 rounded-lg bg-g100 flex items-center justify-center text-g400 active:bg-g200 text-[18px]"
             >
               ×
             </button>
@@ -570,6 +488,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
             type="text"
             value={newProd.nom}
             onChange={e => setNewProd(p => ({ ...p, nom: e.target.value }))}
+            onKeyDown={e => e.key === 'Enter' && addProduit()}
             placeholder="Nom du produit (ex : Attiéké poisson)"
             className="w-full px-4 py-3 rounded-xl bg-sable border border-g200 text-[14px] text-charbon outline-none focus:border-orange"
           />
@@ -577,7 +496,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
             type="number"
             value={newProd.prix}
             onChange={e => setNewProd(p => ({ ...p, prix: e.target.value }))}
-            placeholder="Prix en FCFA (ex : 2000)"
+            placeholder="Prix FCFA"
             className="w-full px-4 py-3 rounded-xl bg-sable border border-g200 text-[14px] text-charbon outline-none focus:border-orange"
           />
           <button
@@ -585,99 +504,49 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
             disabled={!newProd.nom.trim()}
             className="w-full py-2.5 rounded-xl border-2 border-dashed border-g200 text-[13px] font-bold text-g500 disabled:opacity-40 active:bg-g100 transition"
           >
-            + Ajouter ce produit
+            + Ajouter
           </button>
         </div>
       </div>
 
       <div className="px-4 pb-10 pt-3 flex flex-col gap-2">
-        <PrimaryBtn
-          onClick={() => setPhase('validation')}
-          disabled={produits.length === 0}
-        >
-          Valider mon catalogue ({produits.length})
+        <PrimaryBtn onClick={handleSave} disabled={saving}>
+          {saving ? 'Création en cours…' : `Lancer ${assistName}`}
         </PrimaryBtn>
-        {produits.length === 0 && (
-          <button
-            onClick={() => setPhase('validation')}
-            className="text-center text-[13px] text-g400 font-semibold py-2"
-          >
-            Passer (j'ajouterai plus tard)
+        {produits.length === 0 && !saving && (
+          <button onClick={handleSave} className="text-center text-[13px] text-g400 font-semibold py-2">
+            Passer — j'ajouterai mes produits après
           </button>
         )}
+        {saveErr && <p className="text-center text-[12.5px] text-red-500 mt-1">{saveErr}</p>}
       </div>
     </div>
   );
 
-  // ── 8. Validation catalogue ───────────────────────────────────────────────────
-
-  if (phase === 'validation') return (
-    <div className="min-h-screen flex flex-col bg-sable">
-      <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
-        <ProgressBar step={4} />
-        <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Valide ton catalogue</h2>
-        <p className="text-[12.5px] text-g500 mt-0.5">Active ou désactive chaque produit.</p>
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-2.5" style={{ scrollbarWidth: 'none' }}>
-        {produits.length === 0 ? (
-          <div className="text-center py-12 text-g500 text-[14px]">
-            Aucun produit ajouté.<br />Ton catalogue sera vide pour l'instant.
-          </div>
-        ) : (
-          produits.map((p, i) => (
-            <div key={p.id} className="flex items-center gap-3 bg-white rounded-xl border border-g200 px-4 py-3.5">
-              <div className="flex-1 min-w-0">
-                <div className="font-bold text-[14px] text-charbon">{p.nom}</div>
-                {p.prix && <div className="text-[12.5px] text-orange">{parseInt(p.prix).toLocaleString('fr-FR')} F</div>}
-              </div>
-              <button
-                onClick={() => setProduits(ps => ps.map((item, j) => j === i ? { ...item, actif: !item.actif } : item))}
-                className={`px-3 py-1.5 rounded-lg text-[12px] font-bold transition ${
-                  p.actif ? 'bg-vert/10 text-vert' : 'bg-g100 text-g400'
-                }`}
-              >
-                {p.actif ? 'Actif' : 'Inactif'}
-              </button>
-            </div>
-          ))
-        )}
-      </div>
-
-      <div className="px-4 pb-10 pt-3">
-        <PrimaryBtn onClick={handleSave} disabled={saving}>
-          {saving ? 'Création en cours…' : `Lancer mon Assists ${assistName ? '— ' + assistName : ''}`}
-        </PrimaryBtn>
-        {saveErr && <p className="text-center text-[12.5px] text-red-500 mt-2">{saveErr}</p>}
-      </div>
-    </div>
-  );
-
-  // ── 9. Prêt ───────────────────────────────────────────────────────────────────
+  // ── 7. Prêt ────────────────────────────────────────────────────────────────────
 
   if (phase === 'pret') return (
     <div className="min-h-screen flex flex-col bg-sable px-5 pt-14 pb-10">
       <div className="flex-1 flex flex-col justify-center items-center gap-5 text-center">
-        <div
-          className="w-20 h-20 rounded-3xl flex items-center justify-center"
-          style={{ background: 'linear-gradient(135deg,#FF7A2E,#F25C05)', boxShadow: '0 12px 32px -8px rgba(242,92,5,.6)' }}
-        >
-          <Icon name="check" size={36} className="text-white" />
-        </div>
+        <img
+          src="/uploads/agents/carelle.jpg"
+          alt=""
+          className="w-20 h-20 rounded-3xl object-cover object-top shadow-[0_12px_32px_-8px_rgba(26,23,20,.35)]"
+        />
         <div>
           <h1 className="font-display font-extrabold text-[28px] text-charbon leading-[1.2] mb-3">
-            {assistName || 'Ton bras droit'} est prêt !
+            {assistName} est prêt.
           </h1>
           <p className="text-[14.5px] text-g500 leading-relaxed max-w-[280px] mx-auto">
-            Tout est configuré. {prenom || 'Toi'} et {assistName || 'Assists'}, vous êtes une équipe maintenant.
+            {prenom ? `${prenom}, ton` : 'Ton'} bras droit est configuré. Il apprendra de toi à chaque échange.
           </p>
         </div>
 
         <div className="w-full flex flex-col gap-3 mt-2">
           {[
-            { icon: 'chat',  label: 'Parle à ' + (assistName || 'Assists') },
-            { icon: 'grid',  label: 'Voir mon catalogue' },
-            { icon: 'send',  label: 'Partager ma boutique' },
+            { icon: 'chat', label: 'Parle à ' + assistName },
+            { icon: 'grid', label: 'Voir mon catalogue' },
+            { icon: 'send', label: 'Partager ma boutique' },
           ].map((item, i) => (
             <div key={i} className="flex items-center gap-3 bg-white rounded-xl border border-g200 px-4 py-3 shadow-soft">
               <div className="w-8 h-8 rounded-lg bg-orange/10 flex items-center justify-center flex-shrink-0">
