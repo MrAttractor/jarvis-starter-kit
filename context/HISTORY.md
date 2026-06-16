@@ -7,6 +7,74 @@
 
 ---
 
+## 2026-06-17 (session 57 — Monitoring Assists mis en place)
+
+### Système de veille automatique déployé
+
+- Stratégie de monitoring définie : 2 couches (UptimeRobot 5 min + n8n 2h)
+- UptimeRobot actif : 2 monitors (assists.agenceattractor.com + demo.agenceattractor.com)
+- Workflow n8n "Veille Santé Assists" créé et activé sur Railway : 4 checks automatiques toutes les 2h (Netlify, Supabase Auth, chat-assistant, init-payment), alerte email via Resend si panne détectée
+- Variables Railway ajoutées : RESEND_API_KEY, N8N_BLOCK_ENV_ACCESS_IN_NODE=false
+- Incidents gérés en direct : faux positif UptimeRobot Amérique du Nord + faux positif Supabase Auth (apikey manquante, corrigé dans le workflow)
+- Fichier source : livrables/ecosysteme-attractor/attractor-assists/monitoring/n8n-health-check.json
+
+---
+
+## 2026-06-17 (session 56 — Fix login OTP + Facebook Login publié)
+
+### Login OTP réparé et déployé
+
+- Bug "Error sending magic link email" résolu : Resend configuré comme SMTP custom dans Supabase
+- DNS GoDaddy complétés (MX `send` ajouté) → domaine `agenceattractor.com` vérifié dans Resend
+- SMTP Supabase configuré : `smtp.resend.com` port 465, `noreply@agenceattractor.com`
+- Test validé : code OTP reçu en boîte mail
+- Texte LoginScreen corrigé ("lien de connexion" → "code à 6 chiffres") — commit `339fdb4` pushé, Netlify déployé
+- **Impact** : les nouvelles inscriptions sont débloquées
+
+### Facebook Login — app Meta publiée
+
+- App Meta publiée par Mac Arthur en cours de session
+- Étapes suivantes identifiées (non faites) : App ID + Secret → Supabase Auth Providers → callback URL dans Meta → domaine autorisé
+
+### État Assists évalué
+
+- ~68% opérationnel. Login réparé = ~75% désormais
+- Bloquant principal suivant : testeurs silencieux depuis longtemps — à réactiver par WA direct avant nouvelle campagne acquisition
+- Prompt stratégique rédigé : réflexion Assists × écosystème Meta (toutes les connexions possibles)
+
+---
+
+## 2026-06-15 (session 55 — Déploiement C'Real + Vision nouveau produit Assists)
+
+### Mini-site C'Real déployé
+
+- Mini-site Kezey (farines infantiles C'Real) mis en ligne sur `demo.agenceattractor.com/creal`
+- Stack : HTML standalone, catalogue 8 produits, panier, commande via WhatsApp (+225 07 49 56 39 76), chat assistante IA
+- Profil Supabase Kezey configuré : `public_slug = 'creal'`, `client_assistant_prompt` rédigé, `client_assistant_ready = true`
+- Blocages résolus en session : ANTHROPIC_API_KEY vide dans les secrets Supabase Edge Functions (clé ajoutée), erreur 23502 sur INSERT profiles (profil existait déjà, UPDATE suffisait)
+- Lien envoyé à Kezey
+
+### Insight stratégique — Tandem WhatsApp + Assists
+
+- Partager le lien du mini-site en message d'accueil ou message d'absence WhatsApp résout le problème de l'API WhatsApp Cloud (pas besoin de migration SIM)
+- Les conversations publiques sont déjà sauvegardées en base (table `conversations`, `is_public = true`) — le CRM se nourrit automatiquement
+- Chantier restant : afficher ces conversations publiques dans le dashboard entrepreneur (CommandesScreen ou onglet dédié)
+
+### Feedback design — Anti AI-slop
+
+- Réponse de l'assistante C'Real jugée trop "chatbot générique" : emojis, gras markdown, formule d'accueil artificielle
+- Décision : refonte progressive de l'approche design Assists — standard à définir proprement avant la prochaine session dédiée
+- Mémorisé : prompts assistants clients = zéro emojis, zéro markdown, ton naturel et direct
+
+### Vision nouveau produit Assists — Sites de commande métier
+
+- Concept : site web de commande professionnel pour entrepreneurs (hero/bannière, produits bien affichés, couleurs du client)
+- Workflow envisagé : anamnèse conversationnelle → brief design standardisé → transmis à l'équipe (maquettiste + programmeur) → génération maquette → client charge ses propres photos depuis smartphone
+- Faisabilité confirmée : socle technique déjà en place (upload photos Supabase Storage migration 0032, maquette-closer, anamnèse V3)
+- Séance de travail dédiée à planifier
+
+---
+
 ## 2026-06-14 (session 54 — Nouveau prospect Serge Beynaud · Maquette BEYNAUD ARMY)
 
 ### Prospect qualifié : Serge Beynaud (artiste coupé-décalé, icône ivoirienne)

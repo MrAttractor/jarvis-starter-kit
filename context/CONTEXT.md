@@ -126,7 +126,8 @@ Chantiers actifs sur lesquels je veux que Claude m'aide :
 - Claude Code
 - Notion
 - Google Workspace (je n'ai pas encore réussi à créer mon adresse e-mail personnalisée, chantier à traiter)
-- n8n (actif via Docker Desktop local — workflow Veille Quotidienne en production depuis 11/06/2026)
+- n8n (actif via Railway) : workflow Veille Quotidienne (6h30) + workflow Veille Santé Assists (toutes les 2h) + Agent Commercial Brief Matin (en construction)
+- UptimeRobot (actif) : monitoring uptime 5 min sur assists.agenceattractor.com et demo.agenceattractor.com
 - Docker Desktop (installé et opérationnel)
 - Gmail
 - WhatsApp
