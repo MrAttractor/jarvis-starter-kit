@@ -52,7 +52,6 @@ export default function App() {
   const [params, setParams] = useState({});
   const [dark, setDark] = useState(() => localStorage.getItem('aa-dark') === '1');
   const handleSetDark = (val) => { localStorage.setItem('aa-dark', val ? '1' : '0'); setDark(val); };
-  const [fab, setFab] = useState(false);
   const [toastNode, notify] = useToast();
   const [navBadges, setNavBadges] = useState({ assistants: 0, marketplace: 0 });
 
@@ -200,6 +199,7 @@ export default function App() {
   const isAdmin   = profile?.role === 'admin';
   const TABS = isAdmin ? TABS_ADMIN : TABS_V3;
   const isConversation = screen === "conversation";
+  const isChat = screen === "dashboard" || screen === "conversation";
   const COCKPIT_SECTIONS = ['carelle', 'pipeline', 'hub', 'veille', 'intel'];
   const SUBSCREEN_PARENT = {
     paliers: 'profil', methode: 'profil', notifications: 'profil', install: 'profil',
@@ -238,28 +238,15 @@ export default function App() {
                 );
               })}
             </nav>
-            {!isAdmin && (
-              <button onClick={() => go("conversation", { assistant: "coach" })} className="mt-6 flex items-center gap-3 px-3.5 py-3 rounded-xl bg-charbon text-white font-display font-bold text-[14.5px]">
-                <Icon name="spark" size={20} className="text-amber" /> Parler à {profile?.nom_assistant || 'mon Assists'}
-              </button>
-            )}
-            {!isAdmin && profile?.plan_code !== 'bras_droit' && (
-              <div className="mt-auto">
-                <button onClick={() => go("paliers")} className="w-full rounded-xl p-4 text-left text-white" style={{ background: "linear-gradient(135deg,#FF7A2E,#F25C05)" }}>
-                  <div className="font-display font-extrabold text-[14px]">Passer au Bras Droit</div>
-                  <div className="text-[12px] text-white/85 mt-0.5">Assists illimité · 9 900 FCFA/mois</div>
-                </button>
-              </div>
-            )}
           </div>
         </aside>
 
         {/* main column */}
         <div className="relative w-full lg:max-w-[460px] flex-shrink-0">
           <div className="bg-sable lg:rounded-[28px] lg:overflow-hidden lg:border lg:border-g200 lg:shadow-[0_24px_60px_-30px_rgba(26,23,20,.35)] h-[100dvh] lg:h-[calc(100dvh-3rem)] flex flex-col overflow-hidden">
-            <div id="aa-scroll" className={`flex-1 ${isConversation ? 'overflow-hidden' : 'overflow-y-auto'}`} style={{ scrollbarWidth: "none" }}>
+            <div id="aa-scroll" className={`flex-1 ${isChat ? 'overflow-hidden' : 'overflow-y-auto'}`} style={{ scrollbarWidth: "none" }}>
               {screens[screen]}
-              {!isConversation && <div className="h-4" />}
+              {!isChat && <div className="h-4" />}
             </div>
 
             {/* bottom nav mobile — dans le flux flex, pas absolute */}
@@ -274,26 +261,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* FAB action sheet */}
-      {fab && (
-        <Sheet onClose={() => setFab(false)} title="On produit quoi ?">
-          <div className="flex flex-col gap-2.5">
-            {[
-              { ic: "spark", t: "Un argumentaire", d: "AIDA ou PASA, prêt à copier", go: "axes" },
-              { ic: "chat",  t: "Parler à un assistant", d: "Brainstorm & livrables", go: "conversation", p: { assistant: "coach" } },
-              { ic: "mega",  t: "Un broadcast", d: "Message à ta communauté", go: "broadcasts" },
-            ].map(x => (
-              <button key={x.t} onClick={() => { setFab(false); go(x.go, x.p || {}); }} className="flex items-center gap-3.5 p-3.5 rounded-xl border-[1.5px] border-g200 hover:border-orange transition text-left">
-                <div className="w-11 h-11 rounded-xl bg-orange/10 text-orange flex items-center justify-center flex-shrink-0"><Icon name={x.ic} size={21} /></div>
-                <div>
-                  <div className="font-display font-bold text-[15px]">{x.t}</div>
-                  <div className="text-[12.5px] text-g400">{x.d}</div>
-                </div>
-              </button>
-            ))}
-          </div>
-        </Sheet>
-      )}
       {toastNode}
     </Frame>
   );
