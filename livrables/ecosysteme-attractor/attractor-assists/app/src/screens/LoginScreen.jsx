@@ -135,7 +135,7 @@ export function LoginScreen({ onAuthed }) {
               <Icon name="back" size={18} /> Retour
             </button>
             <h2 className="font-display font-extrabold text-[28px] leading-tight">On y va. C'est quoi ton email ?</h2>
-            <p className="text-[14px] text-white/80 mt-2 mb-5">Je t'envoie un lien de connexion. Un clic et tu es dans l'app.</p>
+            <p className="text-[14px] text-white/80 mt-2 mb-5">Je t'envoie un code à 6 chiffres. Saisis-le et tu es dans l'app.</p>
             <div className="bg-white rounded-[20px] p-5 text-charbon shadow-xl">
               <Field label="Ton email">
                 <Input type="email" inputMode="email" placeholder="prenom@exemple.ci" value={email}
