@@ -66,7 +66,7 @@ const PAYMENT_METHODS = [
 ];
 
 export function PublicAssistantScreen({ slug }) {
-  const [appState, setAppState] = useState('loading'); // loading|notfound|splash|catalogue|chat|paiement|confirmation
+  const [appState, setAppState] = useState('loading'); // loading|notfound|catalogue|chat|paiement|confirmation
   const [owner, setOwner]   = useState(null);
   const [produits, setProduits] = useState([]);
   const [cart, setCart]     = useState([]); // [{id, nom, prix, qty}]
@@ -89,25 +89,13 @@ export function PublicAssistantScreen({ slug }) {
     let cancelled = false;
     (async () => {
       try {
-        // Charger le profil owner
         const res = await fetch(`${SUPABASE_URL}/functions/v1/public-assistant?slug=${encodeURIComponent(slug)}`);
-        const json = await res.json();
+        const data = await res.json();
         if (cancelled) return;
-        if (!res.ok || json?.error) { setAppState('notfound'); return; }
-        setOwner(json);
-
-        // Charger les produits via Supabase REST
-        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-        const prodRes = await fetch(
-          `${SUPABASE_URL}/rest/v1/produits_user?select=id,nom,prix,categorie,photo_url,actif&actif=eq.true&user_id=eq.${encodeURIComponent(json.user_id || '')}`,
-          { headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` } }
-        );
-        if (!cancelled && prodRes.ok) {
-          const prods = await prodRes.json();
-          setProduits(prods || []);
-        }
-
-        if (!cancelled) setAppState('splash');
+        if (!res.ok || data?.error) { setAppState('notfound'); return; }
+        setOwner(data);
+        setProduits(data.produits || []);
+        if (!cancelled) setAppState('catalogue');
       } catch {
         if (!cancelled) setAppState('notfound');
       }
@@ -236,53 +224,8 @@ export function PublicAssistantScreen({ slug }) {
     </div>
   );
 
-  const boutiqueName = owner?.prenom ? `Chez ${owner.prenom}` : (owner?.activite || 'Ma Boutique');
+  const boutiqueName = owner?.activite || (owner?.prenom ? `Boutique ${owner.prenom}` : 'Ma Boutique');
   const assistantName = owner?.nom_assistant || 'Assistant';
-
-  // ── SPLASH ────────────────────────────────────────────────────────────────────
-
-  if (appState === 'splash') return (
-    <div className="min-h-screen flex flex-col bg-sable">
-      {/* Cover */}
-      <div
-        className="w-full flex-shrink-0 flex items-end px-5 pb-8 pt-20 text-white relative overflow-hidden"
-        style={{ minHeight: 260, background: 'linear-gradient(160deg,#FF7A2E 0%,#F25C05 40%,#1A1714 100%)' }}
-      >
-        <div className="absolute inset-0 opacity-10"
-          style={{ backgroundImage: 'radial-gradient(circle at 70% 30%, white 0%, transparent 60%)' }} />
-        <div className="relative">
-          <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center font-display font-extrabold text-[20px] mb-3">
-            {boutiqueName.slice(0, 1)}
-          </div>
-          <h1 className="font-display font-extrabold text-[28px] leading-[1.2]">{boutiqueName}</h1>
-          {owner?.activite && <p className="text-[13px] text-white/70 mt-1">{owner.activite}</p>}
-        </div>
-      </div>
-
-      <div className="flex-1 px-5 pt-5 pb-10 flex flex-col gap-4">
-        <button
-          onClick={() => setAppState('catalogue')}
-          className="w-full py-4 rounded-2xl bg-orange text-white font-display font-bold text-[16px] shadow-[0_8px_24px_-8px_rgba(242,92,5,.65)] active:opacity-85 transition"
-        >
-          Commander maintenant
-        </button>
-
-        <div className="bg-white rounded-2xl border border-g200 p-4 shadow-soft">
-          <div className="flex items-center gap-2 mb-2">
-            <Icon name="send" size={16} className="text-vert flex-shrink-0" />
-            <span className="font-display font-bold text-[13.5px] text-charbon">Livraison & horaires</span>
-          </div>
-          <p className="text-[13px] text-g500 leading-relaxed">
-            Commandez via ce lien, {assistantName} gère tout. Je confirme votre commande sur WhatsApp.
-          </p>
-        </div>
-
-        <div className="text-center">
-          <p className="text-[10.5px] text-g400">Propulsé par <span className="font-bold text-charbon">Attractor Assists</span></p>
-        </div>
-      </div>
-    </div>
-  );
 
   // ── CATALOGUE ─────────────────────────────────────────────────────────────────
 
@@ -292,9 +235,6 @@ export function PublicAssistantScreen({ slug }) {
     <div className="flex flex-col bg-sable" style={{ height: '100dvh' }}>
       {/* AppBar */}
       <div className="flex items-center gap-3 px-4 pt-8 pb-3 bg-white border-b border-g200">
-        <button onClick={() => setAppState('splash')} className="w-8 h-8 flex items-center justify-center">
-          <Icon name="back" size={20} className="text-charbon" />
-        </button>
         <div className="flex-1">
           <div className="font-display font-bold text-[16px] text-charbon">{boutiqueName}</div>
           <div className="text-[11.5px] text-vert font-semibold flex items-center gap-1">

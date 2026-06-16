@@ -23,17 +23,26 @@ serve(async (req) => {
     const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
     const { data, error } = await supabase
       .from("profiles")
-      .select("prenom, nom_assistant, activite, client_assistant_ready")
+      .select("id, prenom, nom_assistant, activite, client_assistant_ready")
       .eq("public_slug", slug)
       .eq("client_assistant_ready", true)
       .single();
 
     if (error || !data) return json({ error: "Assistant introuvable" }, 404);
 
+    const { data: produits } = await supabase
+      .from("produits_user")
+      .select("id, nom, prix, categorie, photo_url")
+      .eq("user_id", data.id)
+      .eq("actif", true)
+      .order("categorie");
+
     return json({
+      user_id:       data.id,
       prenom:        data.prenom,
       nom_assistant: data.nom_assistant || "Assistant",
       activite:      data.activite,
+      produits:      produits ?? [],
     });
   } catch (e) {
     return json({ error: String(e) }, 500);
