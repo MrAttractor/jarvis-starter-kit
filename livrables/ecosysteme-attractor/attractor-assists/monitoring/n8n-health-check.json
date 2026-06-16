@@ -1,0 +1,147 @@
+{
+  "name": "Veille Santé — Attractor Assists",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 2
+            }
+          ]
+        }
+      },
+      "id": "node-schedule",
+      "name": "Toutes les 2 heures",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const checks = [\n  {\n    name: 'Netlify Frontend',\n    url: 'https://assists.agenceattractor.com',\n    method: 'GET',\n    expectStatus: 200\n  },\n  {\n    name: 'Supabase Auth',\n    url: 'https://lgdgbrivnhgeupqhkckd.supabase.co/auth/v1/health',\n    method: 'GET',\n    expectStatus: 200\n  },\n  {\n    name: 'Edge: chat-assistant',\n    url: 'https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/chat-assistant',\n    method: 'POST',\n    badStatus: 500\n  },\n  {\n    name: 'Edge: init-payment',\n    url: 'https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/init-payment',\n    method: 'POST',\n    badStatus: 500\n  }\n];\n\nconst results = [];\nfor (const check of checks) {\n  try {\n    const res = await fetch(check.url, {\n      method: check.method,\n      headers: { 'Content-Type': 'application/json' },\n      body: check.method === 'POST' ? '{}' : undefined,\n      signal: AbortSignal.timeout(10000)\n    });\n    const ok = check.expectStatus\n      ? res.status === check.expectStatus\n      : res.status !== check.badStatus;\n    results.push({ name: check.name, status: res.status, ok });\n  } catch (e) {\n    results.push({ name: check.name, status: 0, ok: false, error: e.message });\n  }\n}\n\nconst failures = results.filter(r => !r.ok);\nconst now = new Date().toLocaleString('fr-FR', { timeZone: 'Europe/Paris' });\n\nconst rows = failures\n  .map(f => `<tr><td style=\"padding:8px;border:1px solid #ddd\"><b>${f.name}</b></td><td style=\"padding:8px;border:1px solid #ddd\">HTTP ${f.status}</td><td style=\"padding:8px;border:1px solid #ddd\">${f.error || 'Statut inattendu'}</td></tr>`)\n  .join('');\n\nconst emailHtml = `<h2 style=\"color:#cc0000\">Assists — ${failures.length} panne(s) detectee(s) — ${now}</h2><table style=\"border-collapse:collapse;width:100%\">${rows}</table><br><p><b>Verifier maintenant :</b></p><ul><li>Supabase dashboard</li><li>Netlify deploy logs</li><li>Resend logs (si c'est l'OTP)</li></ul>`;\n\nconst emailPayloadStr = JSON.stringify({\n  from: 'noreply@agenceattractor.com',\n  to: 'macarthur.nguessankouassi@gmail.com',\n  subject: 'ALERTE Assists — ' + failures.length + ' panne(s) — ' + now,\n  html: emailHtml\n});\n\nreturn [{ json: { results, failures, hasFailures: failures.length > 0, checkedAt: now, emailPayloadStr } }];"
+      },
+      "id": "node-check",
+      "name": "Verifier les endpoints",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-has-failures",
+              "leftValue": "={{ $json.hasFailures }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "node-if",
+      "name": "Des pannes ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.RESEND_API_KEY}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "string",
+        "body": "={{ $json.emailPayloadStr }}",
+        "options": {}
+      },
+      "id": "node-alert",
+      "name": "Alerte email Resend",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 180]
+    },
+    {
+      "parameters": {},
+      "id": "node-ok",
+      "name": "Tout est OK",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [900, 440]
+    }
+  ],
+  "connections": {
+    "Toutes les 2 heures": {
+      "main": [
+        [
+          {
+            "node": "Verifier les endpoints",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verifier les endpoints": {
+      "main": [
+        [
+          {
+            "node": "Des pannes ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Des pannes ?": {
+      "main": [
+        [
+          {
+            "node": "Alerte email Resend",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tout est OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "name": "monitoring"
+    }
+  ]
+}
