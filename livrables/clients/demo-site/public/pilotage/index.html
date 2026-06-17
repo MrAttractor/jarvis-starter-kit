@@ -116,6 +116,50 @@ function EditField({ value, onSave, style }) {
   );
 }
 
+/* ── STATUT BADGE (cliquable) ─────────────────────────── */
+const STATUT_OPTIONS = [
+  { label:'Nouveau',       color:'neu' },
+  { label:'En contact',    color:'neu' },
+  { label:'Devis envoyé',  color:'org' },
+  { label:'Acompte reçu',  color:'grn' },
+  { label:'En production', color:'blu' },
+  { label:'Livré',         color:'grn' },
+  { label:'Perdu',         color:'red' },
+];
+
+function StatutBadge({ statut, statut_color, onEdit }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef();
+  useEffect(() => {
+    if (!open) return;
+    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, [open]);
+  return (
+    <div ref={ref} style={{ position:'relative', flexShrink:0 }}>
+      <span className={'badge '+(statut_color||'neu')} style={{ cursor:'pointer', userSelect:'none' }} onClick={() => setOpen(o => !o)}>
+        <span className="dot" />{statut}
+        <svg width="8" height="8" viewBox="0 0 10 10" fill="none" style={{ marginLeft:3, opacity:.6 }}>
+          <path d="M2 4l3 3 3-3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </span>
+      {open && (
+        <div style={{ position:'absolute', right:0, top:'calc(100% + 6px)', zIndex:99, background:'var(--card2)', border:'1px solid var(--bdr)', borderRadius:10, padding:4, minWidth:148, boxShadow:'0 8px 24px rgba(0,0,0,.6)' }}>
+          {STATUT_OPTIONS.map(opt => (
+            <div key={opt.label}
+              onClick={() => { onEdit(opt.label, opt.color); setOpen(false); }}
+              style={{ padding:'7px 10px', borderRadius:8, cursor:'pointer', display:'flex', alignItems:'center', gap:8, fontSize:12, fontWeight:600, color: statut === opt.label ? 'var(--ink)' : 'var(--ink2)', background: statut === opt.label ? 'rgba(255,255,255,.07)' : 'transparent' }}>
+              <span className={'badge '+opt.color} style={{ padding:'2px 6px', fontSize:10, pointerEvents:'none' }}><span className="dot" /></span>
+              {opt.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ── DEMOS (static) ───────────────────────────────────── */
 const DEMOS = [
   { id:'beracca',       nom:'Beracca Mastery Group', type:'Commandes attiéké',   url:'/beracca',           statut:'Envoyée client', sc:'blu' },
@@ -257,7 +301,7 @@ function TabAujourdHui({ cap, focus, onCapChange, onFocusToggle, onFocusEdit }) 
 }
 
 /* ── PIPELINE ─────────────────────────────────────────── */
-function DossierCard({ d, i, onEditProchaine }) {
+function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact }) {
   return (
     <div className="card anim col" style={{ overflow:'hidden', animationDelay:(i*70)+'ms' }}>
       <div style={{ padding:'14px 16px 12px' }}>
@@ -266,7 +310,7 @@ function DossierCard({ d, i, onEditProchaine }) {
             <span className="t-xs mut">{d.id} · {d.type}</span>
             <span className="b" style={{ fontSize:15 }}>{d.nom}</span>
           </div>
-          <span className={'badge '+(d.statut_color||'neu')}><span className="dot" />{d.statut}</span>
+          <StatutBadge statut={d.statut} statut_color={d.statut_color} onEdit={(label, color) => onEditStatut(d, label, color)} />
         </div>
         <div className="row g10" style={{ marginBottom:12 }}>
           {d.setup != null && (
@@ -302,8 +346,15 @@ function DossierCard({ d, i, onEditProchaine }) {
           />
         </div>
       </div>
-      <div style={{ padding:'10px 16px', borderTop:'1px solid var(--bdr)', background:'rgba(0,0,0,.15)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-        <span className="t-xs mut">Contact · </span><span className="t-xs sb">{d.contact || '—'}</span>
+      <div style={{ padding:'10px 16px', borderTop:'1px solid var(--bdr)', background:'rgba(0,0,0,.15)', display:'flex', alignItems:'center', gap:8 }}>
+        <span className="t-xs mut" style={{ flexShrink:0 }}>Contact</span>
+        <div style={{ flex:1, minWidth:0 }}>
+          <EditField
+            value={d.contact || ''}
+            onSave={v => onEditContact(d, v)}
+            style={{ fontSize:11.5, fontWeight:600, color:'var(--ink2)' }}
+          />
+        </div>
         {d.contact && (
           <a href={`https://wa.me/${d.contact.replace(/[\s+\-()]/g,'')}`} target="_blank"
             style={{ display:'flex', alignItems:'center', gap:5, background:'#25D366', color:'#fff', borderRadius:8, padding:'4px 10px', fontSize:11, fontWeight:700, textDecoration:'none', flexShrink:0 }}>
@@ -316,7 +367,7 @@ function DossierCard({ d, i, onEditProchaine }) {
   );
 }
 
-function TabPipeline({ pipeline, onEditProchaine }) {
+function TabPipeline({ pipeline, onEditProchaine, onEditStatut, onEditContact }) {
   const totalSetup = pipeline.reduce((s,d) => s + (d.setup||0), 0);
   const totalMensuel = pipeline.reduce((s,d) => s + (d.mensuel||0), 0);
   return (
@@ -334,7 +385,7 @@ function TabPipeline({ pipeline, onEditProchaine }) {
           <span className="badge org">{pipeline.filter(d=>d.urgent).length} urgent{pipeline.filter(d=>d.urgent).length>1?'s':''}</span>
         </div>
       </div>
-      {pipeline.map((d,i) => <DossierCard key={d.id} d={d} i={i} onEditProchaine={onEditProchaine} />)}
+      {pipeline.map((d,i) => <DossierCard key={d.id} d={d} i={i} onEditProchaine={onEditProchaine} onEditStatut={onEditStatut} onEditContact={onEditContact} />)}
     </Fragment>
   );
 }
@@ -451,12 +502,96 @@ function TabDemos() {
   );
 }
 
+/* ── PLAN D'ACQUISITION ───────────────────────────────── */
+function TabPlan() {
+  const FLUX = [
+    {
+      id:'metier', label:'Apps Métiers', desc:'Web apps sur mesure · closing 48h',
+      recurrent:'800–1 500 € setup · 80–200 €/mois', couleur:'var(--acc)', couleurBg:'var(--acc-s)',
+      cible:'3–5 clients actifs = 3 000 €+/mois',
+      actions:["C'Real comme DMV d'entrée","Démo → devis → NDA en 48h","Relances pipeline hebdo"],
+    },
+    {
+      id:'freemium', label:'Écosystème Freemium', desc:'Assists · Fidelys · Livraison Pro',
+      recurrent:'15–99 €/mois/utilisateur', couleur:'var(--grn)', couleurBg:'var(--grn-s)',
+      cible:'100 payants = 2 000–3 000 €/mois',
+      actions:['Assists V3 live fin juin','Meta Ads CI + diaspora','Viralité via clients apps métiers'],
+    },
+    {
+      id:'b2b', label:'Prestation B2B', desc:'Partenariats · conseil technique',
+      recurrent:'1 000–3 000 €/contrat', couleur:'var(--blu)', couleurBg:'var(--blu-s)',
+      cible:'2–3 contrats actifs = 3 000 €+/mois',
+      actions:['Partenariat XPaye finaliser','Closing Serge Beynaud','Réseau diaspora CI activer'],
+    },
+  ];
+  const ROADMAP = [
+    { mois:'Juin 2026',  cap:'1 500 €',  focus:"2 apps signées · C'Real en promo · pipeline relancé" },
+    { mois:'Juil 2026',  cap:'3 000 €',  focus:'Meta Ads lancées · 10 premiers payants Assists' },
+    { mois:'Août 2026',  cap:'5 000 €',  focus:'Assists V3 live · 3 contrats B2B · 30 payants' },
+    { mois:'Oct 2026',   cap:'7 500 €',  focus:'50 payants · 5 apps actives · partenariats actifs' },
+    { mois:'Déc 2026',   cap:'10 000 €', focus:'100 payants · 5 apps · 2 contrats B2B stables' },
+  ];
+  return (
+    <Fragment>
+      <div className="card" style={{ padding:'16px 18px', background:'linear-gradient(135deg,#1A1208,#201508)', borderColor:'rgba(238,124,31,.18)' }}>
+        <div className="t-xs mut sb" style={{ marginBottom:4 }}>OBJECTIF CENTRAL</div>
+        <div className="row between" style={{ alignItems:'baseline', marginBottom:8 }}>
+          <span className="xb" style={{ fontSize:22, color:'var(--acc)' }}>10 000 €/mois</span>
+          <span className="t-xs mut b">août 2026</span>
+        </div>
+        <div style={{ fontSize:12, color:'var(--ink2)', lineHeight:1.6 }}>
+          3 flux complémentaires. Chaque client Apps Métier devient un vecteur d'entrée Freemium.
+          C'Real est le DMV qui amorce la machine.
+        </div>
+      </div>
+
+      <div className="sect-label" style={{ marginTop:4 }}>LES 3 FLUX</div>
+      {FLUX.map((f,i) => (
+        <div key={f.id} className="card anim" style={{ padding:'14px 16px', animationDelay:(i*70)+'ms' }}>
+          <div className="row between" style={{ marginBottom:8, alignItems:'flex-start' }}>
+            <div>
+              <span className="b" style={{ fontSize:14 }}>{f.label}</span>
+              <div className="t-xs mut" style={{ marginTop:2 }}>{f.desc}</div>
+            </div>
+            <div style={{ textAlign:'right', flexShrink:0, marginLeft:8 }}>
+              <div className="t-xs b" style={{ color:f.couleur }}>{f.recurrent}</div>
+            </div>
+          </div>
+          <div style={{ padding:'7px 10px', borderRadius:8, background:f.couleurBg, marginBottom:10 }}>
+            <span className="t-xs b" style={{ color:f.couleur }}>{f.cible}</span>
+          </div>
+          {f.actions.map((a,j) => (
+            <div key={j} className="row g8" style={{ alignItems:'flex-start', marginBottom:5 }}>
+              <span style={{ width:5, height:5, borderRadius:50, background:f.couleur, flexShrink:0, marginTop:5 }} />
+              <span className="t-xs" style={{ color:'var(--ink2)', lineHeight:1.4 }}>{a}</span>
+            </div>
+          ))}
+        </div>
+      ))}
+
+      <div className="sect-label" style={{ marginTop:4 }}>ROADMAP</div>
+      <div className="card" style={{ padding:'4px 0', overflow:'hidden' }}>
+        {ROADMAP.map((r,i) => (
+          <div key={i} style={{ padding:'12px 16px', borderBottom:i<ROADMAP.length-1?'1px solid var(--bdr)':'none', display:'flex', gap:12, alignItems:'flex-start' }}>
+            <div style={{ minWidth:72 }}>
+              <div className="t-xs mut" style={{ marginBottom:2 }}>{r.mois}</div>
+              <span className="b num" style={{ fontSize:13, color:'var(--acc)' }}>{r.cap}</span>
+            </div>
+            <div style={{ flex:1, fontSize:12, color:'var(--ink2)', lineHeight:1.5 }}>{r.focus}</div>
+          </div>
+        ))}
+      </div>
+    </Fragment>
+  );
+}
+
 /* ── APP ──────────────────────────────────────────────── */
 const TABS = [
   { id:'today',    label:"Aujourd'hui" },
   { id:'pipeline', label:'Pipeline' },
   { id:'projets',  label:'Projets' },
   { id:'demos',    label:'Démos' },
+  { id:'plan',     label:'Plan' },
 ];
 
 function App() {
@@ -499,6 +634,14 @@ function App() {
     setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, prochaine: val } : p));
     await SB.from('pilotage_pipeline').update({ prochaine: val }).eq('id', d.id);
   };
+  const handlePipeStatut = async (d, statut, statut_color) => {
+    setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, statut, statut_color } : p));
+    await SB.from('pilotage_pipeline').update({ statut, statut_color }).eq('id', d.id);
+  };
+  const handlePipeContact = async (d, val) => {
+    setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, contact: val } : p));
+    await SB.from('pilotage_pipeline').update({ contact: val }).eq('id', d.id);
+  };
 
   /* Projets handlers */
   const handleProjetProchaine = async (p, val) => {
@@ -529,7 +672,8 @@ function App() {
 
       <div className="content">
         {tab === 'today'    && <TabAujourdHui cap={cap} focus={focus} onCapChange={setCap} onFocusToggle={handleFocusToggle} onFocusEdit={handleFocusEdit} />}
-        {tab === 'pipeline' && <TabPipeline pipeline={pipeline} onEditProchaine={handlePipeProchaine} />}
+        {tab === 'pipeline' && <TabPipeline pipeline={pipeline} onEditProchaine={handlePipeProchaine} onEditStatut={handlePipeStatut} onEditContact={handlePipeContact} />}
+        {tab === 'plan'     && <TabPlan />}
         {tab === 'projets'  && <TabProjets projets={projets} onEditProchaine={handleProjetProchaine} />}
         {tab === 'demos'    && <TabDemos />}
       </div>
