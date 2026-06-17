@@ -72,15 +72,6 @@ export function LoginScreen({ onAuthed }) {
     }
   };
 
-  const loginWithFacebook = async () => {
-    setErr("");
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'facebook',
-      options: { redirectTo: window.location.origin },
-    });
-    if (error) setErr("Connexion Facebook impossible. Réessaie.");
-  };
-
   const resend = async () => {
     setErr(""); setIsSending(true);
     await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: false } });
@@ -113,15 +104,6 @@ export function LoginScreen({ onAuthed }) {
             </p>
             <div className="mt-7 space-y-3">
               <Btn className="w-full" iconRight="arrow" onClick={() => setStep("email")}>Démarrer gratuitement</Btn>
-              <button
-                onClick={loginWithFacebook}
-                className="w-full flex items-center justify-center gap-2.5 bg-white/15 backdrop-blur-sm text-white font-semibold text-[15px] py-3.5 rounded-2xl border border-white/20 hover:bg-white/25 transition"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
-                Continuer avec Facebook
-              </button>
               <button onClick={() => setStep("email")} className="w-full text-center text-[14px] font-semibold text-white/85 py-2 hover:text-white">
                 J'ai déjà un compte
               </button>
