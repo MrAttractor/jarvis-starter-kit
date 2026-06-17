@@ -778,9 +778,6 @@ function openPay(method, total) {
   document.getElementById('pay-amount-val').textContent = total.toLocaleString('fr-FR') + ' FCFA';
   document.getElementById('pay-wave-section').style.display = method === 'wave' ? 'block' : 'none';
   document.getElementById('pay-om-section').style.display   = method === 'om'   ? 'block' : 'none';
-  document.getElementById('pay-step1').textContent = method === 'wave'
-    ? '1. Cliquez sur "Ouvrir Wave" ci-dessus'
-    : '1. Ouvrez votre app Orange Money';
   document.getElementById('next-steps').style.display = 'none';
   if (method === 'om') document.getElementById('copy-btn').textContent = 'Copier';
   document.getElementById('pay-modal').style.display = 'flex';
