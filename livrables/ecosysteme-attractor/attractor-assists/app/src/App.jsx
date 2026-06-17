@@ -159,9 +159,9 @@ export default function App() {
     </Frame>
   );
 
-  if (phase === "login")      return <Frame dark={dark}><LoginScreen key={loginKey} onAuthed={loadProfile} />{toastNode}</Frame>;
-  if (phase === "onboarding") return <Frame dark={dark}><OnboardingScreen onDone={loadProfile} installPromptRef={deferredPromptRef} />{toastNode}</Frame>;
-  if (phase === "activation") return <Frame dark={dark}><ActivationScreen profile={profile} onDone={doneActivation} />{toastNode}</Frame>;
+  if (phase === "login")      return <Frame dark={dark}><MobileFrame><LoginScreen key={loginKey} onAuthed={loadProfile} /></MobileFrame>{toastNode}</Frame>;
+  if (phase === "onboarding") return <Frame dark={dark}><MobileFrame><OnboardingScreen onDone={loadProfile} installPromptRef={deferredPromptRef} /></MobileFrame>{toastNode}</Frame>;
+  if (phase === "activation") return <Frame dark={dark}><MobileFrame><ActivationScreen profile={profile} onDone={doneActivation} /></MobileFrame>{toastNode}</Frame>;
 
   const screens = {
     dashboard:   <DashboardScreen go={go} notify={notify} profile={profile} />,
@@ -282,6 +282,16 @@ function NavBtn({ t, active, onClick, badge }) {
       </div>
       <span className="text-[10px] font-bold">{t.label}</span>
     </button>
+  );
+}
+
+function MobileFrame({ children }) {
+  return (
+    <div className="lg:flex lg:justify-center lg:items-center lg:min-h-screen">
+      <div className="w-full lg:max-w-[460px] lg:h-[calc(100dvh-3rem)] lg:rounded-[28px] lg:overflow-hidden lg:shadow-[0_24px_60px_-30px_rgba(26,23,20,.5)]">
+        {children}
+      </div>
+    </div>
   );
 }
 
