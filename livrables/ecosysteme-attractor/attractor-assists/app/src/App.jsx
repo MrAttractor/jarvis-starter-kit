@@ -25,6 +25,7 @@ import { PublicAssistantScreen } from './screens/PublicAssistantScreen';
 import { FidelysScreen } from './screens/FidelysScreen';
 import { CatalogueScreen } from './screens/CatalogueScreen';
 import { CommandesScreen } from './screens/CommandesScreen';
+import { TemplateGalerieScreen } from './screens/TemplateGalerieScreen';
 import { FormationScreen } from './screens/FormationScreen';
 
 const TABS_V3 = [
@@ -188,6 +189,7 @@ export default function App() {
     fidelys:       <FidelysScreen go={go} notify={notify} profile={profile} />,
     marketplace:   <MarketplaceScreen go={go} notify={notify} />,
     'mon-app':     <MonAppScreen go={go} profile={profile} />,
+    'galerie-templates': <TemplateGalerieScreen go={go} notify={notify} profile={profile} />,
     install:     <InstallGuide
                    platform={detectPlatform()}
                    prenom={profile?.prenom || ''}
@@ -204,6 +206,7 @@ export default function App() {
   const SUBSCREEN_PARENT = {
     paliers: 'profil', methode: 'profil', notifications: 'profil', install: 'profil',
     fidelys: 'profil', agenda: 'profil', carnet: 'profil', formation: 'profil',
+    'galerie-templates': 'catalogue',
     conversation: 'dashboard', dump: 'dashboard',
     axes: 'dashboard', broadcasts: 'dashboard',
   };

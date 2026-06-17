@@ -197,6 +197,15 @@ export function CatalogueScreen({ go, notify, profile }) {
           <div className="text-[12.5px] text-g500 mt-0.5">{activeCount} produit{activeCount !== 1 ? 's' : ''} actif{activeCount !== 1 ? 's' : ''}</div>
         </div>
         <div className="flex items-center gap-2">
+          {/* Choisir modèle boutique */}
+          <button
+            onClick={() => go('galerie-templates')}
+            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-g200 bg-white text-charbon text-[12.5px] font-bold active:bg-g100 transition"
+            title="Choisir le modèle de ma boutique"
+          >
+            <Icon name="grid" size={15} className="text-orange" />
+            Modèle
+          </button>
           {/* Bouton scan IA */}
           <input
             ref={scanFileRef}
