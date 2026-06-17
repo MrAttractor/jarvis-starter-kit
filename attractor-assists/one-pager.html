@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Pager — Attractor Assists</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #f0efea;
+    color: #1a1a1a;
+  }
+
+  .page {
+    width: 210mm;
+    height: 297mm;
+    margin: 0 auto;
+    background: white;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    overflow: hidden;
+  }
+
+  /* TOP BAND */
+  .top-band {
+    background: #1a1a1a;
+    padding: 8mm 12mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .brand { color: white; }
+  .brand-name { font-size: 18px; font-weight: 800; }
+  .brand-tag { font-size: 9px; font-weight: 500; color: #F97316; text-transform: uppercase; letter-spacing: 2px; margin-top: 1px; }
+  .doc-badge {
+    background: #F97316;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 4px 10px;
+  }
+
+  /* MAIN */
+  .main { padding: 8mm 12mm; display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+
+  /* LEFT COLUMN */
+  .left { display: flex; flex-direction: column; gap: 5mm; }
+
+  /* RIGHT COLUMN */
+  .right { display: flex; flex-direction: column; gap: 5mm; }
+
+  /* HERO CARD */
+  .hero-card {
+    background: linear-gradient(135deg, #1a1a1a 60%, #2d2d2d);
+    color: white;
+    padding: 6mm;
+    position: relative;
+    overflow: hidden;
+    grid-column: 1 / -1;
+  }
+  .hero-card::after {
+    content: 'ATTRACTOR ASSISTS';
+    position: absolute;
+    bottom: -8px; right: -5px;
+    font-size: 42px;
+    font-weight: 900;
+    color: white;
+    opacity: 0.04;
+    letter-spacing: -1px;
+    white-space: nowrap;
+  }
+  .hero-quote {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 3mm;
+  }
+  .hero-quote span { color: #F97316; }
+  .hero-desc { font-size: 11px; color: #aaa; line-height: 1.5; max-width: 320px; }
+
+  /* CARD */
+  .card { border: 1px solid #e8e8e4; padding: 5mm; }
+  .card-title {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #F97316;
+    margin-bottom: 3mm;
+  }
+
+  /* PROBLEM */
+  .problem-number {
+    font-size: 32px;
+    font-weight: 900;
+    color: #1a1a1a;
+    line-height: 1;
+  }
+  .problem-number span { color: #F97316; }
+  .problem-text { font-size: 11px; color: #555; margin-top: 2mm; line-height: 1.5; }
+
+  /* STATS GRID */
+  .stats-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 2mm; }
+  .stat-mini { background: #f9f9f7; padding: 3mm; text-align: center; }
+  .stat-mini-val { font-size: 18px; font-weight: 800; color: #F97316; line-height: 1; }
+  .stat-mini-label { font-size: 9px; color: #888; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.3px; }
+
+  /* SOLUTION LIST */
+  ul.sol { list-style: none; display: flex; flex-direction: column; gap: 2mm; }
+  ul.sol li {
+    font-size: 11px;
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.4;
+  }
+  ul.sol li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: #F97316;
+    font-size: 10px;
+  }
+
+  /* PRICING */
+  .pricing-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2mm 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 11px;
+  }
+  .pricing-row:last-child { border-bottom: none; }
+  .plan-name { font-weight: 600; }
+  .plan-price { color: #F97316; font-weight: 700; }
+
+  /* TIMELINE MINI */
+  .tl { display: flex; flex-direction: column; gap: 2mm; }
+  .tl-item { display: flex; gap: 3mm; align-items: flex-start; font-size: 11px; }
+  .tl-dot { width: 7px; height: 7px; background: #F97316; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .tl-date { font-weight: 700; min-width: 20mm; }
+  .tl-text { color: #555; }
+
+  /* MARKET */
+  .market-big { font-size: 26px; font-weight: 900; color: #1a1a1a; line-height: 1; }
+  .market-big span { color: #F97316; }
+  .market-sub { font-size: 10px; color: #777; margin-top: 2mm; }
+
+  /* TAGS */
+  .tags { display: flex; flex-wrap: wrap; gap: 2mm; margin-top: 3mm; }
+  .tag {
+    padding: 2px 7px;
+    border: 1px solid #e0e0e0;
+    font-size: 9px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .tag.orange { border-color: #F97316; color: #F97316; }
+
+  /* CONTACT BAND */
+  .contact-band {
+    background: #f9f9f7;
+    border-top: 3px solid #F97316;
+    padding: 5mm 12mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .contact-info { font-size: 10px; color: #555; }
+  .contact-info strong { color: #1a1a1a; font-size: 12px; display: block; margin-bottom: 1px; }
+  .contact-url {
+    font-size: 13px;
+    font-weight: 800;
+    color: #F97316;
+  }
+
+  @media print {
+    body { background: white; }
+    .page { margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- TOP -->
+  <div class="top-band">
+    <div class="brand">
+      <div class="brand-name">Mr Attractor</div>
+      <div class="brand-tag">One Pager — Candidature Financement</div>
+    </div>
+    <div class="doc-badge">Confidentiel · Juin 2026</div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="main">
+
+    <!-- HERO FULL WIDTH -->
+    <div class="hero-card">
+      <div class="hero-quote">"Un <span>bras droit intelligent</span> qui soulage l'entrepreneur africain<br>et l'aide à devenir numéro 1 dans son couloir."</div>
+      <div class="hero-desc">Attractor Assists est la duplication numérique de 23 ans d'expérience entrepreneuriale. Pas un chatbot, pas un CRM. Un assistant IA qui connaît votre activité, répond à vos clients et pilote votre croissance.</div>
+    </div>
+
+    <!-- LEFT -->
+    <div class="left">
+
+      <div class="card">
+        <div class="card-title">Le problème</div>
+        <div class="problem-number"><span>80%</span></div>
+        <div class="problem-text">des PME africaines gèrent tout seules ce qui devrait être délégué. Un consultant coûte <strong>500 000 FCFA la session</strong>. Un assistant humain : <strong>80 000 FCFA/mois</strong>. Les deux sont hors budget.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">La solution</div>
+        <ul class="sol">
+          <li>Assistant IA personnalisé qui connaît votre business</li>
+          <li>Mini-site boutique partagé via WhatsApp</li>
+          <li>Gestion commandes + paiements Wave/MTN natifs</li>
+          <li>DMV quotidienne (action marketing du jour)</li>
+          <li>Fidelys : fidélisation clients automatisée</li>
+          <li>6 agents spécialisés (vente, organisation, visibilité)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Modèle économique</div>
+        <div class="pricing-row">
+          <span class="plan-name">Gratuit</span>
+          <span class="plan-price">0 FCFA</span>
+        </div>
+        <div class="pricing-row">
+          <span class="plan-name">Bras Droit</span>
+          <span class="plan-price">9 900 FCFA/mois</span>
+        </div>
+        <div class="pricing-row">
+          <span class="plan-name">App Personnalisée</span>
+          <span class="plan-price">Sur devis</span>
+        </div>
+        <div class="tags">
+          <span class="tag orange">Freemium</span>
+          <span class="tag orange">SaaS</span>
+          <span class="tag">Afrique</span>
+          <span class="tag">IA</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+
+      <div class="card">
+        <div class="card-title">Traction actuelle</div>
+        <div class="stats-mini">
+          <div class="stat-mini">
+            <div class="stat-mini-val">25+</div>
+            <div class="stat-mini-label">Testeurs actifs</div>
+          </div>
+          <div class="stat-mini">
+            <div class="stat-mini-val">6</div>
+            <div class="stat-mini-label">Agents IA</div>
+          </div>
+          <div class="stat-mini">
+            <div class="stat-mini-val">CI+FR</div>
+            <div class="stat-mini-label">Marchés actifs</div>
+          </div>
+          <div class="stat-mini">
+            <div class="stat-mini-val">100%</div>
+            <div class="stat-mini-label">Uptime</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Marché adressable</div>
+        <div class="market-big"><span>5M+</span></div>
+        <div class="market-sub">PME en Côte d'Ivoire dont 80% sans outils digitaux.<br>Diaspora ouest-africaine France : 1,2M personnes.<br>Potentiel MRR à 1% de pénétration CI : <strong>495M FCFA/mois</strong>.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Roadmap</div>
+        <div class="tl">
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div><span class="tl-date">Juin 2026</span><span class="tl-text"> — App déployée en prod, paiements actifs</span></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div><span class="tl-date">Déc. 2026</span><span class="tl-text"> — 200 utilisateurs, tracker impact actif</span></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div><span class="tl-date">2027</span><span class="tl-text"> — 1 000 users, 3 pays, candidature POESAM</span></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div><span class="tl-date">2028</span><span class="tl-text"> — 10 000 users, 5 pays, AfricaTech Award</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Fondateur</div>
+        <div style="font-size:12px; font-weight:700;">Mac Arthur Kouassi — Mr Attractor</div>
+        <div style="font-size:11px; color:#555; margin-top:2mm; line-height:1.5;">23 ans d'expérience CI. Expert marketing, publicité, structuration. Méthode ATTRACTOR développée sur le terrain. Certification coach préparation mentale (sept. 2026). SIRET 98377125400015.</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- CONTACT -->
+  <div class="contact-band">
+    <div class="contact-info">
+      <strong>Mac Arthur Kouassi</strong>
+      myattractor1@gmail.com · +33 7 53 90 23 23 · +225 07 53 90 23 23
+    </div>
+    <div class="contact-url">assists.agenceattractor.com</div>
+  </div>
+
+</div>
+</body>
+</html>
