@@ -101,11 +101,10 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     if (!slug || slug.length < 3) { setIsSlugAvailable(null); return; }
     setSlugChecking(true);
     const timer = setTimeout(async () => {
-      const { data } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('public_slug', slug)
-        .maybeSingle();
+      const { data: { user } } = await supabase.auth.getUser();
+      let q = supabase.from('profiles').select('id').eq('public_slug', slug);
+      if (user?.id) q = q.neq('id', user.id); // exclure son propre profil
+      const { data } = await q.maybeSingle();
       setIsSlugAvailable(!data);
       setSlugChecking(false);
     }, 600);
@@ -123,24 +122,26 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
       const referralCode = user.id.replace(/-/g, '').slice(0, 8).toUpperCase();
 
-      await supabase.from('profiles').update({
-        prenom:          prenom.trim() || null,
+      const { error: profileErr } = await supabase.from('profiles').update({
+        prenom:          prenom.trim() || '',       // NOT NULL — jamais null
         nom_assistant:   (nomAss || 'Assists').trim(),
         activite:        anamnData.activite || null,
-        zone:            anamnData.zone || null,
+        zone:            anamnData.zone?.trim() || '', // NOT NULL — jamais null
         profil_type:     profilType || 'entrepreneur',
         onboarding_done: true,
         referral_code:   referralCode,
         public_slug:     slug.trim() || null,
       }).eq('id', user.id);
+      if (profileErr) throw profileErr;
 
+      // Non-bloquant : échec silencieux si table absente ou schéma différent
       if (anamnData.activite) {
-        await supabase.from('business_anamnese').upsert({
+        supabase.from('business_anamnese').upsert({
           user_id:           user.id,
           ce_quil_vend:      anamnData.activite || null,
           activite_detectee: anamnData.activite || null,
           updated_at:        new Date().toISOString(),
-        }, { onConflict: 'user_id' });
+        }, { onConflict: 'user_id' }).then(() => {}).catch(() => {});
       }
 
       const actifsOnly = produits.filter(p => p.actif);
@@ -159,19 +160,22 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
       supabase.functions.invoke('generate-client-assistant', { body: { user_id: user.id } })
         .then(() => {}).catch(() => {});
 
-      const refCode = localStorage.getItem('aa_ref');
-      if (refCode && refCode !== referralCode) {
-        const { data: referrer } = await supabase
-          .from('profiles').select('id, referral_count')
-          .eq('referral_code', refCode).neq('id', user.id).single();
-        if (referrer) {
-          await Promise.all([
-            supabase.from('profiles').update({ referred_by: refCode }).eq('id', user.id),
-            supabase.from('profiles').update({ referral_count: (referrer.referral_count || 0) + 1 }).eq('id', referrer.id),
-          ]);
+      // Non-bloquant : échec silencieux si pas de parrain
+      try {
+        const refCode = localStorage.getItem('aa_ref');
+        if (refCode && refCode !== referralCode) {
+          const { data: referrer } = await supabase
+            .from('profiles').select('id, referral_count')
+            .eq('referral_code', refCode).neq('id', user.id).maybeSingle();
+          if (referrer) {
+            await Promise.all([
+              supabase.from('profiles').update({ referred_by: refCode }).eq('id', user.id),
+              supabase.from('profiles').update({ referral_count: (referrer.referral_count || 0) + 1 }).eq('id', referrer.id),
+            ]);
+          }
+          localStorage.removeItem('aa_ref');
         }
-        localStorage.removeItem('aa_ref');
-      }
+      } catch { /* referral optionnel */ }
 
       setPhase('pret');
     } catch {
