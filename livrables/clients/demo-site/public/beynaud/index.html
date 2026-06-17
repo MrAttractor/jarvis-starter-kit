@@ -330,6 +330,32 @@
       .s10-title{font-size:88px;letter-spacing:-6px;}
       .s10-btns{flex-direction:row;justify-content:center;}
     }
+
+    /* ─── ROADMAP ─── */
+    .roadmap{text-align:left;width:100%;display:flex;flex-direction:column;gap:7px;margin:14px 0;}
+    .road-step{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:10px 14px;}
+    .road-step.red{border-color:rgba(204,0,0,.25);background:rgba(204,0,0,.04);}
+    .road-num{font-size:10px;font-weight:800;color:rgba(255,255,255,.2);letter-spacing:1px;flex-shrink:0;width:20px;padding-top:1px;}
+    .road-step.red .road-num{color:var(--rouge);}
+    .road-t{font-size:12px;font-weight:700;margin-bottom:2px;}
+    .road-d{font-size:11px;color:rgba(255,255,255,.38);line-height:1.5;}
+
+    /* ─── NDA BUTTON ─── */
+    .nda-trigger{pointer-events:all;background:rgba(204,0,0,.1);border:1px solid rgba(204,0,0,.35);color:var(--rouge);font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:5px 10px;border-radius:3px;cursor:pointer;transition:background .2s;}
+    .nda-trigger:active{background:rgba(204,0,0,.22);}
+
+    /* ─── NDA MODAL ─── */
+    .nda-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s;}
+    .nda-overlay.open{opacity:1;pointer-events:all;}
+    .nda-modal{background:#0e0e0e;border:1px solid rgba(204,0,0,.3);border-radius:12px;max-width:460px;width:100%;padding:26px;}
+    .nda-modal-title{color:var(--rouge);font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase;margin-bottom:5px;}
+    .nda-modal-date{font-size:11px;color:rgba(255,255,255,.3);margin-bottom:18px;}
+    .nda-modal-body{font-size:12px;color:rgba(255,255,255,.6);line-height:1.8;margin-bottom:20px;border-left:2px solid rgba(204,0,0,.28);padding-left:14px;}
+    .nda-modal-body strong{color:rgba(255,255,255,.9);}
+    .nda-modal-btns{display:flex;gap:10px;}
+    .nda-confirm-btn{flex:1;background:var(--rouge);color:#fff;border:none;border-radius:5px;padding:12px;font-size:11px;font-weight:800;letter-spacing:.5px;cursor:pointer;}
+    .nda-close-btn{background:rgba(255,255,255,.05);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:12px 16px;font-size:11px;cursor:pointer;}
+    .nda-stamp{display:none;text-align:center;padding:10px;background:rgba(0,80,0,.12);border:1px solid rgba(74,222,128,.2);border-radius:6px;color:#4ade80;font-size:11px;font-weight:700;margin-top:12px;}
   </style>
 </head>
 <body>
@@ -340,7 +366,10 @@
       <div class="logo-mark">BA</div>
       <span class="logo-name">Beynaud Army</span>
     </div>
-    <span class="counter" id="counter">1 / 10</span>
+    <div style="display:flex;align-items:center;gap:10px;pointer-events:all;">
+      <button class="nda-trigger" onclick="openNDA()">NDA</button>
+      <span class="counter" id="counter">1 / 10</span>
+    </div>
   </div>
 
   <div class="deck" id="deck">
@@ -365,13 +394,13 @@
     <div class="slide" data-i="1">
       <div class="s-inner">
         <div class="slide-tag">Le problème</div>
-        <h2 class="slide-title">Tu construis sur <span class="accent">du sable.</span></h2>
-        <p class="slide-desc">Facebook, Instagram, TikTok. Des millions de fans qui t'adorent. Mais tu ne les contrôles pas.</p>
-        <div class="quote-block">"Tu as vécu la restriction Facebook. Tu sais ce que ça coûte vraiment."</div>
+        <h2 class="slide-title">La majorité construisent sur <span class="accent">du sable.</span></h2>
+        <p class="slide-desc">La plupart des personnalités publiques ayant une présence en ligne construisent sur du sable sans le savoir. Elles s'exposent à des sanctions et parfois à la perte totale de leur page.</p>
+        <div class="quote-block">"Des pages restreintes, des comptes suspendus, des années de travail envolées en quelques heures. Ça arrive tous les jours."</div>
         <div class="pain-cards">
           <div class="pain-card">
             <div class="pain-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M4.93 4.93l14.14 14.14"/></svg></div>
-            <div><div class="pain-t">Restriction & suspension</div><div class="pain-d">Un compte restreint = silence total. Tu n'existes plus.</div></div>
+            <div><div class="pain-t">Restriction & suspension</div><div class="pain-d">Un compte restreint ou suspendu : silence total. Des années d'audience effacées du jour au lendemain.</div></div>
           </div>
           <div class="pain-card">
             <div class="pain-icon"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/><line x1="1" y1="1" x2="23" y2="23"/></svg></div>
@@ -379,11 +408,11 @@
           </div>
           <div class="pain-card">
             <div class="pain-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg></div>
-            <div><div class="pain-t">Zéro revenu direct</div><div class="pain-d">2 millions de fans. Combien t'ont payé directement ce mois ?</div></div>
+            <div><div class="pain-t">Zéro revenu direct</div><div class="pain-d">Des millions de fans. Aucun revenu direct garanti. L'artiste dépend entièrement des plateformes.</div></div>
           </div>
           <div class="pain-card">
             <div class="pain-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
-            <div><div class="pain-t">Tes fans n'existent pas chez toi</div><div class="pain-d">Tu n'as pas leur contact. Ils appartiennent à Facebook, pas à toi.</div></div>
+            <div><div class="pain-t">Les fans n'appartiennent pas à l'artiste</div><div class="pain-d">Pas de contact direct, pas de base propriétaire. Les fans appartiennent aux plateformes, pas à l'artiste.</div></div>
           </div>
         </div>
       </div>
@@ -749,10 +778,31 @@
       <div class="s10-inner">
         <div class="s10-eye">● Prochaine étape</div>
         <h2 class="s10-title">On le<br>construit.</h2>
-        <p class="s10-desc">En 3 semaines, BEYNAUD ARMY est en ligne. Ton lien. Ta communauté. Tes revenus récurrents. Personne ne peut te le retirer.</p>
+        <div class="roadmap">
+          <div class="road-step">
+            <div class="road-num">01</div>
+            <div><div class="road-t">NDA signé ce soir</div><div class="road-d">Accord de confidentialité horodaté — le projet est protégé dès maintenant.</div></div>
+          </div>
+          <div class="road-step">
+            <div class="road-num">02</div>
+            <div><div class="road-t">Réunion de lancement — 2h</div><div class="road-d">Collecte de l'identité visuelle, des contenus et des accès nécessaires.</div></div>
+          </div>
+          <div class="road-step">
+            <div class="road-num">03</div>
+            <div><div class="road-t">Semaine 1 — Fan Club opérationnel</div><div class="road-d">Structure, Fan Club payant et boutique accessible aux premiers membres.</div></div>
+          </div>
+          <div class="road-step">
+            <div class="road-num">04</div>
+            <div><div class="road-t">Semaine 2 — Contenu & membres fondateurs</div><div class="road-d">Contenu exclusif activé. Ouverture aux membres fondateurs — tarif préférentiel.</div></div>
+          </div>
+          <div class="road-step red">
+            <div class="road-num">05</div>
+            <div><div class="road-t">Semaine 3 — Lancement public</div><div class="road-d">Campagne de déploiement. BEYNAUD ARMY est en ligne. Revenus récurrents activés.</div></div>
+          </div>
+        </div>
         <div class="s10-btns">
-          <button class="btn-primary" onclick="alert('Mr Attractor va revenir vers vous pour démarrer.')">
-            Démarrer maintenant
+          <button class="btn-primary" onclick="openNDA()">
+            Signer le NDA maintenant
             <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
           </button>
           <button class="btn-sec">Poser une question</button>
@@ -762,6 +812,24 @@
     </div>
 
   </div><!-- /deck -->
+
+  <!-- NDA MODAL -->
+  <div class="nda-overlay" id="nda-overlay" onclick="if(event.target===this)closeNDA()">
+    <div class="nda-modal">
+      <div class="nda-modal-title">Accord de Confidentialité</div>
+      <div class="nda-modal-date" id="nda-datetime"></div>
+      <div class="nda-modal-body">
+        Je soussigné(e) confirme avoir assisté à une <strong>présentation confidentielle</strong> de <strong>Mr Attractor</strong> (Mac Arthur KOUASSI, SIRET 98377125400015) portant sur un projet de plateforme digitale dédiée aux artistes et personnalités publiques.<br><br>
+        L'ensemble des informations présentées — concept, architecture, modèle économique, projections financières — sont <strong>strictement confidentielles</strong> et ne peuvent être divulguées, reproduites ou transmises à des tiers sans accord écrit préalable de Mr Attractor.<br><br>
+        <strong>Horodatage validé : <span id="nda-timestamp"></span></strong>
+      </div>
+      <div class="nda-modal-btns">
+        <button class="nda-close-btn" onclick="closeNDA()">Annuler</button>
+        <button class="nda-confirm-btn" onclick="confirmNDA()">Je confirme cet accord</button>
+      </div>
+      <div class="nda-stamp" id="nda-stamp"></div>
+    </div>
+  </div>
 
   <!-- Navigation -->
   <nav class="nav">
@@ -859,6 +927,40 @@
     }
 
     render();
+
+    // NDA
+    function openNDA(){
+      const now = new Date();
+      const opts = {weekday:'long',year:'numeric',month:'long',day:'numeric'};
+      const date = now.toLocaleDateString('fr-FR', opts);
+      const time = now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+      const dt = date + ' à ' + time;
+      document.getElementById('nda-datetime').textContent = dt;
+      document.getElementById('nda-timestamp').textContent = dt;
+      document.getElementById('nda-stamp').style.display = 'none';
+      document.getElementById('nda-overlay').classList.add('open');
+    }
+    function closeNDA(){
+      document.getElementById('nda-overlay').classList.remove('open');
+    }
+    function confirmNDA(){
+      const dt = document.getElementById('nda-timestamp').textContent;
+      const stamp = document.getElementById('nda-stamp');
+      stamp.textContent = '✓ Accord confirmé — ' + dt;
+      stamp.style.display = 'block';
+      const subject = encodeURIComponent('NDA Beynaud Army — ' + dt);
+      const body = encodeURIComponent(
+        'ACCORD DE CONFIDENTIALITÉ — NDA\n' +
+        'Date et heure : ' + dt + '\n\n' +
+        'Je soussigné(e) confirme avoir assisté à une présentation confidentielle de Mr Attractor (Mac Arthur KOUASSI, SIRET 98377125400015) portant sur un projet de plateforme digitale dédiée aux artistes et personnalités publiques.\n\n' +
+        'L\'ensemble des informations présentées (concept, architecture, modèle économique, projections financières) sont strictement confidentielles et ne peuvent être divulguées, reproduites ou transmises à des tiers sans accord écrit préalable de Mr Attractor.\n\n' +
+        'Accord confirmé par clic horodaté le ' + dt + '.\n\n' +
+        'Mr Attractor · Mac Arthur KOUASSI · agenceattractor.com · +33 7 53 90 23 23'
+      );
+      setTimeout(()=>{
+        window.open('mailto:myattractor1@gmail.com?subject=' + subject + '&body=' + body);
+      }, 800);
+    }
   </script>
 </body>
 </html>

@@ -7,6 +7,18 @@
 
 ---
 
+## 2026-06-17 (session 58 — Beracca Mastery Group — dossier commercial complet)
+
+### Dossier partenariat Beracca créé et envoyé
+
+- Nouveau dossier client : Bérénice KOUADIO DEBRIMOU, Manager Beracca Mastery Group (CI), agro-distribution attiéké
+- Modèle partenariat simplifié et aligné : 100 000 FCFA mise en place + 100 000 FCFA/mois + 10% sur croissance au-dessus du CA de référence
+- 3 documents produits : NDA (11 articles, durée 5 ans, juridiction CCJA-OHADA), Contrat partenariat stratégique (15 articles, 5 phases ERP), Fiche d'investissement A4 Noir & Or
+- Fix PDF export couleurs appliqué sur les 3 documents (print-color-adjust: exact)
+- Mail envoyé. Statut : en attente retour cliente et versement 100 000 FCFA pour déploiement Phase 1
+
+---
+
 ## 2026-06-17 (session 57 — Monitoring Assists mis en place)
 
 ### Système de veille automatique déployé

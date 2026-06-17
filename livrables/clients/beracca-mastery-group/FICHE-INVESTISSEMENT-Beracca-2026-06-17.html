@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fiche d'investissement — Beracca Mastery Group × Mr Attractor</title>
+<style>
+:root{
+  --brand:#0E1A2B;
+  --accent:#C9A84C;
+  --ink:#1A1F2B;
+  --muted:#6B7280;
+  --line:#E5E7EB;
+  --bg-soft:#F7F5EF;
+  --green:#166534;
+  --bg-green:#F0FDF4;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:#f0f2f5;padding:24px;line-height:1.6}
+.page{width:210mm;margin:0 auto 24px auto;background:#fff;padding:18mm 16mm;box-shadow:0 6px 30px rgba(0,0,0,.12)}
+
+.head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--accent);padding-bottom:16px;margin-bottom:20px}
+.brand h1{color:var(--brand);font-size:22px;letter-spacing:.02em}
+.brand .tag{color:var(--muted);font-size:12px;margin-top:2px}
+.docmeta{text-align:right}
+.docmeta .t{color:var(--accent);font-weight:700;font-size:16px;letter-spacing:.06em;text-transform:uppercase}
+.docmeta .version{display:inline-block;background:var(--brand);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:4px;letter-spacing:.05em}
+.docmeta div{color:var(--muted);margin-top:2px;font-size:12px}
+
+.intro-box{background:var(--bg-soft);border-left:3px solid var(--accent);padding:14px 16px;margin:0 0 22px 0;font-size:13px;line-height:1.6}
+.intro-box strong{color:var(--brand)}
+
+h2{color:var(--brand);font-size:15px;margin-top:22px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--line);letter-spacing:.01em;text-transform:uppercase}
+
+/* Parties */
+.parties{display:flex;gap:16px;margin:12px 0 22px}
+.partie{flex:1;border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:12.5px}
+.partie .label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.partie strong{color:var(--brand);display:block;margin-bottom:2px}
+
+/* Les 3 piliers */
+.pillars{display:flex;gap:12px;margin:14px 0}
+.pillar{flex:1;border:2px solid var(--line);border-radius:10px;padding:16px 14px;text-align:center}
+.pillar.main{border-color:var(--accent);background:var(--bg-soft)}
+.pillar .p-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.pillar .p-amount{font-size:22px;font-weight:700;color:var(--brand);line-height:1}
+.pillar .p-unit{font-size:11px;color:var(--muted);margin-top:4px}
+.pillar.main .p-amount{color:var(--accent);font-size:26px}
+.pillar.main .p-label{color:var(--accent)}
+
+/* Articles */
+.article{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:10px 0}
+.article .num{display:inline-block;background:var(--brand);color:#fff;font-size:10px;font-weight:700;letter-spacing:.05em;padding:3px 9px;border-radius:4px;margin-bottom:10px}
+p{font-size:12.5px;margin-bottom:8px;line-height:1.6}
+ul{margin:6px 0 8px 20px;font-size:12.5px}
+li{margin-bottom:5px;line-height:1.5}
+.sub-section{margin:10px 0 4px}
+.sub-title{font-size:12px;font-weight:700;color:var(--brand);margin-bottom:5px}
+
+/* Bloc exemple commission */
+.commission-block{background:var(--brand);border-radius:8px;padding:14px 16px;margin:10px 0}
+.commission-block .ctitle{color:var(--accent);font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px}
+.commission-block .cexample{font-size:12.5px;color:rgba(255,255,255,.85);line-height:1.7}
+.commission-block .cexample strong{color:var(--accent)}
+.commission-block .cexample .line{padding:3px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.commission-block .cexample .line:last-child{border-bottom:none;padding-top:8px;font-weight:700;color:#fff}
+
+/* Condition */
+.condition-box{background:#FFFBEB;border-left:3px solid #F59E0B;padding:10px 14px;margin:10px 0;font-size:12.5px;color:#78350F;border-radius:0 6px 6px 0}
+.condition-box strong{color:#92400E}
+
+/* Non inclus */
+.exclu-box{background:#FFF1F2;border-left:3px solid #FB7185;padding:10px 14px;margin:10px 0;font-size:12.5px;color:#9F1239;border-radius:0 6px 6px 0}
+
+/* Évolutions futures */
+.future-box{background:var(--bg-soft);border:1px dashed var(--line);border-radius:8px;padding:12px 14px;margin:10px 0;font-size:12.5px;color:var(--muted)}
+.future-box strong{color:var(--brand)}
+
+.foot{margin-top:28px;border-top:1px solid var(--line);padding-top:10px;font-size:10px;color:var(--muted);text-align:center;line-height:1.6}
+
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff;padding:0}
+  .page{box-shadow:none;margin:0;width:100%;padding:10mm 12mm}
+  .article{page-break-inside:avoid}
+  h2{page-break-after:avoid;margin-top:14px}
+  p,li{font-size:11px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- EN-TÊTE -->
+  <div class="head">
+    <div class="brand">
+      <h1>Mr Attractor</h1>
+      <div class="tag">Conseil en business développement &amp; digitalisation</div>
+    </div>
+    <div class="docmeta">
+      <div class="t">Fiche d'investissement</div>
+      <div class="version">17 juin 2026</div>
+      <div>Beracca Mastery Group × Mr Attractor</div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro-box">
+    Ce document présente les conditions financières du partenariat entre Mr Attractor et Beracca Mastery Group. <strong>Le modèle est volontairement simple : 3 éléments, aucune surprise.</strong> Le détail complet des engagements figure dans le contrat de partenariat transmis séparément.
+  </div>
+
+  <!-- PARTIES -->
+  <h2>Les Parties</h2>
+  <div class="parties">
+    <div class="partie">
+      <div class="label">Prestataire</div>
+      <strong>Mac Arthur KOUASSI — Mr Attractor</strong>
+      Auto-entrepreneur — SIRET 98377125400015<br/>
+      myattractor1@gmail.com — +33 7 53 90 23 23
+    </div>
+    <div class="partie">
+      <div class="label">Cliente / Partenaire</div>
+      <strong>Bérénice KOUADIO DEBRIMOU</strong>
+      Manager — Beracca Mastery Group<br/>
+      beraccamasterygroup@gmail.com — +225 07 57 49 72 07
+    </div>
+  </div>
+
+  <!-- LES 3 PILIERS -->
+  <h2>Votre investissement en 3 éléments</h2>
+  <div class="pillars">
+    <div class="pillar">
+      <div class="p-label">1 — Mise en place</div>
+      <div class="p-amount">100 000</div>
+      <div class="p-unit">FCFA — une fois</div>
+    </div>
+    <div class="pillar main">
+      <div class="p-label">2 — Mensuel</div>
+      <div class="p-amount">100 000</div>
+      <div class="p-unit">FCFA / mois</div>
+    </div>
+    <div class="pillar">
+      <div class="p-label">3 — Commission</div>
+      <div class="p-amount">10 %</div>
+      <div class="p-unit">sur la croissance</div>
+    </div>
+  </div>
+
+  <!-- DÉTAIL 1 : MISE EN PLACE -->
+  <h2>Détail des 3 éléments</h2>
+  <div class="article">
+    <span class="num">1 — MISE EN PLACE : 100 000 FCFA (une fois)</span>
+    <p>Versé à la signature du NDA, ce montant couvre l'intégralité des frais d'installation et déclenche immédiatement les travaux. La Phase 1 est livrée <strong>en 1 semaine</strong>.</p>
+    <ul>
+      <li>Achat et configuration du nom de domaine personnalisé</li>
+      <li>Mise en place de l'hébergement et de la base de données</li>
+      <li>Abonnements aux outils de développement</li>
+      <li>Déploiement complet de l'application de gestion des commandes</li>
+      <li>2 rounds de retouches inclus après livraison</li>
+    </ul>
+    <div class="condition-box">
+      <strong>Votre rôle pour tenir le délai d'1 semaine :</strong> transmettre rapidement votre catalogue produits (formats, photos, prix), vos zones de livraison et les informations de base de votre activité. Plus vous transmettez vite et précisément, plus la livraison est rapide et fidèle à votre réalité terrain.
+    </div>
+  </div>
+
+  <!-- DÉTAIL 2 : MENSUEL -->
+  <div class="article">
+    <span class="num">2 — FORFAIT MENSUEL : 100 000 FCFA / mois</span>
+    <p>Ce forfait couvre l'ensemble des interventions continues de Mr Attractor dans le développement de votre activité. Il démarre à la livraison de la Phase 1.</p>
+    <div class="sub-section">
+      <div class="sub-title">Ce que le forfait mensuel inclut</div>
+      <ul>
+        <li><strong>Maintenance et évolution de la plateforme</strong> : mises à jour, corrections, améliorations continues</li>
+        <li><strong>Conseil en business développement</strong> : stratégie de croissance, positionnement, opportunités de marché</li>
+        <li><strong>Business coaching</strong> : accompagnement de la dirigeante, structuration, prise de décision</li>
+        <li><strong>Ingénierie des levées de fonds</strong> : dossiers, identification des bailleurs, montages financiers</li>
+        <li><strong>Dispositifs promotionnels</strong> : conception et pilotage des campagnes et offres spéciales</li>
+        <li><strong>Apport d'affaires</strong> : mise en relation avec le réseau de l'agence (distributeurs, investisseurs, partenaires)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- DÉTAIL 3 : COMMISSION -->
+  <div class="article">
+    <span class="num">3 — COMMISSION : 10 % SUR LA CROISSANCE</span>
+    <p>La commission est calculée uniquement sur la part de chiffre d'affaires dépassant votre CA actuel. <strong>Si l'activité ne progresse pas ce mois-là, aucune commission n'est due.</strong> Elle est payée mensuellement, au plus tard le 15 du mois suivant.</p>
+    <p>Le CA de référence est établi ensemble lors du cadrage de la Phase 1, sur la base de vos 3 derniers mois d'activité encaissée.</p>
+
+    <div class="commission-block">
+      <div class="ctitle">Exemple de calcul</div>
+      <div class="cexample">
+        <div class="line">CA de référence (votre CA actuel moyen) &nbsp;&nbsp; <strong>5 000 000 FCFA</strong></div>
+        <div class="line">CA réalisé ce mois-là &nbsp;&nbsp; <strong>8 000 000 FCFA</strong></div>
+        <div class="line">Croissance sur laquelle la commission s'applique &nbsp;&nbsp; <strong>3 000 000 FCFA</strong></div>
+        <div class="line">Commission Mr Attractor (10 %) &nbsp;&nbsp; <strong>300 000 FCFA</strong></div>
+        <div class="line">Votre gain net sur la croissance &nbsp;&nbsp; <strong>2 700 000 FCFA</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NON INCLUS -->
+  <div class="article">
+    <span class="num">CE QUI N'EST PAS INCLUS</span>
+    <div class="exclu-box">
+      La production de vidéos et publicités audiovisuelles n'est pas couverte par ce partenariat. Elle fait l'objet d'un contrat distinct avec un prestataire spécialisé. Mr Attractor assure le pilotage stratégique et éditorial de ce prestataire — vous n'avez pas à le gérer seule.
+    </div>
+  </div>
+
+  <!-- ÉVOLUTIONS FUTURES -->
+  <div class="article">
+    <span class="num">ÉVOLUTIONS FUTURES</span>
+    <p>Le système est conçu pour grandir avec votre activité. À votre rythme, des modules complémentaires pourront être déployés selon vos besoins et les opportunités de croissance :</p>
+    <div class="future-box">
+      <strong>Modules disponibles en extension :</strong> gestion du stock et de la production, suivi des revendeuses et scoring, base producteurs et supply chain amont, logistique Bouaké → Abidjan, traçabilité HACCP. Chaque extension fait l'objet d'un devis séparé établi et validé ensemble avant démarrage — aucun engagement automatique.
+    </div>
+  </div>
+
+  <!-- PIED DE PAGE -->
+  <div class="foot">
+    Ce document est une synthèse d'information. Le détail complet des engagements, droits et obligations figure dans le <strong>contrat de partenariat stratégique</strong> et l'<strong>accord de confidentialité (NDA)</strong> transmis séparément.<br/>
+    Agence Mr Attractor — Mac Arthur KOUASSI — SIRET 98377125400015 — Immatriculée le 01/02/2024<br/>
+    TVA non applicable, article 293 B du CGI — myattractor1@gmail.com — +33 7 53 90 23 23 — agenceattractor.com<br/>
+    Fiche d'investissement — 17 juin 2026
+  </div>
+
+</div>
+</body>
+</html>
