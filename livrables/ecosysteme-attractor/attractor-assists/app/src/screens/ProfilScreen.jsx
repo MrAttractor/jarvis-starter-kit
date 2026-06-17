@@ -372,7 +372,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
             <div className="bg-charbon rounded-xl px-4 py-3">
               <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Aperçu</p>
               <p className="text-white font-mono text-[13px] break-all">
-                demo.agenceattractor.com/?c=<span className="text-orange font-bold">{slugValue || '...'}</span>
+                www.assists.agenceattractor.com/?c=<span className="text-orange font-bold">{slugValue || '...'}</span>
               </p>
             </div>
 

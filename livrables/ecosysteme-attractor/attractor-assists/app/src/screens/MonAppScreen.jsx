@@ -116,7 +116,7 @@ function AnamneseSheet({ profile, onClose, onGenerated }) {
 
 function ClientAssistantCard({ profile, dark }) {
   const [open, setOpen]       = useState(false);
-  const [link, setLink]       = useState(profile?.public_slug ? `https://demo.agenceattractor.com/?c=${profile.public_slug}` : null);
+  const [link, setLink]       = useState(profile?.public_slug ? `https://www.assists.agenceattractor.com/?c=${profile.public_slug}` : null);
   const [copied, setCopied]   = useState(false);
   const ready = !!profile?.client_assistant_ready && !!link;
 
