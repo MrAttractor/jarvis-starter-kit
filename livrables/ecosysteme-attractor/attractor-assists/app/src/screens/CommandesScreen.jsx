@@ -56,7 +56,44 @@ export function CommandesScreen({ go, notify, profile }) {
     setLoading(false);
   };
 
-  useEffect(() => { loadOrders(); }, []);
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+
+    loadOrders();
+
+    if (!profile?.id) return;
+
+    const channel = supabase
+      .channel('commandes-live')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders', filter: `owner_id=eq.${profile.id}` },
+        (payload) => {
+          setOrders(prev => [payload.new, ...prev]);
+          const o = payload.new;
+          const body = `${o.client_name || 'Nouveau client'} • ${(o.total_fcfa || 0).toLocaleString('fr-FR')} F`;
+          notify(`Nouvelle commande — ${body}`);
+          if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification('Nouvelle commande !', {
+              body,
+              icon: '/icon-192.png',
+              badge: '/icon-192.png',
+              tag: 'new-order',
+              vibrate: [200, 100, 200],
+            });
+          }
+        }
+      )
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'orders', filter: `owner_id=eq.${profile.id}` },
+        (payload) => { setOrders(prev => prev.map(o => o.id === payload.new.id ? payload.new : o)); }
+      )
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'orders', filter: `owner_id=eq.${profile.id}` },
+        (payload) => { setOrders(prev => prev.filter(o => o.id !== payload.old.id)); }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [profile?.id]);
 
   const updateStatus = async (id, status) => {
     await supabase.from('orders').update({ status }).eq('id', id);
