@@ -130,14 +130,58 @@ main { flex: 1; padding-bottom: 72px; }
 .card.featured { border: 1.5px solid rgba(242,163,61,0.4); }
 
 .card-img {
-  width: 100%; aspect-ratio: 4/3;
-  object-fit: cover;
+  width: 100%; aspect-ratio: 2/3;
+  object-fit: cover; object-position: center top;
 }
+.card.wide .card-img { aspect-ratio: 16/7; object-position: center; }
 .card-placeholder {
-  width: 100%; aspect-ratio: 4/3;
+  width: 100%; aspect-ratio: 2/3;
   display: flex; align-items: center; justify-content: center;
   font-size: 32px;
 }
+
+/* ── MODAL DÉTAIL ── */
+.prod-modal {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 100; display: none; align-items: flex-end;
+  transition: opacity .2s;
+}
+.modal-sheet {
+  background: #fff; border-radius: 20px 20px 0 0;
+  max-height: 90vh; overflow-y: auto;
+  width: 100%; max-width: 430px; margin: 0 auto;
+}
+.modal-img-wrap { width: 100%; position: relative; }
+.modal-img-wrap img { width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: center top; }
+.modal-close {
+  position: absolute; top: 12px; right: 12px;
+  width: 32px; height: 32px;
+  background: rgba(0,0,0,0.4); border: none; border-radius: 50%;
+  color: #fff; font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+.modal-body { padding: 18px 20px 36px; }
+.modal-stats { display: flex; gap: 8px; margin-bottom: 14px; }
+.modal-stat {
+  flex: 1; background: var(--cream); border-radius: 10px;
+  padding: 10px 6px; text-align: center;
+}
+.modal-stat-val { font-size: 16px; font-weight: 800; font-family: 'Sora', sans-serif; color: var(--brand); }
+.modal-stat-lbl { font-size: 9px; color: var(--muted); margin-top: 2px; }
+.modal-prep-box {
+  background: #FFF8EE; border-left: 3px solid var(--orange);
+  border-radius: 0 8px 8px 0; padding: 10px 14px;
+  margin-bottom: 16px; font-size: 11.5px; color: #7A5200; line-height: 1.6;
+}
+.modal-add-btn {
+  width: 100%; background: var(--brand); color: #fff;
+  border: none; border-radius: 12px; padding: 15px;
+  font-size: 15px; font-weight: 700; font-family: 'Sora', sans-serif;
+  cursor: pointer; transition: background .15s;
+}
+.modal-add-btn:active { background: var(--orange); }
 .card-body { padding: 10px 12px 12px; }
 .card-tag {
   display: inline-block;
@@ -302,12 +346,13 @@ main { flex: 1; padding-bottom: 72px; }
   <!-- CATALOGUE -->
   <div class="tab-content active" id="tab-catalogue">
     <div class="hero">
-      <h2>Nos farines naturelles</h2>
-      <p>Sans sucre ajouté, ni conservateurs, ni additifs.<br>Saines, locales et prêtes à l'emploi.</p>
+      <h2>Nourrir bébé naturellement</h2>
+      <p>Farines infantiles 100% naturelles, fabriquées en Côte d'Ivoire. Aucun conservateur, aucun colorant, aucun sucre ajouté.</p>
       <div class="pills">
         <span class="pill gold">Dès 4 mois</span>
         <span class="pill">Made in CI</span>
         <span class="pill">Sans conservateurs</span>
+        <span class="pill">Sans gluten</span>
       </div>
     </div>
     <div class="grid" id="products-grid"></div>
@@ -352,20 +397,61 @@ main { flex: 1; padding-bottom: 72px; }
   </button>
 </nav>
 
+<!-- MODAL DÉTAIL PRODUIT -->
+<div class="prod-modal" id="prod-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-sheet">
+    <div class="modal-img-wrap">
+      <img id="modal-img" src="" alt="">
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <span class="card-tag" id="modal-tag"></span>
+      <h2 style="font-size:20px;font-weight:800;margin:8px 0 6px;font-family:'Sora',sans-serif;" id="modal-name"></h2>
+      <p style="font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:14px;" id="modal-detail"></p>
+      <div class="modal-stats">
+        <div class="modal-stat"><div class="modal-stat-val" id="modal-kcal"></div><div class="modal-stat-lbl">Kcal/100g</div></div>
+        <div class="modal-stat"><div class="modal-stat-val" id="modal-weight"></div><div class="modal-stat-lbl">Poids net</div></div>
+        <div class="modal-stat"><div class="modal-stat-val" id="modal-prep"></div><div class="modal-stat-lbl">Cuisson</div></div>
+      </div>
+      <div class="modal-prep-box">
+        <strong>Préparation :</strong> Faire bouillir de l'eau. Dissoudre la farine dans de l'eau froide. Verser dans l'eau bouillante. Cuire à feu doux 5-10 min. Servir chaud, laisser refroidir, ajouter 2-3 mesures de lait bébé.<br>
+        <span style="color:#9c5e15;font-weight:600;margin-top:4px;display:block;">Pas de sucre avant 2 ans.</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
+        <span style="font-size:20px;font-weight:800;font-family:'Sora',sans-serif;" id="modal-price"></span>
+        <span style="font-size:11px;color:var(--muted);">/ paquet 200g</span>
+      </div>
+      <button class="modal-add-btn" id="modal-add-btn" onclick="addFromModal()">Ajouter au panier</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const SUPABASE = 'https://lgdgbrivnhgeupqhkckd.supabase.co';
 const ANON    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
 const KEZEY   = '2250749563976';
 
 const PRODUCTS = [
-  { id:1, name:"Mes premières C'real", desc:"Duo Riz & Sorgho pour les premières cuillères de bébé", tag:"Dès 4 mois", price:1500, bg:"#F5EDD8", icon:"🍼", featured:true },
-  { id:2, name:"Mix C'real",           desc:"Mélange de Riz, Maïs et Sorgho",                        price:1500, img:"../creal-assists/mix-creal.png" },
-  { id:3, name:"C'real Riz",           desc:"Farine de Riz 100% naturelle",                           price:1500, bg:"#F2EEE4", icon:"🌾" },
-  { id:4, name:"C'real Sorgho",        desc:"Farine de Sorgho 100% naturelle",                        price:1500, bg:"#EDE4D8", icon:"🌾" },
-  { id:5, name:"C'real Mil",           desc:"Farine de Mil 100% naturelle",                           price:1000, bg:"#EDF4E2", icon:"🌿" },
-  { id:6, name:"C'real Maïs",          desc:"Farine de Maïs 100% naturelle",                          price:1000, bg:"#FDF6D8", icon:"🌽" },
-  { id:7, name:"Multicreal",           desc:"Mélange de farines enrichi",                             price:1500, bg:"#EAF0F5", icon:"🌾" },
-  { id:8, name:"Kit prise de poids",   desc:"4 farines pour une prise de poids saine et progressive", price:5000, img:"../creal-assists/pack-prise-de-poids.jpg", wide:true },
+  { id:1, name:"Mix C'real",    tag:"Bestseller",  price:1500, img:"imgs/mix.png",    kcal:365, weight:"200g", prep:"5-10 min",
+    desc:"Riz · Maïs · Sorgho — Énergie & immunité",
+    detail:"Source d'énergie naturelle composée de riz, maïs et sorgho. Riche en fer, calcium, magnésium et vitamines, il soutient l'immunité et la croissance de bébé dès 4 mois." },
+  { id:2, name:"Multi C'real",  tag:"Complet",     price:1500, img:"imgs/multi.png",  kcal:365, weight:"200g", prep:"5-10 min",
+    desc:"Riz · Maïs · Sorgho · Soja — Mélange complet",
+    detail:"Mélange 4 céréales enrichi en nutriments essentiels. Riche en calories, protéines et micronutriments pour une croissance complète et équilibrée." },
+  { id:3, name:"C'real Sorgho", tag:"Sans gluten", price:1500, img:"imgs/sorgho.png", kcal:339, weight:"200g", prep:"5-10 min",
+    desc:"Sans gluten · Protéines · Anti-diarrhée",
+    detail:"Farine de sorgho sans gluten, riche en protéines, fibres, vitamines et minéraux. Favorise une bonne digestion, solidifie les os et renforce le système immunitaire. Recommandée en cas de diarrhée." },
+  { id:4, name:"C'real Maïs",   tag:"Sans gluten", price:1000, img:"imgs/mais.png",   kcal:365, weight:"200g", prep:"5-10 min",
+    desc:"Sans gluten · Antioxydant · Vitamines B3",
+    detail:"Farine de maïs à fort pouvoir antioxydant, source de fibres et protéines. Sans gluten, excellente source de glucides complexes et de vitamines B3 pour l'énergie de bébé." },
+  { id:5, name:"C'real Riz",    tag:"Digeste",     price:1500, img:"imgs/riz.png",    kcal:336, weight:"200g", prep:"5-10 min",
+    desc:"Sans gluten · Digeste · Anti-constipation",
+    detail:"Farine de riz sans gluten, digeste et au goût neutre. Excellente source d'énergie grâce aux glucides, vitamines B et minéraux (potassium, phosphore). Idéale contre la constipation." },
+  { id:6, name:"C'real Mil",    tag:"Minéraux",    price:1000, img:"imgs/mil.png",    kcal:377, weight:"200g", prep:"5-10 min",
+    desc:"Sans gluten · Magnésium · Fer · Zinc",
+    detail:"Farine de mil sans gluten, source de protéines, glucides, magnésium (140mg), fer (4,5mg), zinc et vitamines B. Le silicium favorise une belle peau, des cheveux sains et des ongles solides." },
+  { id:7, name:"Kit prise de poids", tag:"Bundle", price:5000, img:"../creal-assists/pack-prise-de-poids.jpg", wide:true,
+    desc:"4 farines pour une prise de poids saine et progressive" },
 ];
 
 const cart = {};
@@ -373,11 +459,10 @@ const cart = {};
 function renderProducts() {
   document.getElementById('products-grid').innerHTML = PRODUCTS.map(p => {
     const qty = cart[p.id] || 0;
+    const clickable = p.detail ? `onclick="openModal(${p.id})" style="cursor:pointer"` : '';
     return `
-    <div class="card${p.wide ? ' wide' : ''}${p.featured ? ' featured' : ''}">
-      ${p.img
-        ? `<img class="card-img" src="${p.img}" alt="${p.name}" onerror="this.parentNode.querySelector('.card-placeholder')&&(this.style.display='none')">`
-        : `<div class="card-placeholder" style="background:${p.bg}">${p.icon}</div>`}
+    <div class="card${p.wide ? ' wide' : ''}" ${clickable}>
+      <img class="card-img" src="${p.img}" alt="${p.name}">
       <div class="card-body">
         ${p.tag ? `<span class="card-tag">${p.tag}</span>` : ''}
         <div class="card-name">${p.name}</div>
@@ -386,14 +471,41 @@ function renderProducts() {
           <div class="price">${p.price.toLocaleString('fr-FR')} <small>FCFA</small></div>
           <div style="display:flex;align-items:center;gap:6px">
             ${qty > 0 ? `<span class="qty-tag" id="qt-${p.id}" style="display:block">${qty} ajouté${qty>1?'s':''}</span>` : `<span class="qty-tag" id="qt-${p.id}"></span>`}
-            <button class="add-btn" onclick="add(${p.id})">
+            <button class="add-btn" onclick="event.stopPropagation();add(${p.id})">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </button>
           </div>
         </div>
+        ${p.detail ? `<div style="font-size:10px;color:var(--muted);margin-top:4px;text-align:center;">Appuyer pour les détails</div>` : ''}
       </div>
     </div>`;
   }).join('');
+}
+
+let currentModalId = null;
+function openModal(id) {
+  const p = PRODUCTS.find(p=>p.id===id);
+  if (!p || !p.detail) return;
+  currentModalId = id;
+  document.getElementById('modal-img').src = p.img;
+  document.getElementById('modal-img').alt = p.name;
+  document.getElementById('modal-tag').textContent = p.tag || 'Dès 4 mois';
+  document.getElementById('modal-name').textContent = p.name;
+  document.getElementById('modal-detail').textContent = p.detail;
+  document.getElementById('modal-kcal').textContent = p.kcal;
+  document.getElementById('modal-weight').textContent = p.weight;
+  document.getElementById('modal-prep').textContent = p.prep;
+  document.getElementById('modal-price').textContent = p.price.toLocaleString('fr-FR') + ' FCFA';
+  const modal = document.getElementById('prod-modal');
+  modal.style.display = 'flex';
+}
+function closeModal() {
+  document.getElementById('prod-modal').style.display = 'none';
+  currentModalId = null;
+}
+function addFromModal() {
+  if (currentModalId) add(currentModalId);
+  closeModal();
 }
 
 function add(id) {
