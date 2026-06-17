@@ -133,7 +133,13 @@ main { flex: 1; padding-bottom: 72px; }
   width: 100%; aspect-ratio: 2/3;
   object-fit: cover; object-position: center top;
 }
-.card.wide .card-img { aspect-ratio: 16/7; object-position: center; }
+/* Logo image */
+.logo-wrap {
+  width: 90px; height: 36px;
+  overflow: hidden; border-radius: 6px;
+  flex-shrink: 0; background: #000;
+}
+.logo-wrap img { width: 100%; display: block; }
 .card-placeholder {
   width: 100%; aspect-ratio: 2/3;
   display: flex; align-items: center; justify-content: center;
@@ -334,7 +340,7 @@ main { flex: 1; padding-bottom: 72px; }
 <body>
 
 <header class="header">
-  <div class="logo">C'<br>Real</div>
+  <div class="logo-wrap"><img src="imgs/logo.jpeg" alt="C'Real"></div>
   <div class="header-text">
     <h1>C'Real</h1>
     <p>Farines infantiles 100% naturelles · Dès 4 mois</p>
@@ -450,8 +456,9 @@ const PRODUCTS = [
   { id:6, name:"C'real Mil",    tag:"Minéraux",    price:1000, img:"imgs/mil.png",    kcal:377, weight:"200g", prep:"5-10 min",
     desc:"Sans gluten · Magnésium · Fer · Zinc",
     detail:"Farine de mil sans gluten, source de protéines, glucides, magnésium (140mg), fer (4,5mg), zinc et vitamines B. Le silicium favorise une belle peau, des cheveux sains et des ongles solides." },
-  { id:7, name:"Kit prise de poids", tag:"Bundle", price:5000, img:"../creal-assists/pack-prise-de-poids.jpg", wide:true,
-    desc:"4 farines pour une prise de poids saine et progressive" },
+  { id:7, name:"Kit prise de poids", tag:"Bundle", price:5000, img:"imgs/kit.jpeg", kcal:"—", weight:"4×50g", prep:"5-10 min",
+    desc:"Riz · Maïs · Mix C'real · Multicreal — Prise de poids",
+    detail:"Le kit comprend 4 farines locales sélectionnées pour booster rapidement la prise de poids de bébé : Riz, Maïs, Mix C'real et Multicreal. Idéal pour les bébés ayant besoin d'un apport calorique renforcé." },
 ];
 
 const cart = {};
