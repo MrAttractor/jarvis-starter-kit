@@ -862,13 +862,33 @@ function copyNumber() {
   });
 }
 
-function confirmPayWA() {
+async function confirmPayWA() {
   const items = Object.entries(cart).filter(([,q])=>q>0);
   const lines = items.map(([id,qty])=>{
     const p = PRODUCTS.find(p=>p.id==+id);
     return `• ${p.name} x${qty} = ${(p.price*qty).toLocaleString('fr-FR')} FCFA`;
   }).join('\n');
   const methodLabel = _payMethod === 'wave' ? 'Wave Business' : 'Orange Money';
+
+  // Enregistrer la commande dans Assists (silencieux, n'empêche pas l'ouverture WA)
+  try {
+    const orderItems = items.map(([id,qty]) => {
+      const p = PRODUCTS.find(p=>p.id==+id);
+      return { nom: p.name, qty, prix_unit: p.price, total: p.price * qty };
+    });
+    await fetch(`${SUPABASE}/rest/v1/rpc/save_order`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': ANON, 'Authorization': `Bearer ${ANON}` },
+      body: JSON.stringify({
+        p_slug: 'creal',
+        p_client_name: _clientName,
+        p_client_wa: _clientPhone,
+        p_items: orderItems,
+        p_total_fcfa: _payTotal
+      })
+    });
+  } catch {}
+
   const msg = `Bonjour Kezey ! Je viens de payer ${_payTotal.toLocaleString('fr-FR')} FCFA via ${methodLabel}.\n\nClient : ${_clientName}\nWhatsApp : ${_clientPhone}\n\nMa commande C'Real :\n${lines}\n\nSous-total : ${_payTotal.toLocaleString('fr-FR')} FCFA (livraison non incluse)\n\nMon adresse de livraison : `;
   window.open(`https://wa.me/${KEZEY}?text=${encodeURIComponent(msg)}`, '_blank');
 }
