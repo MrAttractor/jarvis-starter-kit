@@ -284,8 +284,8 @@ function NavBtn({ t, active, onClick, badge }) {
 
 function Frame({ dark, children }) {
   return (
-    <div className={`${dark ? "theme-dark" : ""} min-h-screen`} style={{ background: dark ? "#0c0907" : undefined }}>
-      <div className="lg:bg-[#1a120c] min-h-screen" style={dark ? { background: "#0c0907" } : {}}>{children}</div>
+    <div className={`${dark ? "theme-dark" : ""} h-full overflow-hidden`} style={{ background: dark ? "#0c0907" : undefined }}>
+      <div className="lg:bg-[#1a120c] h-full overflow-hidden" style={dark ? { background: "#0c0907" } : {}}>{children}</div>
     </div>
   );
 }

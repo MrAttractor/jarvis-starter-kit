@@ -184,7 +184,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   // ── 1. Welcome ─────────────────────────────────────────────────────────────────
 
   if (phase === 'welcome') return (
-    <div className="min-h-screen flex flex-col bg-sable">
+    <div className="h-full flex flex-col bg-sable">
       <div className="relative w-full flex-shrink-0 overflow-hidden" style={{ height: 300 }}>
         <img src="/uploads/agents/carelle.jpg" alt="" className="w-full h-full object-cover object-top" />
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(26,23,20,0) 30%, rgba(26,23,20,0.85) 100%)' }} />
@@ -193,7 +193,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
           <h1 className="font-display font-extrabold text-[30px] text-white leading-[1.15]">Ton bras droit IA.</h1>
         </div>
       </div>
-      <div className="flex-1 px-5 pt-5 pb-10 flex flex-col gap-4">
+      <div className="flex-1 overflow-y-auto px-5 pt-5 pb-10 flex flex-col gap-4" style={{ scrollbarWidth: 'none' }}>
         <div className="flex flex-col gap-2.5">
           {[
             { icon: 'chat',  text: 'Parle-lui comme à un collaborateur. Il gère tes commandes, relances et messages.' },
@@ -222,7 +222,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
       return null;
     }
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="h-full flex flex-col">
         <div className="flex-1">
           <InstallGuide
             platform={platform}
@@ -273,7 +273,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
       : chatHistory;
 
     return (
-      <div className="min-h-screen flex flex-col" style={{ background: '#EAE4D9' }}>
+      <div className="h-full flex flex-col" style={{ background: '#EAE4D9' }}>
         <div className="flex items-center gap-3 px-4 pt-12 pb-3 bg-white border-b border-g200">
           <img src="/uploads/agents/carelle.jpg" alt="Assists" className="w-9 h-9 rounded-full object-cover border border-g200 flex-shrink-0" />
           <div>
@@ -328,7 +328,8 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   // ── 4. Profil type ─────────────────────────────────────────────────────────────
 
   if (phase === 'profil_type') return (
-    <div className="min-h-screen flex flex-col bg-sable px-5 pt-12 pb-10">
+    <div className="h-full flex flex-col bg-sable">
+      <div className="flex-1 overflow-y-auto px-5 pt-12 flex flex-col" style={{ scrollbarWidth: 'none' }}>
       <div className="mb-8">
         <p className="text-[11.5px] font-bold text-orange uppercase tracking-[.12em] mb-2">Une question rapide</p>
         <h2 className="font-display font-extrabold text-[22px] text-charbon leading-[1.25]">Tu es dans quelle situation ?</h2>
@@ -357,10 +358,11 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
           </button>
         ))}
       </div>
-      <div className="mt-auto pt-8">
+      <div className="mt-auto pt-8 pb-10">
         <PrimaryBtn onClick={() => { setAnamnQ(0); setChatHistory([]); setPhase('anamnese'); }} disabled={!profilType}>
           Continuer
         </PrimaryBtn>
+      </div>
       </div>
     </div>
   );
@@ -398,7 +400,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     const done = anamnQ >= ANAMN_QUESTIONS.length;
 
     return (
-      <div className="min-h-screen flex flex-col" style={{ background: '#EAE4D9' }}>
+      <div className="h-full flex flex-col" style={{ background: '#EAE4D9' }}>
         <div className="px-4 pt-12 pb-3 bg-white border-b border-g200">
           <ProgressBar step={1} />
           <div className="flex items-center gap-3 mt-3">
@@ -457,14 +459,14 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   // ── 6. Choix du slug boutique ──────────────────────────────────────────────────
 
   if (phase === 'slug') return (
-    <div className="min-h-screen flex flex-col bg-sable">
+    <div className="h-full flex flex-col bg-sable">
       <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
         <ProgressBar step={2} />
         <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Ton lien boutique</h2>
         <p className="text-[12.5px] text-g500 mt-0.5">C'est ce lien que tu partages à tes clients.</p>
       </div>
 
-      <div className="flex-1 px-5 pt-6 flex flex-col gap-5">
+      <div className="flex-1 overflow-y-auto px-5 pt-6 flex flex-col gap-5" style={{ scrollbarWidth: 'none' }}>
         {/* Preview du lien */}
         <div className="bg-charbon rounded-2xl px-4 py-4">
           <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2">Aperçu de ton lien</p>
@@ -538,7 +540,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   };
 
   if (phase === 'upload') return (
-    <div className="min-h-screen flex flex-col bg-sable">
+    <div className="h-full flex flex-col bg-sable">
       <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
         <ProgressBar step={3} />
         <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Tes produits</h2>
@@ -607,8 +609,8 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   // ── 8. Prêt ────────────────────────────────────────────────────────────────────
 
   if (phase === 'pret') return (
-    <div className="min-h-screen flex flex-col bg-sable px-5 pt-14 pb-10">
-      <div className="flex-1 flex flex-col justify-center items-center gap-5 text-center">
+    <div className="h-full flex flex-col bg-sable px-5 pt-14 pb-10">
+      <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center gap-5 text-center" style={{ scrollbarWidth: 'none' }}>
         <img
           src="/uploads/agents/carelle.jpg"
           alt=""
