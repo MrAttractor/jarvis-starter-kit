@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -264,60 +264,6 @@ section { position:relative; z-index:1; padding:100px 2.5rem; }
 .s-sub { font-size:1rem; color:var(--g700); line-height:1.7; max-width:520px; margin-bottom:3rem; }
 
 @media(max-width:768px) { section{padding:70px 1.2rem;} }
-
-/* ═══════════════════════════════════════
-   AGENTS / ÉQUIPE
-═══════════════════════════════════════ */
-.agents-section { background:var(--white); }
-.agents-grid {
-  display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:3rem;
-}
-.agent-card {
-  background:var(--sable); border:1.5px solid var(--g200); border-radius:20px;
-  overflow:hidden; transition:all .3s; cursor:pointer;
-  opacity:0; transform:translateY(18px);
-}
-.agent-card.visible { opacity:1; transform:translateY(0); }
-.agent-card:hover { border-color:var(--orange); transform:translateY(-6px); box-shadow:var(--shadow-lg); }
-.agent-photo { width:100%; aspect-ratio:1; overflow:hidden; background:var(--g100); }
-.agent-photo img { width:100%; height:100%; object-fit:cover; object-position:top; filter:grayscale(15%); transition:filter .3s; }
-.agent-card:hover .agent-photo img { filter:grayscale(0); }
-.agent-info { padding:1.2rem 1.4rem; }
-.agent-name { font-size:16px; font-weight:800; margin-bottom:2px; }
-.agent-role {
-  font-family:'Space Mono',monospace; font-size:9px; color:var(--orange);
-  letter-spacing:.12em; text-transform:uppercase; margin-bottom:.6rem;
-}
-.agent-desc { font-size:12.5px; color:var(--g700); line-height:1.6; margin-bottom:.8rem; }
-.agent-status {
-  display:inline-flex; align-items:center; gap:6px;
-  font-size:11px; font-weight:700; color:var(--green);
-}
-.status-dot { width:7px; height:7px; border-radius:50%; background:var(--green); animation:pulse 2s infinite; }
-
-/* Mac Arthur card — pleine largeur */
-.agent-card.mac {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 280px 1fr;
-}
-.agent-card.mac .agent-photo { aspect-ratio: auto; height:100%; min-height:220px; }
-.agent-card.mac .agent-info { padding:2rem; display:flex; flex-direction:column; justify-content:center; }
-.agent-card.mac .agent-name { font-size:22px; }
-.mac-badge {
-  display:inline-flex; align-items:center; gap:6px;
-  background:rgba(242,92,5,.1); border:1px solid rgba(242,92,5,.2);
-  border-radius:100px; padding:4px 12px;
-  font-size:10px; font-weight:700; color:var(--orange);
-  margin-bottom:.8rem; width:fit-content;
-}
-
-@media(max-width:900px) {
-  .agents-grid { grid-template-columns:1fr 1fr; }
-  .agent-card.mac { grid-column:1/-1; grid-template-columns:1fr; }
-  .agent-card.mac .agent-photo { aspect-ratio:16/9; min-height:unset; }
-}
-@media(max-width:600px) { .agents-grid { grid-template-columns:1fr; } }
 
 /* ═══════════════════════════════════════
    APPS MÉTIERS
@@ -726,8 +672,8 @@ footer {
     </div>
   </a>
   <div class="nav-links">
-    <a href="#agents" data-track="nav_agents">Notre équipe</a>
-    <a href="#apps" data-track="nav_apps">Apps métiers</a>
+    <a href="https://assists.agenceattractor.com" target="_blank" data-track="nav_assists">Attractor Assists</a>
+    <a href="#apps" data-track="nav_apps">Ton app métier</a>
     <a href="#challenge" data-track="nav_challenge">Challenge 7j</a>
     <a href="#processus" data-track="nav_process">Comment</a>
     <a href="/consulting" data-track="nav_consulting">Consulting</a>
@@ -767,14 +713,7 @@ footer {
     </div>
 
     <div class="hero-proof">
-      <div class="proof-avatars">
-        <div class="proof-avatar"><img src="images/awa.png" alt="Awa"></div>
-        <div class="proof-avatar"><img src="images/serge.jpg" alt="Serge"></div>
-        <div class="proof-avatar"><img src="images/kofi.jpg" alt="Kofi"></div>
-        <div class="proof-avatar"><img src="images/roland.jpg" alt="Roland"></div>
-        <div class="proof-avatar"><img src="images/miriam.jpg" alt="Miriam"></div>
-      </div>
-      <div class="proof-text"><span>25+</span> entrepreneurs accompagnés · 5 agents IA disponibles</div>
+      <div class="proof-text"><span>25+</span> entrepreneurs accompagnés · Un bras droit IA, dupliqué pour ton business</div>
     </div>
 
   </div>
@@ -803,122 +742,6 @@ footer {
   </div>
 </div>
 
-<!-- ══════════ ÉQUIPE / AGENTS ══════════ -->
-<section class="agents-section" id="agents">
-  <div class="section-wrap">
-    <span class="s-tag">L'équipe qui travaille pour toi</span>
-    <h2 class="s-h2">Des experts IA.<br><em>Chacun dans son couloir.</em></h2>
-    <p class="s-sub">Prospection, contenu, organisation, finances, campagnes — chaque spécialiste connaît ton profil et agit à ta place. Pendant que tu te concentres sur ce qui compte.</p>
-
-    <div class="agents-grid">
-
-      <!-- Mac Arthur -->
-      <div class="agent-card mac" data-track="agent_mac">
-        <div class="agent-photo">
-          <img src="images/mac-arthur.jpg" alt="Mac Arthur">
-        </div>
-        <div class="agent-info">
-          <div class="mac-badge">✦ Fondateur · Coach · Stratège</div>
-          <div class="agent-name">Mac Arthur</div>
-          <div class="agent-role">Mr Attractor · Méthode ATTRACTOR</div>
-          <p class="agent-desc">Coach en préparation mentale, Mac Arthur est un passionné du développement de projets. Tellement impliqué qu'il ne pouvait pas aider ses clients comme il le voulait... jusqu'au jour où il maîtrise l'intelligence artificielle pour dupliquer sa connaissance. Aujourd'hui, avec son équipe, il travaille sur 100 projets simultanément — sans surcharge mentale. C'est cette expertise qu'il met à votre disposition.</p>
-          <button onclick="openChat()" class="btn-primary" style="border:none;cursor:none;font-size:13px;padding:11px 22px;" data-track="mac_chat">
-            💬 Discuter avec Mac →
-          </button>
-        </div>
-      </div>
-
-      <!-- Awa -->
-      <div class="agent-card" data-track="agent_awa" style="transition-delay:0s">
-        <div class="agent-photo">
-          <img src="images/awa.png" alt="Awa">
-        </div>
-        <div class="agent-info">
-          <div class="agent-name">Awa</div>
-          <div class="agent-role">Vente & Prospection</div>
-          <p style="font-size:11px;color:var(--orange);font-style:italic;margin-bottom:.5rem;">"Elle a appris à vendre avant d'apprendre à lire."</p>
-          <p class="agent-desc">Relances automatiques, séquences de closing, analyse de chaque prospect. Elle ne laisse aucune vente partir sans se battre — et elle gagne souvent.</p>
-          <div class="agent-status"><span class="status-dot"></span> Disponible gratuitement</div>
-        </div>
-      </div>
-
-      <!-- Miriam -->
-      <div class="agent-card" data-track="agent_miriam" style="transition-delay:.08s">
-        <div class="agent-photo">
-          <img src="images/miriam.jpg" alt="Miriam">
-        </div>
-        <div class="agent-info">
-          <div class="agent-name">Miriam</div>
-          <div class="agent-role">Présence Digitale & Contenu</div>
-          <p style="font-size:11px;color:var(--orange);font-style:italic;margin-bottom:.5rem;">"Elle a rendu viral un post sur l'attiéké sans faire exprès."</p>
-          <p class="agent-desc">Posts, broadcasts, calendrier éditorial. Elle sait exactement à quelle heure ta cible scrolle — et ce qui la fait sortir le portefeuille.</p>
-          <div class="agent-status"><span class="status-dot"></span> Plan Manager</div>
-        </div>
-      </div>
-
-      <!-- Serge -->
-      <div class="agent-card" data-track="agent_serge" style="transition-delay:.16s">
-        <div class="agent-photo">
-          <img src="images/serge.jpg" alt="Serge">
-        </div>
-        <div class="agent-info">
-          <div class="agent-name">Serge</div>
-          <div class="agent-role">Organisation & Agenda</div>
-          <p style="font-size:11px;color:var(--orange);font-style:italic;margin-bottom:.5rem;">"Si c'est pas noté quelque part, pour lui ça n'existe pas."</p>
-          <p class="agent-desc">Brief de semaine chaque lundi, suivi de tes engagements, alerte avant que la deadline passe. Plus rien ne tombe entre les mailles.</p>
-          <div class="agent-status"><span class="status-dot"></span> Plan Manager</div>
-        </div>
-      </div>
-
-      <!-- Roland -->
-      <div class="agent-card" data-track="agent_roland" style="transition-delay:.24s">
-        <div class="agent-photo">
-          <img src="images/roland.jpg" alt="Roland">
-        </div>
-        <div class="agent-info">
-          <div class="agent-name">Roland</div>
-          <div class="agent-role">Finance & Marges</div>
-          <p style="font-size:11px;color:var(--orange);font-style:italic;margin-bottom:.5rem;">"Il est revenu de France avec son master et une aversion pour les chiffres flous."</p>
-          <p class="agent-desc">Point financier automatique, alerte dès que tes marges descendent. Donne-lui 3 chiffres — il te sort une projection complète en 2 minutes.</p>
-          <div class="agent-status"><span class="status-dot"></span> Plan Manager</div>
-        </div>
-      </div>
-
-      <!-- Kofi -->
-      <div class="agent-card" data-track="agent_kofi" style="transition-delay:.32s">
-        <div class="agent-photo">
-          <img src="images/kofi.jpg" alt="Kofi">
-        </div>
-        <div class="agent-info">
-          <div class="agent-name">Kofi</div>
-          <div class="agent-role">Storytelling & Campagnes</div>
-          <p style="font-size:11px;color:var(--orange);font-style:italic;margin-bottom:.5rem;">"Son père convainquait avec des histoires, pas des prix. Il fait pareil."</p>
-          <p class="agent-desc">Campagne complète : film de marque, 7 posts, 3 broadcasts WhatsApp. Chaque mot ancré dans ton histoire réelle — pas un template générique.</p>
-          <div class="agent-status"><span class="status-dot"></span> Plan Manager</div>
-        </div>
-      </div>
-
-      <!-- Carelle -->
-      <div class="agent-card" data-track="agent_carelle" style="transition-delay:.4s">
-        <div class="agent-photo">
-          <img src="images/carelle.jpg" alt="Carelle">
-        </div>
-        <div class="agent-info">
-          <div class="agent-name">Carelle</div>
-          <div class="agent-role">Chief of Staff · Équipe fondatrice</div>
-          <p style="font-size:11px;color:var(--orange);font-style:italic;margin-bottom:.5rem;">"Elle était là quand le fondateur se cherchait encore."</p>
-          <p class="agent-desc">Née à Abidjan, toute sa vie en France. Méticuleuse, courageuse, avec un regard critique qui n'épargne personne — pas même Mac Arthur. Elle est dans l'aventure depuis 2009. Rien ne lui échappe.</p>
-          <div class="agent-status" style="color:var(--gold);">
-            <span style="width:7px;height:7px;border-radius:50%;background:var(--gold);display:inline-block;margin-right:6px;"></span>
-            Depuis 2009
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
 <!-- ══════════ CE QUE NOS CLIENTS NE FONT PLUS SEULS ══════════ -->
 <section style="background:var(--white);padding:100px 2.5rem;">
   <div class="section-wrap">
@@ -938,7 +761,7 @@ footer {
       <div class="expertise-card" onclick="openChat()" data-track="expertise_relances" style="background:var(--sable);border:1.5px solid var(--g200);border-radius:20px;padding:1.8rem;cursor:none;transition:all .3s;opacity:0;transform:translateY(16px);transition-delay:.08s;">
         <div class="xp-icon"><i data-lucide="trending-up"></i></div>
         <h3 style="font-size:15px;font-weight:800;margin-bottom:.6rem;">Tu perds de l'argent chaque semaine sans t'en rendre compte</h3>
-        <p style="font-size:13px;color:var(--g700);line-height:1.65;margin-bottom:1rem;">8 prospects par semaine, 5 non relancés dans les 48h. À 50 000 FCFA de panier moyen, c'est 1 million de FCFA qui s'évapore chaque mois. Awa les relance au bon moment, avec le bon message. Tu fermes des ventes que tu aurais perdues.</p>
+        <p style="font-size:13px;color:var(--g700);line-height:1.65;margin-bottom:1rem;">8 prospects par semaine, 5 non relancés dans les 48h. À 50 000 FCFA de panier moyen, c'est 1 million de FCFA qui s'évapore chaque mois. Ton assistant les relance au bon moment, avec le bon message. Tu fermes des ventes que tu aurais perdues.</p>
         <span style="font-size:12px;font-weight:700;color:var(--orange);">Récupérer ces ventes →</span>
       </div>
 
@@ -952,22 +775,22 @@ footer {
       <div class="expertise-card" onclick="openChat()" data-track="expertise_contenu" style="background:var(--sable);border:1.5px solid var(--g200);border-radius:20px;padding:1.8rem;cursor:none;transition:all .3s;opacity:0;transform:translateY(16px);transition-delay:.24s;">
         <div class="xp-icon"><i data-lucide="radio"></i></div>
         <h3 style="font-size:15px;font-weight:800;margin-bottom:.6rem;">Tu postes en urgence quand tu y penses</h3>
-        <p style="font-size:13px;color:var(--g700);line-height:1.65;margin-bottom:1rem;">Miriam programme ta semaine éditoriale le lundi — ta communauté te voit 7 jours sur 7 sans que tu touches ton téléphone. Ta visibilité monte. Tes concurrents se demandent comment tu fais.</p>
+        <p style="font-size:13px;color:var(--g700);line-height:1.65;margin-bottom:1rem;">Ton assistant programme ta semaine éditoriale le lundi — ta communauté te voit 7 jours sur 7 sans que tu touches ton téléphone. Ta visibilité monte. Tes concurrents se demandent comment tu fais.</p>
         <span style="font-size:12px;font-weight:700;color:var(--orange);">Automatiser ma présence →</span>
       </div>
 
       <div class="expertise-card" onclick="openChat()" data-track="expertise_finances" style="background:var(--sable);border:1.5px solid var(--g200);border-radius:20px;padding:1.8rem;cursor:none;transition:all .3s;opacity:0;transform:translateY(16px);transition-delay:.32s;">
         <div class="xp-icon"><i data-lucide="bar-chart-2"></i></div>
         <h3 style="font-size:15px;font-weight:800;margin-bottom:.6rem;">Tu travailles beaucoup mais tu ne sais pas si tu gagnes vraiment</h3>
-        <p style="font-size:13px;color:var(--g700);line-height:1.65;margin-bottom:1rem;">Roland calcule tes marges par produit, par service, par client. Il t'alerte avant que ça devienne un problème. Tu arrêtes de vendre à perte sans le savoir — et tu doubles là où c'est rentable.</p>
+        <p style="font-size:13px;color:var(--g700);line-height:1.65;margin-bottom:1rem;">Ton assistant calcule tes marges par produit, par service, par client. Il t'alerte avant que ça devienne un problème. Tu arrêtes de vendre à perte sans le savoir — et tu doubles là où c'est rentable.</p>
         <span style="font-size:12px;font-weight:700;color:var(--orange);">Clarifier mes chiffres →</span>
       </div>
 
       <div class="expertise-card" onclick="openChat()" data-track="expertise_deléguer" style="background:var(--charbon);border:1.5px solid rgba(242,92,5,.2);border-radius:20px;padding:1.8rem;cursor:none;transition:all .3s;opacity:0;transform:translateY(16px);transition-delay:.4s;">
         <div class="xp-icon xp-icon-light"><i data-lucide="users"></i></div>
-        <h3 style="font-size:15px;font-weight:800;margin-bottom:.6rem;color:var(--sable);">Tu n'as pas les moyens de payer 5 spécialistes</h3>
-        <p style="font-size:13px;color:rgba(250,246,240,.6);line-height:1.65;margin-bottom:1rem;">Avec le plan Manager, tu as Awa (vente), Miriam (contenu), Serge (agenda), Roland (finances) et Kofi (campagnes) — disponibles 24h/24 pour 29€/mois. Moins cher qu'une journée d'intérim. Et eux, ils ne s'absentent jamais.</p>
-        <span style="font-size:12px;font-weight:700;color:var(--orange);">Voir le plan Manager →</span>
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:.6rem;color:var(--sable);">Tu n'as pas les moyens de payer une équipe</h3>
+        <p style="font-size:13px;color:rgba(250,246,240,.6);line-height:1.65;margin-bottom:1rem;">Attractor Assists, c'est ton bras droit IA, dupliqué pour ton business : vente, contenu, organisation, finances. Disponible 24h/24, moins cher qu'une journée d'intérim. Et lui, il ne s'absente jamais.</p>
+        <span style="font-size:12px;font-weight:700;color:var(--orange);">Découvrir Attractor Assists →</span>
       </div>
 
     </div>
@@ -1306,7 +1129,7 @@ const io = new IntersectionObserver(es=>{
     io.unobserve(e.target);
   });
 },{threshold:.08,rootMargin:'0px 0px -40px 0px'});
-document.querySelectorAll('.agent-card,.app-card,.step,.testi-card,.expertise-card').forEach(el=>io.observe(el));
+document.querySelectorAll('.app-card,.step,.testi-card,.expertise-card').forEach(el=>io.observe(el));
 
 // Hover sur expertise cards
 document.querySelectorAll('.expertise-card').forEach(card=>{
@@ -1409,7 +1232,7 @@ const FLOW = [
   {
     id:'besoin',
     text:(p)=>`Ce qui te prend le plus de temps chez ${p.activite||'toi'} en ce moment ?`,
-    opts:['Relancer mes prospects','Gérer mon agenda','Créer du contenu','Suivre mes finances','Gérer mes commandes'],
+    opts:['Relancer mes prospects','Gérer mon agenda','Créer du contenu','Suivre mes finances','Gérer mes commandes','Autre'],
     key:'besoin'
   },
   {
@@ -1438,7 +1261,7 @@ function confirmLead(p) {
     'Gérer mes commandes':'ta gestion de commandes',
   };
   const sujet = sujets[p.besoin] || 'ton projet';
-  return `C'est noté, ${p.prenom||'toi'}.<br><br>Je reviens vers toi d'ici <strong>24h</strong> avec une solution concrète pour ${sujet}.<br><br>En attendant, tu peux voir nos apps en action ici → <a href="https://demo.agenceattractor.com" target="_blank" style="color:var(--orange);font-weight:700;">demo.agenceattractor.com</a>`;
+  return `C'est noté, ${p.prenom||'toi'}.<br><br>Je reviens vers toi d'ici <strong>24h</strong> avec une solution concrète pour ${sujet}.`;
 }
 
 function openChat() {
@@ -1472,6 +1295,15 @@ function setOpts(opts) {
 function selectOpt(val) {
   chatOpts.innerHTML = '';
   const step = FLOW[chatStep];
+  if (val === 'Autre') {
+    addMsg('Autre','user');
+    addMsg('Dis-moi en quelques mots ce qui te prend le plus de temps ?','mac');
+    chatInput.style.display = '';
+    document.getElementById('chat-send').style.display = '';
+    chatInput.placeholder = 'Ex : gérer mes fournisseurs, suivre mes stocks…';
+    chatInput.focus();
+    return;
+  }
   if(step.key) prospect[step.key]=val;
   addMsg(val,'user');
   track('chat_answer',{step:step.id,val});
@@ -1560,7 +1392,7 @@ async function sendProspect(p) {
 }
 
 /* ── Hover 3D cards ── */
-document.querySelectorAll('.agent-card:not(.mac),.app-card').forEach(card=>{
+document.querySelectorAll('.app-card').forEach(card=>{
   card.addEventListener('mousemove',e=>{
     const r=card.getBoundingClientRect();
     const dx=((e.clientX-r.left)/r.width-.5)*8;

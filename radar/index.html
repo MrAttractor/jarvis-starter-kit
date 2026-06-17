@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Radar Financement — Mr Attractor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+/* ── TOKENS ──────────────────────────────────────────────────────── */
+:root {
+  --orange:    #F25C05;
+  --orange-d:  #B84403;
+  --orange-l:  rgba(242,92,5,.10);
+  --gold:      #C9A84C;
+  --gold-l:    rgba(201,168,76,.12);
+  --charbon:   #1A1714;
+  --charbon-2: #221E1A;
+  --charbon-3: #2B2520;
+  --sable:     #FAF6F0;
+  --g700:      #4A443E;
+  --g400:      #9A938B;
+  --g200:      #E7E1D8;
+  --green:     #1E8A4C;
+  --green-l:   rgba(30,138,76,.12);
+  --surface:   rgba(255,255,255,.04);
+  --surface-h: rgba(255,255,255,.07);
+  --border:    rgba(255,255,255,.08);
+  --border-o:  rgba(242,92,5,.20);
+  --shadow:    0 4px 24px rgba(0,0,0,.35);
+  --radius:    10px;
+}
+
+/* ── RESET ───────────────────────────────────────────────────────── */
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Sora', system-ui, sans-serif;
+  background: var(--charbon);
+  color: var(--sable);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; }
+table { border-collapse: collapse; width: 100%; }
+
+/* ── GATE ─────────────────────────────────────────────────────────── */
+#gate {
+  position: fixed; inset: 0;
+  background: var(--charbon);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+.gate-card {
+  background: var(--charbon-2);
+  border: 1px solid var(--border-o);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  width: min(420px, 100%);
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.gate-logo {
+  width: 52px; height: 52px;
+  background: var(--orange);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 18px; color: white;
+  margin: 0 auto 1rem;
+  letter-spacing: -1px;
+}
+.gate-badge {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 2px;
+  color: var(--orange);
+  border: 1px solid var(--border-o);
+  border-radius: 4px;
+  padding: 3px 10px;
+  margin-bottom: 1rem;
+}
+.gate-title {
+  font-size: 22px; font-weight: 800;
+  margin-bottom: .25rem;
+}
+.gate-sub {
+  font-size: 13px; color: var(--g400);
+  margin-bottom: 2rem;
+}
+.gate-form { display: flex; flex-direction: column; gap: .75rem; }
+.gate-input {
+  background: rgba(255,255,255,.05);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: .75rem 1rem;
+  color: var(--sable);
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  transition: border-color .2s, box-shadow .2s;
+  outline: none;
+}
+.gate-input:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(242,92,5,.15);
+}
+.gate-input::placeholder { color: var(--g400); }
+.gate-btn {
+  background: var(--orange);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: .8rem 1.5rem;
+  font-size: 14px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: .5rem;
+  transition: background .2s, transform .1s;
+}
+.gate-btn:hover { background: var(--orange-d); }
+.gate-btn:active { transform: scale(.98); }
+.gate-err {
+  font-size: 12px; color: #e05a5a;
+  min-height: 1.2rem;
+  margin-top: .25rem;
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%,60%  { transform: translateX(-8px); }
+  40%,80%  { transform: translateX(8px); }
+}
+.shake { animation: shake .4s ease; }
+
+/* ── DASHBOARD ───────────────────────────────────────────────────── */
+#dashboard { display: none; min-height: 100vh; }
+
+/* HEADER */
+.dash-header {
+  background: var(--charbon-2);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem;
+  position: sticky; top: 0; z-index: 100;
+}
+.dash-brand { display: flex; align-items: center; gap: .75rem; }
+.brand-logo {
+  width: 36px; height: 36px;
+  background: var(--orange);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 13px; color: white;
+  flex-shrink: 0;
+}
+.brand-name { font-size: 15px; font-weight: 800; line-height: 1.1; }
+.brand-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; color: var(--orange);
+  text-transform: uppercase; letter-spacing: 1.5px;
+}
+.header-right { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.header-date { font-size: 11px; color: var(--g400); }
+.btn-icon {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: .45rem .8rem;
+  font-size: 12px; font-weight: 600; color: var(--sable);
+  display: flex; align-items: center; gap: .4rem;
+  transition: background .2s, border-color .2s;
+}
+.btn-icon:hover { background: var(--surface-h); border-color: var(--border-o); }
+.btn-icon svg { width: 14px; height: 14px; }
+.btn-notion { color: var(--gold); border-color: rgba(201,168,76,.25); }
+.btn-notion:hover { background: var(--gold-l); }
+.btn-logout { color: #e05a5a; }
+
+/* MAIN */
+.dash-main { max-width: 1100px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+
+/* SECTION TITLE */
+.s-title {
+  display: flex; align-items: center; gap: .6rem;
+  font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--g400);
+  margin-bottom: 1rem;
+}
+.s-title svg { width: 15px; height: 15px; color: var(--orange); }
+
+/* STATS BAR */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  display: flex; flex-direction: column; gap: .25rem;
+  transition: border-color .2s;
+}
+.stat-card:hover { border-color: var(--border-o); }
+.stat-card--hl { border-color: var(--border-o); background: rgba(242,92,5,.06); }
+.stat-val {
+  font-size: 30px; font-weight: 900;
+  color: var(--orange); line-height: 1;
+}
+.stat-val span { font-size: 16px; font-weight: 600; color: var(--g400); }
+.stat-label { font-size: 12px; color: var(--g400); }
+.stat-note { font-size: 11px; color: var(--g700); margin-top: .1rem; }
+
+/* PROGRAMS TABLE */
+.section-programs { margin-bottom: 2.5rem; }
+.table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+.programs-table { font-size: 13px; }
+.programs-table thead { background: rgba(255,255,255,.04); }
+.programs-table th {
+  padding: .75rem 1rem;
+  text-align: left;
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--g400);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.programs-table td {
+  padding: .85rem 1rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.programs-table tr:last-child td { border-bottom: none; }
+.programs-table tr:hover td { background: var(--surface); }
+.row-focus td:first-child { border-left: 3px solid var(--orange); }
+.prog-name {
+  font-weight: 700; display: flex; align-items: center; gap: .5rem;
+  white-space: nowrap;
+}
+.prog-star { color: var(--orange); font-size: 14px; }
+.prize { color: var(--gold); font-weight: 600; }
+.badge {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  padding: 3px 8px; border-radius: 4px;
+  white-space: nowrap;
+}
+.badge--prepare  { background: var(--gold-l); color: var(--gold); border: 1px solid rgba(201,168,76,.3); }
+.badge--action   { background: var(--orange-l); color: var(--orange); border: 1px solid var(--border-o); }
+.badge--done     { background: var(--green-l); color: var(--green); border: 1px solid rgba(30,138,76,.3); }
+
+.score-wrap { display: flex; align-items: center; gap: .6rem; }
+.score-bar {
+  flex: 1; height: 6px; border-radius: 3px; min-width: 80px;
+  background: linear-gradient(90deg, var(--orange) var(--pct), rgba(255,255,255,.08) var(--pct));
+}
+.score-num { font-size: 12px; font-weight: 700; color: var(--orange); white-space: nowrap; }
+
+/* ROADMAP */
+.section-roadmap { margin-bottom: 2.5rem; }
+.roadmap-grid {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  display: flex; flex-direction: column; gap: 0;
+}
+.milestone {
+  display: flex; gap: 1rem; align-items: stretch;
+  position: relative; padding-bottom: 1.5rem;
+}
+.milestone:last-child { padding-bottom: 0; }
+.milestone-left {
+  display: flex; flex-direction: column; align-items: center;
+  width: 20px; flex-shrink: 0;
+}
+.milestone-dot {
+  width: 14px; height: 14px;
+  background: var(--charbon-3);
+  border: 2px solid var(--border-o);
+  border-radius: 50%;
+  flex-shrink: 0; z-index: 1;
+}
+.milestone-line {
+  flex: 1; width: 2px;
+  background: linear-gradient(to bottom, var(--border-o), rgba(242,92,5,.06));
+  margin-top: 4px;
+}
+.milestone:last-child .milestone-line { display: none; }
+.milestone.done .milestone-dot {
+  background: var(--green);
+  border-color: var(--green);
+}
+.milestone.done .milestone-dot::after {
+  content: '✓';
+  position: absolute;
+  color: white; font-size: 8px; font-weight: 900;
+  left: 50%; transform: translateX(-50%);
+}
+.milestone-body { flex: 1; padding-top: 0; }
+.milestone-period {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; color: var(--orange);
+  font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: .2rem;
+}
+.milestone-title { font-size: 14px; font-weight: 700; margin-bottom: .15rem; }
+.milestone-kpi { font-size: 12px; color: var(--g400); }
+.milestone.done .milestone-title { color: var(--green); text-decoration: line-through; opacity: .7; }
+
+/* DOCS */
+.section-docs { margin-bottom: 2.5rem; }
+.docs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.doc-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  display: flex; align-items: center; gap: .75rem;
+  transition: background .2s, border-color .2s, transform .15s;
+  cursor: pointer;
+}
+.doc-card:hover {
+  background: var(--surface-h);
+  border-color: var(--border-o);
+  transform: translateY(-1px);
+}
+.doc-card svg { width: 18px; height: 18px; color: var(--orange); flex-shrink: 0; }
+.doc-card span { flex: 1; font-size: 13px; font-weight: 600; }
+.doc-arrow { color: var(--g400); width: 14px !important; height: 14px !important; }
+.doc-card--ext svg:first-child { color: var(--gold); }
+
+/* FOOTER */
+.dash-footer {
+  text-align: center;
+  padding: 1.5rem 2rem;
+  font-size: 11px; color: var(--g700);
+  border-top: 1px solid var(--border);
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .dash-header { padding: .75rem 1rem; }
+  .dash-main { padding: 1.25rem 1rem 3rem; }
+  .stats-bar { grid-template-columns: 1fr; }
+  .docs-grid { grid-template-columns: 1fr; }
+  .header-date { display: none; }
+  .stat-val { font-size: 24px; }
+}
+@media (max-width: 480px) {
+  .gate-card { padding: 2rem 1.25rem; }
+  .programs-table th, .programs-table td { padding: .6rem .75rem; }
+}
+
+/* ── PRINT ───────────────────────────────────────────────────────── */
+@media print {
+  #gate { display: none !important; }
+  #dashboard { display: block !important; }
+  .dash-header { position: static; }
+  .btn-icon, .header-right button { display: none; }
+  body { background: white; color: black; }
+  .stat-card, .table-wrap, .roadmap-grid, .doc-card { border-color: #ddd; }
+  .section-roadmap, .section-programs { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ GATE ══════════════════════════════════════════════════════════ -->
+<div id="gate">
+  <div class="gate-card" id="gate-card">
+    <div class="gate-logo">MA</div>
+    <div class="gate-badge">Accès Interne</div>
+    <h1 class="gate-title">Mr Attractor</h1>
+    <p class="gate-sub">Radar Financement — Pilotage agence</p>
+    <form class="gate-form" id="gate-form" autocomplete="off">
+      <input
+        type="password"
+        id="pwd"
+        class="gate-input"
+        placeholder="Mot de passe"
+        autocomplete="current-password"
+        autofocus
+        required
+      >
+      <button type="submit" class="gate-btn">
+        Accéder <i data-lucide="arrow-right"></i>
+      </button>
+    </form>
+    <p class="gate-err" id="gate-err" aria-live="polite"></p>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ═════════════════════════════════════════════════════ -->
+<div id="dashboard">
+
+  <!-- HEADER -->
+  <header class="dash-header">
+    <div class="dash-brand">
+      <div class="brand-logo">MA</div>
+      <div>
+        <div class="brand-name">Radar Financement</div>
+        <div class="brand-sub">Mr Attractor — Pilotage interne</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="header-date">Mis à jour : juin 2026</span>
+      <a
+        href="https://app.notion.com/p/3824257524c68131ba72eb3400a989a1"
+        target="_blank" rel="noopener"
+        class="btn-icon btn-notion"
+      >
+        <i data-lucide="book-open"></i> Notion
+      </a>
+      <button id="logout-btn" class="btn-icon btn-logout">
+        <i data-lucide="log-out"></i> Déconnecter
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="dash-main">
+
+    <!-- ═══ UPDATE STATS: changer les chiffres ci-dessous quand les données évoluent ═══ -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-val">5</div>
+        <div class="stat-label">Programmes suivis</div>
+        <div class="stat-note">Niveaux 1 + 2</div>
+      </div>
+      <div class="stat-card stat-card--hl">
+        <div class="stat-val">60<span>/100</span></div>
+        <div class="stat-label">Meilleur score actuel</div>
+        <div class="stat-note">Seedstars Africa</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">1M$<span>+</span></div>
+        <div class="stat-label">Dotations cumulées suivies</div>
+        <div class="stat-note">Subventions + investissements</div>
+      </div>
+    </div>
+    <!-- ═══ FIN UPDATE STATS ═══ -->
+
+    <!-- ═══ UPDATE COMPETITIONS: éditer les lignes du tableau ci-dessous pour mettre à jour ═══ -->
+    <!-- STATUS: badge--prepare (or) | badge--action (orange) | badge--done (vert) -->
+    <!-- SCORE:  changer --pct et le texte XX/100 -->
+    <section class="section-programs">
+      <div class="s-title">
+        <i data-lucide="target"></i> Compétitions Suivies
+      </div>
+      <div class="table-wrap">
+        <table class="programs-table">
+          <thead>
+            <tr>
+              <th>Programme</th>
+              <th>Organisateur</th>
+              <th>Deadline 2027</th>
+              <th>Dotation max</th>
+              <th>Statut</th>
+              <th>Score Attractor</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <!-- ── LIGNE 1 : Orange POESAM ── -->
+            <tr class="row-focus">
+              <td class="prog-name">
+                <span class="prog-star">★</span> Orange POESAM
+              </td>
+              <td>Orange</td>
+              <td>Mars–Mai 2027 (est.)</td>
+              <td class="prize">100 000 USD</td>
+              <td><span class="badge badge--prepare">Préparer</span></td>
+              <td>
+                <div class="score-wrap">
+                  <div class="score-bar" style="--pct:55%"></div>
+                  <span class="score-num">55/100</span>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ── LIGNE 2 : AfricaTech Award ── -->
+            <tr>
+              <td class="prog-name">AfricaTech Award</td>
+              <td>VivaTech + IFC</td>
+              <td>Jan–Fév 2027 (est.)</td>
+              <td class="prize">Réseau IFC + Paris</td>
+              <td><span class="badge badge--prepare">Préparer</span></td>
+              <td>
+                <div class="score-wrap">
+                  <div class="score-bar" style="--pct:35%"></div>
+                  <span class="score-num">35/100</span>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ── LIGNE 3 : Africa Business Heroes ── -->
+            <tr>
+              <td class="prog-name">Africa Business Heroes</td>
+              <td>Jack Ma Foundation</td>
+              <td>Mars–Avril 2027 (est.)</td>
+              <td class="prize">300 000 USD</td>
+              <td><span class="badge badge--prepare">Préparer</span></td>
+              <td>
+                <div class="score-wrap">
+                  <div class="score-bar" style="--pct:20%"></div>
+                  <span class="score-num">20/100</span>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ── LIGNE 4 : Seedstars Africa ── -->
+            <tr class="row-focus">
+              <td class="prog-name">
+                <span class="prog-star">★</span> Seedstars Africa
+              </td>
+              <td>Seedstars Intl</td>
+              <td>Continu (cycles locaux)</td>
+              <td class="prize">500 000 USD</td>
+              <td><span class="badge badge--action">Action H2 2026</span></td>
+              <td>
+                <div class="score-wrap">
+                  <div class="score-bar" style="--pct:60%"></div>
+                  <span class="score-num">60/100</span>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ── LIGNE 5 : UNICEF Venture Fund ── -->
+            <tr>
+              <td class="prog-name">UNICEF Venture Fund</td>
+              <td>UNICEF Innovation</td>
+              <td>Mars 2027 (est.)</td>
+              <td class="prize">100 000 USD</td>
+              <td><span class="badge badge--prepare">Préparer</span></td>
+              <td>
+                <div class="score-wrap">
+                  <div class="score-bar" style="--pct:45%"></div>
+                  <span class="score-num">45/100</span>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <!-- ═══ FIN UPDATE COMPETITIONS ═══ -->
+
+    <!-- ═══ UPDATE ROADMAP: ajouter class="done" à un .milestone quand le jalon est atteint ═══ -->
+    <section class="section-roadmap">
+      <div class="s-title">
+        <i data-lucide="map"></i> Roadmap POESAM 2027 — Cible prioritaire
+      </div>
+      <div class="roadmap-grid">
+
+        <div class="milestone">
+          <div class="milestone-left">
+            <div class="milestone-dot"></div>
+            <div class="milestone-line"></div>
+          </div>
+          <div class="milestone-body">
+            <div class="milestone-period">Juil – Août 2026</div>
+            <div class="milestone-title">Campagne testeurs CI</div>
+            <div class="milestone-kpi">KPI : 100 utilisateurs actifs — FB groupes, LinkedIn, TikTok</div>
+          </div>
+        </div>
+
+        <div class="milestone">
+          <div class="milestone-left">
+            <div class="milestone-dot"></div>
+            <div class="milestone-line"></div>
+          </div>
+          <div class="milestone-body">
+            <div class="milestone-period">Août – Sept 2026</div>
+            <div class="milestone-title">Tracker d'impact intégré</div>
+            <div class="milestone-kpi">KPI : dashboard live (CA moyen, heures économisées, emplois)</div>
+          </div>
+        </div>
+
+        <div class="milestone">
+          <div class="milestone-left">
+            <div class="milestone-dot"></div>
+            <div class="milestone-line"></div>
+          </div>
+          <div class="milestone-body">
+            <div class="milestone-period">Octobre 2026</div>
+            <div class="milestone-title">Partenariat institutionnel CI</div>
+            <div class="milestone-kpi">KPI : 1 accord signé — CEPICI, CCI CI ou incubateur local</div>
+          </div>
+        </div>
+
+        <div class="milestone">
+          <div class="milestone-left">
+            <div class="milestone-dot"></div>
+            <div class="milestone-line"></div>
+          </div>
+          <div class="milestone-body">
+            <div class="milestone-period">Novembre 2026</div>
+            <div class="milestone-title">3 cas clients vidéo</div>
+            <div class="milestone-kpi">KPI : 3 témoignages filmés avec métriques avant/après</div>
+          </div>
+        </div>
+
+        <div class="milestone">
+          <div class="milestone-left">
+            <div class="milestone-dot"></div>
+            <div class="milestone-line"></div>
+          </div>
+          <div class="milestone-body">
+            <div class="milestone-period">Décembre 2026</div>
+            <div class="milestone-title">Seuil de traction atteint</div>
+            <div class="milestone-kpi">KPI : 200 utilisateurs actifs sur Attractor Assists</div>
+          </div>
+        </div>
+
+        <div class="milestone">
+          <div class="milestone-left">
+            <div class="milestone-dot"></div>
+            <div class="milestone-line"></div>
+          </div>
+          <div class="milestone-body">
+            <div class="milestone-period">Janvier 2027</div>
+            <div class="milestone-title">Rédaction dossier POESAM</div>
+            <div class="milestone-kpi">KPI : dossier complet rédigé avec données réelles</div>
+          </div>
+        </div>
+
+        <div class="milestone">
+          <div class="milestone-left">
+            <div class="milestone-dot"></div>
+            <div class="milestone-line"></div>
+          </div>
+          <div class="milestone-body">
+            <div class="milestone-period">Mars – Mai 2027</div>
+            <div class="milestone-title">Dépôt candidature officielle</div>
+            <div class="milestone-kpi">KPI : candidature soumise sur poesam.orange.com</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- ═══ FIN UPDATE ROADMAP ═══ -->
+
+    <!-- ═══ UPDATE DOCS: changer les href si les fichiers sont déplacés ═══ -->
+    <section class="section-docs">
+      <div class="s-title">
+        <i data-lucide="file-text"></i> Documents Clés
+      </div>
+      <div class="docs-grid">
+        <a href="../attractor-assists/executive-summary.html" class="doc-card">
+          <i data-lucide="file-text"></i>
+          <span>Executive Summary</span>
+          <i data-lucide="arrow-right" class="doc-arrow"></i>
+        </a>
+        <a href="../attractor-assists/one-pager.html" class="doc-card">
+          <i data-lucide="file"></i>
+          <span>One Pager</span>
+          <i data-lucide="arrow-right" class="doc-arrow"></i>
+        </a>
+        <a
+          href="https://app.notion.com/p/3824257524c68131ba72eb3400a989a1"
+          target="_blank" rel="noopener"
+          class="doc-card doc-card--ext"
+        >
+          <i data-lucide="book-open"></i>
+          <span>Notion — Fiches détaillées</span>
+          <i data-lucide="external-link" class="doc-arrow"></i>
+        </a>
+      </div>
+    </section>
+    <!-- ═══ FIN UPDATE DOCS ═══ -->
+
+  </main>
+
+  <footer class="dash-footer">
+    Mr Attractor · Radar Financement · Usage interne uniquement
+  </footer>
+
+</div><!-- /#dashboard -->
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// CONFIG — pour changer le mot de passe :
+// 1. Choisir un nouveau mot de passe
+// 2. Calculer son SHA-256 : echo -n "nouveaumotdepasse" | sha256sum
+// 3. Remplacer la valeur de HASH ci-dessous
+// ═══════════════════════════════════════════════════════════════════
+const HASH = '882b8236e59543ac0440897408f8e2406778b526b41f842042e5243756bc9254';
+const SESSION_KEY = 'radar_auth';
+
+// ── UTILS ──────────────────────────────────────────────────────────
+async function hashPassword(pwd) {
+  const enc = new TextEncoder();
+  const buf = await crypto.subtle.digest('SHA-256', enc.encode(pwd));
+  return Array.from(new Uint8Array(buf))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+function showDashboard() {
+  document.getElementById('gate').style.display = 'none';
+  const dash = document.getElementById('dashboard');
+  dash.style.display = 'block';
+  lucide.createIcons();
+}
+
+// ── GATE ───────────────────────────────────────────────────────────
+document.getElementById('gate-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const input = document.getElementById('pwd');
+  const err   = document.getElementById('gate-err');
+  const card  = document.getElementById('gate-card');
+
+  const hash = await hashPassword(input.value);
+
+  if (hash === HASH) {
+    sessionStorage.setItem(SESSION_KEY, '1');
+    showDashboard();
+  } else {
+    card.classList.remove('shake');
+    void card.offsetWidth; // reflow pour relancer l'animation
+    card.classList.add('shake');
+    err.textContent = 'Mot de passe incorrect.';
+    input.value = '';
+    input.focus();
+  }
+});
+
+// ── LOGOUT ─────────────────────────────────────────────────────────
+document.getElementById('logout-btn').addEventListener('click', () => {
+  sessionStorage.removeItem(SESSION_KEY);
+  location.reload();
+});
+
+// ── CHECK SESSION ──────────────────────────────────────────────────
+if (sessionStorage.getItem(SESSION_KEY) === '1') {
+  showDashboard();
+} else {
+  lucide.createIcons(); // icônes dans le gate
+  document.getElementById('pwd').focus();
+}
+</script>
+</body>
+</html>
