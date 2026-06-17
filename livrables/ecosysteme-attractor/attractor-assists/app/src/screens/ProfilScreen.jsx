@@ -35,9 +35,26 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
   const [feedbackText, setFeedbackText]    = useState('');
   const [feedbackSending, setFeedbackSending] = useState(false);
   const [confirmDelete, setConfirmDelete]  = useState(false);
+  const [slugValue, setSlugValue]           = useState('');
+  const [slugChecking, setSlugChecking]     = useState(false);
+  const [isSlugAvail, setIsSlugAvail]       = useState(null);
 
   const photoInputRef = useRef(null);
   const canInstall = !['installed', 'desktop'].includes(detectPlatform());
+
+  // Vérification disponibilité slug (debounce 600ms, exclut le slug actuel)
+  useEffect(() => {
+    if (sheetOpen !== 'slug') return;
+    if (!slugValue || slugValue.length < 3) { setIsSlugAvail(null); return; }
+    if (slugValue === profile?.public_slug) { setIsSlugAvail(true); return; }
+    setSlugChecking(true);
+    const timer = setTimeout(async () => {
+      const { data } = await supabase.from('profiles').select('id').eq('public_slug', slugValue).maybeSingle();
+      setIsSlugAvail(!data);
+      setSlugChecking(false);
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [slugValue, sheetOpen]);
 
   const slug        = profile?.public_slug;
   const boutiqueUrl = slug ? `${window.location.origin}/b/${slug}` : null;
@@ -261,6 +278,13 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
             right="Modifier"
             onClick={() => openSheet('nom_assistant', profile?.nom_assistant || '')}
           />
+          <Divider />
+          <Row
+            label="Lien boutique"
+            sub={slug ? `/b/${slug}` : 'Créer un identifiant'}
+            right="Modifier"
+            onClick={() => { setSlugValue(profile?.public_slug || ''); setIsSlugAvail(null); setSheetOpen('slug'); }}
+          />
         </div>
 
         {/* Application */}
@@ -338,7 +362,64 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
 
       {/* ── Sheets ───────────────────────────────────────────────────────────── */}
 
-      {sheetOpen && sheetOpen !== 'feedback' && (
+      {sheetOpen === 'slug' && (
+        <div className="fixed inset-0 z-50 flex items-end" style={{ background: 'rgba(0,0,0,.45)' }} onClick={() => setSheetOpen(null)}>
+          <div className="w-full bg-white rounded-t-[28px] p-6 pb-10 flex flex-col gap-4" onClick={e => e.stopPropagation()}>
+            <div className="w-10 h-1 rounded-full bg-g200 mx-auto mb-1" />
+            <div className="font-display font-bold text-[17px] text-charbon">Ton lien boutique</div>
+
+            {/* Aperçu */}
+            <div className="bg-charbon rounded-xl px-4 py-3">
+              <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Aperçu</p>
+              <p className="text-white font-mono text-[13px] break-all">
+                assists.agenceattractor.com/b/<span className="text-orange font-bold">{slugValue || '...'}</span>
+              </p>
+            </div>
+
+            {/* Input */}
+            <div>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={slugValue}
+                  onChange={e => {
+                    const val = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 20);
+                    setSlugValue(val);
+                    setIsSlugAvail(null);
+                  }}
+                  placeholder="ex: macarthur"
+                  className="w-full px-4 py-3.5 rounded-xl border border-g200 bg-sable text-[15px] font-mono text-charbon outline-none focus:border-orange pr-10"
+                  autoFocus
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  {slugChecking && <div className="w-4 h-4 border-2 border-orange border-t-transparent rounded-full animate-spin" />}
+                  {!slugChecking && isSlugAvail === true && <span className="text-vert font-bold">✓</span>}
+                  {!slugChecking && isSlugAvail === false && <span className="text-red-500 font-bold">✗</span>}
+                </div>
+              </div>
+              {isSlugAvail === true && slugValue !== profile?.public_slug && (
+                <p className="text-[12px] text-vert font-semibold mt-1.5">Disponible.</p>
+              )}
+              {isSlugAvail === false && (
+                <p className="text-[12px] text-red-500 mt-1.5">
+                  Déjà pris. Essaie <button className="font-bold underline" onClick={() => setSlugValue(slugValue + '2')}>{slugValue}2</button>.
+                </p>
+              )}
+              <p className="text-[11px] text-g400 mt-2">Minuscules, chiffres et tirets. 3 à 20 caractères.</p>
+            </div>
+
+            <button
+              onClick={() => saveField({ public_slug: slugValue.trim() })}
+              disabled={saving || slugValue.length < 3 || !isSlugAvail || slugChecking}
+              className="w-full py-4 rounded-2xl bg-orange text-white font-display font-bold text-[15px] shadow-[0_8px_20px_-6px_rgba(242,92,5,.6)] disabled:opacity-50"
+            >
+              {saving ? 'Sauvegarde…' : 'Enregistrer'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {sheetOpen && sheetOpen !== 'feedback' && sheetOpen !== 'slug' && (
         <div className="fixed inset-0 z-50 flex items-end" style={{ background: 'rgba(0,0,0,.45)' }} onClick={() => setSheetOpen(null)}>
           <div className="w-full bg-white rounded-t-[28px] p-6 pb-10 flex flex-col gap-4" onClick={e => e.stopPropagation()}>
             <div className="w-10 h-1 rounded-full bg-g200 mx-auto mb-1" />
