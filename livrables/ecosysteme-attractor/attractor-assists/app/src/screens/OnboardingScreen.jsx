@@ -475,7 +475,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
         <div className="bg-charbon rounded-2xl px-4 py-4">
           <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2">Aperçu de ton lien</p>
           <p className="text-white font-mono text-[13px] break-all leading-relaxed">
-            assists.agenceattractor.com/b/<span className="text-orange font-bold">{slug || '...'}</span>
+            demo.agenceattractor.com/?c=<span className="text-orange font-bold">{slug || '...'}</span>
           </p>
         </div>
 
@@ -634,17 +634,17 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
           <div className="w-full bg-white rounded-2xl border border-g200 shadow-soft p-4 text-left">
             <p className="text-[11px] font-bold text-g400 uppercase tracking-wider mb-2">Ton lien boutique</p>
             <p className="font-mono text-[13px] text-charbon break-all mb-3">
-              assists.agenceattractor.com/b/<span className="text-orange font-bold">{slug}</span>
+              demo.agenceattractor.com/?c=<span className="text-orange font-bold">{slug}</span>
             </p>
             <div className="flex gap-2">
               <button
-                onClick={() => navigator.clipboard.writeText(`https://assists.agenceattractor.com/b/${slug}`)}
+                onClick={() => navigator.clipboard.writeText(`https://demo.agenceattractor.com/?c=${slug}`)}
                 className="flex-1 py-2.5 rounded-xl bg-orange/10 text-orange font-bold text-[13px] active:bg-orange/20 transition"
               >
                 Copier le lien
               </button>
               <a
-                href={`https://wa.me/?text=${encodeURIComponent(`Commande directement sur mon app : https://assists.agenceattractor.com/b/${slug}`)}`}
+                href={`https://wa.me/?text=${encodeURIComponent(`Commande directement sur mon app : https://demo.agenceattractor.com/?c=${slug}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 py-2.5 rounded-xl bg-vert/10 text-vert font-bold text-[13px] flex items-center justify-center gap-1.5 active:bg-vert/20 transition"

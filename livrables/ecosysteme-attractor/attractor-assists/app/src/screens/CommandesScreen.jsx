@@ -352,7 +352,7 @@ function EmptyState({ tab, profile, notify }) {
       {profile?.public_slug && (
         <button
           onClick={() => {
-            const url = `${window.location.origin}/b/${profile.public_slug}`;
+            const url = `${window.location.origin}/?c=${profile.public_slug}`;
             if (navigator.share) {
               navigator.share({ title: 'Commande ici', url }).catch(() => {});
             } else {
