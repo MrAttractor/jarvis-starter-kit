@@ -938,6 +938,30 @@ async function send() {
 document.getElementById('chat-input').addEventListener('keydown', e => { if (e.key==='Enter') send(); });
 
 renderProducts();
+
+// Mise à jour live des prix depuis Assists (Kezey modifie ses produits dans Assists → site synchronisé)
+async function fetchLivePrices() {
+  try {
+    const res = await fetch(`${SUPABASE}/rest/v1/rpc/get_catalogue`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': ANON, 'Authorization': `Bearer ${ANON}` },
+      body: JSON.stringify({ p_slug: 'creal' })
+    });
+    if (!res.ok) return;
+    const live = await res.json();
+    if (!live || live.length === 0) return;
+    let changed = false;
+    PRODUCTS.forEach(p => {
+      // Matching souple : le nom Supabase contient le nom hardcodé (insensible à la casse)
+      const nameKey = p.name.toLowerCase().replace(/['\s]/g, '');
+      const row = live.find(r => r.nom.toLowerCase().replace(/['\s]/g, '').includes(nameKey) ||
+                                  nameKey.includes(r.nom.toLowerCase().replace(/['\s]/g, '')));
+      if (row && row.prix != null) { p.price = Number(row.prix); changed = true; }
+    });
+    if (changed) { renderProducts(); renderCart(); }
+  } catch {}
+}
+fetchLivePrices();
 </script>
 </body>
 </html>
