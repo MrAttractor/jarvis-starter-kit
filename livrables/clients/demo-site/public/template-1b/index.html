@@ -508,6 +508,10 @@ main { flex: 1; min-height: 0; overflow-y: auto; }
           <div class="next-step"><span class="step-num">3</span><span>Mariama prépare votre commande</span></div>
           <div class="next-step"><span class="step-num">4</span><span>Livraison sous <strong>45 min</strong> à Abidjan</span></div>
         </div>
+        <div id="order-confirm-block" style="display:none;margin-bottom:12px;background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:12px;text-align:center">
+          <p style="font-weight:700;font-size:14px;color:#16a34a;margin-bottom:4px">Commande enregistrée !</p>
+          <p id="order-fidelys-txt" style="font-size:13px;color:#555;line-height:1.5"></p>
+        </div>
         <button class="wa-btn" onclick="confirmPayWA()">
           <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.553 4.107 1.523 5.84L.057 23.7a.5.5 0 0 0 .611.642l6.054-1.587A11.946 11.946 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.87 0-3.63-.484-5.163-1.333l-.37-.215-3.834 1.004 1.021-3.728-.234-.383A9.956 9.956 0 0 1 2 12C2 6.478 6.478 2 12 2s10 4.478 10 10-4.478 10-10 10z"/></svg>
           Envoyer ma capture à Mariama
@@ -731,16 +735,44 @@ async function confirmPayWA() {
     return `• ${p.name} x${qty} = ${(p.price*qty).toLocaleString('fr-FR')} F`;
   }).join('\n');
   const methodLabel = _payMethod === 'wave' ? 'Wave' : 'Orange Money';
+  const confirmBlock = document.getElementById('order-confirm-block');
+  const fidelysMsg   = document.getElementById('order-fidelys-txt');
   try {
     const orderItems = items.map(([id,qty])=>{ const p=PRODUCTS.find(p=>p.id==+id); return {nom:p.name,qty,prix_unit:p.price,total:p.price*qty}; });
-    await fetch(`${SUPABASE}/rest/v1/rpc/save_order`,{
+    const res = await fetch(`${SUPABASE}/rest/v1/rpc/save_order`,{
       method:'POST',
       headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':`Bearer ${ANON}`},
       body:JSON.stringify({p_slug:SLUG,p_client_name:_clientName,p_client_wa:_clientPhone,p_items:orderItems,p_total_fcfa:_payTotal,p_delivery_address:_clientAddress||null})
     });
+    if (!res.ok) {
+      const txt = await res.text();
+      if (txt.includes('QUOTA_REACHED')) {
+        if (confirmBlock) { confirmBlock.style.display='block'; confirmBlock.style.background='#fef2f2'; confirmBlock.style.borderColor='#fca5a5'; }
+        if (fidelysMsg) fidelysMsg.textContent = 'Cette boutique a atteint sa limite de commandes ce mois-ci. Contacte le vendeur directement via WhatsApp.';
+        return;
+      }
+    }
   } catch {}
+  // Afficher confirmation + ouvrir WA
+  if (confirmBlock) confirmBlock.style.display='block';
   const msg = `Bonjour ${SHOP_NAME} ! Commande payée ${_payTotal.toLocaleString('fr-FR')} F via ${methodLabel}.\n\nClient : ${_clientName}\nWhatsApp : ${_clientPhone}\nAdresse : ${_clientAddress||'Non précisée'}\n\nCommande :\n${lines}\n\nTotal : ${_payTotal.toLocaleString('fr-FR')} F`;
   window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`, '_blank');
+  // Fidelys : vérifier le statut du client
+  if (!_clientPhone || !SLUG) return;
+  try {
+    const fr = await fetch(`${SUPABASE}/rest/v1/rpc/get_fidelys_status`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':`Bearer ${ANON}`},
+      body:JSON.stringify({p_slug:SLUG, p_contact:_clientPhone})
+    });
+    const f = await fr.json();
+    if (f && f.commandes_count && fidelysMsg) {
+      const txt = (f.next_in === 0)
+        ? `Bravo ! ${f.commandes_count} commandes chez nous — tu as droit à : ${f.reward_label} 🎉`
+        : `Tu as ${f.commandes_count} commande${f.commandes_count>1?'s':''} chez nous. Encore ${f.next_in} pour ${f.reward_label}.`;
+      fidelysMsg.textContent = txt;
+    }
+  } catch {}
 }
 
 /* ── Tabs ─────────────────────────────────────────────────────────────── */

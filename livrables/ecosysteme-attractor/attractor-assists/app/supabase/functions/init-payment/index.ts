@@ -17,8 +17,9 @@ const json = (data: unknown, status = 200) =>
   });
 
 const PLANS: Record<string, { amount_xof: number; amount_eur: number; label: string }> = {
-  growth: { amount_xof: 9900,  amount_eur: 15, label: "Attractor Growth — Abonnement mensuel" },
-  team:   { amount_xof: 25500, amount_eur: 39, label: "Attractor Team — Abonnement mensuel"   },
+  growth:     { amount_xof: 9900,  amount_eur: 15, label: "Attractor Growth — Abonnement mensuel" },
+  bras_droit: { amount_xof: 9900,  amount_eur: 15, label: "Attractor Growth — Abonnement mensuel" },
+  team:       { amount_xof: 25500, amount_eur: 39, label: "Attractor Team — Abonnement mensuel"   },
 };
 
 const CI_CHANNELS = ["WAVECI", "MOMOCI", "OMCIV2"];

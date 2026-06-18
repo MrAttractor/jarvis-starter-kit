@@ -18,14 +18,14 @@ const PLANS = [
     tagline: 'Pour démarrer et tester',
     features: [
       'Mini-site boutique partageable',
+      'Catalogue produits illimité',
+      'Gestion des commandes (20/mois)',
       '20 messages Assists / jour',
-      'Catalogue produits (illimité)',
-      'Gestion des commandes',
     ],
     locked: [
+      'Commandes illimitées',
+      'Fidelys — programme fidélité auto',
       'DMV quotidienne (action du jour)',
-      'Fidelys — programme fidélité',
-      'Agent Veille & Prospection',
       'Assists illimité',
     ],
     cta: null, // pas de CTA si plan actuel
@@ -39,11 +39,11 @@ const PLANS = [
     tagline: 'Ton assistant IA sans limite',
     badge: 'Recommandé',
     features: [
+      'Commandes illimitées sur ton mini-site',
+      'Fidelys — programme fidélité automatique',
       'Assists illimité (0 restriction)',
       'DMV quotidienne — action du jour personnalisée',
-      'Fidelys — programme fidélité clients',
-      'Agent Veille & Prospection',
-      'Mini-site boutique + gestion commandes',
+      'Mini-site boutique + catalogue illimité',
     ],
     locked: [],
     cta: 'Passer au Bras Droit',
@@ -269,8 +269,9 @@ export function PaliersScreen({ go, notify, profile, onPlanChange }) {
   const [showPayment, setShowPayment] = useState(false);
   const [showTrial, setShowTrial] = useState(false);
 
-  const currentPlan = profile?.plan_code || 'gratuit';
-  const isBrasDroit = ['bras_droit', 'growth', 'growth_eu', 'team', 'manager', 'personnalise'].includes(currentPlan);
+  const currentPlan = profile?.plan_tier ||
+    (['bras_droit','growth','growth_eu','team','manager','personnalise'].includes(profile?.plan_code) ? 'growth' : 'gratuit');
+  const isBrasDroit = currentPlan === 'growth' || currentPlan === 'pro';
   const isTrial     = !!profile?.trial_activated_at && !profile?.trial_expires_at?.passed;
   const alreadyTrialed = !!profile?.trial_activated_at;
 

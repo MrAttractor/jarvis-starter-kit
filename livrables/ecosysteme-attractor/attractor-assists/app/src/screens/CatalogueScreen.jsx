@@ -10,6 +10,9 @@ export function CatalogueScreen({ go, notify, profile }) {
   const [editProduct, setEditProduct] = useState(null);
   const [form, setForm]             = useState({ nom: '', prix: '', unite: 'unité', categorie: '', photo_url: '' });
   const [uploading, setUploading]   = useState(false);
+  const [lastPhotoFile, setLastPhotoFile] = useState(null);
+  const [cleaning, setCleaning]     = useState(false);
+  const [cleanStatus, setCleanStatus] = useState('');
 
   // Scan IA
   const [scanning, setScanning]       = useState(false);
@@ -126,6 +129,7 @@ export function CatalogueScreen({ go, notify, profile }) {
   const handlePhotoUpload = async (file) => {
     if (!file) return;
     setUploading(true);
+    setLastPhotoFile(file);
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { notify('Session expirée'); return; }
@@ -139,6 +143,29 @@ export function CatalogueScreen({ go, notify, profile }) {
       notify(e?.message || 'Erreur upload photo');
     }
     setUploading(false);
+  };
+
+  const handleCleanPhoto = async () => {
+    const source = lastPhotoFile || form.photo_url;
+    if (!source) return;
+    setCleaning(true);
+    setCleanStatus('');
+    try {
+      const { cleanPhotoBackground } = await import('../lib/photoUtils');
+      const cleanedBlob = await cleanPhotoBackground(source, setCleanStatus);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('session');
+      const path = `${user.id}/${Date.now()}_clean.jpg`;
+      const { error } = await supabase.storage.from('catalogue-photos').upload(path, cleanedBlob, { upsert: true, contentType: 'image/jpeg' });
+      if (error) throw error;
+      const { data: { publicUrl } } = supabase.storage.from('catalogue-photos').getPublicUrl(path);
+      setForm(x => ({ ...x, photo_url: publicUrl }));
+      setLastPhotoFile(null);
+    } catch {
+      notify('Erreur lors du traitement. Réessaie.');
+    }
+    setCleaning(false);
+    setCleanStatus('');
   };
 
   const handleSave = async () => {
@@ -416,15 +443,30 @@ export function CatalogueScreen({ go, notify, profile }) {
                     : <Icon name="camera" size={22} className="text-g400" />
                   }
                 </div>
-                <button
-                  type="button"
-                  onClick={() => fileRef.current?.click()}
-                  disabled={uploading}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-[1.5px] border-dashed border-g300 text-[13px] font-bold text-g600 bg-sable active:bg-g100 transition disabled:opacity-60"
-                >
-                  {uploading ? <Spinner className="w-4 h-4" /> : <Icon name="camera" size={15} />}
-                  {uploading ? 'Chargement…' : form.photo_url ? 'Changer la photo' : 'Ajouter une photo'}
-                </button>
+                <div className="flex-1 flex flex-col gap-2">
+                  <button
+                    type="button"
+                    onClick={() => fileRef.current?.click()}
+                    disabled={uploading || cleaning}
+                    className="flex items-center justify-center gap-2 py-3 rounded-xl border-[1.5px] border-dashed border-g300 text-[13px] font-bold text-g600 bg-sable active:bg-g100 transition disabled:opacity-60"
+                  >
+                    {uploading ? <Spinner className="w-4 h-4" /> : <Icon name="camera" size={15} />}
+                    {uploading ? 'Chargement…' : form.photo_url ? 'Changer la photo' : 'Ajouter une photo'}
+                  </button>
+                  {form.photo_url && (
+                    <button
+                      type="button"
+                      onClick={handleCleanPhoto}
+                      disabled={cleaning || uploading}
+                      className="flex items-center justify-center gap-2 py-2.5 rounded-xl border-[1.5px] border-dashed border-orange/40 text-[13px] font-bold text-orange bg-orange/5 active:bg-orange/10 transition disabled:opacity-60"
+                    >
+                      {cleaning
+                        ? <><Spinner className="w-3.5 h-3.5" /> <span>{cleanStatus || 'Traitement…'}</span></>
+                        : 'Nettoyer le fond'
+                      }
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
 

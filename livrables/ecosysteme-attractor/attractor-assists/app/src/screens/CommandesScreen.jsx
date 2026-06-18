@@ -37,12 +37,41 @@ function fmtDate(iso) {
   return new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
 }
 
+const MONTHLY_LIMIT = 20;
+
+function PalierBanner({ count, go }) {
+  const remaining = MONTHLY_LIMIT - count;
+  if (count < 16) return null;
+  const blocked = count >= MONTHLY_LIMIT;
+  return (
+    <div className={`mx-4 mb-3 rounded-2xl px-4 py-3 flex items-center justify-between gap-3 ${blocked ? 'bg-red-50 border border-red-200' : 'bg-orange/8 border border-orange/20'}`}>
+      <div className="flex-1 min-w-0">
+        <p className={`text-[13px] font-bold ${blocked ? 'text-red-600' : 'text-orange'}`}>
+          {blocked ? 'Limite atteinte — boutique bloquée' : `${remaining} commande${remaining > 1 ? 's' : ''} restante${remaining > 1 ? 's' : ''} ce mois`}
+        </p>
+        <p className="text-[11.5px] text-g500 mt-0.5">
+          {blocked ? 'Les nouvelles commandes sont refusées jusqu\'à la fin du mois.' : 'Passe en Growth pour des commandes illimitées.'}
+        </p>
+      </div>
+      <button
+        onClick={() => go('paliers')}
+        className="flex-shrink-0 px-3 py-2 rounded-xl bg-orange text-white text-[12px] font-bold active:opacity-80 transition"
+      >
+        Growth
+      </button>
+    </div>
+  );
+}
+
 export function CommandesScreen({ go, notify, profile }) {
-  const [orders, setOrders]     = useState([]);
-  const [loading, setLoading]   = useState(true);
-  const [tab, setTab]           = useState('new');
-  const [period, setPeriod]     = useState('today');
-  const [expanded, setExpanded] = useState(null); // order id
+  const [orders, setOrders]         = useState([]);
+  const [loading, setLoading]       = useState(true);
+  const [tab, setTab]               = useState('new');
+  const [period, setPeriod]         = useState('today');
+  const [expanded, setExpanded]     = useState(null);
+  const [monthlyCount, setMonthlyCount] = useState(0);
+
+  const isGratuit = !profile?.plan_tier || profile.plan_tier === 'gratuit';
 
   const loadOrders = async () => {
     setLoading(true);
@@ -62,6 +91,12 @@ export function CommandesScreen({ go, notify, profile }) {
     }
 
     loadOrders();
+
+    if (isGratuit) {
+      supabase.rpc('get_monthly_order_count').then(({ data }) => {
+        if (data != null) setMonthlyCount(data);
+      }).catch(() => {});
+    }
 
     if (!profile?.id) return;
 
@@ -162,6 +197,9 @@ export function CommandesScreen({ go, notify, profile }) {
           </div>
         </div>
       </div>
+
+      {/* Banner quota gratuit */}
+      {isGratuit && <PalierBanner count={monthlyCount} go={go} />}
 
       {/* Tabs statut */}
       <div className="px-4 pb-2 flex-shrink-0">

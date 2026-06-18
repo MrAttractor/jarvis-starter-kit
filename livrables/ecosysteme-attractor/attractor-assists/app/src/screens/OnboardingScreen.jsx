@@ -154,6 +154,9 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   const photoRef  = useRef(null);
   const [photoTarget,    setPhotoTarget]    = useState(null);
   const [photoUploading, setPhotoUploading] = useState(false);
+  const [lastPhotoFiles, setLastPhotoFiles] = useState({});
+  const [cleaningIndex,  setCleaningIndex]  = useState(null);
+  const [cleanStatus,    setCleanStatus]    = useState('');
 
   const ANAMN_QUESTIONS = [
     'Tu fais quoi exactement ? Dis-moi ton activité en quelques mots.',
@@ -189,6 +192,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   const handlePhotoUpload = async (file) => {
     if (!file || photoTarget === null) return;
     setPhotoUploading(true);
+    setLastPhotoFiles(f => ({ ...f, [photoTarget]: file }));
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -201,6 +205,26 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     } catch {}
     setPhotoUploading(false);
     setPhotoTarget(null);
+  };
+
+  const handleCleanPhoto = async (index) => {
+    const source = lastPhotoFiles[index] || produits[index]?.photo_url;
+    if (!source) return;
+    setCleaningIndex(index);
+    setCleanStatus('');
+    try {
+      const { cleanPhotoBackground } = await import('../lib/photoUtils');
+      const cleanedBlob = await cleanPhotoBackground(source, setCleanStatus);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const path = `${user.id}/${Date.now()}_clean.jpg`;
+      await supabase.storage.from('catalogue-photos').upload(path, cleanedBlob, { upsert: true, contentType: 'image/jpeg' });
+      const { data: { publicUrl } } = supabase.storage.from('catalogue-photos').getPublicUrl(path);
+      setProduits(ps => ps.map((p, i) => i === index ? { ...p, photo_url: publicUrl } : p));
+      setLastPhotoFiles(f => { const n = { ...f }; delete n[index]; return n; });
+    } catch {}
+    setCleaningIndex(null);
+    setCleanStatus('');
   };
 
   // ── Sauvegarde finale ──────────────────────────────────────────────────────────
@@ -740,7 +764,16 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
             <div className="flex-1 min-w-0">
               <div className="font-bold text-[14px] text-charbon truncate">{p.nom}</div>
               {p.prix && <div className="text-[12.5px] text-orange font-semibold">{parseInt(p.prix).toLocaleString('fr-FR')} F</div>}
-              {!p.photo_url && <div className="text-[11px] text-g400 mt-0.5">Tap pour ajouter une photo</div>}
+              {!p.photo_url
+                ? <div className="text-[11px] text-g400 mt-0.5">Tap la vignette pour ajouter une photo</div>
+                : <button
+                    onClick={() => handleCleanPhoto(i)}
+                    disabled={cleaningIndex === i}
+                    className="text-[11px] font-bold text-orange mt-0.5 active:opacity-70 transition disabled:opacity-50"
+                  >
+                    {cleaningIndex === i ? (cleanStatus || 'Traitement…') : '✦ Nettoyer le fond'}
+                  </button>
+              }
             </div>
             <button
               onClick={() => setProduits(ps => ps.map((item, j) => j === i ? { ...item, actif: !item.actif } : item))}

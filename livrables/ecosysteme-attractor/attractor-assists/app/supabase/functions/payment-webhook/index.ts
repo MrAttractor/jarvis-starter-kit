@@ -59,11 +59,16 @@ Deno.serve(async (req) => {
   }).eq("reference", reference);
 
   if (success) {
+    const planTier =
+      ["bras_droit", "growth", "growth_eu"].includes(payment.plan_id) ? "growth" :
+      payment.plan_id === "pro" ? "pro" : "gratuit";
+
     await supabase.from("profiles").update({
       plan_code: payment.plan_id,
+      plan_tier: planTier,
     }).eq("id", payment.user_id);
 
-    console.log(`payment-webhook: plan_code=${payment.plan_id} activé pour user=${payment.user_id}`);
+    console.log(`payment-webhook: plan_code=${payment.plan_id} plan_tier=${planTier} activé pour user=${payment.user_id}`);
   }
 
   return new Response("OK", { status: 200 });
