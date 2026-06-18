@@ -50,6 +50,74 @@ function PrimaryBtn({ onClick, disabled, children, className = '' }) {
   );
 }
 
+const TEMPLATES = [
+  { id: '1a', name: 'Classique', desc: 'Grille de produits, style épuré' },
+  { id: '1b', name: 'Liste',     desc: 'Détail vertical, idéal restauration' },
+  { id: '1c', name: 'Magazine',  desc: 'Hero immersif, beauté et mode' },
+];
+
+const COLOR_PALETTE = [
+  { hex: '#FF6B35', label: 'Orange' },
+  { hex: '#1B3A2F', label: 'Vert'   },
+  { hex: '#2563EB', label: 'Bleu'   },
+  { hex: '#9333EA', label: 'Violet' },
+  { hex: '#DB2777', label: 'Rose'   },
+  { hex: '#C9A84C', label: 'Or'     },
+];
+
+function TemplatePreview({ id, color }) {
+  if (id === '1a') return (
+    <div style={{ background: '#1a1714', height: 88, padding: 10, display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ width: 28, height: 28, borderRadius: 8, background: `${color}33`, border: `1.5px solid ${color}`, flexShrink: 0 }} />
+        <div>
+          <div style={{ width: 60, height: 6, background: 'rgba(255,255,255,0.75)', borderRadius: 3, marginBottom: 4 }} />
+          <div style={{ width: 38, height: 4, background: 'rgba(255,255,255,0.3)', borderRadius: 3 }} />
+        </div>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 5 }}>
+        {[0,1,2].map(i => (
+          <div key={i} style={{ height: 30, borderRadius: 6, background: i === 0 ? color : 'rgba(255,255,255,0.13)' }} />
+        ))}
+      </div>
+    </div>
+  );
+
+  if (id === '1b') return (
+    <div style={{ background: '#1B3A2F', height: 88, padding: 10, display: 'flex', flexDirection: 'column', gap: 7 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ width: 28, height: 28, borderRadius: 8, background: `${color}33`, border: `1.5px solid ${color}`, flexShrink: 0 }} />
+        <div style={{ width: 56, height: 6, background: 'rgba(255,255,255,0.8)', borderRadius: 3 }} />
+      </div>
+      {[0,1].map(i => (
+        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7, background: 'rgba(255,255,255,0.1)', borderRadius: 8, padding: '5px 7px' }}>
+          <div style={{ width: 26, height: 26, borderRadius: 6, background: i === 0 ? color : 'rgba(255,255,255,0.18)', flexShrink: 0 }} />
+          <div style={{ flex: 1 }}>
+            <div style={{ width: '60%', height: 5, background: 'rgba(255,255,255,0.75)', borderRadius: 2, marginBottom: 4 }} />
+            <div style={{ width: '35%', height: 4, background: color, borderRadius: 2, opacity: 0.85 }} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  return (
+    <div style={{ height: 88, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ background: 'linear-gradient(135deg,#0F0A1A,#2A0A20)', flex: '0 0 56px', padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', gap: 4 }}>
+        <div style={{ display: 'inline-flex', background: color, borderRadius: 10, padding: '2px 8px', alignSelf: 'flex-start' }}>
+          <div style={{ width: 30, height: 4, background: 'rgba(0,0,0,0.4)', borderRadius: 2 }} />
+        </div>
+        <div style={{ width: 72, height: 7, background: '#fff', borderRadius: 3 }} />
+      </div>
+      <div style={{ background: '#FAF8F4', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, padding: 5, flex: 1 }}>
+        {[0,1].map(i => (
+          <div key={i} style={{ borderRadius: 4, background: i === 0 ? color : '#e5e7eb', opacity: i === 0 ? 0.9 : 1 }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function slugify(str) {
   return str
     .toLowerCase()
@@ -73,6 +141,8 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   const [newProd, setNewProd]     = useState({ nom: '', prix: '' });
   const [saving, setSaving]       = useState(false);
   const [saveErr, setSaveErr]     = useState('');
+  const [templateId, setTemplateId] = useState('1a');
+  const [brandColor, setBrandColor] = useState('#FF6B35');
 
   // Slug
   const [slug, setSlug]                   = useState('');
@@ -123,14 +193,16 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
       const referralCode = user.id.replace(/-/g, '').slice(0, 8).toUpperCase();
 
       const { error: profileErr } = await supabase.from('profiles').update({
-        prenom:          prenom.trim() || '',       // NOT NULL — jamais null
+        prenom:          prenom.trim() || '',
         nom_assistant:   (nomAss || 'Assists').trim(),
         activite:        anamnData.activite || null,
-        zone:            anamnData.zone?.trim() || '', // NOT NULL — jamais null
+        zone:            anamnData.zone?.trim() || '',
         profil_type:     profilType || 'entrepreneur',
         onboarding_done: true,
         referral_code:   referralCode,
         public_slug:     slug.trim() || null,
+        template_id:     templateId || '1a',
+        brand_color:     brandColor || '#FF6B35',
       }).eq('id', user.id);
       if (profileErr) throw profileErr;
 
@@ -422,12 +494,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
           {done && (
             <div className="flex justify-center mt-2">
               <button
-                onClick={() => {
-                  setSlug(slugify(prenom));
-                  setIsSlugAvailable(null);
-                  setProduits([]);
-                  setPhase('slug');
-                }}
+                onClick={() => setPhase('template')}
                 className="px-6 py-3 rounded-2xl bg-orange text-white font-bold text-[14px] shadow-[0_6px_16px_-4px_rgba(242,92,5,.55)] active:opacity-80 transition"
               >
                 Créer ma boutique
@@ -460,12 +527,83 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     );
   }
 
-  // ── 6. Choix du slug boutique ──────────────────────────────────────────────────
+  // ── 6. Choix du template ──────────────────────────────────────────────────────
+
+  if (phase === 'template') return (
+    <div className="h-full flex flex-col bg-sable">
+      <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white flex-shrink-0">
+        <ProgressBar step={2} />
+        <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Ton style de boutique</h2>
+        <p className="text-[12.5px] text-g500 mt-0.5">Choisis le modèle qui ressemble à ton activité.</p>
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3" style={{ scrollbarWidth: 'none' }}>
+        {TEMPLATES.map(t => (
+          <button
+            key={t.id}
+            onClick={() => { setTemplateId(t.id); setBrandColor(t.id === '1c' ? '#C9A84C' : '#FF6B35'); }}
+            className={`w-full text-left rounded-2xl border-2 overflow-hidden transition ${
+              templateId === t.id
+                ? 'border-orange shadow-[0_0_0_3px_rgba(242,92,5,.15)]'
+                : 'border-g200 bg-white'
+            }`}
+          >
+            <TemplatePreview id={t.id} color={templateId === t.id ? brandColor : (t.id === '1c' ? '#C9A84C' : '#FF6B35')} />
+            <div className="px-4 py-3">
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-display font-bold text-[14.5px] text-charbon">{t.name}</span>
+                {templateId === t.id && (
+                  <span className="text-[11px] font-bold text-orange bg-orange/10 px-2 py-0.5 rounded-full">Sélectionné</span>
+                )}
+              </div>
+              <p className="text-[12.5px] text-g500 mb-3">{t.desc}</p>
+              {templateId === t.id && (
+                <div className="flex gap-2 flex-wrap">
+                  {COLOR_PALETTE.map(c => (
+                    <button
+                      key={c.hex}
+                      onClick={e => { e.stopPropagation(); setBrandColor(c.hex); }}
+                      title={c.label}
+                      className="transition active:scale-90"
+                      style={{
+                        width: 28, height: 28, borderRadius: '50%',
+                        background: c.hex,
+                        border: brandColor === c.hex ? '3px solid #1a1714' : '2px solid transparent',
+                        outline: brandColor === c.hex ? '2px solid #fff' : 'none',
+                        outlineOffset: brandColor === c.hex ? '-4px' : '0',
+                        boxShadow: '0 1px 4px rgba(0,0,0,0.18)',
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </button>
+        ))}
+      </div>
+
+      <div className="px-4 pb-10 pt-3">
+        <PrimaryBtn
+          onClick={() => {
+            setSlug(slugify(prenom));
+            setIsSlugAvailable(null);
+            setProduits([]);
+            setPhase('slug');
+          }}
+          disabled={!templateId}
+        >
+          Continuer
+        </PrimaryBtn>
+      </div>
+    </div>
+  );
+
+  // ── 7. Choix du slug boutique ──────────────────────────────────────────────────
 
   if (phase === 'slug') return (
     <div className="h-full flex flex-col bg-sable">
       <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
-        <ProgressBar step={2} />
+        <ProgressBar step={3} />
         <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Ton lien boutique</h2>
         <p className="text-[12.5px] text-g500 mt-0.5">C'est ce lien que tu partages à tes clients.</p>
       </div>
@@ -475,7 +613,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
         <div className="bg-charbon rounded-2xl px-4 py-4">
           <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2">Aperçu de ton lien</p>
           <p className="text-white font-mono text-[13px] break-all leading-relaxed">
-            www.assists.agenceattractor.com/?c=<span className="text-orange font-bold">{slug || '...'}</span>
+            demo.agenceattractor.com/template-<span className="text-orange font-bold">{templateId}</span>/?c=<span className="text-orange font-bold">{slug || '...'}</span>
           </p>
         </div>
 
@@ -546,7 +684,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   if (phase === 'upload') return (
     <div className="h-full flex flex-col bg-sable">
       <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
-        <ProgressBar step={3} />
+        <ProgressBar step={4} />
         <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Tes produits</h2>
         <p className="text-[12.5px] text-g500 mt-0.5">Ajoute ce que tu vends. Tu pourras compléter après.</p>
       </div>
@@ -633,18 +771,18 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
         {slug && (
           <div className="w-full bg-white rounded-2xl border border-g200 shadow-soft p-4 text-left">
             <p className="text-[11px] font-bold text-g400 uppercase tracking-wider mb-2">Ton lien boutique</p>
-            <p className="font-mono text-[13px] text-charbon break-all mb-3">
-              www.assists.agenceattractor.com/?c=<span className="text-orange font-bold">{slug}</span>
+            <p className="font-mono text-[12px] text-charbon break-all mb-3">
+              demo.agenceattractor.com/template-<span className="text-orange font-bold">{templateId}</span>/?c=<span className="text-orange font-bold">{slug}</span>
             </p>
             <div className="flex gap-2">
               <button
-                onClick={() => navigator.clipboard.writeText(`https://www.assists.agenceattractor.com/?c=${slug}`)}
+                onClick={() => navigator.clipboard.writeText(`https://demo.agenceattractor.com/template-${templateId}/?c=${slug}`)}
                 className="flex-1 py-2.5 rounded-xl bg-orange/10 text-orange font-bold text-[13px] active:bg-orange/20 transition"
               >
                 Copier le lien
               </button>
               <a
-                href={`https://wa.me/?text=${encodeURIComponent(`Commande directement sur mon app : https://www.assists.agenceattractor.com/?c=${slug}`)}`}
+                href={`https://wa.me/?text=${encodeURIComponent(`Commande directement sur ma boutique : https://demo.agenceattractor.com/template-${templateId}/?c=${slug}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 py-2.5 rounded-xl bg-vert/10 text-vert font-bold text-[13px] flex items-center justify-center gap-1.5 active:bg-vert/20 transition"
