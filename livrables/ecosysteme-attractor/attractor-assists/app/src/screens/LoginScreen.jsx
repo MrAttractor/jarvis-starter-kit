@@ -107,6 +107,9 @@ export function LoginScreen({ onAuthed }) {
               <button onClick={() => setStep("email")} className="w-full text-center text-[14px] font-semibold text-white/85 py-2 hover:text-white">
                 J'ai déjà un compte
               </button>
+              <a href="https://agenceattractor.com" className="flex items-center justify-center gap-1.5 text-[13px] text-white/50 hover:text-white/80 pt-1 transition-colors">
+                <Icon name="back" size={14} /> Retour au site
+              </a>
             </div>
           </div>
         )}

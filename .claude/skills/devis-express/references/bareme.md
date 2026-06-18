@@ -12,7 +12,7 @@
 
 ## Moyens de paiement
 
-- **Côte d'Ivoire / Afrique** : Wave, Djamo, MTN Money, Orange Money (+225 05 76 87 70 70)
+- **Côte d'Ivoire / Afrique** : Wave, Djamo, MTN Money, (+225 05 76 87 70 70)
 - **Europe / France** : PayPal @Myattractor, Wero / Revolut (+33 7 53 90 23 23)
 
 ## Devise par zone
@@ -36,7 +36,7 @@ Ancrage de référence : **J'envoie Express = SOLO**.
 |-------|------|--------|
 | STARTER | 150 € / 100 000 FCFA | Cadrage + reco, 48h |
 | RUNNER | 350 € / 230 000 FCFA | Structuration marketing, 72h |
-| EAGLE | 800 € / 525 000 FCFA | Coaching CEO + pilotage, 8 semaines |
+| EAGLE | 800 € / 525 000 FCFA | Coaching CEO + pilotage, 10h (séances planifiées avec le client) |
 | CONSEIL | 80 €/h / 52 000 FCFA/h | À la demande |
 
 ## Famille C — Attractor Assists (abonnement)
