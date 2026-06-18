@@ -6,7 +6,7 @@ This file provides guidance to Claude Code when working in this workspace.
 
 ## What This Is
 
-Ce workspace est le Jarvis personnel de Mr Attractor (Mac Arthur). Il a été créé avec le Jarvis Starter Kit pour servir d'assistant IA personnel au quotidien.
+Ce workspace est l'Assists de Mr Attractor (Mac Arthur). Il a été créé avec le Jarvis Starter Kit pour servir d'assistant IA personnel au quotidien.
 
 **Ce fichier (CLAUDE.md) est la fondation.** Il est automatiquement chargé au début de chaque session. Gardez-le à jour, c'est la source de vérité unique sur la façon dont Claude doit comprendre et opérer dans ce workspace.
 
@@ -93,8 +93,8 @@ Une fois que je confirme, Claude met à jour le fichier en question et ajoute un
 | `context/` | Tout ce qui me concerne et que Claude doit savoir |
 | `context/import/` | Documents externes (PDFs, exports, notes) à analyser. **INPUTS** |
 | `livrables/` | Tout ce que Claude produit pour moi. **OUTPUTS** |
-| `.claude/commands/` | Commandes personnalisées de mon Jarvis |
-| `.claude/skills/` | Skills (super-pouvoirs) de mon Jarvis |
+| `.claude/commands/` | Commandes personnalisées de mon Assists |
+| `.claude/skills/` | Skills (super-pouvoirs) de mon Assists |
 | `module-installs/` | Modules d'installation (initial et futurs) |
 
 > **Source de vérité (à respecter, ne pas réinventer) :** la grille `livrables/` ci-dessus et la liste des clés du `.env` sont canoniques. Ne jamais réintroduire de dossiers ou de clés génériques hors de cette grille (ex : `sites-web/`, `cabinet/`, `youtube/`, clés YouTube). Toute mise en place doit rester alignée sur l'activité réelle de Mr Attractor.
@@ -141,6 +141,21 @@ L'avantage : pas de bruit. Seulement ce qui me concerne vraiment, vu mes objecti
 **Première fois ?** Lancez `/install module-installs/jarvis-install` pour démarrer l'installation interactive.
 
 **Sessions suivantes ?** Lancez `/prime` au début de chaque session pour charger le contexte.
+
+---
+
+## Standards de développement front-end
+
+> **Référence obligatoire pour tout développement UI/UX :** `livrables/ecosysteme-attractor/UX_SYSTEM.md`
+
+Ce fichier est la source de vérité UX/UI de tout l'écosystème ATTRACTOR (Assists, Livraison Pro, Fidelys, Pilotage, apps métiers clients).
+
+Avant toute mise en production d'un écran ou d'un composant, vérifier :
+- Mobile First validé sur les 6 résolutions (375, 390, 414, 768, 1024, 1440 px)
+- Zéro débordement horizontal (`max-width: 100%`, `overflow-x: hidden`)
+- Grille 8 px respectée (espacements : 8/16/24/32/40/48/64)
+- Boutons tap-friendly ≥ 44×44 px
+- Checklist de rejet automatique passée (section 12 du fichier)
 
 ---
 
