@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Mesure ce que ton entreprise te coûte vraiment. Ebook + challenge 7 jours offerts.">
+<title>Méthode ATTRACTOR — Reçois l'ebook gratuit · Mr Attractor</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','1225122193019269');
+fbq('track','PageView');
+</script>
+
+<style>
+:root {
+  --orange: #F25C05;
+  --orange-d: #B84403;
+  --charbon: #1A1714;
+  --sable: #FAF6F0;
+  --white: #FFFFFF;
+  --g700: #4A443E;
+  --g400: #9A938B;
+  --g200: #E7E1D8;
+  --g100: #F2EDE6;
+  --green: #1E8A4C;
+  --red: #C0392B;
+  --shadow: 0 2px 12px rgba(26,23,20,.08);
+  --shadow-lg: 0 8px 40px rgba(26,23,20,.14);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--charbon);
+  color: var(--sable);
+  font-family: 'Sora', sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.5;} }
+
+/* NAV */
+nav {
+  display:flex; align-items:center; justify-content:space-between;
+  padding: .9rem 2rem;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+.logo-mark {
+  width:30px; height:30px; border-radius:7px; background:var(--orange);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#fff;
+}
+.logo-name { font-size:13px; font-weight:800; color:var(--sable); }
+.nav-back {
+  font-size:12px; color:rgba(250,246,240,.4); text-decoration:none;
+  display:flex; align-items:center; gap:5px; transition:color .2s;
+}
+.nav-back:hover { color:var(--orange); }
+
+/* HERO */
+.hero {
+  max-width:680px; margin:0 auto;
+  padding: 60px 1.5rem 40px;
+  text-align: center;
+  animation: fadeUp .5s ease both;
+}
+.hero-pill {
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(242,92,5,.1); border:1px solid rgba(242,92,5,.2);
+  border-radius:100px; padding:4px 14px;
+  font-family:'Space Mono',monospace; font-size:9px; font-weight:700;
+  color:var(--orange); letter-spacing:.12em; text-transform:uppercase;
+  margin-bottom:1.2rem;
+}
+.hero-h1 {
+  font-size:clamp(1.9rem,4.5vw,3.2rem); font-weight:900;
+  line-height:1.1; letter-spacing:-.03em;
+  color:var(--sable); margin-bottom:1rem;
+}
+.hero-h1 em { font-style:italic; color:var(--orange); font-weight:400; }
+.hero-sub {
+  font-size:15px; color:rgba(250,246,240,.6); line-height:1.75;
+  max-width:520px; margin:0 auto;
+}
+
+/* DIAGNOSTIC WRAPPER */
+.diag-wrap {
+  max-width:640px; margin:40px auto 0;
+  padding:0 1.5rem 80px;
+}
+
+/* ÉTAPE */
+.step { display:none; animation:fadeUp .4s ease; }
+.step.active { display:block; }
+
+/* QUESTION CARD */
+.q-card {
+  background:rgba(255,255,255,.04); border:1.5px solid rgba(255,255,255,.08);
+  border-radius:16px; padding:2rem;
+  margin-bottom:1.5rem;
+}
+.q-num {
+  font-family:'Space Mono',monospace; font-size:9px; font-weight:700;
+  color:var(--orange); letter-spacing:.15em; text-transform:uppercase;
+  margin-bottom:.8rem;
+}
+.q-text {
+  font-size:clamp(1.1rem,2.5vw,1.4rem); font-weight:800;
+  line-height:1.25; margin-bottom:1.5rem; color:var(--sable);
+}
+.q-sub { font-size:13px; color:rgba(250,246,240,.5); margin-top:-.8rem; margin-bottom:1.2rem; line-height:1.6; }
+
+/* OPTIONS */
+.opts { display:flex; flex-direction:column; gap:10px; }
+.opt {
+  display:flex; align-items:center; gap:14px;
+  padding:14px 18px; border-radius:10px;
+  background:rgba(255,255,255,.04); border:1.5px solid rgba(255,255,255,.08);
+  cursor:pointer; transition:all .2s; text-align:left;
+}
+.opt:hover { border-color:rgba(242,92,5,.35); background:rgba(242,92,5,.05); }
+.opt.selected { border-color:var(--orange); background:rgba(242,92,5,.1); }
+.opt-letter {
+  width:28px; height:28px; border-radius:6px; flex-shrink:0;
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Space Mono',monospace; font-size:11px; font-weight:700;
+  color:rgba(250,246,240,.5); transition:all .2s;
+}
+.opt.selected .opt-letter { background:var(--orange); border-color:var(--orange); color:#fff; }
+.opt-label { font-size:14px; font-weight:600; color:var(--sable); line-height:1.4; }
+.opt-sub { font-size:12px; color:rgba(250,246,240,.4); margin-top:2px; }
+
+/* PROGRESS */
+.progress {
+  display:flex; gap:6px; margin-bottom:2rem; justify-content:center;
+}
+.prog-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:rgba(255,255,255,.12); transition:all .3s;
+}
+.prog-dot.active { background:var(--orange); width:20px; border-radius:3px; }
+.prog-dot.done { background:rgba(242,92,5,.4); }
+
+/* BTN */
+.btn-next {
+  width:100%; background:var(--orange); color:#fff;
+  border:none; border-radius:10px; padding:15px;
+  font-family:'Sora',sans-serif; font-size:15px; font-weight:700;
+  cursor:pointer; margin-top:1rem; transition:all .2s;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+}
+.btn-next:hover { background:var(--orange-d); transform:translateY(-2px); }
+.btn-next:disabled { opacity:.4; cursor:not-allowed; transform:none; }
+
+/* RÉSULTAT */
+.result-card {
+  background:rgba(255,255,255,.04); border:1.5px solid rgba(255,255,255,.08);
+  border-radius:16px; padding:2rem; margin-bottom:1.5rem;
+  animation:fadeUp .5s ease;
+}
+.result-label {
+  font-family:'Space Mono',monospace; font-size:9px; font-weight:700;
+  color:var(--orange); letter-spacing:.15em; text-transform:uppercase;
+  margin-bottom:1rem;
+}
+.result-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:rgba(255,255,255,.06); border-radius:10px; overflow:hidden; margin-bottom:1.5rem; }
+.rstat { padding:1.2rem 1rem; background:rgba(26,23,20,.8); text-align:center; }
+.rstat-num { font-family:'Space Mono',monospace; font-size:clamp(1.6rem,4vw,2.2rem); font-weight:700; color:var(--orange); line-height:1; }
+.rstat-lbl { font-size:10px; color:rgba(250,246,240,.4); margin-top:5px; line-height:1.4; }
+.result-insight {
+  font-size:14px; color:rgba(250,246,240,.75); line-height:1.75;
+  padding:1rem 1.2rem; background:rgba(242,92,5,.06);
+  border-left:2px solid var(--orange); border-radius:0 8px 8px 0;
+  margin-bottom:1.5rem;
+}
+.result-insight strong { color:var(--sable); }
+
+/* CAPTURE FORM */
+.capture-card {
+  background:var(--sable); border-radius:16px; padding:2rem;
+  margin-bottom:1rem; animation:fadeUp .5s .1s ease both;
+}
+.capture-h { font-size:1.2rem; font-weight:800; color:var(--charbon); margin-bottom:.4rem; }
+.capture-sub { font-size:13px; color:var(--g700); line-height:1.6; margin-bottom:1.2rem; }
+.capture-field { margin-bottom:10px; }
+.capture-label { display:block; font-size:11px; font-weight:700; color:var(--g700); letter-spacing:.06em; text-transform:uppercase; margin-bottom:5px; }
+.capture-input {
+  width:100%; background:var(--white); border:1.5px solid var(--g200);
+  border-radius:8px; padding:12px 14px; font-family:'Sora',sans-serif;
+  font-size:14px; color:var(--charbon); outline:none;
+  transition:border-color .2s;
+}
+.capture-input:focus { border-color:var(--orange); }
+.btn-capture {
+  width:100%; background:var(--orange); color:#fff; border:none;
+  border-radius:10px; padding:16px; font-family:'Sora',sans-serif;
+  font-size:15px; font-weight:700; cursor:pointer; margin-top:.5rem;
+  transition:all .2s; display:flex; align-items:center; justify-content:center; gap:10px;
+}
+.btn-capture:hover { background:var(--orange-d); transform:translateY(-2px); }
+.btn-capture:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+.capture-legal { font-size:11px; color:var(--g400); text-align:center; margin-top:.6rem; line-height:1.5; }
+
+/* CONFIRMATION */
+.confirm-card {
+  background:rgba(30,138,76,.06); border:1.5px solid rgba(30,138,76,.2);
+  border-radius:16px; padding:2.5rem 2rem; text-align:center;
+  animation:fadeUp .5s ease;
+}
+.confirm-icon {
+  width:56px; height:56px; border-radius:50%; background:rgba(30,138,76,.12);
+  border:1.5px solid rgba(30,138,76,.25); display:flex; align-items:center;
+  justify-content:center; margin:0 auto 1.2rem;
+}
+.confirm-h { font-size:1.3rem; font-weight:800; color:var(--sable); margin-bottom:.5rem; }
+.confirm-sub { font-size:14px; color:rgba(250,246,240,.6); line-height:1.7; margin-bottom:1.5rem; }
+.confirm-next { display:flex; flex-direction:column; gap:10px; }
+.btn-challenge {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  background:var(--orange); color:#fff; text-decoration:none;
+  padding:14px 24px; border-radius:10px; font-size:14px; font-weight:700;
+  transition:all .2s;
+}
+.btn-challenge:hover { background:var(--orange-d); transform:translateY(-1px); }
+.btn-site {
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; color:rgba(250,246,240,.4); text-decoration:none;
+  transition:color .2s;
+}
+.btn-site:hover { color:rgba(250,246,240,.7); }
+
+/* WHAT'S INSIDE (secondary) */
+.inside-section {
+  border-top:1px solid rgba(255,255,255,.06);
+  padding:3rem 1.5rem; max-width:640px; margin:0 auto;
+}
+.inside-label {
+  font-family:'Space Mono',monospace; font-size:9px; font-weight:700;
+  color:rgba(250,246,240,.3); letter-spacing:.15em; text-transform:uppercase;
+  text-align:center; margin-bottom:1.5rem;
+}
+.inside-list { display:flex; flex-direction:column; gap:8px; }
+.inside-item {
+  display:flex; align-items:flex-start; gap:12px; font-size:13px;
+  color:rgba(250,246,240,.5); line-height:1.55;
+  padding:.8rem 1rem; border-radius:8px;
+  background:rgba(255,255,255,.02);
+}
+.inside-day {
+  font-family:'Space Mono',monospace; font-size:9px; font-weight:700;
+  color:var(--orange); letter-spacing:.08em; flex-shrink:0; margin-top:1px;
+  min-width:28px;
+}
+.inside-text strong { color:rgba(250,246,240,.75); }
+
+/* FOOTER */
+footer {
+  border-top:1px solid rgba(255,255,255,.05);
+  padding:1.5rem 2rem; text-align:center;
+}
+.footer-copy { font-size:11px; color:rgba(250,246,240,.2); }
+
+@media(max-width:480px) {
+  .result-grid { grid-template-columns:1fr 1fr; }
+  .q-card,.capture-card,.confirm-card { padding:1.5rem; }
+  nav { padding:.8rem 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <div class="logo-mark">MA</div>
+    <div class="logo-name">Mr Attractor</div>
+  </a>
+  <a href="/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Retour au site
+  </a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-pill">Diagnostic gratuit</div>
+  <h1 class="hero-h1">
+    Ton entreprise te coûte<br>combien d'heures<br><em>par semaine ?</em>
+  </h1>
+  <p class="hero-sub">3 questions. 2 minutes. Tu découvres exactement ce que tu perds — et comment le récupérer.</p>
+</div>
+
+<!-- DIAGNOSTIC -->
+<div class="diag-wrap">
+
+  <!-- PROGRESS -->
+  <div class="progress" id="progressDots">
+    <div class="prog-dot active" id="dot-1"></div>
+    <div class="prog-dot" id="dot-2"></div>
+    <div class="prog-dot" id="dot-3"></div>
+  </div>
+
+  <!-- ÉTAPE 1 -->
+  <div class="step active" id="step-1">
+    <div class="q-card">
+      <div class="q-num">Question 1 / 3</div>
+      <div class="q-text">Combien d'heures par semaine tu répètes exactement les mêmes tâches ?</div>
+      <p class="q-sub">Répondre aux mêmes questions, confirmer les commandes, relancer les impayés, pointer les stocks…</p>
+      <div class="opts" id="opts-1">
+        <div class="opt" onclick="selectOpt(1,'a',5)" id="opt-1-a">
+          <div class="opt-letter">A</div>
+          <div><div class="opt-label">Moins de 5h</div><div class="opt-sub">C'est gérable pour l'instant</div></div>
+        </div>
+        <div class="opt" onclick="selectOpt(1,'b',10)" id="opt-1-b">
+          <div class="opt-letter">B</div>
+          <div><div class="opt-label">Entre 5 et 10h</div><div class="opt-sub">Ça commence à peser</div></div>
+        </div>
+        <div class="opt" onclick="selectOpt(1,'c',18)" id="opt-1-c">
+          <div class="opt-letter">C</div>
+          <div><div class="opt-label">Entre 10 et 20h</div><div class="opt-sub">La moitié de ma semaine part là-dedans</div></div>
+        </div>
+        <div class="opt" onclick="selectOpt(1,'d',28)" id="opt-1-d">
+          <div class="opt-letter">D</div>
+          <div><div class="opt-label">Plus de 20h</div><div class="opt-sub">Je fais tourner la machine, pas mon entreprise</div></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-next" id="btn-1" disabled onclick="goStep(2)">Continuer →</button>
+  </div>
+
+  <!-- ÉTAPE 2 -->
+  <div class="step" id="step-2">
+    <div class="q-card">
+      <div class="q-num">Question 2 / 3</div>
+      <div class="q-text">Sur 10 prospects qui te contactent cette semaine, combien tu relances dans les 48h ?</div>
+      <p class="q-sub">Ceux qui ont posé une question, demandé un devis, montré de l'intérêt — mais que tu n'as pas recontactés.</p>
+      <div class="opts" id="opts-2">
+        <div class="opt" onclick="selectOpt(2,'a',0)" id="opt-2-a">
+          <div class="opt-letter">A</div>
+          <div><div class="opt-label">Je relance tout le monde</div><div class="opt-sub">J'ai un système en place</div></div>
+        </div>
+        <div class="opt" onclick="selectOpt(2,'b',2)" id="opt-2-b">
+          <div class="opt-letter">B</div>
+          <div><div class="opt-label">Je relance 7 à 9 sur 10</div><div class="opt-sub">Quelques-uns passent à travers</div></div>
+        </div>
+        <div class="opt" onclick="selectOpt(2,'c',5)" id="opt-2-c">
+          <div class="opt-letter">C</div>
+          <div><div class="opt-label">Je relance 4 à 6 sur 10</div><div class="opt-sub">Je relance ceux dont je me souviens</div></div>
+        </div>
+        <div class="opt" onclick="selectOpt(2,'d',8)" id="opt-2-d">
+          <div class="opt-letter">D</div>
+          <div><div class="opt-label">Moins de 4 sur 10</div><div class="opt-sub">Je relance quand j'ai le temps, souvent trop tard</div></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-next" id="btn-2" disabled onclick="goStep(3)">Continuer →</button>
+  </div>
+
+  <!-- ÉTAPE 3 -->
+  <div class="step" id="step-3">
+    <div class="q-card">
+      <div class="q-num">Question 3 / 3</div>
+      <div class="q-text">Si tu disparaissais 24h sans téléphone, que se passerait-il dans ton activité ?</div>
+      <p class="q-sub">Sois honnête. C'est la question que peu d'entrepreneurs osent vraiment se poser.</p>
+      <div class="opts" id="opts-3">
+        <div class="opt" onclick="selectOpt(3,'a',0)" id="opt-3-a">
+          <div class="opt-letter">A</div>
+          <div><div class="opt-label">Rien. L'équipe gère.</div><div class="opt-sub">Mon système tourne sans moi</div></div>
+        </div>
+        <div class="opt" onclick="selectOpt(3,'b',1)" id="opt-3-b">
+          <div class="opt-letter">B</div>
+          <div><div class="opt-label">Quelques petits problèmes gérables</div><div class="opt-sub">L'essentiel tient</div></div>
+        </div>
+        <div class="opt" onclick="selectOpt(3,'c',2)" id="opt-3-c">
+          <div class="opt-letter">C</div>
+          <div><div class="opt-label">Des clients mécontents et des commandes bloquées</div><div class="opt-sub">Je suis le point de passage obligé</div></div>
+        </div>
+        <div class="opt" onclick="selectOpt(3,'d',3)" id="opt-3-d">
+          <div class="opt-letter">D</div>
+          <div><div class="opt-label">Tout s'arrêterait</div><div class="opt-sub">Mon entreprise, c'est moi</div></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-next" id="btn-3" disabled onclick="showResult()">Voir mon diagnostic →</button>
+  </div>
+
+  <!-- RÉSULTAT -->
+  <div class="step" id="step-result">
+    <div class="result-card">
+      <div class="result-label">Ton diagnostic</div>
+      <div class="result-grid">
+        <div class="rstat">
+          <div class="rstat-num" id="res-heures">—</div>
+          <div class="rstat-lbl">heures perdues<br>par semaine</div>
+        </div>
+        <div class="rstat">
+          <div class="rstat-num" id="res-fcfa">—</div>
+          <div class="rstat-lbl">FCFA perdus<br>par mois</div>
+        </div>
+      </div>
+      <div class="result-insight" id="res-insight"></div>
+    </div>
+
+    <div class="capture-card">
+      <div class="capture-h">Reçois l'ebook + le challenge 7 jours</div>
+      <div class="capture-sub">Mac Arthur t'envoie l'ebook <em>Méthode ATTRACTOR</em> et 7 emails — un par jour — pour récupérer ces heures et cet argent. Gratuit.</div>
+      <form id="captureForm" onsubmit="submitCapture(event)">
+        <div class="capture-field">
+          <label class="capture-label" for="cap-prenom">Ton prénom</label>
+          <input class="capture-input" type="text" id="cap-prenom" name="prenom" placeholder="Koffi" required autocomplete="given-name">
+        </div>
+        <div class="capture-field">
+          <label class="capture-label" for="cap-email">Ton email</label>
+          <input class="capture-input" type="email" id="cap-email" name="email" placeholder="koffi@exemple.ci" required autocomplete="email" inputmode="email">
+        </div>
+        <button class="btn-capture" type="submit" id="btn-capture">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+          Envoie-moi l'ebook gratuit
+        </button>
+        <p class="capture-legal">Pas de spam. Tu te désabonnes en un clic. En envoyant tu acceptes de recevoir les 7 emails du challenge.</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- CONFIRMATION -->
+  <div class="step" id="step-confirm">
+    <div class="confirm-card">
+      <div class="confirm-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1E8A4C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="confirm-h" id="confirm-prenom">C'est envoyé !</div>
+      <div class="confirm-sub">L'ebook <em>Méthode ATTRACTOR</em> est en route vers ta boîte mail. Vérifie tes spams si tu ne le vois pas dans 5 minutes.<br><br>Dès demain, tu reçois le Jour 1 du challenge.</div>
+      <div class="confirm-next">
+        <a href="challenge.html" class="btn-challenge">
+          Commencer le challenge maintenant →
+        </a>
+        <a href="/" class="btn-site">← Retour au site</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CE QUI EST DANS L'EBOOK (secondaire) -->
+<div class="inside-section" id="insideSection">
+  <div class="inside-label">Ce que tu reçois jour par jour</div>
+  <div class="inside-list">
+    <div class="inside-item">
+      <div class="inside-day">J1</div>
+      <div class="inside-text"><strong>L'inventaire</strong> — Tu listes tout ce que tu répètes. En 20 minutes, tu vois tes fuites.</div>
+    </div>
+    <div class="inside-item">
+      <div class="inside-day">J2</div>
+      <div class="inside-text"><strong>Ta première procédure</strong> — Tu documentes ta tâche la plus répétée. Ce qui est écrit te libère.</div>
+    </div>
+    <div class="inside-item">
+      <div class="inside-day">J3</div>
+      <div class="inside-text"><strong>Le parcours client</strong> — Tu cartographies où tu perds tes prospects. Zéro vente silencieuse.</div>
+    </div>
+    <div class="inside-item">
+      <div class="inside-day">J4</div>
+      <div class="inside-text"><strong>Le système de relance</strong> — Tu crées une relance qui ne dépend plus de ta mémoire.</div>
+    </div>
+    <div class="inside-item">
+      <div class="inside-day">J5</div>
+      <div class="inside-text"><strong>L'assistant invisible</strong> — Tu délègues les 80% qui t'épuisent. Tu gardes les 20% qui t'enrichissent.</div>
+    </div>
+    <div class="inside-item">
+      <div class="inside-day">J6</div>
+      <div class="inside-text"><strong>La mesure</strong> — Tu comptes les heures récupérées. La preuve concrète que ça marche.</div>
+    </div>
+    <div class="inside-item">
+      <div class="inside-day">J7</div>
+      <div class="inside-text"><strong>La vision</strong> — 2 décisions stratégiques que tu peux enfin prendre. Coaching offert avec Mac Arthur.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-copy">© 2026 Mr Attractor — Mac Arthur Kouassi · <a href="/" style="color:inherit;text-decoration:none;">agenceattractor.com</a></div>
+</footer>
+
+<script>
+// État du diagnostic
+const answers = { q1: null, q2: null, q3: null };
+const heuresMap = { 1: { a:5, b:10, c:18, d:28 } };
+
+function selectOpt(q, letter, value) {
+  // Déselectionner les autres
+  document.querySelectorAll(`#opts-${q} .opt`).forEach(o => o.classList.remove('selected'));
+  document.getElementById(`opt-${q}-${letter}`).classList.add('selected');
+  answers[`q${q}`] = { letter, value };
+  document.getElementById(`btn-${q}`).disabled = false;
+}
+
+function goStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById(`step-${n}`).classList.add('active');
+  updateProgress(n);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress(n) {
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById(`dot-${i}`);
+    dot.className = 'prog-dot';
+    if (i < n) dot.classList.add('done');
+    else if (i === n) dot.classList.add('active');
+  }
+}
+
+function showResult() {
+  const heures = answers.q1 ? answers.q1.value : 10;
+  const prospectsNonRelances = answers.q2 ? answers.q2.value : 3;
+  const autonomieScore = answers.q3 ? answers.q3.value : 2;
+
+  // Calcul FCFA perdus (panier moyen 50 000 FCFA × prospects perdus × 4 semaines)
+  const fcfaPerdu = prospectsNonRelances * 50000 * 4;
+  const fcfaStr = fcfaPerdu >= 1000000
+    ? (fcfaPerdu / 1000000).toFixed(1) + 'M'
+    : fcfaPerdu >= 1000
+    ? Math.round(fcfaPerdu / 1000) + 'K'
+    : fcfaPerdu.toString();
+
+  document.getElementById('res-heures').textContent = heures + 'h';
+  document.getElementById('res-fcfa').textContent = fcfaPerdu === 0 ? '—' : fcfaStr + ' FCFA';
+
+  // Message personnalisé selon profil
+  let insight = '';
+  if (heures >= 20 && autonomieScore >= 2) {
+    insight = `Tu perds <strong>${heures}h par semaine</strong> sur des tâches que ton système devrait gérer à ta place — et ton entreprise dépend entièrement de toi. C'est exactement là que la Méthode ATTRACTOR agit. En 7 jours, tu construis le système qui te libère.`;
+  } else if (heures >= 10 || fcfaPerdu >= 400000) {
+    insight = `<strong>${heures}h par semaine</strong> et${fcfaPerdu > 0 ? ' <strong>' + fcfaStr + ' FCFA</strong> perdus par mois en prospects non relancés — c\'est le coût de l\'absence de système.' : ' des ventes qui t\'échappent chaque semaine.'} La Méthode ATTRACTOR t'explique comment boucher ces fuites en 7 jours.`;
+  } else {
+    insight = `Même si tes chiffres semblent corrects, <strong>${heures}h par semaine</strong> sur des tâches répétitives c'est du temps que tu pourrais consacrer à ta croissance. La Méthode ATTRACTOR te donne le système pour automatiser ces tâches.`;
+  }
+  document.getElementById('res-insight').innerHTML = insight;
+
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step-result').classList.add('active');
+  document.getElementById('insideSection').style.display = 'none';
+  document.getElementById('progressDots').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  fbq('track', 'Lead', { content_name: 'diagnostic-complete' });
+}
+
+async function submitCapture(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btn-capture');
+  const prenom = document.getElementById('cap-prenom').value.trim();
+  const email = document.getElementById('cap-email').value.trim();
+  btn.disabled = true;
+  btn.textContent = 'Envoi en cours…';
+
+  // Données diagnostic pour enrichir le profil
+  const heures = answers.q1 ? answers.q1.value : null;
+  const prospectsNonRelances = answers.q2 ? answers.q2.value : null;
+  const autonomie = answers.q3 ? answers.q3.value : null;
+
+  try {
+    // POST vers Google Apps Script (même endpoint que consulting, source différente)
+    // TODO: Remplacer par le webhook Brevo/Mailchimp quand la séquence est configurée
+    await fetch('https://script.google.com/macros/s/AKfycbzfwgmKWpAlQYTGJuxMv4HGVxsUt37-LUW8dezH_6F62L_AHTYT7Uv22byJVrXWKikmbA/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source: 'ebook-lead',
+        prenom,
+        email,
+        heures_perdues: heures,
+        prospects_non_relances: prospectsNonRelances,
+        score_autonomie: autonomie,
+        date: new Date().toISOString()
+      })
+    });
+  } catch (_) {
+    // no-cors = on ne peut pas lire la réponse, mais ça a été envoyé
+  }
+
+  fbq('track', 'CompleteRegistration', { content_name: 'ebook-capture', value: 0, currency: 'EUR' });
+
+  // Confirmation
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('confirm-prenom').textContent = prenom ? `${prenom}, c'est envoyé !` : 'C\'est envoyé !';
+  document.getElementById('step-confirm').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
