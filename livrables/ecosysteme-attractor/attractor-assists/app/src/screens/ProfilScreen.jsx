@@ -57,7 +57,8 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
   }, [slugValue, sheetOpen]);
 
   const slug        = profile?.public_slug;
-  const boutiqueUrl = slug ? `${window.location.origin}/?c=${slug}` : null;
+  const templateId  = profile?.template_id || '1a';
+  const boutiqueUrl = slug ? `https://demo.agenceattractor.com/template-${templateId}/?c=${slug}` : null;
   const initials    = (profile?.prenom || 'AA').slice(0, 2).toUpperCase();
   const photoUrl    = profile?.photo_url || null;
 
@@ -211,7 +212,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
             <div className="px-4 pt-3.5 pb-1 flex items-center justify-between">
               <div>
                 <div className="text-[10px] font-bold text-g400 uppercase tracking-[.1em]">Ma boutique</div>
-                <div className="text-[13px] font-bold text-orange mt-0.5">/?c={slug}</div>
+                <div className="text-[12px] font-mono text-orange mt-0.5 break-all">template-{templateId}/?c={slug}</div>
               </div>
               <div className="w-7 h-7 rounded-lg bg-vert/10 flex items-center justify-center">
                 <Icon name="check" size={14} className="text-vert" />
@@ -226,7 +227,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
               </button>
               <button
                 onClick={() => {
-                  const text = encodeURIComponent(`Commande ici\n${boutiqueUrl}`);
+                  const text = encodeURIComponent(`Commande directement sur ma boutique : ${boutiqueUrl}`);
                   window.open(`https://wa.me/?text=${text}`, '_blank');
                 }}
                 className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-g200 text-[12.5px] font-bold text-charbon bg-sable active:bg-g100 transition"
@@ -250,6 +251,29 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
             <p className="text-[12px] text-g400 leading-relaxed">
               Dis à ton Assists "crée ma boutique" pour générer ton lien en quelques secondes.
             </p>
+          </div>
+        )}
+
+        {/* Domaine professionnel */}
+        {slug && (
+          <div className="bg-white rounded-2xl border border-g200 shadow-soft overflow-hidden">
+            <div className="px-4 pt-3.5 pb-3 flex items-center justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="text-[10px] font-bold text-g400 uppercase tracking-[.1em] mb-0.5">Domaine professionnel</div>
+                <p className="text-[12.5px] text-charbon leading-snug">
+                  Passe de <span className="font-mono text-g500 text-[11px]">demo.agenceattractor.com</span> à ton propre nom de domaine.
+                </p>
+              </div>
+              <a
+                href={`https://wa.me/33600000000?text=${encodeURIComponent(`Bonjour ! Je veux un nom de domaine professionnel pour ma boutique Assists. Mon lien actuel : ${boutiqueUrl}`)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-charbon text-white text-[12.5px] font-bold active:opacity-80 transition whitespace-nowrap"
+              >
+                <Icon name="bolt" size={13} />
+                Obtenir
+              </a>
+            </div>
           </div>
         )}
 

@@ -149,8 +149,11 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   const [slugChecking, setSlugChecking]   = useState(false);
   const [isSlugAvailable, setIsSlugAvailable] = useState(null);
 
-  const inputRef = useRef(null);
-  const chatRef  = useRef(null);
+  const inputRef  = useRef(null);
+  const chatRef   = useRef(null);
+  const photoRef  = useRef(null);
+  const [photoTarget,    setPhotoTarget]    = useState(null);
+  const [photoUploading, setPhotoUploading] = useState(false);
 
   const ANAMN_QUESTIONS = [
     'Tu fais quoi exactement ? Dis-moi ton activité en quelques mots.',
@@ -180,6 +183,25 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     }, 600);
     return () => clearTimeout(timer);
   }, [slug]);
+
+  // ── Upload photo produit ──────────────────────────────────────────────────────
+
+  const handlePhotoUpload = async (file) => {
+    if (!file || photoTarget === null) return;
+    setPhotoUploading(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const ext  = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      const path = `${user.id}/${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from('catalogue-photos').upload(path, file, { upsert: true });
+      if (error) throw error;
+      const { data: { publicUrl } } = supabase.storage.from('catalogue-photos').getPublicUrl(path);
+      setProduits(ps => ps.map((p, i) => i === photoTarget ? { ...p, photo_url: publicUrl } : p));
+    } catch {}
+    setPhotoUploading(false);
+    setPhotoTarget(null);
+  };
 
   // ── Sauvegarde finale ──────────────────────────────────────────────────────────
 
@@ -220,11 +242,12 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
       if (actifsOnly.length > 0) {
         await supabase.from('produits_user').insert(
           actifsOnly.map(p => ({
-            user_id: user.id,
-            nom:     p.nom.trim(),
-            prix:    parseInt(p.prix) || 0,
-            unite:   'FCFA',
-            actif:   true,
+            user_id:   user.id,
+            nom:       p.nom.trim(),
+            prix:      parseInt(p.prix) || 0,
+            unite:     'FCFA',
+            actif:     true,
+            photo_url: p.photo_url || null,
           }))
         );
       }
@@ -688,16 +711,40 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
         <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Tes produits</h2>
         <p className="text-[12.5px] text-g500 mt-0.5">Ajoute ce que tu vends. Tu pourras compléter après.</p>
       </div>
+
+      {/* Input photo caché, partagé entre tous les produits */}
+      <input
+        ref={photoRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={e => handlePhotoUpload(e.target.files?.[0])}
+      />
+
       <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3" style={{ scrollbarWidth: 'none' }}>
         {produits.map((p, i) => (
-          <div key={p.id} className="flex items-center gap-3 bg-white rounded-xl border border-g200 px-4 py-3">
+          <div key={p.id} className="flex items-center gap-3 bg-white rounded-xl border border-g200 px-3 py-3">
+            {/* Vignette photo */}
+            <button
+              onClick={() => { setPhotoTarget(i); photoRef.current?.click(); }}
+              disabled={photoUploading && photoTarget === i}
+              className="w-12 h-12 rounded-xl bg-g100 flex items-center justify-center overflow-hidden flex-shrink-0 border border-g200 active:bg-g200 transition"
+            >
+              {photoUploading && photoTarget === i
+                ? <div className="w-4 h-4 border-2 border-orange border-t-transparent rounded-full animate-spin" />
+                : p.photo_url
+                  ? <img src={p.photo_url} alt={p.nom} className="w-full h-full object-cover" />
+                  : <Icon name="camera" size={16} className="text-g400" />
+              }
+            </button>
             <div className="flex-1 min-w-0">
-              <div className="font-bold text-[14px] text-charbon">{p.nom}</div>
+              <div className="font-bold text-[14px] text-charbon truncate">{p.nom}</div>
               {p.prix && <div className="text-[12.5px] text-orange font-semibold">{parseInt(p.prix).toLocaleString('fr-FR')} F</div>}
+              {!p.photo_url && <div className="text-[11px] text-g400 mt-0.5">Tap pour ajouter une photo</div>}
             </div>
             <button
               onClick={() => setProduits(ps => ps.map((item, j) => j === i ? { ...item, actif: !item.actif } : item))}
-              className={`px-3 py-1.5 rounded-lg text-[12px] font-bold transition mr-1 ${p.actif ? 'bg-vert/10 text-vert' : 'bg-g100 text-g400'}`}
+              className={`px-3 py-1.5 rounded-lg text-[12px] font-bold transition ${p.actif ? 'bg-vert/10 text-vert' : 'bg-g100 text-g400'}`}
             >
               {p.actif ? 'Actif' : 'Off'}
             </button>
