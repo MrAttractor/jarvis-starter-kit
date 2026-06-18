@@ -570,6 +570,10 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
         <label class="form-label">Numéro WhatsApp</label>
         <input type="tel" id="client-phone" class="form-input" placeholder="+225 07 00 00 00 00" autocomplete="tel">
       </div>
+      <div class="form-group">
+        <label class="form-label">Adresse de livraison</label>
+        <input type="text" id="client-address" class="form-input" placeholder="Quartier, rue, point de repère…" autocomplete="street-address">
+      </div>
       <button class="modal-add-btn" onclick="goToPayment()">Continuer vers le paiement →</button>
     </div>
 
@@ -799,6 +803,7 @@ let _payTotal = 0;
 let _payMethod = '';
 let _clientName = '';
 let _clientPhone = '';
+let _clientAddress = '';
 
 function openPay(method, total) {
   _payTotal = total;
@@ -808,22 +813,29 @@ function openPay(method, total) {
   document.getElementById('pay-step-payment').style.display = 'none';
   document.getElementById('client-name').value = _clientName;
   document.getElementById('client-phone').value = _clientPhone;
+  document.getElementById('client-address').value = _clientAddress;
   document.getElementById('client-name').classList.remove('error');
   document.getElementById('client-phone').classList.remove('error');
+  document.getElementById('client-address').classList.remove('error');
   document.getElementById('pay-modal').style.display = 'flex';
 }
 
 function goToPayment() {
-  const nameEl  = document.getElementById('client-name');
-  const phoneEl = document.getElementById('client-phone');
-  const name  = nameEl.value.trim();
-  const phone = phoneEl.value.trim();
+  const nameEl    = document.getElementById('client-name');
+  const phoneEl   = document.getElementById('client-phone');
+  const addressEl = document.getElementById('client-address');
+  const name    = nameEl.value.trim();
+  const phone   = phoneEl.value.trim();
+  const address = addressEl.value.trim();
   nameEl.classList.remove('error');
   phoneEl.classList.remove('error');
-  if (!name)  { nameEl.classList.add('error');  nameEl.focus();  return; }
-  if (!phone) { phoneEl.classList.add('error'); phoneEl.focus(); return; }
-  _clientName  = name;
-  _clientPhone = phone;
+  addressEl.classList.remove('error');
+  if (!name)    { nameEl.classList.add('error');    nameEl.focus();    return; }
+  if (!phone)   { phoneEl.classList.add('error');   phoneEl.focus();   return; }
+  if (!address) { addressEl.classList.add('error'); addressEl.focus(); return; }
+  _clientName    = name;
+  _clientPhone   = phone;
+  _clientAddress = address;
   const label = _payMethod === 'wave' ? 'Wave Business' : 'Orange Money';
   document.getElementById('pay-title').textContent = 'Payer par ' + label;
   document.getElementById('pay-amount-val').textContent = _payTotal.toLocaleString('fr-FR') + ' FCFA';
@@ -884,12 +896,13 @@ async function confirmPayWA() {
         p_client_name: _clientName,
         p_client_wa: _clientPhone,
         p_items: orderItems,
-        p_total_fcfa: _payTotal
+        p_total_fcfa: _payTotal,
+        p_delivery_address: _clientAddress
       })
     });
   } catch {}
 
-  const msg = `Bonjour Kezey ! Je viens de payer ${_payTotal.toLocaleString('fr-FR')} FCFA via ${methodLabel}.\n\nClient : ${_clientName}\nWhatsApp : ${_clientPhone}\n\nMa commande C'Real :\n${lines}\n\nSous-total : ${_payTotal.toLocaleString('fr-FR')} FCFA (livraison non incluse)\n\nMon adresse de livraison : `;
+  const msg = `Bonjour Kezey ! Je viens de payer ${_payTotal.toLocaleString('fr-FR')} FCFA via ${methodLabel}.\n\nClient : ${_clientName}\nWhatsApp : ${_clientPhone}\nAdresse : ${_clientAddress}\n\nMa commande C'Real :\n${lines}\n\nSous-total : ${_payTotal.toLocaleString('fr-FR')} FCFA (livraison non incluse)`;
   window.open(`https://wa.me/${KEZEY}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
