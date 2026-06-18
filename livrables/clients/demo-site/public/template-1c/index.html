@@ -393,8 +393,8 @@ main { flex: 1; min-height: 0; overflow-y: auto; }
       <svg viewBox="0 0 24 24" fill="currentColor" width="9" height="9"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
       100% Naturel
     </div>
-    <div class="hero-name">Éclat<br>Naturel</div>
-    <div class="hero-tagline">Cosmétiques africains · Peaux foncées · Paris</div>
+    <div class="hero-name" id="shop-name">Ma Boutique</div>
+    <div class="hero-tagline" id="shop-tagline">Chargement…</div>
   </div>
 </div>
 
@@ -425,7 +425,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; }
         </div>
       </div>
       <div class="chat-msgs" id="chat-msgs">
-        <div class="msg bot">Bonjour ! Je suis Nadia, votre conseillère Éclat Naturel. Quel est votre type de peau ou votre objectif beauté ?</div>
+        <div class="msg bot" id="chat-welcome">Bonjour ! Je suis votre conseillère. Comment puis-je vous aider ?</div>
       </div>
       <div class="chat-input-wrap">
         <input class="chat-input" id="chat-input" placeholder="Votre question…" type="text">
@@ -468,6 +468,10 @@ main { flex: 1; min-height: 0; overflow-y: auto; }
         <label class="form-label">Votre WhatsApp</label>
         <input class="form-input" id="client-phone" placeholder="+33 6 00 00 00 00" type="tel">
       </div>
+      <div class="form-group">
+        <label class="form-label">Adresse de livraison</label>
+        <input class="form-input" id="client-address" placeholder="Quartier, rue, point de repère…" type="text" autocomplete="street-address">
+      </div>
       <button class="form-btn" onclick="goToPayment()">Continuer vers le paiement</button>
     </div>
     <div id="pay-step-payment" style="display:none">
@@ -507,9 +511,15 @@ main { flex: 1; min-height: 0; overflow-y: auto; }
 /* ── Config ───────────────────────────────────────────────────────────── */
 const SUPABASE  = 'https://lgdgbrivnhgeupqhkckd.supabase.co';
 const ANON      = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
-const SLUG      = 'eclat-naturel';
+const SLUG      = new URLSearchParams(window.location.search).get('c') || null;
 const PHONE     = '33600000000';
 const WAVE_LINK = 'https://pay.wave.com/m/VOTRE_LIEN/';
+
+/* ── Boutique (chargée dynamiquement) ────────────────────────────────── */
+let SHOP_NAME      = 'Ma Boutique';
+let SHOP_TAGLINE   = '';
+let SHOP_ASSISTANT = 'Mon assistante';
+let SHOP_COLOR     = '#C9A84C';
 
 /* ── Produits démo ────────────────────────────────────────────────────── */
 const PRODUCTS_DEMO = [
@@ -536,7 +546,7 @@ const PRODUCTS_DEMO = [
 let PRODUCTS = [...PRODUCTS_DEMO];
 let activeCat = 'Tout';
 const cart = {};
-let _payTotal=0,_payMethod='',_clientName='',_clientPhone='';
+let _payTotal=0,_payMethod='',_clientName='',_clientPhone='',_clientAddress='';
 
 /* ── SVG helpers ──────────────────────────────────────────────────────── */
 function svgPlus(size) {
@@ -580,6 +590,11 @@ function setCat(cat) {
   renderMag();
 }
 
+function thumbHtml(p, cls, badgeCls) {
+  if (p.photo_url) return `<img src="${p.photo_url}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;">`;
+  return `<span class="${badgeCls}">${p.tag||''}</span>${p.letter||'?'}`;
+}
+
 function renderMag() {
   const filtered = activeCat === 'Tout' ? PRODUCTS : PRODUCTS.filter(p=>p.cat===activeCat);
   if (!filtered.length) { document.getElementById('mag-wrap').innerHTML='<p style="padding:20px;color:var(--muted);font-size:14px;text-align:center">Aucun produit dans cette catégorie.</p>'; return; }
@@ -589,13 +604,12 @@ function renderMag() {
 
   let html = `
     <div class="featured-card">
-      <div class="featured-img" style="background:${featured.gradient}">
-        <span class="featured-badge">${featured.tag}</span>
-        ${featured.letter}
+      <div class="featured-img" style="${featured.photo_url ? '' : 'background:' + featured.gradient}">
+        ${thumbHtml(featured, 'featured-img', 'featured-badge')}
       </div>
       <div class="featured-body">
         <div class="featured-name">${featured.name}</div>
-        <div class="featured-desc">${featured.desc}</div>
+        ${featured.desc ? `<div class="featured-desc">${featured.desc}</div>` : ''}
         <div class="featured-footer">
           <span class="featured-price">${featured.price.toLocaleString('fr-FR')} F</span>
           <div id="qc-f-${featured.id}">${qcHTML(featured.id, true)}</div>
@@ -610,9 +624,8 @@ function renderMag() {
       <div class="mag-grid">
         ${pair.map(p=>`
           <div class="mag-card">
-            <div class="mag-img" style="background:${p.gradient}">
-              <span class="mag-tag">${p.tag}</span>
-              ${p.letter}
+            <div class="mag-img" style="${p.photo_url ? '' : 'background:' + p.gradient}">
+              ${thumbHtml(p, 'mag-img', 'mag-tag')}
             </div>
             <div class="mag-body">
               <div class="mag-name">${p.name}</div>
@@ -691,7 +704,8 @@ function openPay(method,total) {
   document.getElementById('pay-step-payment').style.display='none';
   document.getElementById('client-name').value=_clientName;
   document.getElementById('client-phone').value=_clientPhone;
-  ['client-name','client-phone'].forEach(id=>document.getElementById(id).classList.remove('error'));
+  document.getElementById('client-address').value=_clientAddress;
+  ['client-name','client-phone','client-address'].forEach(id=>document.getElementById(id).classList.remove('error'));
   document.getElementById('pay-modal').classList.add('open');
 }
 function closePay() { document.getElementById('pay-modal').classList.remove('open'); }
@@ -699,11 +713,13 @@ function closePay() { document.getElementById('pay-modal').classList.remove('ope
 function goToPayment() {
   const nameEl=document.getElementById('client-name');
   const phoneEl=document.getElementById('client-phone');
-  const name=nameEl.value.trim(),phone=phoneEl.value.trim();
-  nameEl.classList.remove('error'); phoneEl.classList.remove('error');
+  const addrEl=document.getElementById('client-address');
+  const name=nameEl.value.trim(),phone=phoneEl.value.trim(),addr=addrEl.value.trim();
+  nameEl.classList.remove('error'); phoneEl.classList.remove('error'); addrEl.classList.remove('error');
   if (!name){nameEl.classList.add('error');nameEl.focus();return;}
   if (!phone){phoneEl.classList.add('error');phoneEl.focus();return;}
-  _clientName=name; _clientPhone=phone;
+  if (!addr){addrEl.classList.add('error');addrEl.focus();return;}
+  _clientName=name; _clientPhone=phone; _clientAddress=addr;
   const label=_payMethod==='wave'?'Wave':'Orange Money';
   document.getElementById('pay-title').textContent='Payer par '+label;
   const items=Object.entries(cart).filter(([,q])=>q>0);
@@ -730,10 +746,10 @@ async function confirmPayWA() {
     await fetch(`${SUPABASE}/rest/v1/rpc/save_order`,{
       method:'POST',
       headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':`Bearer ${ANON}`},
-      body:JSON.stringify({p_slug:SLUG,p_client_name:_clientName,p_client_wa:_clientPhone,p_items:orderItems,p_total_fcfa:_payTotal})
+      body:JSON.stringify({p_slug:SLUG,p_client_name:_clientName,p_client_wa:_clientPhone,p_items:orderItems,p_total_fcfa:_payTotal,p_delivery_address:_clientAddress||null})
     });
   } catch {}
-  const msg=`Bonjour ! Commande Éclat Naturel — ${_payTotal.toLocaleString('fr-FR')} F via ${methodLabel}.\n\nClient : ${_clientName}\nWhatsApp : ${_clientPhone}\n\nCommande :\n${lines}\n\nTotal : ${_payTotal.toLocaleString('fr-FR')} F`;
+  const msg=`Bonjour ! Commande ${SHOP_NAME} — ${_payTotal.toLocaleString('fr-FR')} F via ${methodLabel}.\n\nClient : ${_clientName}\nWhatsApp : ${_clientPhone}\nAdresse : ${_clientAddress||'Non précisée'}\n\nCommande :\n${lines}\n\nTotal : ${_payTotal.toLocaleString('fr-FR')} F`;
   window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`,'_blank');
 }
 
@@ -764,7 +780,7 @@ async function send() {
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':`Bearer ${ANON}`},
       body:JSON.stringify({message:text,history,conv_id:convId,
-        system:`Tu es Nadia, conseillère beauté d'Éclat Naturel, boutique de cosmétiques africains naturels. Réponds de façon naturelle et experte, sans emojis.`})
+        system:`Tu es ${SHOP_ASSISTANT}, conseillère de ${SHOP_NAME}${SHOP_TAGLINE ? ', ' + SHOP_TAGLINE : ''}. Réponds de façon naturelle et experte, sans emojis.`})
     });
     const d=await r.json(); typing.remove();
     if(d.conv_id) convId=d.conv_id;
@@ -777,26 +793,70 @@ async function send() {
 document.getElementById('chat-input').addEventListener('keydown',e=>{if(e.key==='Enter')send();});
 
 /* ── Init ─────────────────────────────────────────────────────────────── */
-renderCats();
-renderMag();
-async function fetchLivePrices() {
+const GRADIENT_POOL_1C = [
+  'linear-gradient(135deg,#C9A84C,#8B6914)',
+  'linear-gradient(135deg,#2C2C2C,#4A3728)',
+  'linear-gradient(135deg,#D4E157,#9CCC00)',
+  'linear-gradient(135deg,#FF9800,#E65100)',
+  'linear-gradient(135deg,#A1887F,#6D4C41)',
+  'linear-gradient(135deg,#795548,#3E2723)',
+];
+
+async function fetchBoutiqueInfo() {
+  if (!SLUG) return;
   try {
-    const res=await fetch(`${SUPABASE}/rest/v1/rpc/get_catalogue`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':`Bearer ${ANON}`},
-      body:JSON.stringify({p_slug:SLUG})
+    const res = await fetch(`${SUPABASE}/rest/v1/rpc/get_boutique_info`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': ANON, 'Authorization': `Bearer ${ANON}` },
+      body: JSON.stringify({ p_slug: SLUG })
     });
-    if(!res.ok) return;
-    const live=await res.json();
-    if(!live?.length) return;
-    live.forEach(row=>{
-      const key=row.nom.toLowerCase().replace(/[\s']/g,'');
-      const p=PRODUCTS.find(x=>x.name.toLowerCase().replace(/[\s']/g,'').includes(key)||key.includes(x.name.toLowerCase().replace(/[\s']/g,'')));
-      if(p&&row.prix!=null) p.price=Number(row.prix);
-    });
-    renderMag();
+    if (!res.ok) return;
+    const d = await res.json();
+    if (!d) return;
+    SHOP_NAME      = d.nom_boutique || SHOP_NAME;
+    SHOP_TAGLINE   = [d.tagline, d.zone].filter(Boolean).join(' · ');
+    SHOP_ASSISTANT = d.nom_assistant || SHOP_ASSISTANT;
+    SHOP_COLOR     = d.brand_color   || SHOP_COLOR;
+    const elName = document.getElementById('shop-name');
+    if (elName) elName.textContent = SHOP_NAME;
+    const elTag = document.getElementById('shop-tagline');
+    if (elTag) elTag.textContent = SHOP_TAGLINE || '';
+    const elWelcome = document.getElementById('chat-welcome');
+    if (elWelcome) elWelcome.textContent = `Bonjour ! Je suis ${SHOP_ASSISTANT}, votre conseillère ${SHOP_NAME}. Comment puis-je vous aider ?`;
+    document.documentElement.style.setProperty('--gold', SHOP_COLOR);
+    document.title = SHOP_NAME;
   } catch {}
 }
+
+async function fetchLivePrices() {
+  if (!SLUG) { renderCats(); renderMag(); return; }
+  try {
+    const res = await fetch(`${SUPABASE}/rest/v1/rpc/get_catalogue`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': ANON, 'Authorization': `Bearer ${ANON}` },
+      body: JSON.stringify({ p_slug: SLUG })
+    });
+    if (!res.ok) { renderCats(); renderMag(); return; }
+    const live = await res.json();
+    if (!live?.length) { renderCats(); renderMag(); return; }
+    PRODUCTS = live.map((row, i) => ({
+      id:        row.id   || i + 1,
+      name:      row.nom,
+      tag:       row.categorie || '',
+      cat:       row.categorie || 'Tout',
+      price:     Number(row.prix) || 0,
+      desc:      '',
+      featured:  i === 0,
+      gradient:  row.photo_url ? null : GRADIENT_POOL_1C[i % GRADIENT_POOL_1C.length],
+      photo_url: row.photo_url || null,
+      letter:    (row.nom || '?').charAt(0).toUpperCase(),
+    }));
+    renderCats();
+    renderMag();
+  } catch { renderCats(); renderMag(); }
+}
+
+fetchBoutiqueInfo();
 fetchLivePrices();
 </script>
 </body>

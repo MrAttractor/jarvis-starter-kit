@@ -389,10 +389,10 @@ main { flex: 1; min-height: 0; overflow-y: auto; }
 
 <!-- ── Header ─────────────────────────────────────────────────────────── -->
 <div class="header">
-  <div class="logo">CM</div>
+  <div class="logo" id="shop-logo">CM</div>
   <div class="header-text">
-    <h1>Chez Mariama</h1>
-    <p>Plats ivoiriens · Livraison Abidjan</p>
+    <h1 id="shop-name">Ma Boutique</h1>
+    <p id="shop-tagline">Chargement…</p>
   </div>
   <div class="header-right">
     <button class="cart-icon-btn" onclick="goTab('panier',this)">
@@ -518,12 +518,18 @@ main { flex: 1; min-height: 0; overflow-y: auto; }
 </div>
 
 <script>
-/* ── Config (à personnaliser par Carelle) ─────────────────────────────── */
+/* ── Config ───────────────────────────────────────────────────────────── */
 const SUPABASE    = 'https://lgdgbrivnhgeupqhkckd.supabase.co';
 const ANON        = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
-const SLUG        = 'chez-mariama';
+const SLUG        = new URLSearchParams(window.location.search).get('c') || null;
 const PHONE       = '2250700000000';
 const WAVE_LINK   = 'https://pay.wave.com/m/VOTRE_LIEN/';
+
+/* ── Boutique (chargée dynamiquement) ────────────────────────────────── */
+let SHOP_NAME      = 'Ma Boutique';
+let SHOP_TAGLINE   = '';
+let SHOP_ASSISTANT = 'Mon assistante';
+let SHOP_COLOR     = '#FF6B35';
 
 /* ── Produits démo (remplacés par Supabase si le slug existe) ─────────── */
 const PRODUCTS_DEMO = [
@@ -577,14 +583,16 @@ function renderProducts(list) {
   const arr = list || PRODUCTS;
   document.getElementById('products-list').innerHTML = arr.map(p => `
     <div class="product-row">
-      <div class="product-thumb" style="background:${p.gradient}">
-        <span class="product-thumb-tag">${p.tag}</span>
-        ${p.letter}
+      <div class="product-thumb" style="${p.photo_url ? '' : 'background:' + p.gradient}">
+        ${p.photo_url
+          ? `<img src="${p.photo_url}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`
+          : `<span class="product-thumb-tag">${p.tag || ''}</span>${p.letter || '?'}`
+        }
       </div>
       <div class="product-content">
         <div>
           <div class="product-name">${p.name}</div>
-          <div class="product-desc">${p.desc}</div>
+          ${p.desc ? `<div class="product-desc">${p.desc}</div>` : ''}
         </div>
         <div class="product-bottom">
           <span class="product-price">${p.price.toLocaleString('fr-FR')} F</span>
@@ -728,10 +736,10 @@ async function confirmPayWA() {
     await fetch(`${SUPABASE}/rest/v1/rpc/save_order`,{
       method:'POST',
       headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':`Bearer ${ANON}`},
-      body:JSON.stringify({p_slug:SLUG,p_client_name:_clientName,p_client_wa:_clientPhone,p_items:orderItems,p_total_fcfa:_payTotal})
+      body:JSON.stringify({p_slug:SLUG,p_client_name:_clientName,p_client_wa:_clientPhone,p_items:orderItems,p_total_fcfa:_payTotal,p_delivery_address:_clientAddress||null})
     });
   } catch {}
-  const msg = `Bonjour Mariama ! Commande payée ${_payTotal.toLocaleString('fr-FR')} F via ${methodLabel}.\n\nClient : ${_clientName}\nWhatsApp : ${_clientPhone}\nAdresse : ${_clientAddress||'Non précisée'}\n\nCommande :\n${lines}\n\nTotal : ${_payTotal.toLocaleString('fr-FR')} F`;
+  const msg = `Bonjour ${SHOP_NAME} ! Commande payée ${_payTotal.toLocaleString('fr-FR')} F via ${methodLabel}.\n\nClient : ${_clientName}\nWhatsApp : ${_clientPhone}\nAdresse : ${_clientAddress||'Non précisée'}\n\nCommande :\n${lines}\n\nTotal : ${_payTotal.toLocaleString('fr-FR')} F`;
   window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
@@ -762,7 +770,7 @@ async function send() {
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':`Bearer ${ANON}`},
       body:JSON.stringify({message:text,history,conv_id:convId,
-        system:`Tu es Aya, assistante de Chez Mariama, restaurant de plats ivoiriens. Réponds de façon naturelle et directe, sans emojis.`})
+        system:`Tu es ${SHOP_ASSISTANT}, assistante de ${SHOP_NAME}${SHOP_TAGLINE ? ', ' + SHOP_TAGLINE : ''}. Réponds de façon naturelle et directe, sans emojis.`})
     });
     const d = await r.json();
     typing.remove();
@@ -776,25 +784,67 @@ async function send() {
 document.getElementById('chat-input').addEventListener('keydown', e=>{ if(e.key==='Enter') send(); });
 
 /* ── Init ─────────────────────────────────────────────────────────────── */
-renderProducts();
-async function fetchLivePrices() {
+const GRADIENT_POOL_1B = [
+  'linear-gradient(135deg,#FF6B35,#FF8C42)',
+  'linear-gradient(135deg,#2D7D46,#4CAF50)',
+  'linear-gradient(135deg,#B5451B,#E05A28)',
+  'linear-gradient(135deg,#7B5E2A,#A07840)',
+  'linear-gradient(135deg,#DAA520,#F5C842)',
+  'linear-gradient(135deg,#1B5E88,#2196C0)',
+];
+
+async function fetchBoutiqueInfo() {
+  if (!SLUG) return;
   try {
-    const res = await fetch(`${SUPABASE}/rest/v1/rpc/get_catalogue`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':`Bearer ${ANON}`},
-      body:JSON.stringify({p_slug:SLUG})
+    const res = await fetch(`${SUPABASE}/rest/v1/rpc/get_boutique_info`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': ANON, 'Authorization': `Bearer ${ANON}` },
+      body: JSON.stringify({ p_slug: SLUG })
     });
     if (!res.ok) return;
-    const live = await res.json();
-    if (!live?.length) return;
-    live.forEach(row=>{
-      const key = row.nom.toLowerCase().replace(/[\s']/g,'');
-      const p = PRODUCTS.find(x=>x.name.toLowerCase().replace(/[\s']/g,'').includes(key)||key.includes(x.name.toLowerCase().replace(/[\s']/g,'')));
-      if (p && row.prix!=null) p.price = Number(row.prix);
-    });
-    renderProducts();
+    const d = await res.json();
+    if (!d) return;
+    SHOP_NAME      = d.nom_boutique || SHOP_NAME;
+    SHOP_TAGLINE   = [d.tagline, d.zone].filter(Boolean).join(' · ');
+    SHOP_ASSISTANT = d.nom_assistant || SHOP_ASSISTANT;
+    SHOP_COLOR     = d.brand_color   || SHOP_COLOR;
+    const elName = document.getElementById('shop-name');
+    if (elName) elName.textContent = SHOP_NAME;
+    const elTag = document.getElementById('shop-tagline');
+    if (elTag) elTag.textContent = SHOP_TAGLINE || '';
+    const elLogo = document.getElementById('shop-logo');
+    if (elLogo) elLogo.textContent = SHOP_NAME.slice(0, 2).toUpperCase();
+    document.documentElement.style.setProperty('--orange', SHOP_COLOR);
+    document.title = SHOP_NAME;
   } catch {}
 }
+
+async function fetchLivePrices() {
+  if (!SLUG) { renderProducts(); return; }
+  try {
+    const res = await fetch(`${SUPABASE}/rest/v1/rpc/get_catalogue`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': ANON, 'Authorization': `Bearer ${ANON}` },
+      body: JSON.stringify({ p_slug: SLUG })
+    });
+    if (!res.ok) { renderProducts(); return; }
+    const live = await res.json();
+    if (!live?.length) { renderProducts(); return; }
+    PRODUCTS = live.map((row, i) => ({
+      id:        row.id   || i + 1,
+      name:      row.nom,
+      tag:       row.categorie || '',
+      price:     Number(row.prix) || 0,
+      desc:      '',
+      gradient:  row.photo_url ? null : GRADIENT_POOL_1B[i % GRADIENT_POOL_1B.length],
+      photo_url: row.photo_url || null,
+      letter:    (row.nom || '?').charAt(0).toUpperCase(),
+    }));
+    renderProducts();
+  } catch { renderProducts(); }
+}
+
+fetchBoutiqueInfo();
 fetchLivePrices();
 </script>
 </body>
