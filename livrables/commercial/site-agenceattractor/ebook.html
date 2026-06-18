@@ -563,24 +563,21 @@ async function submitCapture(e) {
   const autonomie = answers.q3 ? answers.q3.value : null;
 
   try {
-    // POST vers Google Apps Script (même endpoint que consulting, source différente)
-    // TODO: Remplacer par le webhook Brevo/Mailchimp quand la séquence est configurée
-    await fetch('https://script.google.com/macros/s/AKfycbzfwgmKWpAlQYTGJuxMv4HGVxsUt37-LUW8dezH_6F62L_AHTYT7Uv22byJVrXWKikmbA/exec', {
+    // Apps Script lead magnet — déclenche la séquence 12 emails (J0 livraison → J11 conversion)
+    await fetch('https://script.google.com/macros/s/AKfycbyQjiuF5dqIjlv1oxwjfef86H9pK-GdycVsXAkaWxxxomVK2czFXwuuw1gMm_neYV6G/exec', {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        source: 'ebook-lead',
+        action: 'inscrire',
         prenom,
         email,
-        heures_perdues: heures,
-        prospects_non_relances: prospectsNonRelances,
-        score_autonomie: autonomie,
-        date: new Date().toISOString()
+        whatsapp: '',
+        secteur: ''
       })
     });
   } catch (_) {
-    // no-cors = on ne peut pas lire la réponse, mais ça a été envoyé
+    // no-cors = on ne peut pas lire la réponse, ça passe quand même
   }
 
   fbq('track', 'CompleteRegistration', { content_name: 'ebook-capture', value: 0, currency: 'EUR' });
