@@ -336,7 +336,8 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
       localStorage.removeItem(LOCAL_KEY);
       setPhase('pret');
-    } catch {
+    } catch (err) {
+      console.error('[Onboarding] handleSave error:', err);
       setSaveErr('Une erreur est survenue. Réessaie.');
     } finally {
       setSaving(false);
