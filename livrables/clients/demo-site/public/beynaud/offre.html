@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offre Confidentielle — Beynaud Army</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --rouge:#CC0000;
+      --rouge-l:rgba(204,0,0,.08);
+      --noir:#070707;
+      --noir-2:#0e0e0e;
+      --blanc:#ffffff;
+      --gris:rgba(255,255,255,.45);
+      --gris-d:rgba(255,255,255,.18);
+      --border:rgba(255,255,255,.07);
+    }
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{
+      background:var(--noir);
+      color:var(--blanc);
+      font-family:'Sora',sans-serif;
+      font-size:15px;
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* ── HEADER ── */
+    .header{
+      position:sticky;top:0;z-index:100;
+      background:rgba(7,7,7,.92);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border);
+      padding:14px 24px;
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .header-logo{display:flex;align-items:center;gap:10px;}
+    .logo-mark{width:30px;height:30px;background:var(--rouge);border-radius:4px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:11px;font-weight:900;letter-spacing:-.5px;}
+    .logo-name{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.7);}
+    .header-tag{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+      color:var(--rouge);border:1px solid rgba(204,0,0,.3);padding:4px 10px;border-radius:2px;}
+
+    /* ── WRAPPER ── */
+    .wrap{max-width:680px;margin:0 auto;padding:0 20px 80px;}
+
+    /* ── HERO DOC ── */
+    .doc-hero{padding:56px 0 40px;border-bottom:1px solid var(--border);}
+    .doc-tag{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+      color:var(--rouge);margin-bottom:14px;}
+    .doc-title{font-size:40px;font-weight:900;letter-spacing:-2px;line-height:1.02;margin-bottom:16px;}
+    .doc-title span{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.22);}
+    .doc-intro{font-size:13px;color:var(--gris);line-height:1.75;max-width:520px;}
+    .doc-nda{display:inline-flex;align-items:center;gap:7px;margin-top:18px;
+      background:rgba(204,0,0,.06);border:1px solid rgba(204,0,0,.25);
+      border-radius:4px;padding:8px 14px;font-size:11px;color:var(--gris);line-height:1.5;}
+    .doc-nda strong{color:rgba(255,255,255,.75);}
+
+    /* ── SECTION ── */
+    .section{padding:40px 0 0;}
+    .section-label{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+      color:var(--rouge);margin-bottom:6px;}
+    .section-title{font-size:22px;font-weight:800;letter-spacing:-1px;margin-bottom:20px;}
+
+    /* ── MODÈLES ── */
+    .models{display:flex;flex-direction:column;gap:16px;}
+    .model{border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;}
+    .model.featured{border-color:rgba(204,0,0,.35);}
+    .model-badge{
+      position:absolute;top:0;right:0;
+      background:var(--rouge);color:#fff;
+      font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+      padding:5px 12px;border-radius:0 12px 0 8px;
+    }
+    .model-head{padding:20px 22px 16px;background:rgba(255,255,255,.02);}
+    .model-num{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--gris-d);text-transform:uppercase;margin-bottom:4px;}
+    .model-name{font-size:18px;font-weight:900;letter-spacing:-.5px;margin-bottom:4px;}
+    .model-sub{font-size:12px;color:var(--gris);line-height:1.55;}
+    .model-body{padding:0 22px 20px;display:flex;flex-direction:column;gap:16px;}
+    .model-pricing{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px;}
+    .price-cell{background:rgba(255,255,255,.03);border:1px solid var(--border);
+      border-radius:8px;padding:12px 10px;text-align:center;}
+    .price-cell.accent{background:var(--rouge-l);border-color:rgba(204,0,0,.2);}
+    .price-val{font-size:15px;font-weight:900;letter-spacing:-.5px;color:#fff;line-height:1.1;}
+    .price-val.red{color:var(--rouge);}
+    .price-lbl{font-size:9px;color:var(--gris-d);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;}
+    .model-list{display:flex;flex-direction:column;gap:6px;}
+    .model-list-item{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:rgba(255,255,255,.6);line-height:1.5;}
+    .model-list-item svg{flex-shrink:0;margin-top:1px;}
+    .model-list-item.pro .check{color:rgba(100,220,100,.7);}
+    .model-list-item.con .check{color:rgba(255,100,100,.6);}
+    .sep{height:1px;background:var(--border);margin:0;}
+    .model-ideal{font-size:11px;color:var(--gris-d);padding:12px 22px;
+      border-top:1px solid var(--border);background:rgba(255,255,255,.01);}
+    .model-ideal strong{color:rgba(255,255,255,.5);}
+
+    /* ── REVENUE SHARE TABLE ── */
+    .rs-table{width:100%;border-collapse:collapse;margin-top:8px;}
+    .rs-table thead tr{border-bottom:1px solid rgba(204,0,0,.25);}
+    .rs-table th{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+      color:var(--rouge);padding:10px 12px;text-align:left;}
+    .rs-table td{padding:12px;font-size:12px;color:rgba(255,255,255,.6);
+      border-bottom:1px solid var(--border);vertical-align:top;}
+    .rs-table td:first-child{color:#fff;font-weight:600;font-size:13px;}
+    .rs-table td .val{font-size:15px;font-weight:900;color:var(--rouge);letter-spacing:-.5px;}
+    .rs-table td .sub{font-size:10px;color:var(--gris-d);margin-top:2px;}
+    .rs-note{font-size:11px;color:var(--gris-d);margin-top:12px;line-height:1.65;
+      border-left:2px solid rgba(204,0,0,.25);padding-left:12px;}
+
+    /* ── QUESTIONS JURIDIQUES ── */
+    .legal-list{display:flex;flex-direction:column;gap:12px;}
+    .legal-item{background:rgba(255,255,255,.02);border:1px solid var(--border);
+      border-radius:10px;padding:16px 18px;}
+    .legal-item.warning{border-color:rgba(255,180,0,.18);background:rgba(255,180,0,.03);}
+    .legal-num{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--gris-d);
+      text-transform:uppercase;margin-bottom:4px;}
+    .legal-q{font-size:13px;font-weight:700;letter-spacing:-.2px;margin-bottom:6px;}
+    .legal-a{font-size:12px;color:var(--gris);line-height:1.6;}
+    .legal-flag{display:inline-flex;align-items:center;gap:5px;margin-top:8px;
+      font-size:10px;font-weight:700;color:rgba(255,180,0,.8);letter-spacing:.5px;}
+
+    /* ── CALENDRIER ── */
+    .timeline{display:flex;flex-direction:column;gap:0;}
+    .tl-item{display:flex;gap:16px;position:relative;}
+    .tl-item:not(:last-child) .tl-line{position:absolute;left:15px;top:32px;bottom:0;width:1px;background:var(--border);}
+    .tl-dot{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.04);
+      border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;font-size:10px;font-weight:700;color:var(--gris-d);position:relative;z-index:1;}
+    .tl-dot.red{background:var(--rouge-l);border-color:rgba(204,0,0,.3);color:var(--rouge);}
+    .tl-content{padding:4px 0 24px;}
+    .tl-when{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+      color:var(--gris-d);margin-bottom:3px;}
+    .tl-what{font-size:13px;font-weight:700;margin-bottom:3px;}
+    .tl-desc{font-size:11px;color:var(--gris);line-height:1.55;}
+
+    /* ── CTA FINAL ── */
+    .cta-block{margin-top:48px;padding:28px;background:var(--rouge-l);
+      border:1px solid rgba(204,0,0,.25);border-radius:14px;text-align:center;}
+    .cta-title{font-size:22px;font-weight:900;letter-spacing:-1px;margin-bottom:8px;}
+    .cta-sub{font-size:12px;color:var(--gris);line-height:1.65;margin-bottom:20px;}
+    .cta-btns{display:flex;flex-direction:column;gap:10px;align-items:stretch;}
+    .btn-rouge{background:var(--rouge);color:#fff;padding:14px 24px;border:none;
+      border-radius:5px;font-size:12px;font-weight:800;letter-spacing:.5px;cursor:pointer;
+      font-family:'Sora',sans-serif;}
+    .btn-ghost{background:transparent;color:var(--gris);padding:12px 24px;
+      border:1px solid var(--border);border-radius:5px;font-size:11px;font-weight:600;
+      letter-spacing:.5px;cursor:pointer;font-family:'Sora',sans-serif;}
+    .sig{margin-top:24px;font-size:10px;color:var(--gris-d);letter-spacing:.5px;}
+
+    @media(min-width:600px){
+      .doc-title{font-size:52px;}
+      .model-pricing{grid-template-columns:1fr 1fr 1fr;}
+      .cta-btns{flex-direction:row;justify-content:center;}
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-logo">
+      <div class="logo-mark">BA</div>
+      <span class="logo-name">Beynaud Army</span>
+    </div>
+    <div class="header-tag">Confidentiel</div>
+  </header>
+
+  <div class="wrap">
+
+    <!-- HERO -->
+    <div class="doc-hero">
+      <div class="doc-tag">Offre Technique &amp; Financière</div>
+      <h1 class="doc-title">3 façons de<br><span>construire ensemble.</span></h1>
+      <p class="doc-intro">Ce document est la suite confidentielle de la présentation. Il détaille les modalités de collaboration, la répartition des revenus et les points juridiques à clarifier avant de lancer.</p>
+      <div class="doc-nda">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Couvert par le <strong>NDA signé</strong> — Mac Arthur KOUASSI · SIRET 98377125400015
+      </div>
+    </div>
+
+    <!-- MODÈLES -->
+    <div class="section">
+      <div class="section-label">Les modèles</div>
+      <div class="section-title">Choisis ce qui te convient.</div>
+      <div class="models">
+
+        <!-- MODÈLE 1 -->
+        <div class="model">
+          <div class="model-head">
+            <div class="model-num">Modèle 01</div>
+            <div class="model-name">Clé en main</div>
+            <div class="model-sub">Mac Arthur gère tout — développement, hébergement, maintenance, mises à jour. Toi, tu te concentres sur ton artiste. Zéro charge technique.</div>
+          </div>
+          <div class="model-body">
+            <div class="model-pricing">
+              <div class="price-cell">
+                <div class="price-val">350 000</div>
+                <div class="price-lbl">FCFA · setup</div>
+              </div>
+              <div class="price-cell">
+                <div class="price-val">85 000</div>
+                <div class="price-lbl">FCFA / mois</div>
+              </div>
+              <div class="price-cell accent">
+                <div class="price-val red">5%</div>
+                <div class="price-lbl">des revenus plateforme</div>
+              </div>
+            </div>
+            <div class="sep"></div>
+            <div class="model-list">
+              <div class="model-list-item pro">
+                <svg class="check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(100,220,100,.7)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Plateforme opérationnelle sous 7 jours
+              </div>
+              <div class="model-list-item pro">
+                <svg class="check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(100,220,100,.7)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Aucune compétence technique requise de ton côté
+              </div>
+              <div class="model-list-item pro">
+                <svg class="check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(100,220,100,.7)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Support prioritaire + évolutions inclus
+              </div>
+              <div class="model-list-item con">
+                <svg class="check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,100,100,.6)" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Investissement mensuel fixe quelle que soit l'activité
+              </div>
+            </div>
+          </div>
+          <div class="model-ideal"><strong>Pour qui :</strong> si tu veux que ça soit réglé une fois pour toutes sans y penser.</div>
+        </div>
+
+        <!-- MODÈLE 2 -->
+        <div class="model featured">
+          <div class="model-badge">Recommandé</div>
+          <div class="model-head">
+            <div class="model-num">Modèle 02</div>
+            <div class="model-name">Partenariat actif</div>
+            <div class="model-sub">Pas de frais fixes. Mac Arthur est investi comme associé tech. On partage les revenus, les risques, et les succès. Les intérêts sont alignés à 100%.</div>
+          </div>
+          <div class="model-body">
+            <div class="model-pricing">
+              <div class="price-cell">
+                <div class="price-val red">0</div>
+                <div class="price-lbl">FCFA · setup</div>
+              </div>
+              <div class="price-cell">
+                <div class="price-val red">0</div>
+                <div class="price-lbl">FCFA / mois</div>
+              </div>
+              <div class="price-cell accent">
+                <div class="price-val red">12%</div>
+                <div class="price-lbl">de tous les revenus</div>
+              </div>
+            </div>
+            <div class="sep"></div>
+            <div class="model-list">
+              <div class="model-list-item pro">
+                <svg class="check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(100,220,100,.7)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Zéro investissement au départ — aucun risque financier
+              </div>
+              <div class="model-list-item pro">
+                <svg class="check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(100,220,100,.7)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Mac Arthur a un intérêt direct à faire croître les revenus
+              </div>
+              <div class="model-list-item pro">
+                <svg class="check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(100,220,100,.7)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Si ça cartonne, tout le monde gagne — alignement total
+              </div>
+              <div class="model-list-item con">
+                <svg class="check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,100,100,.6)" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Commission plus élevée si la plateforme génère gros
+              </div>
+            </div>
+          </div>
+          <div class="model-ideal"><strong>Pour qui :</strong> si tu veux tester sans risque et construire une vraie relation à long terme.</div>
+        </div>
+
+        <!-- MODÈLE 3 -->
+        <div class="model">
+          <div class="model-head">
+            <div class="model-num">Modèle 03</div>
+            <div class="model-name">Licence plateforme</div>
+            <div class="model-sub">Tu achètes un accès à la plateforme. Ton équipe gère le contenu et les membres. Mac Arthur livre, forme, et disparaît. Tu gardes 100% des revenus.</div>
+          </div>
+          <div class="model-body">
+            <div class="model-pricing">
+              <div class="price-cell">
+                <div class="price-val">550 000</div>
+                <div class="price-lbl">FCFA · setup</div>
+              </div>
+              <div class="price-cell">
+                <div class="price-val">145 000</div>
+                <div class="price-lbl">FCFA / mois</div>
+              </div>
+              <div class="price-cell accent">
+                <div class="price-val red">0%</div>
+                <div class="price-lbl">commission revenus</div>
+              </div>
+            </div>
+            <div class="sep"></div>
+            <div class="model-list">
+              <div class="model-list-item pro">
+                <svg class="check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(100,220,100,.7)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Tu gardes l'intégralité des revenus générés
+              </div>
+              <div class="model-list-item pro">
+                <svg class="check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(100,220,100,.7)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Indépendance totale — ton équipe pilote
+              </div>
+              <div class="model-list-item con">
+                <svg class="check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,100,100,.6)" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Coût fixe mensuel — nécessite une équipe interne dédiée
+              </div>
+              <div class="model-list-item con">
+                <svg class="check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,100,100,.6)" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Support additionnel facturé hors forfait
+              </div>
+            </div>
+          </div>
+          <div class="model-ideal"><strong>Pour qui :</strong> si tu as déjà un manager digital ou une équipe qui peut prendre en main la plateforme.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- REVENUE SHARING -->
+    <div class="section">
+      <div class="section-label">Revenue sharing</div>
+      <div class="section-title">Ce que chaque modèle rapporte.</div>
+      <table class="rs-table">
+        <thead>
+          <tr>
+            <th>Scénario</th>
+            <th>Modèle 01</th>
+            <th>Modèle 02</th>
+            <th>Modèle 03</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Revenus mensuels bruts<div class="sub">Fan Club + Boutique</div></td>
+            <td>40M FCFA</td>
+            <td>40M FCFA</td>
+            <td>40M FCFA</td>
+          </tr>
+          <tr>
+            <td>Coût mensuel plateforme</td>
+            <td><span class="val">85 000</span><div class="sub">+ 5% = 2,08M FCFA</div></td>
+            <td><span class="val">0</span><div class="sub">+ 12% = 4,8M FCFA</div></td>
+            <td><span class="val">145 000</span><div class="sub">FCFA fixe</div></td>
+          </tr>
+          <tr>
+            <td>Net pour l'artiste</td>
+            <td><span class="val">37,8M</span></td>
+            <td><span class="val">35,2M</span></td>
+            <td><span class="val">39,8M</span></td>
+          </tr>
+          <tr>
+            <td>ROI sur setup<div class="sub">Mois 1</div></td>
+            <td>x 108</td>
+            <td><span class="val">Infini</span></td>
+            <td>x 72</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="rs-note">Projections basées sur 2M fans, 1% d'adoption, abonnement VIP moyen 2 000 FCFA/mois. Hors revenus boutique et contenu additionnel. Le modèle 02 est recommandé car il aligne les intérêts des deux parties sur le long terme.</p>
+    </div>
+
+    <!-- QUESTIONS JURIDIQUES -->
+    <div class="section">
+      <div class="section-label">Questions juridiques</div>
+      <div class="section-title">Ce qu'on doit cadrer avant de signer.</div>
+      <div class="legal-list">
+
+        <div class="legal-item">
+          <div class="legal-num">Point 01</div>
+          <div class="legal-q">Propriété des données membres</div>
+          <div class="legal-a">Toutes les données des fans (nom, email, historique de paiement) appartiennent exclusivement à l'artiste. Mr Attractor est prestataire technique — aucune revente ou exploitation tierce. À formaliser dans le contrat principal.</div>
+        </div>
+
+        <div class="legal-item warning">
+          <div class="legal-num">Point 02</div>
+          <div class="legal-q">Droits à l'image et marque "Beynaud Army"</div>
+          <div class="legal-a">L'utilisation du nom, des photos et de l'image de Serge Beynaud sur la plateforme nécessite une autorisation formelle. À inclure dans le contrat : périmètre autorisé, durée, et conditions de résiliation.</div>
+          <div class="legal-flag">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            À clarifier lors de la réunion de lancement
+          </div>
+        </div>
+
+        <div class="legal-item">
+          <div class="legal-num">Point 03</div>
+          <div class="legal-q">Contrat de prestation vs partenariat commercial</div>
+          <div class="legal-a">Modèles 01 et 03 : contrat de prestation de services (Mac Arthur = prestataire). Modèle 02 : convention de partenariat commercial avec clause de revenue sharing — structure fiscale différente. À valider avec un avocat ou expert-comptable.</div>
+        </div>
+
+        <div class="legal-item">
+          <div class="legal-num">Point 04</div>
+          <div class="legal-q">Paiements mobiles — agrément requis ?</div>
+          <div class="legal-a">En Côte d'Ivoire, la collecte de paiements via Wave, MTN Money ou Orange Money peut nécessiter un agrément de l'ARTCI ou un partenariat avec un agrégateur agréé (CinetPay, Ligdicash, etc.). Mr Attractor s'engage à intégrer uniquement des opérateurs conformes.</div>
+          <div class="legal-flag">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Point sensible à vérifier selon le volume attendu
+          </div>
+        </div>
+
+        <div class="legal-item">
+          <div class="legal-num">Point 05</div>
+          <div class="legal-q">Hébergement des données et conformité</div>
+          <div class="legal-a">La base de données membres sera hébergée sur serveurs européens (conformité RGPD), avec option CI si la réglementation locale l'impose. La politique de confidentialité affichée sur la plateforme sera conforme aux deux juridictions (FR/CI).</div>
+        </div>
+
+        <div class="legal-item">
+          <div class="legal-num">Point 06</div>
+          <div class="legal-q">Clause de sortie et propriété de la plateforme</div>
+          <div class="legal-a">En cas de rupture du partenariat, les données membres restent à l'artiste (export complet fourni sous 30 jours). La plateforme développée reste propriété de Mr Attractor sauf mention contraire dans le contrat. À négocier selon le modèle choisi.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CALENDRIER -->
+    <div class="section">
+      <div class="section-label">Calendrier</div>
+      <div class="section-title">De la décision au lancement.</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot red">J+0</div>
+          <div class="tl-line"></div>
+          <div class="tl-content">
+            <div class="tl-when">Aujourd'hui</div>
+            <div class="tl-what">NDA signé + choix du modèle</div>
+            <div class="tl-desc">Accord de confidentialité horodaté. Sélection du modèle de collaboration. Projet protégé et cadré.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">J+2</div>
+          <div class="tl-line"></div>
+          <div class="tl-content">
+            <div class="tl-when">Sous 48h</div>
+            <div class="tl-what">Réunion de lancement — 2h</div>
+            <div class="tl-desc">Collecte identité visuelle, accès existants, brief contenu. Signature du contrat principal si modèle arrêté.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">S1</div>
+          <div class="tl-line"></div>
+          <div class="tl-content">
+            <div class="tl-when">Semaine 1</div>
+            <div class="tl-what">Fan Club opérationnel</div>
+            <div class="tl-desc">Plateforme brandée Beynaud Army en ligne. Fan Club payant actif. Boutique officielle prête.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">S2</div>
+          <div class="tl-line"></div>
+          <div class="tl-content">
+            <div class="tl-when">Semaine 2</div>
+            <div class="tl-what">Contenu exclusif + membres fondateurs</div>
+            <div class="tl-desc">Lives, backstage, vidéos exclusives activés. Ouverture aux membres fondateurs avec tarif préférentiel.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot red">S3</div>
+          <div class="tl-content">
+            <div class="tl-when">Semaine 3</div>
+            <div class="tl-what">Lancement public — revenus activés</div>
+            <div class="tl-desc">Campagne de déploiement sur tes réseaux. BEYNAUD ARMY officiellement en ligne. Premiers revenus récurrents.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-block">
+      <div class="cta-title">Prochaine étape : 2h avec moi.</div>
+      <p class="cta-sub">Dis-moi quel modèle t'intéresse. On organise la réunion de lancement et on formalise le contrat. Dans 3 semaines, BEYNAUD ARMY est en ligne.</p>
+      <div class="cta-btns">
+        <button class="btn-rouge" onclick="window.open('https://wa.me/33753902323?text=Beynaud%20Army%20-%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%20...')">
+          Contacter Mac Arthur — WhatsApp
+        </button>
+        <button class="btn-ghost" onclick="window.history.back()">Retour à la présentation</button>
+      </div>
+      <div class="sig">Mr Attractor · Mac Arthur KOUASSI · agenceattractor.com · +33 7 53 90 23 23</div>
+    </div>
+
+  </div><!-- /wrap -->
+
+</body>
+</html>

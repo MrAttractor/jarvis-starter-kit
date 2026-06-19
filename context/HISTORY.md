@@ -7,6 +7,60 @@
 
 ---
 
+## 2026-06-19 (session 64 — Login Assists : slideshow hero + Maryline pré-signup + retour site)
+
+- "Retour au site" plus visible sur LoginScreen (text-white/50 → text-white/75)
+- ProfilScreen : footer devient lien cliquable vers agenceattractor.com
+- Slideshow hero 5 photos avec crossfade (4.5s / 0.7s) — hero-1 à hero-5 dans `uploads/`
+- Chat Maryline pré-signup : bulle flottante droite sur l'intro, 4 FAQ scriptées, sheet WhatsApp-style, CTA "Démarrer" intégré
+- Photos : groupe avec téléphones, entrepreneur bras ouverts, rooftop coucher soleil, groupe hommes, businessman bureau
+- 4 commits : 6ddf805 → 4f0cdc2 → db9bd2e → b189347
+
+---
+
+## 2026-06-19 (session 63 — Ebook PDF + redesign consulting + SMTP + fix onboarding C Real)
+
+### Ebook "Méthode ATTRACTOR" déployé
+
+- `livrables/commercial/site-agenceattractor/ebook-pdf.html` créé : ebook HTML A4 imprimable, 19 pages, design system ATTRACTOR complet (cover charbon/orange, pages corps blanc/sable, story sections charbon)
+- Contenu complet : cover, citation, sommaire, intro, prologue Koffi/Awa, 7 chapitres méthode ATTRACTOR, plan 7 jours, bonus CTA
+- 4 URLs converties en liens `<a>` cliquables (agenceattractor.com, assists.agenceattractor.com, consulting, assists)
+- Barre d'impression cachée à l'impression, fonctionnel via `window.print()`
+- Déployé sur GitHub Pages : `agenceattractor.com/ebook-pdf.html`
+- Apps Script mis à jour pour pointer vers le nouvel ebook
+
+### consulting.html redesigné (design system ATTRACTOR)
+
+- Fonts remplacées : Playfair Display + DM Sans → Sora uniquement
+- Tokens ATTRACTOR appliqués : `--orange:#F25C05`, `--charbon:#1A1714`, `--sable:#FAF6F0`, `--g200:#E8E2DA`
+- Aliases legacy conservés pour éviter les régressions visuelles
+- Story section en charbon pour le contraste, footer charbon avec liens sable/orange
+- SVG boussole mis à jour vers orange (#F25C05), modal CGV fond blanc titres Sora accents orange
+
+### Resend SMTP Supabase activé — OTP fonctionnel
+
+- DNS Resend vérifiés (Verified), SMTP configuré dans Supabase Auth : `smtp.resend.com` port 465, `noreply@agenceattractor.com`
+- Confirmé : code OTP 6 chiffres reçu en boîte mail — les nouvelles inscriptions sont débloquées
+
+### Fix onboarding Assists — persistance localStorage (C Real)
+
+- Bug signalé par Kezey (C Real) : blocage au moment de rentrer ses produits + perte de progression en cas de rechargement
+- Fix : persistance de toutes les variables d'état onboarding dans `localStorage` (clé `aa_onboarding_v1`)
+- useEffect RESTORE au montage pour reprendre là où l'utilisateur s'est arrêté
+- useEffect SAVE sur chaque changement d'état significatif (phase, prenom, nomAss, profilType, anamnData, anamnQ, baptemeQ, chatHistory, templateId, brandColor, slug, produits)
+- `localStorage.removeItem(LOCAL_KEY)` à la fin de l'onboarding pour nettoyer
+- Fix champ prix iOS : `type="text" inputMode="numeric"` + `.replace(/\D/g, '')` au lieu de `type="number"` (évite le blocage iOS)
+- Déployé sur Netlify : `assists.agenceattractor.com`
+
+### Tâches restantes
+
+- Vérifier trigger `envoyerEmailsQuotidiens` dans Apps Script (actif + 8h quotidien)
+- Test funnel complet end-to-end (diagnostic → email → J0 reçu)
+- Vérification visuelle consulting.html en conditions réelles
+- Facebook Login : configurer côté Supabase + callback URL Meta
+
+---
+
 ## 2026-06-19 (session 62 — Site agenceattractor.com : funnel DMV + audit UX)
 
 ### Funnel DMV activé sur le site
