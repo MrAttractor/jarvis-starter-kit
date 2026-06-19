@@ -197,16 +197,31 @@ export function LoginScreen({ onAuthed }) {
 
   return (
     <div className="relative min-h-screen flex flex-col text-white">
-      {/* hero image */}
-      <div className="absolute inset-0">
-        <img src="/uploads/photo-hero.jpg" alt="" className="w-full h-full object-cover object-top" />
+      {/* hero image — object-contain pour montrer l'image entière */}
+      <div className="absolute inset-0" style={{ background: '#C06018' }}>
+        <img src="/uploads/photo-hero.jpg" alt="" className="w-full h-full object-contain object-center" />
       </div>
       {/* warm gradient overlays */}
-      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(20,12,7,.30) 0%, rgba(20,12,7,.10) 30%, rgba(217,71,3,.55) 72%, rgba(160,46,0,.95) 100%)" }} />
-      <div className="absolute inset-0" style={{ background: "radial-gradient(120% 60% at 50% 0%, rgba(255,122,46,.25), transparent 60%)" }} />
+      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(20,12,7,.25) 0%, rgba(20,12,7,.05) 30%, rgba(160,46,0,.70) 68%, rgba(120,34,0,.97) 100%)" }} />
+      <div className="absolute inset-0" style={{ background: "radial-gradient(120% 60% at 50% 0%, rgba(255,122,46,.15), transparent 55%)" }} />
 
       <div className="relative z-10 flex flex-col min-h-screen px-7 pt-12 pb-9">
         <Logo light size="md" />
+
+        {/* Bulle Maryline flottante — visible uniquement sur l'intro */}
+        {step === "intro" && !marylineOpen && (
+          <div className="absolute right-5 top-[36%] flex flex-col items-end gap-2 z-20">
+            <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-[14px_14px_4px_14px] shadow-md">
+              <span className="text-[12px] font-semibold text-charbon">Des questions ?</span>
+            </div>
+            <button
+              onClick={() => setMarylineOpen(true)}
+              className="w-14 h-14 rounded-full bg-orange shadow-[0_6px_20px_rgba(0,0,0,.3)] flex items-center justify-center active:scale-95 transition-transform"
+            >
+              <span className="font-display font-bold text-white text-[20px]">M</span>
+            </button>
+          </div>
+        )}
 
         {step === "intro" && (
           <div className="mt-auto animate-[fadeUp_.4s_ease]">
@@ -225,13 +240,6 @@ export function LoginScreen({ onAuthed }) {
               <a href="https://agenceattractor.com" className="flex items-center justify-center gap-1.5 text-[13px] text-white/75 hover:text-white pt-1 transition-colors">
                 <Icon name="back" size={14} /> Retour au site
               </a>
-              <button
-                onClick={() => setMarylineOpen(true)}
-                className="flex items-center justify-center gap-1.5 text-[12px] text-white/50 hover:text-white/80 transition-colors pt-0.5"
-              >
-                <div className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center font-bold text-[9px]">M</div>
-                Des questions ? Parler à Maryline
-              </button>
             </div>
           </div>
         )}
