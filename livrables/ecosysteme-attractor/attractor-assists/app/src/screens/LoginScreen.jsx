@@ -1,4 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+
+const HERO_IMAGES = [
+  '/uploads/hero-1.jpg',
+  '/uploads/hero-2.jpg',
+];
 import { supabase } from '../lib/supabase';
 import { Icon, Logo, Btn, Field, Input, Spinner, Pill } from '../components/ui';
 
@@ -123,7 +128,20 @@ export function LoginScreen({ onAuthed }) {
   const [err, setErr] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [marylineOpen, setMarylineOpen] = useState(false);
+  const [heroIdx, setHeroIdx] = useState(0);
+  const [heroVisible, setHeroVisible] = useState(true);
   const refs = [useRef(), useRef(), useRef(), useRef(), useRef(), useRef()];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeroVisible(false);
+      setTimeout(() => {
+        setHeroIdx(prev => (prev + 1) % HERO_IMAGES.length);
+        setHeroVisible(true);
+      }, 700);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, []);
 
   // Capture le code de référencement dans l'URL (?ref=XXXXXXXX)
   useState(() => {
@@ -197,13 +215,18 @@ export function LoginScreen({ onAuthed }) {
 
   return (
     <div className="relative min-h-screen flex flex-col text-white">
-      {/* hero image — object-contain pour montrer l'image entière */}
-      <div className="absolute inset-0" style={{ background: '#C06018' }}>
-        <img src="/uploads/photo-hero.jpg" alt="" className="w-full h-full object-contain object-center" />
+      {/* slideshow hero */}
+      <div className="absolute inset-0 bg-charbon">
+        <img
+          src={HERO_IMAGES[heroIdx]}
+          alt=""
+          className="w-full h-full object-cover object-center"
+          style={{ opacity: heroVisible ? 1 : 0, transition: 'opacity 0.7s ease' }}
+        />
       </div>
       {/* warm gradient overlays */}
-      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(20,12,7,.25) 0%, rgba(20,12,7,.05) 30%, rgba(160,46,0,.70) 68%, rgba(120,34,0,.97) 100%)" }} />
-      <div className="absolute inset-0" style={{ background: "radial-gradient(120% 60% at 50% 0%, rgba(255,122,46,.15), transparent 55%)" }} />
+      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(20,12,7,.30) 0%, rgba(20,12,7,.10) 30%, rgba(217,71,3,.55) 72%, rgba(160,46,0,.95) 100%)" }} />
+      <div className="absolute inset-0" style={{ background: "radial-gradient(120% 60% at 50% 0%, rgba(255,122,46,.25), transparent 60%)" }} />
 
       <div className="relative z-10 flex flex-col min-h-screen px-7 pt-12 pb-9">
         <Logo light size="md" />
