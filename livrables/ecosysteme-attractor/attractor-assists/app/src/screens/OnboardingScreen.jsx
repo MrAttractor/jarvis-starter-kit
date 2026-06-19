@@ -127,6 +127,8 @@ function slugify(str) {
     .slice(0, 20);
 }
 
+const LOCAL_KEY = 'aa_onboarding_v1';
+
 export function OnboardingScreen({ onDone, installPromptRef }) {
   const [phase, setPhase]         = useState('welcome');
   const [nomAss, setNomAss]       = useState('');
@@ -179,13 +181,49 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     const timer = setTimeout(async () => {
       const { data: { user } } = await supabase.auth.getUser();
       let q = supabase.from('profiles').select('id').eq('public_slug', slug);
-      if (user?.id) q = q.neq('id', user.id); // exclure son propre profil
+      if (user?.id) q = q.neq('id', user.id);
       const { data } = await q.maybeSingle();
       setIsSlugAvailable(!data);
       setSlugChecking(false);
     }, 600);
     return () => clearTimeout(timer);
   }, [slug]);
+
+  // Restaurer la progression depuis localStorage au montage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(LOCAL_KEY);
+      if (!saved) return;
+      const s = JSON.parse(saved);
+      if (!s?.phase || s.phase === 'welcome' || s.phase === 'pret') return;
+      if (s.prenom)      setPrenom(s.prenom);
+      if (s.nomAss)      setNomAss(s.nomAss);
+      if (s.profilType)  setProfilType(s.profilType);
+      if (s.anamnData)   setAnamnData(s.anamnData);
+      if (s.anamnQ !== undefined) setAnamnQ(s.anamnQ);
+      if (s.baptemeQ !== undefined) setBaptemeQ(s.baptemeQ);
+      if (s.chatHistory) setChatHistory(s.chatHistory);
+      if (s.templateId)  setTemplateId(s.templateId);
+      if (s.brandColor)  setBrandColor(s.brandColor);
+      if (s.slug)        setSlug(s.slug);
+      if (s.produits)    setProduits(s.produits);
+      setPhase(s.phase);
+    } catch {}
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Sauvegarder la progression à chaque changement d'état significatif
+  useEffect(() => {
+    if (phase === 'welcome' || phase === 'pret') {
+      localStorage.removeItem(LOCAL_KEY);
+      return;
+    }
+    try {
+      localStorage.setItem(LOCAL_KEY, JSON.stringify({
+        phase, prenom, nomAss, profilType, anamnData, anamnQ,
+        baptemeQ, chatHistory, templateId, brandColor, slug, produits,
+      }));
+    } catch {}
+  }, [phase, prenom, nomAss, profilType, anamnData, anamnQ, baptemeQ, chatHistory, templateId, brandColor, slug, produits]);
 
   // ── Upload photo produit ──────────────────────────────────────────────────────
 
@@ -296,6 +334,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
         }
       } catch { /* referral optionnel */ }
 
+      localStorage.removeItem(LOCAL_KEY);
       setPhase('pret');
     } catch {
       setSaveErr('Une erreur est survenue. Réessaie.');
@@ -799,10 +838,13 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
             className="w-full px-4 py-3 rounded-xl bg-sable border border-g200 text-[14px] text-charbon outline-none focus:border-orange"
           />
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             value={newProd.prix}
-            onChange={e => setNewProd(p => ({ ...p, prix: e.target.value }))}
-            placeholder="Prix FCFA"
+            onChange={e => setNewProd(p => ({ ...p, prix: e.target.value.replace(/\D/g, '') }))}
+            onKeyDown={e => e.key === 'Enter' && addProduit()}
+            placeholder="Prix en FCFA (ex : 2000)"
             className="w-full px-4 py-3 rounded-xl bg-sable border border-g200 text-[14px] text-charbon outline-none focus:border-orange"
           />
           <button
