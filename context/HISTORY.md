@@ -7,6 +7,19 @@
 
 ---
 
+## 2026-06-19 (session 66 — refonte offre Latiss + NDA allégé)
+
+### Beynaud — offre.html refondée + NDA simplifié
+- Tarifs ramenés en euros : Modèle 1 = 5 000€ setup + 1 500€/mois + 12% / Modèle 2 WIN WIN = 1 500€ forfait + 0 MRR + 70-30 / Modèle 3 Licence = 35 000€ + 1 500€/mois + 0%
+- ROI recalculé (1€ = 655 FCFA) : x10 / x28 / x1,7
+- Sections "Pour qui" supprimées, marque concept non nommée dans les docs, artiste désigné "Latiss" partout
+- XPaye 16 pays intégré dans les questions juridiques (partenaire historique Agence Attractor)
+- Calendrier en Étape 1→4, CTA "cahier des charges + démarrage du chantier"
+- NDA modal allégé : simple acceptation confidentialité RGPD, NDA complet renvoyé au cadrage
+- Déployé Netlify demo.agenceattractor.com
+
+---
+
 ## 2026-06-19 (session 65 — Beynaud Army démo complète + offre + Livraison Pro design + fix C Real)
 
 ### Beynaud Army — démo + offre confidentielle
