@@ -7,6 +7,121 @@
 
 ---
 
+## 2026-06-19 (session 62 — Site agenceattractor.com : funnel DMV + audit UX)
+
+### Funnel DMV activé sur le site
+
+- `ebook.html` créé : diagnostic interactif 3 questions (heures perdues + prospects non relancés + autonomie) → calcul FCFA perdus → profil personnalisé → capture email
+- Endpoint Apps Script branché sur le bon lead magnet (`AKfycby...neYV6G/exec`, action `inscrire`) avec séquence 12 emails J0→J11 déjà prête
+- `index.html` restructuré : hero axé sur le diagnostic, banner ebook au-dessus du fold, 6 cartes → 3 cartes "Fuite #1/2/3", section consulting visible avec 3 offres + tarifs, app "bientôt disponible" remplacée par Attractor Assists
+- Nav réordonnée : "Ebook gratuit" (orange) en premier
+- Footer et CTA challenge : `openChallengeModal()` remplacé par lien direct `challenge.html`
+
+### Audit UX et corrections
+
+- Audit complet contre UX_SYSTEM.md réalisé
+- 3 non-conformités critiques corrigées (rejet automatique évité) :
+  - Section consulting 3 cartes : ajout classe `.consulting-grid` + `@media(max-width:768px){1 colonne}`
+  - Challenge days 4 cases : ajout `@media(max-width:600px){2 colonnes}`
+  - Banner ebook `1fr auto` : ajout `.ebook-banner-grid` + `@media(max-width:600px){empilé vertical}`
+- Règle mémorisée : audit UX automatique avant tout commit front-end sans demande explicite
+
+### Déploiement
+
+- Commits pushés sur master, GitHub Actions déploie automatiquement sur `agenceattractor.com`
+
+### Tâches restantes
+
+- Vérifier trigger `envoyerEmailsQuotidiens` dans Apps Script (actif + 8h quotidien)
+- Vérifier onglet LEAD_MAGNET dans Google Sheet
+- Test funnel complet end-to-end (diagnostic → email → J0 reçu)
+- Photo Mac Arthur sur chat widget
+- Audit UX de challenge.html
+- Resend SMTP Supabase dès DNS Verified
+
+---
+
+## 2026-06-18 (session 61 — Cabinet DAB : dossier créé + note stratégique envoyée)
+
+### Note stratégique DFMM envoyée à Cabinet DAB
+
+- Document `note-strategique-dfmm.html` produit et envoyé à Cabinet DAB (Dr. KANGA + M. Ahébé Jean)
+- Contenu : preuve MVP (3-5T/mois CI → Canada) · 3 chantiers détaillés · brief production vidéo (4 tournages) · tableau tarification à compléter · préparatifs par acteur (Dr. KANGA + M. Ahébé Jean) · planning juillet–septembre 2026
+- Prochaines étapes côté Cabinet DAB : valider les tarifs masterclass, fournir accès CMS + inventaire enregistrements, disponibilité Dr. KANGA pour tournages
+- Option dashboard : subdomain `tableau.cabinetdab.com` sur Netlify + Supabase, CNAME côté TyIT Group — à construire dès que Cabinet DAB répond
+
+---
+
+## 2026-06-18 (session 61 — Cabinet DAB : dossier DFMM récupéré et sauvegardé)
+
+### Dossier Cabinet DAB créé après coupure PC
+
+- Contexte récupéré depuis `context/import/DMV Cabinet DAB x Agence Attractor x Beracca.txt` + brief oral de Mac Arthur
+- Projet DFMM "De la Ferme aux Marchés Mondiaux" : Mac Arthur a modélisé le concept avec Cabinet DAB (Dr. KANGA), lancé un appel à candidatures (45+ intéressés), coaching collectif 3 mois par webinaires
+- Mac Arthur a mis en contact Beracca Mastery Group x Cabinet DAB pour la matérialisation
+- Résultat validé : **Beracca a obtenu un marché d'exportation 3 à 5T/mois**, KONAVA reçoit l'attiéké pour les magasins OPLUS Canada
+- Phase suivante : communication pour attirer les 3 cibles de toutes les parties prenantes — Agence Attractor pilote la stratégie globale
+- Dossier créé : `livrables/clients/cabinet-dab/BRIEF_PROJET.md` (source de vérité du projet)
+- CONTEXT.md mis à jour avec Cabinet DAB comme projet actif
+
+---
+
+## 2026-06-17 (session 60 — Plan acquisition 10k€ + pivot focus ventes)
+
+### Pipeline actualisé et plan chiffré construit
+
+- Club Élévia : NDA signé, document vision attendu, démarrage fin juin — 3 500€ setup + 250€/mois
+- Andréa Koné : GO fin juin, site à construire — 500-1 000€ setup
+- Beracca : NDA + offre envoyés, en attente retour — 150€/mois + 10% commission
+- Beynaud : relancé, feedback attendu — 1 500€ setup + rev share (deal stratégique)
+- Club Élévia : NDA signé, vision en cours
+- J'envoie Express : relance en cours (RDV semaine passée annulé)
+- Rukayatou : partenaire (pas cliente), RDV à caler
+- C'Real : tests en cours, sera utilisé comme DMV principale pour attirer nouveaux clients
+- GetWinWorld : relance aujourd'hui
+
+### Modèle économique clarifié — 3 flux vers 10 000€/mois
+
+- Flux 1 : Setups app métier 3-4/mois × 1 000-2 000€ = 3 000-8 000€ (levier principal court terme)
+- Flux 2 : MRR clients 10 clients × 200-250€ = 2 000-2 500€ (construit sur 60-90 jours)
+- Flux 3 : Attractor Assists SaaS = rôle crédibilité avant août, revenus significatifs en 2027
+- Beynaud ou équivalent grand compte = game changer si ça signe
+
+### Décisions stratégiques
+
+- Focus total sur ventes à partir de maintenant
+- Meta ads activé comme canal d'acquisition
+- C'Real = DMV Attractor : 1 client réel qui vend → attire 5 clients similaires
+- HISTORY.md recentré sur acquisition concrète (plus de détails techniques)
+
+---
+
+## 2026-06-17 (session 59 — Galerie templates + P1 bugs + audit parcours)
+
+### Galerie templates, realtime commandes, table orders créée, liens boutique corrigés
+
+- TemplateGalerieScreen : galerie in-app (Grille/Liste/Magazine), mockups CSS purs, iframe preview plein écran, sélection sauvegardée en Supabase — les prospects ne quittent jamais Assists
+- P1 fix : table public.orders créée sur Supabase remote (n'avait jamais été appliquée — toutes les commandes Kezey échouaient silencieusement depuis le début)
+- P1 fix : realtime Supabase branché sur CommandesScreen (channel filtré par owner_id), màj instantanée sans re-tap + notifications navigateur sur nouvelle commande
+- Audit complet du parcours (login → onboarding → activation → app → modèle Kezey) : Facebook login toujours non configuré côté Meta/Supabase
+- Bug lien boutique corrigé dans 5 fichiers : assists.agenceattractor.com/b/slug → www.assists.agenceattractor.com/?c=slug
+- Architecture clarifiée : www.assists.agenceattractor.com = app Assists / demo.agenceattractor.com = mini-sites clients statiques
+- Message WhatsApp rédigé pour Kezey : se reconnecter sur www.assists.agenceattractor.com et vérifier slug = creal
+
+---
+
+## 2026-06-17 (session 58 — suite — Beynaud Army : démo validée)
+
+### Maquette Beynaud Army validée, contact Serge initié
+
+- Maquette 11 slides mise à jour : ton généralisé slide 2, pain cards reformulées
+- Modale NDA horodaté intégrée (clic pendant présentation → mailto pré-rempli)
+- Closing remplacé : roadmap 5 étapes + bouton "Signer le NDA maintenant"
+- Démo validée en live sur demo.agenceattractor.com/beynaud
+- Contact Serge Beynaud initié — prochaine étape : obtenir un rendez-vous de présentation
+
+---
+
 ## 2026-06-17 (session 58 — Beracca Mastery Group — dossier commercial complet)
 
 ### Dossier partenariat Beracca créé et envoyé
