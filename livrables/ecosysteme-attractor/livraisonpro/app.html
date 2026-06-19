@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#F77F00">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Livraison Pro">
+<meta name="description" content="Livraison Pro — App de gestion de livraisons professionnelles 🇨🇮">
+<title>Livraison Pro</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-flag flag-strip"><span class="fs fo"></span><span class="fs fw"></span><span class="fs fg"></span></div>
+  <div class="sp-title">Livraison Pro</div>
+  <div class="sp-sub">La livraison professionnelle 🇨🇮</div>
+  <div class="sp-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+</div>
+
+<!-- LOADING -->
+<div id="loading"><div class="ld-spin"></div><div class="ld-txt" id="ld-txt">Chargement...</div></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- OFFLINE -->
+<div class="offline-bar" id="offline-bar">Pas de connexion — mode hors ligne</div>
+
+<!-- METEO -->
+<div class="meteo-bar" id="meteo-bar"></div>
+
+<!-- ===== ONBOARDING ===== -->
+<div id="onboarding">
+
+  <!-- Étape 1 : Création compte -->
+  <div id="ob-step1">
+    <div class="ob-hero">
+      <div class="flag-strip ob-flag" style="width:52px;height:34px;border-radius:6px;overflow:hidden;margin:0 auto 16px">
+        <span class="fs fo"></span><span class="fs fw"></span><span class="fs fg"></span>
+      </div>
+      <div class="ob-badge">1 mois gratuit — accès complet</div>
+      <div class="ob-title">Bienvenue sur Livraison Pro</div>
+      <div class="ob-sub">La marketplace de livraison certifiée en Côte d'Ivoire.</div>
+    </div>
+
+    <div class="ob-body">
+      <div class="role-grid">
+        <div class="role-card" id="role-marchand" onclick="selectRole('marchand')">
+          <div class="role-icon">🛍️</div>
+          <div class="role-name">Marchand</div>
+          <div class="role-desc">Je cherche un livreur pour mes commandes</div>
+        </div>
+        <div class="role-card" id="role-livreur" onclick="selectRole('livreur')">
+          <div class="role-icon">🛵</div>
+          <div class="role-name">Livreur</div>
+          <div class="role-desc">Je livre et veux accéder au réseau de marchands</div>
+        </div>
+      </div>
+
+      <span class="ob-label">Votre prénom et nom</span>
+      <input class="ob-input" id="ob-nom" placeholder="Ex: Aminata Koné" autocomplete="name">
+
+      <span class="ob-label">Votre numéro WhatsApp</span>
+      <input class="ob-input" id="ob-tel" placeholder="+225 07 XX XX XX XX" type="tel" autocomplete="tel">
+      <div class="ob-error" id="ob-err-tel">Format invalide — Ex: +225 07 12 34 56 78</div>
+
+      <span class="ob-label">Votre commune</span>
+      <select class="ob-select" id="ob-commune">
+        <option value="">Choisir votre commune...</option>
+        <option>Cocody</option><option>Marcory</option><option>Plateau</option>
+        <option>Yopougon</option><option>Abobo</option><option>Adjamé</option>
+        <option>Koumassi</option><option>Port-Bouët</option><option>Treichville</option>
+        <option>Attecoubé</option><option>Bingerville</option><option>Songon</option>
+      </select>
+
+      <!-- Champs supplémentaires livreur -->
+      <div id="livreur-extra" style="display:none">
+        <span class="ob-label">Votre véhicule</span>
+        <select class="ob-select" id="ob-vehicule">
+          <option value="">Choisir...</option>
+          <option value="Moto">Moto</option>
+          <option value="Voiture">Voiture</option>
+          <option value="Vélo">Vélo</option>
+        </select>
+        <span class="ob-label">Vos zones de livraison</span>
+        <input class="ob-input" id="ob-zones" placeholder="Ex: Cocody, Marcory, Plateau">
+      </div>
+
+      <!-- CGV -->
+      <div class="cgv-box">
+        <div class="cgv-item">Livraison Pro met en relation marchands et livreurs. Nous ne sommes pas responsables des colis perdus.</div>
+        <div class="cgv-item">Le bon de livraison généré est la preuve officielle entre les parties.</div>
+        <div class="cgv-item">Vos données sont utilisées uniquement pour le fonctionnement de l'app. Jamais vendues.</div>
+        <div class="cgv-item">En cas de litige, le bon de livraison horodaté fait foi.</div>
+      </div>
+
+      <div class="ob-error" id="ob-err-global"></div>
+      <button class="ob-btn" id="ob-submit" onclick="creerCompte()">J'accepte et je crée mon compte</button>
+      <button class="ob-btn-ghost" onclick="openModal('modal-rc')">J'ai déjà un compte</button>
+    </div>
+  </div>
+
+  <!-- Étape 2 : Installation PWA -->
+  <div id="ob-step2" style="display:none;background:var(--noir);min-height:100vh">
+    <div class="ob-hero">
+      <div class="flag-strip" style="width:52px;height:34px;border-radius:6px;overflow:hidden;margin:0 auto 16px">
+        <span class="fs fo"></span><span class="fs fw"></span><span class="fs fg"></span>
+      </div>
+      <div class="ob-title">Installez l'app</div>
+      <div class="ob-sub">Ajoutez Livraison Pro sur votre écran d'accueil pour l'avoir toujours accessible.</div>
+    </div>
+    <div class="ob-body">
+      <div class="pwa-guide" id="pwa-android" style="display:none">
+        <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:#fff;margin-bottom:12px">Sur Android (Chrome)</div>
+        <div class="pwa-step"><div class="pwa-num">1</div><div class="pwa-txt">Appuyez sur les <strong>3 points</strong> en haut à droite</div></div>
+        <div class="pwa-step"><div class="pwa-num">2</div><div class="pwa-txt">Tapez <strong>"Ajouter à l'écran d'accueil"</strong></div></div>
+        <div class="pwa-step"><div class="pwa-num">3</div><div class="pwa-txt">Tapez <strong>"Installer"</strong></div></div>
+      </div>
+      <div class="pwa-guide" id="pwa-ios" style="display:none">
+        <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:#fff;margin-bottom:12px">Sur iPhone — Safari uniquement</div>
+        <div class="pwa-step"><div class="pwa-num">1</div><div class="pwa-txt">Ouvrez ce lien dans <strong>Safari</strong></div></div>
+        <div class="pwa-step"><div class="pwa-num">2</div><div class="pwa-txt">Appuyez sur <strong>Partager</strong> en bas</div></div>
+        <div class="pwa-step"><div class="pwa-num">3</div><div class="pwa-txt"><strong>"Sur l'écran d'accueil"</strong> puis <strong>"Ajouter"</strong></div></div>
+      </div>
+      <button class="ob-btn" onclick="finirOnboarding()">C'est installé — Accéder à l'app</button>
+      <button class="ob-btn-ghost" onclick="finirOnboarding()">Passer cette étape</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== VISITE GUIDÉE ===== -->
+<div id="visite">
+  <div class="vp-bar" id="vp-bar"></div>
+  <div class="vc" id="vc"></div>
+  <div class="vn" id="vn"></div>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="app">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="hd-top">
+      <div class="brand">
+        <div class="brand-flag flag-strip"><span class="fs fo"></span><span class="fs fw"></span><span class="fs fg"></span></div>
+        <span class="brand-name">Livraison Pro</span>
+      </div>
+      <div class="hd-right">
+        <button class="sync-btn" id="sync-btn" onclick="syncData(true)" title="Actualiser">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+        </button>
+        <div>
+          <div class="hd-name" id="hd-name"></div>
+          <div class="hd-id" id="hd-id"></div>
+        </div>
+        <div class="hd-avatar" id="hd-avatar"></div>
+      </div>
+    </div>
+    <div class="tabs" id="tabs-c"></div>
+  </header>
+
+  <!-- ===== ÉCRANS LIVREUR ===== -->
+  <div id="l-screens">
+
+    <!-- Accueil livreur -->
+    <div class="screen" id="sc-l-home">
+      <div id="l-trial"></div>
+
+      <button class="dispo-btn off" id="dispo-btn" onclick="toggleDispo()">
+        <span id="dispo-icon"></span>
+        <span id="dispo-txt">Je suis disponible aujourd'hui</span>
+      </button>
+
+      <div class="sg">
+        <div class="sc or"><div class="sv" id="l-auj">0</div><div class="sl">Missions du jour</div><div class="sd" id="l-auj-ok">0 livrées</div></div>
+        <div class="sc vt"><div class="sv" id="l-ca">0</div><div class="sl">FCFA ce mois</div></div>
+        <div class="sc bl"><div class="sv" id="l-route">0</div><div class="sl">En route</div></div>
+        <div class="sc pp"><div class="sv" id="l-alrt">0</div><div class="sl">Alertes</div></div>
+      </div>
+
+      <button class="visite-central-btn" id="visite-btn-l" onclick="lancerVisite()">
+        Découvrir comment ça marche
+      </button>
+
+      <div class="st">Missions aujourd'hui</div>
+      <div id="l-today"></div>
+    </div>
+
+    <!-- Missions livreur -->
+    <div class="screen" id="sc-l-missions">
+      <div class="st">Toutes mes missions</div>
+      <div id="l-all"></div>
+    </div>
+
+    <!-- Alertes livreur -->
+    <div class="screen" id="sc-l-alertes">
+      <div class="card">
+        <div class="card-title"><span class="ci ci-rouge">🚨</span>Envoyer une alerte</div>
+        <div class="fg-group">
+          <label class="fg-label">Mission concernée</label>
+          <select class="fg-select" id="l-al-mission"><option value="">Choisir...</option></select>
+        </div>
+        <div class="fg-group">
+          <label class="fg-label">Type d'alerte</label>
+          <select class="fg-select" id="l-al-type">
+            <option value="">Choisir...</option>
+            <option value="Problème de livraison">Problème de livraison</option>
+            <option value="Client introuvable">Client introuvable</option>
+            <option value="Adresse incorrecte">Adresse incorrecte</option>
+            <option value="Retard — URGENT">Retard (URGENT)</option>
+            <option value="Accident — URGENT">Accident (URGENT)</option>
+            <option value="Autre">Autre</option>
+          </select>
+        </div>
+        <div class="fg-group">
+          <label class="fg-label">Description</label>
+          <input class="fg-input" id="l-al-desc" placeholder="Décrivez la situation...">
+        </div>
+        <button class="btn btn-rouge" onclick="envoyerAlerteL()">Envoyer l'alerte</button>
+      </div>
+      <div class="st" style="margin-top:16px">Mes alertes envoyées</div>
+      <div id="l-al-sent"></div>
+    </div>
+
+    <!-- Profil livreur -->
+    <div class="screen" id="sc-l-profil">
+      <div id="l-plan"></div>
+      <div class="card">
+        <div class="card-title"><span class="ci ci-vt">📊</span>Mes statistiques</div>
+        <div id="l-stats"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="ci ci-or">🪪</span>Vérification CNI</div>
+        <div class="verif-step">
+          <div class="verif-num">1</div>
+          <div class="verif-info">
+            <div class="verif-title">Envoyez votre CNI sur WhatsApp</div>
+            <div class="verif-sub">Photo recto + verso. Traitement en 24h ouvrées.</div>
+          </div>
+        </div>
+        <div class="verif-step">
+          <div class="verif-num">2</div>
+          <div class="verif-info">
+            <div class="verif-title">Badge vérifié activé</div>
+            <div class="verif-sub">Vous apparaissez avec la coche verte. Les marchands vous font plus confiance.</div>
+          </div>
+        </div>
+        <button class="btn btn-or" onclick="demanderVerification()">Demander ma vérification</button>
+      </div>
+      <button class="aide-btn" onclick="showAide('l')">Aide &amp; Questions fréquentes</button>
+      <button class="btn btn-ghost" style="margin-top:4px" onclick="seDeconnecter()">Se déconnecter</button>
+    </div>
+  </div>
+
+  <!-- ===== ÉCRANS MARCHAND ===== -->
+  <div id="m-screens">
+
+    <!-- Accueil marchand -->
+    <div class="screen" id="sc-m-home">
+      <div id="m-trial"></div>
+      <div class="sg">
+        <div class="sc or"><div class="sv" id="m-total">0</div><div class="sl">Total livraisons</div><div class="sd" id="m-ok">0 livrés</div></div>
+        <div class="sc vt"><div class="sv" id="m-vol">0</div><div class="sl">FCFA ce mois</div></div>
+        <div class="sc bl"><div class="sv" id="m-route">0</div><div class="sl">En route</div></div>
+        <div class="sc pp"><div class="sv" id="m-alrt">0</div><div class="sl">Alertes</div></div>
+      </div>
+      <button class="visite-central-btn" id="visite-btn-m" onclick="lancerVisite()">
+        Découvrir comment ça marche
+      </button>
+      <div class="st">Livraisons récentes</div>
+      <div id="m-recent"></div>
+    </div>
+
+    <!-- Nouvelle livraison -->
+    <div class="screen" id="sc-m-nouvelle">
+      <div class="card">
+        <div class="card-title"><span class="ci ci-or">📦</span>Créer une livraison</div>
+
+        <div class="fg-group">
+          <label class="fg-label">Nom de la destinataire</label>
+          <input class="fg-input" id="m-dest" placeholder="Ex: Fatou Traoré">
+        </div>
+        <div class="fg-group">
+          <label class="fg-label">Téléphone de la destinataire (optionnel)</label>
+          <input class="fg-input" id="m-dest-tel" placeholder="+225 07 XX XX XX" type="tel">
+          <div class="fg-error" id="m-tel-err">Format invalide</div>
+        </div>
+        <div class="fg-group">
+          <label class="fg-label">Adresse de départ (votre adresse)</label>
+          <input class="fg-input" id="m-depart" placeholder="Ex: Rue des jardins, Cocody Angré">
+        </div>
+        <div class="fg-row">
+          <div class="fg-group">
+            <label class="fg-label">Commune de livraison</label>
+            <select class="fg-select" id="m-commune" onchange="calcDistance()">
+              <option value="">Commune...</option>
+              <option>Cocody</option><option>Marcory</option><option>Plateau</option>
+              <option>Yopougon</option><option>Abobo</option><option>Adjamé</option>
+              <option>Koumassi</option><option>Port-Bouët</option><option>Treichville</option>
+              <option>Attecoubé</option><option>Bingerville</option><option>Songon</option>
+            </select>
+          </div>
+          <div class="fg-group">
+            <label class="fg-label">Date souhaitée</label>
+            <input class="fg-input" id="m-date" type="date">
+          </div>
+        </div>
+
+        <div class="dist-result" id="dist-result">
+          <div class="dr-km" id="dist-km"></div>
+          <div class="dr-prix" id="dist-prix"></div>
+        </div>
+
+        <div class="fg-group">
+          <label class="fg-label">Adresse complète de livraison</label>
+          <input class="fg-input" id="m-arrivee" placeholder="Ex: Rue des bananiers, Angré 8e tranche">
+        </div>
+        <div class="fg-row">
+          <div class="fg-group">
+            <label class="fg-label">Frais (FCFA)</label>
+            <input class="fg-input" id="m-frais" type="number" placeholder="1500">
+          </div>
+          <div class="fg-group">
+            <label class="fg-label">Mode de paiement</label>
+            <select class="fg-select" id="m-paiement">
+              <option value="">Choisir...</option>
+              <option>Wave</option><option>MTN Money</option><option>Orange Money</option>
+              <option>Espèces</option><option>Carte</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg-group">
+          <label class="fg-label">Contenu du colis (optionnel)</label>
+          <input class="fg-input" id="m-desc" placeholder="Ex: Vêtements, cosméticos...">
+        </div>
+      </div>
+
+      <!-- Sélection livreur -->
+      <div class="card">
+        <div class="card-title"><span class="ci ci-vt">🛵</span>Choisir un livreur</div>
+        <div id="livreur-choice">
+          <div class="livreur-choice">
+            <div class="lc-option" onclick="voirCatalogue()">
+              <div class="lc-icon or">🔍</div>
+              <div class="lc-info">
+                <div class="lc-title">Choisir dans le catalogue</div>
+                <div class="lc-sub">Livreurs vérifiés disponibles dans votre zone</div>
+              </div>
+              <span style="color:var(--gris);font-size:18px">›</span>
+            </div>
+            <div class="lc-option">
+              <div class="lc-icon vt">📱</div>
+              <div class="lc-info">
+                <div class="lc-title">Entrer manuellement</div>
+                <div class="lc-sub">Votre livreur habituel</div>
+              </div>
+            </div>
+          </div>
+          <div class="fg-row" style="margin-top:-4px">
+            <div class="fg-group">
+              <label class="fg-label">Nom du livreur</label>
+              <input class="fg-input" id="m-livreur-nom" placeholder="Prénom Nom">
+            </div>
+            <div class="fg-group">
+              <label class="fg-label">WhatsApp livreur</label>
+              <input class="fg-input" id="m-livreur-tel" placeholder="+225 XX XX XX">
+            </div>
+          </div>
+          <button class="btn btn-ghost" onclick="inviterLivreur()" style="margin-bottom:8px">Inviter un livreur</button>
+        </div>
+
+        <div id="livreur-sel" style="display:none">
+          <div style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--vt-l);border-radius:var(--r-sm);margin-bottom:10px">
+            <span style="font-size:20px">🛵</span>
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--vt-d)" id="livreur-sel-nom"></div>
+              <div style="font-size:11px;color:var(--vt-d)">Livreur sélectionné</div>
+            </div>
+            <button onclick="changerLivreur()" style="margin-left:auto;font-size:11px;color:var(--gris);background:none;border:none;cursor:pointer">Changer</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-or" id="btn-creer" onclick="creerLivraison()">Créer la livraison</button>
+    </div>
+
+    <!-- Alertes marchand -->
+    <div class="screen" id="sc-m-alertes">
+      <div class="card">
+        <div class="card-title"><span class="ci ci-rouge">🚨</span>Envoyer une alerte</div>
+        <div class="fg-group">
+          <label class="fg-label">Livraison concernée</label>
+          <select class="fg-select" id="m-al-liv"><option value="">Choisir...</option></select>
+        </div>
+        <div class="fg-group">
+          <label class="fg-label">Type d'alerte</label>
+          <select class="fg-select" id="m-al-type">
+            <option value="">Choisir...</option>
+            <option value="retard">Retard</option>
+            <option value="annulation">Annulation</option>
+            <option value="modification adresse">Modification adresse</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+        <div class="fg-group">
+          <label class="fg-label">Message</label>
+          <input class="fg-input" id="m-al-msg" placeholder="Votre message...">
+        </div>
+        <button class="btn btn-rouge" onclick="envoyerAlerteM()">Envoyer l'alerte</button>
+      </div>
+      <div class="st" style="margin-top:16px">Alertes de vos livreurs</div>
+      <div id="m-al-recues"></div>
+    </div>
+
+    <!-- Rapport mensuel -->
+    <div class="screen" id="sc-m-rapport">
+      <div class="card">
+        <div class="card-title"><span class="ci ci-vt">📊</span>Rapport mensuel</div>
+        <div class="fg-group">
+          <label class="fg-label">Mois</label>
+          <select class="fg-select" id="m-mois">
+            <option value="0">Janvier</option><option value="1">Février</option>
+            <option value="2">Mars</option><option value="3">Avril</option>
+            <option value="4">Mai</option><option value="5">Juin</option>
+            <option value="6">Juillet</option><option value="7">Août</option>
+            <option value="8">Septembre</option><option value="9">Octobre</option>
+            <option value="10">Novembre</option><option value="11">Décembre</option>
+          </select>
+        </div>
+        <button class="btn btn-or" onclick="genRapport()">Générer le rapport</button>
+      </div>
+      <div id="m-rapport-result"></div>
+      <button class="aide-btn" onclick="showAide('m')">Aide &amp; Questions fréquentes</button>
+      <button class="btn btn-ghost" style="margin-top:4px" onclick="seDeconnecter()">Se déconnecter</button>
+    </div>
+  </div>
+
+  <!-- FAB (marchand) -->
+  <button class="fab" id="fab" onclick="showScreen('m-nouvelle')">+</button>
+
+  <!-- Bottom nav -->
+  <nav class="bottom-nav" id="bottom-nav"></nav>
+</div>
+
+<!-- ===== MODALS ===== -->
+
+<!-- Détail mission -->
+<div class="modal-overlay" id="modal-mission">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div id="modal-mission-content"></div>
+    <button class="btn btn-ghost" style="margin-top:8px" onclick="closeModal('modal-mission')">Fermer</button>
+  </div>
+</div>
+
+<!-- Catalogue livreurs -->
+<div class="modal-overlay" id="modal-catalogue">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Livreurs disponibles</div>
+    <div id="modal-cat-content"></div>
+    <button class="btn btn-ghost" style="margin-top:12px" onclick="closeModal('modal-catalogue')">Fermer</button>
+  </div>
+</div>
+
+<!-- Aide -->
+<div class="modal-overlay" id="modal-aide">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Aide</div>
+    <div id="modal-aide-content"></div>
+    <button class="btn btn-ghost" style="margin-top:8px" onclick="closeModal('modal-aide')">Fermer</button>
+  </div>
+</div>
+
+<!-- Reconnexion -->
+<div class="modal-overlay" id="modal-rc">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Me reconnecter</div>
+    <div class="fg-group">
+      <label class="fg-label">Votre numéro WhatsApp</label>
+      <input class="fg-input" id="rc-input" placeholder="+225 07 XX XX XX XX" type="tel">
+      <div class="fg-error" id="rc-input-err" style="display:none"></div>
+    </div>
+    <button class="btn btn-or" id="rc-btn" onclick="doReconnexion()">Rechercher mon compte</button>
+    <button class="btn btn-ghost" style="margin-top:8px" onclick="closeModal('modal-rc')">Annuler</button>
+  </div>
+</div>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
