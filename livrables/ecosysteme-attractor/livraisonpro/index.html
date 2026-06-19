@@ -1,0 +1,598 @@
+?<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1A1714">
+<meta name="description" content="Livraison Pro — La marketplace de livraison vérifiée en Côte d'Ivoire. Livreurs certifiés, suivi en temps réel, zéro litige.">
+<title>Livraison Pro — Marketplace de livraison certifiée 🇨🇮</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<style>
+/* ===== RESET & BASE ===== */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font-body);background:var(--blanc);color:var(--noir);overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+
+/* ===== NAV ===== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(26,23,20,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06);padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-flag{display:flex;width:24px;height:16px;border-radius:3px;overflow:hidden;flex-shrink:0}
+.nav-flag span{flex:1}
+.nav-flag .f-or{background:#F77F00}
+.nav-flag .f-wh{background:#fff}
+.nav-flag .f-vt{background:#009A44}
+.nav-brand{font-family:var(--font-title);font-size:15px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.nav-actions{display:flex;align-items:center;gap:8px}
+.nav-btn{padding:8px 16px;border-radius:20px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:var(--tr)}
+.nav-btn.ghost{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.nav-btn.ghost:hover{background:rgba(255,255,255,.14);color:#fff}
+.nav-btn.primary{background:var(--or);color:#fff}
+.nav-btn.primary:hover{background:var(--or-d)}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;background:var(--noir);display:flex;flex-direction:column;justify-content:center;padding:100px 24px 60px;position:relative;overflow:hidden;max-width:100%}
+.hero-bg{position:absolute;inset:0;pointer-events:none}
+.hero-bg-gradient{position:absolute;inset:0;background:radial-gradient(ellipse 80% 55% at 85% 15%, rgba(242,92,5,.18) 0%, transparent 55%), radial-gradient(ellipse 60% 45% at 15% 85%, rgba(0,154,68,.1) 0%, transparent 55%), linear-gradient(180deg,rgba(26,23,20,0) 0%,rgba(26,23,20,.55) 55%,rgba(26,23,20,.96) 100%);z-index:2}
+.hero-moto{position:absolute;bottom:0;right:-10px;width:68%;max-width:310px;z-index:1;opacity:.15;pointer-events:none;filter:saturate(0) brightness(1.4)}
+.hero-inner{position:relative;z-index:1;max-width:460px;margin:0 auto;width:100%}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,154,68,.12);border:1px solid rgba(0,154,68,.2);border-radius:20px;padding:7px 14px;margin-bottom:24px}
+.hero-badge-dot{width:7px;height:7px;border-radius:50%;background:var(--vt);animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.7;transform:scale(1.2)}}
+.hero-badge span{font-size:12px;font-weight:700;color:var(--vt);letter-spacing:.3px}
+.hero-h1{font-family:var(--font-title);font-size:clamp(32px,8vw,44px);font-weight:700;color:#fff;line-height:1.1;margin-bottom:16px;letter-spacing:-.5px}
+.hero-h1 em{color:var(--or);font-style:normal}
+.hero-sub{font-size:16px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:36px;max-width:380px}
+.hero-ctas{display:flex;flex-direction:column;gap:12px;margin-bottom:48px}
+.cta-card{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:var(--r);cursor:pointer;border:none;text-align:left;transition:var(--tr);width:100%}
+.cta-card.marchand{background:linear-gradient(135deg,rgba(0,154,68,.15),rgba(0,154,68,.05));border:1.5px solid rgba(0,154,68,.25)}
+.cta-card.marchand:hover{background:linear-gradient(135deg,rgba(0,154,68,.22),rgba(0,154,68,.1));border-color:rgba(0,154,68,.4);transform:translateY(-1px)}
+.cta-card.livreur{background:linear-gradient(135deg,rgba(242,92,5,.15),rgba(242,92,5,.05));border:1.5px solid rgba(242,92,5,.25)}
+.cta-card.livreur:hover{background:linear-gradient(135deg,rgba(242,92,5,.22),rgba(242,92,5,.1));border-color:rgba(242,92,5,.4);transform:translateY(-1px)}
+.cta-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cta-icon.vt{background:rgba(0,154,68,.2)}
+.cta-icon.or{background:rgba(242,92,5,.2)}
+.cta-info{flex:1}
+.cta-title{font-family:var(--font-title);font-size:15px;font-weight:700;color:#fff;margin-bottom:3px}
+.cta-desc{font-size:12px;color:rgba(255,255,255,.45);line-height:1.4}
+.cta-arrow{font-size:18px;color:rgba(255,255,255,.3)}
+
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.hstat{text-align:center;padding:16px 8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-sm)}
+.hstat-n{font-family:var(--font-title);font-size:22px;font-weight:700;color:var(--or)}
+.hstat-l{font-size:10px;color:rgba(255,255,255,.35);margin-top:2px;line-height:1.4}
+
+/* ===== SECTION COMMUNE ===== */
+.section{padding:64px 24px;max-width:460px;margin:0 auto}
+.section-label{font-size:11px;font-weight:700;color:var(--or);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.section-title{font-family:var(--font-title);font-size:clamp(24px,6vw,32px);font-weight:700;color:var(--noir);line-height:1.15;margin-bottom:14px}
+.section-sub{font-size:15px;color:var(--gris);line-height:1.7}
+
+/* ===== SECTION LIVREURS (dark) ===== */
+.section-dark{background:var(--noir);padding:64px 24px}
+.section-dark .section-title{color:#fff}
+.section-dark .section-sub{color:rgba(255,255,255,.45)}
+
+.liveurs-grid{display:flex;flex-direction:column;gap:10px;margin-top:28px}
+.livreur-card{display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);transition:var(--tr)}
+.livreur-card:hover{background:rgba(255,255,255,.07);border-color:rgba(242,92,5,.2)}
+.livreur-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-title);font-size:18px;font-weight:700;color:#fff;flex-shrink:0;background:linear-gradient(135deg,var(--or),var(--or-d))}
+.livreur-info{flex:1}
+.livreur-nom{font-family:var(--font-title);font-size:14px;font-weight:700;color:#fff;margin-bottom:2px}
+.livreur-detail{font-size:11px;color:rgba(255,255,255,.4);line-height:1.5}
+.livreur-badges{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
+.badge{font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px}
+.badge-vt{background:rgba(0,154,68,.15);color:#4ADE80}
+.badge-or{background:rgba(242,92,5,.15);color:#FBA94C}
+.badge-gris{background:rgba(255,255,255,.06);color:rgba(255,255,255,.4)}
+.livreur-note{text-align:right;flex-shrink:0}
+.note-val{font-family:var(--font-title);font-size:15px;font-weight:700;color:#fff}
+.note-label{font-size:9px;color:rgba(255,255,255,.3)}
+
+.cta-catalogue{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px;background:var(--or);color:#fff;border:none;border-radius:var(--r-sm);font-family:var(--font-title);font-size:14px;font-weight:700;cursor:pointer;margin-top:20px;transition:var(--tr)}
+.cta-catalogue:hover{background:var(--or-d)}
+
+/* ===== COMMENT CA MARCHE ===== */
+.steps{display:flex;flex-direction:column;gap:0;margin-top:32px}
+.step{display:flex;gap:18px;padding-bottom:28px;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;left:19px;top:40px;width:2px;bottom:0;background:var(--gris-b)}
+.step-num{width:40px;height:40px;border-radius:50%;background:var(--or);color:#fff;font-family:var(--font-title);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1;box-shadow:0 0 0 6px var(--blanc)}
+.step-body{flex:1;padding-top:7px}
+.step-title{font-family:var(--font-title);font-size:15px;font-weight:700;color:var(--noir);margin-bottom:5px}
+.step-desc{font-size:13px;color:var(--gris);line-height:1.6}
+
+/* ===== PLANS ===== */
+.plans-grid{display:flex;flex-direction:column;gap:14px;margin-top:28px}
+.plan-card{border-radius:var(--r);padding:22px;border:2px solid var(--gris-b);position:relative;overflow:hidden}
+.plan-card.featured{border-color:var(--or);background:linear-gradient(135deg,rgba(242,92,5,.04),rgba(242,92,5,.01))}
+.plan-badge{position:absolute;top:14px;right:14px;background:var(--or);color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;font-family:var(--font-title)}
+.plan-name{font-family:var(--font-title);font-size:18px;font-weight:700;color:var(--noir);margin-bottom:4px}
+.plan-price{font-family:var(--font-title);font-size:28px;font-weight:700;color:var(--or);margin-bottom:14px}
+.plan-price span{font-size:13px;font-weight:500;color:var(--gris)}
+.plan-features{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.plan-feature{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gris)}
+.plan-feature.included{color:var(--noir)}
+.feat-icon{flex-shrink:0}
+.plan-cta{width:100%;padding:13px;border:none;border-radius:var(--r-sm);font-family:var(--font-title);font-size:13px;font-weight:700;cursor:pointer;transition:var(--tr)}
+.plan-cta.or{background:var(--or);color:#fff}
+.plan-cta.or:hover{background:var(--or-d)}
+.plan-cta.outline{background:transparent;border:2px solid var(--gris-b);color:var(--gris)}
+.plan-cta.outline:hover{border-color:var(--or);color:var(--or)}
+
+/* ===== CONFIANCE ===== */
+.trust-grid{display:flex;flex-direction:column;gap:14px;margin-top:28px}
+.trust-item{display:flex;align-items:flex-start;gap:16px;padding:18px;background:var(--sable);border-radius:var(--r)}
+.trust-icon-wrap{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--or-l)}
+.trust-title{font-family:var(--font-title);font-size:14px;font-weight:700;color:var(--noir);margin-bottom:4px}
+.trust-desc{font-size:12px;color:var(--gris);line-height:1.6}
+
+/* ===== TEMOIGNAGES ===== */
+.temoignages{background:var(--sable);padding:64px 24px}
+.temo-grid{display:flex;flex-direction:column;gap:12px;margin-top:28px}
+.temo-card{background:var(--blanc);border-radius:var(--r);padding:18px;box-shadow:var(--sh)}
+.temo-quote{font-size:14px;color:var(--noir);line-height:1.7;margin-bottom:14px;font-style:italic}
+.temo-author{display:flex;align-items:center;gap:10px}
+.temo-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--vt),var(--vt-d));display:flex;align-items:center;justify-content:center;font-family:var(--font-title);font-size:13px;font-weight:700;color:#fff}
+.temo-name{font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--noir)}
+.temo-role{font-size:11px;color:var(--gris)}
+
+/* ===== CTA FINAL ===== */
+.cta-final{background:var(--noir);padding:64px 24px;text-align:center}
+.cta-final-title{font-family:var(--font-title);font-size:clamp(26px,7vw,36px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:12px;letter-spacing:-.3px}
+.cta-final-title em{color:var(--or);font-style:normal}
+.cta-final-sub{font-size:14px;color:rgba(255,255,255,.45);line-height:1.7;margin-bottom:32px;max-width:340px;margin-left:auto;margin-right:auto}
+.cta-final-btns{display:flex;flex-direction:column;gap:10px;max-width:320px;margin:0 auto}
+.btn-final{padding:16px;border:none;border-radius:var(--r-sm);font-family:var(--font-title);font-size:14px;font-weight:700;cursor:pointer;transition:var(--tr)}
+.btn-final.or{background:var(--or);color:#fff}
+.btn-final.or:hover{background:var(--or-d)}
+.btn-final.ghost{background:rgba(255,255,255,.07);color:rgba(255,255,255,.6);border:1.5px solid rgba(255,255,255,.1)}
+.btn-final.ghost:hover{background:rgba(255,255,255,.12);color:#fff}
+
+/* ===== FOOTER ===== */
+.footer{background:#0A0A0A;padding:28px 24px;text-align:center;border-top:1px solid rgba(255,255,255,.05)}
+.footer-flag{display:flex;width:28px;height:18px;border-radius:4px;overflow:hidden;margin:0 auto 10px}
+.footer-flag span{flex:1}
+.footer-brand{font-family:var(--font-title);font-size:14px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:8px}
+.footer-sub{font-size:11px;color:rgba(255,255,255,.2);line-height:1.6}
+
+/* ===== SVG ICONS ===== */
+.icon{display:block;width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.icon-sm{width:18px;height:18px}
+.icon-lg{width:28px;height:28px}
+
+/* ===== SCROLL REVEAL ===== */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ===== RESPONSIVE ===== */
+@media(min-width:520px){
+  body{max-width:100%}
+  .hero-inner,.section,.section-dark > *{max-width:500px;margin-left:auto;margin-right:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="nav-flag"><span class="f-or"></span><span class="f-wh"></span><span class="f-vt"></span></div>
+    <span class="nav-brand">Livraison Pro</span>
+  </div>
+  <div class="nav-actions">
+    <button class="nav-btn ghost" onclick="window.location.href='app.html?mode=login'">Se connecter</button>
+    <button class="nav-btn primary" onclick="window.location.href='app.html'">Commencer</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-bg-gradient"></div>
+    <!-- Silhouette moto livreur CI — SVG inline, zéro requête réseau -->
+    <svg class="hero-moto" viewBox="0 0 420 260" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- Route / ombre sol -->
+      <ellipse cx="210" cy="250" rx="190" ry="12" fill="rgba(242,92,5,.06)"/>
+      <!-- Roue arrière -->
+      <circle cx="95" cy="210" r="46" stroke="#F25C05" stroke-width="10" fill="none"/>
+      <circle cx="95" cy="210" r="28" stroke="rgba(242,92,5,.3)" stroke-width="4" fill="none"/>
+      <circle cx="95" cy="210" r="6" fill="#F25C05"/>
+      <!-- Jantes roue arrière -->
+      <line x1="95" y1="164" x2="95" y2="256" stroke="rgba(242,92,5,.25)" stroke-width="2"/>
+      <line x1="49" y1="210" x2="141" y2="210" stroke="rgba(242,92,5,.25)" stroke-width="2"/>
+      <line x1="62" y1="177" x2="128" y2="243" stroke="rgba(242,92,5,.25)" stroke-width="2"/>
+      <line x1="128" y1="177" x2="62" y2="243" stroke="rgba(242,92,5,.25)" stroke-width="2"/>
+      <!-- Roue avant -->
+      <circle cx="330" cy="210" r="46" stroke="#F25C05" stroke-width="10" fill="none"/>
+      <circle cx="330" cy="210" r="28" stroke="rgba(242,92,5,.3)" stroke-width="4" fill="none"/>
+      <circle cx="330" cy="210" r="6" fill="#F25C05"/>
+      <!-- Jantes roue avant -->
+      <line x1="330" y1="164" x2="330" y2="256" stroke="rgba(242,92,5,.25)" stroke-width="2"/>
+      <line x1="284" y1="210" x2="376" y2="210" stroke="rgba(242,92,5,.25)" stroke-width="2"/>
+      <line x1="297" y1="177" x2="363" y2="243" stroke="rgba(242,92,5,.25)" stroke-width="2"/>
+      <line x1="363" y1="177" x2="297" y2="243" stroke="rgba(242,92,5,.25)" stroke-width="2"/>
+      <!-- Cadre moto -->
+      <path d="M95 210 L155 155 L230 148 L290 158 L330 210" stroke="#F25C05" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M155 155 L195 120 L250 118 L290 158" stroke="rgba(242,92,5,.7)" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <!-- Moteur / bloc central -->
+      <rect x="175" y="158" width="68" height="42" rx="8" fill="rgba(242,92,5,.18)" stroke="rgba(242,92,5,.5)" stroke-width="2"/>
+      <!-- Réservoir -->
+      <path d="M195 118 C195 118 200 95 230 95 C258 95 262 118 262 118 L250 118 L195 118Z" fill="rgba(242,92,5,.25)" stroke="rgba(242,92,5,.6)" stroke-width="2"/>
+      <!-- Guidon -->
+      <line x1="290" y1="158" x2="310" y2="128" stroke="rgba(242,92,5,.8)" stroke-width="6" stroke-linecap="round"/>
+      <line x1="302" y1="118" x2="322" y2="118" stroke="#F25C05" stroke-width="5" stroke-linecap="round"/>
+      <!-- Fourche avant -->
+      <line x1="290" y1="158" x2="330" y2="174" stroke="rgba(242,92,5,.7)" stroke-width="6" stroke-linecap="round"/>
+      <line x1="300" y1="148" x2="335" y2="168" stroke="rgba(242,92,5,.5)" stroke-width="4" stroke-linecap="round"/>
+      <!-- Silhouette livreur assis -->
+      <!-- Torse -->
+      <path d="M200 155 C200 155 190 120 198 108 C206 96 226 90 238 96 C250 102 248 125 240 138 L220 155Z" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+      <!-- Tête + casque -->
+      <circle cx="218" cy="82" r="22" fill="rgba(242,92,5,.3)" stroke="rgba(242,92,5,.6)" stroke-width="2"/>
+      <path d="M196 82 C196 70 207 58 218 58 C229 58 240 70 240 82" fill="rgba(242,92,5,.5)" stroke="rgba(242,92,5,.7)" stroke-width="1.5"/>
+      <!-- Visière casque -->
+      <path d="M200 82 C200 82 208 90 218 90 C228 90 236 82 236 82" fill="rgba(0,0,0,.4)" stroke="rgba(242,92,5,.4)" stroke-width="1"/>
+      <!-- Bras -->
+      <path d="M230 118 C240 120 270 130 290 138" stroke="rgba(255,255,255,.18)" stroke-width="7" stroke-linecap="round"/>
+      <!-- Jambe -->
+      <path d="M215 152 C215 152 200 178 190 195" stroke="rgba(255,255,255,.15)" stroke-width="8" stroke-linecap="round"/>
+      <!-- Colis / sac à dos livraison -->
+      <rect x="170" y="100" width="38" height="48" rx="6" fill="rgba(0,154,68,.25)" stroke="rgba(0,154,68,.5)" stroke-width="2"/>
+      <line x1="174" y1="108" x2="204" y2="108" stroke="rgba(0,154,68,.4)" stroke-width="1.5"/>
+      <line x1="174" y1="116" x2="204" y2="116" stroke="rgba(0,154,68,.4)" stroke-width="1.5"/>
+      <!-- Échappement + fumée stylisée -->
+      <path d="M108 200 C90 195 75 185 68 178" stroke="rgba(242,92,5,.4)" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="58" cy="172" r="6" fill="rgba(242,92,5,.08)"/>
+      <circle cx="48" cy="162" r="9" fill="rgba(242,92,5,.05)"/>
+      <!-- Points de vitesse -->
+      <line x1="30" y1="195" x2="10" y2="195" stroke="rgba(242,92,5,.2)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="36" y1="205" x2="12" y2="205" stroke="rgba(242,92,5,.15)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="40" y1="215" x2="18" y2="215" stroke="rgba(242,92,5,.1)" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      <span>La livraison certifiée 🇨🇮</span>
+    </div>
+    <h1 class="hero-h1">Trouvez le bon livreur.<br><em>En 2 minutes.</em></h1>
+    <p class="hero-sub">Des livreurs vérifiés près de chez vous. Bon de livraison automatique. Zéro litige, zéro paperasse.</p>
+
+    <div class="hero-ctas">
+      <button class="cta-card marchand" onclick="window.location.href='app.html?role=marchand'">
+        <div class="cta-icon vt">
+          <svg class="icon icon-lg" viewBox="0 0 24 24" style="color:var(--vt)">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+          </svg>
+        </div>
+        <div class="cta-info">
+          <div class="cta-title">Je cherche un livreur</div>
+          <div class="cta-desc">Marchand, e-commerçant — trouvez un livreur disponible dans votre zone maintenant</div>
+        </div>
+        <div class="cta-arrow">›</div>
+      </button>
+
+      <button class="cta-card livreur" onclick="window.location.href='app.html?role=livreur'">
+        <div class="cta-icon or">
+          <svg class="icon icon-lg" viewBox="0 0 24 24" style="color:var(--or)">
+            <circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6H1"/><path d="M15 6l4 6h3v3H19"/><path d="M15 6l1 5h3"/>
+          </svg>
+        </div>
+        <div class="cta-info">
+          <div class="cta-title">Je suis livreur</div>
+          <div class="cta-desc">Inscrivez-vous, faites-vous vérifier et accédez à des centaines d'entrepreneurs dans votre zone</div>
+        </div>
+        <div class="cta-arrow">›</div>
+      </button>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-n">100%</div><div class="hstat-l">Livreurs vérifiés</div></div>
+      <div class="hstat"><div class="hstat-n">2min</div><div class="hstat-l">Pour trouver un livreur</div></div>
+      <div class="hstat"><div class="hstat-n">0 FCFA</div><div class="hstat-l">Pour démarrer</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVREURS DISPONIBLES -->
+<section class="section-dark">
+  <div style="max-width:460px;margin:0 auto">
+    <p class="section-label" style="color:var(--or)">Catalogue en direct</p>
+    <h2 class="section-title" style="color:#fff">Livreurs disponibles<br>dans votre zone</h2>
+    <p class="section-sub">Chaque livreur est vérifié (CNI + photo) avant d'apparaître dans le catalogue.</p>
+
+    <div class="liveurs-grid" id="livreurs-grid">
+      <!-- Livreurs fictifs (mockup) -->
+      <div class="livreur-card">
+        <div class="livreur-avatar">K</div>
+        <div class="livreur-info">
+          <div class="livreur-nom">Kofi Assamoua
+            <svg class="icon icon-sm" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;color:var(--vt);stroke-width:2.5;margin-left:4px"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="livreur-detail">Moto · Cocody, Marcory, Plateau</div>
+          <div class="livreur-badges">
+            <span class="badge badge-vt">Disponible</span>
+            <span class="badge badge-or">247 livraisons</span>
+          </div>
+        </div>
+        <div class="livreur-note"><div class="note-val">4.9</div><div class="note-label">Note</div></div>
+      </div>
+
+      <div class="livreur-card">
+        <div class="livreur-avatar" style="background:linear-gradient(135deg,#3B82F6,#1D4ED8)">A</div>
+        <div class="livreur-info">
+          <div class="livreur-nom">Awa Traoré
+            <svg class="icon icon-sm" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;color:var(--vt);stroke-width:2.5;margin-left:4px"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="livreur-detail">Moto · Yopougon, Adjamé, Attecoubé</div>
+          <div class="livreur-badges">
+            <span class="badge badge-vt">Disponible</span>
+            <span class="badge badge-or">183 livraisons</span>
+          </div>
+        </div>
+        <div class="livreur-note"><div class="note-val">4.8</div><div class="note-label">Note</div></div>
+      </div>
+
+      <div class="livreur-card">
+        <div class="livreur-avatar" style="background:linear-gradient(135deg,#8B5CF6,#6D28D9)">S</div>
+        <div class="livreur-info">
+          <div class="livreur-nom">Seydou Koné</div>
+          <div class="livreur-detail">Voiture · Toutes communes</div>
+          <div class="livreur-badges">
+            <span class="badge badge-gris">Indisponible</span>
+            <span class="badge badge-or">98 livraisons</span>
+          </div>
+        </div>
+        <div class="livreur-note"><div class="note-val">4.7</div><div class="note-label">Note</div></div>
+      </div>
+    </div>
+
+    <button class="cta-catalogue" onclick="window.location.href='app.html?role=marchand'">
+      Voir tous les livreurs disponibles
+      <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- COMMENT CA MARCHE -->
+<section class="section reveal">
+  <p class="section-label">Simple et rapide</p>
+  <h2 class="section-title">Comment ça marche ?</h2>
+
+  <!-- Pour le livreur -->
+  <p style="font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--or);margin:24px 0 16px">Pour le livreur</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Vous vous inscrivez gratuitement</div>
+        <div class="step-desc">Prénom, téléphone WhatsApp, commune et type de véhicule. 2 minutes montre en main.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Vérification de votre identité</div>
+        <div class="step-desc">Vous envoyez votre CNI par WhatsApp. Une fois vérifié, le badge apparaît sur votre profil. Les marchands vous font plus confiance.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Les missions arrivent sur WhatsApp</div>
+        <div class="step-desc">Les marchands de votre zone vous contactent directement. Acceptez en 1 tap. Chaque livraison génère un bon automatique.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pour le marchand -->
+  <p style="font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--vt);margin:32px 0 16px">Pour le marchand</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num" style="background:var(--vt)">1</div>
+      <div class="step-body">
+        <div class="step-title">Vous cherchez un livreur disponible</div>
+        <div class="step-desc">Filtrez par commune. Voyez les livreurs disponibles maintenant, leurs zones et leur note.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:var(--vt)">2</div>
+      <div class="step-body">
+        <div class="step-title">Vous créez la livraison en 30 secondes</div>
+        <div class="step-desc">Nom de la cliente, adresse, frais, mode de paiement. Votre livreur reçoit la demande sur WhatsApp.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:var(--vt)">3</div>
+      <div class="step-body">
+        <div class="step-title">Votre cliente suit son colis en temps réel</div>
+        <div class="step-desc">Un lien de suivi est généré automatiquement. Elle voit chaque étape. Plus d'appels, plus de stress.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS & TARIFS -->
+<section style="background:var(--sable);padding:64px 0">
+  <div style="max-width:460px;margin:0 auto;padding:0 24px">
+    <p class="section-label">Tarifs transparents</p>
+    <h2 class="section-title">1 mois gratuit,<br>puis vous choisissez</h2>
+    <p class="section-sub">Livraison Pro ne gagne que si vous livrez. On s'aligne sur votre succès.</p>
+
+    <div class="plans-grid" style="margin-top:28px">
+      <!-- Plan Gratuit -->
+      <div class="plan-card">
+        <div class="plan-name">Gratuit</div>
+        <div class="plan-price">0 FCFA <span>/ mois</span></div>
+        <div class="plan-features">
+          <div class="plan-feature included">
+            <svg class="icon icon-sm feat-icon" viewBox="0 0 24 24" style="color:var(--vt)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Catalogue livreurs vérifiés
+          </div>
+          <div class="plan-feature included">
+            <svg class="icon icon-sm feat-icon" viewBox="0 0 24 24" style="color:var(--vt)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Bon de livraison automatique
+          </div>
+          <div class="plan-feature included">
+            <svg class="icon icon-sm feat-icon" viewBox="0 0 24 24" style="color:var(--vt)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Notifications WhatsApp
+          </div>
+          <div class="plan-feature included">
+            <svg class="icon icon-sm feat-icon" viewBox="0 0 24 24" style="color:var(--vt)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Lien de suivi partageable
+          </div>
+          <div class="plan-feature">
+            <svg class="icon icon-sm feat-icon" viewBox="0 0 24 24" style="color:var(--gris-b)"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            GPS temps réel
+          </div>
+          <div class="plan-feature">
+            <svg class="icon icon-sm feat-icon" viewBox="0 0 24 24" style="color:var(--gris-b)"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Priorité dans le catalogue
+          </div>
+        </div>
+        <button class="plan-cta outline" onclick="window.location.href='app.html'">Commencer gratuitement</button>
+      </div>
+
+      <!-- Plan Pro -->
+      <div class="plan-card featured">
+        <div class="plan-badge">PRO</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">2 000 FCFA <span>/ mois (livreur)</span></div>
+        <div class="plan-features">
+          <div class="plan-feature included">
+            <svg class="icon icon-sm feat-icon" viewBox="0 0 24 24" style="color:var(--or)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Tout le plan Gratuit
+          </div>
+          <div class="plan-feature included">
+            <svg class="icon icon-sm feat-icon" viewBox="0 0 24 24" style="color:var(--or)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            GPS temps réel partagé
+          </div>
+          <div class="plan-feature included">
+            <svg class="icon icon-sm feat-icon" viewBox="0 0 24 24" style="color:var(--or)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Priorité dans le catalogue
+          </div>
+          <div class="plan-feature included">
+            <svg class="icon icon-sm feat-icon" viewBox="0 0 24 24" style="color:var(--or)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Statistiques avancées
+          </div>
+          <div class="plan-feature included">
+            <svg class="icon icon-sm feat-icon" viewBox="0 0 24 24" style="color:var(--or)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Badge "Pro" sur le profil
+          </div>
+        </div>
+        <button class="plan-cta or" onclick="window.location.href='app.html'">Passer Pro</button>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--gris);text-align:center;margin-top:14px">Marchands : 3 000 FCFA/mois pour le plan Pro</p>
+  </div>
+</section>
+
+<!-- CONFIANCE -->
+<section class="section reveal">
+  <p class="section-label">Pourquoi nous choisir</p>
+  <h2 class="section-title">Construit sur la confiance</h2>
+  <p class="section-sub">En Côte d'Ivoire, la confiance ne s'impose pas. Elle se prouve.</p>
+
+  <div class="trust-grid">
+    <div class="trust-item">
+      <div class="trust-icon-wrap">
+        <svg class="icon" viewBox="0 0 24 24" style="color:var(--or)">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="trust-title">Vérification CNI</div>
+        <div class="trust-desc">Chaque livreur envoie sa pièce d'identité. Vérifiée manuellement avant activation. Zéro imposteur dans le catalogue.</div>
+      </div>
+    </div>
+
+    <div class="trust-item">
+      <div class="trust-icon-wrap">
+        <svg class="icon" viewBox="0 0 24 24" style="color:var(--or)">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+        </svg>
+      </div>
+      <div>
+        <div class="trust-title">Bon de livraison automatique</div>
+        <div class="trust-desc">À chaque livraison confirmée, un bon numérique horodaté est généré. Votre preuve en cas de litige. Partageable sur WhatsApp en 1 tap.</div>
+      </div>
+    </div>
+
+    <div class="trust-item">
+      <div class="trust-icon-wrap">
+        <svg class="icon" viewBox="0 0 24 24" style="color:var(--or)">
+          <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="trust-title">Suivi en temps réel</div>
+        <div class="trust-desc">Un lien public de suivi pour chaque livraison. Votre cliente suit chaque étape depuis son téléphone. Plus d'appels de la cliente pour "où est mon colis ?"</div>
+      </div>
+    </div>
+
+    <div class="trust-item">
+      <div class="trust-icon-wrap">
+        <svg class="icon" viewBox="0 0 24 24" style="color:var(--or)">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </div>
+      <div>
+        <div class="trust-title">Système de notation</div>
+        <div class="trust-desc">Après chaque livraison, les marchands notent le livreur. Les meilleurs livreurs apparaissent en priorité dans le catalogue.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEMOIGNAGES -->
+<section class="temoignages">
+  <div style="max-width:460px;margin:0 auto">
+    <p class="section-label">Ils utilisent Livraison Pro</p>
+    <h2 class="section-title">Ce qu'ils en disent</h2>
+    <div class="temo-grid" style="margin-top:28px">
+      <div class="temo-card reveal">
+        <div class="temo-quote">"Avant je perdais 30 minutes à chercher un livreur sur WhatsApp. Maintenant j'en trouve un en 2 minutes avec un badge vérifié. Mes clientes reçoivent le lien de suivi automatiquement."</div>
+        <div class="temo-author">
+          <div class="temo-avatar">F</div>
+          <div><div class="temo-name">Fatou K.</div><div class="temo-role">Marchande — Cocody</div></div>
+        </div>
+      </div>
+      <div class="temo-card reveal">
+        <div class="temo-quote">"Le bon de livraison a réglé tous mes litiges. Un marchand a prétendu que je n'avais pas livré. J'ai montré le bon avec l'heure et la date. Affaire classée."</div>
+        <div class="temo-author">
+          <div class="temo-avatar" style="background:linear-gradient(135deg,var(--or),var(--or-d))">M</div>
+          <div><div class="temo-name">Mamadou T.</div><div class="temo-role">Livreur moto — Marcory</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <h2 class="cta-final-title">Prêt à commencer ?<br><em>C'est gratuit.</em></h2>
+  <p class="cta-final-sub">1 mois d'accès complet. Pas de carte bancaire. Pas de surprise. Vous décidez après.</p>
+  <div class="cta-final-btns">
+    <button class="btn-final or" onclick="window.location.href='app.html?role=marchand'">Je cherche un livreur</button>
+    <button class="btn-final ghost" onclick="window.location.href='app.html?role=livreur'">Je suis livreur — Je m'inscris</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-flag"><span class="f-or"></span><span class="f-wh"></span><span class="f-vt"></span></div>
+  <div class="footer-brand">Livraison Pro</div>
+  <div class="footer-sub">La marketplace de livraison certifiée en Côte d'Ivoire<br>
+    Un produit <strong style="color:rgba(255,255,255,.4)">Mr Attractor</strong> · WhatsApp <a href="https://wa.me/33753902323" style="color:var(--or)">+33 7 53 90 23 23</a>
+  </div>
+</footer>
+
+<script>
+/* Scroll reveal */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
