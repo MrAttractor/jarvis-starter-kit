@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Méthode ATTRACTOR — Mac Arthur Kouassi</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --orange: #F25C05;
+  --orange-d: #D94F02;
+  --orange-l: rgba(242,92,5,.10);
+  --charbon: #1A1714;
+  --sable: #FAF6F0;
+  --white: #FFFFFF;
+  --g200: #E8E2DA;
+  --g400: #9C9189;
+  --g700: #4A3F35;
+}
+
+body {
+  background: #D0C8C0;
+  font-family: 'Sora', sans-serif;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ══ PAGE ══ */
+.page {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 8mm auto;
+  background: var(--white);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 32px rgba(0,0,0,.18);
+}
+
+/* ══ PRINT ══ */
+@media print {
+  body { background: none; }
+  .page { margin: 0; box-shadow: none; page-break-after: always; page-break-inside: avoid; }
+  .no-print { display: none !important; }
+}
+@page { size: A4; margin: 0; }
+
+/* ══ COULEURS FOND ══ */
+.bg-charbon { background: var(--charbon) !important; }
+.bg-sable { background: var(--sable) !important; }
+.bg-orange { background: var(--orange) !important; }
+
+/* ══ TYPOGRAPHIE COMMUNE ══ */
+.mono { font-family: 'Space Mono', monospace; }
+.label {
+  font-family: 'Space Mono', monospace;
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+.label-light { color: rgba(250,246,240,.45); }
+
+/* ══ RUNNING HEADER/FOOTER ══ */
+.rh {
+  position: absolute;
+  top: 9mm;
+  left: 14mm;
+  right: 14mm;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 0.4pt solid var(--g200);
+  padding-bottom: 3mm;
+}
+.rh-dark { border-bottom-color: rgba(255,255,255,.12); }
+.rh-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 7pt;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--g400);
+}
+.rh-title-light { color: rgba(250,246,240,.35); }
+.rh-logo {
+  font-family: 'Space Mono', monospace;
+  font-size: 7pt;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+
+.rf {
+  position: absolute;
+  bottom: 9mm;
+  left: 14mm;
+  right: 14mm;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 0.4pt solid var(--g200);
+  padding-top: 3mm;
+}
+.rf-dark { border-top-color: rgba(255,255,255,.1); }
+.page-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 8pt;
+  color: var(--g400);
+}
+.page-num-light { color: rgba(250,246,240,.3); }
+.page-author {
+  font-size: 8pt;
+  color: var(--g400);
+}
+.page-author-light { color: rgba(250,246,240,.3); }
+
+/* ══ CORPS ══ */
+.body {
+  position: absolute;
+  top: 24mm;
+  bottom: 22mm;
+  left: 14mm;
+  right: 14mm;
+}
+
+/* ══ COUVERTURE ══ */
+.cover-body {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+.cover-top {
+  padding: 14mm 14mm 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cover-logo-mark {
+  width: 10mm;
+  height: 10mm;
+  background: var(--orange);
+  border-radius: 2mm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 11pt;
+  font-weight: 700;
+  color: #fff;
+}
+.cover-brand {
+  font-family: 'Space Mono', monospace;
+  font-size: 7.5pt;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(250,246,240,.45);
+}
+.cover-badge {
+  background: var(--orange);
+  color: #fff;
+  font-family: 'Space Mono', monospace;
+  font-size: 7pt;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 2mm 4mm;
+  border-radius: 1mm;
+}
+
+.cover-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 14mm;
+}
+.cover-serie {
+  font-family: 'Space Mono', monospace;
+  font-size: 7.5pt;
+  color: var(--orange);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  margin-bottom: 6mm;
+}
+.cover-h1 {
+  font-size: 38pt;
+  font-weight: 900;
+  color: var(--sable);
+  line-height: 1.0;
+  letter-spacing: -.02em;
+  margin-bottom: 4mm;
+}
+.cover-h1 em { color: var(--orange); font-style: italic; font-weight: 300; }
+.cover-sub {
+  font-size: 11pt;
+  font-weight: 300;
+  color: rgba(250,246,240,.6);
+  line-height: 1.6;
+  max-width: 130mm;
+  margin-bottom: 10mm;
+}
+.cover-pills {
+  display: flex;
+  gap: 3mm;
+  flex-wrap: wrap;
+  margin-bottom: 12mm;
+}
+.cover-pill {
+  border: 0.4pt solid rgba(242,92,5,.45);
+  border-radius: 100pt;
+  padding: 2mm 5mm;
+  font-family: 'Space Mono', monospace;
+  font-size: 7pt;
+  color: var(--orange);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.cover-stats {
+  display: flex;
+  gap: 8mm;
+  margin-bottom: 14mm;
+}
+.cover-stat-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 22pt;
+  font-weight: 700;
+  color: var(--orange);
+  line-height: 1;
+}
+.cover-stat-lbl {
+  font-size: 7.5pt;
+  color: rgba(250,246,240,.4);
+  margin-top: 1mm;
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.cover-stripe {
+  height: 2pt;
+  background: linear-gradient(90deg, var(--orange) 0%, rgba(242,92,5,0) 100%);
+  margin: 0 14mm 8mm;
+}
+.cover-author {
+  padding: 0 14mm 10mm;
+  display: flex;
+  align-items: center;
+  gap: 4mm;
+}
+.cover-author-line {
+  width: 8mm;
+  height: 0.5pt;
+  background: var(--orange);
+}
+.cover-author-name {
+  font-size: 9pt;
+  font-weight: 600;
+  color: rgba(250,246,240,.7);
+}
+.cover-author-role {
+  font-size: 7.5pt;
+  color: rgba(250,246,240,.35);
+}
+
+/* ══ PAGE QUOTE ══ */
+.quote-page .body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.quote-mark {
+  font-size: 48pt;
+  font-weight: 900;
+  color: var(--orange);
+  line-height: .7;
+  margin-bottom: 8mm;
+  opacity: .4;
+}
+.quote-text {
+  font-size: 14pt;
+  font-weight: 300;
+  color: var(--charbon);
+  line-height: 1.65;
+  max-width: 140mm;
+  font-style: italic;
+  margin-bottom: 6mm;
+}
+.quote-author {
+  font-family: 'Space Mono', monospace;
+  font-size: 8pt;
+  color: var(--orange);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+/* ══ SOMMAIRE ══ */
+.toc-h {
+  font-size: 9pt;
+  font-weight: 700;
+  color: var(--charbon);
+  letter-spacing: -.01em;
+  margin-bottom: 8mm;
+  padding-bottom: 3mm;
+  border-bottom: 1pt solid var(--g200);
+}
+.toc-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 4.5mm;
+  gap: 3mm;
+}
+.toc-item-main { display: flex; align-items: baseline; gap: 4mm; flex: 1; }
+.toc-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 7pt;
+  color: var(--orange);
+  flex-shrink: 0;
+  width: 18mm;
+}
+.toc-title {
+  font-size: 10pt;
+  font-weight: 600;
+  color: var(--charbon);
+  line-height: 1.3;
+}
+.toc-sub {
+  font-size: 8.5pt;
+  font-weight: 400;
+  color: var(--g400);
+  display: block;
+  margin-top: .5mm;
+}
+.toc-dots {
+  flex: 1;
+  border-bottom: 0.5pt dotted var(--g200);
+  margin: 0 2mm 1.5mm;
+  min-width: 8mm;
+}
+.toc-page {
+  font-family: 'Space Mono', monospace;
+  font-size: 8pt;
+  color: var(--g400);
+  flex-shrink: 0;
+}
+.toc-section {
+  font-family: 'Space Mono', monospace;
+  font-size: 7pt;
+  color: var(--orange);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin: 6mm 0 3mm;
+}
+
+/* ══ CHAPTER OPENER ══ */
+.ch-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 7.5pt;
+  color: var(--orange);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  margin-bottom: 4mm;
+}
+.ch-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 64pt;
+  font-weight: 700;
+  color: var(--g200);
+  line-height: .85;
+  margin-bottom: -6mm;
+  letter-spacing: -.03em;
+}
+.ch-num-dark { color: rgba(255,255,255,.06); }
+.ch-title {
+  font-size: 28pt;
+  font-weight: 900;
+  color: var(--charbon);
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  margin-bottom: 4mm;
+  position: relative;
+  z-index: 1;
+}
+.ch-title-light { color: var(--sable); }
+.ch-title em { color: var(--orange); font-style: italic; font-weight: 300; }
+.ch-meta {
+  font-size: 9pt;
+  color: var(--g400);
+  font-style: italic;
+  margin-bottom: 8mm;
+  position: relative;
+  z-index: 1;
+}
+.ch-meta-light { color: rgba(250,246,240,.45); }
+.ch-divider {
+  width: 12mm;
+  height: 2pt;
+  background: var(--orange);
+  margin-bottom: 8mm;
+  border-radius: 1pt;
+}
+
+/* ══ CORPS TEXTE ══ */
+.p {
+  font-size: 10pt;
+  line-height: 1.75;
+  color: var(--g700);
+  margin-bottom: 4mm;
+}
+.p-light { color: rgba(250,246,240,.7); }
+.p strong { color: var(--charbon); font-weight: 700; }
+.p-light strong { color: var(--sable); }
+
+.pull-quote {
+  border-left: 2pt solid var(--orange);
+  padding: 3mm 5mm;
+  margin: 5mm 0;
+  font-size: 11pt;
+  font-weight: 700;
+  color: var(--charbon);
+  font-style: italic;
+  line-height: 1.5;
+  background: var(--orange-l);
+  border-radius: 0 2mm 2mm 0;
+}
+.pull-quote-light {
+  background: rgba(242,92,5,.08);
+  color: var(--sable);
+}
+
+/* ══ DIALOGUE ══ */
+.dialogue { margin: 5mm 0; }
+.dial-line { display: flex; gap: 3mm; margin-bottom: 3mm; align-items: flex-start; }
+.dial-who {
+  font-family: 'Space Mono', monospace;
+  font-size: 7.5pt;
+  font-weight: 700;
+  color: var(--orange);
+  flex-shrink: 0;
+  width: 24mm;
+  padding-top: .5mm;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.dial-who-s { color: rgba(250,246,240,.5); }
+.dial-text {
+  font-size: 10pt;
+  line-height: 1.65;
+  color: var(--g700);
+  font-style: italic;
+}
+.dial-text-light { color: rgba(250,246,240,.75); }
+
+/* ══ STATS BLOCK ══ */
+.stats-row {
+  display: flex;
+  gap: 5mm;
+  margin: 6mm 0;
+}
+.stat-box {
+  flex: 1;
+  background: var(--sable);
+  border: 0.4pt solid var(--g200);
+  border-radius: 2mm;
+  padding: 4mm 5mm;
+}
+.stat-box-dark {
+  background: rgba(255,255,255,.04);
+  border-color: rgba(255,255,255,.08);
+}
+.stat-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 22pt;
+  font-weight: 700;
+  color: var(--orange);
+  line-height: 1;
+  margin-bottom: 1.5mm;
+}
+.stat-lbl {
+  font-size: 7.5pt;
+  color: var(--g400);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  line-height: 1.4;
+}
+.stat-lbl-light { color: rgba(250,246,240,.4); }
+
+/* ══ PIÈGE / LISTE ══ */
+.callout {
+  background: var(--sable);
+  border: 0.4pt solid var(--g200);
+  border-left: 3pt solid var(--orange);
+  border-radius: 0 2mm 2mm 0;
+  padding: 4mm 5mm;
+  margin: 5mm 0;
+}
+.callout-dark {
+  background: rgba(255,255,255,.03);
+  border-color: rgba(255,255,255,.08);
+  border-left-color: var(--orange);
+}
+.callout-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 7.5pt;
+  font-weight: 700;
+  color: var(--orange);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 3mm;
+}
+.callout-item {
+  display: flex;
+  gap: 3mm;
+  align-items: flex-start;
+  margin-bottom: 2mm;
+  font-size: 9.5pt;
+  color: var(--g700);
+  line-height: 1.55;
+}
+.callout-item-light { color: rgba(250,246,240,.7); }
+.callout-bullet {
+  color: var(--orange);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: .5mm;
+}
+
+/* ══ PROCEDURE ══ */
+.proc-box {
+  background: var(--charbon);
+  border-radius: 3mm;
+  padding: 5mm 6mm;
+  margin: 4mm 0;
+}
+.proc-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 7pt;
+  font-weight: 700;
+  color: var(--orange);
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  margin-bottom: 3mm;
+  padding-bottom: 2mm;
+  border-bottom: 0.4pt solid rgba(255,255,255,.08);
+}
+.proc-step {
+  display: flex;
+  gap: 3mm;
+  align-items: flex-start;
+  margin-bottom: 2mm;
+  font-size: 8.5pt;
+  color: rgba(250,246,240,.8);
+  line-height: 1.5;
+}
+.proc-n {
+  font-family: 'Space Mono', monospace;
+  font-size: 7pt;
+  color: var(--orange);
+  flex-shrink: 0;
+  width: 5mm;
+  padding-top: .5mm;
+}
+
+/* ══ JOUR CARD (7 JOURS) ══ */
+.days-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4mm;
+  margin: 5mm 0;
+}
+.day-card {
+  background: var(--sable);
+  border: 0.4pt solid var(--g200);
+  border-radius: 2mm;
+  padding: 4mm 5mm;
+  position: relative;
+  overflow: hidden;
+}
+.day-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2pt;
+  background: var(--orange);
+}
+.day-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 7pt;
+  font-weight: 700;
+  color: var(--orange);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: 2mm;
+}
+.day-title {
+  font-size: 11pt;
+  font-weight: 800;
+  color: var(--charbon);
+  line-height: 1.2;
+  margin-bottom: 2mm;
+}
+.day-desc {
+  font-size: 8.5pt;
+  color: var(--g400);
+  line-height: 1.55;
+}
+
+/* ══ CTA FINAL ══ */
+.cta-box {
+  background: var(--orange);
+  border-radius: 3mm;
+  padding: 6mm 8mm;
+  margin: 4mm 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5mm;
+}
+.cta-text-title {
+  font-size: 11pt;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 1.5mm;
+}
+.cta-text-sub {
+  font-size: 8.5pt;
+  color: rgba(255,255,255,.75);
+  line-height: 1.5;
+}
+.cta-url {
+  font-family: 'Space Mono', monospace;
+  font-size: 8pt;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(0,0,0,.2);
+  padding: 2.5mm 4mm;
+  border-radius: 1.5mm;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ══ PRINT BUTTON ══ */
+.print-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: var(--charbon);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 999;
+}
+.print-bar-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: rgba(250,246,240,.5);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.btn-print {
+  background: var(--orange);
+  color: #fff;
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-back {
+  background: rgba(255,255,255,.08);
+  color: rgba(250,246,240,.7);
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.print-spacer { height: 44px; }
+@media print { .print-bar, .print-spacer { display: none; } }
+</style>
+</head>
+<body>
+
+<!-- BARRE IMPRESSION -->
+<div class="print-bar no-print">
+  <span class="print-bar-title">Méthode ATTRACTOR — Ebook</span>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <a href="/" class="btn-back">← Retour au site</a>
+    <button class="btn-print" onclick="window.print()">Télécharger en PDF →</button>
+  </div>
+</div>
+<div class="print-spacer no-print"></div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 1 — COUVERTURE
+══════════════════════════════════════ -->
+<div class="page bg-charbon">
+  <!-- Fond déco -->
+  <div style="position:absolute;top:-30mm;right:-20mm;width:100mm;height:100mm;border-radius:50%;background:radial-gradient(circle,rgba(242,92,5,.18) 0%,transparent 70%);pointer-events:none;"></div>
+  <div style="position:absolute;bottom:20mm;left:-15mm;width:70mm;height:70mm;border-radius:50%;background:radial-gradient(circle,rgba(242,92,5,.08) 0%,transparent 70%);pointer-events:none;"></div>
+
+  <div class="cover-body">
+    <div class="cover-top">
+      <div style="display:flex;align-items:center;gap:3mm;">
+        <div class="cover-logo-mark">M</div>
+        <div>
+          <div style="font-family:'Space Mono',monospace;font-size:8pt;font-weight:700;color:rgba(250,246,240,.7);letter-spacing:.1em;text-transform:uppercase;">Mr Attractor</div>
+          <div style="font-family:'Space Mono',monospace;font-size:6.5pt;color:rgba(250,246,240,.3);letter-spacing:.06em;">Agence de développement</div>
+        </div>
+      </div>
+      <div class="cover-badge">Offert</div>
+    </div>
+
+    <div class="cover-center">
+      <div class="cover-serie">Méthode ATTRACTOR · Collection Systèmes</div>
+      <div class="cover-h1">Comment<br>organiser et<br>piloter votre<br>entreprise <em>sans<br>vous épuiser.</em></div>
+      <div class="cover-sub">7 étapes simples pour bâtir l'entreprise qui tourne même quand vous n'êtes pas là.</div>
+      <div class="cover-pills">
+        <div class="cover-pill">Organiser</div>
+        <div class="cover-pill">Déléguer</div>
+        <div class="cover-pill">Automatiser</div>
+        <div class="cover-pill">7 Jours</div>
+      </div>
+      <div class="cover-stats">
+        <div>
+          <div class="cover-stat-num">18h</div>
+          <div class="cover-stat-lbl">Récupérées<br>par semaine</div>
+        </div>
+        <div style="width:.4pt;background:rgba(255,255,255,.08);"></div>
+        <div>
+          <div class="cover-stat-num">×11</div>
+          <div class="cover-stat-lbl">Prospects<br>relancés</div>
+        </div>
+        <div style="width:.4pt;background:rgba(255,255,255,.08);"></div>
+        <div>
+          <div class="cover-stat-num">24/7</div>
+          <div class="cover-stat-lbl">Système<br>actif</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cover-stripe"></div>
+    <div class="cover-author">
+      <div>
+        <div class="cover-author-line"></div>
+      </div>
+      <div>
+        <div class="cover-author-name">Mac Arthur Kouassi</div>
+        <div class="cover-author-role">Fondateur · Mr Attractor · Abidjan / Paris</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 2 — CITATION FONDATRICE
+══════════════════════════════════════ -->
+<div class="page quote-page">
+  <div class="body" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+    <div style="width:12mm;height:2pt;background:var(--orange);border-radius:1pt;margin-bottom:10mm;"></div>
+    <div class="quote-text">«&thinsp;Une petite entreprise n'est pas définie<br>par le nombre de ses employés.<br>Elle est définie par la clarté<br>de ses procédures et la solidité<br>de ses systèmes.&thinsp;»</div>
+    <div class="quote-author" style="margin-top:6mm;">— Mac Arthur Kouassi, Mr Attractor</div>
+    <div style="width:12mm;height:2pt;background:var(--orange);border-radius:1pt;margin-top:10mm;"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 3 — SOMMAIRE
+══════════════════════════════════════ -->
+<div class="page">
+  <div class="rh">
+    <span class="rh-title">Méthode ATTRACTOR</span>
+    <span class="rh-logo">Mr Attractor</span>
+  </div>
+  <div class="body">
+    <div class="label" style="margin-bottom:3mm;">Sommaire</div>
+    <div style="font-size:20pt;font-weight:900;color:var(--charbon);letter-spacing:-.02em;margin-bottom:8mm;">Table des<br>matières</div>
+
+    <div class="toc-section">Avant-propos</div>
+    <div class="toc-item">
+      <div class="toc-item-main">
+        <span class="toc-num">Intro</span>
+        <div><span class="toc-title">Pourquoi j'ai cessé de gérer dans l'urgence</span><span class="toc-sub">Comment j'ai compris que le problème n'était pas le manque de temps</span></div>
+      </div>
+      <div class="toc-dots"></div>
+      <span class="toc-page">4</span>
+    </div>
+    <div class="toc-item">
+      <div class="toc-item-main">
+        <span class="toc-num">Prologue</span>
+        <div><span class="toc-title">La nuit où tout a basculé</span><span class="toc-sub">Koffi et Awa — Abidjan, 23h42</span></div>
+      </div>
+      <div class="toc-dots"></div>
+      <span class="toc-page">6</span>
+    </div>
+
+    <div class="toc-section">Les 7 chapitres</div>
+    <div class="toc-item">
+      <div class="toc-item-main">
+        <span class="toc-num">Chap. 1</span>
+        <div><span class="toc-title">Le chaos</span><span class="toc-sub">Quand vous êtes le moteur — et les moteurs s'usent</span></div>
+      </div>
+      <div class="toc-dots"></div>
+      <span class="toc-page">8</span>
+    </div>
+    <div class="toc-item">
+      <div class="toc-item-main">
+        <span class="toc-num">Chap. 2</span>
+        <div><span class="toc-title">La rencontre — Monsieur S.</span><span class="toc-sub">Ton entreprise dépend trop de toi</span></div>
+      </div>
+      <div class="toc-dots"></div>
+      <span class="toc-page">10</span>
+    </div>
+    <div class="toc-item">
+      <div class="toc-item-main">
+        <span class="toc-num">Chap. 3</span>
+        <div><span class="toc-title">Les trois fuites et la loi des 80/20</span><span class="toc-sub">Temps · Argent · Attention</span></div>
+      </div>
+      <div class="toc-dots"></div>
+      <span class="toc-page">12</span>
+    </div>
+    <div class="toc-item">
+      <div class="toc-item-main">
+        <span class="toc-num">Chap. 4</span>
+        <div><span class="toc-title">Le manuel invisible</span><span class="toc-sub">Ce qui reste dans ta tête t'enchaîne. Ce qui est écrit te libère.</span></div>
+      </div>
+      <div class="toc-dots"></div>
+      <span class="toc-page">14</span>
+    </div>
+    <div class="toc-item">
+      <div class="toc-item-main">
+        <span class="toc-num">Chap. 5</span>
+        <div><span class="toc-title">L'assistant invisible</span><span class="toc-sub">Libérer les humains pour ce qu'ils font vraiment bien</span></div>
+      </div>
+      <div class="toc-dots"></div>
+      <span class="toc-page">16</span>
+    </div>
+    <div class="toc-item">
+      <div class="toc-item-main">
+        <span class="toc-num">Chap. 6</span>
+        <div><span class="toc-title">Le test — Un jour sans intervenir</span><span class="toc-sub">Ça a tourné. Sans moi.</span></div>
+      </div>
+      <div class="toc-dots"></div>
+      <span class="toc-page">18</span>
+    </div>
+    <div class="toc-item">
+      <div class="toc-item-main">
+        <span class="toc-num">Chap. 7</span>
+        <div><span class="toc-title">L'entreprise autonome</span><span class="toc-sub">Il ne gère plus les urgences. Il voit les opportunités.</span></div>
+      </div>
+      <div class="toc-dots"></div>
+      <span class="toc-page">20</span>
+    </div>
+
+    <div class="toc-section">Votre programme</div>
+    <div class="toc-item">
+      <div class="toc-item-main">
+        <span class="toc-num">Plan</span>
+        <div><span class="toc-title">Le plan 7 jours</span><span class="toc-sub">Une semaine pour transformer votre fonctionnement</span></div>
+      </div>
+      <div class="toc-dots"></div>
+      <span class="toc-page">22</span>
+    </div>
+    <div class="toc-item">
+      <div class="toc-item-main">
+        <span class="toc-num">Bonus</span>
+        <div><span class="toc-title">Votre démo personnalisée</span><span class="toc-sub">Votre premier pas concret — en 45 minutes</span></div>
+      </div>
+      <div class="toc-dots"></div>
+      <span class="toc-page">24</span>
+    </div>
+  </div>
+  <div class="rf">
+    <span class="page-author">Mac Arthur Kouassi</span>
+    <span class="page-num">3</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 4 — INTRODUCTION
+══════════════════════════════════════ -->
+<div class="page">
+  <div class="rh"><span class="rh-title">Introduction</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body">
+    <div class="label" style="margin-bottom:3mm;">Introduction</div>
+    <div style="font-size:20pt;font-weight:900;color:var(--charbon);letter-spacing:-.02em;line-height:1.1;margin-bottom:2mm;">Pourquoi j'ai cessé<br>de gérer dans l'urgence.</div>
+    <div class="ch-divider"></div>
+    <div class="p" style="font-size:8.5pt;color:var(--g400);font-style:italic;margin-bottom:6mm;">Comment j'ai compris que le problème n'était pas le manque de temps, mais l'absence de système.</div>
+    <div class="p">Pendant longtemps, je pensais manquer de temps. Je me levais tôt. Je me couchais tard. Je répondais aux messages le dimanche soir.</div>
+    <div class="p"><strong>En réalité, je manquais de système.</strong></div>
+    <div class="p">Ce n'était pas le temps qui me faisait défaut. C'était l'ordre. Les clients écrivaient partout. Les relances se perdaient. Les assistants demandaient toujours quoi faire.</div>
+    <div class="p">Je ne pilotais pas une entreprise. Je gérais des urgences.</div>
+    <div class="pull-quote">« L'automatisation n'est pas pour gagner du temps. Elle sert à ne plus perdre d'argent. »</div>
+    <div class="p">Ce livre s'adresse à vous — entrepreneur, commerçant, prestataire de service — qui portez tout sur vos épaules. L'histoire que vous allez lire est celle de Koffi. Peut-être que vous vous reconnaîtrez en lui.</div>
+    <div class="callout" style="margin-top:6mm;">
+      <div class="callout-title">Note de lecture</div>
+      <div class="p" style="margin-bottom:0;font-size:9pt;">Ce livre se lit comme une histoire. Chaque chapitre vous plonge dans la vie de Koffi, puis vous propose un exercice ou une réflexion concrète. <strong>Ne sautez pas ces moments</strong> — ce sont eux qui transforment la lecture en résultats.</div>
+    </div>
+  </div>
+  <div class="rf"><span class="page-author">Mac Arthur Kouassi</span><span class="page-num">4</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 5 — PROLOGUE
+══════════════════════════════════════ -->
+<div class="page bg-charbon">
+  <div style="position:absolute;top:-20mm;right:-20mm;width:80mm;height:80mm;border-radius:50%;background:radial-gradient(circle,rgba(242,92,5,.15) 0%,transparent 70%);"></div>
+  <div class="rh rh-dark"><span class="rh-title rh-title-light">Prologue</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body">
+    <div class="label label-light" style="margin-bottom:3mm;">Prologue</div>
+    <div style="font-size:22pt;font-weight:900;color:var(--sable);letter-spacing:-.02em;line-height:1.1;margin-bottom:2mm;">La nuit où tout<br>a basculé</div>
+    <div class="ch-divider"></div>
+    <div class="p p-light" style="font-size:8.5pt;font-style:italic;margin-bottom:6mm;">Koffi et Awa — une conversation que beaucoup d'entrepreneurs ne font jamais.</div>
+    <div class="p p-light" style="font-size:8.5pt;color:rgba(250,246,240,.4);margin-bottom:5mm;">Abidjan, mercredi 15 janvier 2025. 23h42.</div>
+    <div class="p p-light">La maison est silencieuse. Les enfants dorment. Dans la chambre, la lumière de chevet est encore allumée. Awa regarde son mari. Koffi est assis au bord du lit, la tête entre les mains.</div>
+    <div class="dialogue">
+      <div class="dial-line"><span class="dial-who dial-who-s">Awa</span><span class="dial-text dial-text-light">Tu n'as pas mangé ce soir.</span></div>
+      <div class="dial-line"><span class="dial-who" style="color:rgba(250,246,240,.6);">Koffi</span><span class="dial-text dial-text-light">J'avais pas faim.</span></div>
+      <div class="dial-line"><span class="dial-who dial-who-s">Awa</span><span class="dial-text dial-text-light">Les enfants t'ont demandé à table. Aminata a dit que tu étais toujours absent même quand tu es là.</span></div>
+      <div class="dial-line"><span class="dial-who" style="color:rgba(250,246,240,.6);">Koffi</span><span class="dial-text dial-text-light">Je suis là tous les jours.</span></div>
+      <div class="dial-line"><span class="dial-who dial-who-s">Awa</span><span class="dial-text dial-text-light">Ton corps est là. Ta tête est ailleurs. Et moi je le vois depuis des mois.</span></div>
+    </div>
+    <div class="pull-quote pull-quote-light">«&thinsp;Absent même quand tu es là.&thinsp;» Il n'avait jamais entendu ça aussi clairement.</div>
+  </div>
+  <div class="rf rf-dark"><span class="page-author page-author-light">Mac Arthur Kouassi</span><span class="page-num page-num-light">5</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 6 — PROLOGUE SUITE
+══════════════════════════════════════ -->
+<div class="page bg-charbon">
+  <div class="rh rh-dark"><span class="rh-title rh-title-light">Prologue — Suite</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body">
+    <div class="dialogue">
+      <div class="dial-line"><span class="dial-who" style="color:rgba(250,246,240,.6);">Koffi</span><span class="dial-text dial-text-light">J'ai trois clients qui ne m'ont pas payé ce mois. Le fournisseur de Grand-Bassam réclame son argent. Ce soir j'ai perdu un contrat parce que j'ai mis quatre jours à répondre.</span></div>
+      <div class="dial-line"><span class="dial-who dial-who-s">Awa</span><span class="dial-text dial-text-light">Et ça fait combien de temps que tu vis comme ça ?</span></div>
+      <div class="dial-line"><span class="dial-who" style="color:rgba(250,246,240,.6);">Koffi</span><span class="dial-text dial-text-light">Depuis que l'activité a grandi. Maintenant tout finit encore sur mon bureau.</span></div>
+      <div class="dial-line"><span class="dial-who dial-who-s">Awa</span><span class="dial-text dial-text-light">Tu m'as dit que tu avais des maux de tête pendant une semaine. Le médecin t'a dit quoi ?</span></div>
+      <div class="dial-line"><span class="dial-who" style="color:rgba(250,246,240,.6);">Koffi</span><span class="dial-text dial-text-light">Tension artérielle un peu haute. Lié au stress.</span></div>
+      <div class="dial-line"><span class="dial-who dial-who-s">Awa</span><span class="dial-text dial-text-light">Tu as trente-deux ans, Koffi.</span></div>
+      <div class="dial-line"><span class="dial-who" style="color:rgba(250,246,240,.6);">Koffi</span><span class="dial-text dial-text-light">J'ai peur, Awa. J'ai peur de tout lâcher si je ralentis. Et j'ai peur de ne plus tenir si je continue comme ça.</span></div>
+    </div>
+    <div class="pull-quote pull-quote-light">La vraie peur d'un entrepreneur n'est pas l'échec. C'est de ne plus savoir comment s'arrêter.</div>
+    <div class="dialogue" style="margin-top:4mm;">
+      <div class="dial-line"><span class="dial-who dial-who-s">Awa</span><span class="dial-text dial-text-light">Alors il faut changer quelque chose. Pas demain. Maintenant.</span></div>
+    </div>
+    <div class="callout callout-dark" style="margin-top:6mm;">
+      <div class="callout-title">À vous, lecteur</div>
+      <div class="p p-light" style="margin-bottom:0;font-size:9pt;">Avez-vous déjà eu cette conversation ? Parfois avec vous-même, à 23h, quand la maison est silencieuse. Ce livre est pour ceux qui ont répondu oui, même intérieurement.</div>
+    </div>
+  </div>
+  <div class="rf rf-dark"><span class="page-author page-author-light">Mac Arthur Kouassi</span><span class="page-num page-num-light">6</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 7 — CHAPITRE 1
+══════════════════════════════════════ -->
+<div class="page">
+  <div class="rh"><span class="rh-title">Chapitre 1 — Le chaos</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body">
+    <div class="ch-num">01</div>
+    <div class="ch-label">Chapitre 1</div>
+    <div class="ch-title">Le chaos</div>
+    <div class="ch-meta">Abidjan, vendredi 17 janvier 2025. 14h37.</div>
+    <div class="p">La finale de la CAN vient de se terminer la nuit d'avant. Dans le bureau de Koffi Assouman à Cocody, personne ne fête rien. Son téléphone sonne. Encore.</div>
+    <div class="p">Madame Touré — commande urgente. Il pose le téléphone face vers le bas. Il vibre à nouveau.</div>
+    <div class="dialogue">
+      <div class="dial-line"><span class="dial-who" style="color:var(--g400);">Mariame</span><span class="dial-text">Patron, le fournisseur de Bouaké dit qu'il attend votre confirmation depuis hier.</span></div>
+    </div>
+    <div class="p">Sur son bureau : trois bons de commande en attente, une liste de clients à rappeler, un café froid. Il est 14h37. Koffi travaille depuis 7h30. Il n'a pas déjeuné.</div>
+    <div class="pull-quote">Son entreprise tourne. Mais c'est lui le moteur. Et les moteurs s'usent.</div>
+    <div class="stats-row" style="margin-top:6mm;">
+      <div class="stat-box"><div class="stat-num">8h</div><div class="stat-lbl">Temps de<br>réponse client</div></div>
+      <div class="stat-box"><div class="stat-num">2</div><div class="stat-lbl">Bons de commande<br>oubliés / sem.</div></div>
+      <div class="stat-box"><div class="stat-num">0</div><div class="stat-lbl">Système<br>en place</div></div>
+    </div>
+  </div>
+  <div class="rf"><span class="page-author">Mac Arthur Kouassi</span><span class="page-num">7</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 8 — CHAPITRE 1 COÛTS CACHÉS
+══════════════════════════════════════ -->
+<div class="page">
+  <div class="rh"><span class="rh-title">Chapitre 1 — Les coûts cachés</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body">
+    <div class="callout">
+      <div class="callout-title">Les 4 pièges du fondateur épuisé</div>
+      <div class="callout-item"><span class="callout-bullet">1.</span><span>Tout reste dans sa tête — aucune procédure écrite</span></div>
+      <div class="callout-item"><span class="callout-bullet">2.</span><span>Rien n'est standardisé — chaque cas traité différemment</span></div>
+      <div class="callout-item"><span class="callout-bullet">3.</span><span>Personne ne suit les procédures — parce qu'il n'y en a pas</span></div>
+      <div class="callout-item"><span class="callout-bullet">4.</span><span>Des tâches répétitives occupent des heures précieuses</span></div>
+    </div>
+    <div class="p" style="margin-top:5mm;"><strong>L'exemple de Koffi :</strong> 8 prospects par semaine. 5 non relancés dans les 48h. Panier moyen : 50 000 FCFA.</div>
+    <div style="background:var(--orange);border-radius:3mm;padding:5mm 6mm;margin:4mm 0;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-family:'Space Mono',monospace;font-size:7.5pt;color:rgba(255,255,255,.7);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5mm;">Pertes estimées</div>
+        <div style="font-size:24pt;font-weight:900;color:#fff;line-height:1;">1 000 000 FCFA</div>
+        <div style="font-size:8pt;color:rgba(255,255,255,.75);margin-top:1mm;">perdus par mois</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:8.5pt;color:rgba(255,255,255,.8);line-height:1.6;max-width:55mm;">Pas à cause d'un mauvais produit — à cause de l'absence d'un système.</div>
+      </div>
+    </div>
+    <div class="p" style="margin-top:5mm;font-size:9pt;color:var(--g400);font-style:italic;">Le diagnostic joint à cet ebook vous permet de mesurer exactement vos propres pertes.</div>
+    <div class="cta-box" style="margin-top:5mm;">
+      <div>
+        <div class="cta-text-title">Mesurez vos pertes réelles</div>
+        <div class="cta-text-sub">Un diagnostic de 45 minutes identifie vos 3 principales fuites.</div>
+      </div>
+      <div class="cta-url">agenceattractor.com</div>
+    </div>
+  </div>
+  <div class="rf"><span class="page-author">Mac Arthur Kouassi</span><span class="page-num">8</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 9 — CHAPITRE 2
+══════════════════════════════════════ -->
+<div class="page bg-charbon">
+  <div style="position:absolute;top:-15mm;left:-15mm;width:70mm;height:70mm;border-radius:50%;background:radial-gradient(circle,rgba(242,92,5,.12) 0%,transparent 70%);"></div>
+  <div class="rh rh-dark"><span class="rh-title rh-title-light">Chapitre 2 — La rencontre</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body">
+    <div class="ch-num ch-num-dark">02</div>
+    <div class="ch-label">Chapitre 2</div>
+    <div class="ch-title ch-title-light">La rencontre<br><em>Monsieur S.</em></div>
+    <div class="ch-meta ch-meta-light">Samedi 18 janvier 2025. Café de la Riviera, Abidjan.</div>
+    <div class="p p-light">Monsieur S. arrive le premier. Sans téléphone sur la table.</div>
+    <div class="dialogue">
+      <div class="dial-line"><span class="dial-who dial-who-s">M. S.</span><span class="dial-text dial-text-light">C'est toujours urgent, n'est-ce pas ?</span></div>
+      <div class="dial-line"><span class="dial-who" style="color:rgba(250,246,240,.6);">Koffi</span><span class="dial-text dial-text-light">En ce moment, oui. Je ne sais plus où donner de la tête.</span></div>
+      <div class="dial-line"><span class="dial-who dial-who-s">M. S.</span><span class="dial-text dial-text-light">Raconte-moi une journée type.</span></div>
+    </div>
+    <div class="p p-light">Koffi raconte. Monsieur S. écoute sans l'interrompre. Silence.</div>
+    <div class="pull-quote pull-quote-light">«&thinsp;Ton problème n'est pas que tu travailles trop. Ton entreprise dépend trop de toi.&thinsp;»</div>
+    <div class="dialogue">
+      <div class="dial-line"><span class="dial-who" style="color:rgba(250,246,240,.6);">Koffi</span><span class="dial-text dial-text-light">Mais si je m'arrête, tout s'arrête.</span></div>
+      <div class="dial-line"><span class="dial-who dial-who-s">M. S.</span><span class="dial-text dial-text-light">Exactement. Et c'est bien ça le problème.</span></div>
+      <div class="dial-line"><span class="dial-who dial-who-s">M. S.</span><span class="dial-text dial-text-light">La rivière coule parce que le relief est organisé. Toi, chaque matin, tu es l'eau ET le relief. C'est pour ça que tu t'épuises.</span></div>
+      <div class="dial-line"><span class="dial-who" style="color:rgba(250,246,240,.6);">Koffi</span><span class="dial-text dial-text-light">Alors il faudrait que je construise le relief ?</span></div>
+      <div class="dial-line"><span class="dial-who dial-who-s">M. S.</span><span class="dial-text dial-text-light">Ce relief, c'est ton système. Et aujourd'hui, tu n'en as pas.</span></div>
+    </div>
+  </div>
+  <div class="rf rf-dark"><span class="page-author page-author-light">Mac Arthur Kouassi</span><span class="page-num page-num-light">9</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 10 — CHAPITRE 3
+══════════════════════════════════════ -->
+<div class="page">
+  <div class="rh"><span class="rh-title">Chapitre 3 — Les trois fuites</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body">
+    <div class="ch-num">03</div>
+    <div class="ch-label">Chapitre 3</div>
+    <div class="ch-title">Les trois fuites<br><em>et la loi des 80/20</em></div>
+    <div class="ch-meta">Lundi 20 janvier. Le bureau de Koffi.</div>
+    <div class="stats-row" style="margin-bottom:5mm;">
+      <div class="stat-box" style="border-top:2pt solid var(--orange);"><div class="stat-num">20h</div><div class="stat-lbl">Fuite n°1<br>Le Temps</div></div>
+      <div class="stat-box" style="border-top:2pt solid var(--orange);"><div class="stat-num">5/8</div><div class="stat-lbl">Fuite n°2<br>L'Argent</div></div>
+      <div class="stat-box" style="border-top:2pt solid var(--orange);"><div class="stat-num">∞</div><div class="stat-lbl">Fuite n°3<br>L'Attention</div></div>
+    </div>
+    <div class="dialogue">
+      <div class="dial-line"><span class="dial-who" style="color:var(--g400);">M. S.</span><span class="dial-text">Combien d'heures tu fais des choses qu'un système pourrait faire à ta place ?</span></div>
+      <div class="dial-line"><span class="dial-who" style="color:var(--g700);">Koffi</span><span class="dial-text">Vingt heures. Peut-être plus.</span></div>
+      <div class="dial-line"><span class="dial-who" style="color:var(--g400);">M. S.</span><span class="dial-text">Combien de prospects t'ont contacté sans être relancés dans les 48 heures ?</span></div>
+      <div class="dial-line"><span class="dial-who" style="color:var(--g700);">Koffi</span><span class="dial-text">Je n'ai pas de suivi précis.</span></div>
+      <div class="dial-line"><span class="dial-who" style="color:var(--g400);">M. S.</span><span class="dial-text">Les ventes perdues ne font pas de bruit. C'est pour ça qu'elles sont si dangereuses.</span></div>
+    </div>
+    <div class="pull-quote">Le dirigeant doit penser. Pas gérer. Quand il gère, il paie le prix fort avec son énergie.</div>
+    <div class="p">Monsieur S. sort une mangue de son sac. <em>«&thinsp;20% du volume de cette mangue — la chair — te donne 80% de la valeur. 20% de tes actions produisent 80% de tes résultats. Identifie tes 20% et délègue ou automatise le reste.&thinsp;»</em></div>
+  </div>
+  <div class="rf"><span class="page-author">Mac Arthur Kouassi</span><span class="page-num">10</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 11 — EXERCICE PARETO
+══════════════════════════════════════ -->
+<div class="page">
+  <div class="rh"><span class="rh-title">Chapitre 3 — Exercice Pareto</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body">
+    <div class="label" style="margin-bottom:4mm;">Votre exercice</div>
+    <div style="font-size:18pt;font-weight:900;color:var(--charbon);letter-spacing:-.02em;margin-bottom:2mm;">L'exercice Pareto</div>
+    <div class="ch-divider"></div>
+    <div class="p">Listez vos 10 actions de la semaine dernière. Entourez les 2 qui ont produit le plus de résultats.</div>
+
+    <div style="margin:5mm 0;display:grid;grid-template-columns:1fr 1fr;gap:3mm;">
+      <div style="background:var(--sable);border:0.4pt solid var(--g200);border-radius:2mm;padding:3mm 4mm;display:flex;align-items:center;gap:3mm;"><span style="font-family:'Space Mono',monospace;font-size:8pt;color:var(--orange);flex-shrink:0;">01.</span><div style="height:0.4pt;flex:1;background:var(--g200);margin-top:2mm;"></div></div>
+      <div style="background:var(--sable);border:0.4pt solid var(--g200);border-radius:2mm;padding:3mm 4mm;display:flex;align-items:center;gap:3mm;"><span style="font-family:'Space Mono',monospace;font-size:8pt;color:var(--orange);flex-shrink:0;">02.</span><div style="height:0.4pt;flex:1;background:var(--g200);margin-top:2mm;"></div></div>
+      <div style="background:var(--sable);border:0.4pt solid var(--g200);border-radius:2mm;padding:3mm 4mm;display:flex;align-items:center;gap:3mm;"><span style="font-family:'Space Mono',monospace;font-size:8pt;color:var(--orange);flex-shrink:0;">03.</span><div style="height:0.4pt;flex:1;background:var(--g200);margin-top:2mm;"></div></div>
+      <div style="background:var(--sable);border:0.4pt solid var(--g200);border-radius:2mm;padding:3mm 4mm;display:flex;align-items:center;gap:3mm;"><span style="font-family:'Space Mono',monospace;font-size:8pt;color:var(--orange);flex-shrink:0;">04.</span><div style="height:0.4pt;flex:1;background:var(--g200);margin-top:2mm;"></div></div>
+      <div style="background:var(--sable);border:0.4pt solid var(--g200);border-radius:2mm;padding:3mm 4mm;display:flex;align-items:center;gap:3mm;"><span style="font-family:'Space Mono',monospace;font-size:8pt;color:var(--orange);flex-shrink:0;">05.</span><div style="height:0.4pt;flex:1;background:var(--g200);margin-top:2mm;"></div></div>
+      <div style="background:var(--sable);border:0.4pt solid var(--g200);border-radius:2mm;padding:3mm 4mm;display:flex;align-items:center;gap:3mm;"><span style="font-family:'Space Mono',monospace;font-size:8pt;color:var(--orange);flex-shrink:0;">06.</span><div style="height:0.4pt;flex:1;background:var(--g200);margin-top:2mm;"></div></div>
+      <div style="background:var(--sable);border:0.4pt solid var(--g200);border-radius:2mm;padding:3mm 4mm;display:flex;align-items:center;gap:3mm;"><span style="font-family:'Space Mono',monospace;font-size:8pt;color:var(--orange);flex-shrink:0;">07.</span><div style="height:0.4pt;flex:1;background:var(--g200);margin-top:2mm;"></div></div>
+      <div style="background:var(--sable);border:0.4pt solid var(--g200);border-radius:2mm;padding:3mm 4mm;display:flex;align-items:center;gap:3mm;"><span style="font-family:'Space Mono',monospace;font-size:8pt;color:var(--orange);flex-shrink:0;">08.</span><div style="height:0.4pt;flex:1;background:var(--g200);margin-top:2mm;"></div></div>
+      <div style="background:var(--sable);border:0.4pt solid var(--g200);border-radius:2mm;padding:3mm 4mm;display:flex;align-items:center;gap:3mm;"><span style="font-family:'Space Mono',monospace;font-size:8pt;color:var(--orange);flex-shrink:0;">09.</span><div style="height:0.4pt;flex:1;background:var(--g200);margin-top:2mm;"></div></div>
+      <div style="background:var(--sable);border:0.4pt solid var(--g200);border-radius:2mm;padding:3mm 4mm;display:flex;align-items:center;gap:3mm;"><span style="font-family:'Space Mono',monospace;font-size:8pt;color:var(--orange);flex-shrink:0;">10.</span><div style="height:0.4pt;flex:1;background:var(--g200);margin-top:2mm;"></div></div>
+    </div>
+    <div class="p" style="font-size:9pt;color:var(--g400);font-style:italic;">Celles-là, c'est vos 20%. Tout le reste : déléguer ou automatiser.</div>
+  </div>
+  <div class="rf"><span class="page-author">Mac Arthur Kouassi</span><span class="page-num">11</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 12 — CHAPITRE 4
+══════════════════════════════════════ -->
+<div class="page">
+  <div class="rh"><span class="rh-title">Chapitre 4 — Le manuel invisible</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body">
+    <div class="ch-num">04</div>
+    <div class="ch-label">Chapitre 4</div>
+    <div class="ch-title">Le manuel<br><em>invisible.</em></div>
+    <div class="ch-meta">Mercredi 22 janvier. L'entreprise commence à respirer.</div>
+    <div class="dialogue">
+      <div class="dial-line"><span class="dial-who" style="color:var(--g400);">M. S.</span><span class="dial-text">Dis-moi comment tu traites une commande. Depuis le début.</span></div>
+    </div>
+    <div class="p">Koffi parle. Monsieur S. écrit. Vingt minutes. Quatre pages.</div>
+    <div class="dialogue">
+      <div class="dial-line"><span class="dial-who" style="color:var(--g400);">M. S.</span><span class="dial-text">Tu viens de créer la première procédure de ton entreprise.</span></div>
+    </div>
+    <div class="pull-quote">Ce qui reste dans ta tête t'enchaîne. Ce qui est écrit te libère.</div>
+    <div class="dialogue">
+      <div class="dial-line"><span class="dial-who" style="color:var(--g400);">M. S.</span><span class="dial-text">Un vrai système devient ton tableau de bord. Il te dit ce qui se passe en temps réel — commandes, paiements, prospects non relancés.</span></div>
+    </div>
+    <div class="p">Koffi réalise qu'il pilotait à l'aveugle.</div>
+  </div>
+  <div class="rf"><span class="page-author">Mac Arthur Kouassi</span><span class="page-num">12</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 13 — LES PROCÉDURES
+══════════════════════════════════════ -->
+<div class="page">
+  <div class="rh"><span class="rh-title">Chapitre 4 — Les procédures</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body">
+    <div class="label" style="margin-bottom:4mm;">Chapitre 4 — Templates</div>
+    <div style="font-size:16pt;font-weight:900;color:var(--charbon);letter-spacing:-.02em;margin-bottom:5mm;">Vos premières procédures</div>
+
+    <div class="proc-box">
+      <div class="proc-title">Procédure — Commandes (Négoce / Achat-Revente)</div>
+      <div class="proc-step"><span class="proc-n">1.</span><span>Client commande via WhatsApp ou appel</span></div>
+      <div class="proc-step"><span class="proc-n">2.</span><span>Assistant vérifie la disponibilité en stock</span></div>
+      <div class="proc-step"><span class="proc-n">3.</span><span>Confirmation client : prix, délai, paiement</span></div>
+      <div class="proc-step"><span class="proc-n">4.</span><span>Paiement reçu → bon de commande créé</span></div>
+      <div class="proc-step"><span class="proc-n">5.</span><span>Notification livreur : adresse, heure, montant</span></div>
+      <div class="proc-step"><span class="proc-n">6.</span><span>Livraison → photo de confirmation au client</span></div>
+      <div class="proc-step"><span class="proc-n">7.</span><span>Fichier client mis à jour → relance à J+21</span></div>
+    </div>
+
+    <div class="proc-box" style="margin-top:4mm;">
+      <div class="proc-title">Procédure — Production et suivi (Fabrication)</div>
+      <div class="proc-step"><span class="proc-n" style="color:rgba(242,92,5,.6);">R.</span><span>Réception : Vérifier qualité → Peser → Enregistrer</span></div>
+      <div class="proc-step"><span class="proc-n" style="color:rgba(242,92,5,.6);">P.</span><span>Production : Étapes documentées → Contrôle qualité</span></div>
+      <div class="proc-step"><span class="proc-n" style="color:rgba(242,92,5,.6);">C.</span><span>Conditionnement : Étiquetage DLC → Numéro de lot</span></div>
+      <div class="proc-step"><span class="proc-n" style="color:rgba(242,92,5,.6);">S.</span><span>Stock : Mise à jour temps réel → Alerte seuil minimum</span></div>
+      <div class="proc-step"><span class="proc-n" style="color:rgba(242,92,5,.6);">Cl.</span><span>Client : Bon signé → Paiement → Satisfaction J+7</span></div>
+    </div>
+
+    <div class="cta-box" style="margin-top:5mm;">
+      <div>
+        <div class="cta-text-title">Vous voulez un site qui travaille pour vous ?</div>
+        <div class="cta-text-sub">Agenda, clients, finances, relances — assistant IA Pro en 48h.</div>
+      </div>
+      <div class="cta-url">assists.agenceattractor.com</div>
+    </div>
+  </div>
+  <div class="rf"><span class="page-author">Mac Arthur Kouassi</span><span class="page-num">13</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 14 — CHAPITRE 5
+══════════════════════════════════════ -->
+<div class="page bg-charbon">
+  <div style="position:absolute;bottom:-20mm;right:-20mm;width:80mm;height:80mm;border-radius:50%;background:radial-gradient(circle,rgba(242,92,5,.13) 0%,transparent 70%);"></div>
+  <div class="rh rh-dark"><span class="rh-title rh-title-light">Chapitre 5 — L'assistant invisible</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body">
+    <div class="ch-num ch-num-dark">05</div>
+    <div class="ch-label">Chapitre 5</div>
+    <div class="ch-title ch-title-light">L'assistant<br><em>invisible.</em></div>
+    <div class="ch-meta ch-meta-light">Vendredi 24 janvier. Monsieur S. annonce qu'ils sont à mi-chemin.</div>
+    <div class="dialogue">
+      <div class="dial-line"><span class="dial-who dial-who-s">M. S.</span><span class="dial-text dial-text-light">Tu paies des gens pour confirmer des commandes et répondre aux mêmes questions chaque jour. Et si ces heures étaient consacrées à ce que seul un humain peut faire ?</span></div>
+    </div>
+    <div class="pull-quote pull-quote-light">Un bon système ne remplace pas les humains. Il les libère pour ce qu'ils font vraiment bien.</div>
+    <div class="callout callout-dark" style="margin-top:5mm;">
+      <div class="callout-title">Ce que l'assistant fait</div>
+      <div class="callout-item callout-item-light"><span class="callout-bullet">→</span><span>Message à 23h : réponse immédiate automatique</span></div>
+      <div class="callout-item callout-item-light"><span class="callout-bullet">→</span><span>Commande passée : confirmation + stock + livreur</span></div>
+      <div class="callout-item callout-item-light"><span class="callout-bullet">→</span><span>Paiement reçu : reçu envoyé sans intervention</span></div>
+      <div class="callout-item callout-item-light"><span class="callout-bullet">→</span><span>7 jours sans retour : relance douce automatique</span></div>
+      <div class="callout-item callout-item-light"><span class="callout-bullet">→</span><span>Chaque matin : tableau de bord complet à 8h30</span></div>
+    </div>
+  </div>
+  <div class="rf rf-dark"><span class="page-author page-author-light">Mac Arthur Kouassi</span><span class="page-num page-num-light">14</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 15 — CHAPITRE 6
+══════════════════════════════════════ -->
+<div class="page">
+  <div class="rh"><span class="rh-title">Chapitre 6 — Le test</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body">
+    <div class="ch-num">06</div>
+    <div class="ch-label">Chapitre 6</div>
+    <div class="ch-title">Le test<br><em>Un jour sans intervenir.</em></div>
+    <div class="ch-meta">Samedi 1er février 2025. Koffi a mis son téléphone dans le tiroir. À clé.</div>
+    <div class="p">Ce matin-là, il emmène ses enfants au marché. C'est Awa qui a insisté.</div>
+    <div style="margin:5mm 0;display:flex;flex-direction:column;gap:3mm;">
+      <div style="display:flex;align-items:flex-start;gap:4mm;">
+        <div style="font-family:'Space Mono',monospace;font-size:8pt;color:var(--orange);flex-shrink:0;width:12mm;margin-top:.5mm;">10h17</div>
+        <div style="font-size:9.5pt;color:var(--g700);line-height:1.55;">Mariame reçoit une demande inhabituelle. Elle consulte la procédure. Elle gère.</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:4mm;">
+        <div style="font-family:'Space Mono',monospace;font-size:8pt;color:var(--orange);flex-shrink:0;width:12mm;margin-top:.5mm;">13h42</div>
+        <div style="font-size:9.5pt;color:var(--g700);line-height:1.55;">Un livreur est en retard. La notification automatique a déjà prévenu le client.</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:4mm;">
+        <div style="font-family:'Space Mono',monospace;font-size:8pt;color:var(--orange);flex-shrink:0;width:12mm;margin-top:.5mm;">16h05</div>
+        <div style="font-size:9.5pt;color:var(--g700);line-height:1.55;">Trois nouvelles commandes. Confirmations traitées. Stocks mis à jour.</div>
+      </div>
+    </div>
+    <div style="background:var(--sable);border:0.4pt solid var(--g200);border-left:3pt solid var(--orange);border-radius:0 2mm 2mm 0;padding:4mm 5mm;margin:4mm 0;">
+      <div style="font-family:'Space Mono',monospace;font-size:7.5pt;color:var(--orange);letter-spacing:.12em;text-transform:uppercase;margin-bottom:2mm;">Résumé automatique — 17h30</div>
+      <div style="display:flex;gap:6mm;"><div><div class="stat-num" style="font-size:18pt;">12</div><div class="stat-lbl">Messages<br>traités</div></div><div><div class="stat-num" style="font-size:18pt;">3</div><div class="stat-lbl">Commandes<br>confirmées</div></div><div><div class="stat-num" style="font-size:18pt;">0</div><div class="stat-lbl">Urgences non<br>résolues</div></div></div>
+    </div>
+    <div class="pull-quote" style="margin-top:4mm;">Ça a tourné. Sans moi.</div>
+    <div class="dialogue" style="margin-top:4mm;">
+      <div class="dial-line"><span class="dial-who" style="color:var(--g700);">Koffi</span><span class="dial-text">Awa. Ça a tenu.</span></div>
+      <div class="dial-line"><span class="dial-who" style="color:var(--g400);">Awa</span><span class="dial-text">Je sais. J'attendais ton appel.</span></div>
+    </div>
+  </div>
+  <div class="rf"><span class="page-author">Mac Arthur Kouassi</span><span class="page-num">15</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 16 — CHAPITRE 7
+══════════════════════════════════════ -->
+<div class="page">
+  <div class="rh"><span class="rh-title">Chapitre 7 — L'entreprise autonome</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body">
+    <div class="ch-num">07</div>
+    <div class="ch-label">Chapitre 7</div>
+    <div class="ch-title">L'entreprise<br><em>autonome.</em></div>
+    <div class="ch-meta">Mars 2025. Six semaines plus tard.</div>
+    <div class="p">Koffi arrive à 9h00. Il prend son café chaud. Il lit le résumé automatique de son activité. En dix minutes, il sait tout ce qui compte. Il peut commencer sa vraie journée.</div>
+    <div class="pull-quote">Il ne gère plus les urgences. Il voit les opportunités.</div>
+    <div class="stats-row">
+      <div class="stat-box" style="border-top:2pt solid var(--orange);"><div class="stat-num">18h</div><div class="stat-lbl">Récupérées<br>par semaine</div></div>
+      <div class="stat-box" style="border-top:2pt solid var(--orange);"><div class="stat-num">×11</div><div class="stat-lbl">Prospects<br>relancés</div></div>
+      <div class="stat-box" style="border-top:2pt solid var(--orange);"><div class="stat-num">6/7</div><div class="stat-lbl">Nuits sans<br>message pro</div></div>
+    </div>
+    <div class="dialogue" style="margin-top:5mm;">
+      <div class="dial-line"><span class="dial-who" style="color:var(--g400);">M. S.</span><span class="dial-text">Ta posture a changé. Avant, tu étais à l'intérieur, à courir. Maintenant tu es au-dessus. Tu vois. Tu décides. C'est ça, piloter.</span></div>
+    </div>
+    <div class="p" style="margin-top:4mm;">Koffi rentre chez lui à 17h00. Ses enfants sont encore debout.</div>
+  </div>
+  <div class="rf"><span class="page-author">Mac Arthur Kouassi</span><span class="page-num">16</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 17 — MON HISTOIRE
+══════════════════════════════════════ -->
+<div class="page bg-charbon">
+  <div style="position:absolute;top:0;right:0;width:60mm;height:100%;background:linear-gradient(90deg,transparent,rgba(242,92,5,.04));pointer-events:none;"></div>
+  <div class="rh rh-dark"><span class="rh-title rh-title-light">Mon histoire — Mac Arthur Kouassi</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body">
+    <div class="label label-light" style="margin-bottom:3mm;">Épilogue</div>
+    <div style="font-size:18pt;font-weight:900;color:var(--sable);letter-spacing:-.02em;line-height:1.1;margin-bottom:2mm;">Mon histoire</div>
+    <div class="ch-divider"></div>
+    <div class="p p-light">Je vais vous dire quelque chose que je n'avais jamais formulé aussi clairement avant d'écrire ce livre.</div>
+    <div class="p p-light"><strong>Mon histoire ressemble à celle de Koffi.</strong> Pas dans le secteur — moi c'est l'accompagnement, le conseil, la stratégie. Mais dans la dynamique, c'est exactement la même chose.</div>
+    <div class="p p-light">Je suis passionné par ce que je fais. Quand un entrepreneur me confie son projet, je m'y engage à fond. Cette passion, c'est ma force — c'est aussi ce qui m'a failli briser.</div>
+    <div class="pull-quote pull-quote-light">Ma passion me causait des problèmes. Pas parce qu'elle était mauvaise — parce qu'elle n'était pas organisée.</div>
+    <div class="p p-light">Le Système Attractor est né de cette expérience. Pas d'une théorie. D'une nécessité personnelle.</div>
+    <div class="p p-light" style="margin-top:4mm;">Si vous avez lu jusqu'ici, quelque chose dans l'histoire de Koffi vous a touché. Ce quelque chose mérite d'être construit. <strong>Pas demain. Maintenant.</strong></div>
+    <div style="margin-top:6mm;padding-top:5mm;border-top:0.4pt solid rgba(255,255,255,.1);">
+      <div style="font-size:11pt;font-weight:700;color:var(--sable);">Mac Arthur Kouassi</div>
+      <div style="font-size:8.5pt;color:rgba(250,246,240,.4);margin-top:1mm;">Fondateur, Mr Attractor · Abidjan / Paris</div>
+    </div>
+  </div>
+  <div class="rf rf-dark"><span class="page-author page-author-light">Mac Arthur Kouassi</span><span class="page-num page-num-light">17</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 18 — PLAN 7 JOURS
+══════════════════════════════════════ -->
+<div class="page">
+  <div class="rh"><span class="rh-title">Plan 7 jours</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body">
+    <div class="label" style="margin-bottom:3mm;">Votre programme</div>
+    <div style="font-size:20pt;font-weight:900;color:var(--charbon);letter-spacing:-.02em;margin-bottom:2mm;">Le plan 7 jours</div>
+    <div class="ch-divider"></div>
+    <div class="p" style="margin-bottom:5mm;font-style:italic;color:var(--g400);">Une semaine pour transformer votre fonctionnement.</div>
+    <div class="days-grid">
+      <div class="day-card">
+        <div class="day-num">Jour 1</div>
+        <div class="day-title">Inventaire</div>
+        <div class="day-desc">Listez toutes les tâches que vous répétez. Cherchez les répétitions — elles cachent vos fuites.</div>
+      </div>
+      <div class="day-card">
+        <div class="day-num">Jour 2</div>
+        <div class="day-title">Procédure</div>
+        <div class="day-desc">Documentez la tâche la plus répétée en 5 à 8 étapes simples.</div>
+      </div>
+      <div class="day-card">
+        <div class="day-num">Jour 3</div>
+        <div class="day-title">Client</div>
+        <div class="day-desc">Standardisez votre suivi client de l'entrée prospect à la vente.</div>
+      </div>
+      <div class="day-card">
+        <div class="day-num">Jour 4</div>
+        <div class="day-title">Relance</div>
+        <div class="day-desc">Créez un système de relance qui ne dépend plus de votre mémoire.</div>
+      </div>
+      <div class="day-card">
+        <div class="day-num">Jour 5</div>
+        <div class="day-title">Système</div>
+        <div class="day-desc">Installez votre premier assistant. Remettez-lui une procédure.</div>
+      </div>
+      <div class="day-card">
+        <div class="day-num">Jour 6</div>
+        <div class="day-title">Mesure</div>
+        <div class="day-desc">Combien de temps récupéré ? Combien de tâches gérées sans vous ?</div>
+      </div>
+    </div>
+    <div class="day-card" style="margin-top:3mm;border-left:3pt solid var(--orange);">
+      <div class="day-num">Jour 7</div>
+      <div class="day-title">Vision</div>
+      <div class="day-desc">Quelles sont les 2 décisions stratégiques que vous avez enfin le temps de prendre ?</div>
+    </div>
+  </div>
+  <div class="rf"><span class="page-author">Mac Arthur Kouassi</span><span class="page-num">18</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE 19 — BONUS / CTA FINAL
+══════════════════════════════════════ -->
+<div class="page bg-charbon">
+  <div style="position:absolute;top:-30mm;left:50%;transform:translateX(-50%);width:120mm;height:120mm;border-radius:50%;background:radial-gradient(circle,rgba(242,92,5,.18) 0%,transparent 70%);pointer-events:none;"></div>
+  <div class="rh rh-dark"><span class="rh-title rh-title-light">Bonus</span><span class="rh-logo">Mr Attractor</span></div>
+  <div class="body" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="label label-light" style="margin-bottom:3mm;text-align:center;">Bonus</div>
+    <div style="font-size:22pt;font-weight:900;color:var(--sable);letter-spacing:-.02em;line-height:1.1;margin-bottom:3mm;text-align:center;">Votre démo<br><em style="color:var(--orange);font-weight:300;">personnalisée.</em></div>
+    <div class="ch-divider" style="margin:0 auto 5mm;"></div>
+    <div class="p p-light" style="text-align:center;max-width:120mm;margin:0 auto 8mm;">Vous avez lu jusqu'ici. Cela signifie que quelque chose vous a touché dans l'histoire de Koffi. Vous n'avez pas à résoudre seul ce que Koffi a résolu avec Monsieur S.</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin-bottom:6mm;">
+      <div style="background:rgba(255,255,255,.04);border:0.4pt solid rgba(255,255,255,.1);border-radius:3mm;padding:5mm 6mm;">
+        <div style="font-family:'Space Mono',monospace;font-size:7pt;color:var(--orange);letter-spacing:.14em;text-transform:uppercase;margin-bottom:3mm;">Vous cherchez une stratégie</div>
+        <div style="font-size:10pt;font-weight:700;color:var(--sable);margin-bottom:2mm;">Call stratégique</div>
+        <div style="font-size:8.5pt;color:rgba(250,246,240,.55);line-height:1.55;margin-bottom:4mm;">15 minutes offertes. Vous repartez avec une direction claire.</div>
+        <div style="font-family:'Space Mono',monospace;font-size:7.5pt;color:var(--orange);">agenceattractor.com/consulting</div>
+      </div>
+      <div style="background:var(--orange);border-radius:3mm;padding:5mm 6mm;">
+        <div style="font-family:'Space Mono',monospace;font-size:7pt;color:rgba(255,255,255,.7);letter-spacing:.14em;text-transform:uppercase;margin-bottom:3mm;">Vous voulez un système</div>
+        <div style="font-size:10pt;font-weight:700;color:#fff;margin-bottom:2mm;">Attractor Assists</div>
+        <div style="font-size:8.5pt;color:rgba(255,255,255,.75);line-height:1.55;margin-bottom:4mm;">Agenda, clients, finances, relances — assistant IA Pro en 48h.</div>
+        <div style="font-family:'Space Mono',monospace;font-size:7.5pt;color:rgba(255,255,255,.9);">assists.agenceattractor.com</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:5mm;border-top:0.4pt solid rgba(255,255,255,.08);">
+      <div style="font-family:'Space Mono',monospace;font-size:7pt;color:rgba(250,246,240,.25);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2mm;">Mr Attractor · Mac Arthur Kouassi</div>
+      <div style="font-size:8.5pt;color:rgba(250,246,240,.35);">agenceattractor.com · myattractor1@gmail.com · +33 7 53 90 23 23</div>
+    </div>
+  </div>
+  <div class="rf rf-dark"><span class="page-author page-author-light">Mac Arthur Kouassi</span><span class="page-num page-num-light">19</span></div>
+</div>
+
+</body>
+</html>
