@@ -7,6 +7,28 @@
 
 ---
 
+## 2026-06-19 (session 65 — Beynaud Army démo complète + offre + Livraison Pro design + fix C Real)
+
+### Beynaud Army — démo + offre confidentielle
+- Demo 11 slides finalisée : boutique emojis remplacés par SVG line-art (shirt, cap, vinyl, photo)
+- NDA gate : bandeau d'entrée slide 1 + bouton top-bar pulsant rouge, offre déverrouillée après signature
+- `offre.html` créé : 3 modèles de collaboration (Clé en main / Partenariat 12% / Licence), revenue sharing comparatif, 6 points juridiques (droits image, paiements mobiles CI, clause sortie), calendrier J+0→S3
+- Déployé sur Netlify `demo.agenceattractor.com/beynaud/` + `demo.agenceattractor.com/beynaud/offre.html`
+- RDV téléphonique avec Serge prévu : stratégie = envoyer lien WA pendant l'appel, guider vers slide 3 (40M FCFA) et slide 9 (simulation)
+
+### Livraison Pro — design system ATTRACTOR + hero photo
+- `tokens.css` réécrit : palette ATTRACTOR complète (Sora, `--or:#F25C05`, `--noir:#1A1714`, vert CI préservé)
+- Hero photo réelle intégrée (`img/hero.webp` 142kb WebP, fallback PNG), z-index corrigé, gradient overlay ajusté
+- `manifest.json` mis à jour, `app.html` theme-color orange
+- Déployé sur Vercel via `npx vercel --prod`
+
+### Fix Attractor Assists — onboarding C Real
+- Bug "une erreur est survenue" au clic "Lancer assistant" : colonne `profil_type` manquante dans `profiles`
+- Migration `0045_profil_type.sql` créée et appliquée en production via Supabase Management API
+- Fix transparent pour C Real et tous les futurs utilisateurs
+
+---
+
 ## 2026-06-19 (session 64 — Login Assists : slideshow hero + Maryline pré-signup + retour site)
 
 - "Retour au site" plus visible sur LoginScreen (text-white/50 → text-white/75)
