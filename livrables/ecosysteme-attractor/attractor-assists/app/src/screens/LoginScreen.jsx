@@ -2,12 +2,127 @@ import { useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, Logo, Btn, Field, Input, Spinner, Pill } from '../components/ui';
 
+const MARYLINE_FAQS = [
+  {
+    q: "C'est quoi Attractor Assists ?",
+    a: "C'est ton bras droit intelligent. Tu lui parles de ton business, il t'aide à t'organiser, à vendre, et à créer une boutique en ligne que tes clients peuvent utiliser directement. Conçu par Mac Arthur, entrepreneur depuis 23 ans.",
+  },
+  {
+    q: "C'est gratuit ?",
+    a: "Oui, le plan de base est 100% gratuit, sans carte bancaire. Tu crées ta boutique, tu gères tes commandes, et tu discutes avec ton assistant sans payer un centime. Le plan avancé (Bras Droit) débloque plus de fonctionnalités pour ceux qui veulent aller plus loin.",
+  },
+  {
+    q: "Pour qui c'est fait ?",
+    a: "Pour les entrepreneurs qui vendent déjà ou qui démarrent, en Côte d'Ivoire, en France, ou ailleurs. Restaurateurs, commerçants, prestataires de service, artisans. Si tu as des clients et des produits, Assists est fait pour toi.",
+  },
+  {
+    q: "Comment ça marche ?",
+    a: "En 3 étapes. D'abord tu crées ton compte gratuitement. Ensuite tu réponds à quelques questions sur ton activité. Enfin ton assistant et ta boutique sont générés automatiquement, avec un lien que tu partages sur WhatsApp. Tes clients commandent directement, tu reçois une alerte.",
+  },
+];
+
+function MarylineChat({ onClose, onStart }) {
+  const [messages, setMessages] = useState([
+    { from: 'maryline', text: "Bonjour ! Je suis Maryline. Si tu as des questions sur Attractor Assists avant de te lancer, je suis là." }
+  ]);
+  const [picked, setPicked] = useState(new Set());
+  const bottomRef = useRef(null);
+
+  const pickFaq = (faq, idx) => {
+    if (picked.has(idx)) return;
+    setPicked(prev => new Set([...prev, idx]));
+    const next = [
+      ...messages,
+      { from: 'user', text: faq.q },
+      { from: 'maryline', text: faq.a },
+    ];
+    setMessages(next);
+    setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+  };
+
+  const remaining = MARYLINE_FAQS.filter((_, i) => !picked.has(i));
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end" style={{ background: 'rgba(0,0,0,.55)' }} onClick={onClose}>
+      <div
+        className="w-full rounded-t-[28px] overflow-hidden flex flex-col"
+        style={{ maxHeight: '88vh', background: '#EAE4D9' }}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center gap-3 px-4 py-3.5 bg-white border-b border-[#DDD6CE]">
+          <div className="w-9 h-9 rounded-full bg-orange flex items-center justify-center flex-shrink-0">
+            <span className="text-white font-display font-bold text-[15px]">M</span>
+          </div>
+          <div className="flex-1">
+            <div className="font-display font-bold text-[14px] text-charbon leading-none">Maryline</div>
+            <div className="text-[11px] text-[#25D366] font-semibold mt-0.5">En ligne</div>
+          </div>
+          <button onClick={onClose} className="w-8 h-8 rounded-full bg-g100 flex items-center justify-center text-g500 active:bg-g200">
+            <Icon name="close" size={16} />
+          </button>
+        </div>
+
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-2.5" style={{ minHeight: 0 }}>
+          {messages.map((m, i) => (
+            <div key={i} className={`flex ${m.from === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div
+                className={`max-w-[80%] px-3.5 py-2.5 text-[14px] leading-snug shadow-sm ${
+                  m.from === 'user'
+                    ? 'bg-[#F25C05] text-white rounded-[18px_18px_4px_18px]'
+                    : 'bg-white text-charbon rounded-[18px_18px_18px_4px]'
+                }`}
+              >
+                {m.text}
+              </div>
+            </div>
+          ))}
+          <div ref={bottomRef} />
+        </div>
+
+        {/* Quick replies */}
+        <div className="bg-white border-t border-[#DDD6CE] px-3 pt-3 pb-5">
+          {remaining.length > 0 ? (
+            <>
+              <p className="text-[11px] font-bold text-g400 uppercase tracking-[.06em] mb-2">Tes questions</p>
+              <div className="flex flex-col gap-2">
+                {remaining.map((faq, i) => {
+                  const origIdx = MARYLINE_FAQS.indexOf(faq);
+                  return (
+                    <button
+                      key={origIdx}
+                      onClick={() => pickFaq(faq, origIdx)}
+                      className="w-full text-left px-3.5 py-2.5 rounded-xl border border-g200 text-[13.5px] font-semibold text-charbon bg-sable active:bg-g100 transition"
+                    >
+                      {faq.q}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          ) : (
+            <p className="text-[13px] text-g500 text-center mb-2">Tu as toutes les clés. Prêt à démarrer ?</p>
+          )}
+          <button
+            onClick={onStart}
+            className="w-full mt-3 py-3.5 rounded-2xl bg-orange text-white font-display font-bold text-[15px] shadow-[0_8px_20px_-6px_rgba(242,92,5,.5)]"
+          >
+            Démarrer gratuitement →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function LoginScreen({ onAuthed }) {
   const [step, setStep] = useState("intro"); // intro | email | otp | loading
   const [email, setEmail] = useState("");
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [err, setErr] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [marylineOpen, setMarylineOpen] = useState(false);
   const refs = [useRef(), useRef(), useRef(), useRef(), useRef(), useRef()];
 
   // Capture le code de référencement dans l'URL (?ref=XXXXXXXX)
@@ -104,12 +219,19 @@ export function LoginScreen({ onAuthed }) {
             </p>
             <div className="mt-7 space-y-3">
               <Btn className="w-full" iconRight="arrow" onClick={() => setStep("email")}>Démarrer gratuitement</Btn>
-              <button onClick={() => setStep("email")} className="w-full text-center text-[14px] font-semibold text-white/85 py-2 hover:text-white">
+              <button onClick={() => setStep("email")} className="w-full text-center text-[14px] font-semibold text-white/75 py-2 hover:text-white">
                 J'ai déjà un compte
               </button>
-              <a href="https://agenceattractor.com" className="flex items-center justify-center gap-1.5 text-[13px] text-white/50 hover:text-white/80 pt-1 transition-colors">
+              <a href="https://agenceattractor.com" className="flex items-center justify-center gap-1.5 text-[13px] text-white/75 hover:text-white pt-1 transition-colors">
                 <Icon name="back" size={14} /> Retour au site
               </a>
+              <button
+                onClick={() => setMarylineOpen(true)}
+                className="flex items-center justify-center gap-1.5 text-[12px] text-white/50 hover:text-white/80 transition-colors pt-0.5"
+              >
+                <div className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center font-bold text-[9px]">M</div>
+                Des questions ? Parler à Maryline
+              </button>
             </div>
           </div>
         )}
@@ -197,6 +319,14 @@ export function LoginScreen({ onAuthed }) {
           </div>
         )}
       </div>
+
+      {/* Maryline chat sheet */}
+      {marylineOpen && (
+        <MarylineChat
+          onClose={() => setMarylineOpen(false)}
+          onStart={() => { setMarylineOpen(false); setStep("email"); }}
+        />
+      )}
     </div>
   );
 }

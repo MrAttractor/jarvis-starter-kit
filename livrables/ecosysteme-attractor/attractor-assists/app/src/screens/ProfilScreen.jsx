@@ -379,9 +379,14 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
           </div>
         )}
 
-        <p className="text-center text-[11px] text-g400 leading-relaxed pb-2">
-          Attractor Assists · Agence Attractor
-        </p>
+        <a
+          href="https://agenceattractor.com"
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center justify-center gap-1.5 text-[12px] text-g400 hover:text-orange transition-colors pb-2"
+        >
+          <Icon name="back" size={12} /> agenceattractor.com
+        </a>
       </div>
 
       {/* ── Sheets ───────────────────────────────────────────────────────────── */}
