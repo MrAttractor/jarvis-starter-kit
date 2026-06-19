@@ -3,6 +3,9 @@ import { useState, useRef, useEffect } from 'react';
 const HERO_IMAGES = [
   '/uploads/hero-1.jpg',
   '/uploads/hero-2.jpg',
+  '/uploads/hero-3.jpg',
+  '/uploads/hero-4.jpg',
+  '/uploads/hero-5.jpg',
 ];
 import { supabase } from '../lib/supabase';
 import { Icon, Logo, Btn, Field, Input, Spinner, Pill } from '../components/ui';
