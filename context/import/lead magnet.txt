@@ -1,0 +1,608 @@
+// ════════════════════════════════════════════════════════════════
+// APPS SCRIPT — CHALLENGE 7 JOURS MÉTHODE ATTRACTOR [VERSION FINALE]
+// 12 emails automatiques complets | Système production
+// Mac Arthur KOUASSI — Agence Mr Attractor
+// ════════════════════════════════════════════════════════════════
+
+const CONFIG = {
+  MASTER_SHEET_ID: '1sy1rL-t-fjThhsl1mjdHMiCLwOIn0OAnBKQpnrQ1U9w',
+  ONGLET_LEAD_MAGNET: 'LEAD_MAGNET',
+  EMAIL_EXPEDITEUR: 'myattractor1@gmail.com',
+  PRENOM_EXPEDITEUR: 'Mac Arthur',
+  URL_PDF: 'https://drive.google.com/file/d/1o7l8SQIYcCw0pX_Lsb5bL0mbEiS-fqjU/view',
+  URL_WEB_APP: 'https://script.google.com/macros/s/AKfycbyQjiuF5dqIjlv1oxwjfef86H9pK-GdycVsXAkaWxxxomVK2czFXwuuw1gMm_neYV6G/exec', // Colle ton URL ici
+  TELEPHONE: '+337.53.90.23.23'
+};
+
+// ═══ STYLES CSS COMMUNS ═══
+const EMAIL_STYLES = `
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f5f5f5;
+  }
+  .container { background: white; border-radius: 8px; overflow: hidden; }
+  .header { background: #1a1500; color: #C9A84C; padding: 30px 20px; text-align: center; }
+  .header h1, .header h2 { margin: 0; font-size: 24px; font-weight: 600; color: #C9A84C; }
+  .header p { margin: 10px 0 0; font-size: 16px; }
+  .content { padding: 40px 30px; }
+  .button {
+    display: inline-block;
+    background: #C9A84C;
+    color: #000;
+    padding: 14px 28px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    margin: 20px 0;
+  }
+  .mission, .highlight { background: #fff8e1; padding: 20px; border-radius: 8px; margin: 20px 0; }
+  .option { background: #f9f9f9; padding: 15px; margin: 15px 0; border-left: 4px solid #C9A84C; border-radius: 4px; }
+  .footer { background: #f9f9f9; padding: 20px; text-align: center; font-size: 12px; color: #666; }
+  .ps { margin-top: 30px; padding-left: 15px; border-left: 3px solid #C9A84C; font-size: 14px; color: #666; }
+  ul { padding-left: 20px; }
+  li { margin: 8px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+  th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+  th { background: #f5f5f5; font-weight: 600; }
+`;
+
+// ═══ FONCTION TEST ═══
+function testInscription() {
+  inscrireProspectLeadMagnet('Mac', 'myattractor1@gmail.com', '+33753902323', 'Test système');
+}
+
+// ═══ INSCRIPTION PROSPECT ═══
+function inscrireProspectLeadMagnet(prenom, email, whatsapp, secteur) {
+  const ss = SpreadsheetApp.openById(CONFIG.MASTER_SHEET_ID);
+  let sheet = ss.getSheetByName(CONFIG.ONGLET_LEAD_MAGNET);
+  
+  if (!sheet) {
+    Logger.log('❌ ERREUR: Onglet LEAD_MAGNET non trouvé');
+    return;
+  }
+  
+  const date = new Date();
+  const dateStr = Utilities.formatDate(date, 'GMT+1', 'yyyyMMdd');
+  const random = Math.floor(Math.random() * 100);
+  const id = `LM-${dateStr}-${prenom.substring(0,1).toUpperCase()}${random}`;
+  
+  sheet.appendRow([date, id, prenom, email, whatsapp, secteur, 'Inscrit', 0, 0, '', '', '', 'Inscrit via formulaire']);
+  
+  Logger.log(`✅ Prospect ${prenom} inscrit avec ID ${id}`);
+  
+  envoyerEmail('J0_LIVRAISON', prenom, email, id, sheet.getLastRow());
+  
+  return id;
+}
+
+// ═══ ENVOI QUOTIDIEN AUTOMATIQUE ═══
+function envoyerEmailsQuotidiens() {
+  const sheet = SpreadsheetApp.openById(CONFIG.MASTER_SHEET_ID).getSheetByName(CONFIG.ONGLET_LEAD_MAGNET);
+  const data = sheet.getDataRange().getValues();
+  const aujourdhui = new Date();
+  let emailsEnvoyes = 0;
+  
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const dateInscription = new Date(row[0]);
+    const id = row[1];
+    const prenom = row[2];
+    const email = row[3];
+    const statut = row[6];
+    const etapeChallenge = row[7] || 0;
+    
+    if (statut === 'Converti' || statut === 'Abandonné') continue;
+    
+    const joursDepuis = Math.floor((aujourdhui - dateInscription) / (1000 * 60 * 60 * 24));
+    const emailType = determinerEmailAEnvoyer(joursDepuis, etapeChallenge);
+    
+    if (emailType) {
+      envoyerEmail(emailType, prenom, email, id, i + 1);
+      emailsEnvoyes++;
+    }
+  }
+  
+  Logger.log(`✅ ${emailsEnvoyes} email(s) envoyé(s)`);
+}
+
+// ═══ DÉTERMINER EMAIL ═══
+function determinerEmailAEnvoyer(joursDepuis, etapeChallenge) {
+  if (joursDepuis === 1 && etapeChallenge === 0) return 'J1_QUALIFICATION';
+  if (joursDepuis === 2 && etapeChallenge === 0) return 'J2_ANNONCE';
+  if (joursDepuis === 3 && etapeChallenge < 1) return 'CHALLENGE_J1';
+  if (joursDepuis === 4 && etapeChallenge < 2) return 'CHALLENGE_J2';
+  if (joursDepuis === 5 && etapeChallenge < 3) return 'CHALLENGE_J3';
+  if (joursDepuis === 6 && etapeChallenge < 4) return 'CHALLENGE_J4';
+  if (joursDepuis === 7 && etapeChallenge < 5) return 'CHALLENGE_J5';
+  if (joursDepuis === 8 && etapeChallenge < 6) return 'CHALLENGE_J6';
+  if (joursDepuis === 9 && etapeChallenge < 7) return 'CHALLENGE_J7';
+  if (joursDepuis === 10 && etapeChallenge >= 7) return 'J10_FELICITATIONS';
+  if (joursDepuis === 11 && etapeChallenge >= 7) return 'J11_CONVERSION';
+  return null;
+}
+
+// ═══ ENVOYER EMAIL ═══
+function envoyerEmail(typeEmail, prenom, emailDest, idProspect, ligneSheet) {
+  const sujet = getEmailSubject(typeEmail);
+  const corps = getEmailBody(typeEmail, prenom, idProspect);
+  
+  try {
+    GmailApp.sendEmail(emailDest, sujet, '', {
+      htmlBody: corps,
+      name: CONFIG.PRENOM_EXPEDITEUR
+    });
+    
+    const sheet = SpreadsheetApp.openById(CONFIG.MASTER_SHEET_ID).getSheetByName(CONFIG.ONGLET_LEAD_MAGNET);
+    sheet.getRange(ligneSheet, 10).setValue(new Date());
+    sheet.getRange(ligneSheet, 11).setValue(typeEmail);
+    
+    Logger.log(`✅ Email ${typeEmail} envoyé à ${prenom}`);
+  } catch (error) {
+    Logger.log(`❌ Erreur: ${error}`);
+  }
+}
+
+// ═══ SUJETS ═══
+function getEmailSubject(typeEmail) {
+  const sujets = {
+    'J0_LIVRAISON': 'Votre guide Méthode ATTRACTOR est prêt ✅',
+    'J1_QUALIFICATION': 'Une question rapide avant le Challenge 7 Jours',
+    'J2_ANNONCE': 'Le Challenge 7 Jours démarre demain — Êtes-vous prêt ?',
+    'CHALLENGE_J1': 'Challenge Jour 1/7 — Vos tâches répétées vous coûtent combien ?',
+    'CHALLENGE_J2': 'Challenge Jour 2/7 — Votre 1ère procédure en 20 min',
+    'CHALLENGE_J3': 'Challenge Jour 3/7 — Zéro prospect oublié',
+    'CHALLENGE_J4': 'Challenge Jour 4/7 — Votre système de relance automatique',
+    'CHALLENGE_J5': 'Challenge Jour 5/7 — Votre assistant invisible',
+    'CHALLENGE_J6': 'Challenge Jour 6/7 — Combien de temps avez-vous récupéré ?',
+    'CHALLENGE_J7': 'Challenge Jour 7/7 — Qu\'allez-vous faire de ce temps récupéré ?',
+    'J10_FELICITATIONS': '🎉 Challenge terminé — Voici votre bilan',
+    'J11_CONVERSION': 'Call découverte 15 min offert (valeur 80€) — 3 places restantes'
+  };
+  return sujets[typeEmail] || 'Méthode ATTRACTOR';
+}
+
+// ═══ CORPS EMAILS ═══
+function getEmailBody(typeEmail, prenom, idProspect) {
+  const urlValidation = genererURLValidation(idProspect);
+  
+  const templates = {
+    'J0_LIVRAISON': genererEmailJ0(prenom),
+    'J1_QUALIFICATION': genererEmailJ1(prenom),
+    'J2_ANNONCE': genererEmailJ2(prenom),
+    'CHALLENGE_J1': genererEmailChallengeJ1(prenom, urlValidation, 1),
+    'CHALLENGE_J2': genererEmailChallengeJ2(prenom, urlValidation, 2),
+    'CHALLENGE_J3': genererEmailChallengeJ3(prenom, urlValidation, 3),
+    'CHALLENGE_J4': genererEmailChallengeJ4(prenom, urlValidation, 4),
+    'CHALLENGE_J5': genererEmailChallengeJ5(prenom, urlValidation, 5),
+    'CHALLENGE_J6': genererEmailChallengeJ6(prenom, urlValidation, 6),
+    'CHALLENGE_J7': genererEmailChallengeJ7(prenom, urlValidation, 7),
+    'J10_FELICITATIONS': genererEmailJ10(prenom),
+    'J11_CONVERSION': genererEmailJ11(prenom)
+  };
+  
+  return templates[typeEmail] || '';
+}
+
+// ═══ URL VALIDATION ═══
+function genererURLValidation(idProspect, jour) {
+  if (!CONFIG.URL_WEB_APP) return '#';
+  return `${CONFIG.URL_WEB_APP}?id=${idProspect}&jour=${jour || 1}`;
+}
+
+// ═══ BOUTON VALIDATION ═══
+function genererBoutonValidation(urlValidation, jour) {
+  return `<div style="text-align: center; margin: 30px 0;">
+  <a href="${urlValidation}" style="display: inline-block; background: #C9A84C; color: #000; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+    ✅ JOUR ${jour} TERMINÉ
+  </a>
+</div>`;
+}
+
+// ═══ EMAIL J0 — LIVRAISON ═══
+function genererEmailJ0(prenom) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${EMAIL_STYLES}</style></head><body>
+  <div class="container">
+    <div class="header"><h1>📖 Méthode ATTRACTOR</h1><p>Votre guide est prêt</p></div>
+    <div class="content">
+      <p>Bonjour <strong>${prenom}</strong>,</p>
+      <p>Merci pour votre intérêt pour la Méthode ATTRACTOR.</p>
+      <p>Voici votre guide complet (32 pages) :</p>
+      <div style="text-align: center;">
+        <a href="${CONFIG.URL_PDF}" class="button" target="_blank">📖 Accéder au guide PDF</a>
+      </div>
+      <p><strong>Ce que vous allez y découvrir :</strong></p>
+      <ul>
+        <li>L'histoire de Koffi (entrepreneur épuisé qui a tout transformé en 7 jours)</li>
+        <li>Les 4 pièges du fondateur débordé</li>
+        <li>Les 3 fuites qui coûtent chaque mois</li>
+        <li>Le plan 7 jours pour créer votre manuel de procédures</li>
+      </ul>
+      <p>Bonne lecture,</p>
+      <p><strong>Mac Arthur KOUASSI</strong><br>Agence Mr Attractor<br>${CONFIG.TELEPHONE}<br>${CONFIG.EMAIL_EXPEDITEUR}</p>
+      <div class="ps"><strong>P.S.</strong> Dans 2 jours, je vous envoie quelque chose de spécial — le Challenge 7 Jours. Mais avant, j'ai une question importante à vous poser demain.</div>
+    </div>
+    <div class="footer"><p>© 2026 Mr Attractor — Mac Arthur KOUASSI</p></div>
+  </div></body></html>`;
+}
+
+// ═══ EMAIL J1 — QUALIFICATION ═══
+function genererEmailJ1(prenom) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${EMAIL_STYLES}</style></head><body>
+  <div class="container">
+    <div class="header"><h2>Une question rapide</h2></div>
+    <div class="content">
+      <p>Bonjour <strong>${prenom}</strong>,</p>
+      <p>J'espère que vous avez pu parcourir le guide.</p>
+      <p>Petite question avant de vous envoyer le Challenge 7 Jours :</p>
+      <p><strong>Où en êtes-vous aujourd'hui ?</strong></p>
+      <p>Choisissez l'option qui vous ressemble le plus (répondez simplement à cet email avec la lettre) :</p>
+      <div class="option"><strong>🔴 OPTION A — Chaos total</strong><br>Je travaille 12-15h/jour, tout dépend de moi, je gère dans l'urgence.</div>
+      <div class="option"><strong>🟡 OPTION B — Organisé mais manuel</strong><br>J'ai des process en tête, mais rien n'est écrit. Mes assistantes me demandent tout.</div>
+      <div class="option"><strong>🟢 OPTION C — Structuré mais incomplet</strong><br>J'ai quelques procédures écrites, mais pas de système automatisé.</div>
+      <p><strong>Pourquoi je vous pose cette question ?</strong></p>
+      <p>Parce que le Challenge 7 Jours que je vous envoie dans 48h est personnalisé selon votre situation.</p>
+      <p>Répondez simplement avec la lettre (A, B ou C).</p>
+      <p>À demain,<br>Mac Arthur</p>
+      <div class="ps"><strong>P.S.</strong> Si vous ne répondez pas, je vous enverrai quand même le Challenge — mais il sera moins adapté à votre situation.</div>
+    </div>
+    <div class="footer"><p>© 2026 Mr Attractor — Mac Arthur KOUASSI</p></div>
+  </div></body></html>`;
+}
+
+// ═══ EMAIL J2 — ANNONCE ═══
+function genererEmailJ2(prenom) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${EMAIL_STYLES}</style></head><body>
+  <div class="container">
+    <div class="header"><h2>Le Challenge 7 Jours démarre demain</h2></div>
+    <div class="content">
+      <p>Bonjour <strong>${prenom}</strong>,</p>
+      <p>Demain matin à 8h, vous recevez le Jour 1 du Challenge 7 Jours.</p>
+      <p><strong>Voici ce qui va se passer :</strong></p>
+      <ul>
+        <li>📅 7 jours consécutifs</li>
+        <li>📧 1 email par jour (courts, actionnables)</li>
+        <li>⏱️ 15-30 min d'action par jour</li>
+        <li>📝 À la fin : votre manuel de procédures terminé</li>
+      </ul>
+      <div class="highlight">
+        <p><strong>Chaque jour, vous allez FAIRE quelque chose de concret :</strong></p>
+        <p>Jour 1 : Lister vos tâches répétées (15 min)<br>
+        Jour 2 : Documenter votre 1ère procédure (20 min)<br>
+        Jour 3 : Standardiser votre suivi client (25 min)<br>
+        Jour 4 : Installer votre système de relance (20 min)<br>
+        Jour 5 : Créer votre premier assistant invisible (30 min)<br>
+        Jour 6 : Mesurer vos gains de temps (15 min)<br>
+        Jour 7 : Définir vos 2 prochaines décisions stratégiques (20 min)</p>
+        <p><strong>Total : 2h45 sur 7 jours.</strong></p>
+      </div>
+      <p><strong>Au bout de 7 jours, vous aurez :</strong></p>
+      <ul>
+        <li>✅ Un manuel de procédures documenté</li>
+        <li>✅ Un système de relance installé</li>
+        <li>✅ 10-18h récupérées par semaine</li>
+      </ul>
+      <p>Êtes-vous prêt à investir 15-30 min par jour pendant 7 jours ?</p>
+      <p>Répondez simplement "PRÊT" à cet email.</p>
+      <p>À demain,<br>Mac Arthur</p>
+      <div class="ps"><strong>P.S.</strong> Ceux qui s'engagent en répondant ont 3× plus de chances de terminer les 7 jours.</div>
+    </div>
+    <div class="footer"><p>© 2026 Mr Attractor — Mac Arthur KOUASSI</p></div>
+  </div></body></html>`;
+}
+
+// ═══ CHALLENGE J1 ═══
+function genererEmailChallengeJ1(prenom, urlValidation, jour) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${EMAIL_STYLES}</style></head><body>
+  <div class="container">
+    <div class="header"><h2>Challenge Jour ${jour}/7</h2><p>Vos tâches répétées vous coûtent combien ?</p></div>
+    <div class="content">
+      <p>Bonjour <strong>${prenom}</strong>,</p>
+      <p>Bienvenue au Challenge 7 Jours — Jour ${jour}/7.</p>
+      <p>Aujourd'hui, on commence par LA base : identifier ce qui vous épuise.</p>
+      <div class="mission">
+        <h3>🎯 VOTRE MISSION JOUR ${jour} (15 min)</h3>
+        <p>Listez TOUTES les tâches que vous répétez chaque semaine.</p>
+        <p>Pas dans votre tête. Sur papier ou dans un fichier.</p>
+      </div>
+      <table>
+        <tr><th>Tâche</th><th>Fréquence</th><th>Temps</th></tr>
+        <tr><td>Répondre aux messages WhatsApp</td><td>Tous les jours</td><td>2h</td></tr>
+        <tr><td>Relancer les clients impayés</td><td>1×/semaine</td><td>1h</td></tr>
+      </table>
+      <p>Koffi pensait travailler 10h/jour. Quand il a fait cette liste : 18h/semaine de tâches répétitives = 17 280€/an perdus.</p>
+      <p><strong>Votre action :</strong></p>
+      <ol>
+        <li>Ouvrez un document</li>
+        <li>Listez vos tâches répétées (15 min)</li>
+        <li>Cliquez ci-dessous :</li>
+      </ol>
+      ${genererBoutonValidation(urlValidation, jour)}
+      <p>Demain, Jour 2 : On transforme la tâche n°1 en procédure.</p>
+      <p>À demain,<br>Mac Arthur</p>
+      <div class="ps"><strong>P.S.</strong> Si vous bloquez, répondez "BLOQUÉ".</div>
+    </div>
+    <div class="footer"><p>© 2026 Mr Attractor — Mac Arthur KOUASSI</p></div>
+  </div></body></html>`;
+}
+
+// ═══ CHALLENGE J2 ═══
+function genererEmailChallengeJ2(prenom, urlValidation, jour) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${EMAIL_STYLES}</style></head><body>
+  <div class="container">
+    <div class="header"><h2>Challenge Jour ${jour}/7</h2><p>Votre 1ère procédure en 20 min</p></div>
+    <div class="content">
+      <p>Bonjour <strong>${prenom}</strong>,</p>
+      <p>Jour ${jour}/7 — On passe à l'action.</p>
+      <p>Hier, vous avez listé vos tâches répétées. Aujourd'hui, on en documente UNE.</p>
+      <div class="mission">
+        <h3>🎯 VOTRE MISSION JOUR ${jour} (20 min)</h3>
+        <p>Documentez votre tâche la plus répétée en 5-8 étapes.</p>
+        <p><strong>Format :</strong><br>
+        PROCÉDURE : [Nom]<br>
+        1. [Étape 1]<br>
+        2. [Étape 2]<br>
+        3. [Étape 3]...</p>
+      </div>
+      <p><strong>Exemple (Koffi) :</strong><br>
+      PROCÉDURE : Traiter une commande client<br>
+      1. Client commande via WhatsApp<br>
+      2. Vérifier stock<br>
+      3. Confirmer prix, délai<br>
+      4. Réception paiement → bon de commande<br>
+      5. Notifier livreur<br>
+      6. Photo confirmation client<br>
+      7. Relance J+21</p>
+      ${genererBoutonValidation(urlValidation, jour)}
+      <p>Demain, Jour 3 : Suivi client.</p>
+      <p>À demain,<br>Mac Arthur</p>
+      <div class="ps"><strong>P.S.</strong> Les meilleures procédures sont simples.</div>
+    </div>
+    <div class="footer"><p>© 2026 Mr Attractor — Mac Arthur KOUASSI</p></div>
+  </div></body></html>`;
+}
+
+// ═══ CHALLENGE J3 ═══
+function genererEmailChallengeJ3(prenom, urlValidation, jour) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${EMAIL_STYLES}</style></head><body>
+  <div class="container">
+    <div class="header"><h2>Challenge Jour ${jour}/7</h2><p>Zéro prospect oublié</p></div>
+    <div class="content">
+      <p>Bonjour <strong>${prenom}</strong>,</p>
+      <p>Jour ${jour}/7 — On attaque vos clients.</p>
+      <div class="mission">
+        <h3>🎯 VOTRE MISSION JOUR ${jour} (25 min)</h3>
+        <p>Créez un fichier Suivi Clients (Google Sheets/Excel)</p>
+      </div>
+      <table>
+        <tr><th>Date</th><th>Nom</th><th>WhatsApp</th><th>Statut</th><th>Relance</th></tr>
+        <tr><td>02/05</td><td>Marie</td><td>0708...</td><td>Devis envoyé</td><td>04/05</td></tr>
+      </table>
+      <p><strong>5 statuts :</strong><br>
+      1. PROSPECT<br>
+      2. DEVIS ENVOYÉ<br>
+      3. CLIENT ACTIF<br>
+      4. PERDU<br>
+      5. À RELANCER</p>
+      ${genererBoutonValidation(urlValidation, jour)}
+      <p>Demain, Jour 4 : Relances automatiques.</p>
+      <p>À demain,<br>Mac Arthur</p>
+      <div class="ps"><strong>P.S.</strong> Koffi a récupéré 1M FCFA/mois avec ce simple fichier.</div>
+    </div>
+    <div class="footer"><p>© 2026 Mr Attractor — Mac Arthur KOUASSI</p></div>
+  </div></body></html>`;
+}
+
+// ═══ CHALLENGE J4 ═══
+function genererEmailChallengeJ4(prenom, urlValidation, jour) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${EMAIL_STYLES}</style></head><body>
+  <div class="container">
+    <div class="header"><h2>Challenge Jour ${jour}/7</h2><p>Système de relance automatique</p></div>
+    <div class="content">
+      <p>Bonjour <strong>${prenom}</strong>,</p>
+      <div class="mission">
+        <h3>🎯 VOTRE MISSION JOUR ${jour} (20 min)</h3>
+        <p>Créez vos 3 règles de relance :</p>
+        <p><strong>Règle 1</strong> — Devis sans réponse → Relance J+2<br>
+        <strong>Règle 2</strong> — Prospect intéressé → Relance J+7<br>
+        <strong>Règle 3</strong> — Client dormant 30j → Relance nouveau produit</p>
+      </div>
+      ${genererBoutonValidation(urlValidation, jour)}
+      <p>Demain, Jour 5 : Assistant invisible.</p>
+      <p>À demain,<br>Mac Arthur</p>
+      <div class="ps"><strong>P.S.</strong> Ces 3 règles = 30-50% CA en plus.</div>
+    </div>
+    <div class="footer"><p>© 2026 Mr Attractor — Mac Arthur KOUASSI</p></div>
+  </div></body></html>`;
+}
+
+// ═══ CHALLENGE J5 ═══
+function genererEmailChallengeJ5(prenom, urlValidation, jour) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${EMAIL_STYLES}</style></head><body>
+  <div class="container">
+    <div class="header"><h2>Challenge Jour ${jour}/7</h2><p>Votre assistant invisible</p></div>
+    <div class="content">
+      <p>Bonjour <strong>${prenom}</strong>,</p>
+      <div class="mission">
+        <h3>🎯 VOTRE MISSION JOUR ${jour} (30 min)</h3>
+        <p>Créez votre réponse automatique WhatsApp Business :</p>
+        <p>"Bonjour ! Merci pour votre message. Je vous réponds sous 24h. En attendant : [lien catalogue]"</p>
+      </div>
+      <p><strong>Installation :</strong> WhatsApp Business → Paramètres → Message d'absence</p>
+      ${genererBoutonValidation(urlValidation, jour)}
+      <p>Demain, Jour 6 : Mesurer vos gains.</p>
+      <p>À demain,<br>Mac Arthur</p>
+      <div class="ps"><strong>P.S.</strong> Ce message = 20-30h/mois récupérées.</div>
+    </div>
+    <div class="footer"><p>© 2026 Mr Attractor — Mac Arthur KOUASSI</p></div>
+  </div></body></html>`;
+}
+
+// ═══ CHALLENGE J6 ═══
+function genererEmailChallengeJ6(prenom, urlValidation, jour) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${EMAIL_STYLES}</style></head><body>
+  <div class="container">
+    <div class="header"><h2>Challenge Jour ${jour}/7</h2><p>Combien de temps récupéré ?</p></div>
+    <div class="content">
+      <p>Bonjour <strong>${prenom}</strong>,</p>
+      <div class="mission">
+        <h3>🎯 VOTRE MISSION JOUR ${jour} (15 min)</h3>
+        <p>Calculez vos gains :</p>
+      </div>
+      <table>
+        <tr><th>Action</th><th>Avant</th><th>Après</th><th>Gain</th></tr>
+        <tr><td>Messages hors horaires</td><td>3h</td><td>0h</td><td>+3h</td></tr>
+        <tr><td>Chercher infos clients</td><td>2h</td><td>30min</td><td>+1h30</td></tr>
+        <tr><td><strong>TOTAL</strong></td><td></td><td></td><td><strong>+5h40</strong></td></tr>
+      </table>
+      ${genererBoutonValidation(urlValidation, jour)}
+      <p>Demain, Jour 7 : Vos décisions stratégiques.</p>
+      <p>À demain,<br>Mac Arthur</p>
+    </div>
+    <div class="footer"><p>© 2026 Mr Attractor — Mac Arthur KOUASSI</p></div>
+  </div></body></html>`;
+}
+
+// ═══ CHALLENGE J7 ═══
+function genererEmailChallengeJ7(prenom, urlValidation, jour) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${EMAIL_STYLES}</style></head><body>
+  <div class="container">
+    <div class="header"><h2>Challenge Jour ${jour}/7</h2><p>Qu'allez-vous faire de ce temps ?</p></div>
+    <div class="content">
+      <p>Bonjour <strong>${prenom}</strong>,</p>
+      <p>Dernier jour. Vous avez récupéré du temps. Maintenant : qu'allez-vous en faire ?</p>
+      <div class="mission">
+        <h3>🎯 VOTRE MISSION JOUR ${jour} (20 min)</h3>
+        <p>Définissez 2 décisions stratégiques :</p>
+        <p><strong>DÉCISION 1 :</strong> [Action]<br>
+        POURQUOI : [Impact]<br>
+        QUAND : [Date démarrage]</p>
+        <p><strong>DÉCISION 2 :</strong> [Action]<br>
+        POURQUOI : [Impact]<br>
+        QUAND : [Date démarrage]</p>
+      </div>
+      ${genererBoutonValidation(urlValidation, jour)}
+      <p>Demain : Félicitations.</p>
+      <p>À demain,<br>Mac Arthur</p>
+    </div>
+    <div class="footer"><p>© 2026 Mr Attractor — Mac Arthur KOUASSI</p></div>
+  </div></body></html>`;
+}
+
+// ═══ J10 FÉLICITATIONS ═══
+function genererEmailJ10(prenom) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${EMAIL_STYLES}</style></head><body>
+  <div class="container">
+    <div class="header"><h1>🎉 Félicitations !</h1></div>
+    <div class="content">
+      <p>Bonjour <strong>${prenom}</strong>,</p>
+      <p>Vous avez terminé le Challenge 7 Jours.</p>
+      <p><strong>Récapitulatif :</strong></p>
+      <ul>
+        <li>✅ Tâches répétées identifiées</li>
+        <li>✅ Procédure documentée</li>
+        <li>✅ Fichier suivi client créé</li>
+        <li>✅ Règles de relance installées</li>
+        <li>✅ Assistant automatique configuré</li>
+        <li>✅ Gains mesurés : 10-18h/semaine</li>
+        <li>✅ Décisions stratégiques définies</li>
+      </ul>
+      <p><strong>Maintenant, vous avez 2 options :</strong></p>
+      <p>OPTION A — Vous continuez seul (6-12 mois)</p>
+      <p>OPTION B — Vous accélérez avec un système complet (résultat immédiat)</p>
+      <p>Demain, je vous explique l'Option B.</p>
+      <p>Encore bravo,<br>Mac Arthur</p>
+      <div class="ps"><strong>P.S.</strong> Seulement 23% terminent les 7 jours. Vous en faites partie.</div>
+    </div>
+    <div class="footer"><p>© 2026 Mr Attractor — Mac Arthur KOUASSI</p></div>
+  </div></body></html>`;
+}
+
+// ═══ J11 CONVERSION ═══
+function genererEmailJ11(prenom) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${EMAIL_STYLES}</style></head><body>
+  <div class="container">
+    <div class="header"><h2>Call découverte offert (80€)</h2></div>
+    <div class="content">
+      <p>Bonjour <strong>${prenom}</strong>,</p>
+      <p>Vous avez les bases. Parlons de l'étape suivante.</p>
+      <p><strong>Call découverte 15 min — OFFERT (valeur 80€)</strong></p>
+      <p>On regarde ensemble :<br>
+      → Votre situation actuelle<br>
+      → Ce qui vous coûte le plus cher en temps<br>
+      → Quel système installer en priorité</p>
+      <p>Aucune obligation. Juste des recommandations concrètes.</p>
+      <p><strong>3 créneaux cette semaine :</strong><br>
+      → Mardi 14h<br>
+      → Jeudi 10h<br>
+      → Vendredi 16h</p>
+      <p>Pour réserver : répondez avec le créneau qui vous convient.</p>
+      <p>Ou appelez : ${CONFIG.TELEPHONE}</p>
+      <p>À bientôt,<br>Mac Arthur</p>
+      <div class="ps"><strong>P.S.</strong> Ce call est vraiment offert. Vous l'avez mérité.</div>
+    </div>
+    <div class="footer"><p>© 2026 Mr Attractor — Mac Arthur KOUASSI</p></div>
+  </div></body></html>`;
+}
+
+// ═══ WEB APP — VALIDATION ═══
+function doGet(e) {
+  const idProspect = e.parameter.id;
+  const jour = parseInt(e.parameter.jour) || 1;
+  
+  if (!idProspect) {
+    return HtmlService.createHtmlOutput('<h1>Erreur : ID manquant</h1>');
+  }
+  
+  const sheet = SpreadsheetApp.openById(CONFIG.MASTER_SHEET_ID).getSheetByName(CONFIG.ONGLET_LEAD_MAGNET);
+  const data = sheet.getDataRange().getValues();
+  
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][1] === idProspect) {
+      const prenom = data[i][2];
+      sheet.getRange(i + 1, 8).setValue(jour);
+      const nouvelleNote = `${data[i][12] || ''}\nJour ${jour} validé le ${new Date().toLocaleString('fr-FR')}`;
+      sheet.getRange(i + 1, 13).setValue(nouvelleNote);
+      return HtmlService.createHtmlOutput(genererPageConfirmation(prenom, jour));
+    }
+  }
+  
+  return HtmlService.createHtmlOutput('<h1>Prospect non trouvé</h1>');
+}
+
+function genererPageConfirmation(prenom, jour) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Bravo !</title><style>
+    body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #0a0a0a 0%, #1a1500 100%); color: #F2EDE4; text-align: center; padding: 100px 20px; margin: 0; }
+    .container { max-width: 600px; margin: 0 auto; background: rgba(26, 21, 0, 0.6); padding: 60px 40px; border-radius: 16px; border: 1px solid rgba(201, 168, 76, 0.3); }
+    h1 { font-size: 48px; color: #C9A84C; margin: 0 0 20px; }
+    p { font-size: 18px; line-height: 1.8; margin: 15px 0; }
+    .emoji { font-size: 64px; margin-bottom: 20px; }
+  </style></head><body>
+    <div class="container">
+      <div class="emoji">🎉</div>
+      <h1>Bravo, ${prenom} !</h1>
+      <p>Jour ${jour} validé.</p>
+      <p>Jour ${jour + 1} arrive demain à 8h.</p>
+      <p>Relisez votre travail — vous allez être surpris du progrès.</p>
+      <p style="margin-top: 40px; font-size: 14px; color: #C9A84C;">Mac Arthur KOUASSI — Agence Mr Attractor</p>
+    </div>
+  </body></html>`;
+}
+
+// ═══ FORMULAIRE SITE ═══
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    if (data.action === 'inscrire') {
+      inscrireProspectLeadMagnet(data.prenom, data.email, data.whatsapp, data.secteur);
+      return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);
+    }
+  } catch (error) {
+    Logger.log('Erreur doPost: ' + error);
+    return ContentService.createTextOutput(JSON.stringify({ success: false, error: error.toString() })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
