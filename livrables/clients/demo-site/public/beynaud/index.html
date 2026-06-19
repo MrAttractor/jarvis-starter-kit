@@ -844,13 +844,14 @@
       <div class="nda-modal-title">Accord de Confidentialité</div>
       <div class="nda-modal-date" id="nda-datetime"></div>
       <div class="nda-modal-body">
-        Je soussigné(e) confirme avoir assisté à une <strong>présentation confidentielle</strong> de <strong>Mr Attractor</strong> (Mac Arthur KOUASSI, SIRET 98377125400015) portant sur un projet de plateforme digitale dédiée aux artistes et personnalités publiques.<br><br>
-        L'ensemble des informations présentées — concept, architecture, modèle économique, projections financières — sont <strong>strictement confidentielles</strong> et ne peuvent être divulguées, reproduites ou transmises à des tiers sans accord écrit préalable de Mr Attractor.<br><br>
-        <strong>Horodatage validé : <span id="nda-timestamp"></span></strong>
+        Ce jour, Latiss et l'<strong>Agence Attractor</strong> ont échangé sur un projet pouvant présenter un intérêt commun.<br><br>
+        L'Agence Attractor souhaite maintenir cet échange <strong>confidentiel</strong>, dans un souci de transparence et de conformité RGPD.<br><br>
+        En cliquant sur "J'accepte", vous confirmez la tenue de cet échange et son caractère confidentiel. Un NDA complet sera formalisé lors de la réunion de cadrage.<br><br>
+        <strong><span id="nda-timestamp"></span></strong>
       </div>
       <div class="nda-modal-btns">
         <button class="nda-close-btn" onclick="closeNDA()">Annuler</button>
-        <button class="nda-confirm-btn" onclick="confirmNDA()">Je confirme cet accord</button>
+        <button class="nda-confirm-btn" onclick="confirmNDA()">J'accepte</button>
       </div>
       <div class="nda-stamp" id="nda-stamp"></div>
     </div>
@@ -995,14 +996,15 @@
       const stamp = document.getElementById('nda-stamp');
       stamp.textContent = '✓ Accord confirmé — ' + dt;
       stamp.style.display = 'block';
-      const subject = encodeURIComponent('NDA Beynaud Army — ' + dt);
+      const subject = encodeURIComponent('NDA Latiss x Agence Attractor — ' + dt);
       const body = encodeURIComponent(
-        'ACCORD DE CONFIDENTIALITÉ — NDA\n' +
+        'ACCORD DE CONFIDENTIALITÉ — Étape 1\n' +
         'Date et heure : ' + dt + '\n\n' +
-        'Je soussigné(e) confirme avoir assisté à une présentation confidentielle de Mr Attractor (Mac Arthur KOUASSI, SIRET 98377125400015) portant sur un projet de plateforme digitale dédiée aux artistes et personnalités publiques.\n\n' +
-        'L\'ensemble des informations présentées (concept, architecture, modèle économique, projections financières) sont strictement confidentielles et ne peuvent être divulguées, reproduites ou transmises à des tiers sans accord écrit préalable de Mr Attractor.\n\n' +
+        'Ce jour, Latiss et l\'Agence Attractor ont échangé sur un projet pouvant présenter un intérêt commun.\n\n' +
+        'Latiss confirme la tenue de cet échange et son caractère confidentiel. L\'Agence Attractor s\'engage à ne pas divulguer le contenu de cet échange à des tiers.\n\n' +
+        'Un NDA complet sera formalisé lors de la réunion de cadrage.\n\n' +
         'Accord confirmé par clic horodaté le ' + dt + '.\n\n' +
-        'Mr Attractor · Mac Arthur KOUASSI · agenceattractor.com · +33 7 53 90 23 23'
+        'Agence Attractor · agenceattractor.com · +33 7 53 90 23 23'
       );
       unlockOffer();
       setTimeout(()=>{
