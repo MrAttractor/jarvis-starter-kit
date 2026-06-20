@@ -4,16 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GetWinWorld — Proposition</title>
-  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --terra: #8C3520;
-      --terra-d: rgba(140,53,32,0.07);
+      --terra: #1B3A2D;
+      --terra-d: rgba(27,58,45,0.07);
+      --rouge: #C0392B;
       --ink: #1A1614;
-      --ink2: #3D3330;
-      --muted: #9A8E87;
-      --border: #E6DED6;
-      --bg3: #F4F0EB;
+      --ink2: #3A3330;
+      --muted: #8A8078;
+      --border: #E0D8CF;
+      --bg3: #F2ECE4;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -29,8 +30,8 @@
     /* HEADER */
     .doc-header { display:flex; align-items:center; justify-content:space-between; padding-bottom:24px; border-bottom:2px solid var(--terra); margin-bottom:32px; }
     .doc-brand { display:flex; align-items:center; gap:10px; }
-    .doc-mark { width:36px; height:36px; background:var(--terra); display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Spectral',serif; font-size:14px; font-weight:600; }
-    .doc-name { font-family:'Spectral',serif; font-size:20px; font-weight:600; }
+    .doc-mark { width:36px; height:36px; background:var(--terra); display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Cormorant Garamond',serif; font-size:14px; font-weight:500; }
+    .doc-name { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:500; }
     .doc-sub { font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-top:1px; }
     .doc-meta { text-align:right; font-size:12px; color:var(--muted); }
     .doc-meta strong { color:var(--ink); display:block; font-size:13px; margin-bottom:2px; }
@@ -38,14 +39,14 @@
     /* HERO SECTION */
     .doc-hero { background:var(--terra); color:#fff; padding:28px 28px 24px; margin-bottom:32px; }
     .doc-hero-label { font-size:10px; letter-spacing:0.16em; text-transform:uppercase; opacity:0.7; margin-bottom:8px; }
-    .doc-hero-title { font-family:'Spectral',serif; font-size:26px; font-weight:300; line-height:1.25; margin-bottom:8px; }
+    .doc-hero-title { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:300; line-height:1.25; margin-bottom:8px; }
     .doc-hero-title em { font-style:italic; }
     .doc-hero-sub { font-size:13px; opacity:0.85; line-height:1.55; }
 
     /* SECTIONS */
     .section { margin-bottom:32px; }
-    .section-num { font-size:10px; color:var(--terra); letter-spacing:0.16em; text-transform:uppercase; font-weight:600; margin-bottom:6px; }
-    .section-title { font-family:'Spectral',serif; font-size:19px; font-weight:400; margin-bottom:12px; }
+    .section-num { font-size:10px; color:var(--rouge); letter-spacing:0.16em; text-transform:uppercase; font-weight:600; margin-bottom:6px; }
+    .section-title { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:400; margin-bottom:12px; }
     .section-text { font-size:13px; color:var(--ink2); line-height:1.7; }
 
     /* COMPARE */
@@ -73,14 +74,14 @@
     .price-row { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px; }
     .price-row:last-child { margin-bottom:0; padding-top:10px; border-top:1px solid rgba(255,255,255,0.2); }
     .price-item { font-size:13px; opacity:0.85; }
-    .price-val { font-family:'Spectral',serif; font-size:20px; font-weight:400; }
+    .price-val { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400; }
     .price-note { font-size:11px; opacity:0.7; margin-top:6px; }
 
     /* STEPS */
     .steps { margin-top:14px; counter-reset:step; }
     .step { display:flex; align-items:flex-start; gap:14px; padding:14px 0; border-bottom:1px solid var(--border); }
     .step:last-child { border-bottom:none; }
-    .step-num { width:28px; height:28px; background:var(--terra); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; flex-shrink:0; font-family:'Spectral',serif; }
+    .step-num { width:28px; height:28px; background:var(--rouge); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; flex-shrink:0; font-family:'Cormorant Garamond',serif; }
     .step-content { }
     .step-title { font-size:14px; font-weight:600; color:var(--ink); margin-bottom:3px; }
     .step-desc { font-size:12px; color:var(--muted); }
@@ -100,7 +101,7 @@
     /* CTA PRINT */
     .print-btn {
       position:fixed; bottom:24px; right:24px;
-      background:var(--terra); color:#fff; border:none;
+      background:var(--rouge); color:#fff; border:none;
       padding:12px 20px; font-family:'Space Grotesk',sans-serif;
       font-size:13px; font-weight:600; cursor:pointer; letter-spacing:0.03em;
       display:flex; align-items:center; gap:8px;
@@ -190,15 +191,15 @@
     <div class="price-block">
       <div class="price-row">
         <span class="price-item">Mise en place (site + catalogue + IA)</span>
-        <span class="price-val">350 €</span>
+        <span class="price-val">150 €</span>
       </div>
       <div class="price-row">
         <span class="price-item">Abonnement mensuel (hébergement + mises à jour)</span>
-        <span class="price-val">65 €/mois</span>
+        <span class="price-val">35 €/mois</span>
       </div>
       <div class="price-row">
         <span class="price-item">Acompte au démarrage (50%)</span>
-        <span class="price-val">175 €</span>
+        <span class="price-val">75 €</span>
       </div>
       <div class="price-note">Paiement par virement, Wave, ou mobile money · TVA non applicable, art. 293B CGI</div>
     </div>
@@ -213,7 +214,7 @@
         <div class="step-num">1</div>
         <div class="step-content">
           <div class="step-title">Confirmation par WhatsApp</div>
-          <div class="step-desc">Vous répondez "GO" à ce message. L'acompte de 175 € est réglé.</div>
+          <div class="step-desc">Vous répondez "GO" à ce message. L'acompte de 75 € est réglé.</div>
         </div>
       </div>
       <div class="step">
