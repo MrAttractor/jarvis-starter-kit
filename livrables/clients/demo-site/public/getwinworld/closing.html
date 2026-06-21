@@ -69,13 +69,27 @@
     .feature-title { font-size:13px; font-weight:600; color:var(--ink); margin-bottom:4px; }
     .feature-desc { font-size:12px; color:var(--muted); line-height:1.5; }
 
-    /* PRICE */
-    .price-block { background:var(--terra); color:#fff; padding:22px 24px; margin-top:14px; }
-    .price-row { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px; }
-    .price-row:last-child { margin-bottom:0; padding-top:10px; border-top:1px solid rgba(255,255,255,0.2); }
-    .price-item { font-size:13px; opacity:0.85; }
-    .price-val { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400; }
-    .price-note { font-size:11px; opacity:0.7; margin-top:6px; }
+    /* FORMULES */
+    .formules { display:flex; flex-direction:column; gap:12px; margin-top:16px; }
+    .formule-card { border:1px solid var(--border); background:#fff; overflow:hidden; position:relative; }
+    .formule-card.recommended { border-color:var(--terra); border-width:2px; }
+    .rec-tag { position:absolute; top:14px; right:14px; background:var(--terra); color:#fff; font-size:9px; padding:3px 8px; letter-spacing:0.12em; text-transform:uppercase; font-weight:600; }
+    .formule-head { padding:18px 20px 14px; border-bottom:1px solid var(--border); }
+    .formule-num { font-family:'Cormorant Garamond',serif; font-size:13px; color:var(--rouge); letter-spacing:0.16em; text-transform:uppercase; margin-bottom:4px; }
+    .formule-name { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400; margin-bottom:10px; }
+    .formule-price-row { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+    .formule-setup { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:400; color:var(--ink); }
+    .formule-mrr { font-size:13px; color:var(--muted); }
+    .formule-acompte { margin-top:6px; font-size:11px; color:var(--muted); }
+    .formule-acompte strong { color:var(--ink); }
+    .formule-body { padding:16px 20px; }
+    .formule-items { list-style:none; display:flex; flex-direction:column; gap:7px; }
+    .formule-item { display:flex; align-items:flex-start; gap:9px; font-size:12px; color:var(--ink2); line-height:1.45; }
+    .fi-dot { width:14px; height:14px; flex-shrink:0; margin-top:0px; }
+    .fi-dot.yes { color:#2E7D52; }
+    .fi-dot.no  { color:var(--border); }
+    .formule-note { margin-top:10px; padding:8px 12px; background:var(--bg3); border-left:2px solid var(--border); font-size:11px; color:var(--muted); line-height:1.5; }
+    .price-note { font-size:11px; color:var(--muted); margin-top:14px; text-align:center; }
 
     /* STEPS */
     .steps { margin-top:14px; counter-reset:step; }
@@ -160,49 +174,161 @@
 
   <!-- SECTION 2 : CE QUI EST INCLUS -->
   <div class="section">
-    <div class="section-num">02 · Ce qui est inclus</div>
+    <div class="section-num">02 · La base, dans toutes les formules</div>
     <div class="section-title">Votre espace client en 4 modules</div>
-    <div class="section-text">Une application web accessible depuis n'importe quel téléphone, sans téléchargement. Un lien, partagé sur WhatsApp.</div>
+    <div class="section-text">Une application web accessible depuis n'importe quel téléphone, sans téléchargement. Un seul lien, partagé sur WhatsApp.</div>
     <div class="features">
       <div class="feature">
         <div class="feature-title">Vitrine catalogue</div>
-        <div class="feature-desc">Photos produits organisées par catégorie, fiche détaillée, demande de pièce en 1 tap.</div>
+        <div class="feature-desc">3 services (Vestimentaire, Événements, Vidéos), fiches produits, demande en 1 tap.</div>
       </div>
       <div class="feature">
         <div class="feature-title">Conseiller IA</div>
-        <div class="feature-desc">Assistant disponible 24h/24 — répond aux questions, guide le choix de taille, suggère des pièces selon l'occasion.</div>
+        <div class="feature-desc">Assistant disponible 24h/24 — répond aux questions, guide selon l'occasion, suggère des pièces.</div>
       </div>
       <div class="feature">
         <div class="feature-title">Suivi des commandes</div>
-        <div class="feature-desc">Le client voit l'état de sa commande en temps réel. Vous êtes notifié à chaque nouvelle demande.</div>
+        <div class="feature-desc">Chaque commande référencée. Vos clients suivent, vous êtes notifié à chaque nouvelle demande.</div>
       </div>
       <div class="feature">
-        <div class="feature-title">Espace client + SAV</div>
-        <div class="feature-desc">Préférences style, adresses de livraison, historique d'achats, retours et réclamations structurés.</div>
+        <div class="feature-title">Espace client VIP</div>
+        <div class="feature-desc">Préférences style, historique, adresses de livraison, contact direct WhatsApp.</div>
       </div>
     </div>
   </div>
 
-  <!-- SECTION 3 : INVESTISSEMENT -->
+  <!-- SECTION 3 : FORMULES -->
   <div class="section">
-    <div class="section-num">03 · L'investissement</div>
-    <div class="section-title">Transparent, sans surprise</div>
-    <div class="section-text">Paiement en deux fois à la signature et à la livraison. Aucun frais caché.</div>
-    <div class="price-block">
-      <div class="price-row">
-        <span class="price-item">Mise en place (site + catalogue + IA)</span>
-        <span class="price-val">150 €</span>
+    <div class="section-num">03 · Choisissez votre formule</div>
+    <div class="section-title">Trois niveaux, un seul système</div>
+    <div class="section-text">Démarrez avec la formule qui correspond à votre étape aujourd'hui. Passez au niveau supérieur quand vous êtes prêt, sans tout recommencer.</div>
+
+    <div class="formules">
+
+      <!-- FORMULE I -->
+      <div class="formule-card">
+        <div class="formule-head">
+          <div class="formule-num">Formule I</div>
+          <div class="formule-name">Essentielle</div>
+          <div class="formule-price-row">
+            <span class="formule-setup">150 €</span>
+            <span class="formule-mrr">+ 35 €/mois</span>
+          </div>
+          <div class="formule-acompte">Acompte au démarrage : <strong>75 €</strong></div>
+        </div>
+        <div class="formule-body">
+          <ul class="formule-items">
+            <li class="formule-item">
+              <svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Catalogue 3 services (Vestimentaire, Événements, Vidéos)
+            </li>
+            <li class="formule-item">
+              <svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Conseiller IA 24h/24
+            </li>
+            <li class="formule-item">
+              <svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Suivi des commandes + espace client VIP
+            </li>
+            <li class="formule-item">
+              <svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              1 mise à jour catalogue par mois incluse
+            </li>
+            <li class="formule-item">
+              <svg class="fi-dot no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <span style="color:var(--muted)">Back-office autonome (gérez vous-même)</span>
+            </li>
+            <li class="formule-item">
+              <svg class="fi-dot no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <span style="color:var(--muted)">Enquêtes de satisfaction automatiques</span>
+            </li>
+            <li class="formule-item">
+              <svg class="fi-dot no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <span style="color:var(--muted)">Vidéos hébergées + plateforme VIP</span>
+            </li>
+          </ul>
+          <div class="formule-note">Les mises à jour supplémentaires (hors quota mensuel) sont facturées séparément.</div>
+        </div>
       </div>
-      <div class="price-row">
-        <span class="price-item">Abonnement mensuel (hébergement + mises à jour)</span>
-        <span class="price-val">35 €/mois</span>
+
+      <!-- FORMULE II -->
+      <div class="formule-card recommended">
+        <div class="rec-tag">Recommandée</div>
+        <div class="formule-head">
+          <div class="formule-num">Formule II</div>
+          <div class="formule-name">Active</div>
+          <div class="formule-price-row">
+            <span class="formule-setup">350 €</span>
+            <span class="formule-mrr">+ 65 €/mois</span>
+          </div>
+          <div class="formule-acompte">Acompte au démarrage : <strong>175 €</strong></div>
+        </div>
+        <div class="formule-body">
+          <ul class="formule-items">
+            <li class="formule-item">
+              <svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Tout le contenu de la Formule I
+            </li>
+            <li class="formule-item">
+              <svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Back-office : vous gérez vous-même vos photos et produits, sans passer par l'agence
+            </li>
+            <li class="formule-item">
+              <svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Mises à jour illimitées du catalogue
+            </li>
+            <li class="formule-item">
+              <svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Enquêtes de satisfaction automatiques après chaque livraison
+            </li>
+            <li class="formule-item">
+              <svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Notifications automatiques à chaque nouvelle commande
+            </li>
+            <li class="formule-item">
+              <svg class="fi-dot no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <span style="color:var(--muted)">Vidéos hébergées + plateforme VIP</span>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="price-row">
-        <span class="price-item">Acompte au démarrage (50%)</span>
-        <span class="price-val">75 €</span>
+
+      <!-- FORMULE III -->
+      <div class="formule-card">
+        <div class="formule-head">
+          <div class="formule-num">Formule III</div>
+          <div class="formule-name">Premium</div>
+          <div class="formule-price-row">
+            <span class="formule-setup">600 €</span>
+            <span class="formule-mrr">+ 100 €/mois</span>
+          </div>
+          <div class="formule-acompte">Acompte au démarrage : <strong>300 €</strong></div>
+        </div>
+        <div class="formule-body">
+          <ul class="formule-items">
+            <li class="formule-item">
+              <svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Tout le contenu de la Formule II
+            </li>
+            <li class="formule-item">
+              <svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Vidéos hébergées avec lecteur intégré (lookbook, conseils style, événements)
+            </li>
+            <li class="formule-item">
+              <svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Plateforme VIP privée : migration de votre base WhatsApp vers un espace client exclusif
+            </li>
+            <li class="formule-item">
+              <svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Tableau de bord Charles : statistiques commandes, top produits, suivi mensuel
+            </li>
+          </ul>
+          <div class="formule-note">La Formule III est le système complet, autonome et scalable. Idéale quand votre base client dépasse 50 personnes actives.</div>
+        </div>
       </div>
-      <div class="price-note">Paiement par virement, Wave, ou mobile money · TVA non applicable, art. 293B CGI</div>
+
     </div>
+    <div class="price-note">Paiement par virement, Wave ou mobile money · TVA non applicable, art. 293B CGI</div>
   </div>
 
   <!-- SECTION 4 : DÉMARRAGE -->
@@ -214,7 +340,7 @@
         <div class="step-num">1</div>
         <div class="step-content">
           <div class="step-title">Confirmation par WhatsApp</div>
-          <div class="step-desc">Vous répondez "GO" à ce message. L'acompte de 75 € est réglé.</div>
+          <div class="step-desc">Vous répondez "GO" avec la formule choisie. L'acompte correspondant est réglé pour lancer la production.</div>
         </div>
       </div>
       <div class="step">
