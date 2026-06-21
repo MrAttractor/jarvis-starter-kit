@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J'Envoie Express — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --blue:#003A8C; --blue-mid:#0057CC; --blue-light:#1A7FE8; --sky:#5BB8F5; --gold:#F5A623; --white:#F8FAFF; --grey:#E8EDF5; --dark:#0A1628; --text:#334155; --green:#10B981; --red:#EF4444; --orange:#F59E0B; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--dark); color:var(--white); min-height:100vh; overflow-x:hidden; }
+  .app { display:grid; grid-template-columns:240px 1fr; grid-template-rows:auto 1fr; min-height:100vh; }
+  .sidebar { grid-row:1/3; background:linear-gradient(180deg,#001F5C 0%,#0A1628 100%); border-right:1px solid rgba(91,184,245,.15); padding:0 0 2rem; display:flex; flex-direction:column; }
+  .logo-zone { padding:1.5rem 1.2rem; border-bottom:1px solid rgba(91,184,245,.1); margin-bottom:1rem; }
+  .logo-box { background:var(--blue-mid); border-radius:10px; padding:.5rem .8rem; text-align:center; }
+  .logo-box span { font-family:'Syne',sans-serif; font-weight:800; font-size:.75rem; color:white; line-height:1.2; display:block; }
+  .logo-box .accent { color:var(--sky); } .logo-box .sub { font-size:.55rem; color:var(--gold); letter-spacing:1px; }
+  .nav-section { padding:0 .8rem; margin-bottom:.5rem; }
+  .nav-label { font-size:.6rem; letter-spacing:2px; color:rgba(91,184,245,.5); text-transform:uppercase; padding:.5rem .5rem .3rem; font-family:'Syne',sans-serif; }
+  .nav-item { display:flex; align-items:center; gap:.7rem; padding:.6rem .8rem; border-radius:8px; cursor:pointer; transition:all .2s; font-size:.82rem; color:rgba(248,250,255,.6); margin-bottom:2px; }
+  .nav-item:hover { background:rgba(91,184,245,.1); color:var(--white); }
+  .nav-item.active { background:rgba(91,184,245,.2); color:var(--sky); border-left:3px solid var(--sky); }
+  .badge { margin-left:auto; background:var(--gold); color:var(--dark); font-size:.6rem; font-weight:700; padding:1px 6px; border-radius:20px; }
+  .sidebar-bottom { margin-top:auto; padding:1rem; border-top:1px solid rgba(91,184,245,.1); display:flex; align-items:center; justify-content:space-between; }
+  .user-card { display:flex; align-items:center; gap:.6rem; }
+  .avatar { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--blue-light),var(--sky)); display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:700; font-size:.75rem; }
+  .user-info .name { font-size:.78rem; font-weight:600; } .user-info .role { font-size:.65rem; color:var(--sky); }
+  .topbar { background:rgba(10,22,40,.9); backdrop-filter:blur(20px); border-bottom:1px solid rgba(91,184,245,.15); padding:.8rem 1.5rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; }
+  .topbar-title { font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; } .topbar-title span { color:var(--sky); }
+  .topbar-right { display:flex; align-items:center; gap:.8rem; }
+  .btn-logout { background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.3); border-radius:8px; padding:.35rem .8rem; color:#EF4444; font-size:.72rem; font-family:'DM Sans',sans-serif; cursor:pointer; }
+  .main { padding:1.5rem; overflow-y:auto; background:linear-gradient(135deg,#0A1628 0%,#071020 100%); }
+  .view { display:none; } .view.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .view.active { animation:fadeIn .3s ease; }
+  .kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem; }
+  .kpi { background:linear-gradient(135deg,rgba(0,87,204,.25) 0%,rgba(0,31,92,.4) 100%); border:1px solid rgba(91,184,245,.2); border-radius:12px; padding:1.2rem; position:relative; overflow:hidden; }
+  .kpi::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--sky),var(--blue-light)); }
+  .kpi-label { font-size:.7rem; color:rgba(248,250,255,.5); margin-bottom:.5rem; letter-spacing:.5px; }
+  .kpi-val { font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:800; color:white; }
+  .kpi-val span { font-size:.85rem; color:var(--sky); }
+  .kpi-sub { font-size:.65rem; margin-top:.3rem; color:rgba(255,255,255,.4); }
+  .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; flex-wrap:wrap; gap:.5rem; }
+  .section-title { font-family:'Syne',sans-serif; font-size:.95rem; font-weight:700; color:var(--white); }
+  .section-title span { color:var(--sky); }
+  .btn-primary { background:linear-gradient(135deg,var(--blue-light),var(--blue-mid)); border:none; border-radius:8px; padding:.45rem 1rem; color:white; font-size:.78rem; font-family:'DM Sans',sans-serif; font-weight:600; cursor:pointer; }
+  .btn-outline { background:transparent; border:1px solid rgba(91,184,245,.4); border-radius:8px; padding:.45rem 1rem; color:var(--sky); font-size:.78rem; font-family:'DM Sans',sans-serif; cursor:pointer; }
+  .btn-green { background:#10B981; border:none; border-radius:8px; padding:.35rem .7rem; color:white; font-size:.72rem; font-family:'DM Sans',sans-serif; font-weight:600; cursor:pointer; }
+  .btn-red { background:rgba(239,68,68,.2); border:1px solid rgba(239,68,68,.3); border-radius:8px; padding:.35rem .7rem; color:#EF4444; font-size:.72rem; font-family:'DM Sans',sans-serif; cursor:pointer; }
+  .table-wrap { background:rgba(0,31,92,.3); border:1px solid rgba(91,184,245,.15); border-radius:12px; overflow:hidden; margin-bottom:1.5rem; overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; min-width:600px; }
+  thead tr { background:rgba(91,184,245,.08); }
+  th { font-family:'Syne',sans-serif; font-size:.65rem; letter-spacing:1px; text-transform:uppercase; color:rgba(91,184,245,.7); padding:.7rem 1rem; text-align:left; }
+  td { padding:.7rem 1rem; font-size:.8rem; border-top:1px solid rgba(91,184,245,.07); vertical-align:middle; }
+  tr:hover td { background:rgba(91,184,245,.04); }
+  .empty-state { text-align:center; padding:2.5rem; color:rgba(255,255,255,.3); font-size:.82rem; }
+  .status-pill { display:inline-flex; align-items:center; gap:.3rem; padding:.2rem .6rem; border-radius:20px; font-size:.68rem; font-weight:600; white-space:nowrap; }
+  .status-pill::before { content:''; width:6px; height:6px; border-radius:50%; }
+  .s-transit { background:rgba(245,166,35,.15); color:var(--gold); } .s-transit::before { background:var(--gold); }
+  .s-livre { background:rgba(16,185,129,.15); color:var(--green); } .s-livre::before { background:var(--green); }
+  .s-attente { background:rgba(91,184,245,.15); color:var(--sky); } .s-attente::before { background:var(--sky); }
+  .s-collecte { background:rgba(168,85,247,.15); color:#a855f7; } .s-collecte::before { background:#a855f7; }
+  .s-douane { background:rgba(239,68,68,.15); color:var(--red); } .s-douane::before { background:var(--red); }
+  .card { background:rgba(0,31,92,.3); border:1px solid rgba(91,184,245,.15); border-radius:12px; padding:1.2rem; margin-bottom:1rem; }
+  .card-title { font-family:'Syne',sans-serif; font-size:.82rem; font-weight:700; color:var(--sky); margin-bottom:1rem; }
+  /* MODAL */
+  .modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:200; align-items:center; justify-content:center; padding:1rem; }
+  .modal-bg.open { display:flex; }
+  .modal { background:linear-gradient(135deg,#0D1F4A,#0A1628); border:1px solid rgba(91,184,245,.25); border-radius:16px; padding:1.8rem; width:100%; max-width:520px; max-height:90vh; overflow-y:auto; }
+  .modal-title { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; margin-bottom:1.4rem; color:white; }
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; margin-bottom:1rem; }
+  .form-group { display:flex; flex-direction:column; gap:.3rem; }
+  .form-group.full { grid-column:1/-1; }
+  .form-group label { font-size:.68rem; color:var(--sky); letter-spacing:.5px; }
+  .form-group input, .form-group select, .form-group textarea { background:rgba(255,255,255,.05); border:1px solid rgba(91,184,245,.2); border-radius:8px; padding:.55rem .8rem; color:white; font-size:.82rem; font-family:'DM Sans',sans-serif; outline:none; }
+  .form-group input:focus, .form-group select:focus { border-color:var(--sky); }
+  .form-group select option { background:#0A1628; }
+  .form-group textarea { resize:vertical; min-height:70px; }
+  .modal-actions { display:flex; gap:.6rem; justify-content:flex-end; margin-top:1rem; }
+  /* REVENUS */
+  .revenu-row { display:flex; align-items:center; justify-content:space-between; padding:.6rem 0; border-bottom:1px solid rgba(91,184,245,.07); }
+  .rev-credit { font-family:'Syne',sans-serif; font-weight:700; color:var(--green); }
+  .rev-debit { font-family:'Syne',sans-serif; font-weight:700; color:var(--red); }
+  /* SEARCH */
+  .search-bar { display:flex; gap:.5rem; margin-bottom:1rem; }
+  .search-input { flex:1; background:rgba(255,255,255,.05); border:1px solid rgba(91,184,245,.2); border-radius:8px; padding:.55rem .8rem; color:white; font-size:.82rem; font-family:'DM Sans',sans-serif; outline:none; }
+  /* TOAST */
+  .toast { position:fixed; bottom:1.5rem; right:1.5rem; background:#10B981; color:white; border-radius:10px; padding:.7rem 1.2rem; font-size:.8rem; font-weight:600; z-index:999; opacity:0; transform:translateY(10px); transition:all .3s; pointer-events:none; }
+  .toast.show { opacity:1; transform:translateY(0); }
+  /* TRACKING */
+  .track-steps { padding-left:1.2rem; position:relative; }
+  .track-steps::before { content:''; position:absolute; left:6px; top:8px; bottom:8px; width:2px; background:rgba(91,184,245,.2); }
+  .track-step { position:relative; padding:0 0 1rem .8rem; font-size:.78rem; }
+  .track-step::before { content:''; position:absolute; left:-1rem; top:4px; width:12px; height:12px; border-radius:50%; background:var(--dark); border:2px solid rgba(91,184,245,.3); }
+  .track-step.done::before { background:var(--green); border-color:var(--green); }
+  .track-step.current::before { background:var(--gold); border-color:var(--gold); box-shadow:0 0 8px var(--gold); }
+  .track-step-label { font-weight:600; color:var(--white); }
+  .track-step-label.active { color:var(--gold); }
+  .track-step-date { font-size:.65rem; color:rgba(255,255,255,.4); margin-top:2px; }
+  /* MOBILE */
+  .hamburger { display:none; background:none; border:1px solid rgba(91,184,245,.3); border-radius:8px; color:var(--sky); font-size:1.2rem; cursor:pointer; padding:.3rem .5rem; }
+  .sidebar-close { display:none; background:none; border:none; color:rgba(255,255,255,.5); font-size:1.1rem; cursor:pointer; margin-left:auto; padding:.2rem .4rem; }
+  .sidebar-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,.65); z-index:50; }
+  @media (max-width:767px) {
+    .hamburger { display:flex; align-items:center; } .sidebar-close { display:block; }
+    .app { display:flex; flex-direction:column; }
+    .sidebar { position:fixed; left:0; top:0; bottom:0; width:260px; z-index:100; transform:translateX(-100%); transition:transform .25s; grid-row:unset; }
+    .sidebar.open { transform:translateX(0); }
+    .sidebar-backdrop.open { display:block; }
+    .logo-zone { display:flex; align-items:center; justify-content:space-between; }
+    .topbar { width:100%; padding:.7rem 1rem; }
+    .main { flex:1; padding:.9rem; }
+    .kpi-grid { grid-template-columns:repeat(2,1fr); gap:.7rem; }
+    .form-grid { grid-template-columns:1fr; }
+    .form-group.full { grid-column:auto; }
+  }
+  ::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:transparent; } ::-webkit-scrollbar-thumb { background:rgba(91,184,245,.3); border-radius:2px; }
+</style>
+</head>
+<body>
+<div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
+<div class="toast" id="toast"></div>
+
+<!-- MODAL NOUVEAU COLIS -->
+<div class="modal-bg" id="modal-colis">
+  <div class="modal">
+    <div class="modal-title">📦 Nouveau colis</div>
+    <div class="form-grid">
+      <div class="form-group"><label>CLIENT</label><select id="f-colis-client"><option value="">Choisir...</option></select></div>
+      <div class="form-group"><label>VOYAGE</label><select id="f-colis-voyage"><option value="">Choisir...</option></select></div>
+      <div class="form-group"><label>POIDS (kg)</label><input type="number" id="f-colis-poids" step="0.1" placeholder="ex: 3.5"></div>
+      <div class="form-group"><label>MONTANT (€)</label><input type="number" id="f-colis-montant" placeholder="ex: 49"></div>
+      <div class="form-group full"><label>ARTICLES (liste)</label><textarea id="f-colis-articles" placeholder="Ex: 1 téléphone Samsung (0.5kg), 2 paires chaussures (2kg)..."></textarea></div>
+      <div class="form-group full"><label>CONTACT RÉCUPÉRATION</label><input type="text" id="f-colis-contact" placeholder="+33 6 XX ou +225 07 XX"></div>
+      <div class="form-group full" style="flex-direction:row;align-items:center;gap:.8rem;">
+        <input type="checkbox" id="f-colis-livraison" onchange="document.getElementById('f-colis-livraison-fields').style.display=this.checked?'contents':'none'" style="width:auto;accent-color:var(--sky);">
+        <label style="font-size:.78rem;color:white;letter-spacing:0;cursor:pointer;" for="f-colis-livraison">Livraison à domicile souhaitée (Abidjan)</label>
+      </div>
+      <div id="f-colis-livraison-fields" style="display:none;contents;">
+        <div class="form-group"><label>QUARTIER ABIDJAN</label><input type="text" id="f-colis-quartier" placeholder="Ex: Cocody, Marcory..."></div>
+        <div class="form-group"><label>PRIX LIVRAISON (€)</label><input type="number" id="f-colis-prix-livraison" placeholder="ex: 5"></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-outline" onclick="closeModal('modal-colis')">Annuler</button>
+      <button class="btn-primary" onclick="saveColis()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NOUVEAU CLIENT -->
+<div class="modal-bg" id="modal-client">
+  <div class="modal">
+    <div class="modal-title">👤 Nouveau client</div>
+    <div class="form-grid">
+      <div class="form-group full"><label>NOM COMPLET</label><input type="text" id="f-client-nom" placeholder="Prénom Nom"></div>
+      <div class="form-group"><label>WHATSAPP</label><input type="text" id="f-client-wa" placeholder="+225 07 XX XX XX"></div>
+      <div class="form-group"><label>LOCALISATION</label><select id="f-client-loc"><option value="Abidjan 🇨🇮">Abidjan 🇨🇮</option><option value="Paris 🇫🇷">Paris 🇫🇷</option><option value="Autre">Autre</option></select></div>
+      <div class="form-group full"><label>ADRESSE</label><input type="text" id="f-client-adresse" placeholder="Quartier / Rue / Ville"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-outline" onclick="closeModal('modal-client')">Annuler</button>
+      <button class="btn-primary" onclick="saveClient()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL REVENU -->
+<div class="modal-bg" id="modal-revenu">
+  <div class="modal">
+    <div class="modal-title" id="modal-revenu-title">💶 Enregistrer un encaissement</div>
+    <div class="form-grid">
+      <div class="form-group"><label>TYPE</label><select id="f-rev-type"><option value="encaissement">Encaissement</option><option value="retrait">Retrait</option></select></div>
+      <div class="form-group"><label>MONTANT (€)</label><input type="number" id="f-rev-montant" placeholder="ex: 75"></div>
+      <div class="form-group"><label>MÉTHODE</label><select id="f-rev-methode"><option value="Wave">Wave</option><option value="Espèces">Espèces</option><option value="PayPal">PayPal</option><option value="Carte bancaire">Carte bancaire</option><option value="MTN Money">MTN Money</option><option value="Orange Money">Orange Money</option><option value="Wero">Wero</option><option value="Virement">Virement bancaire</option></select></div>
+      <div class="form-group"><label>RÉFÉRENCE (optionnel)</label><input type="text" id="f-rev-ref" placeholder="#JE-20240611"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-outline" onclick="closeModal('modal-revenu')">Annuler</button>
+      <button class="btn-primary" onclick="saveRevenu()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL VOYAGE -->
+<div class="modal-bg" id="modal-voyage">
+  <div class="modal">
+    <div class="modal-title">✈ Nouveau voyage</div>
+    <div class="form-grid">
+      <div class="form-group"><label>DIRECTION</label><select id="f-voy-route"><option value="ABJ_ORY">🇨🇮 Abidjan → 🇫🇷 Orly</option><option value="ORY_ABJ">🇫🇷 Orly → 🇨🇮 Abidjan</option></select></div>
+      <div class="form-group"><label>DATE DÉPART</label><input type="date" id="f-voy-depart"></div>
+      <div class="form-group"><label>DATE ARRIVÉE</label><input type="date" id="f-voy-arrivee"></div>
+      <div class="form-group"><label>CAPACITÉ (kg)</label><input type="number" id="f-voy-capacite" value="50"></div>
+      <div class="form-group"><label>TARIF (€/kg)</label><input type="number" id="f-voy-tarif" placeholder="8 ou 14"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-outline" onclick="closeModal('modal-voyage')">Annuler</button>
+      <button class="btn-primary" onclick="saveVoyage()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+<!-- SIDEBAR -->
+<aside class="sidebar" id="main-sidebar">
+  <div class="logo-zone">
+    <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+    <div class="logo-box">
+      <span>J'<span class="accent">ENVOIE</span></span>
+      <span style="font-size:1rem;">EXPRESS 📦</span>
+      <span class="sub">ABJ ✈ ORY · ORY ✈ ABJ</span>
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-item active" onclick="showView('atraiter',this)" style="font-size:.88rem;padding:.8rem;">
+      📬 À traiter
+      <span class="badge" id="badge-atraiter">0</span>
+    </div>
+    <div class="nav-item" onclick="showView('encours',this)" style="font-size:.88rem;padding:.8rem;">
+      📦 En cours
+      <span class="badge" id="badge-encours">0</span>
+    </div>
+    <div class="nav-item" onclick="showView('parametres',this)" style="font-size:.88rem;padding:.8rem;">
+      ⚙ Paramètres
+    </div>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="user-card">
+      <div class="avatar">JY</div>
+      <div class="user-info"><div class="name">Jean Yves</div><div class="role">Administrateur</div></div>
+    </div>
+    <button class="btn-logout" onclick="logout()">Quitter</button>
+  </div>
+</aside>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <button class="hamburger" onclick="openSidebar()">☰</button>
+  <div class="topbar-title">J'Envoie <span>Express</span></div>
+  <div class="topbar-right">
+    <span id="topbar-date" style="font-size:.72rem;color:rgba(255,255,255,.4);"></span>
+  </div>
+</header>
+
+<main class="main">
+
+<!-- ===================== À TRAITER ===================== -->
+<div id="atraiter" class="view active">
+  <div class="section-header">
+    <div class="section-title">📬 À <span>traiter</span></div>
+    <button class="btn-outline" style="font-size:.72rem;" onclick="loadATraiter()">↻ Actualiser</button>
+  </div>
+  <div id="at-banner" style="display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.2rem;"></div>
+  <div style="font-size:.65rem;letter-spacing:2px;color:rgba(91,184,245,.5);text-transform:uppercase;margin-bottom:.5rem;">Nouvelles demandes</div>
+  <div id="at-attente"><div class="empty-state" style="padding:1.5rem;color:rgba(255,255,255,.3);font-size:.82rem;">Aucune demande en attente</div></div>
+  <div style="font-size:.65rem;letter-spacing:2px;color:rgba(245,166,35,.6);text-transform:uppercase;margin-top:1.4rem;margin-bottom:.5rem;">Acceptées — à convertir en colis</div>
+  <div id="at-acceptees"><div class="empty-state" style="padding:1rem;color:rgba(255,255,255,.2);font-size:.78rem;">Aucune</div></div>
+</div>
+
+<!-- ===================== EN COURS ===================== -->
+<div id="encours" class="view">
+  <div class="section-header">
+    <div class="section-title">📦 En <span>cours</span></div>
+    <button class="btn-outline" style="font-size:.72rem;" onclick="loadEnCours()">↻ Actualiser</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Client</th>
+        <th>N° Colis</th>
+        <th>Direction</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr></thead>
+      <tbody id="encours-tbody"><tr><td colspan="5" class="empty-state">Aucun colis en cours</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- DASHBOARD (caché, conservé pour référence) -->
+<div id="dashboard" class="view">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">COLIS EN TRANSIT</div><div class="kpi-val" id="kpi-transit">—</div><div class="kpi-sub">En cours d'acheminement</div></div>
+    <div class="kpi"><div class="kpi-label">COLIS CE MOIS</div><div class="kpi-val" id="kpi-mois">—</div><div class="kpi-sub">Toutes directions</div></div>
+    <div class="kpi"><div class="kpi-label">REVENUS CE MOIS</div><div class="kpi-val" id="kpi-revenus">—</div><div class="kpi-sub">Encaissements</div></div>
+    <div class="kpi"><div class="kpi-label">CLIENTS ACTIFS</div><div class="kpi-val" id="kpi-clients">—</div><div class="kpi-sub">Base totale</div></div>
+  </div>
+  <div class="section-header">
+    <div class="section-title">Derniers <span>colis</span></div>
+    <button class="btn-primary" onclick="showView('colis',null)">Voir tout →</button>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>N° Colis</th><th>Client</th><th>Route</th><th>Poids</th><th>Montant</th><th>Statut</th></tr></thead>
+    <tbody id="dash-colis-tbody"><tr><td colspan="6" class="empty-state">Chargement...</td></tr></tbody>
+  </table></div>
+  <div class="section-header" style="margin-top:.5rem;">
+    <div class="section-title">Demandes <span>en attente</span></div>
+    <button class="btn-primary" onclick="showView('demandes',null)">Voir tout →</button>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Client</th><th>WhatsApp</th><th>Route</th><th>Poids est.</th><th>Articles</th><th>Action</th></tr></thead>
+    <tbody id="dash-demandes-tbody"><tr><td colspan="6" class="empty-state">Chargement...</td></tr></tbody>
+  </table></div>
+</div>
+
+<!-- COLIS -->
+<div id="colis" class="view">
+  <div class="section-header">
+    <div class="section-title">📦 Gestion des <span>Colis</span></div>
+    <div style="display:flex;gap:.5rem;">
+      <input class="search-input" style="width:200px;" placeholder="🔍 N° ou client..." id="search-colis" oninput="filterColis()">
+      <button class="btn-primary" onclick="openModal('modal-colis')">+ Nouveau</button>
+    </div>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>N° Colis</th><th>Client</th><th>WA</th><th>Route</th><th>Poids</th><th>Montant</th><th>Statut</th><th>Récupération</th><th>Actions</th></tr></thead>
+    <tbody id="colis-tbody"><tr><td colspan="9" class="empty-state">Chargement...</td></tr></tbody>
+  </table></div>
+</div>
+
+<!-- VOYAGES -->
+<div id="voyages" class="view">
+  <div class="section-header">
+    <div class="section-title">✈ <span>Voyages</span></div>
+    <button class="btn-primary" onclick="openModal('modal-voyage')">+ Nouveau voyage</button>
+  </div>
+  <div id="voyages-list"><p class="empty-state">Chargement...</p></div>
+</div>
+
+<!-- REVENUS -->
+<div id="revenus" class="view">
+  <div class="section-header">
+    <div class="section-title">💶 <span>Revenus</span></div>
+    <div style="display:flex;gap:.5rem;">
+      <button class="btn-primary" onclick="openRevenu('encaissement')">+ Encaissement</button>
+      <button class="btn-red" onclick="openRevenu('retrait')">− Retrait</button>
+    </div>
+  </div>
+  <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);">
+    <div class="kpi"><div class="kpi-label">ENCAISSEMENTS DU MOIS</div><div class="kpi-val rev-credit" id="rev-total" style="font-size:1.5rem;color:var(--green);">—</div></div>
+    <div class="kpi"><div class="kpi-label">RETRAITS DU MOIS</div><div class="kpi-val" id="rev-retraits" style="font-size:1.5rem;color:var(--red);">—</div></div>
+    <div class="kpi"><div class="kpi-label">SOLDE NET</div><div class="kpi-val" id="rev-solde" style="font-size:1.5rem;">—</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">📋 Historique transactions</div>
+    <div id="revenus-list"><p class="empty-state">Chargement...</p></div>
+  </div>
+</div>
+
+<!-- CLIENTS -->
+<div id="clients" class="view">
+  <div class="section-header">
+    <div class="section-title">👤 <span>Clients</span></div>
+    <button class="btn-primary" onclick="openModal('modal-client')">+ Nouveau client</button>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Nom</th><th>WhatsApp</th><th>Localisation</th><th>Adresse</th><th>Depuis</th></tr></thead>
+    <tbody id="clients-tbody"><tr><td colspan="5" class="empty-state">Chargement...</td></tr></tbody>
+  </table></div>
+</div>
+
+<!-- DEMANDES -->
+<div id="demandes" class="view">
+  <div class="section-header">
+    <div class="section-title">📬 <span>Demandes</span> clients</div>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Client</th><th>WA</th><th>Route</th><th>Poids est.</th><th>Articles</th><th>Paiement</th><th>Contact récup.</th><th>Statut</th><th>Action</th></tr></thead>
+    <tbody id="demandes-tbody"><tr><td colspan="9" class="empty-state">Chargement...</td></tr></tbody>
+  </table></div>
+</div>
+
+<!-- VUE LIVREUR CI -->
+<div id="livreur" class="view">
+  <div class="section-header">
+    <div class="section-title">🛵 Vue <span>Livreur CI</span></div>
+    <select id="livreur-voyage-sel" onchange="loadLivreur()" style="background:rgba(0,31,92,.5);border:1px solid rgba(91,184,245,.2);border-radius:8px;color:white;font-size:.78rem;padding:.4rem .7rem;outline:none;">
+      <option value="">Sélectionner un voyage...</option>
+    </select>
+  </div>
+  <div class="card" style="margin-bottom:1rem;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.25);">
+    <div style="font-size:.78rem;color:rgba(255,255,255,.7);">Cette vue liste uniquement les colis à <strong>livrer à domicile</strong> pour le voyage sélectionné. Partager avec le livreur avant chaque départ.</div>
+  </div>
+  <div id="livreur-kpis" style="display:flex;gap:1rem;margin-bottom:1rem;flex-wrap:wrap;"></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>N° Colis</th><th>Client</th><th>WhatsApp</th><th>Quartier ABJ</th><th>Contact récupération</th><th>Articles</th><th>Prix livraison</th><th>Statut</th></tr></thead>
+      <tbody id="livreur-tbody"><tr><td colspan="8" class="empty-state">Sélectionner un voyage</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TRACKING -->
+<div id="tracking" class="view">
+  <div class="section-header">
+    <div class="section-title">📍 Tracking <span>colis</span></div>
+  </div>
+  <div class="card" style="max-width:480px;margin-bottom:1.5rem;">
+    <div class="card-title">Rechercher un colis</div>
+    <div class="search-bar">
+      <input class="search-input" id="track-input" placeholder="Ex: JE-20240615-001" onkeydown="if(event.key==='Enter')searchTracking()">
+      <button class="btn-primary" onclick="searchTracking()">Rechercher</button>
+    </div>
+  </div>
+  <div id="tracking-result" style="max-width:480px;"></div>
+</div>
+
+<div id="parametres" class="view">
+  <div class="section-header">
+    <div class="section-title">⚙ <span>Paramètres</span></div>
+  </div>
+  <div class="card" style="max-width:480px;">
+    <div class="card-title">Tarifs au kilo</div>
+    <p style="font-size:.8rem;color:rgba(248,250,255,.5);margin-bottom:1.2rem;">Ces prix sont affichés en temps réel sur le site public.</p>
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <div>
+        <label style="display:block;font-size:.7rem;color:var(--sky);letter-spacing:.5px;margin-bottom:.4rem;">PARIS → ABIDJAN (€/kg)</label>
+        <input class="search-input" id="p-paris-abj" type="number" min="1" style="width:100%;" placeholder="ex: 14">
+      </div>
+      <div>
+        <label style="display:block;font-size:.7rem;color:var(--sky);letter-spacing:.5px;margin-bottom:.4rem;">ABIDJAN → PARIS (€/kg)</label>
+        <input class="search-input" id="p-abj-paris" type="number" min="1" style="width:100%;" placeholder="ex: 10">
+      </div>
+      <button class="btn-primary" onclick="savePrix()">Enregistrer les prix</button>
+      <div id="prix-ok" style="display:none;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:.7rem 1rem;font-size:.8rem;color:#22C55E;">Prix mis à jour avec succès.</div>
+    </div>
+  </div>
+  <div class="card" style="max-width:480px;margin-top:1rem;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+      <div class="card-title" style="margin-bottom:0;">Prochains départs</div>
+      <button class="btn-primary" style="font-size:.72rem;" onclick="openModal('modal-voyage')">+ Ajouter</button>
+    </div>
+    <div id="params-voyages"><div style="font-size:.78rem;color:rgba(255,255,255,.3);">Aucun départ programmé</div></div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ============================================================
+// CONFIG — Remplacer après création du projet Supabase
+// ============================================================
+const SUPABASE_URL = 'https://ltydbwkhdsbmmnoahcty.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0eWRid2toZHNibW1ub2FoY3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMzEyMTIsImV4cCI6MjA5NzYwNzIxMn0.S0u-zZfRKp5t1VpXrGN3II8RtwyRZ7HWUHK3-E8pw58'
+const { createClient } = supabase
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+// ============================================================
+// AUTH GUARD
+// ============================================================
+sb.auth.getSession().then(({ data: { session } }) => {
+  if (!session) window.location.href = 'login.html'
+  else init()
+})
+
+async function logout() {
+  await sb.auth.signOut()
+  window.location.href = 'login.html'
+}
+
+// ============================================================
+// INIT
+// ============================================================
+async function init() {
+  document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })
+  await Promise.all([loadATraiter(), loadColisOptions()])
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+const loaders = {
+  atraiter: loadATraiter, encours: loadEnCours, parametres: loadParametres,
+  colis: loadColis, clients: loadClients, voyages: loadVoyages, revenus: loadRevenus,
+  demandes: loadDemandes, dashboard: loadDashboard, tracking: () => {}, livreur: () => {}
+}
+
+// ============================================================
+// VUE : À TRAITER
+// ============================================================
+async function loadATraiter() {
+  const { data } = await sb.from('demandes')
+    .select('*, clients(nom,whatsapp), nom_expediteur, wa_expediteur')
+    .in('statut', ['en_attente', 'acceptee'])
+    .order('created_at', { ascending: false })
+  window._demandes = data || []
+
+  const attente = (data || []).filter(d => d.statut === 'en_attente')
+  const acceptees = (data || []).filter(d => d.statut === 'acceptee')
+
+  document.getElementById('badge-atraiter').textContent = attente.length || '0'
+
+  // Banner
+  const banner = document.getElementById('at-banner')
+  banner.innerHTML = `
+    <div style="background:rgba(91,184,245,.1);border:1px solid rgba(91,184,245,.2);border-radius:10px;padding:.6rem 1rem;font-size:.78rem;color:var(--sky);">
+      <strong>${attente.length}</strong> en attente de réponse
+    </div>
+    <div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:10px;padding:.6rem 1rem;font-size:.78rem;color:var(--gold);">
+      <strong>${acceptees.length}</strong> à convertir en colis
+    </div>`
+
+  const fmtD = d => {
+    const nom = d.clients?.nom || d.nom_expediteur || '—'
+    const wa = d.clients?.whatsapp || d.wa_expediteur || '—'
+    const collecte = (d.contact_reception || '').split(' | Collecte: ')[1] || ''
+    return `
+      <div style="background:rgba(0,31,92,.35);border:1px solid rgba(91,184,245,.15);border-radius:12px;padding:1rem;margin-bottom:.6rem;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;flex-wrap:wrap;">
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:white;">${nom}</div>
+            <div style="font-size:.72rem;color:var(--sky);margin-top:2px;">${wa} · ${routeLabel(d.voyages?.route || '')}</div>
+          </div>
+          <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+            ${d.statut === 'en_attente' ? `
+              <button class="btn-green" onclick="updateDemandeStatut('${d.id}','acceptee')">✓ Accepter</button>
+              <button class="btn-red" onclick="updateDemandeStatut('${d.id}','refusee')">✗ Refuser</button>
+            ` : `
+              <button class="btn-primary" style="font-size:.72rem;" onclick="convertirEnColis('${d.id}')">Créer le colis →</button>
+            `}
+          </div>
+        </div>
+        ${d.articles ? `<div style="font-size:.76rem;color:rgba(255,255,255,.65);margin-top:.6rem;border-top:1px solid rgba(255,255,255,.06);padding-top:.5rem;">${d.articles}</div>` : ''}
+        ${collecte ? `<div style="font-size:.68rem;color:rgba(255,255,255,.35);margin-top:.3rem;">${collecte} · ${d.methode_paiement || ''}</div>` : ''}
+      </div>`
+  }
+
+  document.getElementById('at-attente').innerHTML = attente.length
+    ? attente.map(fmtD).join('')
+    : '<div style="padding:.8rem;font-size:.78rem;color:rgba(255,255,255,.25);">Aucune demande en attente</div>'
+
+  document.getElementById('at-acceptees').innerHTML = acceptees.length
+    ? acceptees.map(fmtD).join('')
+    : '<div style="padding:.8rem;font-size:.78rem;color:rgba(255,255,255,.2);">Aucune</div>'
+}
+
+// ============================================================
+// VUE : EN COURS
+// ============================================================
+async function loadEnCours() {
+  const { data } = await sb.from('colis')
+    .select('*, clients(nom,whatsapp)')
+    .neq('statut', 'livre')
+    .order('created_at', { ascending: false })
+
+  document.getElementById('badge-encours').textContent = (data || []).length || '0'
+
+  const tbody = document.getElementById('encours-tbody')
+  if (!data?.length) {
+    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Aucun colis en cours</td></tr>'
+    return
+  }
+  tbody.innerHTML = data.map(c => `
+    <tr>
+      <td><strong>${c.clients?.nom || '—'}</strong><br><span style="font-size:.65rem;color:rgba(255,255,255,.4);">${c.clients?.whatsapp || ''}</span></td>
+      <td style="font-family:'Syne',sans-serif;font-size:.78rem;color:var(--sky);">${c.numero}</td>
+      <td>${routeLabel(c.route || '')}</td>
+      <td>
+        <select style="background:rgba(0,31,92,.5);border:1px solid rgba(91,184,245,.2);border-radius:6px;color:white;font-size:.72rem;padding:.2rem .4rem;" onchange="updateStatutColis('${c.id}',this.value)">
+          <option value="en_attente" ${c.statut==='en_attente'?'selected':''}>Demande reçue</option>
+          <option value="collecte" ${c.statut==='collecte'?'selected':''}>Collecté</option>
+          <option value="transit" ${c.statut==='transit'?'selected':''}>En transit</option>
+          <option value="douane" ${c.statut==='douane'?'selected':''}>En douane</option>
+          <option value="livre" ${c.statut==='livre'?'selected':''}>Livré</option>
+        </select>
+      </td>
+      <td>
+        ${c.clients?.whatsapp && c.numero ? `<button class="btn-green" style="font-size:.65rem;padding:.25rem .55rem;" onclick="envoyerSuivi('${c.numero}','${c.clients.whatsapp}','${(c.clients.nom||'').split(' ')[0]}')">📲 Suivi</button>` : '—'}
+      </td>
+    </tr>`).join('')
+}
+
+async function loadParametres() {
+  const { data } = await sb.from('parametres').select('cle,valeur')
+  if (!data) return
+  const p = Object.fromEntries(data.map(r => [r.cle, r.valeur]))
+  if (p.tarif_paris_abj) document.getElementById('p-paris-abj').value = p.tarif_paris_abj
+  if (p.tarif_abj_paris) document.getElementById('p-abj-paris').value = p.tarif_abj_paris
+  const today = new Date().toISOString().split('T')[0]
+  const { data: voys } = await sb.from('voyages').select('route,date_depart,statut').gte('date_depart', today).order('date_depart', { ascending: true }).limit(8)
+  const el = document.getElementById('params-voyages')
+  if (!voys?.length) { el.innerHTML = '<div style="font-size:.78rem;color:rgba(255,255,255,.3);">Aucun départ programmé</div>'; return }
+  const fmt = d => new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', { weekday:'short', day:'numeric', month:'short' })
+  el.innerHTML = voys.map(v => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.78rem;">
+      <span>${routeLabel(v.route)}</span>
+      <span style="color:var(--gold);font-family:'Syne',sans-serif;font-weight:600;">${fmt(v.date_depart)}</span>
+      <span style="font-size:.65rem;color:rgba(255,255,255,.35);">${v.statut}</span>
+    </div>`).join('')
+}
+
+async function savePrix() {
+  const parisAbj = document.getElementById('p-paris-abj').value.trim()
+  const abjParis = document.getElementById('p-abj-paris').value.trim()
+  if (!parisAbj || !abjParis) { alert('Remplissez les deux tarifs.'); return }
+  await sb.from('parametres').upsert([
+    { cle: 'tarif_paris_abj', valeur: parisAbj },
+    { cle: 'tarif_abj_paris', valeur: abjParis }
+  ], { onConflict: 'cle' })
+  const ok = document.getElementById('prix-ok')
+  ok.style.display = 'block'
+  setTimeout(() => ok.style.display = 'none', 3000)
+}
+
+function showView(id, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'))
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'))
+  document.getElementById(id).classList.add('active')
+  if (el) el.classList.add('active')
+  closeSidebar()
+  if (loaders[id]) loaders[id]()
+}
+
+function openSidebar() { document.getElementById('main-sidebar').classList.add('open'); document.getElementById('sidebar-backdrop').classList.add('open'); }
+function closeSidebar() { document.getElementById('main-sidebar').classList.remove('open'); document.getElementById('sidebar-backdrop').classList.remove('open'); }
+
+// ============================================================
+// TOAST
+// ============================================================
+function toast(msg, isError = false) {
+  const el = document.getElementById('toast')
+  el.textContent = msg
+  el.style.background = isError ? '#EF4444' : '#10B981'
+  el.classList.add('show')
+  setTimeout(() => el.classList.remove('show'), 3000)
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+function openModal(id) { document.getElementById(id).classList.add('open') }
+function closeModal(id) { document.getElementById(id).classList.remove('open') }
+
+// ============================================================
+// HELPERS
+// ============================================================
+const routeLabel = r => r === 'ABJ_ORY' ? '🇨🇮 ABJ→ORY 🇫🇷' : '🇫🇷 ORY→ABJ 🇨🇮'
+const statutPill = s => {
+  const map = { en_attente:['s-attente','En attente'], collecte:['s-collecte','Collecté'], transit:['s-transit','En transit'], douane:['s-douane','En douane'], livre:['s-livre','Livré ✓'] }
+  const [cls, label] = map[s] || ['s-attente', s]
+  return `<span class="status-pill ${cls}">${label}</span>`
+}
+const fmtDate = d => d ? new Date(d).toLocaleDateString('fr-FR') : '—'
+const fmtEur = n => n != null ? `${parseFloat(n).toFixed(0)}€` : '—'
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+async function loadDashboard() {
+  const now = new Date()
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+
+  const [{ data: allColis }, { data: moisColis }, { data: allClients }, { data: encaiss }, { data: demandesEn }] = await Promise.all([
+    sb.from('colis').select('statut'),
+    sb.from('colis').select('id').gte('created_at', startOfMonth),
+    sb.from('clients').select('id'),
+    sb.from('revenus').select('montant,type').gte('created_at', startOfMonth),
+    sb.from('demandes').select('id').eq('statut','en_attente'),
+  ])
+
+  const transit = (allColis || []).filter(c => ['collecte','transit','douane'].includes(c.statut)).length
+  const revTotal = (encaiss || []).filter(r => r.type === 'encaissement').reduce((a,r) => a + r.montant, 0)
+
+  document.getElementById('kpi-transit').innerHTML = `${transit} <span>colis</span>`
+  document.getElementById('kpi-mois').innerHTML = `${(moisColis||[]).length} <span>colis</span>`
+  document.getElementById('kpi-revenus').innerHTML = `${revTotal.toFixed(0)}<span>€</span>`
+  document.getElementById('kpi-clients').innerHTML = `${(allClients||[]).length} <span>clients</span>`
+  document.getElementById('badge-colis').textContent = (allColis||[]).filter(c => c.statut !== 'livre').length
+  document.getElementById('badge-demandes').textContent = (demandesEn||[]).length
+
+  // derniers colis
+  const { data: derniersColis } = await sb.from('colis').select('*, clients(nom, whatsapp)').order('created_at', { ascending: false }).limit(5)
+  const tbody = document.getElementById('dash-colis-tbody')
+  if (!derniersColis?.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Aucun colis enregistré</td></tr>'; return }
+  tbody.innerHTML = derniersColis.map(c => `
+    <tr>
+      <td><strong>${c.numero}</strong></td>
+      <td>${c.clients?.nom || '—'}</td>
+      <td>${routeLabel(c.voyages?.route || '')}</td>
+      <td>${c.poids ? c.poids + ' kg' : '—'}</td>
+      <td style="color:var(--gold)">${fmtEur(c.montant)}</td>
+      <td>${statutPill(c.statut)}</td>
+    </tr>`).join('')
+
+  // demandes en attente
+  const { data: demandes } = await sb.from('demandes').select('*, clients(nom, whatsapp), voyages(route)').eq('statut','en_attente').order('created_at', { ascending: false }).limit(5)
+  const dtbody = document.getElementById('dash-demandes-tbody')
+  if (!demandes?.length) { dtbody.innerHTML = '<tr><td colspan="6" class="empty-state">Aucune demande en attente</td></tr>'; return }
+  dtbody.innerHTML = demandes.map(d => `
+    <tr>
+      <td><strong>${d.clients?.nom || '—'}</strong></td>
+      <td>${d.clients?.whatsapp || '—'}</td>
+      <td>${routeLabel(d.voyages?.route || '')}</td>
+      <td>${d.poids_estime ? d.poids_estime + ' kg' : '—'}</td>
+      <td style="font-size:.72rem;max-width:180px;">${d.articles || '—'}</td>
+      <td><div style="display:flex;gap:.3rem;">
+        <button class="btn-green" onclick="updateDemandeStatut('${d.id}','acceptee')">✓ Accepter</button>
+        <button class="btn-red" onclick="updateDemandeStatut('${d.id}','refusee')">✗</button>
+      </div></td>
+    </tr>`).join('')
+}
+
+// ============================================================
+// COLIS
+// ============================================================
+let allColisData = []
+
+async function loadColis() {
+  const { data, error } = await sb.from('colis').select('*, clients(nom, whatsapp)').order('created_at', { ascending: false })
+  if (error) return toast('Erreur chargement colis', true)
+  allColisData = data || []
+  renderColis(allColisData)
+}
+
+function renderColis(rows) {
+  const tbody = document.getElementById('colis-tbody')
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="9" class="empty-state">Aucun colis</td></tr>'; return }
+  tbody.innerHTML = rows.map(c => `
+    <tr>
+      <td><strong>${c.numero}</strong></td>
+      <td>${c.clients?.nom || '—'}</td>
+      <td style="font-size:.72rem;">${c.clients?.whatsapp || '—'}</td>
+      <td>${routeLabel(c.route || '')}</td>
+      <td>${c.poids ? c.poids + ' kg' : '—'}</td>
+      <td style="color:var(--gold)">${fmtEur(c.montant)}</td>
+      <td>${statutPill(c.statut)}</td>
+      <td style="font-size:.72rem;">${c.contact_reception || '—'}</td>
+      <td>
+        <div style="display:flex;gap:.3rem;flex-wrap:wrap;align-items:center;">
+          ${c.statut !== 'livre' ? `<button class="btn-green" onclick="markLivre('${c.id}')">✓ Livré</button>` : ''}
+          <select style="background:rgba(0,31,92,.5);border:1px solid rgba(91,184,245,.2);border-radius:6px;color:white;font-size:.65rem;padding:.15rem .3rem;" onchange="updateStatutColis('${c.id}',this.value)">
+            <option value="">Statut...</option>
+            <option value="en_attente">En attente</option>
+            <option value="collecte">Collecté</option>
+            <option value="transit">En transit</option>
+            <option value="douane">En douane</option>
+            <option value="livre">Livré</option>
+          </select>
+          ${c.clients?.whatsapp && c.numero ? `<button class="btn-primary" style="font-size:.62rem;padding:.2rem .5rem;background:var(--green);border-color:transparent;" onclick="envoyerSuivi('${c.numero}','${c.clients.whatsapp}','${(c.clients.nom||'').split(' ')[0]}')">📲 Suivi</button>` : ''}
+        </div>
+      </td>
+    </tr>`).join('')
+}
+
+function filterColis() {
+  const q = document.getElementById('search-colis').value.toLowerCase()
+  renderColis(allColisData.filter(c => (c.numero||'').toLowerCase().includes(q) || (c.clients?.nom||'').toLowerCase().includes(q)))
+}
+
+async function markLivre(id) {
+  const { error } = await sb.from('colis').update({ statut: 'livre' }).eq('id', id)
+  if (error) return toast('Erreur', true)
+  toast('Colis marqué livré ✓')
+  loadEnCours()
+}
+
+async function updateStatutColis(id, statut) {
+  if (!statut) return
+  const { error } = await sb.from('colis').update({ statut }).eq('id', id)
+  if (error) return toast('Erreur', true)
+  toast('Statut mis à jour')
+  loadEnCours()
+}
+
+async function saveColis() {
+  const livraisonOui = document.getElementById('f-colis-livraison').checked
+  const payload = {
+    client_id: document.getElementById('f-colis-client').value || null,
+    voyage_id: document.getElementById('f-colis-voyage').value || null,
+    poids: parseFloat(document.getElementById('f-colis-poids').value) || null,
+    montant: parseFloat(document.getElementById('f-colis-montant').value) || null,
+    articles: document.getElementById('f-colis-articles').value,
+    contact_reception: document.getElementById('f-colis-contact').value,
+    livraison_souhaitee: livraisonOui,
+    quartier_abidjan: livraisonOui ? document.getElementById('f-colis-quartier').value : null,
+    prix_livraison: livraisonOui ? parseFloat(document.getElementById('f-colis-prix-livraison').value) || null : null,
+  }
+  const { error } = await sb.from('colis').insert(payload)
+  if (error) return toast('Erreur enregistrement', true)
+  toast('Colis créé ✓')
+  closeModal('modal-colis')
+  ;['f-colis-poids','f-colis-montant','f-colis-articles','f-colis-contact','f-colis-quartier','f-colis-prix-livraison'].forEach(id => { const el = document.getElementById(id); if(el) el.value = '' })
+  document.getElementById('f-colis-client').value = ''
+  document.getElementById('f-colis-livraison').checked = false
+  document.getElementById('f-colis-livraison-fields').style.display = 'none'
+  loadATraiter()
+  loadEnCours()
+}
+
+// ============================================================
+// VOYAGES
+// ============================================================
+async function loadVoyages() {
+  const { data } = await sb.from('voyages').select('*').order('date_depart', { ascending: false })
+  const el = document.getElementById('voyages-list')
+  if (!data?.length) { el.innerHTML = '<p class="empty-state">Aucun voyage enregistré</p>'; return }
+  el.innerHTML = data.map(v => {
+    const pct = v.capacite_totale ? Math.round((1 - v.capacite_restante/v.capacite_totale)*100) : 0
+    const route = v.route === 'ABJ_ORY' ? '🇨🇮 Abidjan → 🇫🇷 Orly' : '🇫🇷 Orly → 🇨🇮 Abidjan'
+    return `<div class="card">
+      <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;margin-bottom:.6rem;">${route}</div>
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;font-size:.78rem;margin-bottom:.8rem;">
+        <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">DÉPART</div>${fmtDate(v.date_depart)}</div>
+        <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">ARRIVÉE</div>${fmtDate(v.date_arrivee)}</div>
+        <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">CAPACITÉ</div>${v.capacite_restante}/${v.capacite_totale} kg</div>
+        <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">TARIF</div>${v.tarif_kg ? v.tarif_kg + '€/kg' : '—'}</div>
+        <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">STATUT</div><span style="color:${v.statut==='ouvert'?'var(--green)':v.statut==='complet'?'var(--gold)':'rgba(255,255,255,.4)'};">${v.statut}</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.6rem;font-size:.65rem;color:rgba(255,255,255,.4);">
+        Remplissage
+        <div style="flex:1;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--sky),var(--green));border-radius:3px;"></div>
+        </div>
+        <span style="color:var(--sky);">${pct}%</span>
+      </div>
+    </div>`}).join('')
+}
+
+async function saveVoyage() {
+  const payload = {
+    route: document.getElementById('f-voy-route').value,
+    date_depart: document.getElementById('f-voy-depart').value,
+    date_arrivee: document.getElementById('f-voy-arrivee').value || null,
+    capacite_totale: parseFloat(document.getElementById('f-voy-capacite').value) || 50,
+    capacite_restante: parseFloat(document.getElementById('f-voy-capacite').value) || 50,
+    tarif_kg: parseFloat(document.getElementById('f-voy-tarif').value) || null,
+  }
+  const { error } = await sb.from('voyages').insert(payload)
+  if (error) return toast('Erreur', true)
+  toast('Voyage créé ✓')
+  closeModal('modal-voyage')
+  loadVoyages()
+  loadColisOptions()
+}
+
+// ============================================================
+// REVENUS
+// ============================================================
+async function loadRevenus() {
+  const now = new Date()
+  const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+  const { data } = await sb.from('revenus').select('*').order('created_at', { ascending: false })
+  const mois = (data||[]).filter(r => r.created_at >= start)
+  const enc = mois.filter(r => r.type === 'encaissement').reduce((a,r) => a+r.montant, 0)
+  const ret = mois.filter(r => r.type === 'retrait').reduce((a,r) => a+r.montant, 0)
+  document.getElementById('rev-total').textContent = `+${enc.toFixed(0)}€`
+  document.getElementById('rev-retraits').textContent = `-${ret.toFixed(0)}€`
+  const solde = enc - ret
+  const el = document.getElementById('rev-solde')
+  el.textContent = `${solde >= 0 ? '+' : ''}${solde.toFixed(0)}€`
+  el.style.color = solde >= 0 ? 'var(--green)' : 'var(--red)'
+  const el2 = document.getElementById('revenus-list')
+  if (!data?.length) { el2.innerHTML = '<p class="empty-state">Aucune transaction</p>'; return }
+  el2.innerHTML = data.map(r => `
+    <div class="revenu-row">
+      <div>
+        <div style="font-size:.8rem;">${r.type === 'encaissement' ? '<span style="color:var(--green)">↑</span>' : '<span style="color:var(--red)">↓</span>'} ${r.reference || r.methode || r.type}</div>
+        <div style="font-size:.65rem;color:rgba(255,255,255,.4);">${fmtDate(r.created_at)} · ${r.methode || ''}</div>
+      </div>
+      <div class="${r.type === 'encaissement' ? 'rev-credit' : 'rev-debit'}">${r.type === 'encaissement' ? '+' : '-'}${fmtEur(r.montant)}</div>
+    </div>`).join('')
+}
+
+function openRevenu(type) {
+  document.getElementById('f-rev-type').value = type
+  document.getElementById('modal-revenu-title').textContent = type === 'encaissement' ? '💶 Enregistrer un encaissement' : '💸 Enregistrer un retrait'
+  openModal('modal-revenu')
+}
+
+async function saveRevenu() {
+  const payload = {
+    type: document.getElementById('f-rev-type').value,
+    montant: parseFloat(document.getElementById('f-rev-montant').value),
+    methode: document.getElementById('f-rev-methode').value,
+    reference: document.getElementById('f-rev-ref').value || null,
+  }
+  if (!payload.montant) return toast('Montant requis', true)
+  const { error } = await sb.from('revenus').insert(payload)
+  if (error) return toast('Erreur', true)
+  toast('Transaction enregistrée ✓')
+  closeModal('modal-revenu')
+  document.getElementById('f-rev-montant').value = ''
+  document.getElementById('f-rev-ref').value = ''
+  loadRevenus()
+  loadDashboard()
+}
+
+// ============================================================
+// CLIENTS
+// ============================================================
+async function loadClients() {
+  const { data } = await sb.from('clients').select('*').order('created_at', { ascending: false })
+  const tbody = document.getElementById('clients-tbody')
+  if (!data?.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Aucun client</td></tr>'; return }
+  tbody.innerHTML = data.map(c => `
+    <tr>
+      <td><strong>${c.nom}</strong></td>
+      <td>${c.whatsapp || '—'}</td>
+      <td>${c.localisation || '—'}</td>
+      <td style="font-size:.75rem;">${c.adresse || '—'}</td>
+      <td style="font-size:.72rem;color:rgba(255,255,255,.4);">${fmtDate(c.created_at)}</td>
+    </tr>`).join('')
+}
+
+async function saveClient() {
+  const payload = { nom: document.getElementById('f-client-nom').value, whatsapp: document.getElementById('f-client-wa').value, localisation: document.getElementById('f-client-loc').value, adresse: document.getElementById('f-client-adresse').value }
+  if (!payload.nom) return toast('Nom requis', true)
+  const { error } = await sb.from('clients').insert(payload)
+  if (error) return toast('Erreur', true)
+  toast('Client ajouté ✓')
+  closeModal('modal-client')
+  document.getElementById('f-client-nom').value = ''
+  document.getElementById('f-client-wa').value = ''
+  document.getElementById('f-client-adresse').value = ''
+  loadClients()
+  loadColisOptions()
+  loadDashboard()
+}
+
+// ============================================================
+// DEMANDES
+// ============================================================
+async function loadDemandes() {
+  const { data } = await sb.from('demandes').select('*, clients(nom,whatsapp), voyages(route), nom_expediteur, wa_expediteur').order('created_at', { ascending: false })
+  window._demandes = data || []
+  const tbody = document.getElementById('demandes-tbody')
+  if (!data?.length) { tbody.innerHTML = '<tr><td colspan="9" class="empty-state">Aucune demande</td></tr>'; return }
+  tbody.innerHTML = data.map(d => `
+    <tr>
+      <td><strong>${d.clients?.nom || d.nom_expediteur || '—'}</strong></td>
+      <td style="font-size:.72rem;">${d.clients?.whatsapp || d.wa_expediteur || '—'}</td>
+      <td>${routeLabel(d.voyages?.route || '')}</td>
+      <td>${d.poids_estime ? d.poids_estime + ' kg' : '—'}</td>
+      <td style="font-size:.72rem;max-width:160px;">${d.articles || '—'}</td>
+      <td style="font-size:.72rem;">${d.methode_paiement || '—'}</td>
+      <td style="font-size:.72rem;">${d.contact_reception || '—'}</td>
+      <td>${statutPill(d.statut)}</td>
+      <td>
+        ${d.statut === 'en_attente' ? `
+        <div style="display:flex;gap:.3rem;">
+          <button class="btn-green" onclick="updateDemandeStatut('${d.id}','acceptee')">✓</button>
+          <button class="btn-red" onclick="updateDemandeStatut('${d.id}','refusee')">✗</button>
+        </div>` : d.statut === 'acceptee' ? `
+        <button class="btn-primary" onclick="convertirEnColis('${d.id}')" style="font-size:.72rem;padding:.3rem .7rem;">Créer le colis →</button>
+        ` : '—'}
+      </td>
+    </tr>`).join('')
+}
+
+function convertirEnColis(demandeId) {
+  const d = (window._demandes || []).find(x => x.id === demandeId)
+  if (!d) return
+  // pré-remplir le modal colis avec les données de la demande
+  const clientSel = document.getElementById('f-colis-client')
+  if (d.client_id) {
+    for (let opt of clientSel.options) { if (opt.value === d.client_id) { opt.selected = true; break } }
+  }
+  document.getElementById('f-colis-articles').value = d.articles || ''
+  document.getElementById('f-colis-poids').value = d.poids_estime || ''
+  document.getElementById('f-colis-contact').value = d.contact_reception || ''
+  const livraisonCb = document.getElementById('f-colis-livraison')
+  livraisonCb.checked = !!d.livraison_souhaitee
+  document.getElementById('f-colis-livraison-fields').style.display = d.livraison_souhaitee ? 'contents' : 'none'
+  if (d.quartier_abidjan) document.getElementById('f-colis-quartier').value = d.quartier_abidjan
+  openModal('modal-colis')
+}
+
+function envoyerSuivi(numero, whatsapp, prenom) {
+  const num = whatsapp.replace(/[\s\+\-\(\)]/g, '')
+  const lien = `https://jenvoie-express.surge.sh?n=${encodeURIComponent(numero)}`
+  const msg = encodeURIComponent(`Bonjour ${prenom || 'cher client'}, votre colis J'Envoie Express *${numero}* est en cours d'acheminement.\n\nSuivez votre colis en temps réel ici :\n${lien}`)
+  window.open(`https://wa.me/${num}?text=${msg}`, '_blank')
+}
+
+async function updateDemandeStatut(id, statut) {
+  const { error } = await sb.from('demandes').update({ statut }).eq('id', id)
+  if (error) return toast('Erreur', true)
+  toast(statut === 'acceptee' ? 'Demande acceptée ✓' : 'Demande refusée')
+  loadATraiter()
+  if (statut === 'acceptee') {
+    const d = (window._demandes || []).find(x => x.id === id)
+    const waRaw = d?.clients?.whatsapp || d?.wa_expediteur
+    const nomRaw = d?.clients?.nom || d?.nom_expediteur || 'client'
+    if (waRaw) {
+      const prenom = nomRaw.split(' ')[0]
+      const msg = encodeURIComponent(`Bonjour ${prenom}, votre demande d'envoi J'Envoie Express a bien été acceptée. Nous vous contacterons rapidement pour confirmer les détails de collecte et votre numéro de suivi. Merci de votre confiance !`)
+      const num = waRaw.replace(/[\s\+\-\(\)]/g, '')
+      window.open(`https://wa.me/${num}?text=${msg}`, '_blank')
+    }
+  }
+  loadDemandes()
+  loadDashboard()
+}
+
+// ============================================================
+// TRACKING
+// ============================================================
+const statutOrder = ['en_attente','collecte','transit','douane','livre']
+const statutLabels = { en_attente:'Demande reçue', collecte:'Colis collecté', transit:'En vol', douane:'Contrôle douanier', livre:'Livré' }
+
+async function searchTracking() {
+  const q = document.getElementById('track-input').value.trim()
+  if (!q) return
+  const { data, error } = await sb.from('colis').select('*, clients(nom,whatsapp)').ilike('numero', `%${q}%`).limit(1).maybeSingle()
+  const el = document.getElementById('tracking-result')
+  if (error || !data) { el.innerHTML = '<div class="card" style="color:var(--red);">Aucun colis trouvé pour ce numéro.</div>'; return }
+  const idx = statutOrder.indexOf(data.statut)
+  const steps = statutOrder.map((s, i) => `
+    <div class="track-step ${i < idx ? 'done' : i === idx ? 'current' : ''}">
+      <div class="track-step-label ${i === idx ? 'active' : ''}">${i <= idx ? '✓ ' : ''}${statutLabels[s]}</div>
+    </div>`).join('')
+  el.innerHTML = `<div class="card">
+    <div class="card-title">📦 ${data.numero}</div>
+    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;font-size:.78rem;margin-bottom:1rem;">
+      <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">CLIENT</div>${data.clients?.nom || '—'}</div>
+      <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">POIDS</div>${data.poids ? data.poids + ' kg' : '—'}</div>
+      <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">MONTANT</div>${fmtEur(data.montant)}</div>
+      <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">RÉCUPÉRATION</div>${data.contact_reception || '—'}</div>
+    </div>
+    <div class="track-steps">${steps}</div>
+    <div style="margin-top:1rem;">
+      <button class="btn-green" onclick="markLivreTracking('${data.id}')">✓ Marquer livré</button>
+    </div>
+  </div>`
+}
+
+async function markLivreTracking(id) {
+  await sb.from('colis').update({ statut: 'livre' }).eq('id', id)
+  toast('Livré ✓')
+  searchTracking()
+  loadDashboard()
+}
+
+// ============================================================
+// OPTIONS (dropdowns modaux)
+// ============================================================
+async function loadColisOptions() {
+  const [{ data: clients }, { data: voyages }] = await Promise.all([
+    sb.from('clients').select('id,nom').order('nom'),
+    sb.from('voyages').select('id,route,date_depart').eq('statut','ouvert').order('date_depart'),
+  ])
+  const cSel = document.getElementById('f-colis-client')
+  const vSel = document.getElementById('f-colis-voyage')
+  // clear existing options (keep placeholder)
+  while (cSel.options.length > 1) cSel.remove(1)
+  while (vSel.options.length > 1) vSel.remove(1)
+  ;(clients||[]).forEach(c => cSel.add(new Option(c.nom, c.id)))
+  ;(voyages||[]).forEach(v => vSel.add(new Option(`${routeLabel(v.route)} · ${fmtDate(v.date_depart)}`, v.id)))
+  // also populate livreur voyage selector
+  const lSel = document.getElementById('livreur-voyage-sel')
+  while (lSel.options.length > 1) lSel.remove(1)
+  const { data: allVoy } = await sb.from('voyages').select('id,route,date_depart').order('date_depart', { ascending: false })
+  ;(allVoy||[]).filter(v => v.route === 'ORY_ABJ').forEach(v => lSel.add(new Option(`🇫🇷 ORY→ABJ · ${fmtDate(v.date_depart)}`, v.id)))
+}
+
+// ============================================================
+// VUE LIVREUR CI
+// ============================================================
+async function loadLivreur() {
+  const voyageId = document.getElementById('livreur-voyage-sel').value
+  const tbody = document.getElementById('livreur-tbody')
+  const kpisEl = document.getElementById('livreur-kpis')
+  if (!voyageId) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Sélectionner un voyage</td></tr>'; kpisEl.innerHTML = ''; return }
+
+  const { data } = await sb.from('colis')
+    .select('*, clients(nom,whatsapp)')
+    .eq('voyage_id', voyageId)
+    .eq('livraison_souhaitee', true)
+    .neq('statut', 'livre')
+    .order('quartier_abidjan')
+
+  const total = (data||[]).length
+  const totalLiv = (data||[]).reduce((a,c) => a + (c.prix_livraison||0), 0)
+
+  kpisEl.innerHTML = `
+    <div class="kpi" style="min-width:160px;"><div class="kpi-label">COLIS À LIVRER</div><div class="kpi-val">${total} <span>colis</span></div></div>
+    <div class="kpi" style="min-width:160px;"><div class="kpi-label">TOTAL LIVRAISONS</div><div class="kpi-val">${totalLiv.toFixed(0)}<span>€</span></div></div>
+  `
+
+  if (!data?.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Aucun colis à livrer pour ce voyage</td></tr>'; return }
+  tbody.innerHTML = data.map(c => `
+    <tr>
+      <td><strong>${c.numero}</strong></td>
+      <td>${c.clients?.nom || '—'}</td>
+      <td>${c.clients?.whatsapp || '—'}</td>
+      <td><strong style="color:var(--gold);">${c.quartier_abidjan || '—'}</strong></td>
+      <td>${c.contact_reception || '—'}</td>
+      <td style="font-size:.72rem;max-width:160px;">${c.articles || '—'}</td>
+      <td style="color:var(--gold);">${c.prix_livraison ? c.prix_livraison + '€' : '—'}</td>
+      <td>
+        <button class="btn-green" onclick="markLivre('${c.id}').then(()=>loadLivreur())">✓ Livré</button>
+      </td>
+    </tr>`).join('')
+}
+</script>
+</body>
+</html>

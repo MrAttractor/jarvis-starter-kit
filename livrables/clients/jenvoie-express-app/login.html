@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J'Envoie Express — Connexion Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:#0A1628; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+  .bg { position:fixed; inset:0; background:radial-gradient(ellipse at 30% 40%, rgba(0,87,204,.2) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(91,184,245,.1) 0%, transparent 50%); pointer-events:none; }
+  .card { background:rgba(0,31,92,.4); border:1px solid rgba(91,184,245,.2); border-radius:16px; padding:2.5rem 2rem; width:360px; position:relative; z-index:1; }
+  .logo { text-align:center; margin-bottom:2rem; }
+  .logo-box { display:inline-block; background:rgba(0,87,204,.5); border:1px solid rgba(91,184,245,.3); border-radius:12px; padding:.6rem 1.2rem; }
+  .logo-box .name { font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem; color:white; }
+  .logo-box .name span { color:#5BB8F5; }
+  .logo-box .sub { font-size:.6rem; color:#F5A623; letter-spacing:1px; text-align:center; }
+  h2 { font-family:'Syne',sans-serif; font-size:1.1rem; text-align:center; color:white; margin-bottom:.3rem; }
+  .subtitle { font-size:.75rem; color:rgba(255,255,255,.4); text-align:center; margin-bottom:1.8rem; }
+  .form-group { margin-bottom:1rem; }
+  label { display:block; font-size:.68rem; color:#5BB8F5; letter-spacing:.5px; margin-bottom:.35rem; }
+  input { width:100%; background:rgba(255,255,255,.05); border:1px solid rgba(91,184,245,.2); border-radius:8px; padding:.65rem .9rem; color:white; font-size:.85rem; font-family:'DM Sans',sans-serif; outline:none; transition:border-color .2s; }
+  input:focus { border-color:#5BB8F5; }
+  input::placeholder { color:rgba(255,255,255,.25); }
+  .btn { width:100%; background:linear-gradient(135deg,#1A7FE8,#0057CC); border:none; border-radius:10px; padding:.75rem; color:white; font-size:.88rem; font-family:'DM Sans',sans-serif; font-weight:600; cursor:pointer; margin-top:.5rem; transition:opacity .2s; }
+  .btn:hover { opacity:.85; }
+  .btn:disabled { opacity:.5; cursor:not-allowed; }
+  .error { background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.3); border-radius:8px; padding:.6rem .8rem; font-size:.75rem; color:#EF4444; margin-top:.8rem; display:none; }
+  .footer { text-align:center; margin-top:1.5rem; font-size:.65rem; color:rgba(255,255,255,.2); }
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="card">
+  <div class="logo">
+    <div class="logo-box">
+      <div class="name">J'<span>ENVOIE</span> EXPRESS</div>
+      <div class="sub">ABJ ✈ Paris · Paris ✈ ABJ</div>
+    </div>
+  </div>
+  <h2>Espace Administrateur</h2>
+  <p class="subtitle">Accès réservé à Jean Yves Gbouablé</p>
+  <form id="login-form">
+    <div class="form-group">
+      <label>ADRESSE EMAIL</label>
+      <input type="email" id="email" placeholder="votre@email.com" required autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>MOT DE PASSE</label>
+      <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+    </div>
+    <button type="submit" class="btn" id="btn-login">Se connecter</button>
+    <div class="error" id="error-msg"></div>
+  </form>
+  <div class="footer">J'Envoie Express © 2024 — Plateforme by Attractor</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ⚠️ Remplacer par les vraies valeurs après création du projet Supabase
+  const SUPABASE_URL = 'https://ltydbwkhdsbmmnoahcty.supabase.co'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0eWRid2toZHNibW1ub2FoY3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMzEyMTIsImV4cCI6MjA5NzYwNzIxMn0.S0u-zZfRKp5t1VpXrGN3II8RtwyRZ7HWUHK3-E8pw58'
+  const { createClient } = supabase
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+  // Redirect si déjà connecté
+  sb.auth.getSession().then(({ data: { session } }) => {
+    if (session) window.location.href = 'app.html'
+  })
+
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const btn = document.getElementById('btn-login')
+    const errEl = document.getElementById('error-msg')
+    btn.disabled = true
+    btn.textContent = 'Connexion...'
+    errEl.style.display = 'none'
+
+    const email = document.getElementById('email').value
+    const password = document.getElementById('password').value
+
+    const { error } = await sb.auth.signInWithPassword({ email, password })
+
+    if (error) {
+      errEl.textContent = 'Email ou mot de passe incorrect.'
+      errEl.style.display = 'block'
+      btn.disabled = false
+      btn.textContent = 'Se connecter'
+    } else {
+      window.location.href = 'app.html'
+    }
+  })
+</script>
+</body>
+</html>
