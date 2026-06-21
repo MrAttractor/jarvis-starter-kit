@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Club Élévia — Maquette V2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF6F0;
+    --sand: #E8DDD0;
+    --terracotta: #C4714A;
+    --terracotta-dark: #A05535;
+    --charcoal: #2A2320;
+    --muted: #8A7E78;
+    --white: #FFFFFF;
+    --success: #4CAF82;
+    --warn: #E8A94A;
+    --gold: #C9A96E;
+    --glass: rgba(255,255,255,0.72);
+    --shadow: 0 8px 32px rgba(42,35,32,0.10);
+    --shadow-lg: 0 24px 64px rgba(42,35,32,0.16);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  .app-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(196,113,74,0.12);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; height: 60px;
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 600; color: var(--terracotta);
+    letter-spacing: 0.5px;
+  }
+  .nav-logo span { font-style: italic; font-weight: 300; }
+  .nav-icons { display: flex; gap: 20px; align-items: center; }
+  .nav-icons svg { width: 22px; height: 22px; stroke: var(--charcoal); cursor: pointer; }
+  .nav-badge { position: relative; }
+  .badge-dot {
+    position: absolute; top: -2px; right: -2px;
+    width: 8px; height: 8px; background: var(--terracotta);
+    border-radius: 50%; border: 2px solid var(--cream);
+  }
+
+  /* ── SCREEN WRAPPER ── */
+  .screens { padding-top: 60px; display: flex; flex-direction: column; gap: 0; }
+
+  .section-label {
+    font-size: 10px; font-weight: 500; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--muted);
+    padding: 40px 24px 12px;
+  }
+
+  /* ══════════════════════════════════
+     1. SPLASH / ONBOARDING
+  ══════════════════════════════════ */
+  .screen-splash {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #2A2320 0%, #4A3228 55%, #C4714A 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 40px 32px;
+    position: relative; overflow: hidden;
+  }
+  .splash-grain {
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.6; pointer-events: none;
+  }
+  .splash-ring {
+    width: 200px; height: 200px;
+    border: 1px solid rgba(201,169,110,0.3);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    margin-bottom: 40px; position: relative;
+    animation: pulse-ring 3s ease-in-out infinite;
+  }
+  .splash-ring::before {
+    content: ''; position: absolute; inset: 12px;
+    border: 1px solid rgba(201,169,110,0.2); border-radius: 50%;
+  }
+  .splash-ring-inner {
+    width: 120px; height: 120px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--terracotta));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px;
+  }
+  @keyframes pulse-ring {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.04); opacity: 0.85; }
+  }
+  .splash-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px; font-weight: 300; color: var(--cream);
+    line-height: 1.1; margin-bottom: 8px;
+  }
+  .splash-title em { font-style: italic; color: var(--gold); }
+  .splash-tagline {
+    font-size: 13px; color: rgba(250,246,240,0.6);
+    letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 56px;
+  }
+  .btn-primary {
+    background: var(--terracotta);
+    color: #fff; border: none; border-radius: 100px;
+    padding: 16px 40px; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 500; cursor: pointer;
+    letter-spacing: 0.5px; transition: all 0.2s;
+    box-shadow: 0 8px 24px rgba(196,113,74,0.35);
+  }
+  .btn-primary:hover { background: var(--terracotta-dark); transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent; color: rgba(250,246,240,0.7);
+    border: 1px solid rgba(250,246,240,0.2); border-radius: 100px;
+    padding: 14px 40px; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; cursor: pointer; margin-top: 12px;
+  }
+  .splash-buttons { display: flex; flex-direction: column; gap: 0; width: 280px; }
+
+  /* ══════════════════════════════════
+     2. INSCRIPTION / COMPTE
+  ══════════════════════════════════ */
+  .screen-signup {
+    background: var(--white);
+    padding: 32px 24px 40px;
+    border-bottom: 8px solid var(--cream);
+  }
+  .screen-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; font-weight: 400; margin-bottom: 4px;
+  }
+  .screen-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
+
+  .step-indicator { display: flex; gap: 6px; margin-bottom: 32px; }
+  .step-dot { height: 3px; border-radius: 2px; background: var(--sand); transition: all 0.3s; flex: 1; }
+  .step-dot.active { background: var(--terracotta); }
+  .step-dot.done { background: var(--terracotta); opacity: 0.4; }
+
+  .form-group { margin-bottom: 20px; }
+  .form-label {
+    font-size: 11px; font-weight: 500; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--muted);
+    display: block; margin-bottom: 8px;
+  }
+  .form-input {
+    width: 100%; padding: 14px 16px;
+    background: var(--cream); border: 1.5px solid var(--sand);
+    border-radius: 12px; font-family: 'DM Sans', sans-serif;
+    font-size: 15px; color: var(--charcoal); outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--terracotta); }
+  .form-input::placeholder { color: var(--muted); }
+
+  .pseudo-hint { font-size: 11px; color: var(--muted); margin-top: 6px; }
+  .pseudo-available {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; color: var(--success); margin-top: 6px;
+  }
+
+  .select-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .select-btn {
+    padding: 14px; border: 1.5px solid var(--sand);
+    border-radius: 12px; background: var(--cream);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    cursor: pointer; text-align: center; transition: all 0.2s;
+  }
+  .select-btn.selected {
+    border-color: var(--terracotta); background: rgba(196,113,74,0.06);
+    color: var(--terracotta); font-weight: 500;
+  }
+
+  .cgv-box {
+    background: rgba(196,113,74,0.05); border: 1px solid rgba(196,113,74,0.15);
+    border-radius: 12px; padding: 16px; margin: 20px 0;
+    font-size: 12px; color: var(--muted); line-height: 1.6;
+  }
+  .cgv-box a { color: var(--terracotta); text-decoration: none; }
+  .cgv-check { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+  .cgv-check input[type="checkbox"] { margin-top: 2px; accent-color: var(--terracotta); }
+  .cgv-decline { font-size: 11px; color: var(--muted); text-align: center; margin-top: 8px; cursor: pointer; text-decoration: underline; }
+
+  /* ══════════════════════════════════
+     3. VÉRIFICATION VIDÉO
+  ══════════════════════════════════ */
+  .screen-verif {
+    background: var(--charcoal);
+    padding: 32px 24px 40px;
+    border-bottom: 8px solid var(--cream);
+  }
+  .screen-title-light {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; font-weight: 400; color: var(--cream); margin-bottom: 4px;
+  }
+  .screen-subtitle-light { font-size: 13px; color: rgba(250,246,240,0.5); margin-bottom: 32px; }
+
+  .verif-camera {
+    width: 100%; aspect-ratio: 3/4; max-width: 320px;
+    margin: 0 auto 24px;
+    background: #1a1410; border-radius: 24px;
+    position: relative; overflow: hidden;
+    border: 1.5px solid rgba(201,169,110,0.2);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .camera-face {
+    width: 96px; height: 96px; border-radius: 50%;
+    background: rgba(201,169,110,0.12);
+    border: 2px dashed rgba(201,169,110,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+  }
+  .camera-overlay { position: absolute; inset: 0; border-radius: 24px; box-shadow: inset 0 0 0 2px rgba(201,169,110,0.15); }
+  .camera-corner { position: absolute; width: 28px; height: 28px; border-color: var(--gold); border-style: solid; border-width: 0; }
+  .camera-corner.tl { top: 16px; left: 16px; border-top-width: 2px; border-left-width: 2px; }
+  .camera-corner.tr { top: 16px; right: 16px; border-top-width: 2px; border-right-width: 2px; }
+  .camera-corner.bl { bottom: 16px; left: 16px; border-bottom-width: 2px; border-left-width: 2px; }
+  .camera-corner.br { bottom: 16px; right: 16px; border-bottom-width: 2px; border-right-width: 2px; }
+  .verif-pulse {
+    position: absolute; top: 16px; right: 16px;
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.1); border-radius: 20px; padding: 6px 12px;
+  }
+  .pulse-dot { width: 8px; height: 8px; background: #ff4444; border-radius: 50%; animation: blink 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.3} }
+  .verif-pulse span { font-size: 11px; color: rgba(255,255,255,0.8); }
+
+  .verif-steps { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+  .verif-step {
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(255,255,255,0.05); border-radius: 12px; padding: 14px 16px;
+  }
+  .verif-step-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .verif-step-icon.done { background: rgba(76,175,130,0.2); }
+  .verif-step-icon.active { background: rgba(201,169,110,0.2); animation: pulse-step 1.5s infinite; }
+  .verif-step-icon.wait { background: rgba(255,255,255,0.06); }
+  @keyframes pulse-step { 0%,100%{opacity:1}50%{opacity:0.5} }
+  .verif-step-text { font-size: 13px; }
+  .verif-step-title { color: var(--cream); font-weight: 500; }
+  .verif-step-sub { font-size: 11px; color: rgba(250,246,240,0.4); margin-top: 1px; }
+
+  .verif-shield {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(76,175,130,0.1); border: 1px solid rgba(76,175,130,0.25);
+    border-radius: 12px; padding: 14px 16px; margin-bottom: 24px;
+  }
+  .verif-shield span { font-size: 12px; color: rgba(250,246,240,0.7); }
+
+  .btn-primary-dark {
+    background: var(--terracotta); color: #fff;
+    border: none; border-radius: 100px; width: 100%;
+    padding: 16px; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 500; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(196,113,74,0.3);
+  }
+
+  /* ══════════════════════════════════
+     4. MATCHING CONVERSATIONNEL
+  ══════════════════════════════════ */
+  .screen-matching { background: var(--cream); padding: 32px 24px 40px; border-bottom: 8px solid var(--white); }
+  .chat-bubble-wrapper { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
+  .chat-item { display: flex; gap: 10px; align-items: flex-end; }
+  .chat-item.right { flex-direction: row-reverse; }
+  .chat-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--terracotta)); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .chat-avatar.bot { background: var(--sand); }
+  .chat-bubble { max-width: 75%; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.5; }
+  .chat-bubble.bot { background: var(--white); color: var(--charcoal); border-bottom-left-radius: 4px; box-shadow: 0 2px 8px rgba(42,35,32,0.06); }
+  .chat-bubble.user { background: var(--terracotta); color: #fff; border-bottom-right-radius: 4px; margin-left: auto; }
+  .chat-choices { display: flex; flex-wrap: wrap; gap: 8px; margin-left: 42px; }
+  .chat-choice { padding: 8px 16px; border: 1.5px solid var(--sand); border-radius: 100px; font-size: 13px; cursor: pointer; background: var(--white); transition: all 0.2s; color: var(--charcoal); }
+  .chat-choice.selected { border-color: var(--terracotta); background: rgba(196,113,74,0.07); color: var(--terracotta); }
+
+  .match-progress { background: var(--white); border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
+  .match-progress-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .match-progress-label span:first-child { font-size: 12px; color: var(--muted); }
+  .match-score { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--terracotta); }
+  .progress-bar { height: 6px; background: var(--sand); border-radius: 3px; }
+  .progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--terracotta), var(--gold)); }
+  .match-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .match-tag { font-size: 11px; padding: 4px 10px; border-radius: 100px; background: rgba(196,113,74,0.08); color: var(--terracotta); border: 1px solid rgba(196,113,74,0.15); }
+
+  .chat-input-bar { display: flex; gap: 10px; align-items: center; background: var(--white); border: 1.5px solid var(--sand); border-radius: 100px; padding: 8px 8px 8px 16px; }
+  .chat-input-bar input { flex: 1; border: none; background: none; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--charcoal); outline: none; }
+  .chat-send { width: 36px; height: 36px; border-radius: 50%; background: var(--terracotta); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+  /* ══════════════════════════════════
+     5. PROFILS / DÉCOUVERTE
+  ══════════════════════════════════ */
+  .screen-discover { background: var(--white); padding: 32px 24px 40px; border-bottom: 8px solid var(--cream); }
+  .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 24px; scrollbar-width: none; }
+  .filter-chip { padding: 8px 16px; border-radius: 100px; font-size: 12px; white-space: nowrap; cursor: pointer; border: 1.5px solid var(--sand); background: var(--cream); color: var(--muted); flex-shrink: 0; transition: all 0.2s; }
+  .filter-chip.active { border-color: var(--terracotta); background: rgba(196,113,74,0.07); color: var(--terracotta); font-weight: 500; }
+
+  .profiles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .profile-card { border-radius: 20px; overflow: hidden; background: var(--cream); position: relative; box-shadow: var(--shadow); cursor: pointer; transition: transform 0.2s; }
+  .profile-card:hover { transform: translateY(-2px); }
+  .profile-card-img { width: 100%; aspect-ratio: 3/4; display: flex; align-items: center; justify-content: center; font-size: 56px; position: relative; }
+  .profile-card-img.f1 { background: linear-gradient(160deg, #F5E6D3, #E8C4A0); }
+  .profile-card-img.f2 { background: linear-gradient(160deg, #D3E8F5, #A0C4E8); }
+  .profile-card-img.f3 { background: linear-gradient(160deg, #E8D3F5, #C4A0E8); }
+  .profile-card-img.f4 { background: linear-gradient(160deg, #D3F5E8, #A0E8C4); }
+
+  .verified-badge { position: absolute; top: 10px; right: 10px; background: var(--white); border-radius: 100px; padding: 4px 8px; font-size: 10px; display: flex; align-items: center; gap: 4px; font-weight: 500; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .verified-badge.yes { color: var(--success); }
+  .verified-badge.no { color: var(--warn); }
+
+  .profile-card-info { padding: 12px; }
+  .profile-card-name { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; }
+  .profile-card-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .profile-card-compat { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+  .compat-bar { flex: 1; height: 3px; background: var(--sand); border-radius: 2px; }
+  .compat-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--terracotta), var(--gold)); }
+  .compat-pct { font-size: 11px; color: var(--terracotta); font-weight: 500; }
+
+  /* ══════════════════════════════════
+     6. DEMANDE DE MISE EN RELATION
+  ══════════════════════════════════ */
+  .screen-request { background: var(--cream); padding: 32px 24px 40px; border-bottom: 8px solid var(--white); }
+  .profile-detail-header { display: flex; gap: 20px; align-items: center; margin-bottom: 28px; }
+  .profile-detail-avatar { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; flex-shrink: 0; background: linear-gradient(160deg, #F5E6D3, #E8C4A0); border: 2px solid rgba(201,169,110,0.3); }
+  .profile-detail-name { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; }
+  .profile-detail-pseudo { font-size: 12px; color: var(--muted); }
+  .profile-detail-verified { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--success); margin-top: 4px; background: rgba(76,175,130,0.1); border-radius: 100px; padding: 3px 8px; }
+
+  .compat-card { background: var(--white); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
+  .compat-card-title { font-size: 11px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+  .compat-ring { display: flex; align-items: center; gap: 20px; }
+  .compat-circle { width: 72px; height: 72px; border-radius: 50%; background: conic-gradient(var(--terracotta) 0% 82%, var(--sand) 82% 100%); display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+  .compat-circle-inner { width: 52px; height: 52px; border-radius: 50%; background: var(--white); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: var(--terracotta); }
+  .compat-details { flex: 1; }
+  .compat-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .compat-row-label { font-size: 12px; color: var(--muted); }
+  .compat-row-bar { width: 80px; height: 4px; background: var(--sand); border-radius: 2px; }
+  .compat-row-fill { height: 100%; border-radius: 2px; background: var(--terracotta); }
+
+  .request-message-box { background: var(--white); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
+  .request-message-box label { font-size: 11px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; display: block; margin-bottom: 12px; }
+  .request-message-box textarea { width: 100%; border: none; background: var(--cream); border-radius: 12px; padding: 14px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--charcoal); resize: none; outline: none; min-height: 100px; line-height: 1.6; }
+  .request-char { font-size: 11px; color: var(--muted); text-align: right; margin-top: 6px; }
+
+  .request-btns { display: flex; gap: 10px; }
+  .btn-decline { flex: 1; padding: 16px; border-radius: 100px; border: 1.5px solid var(--sand); background: var(--white); font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--muted); cursor: pointer; }
+  .btn-accept { flex: 2; padding: 16px; border-radius: 100px; background: var(--terracotta); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: 0 8px 24px rgba(196,113,74,0.3); }
+
+  /* ══════════════════════════════════
+     7. NOTIFICATION MATCH
+  ══════════════════════════════════ */
+  .screen-notif { background: var(--charcoal); padding: 32px 24px 40px; border-bottom: 8px solid var(--cream); }
+  .match-notif-card { background: linear-gradient(145deg, #3a2c28, #4a3530); border: 1px solid rgba(201,169,110,0.2); border-radius: 24px; padding: 32px 24px; text-align: center; position: relative; overflow: hidden; }
+  .match-notif-glow { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(201,169,110,0.2) 0%, transparent 70%); pointer-events: none; }
+  .match-avatars { display: flex; justify-content: center; align-items: center; gap: 0; margin-bottom: 20px; }
+  .match-av { width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; border: 3px solid #3a2c28; }
+  .match-av.a1 { background: linear-gradient(135deg, #F5E6D3, #E8C4A0); z-index: 2; }
+  .match-av.a2 { background: linear-gradient(135deg, #D3E8F5, #A0C4E8); margin-left: -14px; }
+  .match-heart { width: 28px; height: 28px; background: var(--terracotta); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 2px solid #3a2c28; z-index: 3; animation: heartbeat 1.5s infinite; }
+  @keyframes heartbeat { 0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.15)} }
+  .match-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--gold); font-weight: 400; margin-bottom: 8px; }
+  .match-desc { font-size: 13px; color: rgba(250,246,240,0.55); line-height: 1.6; margin-bottom: 24px; }
+  .match-pseudos { font-size: 15px; color: var(--cream); font-weight: 500; margin-bottom: 4px; }
+
+  .btn-match-action { width: 100%; padding: 16px; border-radius: 100px; background: var(--gold); color: var(--charcoal); border: none; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 10px; }
+  .btn-match-later { width: 100%; padding: 14px; border-radius: 100px; background: transparent; color: rgba(250,246,240,0.45); border: 1px solid rgba(250,246,240,0.1); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; }
+
+  /* ══════════════════════════════════
+     8. CGV
+  ══════════════════════════════════ */
+  .screen-cgv { background: var(--white); padding: 32px 24px 40px; }
+  .cgv-scroll-area { background: var(--cream); border-radius: 16px; padding: 20px; margin-bottom: 20px; max-height: 260px; overflow-y: auto; font-size: 12px; color: var(--muted); line-height: 1.8; }
+  .cgv-scroll-area h4 { font-family: 'Cormorant Garamond', serif; font-size: 15px; color: var(--charcoal); margin: 16px 0 6px; font-weight: 600; }
+  .cgv-scroll-area h4:first-child { margin-top: 0; }
+  .cgv-actions { display: flex; gap: 10px; }
+  .btn-cgv-accept { flex: 2; padding: 16px; border-radius: 100px; background: var(--terracotta); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; }
+  .btn-cgv-decline { flex: 1; padding: 16px; border-radius: 100px; background: var(--cream); color: var(--muted); border: 1.5px solid var(--sand); font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; }
+
+  /* ── TAB BAR ── */
+  .tab-bar { position: sticky; bottom: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); border-top: 1px solid var(--sand); display: flex; justify-content: space-around; padding: 10px 0 16px; }
+  .tab-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 0 16px; }
+  .tab-item svg { width: 22px; height: 22px; stroke: var(--muted); }
+  .tab-item.active svg { stroke: var(--terracotta); }
+  .tab-item span { font-size: 10px; color: var(--muted); }
+  .tab-item.active span { color: var(--terracotta); }
+
+  /* ── ANNOTATIONS ── */
+  .annotation { margin: 0 24px 8px; background: rgba(201,169,110,0.1); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 11px; color: #7a6030; line-height: 1.5; }
+  .annotation strong { font-weight: 600; color: #5a4020; }
+  .divider-section { height: 8px; background: var(--cream); border-top: 1px solid var(--sand); border-bottom: 1px solid var(--sand); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="app-nav">
+  <div class="nav-logo">Club <span>Élévia</span></div>
+  <div class="nav-icons">
+    <div class="nav-badge">
+      <svg fill="none" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/></svg>
+      <span class="badge-dot"></span>
+    </div>
+    <svg fill="none" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+  </div>
+</nav>
+
+<div class="screens">
+
+  <!-- ══ 1. SPLASH ══ -->
+  <div class="section-label">① Écran d'accueil</div>
+  <div class="annotation"><strong>Splash / Onboarding :</strong> Premier contact avec la marque. Identité premium, mémorable.</div>
+  <div class="screen-splash">
+    <div class="splash-grain"></div>
+    <div class="splash-ring">
+      <!-- PLACEHOLDER : remplacer par le logo Club Élévia -->
+      <div class="splash-ring-inner">CE</div>
+    </div>
+    <!-- PLACEHOLDER : tagline à valider avec Elise CAPEL -->
+    <h1 class="splash-title">Des rencontres<br><em>vraiment</em> authentiques</h1>
+    <p class="splash-tagline">Club Élévia · Monde entier</p>
+    <div class="splash-buttons">
+      <button class="btn-primary">Créer mon compte</button>
+      <button class="btn-ghost">J'ai déjà un compte</button>
+    </div>
+  </div>
+
+  <div class="divider-section"></div>
+
+  <!-- ══ 2. INSCRIPTION ══ -->
+  <div class="section-label">② Inscription — Création de compte</div>
+  <div class="annotation"><strong>Compte par contrat :</strong> Pseudo obligatoire (jamais de vrai nom public), engagement CGV dès l'étape 1.</div>
+  <div class="screen-signup">
+    <div class="step-indicator">
+      <div class="step-dot done"></div>
+      <div class="step-dot active"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+    </div>
+    <h2 class="screen-title">Mon profil</h2>
+    <p class="screen-subtitle">Étape 2 sur 4 · Informations de base</p>
+    <div class="form-group">
+      <label class="form-label">Mon pseudo</label>
+      <!-- PLACEHOLDER : exemple de pseudo -->
+      <input class="form-input" type="text" value="LunaLibre">
+      <span class="pseudo-available">✓ &nbsp;@LunaLibre est disponible</span>
+      <span class="pseudo-hint" style="display:block;margin-top:2px">Visible de tous · Votre vrai nom reste privé</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Je suis</label>
+      <div class="select-row">
+        <div class="select-btn selected">Une femme</div>
+        <div class="select-btn">Un homme</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <!-- PLACEHOLDER : liste des pays selon décision Elise -->
+      <label class="form-label">Pays de résidence</label>
+      <input class="form-input" type="text" value="France">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date de naissance</label>
+      <input class="form-input" type="text" value="12 / 03 / 1990">
+    </div>
+    <div class="cgv-box">
+      <div class="cgv-check">
+        <input type="checkbox" checked id="cgv1">
+        <!-- PLACEHOLDER : lien CGV Club Élévia à créer -->
+        <label for="cgv1">J'accepte les <a href="#">Conditions Générales d'Utilisation</a> et la <a href="#">Politique de confidentialité</a> de Club Élévia.</label>
+      </div>
+      <div class="cgv-check">
+        <input type="checkbox" id="cgv2">
+        <label for="cgv2">Je souhaite recevoir des recommandations personnalisées par e-mail (optionnel).</label>
+      </div>
+      <div class="cgv-decline">Je refuse et souhaite quitter →</div>
+    </div>
+    <button class="btn-primary" style="width:100%">Continuer →</button>
+  </div>
+
+  <div class="divider-section"></div>
+
+  <!-- ══ 3. VÉRIFICATION VIDÉO ══ -->
+  <div class="section-label">③ Authentification — Vérification vidéo</div>
+  <div class="annotation"><strong>Vidéo vérification :</strong> Étape anti-fraude obligatoire. Aucune photo de profil acceptée sans validation.</div>
+  <div class="screen-verif">
+    <h2 class="screen-title-light">Vérification<br>vidéo</h2>
+    <p class="screen-subtitle-light">Étape 3 sur 4 · Authentification du profil</p>
+    <div class="verif-camera" style="max-width:100%;margin:0 0 20px;">
+      <div class="camera-face">😊</div>
+      <div class="camera-overlay">
+        <div class="camera-corner tl"></div>
+        <div class="camera-corner tr"></div>
+        <div class="camera-corner bl"></div>
+        <div class="camera-corner br"></div>
+      </div>
+      <div class="verif-pulse"><div class="pulse-dot"></div><span>EN DIRECT</span></div>
+    </div>
+    <div class="verif-steps">
+      <div class="verif-step"><div class="verif-step-icon done">✅</div><div class="verif-step-text"><div class="verif-step-title">Caméra activée</div><div class="verif-step-sub">Connexion établie</div></div></div>
+      <div class="verif-step"><div class="verif-step-icon active">👁️</div><div class="verif-step-text"><div class="verif-step-title">Détection du visage</div><div class="verif-step-sub">Regardez droit devant vous…</div></div></div>
+      <div class="verif-step"><div class="verif-step-icon wait">🔄</div><div class="verif-step-text"><div class="verif-step-title">Geste de confirmation</div><div class="verif-step-sub">Souriez puis tournez la tête</div></div></div>
+      <div class="verif-step"><div class="verif-step-icon wait">🛡️</div><div class="verif-step-text"><div class="verif-step-title">Validation — résultat sous 2h</div><div class="verif-step-sub">Notification envoyée par l'équipe</div></div></div>
+    </div>
+    <div class="verif-shield">
+      <svg width="20" height="20" fill="none" stroke="var(--success)" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
+      <span>Votre vidéo n'est jamais stockée ni partagée. Elle sert uniquement à confirmer votre authenticité.</span>
+    </div>
+    <button class="btn-primary-dark">Lancer la vérification</button>
+  </div>
+
+  <div class="divider-section"></div>
+
+  <!-- ══ 4. MATCHING CONVERSATIONNEL ══ -->
+  <div class="section-label">④ Matching conversationnel</div>
+  <div class="annotation"><strong>Stratégie conversationnelle :</strong> Un assistant guide l'utilisateur par des questions naturelles pour nourrir l'algorithme de matching.</div>
+  <div class="screen-matching">
+    <h2 class="screen-title">Parlons de vous</h2>
+    <!-- PLACEHOLDER : questions à définir avec Elise selon les critères de matching retenus -->
+    <p class="screen-subtitle">Nos questions révèlent vos vraies affinités</p>
+    <div class="chat-bubble-wrapper">
+      <div class="chat-item"><div class="chat-avatar bot">CE</div><div class="chat-bubble bot">Bonjour ! Pour vous proposer les meilleures rencontres, j'ai quelques questions. Ça prend 4 minutes. Prête ?</div></div>
+      <div class="chat-item right"><div class="chat-avatar">✨</div><div class="chat-bubble user">Oui, allons-y !</div></div>
+      <div class="chat-item"><div class="chat-avatar bot">CE</div><div class="chat-bubble bot">Comment décririez-vous votre mode de vie idéal en week-end ?</div></div>
+    </div>
+    <div class="chat-choices">
+      <div class="chat-choice selected">Nature & aventure</div>
+      <div class="chat-choice">Sorties culturelles</div>
+      <div class="chat-choice">Cocooning maison</div>
+      <div class="chat-choice">Voyages spontanés</div>
+    </div>
+    <div style="height:20px"></div>
+    <div class="match-progress">
+      <div class="match-progress-label"><span>Affinités détectées</span><span class="match-score">82%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:82%"></div></div>
+      <!-- PLACEHOLDER : tags affinités à définir avec Elise -->
+      <div class="match-tags"><span class="match-tag">Voyages</span><span class="match-tag">Culture</span><span class="match-tag">Bien-être</span><span class="match-tag">Musique</span></div>
+    </div>
+    <div class="chat-input-bar">
+      <input type="text" placeholder="Répondre librement…">
+      <button class="chat-send"><svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
+  </div>
+
+  <div class="divider-section"></div>
+
+  <!-- ══ 5. DÉCOUVERTE PROFILS ══ -->
+  <div class="section-label">⑤ Découverte des profils</div>
+  <div class="annotation"><strong>Mise en relation :</strong> Score de compatibilité affiché. Badge "Vérifié" visible. Ouverte à toutes nationalités.</div>
+  <div class="screen-discover">
+    <h2 class="screen-title">Vos affinités</h2>
+    <p class="screen-subtitle">Profils compatibles · Ce soir</p>
+    <!-- PLACEHOLDER : filtres à valider selon les régions cibles -->
+    <div class="filter-bar">
+      <div class="filter-chip active">Tous</div>
+      <div class="filter-chip">Europe</div>
+      <div class="filter-chip">Afrique</div>
+      <div class="filter-chip">Amériques</div>
+      <div class="filter-chip">Asie</div>
+      <div class="filter-chip">Vérifiés</div>
+    </div>
+    <div class="profiles-grid">
+      <!-- PLACEHOLDER : profils exemples, remplacer par données réelles -->
+      <div class="profile-card"><div class="profile-card-img f1">👩‍🦱<div class="verified-badge yes">✓ Vérifié</div></div><div class="profile-card-info"><div class="profile-card-name">@StarWanderer</div><div class="profile-card-meta">34 ans · Dakar</div><div class="profile-card-compat"><div class="compat-bar"><div class="compat-fill" style="width:89%"></div></div><span class="compat-pct">89%</span></div></div></div>
+      <div class="profile-card"><div class="profile-card-img f2">👨‍🦰<div class="verified-badge yes">✓ Vérifié</div></div><div class="profile-card-info"><div class="profile-card-name">@BorealDream</div><div class="profile-card-meta">37 ans · Oslo</div><div class="profile-card-compat"><div class="compat-bar"><div class="compat-fill" style="width:76%"></div></div><span class="compat-pct">76%</span></div></div></div>
+      <div class="profile-card"><div class="profile-card-img f3">👩‍🦳<div class="verified-badge no">En attente</div></div><div class="profile-card-info"><div class="profile-card-name">@VioletteM</div><div class="profile-card-meta">29 ans · Montréal</div><div class="profile-card-compat"><div class="compat-bar"><div class="compat-fill" style="width:71%"></div></div><span class="compat-pct">71%</span></div></div></div>
+      <div class="profile-card"><div class="profile-card-img f4">👨‍🦱<div class="verified-badge yes">✓ Vérifié</div></div><div class="profile-card-info"><div class="profile-card-name">@MidnightSun</div><div class="profile-card-meta">41 ans · Tokyo</div><div class="profile-card-compat"><div class="compat-bar"><div class="compat-fill" style="width:68%"></div></div><span class="compat-pct">68%</span></div></div></div>
+    </div>
+  </div>
+
+  <div class="divider-section"></div>
+
+  <!-- ══ 6. DEMANDE EN RELATION ══ -->
+  <div class="section-label">⑥ Demande d'entrée en relation</div>
+  <div class="annotation"><strong>Mise en relation protégée :</strong> L'autre utilisateur accepte ou décline. Aucun contact sans consentement mutuel.</div>
+  <div class="screen-request">
+    <div class="profile-detail-header">
+      <div class="profile-detail-avatar">👩‍🦱</div>
+      <div class="profile-detail-info">
+        <div class="profile-detail-name">@StarWanderer</div>
+        <div class="profile-detail-pseudo">34 ans · Dakar, Sénégal</div>
+        <div class="profile-detail-verified">Profil vérifié</div>
+      </div>
+    </div>
+    <div class="compat-card">
+      <div class="compat-card-title">Votre compatibilité</div>
+      <div class="compat-ring">
+        <div class="compat-circle"><div class="compat-circle-inner">89%</div></div>
+        <div class="compat-details">
+          <!-- PLACEHOLDER : critères de compatibilité à définir avec Elise -->
+          <div class="compat-row"><span class="compat-row-label">Valeurs</span><div class="compat-row-bar"><div class="compat-row-fill" style="width:95%"></div></div></div>
+          <div class="compat-row"><span class="compat-row-label">Style de vie</span><div class="compat-row-bar"><div class="compat-row-fill" style="width:85%"></div></div></div>
+          <div class="compat-row"><span class="compat-row-label">Projets de vie</span><div class="compat-row-bar"><div class="compat-row-fill" style="width:80%"></div></div></div>
+          <div class="compat-row"><span class="compat-row-label">Humour</span><div class="compat-row-bar"><div class="compat-row-fill" style="width:90%"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="request-message-box">
+      <label>Votre message d'introduction</label>
+      <textarea>Bonjour ! Vos réponses sur les voyages m'ont vraiment parlé. J'adorerais échanger avec vous.</textarea>
+      <div class="request-char">92 / 280 caractères</div>
+    </div>
+    <div class="request-btns">
+      <button class="btn-decline">Passer</button>
+      <button class="btn-accept">Envoyer la demande</button>
+    </div>
+  </div>
+
+  <div class="divider-section"></div>
+
+  <!-- ══ 7. NOTIFICATION MATCH ══ -->
+  <div class="section-label">⑦ Connexion établie</div>
+  <div class="annotation"><strong>Consentement mutuel :</strong> La conversation ne s'ouvre que si les deux parties acceptent.</div>
+  <div class="screen-notif">
+    <h2 class="screen-title-light" style="margin-bottom:24px">Notification</h2>
+    <div class="match-notif-card">
+      <div class="match-notif-glow"></div>
+      <div class="match-avatars" style="position:relative;height:80px;width:150px;margin:0 auto 20px;">
+        <div class="match-av a1" style="position:absolute;left:0;">👩‍🦱</div>
+        <div class="match-av a2" style="position:absolute;right:0;">👩</div>
+        <div class="match-heart">+</div>
+      </div>
+      <div class="match-title">Connexion établie !</div>
+      <div class="match-pseudos">@StarWanderer & @LunaLibre</div>
+      <div class="match-desc">Vous avez tous les deux accepté la mise en relation. La conversation peut commencer dans le respect et la bienveillance.</div>
+      <button class="btn-match-action">Ouvrir la conversation</button>
+      <button class="btn-match-later">Plus tard</button>
+    </div>
+  </div>
+
+  <div class="divider-section"></div>
+
+  <!-- ══ 8. CGV ══ -->
+  <div class="section-label">⑧ CGV — Conditions Générales</div>
+  <div class="annotation"><strong>CGV lisibles & acceptation éclairée :</strong> Possibilité de décliner à tout moment.</div>
+  <div class="screen-cgv">
+    <h2 class="screen-title">Conditions d'utilisation</h2>
+    <!-- PLACEHOLDER : date de mise à jour à actualiser -->
+    <p class="screen-subtitle">Club Élévia · Version 1.0</p>
+    <div class="cgv-scroll-area">
+      <h4>1. Objet du service</h4>
+      Club Élévia est une plateforme de rencontres et de mise en relation ouverte à toutes nationalités. L'accès implique l'acceptation pleine des présentes conditions.
+      <h4>2. Authentification et pseudonymat</h4>
+      Chaque utilisateur s'inscrit sous un pseudo unique. Votre identité réelle n'est jamais affichée ni communiquée sans votre consentement exprès.
+      <h4>3. Mise en relation</h4>
+      Aucun contact direct n'est possible sans acceptation mutuelle des deux parties.
+      <!-- PLACEHOLDER : articles CGV complets à rédiger avec Elise -->
+      <h4>4. Données personnelles</h4>
+      Vos données sont traitées conformément au RGPD. La vidéo de vérification est détruite dans les 24h suivant la validation.
+      <h4>5. Droit de refus et résiliation</h4>
+      Vous pouvez refuser les présentes conditions à tout moment. Votre compte sera désactivé et vos données supprimées sous 30 jours.
+      <h4>6. Comportement attendu</h4>
+      Tout comportement irrespectueux ou usurpation d'identité entraîne la suspension immédiate du compte.
+    </div>
+    <div class="cgv-actions">
+      <button class="btn-cgv-decline">Je refuse</button>
+      <button class="btn-cgv-accept">J'accepte et je continue</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- TAB BAR -->
+<nav class="tab-bar">
+  <div class="tab-item">
+    <svg fill="none" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+    <span>Accueil</span>
+  </div>
+  <div class="tab-item active">
+    <svg fill="none" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>
+    <span>Affinités</span>
+  </div>
+  <div class="tab-item">
+    <svg fill="none" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"/></svg>
+    <span>Messages</span>
+  </div>
+  <div class="tab-item">
+    <svg fill="none" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+    <span>Profil</span>
+  </div>
+</nav>
+
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'argent suit ceux qui créent de la valeur — Mac Arthur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Design system Attractor */
+    --sable: #F2E8D2;
+    --sable-clair: #FAF4E6;
+    --charbon: #1F1B17;
+    --charbon-soft: #4A433C;
+    --orange: #E87F3E;
+    --orange-soft: #F4B27E;
+    --vert: #4F6B4B;
+    --vert-soft: #8FA38B;
+    --line: rgba(31, 27, 23, 0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--sable);
+    color: var(--charbon);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .deck { position: relative; width: 100vw; height: 100vh; }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8vh 10vw;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease;
+  }
+  .slide.active { opacity: 1; visibility: visible; }
+
+  /* Frise narrative — bande en bas de chaque slide */
+  .frise {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    display: flex;
+    z-index: 80;
+  }
+  .frise .seg { flex: 1; }
+  .frise .seg.orange { background: var(--orange); }
+  .frise .seg.vert { background: var(--vert); }
+  .frise .seg.sable { background: var(--sable-clair); }
+  .frise .seg.charbon { background: var(--charbon); }
+
+  /* Typographie */
+  h1, h2, h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--charbon);
+  }
+
+  .hero-title {
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    font-weight: 500;
+    max-width: 20ch;
+    text-align: center;
+  }
+
+  .slide-title {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    margin-bottom: 2rem;
+    max-width: 22ch;
+  }
+
+  .kicker {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--orange);
+    margin-bottom: 2.5rem;
+  }
+  .kicker.vert { color: var(--vert); }
+  .kicker.muted { color: var(--charbon-soft); }
+
+  .lead {
+    font-size: clamp(1.1rem, 1.7vw, 1.5rem);
+    line-height: 1.5;
+    color: var(--charbon-soft);
+    max-width: 48ch;
+  }
+
+  .big-stmt {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.4rem, 5vw, 4.5rem);
+    font-weight: 500;
+    line-height: 1.1;
+    text-align: center;
+    max-width: 22ch;
+  }
+  .big-stmt .accent { color: var(--orange); font-style: italic; }
+  .big-stmt .vert { color: var(--vert); font-style: italic; }
+
+  .quote {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.3;
+    max-width: 28ch;
+    text-align: center;
+  }
+
+  /* Layouts */
+  .layout-left { align-items: flex-start; text-align: left; }
+  .layout-center { text-align: center; }
+
+  /* Cover */
+  .cover { text-align: center; }
+  .cover .rule {
+    width: 80px;
+    height: 2px;
+    background: var(--orange);
+    margin: 2.5rem auto;
+  }
+  .cover .meta {
+    margin-top: 3rem;
+    font-size: 1rem;
+    color: var(--charbon-soft);
+    letter-spacing: 0.05em;
+  }
+  .cover .meta strong {
+    color: var(--charbon);
+    font-weight: 600;
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem;
+  }
+  .cover .lead-sub {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--charbon-soft);
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    max-width: 40ch;
+    margin: 0 auto;
+  }
+
+  /* Big number / index */
+  .index-card {
+    display: flex;
+    align-items: baseline;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .index-card .n {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 500;
+    color: var(--orange);
+    line-height: 1;
+  }
+  .index-card .label {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+    font-weight: 500;
+  }
+
+  /* Liste 3 modèles */
+  .modeles {
+    list-style: none;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+    max-width: 50ch;
+  }
+  .modeles li {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .modeles li:last-child { border-bottom: none; }
+  .modeles .n {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    color: var(--orange);
+    font-weight: 500;
+    min-width: 2ch;
+  }
+  .modeles .txt {
+    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    line-height: 1.5;
+    color: var(--charbon);
+  }
+
+  /* GGF — trois colonnes */
+  .ggf-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2.5rem;
+    width: 100%;
+    max-width: 1100px;
+    margin-top: 3rem;
+  }
+  .ggf-card {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    border-top: 2px solid var(--orange);
+  }
+  .ggf-card:nth-child(2) { border-top-color: var(--vert); }
+  .ggf-card:nth-child(3) { border-top-color: var(--charbon); }
+
+  .ggf-card .num {
+    font-family: 'Fraunces', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    color: var(--charbon-soft);
+    margin-bottom: 1rem;
+  }
+  .ggf-card .verbe {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-weight: 500;
+    margin-bottom: 0.8rem;
+  }
+  .ggf-card .desc {
+    font-size: 1rem;
+    color: var(--charbon-soft);
+    line-height: 1.4;
+  }
+
+  /* Definition card */
+  .def-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 60ch;
+    padding: 3rem;
+    background: var(--sable-clair);
+    border-left: 4px solid var(--orange);
+  }
+  .def-card.vert { border-left-color: var(--vert); }
+  .def-card .terme {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 500;
+  }
+  .def-card .def {
+    font-size: 1.2rem;
+    color: var(--charbon-soft);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* Note latérale */
+  .side-note {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--vert);
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    border-left: 3px solid var(--vert);
+    padding-left: 1.2rem;
+    margin-top: 2.5rem;
+    max-width: 42ch;
+  }
+
+  /* Navigation */
+  .nav {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    font-size: 0.85rem;
+    color: var(--charbon-soft);
+    z-index: 100;
+  }
+  .nav button {
+    background: var(--sable-clair);
+    border: 1px solid var(--line);
+    color: var(--charbon);
+    cursor: pointer;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 1.1rem;
+  }
+  .nav button:hover {
+    background: var(--orange);
+    color: var(--sable-clair);
+    border-color: var(--orange);
+  }
+  .counter {
+    font-family: 'Fraunces', serif;
+    letter-spacing: 0.05em;
+  }
+
+  .progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--orange);
+    transition: width 0.3s ease;
+    z-index: 100;
+  }
+
+  .click-zone {
+    position: fixed;
+    top: 0;
+    height: calc(100% - 60px);
+    width: 30%;
+    z-index: 50;
+    cursor: pointer;
+  }
+  .click-zone.left { left: 0; }
+  .click-zone.right { right: 0; }
+
+  .brand-mark {
+    position: fixed;
+    top: 2rem;
+    left: 2.5rem;
+    font-family: 'Fraunces', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    color: var(--charbon-soft);
+    text-transform: uppercase;
+    z-index: 90;
+  }
+  .brand-mark .dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--orange);
+    border-radius: 50%;
+    margin-right: 0.6rem;
+    vertical-align: middle;
+  }
+
+  /* Print */
+  @media print {
+    .slide { position: relative; opacity: 1; visibility: visible; page-break-after: always; height: 100vh; }
+    .nav, .click-zone { display: none; }
+  }
+
+  @media (max-width: 768px) {
+    .ggf-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="brand-mark"><span class="dot"></span>Mr Attractor</div>
+<div class="progress" id="progress"></div>
+
+<div class="frise">
+  <div class="seg orange"></div>
+  <div class="seg vert"></div>
+  <div class="seg sable"></div>
+  <div class="seg charbon"></div>
+</div>
+
+<div class="click-zone left" onclick="prev()"></div>
+<div class="click-zone right" onclick="next()"></div>
+
+<div class="deck" id="deck">
+
+  <!-- 1 — COVER -->
+  <section class="slide active cover">
+    <div class="kicker">Masterclass HCDAF &middot; Samedi 13 juin 2026 &middot; Paris</div>
+    <h1 class="hero-title">L'argent suit ceux qui créent de la valeur.</h1>
+    <div class="rule"></div>
+    <p class="lead-sub">Éducation financière et investissement — transmettre aujourd'hui, pour un avenir meilleur.</p>
+    <div class="meta">
+      <strong>Mac Arthur Kouassi</strong><br>
+      <span>Coach en préparation mentale &middot; Business Developer &middot; Fondateur de Mr Attractor</span>
+    </div>
+  </section>
+
+  <!-- 1bis — À qui je parle aujourd'hui -->
+  <section class="slide layout-center">
+    <div class="kicker">Aujourd'hui, je parle à deux générations.</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; max-width: 1100px; width: 100%; margin-top: 2rem; align-items: stretch;">
+      <div class="def-card" style="border-left-color: var(--orange);">
+        <div class="terme" style="font-size: clamp(1.4rem, 2.2vw, 1.8rem);">Aux jeunes.</div>
+        <div class="def">Ce que vous savez vaut déjà quelque chose. Pas besoin d'attendre d'avoir de l'argent pour commencer à en créer.</div>
+      </div>
+      <div class="def-card vert">
+        <div class="terme" style="font-size: clamp(1.4rem, 2.2vw, 1.8rem);">Aux parents.</div>
+        <div class="def">L'argent qu'on transmet peut se perdre. Une manière de penser, une discipline, des compétences — ça ne se perd jamais.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 — INTRO : Investisseur -->
+  <section class="slide layout-left">
+    <div class="kicker">Avant de commencer — deux notions</div>
+    <div class="def-card">
+      <div class="terme">L'investisseur.</div>
+      <div class="def">Celui qui place du capital pour qu'il rapporte. Il fait travailler de l'argent, pas son temps.</div>
+    </div>
+  </section>
+
+  <!-- 3 — INTRO : Entrepreneur -->
+  <section class="slide layout-left">
+    <div class="kicker vert">Avant de commencer — deux notions</div>
+    <div class="def-card vert">
+      <div class="terme">L'entrepreneur.</div>
+      <div class="def">Celui qui crée de la valeur en montant une activité. Il transforme une idée et des compétences en un produit ou un service qu'il vend.</div>
+    </div>
+  </section>
+
+  <!-- 4 — Transition : mes erreurs -->
+  <section class="slide layout-center">
+    <div class="kicker muted">Transition</div>
+    <h2 class="quote">"Ce sont mes erreurs<br>qui m'ont appris<br>ce que je veux<br>partager aujourd'hui."</h2>
+  </section>
+
+  <!-- 5 — Phrase clé -->
+  <section class="slide layout-center">
+    <div class="kicker">L'insight central</div>
+    <h2 class="quote" style="max-width: 36ch;">"Je ne suis pas devenu entrepreneur parce que j'avais beaucoup d'argent.<br><br>Je suis devenu entrepreneur parce que j'ai compris que <span style="color: var(--orange); font-style: normal; font-weight: 500;">les compétences peuvent devenir des actifs</span>."</h2>
+  </section>
+
+  <!-- 6 — Slide 1 : bonne nouvelle, argent abondant -->
+  <section class="slide layout-center">
+    <div class="kicker">Une bonne nouvelle, pour commencer</div>
+    <h2 class="big-stmt">L'argent est disponible<br>en <span class="accent">abondance</span>.</h2>
+    <p class="lead" style="text-align: center; margin: 3rem auto 0;">La preuve : chaque jour, le monde produit de nouveaux billets de banque.</p>
+  </section>
+
+  <!-- 7 — Slide 2 : MAIS valeur -->
+  <section class="slide layout-center">
+    <div class="kicker vert">Mais</div>
+    <h2 class="big-stmt">L'argent ne suit que ceux qui<br><span class="vert">créent de la valeur</span>.</h2>
+  </section>
+
+  <!-- 8 — Slide 3 : comprendre sa valeur -->
+  <section class="slide layout-left">
+    <div class="kicker">Ce qu'il faut comprendre</div>
+    <h2 class="slide-title">Connaître sa valeur,<br>en faire un canal.</h2>
+    <p class="lead">Si tu arrives à identifier ta valeur, et à en faire un canal pour attirer l'argent — tu commences à en gagner.</p>
+    <div class="side-note">Quel que soit ton âge. Quel que soit ton point de départ.</div>
+  </section>
+
+  <!-- 9 — Slide 4 : 3 modèles -->
+  <section class="slide layout-left">
+    <div class="kicker">Trois modèles économiques</div>
+    <h2 class="slide-title">Trois façons de créer<br>de la valeur.</h2>
+    <ol class="modeles">
+      <li>
+        <span class="n">01</span>
+        <span class="txt"><strong>Transmettre des connaissances</strong> sous forme de produit.<br><span style="color: var(--charbon-soft); font-size: 0.95rem;">Formations, livres, conseil, accompagnement.</span></span>
+      </li>
+      <li>
+        <span class="n">02</span>
+        <span class="txt"><strong>Acheter et revendre</strong> pour répondre à un besoin constaté sur le marché.<br><span style="color: var(--charbon-soft); font-size: 0.95rem;">Commerce, distribution, importation.</span></span>
+      </li>
+      <li>
+        <span class="n">03</span>
+        <span class="txt"><strong>Créer, concevoir et commercialiser</strong> des produits.<br><span style="color: var(--charbon-soft); font-size: 0.95rem;">Production, fabrication, technologie.</span></span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- 10 — Slide 5 : créateur de richesse -->
+  <section class="slide layout-center">
+    <h2 class="big-stmt">Une fois cela compris et intégré,<br>on devient <span class="accent">créateur de richesse</span>.</h2>
+  </section>
+
+  <!-- 11 — Slide 6 : Gagner / Garder / Fructifier -->
+  <section class="slide layout-center">
+    <div class="kicker">La discipline du créateur de richesse</div>
+    <h2 class="slide-title" style="text-align: center;">Gagner. Garder. Fructifier.</h2>
+    <div class="ggf-grid">
+      <div class="ggf-card">
+        <div class="num">01</div>
+        <div class="verbe">Gagner</div>
+        <div class="desc">Créer de la valeur. Se faire payer pour cette valeur.</div>
+      </div>
+      <div class="ggf-card">
+        <div class="num">02</div>
+        <div class="verbe">Garder</div>
+        <div class="desc">Résister à la consommation impulsive. Vivre en dessous de ses moyens.</div>
+      </div>
+      <div class="ggf-card">
+        <div class="num">03</div>
+        <div class="verbe">Fructifier</div>
+        <div class="desc">Faire travailler ce qu'on a gardé. L'argent qui dort perd de la valeur.</div>
+      </div>
+    </div>
+    <div class="side-note" style="margin-top: 3rem; text-align: left;">Mais toujours commencer par tester son idée à petite échelle, puis structurer.</div>
+  </section>
+
+  <!-- 12 — Conclusion -->
+  <section class="slide layout-center">
+    <div class="kicker">Pour conclure</div>
+    <h2 class="big-stmt">L'éducation financière, ce n'est pas apprendre à <span class="accent">devenir riche</span>.</h2>
+    <p class="lead" style="text-align: center; margin: 3rem auto 0; font-family: 'Fraunces', serif; font-style: italic; font-size: clamp(1.3rem, 2vw, 1.6rem); max-width: 36ch; color: var(--charbon);">C'est apprendre à prendre de bonnes décisions avec l'argent, tout au long de sa vie.</p>
+  </section>
+
+  <!-- 13 — Merci / Q&A -->
+  <section class="slide cover">
+    <div class="kicker">Merci.</div>
+    <h1 class="hero-title" style="font-size: clamp(2.5rem, 5vw, 4rem);">Vos questions.</h1>
+    <div class="rule"></div>
+    <p class="lead-sub" style="font-style: normal; letter-spacing: 0.15em; text-transform: uppercase; font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--orange);">Éduquer &middot; Investir &middot; Transmettre &middot; Bâtir</p>
+    <div class="meta">
+      <strong>Mac Arthur Kouassi</strong><br>
+      <span>Mr Attractor &middot; Coach en préparation mentale &middot; Business Developer</span>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button onclick="prev()" aria-label="Précédent">‹</button>
+  <span class="counter"><span id="current">1</span> / <span id="total">13</span></span>
+  <button onclick="next()" aria-label="Suivant">›</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+  document.getElementById('total').textContent = total;
+
+  function show(i) {
+    slides[current].classList.remove('active');
+    current = (i + total) % total;
+    slides[current].classList.add('active');
+    document.getElementById('current').textContent = current + 1;
+    document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+  }
+  function next() { show(current + 1); }
+  function prev() { show(current - 1); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { next(); e.preventDefault(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { prev(); e.preventDefault(); }
+    if (e.key === 'Home') show(0);
+    if (e.key === 'End') show(total - 1);
+    if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+
+  show(0);
+</script>
+
+</body>
+</html>

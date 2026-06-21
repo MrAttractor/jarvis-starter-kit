@@ -7,6 +7,30 @@
 
 ---
 
+## 2026-06-21 (session 67 — GetWinWorld refonte + stratégie formules multiples)
+
+### GetWinWorld — refonte visuelle complète (index.html)
+- Palette "Atelier Italien" : Vert #1B3A2D + Rouge #C0392B, Cormorant Garamond (titres) + Space Grotesk (corps)
+- Splash redesignée : hero vert foncé, 3 services numérotés I/II/III en rouge, comparaison avant/après, prix 150€ + 35€/mois
+- App : 3 onglets Vitrine (Vestimentaire / Concierge Événements / Vidéos), logique 0 stock throughout ("Sur commande · Délai X-X jours")
+- Section Concierge avec 3 offres (Événements privés / Accès VIP / Déplacements)
+- Section Vidéos avec thumbnails et bouton play
+- Déployé sur demo.agenceattractor.com/getwinworld
+
+### GetWinWorld — closing.html : 3 formules tarifaires
+- Formule I Essentielle : 150€ setup + 35€/mois — 1 mise à jour catalogue/mois incluse, acompte 75€
+- Formule II Active : 350€ setup + 65€/mois — back-office autonome (MAJ illimitées), enquêtes satisfaction, notifications auto, acompte 175€ — mise en avant "Recommandée"
+- Formule III Premium : 600€ setup + 100€/mois — tout le II + vidéos hébergées + plateforme VIP + tableau de bord Charles, acompte 300€
+- Checklist inclus/exclus par formule, note explicite sur quota mensuel Formule I
+
+### Décision commerciale — formules multiples dans tous les devis
+- Cas Charles = cas d'école : prospect via recommandation, a négocié de 350€ à 150€ sur un seul tarif présenté
+- Nouvelle règle : tout devis présente désormais 2 ou 3 formules (Essentielle / Active / Premium ou équivalent)
+- Le client choisit son niveau d'entrée, on ne descend plus sur le même périmètre
+- À uniformiser sur tous les templates commerciaux existants et futurs
+
+---
+
 ## 2026-06-19 (session 66 — refonte offre Latiss + NDA allégé)
 
 ### Beynaud — offre.html refondée + NDA simplifié

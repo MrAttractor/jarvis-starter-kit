@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Contrat de prestation — Club Élévia × Mr Attractor</title>
+<style>
+:root{
+  --brand:#0E1A2B;
+  --accent:#C9A84C;
+  --ink:#1A1F2B;
+  --muted:#6B7280;
+  --line:#E5E7EB;
+  --bg-soft:#F7F5EF;
+  --red-bg:#FFF5F5;
+  --red:#B91C1C;
+  --green-bg:#E8F5E9;
+  --green:#1B5E20;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:#f0f2f5;padding:24px;line-height:1.6}
+.page{width:210mm;margin:0 auto 24px auto;background:#fff;padding:16mm 16mm;box-shadow:0 6px 30px rgba(0,0,0,.12)}
+
+/* En-tête */
+.head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--accent);padding-bottom:16px;margin-bottom:24px}
+.brand h1{color:var(--brand);font-size:22px;letter-spacing:.02em}
+.brand .tag{color:var(--muted);font-size:12px;margin-top:2px}
+.docmeta{text-align:right}
+.docmeta .t{color:var(--accent);font-weight:700;font-size:16px;letter-spacing:.06em;text-transform:uppercase}
+.docmeta .ref{color:var(--brand);font-weight:700;font-size:13px;margin-top:4px}
+.docmeta .date{color:var(--muted);font-size:12px;margin-top:2px}
+
+/* Parties */
+h2{color:var(--brand);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:22px 0 8px 0;padding-bottom:5px;border-bottom:1px solid var(--line)}
+.parties{display:flex;gap:16px;margin-bottom:4px}
+.partie{flex:1;border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:12.5px}
+.partie .label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.partie strong{color:var(--brand);display:block;font-size:13px;margin-bottom:2px}
+
+/* Articles */
+.article{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:7px 0}
+.article .num{display:inline-block;background:var(--brand);color:#fff;font-size:10px;font-weight:700;letter-spacing:.05em;padding:3px 9px;border-radius:4px;margin-bottom:10px;text-transform:uppercase}
+p{font-size:12.5px;margin-bottom:7px;line-height:1.6}
+p:last-child{margin-bottom:0}
+ul{margin:6px 0 8px 18px}
+ul li{font-size:12.5px;margin-bottom:4px;line-height:1.5}
+.sub{margin:10px 0 4px;font-size:12px;font-weight:700;color:var(--brand)}
+
+/* Encadrés spéciaux */
+.box-green{background:var(--green-bg);border-left:3px solid #4CAF50;padding:10px 14px;border-radius:0 6px 6px 0;font-size:12px;margin:8px 0}
+.box-red{background:var(--red-bg);border-left:3px solid var(--red);padding:10px 14px;border-radius:0 6px 6px 0;font-size:12px;margin:8px 0}
+.box-amber{background:#FFFDF5;border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 6px 6px 0;font-size:12px;margin:8px 0}
+.box-green strong,.box-red strong,.box-amber strong{display:block;margin-bottom:3px;font-size:12.5px}
+
+/* Tableau récap paiement */
+.pay-table{width:100%;border-collapse:collapse;margin:8px 0;font-size:12px}
+.pay-table th{background:var(--brand);color:var(--accent);padding:8px 12px;text-align:left;font-size:10px;letter-spacing:.04em;text-transform:uppercase}
+.pay-table td{padding:8px 12px;border-bottom:1px solid var(--line)}
+.pay-table tr:last-child td{border-bottom:none}
+.pay-table tr:nth-child(even) td{background:#FAFAFA}
+.pay-table .amount{text-align:right;font-weight:700;color:var(--brand)}
+.pay-table .total-row td{background:var(--brand);color:#fff;font-weight:700}
+.pay-table .total-row .amount{color:var(--accent)}
+
+/* Signatures */
+.signatures{display:flex;gap:20px;margin-top:8px}
+.sig{flex:1;border:1px solid var(--line);border-radius:8px;padding:16px}
+.sig .sig-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.sig .sig-name{color:var(--brand);font-weight:700;font-size:13px}
+.sig .sig-role{color:var(--muted);font-size:12px;margin-top:2px}
+.sig .sig-space{height:48px;border-bottom:1px dotted var(--line);margin:14px 0 8px}
+.sig .sig-date{font-size:12px;color:var(--muted)}
+.sig .sig-mention{font-size:10.5px;color:var(--accent);margin-bottom:6px;font-style:italic}
+
+/* Pied de page */
+.foot{margin-top:20px;border-top:1px solid var(--line);padding-top:10px;font-size:10px;color:var(--muted);text-align:center;line-height:1.7}
+
+@media print{
+  body{background:#fff;padding:0}
+  .page{box-shadow:none;margin:0;width:100%;padding:10mm 12mm}
+  .article{page-break-inside:avoid}
+  h2{page-break-after:avoid}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- EN-TÊTE -->
+  <div class="head">
+    <div class="brand">
+      <h1>Mr Attractor</h1>
+      <div class="tag">Conception d'applications métier &amp; systèmes intelligents</div>
+    </div>
+    <div class="docmeta">
+      <div class="t">Contrat de prestation de développement</div>
+      <div class="ref">Réf. CONTRAT-ATR-2026-0005</div>
+      <div class="date">Émis le 13 juin 2026</div>
+    </div>
+  </div>
+
+  <!-- PARTIES -->
+  <h2>Entre les soussignés</h2>
+  <div class="parties">
+    <div class="partie">
+      <div class="label">Le Prestataire</div>
+      <strong>Mac Arthur KOUASSI</strong>
+      Exerçant sous la marque Mr Attractor<br/>
+      Auto-entrepreneur — SIRET 98377125400015<br/>
+      Paris, France<br/>
+      myattractor1@gmail.com — +33 7 53 90 23 23
+    </div>
+    <div class="partie">
+      <div class="label">La Cliente</div>
+      <strong>Elise CAPEL</strong>
+      Porteuse et propriétaire exclusive du projet Club privé Élévia<br/>
+      Elisepelagie@outlook.be<br/><br/>
+      Ci-après dénommée "la Cliente"
+    </div>
+  </div>
+
+  <p style="font-size:12px;color:var(--muted);margin-top:8px">Il a été convenu et arrêté ce qui suit :</p>
+
+  <!-- ART 1 -->
+  <h2>Clauses du contrat</h2>
+
+  <div class="article">
+    <span class="num">Art. 1 — Objet du contrat</span>
+    <p>Le présent contrat a pour objet de définir les conditions dans lesquelles Mr Attractor réalisera pour la Cliente la conception et le développement de l'application <strong>Club privé Élévia</strong>, plateforme de mise en relation ouverte à toutes nationalités, intégrant une vérification d'identité, un système de matching par intelligence artificielle et une infrastructure conforme au RGPD.</p>
+    <p>Le présent contrat est conclu en référence au devis <strong>ATR-2026-0005</strong> du 13 juin 2026, accepté par les deux parties, et complète l'accord de confidentialité <strong>NDA V2</strong> signé entre les mêmes parties.</p>
+  </div>
+
+  <!-- ART 2 -->
+  <div class="article">
+    <span class="num">Art. 2 — Documents contractuels</span>
+    <p>Les documents suivants forment l'ensemble contractuel liant les parties, par ordre de priorité décroissante en cas de contradiction :</p>
+    <ul>
+      <li>Le présent contrat de prestation</li>
+      <li>Le devis ATR-2026-0005 du 13 juin 2026</li>
+      <li>L'accord de confidentialité NDA V2 du 13 juin 2026</li>
+      <li>Le cahier des charges, une fois validé par les deux parties</li>
+    </ul>
+  </div>
+
+  <!-- ART 3 -->
+  <div class="article">
+    <span class="num">Art. 3 — Périmètre des prestations</span>
+    <div class="box-green">
+      <strong>Prestations incluses dans ce contrat</strong>
+      Développement des 4 phases définies au devis ATR-2026-0005 (Identité, Confiance, Rencontre, Communauté) et Plan de continuité mensuel tel que défini à l'Article 11.
+    </div>
+    <div class="box-red">
+      <strong>Hors périmètre — non inclus dans ce contrat</strong>
+      Conseil en stratégie commerciale, accompagnement business, création de contenus éditoriaux, conception graphique (logo, charte visuelle, supports de communication), référencement naturel (SEO), campagnes publicitaires, formation des équipes de la Cliente.
+    </div>
+    <div class="box-amber">
+      <strong>Prestations complémentaires</strong>
+      Toute demande hors périmètre pourra faire l'objet d'un devis séparé auprès de Mr Attractor ou être confiée à un prestataire tiers au choix de la Cliente. Aucune prestation hors périmètre ne sera exécutée sans accord écrit préalable entre les parties.
+    </div>
+  </div>
+
+  <!-- ART 4 -->
+  <div class="article">
+    <span class="num">Art. 4 — Description des prestations</span>
+    <p>Les prestations sont organisées en 4 phases progressives et indépendantes, détaillées dans le devis ATR-2026-0005 :</p>
+    <ul>
+      <li><strong>Phase 1 — Identité (800 €) :</strong> Architecture technique, authentification, infrastructure RGPD, design system.</li>
+      <li><strong>Phase 2 — Confiance (700 €) :</strong> Vérification d'identité, modération des profils, gestion sécurisée des données de vérification.</li>
+      <li><strong>Phase 3 — Rencontre (1 350 €) :</strong> Matching par intelligence artificielle, interface de découverte, mise en relation, messagerie initiale.</li>
+      <li><strong>Phase 4 — Communauté (650 €) :</strong> Messagerie complète, back-office de modération, tableau de bord propriétaire.</li>
+    </ul>
+    <p>Chaque phase est distincte et fait l'objet d'une livraison, d'une validation et d'un règlement séparés. La phase suivante ne démarre qu'après validation et règlement complet de la phase en cours.</p>
+  </div>
+
+  <!-- ART 5 -->
+  <div class="article">
+    <span class="num">Art. 5 — Obligations du Prestataire</span>
+    <p>Mr Attractor s'engage à :</p>
+    <ul>
+      <li>Réaliser les prestations avec soin, diligence et compétence professionnelle ;</li>
+      <li>Informer la Cliente de tout blocage technique ou dépassement de délai dès qu'il en a connaissance ;</li>
+      <li>Livrer des livrables fonctionnels, testés et documentés à chaque fin de phase ;</li>
+      <li>Respecter les exigences de confidentialité définies dans le NDA V2 ;</li>
+      <li>Ne pas sous-traiter tout ou partie des prestations sans accord écrit préalable de la Cliente.</li>
+    </ul>
+    <p>Mr Attractor est soumis à une <strong>obligation de moyens</strong> et non de résultat commercial. Il s'engage sur la qualité technique des livrables, non sur les performances commerciales de l'application.</p>
+  </div>
+
+  <!-- ART 6 -->
+  <div class="article">
+    <span class="num">Art. 6 — Obligations de la Cliente</span>
+    <p>La Cliente s'engage à :</p>
+    <ul>
+      <li>Fournir dans les délais convenus toutes les informations, contenus, accès et validations nécessaires à l'avancement du projet ;</li>
+      <li>Désigner un interlocuteur unique disponible pour les échanges techniques et fonctionnels ;</li>
+      <li>Régler les versements selon le calendrier défini à l'Article 8 ;</li>
+      <li>Formuler ses retours et validations dans un délai de <strong>7 jours ouvrés</strong> après réception de chaque livraison ;</li>
+      <li>Ne pas divulguer les éléments techniques produits dans le cadre du projet à des tiers sans accord préalable de Mr Attractor, conformément au NDA V2.</li>
+    </ul>
+    <p>Tout retard imputable à la Cliente (validation tardive, informations manquantes, retard de paiement) décale le planning sans engager la responsabilité du Prestataire.</p>
+  </div>
+
+  <!-- ART 7 -->
+  <div class="article">
+    <span class="num">Art. 7 — Délais et planning</span>
+    <p>Un planning détaillé par phase sera co-établi et validé par les deux parties dans les <strong>15 jours suivant la signature</strong> du présent contrat, après réception du cahier des charges complet.</p>
+    <p>Les délais sont indicatifs et peuvent être révisés d'un commun accord. Ils sont suspendus en cas de retard de la Cliente (fourniture d'informations, validation, paiement) ou de force majeure.</p>
+    <p>Toute modification de périmètre demandée en cours de phase fait l'objet d'un avenant écrit précisant l'impact sur les délais et le prix avant exécution.</p>
+  </div>
+
+  <!-- ART 8 -->
+  <div class="article">
+    <span class="num">Art. 8 — Conditions financières et modalités de paiement</span>
+    <p>Les prestations sont facturées selon le devis ATR-2026-0005, selon le calendrier suivant :</p>
+    <table class="pay-table">
+      <thead>
+        <tr><th>Échéance</th><th>Description</th><th class="amount">Montant</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Versé</td><td>Acompte reçu (REÇ-2026-001 — Wero — 10/06/2026)</td><td class="amount" style="color:#2E7D32">200 € ✓</td></tr>
+        <tr><td>À la signature</td><td>Solde acompte + démarrage Phase 1 (400 € − 250 € acompte total)</td><td class="amount">200 €</td></tr>
+        <tr><td>Livraison Phase 1</td><td>Solde Phase 1</td><td class="amount">400 €</td></tr>
+        <tr><td>Démarrage Phase 2</td><td>50% Phase 2</td><td class="amount">350 €</td></tr>
+        <tr><td>Livraison Phase 2</td><td>Solde Phase 2</td><td class="amount">350 €</td></tr>
+        <tr><td>Démarrage Phase 3</td><td>50% Phase 3</td><td class="amount">675 €</td></tr>
+        <tr><td>Livraison Phase 3</td><td>Solde Phase 3</td><td class="amount">675 €</td></tr>
+        <tr><td>Démarrage Phase 4</td><td>50% Phase 4</td><td class="amount">325 €</td></tr>
+        <tr><td>Livraison Phase 4</td><td>Solde Phase 4</td><td class="amount">325 €</td></tr>
+        <tr class="total-row"><td colspan="2">Total setup HT</td><td class="amount">3 500 €</td></tr>
+      </tbody>
+    </table>
+    <p>Moyens de paiement acceptés : Wero (+33 7 53 90 23 23), Revolut, virement bancaire. TVA non applicable, article 293 B du CGI.</p>
+    <p>Tout retard de paiement supérieur à <strong>10 jours ouvrés</strong> suspend automatiquement les travaux jusqu'à régularisation, sans préjudice d'une éventuelle résiliation pour manquement.</p>
+  </div>
+
+  <!-- ART 9 -->
+  <div class="article">
+    <span class="num">Art. 9 — Recette, validation et révisions</span>
+    <div class="sub">9.1 — Processus de validation</div>
+    <p>À la livraison de chaque phase, Mr Attractor transmet à la Cliente une <strong>fiche de livraison</strong> listant les fonctionnalités livrées et les critères de validation. La Cliente dispose de <strong>7 jours ouvrés</strong> pour formuler ses retours par écrit.</p>
+    <p>Sans retour dans ce délai, la phase est réputée acceptée et le versement de livraison devient exigible.</p>
+    <div class="sub">9.2 — Révisions incluses</div>
+    <p>Chaque phase inclut <strong>2 rounds de révisions</strong> sur les livrables, dans la limite du périmètre défini au devis. Un round de révisions correspond à un ensemble de retours formulés en une seule fois par la Cliente.</p>
+    <p>Au-delà de 2 rounds, toute correction ou ajustement supplémentaire fait l'objet d'un avenant facturé. Le tarif horaire applicable est de <strong>65 € HT/heure</strong>.</p>
+    <div class="sub">9.3 — Modifications de périmètre</div>
+    <p>Toute demande de fonctionnalité nouvelle ou modification substantielle du cahier des charges en cours d'exécution est traitée comme un avenant. Elle est chiffrée, soumise à l'accord écrit de la Cliente, et ne peut être exécutée qu'après signature de cet avenant.</p>
+  </div>
+
+  <!-- ART 10 -->
+  <div class="article">
+    <span class="num">Art. 10 — Propriété intellectuelle</span>
+    <div class="sub">10.1 — Propriété exclusive et permanente de la Cliente</div>
+    <p>Le nom et la marque <strong>Club privé Élévia</strong>, le concept, le business model, la stratégie commerciale, le positionnement, les contenus et tous droits attachés au projet appartiennent exclusivement et de manière permanente à Elise CAPEL, indépendamment de toute prestation réalisée. Ces éléments ne sauraient être affectés par le présent contrat.</p>
+    <div class="sub">10.2 — Cession des livrables techniques</div>
+    <p>Les livrables techniques produits par Mr Attractor dans le cadre de chaque phase (code source, architecture applicative, design d'interface, documentation) restent la propriété de Mr Attractor jusqu'au règlement intégral des sommes dues au titre de ladite phase.</p>
+    <p>Dès réception du paiement complet de chaque phase, Mr Attractor cède à la Cliente, de manière automatique, définitive et irrévocable, l'ensemble des droits de propriété intellectuelle attachés aux livrables de cette phase, pour toute exploitation, à titre exclusif, pour le monde entier et pour toute la durée légale de protection.</p>
+    <p>La cession comprend : le droit de reproduction, de représentation, d'adaptation, de traduction, de distribution, d'exploitation commerciale et de sous-licence.</p>
+    <div class="sub">10.3 — Droit de référence</div>
+    <p>Mr Attractor se réserve le droit de mentionner le projet Club privé Élévia dans ses références commerciales, sans divulguer d'informations confidentielles, sauf opposition écrite de la Cliente.</p>
+  </div>
+
+  <!-- ART 11 -->
+  <div class="article">
+    <span class="num">Art. 11 — Plan de continuité</span>
+    <p>À compter de la livraison et de la validation de la Phase 4, un <strong>Plan de continuité mensuel</strong> est activé, facturé <strong>250 € HT/mois</strong>.</p>
+    <p>Ce plan comprend :</p>
+    <ul>
+      <li>Hébergement et infrastructure cloud ;</li>
+      <li>Application des mises à jour de sécurité critiques ;</li>
+      <li>Maintenance corrective des bugs constatés en production ;</li>
+      <li>Conformité RGPD continue (évolutions réglementaires) ;</li>
+      <li>Sauvegardes quotidiennes des données ;</li>
+      <li>Support technique : réponse sous 48h ouvrées.</li>
+    </ul>
+    <div class="box-red">
+      <strong>Hors plan de continuité</strong>
+      Les évolutions fonctionnelles, nouvelles fonctionnalités, intégrations tierces, refonte de design ou toute prestation hors maintenance corrective ne sont pas couvertes par ce plan. Elles font l'objet d'un devis séparé.
+    </div>
+    <p>Le Plan de continuité est facturé mensuellement, à terme à échoir. Il peut être résilié par l'une ou l'autre partie avec un préavis écrit de <strong>30 jours</strong>. En cas de résiliation par la Cliente, Mr Attractor remet l'ensemble des accès, du code source et de la documentation dans les 15 jours suivant la fin du préavis.</p>
+  </div>
+
+  <!-- ART 12 -->
+  <div class="article">
+    <span class="num">Art. 12 — Garantie</span>
+    <p>Mr Attractor garantit les livrables de chaque phase contre les défauts de conformité par rapport aux spécifications validées, pendant une durée de <strong>2 mois</strong> à compter de la date de validation de ladite phase.</p>
+    <p>Durant cette période, Mr Attractor corrige gratuitement tout bug ou dysfonctionnement dont il est démontré qu'il résulte d'une erreur de développement.</p>
+    <p>La garantie ne couvre pas :</p>
+    <ul>
+      <li>Les dysfonctionnements résultant de modifications effectuées par la Cliente ou un tiers sans accord du Prestataire ;</li>
+      <li>Les évolutions de fonctionnalités ou les demandes de modification ;</li>
+      <li>Les incidents liés à des services tiers (hébergeurs, API externes) ;</li>
+      <li>Les problèmes résultant d'une utilisation non conforme aux spécifications.</li>
+    </ul>
+  </div>
+
+  <!-- ART 13 -->
+  <div class="article">
+    <span class="num">Art. 13 — Confidentialité</span>
+    <p>Les parties sont liées par l'accord de confidentialité <strong>NDA V2</strong> signé le 13 juin 2026, qui s'applique dans son intégralité pendant toute la durée du présent contrat et au-delà, selon les termes qui y sont définis.</p>
+    <p>En cas de contradiction entre le présent contrat et le NDA V2 sur les questions de confidentialité, le NDA V2 prévaut.</p>
+  </div>
+
+  <!-- ART 14 -->
+  <div class="article">
+    <span class="num">Art. 14 — Limitation de responsabilité</span>
+    <p>La responsabilité de Mr Attractor au titre du présent contrat est limitée aux dommages directs prouvés. Elle est plafonnée au <strong>montant total des sommes effectivement versées par la Cliente</strong> au titre du présent contrat, toutes phases confondues.</p>
+    <p>En aucun cas Mr Attractor ne pourra être tenu responsable des dommages indirects, pertes d'exploitation, pertes de revenus, pertes de données, manque à gagner ou atteinte à l'image de la Cliente, même s'il a été informé de la possibilité de tels dommages.</p>
+    <p>Cette limitation ne s'applique pas en cas de dol ou de faute lourde avérée du Prestataire.</p>
+  </div>
+
+  <!-- ART 15 -->
+  <div class="article">
+    <span class="num">Art. 15 — Résiliation</span>
+    <div class="sub">15.1 — Résiliation pour manquement</div>
+    <p>En cas de manquement grave de l'une des parties à ses obligations contractuelles, l'autre partie peut résilier le contrat de plein droit, après mise en demeure restée sans effet pendant <strong>15 jours ouvrés</strong>.</p>
+    <div class="sub">15.2 — Résiliation à l'initiative de la Cliente</div>
+    <p>La Cliente peut mettre fin au contrat à tout moment, avec un préavis écrit de <strong>15 jours ouvrés</strong>. Dans ce cas :</p>
+    <ul>
+      <li>Les phases entièrement livrées et validées sont intégralement dues ;</li>
+      <li>La phase en cours est facturée au prorata des travaux réalisés, sur la base du tarif horaire de 65 € HT/heure ;</li>
+      <li>Les phases non démarrées ne sont pas dues.</li>
+    </ul>
+    <div class="sub">15.3 — Résiliation à l'initiative du Prestataire</div>
+    <p>Mr Attractor peut résilier le contrat en cas de non-paiement persistant (plus de 20 jours ouvrés après relance écrite) ou de manquement grave de la Cliente à ses obligations, après mise en demeure restée sans effet pendant 15 jours ouvrés. Les sommes dues pour les travaux réalisés restent exigibles.</p>
+  </div>
+
+  <!-- ART 16 -->
+  <div class="article">
+    <span class="num">Art. 16 — Force majeure</span>
+    <p>Aucune des parties ne pourra être tenue responsable d'un retard ou d'une inexécution résultant d'un événement de force majeure au sens de l'article 1218 du Code civil (catastrophe naturelle, pandémie, conflit armé, décision gouvernementale, panne généralisée d'infrastructure internet, etc.).</p>
+    <p>La partie concernée notifie l'autre dans les meilleurs délais. Si l'événement de force majeure persiste au-delà de <strong>60 jours</strong>, chaque partie pourra résilier le contrat sans indemnité, les sommes dues pour les travaux réalisés restant exigibles.</p>
+  </div>
+
+  <!-- ART 17 -->
+  <div class="article">
+    <span class="num">Art. 17 — Loi applicable et juridiction</span>
+    <p>Le présent contrat est soumis au droit français. En cas de litige relatif à son interprétation, son exécution ou sa résiliation, les parties s'engagent à rechercher une solution amiable dans un délai de <strong>30 jours</strong> avant tout recours judiciaire.</p>
+    <p>À défaut d'accord amiable dans ce délai, le <strong>Tribunal Judiciaire de Paris</strong> sera seul compétent pour connaître du litige, nonobstant pluralité de défendeurs ou appel en garantie.</p>
+  </div>
+
+  <!-- ART 18 -->
+  <div class="article">
+    <span class="num">Art. 18 — Dispositions générales</span>
+    <p><strong>18.1 Divisibilité.</strong> Si une clause est déclarée nulle ou inapplicable, les autres clauses conservent leur plein effet.</p>
+    <p><strong>18.2 Modifications.</strong> Toute modification du présent contrat doit faire l'objet d'un avenant écrit signé par les deux parties.</p>
+    <p><strong>18.3 Accord complet.</strong> Le présent contrat, combiné au devis ATR-2026-0005 et au NDA V2, constitue l'intégralité des engagements entre les parties sur son objet et remplace tout échange antérieur.</p>
+    <p><strong>18.4 Non-renonciation.</strong> Le fait pour l'une des parties de ne pas se prévaloir d'un manquement de l'autre ne vaut pas renonciation à se prévaloir de manquements ultérieurs.</p>
+  </div>
+
+  <!-- SIGNATURES -->
+  <h2>Signatures — Bon pour accord</h2>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:12px">En signant le présent contrat, les parties reconnaissent en avoir pris connaissance intégrale et en accepter toutes les clauses sans réserve.</p>
+  <div class="signatures">
+    <div class="sig">
+      <div class="sig-label">Le Prestataire</div>
+      <div class="sig-name">Mac Arthur KOUASSI</div>
+      <div class="sig-role">Mr Attractor — Auto-entrepreneur</div>
+      <div class="sig-mention">Lu et approuvé — Bon pour accord</div>
+      <div class="sig-space"></div>
+      <div class="sig-date">Fait le 13 juin 2026, à Paris</div>
+    </div>
+    <div class="sig">
+      <div class="sig-label">La Cliente</div>
+      <div class="sig-name">Elise CAPEL</div>
+      <div class="sig-role">Club privé Élévia</div>
+      <div class="sig-mention">Lu et approuvé — Bon pour accord</div>
+      <div class="sig-space"></div>
+      <div class="sig-date">Fait le __________, à __________</div>
+    </div>
+  </div>
+
+  <!-- PIED DE PAGE -->
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015 — Immatriculée le 01/02/2024<br>
+    TVA non applicable, article 293 B du CGI — myattractor1@gmail.com — +33 7 53 90 23 23 — agenceattractor.com<br>
+    Contrat Réf. CONTRAT-ATR-2026-0005 — Projet Club privé Élévia — 13 juin 2026
+  </div>
+
+</div>
+</body>
+</html>

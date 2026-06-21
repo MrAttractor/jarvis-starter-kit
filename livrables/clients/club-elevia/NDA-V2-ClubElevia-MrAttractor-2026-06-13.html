@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>NDA V2 — Club Élévia × Mr Attractor</title>
+<style>
+:root{
+  --brand:#0E1A2B;
+  --accent:#C9A84C;
+  --ink:#1A1F2B;
+  --muted:#6B7280;
+  --line:#E5E7EB;
+  --bg-soft:#F7F5EF;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:#f0f2f5;padding:24px;line-height:1.6}
+.page{width:210mm;min-height:297mm;margin:0 auto 24px auto;background:#fff;padding:18mm 16mm;box-shadow:0 6px 30px rgba(0,0,0,.12)}
+
+/* En-tête */
+.head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--accent);padding-bottom:16px;margin-bottom:20px}
+.brand h1{color:var(--brand);font-size:22px;letter-spacing:.02em}
+.brand .tag{color:var(--muted);font-size:12px;margin-top:2px}
+.docmeta{text-align:right;font-size:13px}
+.docmeta .t{color:var(--accent);font-weight:700;font-size:16px;letter-spacing:.06em;text-transform:uppercase}
+.docmeta .version{display:inline-block;background:var(--brand);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:4px;letter-spacing:.05em}
+.docmeta div{color:var(--muted);margin-top:2px}
+
+/* Intro */
+.intro-box{background:var(--bg-soft);border-left:3px solid var(--accent);padding:14px 16px;margin:0 0 20px 0;font-size:13px;line-height:1.6}
+.intro-box strong{color:var(--brand)}
+.replace-notice{background:#FFF3CD;border-left:3px solid #E6A817;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#7A5200}
+
+/* Parties */
+h2{color:var(--brand);font-size:15px;margin-top:22px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--line);letter-spacing:.01em;text-transform:uppercase}
+.parties{display:flex;gap:16px;margin:12px 0}
+.partie{flex:1;border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:12.5px}
+.partie .label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.partie strong{color:var(--brand);display:block;margin-bottom:2px}
+
+/* Articles */
+.article{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:8px 0}
+.article.new{border-color:#C9A84C44;background:#FFFDF5}
+.article .num{display:inline-block;background:var(--brand);color:#fff;font-size:10px;font-weight:700;letter-spacing:.05em;padding:3px 9px;border-radius:4px;margin-bottom:10px}
+.article.new .num{background:var(--accent);color:var(--brand)}
+.article .badge-new{display:inline-block;background:#E8F5E9;color:#2E7D32;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;margin-left:6px;letter-spacing:.04em;vertical-align:middle}
+.article .badge-updated{display:inline-block;background:#E3F2FD;color:#1565C0;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;margin-left:6px;letter-spacing:.04em;vertical-align:middle}
+p{font-size:12.5px;margin-bottom:8px;line-height:1.6}
+ul{margin:6px 0 10px 20px;font-size:12.5px}
+li{margin-bottom:5px;line-height:1.5}
+.sub-section{margin:10px 0 6px 0}
+.sub-section .sub-title{font-size:12px;font-weight:700;color:var(--brand);margin-bottom:5px}
+
+/* Signatures */
+.signatures{display:flex;gap:20px;margin-top:32px}
+.sig{flex:1;border:1px solid var(--line);border-radius:8px;padding:16px}
+.sig .sig-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.sig .sig-name{color:var(--brand);font-weight:700;font-size:13px}
+.sig .sig-role{color:var(--muted);font-size:12px;margin-top:2px}
+.sig .sig-space{height:52px;border-bottom:1px dotted var(--line);margin:16px 0 8px}
+.sig .sig-date{font-size:12px;color:var(--muted)}
+
+/* Pied de page */
+.foot{margin-top:24px;border-top:1px solid var(--line);padding-top:10px;font-size:10px;color:var(--muted);text-align:center;line-height:1.6}
+
+@media print{
+  body{background:#fff;padding:0}
+  .page{box-shadow:none;margin:0;width:100%;min-height:auto;padding:10mm 12mm}
+  .article{page-break-inside:avoid;padding:8px 12px;margin:5px 0}
+  .signatures{page-break-inside:avoid;margin-top:16px}
+  .parties{page-break-inside:avoid;margin:8px 0}
+  h2{page-break-after:avoid;margin-top:14px;margin-bottom:6px}
+  p,li{font-size:11px}
+  .badge-new,.badge-updated{display:none}
+  .replace-notice{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- EN-TÊTE -->
+  <div class="head">
+    <div class="brand">
+      <h1>Mr Attractor</h1>
+      <div class="tag">Conception d'applications métier &amp; systèmes intelligents</div>
+    </div>
+    <div class="docmeta">
+      <div class="t">Accord de confidentialité</div>
+      <div class="version">VERSION 2 — 13 juin 2026</div>
+      <div>Club Élévia × Mr Attractor</div>
+    </div>
+  </div>
+
+  <!-- AVIS DE VERSION -->
+  <div class="replace-notice">
+    Le présent accord (Version 2, 13 juin 2026) intègre les retours des deux parties suite à la première version soumise le 10 juin 2026. Il doit être signé par les deux parties pour prendre effet.
+  </div>
+
+  <!-- INTRODUCTION -->
+  <div class="intro-box">
+    Le présent accord régit l'ensemble des échanges confidentiels entre <strong>Mr Attractor</strong> et <strong>Elise CAPEL</strong> dans le cadre du projet <strong>Club privé Élévia</strong>. Il établit les droits de propriété intellectuelle de chacune des parties, les obligations de restitution des données et les engagements de non-concurrence du Prestataire.
+  </div>
+
+  <!-- PARTIES -->
+  <h2>Les Parties</h2>
+  <div class="parties">
+    <div class="partie">
+      <div class="label">Partie A — Prestataire</div>
+      <strong>Mac Arthur KOUASSI</strong>
+      Mr Attractor — Auto-entrepreneur<br/>
+      SIRET 98377125400015<br/>
+      Paris, France<br/>
+      myattractor1@gmail.com
+    </div>
+    <div class="partie">
+      <div class="label">Partie B — Cliente / Donneuse d'ordre</div>
+      <strong>Elise CAPEL</strong>
+      Porteuse et propriétaire exclusive du projet Club privé Élévia<br/>
+      Elisepelagie@outlook.be
+    </div>
+  </div>
+
+  <!-- CLAUSES -->
+  <h2>Clauses</h2>
+
+  <!-- ART. 1 -->
+  <div class="article">
+    <span class="num">ART. 1 — OBJET</span>
+    <p>Le présent accord définit les conditions dans lesquelles les informations confidentielles échangées dans le cadre du projet Club privé Élévia sont traitées, protégées et restituées par chacune des parties. Il précise également les droits de propriété intellectuelle respectifs et les obligations de non-concurrence du Prestataire.</p>
+  </div>
+
+  <!-- ART. 2 -->
+  <div class="article">
+    <span class="num">ART. 2 — INFORMATIONS CONFIDENTIELLES</span>
+    <p>Sont confidentielles toutes les informations communiquées par l'une des parties à l'autre, sous quelque forme que ce soit (écrite, orale, numérique, visuelle), notamment :</p>
+    <ul>
+      <li>le concept, la vision fondatrice et l'architecture fonctionnelle du projet ;</li>
+      <li>le business model, la stratégie commerciale, tarifaire et de positionnement ;</li>
+      <li>les maquettes, prototypes, cahiers des charges et éléments de design ;</li>
+      <li>les données personnelles des utilisateurs et des parties ;</li>
+      <li>tout code source, base de données ou infrastructure technique développés dans le cadre du projet ;</li>
+      <li>les informations financières, économiques et opérationnelles communiquées par l'une ou l'autre partie.</li>
+    </ul>
+    <p>Sont également confidentiels, sans qu'il soit besoin de les désigner expressément, tous les secrets commerciaux au sens de la loi n° 2018-670 du 30 juillet 2018 relative à la protection du secret des affaires.</p>
+  </div>
+
+  <!-- ART. 3 -->
+  <div class="article">
+    <span class="num">ART. 3 — OBLIGATIONS DES PARTIES</span>
+    <p>Chacune des parties s'engage à :</p>
+    <ul>
+      <li>ne pas divulguer les informations confidentielles à des tiers sans accord préalable écrit de l'autre partie ;</li>
+      <li>ne pas les utiliser à des fins autres que celles du projet Club privé Élévia ;</li>
+      <li>prendre toutes les mesures raisonnables pour assurer leur protection, au moins équivalentes à celles prises pour ses propres informations confidentielles ;</li>
+      <li>ne les communiquer, en interne, qu'aux personnes qui en ont strictement besoin pour l'exécution du projet.</li>
+    </ul>
+  </div>
+
+  <!-- ART. 4 -->
+  <div class="article">
+    <span class="num">ART. 4 — EXCEPTIONS</span>
+    <p>Les obligations de confidentialité ne s'appliquent pas aux informations qui :</p>
+    <ul>
+      <li>sont ou deviennent publiques sans faute de la partie réceptrice ;</li>
+      <li>étaient déjà connues de la partie réceptrice avant leur communication, justificatifs à l'appui ;</li>
+      <li>ont été reçues légitimement d'un tiers sans restriction de confidentialité ;</li>
+      <li>sont divulguées en vertu d'une obligation légale ou d'une décision judiciaire, après notification préalable à l'autre partie dans les meilleurs délais.</li>
+    </ul>
+  </div>
+
+  <!-- ART. 5 — DURÉE (UPDATED) -->
+  <div class="article">
+    <span class="num">ART. 5 — DURÉE</span><span class="badge-updated">MODIFIÉ</span>
+    <div class="sub-section">
+      <div class="sub-title">5.1 — Durée générale</div>
+      <p>Le présent accord prend effet à sa date de signature et reste en vigueur pendant <strong>cinq (5) ans</strong> à compter de la fin de la mission ou de la résiliation de la relation commerciale entre les parties, quelle qu'en soit la cause.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">5.2 — Secrets commerciaux (durée illimitée)</div>
+      <p>Par dérogation à l'alinéa précédent, les informations qualifiables de secrets commerciaux au sens de la loi n° 2018-670 du 30 juillet 2018 bénéficient d'une <strong>protection sans limitation de durée</strong>. Constituent notamment des secrets commerciaux au sens du présent accord : le nom et la marque Club privé Élévia, le business model, le concept d'ensemble, la stratégie de développement, le positionnement et tout savoir-faire propriétaire de la Cliente.</p>
+    </div>
+  </div>
+
+  <!-- ART. 6 — PI (COMPLETELY REWRITTEN) -->
+  <div class="article">
+    <span class="num">ART. 6 — PROPRIÉTÉ INTELLECTUELLE</span><span class="badge-updated">RENFORCÉ</span>
+
+    <div class="sub-section">
+      <div class="sub-title">6.1 — Propriété exclusive et permanente de la Cliente</div>
+      <p>Les éléments suivants appartiennent exclusivement et de manière permanente à Elise CAPEL, indépendamment de toute prestation réalisée par Mr Attractor, avant, pendant et après la mission :</p>
+      <ul>
+        <li>le nom et la marque <strong>Club privé Élévia</strong> et toutes ses déclinaisons ;</li>
+        <li>le concept, la vision fondatrice et l'idée d'ensemble du projet ;</li>
+        <li>le business model, la stratégie commerciale et le positionnement ;</li>
+        <li>les contenus éditoriaux, textes, visuels et éléments de communication créés par ou pour la Cliente ;</li>
+        <li>tous droits de propriété intellectuelle et droits de marque attachés au projet, antérieurs à la mission ou créés par la Cliente de manière indépendante.</li>
+      </ul>
+      <p>Ces éléments demeurent la propriété exclusive d'Elise CAPEL sans aucune condition et ne sauraient être affectés par le présent accord ni par tout contrat de prestation à venir.</p>
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-title">6.2 — Livrables produits par Mr Attractor</div>
+      <p>Les livrables techniques produits par Mr Attractor dans le cadre du projet (code source, architecture applicative, design d'interface, documentation technique) restent la propriété de Mr Attractor jusqu'au règlement intégral des sommes dues au titre du contrat de prestation. Dès réception du paiement complet, la propriété et l'intégralité des droits attachés sont automatiquement et irrévocablement transférés à la Cliente, sans qu'il soit besoin d'un acte supplémentaire.</p>
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-title">6.3 — Licence provisoire d'utilisation</div>
+      <p>Pendant la durée de la mission et avant paiement complet, Mr Attractor concède à la Cliente une licence d'utilisation non exclusive, non cessible et révocable des livrables produits, limitée aux seules fins du projet Club privé Élévia.</p>
+    </div>
+  </div>
+
+  <!-- ART. 7 — NON-CONCURRENCE (NEW) -->
+  <div class="article new">
+    <span class="num">ART. 7 — NON-CONCURRENCE</span><span class="badge-new">NOUVEAU</span>
+    <p>Le Prestataire s'interdit, pendant une durée de <strong>vingt-quatre (24) mois</strong> à compter de la fin de la mission, de développer, participer à ou contribuer à tout projet directement concurrent de Club privé Élévia, dès lors que ce projet ferait usage des informations confidentielles reçues dans le cadre du présent accord.</p>
+    <p>Est considéré comme directement concurrent tout service ou application ayant pour objet principal la mise en relation de membres de la diaspora africaine basé sur un modèle de club privé ou communauté fermée, conçu en utilisant des informations confidentielles ou des éléments propriétaires de Club Élévia.</p>
+    <p>Cette clause ne fait pas obstacle à la poursuite des activités générales de développement d'applications du Prestataire dans d'autres secteurs, ni à la réalisation de projets n'utilisant aucune information confidentielle de Club Élévia.</p>
+  </div>
+
+  <!-- ART. 8 — RESTITUTION/DESTRUCTION (NEW) -->
+  <div class="article new">
+    <span class="num">ART. 8 — RESTITUTION ET DESTRUCTION DES DONNÉES</span><span class="badge-new">NOUVEAU</span>
+    <p>À la fin de la mission, quelle qu'en soit la cause (achèvement, résiliation, rupture), Mr Attractor s'engage à :</p>
+    <ul>
+      <li>restituer à la Cliente l'ensemble des documents, fichiers et informations confidentielles reçus dans le cadre du projet, sous format numérique et/ou physique selon leur nature ;</li>
+      <li>supprimer toute copie numérique de ces informations de ses systèmes, appareils et supports de stockage ;</li>
+      <li>ne conserver aucune copie, reproduction ou extraction des informations confidentielles, sauf si une obligation légale l'impose expressément ;</li>
+      <li>s'assurer que tout sous-traitant ou collaborateur ayant eu accès aux informations confidentielles soit soumis aux mêmes obligations.</li>
+    </ul>
+    <p>Mr Attractor attestera par écrit, à la première demande de la Cliente, de l'exécution complète de ces obligations, dans un délai de <strong>quinze (15) jours</strong> suivant la fin de la mission.</p>
+  </div>
+
+  <!-- ART. 9 — LOI ET JURIDICTION (UPDATED) -->
+  <div class="article">
+    <span class="num">ART. 9 — LOI APPLICABLE ET JURIDICTION</span><span class="badge-updated">MODIFIÉ</span>
+    <p>Le présent accord est soumis au droit français. En cas de litige relatif à son interprétation, son exécution ou sa résiliation, les parties s'engagent à rechercher une solution amiable dans un délai de <strong>trente (30) jours</strong> avant tout recours judiciaire. À défaut d'accord amiable dans ce délai, le <strong>Tribunal Judiciaire de Paris</strong> sera seul compétent pour connaître du litige, nonobstant pluralité de défendeurs ou appel en garantie.</p>
+  </div>
+
+  <!-- ART. 10 — DOCUMENTS À VENIR (NEW) -->
+  <div class="article new">
+    <span class="num">ART. 10 — DOCUMENTS CONTRACTUELS À VENIR</span><span class="badge-new">NOUVEAU</span>
+    <p>Le présent accord constitue le premier document contractuel de la relation entre les parties. Il sera complété, dans les meilleurs délais et avant tout commencement d'exécution, par :</p>
+    <ul>
+      <li>un <strong>cahier des charges</strong> détaillé définissant le périmètre fonctionnel et les spécifications techniques du projet ;</li>
+      <li>un <strong>devis définitif</strong> accepté par les deux parties, incluant les modalités de paiement et le calendrier de livraison ;</li>
+      <li>un <strong>contrat de prestation de développement</strong> comprenant notamment une clause de cession complète de propriété intellectuelle sur les livrables, les garanties, les conditions de réception et les pénalités.</li>
+    </ul>
+    <p>Le présent accord reste en vigueur indépendamment de la conclusion ou non desdits documents.</p>
+  </div>
+
+  <!-- ART. 11 — DISPOSITIONS GÉNÉRALES -->
+  <div class="article">
+    <span class="num">ART. 11 — DISPOSITIONS GÉNÉRALES</span>
+    <p><strong>11.1 Divisibilité.</strong> Si une clause du présent accord est déclarée nulle, non écrite ou inapplicable par une décision de justice, les autres clauses conservent leur plein effet.</p>
+    <p><strong>11.2 Modifications.</strong> Toute modification du présent accord doit faire l'objet d'un avenant écrit signé par les deux parties.</p>
+    <p><strong>11.3 Accord complet.</strong> Le présent accord constitue l'intégralité des engagements de confidentialité entre les parties et remplace tout projet ou version antérieure ayant le même objet soumis entre les parties.</p>
+  </div>
+
+  <!-- SIGNATURES -->
+  <h2>Signatures</h2>
+  <div class="signatures">
+    <div class="sig">
+      <div class="sig-label">Partie A — Prestataire</div>
+      <div class="sig-name">Mac Arthur KOUASSI</div>
+      <div class="sig-role">Mr Attractor — Auto-entrepreneur</div>
+      <div class="sig-space"></div>
+      <div class="sig-date">Fait le __________, à Paris</div>
+    </div>
+    <div class="sig">
+      <div class="sig-label">Partie B — Cliente</div>
+      <div class="sig-name">Elise CAPEL</div>
+      <div class="sig-role">Porteuse du projet Club privé Élévia</div>
+      <div class="sig-space"></div>
+      <div class="sig-date">Fait le __________, à __________</div>
+    </div>
+  </div>
+
+  <!-- PIED DE PAGE -->
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015 — Immatriculée le 01/02/2024<br>
+    TVA non applicable, article 293 B du CGI — myattractor1@gmail.com — +33 7 53 90 23 23 — agenceattractor.com<br>
+    NDA Version 2 — 13 juin 2026
+  </div>
+
+</div>
+</body>
+</html>

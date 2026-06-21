@@ -1,0 +1,177 @@
+{
+  "name": "Veille Compétitions Startups Africaines",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "weeksInterval": 1,
+              "triggerAtDay": [1],
+              "triggerAtHour": 8,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "cron-weekly",
+      "name": "Cron — Lundi 8h",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Calendrier des compétitions (mis à jour manuellement)\n// Ajouter de nouvelles compétitions ici quand elles sont détectées\n\nconst competitions = [\n  {\n    name: 'Orange POESAM',\n    url: 'https://poesam.orange.com',\n    deadline_estimated: '2027-05-10',\n    opening_estimated: '2027-03-01',\n    prize: '100 000 USD',\n    status: 'PREPARER',\n    priority: 1,\n    notes: 'Cible prioritaire Attractor Assists. Jury local CI = levier.'\n  },\n  {\n    name: 'AfricaTech Award (VivaTech)',\n    url: 'https://challenges.vivatech.com',\n    deadline_estimated: '2027-02-15',\n    opening_estimated: '2027-01-10',\n    prize: 'Visibilité Paris + réseau IFC',\n    status: 'PREPARER',\n    priority: 1,\n    notes: 'Condition bloquante : 150k USD levés. Cible 2028 réaliste.'\n  },\n  {\n    name: 'Africa Business Heroes',\n    url: 'https://africabusinessheroes.org',\n    deadline_estimated: '2027-04-28',\n    opening_estimated: '2027-03-01',\n    prize: '300 000 USD (1er)',\n    status: 'PREPARER',\n    priority: 1,\n    notes: 'Condition bloquante : 3 ans de revenus. Eligible après 02/2027.'\n  },\n  {\n    name: 'Seedstars Africa',\n    url: 'https://www.seedstarsworld.com',\n    deadline_estimated: 'CONTINU',\n    opening_estimated: 'CONTINU',\n    prize: '500 000 USD',\n    status: 'POSTULER_H2_2026',\n    priority: 1,\n    notes: 'Seul programme ouvert en continu. Identifier cycle local CI/Nigeria.'\n  },\n  {\n    name: 'UNICEF Venture Fund',\n    url: 'https://www.unicefventurefund.org',\n    deadline_estimated: '2027-05-17',\n    opening_estimated: '2027-03-01',\n    prize: '100 000 USD',\n    status: 'PREPARER',\n    priority: 2,\n    notes: 'Angle FemTech ou Climate+Santé. Open source obligatoire.'\n  }\n];\n\n// Calculer les alertes\nconst today = new Date();\nconst alerts = [];\n\nfor (const comp of competitions) {\n  if (comp.deadline_estimated === 'CONTINU') {\n    if (comp.status === 'POSTULER_H2_2026') {\n      alerts.push({\n        ...comp,\n        alert_type: 'ACTION_REQUISE',\n        message: `[${comp.name}] PROGRAMME OUVERT EN CONTINU — Identifier le prochain cycle local CI/Nigeria cette semaine.`\n      });\n    }\n    continue;\n  }\n  \n  const deadline = new Date(comp.deadline_estimated);\n  const opening = new Date(comp.opening_estimated);\n  const daysToDeadline = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));\n  const daysToOpening = Math.ceil((opening - today) / (1000 * 60 * 60 * 24));\n  \n  if (daysToDeadline <= 30 && daysToDeadline > 0) {\n    alerts.push({\n      ...comp,\n      days_remaining: daysToDeadline,\n      alert_type: 'DEADLINE_PROCHE',\n      message: `🚨 [${comp.name}] DEADLINE DANS ${daysToDeadline} JOURS ! Finaliser et soumettre la candidature.`\n    });\n  } else if (daysToOpening <= 30 && daysToOpening > 0) {\n    alerts.push({\n      ...comp,\n      days_remaining: daysToOpening,\n      alert_type: 'OUVERTURE_PROCHE',\n      message: `📅 [${comp.name}] Ouverture des candidatures dans ${daysToOpening} jours. Préparer le dossier.`\n    });\n  } else if (daysToOpening <= 60 && daysToOpening > 30) {\n    alerts.push({\n      ...comp,\n      days_remaining: daysToOpening,\n      alert_type: 'PREPARER',\n      message: `📋 [${comp.name}] Ouverture dans ${daysToOpening} jours. Vérifier que le dossier est prêt.`\n    });\n  }\n}\n\n// Résumé hebdomadaire (toujours envoyé)\nconst summary = {\n  type: 'RAPPORT_HEBDO',\n  date: today.toISOString().split('T')[0],\n  competitions_suivies: competitions.length,\n  alerts_actives: alerts.length,\n  competitions: competitions.map(c => ({\n    name: c.name,\n    status: c.status,\n    deadline: c.deadline_estimated,\n    priority: c.priority\n  }))\n};\n\nalerts.push(summary);\n\nreturn alerts.map(a => ({ json: a }));"
+      },
+      "id": "check-competitions",
+      "name": "Vérifier Deadlines",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-alerts",
+              "leftValue": "={{ $json.alert_type }}",
+              "rightValue": "RAPPORT_HEBDO",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "or"
+        }
+      },
+      "id": "filter-alerts",
+      "name": "Filtrer Alertes Urgentes",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Construire le message email de résumé hebdomadaire\nconst allItems = $input.all();\nconst alerts = allItems.filter(i => i.json.alert_type !== 'RAPPORT_HEBDO');\nconst summary = allItems.find(i => i.json.alert_type === 'RAPPORT_HEBDO');\n\nconst alertLines = alerts.length > 0\n  ? alerts.map(a => `• ${a.json.message}`).join('\\n')\n  : '• Aucune alerte urgente cette semaine.';\n\nconst competitionLines = summary?.json?.competitions\n  ? summary.json.competitions.map(c => `  [${c.status}] ${c.name} — deadline : ${c.deadline}`).join('\\n')\n  : '';\n\nconst emailBody = `\nRAPPORT HEBDO — VEILLE COMPÉTITIONS AFRICAINES\n${summary?.json?.date || new Date().toISOString().split('T')[0]}\n\n━━━ ALERTES ACTIVES ━━━\n${alertLines}\n\n━━━ SUIVI COMPLET ━━━\n${competitionLines}\n\n━━━ DOSSIERS ━━━\nExecutive Summary : livrables/commercial/candidatures/attractor-assists/executive-summary.html\nOne Pager : livrables/commercial/candidatures/attractor-assists/one-pager.html\n\n━━━ NOTION ━━━\nRadar Financement : https://app.notion.com/p/3824257524c68131ba72eb3400a989a1\n\n—\nAssists — Pilotage Agence Mr Attractor\n`;\n\nreturn [{ json: { subject: `[Veille Compétitions] ${alerts.length} alerte(s) — ${new Date().toISOString().split('T')[0]}`, body: emailBody } }];"
+      },
+      "id": "build-email",
+      "name": "Construire Email Récap",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [600, 400]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@agenceattractor.com",
+        "toEmail": "myattractor1@gmail.com",
+        "subject": "={{ $json.subject }}",
+        "text": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "send-email",
+      "name": "Envoyer Email (Resend)",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [800, 400],
+      "credentials": {
+        "smtp": {
+          "id": "resend-smtp",
+          "name": "Resend SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Sauvegarder le rapport dans Supabase pour historique\n// Utiliser la table veille_rapports existante\nconst item = $input.first().json;\nreturn [{\n  json: {\n    source: 'competitions',\n    contenu: JSON.stringify(item),\n    created_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "prepare-supabase",
+      "name": "Préparer Supabase",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [600, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://lgdgbrivnhgeupqhkckd.supabase.co/rest/v1/veille_rapports",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=minimal"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "save-supabase",
+      "name": "Sauver dans Supabase",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [800, 200]
+    }
+  ],
+  "connections": {
+    "Cron — Lundi 8h": {
+      "main": [
+        [{ "node": "Vérifier Deadlines", "type": "main", "index": 0 }]
+      ]
+    },
+    "Vérifier Deadlines": {
+      "main": [
+        [
+          { "node": "Filtrer Alertes Urgentes", "type": "main", "index": 0 },
+          { "node": "Préparer Supabase", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Filtrer Alertes Urgentes": {
+      "main": [
+        [{ "node": "Construire Email Récap", "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "Construire Email Récap": {
+      "main": [
+        [{ "node": "Envoyer Email (Resend)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Préparer Supabase": {
+      "main": [
+        [{ "node": "Sauver dans Supabase", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "instanceId": "attractor-assists"
+  }
+}

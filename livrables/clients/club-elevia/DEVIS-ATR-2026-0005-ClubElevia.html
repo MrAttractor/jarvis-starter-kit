@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Devis ATR-2026-0005 — Club Élévia × Mr Attractor</title>
+<style>
+:root{
+  --brand:#0E1A2B;
+  --accent:#C9A84C;
+  --ink:#1A1F2B;
+  --muted:#6B7280;
+  --line:#E5E7EB;
+  --bg-soft:#F7F5EF;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:#f0f2f5;padding:24px;line-height:1.6}
+.page{width:210mm;margin:0 auto 24px auto;background:#fff;padding:16mm 16mm;box-shadow:0 6px 30px rgba(0,0,0,.12)}
+
+/* En-tête */
+.head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--accent);padding-bottom:16px;margin-bottom:24px}
+.brand h1{color:var(--brand);font-size:22px;letter-spacing:.02em}
+.brand .tag{color:var(--muted);font-size:12px;margin-top:2px}
+.docmeta{text-align:right}
+.docmeta .t{color:var(--accent);font-weight:700;font-size:18px;letter-spacing:.06em;text-transform:uppercase}
+.docmeta .ref{color:var(--brand);font-weight:700;font-size:13px;margin-top:4px}
+.docmeta .date{color:var(--muted);font-size:12px;margin-top:2px}
+.docmeta .validite{display:inline-block;background:#FFF3CD;color:#7A5200;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:4px}
+
+/* Parties */
+h2{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:20px 0 10px 0;padding-bottom:5px;border-bottom:1px solid var(--line)}
+.parties{display:flex;gap:16px;margin-bottom:4px}
+.partie{flex:1;border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:12.5px}
+.partie .label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.partie strong{color:var(--brand);display:block;font-size:13px;margin-bottom:2px}
+
+/* Objet */
+.objet-box{background:var(--bg-soft);border-left:3px solid var(--accent);padding:12px 16px;font-size:12.5px;margin-bottom:4px;line-height:1.6}
+.objet-box strong{color:var(--brand)}
+
+/* Phases */
+.phase{border:1px solid var(--line);border-radius:8px;margin:8px 0;overflow:hidden}
+.phase-head{display:flex;justify-content:space-between;align-items:center;background:var(--brand);padding:11px 16px}
+.phase-head .ph-label{color:var(--accent);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.phase-head .ph-title{color:#fff;font-size:13.5px;font-weight:700;margin-top:1px}
+.phase-head .ph-amount{color:var(--accent);font-size:18px;font-weight:700}
+.phase-body{padding:12px 16px}
+.phase-body .description{font-size:12.5px;color:var(--muted);margin-bottom:8px;font-style:italic}
+.phase-body ul{margin:0 0 0 16px}
+.phase-body li{font-size:12px;margin-bottom:4px;color:var(--ink)}
+.phase-payment{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.pay-pill{flex:1;background:var(--bg-soft);border-radius:6px;padding:8px 12px;text-align:center}
+.pay-pill .pp-label{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.pay-pill .pp-amount{font-size:15px;font-weight:700;color:var(--brand);margin-top:2px}
+.pay-pill .pp-note{font-size:10px;color:var(--accent);margin-top:1px}
+
+/* Récapitulatif */
+.recap{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:8px 0}
+.recap-row{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line);font-size:12.5px}
+.recap-row:last-child{border-bottom:none}
+.recap-row.total{background:var(--brand)}
+.recap-row.total .rk{color:var(--accent);font-weight:700;font-size:13px}
+.recap-row.total .rv{color:#fff;font-weight:700;font-size:18px}
+.recap-row.acompte .rk{color:var(--muted)}
+.recap-row.acompte .rv{color:#2E7D32;font-weight:700}
+.recap-row.net .rk{font-weight:700;color:var(--brand)}
+.recap-row.net .rv{font-weight:700;color:var(--brand);font-size:15px}
+.rk{color:var(--ink)}
+.rv{font-weight:600}
+
+/* Plan de continuité */
+.mrr-block{border:2px solid var(--accent);border-radius:8px;overflow:hidden;margin:8px 0}
+.mrr-head{background:var(--accent);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.mrr-head .mh-title{color:var(--brand);font-weight:700;font-size:14px}
+.mrr-head .mh-label{color:var(--brand);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.mrr-head .mh-amount{color:var(--brand);font-size:22px;font-weight:700}
+.mrr-head .mh-per{color:var(--brand);font-size:12px;font-weight:600}
+.mrr-body{padding:14px 16px;background:#FFFDF5}
+.mrr-body .tagline{font-size:12.5px;color:var(--ink);margin-bottom:10px;font-style:italic}
+.mrr-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.mrr-item{background:#fff;border:1px solid var(--line);border-radius:6px;padding:8px 12px;font-size:12px}
+.mrr-item .mi-title{font-weight:700;color:var(--brand);margin-bottom:2px;font-size:12px}
+.mrr-item .mi-desc{color:var(--muted);font-size:11px;line-height:1.4}
+.mrr-note{background:var(--bg-soft);border-left:3px solid var(--accent);padding:10px 14px;font-size:11.5px;color:var(--muted);line-height:1.5}
+
+/* Calendrier de paiement */
+.calendar{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:8px 0}
+.cal-row{display:flex;align-items:center;padding:9px 16px;border-bottom:1px solid var(--line);font-size:12px;gap:12px}
+.cal-row:last-child{border-bottom:none}
+.cal-row .cal-step{width:24px;height:24px;background:var(--brand);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.cal-row .cal-desc{flex:1;color:var(--ink)}
+.cal-row .cal-amount{font-weight:700;color:var(--brand);text-align:right;min-width:70px}
+.cal-row .cal-amount.green{color:#2E7D32}
+.cal-row .cal-amount.muted{color:var(--muted);font-weight:400;font-style:italic}
+
+/* Conditions */
+.conditions{background:var(--bg-soft);border-radius:8px;padding:14px 16px;font-size:12px;margin:8px 0;line-height:1.7}
+.conditions p{margin-bottom:4px}
+.conditions strong{color:var(--brand)}
+
+/* Acceptation */
+.acceptance{border:2px solid var(--brand);border-radius:8px;padding:16px;margin-top:20px}
+.acceptance .acc-title{color:var(--brand);font-weight:700;font-size:13px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
+.acceptance .acc-text{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6}
+.signatures{display:flex;gap:20px}
+.sig{flex:1}
+.sig .sig-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.sig .sig-name{color:var(--brand);font-weight:700;font-size:13px}
+.sig .sig-role{color:var(--muted);font-size:11.5px;margin-top:1px}
+.sig .sig-space{height:44px;border-bottom:1px dotted var(--line);margin:12px 0 6px}
+.sig .sig-date{font-size:11.5px;color:var(--muted)}
+
+/* Pied de page */
+.foot{margin-top:20px;border-top:1px solid var(--line);padding-top:10px;font-size:10px;color:var(--muted);text-align:center;line-height:1.7}
+
+@media print{
+  body{background:#fff;padding:0}
+  .page{box-shadow:none;margin:0;width:100%;padding:10mm 12mm}
+  .phase,.recap,.mrr-block,.calendar{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- EN-TÊTE -->
+  <div class="head">
+    <div class="brand">
+      <h1>Mr Attractor</h1>
+      <div class="tag">Conception d'applications métier &amp; systèmes intelligents</div>
+    </div>
+    <div class="docmeta">
+      <div class="t">Devis</div>
+      <div class="ref">N° ATR-2026-0005</div>
+      <div class="date">Émis le 13 juin 2026</div>
+      <div class="validite">Valable 30 jours — jusqu'au 13 juillet 2026</div>
+    </div>
+  </div>
+
+  <!-- PARTIES -->
+  <h2>Parties</h2>
+  <div class="parties">
+    <div class="partie">
+      <div class="label">Prestataire</div>
+      <strong>Mac Arthur KOUASSI</strong>
+      Mr Attractor — Auto-entrepreneur<br/>
+      SIRET 98377125400015 — Paris, France<br/>
+      myattractor1@gmail.com — +33 7 53 90 23 23
+    </div>
+    <div class="partie">
+      <div class="label">Cliente</div>
+      <strong>Elise CAPEL</strong>
+      Porteuse du projet Club privé Élévia<br/>
+      Elisepelagie@outlook.be
+    </div>
+  </div>
+
+  <!-- OBJET -->
+  <h2>Objet</h2>
+  <div class="objet-box">
+    Conception et développement de l'application <strong>Club privé Élévia</strong> — plateforme de mise en relation ouverte à toutes nationalités, intégrant une vérification d'identité vidéo (KYC), un système de matching par intelligence artificielle et une infrastructure conforme au RGPD. Déploiement progressif en <strong>4 phases indépendantes</strong>.
+  </div>
+
+  <!-- PHASES -->
+  <h2>Détail des prestations</h2>
+
+  <!-- PHASE 1 -->
+  <div class="phase">
+    <div class="phase-head">
+      <div>
+        <div class="ph-label">Phase 1</div>
+        <div class="ph-title">Identité</div>
+      </div>
+      <div class="ph-amount">800 €</div>
+    </div>
+    <div class="phase-body">
+      <div class="description">Socle technique, identité visuelle et conformité légale. Rien ne se construit sans cette base.</div>
+      <ul>
+        <li>Architecture technique et choix de stack (base de données, hébergement, API)</li>
+        <li>Système d'authentification sécurisé (inscription, connexion, gestion des sessions)</li>
+        <li>Design system complet : charte graphique, typographie, composants UI réutilisables</li>
+        <li>Infrastructure RGPD : politique de confidentialité, mentions légales, gestion des consentements</li>
+        <li>Recommandation DPO et protocole de traitement des données sensibles</li>
+      </ul>
+      <div class="phase-payment">
+        <div class="pay-pill">
+          <div class="pp-label">Au démarrage</div>
+          <div class="pp-amount">400 €</div>
+          <div class="pp-note">50% — acompte déduit au calendrier</div>
+        </div>
+        <div class="pay-pill">
+          <div class="pp-label">À la livraison</div>
+          <div class="pp-amount">400 €</div>
+          <div class="pp-note">Validation client requise</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase">
+    <div class="phase-head">
+      <div>
+        <div class="ph-label">Phase 2</div>
+        <div class="ph-title">Confiance</div>
+      </div>
+      <div class="ph-amount">700 €</div>
+    </div>
+    <div class="phase-body">
+      <div class="description">La confiance se construit avant la rencontre. Cette phase garantit que chaque profil est réel.</div>
+      <ul>
+        <li>KYC vidéo : vérification de vivacité (liveness detection) pour authentifier l'identité</li>
+        <li>Processus de validation des profils : statuts, file de modération, tableau de bord admin</li>
+        <li>Durée de vie limitée des données vidéo (TTL 24h) conformément aux exigences RGPD sur la biométrie</li>
+        <li>Badges de confiance visibles sur les profils vérifiés</li>
+      </ul>
+      <div class="phase-payment">
+        <div class="pay-pill">
+          <div class="pp-label">Au démarrage</div>
+          <div class="pp-amount">350 €</div>
+          <div class="pp-note">Après livraison Phase 1</div>
+        </div>
+        <div class="pay-pill">
+          <div class="pp-label">À la livraison</div>
+          <div class="pp-amount">350 €</div>
+          <div class="pp-note">Validation client requise</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase">
+    <div class="phase-head">
+      <div>
+        <div class="ph-label">Phase 3</div>
+        <div class="ph-title">Rencontre</div>
+      </div>
+      <div class="ph-amount">1 350 €</div>
+    </div>
+    <div class="phase-body">
+      <div class="description">Le cœur de l'application. L'intelligence qui connecte les bonnes personnes au bon moment.</div>
+      <ul>
+        <li>Algorithme de matching par IA (embeddings) : compatibilité de profils selon critères personnalisables</li>
+        <li>Interface de découverte : navigation des profils, filtres avancés, suggestions intelligentes</li>
+        <li>Système de mise en relation : demandes, acceptations, refus, blocages</li>
+        <li>Messagerie initiale : premier échange après mise en relation validée</li>
+        <li>Notifications (nouvelle suggestion, mise en relation acceptée)</li>
+      </ul>
+      <div class="phase-payment">
+        <div class="pay-pill">
+          <div class="pp-label">Au démarrage</div>
+          <div class="pp-amount">675 €</div>
+          <div class="pp-note">Après livraison Phase 2</div>
+        </div>
+        <div class="pay-pill">
+          <div class="pp-label">À la livraison</div>
+          <div class="pp-amount">675 €</div>
+          <div class="pp-note">Validation client requise</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase">
+    <div class="phase-head">
+      <div>
+        <div class="ph-label">Phase 4</div>
+        <div class="ph-title">Communauté</div>
+      </div>
+      <div class="ph-amount">650 €</div>
+    </div>
+    <div class="phase-body">
+      <div class="description">L'application devient un espace vivant. Les échanges s'approfondissent, la communauté se régule.</div>
+      <ul>
+        <li>Messagerie complète : conversations, photos, vocaux, historique</li>
+        <li>Back-office modération : signalements, suspensions, gestion des litiges</li>
+        <li>Tableau de bord propriétaire : statistiques d'usage, membres actifs, taux de mise en relation</li>
+        <li>Tests de charge et optimisation des performances avant ouverture publique</li>
+      </ul>
+      <div class="phase-payment">
+        <div class="pay-pill">
+          <div class="pp-label">Au démarrage</div>
+          <div class="pp-amount">325 €</div>
+          <div class="pp-note">Après livraison Phase 3</div>
+        </div>
+        <div class="pay-pill">
+          <div class="pp-label">À la livraison</div>
+          <div class="pp-amount">325 €</div>
+          <div class="pp-note">Validation client requise</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RÉCAPITULATIF -->
+  <h2>Récapitulatif setup</h2>
+  <div class="recap">
+    <div class="recap-row">
+      <span class="rk">Phase 1 — Identité</span>
+      <span class="rv">800 €</span>
+    </div>
+    <div class="recap-row">
+      <span class="rk">Phase 2 — Confiance</span>
+      <span class="rv">700 €</span>
+    </div>
+    <div class="recap-row">
+      <span class="rk">Phase 3 — Rencontre</span>
+      <span class="rv">1 350 €</span>
+    </div>
+    <div class="recap-row">
+      <span class="rk">Phase 4 — Communauté</span>
+      <span class="rv">650 €</span>
+    </div>
+    <div class="recap-row total">
+      <span class="rk">Total setup HT</span>
+      <span class="rv">3 500 €</span>
+    </div>
+    <div class="recap-row acompte">
+      <span class="rk">Acompte reçu le 10/06/2026 (REÇ-2026-001 — Wero)</span>
+      <span class="rv green">− 200 €</span>
+    </div>
+    <div class="recap-row acompte">
+      <span class="rk">Solde acompte restant à percevoir</span>
+      <span class="rv green">− 50 €</span>
+    </div>
+    <div class="recap-row net">
+      <span class="rk">Reste à régler (selon calendrier ci-dessous)</span>
+      <span class="rv">3 250 €</span>
+    </div>
+  </div>
+
+  <!-- PLAN DE CONTINUITÉ -->
+  <h2>Plan de continuité</h2>
+  <div class="mrr-block">
+    <div class="mrr-head">
+      <div>
+        <div class="mh-label">Après livraison de la Phase 4</div>
+        <div class="mh-title">Plan de continuité Club Élévia</div>
+      </div>
+      <div>
+        <div class="mh-amount">250 €<span class="mh-per"> / mois</span></div>
+      </div>
+    </div>
+    <div class="mrr-body">
+      <div class="tagline">Club Élévia traite des données d'identité, des données biométriques et des données personnelles sensibles. Ce plan garantit que l'application reste sécurisée, conforme et opérationnelle — chaque jour.</div>
+      <div class="mrr-grid">
+        <div class="mrr-item">
+          <div class="mi-title">Hébergement &amp; infrastructure</div>
+          <div class="mi-desc">Serveurs, base de données, CDN. L'application disponible 24h/24.</div>
+        </div>
+        <div class="mrr-item">
+          <div class="mi-title">Mises à jour de sécurité</div>
+          <div class="mi-desc">Correctifs critiques appliqués sous 48h. Indispensable pour les données KYC.</div>
+        </div>
+        <div class="mrr-item">
+          <div class="mi-title">Conformité RGPD continue</div>
+          <div class="mi-desc">Adaptation aux évolutions réglementaires sur la biométrie et la protection des données.</div>
+        </div>
+        <div class="mrr-item">
+          <div class="mi-title">Maintenance corrective</div>
+          <div class="mi-desc">Résolution des bugs et dysfonctionnements signalés.</div>
+        </div>
+        <div class="mrr-item">
+          <div class="mi-title">Sauvegardes quotidiennes</div>
+          <div class="mi-desc">Données sauvegardées chaque jour. Restauration possible en cas d'incident.</div>
+        </div>
+        <div class="mrr-item">
+          <div class="mi-title">Support technique</div>
+          <div class="mi-desc">Réponse sous 48h ouvrées pour toute demande ou question technique.</div>
+        </div>
+      </div>
+      <div class="mrr-note">
+        Soit <strong>8,30 € par jour</strong> pour que Club Élévia reste sécurisée, conforme et disponible pour ses membres. Le plan de continuité est activé à la livraison de la Phase 4 et facturé mensuellement. Il peut être résilié avec un préavis de 30 jours.
+      </div>
+    </div>
+  </div>
+
+  <!-- CALENDRIER DE PAIEMENT -->
+  <h2>Calendrier de paiement</h2>
+  <div class="calendar">
+    <div class="cal-row">
+      <div class="cal-step">✓</div>
+      <div class="cal-desc"><strong>Acompte reçu</strong> — Reçu REÇ-2026-001 — Wero — 10/06/2026</div>
+      <div class="cal-amount green">200 € reçus</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-step">→</div>
+      <div class="cal-desc"><strong>Solde acompte restant</strong> — À percevoir avant démarrage Phase 1</div>
+      <div class="cal-amount">50 €</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-step">1</div>
+      <div class="cal-desc"><strong>Démarrage Phase 1</strong> — À la signature du contrat de prestation (400 € − 250 € acompte = <strong>150 € net</strong>)</div>
+      <div class="cal-amount">150 €</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-step">2</div>
+      <div class="cal-desc"><strong>Livraison Phase 1</strong> — Validation du socle technique et du design system</div>
+      <div class="cal-amount">400 €</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-step">3</div>
+      <div class="cal-desc"><strong>Démarrage Phase 2</strong> — Après validation Phase 1</div>
+      <div class="cal-amount">350 €</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-step">4</div>
+      <div class="cal-desc"><strong>Livraison Phase 2</strong> — KYC vidéo opérationnel et validé</div>
+      <div class="cal-amount">350 €</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-step">5</div>
+      <div class="cal-desc"><strong>Démarrage Phase 3</strong> — Après validation Phase 2</div>
+      <div class="cal-amount">675 €</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-step">6</div>
+      <div class="cal-desc"><strong>Livraison Phase 3</strong> — Matching IA et mise en relation opérationnels</div>
+      <div class="cal-amount">675 €</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-step">7</div>
+      <div class="cal-desc"><strong>Démarrage Phase 4</strong> — Après validation Phase 3</div>
+      <div class="cal-amount">325 €</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-step">8</div>
+      <div class="cal-desc"><strong>Livraison Phase 4 &amp; mise en production</strong> — Application complète livrée</div>
+      <div class="cal-amount">325 €</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-step">→</div>
+      <div class="cal-desc"><strong>Plan de continuité</strong> — Facturation mensuelle à partir de la mise en production</div>
+      <div class="cal-amount muted">250 €/mois</div>
+    </div>
+  </div>
+
+  <!-- CONDITIONS -->
+  <h2>Conditions</h2>
+  <div class="conditions">
+    <p><strong>TVA :</strong> TVA non applicable, article 293 B du CGI.</p>
+    <p><strong>Paiement :</strong> Wero (+33 7 53 90 23 23), Revolut ou virement bancaire. Chaque versement déclenche le démarrage de l'étape suivante.</p>
+    <p><strong>Validation :</strong> Chaque phase est validée par la Cliente avant que le versement de livraison soit dû. Une fiche de validation sera transmise à chaque livraison.</p>
+    <p><strong>Propriété intellectuelle :</strong> Les livrables de chaque phase deviennent la propriété de la Cliente après règlement complet de ladite phase, conformément au NDA et au contrat de prestation à venir.</p>
+    <p><strong>Délais :</strong> Les délais de réalisation par phase seront définis dans le contrat de prestation, après signature du présent devis et réception du cahier des charges complet.</p>
+    <p><strong>Validité :</strong> Le présent devis est valable 30 jours à compter de sa date d'émission, soit jusqu'au <strong>13 juillet 2026</strong>.</p>
+  </div>
+
+  <!-- ACCEPTATION -->
+  <div class="acceptance">
+    <div class="acc-title">Bon pour accord</div>
+    <div class="acc-text">En signant le présent devis, la Cliente accepte les prestations, montants et modalités de paiement décrits ci-dessus. Ce devis signé vaut commande et engage les deux parties. Il sera complété par un contrat de prestation détaillé signé séparément.</div>
+    <div class="signatures">
+      <div class="sig">
+        <div class="sig-label">Prestataire</div>
+        <div class="sig-name">Mac Arthur KOUASSI</div>
+        <div class="sig-role">Mr Attractor — Auto-entrepreneur</div>
+        <div class="sig-space"></div>
+        <div class="sig-date">Fait le 13 juin 2026, à Paris</div>
+      </div>
+      <div class="sig">
+        <div class="sig-label">Cliente — Bon pour accord</div>
+        <div class="sig-name">Elise CAPEL</div>
+        <div class="sig-role">Club privé Élévia</div>
+        <div class="sig-space"></div>
+        <div class="sig-date">Fait le __________, à __________</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIED DE PAGE -->
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015 — Immatriculée le 01/02/2024<br>
+    TVA non applicable, article 293 B du CGI — myattractor1@gmail.com — +33 7 53 90 23 23 — agenceattractor.com<br>
+    Devis N° ATR-2026-0005 — Projet Club privé Élévia — Valable jusqu'au 13 juillet 2026
+  </div>
+
+</div>
+</body>
+</html>

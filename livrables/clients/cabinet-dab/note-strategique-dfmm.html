@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cabinet DAB × Agence Attractor — Note Stratégique DFMM</title>
+<style>
+:root {
+  --brand:   #0E2A1A;
+  --accent:  #C9A84C;
+  --ink:     #1A1F2B;
+  --muted:   #6B7280;
+  --line:    #E5E7EB;
+  --bg-soft: #F7F5EF;
+  --bg-or:   #FDFAF2;
+  --orange:  #E8751A;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  color: var(--ink);
+  background: #ECEAE4;
+  padding: 24px;
+  line-height: 1.6;
+  font-size: 13px;
+}
+
+/* PAGE WRAPPER — 210mm pour A4 */
+.page {
+  width: 210mm;
+  margin: 0 auto 32px;
+  background: #fff;
+  padding: 18mm 16mm 14mm;
+  box-shadow: 0 6px 30px rgba(0,0,0,.12);
+}
+
+/* =====================
+   COVER
+   ===================== */
+.cover-band {
+  background: var(--brand);
+  margin: -18mm -16mm 0;
+  padding: 18mm 16mm 14mm;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.cover-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+.cover-h1 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.cover-h1 span { color: var(--accent); }
+.cover-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,.7);
+  max-width: 480px;
+  margin-bottom: 36px;
+  line-height: 1.5;
+}
+.cover-meta-row {
+  display: flex;
+  gap: 0;
+  border-top: 1px solid rgba(255,255,255,.15);
+  padding-top: 20px;
+}
+.cover-meta-cell {
+  flex: 1;
+  padding-right: 24px;
+}
+.cover-meta-cell label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.4);
+  margin-bottom: 3px;
+}
+.cover-meta-cell span {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* =====================
+   TYPOGRAPHY
+   ===================== */
+.section { margin-top: 28px; page-break-inside: avoid; }
+.section + .section { margin-top: 36px; }
+
+.sec-num {
+  display: inline-block;
+  background: var(--brand);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 3px 10px;
+  border-radius: 2px;
+  margin-bottom: 8px;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--brand);
+  margin-bottom: 4px;
+}
+.sec-lead {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 20px;
+  max-width: 540px;
+  line-height: 1.6;
+}
+h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--brand);
+  margin-bottom: 8px;
+}
+p { font-size: 12.5px; margin-bottom: 8px; line-height: 1.6; }
+ul { margin: 6px 0 8px 18px; font-size: 12.5px; }
+li { margin-bottom: 5px; line-height: 1.5; }
+
+/* =====================
+   PROOF BANNER
+   ===================== */
+.proof-banner {
+  background: var(--brand);
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  page-break-inside: avoid;
+}
+.proof-headline {
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.proof-headline span { color: var(--accent); }
+.proof-sub { font-size: 12px; color: rgba(255,255,255,.6); margin-bottom: 20px; }
+
+.stats-row { display: flex; gap: 0; }
+.stat-cell {
+  flex: 1;
+  text-align: center;
+  padding: 0 8px;
+  border-right: 1px solid rgba(255,255,255,.12);
+}
+.stat-cell:last-child { border-right: none; }
+.stat-num {
+  display: block;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-lbl { font-size: 11px; color: rgba(255,255,255,.6); line-height: 1.4; }
+
+/* =====================
+   TIMELINE
+   ===================== */
+.timeline { margin-top: 16px; padding-left: 20px; position: relative; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 4px; top: 6px; bottom: 6px;
+  width: 2px;
+  background: var(--line);
+}
+.tl-item { position: relative; margin-bottom: 16px; page-break-inside: avoid; }
+.tl-dot {
+  position: absolute;
+  left: -19px; top: 5px;
+  width: 10px; height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.tl-date { font-size: 10px; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 1px; }
+.tl-text { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.tl-text strong { color: var(--ink); }
+
+/* =====================
+   CARDS (flex, print-safe)
+   ===================== */
+.cards-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+.card {
+  flex: 1 1 45%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  page-break-inside: avoid;
+}
+.card-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.card h4 { font-size: 13px; font-weight: 700; color: var(--brand); margin-bottom: 6px; }
+.card p { font-size: 12px; color: var(--muted); }
+
+/* =====================
+   CHANTIER BLOCKS
+   ===================== */
+.chantier {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  page-break-inside: avoid;
+}
+.chantier-head {
+  background: var(--brand);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.ch-num {
+  width: 28px; height: 28px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; color: #fff;
+  flex-shrink: 0;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.chantier-head h3 { font-size: 14px; font-weight: 700; color: #fff; margin: 0; }
+.ch-badge {
+  margin-left: auto;
+  background: rgba(201,168,76,.25);
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.chantier-body { padding: 18px 20px; }
+.why-box {
+  background: var(--bg-soft);
+  border-left: 3px solid var(--accent);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.6;
+  border-radius: 0 4px 4px 0;
+}
+.why-box strong { color: var(--ink); }
+.tasks { list-style: none; margin: 0; padding: 0; }
+.tasks li {
+  display: flex;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: flex-start;
+  font-size: 12.5px;
+}
+.tasks li:last-child { border-bottom: none; }
+.chk {
+  width: 16px; height: 16px; min-width: 16px;
+  border: 2px solid var(--line);
+  border-radius: 3px;
+  margin-top: 2px;
+}
+.t-main { color: var(--ink); font-weight: 600; }
+.t-sub { color: var(--muted); font-size: 12px; display: block; margin-top: 1px; line-height: 1.4; }
+
+/* =====================
+   PREPARATIFS SECTION
+   ===================== */
+.prep-block {
+  background: var(--bg-or);
+  border: 1px solid #E8D8A0;
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  page-break-inside: avoid;
+}
+.prep-who {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.prep-avatar {
+  width: 36px; height: 36px;
+  background: var(--brand);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; color: var(--accent);
+  flex-shrink: 0;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.prep-name { font-size: 14px; font-weight: 700; color: var(--brand); }
+.prep-role { font-size: 11px; color: var(--muted); }
+.prep-tasks { list-style: none; margin: 0; padding: 0; }
+.prep-tasks li {
+  display: flex;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid #E8D8A0;
+  align-items: flex-start;
+  font-size: 12.5px;
+}
+.prep-tasks li:last-child { border-bottom: none; }
+.prep-chk {
+  width: 16px; height: 16px; min-width: 16px;
+  border: 2px solid var(--accent);
+  border-radius: 3px;
+  margin-top: 2px;
+}
+
+/* =====================
+   VIDEO BRIEF
+   ===================== */
+.video-block {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  page-break-inside: avoid;
+}
+.video-head {
+  background: #1A1F2B;
+  padding: 12px 18px;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.video-head h4 { font-size: 13px; font-weight: 700; color: #fff; }
+.video-head span { font-size: 11px; color: rgba(255,255,255,.5); }
+.video-body { padding: 14px 18px; }
+.video-row { display: flex; gap: 12px; margin-bottom: 8px; align-items: flex-start; }
+.video-tag {
+  background: var(--bg-soft);
+  color: var(--brand);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.video-desc { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.video-desc strong { color: var(--ink); }
+
+/* =====================
+   TARIF TABLE
+   ===================== */
+.tarif-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 12.5px; }
+.tarif-table th {
+  background: var(--brand);
+  color: #fff;
+  padding: 9px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.tarif-table td { padding: 9px 14px; border-bottom: 1px solid var(--line); color: var(--ink); }
+.tarif-table tr:last-child td { border-bottom: none; }
+.tarif-table tr:nth-child(even) td { background: var(--bg-soft); }
+.tarif-pill {
+  display: inline-block;
+  background: var(--bg-or);
+  border: 1px solid #E8D8A0;
+  color: var(--brand);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+.fill-box {
+  background: var(--bg-soft);
+  border: 1px dashed var(--line);
+  border-radius: 4px;
+  padding: 4px 10px;
+  color: var(--muted);
+  font-size: 11px;
+  font-style: italic;
+}
+
+/* =====================
+   PLANNING TABLE
+   ===================== */
+.plan-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 12px; }
+.plan-table th {
+  background: var(--brand);
+  color: #fff;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: left;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.plan-table td { padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.plan-table tr:last-child td { border-bottom: none; }
+.plan-mois {
+  background: var(--bg-or);
+  color: var(--brand);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.plan-dot { color: var(--accent); font-weight: 700; margin-right: 4px; }
+
+/* =====================
+   ROLES TABLE
+   ===================== */
+.roles-row { display: flex; gap: 12px; margin-top: 16px; }
+.role-card {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  page-break-inside: avoid;
+}
+.role-name { font-size: 13px; font-weight: 700; color: var(--brand); margin-bottom: 2px; }
+.role-title { font-size: 10px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.role-card p { font-size: 12px; color: var(--muted); }
+
+/* =====================
+   CLOSING BANNER
+   ===================== */
+.closing-banner {
+  background: var(--brand);
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin-top: 28px;
+  text-align: center;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  page-break-inside: avoid;
+}
+.closing-banner h3 { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 6px; line-height: 1.3; }
+.closing-banner h3 span { color: var(--accent); }
+.closing-banner p { font-size: 13px; color: rgba(255,255,255,.7); margin-bottom: 18px; }
+.cta-pill {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 10px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+/* =====================
+   FOOTER
+   ===================== */
+.doc-foot {
+  margin-top: 24px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* =====================
+   PRINT
+   ===================== */
+@media print {
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body { background: #fff; padding: 0; }
+  .page { box-shadow: none; margin: 0; width: 100%; padding: 12mm 14mm 10mm; }
+  .section { page-break-inside: avoid; }
+  h2 { page-break-after: avoid; }
+  .chantier, .prep-block, .video-block, .card, .role-card { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- COVER -->
+  <div class="cover-band">
+    <div class="cover-label">Note stratégique confidentielle — Juin 2026</div>
+    <div class="cover-h1">De la <span>preuve</span><br>à la puissance</div>
+    <p class="cover-sub">Ce que nous avons déjà construit ensemble dans le cadre du programme DFMM — et ce que nous allons faire maintenant pour amplifier les résultats.</p>
+    <div class="cover-meta-row">
+      <div class="cover-meta-cell">
+        <label>Destinataires</label>
+        <span>Cabinet DAB · Beracca Mastery Group</span>
+      </div>
+      <div class="cover-meta-cell">
+        <label>Préparé par</label>
+        <span>Mac Arthur KOUASSI — Agence Mr Attractor</span>
+      </div>
+      <div class="cover-meta-cell">
+        <label>Statut</label>
+        <span>Confidentiel · Pour validation</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================
+       01 — CE QUI A ÉTÉ PROUVÉ
+       ============================ -->
+  <div class="section">
+    <div class="sec-num">01 — LA PREUVE</div>
+    <h2>Ce que nous avons déjà construit</h2>
+    <p class="sec-lead">Avant toute campagne, regardons ce qui existe. En 6 mois, un parcours complet a été réalisé de A à Z. Ce n'est pas une promesse. C'est un cas réel, documenté, avec des chiffres.</p>
+
+    <div class="proof-banner">
+      <div class="proof-headline">L'attiéké de <span>Bouaké</span> est dans les rayons <span>canadiens</span>.</div>
+      <div class="proof-sub">Beracca Mastery Group · Premier producteur du programme DFMM à avoir matérialisé une commande export réelle.</div>
+      <div class="stats-row">
+        <div class="stat-cell">
+          <span class="stat-num">3–5T</span>
+          <span class="stat-lbl">par mois,<br>marché récurrent validé</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num">45+</span>
+          <span class="stat-lbl">candidats à la<br>1ère cohorte DFMM</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num">CI → CA</span>
+          <span class="stat-lbl">Bouaké · KONAVA<br>Magasins OPLUS Canada</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Décembre 2025</div>
+        <div class="tl-text"><strong>Premier contact.</strong> Recommandation réseau — Beracca Mastery Group identifié comme partenaire producteur. Réception des premiers échantillons.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Janvier 2026</div>
+        <div class="tl-text"><strong>Validation terrain.</strong> Visite à Bouaké, tests produit, recommandations techniques Dr. KANGA, présentation à KONAVA.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Mars 2026</div>
+        <div class="tl-text"><strong>Première commande.</strong> 3T d'attiéké produites, livrées à Abidjan, acheminées à KONAVA. Toute la chaîne de valeur testée pour la première fois.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Juin 2026</div>
+        <div class="tl-text"><strong>Marché récurrent.</strong> KONAVA confirme et envisage de monter en puissance. <strong>Beracca dispose d'un débouché stable de 3 à 5T/mois. Le modèle DFMM est prouvé.</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================
+       02 — CE QUE CA SIGNIFIE
+       ============================ -->
+  <div class="section">
+    <div class="sec-num">02 — LA VALEUR</div>
+    <h2>Ce que ça signifie pour chaque partie</h2>
+    <p class="sec-lead">Ce MVP n'est pas juste une commande. C'est une démonstration vivante que tout le modèle fonctionne. Chaque acteur sort de ce test avec un actif précieux.</p>
+
+    <div class="cards-row">
+      <div class="card">
+        <div class="card-label">Beracca Mastery Group</div>
+        <h4>Le premier champion DFMM</h4>
+        <p>La preuve que son attiéké est aux normes internationales. Un marché récurrent qui sécurise la trésorerie. Et un statut national rare : premier producteur ivoirien à exporter via le programme.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">KONAVA</div>
+        <h4>Un fournisseur fiable trouvé</h4>
+        <p>Un produit de consommation courante, traçable, local. Une histoire à raconter à ses clients. La confiance est en place pour monter en puissance rapidement.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Cabinet DAB</div>
+        <h4>Un programme prouvé</h4>
+        <p>DFMM n'est plus une promesse. C'est un cas documenté avec des chiffres réels. Le Programme Signature peut maintenant se vendre sur la base de la preuve, pas du discours.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Agence Mr Attractor</div>
+        <h4>L'orchestrateur stratégique</h4>
+        <p>A modélisé le concept, connecté les acteurs, piloté la stratégie. Positionné comme l'adjuvant qui rend possible ce que les autres ne peuvent pas faire seuls.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================
+       03 — LES 3 CHANTIERS
+       ============================ -->
+  <div class="section">
+    <div class="sec-num">03 — LES CHANTIERS</div>
+    <h2>Ce qu'on va construire maintenant</h2>
+    <p class="sec-lead">Nous avons la preuve. Il faut maintenant construire la machine qui va la diffuser, attirer les prochains candidats et structurer le programme pour qu'il devienne scalable.</p>
+
+    <div class="chantier">
+      <div class="chantier-head">
+        <div class="ch-num">1</div>
+        <h3>Rendre Dr. KANGA autonome sur LinkedIn</h3>
+        <div class="ch-badge">Priorité haute</div>
+      </div>
+      <div class="chantier-body">
+        <div class="why-box">Dr. KANGA est l'expert. Sa crédibilité personnelle est l'actif le plus puissant du programme. Or le site cabinetdab.com ne présente pas encore l'équipe. <strong>LinkedIn est le canal n°1 pour atteindre les investisseurs, les institutionnels et les acheteurs internationaux.</strong> Son profil doit être prêt avant l'event de lancement.</div>
+        <ul class="tasks">
+          <li><div class="chk"></div><div><span class="t-main">Photo professionnelle.</span><span class="t-sub">Portrait studio ou cadre naturel terrain. Représente l'homme de terrain expert, pas le consultant générique.</span></div></li>
+          <li><div class="chk"></div><div><span class="t-main">Titre LinkedIn optimisé.</span><span class="t-sub">Ex : "Expert Agricole | Accompagnement à l'exportation agroalimentaire en Afrique | Fondateur Programme DFMM"</span></div></li>
+          <li><div class="chk"></div><div><span class="t-main">Résumé "À propos" rédigé par l'agence.</span><span class="t-sub">180 mots max. Histoire personnelle + résultats + vision. Cas Beracca/KONAVA cité explicitement.</span></div></li>
+          <li><div class="chk"></div><div><span class="t-main">5 posts piliers préparés à l'avance par l'agence.</span><span class="t-sub">Thèmes : les 3 erreurs des producteurs / ce que j'ai appris en 3 mois de coaching collectif / pourquoi l'attiéké peut dominer la diaspora mondiale / le cas Beracca raconté en 1 post.</span></div></li>
+          <li><div class="chk"></div><div><span class="t-main">1 post par semaine — rythme autonome.</span><span class="t-sub">L'agence fournit les brouillons, Dr. KANGA valide et publie. Autonomie complète en 4 semaines.</span></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chantier">
+      <div class="chantier-head">
+        <div class="ch-num">2</div>
+        <h3>Transformer les masterclass en programme digital</h3>
+        <div class="ch-badge">Actif disponible</div>
+      </div>
+      <div class="chantier-body">
+        <div class="why-box">Les enregistrements des 3 mois de webinaires existent déjà. Ce contenu a coûté du temps et de l'expertise. Laissé en l'état, il dort. <strong>Structuré en programme digital, il devient un produit qui se vend 24h/24 et attire les candidats en continu.</strong></div>
+        <ul class="tasks">
+          <li><div class="chk"></div><div><span class="t-main">Inventaire des enregistrements existants.</span><span class="t-sub">Liste, durée, thème de chaque session. Identifier les 5 à 8 meilleures pour le programme commercial.</span></div></li>
+          <li><div class="chk"></div><div><span class="t-main">Découpage en modules.</span><span class="t-sub">Proposition : M1 Comprendre les marchés mondiaux / M2 Préparer sa production aux normes export / M3 Trouver son acheteur / M4 Gérer la chaîne logistique / M5 Sécuriser son premier contrat.</span></div></li>
+          <li><div class="chk"></div><div><span class="t-main">Montage vidéo léger par le prestataire choisi.</span><span class="t-sub">Intro/outro Cabinet DAB, sous-titres, chapitrage. Valoriser l'existant sans re-tourner.</span></div></li>
+          <li><div class="chk"></div><div><span class="t-main">Hébergement sur cabinetdab.com.</span><span class="t-sub">Espace membres sécurisé intégré au site existant. Pas de plateforme tierce qui capte l'audience.</span></div></li>
+          <li><div class="chk"></div><div><span class="t-main">Définir les tarifs d'accès. (voir section 05)</span><span class="t-sub">Le programme digital sert aussi de produit d'entrée avant la cohorte payante complète.</span></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chantier">
+      <div class="chantier-head">
+        <div class="ch-num">3</div>
+        <h3>Organiser l'event de lancement DFMM</h3>
+        <div class="ch-badge">Moment décisif</div>
+      </div>
+      <div class="chantier-body">
+        <div class="why-box">Un event de lancement n'est pas une conférence. C'est une scène. Celle où on révèle les résultats DFMM en public, où Beracca témoigne, où KONAVA confirme — et où le prochain candidat dans la salle pense : <strong>"C'est moi le prochain."</strong></div>
+        <ul class="tasks">
+          <li><div class="chk"></div><div><span class="t-main">Format hybride recommandé.</span><span class="t-sub">Abidjan en physique (80–150 personnes) + streaming Facebook Live / YouTube pour la diaspora et les producteurs hors Abidjan.</span></div></li>
+          <li><div class="chk"></div><div><span class="t-main">Agenda proposé (2h30 max).</span><span class="t-sub">Ouverture Cabinet DAB (10 min) · Présentation DFMM (20 min) · Témoignage Beracca (15 min) · Intervention KONAVA (10 min) · Q&amp;A (20 min) · Ouverture candidatures cohorte 2 (15 min) · Networking.</span></div></li>
+          <li><div class="chk"></div><div><span class="t-main">Invités prioritaires.</span><span class="t-sub">Producteurs agroalimentaires CI · Institutionnels (ministères, chambres de commerce) · Médias économiques africains · Réseau diaspora · Partenaires financiers.</span></div></li>
+          <li><div class="chk"></div><div><span class="t-main">Captation complète par le prestataire vidéo.</span><span class="t-sub">L'event produit 4 semaines de contenu post-lancement : extraits, citations, data, témoignages.</span></div></li>
+          <li><div class="chk"></div><div><span class="t-main">Date cible : Septembre 2026.</span><span class="t-sub">Après la préparation des chantiers 1 et 2, avant la fin d'année pour ouvrir la cohorte 2.</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================
+       04 — PRODUCTION VIDEO
+       ============================ -->
+  <div class="section">
+    <div class="sec-num">04 — PRODUCTION VIDÉO</div>
+    <h2>Choisir le bon prestataire vidéo</h2>
+    <p class="sec-lead">Nous avons eu des difficultés avec des prestataires non qualifiés par le passé. Cette fois, le brief est précis. Le prestataire retenu devra couvrir 4 tournages distincts avec un niveau professionnel constant.</p>
+
+    <div class="video-block">
+      <div class="video-head">
+        <h4>Tournage 1 — Interview Dr. KANGA (son parcours et le programme DFMM)</h4>
+        <span>Studio ou cadre institutionnel · Durée finale : 8–12 min</span>
+      </div>
+      <div class="video-body">
+        <div class="video-row"><span class="video-tag">Contenu</span><span class="video-desc">Dr. KANGA parle de son parcours d'expert, de la genèse du concept DFMM, de ce qu'il a voulu résoudre pour les producteurs africains. <strong>L'histoire personnelle avant le programme.</strong></span></div>
+        <div class="video-row"><span class="video-tag">Usage</span><span class="video-desc">Intro du programme digital · Page d'accueil cabinetdab.com · LinkedIn · Contenu long format</span></div>
+        <div class="video-row"><span class="video-tag">Exigences</span><span class="video-desc">Éclairage studio, 2 caméras (plan large + plan serré), micro-cravate, fond sobre ou bureau soigné.</span></div>
+      </div>
+    </div>
+
+    <div class="video-block">
+      <div class="video-head">
+        <h4>Tournage 2 — Dr. KANGA en mission terrain à Bouaké (chez Beracca)</h4>
+        <span>Terrain / Bouaké · Durée finale : 5–8 min</span>
+      </div>
+      <div class="video-body">
+        <div class="video-row"><span class="video-tag">Contenu</span><span class="video-desc">Dr. KANGA dans les installations de production de Beracca. Interaction avec les équipes, observation du process, commentaire en direct. <strong>La preuve que l'expert est sur le terrain, pas derrière un bureau.</strong></span></div>
+        <div class="video-row"><span class="video-tag">Inclus</span><span class="video-desc">Témoignage de Mme Bérénice KOUADIO DEBRIMOU (Beracca) capté dans ce même tournage. Son parcours, ses défis, ce que le programme a changé concrètement.</span></div>
+        <div class="video-row"><span class="video-tag">Usage</span><span class="video-desc">DMV centrale · Contenu social media · Présentation à l'event de lancement · Pitch investisseurs</span></div>
+        <div class="video-row"><span class="video-tag">Exigences</span><span class="video-desc">Tournage en lumière naturelle ou semi-naturelle. Mobilité obligatoire (steadicam ou épaule). Micro ambiance + micro-cravate. Montage fluide, pas de stock shots artificiels.</span></div>
+      </div>
+    </div>
+
+    <div class="video-block">
+      <div class="video-head">
+        <h4>Tournage 3 — Masterclass : enregistrement des sessions du programme</h4>
+        <span>Studio ou salle équipée · Durée brute par session : 60–90 min</span>
+      </div>
+      <div class="video-body">
+        <div class="video-row"><span class="video-tag">Contenu</span><span class="video-desc">Enregistrement des nouvelles sessions masterclass de Dr. KANGA. Contenu pédagogique structuré par module (5 modules cibles). <strong>Ce sont les vidéos vendues dans le programme digital.</strong></span></div>
+        <div class="video-row"><span class="video-tag">Exigences</span><span class="video-desc">Image stable, son irréprochable (aucune distorsion), présentation slides visible en incrustation, chapitrage au montage. Le standard Netflix documentaire est la référence minimum.</span></div>
+        <div class="video-row"><span class="video-tag">Livrable</span><span class="video-desc">Fichiers MP4 HD + sous-titres SRT. Intro/outro Cabinet DAB intégrés à chaque module.</span></div>
+      </div>
+    </div>
+
+    <div class="video-block">
+      <div class="video-head">
+        <h4>Tournage 4 — Captation de l'event de lancement</h4>
+        <span>Abidjan · Durée event : 2h30 · Contenu post-event : 4 semaines</span>
+      </div>
+      <div class="video-body">
+        <div class="video-row"><span class="video-tag">Contenu</span><span class="video-desc">Couverture complète de l'event : scène, salle, témoignages live, réactions, networking. <strong>Matière première pour 4 semaines de contenu social media après l'event.</strong></span></div>
+        <div class="video-row"><span class="video-tag">Exigences</span><span class="video-desc">2 camérastes minimum. Un clip résumé de 90 sec livré dans les 48h. Extraits courtes durées (15–30 sec) pour les réseaux livrés en J+5.</span></div>
+      </div>
+    </div>
+
+    <div class="why-box" style="margin-top:16px;">
+      <strong>Critères de sélection du prestataire.</strong> Le Cabinet DAB doit demander : (1) un portfolio avec au moins 2 tournages institutionnels/corporate réalisés en Côte d'Ivoire, (2) une référence vérifiable dans le secteur agro ou associatif, (3) un devis détaillé par tournage avec liste du matériel utilisé. <strong>Ne pas choisir sur le prix seul.</strong> La qualité des vidéos conditionne directement la crédibilité du programme à l'international.
+    </div>
+  </div>
+
+  <!-- ============================
+       05 — TARIFICATION MASTERCLASS
+       ============================ -->
+  <div class="section">
+    <div class="sec-num">05 — TARIFICATION</div>
+    <h2>Définir les coûts d'accès à la masterclass</h2>
+    <p class="sec-lead">Cabinet DAB doit valider sa grille tarifaire avant le lancement de la communication. Ces tarifs serviront de base à tous les supports de vente. Ce tableau est à compléter par Cabinet DAB.</p>
+
+    <table class="tarif-table">
+      <thead>
+        <tr>
+          <th>Offre</th>
+          <th>Contenu inclus</th>
+          <th>Cible</th>
+          <th>Tarif à définir</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Accès Masterclass Digital</strong><br><span style="font-size:11px;color:#6B7280">Programme vidéo en ligne</span></td>
+          <td>5 modules vidéo + supports PDF + accès 6 mois</td>
+          <td>Producteurs CI + diaspora</td>
+          <td><span class="fill-box">À définir par Cabinet DAB</span></td>
+        </tr>
+        <tr>
+          <td><strong>Programme Signature — Cohorte</strong><br><span style="font-size:11px;color:#6B7280">Accompagnement collectif</span></td>
+          <td>Masterclass digital + coaching collectif 3 mois + mise en réseau acheteurs</td>
+          <td>Producteurs prêts à exporter</td>
+          <td><span class="fill-box">À définir par Cabinet DAB</span></td>
+        </tr>
+        <tr>
+          <td><strong>Accompagnement individuel</strong><br><span style="font-size:11px;color:#6B7280">Sur devis</span></td>
+          <td>Audit + plan d'action personnalisé + accès réseau DFMM</td>
+          <td>Investisseurs / grandes exploitations</td>
+          <td><span class="fill-box">Sur devis — contacter Cabinet DAB</span></td>
+        </tr>
+        <tr>
+          <td><strong>Livre blanc gratuit</strong><br><span style="font-size:11px;color:#6B7280">Lead magnet</span></td>
+          <td>"Les 3 erreurs qui bloquent les producteurs locaux à l'export"</td>
+          <td>Tous les prospects (premier contact)</td>
+          <td><span class="tarif-pill">Gratuit — capture email</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================
+       06 — PRÉPARATIFS PAR ACTEUR
+       ============================ -->
+  <div class="section">
+    <div class="sec-num">06 — VOS PRÉPARATIFS</div>
+    <h2>Ce que Cabinet DAB doit préparer de son côté</h2>
+    <p class="sec-lead">L'Agence Attractor construit le narratif, produit les contenus et orchestre la stratégie. Pour que tout s'enchaîne sans délai, Cabinet DAB doit préparer ces éléments en parallèle.</p>
+
+    <div class="prep-block">
+      <div class="prep-who">
+        <div class="prep-avatar">DK</div>
+        <div>
+          <div class="prep-name">Dr. KANGA</div>
+          <div class="prep-role">Expert agricole · Fondateur du programme DFMM</div>
+        </div>
+      </div>
+      <ul class="prep-tasks">
+        <li><div class="prep-chk"></div><div><strong>Biographie personnelle rédigée.</strong> 2 à 3 paragraphes : parcours, expertise, pourquoi DFMM. L'agence reformule, mais la matière brute vient de vous.</div></li>
+        <li><div class="prep-chk"></div><div><strong>Photo professionnelle récente.</strong> Portrait haute résolution, fond neutre ou terrain. Utilisée sur LinkedIn, le site et tous les supports.</div></li>
+        <li><div class="prep-chk"></div><div><strong>Disponibilité pour 2 tournages.</strong> Interview studio (demi-journée) + mission terrain Bouaké chez Beracca (1 journée). Dates à caler avec l'agence en juillet.</div></li>
+        <li><div class="prep-chk"></div><div><strong>Inventaire des enregistrements masterclass.</strong> Liste de toutes les sessions webinaires enregistrées (titre, date, durée). Envoyer les fichiers ou les liens d'accès à l'agence.</div></li>
+        <li><div class="prep-chk"></div><div><strong>Validation de la grille tarifaire.</strong> Remplir le tableau section 05 avec les prix définitifs. Décision stratégique qui appartient au Cabinet.</div></li>
+        <li><div class="prep-chk"></div><div><strong>Désignation du responsable communication interne.</strong> Une personne du Cabinet qui valide rapidement les contenus avant publication (délai de retour max 48h).</div></li>
+      </ul>
+    </div>
+
+    <div class="prep-block">
+      <div class="prep-who">
+        <div class="prep-avatar">AJ</div>
+        <div>
+          <div class="prep-name">M. Ahébé Jean</div>
+          <div class="prep-role">Consultant IT · Cabinet DAB</div>
+        </div>
+      </div>
+      <ul class="prep-tasks">
+        <li><div class="prep-chk"></div><div><strong>Accès administrateur au site cabinetdab.com.</strong> Identifiants CMS / hébergeur à partager avec l'agence pour intégrer la page équipe, la section résultats et l'espace membres programme digital.</div></li>
+        <li><div class="prep-chk"></div><div><strong>Rapport technique du site actuel.</strong> CMS utilisé (WordPress, autre), hébergeur, thème, plugins actifs. L'agence doit évaluer ce qui est faisable sans refonte complète.</div></li>
+        <li><div class="prep-chk"></div><div><strong>Solution d'hébergement vidéo.</strong> Évaluer les options : Vimeo Pro, Wistia, ou hébergement direct. Recommandation attendue avant fin juillet pour intégration dans le programme digital.</div></li>
+        <li><div class="prep-chk"></div><div><strong>Mise en place d'un formulaire de candidature.</strong> Formulaire simple (nom, pays, activité, motivation) pour capter les candidats cohorte 2 avant l'event de lancement.</div></li>
+        <li><div class="prep-chk"></div><div><strong>Outil de paiement en ligne.</strong> Identifier et activer un moyen de paiement adapté à la cible CI + diaspora (Wave, Djamo, carte internationale). Nécessaire pour vendre le programme digital.</div></li>
+        <li><div class="prep-chk"></div><div><strong>Page LinkedIn Cabinet DAB à créer ou mettre à jour.</strong> Page entreprise distincte du profil personnel Dr. KANGA. L'agence fournit les visuels et le texte, M. Ahébé administre.</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ============================
+       07 — PLANNING
+       ============================ -->
+  <div class="section">
+    <div class="sec-num">07 — PLANNING</div>
+    <h2>Feuille de route juillet – septembre 2026</h2>
+    <p class="sec-lead">Trois mois, une montée en puissance progressive. L'objectif : arriver à l'event avec tous les actifs en place et la cohorte 2 en attente.</p>
+
+    <table class="plan-table">
+      <thead>
+        <tr>
+          <th style="width:18%">Période</th>
+          <th>Cabinet DAB</th>
+          <th>Agence Attractor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="plan-mois">Juillet 2026<br><span style="font-size:10px;font-weight:400;">Semaines 1–4</span></td>
+          <td>
+            <span class="plan-dot">·</span>Biographie + photo Dr. KANGA fournie<br>
+            <span class="plan-dot">·</span>Inventaire enregistrements masterclass transmis<br>
+            <span class="plan-dot">·</span>Accès CMS + rapport technique fourni (M. Ahébé)<br>
+            <span class="plan-dot">·</span>Tarifs masterclass validés
+          </td>
+          <td>
+            <span class="plan-dot">·</span>Profil LinkedIn Dr. KANGA optimisé<br>
+            <span class="plan-dot">·</span>5 posts piliers rédigés<br>
+            <span class="plan-dot">·</span>Brief prestataire vidéo finalisé + sélection<br>
+            <span class="plan-dot">·</span>Premiers tournages planifiés
+          </td>
+        </tr>
+        <tr>
+          <td class="plan-mois">Août 2026<br><span style="font-size:10px;font-weight:400;">Semaines 5–8</span></td>
+          <td>
+            <span class="plan-dot">·</span>Tournages validés et réalisés<br>
+            <span class="plan-dot">·</span>Retours contenus LinkedIn (48h max)<br>
+            <span class="plan-dot">·</span>Formulaire candidature cohorte 2 en ligne
+          </td>
+          <td>
+            <span class="plan-dot">·</span>Montage et livraison vidéos modules<br>
+            <span class="plan-dot">·</span>Programme digital mis en ligne sur le site<br>
+            <span class="plan-dot">·</span>Invitations event envoyées + page inscription créée<br>
+            <span class="plan-dot">·</span>Campagne acquisition démarrée (LinkedIn + Facebook)
+          </td>
+        </tr>
+        <tr>
+          <td class="plan-mois">Septembre 2026<br><span style="font-size:10px;font-weight:400;">Semaines 9–12</span></td>
+          <td>
+            <span class="plan-dot">·</span>Validation finale contenu event<br>
+            <span class="plan-dot">·</span>Logistique event (salle, streaming, invités VIP)
+          </td>
+          <td>
+            <span class="plan-dot">·</span>Event de lancement public DFMM<br>
+            <span class="plan-dot">·</span>Ouverture officielle candidatures cohorte 2<br>
+            <span class="plan-dot">·</span>Contenu post-event : 4 semaines de publications
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============================
+       08 — RÔLES
+       ============================ -->
+  <div class="section">
+    <div class="sec-num">08 — QUI FAIT QUOI</div>
+    <h2>La répartition des rôles</h2>
+    <div class="roles-row">
+      <div class="role-card">
+        <div class="role-name">Cabinet DAB · Dr. KANGA</div>
+        <div class="role-title">L'Expert</div>
+        <p>Valide les contenus, publie sur LinkedIn, prend les décisions programme et tarifs. Incarne la crédibilité académique et terrain de DFMM.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-name">Beracca Mastery Group</div>
+        <div class="role-title">Le Témoin</div>
+        <p>Témoigne de son parcours. Preuve vivante du concept. Participe à l'event et aux tournages. Sa réussite est l'argument de vente n°1.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-name">Agence Mr Attractor</div>
+        <div class="role-title">L'Orchestrateur</div>
+        <p>Pilote la stratégie globale. Produit les contenus, coordonne les prestataires, gère le calendrier et assure la cohérence de la communication.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLOSING -->
+  <div class="closing-banner">
+    <h3>Le programme DFMM a prouvé<br>qu'il fonctionne. <span>Il est temps de le faire savoir.</span></h3>
+    <p>Cette note est le point de départ. Les trois chantiers sont actionnables maintenant, avec les ressources existantes.</p>
+    <a class="cta-pill" href="mailto:myattractor1@gmail.com">Prendre rendez-vous avec Mac Arthur</a>
+  </div>
+
+  <div class="doc-foot">
+    <span><strong>Document confidentiel</strong> — Cabinet DAB × Agence Mr Attractor · Juin 2026</span>
+    <span>Mac Arthur KOUASSI · agenceattractor.com</span>
+  </div>
+
+</div>
+</body>
+</html>

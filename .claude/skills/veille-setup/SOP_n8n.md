@@ -139,4 +139,4 @@ Une fois le test validé :
 
 ---
 
-*SOP créé le 09/06/2026 — Session 42 Jarvis*
+*SOP créé le 09/06/2026 — Session 42 Assists*
