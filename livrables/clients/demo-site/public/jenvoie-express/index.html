@@ -7,1808 +7,1000 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --blue: #003A8C;
-    --blue-mid: #0057CC;
-    --blue-light: #1A7FE8;
-    --sky: #5BB8F5;
-    --gold: #F5A623;
-    --white: #F8FAFF;
-    --grey: #E8EDF5;
-    --dark: #0A1628;
-    --text: #334155;
-    --green: #10B981;
-    --red: #EF4444;
-    --orange: #F59E0B;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--dark);
-    color: var(--white);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* ── LAYOUT ── */
-  .app {
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    grid-template-rows: auto 1fr;
-    min-height: 100vh;
-  }
-
-  /* ── SIDEBAR ── */
-  .sidebar {
-    grid-row: 1 / 3;
-    background: linear-gradient(180deg, #001F5C 0%, #0A1628 100%);
-    border-right: 1px solid rgba(91,184,245,0.15);
-    padding: 0 0 2rem;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .logo-zone {
-    padding: 1.5rem 1.2rem;
-    border-bottom: 1px solid rgba(91,184,245,0.1);
-    margin-bottom: 1rem;
-  }
-
-  .logo-zone img-placeholder {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
-
-  .logo-box {
-    background: var(--blue-mid);
-    border-radius: 10px;
-    padding: 0.5rem 0.8rem;
-    text-align: center;
-  }
-
-  .logo-box span {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 0.75rem;
-    color: white;
-    line-height: 1.2;
-    display: block;
-  }
-
-  .logo-box .accent { color: var(--sky); }
-  .logo-box .sub { font-size: 0.55rem; color: var(--gold); letter-spacing: 1px; }
-
-  .nav-section {
-    padding: 0 0.8rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .nav-label {
-    font-size: 0.6rem;
-    letter-spacing: 2px;
-    color: rgba(91,184,245,0.5);
-    text-transform: uppercase;
-    padding: 0.5rem 0.5rem 0.3rem;
-    font-family: 'Syne', sans-serif;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    padding: 0.6rem 0.8rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 0.82rem;
-    color: rgba(248,250,255,0.6);
-    margin-bottom: 2px;
-  }
-
-  .nav-item:hover { background: rgba(91,184,245,0.1); color: var(--white); }
-  .nav-item.active { background: rgba(91,184,245,0.2); color: var(--sky); border-left: 3px solid var(--sky); }
-
-  .nav-item .icon { width: 18px; text-align: center; font-size: 0.95rem; }
-
-  .badge {
-    margin-left: auto;
-    background: var(--gold);
-    color: var(--dark);
-    font-size: 0.6rem;
-    font-weight: 700;
-    padding: 1px 6px;
-    border-radius: 20px;
-  }
-
-  .sidebar-bottom {
-    margin-top: auto;
-    padding: 1rem;
-    border-top: 1px solid rgba(91,184,245,0.1);
-  }
-
-  .user-card {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
-
-  .avatar {
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--blue-light), var(--sky));
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 0.75rem;
-  }
-
-  .user-info .name { font-size: 0.78rem; font-weight: 600; }
-  .user-info .role { font-size: 0.65rem; color: var(--sky); }
-
-  /* ── TOPBAR ── */
-  .topbar {
-    background: rgba(10,22,40,0.9);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(91,184,245,0.15);
-    padding: 0.8rem 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-
-  .topbar-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; }
-  .topbar-title span { color: var(--sky); }
-
-  .topbar-right { display: flex; align-items: center; gap: 0.8rem; }
-
-  .notif-btn {
-    width: 36px; height: 36px;
-    border-radius: 8px;
-    background: rgba(91,184,245,0.1);
-    border: 1px solid rgba(91,184,245,0.2);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; font-size: 1rem; position: relative;
-  }
-
-  .notif-btn::after {
-    content: '3';
-    position: absolute; top: -4px; right: -4px;
-    background: var(--red);
-    width: 16px; height: 16px;
-    border-radius: 50%;
-    font-size: 0.55rem;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700;
-  }
-
-  .whatsapp-btn {
-    display: flex; align-items: center; gap: 0.4rem;
-    background: #25D366;
-    border: none;
-    border-radius: 8px;
-    padding: 0.4rem 0.8rem;
-    font-size: 0.75rem;
-    font-family: 'DM Sans', sans-serif;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  /* ── MAIN CONTENT ── */
-  .main {
-    padding: 1.5rem;
-    overflow-y: auto;
-    background: linear-gradient(135deg, #0A1628 0%, #071020 100%);
-  }
-
-  /* ── VIEWS (tabs) ── */
-  .view { display: none; }
-  .view.active { display: block; }
-
-  /* ── KPI CARDS ── */
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .kpi {
-    background: linear-gradient(135deg, rgba(0,87,204,0.25) 0%, rgba(0,31,92,0.4) 100%);
-    border: 1px solid rgba(91,184,245,0.2);
-    border-radius: 12px;
-    padding: 1.2rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .kpi::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, var(--sky), var(--blue-light));
-  }
-
-  .kpi-label { font-size: 0.7rem; color: rgba(248,250,255,0.5); margin-bottom: 0.5rem; letter-spacing: 0.5px; }
-  .kpi-val { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: white; }
-  .kpi-val span { font-size: 0.85rem; color: var(--sky); }
-  .kpi-sub { font-size: 0.65rem; margin-top: 0.3rem; }
-  .kpi-sub.up { color: var(--green); }
-  .kpi-sub.down { color: var(--red); }
-  .kpi-icon { position: absolute; right: 1rem; top: 1rem; font-size: 1.5rem; opacity: 0.4; }
-
-  /* ── SECTION HEADERS ── */
-  .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
-
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--white);
-  }
-
-  .section-title span { color: var(--sky); }
-
-  .btn-primary {
-    background: linear-gradient(135deg, var(--blue-light), var(--blue-mid));
-    border: none;
-    border-radius: 8px;
-    padding: 0.45rem 1rem;
-    color: white;
-    font-size: 0.78rem;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
-
-  .btn-primary:hover { opacity: 0.85; }
-
-  .btn-outline {
-    background: transparent;
-    border: 1px solid rgba(91,184,245,0.4);
-    border-radius: 8px;
-    padding: 0.45rem 1rem;
-    color: var(--sky);
-    font-size: 0.78rem;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-  }
-
-  /* ── TABLE ── */
-  .table-wrap {
-    background: rgba(0,31,92,0.3);
-    border: 1px solid rgba(91,184,245,0.15);
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 1.5rem;
-  }
-
-  table { width: 100%; border-collapse: collapse; }
-
-  thead tr { background: rgba(91,184,245,0.08); }
-  th {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.65rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: rgba(91,184,245,0.7);
-    padding: 0.7rem 1rem;
-    text-align: left;
-  }
-
-  td {
-    padding: 0.75rem 1rem;
-    font-size: 0.8rem;
-    border-top: 1px solid rgba(91,184,245,0.07);
-    vertical-align: middle;
-  }
-
-  tr:hover td { background: rgba(91,184,245,0.05); }
-
-  .status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.2rem 0.6rem;
-    border-radius: 20px;
-    font-size: 0.68rem;
-    font-weight: 600;
-  }
-
-  .status-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
-
-  .status-transit { background: rgba(245,166,35,0.15); color: var(--gold); }
-  .status-transit::before { background: var(--gold); }
-  .status-livre { background: rgba(16,185,129,0.15); color: var(--green); }
-  .status-livre::before { background: var(--green); }
-  .status-attente { background: rgba(91,184,245,0.15); color: var(--sky); }
-  .status-attente::before { background: var(--sky); }
-  .status-retard { background: rgba(239,68,68,0.15); color: var(--red); }
-  .status-retard::before { background: var(--red); }
-
-  .track-link {
-    display: inline-flex; align-items: center; gap: 0.3rem;
-    background: rgba(16,185,129,0.15);
-    color: var(--green);
-    border-radius: 6px;
-    padding: 0.15rem 0.5rem;
-    font-size: 0.7rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  .wa-icon {
-    display: inline-flex; align-items: center; gap: 0.3rem;
-    background: rgba(37,211,102,0.15);
-    color: #25D366;
-    border-radius: 6px;
-    padding: 0.15rem 0.5rem;
-    font-size: 0.7rem;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  /* ── TWO COLS ── */
-  .two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
-  .three-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
-
-  /* ── CARD ── */
-  .card {
-    background: rgba(0,31,92,0.3);
-    border: 1px solid rgba(91,184,245,0.15);
-    border-radius: 12px;
-    padding: 1.2rem;
-  }
-
-  .card-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: var(--sky);
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
-  /* ── VOYAGE CARD ── */
-  .voyage-card {
-    background: linear-gradient(135deg, rgba(0,87,204,0.3), rgba(0,31,92,0.5));
-    border: 1px solid rgba(91,184,245,0.25);
-    border-radius: 12px;
-    padding: 1.2rem;
-    margin-bottom: 0.8rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .voyage-card::before {
-    content: '✈';
-    position: absolute;
-    right: 1rem; top: 50%;
-    transform: translateY(-50%);
-    font-size: 2.5rem;
-    opacity: 0.08;
-  }
-
-  .voyage-route {
-    font-family: 'Syne', sans-serif;
-    font-size: 1rem;
-    font-weight: 800;
-    margin-bottom: 0.5rem;
-  }
-
-  .voyage-route span { color: var(--sky); }
-
-  .voyage-meta {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .voyage-meta-item { font-size: 0.72rem; color: rgba(248,250,255,0.6); }
-  .voyage-meta-item strong { color: var(--white); display: block; font-size: 0.8rem; }
-
-  .voyage-bar {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin-top: 0.8rem;
-    font-size: 0.68rem;
-  }
-
-  .bar-track {
-    flex: 1;
-    height: 6px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-
-  .bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--sky), var(--green));
-    border-radius: 3px;
-  }
-
-  /* ── ASSISTANT CHAT ── */
-  .chat-container {
-    display: flex;
-    flex-direction: column;
-    height: 520px;
-    background: rgba(0,31,92,0.3);
-    border: 1px solid rgba(91,184,245,0.15);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  .chat-header {
-    padding: 1rem 1.2rem;
-    border-bottom: 1px solid rgba(91,184,245,0.1);
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    background: rgba(0,57,140,0.3);
-  }
-
-  .chat-avatar {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--blue-light), var(--sky));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1rem;
-  }
-
-  .chat-info .name { font-size: 0.82rem; font-weight: 600; }
-  .chat-info .online { font-size: 0.65rem; color: var(--green); }
-
-  .chat-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-
-  .msg {
-    max-width: 75%;
-    padding: 0.7rem 0.9rem;
-    border-radius: 10px;
-    font-size: 0.78rem;
-    line-height: 1.5;
-  }
-
-  .msg.bot {
-    background: rgba(0,87,204,0.35);
-    border: 1px solid rgba(91,184,245,0.2);
-    align-self: flex-start;
-    border-bottom-left-radius: 3px;
-  }
-
-  .msg.user {
-    background: rgba(91,184,245,0.2);
-    align-self: flex-end;
-    border-bottom-right-radius: 3px;
-  }
-
-  .msg-time { font-size: 0.6rem; color: rgba(255,255,255,0.35); margin-top: 0.3rem; }
-
-  .quick-replies {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 0.5rem;
-  }
-
-  .qr {
-    background: rgba(91,184,245,0.15);
-    border: 1px solid rgba(91,184,245,0.3);
-    border-radius: 20px;
-    padding: 0.25rem 0.7rem;
-    font-size: 0.68rem;
-    color: var(--sky);
-    cursor: pointer;
-  }
-
-  .chat-input-area {
-    padding: 0.8rem 1rem;
-    border-top: 1px solid rgba(91,184,245,0.1);
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .chat-input {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(91,184,245,0.2);
-    border-radius: 20px;
-    padding: 0.5rem 1rem;
-    color: white;
-    font-size: 0.78rem;
-    font-family: 'DM Sans', sans-serif;
-    outline: none;
-  }
-
-  .chat-send {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: var(--blue-light);
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 0.9rem;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  /* ── TARIFS GRID ── */
-  .tarif-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .tarif-card {
-    background: linear-gradient(135deg, rgba(0,57,140,0.4), rgba(0,31,92,0.6));
-    border: 1px solid rgba(91,184,245,0.2);
-    border-radius: 12px;
-    padding: 1.4rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.2s;
-  }
-
-  .tarif-card:hover { transform: translateY(-3px); }
-
-  .tarif-card.featured {
-    border-color: var(--gold);
-    background: linear-gradient(135deg, rgba(245,166,35,0.15), rgba(0,57,140,0.5));
-  }
-
-  .tarif-card.featured::before {
-    content: '⭐ POPULAIRE';
-    position: absolute; top: 0; left: 0; right: 0;
-    background: var(--gold);
-    color: var(--dark);
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    padding: 3px;
-    text-align: center;
-  }
-
-  .tarif-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--sky); margin-bottom: 0.8rem; margin-top: 0.5rem; }
-  .tarif-price { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; }
-  .tarif-price .unit { font-size: 0.8rem; color: rgba(255,255,255,0.5); }
-  .tarif-dir { font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-top: 0.3rem; }
-  .tarif-features { margin-top: 1rem; font-size: 0.72rem; color: rgba(255,255,255,0.7); line-height: 1.8; }
-
-  /* ── TRACKING ── */
-  .track-steps {
-    position: relative;
-    padding-left: 1.5rem;
-  }
-
-  .track-steps::before {
-    content: '';
-    position: absolute;
-    left: 7px; top: 10px; bottom: 10px;
-    width: 2px;
-    background: rgba(91,184,245,0.2);
-  }
-
-  .track-step {
-    position: relative;
-    padding: 0 0 1.2rem 1rem;
-    font-size: 0.78rem;
-  }
-
-  .track-step::before {
-    content: '';
-    position: absolute;
-    left: -1.08rem;
-    top: 4px;
-    width: 12px; height: 12px;
-    border-radius: 50%;
-    background: var(--dark);
-    border: 2px solid rgba(91,184,245,0.3);
-  }
-
-  .track-step.done::before { background: var(--green); border-color: var(--green); }
-  .track-step.current::before { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 8px var(--gold); }
-
-  .track-step-label { font-weight: 600; color: var(--white); }
-  .track-step-label.active { color: var(--gold); }
-  .track-step-date { font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-top: 2px; }
-
-  /* ── FORM ── */
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1rem; }
-  .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
-  .form-group label { font-size: 0.68rem; color: var(--sky); letter-spacing: 0.5px; }
-  .form-group input, .form-group select, .form-group textarea {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(91,184,245,0.2);
-    border-radius: 8px;
-    padding: 0.55rem 0.8rem;
-    color: white;
-    font-size: 0.78rem;
-    font-family: 'DM Sans', sans-serif;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-    border-color: var(--sky);
-  }
-
-  .form-group select option { background: #0A1628; }
-  .form-group textarea { resize: none; height: 80px; }
-
-  .full-width { grid-column: 1 / -1; }
-
-  /* ── MOBILE PREVIEW ── */
-  .mobile-frame {
-    width: 220px;
-    height: 420px;
-    background: #0A1628;
-    border-radius: 30px;
-    border: 3px solid rgba(91,184,245,0.3);
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
-    margin: 0 auto;
-  }
-
-  .mobile-notch {
-    width: 60px; height: 8px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 4px;
-    margin: 8px auto;
-  }
-
-  .mobile-screen {
-    padding: 0.5rem;
-    overflow: hidden;
-  }
-
-  .mob-header {
-    background: var(--blue-mid);
-    border-radius: 8px;
-    padding: 0.5rem 0.7rem;
-    margin-bottom: 0.5rem;
-    text-align: center;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 700;
-  }
-
-  .mob-track-id {
-    font-size: 0.75rem;
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    color: var(--sky);
-    text-align: center;
-    margin-bottom: 0.5rem;
-  }
-
-  .mob-step {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    padding: 0.35rem 0;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-
-  .mob-dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    margin-top: 2px; flex-shrink: 0;
-  }
-
-  .mob-step-text { font-size: 0.6rem; line-height: 1.4; }
-  .mob-step-text strong { color: white; display: block; }
-  .mob-step-text span { color: rgba(255,255,255,0.4); }
-
-  .mob-wa-btn {
-    background: #25D366;
-    border-radius: 8px;
-    padding: 0.5rem;
-    text-align: center;
-    font-size: 0.65rem;
-    font-weight: 700;
-    margin-top: 0.5rem;
-    color: white;
-  }
-
-  /* ── PAGE TABS ── */
-  .page-tabs {
-    display: flex;
-    gap: 0.3rem;
-    background: rgba(0,31,92,0.4);
-    border: 1px solid rgba(91,184,245,0.15);
-    border-radius: 10px;
-    padding: 4px;
-    margin-bottom: 1.5rem;
-    width: fit-content;
-  }
-
-  .page-tab {
-    padding: 0.4rem 0.9rem;
-    border-radius: 7px;
-    font-size: 0.75rem;
-    cursor: pointer;
-    color: rgba(255,255,255,0.5);
-    transition: all 0.2s;
-  }
-
-  .page-tab.active {
-    background: var(--blue-mid);
-    color: white;
-    font-weight: 600;
-  }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .view.active { animation: fadeIn 0.3s ease; }
-
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-  .pulse { animation: pulse 2s infinite; }
-
-  /* ── SCROLLBAR ── */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(91,184,245,0.3); border-radius: 2px; }
-
-  .footer-bar {
-    grid-column: 1 / -1;
-    background: rgba(0,10,30,0.8);
-    border-top: 1px solid rgba(91,184,245,0.1);
-    padding: 0.6rem 1.5rem;
-    font-size: 0.65rem;
-    color: rgba(91,184,245,0.5);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  /* ── HAMBURGER ── */
-  .hamburger {
-    display: none;
-    background: none;
-    border: 1px solid rgba(91,184,245,0.3);
-    border-radius: 8px;
-    color: var(--sky);
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0.3rem 0.5rem;
-    line-height: 1;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .sidebar-close {
-    display: none;
-    background: none;
-    border: none;
-    color: rgba(255,255,255,0.5);
-    font-size: 1.1rem;
-    cursor: pointer;
-    margin-left: auto;
-    padding: 0.2rem 0.4rem;
-  }
-
-  .sidebar-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.65);
-    z-index: 50;
-  }
-
-  @keyframes slideInLeft {
-    from { transform: translateX(-100%); }
-    to   { transform: translateX(0); }
-  }
-
-  /* ── MOBILE ── */
-  @media (max-width: 767px) {
-    .hamburger { display: flex; }
-    .sidebar-close { display: block; }
-
-    .app {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    .sidebar {
-      position: fixed;
-      left: 0; top: 0; bottom: 0;
-      width: 260px;
-      z-index: 100;
-      transform: translateX(-100%);
-      transition: transform 0.25s ease;
-      grid-row: unset;
-    }
-
-    .sidebar.open {
-      transform: translateX(0);
-    }
-
-    .sidebar-backdrop.open { display: block; }
-
-    .logo-zone {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .topbar {
-      width: 100%;
-      padding: 0.7rem 1rem;
-    }
-
-    .topbar-title { font-size: 0.82rem; }
-
-    .main {
-      flex: 1;
-      padding: 0.9rem;
-      width: 100%;
-    }
-
-    .kpi-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.7rem;
-    }
-
-    .kpi { padding: 0.9rem; }
-    .kpi-val { font-size: 1.4rem; }
-    .kpi-icon { font-size: 1.2rem; }
-
-    .two-cols,
-    .three-cols { grid-template-columns: 1fr; }
-
-    .tarif-grid { grid-template-columns: 1fr; }
-
-    .form-grid { grid-template-columns: 1fr; }
-    .full-width { grid-column: auto; }
-
-    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    table { min-width: 540px; }
-
-    .chat-container { height: 400px; }
-
-    .page-tabs {
-      width: 100%;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .footer-bar { display: none; }
-
-    .section-header { flex-wrap: wrap; gap: 0.5rem; }
-
-    .whatsapp-btn .wa-label { display: none; }
+    --blue: #003A8C; --blue-mid: #0057CC; --blue-light: #1A7FE8;
+    --sky: #5BB8F5; --gold: #F5A623; --white: #F8FAFF;
+    --grey: #E8EDF5; --dark: #0A1628; --text: #334155;
+    --green: #10B981; --red: #EF4444; --orange: #F59E0B;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--dark); color:var(--white); min-height:100vh; overflow-x:hidden; }
+  .app { display:grid; grid-template-columns:240px 1fr; grid-template-rows:auto 1fr; min-height:100vh; }
+  .sidebar { grid-row:1/3; background:linear-gradient(180deg,#001F5C 0%,#0A1628 100%); border-right:1px solid rgba(91,184,245,.15); padding:0 0 2rem; display:flex; flex-direction:column; }
+  .logo-zone { padding:1.5rem 1.2rem; border-bottom:1px solid rgba(91,184,245,.1); margin-bottom:1rem; }
+  .logo-box { background:var(--blue-mid); border-radius:10px; padding:.5rem .8rem; text-align:center; }
+  .logo-box span { font-family:'Syne',sans-serif; font-weight:800; font-size:.75rem; color:white; line-height:1.2; display:block; }
+  .logo-box .accent { color:var(--sky); } .logo-box .sub { font-size:.55rem; color:var(--gold); letter-spacing:1px; }
+  .nav-section { padding:0 .8rem; margin-bottom:.5rem; }
+  .nav-label { font-size:.6rem; letter-spacing:2px; color:rgba(91,184,245,.5); text-transform:uppercase; padding:.5rem .5rem .3rem; font-family:'Syne',sans-serif; }
+  .nav-item { display:flex; align-items:center; gap:.7rem; padding:.6rem .8rem; border-radius:8px; cursor:pointer; transition:all .2s; font-size:.82rem; color:rgba(248,250,255,.6); margin-bottom:2px; }
+  .nav-item:hover { background:rgba(91,184,245,.1); color:var(--white); }
+  .nav-item.active { background:rgba(91,184,245,.2); color:var(--sky); border-left:3px solid var(--sky); }
+  .nav-item .icon { width:18px; text-align:center; font-size:.95rem; }
+  .badge { margin-left:auto; background:var(--gold); color:var(--dark); font-size:.6rem; font-weight:700; padding:1px 6px; border-radius:20px; }
+  .sidebar-bottom { margin-top:auto; padding:1rem; border-top:1px solid rgba(91,184,245,.1); }
+  .user-card { display:flex; align-items:center; gap:.6rem; }
+  .avatar { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--blue-light),var(--sky)); display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:700; font-size:.75rem; }
+  .user-info .name { font-size:.78rem; font-weight:600; } .user-info .role { font-size:.65rem; color:var(--sky); }
+  .topbar { background:rgba(10,22,40,.9); backdrop-filter:blur(20px); border-bottom:1px solid rgba(91,184,245,.15); padding:.8rem 1.5rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; }
+  .topbar-title { font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; } .topbar-title span { color:var(--sky); }
+  .topbar-right { display:flex; align-items:center; gap:.8rem; }
+  .notif-btn { width:36px; height:36px; border-radius:8px; background:rgba(91,184,245,.1); border:1px solid rgba(91,184,245,.2); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; position:relative; }
+  .notif-btn::after { content:'3'; position:absolute; top:-4px; right:-4px; background:var(--red); width:16px; height:16px; border-radius:50%; font-size:.55rem; display:flex; align-items:center; justify-content:center; font-weight:700; }
+  .whatsapp-btn { display:flex; align-items:center; gap:.4rem; background:#25D366; border:none; border-radius:8px; padding:.4rem .8rem; font-size:.75rem; font-family:'DM Sans',sans-serif; color:white; font-weight:600; cursor:pointer; }
+  .main { padding:1.5rem; overflow-y:auto; background:linear-gradient(135deg,#0A1628 0%,#071020 100%); }
+  .view { display:none; } .view.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .view.active { animation:fadeIn .3s ease; }
+  .kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem; }
+  .kpi { background:linear-gradient(135deg,rgba(0,87,204,.25) 0%,rgba(0,31,92,.4) 100%); border:1px solid rgba(91,184,245,.2); border-radius:12px; padding:1.2rem; position:relative; overflow:hidden; }
+  .kpi::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--sky),var(--blue-light)); }
+  .kpi-label { font-size:.7rem; color:rgba(248,250,255,.5); margin-bottom:.5rem; letter-spacing:.5px; }
+  .kpi-val { font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:800; color:white; }
+  .kpi-val span { font-size:.85rem; color:var(--sky); }
+  .kpi-sub { font-size:.65rem; margin-top:.3rem; } .kpi-sub.up { color:var(--green); } .kpi-sub.down { color:var(--red); }
+  .kpi-icon { position:absolute; right:1rem; top:1rem; font-size:1.5rem; opacity:.4; }
+  .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; flex-wrap:wrap; gap:.5rem; }
+  .section-title { font-family:'Syne',sans-serif; font-size:.95rem; font-weight:700; color:var(--white); }
+  .section-title span { color:var(--sky); }
+  .btn-primary { background:linear-gradient(135deg,var(--blue-light),var(--blue-mid)); border:none; border-radius:8px; padding:.45rem 1rem; color:white; font-size:.78rem; font-family:'DM Sans',sans-serif; font-weight:600; cursor:pointer; transition:opacity .2s; }
+  .btn-primary:hover { opacity:.85; }
+  .btn-outline { background:transparent; border:1px solid rgba(91,184,245,.4); border-radius:8px; padding:.45rem 1rem; color:var(--sky); font-size:.78rem; font-family:'DM Sans',sans-serif; cursor:pointer; }
+  .btn-green { background:#10B981; border:none; border-radius:8px; padding:.45rem 1rem; color:white; font-size:.78rem; font-family:'DM Sans',sans-serif; font-weight:600; cursor:pointer; }
+  .table-wrap { background:rgba(0,31,92,.3); border:1px solid rgba(91,184,245,.15); border-radius:12px; overflow:hidden; margin-bottom:1.5rem; }
+  table { width:100%; border-collapse:collapse; }
+  thead tr { background:rgba(91,184,245,.08); }
+  th { font-family:'Syne',sans-serif; font-size:.65rem; letter-spacing:1px; text-transform:uppercase; color:rgba(91,184,245,.7); padding:.7rem 1rem; text-align:left; }
+  td { padding:.75rem 1rem; font-size:.8rem; border-top:1px solid rgba(91,184,245,.07); vertical-align:middle; }
+  tr:hover td { background:rgba(91,184,245,.05); }
+  .status-pill { display:inline-flex; align-items:center; gap:.3rem; padding:.2rem .6rem; border-radius:20px; font-size:.68rem; font-weight:600; }
+  .status-pill::before { content:''; width:6px; height:6px; border-radius:50%; }
+  .status-transit { background:rgba(245,166,35,.15); color:var(--gold); } .status-transit::before { background:var(--gold); }
+  .status-livre { background:rgba(16,185,129,.15); color:var(--green); } .status-livre::before { background:var(--green); }
+  .status-attente { background:rgba(91,184,245,.15); color:var(--sky); } .status-attente::before { background:var(--sky); }
+  .status-retard { background:rgba(239,68,68,.15); color:var(--red); } .status-retard::before { background:var(--red); }
+  .status-douane { background:rgba(168,85,247,.15); color:#a855f7; } .status-douane::before { background:#a855f7; }
+  .track-link { display:inline-flex; align-items:center; gap:.3rem; background:rgba(16,185,129,.15); color:var(--green); border-radius:6px; padding:.15rem .5rem; font-size:.7rem; font-weight:600; cursor:pointer; text-decoration:none; }
+  .wa-icon { display:inline-flex; align-items:center; gap:.3rem; background:rgba(37,211,102,.15); color:#25D366; border-radius:6px; padding:.15rem .5rem; font-size:.7rem; font-weight:600; cursor:pointer; }
+  .two-cols { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem; }
+  .three-cols { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; margin-bottom:1.5rem; }
+  .card { background:rgba(0,31,92,.3); border:1px solid rgba(91,184,245,.15); border-radius:12px; padding:1.2rem; }
+  .card-title { font-family:'Syne',sans-serif; font-size:.82rem; font-weight:700; color:var(--sky); margin-bottom:1rem; display:flex; align-items:center; gap:.4rem; }
+  .voyage-card { background:linear-gradient(135deg,rgba(0,87,204,.3),rgba(0,31,92,.5)); border:1px solid rgba(91,184,245,.25); border-radius:12px; padding:1.2rem; margin-bottom:.8rem; position:relative; overflow:hidden; }
+  .voyage-card::before { content:'✈'; position:absolute; right:1rem; top:50%; transform:translateY(-50%); font-size:2.5rem; opacity:.08; }
+  .voyage-route { font-family:'Syne',sans-serif; font-size:1rem; font-weight:800; margin-bottom:.5rem; }
+  .voyage-route span { color:var(--sky); }
+  .voyage-meta { display:flex; gap:1rem; flex-wrap:wrap; }
+  .voyage-meta-item { font-size:.72rem; color:rgba(248,250,255,.6); }
+  .voyage-meta-item strong { color:var(--white); display:block; font-size:.8rem; }
+  .voyage-bar { display:flex; align-items:center; gap:.4rem; margin-top:.8rem; font-size:.68rem; }
+  .bar-track { flex:1; height:6px; background:rgba(255,255,255,.1); border-radius:3px; overflow:hidden; }
+  .bar-fill { height:100%; background:linear-gradient(90deg,var(--sky),var(--green)); border-radius:3px; }
+  .chat-container { display:flex; flex-direction:column; height:520px; background:rgba(0,31,92,.3); border:1px solid rgba(91,184,245,.15); border-radius:12px; overflow:hidden; }
+  .chat-header { padding:1rem 1.2rem; border-bottom:1px solid rgba(91,184,245,.1); display:flex; align-items:center; gap:.7rem; background:rgba(0,57,140,.3); }
+  .chat-avatar { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--blue-light),var(--sky)); display:flex; align-items:center; justify-content:center; font-size:1rem; }
+  .chat-info .name { font-size:.82rem; font-weight:600; } .chat-info .online { font-size:.65rem; color:var(--green); }
+  .chat-messages { flex:1; overflow-y:auto; padding:1rem; display:flex; flex-direction:column; gap:.8rem; }
+  .msg { max-width:75%; padding:.7rem .9rem; border-radius:10px; font-size:.78rem; line-height:1.5; }
+  .msg.bot { background:rgba(0,87,204,.35); border:1px solid rgba(91,184,245,.2); align-self:flex-start; border-bottom-left-radius:3px; }
+  .msg.user { background:rgba(91,184,245,.2); align-self:flex-end; border-bottom-right-radius:3px; }
+  .msg-time { font-size:.6rem; color:rgba(255,255,255,.35); margin-top:.3rem; }
+  .quick-replies { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.5rem; }
+  .qr { background:rgba(91,184,245,.15); border:1px solid rgba(91,184,245,.3); border-radius:20px; padding:.25rem .7rem; font-size:.68rem; color:var(--sky); cursor:pointer; }
+  .chat-input-area { padding:.8rem 1rem; border-top:1px solid rgba(91,184,245,.1); display:flex; gap:.5rem; }
+  .chat-input { flex:1; background:rgba(255,255,255,.05); border:1px solid rgba(91,184,245,.2); border-radius:20px; padding:.5rem 1rem; color:white; font-size:.78rem; font-family:'DM Sans',sans-serif; outline:none; }
+  .chat-send { width:36px; height:36px; border-radius:50%; background:var(--blue-light); border:none; color:white; cursor:pointer; font-size:.9rem; display:flex; align-items:center; justify-content:center; }
+  .tarif-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:1.5rem; }
+  .tarif-card { background:linear-gradient(135deg,rgba(0,57,140,.4),rgba(0,31,92,.6)); border:1px solid rgba(91,184,245,.2); border-radius:12px; padding:1.4rem; text-align:center; position:relative; overflow:hidden; transition:transform .2s; }
+  .tarif-card:hover { transform:translateY(-3px); }
+  .tarif-card.featured { border-color:var(--gold); background:linear-gradient(135deg,rgba(245,166,35,.15),rgba(0,57,140,.5)); }
+  .tarif-card.featured::before { content:'⭐ POPULAIRE'; position:absolute; top:0; left:0; right:0; background:var(--gold); color:var(--dark); font-size:.6rem; font-weight:700; letter-spacing:1px; padding:3px; text-align:center; }
+  .tarif-name { font-family:'Syne',sans-serif; font-weight:700; font-size:.85rem; color:var(--sky); margin-bottom:.8rem; margin-top:.5rem; }
+  .tarif-price { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; }
+  .tarif-price .unit { font-size:.8rem; color:rgba(255,255,255,.5); }
+  .tarif-dir { font-size:.7rem; color:rgba(255,255,255,.5); margin-top:.3rem; }
+  .tarif-features { margin-top:1rem; font-size:.72rem; color:rgba(255,255,255,.7); line-height:1.8; text-align:left; }
+  .track-steps { position:relative; padding-left:1.5rem; }
+  .track-steps::before { content:''; position:absolute; left:7px; top:10px; bottom:10px; width:2px; background:rgba(91,184,245,.2); }
+  .track-step { position:relative; padding:0 0 1.2rem 1rem; font-size:.78rem; }
+  .track-step::before { content:''; position:absolute; left:-1.08rem; top:4px; width:12px; height:12px; border-radius:50%; background:var(--dark); border:2px solid rgba(91,184,245,.3); }
+  .track-step.done::before { background:var(--green); border-color:var(--green); }
+  .track-step.current::before { background:var(--gold); border-color:var(--gold); box-shadow:0 0 8px var(--gold); }
+  .track-step.douane::before { background:#a855f7; border-color:#a855f7; }
+  .track-step-label { font-weight:600; color:var(--white); } .track-step-label.active { color:var(--gold); }
+  .track-step-date { font-size:.65rem; color:rgba(255,255,255,.4); margin-top:2px; }
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; margin-bottom:1rem; }
+  .form-group { display:flex; flex-direction:column; gap:.3rem; }
+  .form-group label { font-size:.68rem; color:var(--sky); letter-spacing:.5px; }
+  .form-group input, .form-group select, .form-group textarea { background:rgba(255,255,255,.05); border:1px solid rgba(91,184,245,.2); border-radius:8px; padding:.55rem .8rem; color:white; font-size:.78rem; font-family:'DM Sans',sans-serif; outline:none; transition:border-color .2s; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--sky); }
+  .form-group select option { background:#0A1628; }
+  .form-group textarea { resize:none; height:80px; }
+  .full-width { grid-column:1/-1; }
+  .page-tabs { display:flex; gap:.3rem; background:rgba(0,31,92,.4); border:1px solid rgba(91,184,245,.15); border-radius:10px; padding:4px; margin-bottom:1.5rem; width:fit-content; flex-wrap:wrap; }
+  .page-tab { padding:.4rem .9rem; border-radius:7px; font-size:.75rem; cursor:pointer; color:rgba(255,255,255,.5); transition:all .2s; }
+  .page-tab.active { background:var(--blue-mid); color:white; font-weight:600; }
+  .mobile-frame { width:220px; height:420px; background:#0A1628; border-radius:30px; border:3px solid rgba(91,184,245,.3); overflow:hidden; position:relative; box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.05); margin:0 auto; }
+  .mobile-notch { width:60px; height:8px; background:rgba(255,255,255,.1); border-radius:4px; margin:8px auto; }
+  .mobile-screen { padding:.5rem; overflow:hidden; }
+  .mob-header { background:var(--blue-mid); border-radius:8px; padding:.5rem .7rem; margin-bottom:.5rem; text-align:center; font-family:'Syne',sans-serif; font-size:.65rem; font-weight:700; }
+  .mob-track-id { font-size:.75rem; font-family:'Syne',sans-serif; font-weight:800; color:var(--sky); text-align:center; margin-bottom:.5rem; }
+  .mob-step { display:flex; align-items:flex-start; gap:.5rem; padding:.35rem 0; border-bottom:1px solid rgba(255,255,255,.06); }
+  .mob-dot { width:10px; height:10px; border-radius:50%; margin-top:2px; flex-shrink:0; }
+  .mob-step-text { font-size:.6rem; line-height:1.4; }
+  .mob-step-text strong { color:white; display:block; } .mob-step-text span { color:rgba(255,255,255,.4); }
+  .mob-wa-btn { background:#25D366; border-radius:8px; padding:.5rem; text-align:center; font-size:.65rem; font-weight:700; margin-top:.5rem; color:white; }
+  /* Article prix grid */
+  .article-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.8rem; margin-bottom:1.5rem; }
+  .article-card { background:rgba(0,31,92,.4); border:1px solid rgba(91,184,245,.15); border-radius:10px; padding:1rem; }
+  .article-icon { font-size:1.4rem; margin-bottom:.4rem; }
+  .article-name { font-family:'Syne',sans-serif; font-size:.78rem; font-weight:700; margin-bottom:.3rem; }
+  .article-price { font-size:.7rem; color:var(--gold); }
+  .article-note { font-size:.62rem; color:rgba(255,255,255,.45); margin-top:.2rem; }
+  /* Paiement pills */
+  .pay-grid { display:flex; flex-wrap:wrap; gap:.6rem; margin-bottom:1rem; }
+  .pay-pill { display:flex; align-items:center; gap:.4rem; background:rgba(91,184,245,.1); border:1px solid rgba(91,184,245,.25); border-radius:20px; padding:.35rem .8rem; font-size:.75rem; }
+  /* Avis */
+  .avis-card { background:rgba(0,31,92,.3); border:1px solid rgba(91,184,245,.12); border-radius:10px; padding:1rem; margin-bottom:.8rem; }
+  .avis-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:.5rem; }
+  .avis-stars { color:var(--gold); font-size:.85rem; }
+  .avis-author { font-size:.72rem; font-weight:600; }
+  .avis-date { font-size:.62rem; color:rgba(255,255,255,.35); }
+  .avis-text { font-size:.75rem; color:rgba(255,255,255,.7); line-height:1.5; }
+  /* Abonnés */
+  .subscriber-row { display:flex; align-items:center; justify-content:space-between; padding:.6rem 0; border-bottom:1px solid rgba(91,184,245,.07); }
+  .subscriber-info .name { font-size:.8rem; font-weight:600; }
+  .subscriber-info .meta { font-size:.65rem; color:rgba(255,255,255,.4); }
+  .badge-sub { background:rgba(16,185,129,.15); color:var(--green); border-radius:20px; padding:.15rem .5rem; font-size:.62rem; font-weight:600; }
+  /* Revenus */
+  .revenu-row { display:flex; align-items:center; justify-content:space-between; padding:.6rem 0; border-bottom:1px solid rgba(91,184,245,.07); }
+  .revenu-type { font-size:.78rem; }
+  .revenu-amount { font-family:'Syne',sans-serif; font-weight:700; }
+  .revenu-amount.credit { color:var(--green); } .revenu-amount.debit { color:var(--red); }
+  /* Maritime */
+  .maritime-card { background:linear-gradient(135deg,rgba(0,57,140,.4),rgba(0,31,92,.6)); border:1px solid rgba(91,184,245,.2); border-radius:12px; padding:1.4rem; margin-bottom:1rem; }
+  .maritime-title { font-family:'Syne',sans-serif; font-size:1rem; font-weight:800; margin-bottom:.8rem; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+  .pulse { animation:pulse 2s infinite; }
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:rgba(91,184,245,.3); border-radius:2px; }
+  .footer-bar { grid-column:1/-1; background:rgba(0,10,30,.8); border-top:1px solid rgba(91,184,245,.1); padding:.6rem 1.5rem; font-size:.65rem; color:rgba(91,184,245,.5); display:flex; justify-content:space-between; align-items:center; }
+  .hamburger { display:none; background:none; border:1px solid rgba(91,184,245,.3); border-radius:8px; color:var(--sky); font-size:1.2rem; cursor:pointer; padding:.3rem .5rem; line-height:1; align-items:center; justify-content:center; }
+  .sidebar-close { display:none; background:none; border:none; color:rgba(255,255,255,.5); font-size:1.1rem; cursor:pointer; margin-left:auto; padding:.2rem .4rem; }
+  .sidebar-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,.65); z-index:50; }
+  @keyframes slideInLeft { from{transform:translateX(-100%)} to{transform:translateX(0)} }
+  @media (max-width:767px) {
+    .hamburger { display:flex; } .sidebar-close { display:block; }
+    .app { display:flex; flex-direction:column; min-height:100vh; }
+    .sidebar { position:fixed; left:0; top:0; bottom:0; width:260px; z-index:100; transform:translateX(-100%); transition:transform .25s ease; grid-row:unset; }
+    .sidebar.open { transform:translateX(0); }
+    .sidebar-backdrop.open { display:block; }
+    .logo-zone { display:flex; align-items:center; justify-content:space-between; }
+    .topbar { width:100%; padding:.7rem 1rem; }
+    .topbar-title { font-size:.82rem; }
+    .main { flex:1; padding:.9rem; width:100%; }
+    .kpi-grid { grid-template-columns:repeat(2,1fr); gap:.7rem; }
+    .kpi { padding:.9rem; } .kpi-val { font-size:1.4rem; }
+    .two-cols,.three-cols { grid-template-columns:1fr; }
+    .tarif-grid,.article-grid { grid-template-columns:1fr; }
+    .form-grid { grid-template-columns:1fr; }
+    .full-width { grid-column:auto; }
+    .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    table { min-width:540px; }
+    .chat-container { height:400px; }
+    .page-tabs { width:100%; overflow-x:auto; }
+    .footer-bar { display:none; }
+    .whatsapp-btn .wa-label { display:none; }
   }
 </style>
 </head>
 <body>
-
 <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
-
 <div class="app">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar" id="main-sidebar">
-    <div class="logo-zone">
-      <button class="sidebar-close" onclick="closeSidebar()">✕</button>
-      <div class="logo-box">
-        <span>J'<span class="accent">ENVOIE</span></span>
-        <span style="font-size:1rem;">EXPRESS 📦</span>
-        <span class="sub">ABJ ✈ CDG · CDG ✈ ABJ</span>
+<!-- SIDEBAR -->
+<aside class="sidebar" id="main-sidebar">
+  <div class="logo-zone">
+    <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+    <div class="logo-box">
+      <span>J'<span class="accent">ENVOIE</span></span>
+      <span style="font-size:1rem;">EXPRESS 📦</span>
+      <span class="sub">ABJ ✈ CDG · CDG ✈ ABJ</span>
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Tableau de bord</div>
+    <div class="nav-item active" onclick="showView('dashboard',this)"><span class="icon">📊</span> Vue d'ensemble</div>
+    <div class="nav-item" onclick="showView('colis',this)"><span class="icon">📦</span> Mes Colis <span class="badge">12</span></div>
+    <div class="nav-item" onclick="showView('voyages',this)"><span class="icon">✈️</span> Voyages</div>
+    <div class="nav-item" onclick="showView('revenus',this)"><span class="icon">💶</span> Revenus</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Gestion</div>
+    <div class="nav-item" onclick="showView('clients',this)"><span class="icon">👤</span> Clients</div>
+    <div class="nav-item" onclick="showView('demandes',this)"><span class="icon">📬</span> Demandes <span class="badge">5</span></div>
+    <div class="nav-item" onclick="showView('tarifs',this)"><span class="icon">💰</span> Tarifs & Paiements</div>
+    <div class="nav-item" onclick="showView('abonnes',this)"><span class="icon">⭐</span> Abonnés</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Services</div>
+    <div class="nav-item" onclick="showView('achats',this)"><span class="icon">🛒</span> Achats en ligne</div>
+    <div class="nav-item" onclick="showView('maritime',this)"><span class="icon">🚢</span> Envoi maritime</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Communication</div>
+    <div class="nav-item" onclick="showView('assistant',this)"><span class="icon">🤖</span> Assistant IA</div>
+    <div class="nav-item" onclick="showView('discussion',this)"><span class="icon">💬</span> Discussion</div>
+    <div class="nav-item" onclick="showView('tracking',this)"><span class="icon">📍</span> Suivi Client</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Communauté</div>
+    <div class="nav-item" onclick="showView('avis',this)"><span class="icon">⭐</span> Avis clients</div>
+    <div class="nav-item" onclick="showView('apropos',this)"><span class="icon">🏢</span> À propos</div>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="user-card">
+      <div class="avatar">JE</div>
+      <div class="user-info"><div class="name">Admin Express</div><div class="role">Propriétaire ✓</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <button class="hamburger" onclick="openSidebar()">☰</button>
+  <div class="topbar-title">J'Envoie <span>Express</span> — Plateforme Pro</div>
+  <div class="topbar-right">
+    <div class="notif-btn">🔔</div>
+    <button class="whatsapp-btn">📱 <span class="wa-label">WhatsApp</span></button>
+    <div class="avatar" style="width:32px;height:32px;font-size:.7rem;">JE</div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ===== DASHBOARD ===== -->
+<div id="dashboard" class="view active">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-icon">📦</div><div class="kpi-label">COLIS EN TRANSIT</div><div class="kpi-val">24 <span>colis</span></div><div class="kpi-sub up">↑ +3 depuis hier</div></div>
+    <div class="kpi"><div class="kpi-icon">✈</div><div class="kpi-label">PROCHAIN VOL</div><div class="kpi-val">J<span>-4</span></div><div class="kpi-sub">15 juin · ABJ → CDG</div></div>
+    <div class="kpi"><div class="kpi-icon">💶</div><div class="kpi-label">REVENUS (juin)</div><div class="kpi-val">3<span>,840€</span></div><div class="kpi-sub up">↑ +18% vs mai</div></div>
+    <div class="kpi"><div class="kpi-icon">👤</div><div class="kpi-label">CLIENTS ACTIFS</div><div class="kpi-val">47 <span>clients</span></div><div class="kpi-sub up">↑ +5 ce mois</div></div>
+  </div>
+  <div class="section-header">
+    <div class="section-title">Colis Récents <span>— En cours</span></div>
+    <button class="btn-primary" onclick="showView('colis',null)">Voir tout →</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>N° Colis</th><th>Client</th><th>Route</th><th>Poids</th><th>Statut</th><th>Suivi</th><th>WhatsApp</th></tr></thead>
+      <tbody>
+        <tr><td><strong>#JE-20240611</strong></td><td>Aminata Koné</td><td>🇨🇮 ABJ → 🇫🇷 CDG</td><td>3.2 kg</td><td><span class="status-pill status-transit">En transit</span></td><td><a class="track-link">🔗 Lien</a></td><td><span class="wa-icon">📱 Envoyer</span></td></tr>
+        <tr><td><strong>#JE-20240610</strong></td><td>Marc Dupont</td><td>🇫🇷 CDG → 🇨🇮 ABJ</td><td>7.5 kg</td><td><span class="status-pill status-livre">Livré ✓</span></td><td><a class="track-link">🔗 Lien</a></td><td><span class="wa-icon">📱 Envoyer</span></td></tr>
+        <tr><td><strong>#JE-20240609</strong></td><td>Fatou Diallo</td><td>🇨🇮 ABJ → 🇫🇷 CDG</td><td>1.8 kg</td><td><span class="status-pill status-attente">En attente</span></td><td><a class="track-link">🔗 Lien</a></td><td><span class="wa-icon">📱 Envoyer</span></td></tr>
+        <tr><td><strong>#JE-20240608</strong></td><td>Jean Assi</td><td>🇫🇷 CDG → 🇨🇮 ABJ</td><td>12.0 kg</td><td><span class="status-pill status-retard">Retard</span></td><td><a class="track-link">🔗 Lien</a></td><td><span class="wa-icon">📱 Envoyer</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="two-cols">
+    <div class="card">
+      <div class="card-title">✈ Prochain voyage</div>
+      <div class="voyage-card" style="margin-bottom:0;">
+        <div class="voyage-route">🇨🇮 <span>ABJ</span> → 🇫🇷 <span>CDG</span></div>
+        <div class="voyage-meta">
+          <div class="voyage-meta-item"><strong>15 Juin 2024</strong>Départ</div>
+          <div class="voyage-meta-item"><strong>16 Juin 2024</strong>Arrivée</div>
+          <div class="voyage-meta-item"><strong>48h avant</strong>Clôture dépôt</div>
+          <div class="voyage-meta-item"><strong>18 kg</strong>Capacité restante</div>
+        </div>
+        <div class="voyage-bar"><span style="font-size:.65rem;color:rgba(255,255,255,.4)">Remplissage</span><div class="bar-track"><div class="bar-fill" style="width:72%"></div></div><span style="font-size:.65rem;color:var(--sky)">72%</span></div>
       </div>
     </div>
-
-    <div class="nav-section">
-      <div class="nav-label">Tableau de bord</div>
-      <div class="nav-item active" onclick="showView('dashboard')">
-        <span class="icon">📊</span> Vue d'ensemble
-      </div>
-      <div class="nav-item" onclick="showView('colis')">
-        <span class="icon">📦</span> Mes Colis <span class="badge">12</span>
-      </div>
-      <div class="nav-item" onclick="showView('voyages')">
-        <span class="icon">✈️</span> Voyages
-      </div>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-label">Gestion</div>
-      <div class="nav-item" onclick="showView('clients')">
-        <span class="icon">👤</span> Clients
-      </div>
-      <div class="nav-item" onclick="showView('demandes')">
-        <span class="icon">📬</span> Demandes <span class="badge">5</span>
-      </div>
-      <div class="nav-item" onclick="showView('tarifs')">
-        <span class="icon">💰</span> Tarifs
-      </div>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-label">Communication</div>
-      <div class="nav-item" onclick="showView('assistant')">
-        <span class="icon">🤖</span> Assistant IA
-      </div>
-      <div class="nav-item" onclick="showView('tracking')">
-        <span class="icon">📍</span> Suivi Client
-      </div>
-    </div>
-
-    <div class="sidebar-bottom">
-      <div class="user-card">
-        <div class="avatar">JE</div>
-        <div class="user-info">
-          <div class="name">Admin Express</div>
-          <div class="role">Propriétaire ✓</div>
+    <div class="card">
+      <div class="card-title">📬 Demandes en attente</div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(91,184,245,.07)">
+          <div><div style="font-size:.78rem;font-weight:600;">Koffi Yao</div><div style="font-size:.65rem;color:rgba(255,255,255,.4);">ABJ→CDG · 5 kg · 15 juin</div></div>
+          <div style="display:flex;gap:.4rem;"><button class="btn-primary" style="padding:.25rem .6rem;font-size:.65rem;">✓</button><button class="btn-outline" style="padding:.25rem .6rem;font-size:.65rem;">✗</button></div>
         </div>
-      </div>
-    </div>
-  </aside>
-
-  <!-- TOPBAR -->
-  <header class="topbar">
-    <button class="hamburger" onclick="openSidebar()">☰</button>
-    <div class="topbar-title">J'Envoie <span>Express</span> — Plateforme Pro</div>
-    <div class="topbar-right">
-      <div class="notif-btn">🔔</div>
-      <button class="whatsapp-btn">📱 WhatsApp</button>
-      <div class="avatar" style="width:32px;height:32px;font-size:0.7rem;">JE</div>
-    </div>
-  </header>
-
-  <!-- MAIN -->
-  <main class="main">
-
-    <!-- ===== DASHBOARD ===== -->
-    <div id="dashboard" class="view active">
-
-      <div class="kpi-grid">
-        <div class="kpi">
-          <div class="kpi-icon">📦</div>
-          <div class="kpi-label">COLIS EN TRANSIT</div>
-          <div class="kpi-val">24 <span>colis</span></div>
-          <div class="kpi-sub up">↑ +3 depuis hier</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-icon">✈</div>
-          <div class="kpi-label">PROCHAIN VOL</div>
-          <div class="kpi-val">J<span>-4</span></div>
-          <div class="kpi-sub">15 juin · ABJ → CDG</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-icon">💶</div>
-          <div class="kpi-label">REVENUS (juin)</div>
-          <div class="kpi-val">3<span>,840€</span></div>
-          <div class="kpi-sub up">↑ +18% vs mai</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-icon">👤</div>
-          <div class="kpi-label">CLIENTS ACTIFS</div>
-          <div class="kpi-val">47 <span>clients</span></div>
-          <div class="kpi-sub up">↑ +5 ce mois</div>
-        </div>
-      </div>
-
-      <div class="section-header">
-        <div class="section-title">Colis Récents <span>— En cours</span></div>
-        <button class="btn-primary" onclick="showView('colis')">Voir tout →</button>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>N° Colis</th>
-              <th>Client</th>
-              <th>Route</th>
-              <th>Poids</th>
-              <th>Statut</th>
-              <th>Suivi</th>
-              <th>WhatsApp</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>#JE-20240611</strong></td>
-              <td>Aminata Koné</td>
-              <td>🇨🇮 ABJ → 🇫🇷 CDG</td>
-              <td>3.2 kg</td>
-              <td><span class="status-pill status-transit">En transit</span></td>
-              <td><a class="track-link">🔗 Lien</a></td>
-              <td><span class="wa-icon">📱 Envoyer</span></td>
-            </tr>
-            <tr>
-              <td><strong>#JE-20240610</strong></td>
-              <td>Marc Dupont</td>
-              <td>🇫🇷 CDG → 🇨🇮 ABJ</td>
-              <td>7.5 kg</td>
-              <td><span class="status-pill status-livre">Livré ✓</span></td>
-              <td><a class="track-link">🔗 Lien</a></td>
-              <td><span class="wa-icon">📱 Envoyer</span></td>
-            </tr>
-            <tr>
-              <td><strong>#JE-20240609</strong></td>
-              <td>Fatou Diallo</td>
-              <td>🇨🇮 ABJ → 🇫🇷 CDG</td>
-              <td>1.8 kg</td>
-              <td><span class="status-pill status-attente">En attente</span></td>
-              <td><a class="track-link">🔗 Lien</a></td>
-              <td><span class="wa-icon">📱 Envoyer</span></td>
-            </tr>
-            <tr>
-              <td><strong>#JE-20240608</strong></td>
-              <td>Jean Assi</td>
-              <td>🇫🇷 CDG → 🇨🇮 ABJ</td>
-              <td>12.0 kg</td>
-              <td><span class="status-pill status-retard">Retard</span></td>
-              <td><a class="track-link">🔗 Lien</a></td>
-              <td><span class="wa-icon">📱 Envoyer</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="two-cols">
-        <div class="card">
-          <div class="card-title">✈ Prochain voyage</div>
-          <div class="voyage-card" style="margin-bottom:0;">
-            <div class="voyage-route">🇨🇮 <span>ABJ</span> → 🇫🇷 <span>CDG</span></div>
-            <div class="voyage-meta">
-              <div class="voyage-meta-item">
-                <strong>15 Juin 2024</strong>Départ
-              </div>
-              <div class="voyage-meta-item">
-                <strong>16 Juin 2024</strong>Arrivée
-              </div>
-              <div class="voyage-meta-item">
-                <strong>48h avant</strong>Clôture dépôt
-              </div>
-              <div class="voyage-meta-item">
-                <strong>18 kg</strong>Capacité restante
-              </div>
-            </div>
-            <div class="voyage-bar">
-              <span style="font-size:0.65rem;color:rgba(255,255,255,0.4)">Remplissage</span>
-              <div class="bar-track">
-                <div class="bar-fill" style="width:72%"></div>
-              </div>
-              <span style="font-size:0.65rem;color:var(--sky)">72%</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">📬 Demandes en attente</div>
-          <div style="display:flex;flex-direction:column;gap:0.5rem;">
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-bottom:1px solid rgba(91,184,245,0.07)">
-              <div>
-                <div style="font-size:0.78rem;font-weight:600;">Koffi Yao</div>
-                <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);">ABJ→CDG · 5 kg · 15 juin</div>
-              </div>
-              <div style="display:flex;gap:0.4rem;">
-                <button class="btn-primary" style="padding:0.25rem 0.6rem;font-size:0.65rem;">✓</button>
-                <button class="btn-outline" style="padding:0.25rem 0.6rem;font-size:0.65rem;">✗</button>
-              </div>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-bottom:1px solid rgba(91,184,245,0.07)">
-              <div>
-                <div style="font-size:0.78rem;font-weight:600;">Sophie Martin</div>
-                <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);">CDG→ABJ · 8 kg · 20 juin</div>
-              </div>
-              <div style="display:flex;gap:0.4rem;">
-                <button class="btn-primary" style="padding:0.25rem 0.6rem;font-size:0.65rem;">✓</button>
-                <button class="btn-outline" style="padding:0.25rem 0.6rem;font-size:0.65rem;">✗</button>
-              </div>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;">
-              <div>
-                <div style="font-size:0.78rem;font-weight:600;">Issa Traoré</div>
-                <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);">ABJ→CDG · 2 kg · 15 juin</div>
-              </div>
-              <div style="display:flex;gap:0.4rem;">
-                <button class="btn-primary" style="padding:0.25rem 0.6rem;font-size:0.65rem;">✓</button>
-                <button class="btn-outline" style="padding:0.25rem 0.6rem;font-size:0.65rem;">✗</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- ===== VOYAGES ===== -->
-    <div id="voyages" class="view">
-      <div class="section-header">
-        <div class="section-title">✈ Mes <span>Voyages</span></div>
-        <button class="btn-primary">+ Nouveau voyage</button>
-      </div>
-
-      <div style="margin-bottom:1.5rem;">
-        <div class="voyage-card">
-          <div class="voyage-route">🇨🇮 <span>ABJ</span> → 🇫🇷 <span>CDG</span></div>
-          <div class="voyage-meta">
-            <div class="voyage-meta-item"><strong>15 Juin 2024</strong>Départ Abidjan</div>
-            <div class="voyage-meta-item"><strong>16 Juin 2024</strong>Arrivée Paris</div>
-            <div class="voyage-meta-item"><strong>13 Juin 2024</strong>Clôture dépôt (J-2)</div>
-            <div class="voyage-meta-item"><strong>18 kg restants</strong>Capacité</div>
-            <div class="voyage-meta-item"><strong>8€/kg</strong>Tarif ABJ→CDG</div>
-            <div class="voyage-meta-item"><strong>24h max</strong>Délai récupération</div>
-          </div>
-          <div class="voyage-bar">
-            <span style="font-size:0.65rem;color:rgba(255,255,255,0.4)">Capacité utilisée (32/50 kg)</span>
-            <div class="bar-track"><div class="bar-fill" style="width:64%"></div></div>
-            <span style="font-size:0.65rem;color:var(--sky)">64%</span>
-          </div>
-          <div style="margin-top:0.8rem;display:flex;gap:0.5rem;">
-            <button class="btn-primary" style="font-size:0.7rem;">✏️ Modifier</button>
-            <button class="btn-outline" style="font-size:0.7rem;">📤 Partager</button>
-            <button class="btn-outline" style="font-size:0.7rem;">📱 WhatsApp annonce</button>
-          </div>
-        </div>
-
-        <div class="voyage-card">
-          <div class="voyage-route">🇫🇷 <span>CDG</span> → 🇨🇮 <span>ABJ</span></div>
-          <div class="voyage-meta">
-            <div class="voyage-meta-item"><strong>22 Juin 2024</strong>Départ Paris</div>
-            <div class="voyage-meta-item"><strong>22 Juin 2024</strong>Arrivée Abidjan</div>
-            <div class="voyage-meta-item"><strong>20 Juin 2024</strong>Clôture dépôt (J-2)</div>
-            <div class="voyage-meta-item"><strong>30 kg restants</strong>Capacité</div>
-            <div class="voyage-meta-item"><strong>10€/kg</strong>Tarif CDG→ABJ</div>
-            <div class="voyage-meta-item"><strong>48h max</strong>Délai récupération</div>
-          </div>
-          <div class="voyage-bar">
-            <span style="font-size:0.65rem;color:rgba(255,255,255,0.4)">Capacité utilisée (20/50 kg)</span>
-            <div class="bar-track"><div class="bar-fill" style="width:40%"></div></div>
-            <span style="font-size:0.65rem;color:var(--sky)">40%</span>
-          </div>
-          <div style="margin-top:0.8rem;display:flex;gap:0.5rem;">
-            <button class="btn-primary" style="font-size:0.7rem;">✏️ Modifier</button>
-            <button class="btn-outline" style="font-size:0.7rem;">📤 Partager</button>
-            <button class="btn-outline" style="font-size:0.7rem;">📱 WhatsApp annonce</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Formulaire nouveau voyage -->
-      <div class="card">
-        <div class="card-title">➕ Ajouter un voyage</div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>DIRECTION</label>
-            <select>
-              <option>🇨🇮 Abidjan → 🇫🇷 Paris</option>
-              <option>🇫🇷 Paris → 🇨🇮 Abidjan</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>DATE DE DÉPART</label>
-            <input type="date" value="2024-06-15">
-          </div>
-          <div class="form-group">
-            <label>PRIX AU KG (€)</label>
-            <input type="number" placeholder="ex: 8" value="8">
-          </div>
-          <div class="form-group">
-            <label>CAPACITÉ TOTALE (kg)</label>
-            <input type="number" placeholder="ex: 50" value="50">
-          </div>
-          <div class="form-group">
-            <label>DÉLAI DE RÉCUPÉRATION</label>
-            <select>
-              <option>24h après arrivée</option>
-              <option>48h après arrivée</option>
-              <option>72h après arrivée</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>CLÔTURE DES DÉPÔTS</label>
-            <select>
-              <option>J-2 avant départ</option>
-              <option>J-1 avant départ</option>
-              <option>J-3 avant départ</option>
-            </select>
-          </div>
-          <div class="form-group full-width">
-            <label>ADRESSE DE RÉCEPTION (Paris)</label>
-            <input type="text" placeholder="123 Rue de Paris, 75001 Paris">
-          </div>
-          <div class="form-group full-width">
-            <label>ADRESSE DE LIVRAISON (Abidjan)</label>
-            <input type="text" placeholder="Cocody, Abidjan, Côte d'Ivoire">
-          </div>
-          <div class="form-group full-width">
-            <label>CONDITIONS DE VENTE</label>
-            <textarea placeholder="Ex: Pas de produits liquides, dangereux, ou alimentaires périssables..."></textarea>
-          </div>
-        </div>
-        <button class="btn-primary">💾 Enregistrer le voyage</button>
-      </div>
-    </div>
-
-    <!-- ===== ASSISTANT IA ===== -->
-    <div id="assistant" class="view">
-      <div class="section-header">
-        <div class="section-title">🤖 Assistant <span>Digital IA</span></div>
-        <span style="font-size:0.7rem;color:var(--green);" class="pulse">● En ligne 24h/24</span>
-      </div>
-
-      <div class="two-cols">
-        <div>
-          <div class="chat-container">
-            <div class="chat-header">
-              <div class="chat-avatar">🤖</div>
-              <div class="chat-info">
-                <div class="name">Assistant J'Envoie Express</div>
-                <div class="online">● En ligne — Répond en &lt;1 min</div>
-              </div>
-            </div>
-
-            <div class="chat-messages">
-              <div class="msg bot">
-                👋 Bonjour ! Je suis l'assistant de <strong>J'Envoie Express</strong>.<br><br>
-                Je peux vous aider à :<br>
-                • Connaître nos tarifs<br>
-                • Faire une demande d'envoi<br>
-                • Suivre votre colis<br>
-                • Connaître les prochains départs<br><br>
-                Comment puis-je vous aider ?
-                <div class="msg-time">09:00</div>
-                <div class="quick-replies">
-                  <span class="qr">📦 Tarifs</span>
-                  <span class="qr">✈️ Prochains départs</span>
-                  <span class="qr">📍 Suivre mon colis</span>
-                  <span class="qr">📋 Faire une demande</span>
-                </div>
-              </div>
-
-              <div class="msg user">
-                Quels sont vos tarifs pour envoyer un colis d'Abidjan à Paris ?
-                <div class="msg-time">09:02</div>
-              </div>
-
-              <div class="msg bot">
-                Voici nos tarifs <strong>Abidjan → Paris</strong> 🇨🇮✈🇫🇷 :<br><br>
-                💰 <strong>8€ / kg</strong> (tarif standard)<br>
-                📦 Forfait jusqu'à 5 kg : <strong>35€</strong><br>
-                📦 Forfait jusqu'à 10 kg : <strong>65€</strong><br><br>
-                ✅ Collecte incluse à Abidjan<br>
-                ✅ Livraison à domicile à Paris<br>
-                ✅ Suivi en temps réel<br><br>
-                Souhaitez-vous faire une demande pour le <strong>prochain départ du 15 juin</strong> ?
-                <div class="msg-time">09:02</div>
-                <div class="quick-replies">
-                  <span class="qr">✅ Faire une demande</span>
-                  <span class="qr">📅 Voir autres dates</span>
-                </div>
-              </div>
-
-              <div class="msg user">
-                Oui, je veux envoyer 4 kg le 15 juin
-                <div class="msg-time">09:03</div>
-              </div>
-
-              <div class="msg bot">
-                Parfait ! 4 kg × 8€ = <strong>32€</strong> 🎉<br><br>
-                Pour valider votre demande, j'ai besoin de :<br>
-                1. Votre nom complet<br>
-                2. Numéro WhatsApp<br>
-                3. Adresse de collecte (Abidjan)<br>
-                4. Adresse de livraison (Paris)<br>
-                5. Nature du colis<br><br>
-                Pouvez-vous commencer par votre nom ?
-                <div class="msg-time">09:03</div>
-              </div>
-            </div>
-
-            <div class="chat-input-area">
-              <input class="chat-input" placeholder="Écrivez votre message...">
-              <button class="chat-send">➤</button>
-            </div>
-          </div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:1rem;">
-          <div class="card">
-            <div class="card-title">⚙️ Configuration assistant</div>
-            <div style="display:flex;flex-direction:column;gap:0.6rem;">
-              <div class="form-group">
-                <label>TARIF ABJ → CDG (€/kg)</label>
-                <input type="number" value="8">
-              </div>
-              <div class="form-group">
-                <label>TARIF CDG → ABJ (€/kg)</label>
-                <input type="number" value="10">
-              </div>
-              <div class="form-group">
-                <label>MESSAGE D'ACCUEIL</label>
-                <textarea style="height:60px;">Bonjour ! Je suis l'assistant de J'Envoie Express...</textarea>
-              </div>
-              <button class="btn-primary" style="width:100%;">💾 Sauvegarder</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-title">📱 Envoi WhatsApp automatique</div>
-            <div style="font-size:0.75rem;color:rgba(255,255,255,0.6);margin-bottom:0.8rem;">
-              Envoyez automatiquement le lien de suivi + confirmation à vos clients
-            </div>
-            <div style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.3);border-radius:8px;padding:0.8rem;font-size:0.72rem;margin-bottom:0.8rem;">
-              <strong style="color:#25D366;">📱 Modèle de message :</strong><br><br>
-              Bonjour [Prénom] 👋<br>
-              Votre colis #JE-XXXX est confirmé !<br>
-              📦 Poids: [X] kg<br>
-              ✈️ Départ: [Date]<br>
-              🔗 Suivez votre colis: [Lien]<br>
-              Merci de votre confiance !
-            </div>
-            <button class="whatsapp-btn" style="width:100%;justify-content:center;">📱 Tester l'envoi</button>
-          </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;">
+          <div><div style="font-size:.78rem;font-weight:600;">Sophie Martin</div><div style="font-size:.65rem;color:rgba(255,255,255,.4);">CDG→ABJ · 8 kg · 20 juin</div></div>
+          <div style="display:flex;gap:.4rem;"><button class="btn-primary" style="padding:.25rem .6rem;font-size:.65rem;">✓</button><button class="btn-outline" style="padding:.25rem .6rem;font-size:.65rem;">✗</button></div>
         </div>
       </div>
     </div>
+  </div>
+</div>
 
-    <!-- ===== TARIFS ===== -->
-    <div id="tarifs" class="view">
-      <div class="section-header">
-        <div class="section-title">💰 Grilles <span>Tarifaires</span></div>
-        <button class="btn-primary">✏️ Modifier les tarifs</button>
+<!-- ===== COLIS ===== -->
+<div id="colis" class="view">
+  <div class="section-header">
+    <div class="section-title">📦 Tous les <span>Colis</span></div>
+    <div style="display:flex;gap:.5rem;">
+      <input class="chat-input" placeholder="🔍 Rechercher..." style="border-radius:8px;width:200px;">
+      <button class="btn-primary">+ Nouveau colis</button>
+    </div>
+  </div>
+  <div class="page-tabs">
+    <div class="page-tab active" onclick="filterTab(this,'tous')">Tous (24)</div>
+    <div class="page-tab" onclick="filterTab(this,'transit')">En transit (8)</div>
+    <div class="page-tab" onclick="filterTab(this,'douane')">En douane (2)</div>
+    <div class="page-tab" onclick="filterTab(this,'livre')">Livré (14)</div>
+    <div class="page-tab" onclick="filterTab(this,'attente')">En attente (2)</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>N° Colis</th><th>Client</th><th>WA</th><th>Route</th><th>Vol</th><th>Poids</th><th>Montant</th><th>Statut</th><th>Contact réception</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>#JE-20240611</strong></td><td>Aminata Koné</td><td>+225 07 xx</td><td>🇨🇮 → 🇫🇷</td><td>15 juin</td><td>3.2 kg</td><td style="color:var(--gold)">25.60€</td>
+          <td><span class="status-pill status-transit">En transit</span></td>
+          <td style="font-size:.68rem;">+33 6 xx xx xx</td>
+          <td><div style="display:flex;gap:.3rem;flex-wrap:wrap;"><a class="track-link" style="font-size:.65rem;">🔗</a><span class="wa-icon" style="font-size:.65rem;">📱</span><button class="btn-green" style="font-size:.6rem;padding:.15rem .4rem;" onclick="markLivre(this)">✓ Livré</button></div></td>
+        </tr>
+        <tr>
+          <td><strong>#JE-20240610</strong></td><td>Marc Dupont</td><td>+33 6 xx</td><td>🇫🇷 → 🇨🇮</td><td>10 juin</td><td>7.5 kg</td><td style="color:var(--gold)">75€</td>
+          <td><span class="status-pill status-livre">Livré ✓</span></td>
+          <td style="font-size:.68rem;">+225 07 xx xx xx</td>
+          <td><div style="display:flex;gap:.3rem;"><a class="track-link" style="font-size:.65rem;">🔗</a><span class="wa-icon" style="font-size:.65rem;">📱</span></div></td>
+        </tr>
+        <tr>
+          <td><strong>#JE-20240609</strong></td><td>Fatou Diallo</td><td>+225 05 xx</td><td>🇨🇮 → 🇫🇷</td><td>15 juin</td><td>1.8 kg</td><td style="color:var(--gold)">14.40€</td>
+          <td><span class="status-pill status-douane">En douane</span></td>
+          <td style="font-size:.68rem;">+33 7 xx xx xx</td>
+          <td><div style="display:flex;gap:.3rem;flex-wrap:wrap;"><a class="track-link" style="font-size:.65rem;">🔗</a><span class="wa-icon" style="font-size:.65rem;">📱</span><button class="btn-green" style="font-size:.6rem;padding:.15rem .4rem;" onclick="markLivre(this)">✓ Livré</button></div></td>
+        </tr>
+        <tr>
+          <td><strong>#JE-20240608</strong></td><td>Jean Assi</td><td>+225 01 xx</td><td>🇫🇷 → 🇨🇮</td><td>10 juin</td><td>12.0 kg</td><td style="color:var(--gold)">120€</td>
+          <td><span class="status-pill status-attente">En attente</span></td>
+          <td style="font-size:.68rem;">+225 05 xx xx xx</td>
+          <td><div style="display:flex;gap:.3rem;flex-wrap:wrap;"><a class="track-link" style="font-size:.65rem;">🔗</a><span class="wa-icon" style="font-size:.65rem;">📱</span><button class="btn-green" style="font-size:.6rem;padding:.15rem .4rem;" onclick="markLivre(this)">✓ Livré</button></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== VOYAGES ===== -->
+<div id="voyages" class="view">
+  <div class="section-header">
+    <div class="section-title">✈ Mes <span>Voyages</span></div>
+    <button class="btn-primary">+ Nouveau voyage</button>
+  </div>
+  <div style="margin-bottom:1.5rem;">
+    <div class="voyage-card">
+      <div class="voyage-route">🇨🇮 <span>ABJ</span> → 🇫🇷 <span>CDG</span></div>
+      <div class="voyage-meta">
+        <div class="voyage-meta-item"><strong>15 Juin 2024</strong>Départ Abidjan</div>
+        <div class="voyage-meta-item"><strong>16 Juin 2024</strong>Arrivée Paris</div>
+        <div class="voyage-meta-item"><strong>13 Juin 2024</strong>Clôture dépôt (J-2)</div>
+        <div class="voyage-meta-item"><strong>18 kg restants</strong>Capacité</div>
+        <div class="voyage-meta-item"><strong>8€/kg</strong>Tarif ABJ→CDG</div>
+        <div class="voyage-meta-item"><strong>24h max</strong>Délai récupération</div>
       </div>
-
-      <div class="tarif-grid">
-        <div class="tarif-card">
-          <div class="tarif-name">🇨🇮 ABIDJAN → PARIS 🇫🇷</div>
-          <div class="tarif-price">8<span class="unit">€/kg</span></div>
-          <div class="tarif-dir">Standard · Délai 48h</div>
-          <div class="tarif-features">
-            ✅ Collecte incluse ABJ<br>
-            ✅ Livraison CDG<br>
-            ✅ Suivi temps réel<br>
-            ✅ Assurance basique
-          </div>
-        </div>
-
-        <div class="tarif-card featured">
-          <div class="tarif-name">📦 FORFAITS ABJ → CDG</div>
-          <div class="tarif-price">35<span class="unit">€</span></div>
-          <div class="tarif-dir">Jusqu'à 5 kg · Populaire</div>
-          <div class="tarif-features">
-            ✅ 5 kg inclus<br>
-            ✅ 10 kg : 65€<br>
-            ✅ 15 kg : 90€<br>
-            ✅ 20 kg : 115€
-          </div>
-        </div>
-
-        <div class="tarif-card">
-          <div class="tarif-name">🇫🇷 PARIS → ABIDJAN 🇨🇮</div>
-          <div class="tarif-price">10<span class="unit">€/kg</span></div>
-          <div class="tarif-dir">Standard · Délai 48h</div>
-          <div class="tarif-features">
-            ✅ Collecte incluse CDG<br>
-            ✅ Livraison ABJ<br>
-            ✅ Suivi temps réel<br>
-            ✅ Assurance basique
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">📋 Conditions de vente</div>
-        <div style="font-size:0.78rem;color:rgba(255,255,255,0.7);line-height:2;">
-          ❌ Pas de produits liquides non scellés<br>
-          ❌ Pas de matières dangereuses ou inflammables<br>
-          ❌ Pas d'aliments périssables<br>
-          ✅ Documents et vêtements acceptés<br>
-          ✅ Électronique accepté (avec facture)<br>
-          ✅ Paiement avant prise en charge (Mobile Money / Virement)<br>
-          📅 Dépôt minimum 48h avant le vol
-        </div>
-        <button class="btn-outline" style="margin-top:1rem;">✏️ Modifier les conditions</button>
+      <div class="voyage-bar"><span style="font-size:.65rem;color:rgba(255,255,255,.4)">Capacité utilisée (32/50 kg)</span><div class="bar-track"><div class="bar-fill" style="width:64%"></div></div><span style="font-size:.65rem;color:var(--sky)">64%</span></div>
+      <div style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap;">
+        <button class="btn-primary" style="font-size:.7rem;">✏️ Modifier</button>
+        <button class="btn-outline" style="font-size:.7rem;">📤 Partager</button>
+        <button class="whatsapp-btn" style="font-size:.7rem;">📱 Annonce WA</button>
       </div>
     </div>
-
-    <!-- ===== TRACKING ===== -->
-    <div id="tracking" class="view">
-      <div class="section-header">
-        <div class="section-title">📍 Suivi <span>Client</span></div>
-        <button class="btn-primary">🔗 Générer un lien de suivi</button>
+    <div class="voyage-card">
+      <div class="voyage-route">🇫🇷 <span>CDG</span> → 🇨🇮 <span>ABJ</span></div>
+      <div class="voyage-meta">
+        <div class="voyage-meta-item"><strong>22 Juin 2024</strong>Départ Paris</div>
+        <div class="voyage-meta-item"><strong>22 Juin 2024</strong>Arrivée Abidjan</div>
+        <div class="voyage-meta-item"><strong>20 Juin 2024</strong>Clôture dépôt (J-2)</div>
+        <div class="voyage-meta-item"><strong>30 kg restants</strong>Capacité</div>
+        <div class="voyage-meta-item"><strong>10€/kg</strong>Tarif CDG→ABJ</div>
+        <div class="voyage-meta-item"><strong>+ Livraison ABJ</strong>Option disponible</div>
       </div>
-
-      <div class="two-cols">
-        <div>
-          <div class="card" style="margin-bottom:1rem;">
-            <div class="card-title">🔍 Rechercher un colis</div>
-            <div style="display:flex;gap:0.5rem;">
-              <input class="chat-input" placeholder="#JE-20240611" style="border-radius:8px;flex:1;">
-              <button class="btn-primary">Rechercher</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-title">📦 Colis #JE-20240611 — Aminata Koné</div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:1rem;font-size:0.72rem;">
-              <div>
-                <div style="color:rgba(255,255,255,0.4)">Route</div>
-                <div>🇨🇮 ABJ → 🇫🇷 CDG</div>
-              </div>
-              <div>
-                <div style="color:rgba(255,255,255,0.4)">Poids</div>
-                <div>3.2 kg</div>
-              </div>
-              <div>
-                <div style="color:rgba(255,255,255,0.4)">Montant</div>
-                <div style="color:var(--gold)">25.60€</div>
-              </div>
-            </div>
-
-            <div class="track-steps">
-              <div class="track-step done">
-                <div class="track-step-label">✓ Demande reçue</div>
-                <div class="track-step-date">10 juin 2024 · 14h30</div>
-              </div>
-              <div class="track-step done">
-                <div class="track-step-label">✓ Colis collecté à Abidjan</div>
-                <div class="track-step-date">13 juin 2024 · 10h00</div>
-              </div>
-              <div class="track-step current">
-                <div class="track-step-label active pulse">✈ En vol ABJ → CDG</div>
-                <div class="track-step-date">15 juin 2024 · Vol AF0702</div>
-              </div>
-              <div class="track-step">
-                <div class="track-step-label" style="color:rgba(255,255,255,0.4)">Arrivée Paris CDG</div>
-                <div class="track-step-date">16 juin 2024 · ~06h20</div>
-              </div>
-              <div class="track-step">
-                <div class="track-step-label" style="color:rgba(255,255,255,0.4)">Livraison à domicile</div>
-                <div class="track-step-date">Estimée : 17 juin 2024</div>
-              </div>
-            </div>
-
-            <div style="display:flex;gap:0.5rem;margin-top:1rem;">
-              <button class="whatsapp-btn" style="flex:1;justify-content:center;">📱 Envoyer le suivi par WhatsApp</button>
-              <button class="btn-outline">🔗 Copier le lien</button>
-            </div>
-          </div>
+      <div class="voyage-bar"><span style="font-size:.65rem;color:rgba(255,255,255,.4)">Capacité utilisée (20/50 kg)</span><div class="bar-track"><div class="bar-fill" style="width:40%"></div></div><span style="font-size:.65rem;color:var(--sky)">40%</span></div>
+      <div style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap;">
+        <button class="btn-primary" style="font-size:.7rem;">✏️ Modifier</button>
+        <button class="btn-outline" style="font-size:.7rem;">📤 Partager</button>
+        <button class="whatsapp-btn" style="font-size:.7rem;">📱 Annonce WA</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📍 Points de récupération</div>
+    <div class="two-cols" style="margin-bottom:0;">
+      <div style="background:rgba(91,184,245,.07);border-radius:10px;padding:1rem;">
+        <div style="font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;color:var(--sky);margin-bottom:.6rem;">🇫🇷 Paris — Point de dépôt</div>
+        <div style="font-size:.78rem;line-height:1.8;color:rgba(255,255,255,.75);">
+          📌 Adresse : <strong>[À renseigner]</strong><br>
+          📞 Contact : <strong>[Numéro à renseigner]</strong><br>
+          🕐 Horaires : Lun–Sam · 9h–19h<br>
+          ⏰ Dépôt avant J-2 du vol
         </div>
-
-        <!-- Mobile preview -->
-        <div>
-          <div class="card-title" style="margin-bottom:1rem;font-family:'Syne',sans-serif;font-size:0.82rem;color:var(--sky);">
-            📱 Aperçu page de suivi client
-          </div>
-          <div class="mobile-frame">
-            <div class="mobile-notch"></div>
-            <div class="mobile-screen">
-              <div class="mob-header">
-                ✈ J'ENVOIE EXPRESS<br>
-                <span style="font-size:0.5rem;color:var(--sky);">Vos colis, vos sourires... Livrés en EXPRESS !</span>
-              </div>
-              <div class="mob-track-id">#JE-20240611</div>
-              <div style="background:rgba(245,166,35,0.15);border-radius:6px;padding:0.35rem;text-align:center;font-size:0.62rem;color:var(--gold);margin-bottom:0.5rem;font-weight:600;">
-                ✈ EN VOL ABJ → CDG
-              </div>
-              <div class="mob-step">
-                <div class="mob-dot" style="background:var(--green)"></div>
-                <div class="mob-step-text">
-                  <strong>✓ Colis collecté</strong>
-                  <span>13 juin · Abidjan</span>
-                </div>
-              </div>
-              <div class="mob-step">
-                <div class="mob-dot" style="background:var(--gold)" class="pulse"></div>
-                <div class="mob-step-text">
-                  <strong style="color:var(--gold);">✈ En vol</strong>
-                  <span>15 juin · AF0702</span>
-                </div>
-              </div>
-              <div class="mob-step">
-                <div class="mob-dot" style="background:rgba(255,255,255,0.2)"></div>
-                <div class="mob-step-text">
-                  <strong style="color:rgba(255,255,255,0.4)">Arrivée Paris</strong>
-                  <span>16 juin · ~06h20</span>
-                </div>
-              </div>
-              <div class="mob-step">
-                <div class="mob-dot" style="background:rgba(255,255,255,0.2)"></div>
-                <div class="mob-step-text">
-                  <strong style="color:rgba(255,255,255,0.4)">Livraison</strong>
-                  <span>Est. 17 juin</span>
-                </div>
-              </div>
-              <div class="mob-wa-btn">📱 Contacter J'Envoie Express</div>
-            </div>
-          </div>
-          <div style="text-align:center;font-size:0.65rem;color:rgba(255,255,255,0.3);margin-top:0.5rem;">
-            Page vue par le client sur son téléphone
-          </div>
+      </div>
+      <div style="background:rgba(91,184,245,.07);border-radius:10px;padding:1rem;">
+        <div style="font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;color:var(--sky);margin-bottom:.6rem;">🇨🇮 Abidjan — Point de dépôt</div>
+        <div style="font-size:.78rem;line-height:1.8;color:rgba(255,255,255,.75);">
+          📌 Adresse : <strong>[À renseigner]</strong><br>
+          📞 Contact CI : <strong>[Numéro à renseigner]</strong><br>
+          🕐 Horaires : Lun–Sam · 8h–18h<br>
+          ⏰ Dépôt avant J-2 du vol
         </div>
       </div>
     </div>
+  </div>
+</div>
 
-    <!-- ===== DEMANDES ===== -->
-    <div id="demandes" class="view">
-      <div class="section-header">
-        <div class="section-title">📬 Demandes <span>Clients</span></div>
-        <span style="font-size:0.75rem;color:var(--gold);">5 en attente de traitement</span>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Client</th>
-              <th>WhatsApp</th>
-              <th>Route</th>
-              <th>Vol souhaité</th>
-              <th>Poids</th>
-              <th>Montant</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Koffi Yao</strong></td>
-              <td>+225 07 XX XX XX</td>
-              <td>🇨🇮 ABJ → 🇫🇷 CDG</td>
-              <td>15 juin 2024</td>
-              <td>5 kg</td>
-              <td style="color:var(--gold);">40€</td>
-              <td>
-                <div style="display:flex;gap:0.4rem;">
-                  <button class="btn-primary" style="font-size:0.65rem;padding:0.2rem 0.5rem;">✓ Valider</button>
-                  <button class="btn-outline" style="font-size:0.65rem;padding:0.2rem 0.5rem;">✗</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Sophie Martin</strong></td>
-              <td>+33 6 XX XX XX XX</td>
-              <td>🇫🇷 CDG → 🇨🇮 ABJ</td>
-              <td>22 juin 2024</td>
-              <td>8 kg</td>
-              <td style="color:var(--gold);">80€</td>
-              <td>
-                <div style="display:flex;gap:0.4rem;">
-                  <button class="btn-primary" style="font-size:0.65rem;padding:0.2rem 0.5rem;">✓ Valider</button>
-                  <button class="btn-outline" style="font-size:0.65rem;padding:0.2rem 0.5rem;">✗</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Issa Traoré</strong></td>
-              <td>+225 05 XX XX XX</td>
-              <td>🇨🇮 ABJ → 🇫🇷 CDG</td>
-              <td>15 juin 2024</td>
-              <td>2 kg</td>
-              <td style="color:var(--gold);">16€</td>
-              <td>
-                <div style="display:flex;gap:0.4rem;">
-                  <button class="btn-primary" style="font-size:0.65rem;padding:0.2rem 0.5rem;">✓ Valider</button>
-                  <button class="btn-outline" style="font-size:0.65rem;padding:0.2rem 0.5rem;">✗</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+<!-- ===== REVENUS ===== -->
+<div id="revenus" class="view">
+  <div class="section-header">
+    <div class="section-title">💶 <span>Revenus</span></div>
+    <div style="display:flex;gap:.5rem;">
+      <button class="btn-primary">+ Enregistrer encaissement</button>
+      <button class="btn-outline" style="color:var(--red);border-color:rgba(239,68,68,.4);">− Retirer</button>
     </div>
-
-    <!-- ===== COLIS ===== -->
-    <div id="colis" class="view">
-      <div class="section-header">
-        <div class="section-title">📦 Tous les <span>Colis</span></div>
-        <div style="display:flex;gap:0.5rem;">
-          <input class="chat-input" placeholder="🔍 Rechercher..." style="border-radius:8px;width:200px;">
-          <button class="btn-primary">+ Nouveau colis</button>
-        </div>
-      </div>
-
-      <div class="page-tabs">
-        <div class="page-tab active">Tous (24)</div>
-        <div class="page-tab">En transit (8)</div>
-        <div class="page-tab">Livré (14)</div>
-        <div class="page-tab">En attente (2)</div>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>N° Colis</th>
-              <th>Client</th>
-              <th>WhatsApp</th>
-              <th>Route</th>
-              <th>Vol</th>
-              <th>Poids</th>
-              <th>Montant</th>
-              <th>Statut</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>#JE-20240611</strong></td>
-              <td>Aminata Koné</td>
-              <td>+225 07 xx</td>
-              <td>🇨🇮 → 🇫🇷</td>
-              <td>15 juin</td>
-              <td>3.2 kg</td>
-              <td style="color:var(--gold)">25.60€</td>
-              <td><span class="status-pill status-transit">En transit</span></td>
-              <td>
-                <div style="display:flex;gap:0.3rem;">
-                  <a class="track-link" style="font-size:0.65rem;">🔗</a>
-                  <span class="wa-icon" style="font-size:0.65rem;">📱</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><strong>#JE-20240610</strong></td>
-              <td>Marc Dupont</td>
-              <td>+33 6 xx</td>
-              <td>🇫🇷 → 🇨🇮</td>
-              <td>10 juin</td>
-              <td>7.5 kg</td>
-              <td style="color:var(--gold)">75€</td>
-              <td><span class="status-pill status-livre">Livré ✓</span></td>
-              <td>
-                <div style="display:flex;gap:0.3rem;">
-                  <a class="track-link" style="font-size:0.65rem;">🔗</a>
-                  <span class="wa-icon" style="font-size:0.65rem;">📱</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><strong>#JE-20240609</strong></td>
-              <td>Fatou Diallo</td>
-              <td>+225 05 xx</td>
-              <td>🇨🇮 → 🇫🇷</td>
-              <td>15 juin</td>
-              <td>1.8 kg</td>
-              <td style="color:var(--gold)">14.40€</td>
-              <td><span class="status-pill status-attente">En attente</span></td>
-              <td>
-                <div style="display:flex;gap:0.3rem;">
-                  <a class="track-link" style="font-size:0.65rem;">🔗</a>
-                  <span class="wa-icon" style="font-size:0.65rem;">📱</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><strong>#JE-20240608</strong></td>
-              <td>Jean Assi</td>
-              <td>+225 01 xx</td>
-              <td>🇫🇷 → 🇨🇮</td>
-              <td>10 juin</td>
-              <td>12.0 kg</td>
-              <td style="color:var(--gold)">120€</td>
-              <td><span class="status-pill status-retard">Retard</span></td>
-              <td>
-                <div style="display:flex;gap:0.3rem;">
-                  <a class="track-link" style="font-size:0.65rem;">🔗</a>
-                  <span class="wa-icon" style="font-size:0.65rem;">📱</span>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  </div>
+  <div class="three-cols">
+    <div class="kpi"><div class="kpi-label">TOTAL JUIN</div><div class="kpi-val">3<span>,840€</span></div><div class="kpi-sub up">↑ +18% vs mai</div></div>
+    <div class="kpi"><div class="kpi-label">RETRAITS</div><div class="kpi-val" style="color:var(--red);">1<span>,200€</span></div><div class="kpi-sub">3 retraits ce mois</div></div>
+    <div class="kpi"><div class="kpi-label">SOLDE NET</div><div class="kpi-val" style="color:var(--green);">2<span>,640€</span></div><div class="kpi-sub up">Disponible</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">📋 Historique des transactions</div>
+    <div style="margin-bottom:1rem;">
+      <div class="revenu-row"><div class="revenu-type"><span style="color:var(--green);">↑</span> Encaissement · #JE-20240611</div><div style="text-align:right;"><div class="revenu-amount credit">+25.60€</div><div style="font-size:.62rem;color:rgba(255,255,255,.4);">15 juin · Wave</div></div></div>
+      <div class="revenu-row"><div class="revenu-type"><span style="color:var(--green);">↑</span> Encaissement · #JE-20240610</div><div style="text-align:right;"><div class="revenu-amount credit">+75€</div><div style="font-size:.62rem;color:rgba(255,255,255,.4);">14 juin · PayPal</div></div></div>
+      <div class="revenu-row"><div class="revenu-type"><span style="color:var(--red);">↓</span> Retrait personnel</div><div style="text-align:right;"><div class="revenu-amount debit">−500€</div><div style="font-size:.62rem;color:rgba(255,255,255,.4);">12 juin · Virement</div></div></div>
+      <div class="revenu-row"><div class="revenu-type"><span style="color:var(--green);">↑</span> Encaissement · #JE-20240609</div><div style="text-align:right;"><div class="revenu-amount credit">+14.40€</div><div style="font-size:.62rem;color:rgba(255,255,255,.4);">10 juin · Espèces</div></div></div>
+      <div class="revenu-row"><div class="revenu-type"><span style="color:var(--green);">↑</span> Encaissement · #JE-20240608</div><div style="text-align:right;"><div class="revenu-amount credit">+120€</div><div style="font-size:.62rem;color:rgba(255,255,255,.4);">10 juin · Carte</div></div></div>
+      <div class="revenu-row"><div class="revenu-type"><span style="color:var(--red);">↓</span> Retrait personnel</div><div style="text-align:right;"><div class="revenu-amount debit">−700€</div><div style="font-size:.62rem;color:rgba(255,255,255,.4);">05 juin · Virement</div></div></div>
     </div>
+  </div>
+</div>
 
-    <!-- ===== CLIENTS ===== -->
-    <div id="clients" class="view">
-      <div class="section-header">
-        <div class="section-title">👤 Gestion <span>Clients</span></div>
-        <button class="btn-primary">+ Nouveau client</button>
-      </div>
-
-      <div class="three-cols">
-        <div class="kpi">
-          <div class="kpi-label">TOTAL CLIENTS</div>
-          <div class="kpi-val">47</div>
-          <div class="kpi-sub up">↑ +5 ce mois</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-label">FRANCE 🇫🇷</div>
-          <div class="kpi-val">23</div>
-          <div class="kpi-sub">Paris principalement</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-label">CÔTE D'IVOIRE 🇨🇮</div>
-          <div class="kpi-val">24</div>
-          <div class="kpi-sub">Abidjan principalement</div>
-        </div>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Nom</th>
-              <th>WhatsApp</th>
-              <th>Localisation</th>
-              <th>Adresse</th>
-              <th>Colis envoyés</th>
-              <th>Total dépensé</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Aminata Koné</strong></td>
-              <td>+225 07 XX XX XX</td>
-              <td>🇨🇮 Abidjan</td>
-              <td>Cocody, ABJ</td>
-              <td>8 colis</td>
-              <td style="color:var(--gold)">204€</td>
-            </tr>
-            <tr>
-              <td><strong>Marc Dupont</strong></td>
-              <td>+33 6 XX XX XX XX</td>
-              <td>🇫🇷 Paris</td>
-              <td>75012 Paris</td>
-              <td>5 colis</td>
-              <td style="color:var(--gold)">375€</td>
-            </tr>
-            <tr>
-              <td><strong>Fatou Diallo</strong></td>
-              <td>+225 05 XX XX XX</td>
-              <td>🇨🇮 Abidjan</td>
-              <td>Marcory, ABJ</td>
-              <td>3 colis</td>
-              <td style="color:var(--gold)">72€</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </main>
-
-  <div class="footer-bar">
-    <span>J'Envoie Express © 2024 — Plateforme de gestion colis ABJ ✈ CDG</span>
-    <span>🔒 Sécurisé · Version Maquette v1.0</span>
+<!-- ===== TARIFS & PAIEMENTS ===== -->
+<div id="tarifs" class="view">
+  <div class="section-header">
+    <div class="section-title">💰 Tarifs & <span>Paiements</span></div>
+    <button class="btn-primary">✏️ Modifier les tarifs</button>
   </div>
 
+  <div class="tarif-grid">
+    <div class="tarif-card">
+      <div class="tarif-name">🇨🇮 ABIDJAN → PARIS 🇫🇷</div>
+      <div class="tarif-price">10<span class="unit">€/kg</span></div>
+      <div class="tarif-dir">Standard · Délai 48h</div>
+      <div class="tarif-features">✅ Collecte incluse ABJ<br>✅ Livraison CDG<br>✅ Suivi temps réel<br>✅ Assurance basique</div>
+    </div>
+    <div class="tarif-card featured">
+      <div class="tarif-name">⚠️ RÈGLE IMPORTANTE</div>
+      <div class="tarif-price" style="font-size:1.4rem;">10<span class="unit">%</span></div>
+      <div class="tarif-dir">Pour tout article &gt; 100€</div>
+      <div class="tarif-features" style="margin-top:.8rem;">Pour tout article dont la valeur est supérieure à 100€, nous appliquons <strong>10% du prix de l'article</strong> en plus du tarif de base.<br><br>Exemple : article à 500€ → +50€</div>
+    </div>
+    <div class="tarif-card">
+      <div class="tarif-name">🇫🇷 PARIS → ABIDJAN 🇨🇮</div>
+      <div class="tarif-price">14<span class="unit">€/kg</span></div>
+      <div class="tarif-dir">Standard · Délai 48h</div>
+      <div class="tarif-features">✅ Collecte incluse CDG<br>✅ Livraison ABJ incluse<br>✅ Suivi temps réel<br>✅ Contact livreur CI fourni</div>
+    </div>
+  </div>
+
+  <!-- Prix par type d'article -->
+  <div class="section-header">
+    <div class="section-title">🏷️ Prix <span>ABJ → CDG</span></div>
+    <div style="font-size:.7rem;color:rgba(255,255,255,.4);">La livraison à Paris est à la charge du client</div>
+  </div>
+  <div class="article-grid">
+    <div class="article-card"><div class="article-icon">💄</div><div class="article-name">Cosmétiques</div><div class="article-price">12€/kg</div><div class="article-note">Produits scellés uniquement</div></div>
+    <div class="article-card"><div class="article-icon">🧴</div><div class="article-name">Game de cosmétiques</div><div class="article-price">50€/game</div><div class="article-note">Coffret complet</div></div>
+    <div class="article-card"><div class="article-icon">🍯</div><div class="article-name">Miel</div><div class="article-price">10€/bouteille 1L</div><div class="article-note">Emballage hermétique obligatoire</div></div>
+    <div class="article-card"><div class="article-icon">🥘</div><div class="article-name">Nourriture / Méd. traditionnels</div><div class="article-price">10€/kg</div><div class="article-note">Emballage alimentaire obligatoire</div></div>
+    <div class="article-card"><div class="article-icon">👕</div><div class="article-name">Maillot</div><div class="article-price">10€/maillot</div><div class="article-note">Emballé soigneusement</div></div>
+    <div class="article-card"><div class="article-icon">💇</div><div class="article-name">Mèche / Perruque / Tissage</div><div class="article-price">10€</div><div class="article-note">Emballé soigneusement</div></div>
+  </div>
+  <div class="section-header" style="margin-top:.5rem;">
+    <div class="section-title">🏷️ Prix <span>CDG → ABJ</span></div>
+    <div style="font-size:.7rem;color:rgba(255,255,255,.4);">Livraison Abidjan en option (+prix selon quartier)</div>
+  </div>
+  <div class="article-grid">
+    <div class="article-card"><div class="article-icon">📱</div><div class="article-name">Téléphone neuf</div><div class="article-price">30€</div><div class="article-note">Facture obligatoire · batterie déclarée</div></div>
+    <div class="article-card"><div class="article-icon">📲</div><div class="article-name">Téléphone ancien</div><div class="article-price">20€</div><div class="article-note">Batterie déclarée · état constaté</div></div>
+    <div class="article-card"><div class="article-icon">🍎</div><div class="article-name">iPhone neuf</div><div class="article-price">70€</div><div class="article-note">Facture obligatoire · batterie déclarée</div></div>
+    <div class="article-card"><div class="article-icon">💻</div><div class="article-name">Ordinateur portable</div><div class="article-price">100€</div><div class="article-note">Facture obligatoire · batterie déclarée</div></div>
+    <div class="article-card"><div class="article-icon">🎮</div><div class="article-name">Jeux vidéo</div><div class="article-price">80€</div><div class="article-note">Console ou jeu · facture recommandée</div></div>
+    <div class="article-card"><div class="article-icon">📟</div><div class="article-name">Tablette</div><div class="article-price">50€</div><div class="article-note">Facture obligatoire · batterie déclarée</div></div>
+    <div class="article-card"><div class="article-icon">🌸</div><div class="article-name">Parfum (&gt;50€)</div><div class="article-price">10€ / parfum</div><div class="article-note">Emballé sous bulle · non aérosol</div></div>
+    <div class="article-card"><div class="article-icon">💐</div><div class="article-name">Coffret parfum</div><div class="article-price">15€</div><div class="article-note">Emballage sécurisé obligatoire</div></div>
+    <div class="article-card"><div class="article-icon">🏠</div><div class="article-name">Électroménager</div><div class="article-price">16€/kg</div><div class="article-note">Emballage solide obligatoire</div></div>
+    <div class="article-card"><div class="article-icon">⌚</div><div class="article-name">Montre connectée</div><div class="article-price">30€</div><div class="article-note">Facture recommandée</div></div>
+    <div class="article-card"><div class="article-icon">🕰️</div><div class="article-name">Montre</div><div class="article-price">25€</div><div class="article-note">Boîte d'origine conseillée</div></div>
+    <div class="article-card"><div class="article-icon">📄</div><div class="article-name">Document</div><div class="article-price">15€</div><div class="article-note">Enveloppe sécurisée · suivi prioritaire</div></div>
+  </div>
+  <div style="background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);border-radius:10px;padding:.9rem 1.1rem;margin-bottom:1.5rem;font-size:.78rem;line-height:1.7;color:rgba(255,255,255,.85);">
+    <strong style="color:var(--gold);">⚠️ NB :</strong> Pour tout article ayant une valeur supérieure à 100€, un supplément de <strong>10% du prix de l'article</strong> est ajouté au tarif de base.
+  </div>
+
+  <!-- Paiements acceptés -->
+  <div class="section-header"><div class="section-title">💳 Paiements <span>acceptés</span></div></div>
+  <div class="pay-grid" style="margin-bottom:1.5rem;">
+    <div class="pay-pill">💵 Espèces</div>
+    <div class="pay-pill">💳 Carte bancaire</div>
+    <div class="pay-pill">🅿️ PayPal</div>
+    <div class="pay-pill">🌊 Wave</div>
+    <div class="pay-pill">📲 MTN Money</div>
+    <div class="pay-pill">🟠 Orange Money</div>
+    <div class="pay-pill">🔵 Wero</div>
+    <div class="pay-pill">💸 Virement bancaire</div>
+  </div>
+
+  <!-- Colis interdits -->
+  <div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-title">🚫 Colis interdits</div>
+    <div class="two-cols" style="margin-bottom:0;">
+      <div style="font-size:.78rem;line-height:2;color:rgba(255,255,255,.75);">
+        ❌ Matières explosives ou inflammables<br>
+        ❌ Armes et munitions de toute nature<br>
+        ❌ Stupéfiants et substances illicites<br>
+        ❌ Médicaments non déclarés / sans ordonnance<br>
+        ❌ Devises > seuil douanier (10 000€)
+      </div>
+      <div style="font-size:.78rem;line-height:2;color:rgba(255,255,255,.75);">
+        ❌ Contrefaçons et produits piratés<br>
+        ❌ Aliments périssables non emballés<br>
+        ❌ Liquides non scellés et produits corrosifs<br>
+        ❌ Animaux vivants<br>
+        ❌ Batteries Li-ion non déclarées (avion)
+      </div>
+    </div>
+  </div>
+
+  <!-- Douane -->
+  <div class="card">
+    <div class="card-title">🛃 Étape douane — Ce qu'il faut savoir</div>
+    <div style="font-size:.78rem;line-height:2;color:rgba(255,255,255,.75);">
+      📋 <strong>Déclaration obligatoire</strong> pour tout colis de valeur supérieure à 150€ (EU)<br>
+      🧾 <strong>Facture / proof of purchase</strong> à joindre pour électroniques et objets de valeur<br>
+      💶 <strong>Droits de douane</strong> : potentiellement appliqués par les autorités françaises ou ivoiriennes selon la valeur déclarée<br>
+      ⏱️ <strong>Délai douane</strong> : 24h à 72h supplémentaires possibles — prévu dans le suivi<br>
+      📞 <strong>En cas de blocage</strong> : J'Envoie Express vous contacte directement par WhatsApp
+    </div>
+  </div>
+</div>
+
+<!-- ===== TRACKING ===== -->
+<div id="tracking" class="view">
+  <div class="section-header">
+    <div class="section-title">📍 Suivi <span>Client</span></div>
+    <button class="btn-primary">🔗 Générer un lien de suivi</button>
+  </div>
+  <div class="two-cols">
+    <div>
+      <div class="card" style="margin-bottom:1rem;">
+        <div class="card-title">🔍 Rechercher un colis</div>
+        <div style="display:flex;gap:.5rem;">
+          <input class="chat-input" placeholder="#JE-20240611" style="border-radius:8px;flex:1;">
+          <button class="btn-primary">Rechercher</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📦 Colis #JE-20240611 — Aminata Koné</div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:1rem;font-size:.72rem;flex-wrap:wrap;gap:.5rem;">
+          <div><div style="color:rgba(255,255,255,.4)">Route</div><div>🇨🇮 ABJ → 🇫🇷 CDG</div></div>
+          <div><div style="color:rgba(255,255,255,.4)">Poids</div><div>3.2 kg</div></div>
+          <div><div style="color:rgba(255,255,255,.4)">Montant</div><div style="color:var(--gold)">25.60€</div></div>
+          <div><div style="color:rgba(255,255,255,.4)">Contact récupération</div><div>+33 6 xx xx xx</div></div>
+        </div>
+        <div style="font-size:.72rem;margin-bottom:.8rem;background:rgba(91,184,245,.07);border-radius:8px;padding:.6rem;">
+          📦 <strong>Livreur CI :</strong> [Nom livreur] · <a style="color:#25D366;text-decoration:none;" href="#">📱 +225 XX XX XX XX</a>
+        </div>
+        <div class="track-steps">
+          <div class="track-step done"><div class="track-step-label">✓ Demande reçue</div><div class="track-step-date">10 juin 2024 · 14h30</div></div>
+          <div class="track-step done"><div class="track-step-label">✓ Colis collecté à Abidjan</div><div class="track-step-date">13 juin 2024 · 10h00</div></div>
+          <div class="track-step current"><div class="track-step-label active pulse">✈ En vol ABJ → CDG</div><div class="track-step-date">15 juin 2024 · Vol AF0702</div></div>
+          <div class="track-step"><div class="track-step-label" style="color:rgba(255,255,255,.4)">Arrivée Paris CDG</div><div class="track-step-date">16 juin 2024 · ~06h20</div></div>
+          <div class="track-step douane"><div class="track-step-label" style="color:#a855f7;">🛃 Contrôle douanier (si nécessaire)</div><div class="track-step-date">16 juin 2024 · délai 24-72h</div></div>
+          <div class="track-step"><div class="track-step-label" style="color:rgba(255,255,255,.4)">Livraison à domicile</div><div class="track-step-date">Estimée : 17–18 juin 2024</div></div>
+        </div>
+        <div style="display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap;">
+          <button class="whatsapp-btn" style="flex:1;justify-content:center;">📱 Envoyer suivi WA</button>
+          <button class="btn-outline">🔗 Copier lien</button>
+          <button class="btn-green" onclick="markLivre(this)">✓ Marquer livré</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card-title" style="margin-bottom:1rem;font-family:'Syne',sans-serif;font-size:.82rem;color:var(--sky);">📱 Aperçu page suivi client</div>
+      <div class="mobile-frame">
+        <div class="mobile-notch"></div>
+        <div class="mobile-screen">
+          <div class="mob-header">✈ J'ENVOIE EXPRESS<br><span style="font-size:.5rem;color:var(--sky);">Vos colis, livrés en EXPRESS !</span></div>
+          <div class="mob-track-id">#JE-20240611</div>
+          <div style="background:rgba(245,166,35,.15);border-radius:6px;padding:.35rem;text-align:center;font-size:.62rem;color:var(--gold);margin-bottom:.5rem;font-weight:600;">✈ EN VOL ABJ → CDG</div>
+          <div class="mob-step"><div class="mob-dot" style="background:var(--green)"></div><div class="mob-step-text"><strong>✓ Colis collecté</strong><span>13 juin · Abidjan</span></div></div>
+          <div class="mob-step"><div class="mob-dot" style="background:var(--gold)"></div><div class="mob-step-text"><strong style="color:var(--gold);">✈ En vol</strong><span>15 juin · AF0702</span></div></div>
+          <div class="mob-step"><div class="mob-dot" style="background:rgba(255,255,255,.2)"></div><div class="mob-step-text"><strong style="color:rgba(255,255,255,.4)">Arrivée Paris</strong><span>16 juin · ~06h20</span></div></div>
+          <div class="mob-step"><div class="mob-dot" style="background:rgba(168,85,247,.4)"></div><div class="mob-step-text"><strong style="color:#a855f7;">🛃 Douane</strong><span>Si nécessaire</span></div></div>
+          <div class="mob-step"><div class="mob-dot" style="background:rgba(255,255,255,.2)"></div><div class="mob-step-text"><strong style="color:rgba(255,255,255,.4)">Livraison</strong><span>Est. 17–18 juin</span></div></div>
+          <div class="mob-wa-btn">📱 Contacter J'Envoie Express</div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:.65rem;color:rgba(255,255,255,.3);margin-top:.5rem;">Vue du client sur son téléphone</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DEMANDES ===== -->
+<div id="demandes" class="view">
+  <div class="section-header">
+    <div class="section-title">📬 Demandes <span>Clients</span></div>
+    <span style="font-size:.75rem;color:var(--gold);">5 en attente</span>
+  </div>
+  <div class="table-wrap" style="margin-bottom:1.5rem;">
+    <table>
+      <thead><tr><th>Client</th><th>WA</th><th>Route</th><th>Vol</th><th>Poids</th><th>Articles</th><th>Contact récupération</th><th>Montant</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Koffi Yao</strong></td><td>+225 07 XX</td><td>🇨🇮 → 🇫🇷</td><td>15 juin</td><td>5 kg</td>
+          <td style="font-size:.68rem;">Vêtements (3kg), Chaussures (2kg)</td>
+          <td style="font-size:.68rem;">+33 6 xx xx xx</td>
+          <td style="color:var(--gold);">40€</td>
+          <td><div style="display:flex;gap:.3rem;"><button class="btn-primary" style="font-size:.65rem;padding:.2rem .5rem;">✓</button><button class="btn-outline" style="font-size:.65rem;padding:.2rem .5rem;">✗</button></div></td>
+        </tr>
+        <tr>
+          <td><strong>Sophie Martin</strong></td><td>+33 6 XX</td><td>🇫🇷 → 🇨🇮</td><td>22 juin</td><td>8 kg</td>
+          <td style="font-size:.68rem;">Ordinateur (4kg), Parfums (2kg), Cosmétiques (2kg)</td>
+          <td style="font-size:.68rem;">+225 05 xx xx xx</td>
+          <td style="color:var(--gold);">80€</td>
+          <td><div style="display:flex;gap:.3rem;"><button class="btn-primary" style="font-size:.65rem;padding:.2rem .5rem;">✓</button><button class="btn-outline" style="font-size:.65rem;padding:.2rem .5rem;">✗</button></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title">➕ Nouvelle demande client</div>
+    <div class="form-grid">
+      <div class="form-group"><label>NOM DU CLIENT</label><input type="text" placeholder="Prénom Nom"></div>
+      <div class="form-group"><label>WHATSAPP</label><input type="text" placeholder="+225 07 XX XX XX"></div>
+      <div class="form-group"><label>DIRECTION</label><select><option>🇨🇮 Abidjan → 🇫🇷 Paris</option><option>🇫🇷 Paris → 🇨🇮 Abidjan</option></select></div>
+      <div class="form-group"><label>VOL SOUHAITÉ</label><select><option>15 Juin 2024 · ABJ→CDG</option><option>22 Juin 2024 · CDG→ABJ</option></select></div>
+      <div class="form-group"><label>POIDS ESTIMÉ (kg)</label><input type="number" placeholder="ex: 5"></div>
+      <div class="form-group"><label>MODE DE PAIEMENT</label><select><option>Wave</option><option>Espèces</option><option>PayPal</option><option>Carte bancaire</option><option>MTN Money</option><option>Orange Money</option><option>Wero</option><option>Virement</option></select></div>
+      <div class="form-group full-width"><label>LISTE DES ARTICLES (détailler chaque article et son poids approximatif)</label><textarea placeholder="Ex: 1 téléphone Samsung Galaxy (0.5kg), 2 paires de chaussures (2kg), 1 sac de cosmétiques (1.5kg)..."></textarea></div>
+      <div class="form-group"><label>CONTACT PERSONNE QUI RÉCUPÈRE (numéro sur place)</label><input type="text" placeholder="+33 6 XX XX XX XX / +225 07 XX XX XX"></div>
+      <div class="form-group"><label>ADRESSE DE LIVRAISON</label><input type="text" placeholder="Adresse complète"></div>
+    </div>
+    <button class="btn-primary">💾 Enregistrer la demande</button>
+  </div>
+</div>
+
+<!-- ===== CLIENTS ===== -->
+<div id="clients" class="view">
+  <div class="section-header"><div class="section-title">👤 Gestion <span>Clients</span></div><button class="btn-primary">+ Nouveau client</button></div>
+  <div class="three-cols">
+    <div class="kpi"><div class="kpi-label">TOTAL CLIENTS</div><div class="kpi-val">47</div><div class="kpi-sub up">↑ +5 ce mois</div></div>
+    <div class="kpi"><div class="kpi-label">FRANCE 🇫🇷</div><div class="kpi-val">23</div><div class="kpi-sub">Paris principalement</div></div>
+    <div class="kpi"><div class="kpi-label">CÔTE D'IVOIRE 🇨🇮</div><div class="kpi-val">24</div><div class="kpi-sub">Abidjan principalement</div></div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Nom</th><th>WhatsApp</th><th>Localisation</th><th>Adresse</th><th>Colis</th><th>Total dépensé</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aminata Koné</strong></td><td>+225 07 XX XX XX</td><td>🇨🇮 Abidjan</td><td>Cocody, ABJ</td><td>8 colis</td><td style="color:var(--gold)">204€</td></tr>
+        <tr><td><strong>Marc Dupont</strong></td><td>+33 6 XX XX XX XX</td><td>🇫🇷 Paris</td><td>75012 Paris</td><td>5 colis</td><td style="color:var(--gold)">375€</td></tr>
+        <tr><td><strong>Fatou Diallo</strong></td><td>+225 05 XX XX XX</td><td>🇨🇮 Abidjan</td><td>Marcory, ABJ</td><td>3 colis</td><td style="color:var(--gold)">72€</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== ASSISTANT IA ===== -->
+<div id="assistant" class="view">
+  <div class="section-header">
+    <div class="section-title">🤖 Assistant <span>Digital IA</span></div>
+    <span style="font-size:.7rem;color:var(--green);" class="pulse">● En ligne 24h/24</span>
+  </div>
+  <div class="two-cols">
+    <div>
+      <div class="chat-container">
+        <div class="chat-header"><div class="chat-avatar">🤖</div><div class="chat-info"><div class="name">Assistant J'Envoie Express</div><div class="online">● En ligne — Répond en &lt;1 min</div></div></div>
+        <div class="chat-messages">
+          <div class="msg bot">Bonjour ! Je suis l'assistant de <strong>J'Envoie Express</strong>.<br><br>Je peux vous aider à :<br>• Connaître nos tarifs<br>• Faire une demande d'envoi<br>• Suivre votre colis<br>• Prochains départs<br><br>Comment puis-je vous aider ?<div class="msg-time">09:00</div><div class="quick-replies"><span class="qr">📦 Tarifs</span><span class="qr">✈️ Prochains départs</span><span class="qr">📍 Suivre mon colis</span><span class="qr">📋 Faire une demande</span></div></div>
+          <div class="msg user">Quels sont vos tarifs pour envoyer d'Abidjan à Paris ?<div class="msg-time">09:02</div></div>
+          <div class="msg bot">Voici nos tarifs <strong>Abidjan → Paris</strong> 🇨🇮✈🇫🇷 :<br><br>💰 <strong>8€ / kg</strong> (tarif standard)<br>📦 Forfait 5 kg : <strong>35€</strong><br>📦 Forfait 10 kg : <strong>65€</strong><br><br>✅ Collecte incluse à Abidjan<br>✅ Livraison à domicile à Paris<br>✅ Suivi en temps réel<div class="msg-time">09:02</div><div class="quick-replies"><span class="qr">✅ Faire une demande</span><span class="qr">📅 Autres dates</span></div></div>
+        </div>
+        <div class="chat-input-area"><input class="chat-input" placeholder="Écrivez votre message..."><button class="chat-send">➤</button></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <div class="card">
+        <div class="card-title">⚙️ Configuration assistant</div>
+        <div style="display:flex;flex-direction:column;gap:.6rem;">
+          <div class="form-group"><label>TARIF ABJ → CDG (€/kg)</label><input type="number" value="8"></div>
+          <div class="form-group"><label>TARIF CDG → ABJ (€/kg)</label><input type="number" value="14"></div>
+          <div class="form-group"><label>MESSAGE D'ACCUEIL</label><textarea style="height:60px;">Bonjour ! Je suis l'assistant de J'Envoie Express...</textarea></div>
+          <button class="btn-primary" style="width:100%;">💾 Sauvegarder</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📱 WhatsApp automatique</div>
+        <div style="background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);border-radius:8px;padding:.8rem;font-size:.72rem;margin-bottom:.8rem;">
+          <strong style="color:#25D366;">📱 Modèle de message :</strong><br><br>
+          Bonjour [Prénom] 👋<br>
+          Votre colis #JE-XXXX est confirmé !<br>
+          📦 Poids: [X] kg · ✈️ Départ: [Date]<br>
+          🔗 Suivez votre colis: [Lien]<br>
+          Merci de votre confiance !
+        </div>
+        <button class="whatsapp-btn" style="width:100%;justify-content:center;">📱 Tester l'envoi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DISCUSSION ===== -->
+<div id="discussion" class="view">
+  <div class="section-header">
+    <div class="section-title">💬 Discussion <span>directe</span></div>
+    <span style="font-size:.7rem;color:var(--green);" class="pulse">● En ligne</span>
+  </div>
+  <div class="two-cols">
+    <div style="background:rgba(0,31,92,.3);border:1px solid rgba(91,184,245,.15);border-radius:12px;overflow:hidden;">
+      <div style="padding:.8rem;border-bottom:1px solid rgba(91,184,245,.1);">
+        <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-bottom:.5rem;">Conversations récentes</div>
+        <div style="display:flex;flex-direction:column;gap:.3rem;">
+          <div style="display:flex;align-items:center;gap:.7rem;padding:.5rem;border-radius:8px;background:rgba(91,184,245,.15);cursor:pointer;">
+            <div class="avatar" style="width:32px;height:32px;font-size:.65rem;background:linear-gradient(135deg,#10B981,#059669);">AK</div>
+            <div style="flex:1;"><div style="font-size:.78rem;font-weight:600;">Aminata Koné</div><div style="font-size:.63rem;color:rgba(255,255,255,.4);">Mon colis est bien parti ?</div></div>
+            <div style="font-size:.6rem;color:rgba(255,255,255,.35);">09:14</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.7rem;padding:.5rem;border-radius:8px;cursor:pointer;">
+            <div class="avatar" style="width:32px;height:32px;font-size:.65rem;background:linear-gradient(135deg,#F59E0B,#D97706);">MD</div>
+            <div style="flex:1;"><div style="font-size:.78rem;font-weight:600;">Marc Dupont</div><div style="font-size:.63rem;color:rgba(255,255,255,.4);">Merci pour la livraison rapide !</div></div>
+            <div style="font-size:.6rem;color:rgba(255,255,255,.35);">hier</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.7rem;padding:.5rem;border-radius:8px;cursor:pointer;">
+            <div class="avatar" style="width:32px;height:32px;font-size:.65rem;background:linear-gradient(135deg,#8B5CF6,#7C3AED);">KY</div>
+            <div style="flex:1;"><div style="font-size:.78rem;font-weight:600;">Koffi Yao</div><div style="font-size:.63rem;color:rgba(255,255,255,.4);">C'est combien pour 8 kg ?</div></div>
+            <div style="font-size:.6rem;color:rgba(255,255,255,.35);">hier</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="avatar" style="width:36px;height:36px;font-size:.65rem;background:linear-gradient(135deg,#10B981,#059669);">AK</div>
+        <div class="chat-info"><div class="name">Aminata Koné</div><div class="online">● En ligne · +225 07 XX XX XX</div></div>
+        <button class="whatsapp-btn" style="margin-left:auto;font-size:.65rem;padding:.3rem .6rem;">📱 WA</button>
+      </div>
+      <div class="chat-messages">
+        <div class="msg bot">Bonjour ! Mon colis #JE-20240611 est bien parti ?<div class="msg-time">09:10</div></div>
+        <div class="msg user">Bonjour Aminata ! Oui, votre colis est en vol depuis ce matin. Voici votre lien de suivi : [lien]<div class="msg-time">09:12</div></div>
+        <div class="msg bot">Merci beaucoup !<div class="msg-time">09:14</div></div>
+      </div>
+      <div class="chat-input-area"><input class="chat-input" placeholder="Répondre à Aminata..."><button class="chat-send">➤</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ACHATS EN LIGNE ===== -->
+<div id="achats" class="view">
+  <div class="section-header">
+    <div class="section-title">🛒 Achats <span>en ligne</span></div>
+    <button class="btn-primary">+ Nouvelle commande</button>
+  </div>
+  <div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-title">ℹ️ Comment ça marche</div>
+    <div style="font-size:.78rem;line-height:2;color:rgba(255,255,255,.75);">
+      1. Vous trouvez un article en ligne (Amazon, Cdiscount, AliExpress, etc.)<br>
+      2. Vous nous envoyez le lien du produit + votre adresse de livraison à Abidjan<br>
+      3. Nous effectuons l'achat à votre place depuis la France<br>
+      4. Le colis est inclus dans notre prochain voyage vers Abidjan<br>
+      5. Vous payez : prix article + frais de service + transport (8-10€/kg)
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-title">➕ Nouvelle commande achat en ligne</div>
+    <div class="form-grid">
+      <div class="form-group"><label>NOM DU CLIENT</label><input type="text" placeholder="Prénom Nom"></div>
+      <div class="form-group"><label>WHATSAPP</label><input type="text" placeholder="+225 07 XX XX XX"></div>
+      <div class="form-group full-width"><label>LIEN DU PRODUIT (coller l'URL complète du téléphone ou article souhaité)</label><input type="url" placeholder="https://www.amazon.fr/..."></div>
+      <div class="form-group full-width"><label>DESCRIPTION DE L'ARTICLE</label><textarea placeholder="Ex: iPhone 15 Pro Max 256 Go Noir · Couleur: Titane Naturel · Quantité: 1"></textarea></div>
+      <div class="form-group"><label>BUDGET MAX (€)</label><input type="number" placeholder="ex: 500"></div>
+      <div class="form-group"><label>VOL SOUHAITÉ</label><select><option>22 Juin 2024 · CDG→ABJ</option><option>Prochain disponible</option></select></div>
+      <div class="form-group full-width"><label>ADRESSE DE LIVRAISON ABIDJAN</label><input type="text" placeholder="Quartier, rue, repère..."></div>
+      <div class="form-group"><label>CONTACT À LA LIVRAISON (numéro sur place)</label><input type="text" placeholder="+225 07 XX XX XX"></div>
+    </div>
+    <button class="btn-primary">💾 Enregistrer la commande</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Client</th><th>Article</th><th>Lien</th><th>Budget</th><th>Vol</th><th>Statut</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Issa Traoré</strong></td><td>iPhone 15 128Go</td><td><a class="track-link" href="#">🔗 Lien</a></td><td style="color:var(--gold)">850€</td><td>22 juin</td><td><span class="status-pill status-attente">En attente achat</span></td></tr>
+        <tr><td><strong>Rose Kouassi</strong></td><td>PS5 + manette</td><td><a class="track-link" href="#">🔗 Lien</a></td><td style="color:var(--gold)">580€</td><td>22 juin</td><td><span class="status-pill status-transit">Acheté · en transit</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== MARITIME ===== -->
+<div id="maritime" class="view">
+  <div class="section-header">
+    <div class="section-title">🚢 Envoi <span>Maritime</span></div>
+  </div>
+  <div class="maritime-card">
+    <div class="maritime-title">🚢 Service d'envoi maritime — Abidjan ↔ Paris</div>
+    <div style="font-size:.78rem;line-height:2;color:rgba(255,255,255,.75);margin-bottom:1rem;">
+      Pour les <strong>colis lourds ou volumineux</strong> (meubles, appareils électroménagers, marchandises en gros), nous proposons un service d'envoi maritime.<br><br>
+      ⏱️ <strong>Délai :</strong> 3 à 6 semaines (selon destination)<br>
+      💰 <strong>Tarif :</strong> à partir de <strong>2€/kg</strong> (selon volume et destination)<br>
+      📦 <strong>Volume minimum :</strong> 50 kg ou 1 m³<br>
+      🛃 <strong>Dédouanement :</strong> accompagné et pris en charge<br>
+      📍 <strong>Port de départ :</strong> Abidjan / Port autonome · Le Havre / Marseille
+    </div>
+    <div style="display:flex;gap:.8rem;flex-wrap:wrap;">
+      <button class="whatsapp-btn">📱 Demander un devis maritime</button>
+      <button class="btn-outline">📋 Voir les conditions</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📋 Comparatif Aérien vs Maritime</div>
+    <div class="table-wrap" style="margin-bottom:0;">
+      <table>
+        <thead><tr><th></th><th>✈ Aérien</th><th>🚢 Maritime</th></tr></thead>
+        <tbody>
+          <tr><td>Délai</td><td>48h – 5 jours</td><td>3 – 6 semaines</td></tr>
+          <tr><td>Tarif</td><td>8–10€/kg</td><td>2–4€/kg</td></tr>
+          <tr><td>Volume max</td><td>50 kg/voyage</td><td>Illimité</td></tr>
+          <tr><td>Meuble / électroménager</td><td>Non</td><td>✅ Oui</td></tr>
+          <tr><td>Suivi en temps réel</td><td>✅ Oui</td><td>Partiel</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ABONNÉS ===== -->
+<div id="abonnes" class="view">
+  <div class="section-header">
+    <div class="section-title">⭐ <span>Abonnés</span></div>
+    <div style="display:flex;gap:.5rem;"><button class="btn-primary">+ Ajouter</button><button class="whatsapp-btn">📱 Message groupé</button></div>
+  </div>
+  <div class="three-cols">
+    <div class="kpi"><div class="kpi-label">ABONNÉS ACTIFS</div><div class="kpi-val">23</div><div class="kpi-sub up">↑ +4 ce mois</div></div>
+    <div class="kpi"><div class="kpi-label">ALERTES ENVOYÉES</div><div class="kpi-val">8</div><div class="kpi-sub">Ce mois</div></div>
+    <div class="kpi"><div class="kpi-label">TAUX D'OUVERTURE WA</div><div class="kpi-val">94<span>%</span></div><div class="kpi-sub up">Très bon</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">📋 Liste des abonnés</div>
+    <div style="display:flex;flex-direction:column;">
+      <div class="subscriber-row"><div class="subscriber-info"><div class="name">Aminata Koné</div><div class="meta">+225 07 xx · 8 colis · Abidjan</div></div><div style="display:flex;align-items:center;gap:.5rem;"><span class="badge-sub">Régulier</span><span class="wa-icon" style="font-size:.7rem;">📱 WA</span></div></div>
+      <div class="subscriber-row"><div class="subscriber-info"><div class="name">Marc Dupont</div><div class="meta">+33 6 xx · 5 colis · Paris</div></div><div style="display:flex;align-items:center;gap:.5rem;"><span class="badge-sub">Régulier</span><span class="wa-icon" style="font-size:.7rem;">📱 WA</span></div></div>
+      <div class="subscriber-row"><div class="subscriber-info"><div class="name">Fatou Diallo</div><div class="meta">+225 05 xx · 3 colis · Abidjan</div></div><div style="display:flex;align-items:center;gap:.5rem;"><span style="background:rgba(91,184,245,.15);color:var(--sky);border-radius:20px;padding:.15rem .5rem;font-size:.62rem;font-weight:600;">Nouveau</span><span class="wa-icon" style="font-size:.7rem;">📱 WA</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AVIS CLIENTS ===== -->
+<div id="avis" class="view">
+  <div class="section-header">
+    <div class="section-title">⭐ Avis <span>clients</span></div>
+    <button class="whatsapp-btn">📱 Demander un avis</button>
+  </div>
+  <div class="three-cols">
+    <div class="kpi"><div class="kpi-label">NOTE MOYENNE</div><div class="kpi-val">4.8<span>/5</span></div><div class="kpi-sub up">⭐⭐⭐⭐⭐</div></div>
+    <div class="kpi"><div class="kpi-label">TOTAL AVIS</div><div class="kpi-val">34</div><div class="kpi-sub up">↑ +6 ce mois</div></div>
+    <div class="kpi"><div class="kpi-label">RECOMMANDENT</div><div class="kpi-val">97<span>%</span></div><div class="kpi-sub up">Excellent</div></div>
+  </div>
+  <div>
+    <div class="avis-card">
+      <div class="avis-header"><div><div class="avis-author">Aminata Koné 🇨🇮</div><div class="avis-date">15 juin 2024</div></div><div class="avis-stars">⭐⭐⭐⭐⭐</div></div>
+      <div class="avis-text">Service impeccable ! Mon colis est arrivé en parfait état en moins de 3 jours. Le suivi en temps réel est très rassurant. Je recommande à 100%.</div>
+    </div>
+    <div class="avis-card">
+      <div class="avis-header"><div><div class="avis-author">Marc Dupont 🇫🇷</div><div class="avis-date">10 juin 2024</div></div><div class="avis-stars">⭐⭐⭐⭐⭐</div></div>
+      <div class="avis-text">J'envoie régulièrement des colis à ma famille en Côte d'Ivoire. Prix imbattables, service professionnel et réponse rapide sur WhatsApp. Vraiment top !</div>
+    </div>
+    <div class="avis-card">
+      <div class="avis-header"><div><div class="avis-author">Koffi Mensah 🇨🇮</div><div class="avis-date">05 juin 2024</div></div><div class="avis-stars">⭐⭐⭐⭐</div></div>
+      <div class="avis-text">Très bon service. Un léger retard lié à la douane mais l'équipe m'a tenu informé à chaque étape. Livraison soignée.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== À PROPOS ===== -->
+<div id="apropos" class="view">
+  <div class="section-header"><div class="section-title">🏢 À <span>propos</span></div></div>
+  <div class="two-cols">
+    <div>
+      <div class="card" style="margin-bottom:1rem;">
+        <div class="card-title">🚀 Notre mission</div>
+        <div style="font-size:.82rem;line-height:1.8;color:rgba(255,255,255,.8);">
+          <strong>J'Envoie Express</strong> est le service de transport de colis de confiance entre la France et la Côte d'Ivoire.<br><br>
+          Fondé pour répondre aux besoins des diasporas et des familles, nous offrons un service <strong>rapide, sécurisé et abordable</strong> pour envoyer ou recevoir vos colis entre Paris et Abidjan.<br><br>
+          Chaque colis est suivi de A à Z, de la collecte jusqu'à la livraison à domicile.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📞 Nous contacter</div>
+        <div style="font-size:.8rem;line-height:2;color:rgba(255,255,255,.8);">
+          📱 <strong>WhatsApp France :</strong> <a href="#" style="color:#25D366;">+33 X XX XX XX XX</a><br>
+          📱 <strong>WhatsApp CI :</strong> <a href="#" style="color:#25D366;">+225 XX XX XX XX XX</a><br>
+          📧 <strong>Email :</strong> contact@jenvoieexpress.com<br>
+          📍 <strong>Paris :</strong> [Adresse à renseigner]<br>
+          📍 <strong>Abidjan :</strong> [Adresse à renseigner]
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:1rem;">
+        <div class="card-title">✅ Pourquoi nous choisir</div>
+        <div style="font-size:.78rem;line-height:2;color:rgba(255,255,255,.75);">
+          ✈️ <strong>Rapidité</strong> : 48h à 5 jours Paris ↔ Abidjan<br>
+          🔗 <strong>Suivi en temps réel</strong> : lien de tracking dès confirmation<br>
+          💬 <strong>Réactivité</strong> : réponse WhatsApp en moins d'1h<br>
+          🛃 <strong>Douane gérée</strong> : on vous accompagne à chaque étape<br>
+          💳 <strong>Multi-paiement</strong> : Wave, PayPal, carte, espèces…<br>
+          🚢 <strong>Maritime disponible</strong> : pour les gros volumes<br>
+          🛒 <strong>Achats en ligne</strong> : on achète pour vous depuis la France
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 En chiffres</div>
+        <div class="two-cols" style="margin-bottom:0;gap:.5rem;">
+          <div style="background:rgba(91,184,245,.07);border-radius:8px;padding:.8rem;text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--sky);">500+</div><div style="font-size:.65rem;color:rgba(255,255,255,.5);">Colis livrés</div></div>
+          <div style="background:rgba(91,184,245,.07);border-radius:8px;padding:.8rem;text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--gold);">4.8★</div><div style="font-size:.65rem;color:rgba(255,255,255,.5);">Note moyenne</div></div>
+          <div style="background:rgba(91,184,245,.07);border-radius:8px;padding:.8rem;text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--green);">97%</div><div style="font-size:.65rem;color:rgba(255,255,255,.5);">Satisfaits</div></div>
+          <div style="background:rgba(91,184,245,.07);border-radius:8px;padding:.8rem;text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:white;">48h</div><div style="font-size:.65rem;color:rgba(255,255,255,.5);">Délai standard</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+<div class="footer-bar">
+  <span>J'Envoie Express © 2024 — ABJ ✈ CDG | CDG ✈ ABJ | Service Maritime disponible</span>
+  <span>🔒 Sécurisé · Maquette v2.0</span>
+</div>
 </div>
 
 <script>
-function showView(id) {
+function showView(id, el) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  event.currentTarget.classList.add('active');
+  if (el) el.classList.add('active');
   closeSidebar();
 }
-
+function filterTab(el, filter) {
+  document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+function markLivre(btn) {
+  const row = btn.closest('tr');
+  if (row) {
+    const pill = row.querySelector('.status-pill');
+    if (pill) { pill.className = 'status-pill status-livre'; pill.textContent = 'Livré ✓'; }
+    btn.remove();
+  } else {
+    alert('Colis marqué comme livré !');
+  }
+}
 function openSidebar() {
   document.getElementById('main-sidebar').classList.add('open');
   document.getElementById('sidebar-backdrop').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-
 function closeSidebar() {
   document.getElementById('main-sidebar').classList.remove('open');
   document.getElementById('sidebar-backdrop').classList.remove('open');

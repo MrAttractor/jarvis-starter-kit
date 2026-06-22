@@ -182,6 +182,22 @@
   </div>
 </div>
 
+<!-- MODAL ACCEPTATION RAPIDE -->
+<div class="modal-bg" id="modal-accept">
+  <div class="modal">
+    <div class="modal-title">✓ Accepter la demande</div>
+    <div id="modal-accept-info" style="background:rgba(91,184,245,.08);border:1px solid rgba(91,184,245,.2);border-radius:10px;padding:.8rem 1rem;margin-bottom:1.2rem;font-size:.82rem;color:rgba(255,255,255,.75);line-height:1.6;"></div>
+    <div class="form-grid">
+      <div class="form-group"><label>POIDS RÉEL (kg)</label><input type="number" id="f-accept-poids" step="0.1" placeholder="ex: 3.5"></div>
+      <div class="form-group"><label>MONTANT À PAYER (€)</label><input type="number" id="f-accept-montant" placeholder="ex: 49"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-outline" onclick="closeModal('modal-accept')">Annuler</button>
+      <button class="btn-primary" onclick="confirmAccept()">Accepter & créer le colis</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL VOYAGE -->
 <div class="modal-bg" id="modal-voyage">
   <div class="modal">
@@ -503,8 +519,11 @@ async function loadATraiter() {
     </div>`
 
   const fmtD = d => {
-    const nom = d.clients?.nom || d.nom_expediteur || '—'
-    const wa = d.clients?.whatsapp || d.wa_expediteur || '—'
+    const nomFormulaire = d.nom_expediteur || d.clients?.nom || '—'
+    const nomCrm = d.clients?.nom
+    const nomSuffix = (nomCrm && nomCrm !== nomFormulaire) ? ` <span style="font-size:.65rem;color:rgba(255,255,255,.35);">· CRM: ${nomCrm}</span>` : ''
+    const nom = nomFormulaire + nomSuffix
+    const wa = d.wa_expediteur || d.clients?.whatsapp || '—'
     const collecte = (d.contact_reception || '').split(' | Collecte: ')[1] || ''
     return `
       <div style="background:rgba(0,31,92,.35);border:1px solid rgba(91,184,245,.15);border-radius:12px;padding:1rem;margin-bottom:.6rem;">
@@ -515,10 +534,10 @@ async function loadATraiter() {
           </div>
           <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
             ${d.statut === 'en_attente' ? `
-              <button class="btn-green" onclick="updateDemandeStatut('${d.id}','acceptee')">✓ Accepter</button>
-              <button class="btn-red" onclick="updateDemandeStatut('${d.id}','refusee')">✗ Refuser</button>
+              <button class="btn-green" onclick="openAcceptModal('${d.id}')">✓ Accepter</button>
+              <button class="btn-red" onclick="refuserDemande('${d.id}')">✗ Refuser</button>
             ` : `
-              <button class="btn-primary" style="font-size:.72rem;" onclick="convertirEnColis('${d.id}')">Créer le colis →</button>
+              <span style="font-size:.72rem;color:var(--green);font-weight:600;">✓ Colis créé</span>
             `}
           </div>
         </div>
@@ -541,7 +560,7 @@ async function loadATraiter() {
 // ============================================================
 async function loadEnCours() {
   const { data } = await sb.from('colis')
-    .select('*, clients(nom,whatsapp)')
+    .select('*, clients(nom,whatsapp), voyages(route)')
     .neq('statut', 'livre')
     .order('created_at', { ascending: false })
 
@@ -552,11 +571,15 @@ async function loadEnCours() {
     tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Aucun colis en cours</td></tr>'
     return
   }
-  tbody.innerHTML = data.map(c => `
+  tbody.innerHTML = data.map(c => {
+    const nom = c.clients?.nom || '<span style="color:rgba(255,255,255,.3);font-style:italic;font-weight:400;">Non enregistré</span>'
+    const wa = c.clients?.whatsapp || ''
+    const route = c.voyages?.route || ''
+    return `
     <tr>
-      <td><strong>${c.clients?.nom || '—'}</strong><br><span style="font-size:.65rem;color:rgba(255,255,255,.4);">${c.clients?.whatsapp || ''}</span></td>
+      <td><strong>${nom}</strong><br><span style="font-size:.65rem;color:rgba(255,255,255,.4);">${wa}</span></td>
       <td style="font-family:'Syne',sans-serif;font-size:.78rem;color:var(--sky);">${c.numero}</td>
-      <td>${routeLabel(c.route || '')}</td>
+      <td>${routeLabel(route)}</td>
       <td>
         <select style="background:rgba(0,31,92,.5);border:1px solid rgba(91,184,245,.2);border-radius:6px;color:white;font-size:.72rem;padding:.2rem .4rem;" onchange="updateStatutColis('${c.id}',this.value)">
           <option value="en_attente" ${c.statut==='en_attente'?'selected':''}>Demande reçue</option>
@@ -567,9 +590,10 @@ async function loadEnCours() {
         </select>
       </td>
       <td>
-        ${c.clients?.whatsapp && c.numero ? `<button class="btn-green" style="font-size:.65rem;padding:.25rem .55rem;" onclick="envoyerSuivi('${c.numero}','${c.clients.whatsapp}','${(c.clients.nom||'').split(' ')[0]}')">📲 Suivi</button>` : '—'}
+        ${wa && c.numero ? `<button class="btn-green" style="font-size:.65rem;padding:.25rem .55rem;" onclick="envoyerSuivi('${c.numero}','${wa}','${(c.clients?.nom||'').split(' ')[0]}')">📲 Suivi</button>` : '—'}
       </td>
-    </tr>`).join('')
+    </tr>`
+  }).join('')
 }
 
 async function loadParametres() {
@@ -696,8 +720,8 @@ async function loadDashboard() {
       <td>${d.poids_estime ? d.poids_estime + ' kg' : '—'}</td>
       <td style="font-size:.72rem;max-width:180px;">${d.articles || '—'}</td>
       <td><div style="display:flex;gap:.3rem;">
-        <button class="btn-green" onclick="updateDemandeStatut('${d.id}','acceptee')">✓ Accepter</button>
-        <button class="btn-red" onclick="updateDemandeStatut('${d.id}','refusee')">✗</button>
+        <button class="btn-green" onclick="openAcceptModal('${d.id}')">✓ Accepter</button>
+        <button class="btn-red" onclick="refuserDemande('${d.id}')">✗</button>
       </div></td>
     </tr>`).join('')
 }
@@ -940,8 +964,8 @@ async function loadDemandes() {
       <td>
         ${d.statut === 'en_attente' ? `
         <div style="display:flex;gap:.3rem;">
-          <button class="btn-green" onclick="updateDemandeStatut('${d.id}','acceptee')">✓</button>
-          <button class="btn-red" onclick="updateDemandeStatut('${d.id}','refusee')">✗</button>
+          <button class="btn-green" onclick="openAcceptModal('${d.id}')">✓</button>
+          <button class="btn-red" onclick="refuserDemande('${d.id}')">✗</button>
         </div>` : d.statut === 'acceptee' ? `
         <button class="btn-primary" onclick="convertirEnColis('${d.id}')" style="font-size:.72rem;padding:.3rem .7rem;">Créer le colis →</button>
         ` : '—'}
@@ -969,29 +993,87 @@ function convertirEnColis(demandeId) {
 
 function envoyerSuivi(numero, whatsapp, prenom) {
   const num = whatsapp.replace(/[\s\+\-\(\)]/g, '')
-  const lien = `https://jenvoie-express.surge.sh?n=${encodeURIComponent(numero)}`
+  const lien = `https://jenvoie-express.myattractor1.workers.dev?n=${encodeURIComponent(numero)}`
   const msg = encodeURIComponent(`Bonjour ${prenom || 'cher client'}, votre colis J'Envoie Express *${numero}* est en cours d'acheminement.\n\nSuivez votre colis en temps réel ici :\n${lien}`)
   window.open(`https://wa.me/${num}?text=${msg}`, '_blank')
+}
+
+function openAcceptModal(id) {
+  const d = (window._demandes || []).find(x => x.id === id)
+  if (!d) return
+  window._acceptDemandeId = id
+  const nom = d?.nom_expediteur || d?.clients?.nom || 'Client'
+  const wa = d?.wa_expediteur || d?.clients?.whatsapp || '—'
+  const articles = d?.articles || '—'
+  const poids = d?.poids_estime ? `${d.poids_estime} kg` : 'Non précisé'
+  document.getElementById('modal-accept-info').innerHTML =
+    `<strong>${nom}</strong> · ${wa}<br>Articles : ${articles}<br>Poids estimé : ${poids}`
+  document.getElementById('f-accept-poids').value = d?.poids_estime || ''
+  document.getElementById('f-accept-montant').value = ''
+  openModal('modal-accept')
+}
+
+async function confirmAccept() {
+  const id = window._acceptDemandeId
+  if (!id) return
+  const poids = parseFloat(document.getElementById('f-accept-poids').value) || null
+  const montant = parseFloat(document.getElementById('f-accept-montant').value) || null
+  const d = (window._demandes || []).find(x => x.id === id)
+
+  const { error: eD } = await sb.from('demandes').update({ statut: 'acceptee' }).eq('id', id)
+  if (eD) return toast('Erreur mise à jour demande', true)
+
+  // Auto-créer le client si la demande vient du formulaire public (pas de client_id)
+  let clientId = d?.client_id || null
+  if (!clientId && (d?.nom_expediteur || d?.wa_expediteur)) {
+    const { data: nc } = await sb.from('clients').insert({
+      nom: d.nom_expediteur || 'Expéditeur',
+      whatsapp: d.wa_expediteur || null,
+      localisation: 'France 🇫🇷'
+    }).select('id').single()
+    if (nc) clientId = nc.id
+  }
+
+  const { error: eC } = await sb.from('colis').insert({
+    client_id: clientId,
+    voyage_id: d?.voyage_id || null,
+    poids,
+    montant,
+    articles: d?.articles || null,
+    contact_reception: d?.contact_reception || null,
+    livraison_souhaitee: d?.livraison_souhaitee || false,
+    quartier_abidjan: d?.quartier_abidjan || null,
+  })
+  if (eC) return toast('Erreur création colis', true)
+
+  toast('Demande acceptée — colis créé ✓')
+  closeModal('modal-accept')
+  loadATraiter()
+  loadEnCours()
+
+  const waRaw = d?.wa_expediteur || d?.clients?.whatsapp
+  const nomRaw = d?.nom_expediteur || d?.clients?.nom || 'client'
+  if (waRaw) {
+    const prenom = nomRaw.split(' ')[0]
+    const msg = encodeURIComponent(`Bonjour ${prenom}, votre demande d'envoi J'Envoie Express a bien été acceptée. Nous vous contacterons rapidement pour confirmer les détails de collecte et votre numéro de suivi. Merci de votre confiance !`)
+    window.open(`https://wa.me/${waRaw.replace(/[\s\+\-\(\)]/g, '')}?text=${msg}`, '_blank')
+  }
+}
+
+async function refuserDemande(id) {
+  if (!confirm('Confirmer le refus de cette demande ?')) return
+  const { error } = await sb.from('demandes').update({ statut: 'refusee' }).eq('id', id)
+  if (error) return toast('Erreur', true)
+  toast('Demande refusée')
+  loadATraiter()
 }
 
 async function updateDemandeStatut(id, statut) {
   const { error } = await sb.from('demandes').update({ statut }).eq('id', id)
   if (error) return toast('Erreur', true)
-  toast(statut === 'acceptee' ? 'Demande acceptée ✓' : 'Demande refusée')
+  toast(statut === 'acceptee' ? 'Demande acceptée ✓' : 'Statut mis à jour')
   loadATraiter()
-  if (statut === 'acceptee') {
-    const d = (window._demandes || []).find(x => x.id === id)
-    const waRaw = d?.clients?.whatsapp || d?.wa_expediteur
-    const nomRaw = d?.clients?.nom || d?.nom_expediteur || 'client'
-    if (waRaw) {
-      const prenom = nomRaw.split(' ')[0]
-      const msg = encodeURIComponent(`Bonjour ${prenom}, votre demande d'envoi J'Envoie Express a bien été acceptée. Nous vous contacterons rapidement pour confirmer les détails de collecte et votre numéro de suivi. Merci de votre confiance !`)
-      const num = waRaw.replace(/[\s\+\-\(\)]/g, '')
-      window.open(`https://wa.me/${num}?text=${msg}`, '_blank')
-    }
-  }
-  loadDemandes()
-  loadDashboard()
+  loadEnCours()
 }
 
 // ============================================================

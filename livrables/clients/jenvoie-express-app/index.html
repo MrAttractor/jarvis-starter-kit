@@ -417,23 +417,68 @@ a { color: inherit; text-decoration: none; }
 
 .departs-wrap {
   display: none;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
   margin-top: 16px;
+  width: 100%;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
 }
-.depart-item {
+.departs-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: rgba(245, 194, 0, 0.08);
+  border: 1px solid rgba(245, 194, 0, 0.3);
+  border-radius: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.departs-toggle:hover { background: rgba(245, 194, 0, 0.14); }
+.departs-toggle-left {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(245, 194, 0, 0.08);
-  border: 1px solid rgba(245, 194, 0, 0.25);
-  border-radius: 24px;
-  padding: 8px 16px;
-  font-size: 16px;
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gold);
+}
+.departs-toggle-right {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.departs-arrow {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.25s;
+  color: rgba(255,255,255,0.4);
+}
+.departs-wrap.open .departs-arrow { transform: rotate(180deg); }
+.departs-list {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 4px 4px;
+}
+.departs-wrap.open .departs-list { display: flex; }
+.depart-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 15px;
   color: rgba(255, 255, 255, 0.85);
 }
-.depart-item svg { flex-shrink: 0; }
+.depart-item svg { flex-shrink: 0; color: var(--gold); }
 .depart-date { font-family: 'Sora', sans-serif; font-weight: 600; color: var(--gold); }
 
 .btn-demande-hero {
@@ -504,7 +549,19 @@ a { color: inherit; text-decoration: none; }
     <div class="route-pill">🇫🇷 Paris → Abidjan · à partir de <strong><span class="price-paris-abj">14</span>€/kg</strong></div>
     <div class="route-pill">🇨🇮 Abidjan → Paris · à partir de <strong><span class="price-abj-paris">10</span>€/kg</strong></div>
   </div>
-  <div class="departs-wrap" id="prochains-departs"></div>
+  <div class="departs-wrap" id="prochains-departs">
+    <div class="departs-toggle" onclick="toggleDeparts()">
+      <div class="departs-toggle-left">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Prochains départs
+      </div>
+      <div class="departs-toggle-right">
+        <span id="departs-count"></span>
+        <svg class="departs-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="departs-list" id="departs-list"></div>
+  </div>
 
   <!-- TRACKING -->
   <div class="track-wrap">
@@ -594,6 +651,13 @@ a { color: inherit; text-decoration: none; }
           <option value="ABJ_ORY">🇨🇮 Abidjan → Paris 🇫🇷</option>
         </select>
       </div>
+      <div class="f-col full">
+        <label class="f-label">Voyage souhaité</label>
+        <select class="f-select" id="d-voyage">
+          <option value="">Chargement des départs...</option>
+        </select>
+        <span class="f-note">Laissez vide si vous n'avez pas de préférence, Jean Yves vous assignera un départ.</span>
+      </div>
       <div class="f-col">
         <label class="f-label">Poids estimé</label>
         <select class="f-select" id="d-poids">
@@ -634,14 +698,15 @@ a { color: inherit; text-decoration: none; }
       </div>
       <div id="collecte-france" style="display:contents">
         <div class="f-col full">
-          <label class="f-label">Mode de collecte (côté France)</label>
+          <label class="f-label">Mode de remise (côté France)</label>
           <div class="livraison-row">
-            <label class="livraison-opt"><input type="radio" name="collecte" value="point" checked onchange="toggleCollecte('point')"> Collecte à votre adresse (+10€ déplacement)</label>
+            <label class="livraison-opt"><input type="radio" name="collecte" value="point" checked onchange="toggleCollecte('point')"> Point de rencontre</label>
             <label class="livraison-opt"><input type="radio" name="collecte" value="domicile" onchange="toggleCollecte('domicile')"> Déposer à notre adresse</label>
+            <label class="livraison-opt"><input type="radio" name="collecte" value="recup" onchange="toggleCollecte('recup')"> Récupération à domicile</label>
           </div>
         </div>
         <div class="f-col full" id="collecte-point">
-          <label class="f-label">Point de collecte souhaité</label>
+          <label class="f-label">Point de rencontre souhaité</label>
           <select class="f-select" id="d-point-collecte">
             <option value="Val de Fontenay">Val de Fontenay</option>
             <option value="Châtelet">Châtelet</option>
@@ -655,6 +720,11 @@ a { color: inherit; text-decoration: none; }
             <div style="font-size:16px;color:rgba(255,255,255,.75);">94500 Champigny-sur-Marne</div>
           </div>
           <span class="f-note" style="margin-top:8px;">Convenez d'un créneau avec nous sur WhatsApp avant de vous déplacer.</span>
+        </div>
+        <div class="f-col full" id="collecte-recup" style="display:none">
+          <label class="f-label">Votre adresse en France</label>
+          <input class="f-input" id="d-adresse-recup" placeholder="Ex: 12 rue de la Paix, 75002 Paris">
+          <span class="f-note" style="margin-top:8px;">Les frais de déplacement seront calculés selon votre zone et confirmés par WhatsApp.</span>
         </div>
       </div>
       <div id="collecte-ci" style="display:none">
@@ -678,17 +748,19 @@ a { color: inherit; text-decoration: none; }
           <span class="f-note" style="margin-top:8px;">Les frais de collecte seront précisés lors de la confirmation.</span>
         </div>
       </div>
-      <div class="f-col full">
-        <label class="f-label">Livraison à domicile (Abidjan)</label>
-        <div class="livraison-row">
-          <label class="livraison-opt"><input type="radio" name="livraison" value="non" checked onchange="toggleLivraison(false)"> Non, je récupère moi-même</label>
-          <label class="livraison-opt"><input type="radio" name="livraison" value="oui" onchange="toggleLivraison(true)"> Oui, livraison à domicile</label>
+      <div id="livraison-section" style="display:contents">
+        <div class="f-col full">
+          <label class="f-label">Livraison à domicile (Abidjan)</label>
+          <div class="livraison-row">
+            <label class="livraison-opt"><input type="radio" name="livraison" value="non" checked onchange="toggleLivraison(false)"> Non, je récupère moi-même</label>
+            <label class="livraison-opt"><input type="radio" name="livraison" value="oui" onchange="toggleLivraison(true)"> Oui, livraison à domicile</label>
+          </div>
         </div>
-      </div>
-      <div class="f-col full" id="quartier-field" style="display:none">
-        <label class="f-label">Quartier à Abidjan</label>
-        <input class="f-input" id="d-quartier" placeholder="Ex: Cocody, Marcory, Yopougon...">
-        <span class="f-note">Prix calculé selon quartier, ajouté à votre facture.</span>
+        <div class="f-col full" id="quartier-field" style="display:none">
+          <label class="f-label">Quartier à Abidjan</label>
+          <input class="f-input" id="d-quartier" placeholder="Ex: Cocody, Marcory, Yopougon...">
+          <span class="f-note">Prix calculé selon quartier, ajouté à votre facture.</span>
+        </div>
       </div>
       <button class="btn-submit" onclick="submitDemande()">Envoyer ma demande</button>
     </div>
@@ -861,9 +933,13 @@ async function loadProchainsDepartsPublic() {
   const items = []
   ;(byRoute['ORY_ABJ'] || []).slice(0, 2).forEach(d => items.push(`🇫🇷 Paris → Abidjan · <span class="depart-date">${fmt(d)}</span>`))
   ;(byRoute['ABJ_ORY'] || []).slice(0, 2).forEach(d => items.push(`🇨🇮 Abidjan → Paris · <span class="depart-date">${fmt(d)}</span>`))
-  const el = document.getElementById('prochains-departs')
-  el.innerHTML = items.map(i => `<div class="depart-item">${calIcon} ${i}</div>`).join('')
-  el.style.display = 'flex'
+  const list = document.getElementById('departs-list')
+  list.innerHTML = items.map(i => `<div class="depart-item">${calIcon} ${i}</div>`).join('')
+  document.getElementById('departs-count').textContent = `${items.length} départ${items.length > 1 ? 's' : ''}`
+  document.getElementById('prochains-departs').style.display = 'block'
+}
+function toggleDeparts() {
+  document.getElementById('prochains-departs').classList.toggle('open')
 }
 loadProchainsDepartsPublic()
 
@@ -893,11 +969,30 @@ function toggleLivraison(on) {
 function toggleCollecte(mode) {
   document.getElementById('collecte-point').style.display = mode === 'point' ? 'flex' : 'none'
   document.getElementById('collecte-domicile').style.display = mode === 'domicile' ? 'flex' : 'none'
+  document.getElementById('collecte-recup').style.display = mode === 'recup' ? 'flex' : 'none'
 }
 
 function toggleCollecteCi(mode) {
   document.getElementById('collecte-ci-depot').style.display = mode === 'depot' ? 'flex' : 'none'
   document.getElementById('collecte-ci-recup').style.display = mode === 'recup' ? 'flex' : 'none'
+}
+
+async function loadVoyagesPublic(route) {
+  const today = new Date().toISOString().split('T')[0]
+  const { data } = await sb.from('voyages')
+    .select('id, route, date_depart')
+    .eq('statut', 'ouvert')
+    .eq('route', route)
+    .gte('date_depart', today)
+    .order('date_depart', { ascending: true })
+  const sel = document.getElementById('d-voyage')
+  sel.innerHTML = '<option value="">Choisir un départ (optionnel)</option>'
+  const fmt = d => new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
+  ;(data || []).forEach(v => {
+    const dir = v.route === 'ORY_ABJ' ? 'Paris → Abidjan' : 'Abidjan → Paris'
+    sel.add(new Option(`${dir} · ${fmt(v.date_depart)}`, v.id))
+  })
+  if (!data || data.length === 0) sel.innerHTML = '<option value="">Aucun départ disponible pour le moment</option>'
 }
 
 document.getElementById('d-route').addEventListener('change', function() {
@@ -906,7 +1001,10 @@ document.getElementById('d-route').addEventListener('change', function() {
   document.getElementById('d-contact-prefix').value = isCi ? '+33' : '+225'
   document.getElementById('collecte-france').style.display = isCi ? 'none' : 'contents'
   document.getElementById('collecte-ci').style.display = isCi ? 'contents' : 'none'
+  document.getElementById('livraison-section').style.display = isCi ? 'none' : 'contents'
+  loadVoyagesPublic(this.value)
 })
+loadVoyagesPublic('ORY_ABJ')
 
 async function doTrack() {
   const q = document.getElementById('track-q').value.trim()
@@ -963,17 +1061,23 @@ async function submitDemande() {
       : `Collecte CI — ${document.getElementById('d-quartier-ci').value}`
   } else {
     const modeCollecte = document.querySelector('input[name="collecte"]:checked')?.value
-    pointCollecte = modeCollecte === 'point'
-      ? `Collecte (+10€) — ${document.getElementById('d-point-collecte').value}`
-      : 'Dépôt FR — 2 Square Léon Blum, 94500 Champigny-sur-Marne'
+    if (modeCollecte === 'point') {
+      pointCollecte = `Point de rencontre — ${document.getElementById('d-point-collecte').value}`
+    } else if (modeCollecte === 'domicile') {
+      pointCollecte = 'Dépôt FR — 2 Square Léon Blum, 94500 Champigny-sur-Marne'
+    } else {
+      pointCollecte = `Récupération domicile FR — ${document.getElementById('d-adresse-recup').value} (frais à confirmer)`
+    }
   }
   const contactNum = document.getElementById('d-contact').value.replace(/[\s\-\(\)]/g, '')
   const contactFull = contactNum ? document.getElementById('d-contact-prefix').value + contactNum : ''
 
+  const voyageId = document.getElementById('d-voyage').value || null
   const { error } = await sb.from('demandes').insert({
     client_id: clientId,
     nom_expediteur: nom,
     wa_expediteur: wa,
+    voyage_id: voyageId,
     articles: document.getElementById('d-articles').value,
     poids_estime: parseFloat(document.getElementById('d-poids').value) || null,
     methode_paiement: document.getElementById('d-paiement').value,
