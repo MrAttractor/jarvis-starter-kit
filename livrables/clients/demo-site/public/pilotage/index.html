@@ -112,7 +112,7 @@ function EditField({ value, onSave, style }) {
       data-ph="Cliquer pour modifier…"
       onBlur={save}
       onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); ref.current?.blur(); } if (e.key === 'Escape') { if (ref.current) ref.current.innerText = value || ''; ref.current?.blur(); } }}
-      style={{ ...style, cursor:'text', borderBottom:'1px dashed rgba(0,0,0,.15)', paddingBottom:1, display:'block', minWidth:20 }}
+      style={{ ...style, cursor:'text', borderBottom:'1px dashed rgba(0,0,0,.15)', paddingBottom:1, display:'block', width:'100%', maxWidth:'100%', minWidth:0, overflowWrap:'break-word', wordBreak:'break-word' }}
     />
   );
 }
