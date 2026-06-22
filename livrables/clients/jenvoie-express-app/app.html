@@ -572,8 +572,9 @@ async function loadEnCours() {
     return
   }
   tbody.innerHTML = data.map(c => {
-    const nom = c.clients?.nom || '<span style="color:rgba(255,255,255,.3);font-style:italic;font-weight:400;">Non enregistré</span>'
-    const wa = c.clients?.whatsapp || ''
+    const nom = c.clients?.nom || c.nom_expediteur || '<span style="color:rgba(255,255,255,.3);font-style:italic;font-weight:400;">Non enregistré</span>'
+    const wa = c.clients?.whatsapp || c.wa_expediteur || ''
+    const prenom = (c.clients?.nom || c.nom_expediteur || '').split(' ')[0]
     const route = c.voyages?.route || ''
     return `
     <tr>
@@ -590,7 +591,7 @@ async function loadEnCours() {
         </select>
       </td>
       <td>
-        ${wa && c.numero ? `<button class="btn-green" style="font-size:.65rem;padding:.25rem .55rem;" onclick="envoyerSuivi('${c.numero}','${wa}','${(c.clients?.nom||'').split(' ')[0]}')">📲 Suivi</button>` : '—'}
+        ${wa && c.numero ? `<button class="btn-green" style="font-size:.65rem;padding:.25rem .55rem;" onclick="envoyerSuivi('${c.numero}','${wa}','${prenom}')">📲 Suivi</button>` : '—'}
       </td>
     </tr>`
   }).join('')
@@ -1043,6 +1044,8 @@ async function confirmAccept() {
     contact_reception: d?.contact_reception || null,
     livraison_souhaitee: d?.livraison_souhaitee || false,
     quartier_abidjan: d?.quartier_abidjan || null,
+    nom_expediteur: d?.nom_expediteur || d?.clients?.nom || null,
+    wa_expediteur: d?.wa_expediteur || d?.clients?.whatsapp || null,
   })
   if (eC) return toast('Erreur création colis', true)
 
