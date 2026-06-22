@@ -1035,7 +1035,7 @@ async function confirmAccept() {
     if (nc) clientId = nc.id
   }
 
-  const { error: eC } = await sb.from('colis').insert({
+  const { data: newColis, error: eC } = await sb.from('colis').insert({
     client_id: clientId,
     voyage_id: d?.voyage_id || null,
     poids,
@@ -1046,7 +1046,7 @@ async function confirmAccept() {
     quartier_abidjan: d?.quartier_abidjan || null,
     nom_expediteur: d?.nom_expediteur || d?.clients?.nom || null,
     wa_expediteur: d?.wa_expediteur || d?.clients?.whatsapp || null,
-  })
+  }).select('numero').single()
   if (eC) return toast('Erreur création colis', true)
 
   toast('Demande acceptée — colis créé ✓')
@@ -1056,10 +1056,22 @@ async function confirmAccept() {
 
   const waRaw = d?.wa_expediteur || d?.clients?.whatsapp
   const nomRaw = d?.nom_expediteur || d?.clients?.nom || 'client'
+  const numero = newColis?.numero || ''
+  const lienSuivi = numero ? `https://jenvoie-express.myattractor1.workers.dev?n=${encodeURIComponent(numero)}` : ''
   if (waRaw) {
     const prenom = nomRaw.split(' ')[0]
-    const msg = encodeURIComponent(`Bonjour ${prenom}, votre demande d'envoi J'Envoie Express a bien été acceptée. Nous vous contacterons rapidement pour confirmer les détails de collecte et votre numéro de suivi. Merci de votre confiance !`)
-    window.open(`https://wa.me/${waRaw.replace(/[\s\+\-\(\)]/g, '')}?text=${msg}`, '_blank')
+    const lignes = [
+      `Bonjour ${prenom}, votre demande d'envoi J'Envoie Express a bien été acceptée ✅`,
+      ``,
+      `📦 Numéro de colis : *${numero}*`,
+      montant ? `💶 Montant à régler : *${montant}€*` : null,
+      poids ? `⚖️ Poids confirmé : *${poids} kg*` : null,
+      ``,
+      lienSuivi ? `Suivez votre colis en temps réel ici :\n${lienSuivi}` : `Nous vous enverrons votre numéro de suivi très bientôt.`,
+      ``,
+      `Merci de votre confiance ! 🙏`
+    ].filter(l => l !== null).join('\n')
+    window.open(`https://wa.me/${waRaw.replace(/[\s\+\-\(\)]/g, '')}?text=${encodeURIComponent(lignes)}`, '_blank')
   }
 }
 
