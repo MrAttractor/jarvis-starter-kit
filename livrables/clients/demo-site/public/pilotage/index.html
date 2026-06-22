@@ -6,8 +6,8 @@
 <title>Pilotage — Mr Attractor</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;}
-  html,body,#root{height:100%;background:#0C0A08;font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
-  #boot{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0C0A08;color:#7A746C;font-family:system-ui;}
+  html,body,#root{height:100%;background:#F5F0E8;font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+  #boot{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#F5F0E8;color:#8A8078;font-family:system-ui;}
 </style>
 </head>
 <body>
@@ -33,27 +33,27 @@ const SB = createClient(
 const T = `
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 :root{
-  --bg:#0C0A08;--sur:#181410;--card:#1F1B16;--card2:#252018;
-  --bdr:rgba(255,255,255,.08);--bdr2:rgba(255,255,255,.05);
-  --ink:#F0EDE8;--ink2:#B8B0A5;--mut:#7A746C;--faint:#4A4540;
-  --acc:#EE7C1F;--acc-d:#CC5C08;--acc-s:rgba(238,124,31,.14);
-  --grn:#22A55A;--grn-s:rgba(34,165,90,.14);
-  --red:#E05050;--red-s:rgba(224,80,80,.14);
-  --blu:#4A9FE0;--blu-s:rgba(74,159,224,.14);
+  --bg:#F5F0E8;--sur:#FFFFFF;--card:#FFFFFF;--card2:#EDE8E0;
+  --bdr:rgba(0,0,0,.09);--bdr2:rgba(0,0,0,.05);
+  --ink:#1A1714;--ink2:#5A5450;--mut:#8A8078;--faint:#C0B8B0;
+  --acc:#EE7C1F;--acc-d:#CC5C08;--acc-s:rgba(238,124,31,.12);
+  --grn:#1A9448;--grn-s:rgba(26,148,72,.12);
+  --red:#D94040;--red-s:rgba(217,64,64,.1);
+  --blu:#3A8FD0;--blu-s:rgba(58,143,208,.12);
   --r:14px;--r-sm:10px;--r-lg:18px;
-  --sh:0 2px 12px rgba(0,0,0,.35);
+  --sh:0 2px 14px rgba(0,0,0,.07);
 }
 body{background:var(--bg);color:var(--ink);}
-.app{display:flex;flex-direction:column;min-height:100dvh;max-width:520px;margin:0 auto;padding:0 0 32px;}
-.hdr{padding:20px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;}
-.hdr-left .label{font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--mut);margin-bottom:4px;}
-.hdr-left .title{font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.4px;}
+.app{display:flex;flex-direction:column;min-height:100dvh;max-width:520px;margin:0 auto;padding:0 0 40px;}
+.hdr{padding:24px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;}
+.hdr-left .label{font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--acc);margin-bottom:4px;}
+.hdr-left .title{font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.5px;}
 .hdr-right{font-size:11px;color:var(--mut);font-weight:600;text-align:right;line-height:1.5;margin-top:4px;}
-.tabs{display:flex;gap:8px;padding:18px 20px 0;overflow-x:auto;scrollbar-width:none;}
+.tabs{display:flex;gap:6px;padding:18px 20px 0;overflow-x:auto;scrollbar-width:none;}
 .tabs::-webkit-scrollbar{display:none;}
-.tab{flex:0 0 auto;padding:10px 16px;border-radius:var(--r-sm);border:1.5px solid var(--bdr);background:var(--card);color:var(--mut);font-size:12.5px;font-weight:700;cursor:pointer;text-align:center;transition:.15s;font-family:inherit;white-space:nowrap;}
-.tab.on{border-color:var(--acc);background:var(--acc-s);color:var(--acc);}
-.content{padding:16px 20px 0;display:flex;flex-direction:column;gap:14px;}
+.tab{flex:0 0 auto;padding:9px 16px;border-radius:30px;border:1.5px solid var(--bdr);background:var(--card);color:var(--mut);font-size:12.5px;font-weight:700;cursor:pointer;text-align:center;transition:.15s;font-family:inherit;white-space:nowrap;box-shadow:var(--sh);}
+.tab.on{border-color:var(--acc);background:var(--acc);color:#fff;box-shadow:0 4px 14px rgba(238,124,31,.3);}
+.content{padding:14px 20px 0;display:flex;flex-direction:column;gap:14px;}
 .card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);box-shadow:var(--sh);}
 .card2{background:var(--card2);border:1px solid var(--bdr2);border-radius:var(--r);}
 .sect-label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--mut);margin-bottom:10px;}
@@ -63,7 +63,7 @@ body{background:var(--bg);color:var(--ink);}
 .badge.grn{background:var(--grn-s);color:var(--grn);}
 .badge.red{background:var(--red-s);color:var(--red);}
 .badge.blu{background:var(--blu-s);color:var(--blu);}
-.badge.neu{background:rgba(255,255,255,.06);color:var(--ink2);}
+.badge.neu{background:rgba(0,0,0,.07);color:var(--ink2);}
 .row{display:flex;align-items:center;}
 .col{display:flex;flex-direction:column;}
 .between{justify-content:space-between;}
@@ -111,7 +111,7 @@ function EditField({ value, onSave, style }) {
       data-ph="Cliquer pour modifier…"
       onBlur={save}
       onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); ref.current?.blur(); } if (e.key === 'Escape') { if (ref.current) ref.current.innerText = value || ''; ref.current?.blur(); } }}
-      style={{ ...style, cursor:'text', borderBottom:'1px dashed rgba(255,255,255,.15)', paddingBottom:1, display:'block', minWidth:20 }}
+      style={{ ...style, cursor:'text', borderBottom:'1px dashed rgba(0,0,0,.15)', paddingBottom:1, display:'block', minWidth:20 }}
     />
   );
 }
@@ -171,7 +171,7 @@ const SOP_VALIDATION = {
 /* ── INPUT STYLE (shared) ─────────────────────────────── */
 const iStyle = {
   width:'100%', padding:'11px 14px', borderRadius:10,
-  background:'rgba(255,255,255,.05)', border:'1.5px solid var(--bdr)',
+  background:'var(--bg)', border:'1.5px solid var(--bdr)',
   color:'var(--ink)', fontSize:13, fontWeight:600, fontFamily:'inherit',
   outline:'none', boxSizing:'border-box',
 };
@@ -215,7 +215,7 @@ function StatutBadge({ statut, statut_color, onEdit }) {
           {STATUT_OPTIONS.map(opt => (
             <div key={opt.label}
               onClick={() => handleSelect(opt)}
-              style={{ padding:'7px 10px', borderRadius:8, cursor:'pointer', display:'flex', alignItems:'center', gap:8, fontSize:12, fontWeight:600, color: statut === opt.label ? 'var(--ink)' : 'var(--ink2)', background: statut === opt.label ? 'rgba(255,255,255,.07)' : 'transparent' }}>
+              style={{ padding:'7px 10px', borderRadius:8, cursor:'pointer', display:'flex', alignItems:'center', gap:8, fontSize:12, fontWeight:600, color: statut === opt.label ? 'var(--ink)' : 'var(--ink2)', background: statut === opt.label ? 'rgba(0,0,0,.05)' : 'transparent' }}>
               <span className={'badge '+opt.color} style={{ padding:'2px 6px', fontSize:10, pointerEvents:'none' }}><span className="dot" /></span>
               {opt.label}
               {SOP_VALIDATION[opt.label] && <span style={{ marginLeft:'auto', fontSize:9, color:'var(--acc)', fontWeight:800, opacity:.7 }}>SOP</span>}
@@ -236,7 +236,7 @@ function StatutBadge({ statut, statut_color, onEdit }) {
               <div key={i} onClick={() => toggle(i)}
                 style={{ display:'flex', gap:12, alignItems:'flex-start', padding:'12px 0', borderBottom:'1px solid var(--bdr)', cursor:'pointer' }}>
                 <div style={{ width:22, height:22, borderRadius:8, flexShrink:0, marginTop:1,
-                  background: validating.done.includes(i) ? 'var(--grn-s)' : 'rgba(255,255,255,.05)',
+                  background: validating.done.includes(i) ? 'var(--grn-s)' : 'rgba(0,0,0,.05)',
                   border: `1.5px solid ${validating.done.includes(i) ? 'var(--grn)' : 'var(--bdr)'}`,
                   display:'flex', alignItems:'center', justifyContent:'center', transition:'.15s' }}>
                   {validating.done.includes(i) && <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--grn)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
@@ -251,7 +251,7 @@ function StatutBadge({ statut, statut_color, onEdit }) {
               </button>
               <button onClick={confirm} disabled={!allDone}
                 style={{ flex:2, padding:13, borderRadius:12, border:'none',
-                  background: allDone ? 'var(--acc)' : 'rgba(255,255,255,.07)',
+                  background: allDone ? 'var(--acc)' : 'rgba(0,0,0,.06)',
                   color: allDone ? '#fff' : 'var(--faint)',
                   fontWeight:800, fontSize:13, cursor: allDone ? 'pointer' : 'not-allowed', fontFamily:'inherit', transition:'.2s' }}>
                 Confirmer → {validating.label}
@@ -298,7 +298,7 @@ function CapCard({ cap, onChange }) {
   };
 
   return (
-    <div className="card" style={{ padding:'18px 18px 16px', background:'linear-gradient(135deg,#1A1208 0%,#201508 100%)', borderColor:'rgba(238,124,31,.18)' }}>
+    <div className="card" style={{ padding:'18px 18px 16px', background:'linear-gradient(135deg,#FFF8F2 0%,#FFF0E0 100%)', borderColor:'rgba(238,124,31,.25)' }}>
       <div className="row between" style={{ marginBottom:14 }}>
         <div>
           <div className="t-xs mut sb" style={{ marginBottom:3 }}>CAP MENSUEL</div>
@@ -313,7 +313,7 @@ function CapCard({ cap, onChange }) {
         </div>
       </div>
 
-      <div style={{ height:8, borderRadius:100, background:'rgba(255,255,255,.07)', overflow:'hidden', marginBottom:12 }}>
+      <div style={{ height:8, borderRadius:100, background:'rgba(0,0,0,.08)', overflow:'hidden', marginBottom:12 }}>
         <div style={{ height:'100%', display:'flex', borderRadius:100, overflow:'hidden' }}>
           {pct_conf > 0 && <div style={{ width:pct_conf+'%', background:'var(--grn)', transition:'.6s' }} />}
           <div style={{ width:pct_pipe+'%', background:'var(--acc)', opacity:.85, transition:'.6s' }} />
@@ -371,7 +371,7 @@ function FocusItem({ item, i, onToggle, onEdit }) {
       <div
         onClick={() => onToggle(item)}
         style={{ width:22, height:22, borderRadius:8, flexShrink:0, marginTop:2, cursor:'pointer',
-          background: item.done ? 'var(--grn-s)' : item.urgent ? 'var(--red-s)' : 'rgba(255,255,255,.06)',
+          background: item.done ? 'var(--grn-s)' : item.urgent ? 'var(--red-s)' : 'rgba(0,0,0,.06)',
           display:'flex', alignItems:'center', justifyContent:'center' }}>
         {item.done
           ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--grn)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -535,7 +535,7 @@ function NouveauProspectModal({ onConfirm, onCancel }) {
           </button>
           <button onClick={handleSave} disabled={!valid || saving}
             style={{ flex:2, padding:13, borderRadius:12, border:'none',
-              background: valid ? 'var(--acc)' : 'rgba(255,255,255,.07)',
+              background: valid ? 'var(--acc)' : 'rgba(0,0,0,.06)',
               color: valid ? '#fff' : 'var(--faint)',
               fontWeight:800, fontSize:13, cursor: valid ? 'pointer' : 'not-allowed', fontFamily:'inherit', transition:'.2s' }}>
             {saving ? 'Création…' : 'Créer le dossier →'}
@@ -588,7 +588,7 @@ function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact }) {
             <span className="b" style={{ fontSize:13, color: d.urgent ? 'var(--red)' : 'var(--acc)' }}>{d.date_action}</span>
           </div>
         </div>
-        <div style={{ padding:'10px 12px', borderRadius:10, background:'rgba(255,255,255,.04)', borderLeft:'2px solid rgba(255,255,255,.1)' }}>
+        <div style={{ padding:'10px 12px', borderRadius:10, background:'rgba(0,0,0,.04)', borderLeft:'2px solid rgba(0,0,0,.1)' }}>
           <div className="t-xs mut b" style={{ marginBottom:4 }}>→ PROCHAINE ACTION</div>
           <EditField
             value={d.prochaine}
@@ -598,7 +598,7 @@ function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact }) {
           />
         </div>
       </div>
-      <div style={{ padding:'10px 16px', borderTop:'1px solid var(--bdr)', background:'rgba(0,0,0,.15)', display:'flex', alignItems:'center', gap:8 }}>
+      <div style={{ padding:'10px 16px', borderTop:'1px solid var(--bdr)', background:'var(--bg)', display:'flex', alignItems:'center', gap:8 }}>
         <span className="t-xs mut" style={{ flexShrink:0 }}>Contact</span>
         <div style={{ flex:1, minWidth:0 }}>
           <EditField
@@ -682,12 +682,12 @@ function ProjetCard({ p, i, onEditProchaine }) {
             <span className="t-xs mut">Avancement</span>
             <span className="t-xs b num" style={{ color:avcColor }}>{p.avancement}%</span>
           </div>
-          <div style={{ height:5, borderRadius:100, background:'rgba(255,255,255,.07)', overflow:'hidden' }}>
+          <div style={{ height:5, borderRadius:100, background:'rgba(0,0,0,.08)', overflow:'hidden' }}>
             <div style={{ height:'100%', width:p.avancement+'%', background:avcColor, borderRadius:100, transition:'.5s' }} />
           </div>
         </div>
 
-        <div style={{ padding:'9px 12px', borderRadius:10, background:'rgba(255,255,255,.04)', borderLeft:'2px solid rgba(255,255,255,.1)', marginBottom: p.etapes ? 10 : 0 }}>
+        <div style={{ padding:'9px 12px', borderRadius:10, background:'rgba(0,0,0,.04)', borderLeft:'2px solid rgba(0,0,0,.1)', marginBottom: p.etapes ? 10 : 0 }}>
           <div className="t-xs mut" style={{ marginBottom:3, fontWeight:700 }}>PROCHAINE ÉTAPE</div>
           <EditField
             value={p.prochaine_action}
@@ -701,7 +701,7 @@ function ProjetCard({ p, i, onEditProchaine }) {
           <div className="row" style={{ flexWrap:'wrap', gap:6, marginTop:10 }}>
             {p.etapes.map((e,j) => (
               <span key={j} style={{ fontSize:10.5, fontWeight:600, padding:'3px 9px', borderRadius:7,
-                background:'rgba(255,255,255,.05)', color:'var(--ink2)', border:'1px solid var(--bdr)' }}>{e}</span>
+                background:'rgba(0,0,0,.05)', color:'var(--ink2)', border:'1px solid var(--bdr)' }}>{e}</span>
             ))}
           </div>
         )}
@@ -806,7 +806,7 @@ function TabPlan() {
   ];
   return (
     <Fragment>
-      <div className="card" style={{ padding:'16px 18px', background:'linear-gradient(135deg,#1A1208,#201508)', borderColor:'rgba(238,124,31,.18)' }}>
+      <div className="card" style={{ padding:'16px 18px', background:'linear-gradient(135deg,#FFF8F2,#FFF0E0)', borderColor:'rgba(238,124,31,.25)' }}>
         <div className="t-xs mut sb" style={{ marginBottom:4 }}>OBJECTIF CENTRAL</div>
         <div className="row between" style={{ alignItems:'baseline', marginBottom:8 }}>
           <span className="xb" style={{ fontSize:22, color:'var(--acc)' }}>10 000 €/mois</span>
