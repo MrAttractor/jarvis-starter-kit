@@ -116,7 +116,7 @@ function EditField({ value, onSave, style }) {
   );
 }
 
-/* ── STATUT BADGE (cliquable) ─────────────────────────── */
+/* ── STATUT OPTIONS ───────────────────────────────────── */
 const STATUT_OPTIONS = [
   { label:'Nouveau',       color:'neu' },
   { label:'En contact',    color:'neu' },
@@ -127,8 +127,58 @@ const STATUT_OPTIONS = [
   { label:'Perdu',         color:'red' },
 ];
 
+/* ── SOP — CONDITIONS PAR ÉTAPE ───────────────────────── */
+const SOP_VALIDATION = {
+  'Devis envoyé': {
+    titre: 'Avant d\'envoyer le devis',
+    checks: [
+      'La maquette a été présentée EN DIRECT (pas envoyée à froid)',
+      'Le prospect a réagi positivement à la démo',
+      'Le devis contient bien 3 formules (Essentielle / Active / Premium)',
+      'La famille (A/B/C) est identifiée et notée dans la fiche',
+    ],
+  },
+  'Acompte reçu': {
+    titre: 'Avant de marquer l\'acompte reçu',
+    checks: [
+      'Le prospect a choisi une formule explicitement',
+      'L\'accord est écrit (Yousign signé ou message WA conservé)',
+      'L\'acompte 50% est bien arrivé sur le compte',
+      'Le reçu a été émis et envoyé immédiatement après réception',
+    ],
+  },
+  'En production': {
+    titre: 'Avant de démarrer le développement',
+    checks: [
+      'L\'audit métier a été rempli par le client',
+      'Le récapitulatif a été envoyé et validé par le client',
+      'Le BON DE LIVRAISON est confirmé — le scope est verrouillé',
+      'Aucune feature hors périmètre ne sera ajoutée sans avenant chiffré',
+    ],
+  },
+  'Livré': {
+    titre: 'Avant de marquer comme livré',
+    checks: [
+      'Le solde 50% a été reçu sur le compte',
+      'Le reçu de solde a été émis immédiatement',
+      'Tous les accès ont été remis au client',
+      'Le MRR est programmé pour le 1er du mois suivant',
+      'Le suivi J+30 est planifié dans le Focus du jour',
+    ],
+  },
+};
+
+/* ── INPUT STYLE (shared) ─────────────────────────────── */
+const iStyle = {
+  width:'100%', padding:'11px 14px', borderRadius:10,
+  background:'rgba(255,255,255,.05)', border:'1.5px solid var(--bdr)',
+  color:'var(--ink)', fontSize:13, fontWeight:600, fontFamily:'inherit',
+  outline:'none', boxSizing:'border-box',
+};
+
 function StatutBadge({ statut, statut_color, onEdit }) {
   const [open, setOpen] = useState(false);
+  const [validating, setValidating] = useState(null);
   const ref = useRef();
   useEffect(() => {
     if (!open) return;
@@ -136,6 +186,22 @@ function StatutBadge({ statut, statut_color, onEdit }) {
     document.addEventListener('mousedown', h);
     return () => document.removeEventListener('mousedown', h);
   }, [open]);
+
+  const handleSelect = (opt) => {
+    setOpen(false);
+    const rules = SOP_VALIDATION[opt.label];
+    if (!rules) { onEdit(opt.label, opt.color); return; }
+    setValidating({ label: opt.label, color: opt.color, titre: rules.titre, checks: rules.checks, done: [] });
+  };
+
+  const toggle = (i) => setValidating(v => ({
+    ...v, done: v.done.includes(i) ? v.done.filter(x=>x!==i) : [...v.done, i]
+  }));
+
+  const confirm = () => { if (validating) { onEdit(validating.label, validating.color); setValidating(null); } };
+
+  const allDone = validating && validating.done.length === validating.checks.length;
+
   return (
     <div ref={ref} style={{ position:'relative', flexShrink:0 }}>
       <span className={'badge '+(statut_color||'neu')} style={{ cursor:'pointer', userSelect:'none' }} onClick={() => setOpen(o => !o)}>
@@ -148,12 +214,50 @@ function StatutBadge({ statut, statut_color, onEdit }) {
         <div style={{ position:'absolute', right:0, top:'calc(100% + 6px)', zIndex:99, background:'var(--card2)', border:'1px solid var(--bdr)', borderRadius:10, padding:4, minWidth:148, boxShadow:'0 8px 24px rgba(0,0,0,.6)' }}>
           {STATUT_OPTIONS.map(opt => (
             <div key={opt.label}
-              onClick={() => { onEdit(opt.label, opt.color); setOpen(false); }}
+              onClick={() => handleSelect(opt)}
               style={{ padding:'7px 10px', borderRadius:8, cursor:'pointer', display:'flex', alignItems:'center', gap:8, fontSize:12, fontWeight:600, color: statut === opt.label ? 'var(--ink)' : 'var(--ink2)', background: statut === opt.label ? 'rgba(255,255,255,.07)' : 'transparent' }}>
               <span className={'badge '+opt.color} style={{ padding:'2px 6px', fontSize:10, pointerEvents:'none' }}><span className="dot" /></span>
               {opt.label}
+              {SOP_VALIDATION[opt.label] && <span style={{ marginLeft:'auto', fontSize:9, color:'var(--acc)', fontWeight:800, opacity:.7 }}>SOP</span>}
             </div>
           ))}
+        </div>
+      )}
+
+      {validating && (
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.82)', zIndex:300, display:'flex', alignItems:'flex-end', justifyContent:'center' }}
+          onClick={e => { if (e.target === e.currentTarget) setValidating(null); }}>
+          <div style={{ width:'100%', maxWidth:520, background:'var(--card)', borderRadius:'18px 18px 0 0', padding:'24px 20px 44px' }}>
+            <div style={{ width:36, height:4, borderRadius:2, background:'var(--bdr)', margin:'0 auto 22px' }} />
+            <div style={{ fontSize:10, fontWeight:800, color:'var(--acc)', letterSpacing:'1.2px', textTransform:'uppercase', marginBottom:5 }}>Validation SOP requise</div>
+            <div style={{ fontSize:17, fontWeight:800, color:'var(--ink)', marginBottom:4 }}>{validating.titre}</div>
+            <div style={{ fontSize:12, color:'var(--mut)', marginBottom:20 }}>Coche chaque point pour débloquer la confirmation</div>
+            {validating.checks.map((check, i) => (
+              <div key={i} onClick={() => toggle(i)}
+                style={{ display:'flex', gap:12, alignItems:'flex-start', padding:'12px 0', borderBottom:'1px solid var(--bdr)', cursor:'pointer' }}>
+                <div style={{ width:22, height:22, borderRadius:8, flexShrink:0, marginTop:1,
+                  background: validating.done.includes(i) ? 'var(--grn-s)' : 'rgba(255,255,255,.05)',
+                  border: `1.5px solid ${validating.done.includes(i) ? 'var(--grn)' : 'var(--bdr)'}`,
+                  display:'flex', alignItems:'center', justifyContent:'center', transition:'.15s' }}>
+                  {validating.done.includes(i) && <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--grn)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                </div>
+                <span style={{ fontSize:13, color: validating.done.includes(i) ? 'var(--ink2)' : 'var(--ink)', lineHeight:1.5, flex:1, userSelect:'none' }}>{check}</span>
+              </div>
+            ))}
+            <div style={{ marginTop:20, display:'flex', gap:10 }}>
+              <button onClick={() => setValidating(null)}
+                style={{ flex:1, padding:13, borderRadius:12, border:'1.5px solid var(--bdr)', background:'transparent', color:'var(--mut)', fontWeight:700, fontSize:13, cursor:'pointer', fontFamily:'inherit' }}>
+                Annuler
+              </button>
+              <button onClick={confirm} disabled={!allDone}
+                style={{ flex:2, padding:13, borderRadius:12, border:'none',
+                  background: allDone ? 'var(--acc)' : 'rgba(255,255,255,.07)',
+                  color: allDone ? '#fff' : 'var(--faint)',
+                  fontWeight:800, fontSize:13, cursor: allDone ? 'pointer' : 'not-allowed', fontFamily:'inherit', transition:'.2s' }}>
+                Confirmer → {validating.label}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -300,15 +404,163 @@ function TabAujourdHui({ cap, focus, onCapChange, onFocusToggle, onFocusEdit }) 
   );
 }
 
+/* ── SOP CADRE ────────────────────────────────────────── */
+const SOP_RULES = [
+  'Toujours 3 formules dans le devis — jamais 1 seul tarif',
+  'Maquette présentée EN DIRECT — jamais envoyée à froid',
+  'Acompte 50% reçu avant tout démarrage — sans exception',
+  'Bon de livraison signé avant tout développement',
+  'Reçu émis immédiatement à chaque versement',
+  'NDA obligatoire si le deal dépasse 500 €',
+  'Délai selon la grille uniquement — jamais promis sous pression',
+  'Pipeline mis à jour à chaque changement d\'étape',
+];
+function SOPCadre() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ background:'rgba(238,124,31,.07)', border:'1.5px solid rgba(238,124,31,.2)', borderRadius:12, overflow:'hidden' }}>
+      <div onClick={() => setOpen(o=>!o)}
+        style={{ padding:'11px 14px', display:'flex', alignItems:'center', justifyContent:'space-between', cursor:'pointer', userSelect:'none' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="3" stroke="var(--acc)" strokeWidth="1.6"/><path d="M5 8h6M5 5h6M5 11h4" stroke="var(--acc)" strokeWidth="1.6" strokeLinecap="round"/></svg>
+          <span style={{ fontSize:10, fontWeight:800, letterSpacing:'1.2px', textTransform:'uppercase', color:'var(--acc)' }}>Cadre SOP</span>
+          <span style={{ fontSize:11, color:'var(--mut)', fontWeight:600 }}>8 règles non négociables</span>
+        </div>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transform: open ? 'rotate(180deg)' : 'none', transition:'.2s', flexShrink:0 }}>
+          <path d="M2 4l4 4 4-4" stroke="var(--acc)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </div>
+      {open && (
+        <div style={{ padding:'2px 14px 14px', borderTop:'1px solid rgba(238,124,31,.15)' }}>
+          {SOP_RULES.map((r, i) => (
+            <div key={i} style={{ display:'flex', gap:10, alignItems:'flex-start', paddingTop:10 }}>
+              <span style={{ fontSize:10, fontWeight:800, color:'var(--acc)', flexShrink:0, minWidth:14, marginTop:1 }}>{i+1}</span>
+              <span style={{ fontSize:12, color:'var(--ink2)', lineHeight:1.5 }}>{r}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── NOUVEAU PROSPECT MODAL ───────────────────────────── */
+function NouveauProspectModal({ onConfirm, onCancel }) {
+  const [nom, setNom] = useState('');
+  const [wa, setWa] = useState('');
+  const [activite, setActivite] = useState('');
+  const [famille, setFamille] = useState('');
+  const [zone, setZone] = useState('');
+  const [saving, setSaving] = useState(false);
+  const valid = nom.trim() && famille && zone;
+
+  const handleSave = async () => {
+    if (!valid || saving) return;
+    setSaving(true);
+    const { data, error } = await SB.from('pilotage_pipeline').insert({
+      nom: nom.trim(),
+      contact: wa.trim() || null,
+      activite: activite.trim() || null,
+      famille,
+      zone,
+      type: famille === 'A' ? 'App Métier' : famille === 'B' ? 'Consulting' : 'SaaS / Assists',
+      statut: 'En contact',
+      statut_color: 'neu',
+      prochaine: famille === 'A' ? 'Préparer maquette → caler présentation directe' : 'Brief découverte 30 min',
+      date_action: new Date().toLocaleDateString('fr-FR'),
+      priorite: 99,
+      urgent: false,
+    }).select().single();
+    setSaving(false);
+    if (!error && data) onConfirm(data);
+  };
+
+  const famOptions = [['A','App Métier'],['B','Consulting'],['C','SaaS / Assists']];
+  const zoneOptions = ['CI', 'France', 'International'];
+
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.85)', zIndex:300, display:'flex', alignItems:'flex-end', justifyContent:'center' }}
+      onClick={e => { if (e.target === e.currentTarget) onCancel(); }}>
+      <div style={{ width:'100%', maxWidth:520, background:'var(--card)', borderRadius:'18px 18px 0 0', padding:'24px 20px 48px' }}>
+        <div style={{ width:36, height:4, borderRadius:2, background:'var(--bdr)', margin:'0 auto 22px' }} />
+        <div style={{ fontSize:17, fontWeight:800, color:'var(--ink)', marginBottom:18 }}>Nouveau prospect</div>
+
+        <div style={{ marginBottom:14 }}>
+          <div style={{ fontSize:10, fontWeight:700, color:'var(--mut)', letterSpacing:'1px', textTransform:'uppercase', marginBottom:6 }}>Nom / Prénom *</div>
+          <input value={nom} onChange={e=>setNom(e.target.value)} placeholder="Ex: Andréa Koné, Club Élévia…" style={iStyle} />
+        </div>
+        <div style={{ marginBottom:14 }}>
+          <div style={{ fontSize:10, fontWeight:700, color:'var(--mut)', letterSpacing:'1px', textTransform:'uppercase', marginBottom:6 }}>Activité</div>
+          <input value={activite} onChange={e=>setActivite(e.target.value)} placeholder="Ex: livraison express, réseau B2B…" style={iStyle} />
+        </div>
+        <div style={{ marginBottom:16 }}>
+          <div style={{ fontSize:10, fontWeight:700, color:'var(--mut)', letterSpacing:'1px', textTransform:'uppercase', marginBottom:6 }}>WhatsApp</div>
+          <input value={wa} onChange={e=>setWa(e.target.value)} placeholder="+33 6… ou +225 07…" style={iStyle} />
+        </div>
+
+        <div style={{ marginBottom:16 }}>
+          <div style={{ fontSize:10, fontWeight:700, color:'var(--mut)', letterSpacing:'1px', textTransform:'uppercase', marginBottom:8 }}>Famille *</div>
+          <div style={{ display:'flex', gap:8 }}>
+            {famOptions.map(([f, label]) => (
+              <div key={f} onClick={() => setFamille(f)}
+                style={{ flex:1, padding:'10px 6px', borderRadius:10, textAlign:'center', cursor:'pointer',
+                  border:`1.5px solid ${famille===f ? 'var(--acc)' : 'var(--bdr)'}`,
+                  background: famille===f ? 'var(--acc-s)' : 'transparent', transition:'.15s' }}>
+                <div style={{ fontWeight:800, fontSize:15, color: famille===f ? 'var(--acc)' : 'var(--ink)', marginBottom:2 }}>Fam. {f}</div>
+                <div style={{ fontSize:10, color:'var(--mut)', fontWeight:600 }}>{label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ marginBottom:22 }}>
+          <div style={{ fontSize:10, fontWeight:700, color:'var(--mut)', letterSpacing:'1px', textTransform:'uppercase', marginBottom:8 }}>Zone *</div>
+          <div style={{ display:'flex', gap:8 }}>
+            {zoneOptions.map(z => (
+              <div key={z} onClick={() => setZone(z)}
+                style={{ flex:1, padding:'10px 6px', borderRadius:10, textAlign:'center', cursor:'pointer', fontSize:12, fontWeight:700,
+                  border:`1.5px solid ${zone===z ? 'var(--acc)' : 'var(--bdr)'}`,
+                  background: zone===z ? 'var(--acc-s)' : 'transparent',
+                  color: zone===z ? 'var(--acc)' : 'var(--mut)', transition:'.15s' }}>
+                {z}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ display:'flex', gap:10 }}>
+          <button onClick={onCancel}
+            style={{ flex:1, padding:13, borderRadius:12, border:'1.5px solid var(--bdr)', background:'transparent', color:'var(--mut)', fontWeight:700, fontSize:13, cursor:'pointer', fontFamily:'inherit' }}>
+            Annuler
+          </button>
+          <button onClick={handleSave} disabled={!valid || saving}
+            style={{ flex:2, padding:13, borderRadius:12, border:'none',
+              background: valid ? 'var(--acc)' : 'rgba(255,255,255,.07)',
+              color: valid ? '#fff' : 'var(--faint)',
+              fontWeight:800, fontSize:13, cursor: valid ? 'pointer' : 'not-allowed', fontFamily:'inherit', transition:'.2s' }}>
+            {saving ? 'Création…' : 'Créer le dossier →'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── PIPELINE ─────────────────────────────────────────── */
 function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact }) {
+  const famColor = d.famille === 'A' ? 'org' : d.famille === 'B' ? 'blu' : 'grn';
   return (
     <div className="card anim col" style={{ overflow:'hidden', animationDelay:(i*70)+'ms' }}>
       <div style={{ padding:'14px 16px 12px' }}>
         <div className="row between" style={{ marginBottom:10 }}>
           <div className="col g4">
-            <span className="t-xs mut">{d.id} · {d.type}</span>
+            <div className="row g6" style={{ flexWrap:'wrap', marginBottom:2 }}>
+              {d.famille && <span className={'badge '+famColor} style={{ fontSize:10, padding:'2px 7px' }}>Fam. {d.famille}</span>}
+              {d.zone && <span className="badge neu" style={{ fontSize:10, padding:'2px 7px' }}>{d.zone}</span>}
+              {!d.famille && <span className="t-xs mut">{d.type}</span>}
+            </div>
             <span className="b" style={{ fontSize:15 }}>{d.nom}</span>
+            {d.activite && <span className="t-xs mut" style={{ marginTop:1 }}>{d.activite}</span>}
           </div>
           <StatutBadge statut={d.statut} statut_color={d.statut_color} onEdit={(label, color) => onEditStatut(d, label, color)} />
         </div>
@@ -367,13 +619,18 @@ function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact }) {
   );
 }
 
-function TabPipeline({ pipeline, onEditProchaine, onEditStatut, onEditContact }) {
+function TabPipeline({ pipeline, onEditProchaine, onEditStatut, onEditContact, onAddProspect }) {
+  const [showNouveau, setShowNouveau] = useState(false);
   const totalSetup = pipeline.reduce((s,d) => s + (d.setup||0), 0);
   const totalMensuel = pipeline.reduce((s,d) => s + (d.mensuel||0), 0);
+  const nbUrgents = pipeline.filter(d=>d.urgent).length;
+
   return (
     <Fragment>
+      <SOPCadre />
+
       <div className="card" style={{ padding:'14px 16px' }}>
-        <div className="row between center">
+        <div className="row between" style={{ alignItems:'flex-start' }}>
           <div>
             <div className="t-xs mut" style={{ marginBottom:3 }}>{pipeline.length} dossiers actifs</div>
             <div className="row g10">
@@ -382,10 +639,26 @@ function TabPipeline({ pipeline, onEditProchaine, onEditStatut, onEditContact })
               <span className="b num" style={{ fontSize:15, color:'var(--grn)' }}>{fmt(totalMensuel)}/mois</span>
             </div>
           </div>
-          <span className="badge org">{pipeline.filter(d=>d.urgent).length} urgent{pipeline.filter(d=>d.urgent).length>1?'s':''}</span>
+          <div className="col g6" style={{ alignItems:'flex-end' }}>
+            {nbUrgents > 0 && <span className="badge red" style={{ marginBottom:4 }}>{nbUrgents} urgent{nbUrgents>1?'s':''}</span>}
+            <button onClick={() => setShowNouveau(true)}
+              style={{ display:'flex', alignItems:'center', gap:6, padding:'8px 13px', borderRadius:10, border:'none',
+                background:'var(--acc)', color:'#fff', fontWeight:800, fontSize:12, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap' }}>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+              Prospect
+            </button>
+          </div>
         </div>
       </div>
+
       {pipeline.map((d,i) => <DossierCard key={d.id} d={d} i={i} onEditProchaine={onEditProchaine} onEditStatut={onEditStatut} onEditContact={onEditContact} />)}
+
+      {showNouveau && (
+        <NouveauProspectModal
+          onConfirm={(newDossier) => { onAddProspect(newDossier); setShowNouveau(false); }}
+          onCancel={() => setShowNouveau(false)}
+        />
+      )}
     </Fragment>
   );
 }
@@ -642,6 +915,9 @@ function App() {
     setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, contact: val } : p));
     await SB.from('pilotage_pipeline').update({ contact: val }).eq('id', d.id);
   };
+  const handlePipeAdd = (newDossier) => {
+    setPipeline(prev => [newDossier, ...prev]);
+  };
 
   /* Projets handlers */
   const handleProjetProchaine = async (p, val) => {
@@ -672,7 +948,7 @@ function App() {
 
       <div className="content">
         {tab === 'today'    && <TabAujourdHui cap={cap} focus={focus} onCapChange={setCap} onFocusToggle={handleFocusToggle} onFocusEdit={handleFocusEdit} />}
-        {tab === 'pipeline' && <TabPipeline pipeline={pipeline} onEditProchaine={handlePipeProchaine} onEditStatut={handlePipeStatut} onEditContact={handlePipeContact} />}
+        {tab === 'pipeline' && <TabPipeline pipeline={pipeline} onEditProchaine={handlePipeProchaine} onEditStatut={handlePipeStatut} onEditContact={handlePipeContact} onAddProspect={handlePipeAdd} />}
         {tab === 'plan'     && <TabPlan />}
         {tab === 'projets'  && <TabProjets projets={projets} onEditProchaine={handleProjetProchaine} />}
         {tab === 'demos'    && <TabDemos />}
