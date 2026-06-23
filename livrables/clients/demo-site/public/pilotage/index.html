@@ -549,7 +549,8 @@ function NouveauProspectModal({ onConfirm, onCancel }) {
 }
 
 /* ── PIPELINE ─────────────────────────────────────────── */
-function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact }) {
+function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact, onEditSetup, onEditMensuel }) {
+  const parseAmount = (raw) => { const n = parseInt((raw||'').replace(/[^\d]/g,''),10); return isNaN(n) ? null : n; };
   const famColor = d.famille === 'A' ? 'org' : d.famille === 'B' ? 'blu' : 'grn';
   return (
     <div className="card anim col" style={{ overflow:'hidden', animationDelay:(i*70)+'ms' }}>
@@ -567,25 +568,25 @@ function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact }) {
           <StatutBadge statut={d.statut} statut_color={d.statut_color} onEdit={(label, color) => onEditStatut(d, label, color)} />
         </div>
         <div className="row g10" style={{ marginBottom:12 }}>
-          {d.setup != null && (
-            <div className="col g3 grow">
-              <span className="t-xs mut">Setup</span>
-              <span className="b num" style={{ fontSize:14 }}>{fmt(d.setup)}</span>
-            </div>
-          )}
-          {d.mensuel != null && (
-            <div className="col g3 grow">
-              <span className="t-xs mut">Récurrent</span>
-              <span className="b num" style={{ fontSize:14, color:'var(--grn)' }}>{fmt(d.mensuel)}<span className="t-xs mut">/mois</span></span>
-            </div>
-          )}
-          {d.setup == null && d.mensuel == null && (
-            <div className="col g3 grow">
-              <span className="t-xs mut">Budget</span>
-              <span className="mut" style={{ fontSize:13 }}>À qualifier</span>
-            </div>
-          )}
-          <div className="col g3" style={{ alignItems:'flex-end' }}>
+          <div className="col g3 grow">
+            <span className="t-xs mut">Setup €</span>
+            <EditField
+              value={d.setup != null ? String(d.setup) : ''}
+              onSave={v => onEditSetup(d, parseAmount(v))}
+              style={{ fontSize:14, fontWeight:700, color:'var(--ink)' }}
+            />
+          </div>
+          <div style={{ width:1, background:'var(--bdr)', alignSelf:'stretch' }} />
+          <div className="col g3 grow">
+            <span className="t-xs mut">Récurrent €/mois</span>
+            <EditField
+              value={d.mensuel != null ? String(d.mensuel) : ''}
+              onSave={v => onEditMensuel(d, parseAmount(v))}
+              style={{ fontSize:14, fontWeight:700, color:'var(--grn)' }}
+            />
+          </div>
+          <div style={{ width:1, background:'var(--bdr)', alignSelf:'stretch' }} />
+          <div className="col g3" style={{ alignItems:'flex-end', flexShrink:0 }}>
             <span className="t-xs mut">Action le</span>
             <span className="b" style={{ fontSize:13, color: d.urgent ? 'var(--red)' : 'var(--acc)' }}>{d.date_action}</span>
           </div>
@@ -621,7 +622,7 @@ function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact }) {
   );
 }
 
-function TabPipeline({ pipeline, onEditProchaine, onEditStatut, onEditContact, onAddProspect }) {
+function TabPipeline({ pipeline, onEditProchaine, onEditStatut, onEditContact, onEditSetup, onEditMensuel, onAddProspect }) {
   const [showNouveau, setShowNouveau] = useState(false);
   const totalSetup = pipeline.reduce((s,d) => s + (d.setup||0), 0);
   const totalMensuel = pipeline.reduce((s,d) => s + (d.mensuel||0), 0);
@@ -653,7 +654,7 @@ function TabPipeline({ pipeline, onEditProchaine, onEditStatut, onEditContact, o
         </div>
       </div>
 
-      {pipeline.map((d,i) => <DossierCard key={d.id} d={d} i={i} onEditProchaine={onEditProchaine} onEditStatut={onEditStatut} onEditContact={onEditContact} />)}
+      {pipeline.map((d,i) => <DossierCard key={d.id} d={d} i={i} onEditProchaine={onEditProchaine} onEditStatut={onEditStatut} onEditContact={onEditContact} onEditSetup={onEditSetup} onEditMensuel={onEditMensuel} />)}
 
       {showNouveau && (
         <NouveauProspectModal
@@ -917,6 +918,14 @@ function App() {
     setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, contact: val } : p));
     await SB.from('pilotage_pipeline').update({ contact: val }).eq('id', d.id);
   };
+  const handlePipeSetup = async (d, val) => {
+    setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, setup: val } : p));
+    await SB.from('pilotage_pipeline').update({ setup: val }).eq('id', d.id);
+  };
+  const handlePipeMensuel = async (d, val) => {
+    setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, mensuel: val } : p));
+    await SB.from('pilotage_pipeline').update({ mensuel: val }).eq('id', d.id);
+  };
   const handlePipeAdd = (newDossier) => {
     setPipeline(prev => [newDossier, ...prev]);
   };
@@ -950,7 +959,7 @@ function App() {
 
       <div className="content">
         {tab === 'today'    && <TabAujourdHui cap={cap} focus={focus} onCapChange={setCap} onFocusToggle={handleFocusToggle} onFocusEdit={handleFocusEdit} />}
-        {tab === 'pipeline' && <TabPipeline pipeline={pipeline} onEditProchaine={handlePipeProchaine} onEditStatut={handlePipeStatut} onEditContact={handlePipeContact} onAddProspect={handlePipeAdd} />}
+        {tab === 'pipeline' && <TabPipeline pipeline={pipeline} onEditProchaine={handlePipeProchaine} onEditStatut={handlePipeStatut} onEditContact={handlePipeContact} onEditSetup={handlePipeSetup} onEditMensuel={handlePipeMensuel} onAddProspect={handlePipeAdd} />}
         {tab === 'plan'     && <TabPlan />}
         {tab === 'projets'  && <TabProjets projets={projets} onEditProchaine={handleProjetProchaine} />}
         {tab === 'demos'    && <TabDemos />}
