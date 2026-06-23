@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <title>ETHSUN OS — Démo Agence Attractor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0A0F15;
+      --surface: #111922;
+      --card: #18242F;
+      --border: rgba(201, 151, 58, 0.2);
+      --gold: #C9973A;
+      --gold-light: #E8C46A;
+      --gold-dim: rgba(201, 151, 58, 0.12);
+      --text: #F0EDE8;
+      --text-muted: #7A8A99;
+      --text-dim: #3A4858;
+      --green: #27AE60;
+      --red: #E74C3C;
+      --orange: #F39C12;
+      --blue: #3498DB;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* NAV DOTS */
+    .nav-dots {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 100;
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .dot.active {
+      background: var(--gold);
+      width: 20px;
+      border-radius: 3px;
+    }
+
+    /* SCREENS */
+    .screen {
+      display: none;
+      min-height: 100vh;
+      padding: 52px 20px calc(24px + env(safe-area-inset-bottom));
+      flex-direction: column;
+    }
+    .screen.active { display: flex; }
+
+    /* TYPOGRAPHY */
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .screen-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    /* BUTTONS */
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      color: #0A0F15;
+      border: none;
+      border-radius: 12px;
+      padding: 15px 24px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: opacity 0.2s, transform 0.1s;
+      letter-spacing: 0.2px;
+    }
+    .btn-gold:active { transform: scale(0.98); opacity: 0.9; }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--gold);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .btn-outline:hover { background: var(--gold-dim); }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 20px;
+    }
+    .btn-row .btn-gold { flex: 1; }
+
+    /* CARDS */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    /* TAGS */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--gold-dim);
+      border: 1px solid var(--border);
+      color: var(--gold);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* STATUS BADGES */
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 9px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .badge-green { background: rgba(39,174,96,0.15); color: #27AE60; }
+    .badge-orange { background: rgba(243,156,18,0.15); color: #F39C12; }
+    .badge-blue { background: rgba(52,152,219,0.15); color: #3498DB; }
+
+    /* SCROLL AREA */
+    .scroll-area {
+      overflow-y: auto;
+      flex: 1;
+      min-height: 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* UTILITIES */
+    .mt-4 { margin-top: 4px; }
+    .mt-8 { margin-top: 8px; }
+    .mt-12 { margin-top: 12px; }
+    .mt-16 { margin-top: 16px; }
+    .mb-8 { margin-bottom: 8px; }
+    .mb-12 { margin-bottom: 12px; }
+    .mb-16 { margin-bottom: 16px; }
+    .text-muted { color: var(--text-muted); }
+    .text-gold { color: var(--gold); }
+    .text-sm { font-size: 13px; }
+    .text-xs { font-size: 11px; }
+    .divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      top: 48px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: var(--green);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 24px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 999;
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(39,174,96,0.4);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* WATERMARK */
+    .watermark {
+      position: fixed;
+      bottom: 10px;
+      right: 12px;
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+      pointer-events: none;
+    }
+
+    /* ===================== SCREEN 0 — SPLASH ===================== */
+    #s0 {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 20%, #1B2E40 0%, var(--bg) 65%);
+      padding: 40px 28px;
+    }
+
+    .logo-box {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(201,151,58,0.2), rgba(232,196,106,0.1));
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .logo-box span {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .s0-eyebrow {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+    .s0-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      font-weight: 600;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .s0-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      max-width: 300px;
+      margin: 0 auto 28px;
+    }
+    .badge-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+
+    /* ===================== SCREEN 1 — PROBLÈME ===================== */
+    .pain-card {
+      background: var(--card);
+      border: 1px solid rgba(231,76,60,0.18);
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 10px;
+    }
+    .pain-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: rgba(231,76,60,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    .pain-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .pain-desc { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+
+    /* ===================== SCREEN 2 — SOLUTION ===================== */
+    .module-row {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .module-row:hover { border-color: var(--gold); background: rgba(201,151,58,0.05); }
+
+    .module-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 11px;
+      background: var(--gold-dim);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .module-info { flex: 1; }
+    .module-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+    .module-info p { font-size: 12px; color: var(--text-muted); }
+
+    /* ===================== SCREEN 3 — INSCRIPTION ===================== */
+    .prog-option {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .prog-option.selected {
+      border-color: var(--gold);
+      background: var(--gold-dim);
+    }
+    .prog-name { font-size: 14px; font-weight: 600; }
+    .prog-detail { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .prog-price { font-size: 15px; font-weight: 700; color: var(--gold); }
+
+    .form-group { margin-bottom: 12px; }
+    .form-label { display: block; font-size: 12px; color: var(--text-muted); font-weight: 500; margin-bottom: 6px; }
+    .form-input, .form-select {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus { border-color: var(--gold); }
+    .form-select { appearance: none; }
+
+    /* ===================== SCREEN 3B — CONFIRMATION ===================== */
+    #s3b {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 30%, #0E2A1A 0%, var(--bg) 65%);
+    }
+    .check-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(39,174,96,0.12);
+      border: 2px solid var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .confirm-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 30px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .confirm-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 280px;
+      margin: 0 auto 24px;
+    }
+    .automation-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .automation-row:last-child { border-bottom: none; }
+    .automation-label { font-size: 13px; }
+
+    /* ===================== SCREEN 4 — DASHBOARD ===================== */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .kpi-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .kpi-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 30px;
+      font-weight: 600;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .kpi-label { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+
+    .ins-row {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .ins-name { font-size: 14px; font-weight: 500; }
+    .ins-detail { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ===================== SCREEN 5 — LIVRE ===================== */
+    .book-hero {
+      background: linear-gradient(135deg, #0E1F14, #172B1D);
+      border: 1px solid rgba(39,174,96,0.2);
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .book-cover {
+      width: 90px;
+      height: 128px;
+      background: linear-gradient(160deg, #1A3C26, #2A5A38);
+      border-radius: 6px;
+      margin: 0 auto 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 8px;
+      box-shadow: 6px 8px 24px rgba(0,0,0,0.6), inset 1px 0 0 rgba(255,255,255,0.05);
+      border: 1px solid rgba(201,151,58,0.25);
+    }
+    .book-cover-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--gold-light);
+      text-align: center;
+      line-height: 1.4;
+    }
+    .book-cover-sep {
+      width: 30px;
+      height: 1px;
+      background: rgba(201,151,58,0.4);
+      margin: 6px auto;
+    }
+    .book-cover-sub {
+      font-size: 7px;
+      color: rgba(232,196,106,0.7);
+      text-align: center;
+      font-style: italic;
+    }
+    .book-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .book-subtitle { font-size: 13px; color: var(--text-muted); font-style: italic; }
+
+    .book-stats {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .book-stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      flex: 1;
+      text-align: center;
+    }
+    .book-stat-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--gold);
+    }
+    .book-stat-label { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ===================== SCREEN 6 — CLOSING ===================== */
+    .formula {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .formula.star { border-color: var(--gold); }
+    .rec-tag {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--gold);
+      color: #0A0F15;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 0 16px 0 10px;
+      letter-spacing: 0.5px;
+    }
+    .formula-tier {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .formula-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .formula-price-setup {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .formula-price-mrr { font-size: 13px; color: var(--text-muted); margin-top: 2px; margin-bottom: 14px; }
+    .formula-features { list-style: none; margin-bottom: 14px; }
+    .formula-features li {
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 4px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.45;
+    }
+    .formula-features li::before { content: "—"; color: var(--gold); flex-shrink: 0; }
+    .formula-acompte { font-size: 11px; color: var(--text-dim); }
+
+    .closing-note {
+      background: var(--gold-dim);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+    .closing-note p { font-size: 13px; color: var(--text-muted); text-align: center; line-height: 1.6; }
+    .closing-note strong { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+<div class="nav-dots" id="navDots"></div>
+<div class="watermark">Agence Attractor · Démo</div>
+
+<!-- ===== S0 — SPLASH ===== -->
+<div class="screen active" id="s0">
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+    <div class="logo-box"><span>E</span></div>
+    <p class="s0-eyebrow">ETHSUN Executive Education</p>
+    <h1 class="s0-title">Votre système<br>opérationnel</h1>
+    <p class="s0-desc">Automatisez vos inscriptions, centralisez votre CRM programmes, et lancez la vente de votre livre — le tout sans intervention manuelle.</p>
+    <div class="badge-row">
+      <span class="tag">20 pays</span>
+      <span class="tag">Oxford · Davos · Singapour</span>
+      <span class="tag">2 500+ dirigeants</span>
+    </div>
+    <button class="btn-gold" onclick="goTo(1)">Voir la démo →</button>
+  </div>
+</div>
+
+<!-- ===== S1 — PROBLÈME ===== -->
+<div class="screen" id="s1">
+  <p class="section-label">Aujourd'hui</p>
+  <h2 class="screen-title">Ce qui vous freine</h2>
+  <p class="text-sm text-muted mb-16">Votre excellence académique mérite une infrastructure à la hauteur.</p>
+
+  <div class="scroll-area">
+    <div class="pain-card">
+      <div class="pain-icon">
+        <svg width="18" height="18" fill="none" stroke="#E74C3C" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      </div>
+      <div class="pain-title">Inscriptions encore manuelles</div>
+      <div class="pain-desc">Chaque inscription = e-mail, suivi, relance à la main. Sur 3 programmes actifs et 20 pays, c'est ingérable à l'échelle.</div>
+    </div>
+
+    <div class="pain-card">
+      <div class="pain-icon">
+        <svg width="18" height="18" fill="none" stroke="#E74C3C" stroke-width="2" viewBox="0 0 24 24"><path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg>
+      </div>
+      <div class="pain-title">Paiements non centralisés</div>
+      <div class="pain-desc">Virements éparpillés, reçus à créer manuellement, aucun tableau de bord CA global par programme.</div>
+    </div>
+
+    <div class="pain-card">
+      <div class="pain-icon">
+        <svg width="18" height="18" fill="none" stroke="#E74C3C" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+      </div>
+      <div class="pain-title">Le livre sans canal de vente</div>
+      <div class="pain-desc">"L'Afrique des Entrepreneurs" est prêt — mais sans page dédiée, sans paiement intégré, les ventes ne peuvent pas décoller.</div>
+    </div>
+
+    <div class="pain-card">
+      <div class="pain-icon">
+        <svg width="18" height="18" fill="none" stroke="#E74C3C" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <div class="pain-title">Données dispersées</div>
+      <div class="pain-desc">Aucune vue consolidée : qui est inscrit à quoi, qui a payé, qui relancer, quel CA par programme — vous naviguez à vue.</div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-outline" onclick="goTo(0)">←</button>
+    <button class="btn-gold" onclick="goTo(2)">La solution →</button>
+  </div>
+</div>
+
+<!-- ===== S2 — SOLUTION ===== -->
+<div class="screen" id="s2">
+  <p class="section-label">ETHSUN OS</p>
+  <h2 class="screen-title">Un système,<br>trois modules</h2>
+  <p class="text-sm text-muted mb-16">Tout ce que vous gérez manuellement — automatisé.</p>
+
+  <div class="scroll-area">
+    <div class="module-row" onclick="goTo(3)">
+      <div class="module-icon">
+        <svg width="22" height="22" fill="none" stroke="#C9973A" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+      </div>
+      <div class="module-info">
+        <h4>Module 1 — Inscriptions</h4>
+        <p>Formulaire public · paiement · confirmation automatique</p>
+      </div>
+      <svg width="16" height="16" fill="none" stroke="#C9973A" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+
+    <div class="module-row" onclick="goTo(4)">
+      <div class="module-icon">
+        <svg width="22" height="22" fill="none" stroke="#C9973A" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 17h7m-3.5-3.5v7"/></svg>
+      </div>
+      <div class="module-info">
+        <h4>Module 2 — Dashboard Admin</h4>
+        <p>Inscriptions temps réel · CA · relances auto</p>
+      </div>
+      <svg width="16" height="16" fill="none" stroke="#C9973A" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+
+    <div class="module-row" onclick="goTo(5)">
+      <div class="module-icon">
+        <svg width="22" height="22" fill="none" stroke="#C9973A" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+      </div>
+      <div class="module-info">
+        <h4>Module 3 — Vente du Livre</h4>
+        <p>Page dédiée · paiement intégré · livraison PDF auto</p>
+      </div>
+      <svg width="16" height="16" fill="none" stroke="#C9973A" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+
+    <div class="card mt-12" style="border-color:rgba(39,174,96,0.25);">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <svg width="16" height="16" fill="none" stroke="#27AE60" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span style="font-size:12px; font-weight:600; color:#27AE60;">Automatisations incluses</span>
+      </div>
+      <p class="text-sm text-muted">Confirmation immédiate, rappels J-7 et J-1, certificat auto en fin de programme, relance des inactifs, rapport CA hebdomadaire — tout tourne sans vous.</p>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-outline" onclick="goTo(1)">←</button>
+    <button class="btn-gold" onclick="goTo(3)">Essayer en live →</button>
+  </div>
+</div>
+
+<!-- ===== S3 — INSCRIPTION ===== -->
+<div class="screen" id="s3">
+  <p class="section-label">Module 1 · Vue Participant</p>
+  <h2 class="screen-title">Inscription programme</h2>
+  <p class="text-sm text-muted mb-16">Ce que voit votre participant :</p>
+
+  <div class="scroll-area">
+    <div class="prog-option selected" id="opt-ceo" onclick="selectProg('ceo','3 500 €')">
+      <div>
+        <div class="prog-name">CEO Programme</div>
+        <div class="prog-detail">Oxford · 3 jours · Leadership stratégique</div>
+      </div>
+      <div class="prog-price">3 500 €</div>
+    </div>
+    <div class="prog-option" id="opt-cfo" onclick="selectProg('cfo','3 500 €')">
+      <div>
+        <div class="prog-name">CFO Programme</div>
+        <div class="prog-detail">Davos · 3 jours · Finance & gouvernance</div>
+      </div>
+      <div class="prog-price">3 500 €</div>
+    </div>
+    <div class="prog-option" id="opt-ai" onclick="selectProg('ai','1 200 €')">
+      <div>
+        <div class="prog-name">Sprint IA Dirigeants</div>
+        <div class="prog-detail">En ligne · 2 jours · IA opérationnelle</div>
+      </div>
+      <div class="prog-price">1 200 €</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="form-group">
+      <label class="form-label">Prénom et nom</label>
+      <input class="form-input" type="text" placeholder="Votre nom complet" value="Dr. Aminata Diallo">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Organisation</label>
+      <input class="form-input" type="text" placeholder="Votre organisation" value="Groupe NSIA">
+    </div>
+    <div class="form-group">
+      <label class="form-label">E-mail professionnel</label>
+      <input class="form-input" type="email" placeholder="vous@organisation.com" value="a.diallo@groupe-nsia.ci">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Pays</label>
+      <select class="form-select">
+        <option>Côte d'Ivoire</option>
+        <option>Sénégal</option>
+        <option>Cameroun</option>
+        <option>France</option>
+        <option>Ghana</option>
+        <option>Autre</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-outline" onclick="goTo(2)">←</button>
+    <button class="btn-gold" id="payBtn" onclick="payer()">Payer 3 500 € et s'inscrire →</button>
+  </div>
+</div>
+
+<!-- ===== S3B — CONFIRMATION ===== -->
+<div class="screen" id="s3b">
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+    <div class="check-circle">
+      <svg width="36" height="36" fill="none" stroke="#27AE60" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    </div>
+    <h2 class="confirm-title">Inscription confirmée</h2>
+    <p class="confirm-sub">Dr. Aminata Diallo est inscrite au CEO Programme. Tout a été déclenché automatiquement.</p>
+
+    <div class="card" style="width:100%; max-width:340px; text-align:left;">
+      <p class="text-xs text-muted mb-8" style="font-weight:600; letter-spacing:1px;">DÉCLENCHÉ AUTOMATIQUEMENT</p>
+      <div class="automation-row">
+        <span class="automation-label">Reçu de paiement</span>
+        <span class="badge badge-green">Envoyé</span>
+      </div>
+      <div class="automation-row">
+        <span class="automation-label">Confirmation programme</span>
+        <span class="badge badge-green">Envoyé</span>
+      </div>
+      <div class="automation-row">
+        <span class="automation-label">Rappel J-7</span>
+        <span class="badge badge-orange">Programmé</span>
+      </div>
+      <div class="automation-row">
+        <span class="automation-label">Rappel J-1</span>
+        <span class="badge badge-orange">Programmé</span>
+      </div>
+      <div class="automation-row">
+        <span class="automation-label">Certificat (fin de programme)</span>
+        <span class="badge badge-orange">Programmé</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-gold" onclick="goTo(4)">Voir le dashboard admin →</button>
+  </div>
+</div>
+
+<!-- ===== S4 — DASHBOARD ===== -->
+<div class="screen" id="s4">
+  <p class="section-label">Module 2 · Vue ETHSUN</p>
+  <h2 class="screen-title">Dashboard Admin</h2>
+
+  <div class="scroll-area">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-value">46</div>
+        <div class="kpi-label">Inscriptions actives</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">€149k</div>
+        <div class="kpi-label">CA en cours</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">3</div>
+        <div class="kpi-label">Programmes actifs</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">97%</div>
+        <div class="kpi-label">Taux confirmation</div>
+      </div>
+    </div>
+
+    <p class="text-xs text-muted mb-8" style="font-weight:600; letter-spacing:1px; text-transform:uppercase;">Dernières inscriptions</p>
+
+    <div class="ins-row" id="newIns" style="border-color:rgba(52,152,219,0.3); display:none;">
+      <div>
+        <div class="ins-name">Dr. Aminata Diallo</div>
+        <div class="ins-detail">CEO Programme · Groupe NSIA · Côte d'Ivoire</div>
+      </div>
+      <span class="badge badge-blue">Nouveau</span>
+    </div>
+
+    <div class="ins-row">
+      <div>
+        <div class="ins-name">Moussa Traoré</div>
+        <div class="ins-detail">Sprint IA · BNI Sénégal · Sénégal</div>
+      </div>
+      <span class="badge badge-green">Confirmé</span>
+    </div>
+    <div class="ins-row">
+      <div>
+        <div class="ins-name">Aïssa Koné</div>
+        <div class="ins-detail">CFO Programme · Orange CI · Côte d'Ivoire</div>
+      </div>
+      <span class="badge badge-green">Confirmé</span>
+    </div>
+    <div class="ins-row">
+      <div>
+        <div class="ins-name">Pierre Mensah</div>
+        <div class="ins-detail">CEO Programme · Ecobank · Ghana</div>
+      </div>
+      <span class="badge badge-orange">Paiement</span>
+    </div>
+    <div class="ins-row">
+      <div>
+        <div class="ins-name">Fatou Camara</div>
+        <div class="ins-detail">Sprint IA · MTN Cameroun · Cameroun</div>
+      </div>
+      <span class="badge badge-green">Confirmé</span>
+    </div>
+
+    <div class="card mt-12" style="border-color:rgba(243,156,18,0.25);">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <svg width="16" height="16" fill="none" stroke="#F39C12" stroke-width="2" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        <span style="font-size:12px; font-weight:600; color:#F39C12;">Relances automatiques</span>
+      </div>
+      <p class="text-sm text-muted">2 participants sans confirmation depuis 48h. Relance e-mail envoyée automatiquement ce matin à 8h — aucune action requise de votre part.</p>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-outline" onclick="goTo(3)">←</button>
+    <button class="btn-gold" onclick="goTo(5)">Module livre →</button>
+  </div>
+</div>
+
+<!-- ===== S5 — LIVRE ===== -->
+<div class="screen" id="s5">
+  <p class="section-label">Module 3 · Vente du Livre</p>
+
+  <div class="scroll-area">
+    <div class="book-hero">
+      <div class="book-cover">
+        <div class="book-cover-title">L'Afrique des Entrepreneurs</div>
+        <div class="book-cover-sep"></div>
+        <div class="book-cover-sub">Bâtir dans la tempête</div>
+      </div>
+      <div class="book-title">L'Afrique des Entrepreneurs</div>
+      <div class="book-subtitle">Bâtir dans la tempête</div>
+    </div>
+
+    <div class="book-stats">
+      <div class="book-stat">
+        <div class="book-stat-val">PDF</div>
+        <div class="book-stat-label">Format numérique</div>
+      </div>
+      <div class="book-stat">
+        <div class="book-stat-val">35 €</div>
+        <div class="book-stat-label">Prix de lancement</div>
+      </div>
+      <div class="book-stat">
+        <div class="book-stat-val">∞</div>
+        <div class="book-stat-label">Accès immédiat</div>
+      </div>
+    </div>
+
+    <div class="card mb-12" style="border-color:rgba(39,174,96,0.25);">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <svg width="16" height="16" fill="none" stroke="#27AE60" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span style="font-size:12px; font-weight:600; color:#27AE60;">Après paiement — automatique</span>
+      </div>
+      <p class="text-sm text-muted">Le PDF est envoyé par e-mail dans la seconde. L'acheteur est ajouté à votre liste ETHSUN. Une relance J+7 lui propose votre prochain programme.</p>
+    </div>
+
+    <button class="btn-gold mb-12" onclick="achatLivre()">Commander le livre — 35 € →</button>
+    <p class="text-xs text-muted" style="text-align:center; margin-bottom:8px;">Paiement sécurisé · Livraison immédiate par e-mail</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-outline" onclick="goTo(4)">←</button>
+    <button class="btn-gold" onclick="goTo(6)">Voir les formules →</button>
+  </div>
+</div>
+
+<!-- ===== S6 — CLOSING ===== -->
+<div class="screen" id="s6">
+  <p class="section-label">Votre investissement</p>
+  <h2 class="screen-title">3 formules,<br>1 décision</h2>
+
+  <div class="scroll-area">
+    <div class="formula">
+      <div class="formula-tier">Essentielle</div>
+      <div class="formula-name">Inscriptions + Livre</div>
+      <div class="formula-price-setup">800 €</div>
+      <div class="formula-price-mrr">+ 80 €/mois</div>
+      <ul class="formula-features">
+        <li>Formulaire d'inscription en ligne</li>
+        <li>Paiement intégré (carte, virement)</li>
+        <li>Confirmations et reçus automatiques</li>
+        <li>Page de vente du livre</li>
+        <li>1 programme actif</li>
+      </ul>
+      <div class="formula-acompte">Acompte de démarrage : 400 €</div>
+    </div>
+
+    <div class="formula star">
+      <div class="rec-tag">RECOMMANDÉE</div>
+      <div class="formula-tier">Active</div>
+      <div class="formula-name">Système Complet</div>
+      <div class="formula-price-setup">2 500 €</div>
+      <div class="formula-price-mrr">+ 200 €/mois</div>
+      <ul class="formula-features">
+        <li>Tout de l'Essentielle</li>
+        <li>Dashboard admin temps réel</li>
+        <li>CRM participants (historique, notes)</li>
+        <li>Relances automatiques J-7, J-1, inactifs</li>
+        <li>Programmes illimités</li>
+        <li>Certificats générés automatiquement</li>
+        <li>Rapport CA hebdomadaire par programme</li>
+      </ul>
+      <div class="formula-acompte">Acompte de démarrage : 1 250 €</div>
+    </div>
+
+    <div class="formula">
+      <div class="formula-tier">Premium</div>
+      <div class="formula-name">Opérations Internationales</div>
+      <div class="formula-price-setup">5 000 €</div>
+      <div class="formula-price-mrr">+ 400 €/mois</div>
+      <ul class="formula-features">
+        <li>Tout de l'Active</li>
+        <li>Multi-zones (CI, France, International)</li>
+        <li>Multi-devises (EUR, XOF, USD)</li>
+        <li>Académies entreprise (inscriptions B2B, groupes)</li>
+        <li>Analytics avancés + exports</li>
+        <li>Intégration vos outils existants</li>
+      </ul>
+      <div class="formula-acompte">Acompte de démarrage : 2 500 €</div>
+    </div>
+
+    <div class="closing-note">
+      <p>Déploiement en <strong>10 à 21 jours</strong>. Hébergement, maintenance et support inclus dans toutes les formules.</p>
+    </div>
+
+    <button class="btn-gold" onclick="cta()">Démarrer avec Agence Attractor →</button>
+    <p class="text-xs text-muted" style="text-align:center; margin-top:10px;">Mac Arthur · +33 7 53 90 23 23</p>
+  </div>
+
+  <div class="btn-row" style="padding-top:12px;">
+    <button class="btn-outline" onclick="goTo(5)">←</button>
+  </div>
+</div>
+
+<script>
+  const SCREENS = ['s0','s1','s2','s3','s3b','s4','s5','s6'];
+  const DOT_MAP  = [0,1,2,3,5,6]; // screen indices that have dots (skip s3b)
+  let current = 0;
+  let inscriptionFaite = false;
+
+  // Build nav dots
+  const navEl = document.getElementById('navDots');
+  DOT_MAP.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => { const idx = DOT_MAP[i]; if(idx !== undefined) goTo(idx); };
+    navEl.appendChild(d);
+  });
+
+  function goTo(idx) {
+    document.getElementById(SCREENS[current]).classList.remove('active');
+    current = idx;
+    document.getElementById(SCREENS[current]).classList.add('active');
+
+    const dotIdx = DOT_MAP.indexOf(idx);
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === (dotIdx >= 0 ? dotIdx : 0));
+    });
+    window.scrollTo(0, 0);
+  }
+
+  function selectProg(id, price) {
+    document.querySelectorAll('.prog-option').forEach(el => el.classList.remove('selected'));
+    document.getElementById('opt-' + id).classList.add('selected');
+    document.getElementById('payBtn').textContent = 'Payer ' + price + ' et s\'inscrire →';
+  }
+
+  function payer() {
+    showToast('Paiement sécurisé en cours...');
+    inscriptionFaite = true;
+    setTimeout(() => {
+      goTo(4);
+      document.getElementById('newIns').style.display = 'flex';
+    }, 1400);
+  }
+
+  function achatLivre() {
+    showToast('PDF envoyé par e-mail ✓');
+  }
+
+  function cta() {
+    const msg = encodeURIComponent("Bonjour Mac Arthur, j'ai consulté la démo ETHSUN OS et je suis intéressé pour démarrer. Quand pouvons-nous convenir d'un RDV ?");
+    window.open('https://wa.me/33753902323?text=' + msg, '_blank');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' && current < SCREENS.length - 1) goTo(current + 1);
+    if (e.key === 'ArrowLeft' && current > 0) goTo(current - 1);
+  });
+
+  // Touch/swipe navigation
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 60) {
+      if (dx < 0 && current < SCREENS.length - 1) goTo(current + 1);
+      if (dx > 0 && current > 0) goTo(current - 1);
+    }
+  }, { passive: true });
+</script>
+</body>
+</html>
