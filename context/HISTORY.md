@@ -7,6 +7,56 @@
 
 ---
 
+## 2026-06-23 (session 70 — Automatisation process commercial + Knowledge Base)
+
+### Sprint 1 : Notion Knowledge Base
+- Database "Knowledge Base — Sessions & Bugs" créée sur la page CRM Notion (`collection://179ddada-8eb1-4734-bf0d-fb807af129eb`)
+- 11 entrées seed : bugs bloquants J'Envoie Express, Assists, Pilotage + leçons cross-client (RLS, iOS, Netlify, NDA)
+- 3 vues : Tout / Par client / Bugs actifs (filtrée Type=Bug, triée par Gravité)
+- /update enrichi : Étape 4 pousse automatiquement les événements notables dans Notion après chaque session
+
+### Sprint 2 : Tunnel commercial automatisé
+- Formulaire audit "Je veux mon app" ajouté dans section #apps de agenceattractor.com (modale 5 questions : prenom/activite/besoin/zone/wa → Supabase table prospects, type_projet=A)
+- SQL : colonnes `source` + `wa_draft` ajoutées à `pilotage_pipeline`
+- Workflow n8n "Brief Inbound" (`livrables/ecosysteme-attractor/attractor-assists/n8n/brief-inbound.json`) : schedule 15 min, fetch prospects nouveaux App Métier, Claude Haiku génère message WA + note de qualification, INSERT pilotage_pipeline, PATCH prospect statut=traité
+- Pilotage (`demo.agenceattractor.com/pilotage`) : badge "Site" sur leads inbound, bouton "WA pré-écrit" orange (wa.me?text=[message Claude]) remplace le bouton WA standard
+- Déployé : GitHub Actions (agenceattractor.com) + Cloudflare Pages (pilotage)
+- Mac Arthur ne qualifie plus et ne rédige plus manuellement : 1 clic suffit pour envoyer le premier message au prospect
+
+---
+
+## 2026-06-22 (session 69 — Pilotage : SOP commerciale + design light mode)
+
+### Process commercial cadré dans l'app pilotage
+- **SOPCadre** : 8 règles non négociables affichées en permanence dans l'onglet Pipeline
+- **Validation par étape** : checklist bloquante à chaque changement de statut (Devis envoyé : 4 / Acompte reçu : 4 / En production : 4 / Livré : 5 conditions)
+- **NouveauProspectModal** : ajout prospect depuis l'app (nom, activité, WA, famille A/B/C, zone CI/France/International) sans sortir de l'interface
+- **Pipeline natif Supabase** (`pilotage_pipeline`) : colonnes `famille`, `zone`, `activite`, `setup`, `mensuel` ajoutées. Notion CRM remplacé pour le suivi actif
+- **Montants éditables** : setup et mensuel saisissables directement dans chaque fiche prospect
+
+### Design apps aligné agenceattractor.com
+- Light mode complet : fond crème (#F5F0E8), cartes blanches, accent orange (#EE7C1F), typographie propre
+- Fix iOS Safari : zoom auto sur contentEditable corrigé (`maximum-scale=1` + `font-size:16px` au focus)
+- Fix overflow horizontal : `width:100%; maxWidth:100%; minWidth:0; overflowWrap:break-word` sur tous les champs éditables
+- Fix SOP modal scroll : `flex:1; minHeight:0; overflowY:auto` sur la liste des checks (résout le `min-height:auto` par défaut des flex children)
+
+### Infra
+- Déploiement basculé sur Cloudflare Pages (wrangler), Netlify crédits épuisés
+- Projet Cloudflare : `demo-agenceattractor`
+
+---
+
+## 2026-06-22 (session 68 — J'Envoie Express livraison complète)
+
+### J'Envoie Express — app métier livrée et déployée
+- Page publique : formulaire demande (3 options collecte FR + CI), prochains départs accordéon, suivi colis par numéro, prix dynamiques Supabase
+- Dashboard Jean Yves simplifié : 3 vues (À traiter / En cours / Paramètres), modal acceptation rapide (poids + montant → colis créé directement), confirmation avant refus, lien suivi WA 1 clic
+- Déployé sur Cloudflare Pages (jenvoie-express.myattractor1.workers.dev) après blocage crédits Netlify
+- SQL Supabase exécuté : colonnes nom_expediteur + wa_expediteur, policy voyages lecture publique
+- Template #1 du Générateur d'Apps Métier validé en conditions réelles
+
+---
+
 ## 2026-06-21 (session 67 — GetWinWorld refonte + stratégie formules multiples)
 
 ### GetWinWorld — refonte visuelle complète (index.html)
