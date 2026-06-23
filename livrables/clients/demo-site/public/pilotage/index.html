@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>Pilotage — Mr Attractor</title>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0;max-width:100%;}
+  *{box-sizing:border-box;margin:0;padding:0;}
   html,body,#root{height:100%;background:#F5F0E8;font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
-  img,svg,video{max-width:100%;display:block;}
+  img,video{max-width:100%;display:block;}
   #boot{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#F5F0E8;color:#8A8078;font-family:system-ui;}
 </style>
 </head>
@@ -229,34 +229,49 @@ function StatutBadge({ statut, statut_color, onEdit }) {
       {validating && (
         <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.82)', zIndex:300, display:'flex', alignItems:'flex-end', justifyContent:'center' }}
           onClick={e => { if (e.target === e.currentTarget) setValidating(null); }}>
-          <div style={{ width:'100%', maxWidth:520, background:'var(--card)', borderRadius:'18px 18px 0 0', padding:'24px 20px 44px' }}>
-            <div style={{ width:36, height:4, borderRadius:2, background:'var(--bdr)', margin:'0 auto 22px' }} />
-            <div style={{ fontSize:10, fontWeight:800, color:'var(--acc)', letterSpacing:'1.2px', textTransform:'uppercase', marginBottom:5 }}>Validation SOP requise</div>
-            <div style={{ fontSize:17, fontWeight:800, color:'var(--ink)', marginBottom:4 }}>{validating.titre}</div>
-            <div style={{ fontSize:12, color:'var(--mut)', marginBottom:20 }}>Coche chaque point pour débloquer la confirmation</div>
-            {validating.checks.map((check, i) => (
-              <div key={i} onClick={() => toggle(i)}
-                style={{ display:'flex', gap:12, alignItems:'flex-start', padding:'12px 0', borderBottom:'1px solid var(--bdr)', cursor:'pointer' }}>
-                <div style={{ width:22, height:22, borderRadius:8, flexShrink:0, marginTop:1,
-                  background: validating.done.includes(i) ? 'var(--grn-s)' : 'rgba(0,0,0,.05)',
-                  border: `1.5px solid ${validating.done.includes(i) ? 'var(--grn)' : 'var(--bdr)'}`,
-                  display:'flex', alignItems:'center', justifyContent:'center', transition:'.15s' }}>
-                  {validating.done.includes(i) && <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--grn)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+          <div style={{ width:'100%', maxWidth:520, background:'var(--card)', borderRadius:'18px 18px 0 0', maxHeight:'88vh', display:'flex', flexDirection:'column' }}>
+
+            {/* En-tête fixe */}
+            <div style={{ padding:'20px 20px 0', flexShrink:0 }}>
+              <div style={{ width:36, height:4, borderRadius:2, background:'var(--bdr)', margin:'0 auto 18px' }} />
+              <div style={{ fontSize:10, fontWeight:800, color:'var(--acc)', letterSpacing:'1.2px', textTransform:'uppercase', marginBottom:5 }}>Validation SOP requise</div>
+              <div style={{ fontSize:17, fontWeight:800, color:'var(--ink)', marginBottom:4 }}>{validating.titre}</div>
+              <div style={{ fontSize:12, color:'var(--mut)', paddingBottom:14, borderBottom:'1px solid var(--bdr)' }}>Coche chaque point pour débloquer la confirmation</div>
+            </div>
+
+            {/* Cases à cocher — scrollable */}
+            <div style={{ flex:1, overflowY:'auto', padding:'0 20px', WebkitOverflowScrolling:'touch' }}>
+              {validating.checks.map((check, i) => (
+                <div key={i} onClick={() => toggle(i)}
+                  style={{ display:'flex', gap:14, alignItems:'flex-start', padding:'14px 0', borderBottom:'1px solid var(--bdr)', cursor:'pointer' }}>
+                  <div style={{ width:24, height:24, minWidth:24, minHeight:24, borderRadius:8, marginTop:1, flexShrink:0,
+                    background: validating.done.includes(i) ? 'var(--grn-s)' : 'rgba(0,0,0,.05)',
+                    border: `2px solid ${validating.done.includes(i) ? 'var(--grn)' : 'var(--bdr)'}`,
+                    display:'flex', alignItems:'center', justifyContent:'center', transition:'.15s' }}>
+                    {validating.done.includes(i) && (
+                      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style={{ display:'block', flexShrink:0, minWidth:13 }}>
+                        <path d="M2 6.5l3.5 3.5 5.5-6" stroke="var(--grn)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
+                  </div>
+                  <span style={{ fontSize:14, color: validating.done.includes(i) ? 'var(--mut)' : 'var(--ink)', lineHeight:1.5, userSelect:'none', textDecoration: validating.done.includes(i) ? 'line-through' : 'none' }}>{check}</span>
                 </div>
-                <span style={{ fontSize:13, color: validating.done.includes(i) ? 'var(--ink2)' : 'var(--ink)', lineHeight:1.5, flex:1, userSelect:'none' }}>{check}</span>
-              </div>
-            ))}
-            <div style={{ marginTop:20, display:'flex', gap:10 }}>
+              ))}
+              <div style={{ height:8 }} />
+            </div>
+
+            {/* Boutons — toujours visibles en bas */}
+            <div style={{ padding:'14px 20px 40px', flexShrink:0, borderTop:'1px solid var(--bdr)', background:'var(--card)', display:'flex', gap:10 }}>
               <button onClick={() => setValidating(null)}
-                style={{ flex:1, minHeight:44, padding:'0 13px', borderRadius:12, border:'1.5px solid var(--bdr)', background:'transparent', color:'var(--mut)', fontWeight:700, fontSize:13, cursor:'pointer', fontFamily:'inherit' }}>
+                style={{ flex:1, minHeight:48, borderRadius:12, border:'1.5px solid var(--bdr)', background:'transparent', color:'var(--mut)', fontWeight:700, fontSize:13, cursor:'pointer', fontFamily:'inherit' }}>
                 Annuler
               </button>
               <button onClick={confirm} disabled={!allDone}
-                style={{ flex:2, minHeight:44, padding:'0 13px', borderRadius:12, border:'none',
+                style={{ flex:2, minHeight:48, borderRadius:12, border:'none',
                   background: allDone ? 'var(--acc)' : 'rgba(0,0,0,.06)',
                   color: allDone ? '#fff' : 'var(--faint)',
-                  fontWeight:800, fontSize:13, cursor: allDone ? 'pointer' : 'not-allowed', fontFamily:'inherit', transition:'.2s' }}>
-                Confirmer → {validating.label}
+                  fontWeight:800, fontSize:14, cursor: allDone ? 'pointer' : 'not-allowed', fontFamily:'inherit', transition:'.2s' }}>
+                {allDone ? `Confirmer → ${validating.label}` : `${validating.done.length}/${validating.checks.length} complété${validating.done.length > 1 ? 's' : ''}`}
               </button>
             </div>
           </div>
