@@ -294,6 +294,17 @@ const DEMOS = [
   { id:'beynaud',       nom:'Serge Beynaud',           type:'App artiste / Fan Club', url:'/beynaud',          statut:'Prête · à présenter', sc:'org' },
 ];
 
+/* ── JALONS DE VIE ─────────────────────────────────────── */
+const JALONS = [
+  { id:'j1', titre:'Certification coach — préparation mentale', date_cible:'Sept 2026', horizon:'court', lien:'Légitimité produit Assists' },
+  { id:'j2', titre:'10 000 €/mois réguliers', date_cible:'Août 2026', horizon:'court', lien:'Flux 1 Apps + Freemium + B2B consolidés' },
+  { id:'j3', titre:'1 000 utilisateurs actifs Assists', date_cible:'Déc 2026', horizon:'moyen', lien:'Freemium + Meta Ads CI/diaspora' },
+  { id:'j4', titre:'15 000 €/mois — système autonome', date_cible:'2027', horizon:'moyen', lien:'MRR + partenaires actifs' },
+  { id:'j5', titre:'Sortie de la fonction publique', date_cible:'2028', horizon:'long', lien:'CA stable sur 18 mois consécutifs' },
+  { id:'j6', titre:'Installation au Canada avec la famille', date_cible:'2028', horizon:'long', lien:'Visa + revenus internationaux' },
+  { id:'j7', titre:'120 projets simultanés sur 3 continents', date_cible:'2028+', horizon:'long', lien:'Équipe + systèmes autonomes' },
+];
+
 /* ── CAP CARD ─────────────────────────────────────────── */
 function CapCard({ cap, onChange }) {
   if (!cap) return null;
@@ -407,10 +418,48 @@ function FocusItem({ item, i, onToggle, onEdit }) {
   );
 }
 
-function TabAujourdHui({ cap, focus, onCapChange, onFocusToggle, onFocusEdit }) {
+/* ── FINANCE SUMMARY MINI (dashboard) ────────────────────── */
+function FinanceSummaryMini({ finances, onGoFinance }) {
+  const now = new Date();
+  const moisStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+  const mois = finances.filter(f => f.date >= moisStart);
+  const entreesPro   = mois.filter(f=>f.type==='entree'&&f.categorie==='pro').reduce((s,f)=>s+f.montant,0);
+  const entreesPerso = mois.filter(f=>f.type==='entree'&&f.categorie==='perso').reduce((s,f)=>s+f.montant,0);
+  const sorties      = mois.filter(f=>f.type==='sortie').reduce((s,f)=>s+f.montant,0);
+  const pct = Math.min(100, Math.round((entreesPro/10000)*100));
+  return (
+    <div className="card" onClick={onGoFinance} style={{ padding:'14px 16px', cursor:'pointer', userSelect:'none' }}>
+      <div className="row between" style={{ marginBottom:10, alignItems:'center' }}>
+        <div className="sect-label" style={{ margin:0 }}>Finances ce mois</div>
+        <span style={{ fontSize:10, color:'var(--acc)', fontWeight:700 }}>Voir détail →</span>
+      </div>
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:10, marginBottom:10 }}>
+        <div className="col g3">
+          <span className="t-xs mut">Pro encaissé</span>
+          <span className="b num" style={{ fontSize:13, color:'var(--grn)' }}>+{fmt(entreesPro)}</span>
+        </div>
+        <div className="col g3">
+          <span className="t-xs mut">Perso</span>
+          <span className="b num" style={{ fontSize:13, color:'var(--blu)' }}>+{fmt(entreesPerso)}</span>
+        </div>
+        <div className="col g3">
+          <span className="t-xs mut">Sorties</span>
+          <span className="b num" style={{ fontSize:13, color:'var(--red)' }}>-{fmt(sorties)}</span>
+        </div>
+      </div>
+      <div style={{ height:5, borderRadius:100, background:'rgba(0,0,0,.07)', overflow:'hidden' }}>
+        <div style={{ height:'100%', width:pct+'%', background:'var(--grn)', borderRadius:100, transition:'.6s' }} />
+      </div>
+      <div className="t-xs mut" style={{ marginTop:4 }}>{pct}% de l'objectif 10 000 € encaissé (pro)</div>
+    </div>
+  );
+}
+
+function TabAujourdHui({ cap, focus, finances, onCapChange, onFocusToggle, onFocusEdit, onGoFinance }) {
   return (
     <Fragment>
       <CapCard cap={cap} onChange={onCapChange} />
+      <FinanceSummaryMini finances={finances} onGoFinance={onGoFinance} />
       <div className="card" style={{ padding:'16px 18px' }}>
         <div className="sect-label">Focus du jour</div>
         {focus.map((f,i) => (
@@ -698,7 +747,16 @@ function ProjetCard({ p, i, onEditProchaine }) {
       <div style={{ padding:'14px 16px 13px' }}>
         <div className="row between" style={{ marginBottom:8 }}>
           <div className="col g4">
-            <span style={{ fontSize:10.5, fontWeight:700, color:'var(--blu)' }}>{p.tag}</span>
+            <div className="row g6" style={{ alignItems:'center' }}>
+              <span style={{ fontSize:10.5, fontWeight:700, color:'var(--blu)' }}>{p.tag}</span>
+              {p.horizon && (
+                <span style={{ fontSize:9, fontWeight:800, padding:'1px 6px', borderRadius:5,
+                  background: p.horizon==='court'?'var(--acc-s)':p.horizon==='moyen'?'var(--blu-s)':'rgba(0,0,0,.07)',
+                  color: p.horizon==='court'?'var(--acc)':p.horizon==='moyen'?'var(--blu)':'var(--mut)' }}>
+                  {p.horizon==='court'?'CT':p.horizon==='moyen'?'MT':'LT'}
+                </span>
+              )}
+            </div>
             <span className="b" style={{ fontSize:15 }}>{p.nom}</span>
           </div>
           <span className={'badge '+(p.avancement>=60?'grn':p.avancement>=30?'org':'neu')}>{p.statut}</span>
@@ -745,6 +803,16 @@ function ProjetCard({ p, i, onEditProchaine }) {
 }
 
 function TabProjets({ projets, onEditProchaine }) {
+  const [hFilter, setHFilter] = useState('all');
+  const HZNS = [
+    { id:'all',   label:'Tous' },
+    { id:'court', label:'Court terme' },
+    { id:'moyen', label:'Moyen terme' },
+    { id:'long',  label:'Long terme' },
+  ];
+  const filtered = hFilter === 'all' ? projets : projets.filter(p => (p.horizon || 'court') === hFilter);
+  const jalons   = hFilter === 'all' ? JALONS   : JALONS.filter(j => j.horizon === hFilter);
+
   return (
     <Fragment>
       <div className="card" style={{ padding:'14px 16px' }}>
@@ -763,7 +831,51 @@ function TabProjets({ projets, onEditProchaine }) {
           </div>
         </div>
       </div>
-      {projets.map((p,i) => <ProjetCard key={p.id} p={p} i={i} onEditProchaine={onEditProchaine} />)}
+
+      <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
+        {HZNS.map(h => (
+          <button key={h.id} onClick={() => setHFilter(h.id)}
+            style={{ minHeight:36, padding:'0 14px', borderRadius:20, fontFamily:'inherit', cursor:'pointer',
+              border:`1.5px solid ${hFilter===h.id?'var(--acc)':'var(--bdr)'}`,
+              background: hFilter===h.id?'var(--acc)':'var(--card)',
+              color: hFilter===h.id?'#fff':'var(--mut)', fontWeight:700, fontSize:12, transition:'.15s' }}>
+            {h.label}
+          </button>
+        ))}
+      </div>
+
+      {filtered.length > 0 && (
+        <>
+          <div className="sect-label">PROJETS INTERNES</div>
+          {filtered.map((p,i) => <ProjetCard key={p.id} p={p} i={i} onEditProchaine={onEditProchaine} />)}
+        </>
+      )}
+
+      {jalons.length > 0 && (
+        <>
+          <div className="sect-label" style={{ marginTop:4 }}>JALONS DE VIE</div>
+          <div className="card" style={{ padding:'4px 0', overflow:'hidden' }}>
+            {jalons.map((j, i) => (
+              <div key={j.id} style={{ padding:'13px 16px', borderBottom:i<jalons.length-1?'1px solid var(--bdr)':'none', display:'flex', gap:12, alignItems:'flex-start' }}>
+                <div style={{ width:8, height:8, borderRadius:50, flexShrink:0, marginTop:5,
+                  background: j.horizon==='court'?'var(--acc)':j.horizon==='moyen'?'var(--blu)':'var(--mut)' }} />
+                <div className="col grow g4" style={{ minWidth:0 }}>
+                  <span className="b" style={{ fontSize:13 }}>{j.titre}</span>
+                  <div className="row g8">
+                    <span className="t-xs mut">{j.date_cible}</span>
+                    <span className="t-xs mut">·</span>
+                    <span className="t-xs" style={{ color:'var(--ink2)' }}>{j.lien}</span>
+                  </div>
+                </div>
+                <span className={'badge '+(j.horizon==='court'?'org':j.horizon==='moyen'?'blu':'neu')}
+                  style={{ fontSize:10, padding:'2px 7px', flexShrink:0 }}>
+                  {j.horizon==='court'?'CT':j.horizon==='moyen'?'MT':'LT'}
+                </span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </Fragment>
   );
 }
@@ -885,22 +997,304 @@ function TabPlan() {
   );
 }
 
+/* ── FINANCE MODAL ────────────────────────────────────── */
+function FinanceModal({ onConfirm, onCancel }) {
+  const [type, setType]   = useState('entree');
+  const [cat, setCat]     = useState('pro');
+  const [montant, setMontant] = useState('');
+  const [desc, setDesc]   = useState('');
+  const [date, setDate]   = useState(new Date().toISOString().split('T')[0]);
+  const [saving, setSaving] = useState(false);
+  const valid = montant && parseFloat(montant) > 0 && desc.trim();
+
+  const save = async () => {
+    if (!valid || saving) return;
+    setSaving(true);
+    const { data, error } = await SB.from('pilotage_finances').insert({
+      type, categorie: cat, montant: parseFloat(montant),
+      description: desc.trim(), date,
+    }).select().single();
+    setSaving(false);
+    if (!error && data) onConfirm(data);
+  };
+
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.85)', zIndex:300, display:'flex', alignItems:'flex-end', justifyContent:'center' }}
+      onClick={e => { if (e.target === e.currentTarget) onCancel(); }}>
+      <div style={{ width:'100%', maxWidth:520, background:'var(--card)', borderRadius:'18px 18px 0 0', padding:'24px 20px 48px' }}>
+        <div style={{ width:36, height:4, borderRadius:2, background:'var(--bdr)', margin:'0 auto 22px' }} />
+        <div style={{ fontSize:17, fontWeight:800, color:'var(--ink)', marginBottom:18 }}>Nouvelle transaction</div>
+
+        <div style={{ marginBottom:14 }}>
+          <div style={{ fontSize:10, fontWeight:700, color:'var(--mut)', letterSpacing:'1px', textTransform:'uppercase', marginBottom:8 }}>Type *</div>
+          <div style={{ display:'flex', gap:8 }}>
+            {[['entree','Entrée'],['sortie','Sortie']].map(([v,l]) => (
+              <div key={v} onClick={() => setType(v)}
+                style={{ flex:1, padding:'10px 6px', borderRadius:10, textAlign:'center', cursor:'pointer', fontWeight:800, fontSize:14,
+                  border:`1.5px solid ${type===v?(v==='entree'?'var(--grn)':'var(--red)'):'var(--bdr)'}`,
+                  background: type===v?(v==='entree'?'var(--grn-s)':'var(--red-s)'):'transparent',
+                  color: type===v?(v==='entree'?'var(--grn)':'var(--red)'):'var(--mut)', transition:'.15s' }}>{l}</div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ marginBottom:14 }}>
+          <div style={{ fontSize:10, fontWeight:700, color:'var(--mut)', letterSpacing:'1px', textTransform:'uppercase', marginBottom:8 }}>Catégorie *</div>
+          <div style={{ display:'flex', gap:8 }}>
+            {[['pro','Pro — Agence'],['perso','Perso — DGFiP / autre']].map(([v,l]) => (
+              <div key={v} onClick={() => setCat(v)}
+                style={{ flex:1, padding:'10px 6px', borderRadius:10, textAlign:'center', cursor:'pointer', fontWeight:700, fontSize:12,
+                  border:`1.5px solid ${cat===v?'var(--acc)':'var(--bdr)'}`,
+                  background: cat===v?'var(--acc-s)':'transparent',
+                  color: cat===v?'var(--acc)':'var(--mut)', transition:'.15s' }}>{l}</div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ marginBottom:14 }}>
+          <div style={{ fontSize:10, fontWeight:700, color:'var(--mut)', letterSpacing:'1px', textTransform:'uppercase', marginBottom:6 }}>Montant € *</div>
+          <input value={montant} onChange={e => setMontant(e.target.value.replace(/[^0-9.]/g,''))}
+            inputMode="decimal" placeholder="0.00" style={iStyle} />
+        </div>
+
+        <div style={{ marginBottom:14 }}>
+          <div style={{ fontSize:10, fontWeight:700, color:'var(--mut)', letterSpacing:'1px', textTransform:'uppercase', marginBottom:6 }}>Description *</div>
+          <input value={desc} onChange={e => setDesc(e.target.value)}
+            placeholder="Ex: Acompte Club Élévia, Salaire DGFiP juin…" style={iStyle} />
+        </div>
+
+        <div style={{ marginBottom:22 }}>
+          <div style={{ fontSize:10, fontWeight:700, color:'var(--mut)', letterSpacing:'1px', textTransform:'uppercase', marginBottom:6 }}>Date</div>
+          <input type="date" value={date} onChange={e => setDate(e.target.value)} style={iStyle} />
+        </div>
+
+        <div style={{ display:'flex', gap:10 }}>
+          <button onClick={onCancel}
+            style={{ flex:1, minHeight:44, borderRadius:12, border:'1.5px solid var(--bdr)', background:'transparent', color:'var(--mut)', fontWeight:700, fontSize:13, cursor:'pointer', fontFamily:'inherit' }}>
+            Annuler
+          </button>
+          <button onClick={save} disabled={!valid||saving}
+            style={{ flex:2, minHeight:44, borderRadius:12, border:'none',
+              background: valid?'var(--acc)':'rgba(0,0,0,.06)',
+              color: valid?'#fff':'var(--faint)',
+              fontWeight:800, fontSize:13, cursor:valid?'pointer':'not-allowed', fontFamily:'inherit', transition:'.2s' }}>
+            {saving ? 'Enregistrement…' : 'Enregistrer →'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── COACH FINANCIER ──────────────────────────────────── */
+const REGLES_COACH = [
+  { id:'epargne',   label:'Épargne de sécurité', desc:'Mettre de côté 20% de chaque encaissement pro', pct:0.20, couleur:'var(--grn)' },
+  { id:'charges',   label:'Charges stack', desc:'Stack outils (Claude Max, API, GoDaddy…) = 110 €/mois max', plafond:110, couleur:'var(--acc)' },
+  { id:'reinvest',  label:'Réinvestissement', desc:'10% des encaissements pro pour ads et croissance', pct:0.10, couleur:'var(--blu)' },
+  { id:'salaire',   label:'Salaire pro fixe', desc:'Te verser un salaire fixe dès 3 000 € encaissés/mois', seuil:3000, couleur:'var(--mut)' },
+];
+
+function CoachFinancier({ finances }) {
+  const now = new Date();
+  const moisStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+  const mois = finances.filter(f => f.date >= moisStart);
+  const entreesPro = mois.filter(f=>f.type==='entree'&&f.categorie==='pro').reduce((s,f)=>s+f.montant,0);
+  const sortiesPro = mois.filter(f=>f.type==='sortie'&&f.categorie==='pro').reduce((s,f)=>s+f.montant,0);
+
+  const diagnostics = [];
+  if (entreesPro > 0) {
+    const epargne = entreesPro * 0.20;
+    diagnostics.push({ ok: sortiesPro < entreesPro * 0.80, label:'Épargne 20%', msg: `Mettre ${fmt(epargne)} de côté ce mois`, couleur:'var(--grn)' });
+    diagnostics.push({ ok: sortiesPro <= 110, label:'Charges stack', msg: sortiesPro <= 110 ? `Charges dans les clous (${fmt(sortiesPro)})` : `Dépassement : ${fmt(sortiesPro)} > 110 €`, couleur:'var(--acc)' });
+    diagnostics.push({ ok: entreesPro >= 3000, label:'Seuil salaire fixe', msg: entreesPro >= 3000 ? 'Seuil atteint — verse-toi un salaire' : `Il manque ${fmt(3000-entreesPro)} pour le seuil`, couleur:'var(--mut)' });
+    diagnostics.push({ ok: true, label:'Réinvestissement', msg: `Prévoir ${fmt(entreesPro*0.10)} pour les Meta Ads ce mois`, couleur:'var(--blu)' });
+  }
+
+  return (
+    <div style={{ background:'rgba(238,124,31,.06)', border:'1.5px solid rgba(238,124,31,.2)', borderRadius:12, overflow:'hidden' }}>
+      <div style={{ padding:'11px 14px 10px', borderBottom:'1px solid rgba(238,124,31,.15)' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--acc)" strokeWidth="1.5"/><path d="M8 5v4M8 11v.5" stroke="var(--acc)" strokeWidth="1.8" strokeLinecap="round"/></svg>
+          <span style={{ fontSize:10, fontWeight:800, letterSpacing:'1.2px', textTransform:'uppercase', color:'var(--acc)' }}>Coach Financier</span>
+        </div>
+      </div>
+      {entreesPro === 0 ? (
+        <div style={{ padding:'14px 14px', fontSize:12, color:'var(--ink2)', lineHeight:1.6 }}>
+          Enregistre tes premières entrées pro ce mois pour recevoir ton diagnostic personnalisé.
+        </div>
+      ) : (
+        <div style={{ padding:'6px 0' }}>
+          {diagnostics.map((d, i) => (
+            <div key={i} style={{ padding:'10px 14px', borderBottom:i<diagnostics.length-1?'1px solid rgba(238,124,31,.1)':'none', display:'flex', gap:10, alignItems:'flex-start' }}>
+              <div style={{ width:18, height:18, borderRadius:6, flexShrink:0, marginTop:1, display:'flex', alignItems:'center', justifyContent:'center',
+                background: d.ok?'var(--grn-s)':'var(--red-s)' }}>
+                {d.ok
+                  ? <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--grn)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  : <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="var(--red)" strokeWidth="2" strokeLinecap="round"/></svg>
+                }
+              </div>
+              <div className="col g3">
+                <span style={{ fontSize:11, fontWeight:800, color:d.couleur }}>{d.label}</span>
+                <span style={{ fontSize:11.5, color:'var(--ink2)', lineHeight:1.4 }}>{d.msg}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── TAB FINANCE ──────────────────────────────────────── */
+function TabFinance({ finances, onAdd }) {
+  const [showModal, setShowModal] = useState(false);
+  const [filter, setFilter]       = useState('all');
+
+  const now = new Date();
+  const moisLabel = now.toLocaleDateString('fr-FR', { month:'long', year:'numeric' });
+  const moisStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+
+  const moisF = finances.filter(f => f.date >= moisStart);
+  const entreesPro   = moisF.filter(f=>f.type==='entree'&&f.categorie==='pro').reduce((s,f)=>s+f.montant,0);
+  const entreesPerso = moisF.filter(f=>f.type==='entree'&&f.categorie==='perso').reduce((s,f)=>s+f.montant,0);
+  const sortiesPro   = moisF.filter(f=>f.type==='sortie'&&f.categorie==='pro').reduce((s,f)=>s+f.montant,0);
+  const sortiesPerso = moisF.filter(f=>f.type==='sortie'&&f.categorie==='perso').reduce((s,f)=>s+f.montant,0);
+  const soldePro   = entreesPro - sortiesPro;
+  const soldePerso = entreesPerso - sortiesPerso;
+  const pct = Math.min(100, Math.round((entreesPro/10000)*100));
+
+  const displayed = finances.filter(f => filter === 'all' ? true : f.categorie === filter);
+  const tColor = (f) => f.type==='entree'?'var(--grn)':'var(--red)';
+  const tSign  = (f) => f.type==='entree'?'+':'-';
+
+  return (
+    <Fragment>
+      {/* Recap mois */}
+      <div className="card" style={{ padding:'16px 18px', background:'linear-gradient(135deg,#F2FFF6,#E8F8EC)', borderColor:'rgba(26,148,72,.2)' }}>
+        <div style={{ fontSize:10, fontWeight:700, color:'var(--mut)', letterSpacing:'1.2px', textTransform:'uppercase', marginBottom:10 }}>
+          {moisLabel}
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:14 }}>
+          <div className="col g4">
+            <span className="t-xs mut">Entrées pro</span>
+            <span className="xb num" style={{ fontSize:17, color:'var(--grn)' }}>+{fmt(entreesPro)}</span>
+          </div>
+          <div className="col g4">
+            <span className="t-xs mut">Entrées perso</span>
+            <span className="xb num" style={{ fontSize:17, color:'var(--blu)' }}>+{fmt(entreesPerso)}</span>
+          </div>
+          <div className="col g4">
+            <span className="t-xs mut">Sorties pro</span>
+            <span className="xb num" style={{ fontSize:17, color:'var(--red)' }}>-{fmt(sortiesPro)}</span>
+          </div>
+          <div className="col g4">
+            <span className="t-xs mut">Sorties perso</span>
+            <span className="xb num" style={{ fontSize:17, color:'var(--red)' }}>-{fmt(sortiesPerso)}</span>
+          </div>
+        </div>
+        <div style={{ height:1, background:'rgba(0,0,0,.07)', marginBottom:12 }} />
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:12 }}>
+          <div className="col g3">
+            <span className="t-xs mut">Solde net pro</span>
+            <span className="b num" style={{ fontSize:15, color:soldePro>=0?'var(--grn)':'var(--red)' }}>{soldePro>=0?'+':''}{fmt(soldePro)}</span>
+          </div>
+          <div className="col g3">
+            <span className="t-xs mut">Solde net perso</span>
+            <span className="b num" style={{ fontSize:15, color:soldePerso>=0?'var(--blu)':'var(--red)' }}>{soldePerso>=0?'+':''}{fmt(soldePerso)}</span>
+          </div>
+        </div>
+        <div>
+          <div className="row between" style={{ marginBottom:5 }}>
+            <span className="t-xs mut">Objectif 10 000 €/mois</span>
+            <span className="t-xs b" style={{ color:'var(--grn)' }}>{pct}%</span>
+          </div>
+          <div style={{ height:7, borderRadius:100, background:'rgba(0,0,0,.08)', overflow:'hidden' }}>
+            <div style={{ height:'100%', width:pct+'%', background:'var(--grn)', borderRadius:100, transition:'.6s' }} />
+          </div>
+        </div>
+      </div>
+
+      {/* Coach financier */}
+      <CoachFinancier finances={finances} />
+
+      {/* Filtres + bouton */}
+      <div className="row between" style={{ alignItems:'center' }}>
+        <div style={{ display:'flex', gap:6 }}>
+          {[['all','Tout'],['pro','Pro'],['perso','Perso']].map(([v,l]) => (
+            <button key={v} onClick={() => setFilter(v)}
+              style={{ minHeight:36, padding:'0 14px', borderRadius:20, fontFamily:'inherit', cursor:'pointer',
+                border:`1.5px solid ${filter===v?'var(--acc)':'var(--bdr)'}`,
+                background: filter===v?'var(--acc)':'var(--card)',
+                color: filter===v?'#fff':'var(--mut)', fontWeight:700, fontSize:12, transition:'.15s' }}>{l}</button>
+          ))}
+        </div>
+        <button onClick={() => setShowModal(true)}
+          style={{ display:'flex', alignItems:'center', gap:6, minHeight:44, padding:'0 14px', borderRadius:10, border:'none',
+            background:'var(--acc)', color:'#fff', fontWeight:800, fontSize:12, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap' }}>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+          Ajouter
+        </button>
+      </div>
+
+      {/* Liste */}
+      <div className="card" style={{ padding:'4px 0', overflow:'hidden' }}>
+        {displayed.length === 0 && (
+          <div style={{ padding:'22px 16px', textAlign:'center', color:'var(--mut)', fontSize:13 }}>
+            Aucune transaction enregistrée
+          </div>
+        )}
+        {displayed.map((f, i) => (
+          <div key={f.id} style={{ padding:'12px 16px', borderBottom:i<displayed.length-1?'1px solid var(--bdr)':'none', display:'flex', gap:12, alignItems:'center' }}>
+            <div style={{ width:36, height:36, borderRadius:10, flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center',
+              background: f.type==='entree'?'var(--grn-s)':'var(--red-s)' }}>
+              <span style={{ fontSize:17, fontWeight:900, color:tColor(f) }}>{tSign(f)}</span>
+            </div>
+            <div className="col grow g4" style={{ minWidth:0 }}>
+              <span className="b truncate" style={{ fontSize:13 }}>{f.description}</span>
+              <div style={{ display:'flex', gap:6, alignItems:'center' }}>
+                <span className={'badge '+(f.categorie==='pro'?'org':'blu')} style={{ fontSize:10, padding:'1px 6px' }}>
+                  {f.categorie==='pro'?'Pro':'Perso'}
+                </span>
+                <span className="t-xs mut">
+                  {new Date(f.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}
+                </span>
+              </div>
+            </div>
+            <span className="xb num" style={{ fontSize:15, color:tColor(f), flexShrink:0 }}>
+              {tSign(f)}{fmt(f.montant)}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {showModal && (
+        <FinanceModal
+          onConfirm={d => { onAdd(d); setShowModal(false); }}
+          onCancel={() => setShowModal(false)}
+        />
+      )}
+    </Fragment>
+  );
+}
+
 /* ── APP ──────────────────────────────────────────────── */
 const TABS = [
   { id:'today',    label:"Aujourd'hui" },
   { id:'pipeline', label:'Pipeline' },
   { id:'projets',  label:'Projets' },
+  { id:'finance',  label:'Finance' },
   { id:'demos',    label:'Démos' },
   { id:'plan',     label:'Plan' },
 ];
 
 function App() {
-  const [tab, setTab]         = useState('today');
-  const [cap, setCap]         = useState(null);
-  const [focus, setFocus]     = useState([]);
+  const [tab, setTab]           = useState('today');
+  const [cap, setCap]           = useState(null);
+  const [focus, setFocus]       = useState([]);
   const [pipeline, setPipeline] = useState([]);
-  const [projets, setProjets] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [projets, setProjets]   = useState([]);
+  const [finances, setFinances] = useState([]);
+  const [loading, setLoading]   = useState(true);
 
   useEffect(() => {
     Promise.all([
@@ -908,11 +1302,13 @@ function App() {
       SB.from('pilotage_focus').select('*').order('ordre'),
       SB.from('pilotage_pipeline').select('*, source, wa_draft').order('priorite'),
       SB.from('pilotage_projets').select('*').order('priorite'),
-    ]).then(([capR, focusR, pipeR, projR]) => {
+      SB.from('pilotage_finances').select('*').order('date', { ascending: false }),
+    ]).then(([capR, focusR, pipeR, projR, finR]) => {
       if (capR.data)   setCap(capR.data);
       if (focusR.data) setFocus(focusR.data);
       if (pipeR.data)  setPipeline(pipeR.data);
       if (projR.data)  setProjets(projR.data);
+      if (finR.data)   setFinances(finR.data);
       setLoading(false);
       document.getElementById('boot')?.remove();
     });
@@ -960,6 +1356,11 @@ function App() {
     await SB.from('pilotage_projets').update({ prochaine_action: val }).eq('id', p.id);
   };
 
+  /* Finance handlers */
+  const handleFinanceAdd = (entry) => {
+    setFinances(prev => [entry, ...prev]);
+  };
+
   const heure = new Date().getHours();
   const salut = heure < 12 ? 'Bonjour' : heure < 18 ? 'Bon après-midi' : 'Bonsoir';
 
@@ -982,10 +1383,11 @@ function App() {
       </div>
 
       <div className="content">
-        {tab === 'today'    && <TabAujourdHui cap={cap} focus={focus} onCapChange={setCap} onFocusToggle={handleFocusToggle} onFocusEdit={handleFocusEdit} />}
+        {tab === 'today'    && <TabAujourdHui cap={cap} focus={focus} finances={finances} onCapChange={setCap} onFocusToggle={handleFocusToggle} onFocusEdit={handleFocusEdit} onGoFinance={() => setTab('finance')} />}
         {tab === 'pipeline' && <TabPipeline pipeline={pipeline} onEditProchaine={handlePipeProchaine} onEditStatut={handlePipeStatut} onEditContact={handlePipeContact} onEditSetup={handlePipeSetup} onEditMensuel={handlePipeMensuel} onAddProspect={handlePipeAdd} />}
         {tab === 'plan'     && <TabPlan />}
         {tab === 'projets'  && <TabProjets projets={projets} onEditProchaine={handleProjetProchaine} />}
+        {tab === 'finance'  && <TabFinance finances={finances} onAdd={handleFinanceAdd} />}
         {tab === 'demos'    && <TabDemos />}
       </div>
     </div>
