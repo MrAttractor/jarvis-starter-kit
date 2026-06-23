@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>Pilotage — Mr Attractor</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;max-width:100%;}
@@ -78,7 +78,8 @@ body{background:var(--bg);color:var(--ink);overflow-x:hidden;}
 .divider{height:1px;background:var(--bdr);margin:0 -1px;}
 @keyframes up{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
 .anim{animation:up .28s cubic-bezier(.2,.7,.3,1) both;}
-[contenteditable]:focus{outline:none;border-bottom:1.5px solid var(--acc) !important;}
+[contenteditable]{touch-action:manipulation;-webkit-user-select:text;user-select:text;}
+[contenteditable]:focus{outline:none;border-bottom:1.5px solid var(--acc) !important;font-size:16px !important;}
 [contenteditable]:empty:before{content:attr(data-ph);color:var(--faint);}
 .demos-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 @media(max-width:400px){.demos-grid{grid-template-columns:1fr;}}
