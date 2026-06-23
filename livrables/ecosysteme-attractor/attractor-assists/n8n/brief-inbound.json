@@ -1,0 +1,177 @@
+{
+  "name": "Brief Inbound — App Métier",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "minutes", "minutesInterval": 15 }]
+        }
+      },
+      "id": "node-schedule",
+      "name": "Toutes les 15 min",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://lgdgbrivnhgeupqhkckd.supabase.co/rest/v1/prospects?statut=eq.nouveau&type_projet=eq.A&select=id,prenom,activite,besoin,zone,whatsapp",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk" },
+            { "name": "Authorization", "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk" }
+          ]
+        }
+      },
+      "id": "node-fetch-prospects",
+      "name": "Fetch prospects nouveaux",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "cond-has-items",
+              "leftValue": "={{ $json.length }}",
+              "rightValue": 0,
+              "operator": { "type": "number", "operation": "gt" }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "node-check-empty",
+      "name": "Des prospects ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().flatMap(item => Array.isArray(item.json) ? item.json.map(p => ({json: p})) : [{json: item.json}]);"
+      },
+      "id": "node-split",
+      "name": "Split prospects",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 220]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $env.ANTHROPIC_API_KEY }}" },
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": []
+        },
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-haiku-4-5-20251001\",\n  \"max_tokens\": 512,\n  \"system\": \"Tu es l'assistant de Mac Arthur, fondateur de l'agence Mr Attractor (CI + diaspora France).\\nTu rédiges des messages WhatsApp COURTS, naturels, directs, SANS emojis, SANS markdown, SANS formule d'accueil artificielle.\\nMac Arthur enverra ce message en son nom. Écris comme lui : humain, pro, direct.\\nDonne aussi une note de qualification en 1 ligne (secteur détecté, besoin, urgence estimée).\\n\\nFormat de réponse OBLIGATOIRE (respecte exactement ces labels) :\\nMESSAGE_WA: [le message, 2-3 phrases max]\\nQUALIFICATION: [une ligne : secteur, besoin, urgence]\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Prospect reçu via site web.\\nPrénom: {{ $json.prenom }}\\nActivité: {{ $json.activite }}\\nBesoin principal: {{ $json.besoin }}\\nZone: {{ $json.zone }}\\n\\nGénère le MESSAGE_WA et la QUALIFICATION.\"\n    }\n  ]\n}"
+      },
+      "id": "node-claude",
+      "name": "Claude — Draft WA + Qualification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 220]
+    },
+    {
+      "parameters": {
+        "jsCode": "const prospect = $('Split prospects').first().json;\nconst raw = $input.first().json.content?.[0]?.text || '';\n\nconst waMatch   = raw.match(/MESSAGE_WA:\\s*([\\s\\S]*?)(?=QUALIFICATION:|$)/);\nconst qualMatch = raw.match(/QUALIFICATION:\\s*([\\s\\S]*?)$/);\n\nconst waDraft   = waMatch   ? waMatch[1].trim()   : raw.trim();\nconst qualif    = qualMatch ? qualMatch[1].trim()  : '';\n\nconst zoneMap = { CI: 'CI', EU: 'France', LES2: 'CI' };\nconst zone    = zoneMap[prospect.zone] || prospect.zone || 'CI';\n\nreturn [{\n  json: {\n    prospect_id: prospect.id,\n    prenom:      prospect.prenom,\n    activite:    prospect.activite,\n    whatsapp:    prospect.whatsapp,\n    zone,\n    wa_draft:    waDraft,\n    qualification: qualif\n  }\n}];"
+      },
+      "id": "node-parse",
+      "name": "Parser réponse Claude",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 220]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://lgdgbrivnhgeupqhkckd.supabase.co/rest/v1/pilotage_pipeline",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk" },
+            { "name": "Authorization", "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk" },
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Prefer", "value": "return=representation" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"nom\": \"{{ $json.prenom }} — {{ $json.activite }}\",\n  \"contact\": \"{{ $json.whatsapp }}\",\n  \"activite\": \"{{ $json.activite }}\",\n  \"famille\": \"A\",\n  \"zone\": \"{{ $json.zone }}\",\n  \"statut\": \"En contact\",\n  \"statut_color\": \"neu\",\n  \"prochaine\": \"{{ $json.qualification }}\",\n  \"source\": \"inbound_site\",\n  \"wa_draft\": \"{{ $json.wa_draft }}\",\n  \"priorite\": 1,\n  \"urgent\": true\n}"
+      },
+      "id": "node-insert-pipeline",
+      "name": "Insérer dans pilotage_pipeline",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 220]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://lgdgbrivnhgeupqhkckd.supabase.co/rest/v1/prospects?id=eq.{{ $('Parser réponse Claude').first().json.prospect_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk" },
+            { "name": "Authorization", "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{ \"statut\": \"traité\" }"
+      },
+      "id": "node-mark-traite",
+      "name": "Marquer prospect traité",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1780, 220]
+    }
+  ],
+  "connections": {
+    "Toutes les 15 min": {
+      "main": [[{ "node": "Fetch prospects nouveaux", "type": "main", "index": 0 }]]
+    },
+    "Fetch prospects nouveaux": {
+      "main": [[{ "node": "Des prospects ?", "type": "main", "index": 0 }]]
+    },
+    "Des prospects ?": {
+      "main": [
+        [{ "node": "Split prospects", "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "Split prospects": {
+      "main": [[{ "node": "Claude — Draft WA + Qualification", "type": "main", "index": 0 }]]
+    },
+    "Claude — Draft WA + Qualification": {
+      "main": [[{ "node": "Parser réponse Claude", "type": "main", "index": 0 }]]
+    },
+    "Parser réponse Claude": {
+      "main": [[{ "node": "Insérer dans pilotage_pipeline", "type": "main", "index": 0 }]]
+    },
+    "Insérer dans pilotage_pipeline": {
+      "main": [[{ "node": "Marquer prospect traité", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "meta": { "description": "Récupère les nouveaux prospects App Métier du site, génère un message WA + note de qualification via Claude, les insère dans pilotage_pipeline et marque les prospects comme traités." }
+}
