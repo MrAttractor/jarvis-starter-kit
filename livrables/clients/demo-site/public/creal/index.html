@@ -454,6 +454,19 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
 }
 .form-input:focus { border-color: var(--orange); }
 .form-input.error { border-color: #ef4444; }
+
+/* Bannière mémoire client */
+#memory-banner { display: none; }
+#memory-banner.visible {
+  display: flex; align-items: center; justify-content: space-between;
+  background: #FFF8EE; border-bottom: 1px solid rgba(242,163,61,0.2);
+  padding: 8px 20px; font-size: 12px; color: #7A5200;
+}
+#memory-banner button {
+  background: none; border: none; color: #9c5e15;
+  font-size: 11px; font-weight: 600; cursor: pointer; text-decoration: underline;
+  flex-shrink: 0; margin-left: 12px;
+}
 </style>
 </head>
 <body>
@@ -465,6 +478,11 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
     <p>Farines infantiles 100% naturelles · Dès 4 mois</p>
   </div>
 </header>
+
+<div id="memory-banner">
+  <span id="memory-banner-text"></span>
+  <button onclick="forgetMe()">Ce n'est pas moi</button>
+</div>
 
 <main>
 
@@ -622,6 +640,29 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
 </div>
 
 <script>
+// ── MÉMOIRE CLIENT ──
+const MEMORY_KEY = 'creal_client';
+function readMemory() { try { return JSON.parse(localStorage.getItem(MEMORY_KEY) || '{}'); } catch { return {}; } }
+function saveMemory(data) { try { localStorage.setItem(MEMORY_KEY, JSON.stringify(data)); } catch {} }
+function clearMemory() { localStorage.removeItem(MEMORY_KEY); }
+
+function initMemory() {
+  const m = readMemory();
+  if (!m.prenom) return;
+  document.getElementById('memory-banner-text').textContent = 'Bienvenue, ' + m.prenom + ' !';
+  document.getElementById('memory-banner').classList.add('visible');
+  document.querySelector('#chat-msgs .msg.bot').textContent =
+    'Bonjour ' + m.prenom + ' ! Content de vous retrouver. Comment puis-je vous aider aujourd\'hui ?';
+  _clientName    = m.prenom;
+  _clientPhone   = m.telephone  || '';
+  _clientAddress = m.adresse    || '';
+}
+
+function forgetMe() {
+  clearMemory();
+  location.reload();
+}
+
 const SUPABASE = 'https://lgdgbrivnhgeupqhkckd.supabase.co';
 const ANON    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
 const KEZEY   = '2250758680279';
@@ -902,6 +943,18 @@ async function confirmPayWA() {
     });
   } catch {}
 
+  saveMemory({
+    prenom: _clientName,
+    telephone: _clientPhone,
+    adresse: _clientAddress,
+    derniere_commande: Object.entries(cart)
+      .filter(([,q]) => q > 0)
+      .map(([id, qty]) => {
+        const p = PRODUCTS.find(p => p.id == +id);
+        return { id: +id, name: p.name, qty, price: p.price };
+      })
+  });
+
   const msg = `Bonjour Kezey ! Je viens de payer ${_payTotal.toLocaleString('fr-FR')} FCFA via ${methodLabel}.\n\nClient : ${_clientName}\nWhatsApp : ${_clientPhone}\nAdresse : ${_clientAddress}\n\nMa commande C'Real :\n${lines}\n\nSous-total : ${_payTotal.toLocaleString('fr-FR')} FCFA (livraison non incluse)`;
   window.open(`https://wa.me/${KEZEY}?text=${encodeURIComponent(msg)}`, '_blank');
 }
@@ -971,6 +1024,7 @@ async function send() {
 document.getElementById('chat-input').addEventListener('keydown', e => { if (e.key==='Enter') send(); });
 
 renderProducts();
+initMemory();
 
 // Mise à jour live des prix depuis Assists (Kezey modifie ses produits dans Assists → site synchronisé)
 async function fetchLivePrices() {
