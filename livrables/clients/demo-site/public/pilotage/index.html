@@ -229,7 +229,7 @@ function StatutBadge({ statut, statut_color, onEdit }) {
       {validating && (
         <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.82)', zIndex:300, display:'flex', alignItems:'flex-end', justifyContent:'center' }}
           onClick={e => { if (e.target === e.currentTarget) setValidating(null); }}>
-          <div style={{ width:'100%', maxWidth:520, background:'var(--card)', borderRadius:'18px 18px 0 0', display:'flex', flexDirection:'column' }}>
+          <div style={{ width:'100%', maxWidth:520, background:'var(--card)', borderRadius:'18px 18px 0 0', maxHeight:'90vh', display:'flex', flexDirection:'column' }}>
 
             {/* En-tête fixe */}
             <div style={{ padding:'20px 20px 0', flexShrink:0 }}>
@@ -240,7 +240,7 @@ function StatutBadge({ statut, statut_color, onEdit }) {
             </div>
 
             {/* Cases à cocher — scrollable */}
-            <div style={{ maxHeight:'calc(60vh)', overflowY:'auto', padding:'0 20px', WebkitOverflowScrolling:'touch' }}>
+            <div style={{ flex:1, minHeight:0, overflowY:'auto', padding:'0 20px', WebkitOverflowScrolling:'touch' }}>
               {validating.checks.map((check, i) => (
                 <div key={i} onClick={() => toggle(i)}
                   style={{ display:'flex', gap:14, alignItems:'flex-start', padding:'14px 0', borderBottom:'1px solid var(--bdr)', cursor:'pointer' }}>
