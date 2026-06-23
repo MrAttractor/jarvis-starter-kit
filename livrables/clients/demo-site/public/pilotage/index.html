@@ -997,6 +997,134 @@ function TabPlan() {
   );
 }
 
+/* ── ALIMENTER MODAL ─────────────────────────────────── */
+function AlimenterModal({ env, onConfirm, onCancel }) {
+  const [montant, setMontant] = useState('');
+  const [saving, setSaving]   = useState(false);
+  const val = montant && parseFloat(montant) > 0;
+
+  const save = async () => {
+    if (!val || saving) return;
+    setSaving(true);
+    const newEpargne = (env.epargne || 0) + parseFloat(montant);
+    const { error } = await SB.from('pilotage_enveloppes').update({ epargne: newEpargne }).eq('id', env.id);
+    setSaving(false);
+    if (!error) onConfirm({ ...env, epargne: newEpargne });
+  };
+
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.85)', zIndex:300, display:'flex', alignItems:'flex-end', justifyContent:'center' }}
+      onClick={e => { if (e.target === e.currentTarget) onCancel(); }}>
+      <div style={{ width:'100%', maxWidth:520, background:'var(--card)', borderRadius:'18px 18px 0 0', padding:'24px 20px 48px' }}>
+        <div style={{ width:36, height:4, borderRadius:2, background:'var(--bdr)', margin:'0 auto 20px' }} />
+        <div style={{ fontSize:15, fontWeight:800, color:'var(--ink)', marginBottom:3 }}>Alimenter l'enveloppe</div>
+        <div style={{ fontSize:12, color:'var(--mut)', marginBottom:20 }}>{env.nom} · {fmt(env.epargne || 0)} / {fmt(env.cible)}</div>
+        <div style={{ marginBottom:20 }}>
+          <div style={{ fontSize:10, fontWeight:700, color:'var(--mut)', letterSpacing:'1px', textTransform:'uppercase', marginBottom:6 }}>Montant à ajouter €</div>
+          <input value={montant} onChange={e => setMontant(e.target.value.replace(/[^0-9.]/g,''))}
+            inputMode="decimal" placeholder="0.00" style={iStyle} autoFocus />
+        </div>
+        <div style={{ display:'flex', gap:10 }}>
+          <button onClick={onCancel} style={{ flex:1, minHeight:44, borderRadius:12, border:'1.5px solid var(--bdr)', background:'transparent', color:'var(--mut)', fontWeight:700, fontSize:13, cursor:'pointer', fontFamily:'inherit' }}>Annuler</button>
+          <button onClick={save} disabled={!val||saving}
+            style={{ flex:2, minHeight:44, borderRadius:12, border:'none',
+              background:val?'var(--grn)':'rgba(0,0,0,.06)',
+              color:val?'#fff':'var(--faint)',
+              fontWeight:800, fontSize:13, cursor:val?'pointer':'not-allowed', fontFamily:'inherit', transition:'.2s' }}>
+            {saving ? 'Enregistrement…' : val ? '+'+fmt(parseFloat(montant))+' →' : 'Saisir un montant'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── ENVELOPPE CARD ──────────────────────────────────── */
+function EnveloppeCard({ env, onAlimenter }) {
+  const epargne = env.epargne || 0;
+  const pct     = Math.min(100, Math.round((epargne / env.cible) * 100));
+  const reste   = env.cible - epargne;
+  const barCol  = pct >= 75 ? 'var(--grn)' : pct >= 40 ? 'var(--acc)' : 'var(--red)';
+  const hzLabel = env.horizon === 'court' ? 'Court terme' : env.horizon === 'moyen' ? 'Moyen terme' : 'Long terme';
+  const hzBadge = env.horizon === 'court' ? 'org' : env.horizon === 'moyen' ? 'blu' : 'neu';
+
+  return (
+    <div style={{ padding:'14px 16px', borderBottom:'1px solid var(--bdr)' }}>
+      <div className="row between" style={{ marginBottom:8, alignItems:'flex-start' }}>
+        <div className="col g3 grow" style={{ minWidth:0 }}>
+          <span className="b truncate" style={{ fontSize:13 }}>{env.nom}</span>
+          {env.description && <span className="t-xs mut truncate">{env.description}</span>}
+        </div>
+        <div style={{ display:'flex', gap:4, flexShrink:0, marginLeft:8 }}>
+          <span className={'badge '+(env.categorie==='pro'?'blu':'grn')} style={{ fontSize:10, padding:'2px 6px' }}>{env.categorie==='pro'?'Pro':'Perso'}</span>
+          <span className={'badge '+hzBadge} style={{ fontSize:10, padding:'2px 6px' }}>{hzLabel}</span>
+        </div>
+      </div>
+      <div style={{ marginBottom:8 }}>
+        <div className="row between" style={{ marginBottom:5 }}>
+          <span className="b num" style={{ fontSize:14, color:barCol }}>{fmt(epargne)}</span>
+          <span className="t-xs mut">sur {fmt(env.cible)} · reste {fmt(reste)}</span>
+        </div>
+        <div style={{ height:7, borderRadius:100, background:'rgba(0,0,0,.07)', overflow:'hidden' }}>
+          <div style={{ height:'100%', width:pct+'%', background:barCol, borderRadius:100, transition:'.5s' }} />
+        </div>
+      </div>
+      <div className="row between" style={{ alignItems:'center' }}>
+        <span style={{ fontSize:11, fontWeight:700, color:barCol }}>{pct}% constitué</span>
+        <button onClick={() => onAlimenter(env)}
+          style={{ minHeight:36, padding:'0 14px', borderRadius:9, border:'none',
+            background:'var(--grn-s)', color:'var(--grn)', fontWeight:800, fontSize:12, cursor:'pointer', fontFamily:'inherit' }}>
+          + Alimenter
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ── ENVELOPPES SECTION ──────────────────────────────── */
+function EnveloppesSection({ enveloppes, onUpdateEnveloppe }) {
+  const [alimenter, setAlimenter] = useState(null);
+
+  const total_cible   = enveloppes.reduce((s,e) => s + e.cible, 0);
+  const total_epargne = enveloppes.reduce((s,e) => s + (e.epargne||0), 0);
+  const total_reste   = total_cible - total_epargne;
+  const pct_global    = total_cible > 0 ? Math.min(100, Math.round((total_epargne/total_cible)*100)) : 0;
+
+  return (
+    <Fragment>
+      <div className="card" style={{ overflow:'hidden' }}>
+        <div style={{ padding:'14px 16px 12px', borderBottom:'1px solid var(--bdr)', background:'rgba(0,0,0,.02)' }}>
+          <div className="row between" style={{ marginBottom:10, alignItems:'flex-start' }}>
+            <div>
+              <div className="sect-label" style={{ margin:0, marginBottom:3 }}>Enveloppes & Objectifs</div>
+              <div className="t-xs mut">{enveloppes.length} objectifs · {fmt(total_reste)} restants</div>
+            </div>
+            <div className="col g3" style={{ alignItems:'flex-end' }}>
+              <span className="t-xs mut">Déjà constitué</span>
+              <span className="b num" style={{ fontSize:15, color:'var(--grn)' }}>{fmt(total_epargne)}</span>
+            </div>
+          </div>
+          <div style={{ height:7, borderRadius:100, background:'rgba(0,0,0,.07)', overflow:'hidden', marginBottom:5 }}>
+            <div style={{ height:'100%', width:pct_global+'%', background:'var(--grn)', borderRadius:100, transition:'.6s' }} />
+          </div>
+          <div className="t-xs mut">{pct_global}% de la suffisance financière · objectif total {fmt(total_cible)}</div>
+        </div>
+        {enveloppes.map((e,i) => (
+          <EnveloppeCard key={e.id} env={e} onAlimenter={setAlimenter} />
+        ))}
+      </div>
+
+      {alimenter && (
+        <AlimenterModal
+          env={alimenter}
+          onConfirm={updated => { onUpdateEnveloppe(updated); setAlimenter(null); }}
+          onCancel={() => setAlimenter(null)}
+        />
+      )}
+    </Fragment>
+  );
+}
+
 /* ── FINANCE MODAL ────────────────────────────────────── */
 function FinanceModal({ onConfirm, onCancel }) {
   const [type, setType]   = useState('entree');
@@ -1146,7 +1274,7 @@ function CoachFinancier({ finances }) {
 }
 
 /* ── TAB FINANCE ──────────────────────────────────────── */
-function TabFinance({ finances, onAdd }) {
+function TabFinance({ finances, enveloppes, onAdd, onUpdateEnveloppe }) {
   const [showModal, setShowModal] = useState(false);
   const [filter, setFilter]       = useState('all');
 
@@ -1213,6 +1341,9 @@ function TabFinance({ finances, onAdd }) {
           </div>
         </div>
       </div>
+
+      {/* Enveloppes */}
+      <EnveloppesSection enveloppes={enveloppes} onUpdateEnveloppe={onUpdateEnveloppe} />
 
       {/* Coach financier */}
       <CoachFinancier finances={finances} />
@@ -1293,8 +1424,9 @@ function App() {
   const [focus, setFocus]       = useState([]);
   const [pipeline, setPipeline] = useState([]);
   const [projets, setProjets]   = useState([]);
-  const [finances, setFinances] = useState([]);
-  const [loading, setLoading]   = useState(true);
+  const [finances, setFinances]     = useState([]);
+  const [enveloppes, setEnveloppes] = useState([]);
+  const [loading, setLoading]       = useState(true);
 
   useEffect(() => {
     Promise.all([
@@ -1303,12 +1435,14 @@ function App() {
       SB.from('pilotage_pipeline').select('*, source, wa_draft').order('priorite'),
       SB.from('pilotage_projets').select('*').order('priorite'),
       SB.from('pilotage_finances').select('*').order('date', { ascending: false }),
-    ]).then(([capR, focusR, pipeR, projR, finR]) => {
+      SB.from('pilotage_enveloppes').select('*').order('priorite'),
+    ]).then(([capR, focusR, pipeR, projR, finR, envR]) => {
       if (capR.data)   setCap(capR.data);
       if (focusR.data) setFocus(focusR.data);
       if (pipeR.data)  setPipeline(pipeR.data);
       if (projR.data)  setProjets(projR.data);
       if (finR.data)   setFinances(finR.data);
+      if (envR.data)   setEnveloppes(envR.data);
       setLoading(false);
       document.getElementById('boot')?.remove();
     });
@@ -1361,6 +1495,11 @@ function App() {
     setFinances(prev => [entry, ...prev]);
   };
 
+  /* Enveloppes handlers */
+  const handleEnveloppeUpdate = (updated) => {
+    setEnveloppes(prev => prev.map(e => e.id === updated.id ? updated : e));
+  };
+
   const heure = new Date().getHours();
   const salut = heure < 12 ? 'Bonjour' : heure < 18 ? 'Bon après-midi' : 'Bonsoir';
 
@@ -1387,7 +1526,7 @@ function App() {
         {tab === 'pipeline' && <TabPipeline pipeline={pipeline} onEditProchaine={handlePipeProchaine} onEditStatut={handlePipeStatut} onEditContact={handlePipeContact} onEditSetup={handlePipeSetup} onEditMensuel={handlePipeMensuel} onAddProspect={handlePipeAdd} />}
         {tab === 'plan'     && <TabPlan />}
         {tab === 'projets'  && <TabProjets projets={projets} onEditProchaine={handleProjetProchaine} />}
-        {tab === 'finance'  && <TabFinance finances={finances} onAdd={handleFinanceAdd} />}
+        {tab === 'finance'  && <TabFinance finances={finances} enveloppes={enveloppes} onAdd={handleFinanceAdd} onUpdateEnveloppe={handleEnveloppeUpdate} />}
         {tab === 'demos'    && <TabDemos />}
       </div>
     </div>
