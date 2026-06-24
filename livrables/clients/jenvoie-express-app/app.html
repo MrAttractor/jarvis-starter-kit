@@ -216,6 +216,26 @@
   </div>
 </div>
 
+<!-- MODAL MODIFIER COLIS -->
+<div class="modal-bg" id="modal-edit-colis">
+  <div class="modal">
+    <div class="modal-title">✏ Modifier le colis</div>
+    <div id="modal-edit-info" style="background:rgba(91,184,245,.08);border:1px solid rgba(91,184,245,.2);border-radius:10px;padding:.7rem 1rem;margin-bottom:1.2rem;font-size:.82rem;color:rgba(255,255,255,.75);"></div>
+    <div class="form-grid">
+      <div class="form-group"><label>MONTANT PAYÉ (€)</label><input type="number" id="e-montant" step="0.01" placeholder="ex: 120"></div>
+      <div class="form-group"><label>POIDS RÉEL (kg)</label><input type="number" id="e-poids" step="0.1" placeholder="ex: 3.5"></div>
+      <div class="form-group full"><label>ARTICLES</label><textarea id="e-articles" rows="3" placeholder="Ex: 1 téléphone Samsung, 2 paires de chaussures..."></textarea></div>
+      <div class="form-group full"><label>CONTACT RÉCUPÉRATION</label><input type="text" id="e-contact" placeholder="+225 07 XX ou +33 6 XX"></div>
+      <div class="form-group"><label>QUARTIER ABIDJAN</label><input type="text" id="e-quartier" placeholder="Ex: Cocody, Marcory..."></div>
+      <div class="form-group"><label>PRIX LIVRAISON ABJ (€)</label><input type="number" id="e-prix-livraison" step="0.01" placeholder="ex: 5"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-outline" onclick="closeModal('modal-edit-colis')">Annuler</button>
+      <button class="btn-primary" onclick="saveEditColis()">Enregistrer les modifications</button>
+    </div>
+  </div>
+</div>
+
 <div class="app">
 <!-- SIDEBAR -->
 <aside class="sidebar" id="main-sidebar">
@@ -589,6 +609,7 @@ async function loadEnCours() {
     .neq('statut', 'livre')
     .order('created_at', { ascending: false })
 
+  window._enCoursData = data || []
   document.getElementById('badge-encours').textContent = (data || []).length || '0'
 
   const tbody = document.getElementById('encours-tbody')
@@ -617,7 +638,10 @@ async function loadEnCours() {
         </select>
       </td>
       <td>
-        ${wa && c.numero ? `<button class="btn-green" style="font-size:.65rem;padding:.25rem .55rem;" onclick="envoyerSuivi('${c.numero}','${wa}','${prenom}')">📲 Suivi</button>` : '—'}
+        <div style="display:flex;gap:.3rem;flex-wrap:wrap;align-items:center;">
+          ${wa && c.numero ? `<button class="btn-green" style="font-size:.65rem;padding:.25rem .55rem;" onclick="envoyerSuivi('${c.numero}','${wa}','${prenom}')">📲 Suivi</button>` : ''}
+          <button class="btn-outline" style="font-size:.65rem;padding:.25rem .55rem;" onclick="openEditColis('${c.id}')">✏ Modifier</button>
+        </div>
       </td>
     </tr>`
   }).join('')
@@ -643,6 +667,43 @@ async function loadParametres() {
       <span style="color:var(--gold);font-family:'Syne',sans-serif;font-weight:600;">${fmt(v.date_depart)}</span>
       <span style="font-size:.65rem;color:rgba(255,255,255,.35);">${v.statut}</span>
     </div>`).join('')
+}
+
+// ============================================================
+// MODIFIER UN COLIS
+// ============================================================
+let _editColisId = null
+
+function openEditColis(id) {
+  const c = (window._enCoursData || []).find(x => x.id === id)
+  if (!c) return toast('Colis introuvable', true)
+  _editColisId = id
+  const nom = c.clients?.nom || c.nom_expediteur || '—'
+  document.getElementById('modal-edit-info').textContent = `N° ${c.numero} · ${nom}`
+  document.getElementById('e-montant').value = c.montant || ''
+  document.getElementById('e-poids').value = c.poids || ''
+  document.getElementById('e-articles').value = c.articles || ''
+  document.getElementById('e-contact').value = c.contact_reception || ''
+  document.getElementById('e-quartier').value = c.quartier_abidjan || ''
+  document.getElementById('e-prix-livraison').value = c.prix_livraison || ''
+  openModal('modal-edit-colis')
+}
+
+async function saveEditColis() {
+  if (!_editColisId) return
+  const updates = {
+    montant:           parseFloat(document.getElementById('e-montant').value) || null,
+    poids:             parseFloat(document.getElementById('e-poids').value) || null,
+    articles:          document.getElementById('e-articles').value.trim() || null,
+    contact_reception: document.getElementById('e-contact').value.trim() || null,
+    quartier_abidjan:  document.getElementById('e-quartier').value.trim() || null,
+    prix_livraison:    parseFloat(document.getElementById('e-prix-livraison').value) || null,
+  }
+  const { error } = await sb.from('colis').update(updates).eq('id', _editColisId)
+  if (error) { toast('Erreur lors de la modification', true); return }
+  closeModal('modal-edit-colis')
+  toast('Colis mis à jour')
+  loadEnCours()
 }
 
 async function savePrix() {
