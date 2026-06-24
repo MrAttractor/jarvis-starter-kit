@@ -288,10 +288,11 @@
         <th>Client</th>
         <th>N° Colis</th>
         <th>Direction</th>
+        <th style="color:var(--gold);">Montant payé</th>
         <th>Statut</th>
         <th>Actions</th>
       </tr></thead>
-      <tbody id="encours-tbody"><tr><td colspan="5" class="empty-state">Aucun colis en cours</td></tr></tbody>
+      <tbody id="encours-tbody"><tr><td colspan="6" class="empty-state">Aucun colis en cours</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -445,6 +446,27 @@
     </div>
   </div>
   <div class="card" style="max-width:480px;margin-top:1rem;">
+    <div class="card-title">Tarifs fret maritime (Paris)</div>
+    <p style="font-size:.8rem;color:rgba(248,250,255,.5);margin-bottom:1.2rem;">Prix tout compris livraison incluse, affichés sur le site public.</p>
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <div>
+        <label style="display:block;font-size:.7rem;color:var(--gold);letter-spacing:.5px;margin-bottom:.4rem;">BARIL + LIVRAISON (€)</label>
+        <input class="search-input" id="p-maritime-baril" type="number" min="1" style="width:100%;" placeholder="ex: 120">
+      </div>
+      <div>
+        <label style="display:block;font-size:.7rem;color:var(--sky);letter-spacing:.5px;margin-bottom:.4rem;">GRAND CARTON + LIVRAISON (€)</label>
+        <input class="search-input" id="p-maritime-grand" type="number" min="1" style="width:100%;" placeholder="ex: 120">
+      </div>
+      <div>
+        <label style="display:block;font-size:.7rem;color:var(--sky);letter-spacing:.5px;margin-bottom:.4rem;">MOYEN CARTON + LIVRAISON (€)</label>
+        <input class="search-input" id="p-maritime-moyen" type="number" min="1" style="width:100%;" placeholder="ex: 90">
+      </div>
+      <button class="btn-primary" onclick="saveTarifsMaritime()">Enregistrer les tarifs maritimes</button>
+      <div id="maritime-ok" style="display:none;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:.7rem 1rem;font-size:.8rem;color:#22C55E;">Tarifs maritimes mis à jour.</div>
+    </div>
+  </div>
+
+  <div class="card" style="max-width:480px;margin-top:1rem;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
       <div class="card-title" style="margin-bottom:0;">Prochains départs</div>
       <button class="btn-primary" style="font-size:.72rem;" onclick="openModal('modal-voyage')">+ Ajouter</button>
@@ -584,6 +606,7 @@ async function loadEnCours() {
       <td><strong>${nom}</strong><br><span style="font-size:.65rem;color:rgba(255,255,255,.4);">${wa}</span></td>
       <td style="font-family:'Syne',sans-serif;font-size:.78rem;color:var(--sky);">${c.numero}</td>
       <td>${routeLabel(route)}</td>
+      <td style="color:var(--gold);font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;">${c.montant ? c.montant + ' €' : '—'}</td>
       <td>
         <select style="background:rgba(0,31,92,.5);border:1px solid rgba(91,184,245,.2);border-radius:6px;color:white;font-size:.72rem;padding:.2rem .4rem;" onchange="updateStatutColis('${c.id}',this.value)">
           <option value="en_attente" ${c.statut==='en_attente'?'selected':''}>Demande reçue</option>
@@ -606,6 +629,9 @@ async function loadParametres() {
   const p = Object.fromEntries(data.map(r => [r.cle, r.valeur]))
   if (p.tarif_paris_abj) document.getElementById('p-paris-abj').value = p.tarif_paris_abj
   if (p.tarif_abj_paris) document.getElementById('p-abj-paris').value = p.tarif_abj_paris
+  if (p.tarif_maritime_baril) document.getElementById('p-maritime-baril').value = p.tarif_maritime_baril
+  if (p.tarif_maritime_grand) document.getElementById('p-maritime-grand').value = p.tarif_maritime_grand
+  if (p.tarif_maritime_moyen) document.getElementById('p-maritime-moyen').value = p.tarif_maritime_moyen
   const today = new Date().toISOString().split('T')[0]
   const { data: voys } = await sb.from('voyages').select('route,date_depart,statut').gte('date_depart', today).order('date_depart', { ascending: true }).limit(8)
   const el = document.getElementById('params-voyages')
@@ -628,6 +654,21 @@ async function savePrix() {
     { cle: 'tarif_abj_paris', valeur: abjParis }
   ], { onConflict: 'cle' })
   const ok = document.getElementById('prix-ok')
+  ok.style.display = 'block'
+  setTimeout(() => ok.style.display = 'none', 3000)
+}
+
+async function saveTarifsMaritime() {
+  const baril = document.getElementById('p-maritime-baril').value.trim()
+  const grand = document.getElementById('p-maritime-grand').value.trim()
+  const moyen = document.getElementById('p-maritime-moyen').value.trim()
+  if (!baril || !grand || !moyen) { alert('Remplissez les trois tarifs.'); return }
+  await sb.from('parametres').upsert([
+    { cle: 'tarif_maritime_baril', valeur: baril },
+    { cle: 'tarif_maritime_grand', valeur: grand },
+    { cle: 'tarif_maritime_moyen', valeur: moyen }
+  ], { onConflict: 'cle' })
+  const ok = document.getElementById('maritime-ok')
   ok.style.display = 'block'
   setTimeout(() => ok.style.display = 'none', 3000)
 }
