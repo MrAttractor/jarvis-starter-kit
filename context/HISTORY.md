@@ -7,6 +7,81 @@
 
 ---
 
+## 2026-06-24 (session 73 — Beynaud DMV V2 + Bible Attractor + migrations infra)
+
+### Beynaud DMV V2 — RDV 30 juin
+- 3 fichiers déployés sur Cloudflare Workers : `app.html` (dashboard artiste), `fan.html` (espace Fami), `brief.html` (préparation RDV)
+- Naming validé : Fami (base) / Fami Gold (19,99€) / Clan Latiss (49,99€) — Fami = Famille, Latiss = surnom de Serge Beynaud. Jamais "Mes Fami", toujours "Fami, j'ai un truc pour vous"
+- Fonctionnalités DMV : compteur fans live animé, calculateur revenus interactif (curseur), carte géo fans animée, feed inscriptions en temps réel, player audio, countdown live, fan wall, boutique SVG
+- YouTube embed intégré dans fan.html (video IenC34xgq9o)
+- 3 modèles économiques formalisés : abonnement mensuel (idéal long terme) / pay-per-event (compatible XPaye) / boutique + exclusifs offerts (recommandé pour démarrer)
+- XPaye partenaire paiement confirmé — ne gère pas le récurrent automatique pour l'instant
+
+### Migrations infra actées
+- Demo-site migré définitivement sur Cloudflare Workers (`demo-agenceattractor` worker, `npx wrangler deploy`) — Netlify en pause, ne plus utiliser
+- /prime reconfiguré : plus de fetch Notion CRM, scan livrables/ + croisement HISTORY.md pour anticiper les points chauds
+
+### Bible Attractor — initiative identifiée
+- Concept validé : Single Source of Truth multi-agents (Vision + Principes + UX + Architecture + Qualité + Agents)
+- 60% de la matière existe déjà (CONTEXT.md MAÎTRE, UX_SYSTEM.md, BASE_CONNAISSANCE_ASSISTS.md, mémoire agents)
+- Manque : architecture technique formalisée, ADR, Guardian system
+- Session dédiée à planifier pour construire la Bible complète
+
+---
+
+## 2026-06-24 (session 72 — ETHSUN proposition + NDA gate + exigences qualité)
+
+### Call discovery ETHSUN + requalification
+- Call effectué le 23/06/2026 à 22h30 avec Jean Calvin ETHIEN (oxford@ethsun.org)
+- Requalifié Famille B + A hybride : pas une app métier, mais audit + intégrations N8N + stratégie contenu + lancement livre
+- Stack existante : Dolibarr (depuis 2020) + HubSpot + site en production
+- Client techniquement averti (utilise Claude, connaît les outils)
+- Maquette 8 écrans OS ETHSUN déplacée vers `template-executive-edu` (réutilisable secteur éducation executive)
+
+### Proposition de mission envoyée
+- `demo.agenceattractor.com/ethsun/` : single-page NDA gate + proposition complète
+- Pattern Beynaud appliqué : 1 seul lien, NDA modal auto-appear, confirm + mailto, proposition révélée
+- 3 formules : Formule I 800€ (Cartographie & Audit) / Formule II 2 500€+300€/mois (Intégration & Stratégie, Recommandée) / Formule III 5 000€+500€/mois (Accélérateur Complet)
+- Email envoyé à oxford@ethsun.org. Statut : en attente NDA + choix formule
+
+### Exigences qualité actées (définitif)
+- Checklist QA obligatoire avant tout livrable : NDA, scope sans ambiguïté, coûts de livraison calculés, liens testés, résidus template éliminés, recommandations positionnées comme expérience terrain (pas IA)
+- Zéro marge d'erreur sur les livrables B2B exécutifs
+- Patterns validés à respecter systématiquement sans réinventer (Beynaud NDA gate = référence)
+- Scope auto-publication LinkedIn/réseaux interdit (LinkedIn API bloque les profils perso) : remplacé par "accompagnement à la publication"
+- Toujours calculer les coûts de sous-traitance (vidéo, PR) avant inclusion dans une offre
+
+### Corrections majeures session
+- Nom client corrigé : Jean Calvin ETHIEN (pas "Jean-Calvin Étienne")
+- Titre livre corrigé : "L'Afrique des entrepreneurs - Bâtir dans la tempête" (5 occurrences)
+- Unicode chars (━━━, ×) retirés du body mailto : incompatibles Outlook → remplacés par ASCII pur
+
+---
+
+## 2026-06-23 (session 71 — Maquette ETHSUN + fix desktop + fonts)
+
+### Prospect ETHSUN entrant
+- www.ethsun.org : executive education Afrique (partenariat Oxford), 2 500+ dirigeants, 20 pays, 3 centres
+- Besoin : automatiser tous les process business (inscriptions, CRM, paiements, relances) + vendre le livre "L'Afrique des Entrepreneurs - Bâtir dans la tempête"
+- Maquette produite depuis sources publiques en session : `demo.agenceattractor.com/ethsun` (8 écrans, light mode navy/blanc, Cormorant Garamond + Inter)
+- Décision closing : pas de prix sur l'écran S6, seulement les features par palier. Budget demandé pendant le call, chiffrage dans le devis PDF sous 24h
+- Call prévu ce soir à 22h30
+
+### Fix desktop maquette ETHSUN
+- Problème : la maquette s'étirait en plein écran sur desktop
+- Fix : ajout `.app-shell` max-width 430px centré, fond gris (#D8D4CE) autour, nav passée de `position:fixed` à `position:sticky`, `.screen` min-height recalculé (`100vh - 52px`)
+- Règle validée : toutes les maquettes mobiles doivent avoir ce shell desktop dès la création
+
+### Fix déploiement Cloudflare Pages
+- Bug : `npx wrangler deploy` pousse vers Cloudflare Workers (`*.workers.dev`) alors que le DNS pointe vers Cloudflare Pages (`demo-agenceattractor.pages.dev`)
+- Fix : toujours utiliser `npx wrangler pages deploy ./public --project-name demo-agenceattractor --commit-dirty=true`
+- Les deux produits (Workers / Pages) sont distincts sur Cloudflare
+
+### Fonts ETHSUN
+- Toutes les tailles de police augmentées sur l'ensemble des 8 écrans (minimum 13px pour les labels, 14px pour les textes courants)
+
+---
+
 ## 2026-06-23 (session 70 — Automatisation process commercial + Knowledge Base)
 
 ### Sprint 1 : Notion Knowledge Base

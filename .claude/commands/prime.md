@@ -15,21 +15,27 @@ Lis dans cet ordre, en intégralité :
 2. `context/CONTEXT.md` (mon contexte personnel et professionnel)
 3. `context/HISTORY.md` (l'historique de mes sessions précédentes)
 
-### Étape 2 : Charger le CRM Notion
+### Étape 2 : Relire ce qui a été produit pour anticiper
 
-Lis le CRM Notion pour avoir l'état réel et à jour du pipeline :
-- Page CRM : https://app.notion.com/p/37a4257524c681e6a510c98e53210ffe
-- Fetch la base Dossiers (collection://e6f8bb59-bee7-47d6-b8c0-69bf92de00a2)
-- Extraire : tous les dossiers actifs (statut != Perdu / Clôturé), leur statut, prochaine action, montants
+Scanne la structure `livrables/` pour avoir une vue complète de ce qui existe déjà :
+- `livrables/clients/` : toutes les apps métiers livrées ou en cours par client
+- `livrables/ecosysteme-attractor/` : les apps internes (Assists, Pilotage, Fidelys, etc.)
+- `livrables/commercial/` : supports de vente, devis, maquettes closing
 
-Si le CRM n'est pas accessible, signale-le et utilise les infos de CONTEXT.md à la place.
+Pour chaque livrable identifié, croise avec HISTORY.md pour détecter :
+- Ce qui est **livré et déployé** (rien à faire)
+- Ce qui est **en suspens** (commencé mais pas terminé ou pas testé)
+- Ce qui a une **suite logique** non encore engagée (prochain chantier naturel)
+- Ce qui a des **bugs connus** ou retours clients non traités
+
+L'objectif n'est pas de lister tout ce qui existe, mais de dégager les **points chauds** : ce sur quoi il y a de la valeur à reprendre ou à faire avancer.
 
 ### Étape 3 : Résumer ta compréhension
 
 Présente-moi un résumé clair et synthétique en suivant cette structure :
 
 ```
-Bonjour [Prénom], j'ai bien chargé ton contexte. Voici où on en est :
+Bonjour Mac Arthur, j'ai chargé ton contexte. Voici ce que je vois :
 
 **Qui tu es**
 - [Synthèse en 2-3 lignes du profil]
@@ -37,16 +43,16 @@ Bonjour [Prénom], j'ai bien chargé ton contexte. Voici où on en est :
 **Tes objectifs court terme**
 - [Top 3 des objectifs en cours]
 
-**Pipeline actif (depuis Notion)**
-- [Liste des dossiers actifs avec statut et prochaine action]
+**Ce qu'on a déjà produit**
+- [Liste des livrables actifs par client/projet, avec statut court]
 
-**Projets internes actifs**
-- [Liste des projets en cours hors clients]
+**Points chauds à anticiper**
+- [2 à 4 sujets qui ont une suite logique ou un chantier en suspens]
 
 **Dernière session**
-- [Si HISTORY.md contient une entrée récente, la résumer]
+- [Si HISTORY.md contient une entrée récente, la résumer en 2-3 lignes]
 
-Je suis prêt à t'aider. Que veux-tu faire aujourd'hui ?
+Je suis prêt. Que veux-tu faire aujourd'hui ?
 ```
 
 ### Étape 4 : Attendre les instructions
@@ -62,3 +68,4 @@ Ne lance aucune action de toi-même. Attends que je te donne le sujet de la sess
 - Ne fais pas de suppositions sur ce qu'on doit faire aujourd'hui, attends mes instructions
 - Le résumé doit être en français et utiliser le tutoiement
 - Pas de tirets longs (em dashes) dans tes réponses
+- Ne pas aller chercher le CRM Notion ni le pipeline clients : l'état des dossiers est dans CONTEXT.md et HISTORY.md
