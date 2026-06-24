@@ -114,7 +114,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"nom\": \"{{ $json.prenom }} — {{ $json.activite }}\",\n  \"contact\": \"{{ $json.whatsapp }}\",\n  \"activite\": \"{{ $json.activite }}\",\n  \"famille\": \"A\",\n  \"zone\": \"{{ $json.zone }}\",\n  \"statut\": \"En contact\",\n  \"statut_color\": \"neu\",\n  \"prochaine\": \"{{ $json.qualification }}\",\n  \"source\": \"inbound_site\",\n  \"wa_draft\": \"{{ $json.wa_draft }}\",\n  \"priorite\": 1,\n  \"urgent\": true\n}"
+        "jsonBody": "={\n  \"id\": \"inb-{{ $json.prospect_id }}\",\n  \"nom\": \"{{ $json.prenom }} — {{ $json.activite }}\",\n  \"contact\": \"{{ $json.whatsapp }}\",\n  \"activite\": \"{{ $json.activite }}\",\n  \"famille\": \"A\",\n  \"zone\": \"{{ $json.zone }}\",\n  \"statut\": \"En contact\",\n  \"statut_color\": \"neu\",\n  \"prochaine\": \"{{ $json.qualification }}\",\n  \"source\": \"inbound_site\",\n  \"wa_draft\": \"{{ $json.wa_draft }}\",\n  \"priorite\": 1,\n  \"urgent\": true\n}"
       },
       "id": "node-insert-pipeline",
       "name": "Insérer dans pilotage_pipeline",
