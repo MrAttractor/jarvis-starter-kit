@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>BEYNAUD ARMY — Espace Fan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --noir:#070707;--n2:#0f0f0f;--n3:#171717;--n4:#1f1f1f;--n5:#2a2a2a;
+  --rouge:#CC0000;--rouge-glow:rgba(204,0,0,.4);
+  --chrome:#C8C8C8;--chrome-dim:rgba(200,200,200,.5);
+  --or:#D4A017;--or-dim:rgba(212,160,23,.2);
+  --blanc:#FFFFFF;--dim:rgba(255,255,255,.45);--faint:rgba(255,255,255,.07);
+  --bebas:'Bebas Neue',sans-serif;--inter:'Inter',sans-serif;
+}
+html,body{background:var(--noir);color:var(--blanc);font-family:var(--inter);overflow-x:hidden;}
+button{font-family:var(--inter);cursor:pointer;border:none;outline:none;}
+svg{display:block;}
+
+/* ── Hero cinématique */
+.hero{height:58vh;position:relative;overflow:hidden;flex-shrink:0;}
+.hero img{width:100%;height:100%;object-fit:cover;object-position:top center;}
+.hero-grad{position:absolute;inset:0;
+  background:linear-gradient(0deg,var(--noir) 0%,rgba(7,7,7,.55) 50%,rgba(7,7,7,.15) 100%);}
+.hero-content{position:absolute;bottom:0;left:0;right:0;padding:24px 20px;}
+.hero-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--chrome-dim);margin-bottom:8px;}
+.hero-title{font-family:var(--bebas);font-size:56px;letter-spacing:2px;line-height:.95;margin-bottom:12px;}
+.hero-membership{display:inline-flex;align-items:center;gap:6px;
+  background:var(--rouge);border-radius:20px;padding:5px 14px;
+  font-size:11px;font-weight:800;letter-spacing:.5px;margin-bottom:12px;
+  box-shadow:0 4px 16px var(--rouge-glow);}
+.countdown{display:flex;align-items:flex-end;gap:6px;}
+.cdt{background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;padding:6px 10px;text-align:center;min-width:46px;}
+.cdt-num{font-family:var(--bebas);font-size:24px;line-height:1;color:var(--rouge);}
+.cdt-lbl{font-size:9px;color:var(--dim);letter-spacing:.5px;text-transform:uppercase;}
+.cdt-sep{font-family:var(--bebas);font-size:22px;color:var(--rouge);padding-bottom:4px;}
+.countdown-label{font-size:10px;color:var(--dim);padding-bottom:3px;margin-left:4px;}
+
+/* ── Scroll body */
+.scroll{padding:20px 20px 72px;}
+
+/* ── Message Serge */
+.serge-msg{background:var(--n3);border:1px solid var(--faint);border-radius:18px;padding:18px;margin-bottom:14px;}
+.sm-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.sm-avatar{width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid var(--rouge);flex-shrink:0;}
+.sm-avatar img{width:100%;height:100%;object-fit:cover;object-position:top;}
+.sm-id{flex:1;}
+.sm-name{font-size:14px;font-weight:800;}
+.sm-verified{font-size:10px;color:var(--rouge);font-weight:700;margin-top:1px;}
+.sm-time{font-size:10px;color:var(--dim);}
+.sm-bubble{background:var(--n4);border-radius:0 14px 14px 14px;padding:14px 16px;
+  font-size:13px;line-height:1.65;color:rgba(255,255,255,.82);}
+
+/* ── Player */
+.player{background:linear-gradient(135deg,#140000,var(--n3));
+  border:1px solid rgba(204,0,0,.22);border-radius:18px;padding:20px;margin-bottom:14px;}
+.pt{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.pt-cover{width:54px;height:54px;border-radius:11px;overflow:hidden;flex-shrink:0;
+  background:linear-gradient(135deg,var(--rouge),#500000);}
+.pt-cover img{width:100%;height:100%;object-fit:cover;object-position:top;}
+.pt-info{}
+.pt-exclu{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--rouge);margin-bottom:3px;}
+.pt-title{font-size:15px;font-weight:800;}
+.pt-meta{font-size:11px;color:var(--dim);margin-top:2px;}
+.progress-wrap{height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:8px;position:relative;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--rouge),#ff6060);border-radius:2px;width:32%;
+  transition:width .5s linear;}
+.pt-times{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);margin-bottom:14px;}
+.controls{display:flex;align-items:center;justify-content:center;gap:20px;}
+.ctrl{width:38px;height:38px;border-radius:50%;background:var(--n5);
+  display:flex;align-items:center;justify-content:center;}
+.ctrl-play{width:54px;height:54px;border-radius:50%;background:var(--rouge);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 24px var(--rouge-glow);}
+.ctrl-play .pause-ico{display:none;}
+.ctrl-play.playing .play-ico{display:none;}
+.ctrl-play.playing .pause-ico{display:block;}
+
+/* ── Section title */
+.section-title{font-family:var(--bebas);font-size:26px;letter-spacing:1px;margin-bottom:12px;}
+
+/* ── Contenu exclusif */
+.exclu-list{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+.exclu-item{background:var(--n3);border:1px solid var(--faint);border-radius:14px;
+  display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;transition:all .15s;}
+.exclu-item:active{border-color:var(--rouge);}
+.exclu-thumb{width:54px;height:54px;border-radius:11px;flex-shrink:0;overflow:hidden;
+  position:relative;display:flex;align-items:center;justify-content:center;}
+.exclu-thumb img{width:100%;height:100%;object-fit:cover;}
+.exclu-play{position:absolute;width:26px;height:26px;border-radius:50%;
+  background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;}
+.exclu-info{flex:1;}
+.exclu-type{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.exclu-name{font-size:13px;font-weight:700;}
+.exclu-meta{font-size:11px;color:var(--dim);margin-top:2px;}
+.exclu-lock .exclu-thumb{background:var(--n5);opacity:.55;}
+
+/* ── Fan wall */
+.fan-wall{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.fan-msg{background:var(--n3);border:1px solid var(--faint);border-radius:12px;padding:12px 14px;}
+.fm-header{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.fm-av{width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;}
+.fm-name{font-size:12px;font-weight:700;}
+.fm-flag{font-size:14px;}
+.fm-text{font-size:12px;line-height:1.55;color:rgba(255,255,255,.75);}
+.fm-likes{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;color:var(--dim);}
+
+/* ── Boutique */
+.boutique-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.prod{background:var(--n3);border:1px solid var(--faint);border-radius:14px;overflow:hidden;cursor:pointer;}
+.prod:active{border-color:var(--rouge);}
+.prod-visual{height:120px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.prod-visual img{width:100%;height:100%;object-fit:cover;}
+.prod-badge{position:absolute;top:8px;left:8px;background:var(--rouge);border-radius:5px;
+  font-size:9px;font-weight:800;padding:2px 7px;letter-spacing:.5px;}
+.prod-body{padding:10px 12px 12px;}
+.prod-name{font-size:13px;font-weight:700;}
+.prod-ed{font-size:10px;color:var(--dim);margin-top:1px;}
+.prod-price{font-family:var(--bebas);font-size:20px;color:var(--rouge);margin-top:5px;}
+.prod-add{width:100%;margin-top:8px;padding:9px;background:var(--n5);border-radius:9px;
+  color:#fff;font-size:12px;font-weight:700;}
+.prod-add:active{background:var(--rouge);}
+
+/* ── Upgrade banner */
+.upgrade{background:linear-gradient(135deg,#0d0000,var(--n3));
+  border:1px solid rgba(212,160,23,.25);border-radius:18px;padding:20px;
+  display:flex;align-items:center;gap:14px;margin-bottom:8px;}
+.upg-icon{width:44px;height:44px;border-radius:12px;background:var(--or-dim);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.upg-title{font-size:14px;font-weight:800;margin-bottom:3px;}
+.upg-sub{font-size:11px;color:var(--dim);line-height:1.5;}
+.upg-btn{background:var(--or);border-radius:9px;color:#000;font-size:12px;font-weight:800;
+  padding:8px 14px;flex-shrink:0;white-space:nowrap;}
+.upg-btn:active{opacity:.8;}
+
+/* ── Toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);
+  background:var(--n2);border:1px solid rgba(204,0,0,.45);border-radius:14px;
+  padding:12px 20px;font-size:13px;font-weight:600;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:999;
+  white-space:nowrap;box-shadow:0 8px 40px rgba(0,0,0,.7);}
+.toast.show{transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- Hero cinématique -->
+<div class="hero">
+  <img src="serge-concert.jpg" alt="Serge Beynaud"/>
+  <div class="hero-grad"></div>
+  <div class="hero-content">
+    <div class="hero-label">Fan Club Officiel</div>
+    <div class="hero-title">SERGE<br>BEYNAUD</div>
+    <div class="hero-membership">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="#fff"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+      INNER CIRCLE
+    </div>
+    <div class="countdown">
+      <div class="cdt"><div class="cdt-num" id="cd-j">05</div><div class="cdt-lbl">Jours</div></div>
+      <div class="cdt-sep">:</div>
+      <div class="cdt"><div class="cdt-num" id="cd-h">14</div><div class="cdt-lbl">Heures</div></div>
+      <div class="cdt-sep">:</div>
+      <div class="cdt"><div class="cdt-num" id="cd-m">32</div><div class="cdt-lbl">Min</div></div>
+      <div class="countdown-label">avant le live exclusif</div>
+    </div>
+  </div>
+</div>
+
+<div class="scroll">
+
+  <!-- Message Serge -->
+  <div class="serge-msg">
+    <div class="sm-header">
+      <div class="sm-avatar"><img src="serge-creatair.jpg" alt="Serge"/></div>
+      <div class="sm-id">
+        <div class="sm-name">Serge Beynaud</div>
+        <div class="sm-verified">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="var(--rouge)" style="display:inline;margin-right:3px;"><polyline points="20,6 9,17 4,12"/></svg>
+          Artiste vérifié
+        </div>
+      </div>
+      <div class="sm-time">Il y a 3h</div>
+    </div>
+    <div class="sm-bubble">
+      Mes ARMY, je vous prépare quelque chose d'inédit pour ce live. Vous allez entendre des sons que personne n'a encore entendus. Restez connectés, c'est pour vous.
+    </div>
+  </div>
+
+  <!-- Player audio -->
+  <div class="player">
+    <div class="pt">
+      <div class="pt-cover"><img src="serge-creatair.jpg" alt=""/></div>
+      <div class="pt-info">
+        <div class="pt-exclu">Exclusif Inner Circle</div>
+        <div class="pt-title">La Joie — Version acoustique</div>
+        <div class="pt-meta">Avant sortie officielle · 4:22</div>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-fill" id="prog-fill"></div>
+    </div>
+    <div class="pt-times"><span id="pt-time">1:18</span><span>4:22</span></div>
+    <div class="controls">
+      <div class="ctrl" onclick="t('Titre précédent')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chrome-dim)" stroke-width="2" stroke-linecap="round"><polygon points="19,20 9,12 19,4"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+      </div>
+      <div class="ctrl-play" id="play-btn" onclick="togglePlay()">
+        <svg class="play-ico" width="20" height="20" viewBox="0 0 24 24" fill="#fff"><polygon points="5,3 19,12 5,21"/></svg>
+        <svg class="pause-ico" width="20" height="20" viewBox="0 0 24 24" fill="#fff"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+      </div>
+      <div class="ctrl" onclick="t('Audio inédit suivant : Femme Idéale')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chrome-dim)" stroke-width="2" stroke-linecap="round"><polygon points="5,4 15,12 5,20"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenu exclusif -->
+  <div class="section-title">CONTENU EXCLUSIF</div>
+  <div class="exclu-list">
+
+    <div class="exclu-item" onclick="t('Lecture : Backstage — Zénith de Paris')">
+      <div class="exclu-thumb">
+        <img src="serge-concert.jpg" alt=""/>
+        <div class="exclu-play"><svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><polygon points="5,3 19,12 5,21"/></svg></div>
+      </div>
+      <div class="exclu-info">
+        <div class="exclu-type" style="color:var(--rouge);">Vidéo backstage</div>
+        <div class="exclu-name">Coulisses — Zénith de Paris</div>
+        <div class="exclu-meta">12 min · Publié il y a 3 jours</div>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
+    </div>
+
+    <div class="exclu-item" onclick="t('Replay disponible jusqu\'au 30 juin')">
+      <div class="exclu-thumb" style="background:linear-gradient(135deg,#1a0000,#2a0a0a);">
+        <div class="exclu-play"><svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><polygon points="5,3 19,12 5,21"/></svg></div>
+      </div>
+      <div class="exclu-info">
+        <div class="exclu-type" style="color:var(--or);">Replay live privé</div>
+        <div class="exclu-name">Répétition tournée 2026</div>
+        <div class="exclu-meta">47 min · Backstage members only</div>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
+    </div>
+
+    <div class="exclu-item exclu-lock" style="opacity:.6;" onclick="t('Passez au Backstage pour débloquer ce contenu')">
+      <div class="exclu-thumb" style="background:var(--n5);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div class="exclu-info">
+        <div class="exclu-type" style="color:var(--or);">Backstage requis</div>
+        <div class="exclu-name">Rencontre VIP — 30 juin Abidjan</div>
+        <div class="exclu-meta">Accès réservé aux membres Backstage</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Fan wall -->
+  <div class="section-title">CE QUE DISENT TES FANS</div>
+  <div class="fan-wall">
+    <div class="fan-msg">
+      <div class="fm-header">
+        <div class="fm-av" style="background:linear-gradient(135deg,#1a3a00,#2a5a00);">B</div>
+        <div class="fm-name">Bintou K.</div>
+        <div class="fm-flag">🇨🇮</div>
+      </div>
+      <div class="fm-text">Ce live privé c'était INCROYABLE. Serge qui répond aux messages en direct, on se sent vraiment privilégiés. Cette plateforme vaut tellement son prix.</div>
+      <div class="fm-likes">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--rouge)" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        284 · Inner Circle
+      </div>
+    </div>
+    <div class="fan-msg">
+      <div class="fm-header">
+        <div class="fm-av" style="background:linear-gradient(135deg,#001a3a,#002a5a);">M</div>
+        <div class="fm-name">Marcus D.</div>
+        <div class="fm-flag">🇫🇷</div>
+      </div>
+      <div class="fm-text">Depuis Paris, impossible d'aller à chaque concert. Grâce à l'espace membre, j'ai les backstages, les messages, les lives. Je suis dans l'univers de Serge tous les jours.</div>
+      <div class="fm-likes">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--rouge)" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        197 · Inner Circle
+      </div>
+    </div>
+  </div>
+
+  <!-- Boutique -->
+  <div class="section-title">BOUTIQUE OFFICIELLE</div>
+  <div class="boutique-grid">
+    <div class="prod" onclick="t('T-shirt ARMY ajouté au panier — 29€')">
+      <div class="prod-visual" style="background:linear-gradient(135deg,#1a0000,#3a0000);">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="rgba(204,0,0,.35)" stroke-width="1.2" stroke-linecap="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
+        <div class="prod-badge">2026</div>
+      </div>
+      <div class="prod-body">
+        <div class="prod-name">T-shirt ARMY</div>
+        <div class="prod-ed">Sérigraphie exclusive</div>
+        <div class="prod-price">29 €</div>
+        <button class="prod-add">Ajouter</button>
+      </div>
+    </div>
+    <div class="prod" onclick="t('CD Dédicacé ajouté — signature originale')">
+      <div class="prod-visual" style="background:linear-gradient(135deg,#0a0a1a,#1a1a3a);">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="rgba(100,100,200,.3)" stroke-width="1.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <div class="prod-body">
+        <div class="prod-name">CD Dédicacé</div>
+        <div class="prod-ed">Signature de Serge</div>
+        <div class="prod-price">45 €</div>
+        <button class="prod-add">Ajouter</button>
+      </div>
+    </div>
+    <div class="prod" onclick="t('Hoodie ARMY ajouté')">
+      <div class="prod-visual" style="background:linear-gradient(135deg,#0f0000,#1f0000);">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="rgba(204,0,0,.3)" stroke-width="1.2" stroke-linecap="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
+        <div class="prod-badge">LIMITED</div>
+      </div>
+      <div class="prod-body">
+        <div class="prod-name">Hoodie ARMY</div>
+        <div class="prod-ed">Broderie premium</div>
+        <div class="prod-price">65 €</div>
+        <button class="prod-add">Ajouter</button>
+      </div>
+    </div>
+    <div class="prod" onclick="t('Photo dédicacée ajoutée — livraison 5-7j')">
+      <div class="prod-visual" style="background:#0a0a0a;">
+        <img src="serge-creatair.jpg" alt="Serge" style="opacity:.45;object-position:top;"/>
+        <div class="prod-badge">RARE</div>
+      </div>
+      <div class="prod-body">
+        <div class="prod-name">Photo dédicacée</div>
+        <div class="prod-ed">Format A4 originale</div>
+        <div class="prod-price">35 €</div>
+        <button class="prod-add">Ajouter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upgrade Backstage -->
+  <div class="upgrade" onclick="t('Redirection vers la page Backstage — 49,99€/mois')">
+    <div class="upg-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="2" stroke-linecap="round">
+        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+      </svg>
+    </div>
+    <div style="flex:1;">
+      <div class="upg-title">Passer Backstage</div>
+      <div class="upg-sub">Rencontre VIP · lives ultra-privés · merch réservé</div>
+    </div>
+    <button class="upg-btn">49,99 €</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let _tt;
+function t(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),2500);}
+
+// Countdown
+let secs=5*86400+14*3600+32*60;
+(function tick(){
+  const j=Math.floor(secs/86400),h=Math.floor((secs%86400)/3600),m=Math.floor((secs%3600)/60);
+  document.getElementById('cd-j').textContent=String(j).padStart(2,'0');
+  document.getElementById('cd-h').textContent=String(h).padStart(2,'0');
+  document.getElementById('cd-m').textContent=String(m).padStart(2,'0');
+  if(secs-->0)setTimeout(tick,1000);
+})();
+
+// Player
+let playing=false,progW=32,progInt;
+function togglePlay(){
+  playing=!playing;
+  const btn=document.getElementById('play-btn');
+  if(playing){
+    btn.classList.add('playing');
+    t('Lecture : La Joie — Version acoustique');
+    progInt=setInterval(()=>{
+      progW=Math.min(100,progW+.02);
+      document.getElementById('prog-fill').style.width=progW+'%';
+      const secs2=Math.round(progW/100*262);
+      document.getElementById('pt-time').textContent=Math.floor(secs2/60)+':'+(secs2%60+'').padStart(2,'0');
+    },100);
+  } else {
+    btn.classList.remove('playing');
+    clearInterval(progInt);
+    t('Pause');
+  }
+}
+</script>
+</body>
+</html>

@@ -3,463 +3,360 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>BEYNAUD ARMY — Plateforme Officielle</title>
+<title>BEYNAUD ARMY — Dashboard Artiste</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
-  --noir:#070707;--noir2:#111;--noir3:#1a1a1a;--noir4:#222;
-  --rouge:#CC0000;--rouge-vif:#E8000B;--rouge-s:rgba(204,0,0,.12);
-  --chrome:#C8C8C8;--chrome-s:rgba(200,200,200,.08);
-  --or:#D4A017;--or-s:rgba(212,160,23,.12);
-  --blanc:#FFFFFF;--mut:rgba(255,255,255,.35);--faint:rgba(255,255,255,.12);
+  --noir:#070707;--n2:#0f0f0f;--n3:#171717;--n4:#1f1f1f;--n5:#2a2a2a;
+  --rouge:#CC0000;--rouge-glow:rgba(204,0,0,.4);
+  --chrome:#C8C8C8;--chrome-dim:rgba(200,200,200,.5);
+  --or:#D4A017;--or-dim:rgba(212,160,23,.2);
+  --vert:#16A34A;
+  --blanc:#FFFFFF;--dim:rgba(255,255,255,.45);--faint:rgba(255,255,255,.07);
+  --bebas:'Bebas Neue',sans-serif;--inter:'Inter',sans-serif;
 }
-html,body{height:100%;width:100%;background:var(--noir);color:var(--blanc);
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
-  overflow-x:hidden;}
-.screen{display:none;min-height:100vh;flex-direction:column;}
-.screen.on{display:flex;}
-button{font-family:inherit;cursor:pointer;border:none;outline:none;}
+html,body{background:var(--noir);color:var(--blanc);font-family:var(--inter);overflow-x:hidden;}
+button{font-family:var(--inter);cursor:pointer;border:none;outline:none;}
+svg{display:block;}
 
-/* ── SPLASH ── */
-#s-splash{
-  background:var(--noir);
-  align-items:center;justify-content:center;
-  position:relative;overflow:hidden;
-}
-.splash-bg{
-  position:absolute;inset:0;
-  background:url('serge-concert.jpg') center/cover no-repeat;
-  opacity:.18;
-}
-.splash-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(7,7,7,0) 0%,rgba(7,7,7,.9) 60%,var(--noir) 100%);
-}
-.splash-content{position:relative;z-index:2;text-align:center;padding:32px 24px 48px;}
-.splash-logo{
-  width:72px;height:72px;background:var(--rouge);border-radius:18px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:800;letter-spacing:1px;color:#fff;
-  margin:0 auto 24px;box-shadow:0 8px 32px rgba(204,0,0,.4);
-}
-.splash-title{font-size:34px;font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:8px;}
-.splash-title span{color:var(--rouge);}
-.splash-sub{font-size:14px;color:var(--mut);margin-bottom:40px;line-height:1.6;}
-.badge-live{display:inline-flex;align-items:center;gap:6px;background:var(--rouge-s);border:1px solid var(--rouge);
-  border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--rouge);margin-bottom:32px;}
-.badge-live .dot{width:6px;height:6px;border-radius:50%;background:var(--rouge);animation:pulse 1.2s infinite;}
+/* ── Header */
+.header{padding:20px 20px 0;display:flex;align-items:center;justify-content:space-between;}
+.header-brand{display:flex;align-items:center;gap:8px;}
+.header-logo{width:32px;height:32px;background:var(--rouge);border-radius:9px;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px var(--rouge-glow);}
+.header-name{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);}
+.live-pill{display:flex;align-items:center;gap:5px;background:rgba(204,0,0,.12);
+  border:1px solid rgba(204,0,0,.3);border-radius:20px;padding:5px 12px;
+  font-size:11px;font-weight:700;color:var(--rouge);}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--rouge);animation:pulse 1.4s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.role-grid{display:flex;flex-direction:column;gap:12px;width:100%;max-width:340px;margin:0 auto;}
-.role-btn{
-  width:100%;padding:18px 20px;border-radius:16px;border:1.5px solid var(--faint);
-  background:rgba(255,255,255,.04);color:#fff;
-  display:flex;align-items:center;gap:16px;
-  transition:all .2s;text-align:left;
-}
-.role-btn:active,.role-btn:hover{border-color:var(--rouge);background:var(--rouge-s);}
-.role-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-.role-icon.rouge{background:var(--rouge-s);border:1px solid rgba(204,0,0,.3);}
-.role-icon.chrome{background:var(--chrome-s);border:1px solid rgba(200,200,200,.15);}
-.role-label{font-size:15px;font-weight:700;}
-.role-desc{font-size:12px;color:var(--mut);margin-top:2px;}
 
-/* ── SHARED HEADER ── */
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 20px 0;flex-shrink:0;
-}
-.topbar-logo{display:flex;align-items:center;gap:8px;}
-.topbar-mark{width:30px;height:30px;background:var(--rouge);border-radius:8px;
-  display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;}
-.topbar-name{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--mut);}
-.topbar-back{background:var(--chrome-s);border:1px solid var(--faint);border-radius:8px;
-  color:#fff;padding:6px 14px;font-size:12px;font-weight:600;}
-.scroll-body{flex:1;overflow-y:auto;padding:20px 20px 48px;}
+/* ── Main scroll */
+.scroll{padding:20px 20px 72px;}
 
-/* ── ARTISTE DASHBOARD ── */
-.artiste-hero{
-  background:linear-gradient(135deg,var(--rouge) 0%,#800000 100%);
-  border-radius:16px;padding:20px;margin-bottom:20px;position:relative;overflow:hidden;
-}
-.artiste-hero::after{content:'';position:absolute;right:-20px;top:-20px;
-  width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.06);}
-.artiste-greeting{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:4px;}
-.artiste-name{font-size:22px;font-weight:800;letter-spacing:-.5px;}
-.artiste-stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:16px;}
-.astat{background:rgba(0,0,0,.2);border-radius:10px;padding:10px 8px;text-align:center;}
-.astat-val{font-size:18px;font-weight:800;letter-spacing:-.5px;}
-.astat-lbl{font-size:10px;color:rgba(255,255,255,.6);margin-top:2px;letter-spacing:.5px;text-transform:uppercase;}
+/* ── Greeting */
+.greeting{margin-bottom:20px;}
+.greeting-sub{font-size:13px;color:var(--dim);font-weight:500;margin-bottom:4px;}
+.greeting-title{font-family:var(--bebas);font-size:42px;letter-spacing:1px;line-height:1;}
+.greeting-title span{color:var(--rouge);}
 
-.section-title{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
-  color:var(--mut);margin-bottom:12px;}
-.actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;}
-.action-card{
-  background:var(--noir3);border:1px solid var(--faint);border-radius:14px;
-  padding:16px 14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;
-  transition:all .2s;
-}
-.action-card:active{border-color:var(--rouge);background:var(--rouge-s);}
-.action-icon{font-size:22px;}
-.action-label{font-size:13px;font-weight:700;}
-.action-desc{font-size:11px;color:var(--mut);line-height:1.4;}
+/* ── Live counter */
+.live-block{background:linear-gradient(135deg,#140000 0%,#0d0d0d 100%);
+  border:1px solid rgba(204,0,0,.3);border-radius:20px;padding:22px 20px;margin-bottom:14px;position:relative;overflow:hidden;}
+.live-block::before{content:'';position:absolute;right:-30px;top:-30px;
+  width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(204,0,0,.12) 0%,transparent 70%);}
+.lb-tag{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--rouge);display:flex;align-items:center;gap:5px;margin-bottom:10px;}
+.lb-main{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;}
+.lb-num{font-family:var(--bebas);font-size:64px;letter-spacing:2px;line-height:1;}
+.lb-unit{font-size:14px;font-weight:600;color:var(--dim);}
+.lb-trend{font-size:12px;color:#22C55E;font-weight:600;margin-bottom:18px;}
+.lb-progress{height:3px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;margin-bottom:6px;}
+.lb-bar{height:100%;width:57%;background:linear-gradient(90deg,var(--rouge),#ff4444);border-radius:2px;}
+.lb-progress-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);}
 
-.fans-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
-.fan-row{background:var(--noir3);border:1px solid var(--faint);border-radius:12px;
-  padding:12px 14px;display:flex;align-items:center;justify-content:space-between;}
-.fan-info{}
-.fan-name{font-size:13px;font-weight:700;}
-.fan-meta{font-size:11px;color:var(--mut);margin-top:2px;}
-.fan-badge{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;}
-.fan-badge.inner{background:var(--or-s);color:var(--or);border:1px solid rgba(212,160,23,.3);}
-.fan-badge.back{background:var(--rouge-s);color:var(--rouge);border:1px solid rgba(204,0,0,.3);}
-.fan-badge.sup{background:var(--chrome-s);color:var(--chrome);border:1px solid rgba(200,200,200,.15);}
+/* ── Quick stats */
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.stat{background:var(--n3);border:1px solid var(--faint);border-radius:16px;padding:16px;}
+.stat-val{font-family:var(--bebas);font-size:30px;letter-spacing:.5px;}
+.stat-val.or{color:var(--or);}
+.stat-val.vert{color:#22C55E;}
+.stat-lbl{font-size:11px;color:var(--dim);margin-top:2px;font-weight:500;}
+.stat-sub{font-size:10px;color:var(--dim);opacity:.6;margin-top:6px;}
 
-.revenus-card{background:var(--noir3);border:1px solid var(--faint);border-radius:14px;padding:16px;margin-bottom:24px;}
-.rev-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--faint);}
-.rev-row:last-child{border-bottom:none;}
-.rev-label{font-size:13px;color:var(--mut);}
-.rev-val{font-size:13px;font-weight:700;}
-.rev-val.grn{color:#22C55E;}
-.rev-val.rouge{color:var(--rouge);}
+/* ── Calculateur */
+.calc{background:var(--n3);border:1px solid var(--faint);border-radius:18px;padding:20px;margin-bottom:14px;}
+.block-title{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);margin-bottom:14px;}
+.calc-result{font-family:var(--bebas);font-size:46px;color:var(--or);letter-spacing:1px;line-height:1;}
+.calc-desc{font-size:12px;color:var(--dim);margin-top:4px;margin-bottom:18px;}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;border-radius:2px;outline:none;
+  background:linear-gradient(90deg,var(--rouge) 30%,var(--n5) 30%);margin-bottom:8px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+  background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.5);cursor:pointer;}
+.calc-range-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);}
 
-/* ── FAN ESPACE ── */
-.fan-hero{position:relative;height:240px;overflow:hidden;flex-shrink:0;}
-.fan-hero img{width:100%;height:100%;object-fit:cover;}
-.fan-hero-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(7,7,7,.2) 0%,rgba(7,7,7,.85) 100%);
-  display:flex;flex-direction:column;justify-content:flex-end;padding:20px;
-}
-.fan-artist-name{font-size:26px;font-weight:800;letter-spacing:-.5px;}
-.fan-tagline{font-size:13px;color:rgba(255,255,255,.6);margin-top:4px;}
-.fan-plan-badge{display:inline-flex;align-items:center;gap:6px;
-  background:var(--rouge);border-radius:20px;padding:5px 14px;
-  font-size:11px;font-weight:800;color:#fff;margin-top:10px;}
+/* ── Carte */
+.map-block{background:var(--n3);border:1px solid var(--faint);border-radius:18px;padding:20px;margin-bottom:14px;}
+.map-surface{position:relative;height:150px;background:var(--n4);border-radius:12px;overflow:hidden;margin-bottom:14px;}
+.map-grid{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:24px 24px;}
+.mp{position:absolute;width:10px;height:10px;border-radius:50%;transform:translate(-50%,-50%);}
+.mp::after{content:'';position:absolute;inset:-4px;border-radius:50%;animation:ring 2.5s infinite ease-out;}
+@keyframes ring{0%{box-shadow:0 0 0 0 currentColor;opacity:.7}100%{box-shadow:0 0 0 14px transparent;opacity:0}}
+.mp.rouge{background:var(--rouge);color:rgba(204,0,0,.5);}
+.mp.or{background:var(--or);color:rgba(212,160,23,.5);}
+.mp.chrome{background:var(--chrome-dim);color:rgba(200,200,200,.3);}
+.cities{display:flex;flex-wrap:wrap;gap:8px;}
+.city{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;}
+.city-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 
-.content-grid{display:flex;flex-direction:column;gap:12px;margin-bottom:24px;}
-.content-card{background:var(--noir3);border:1px solid var(--faint);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s;}
-.content-card:active{border-color:var(--rouge);}
-.content-thumb{height:120px;background:linear-gradient(135deg,var(--noir4),var(--noir3));
-  display:flex;align-items:center;justify-content:center;position:relative;}
-.content-thumb img{width:100%;height:100%;object-fit:cover;opacity:.6;}
-.content-play{
-  position:absolute;width:48px;height:48px;border-radius:50%;
-  background:var(--rouge);display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 20px rgba(204,0,0,.5);
-}
-.content-body{padding:12px 14px;}
-.content-type{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--rouge);margin-bottom:4px;}
-.content-title{font-size:14px;font-weight:700;}
-.content-meta{font-size:11px;color:var(--mut);margin-top:4px;}
-.lock-overlay{
-  position:absolute;inset:0;background:rgba(7,7,7,.7);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
-}
-.lock-overlay span{font-size:10px;font-weight:700;color:var(--or);letter-spacing:.5px;}
+/* ── Notifications */
+.notif-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.notif{background:var(--n3);border:1px solid var(--faint);border-radius:12px;
+  padding:12px 14px;display:flex;align-items:center;gap:10px;animation:slidein .35s ease;}
+@keyframes slidein{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+.nav{width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--rouge),#800000);
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;}
+.notif-body{flex:1;}
+.notif-name{font-size:13px;font-weight:700;}
+.notif-sub{font-size:11px;color:var(--dim);margin-top:1px;}
+.badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:7px;flex-shrink:0;}
+.badge.back{background:rgba(204,0,0,.15);color:var(--rouge);}
+.badge.inner{background:var(--or-dim);color:var(--or);}
+.badge.sup{background:var(--n5);color:var(--chrome-dim);}
+.notif-time{font-size:10px;color:var(--dim);margin-left:2px;flex-shrink:0;}
 
-.boutique-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
-.product-card{background:var(--noir3);border:1px solid var(--faint);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s;}
-.product-card:active{border-color:var(--rouge);}
-.product-img{height:130px;background:linear-gradient(135deg,#1a0000,#2a0a0a);
-  display:flex;align-items:center;justify-content:center;font-size:36px;}
-.product-body{padding:10px 12px;}
-.product-name{font-size:13px;font-weight:700;}
-.product-price{font-size:15px;font-weight:800;color:var(--rouge);margin-top:4px;}
-.product-badge{font-size:10px;color:var(--mut);}
-.btn-add{width:100%;margin-top:8px;padding:8px;background:var(--rouge);border-radius:8px;
-  color:#fff;font-size:12px;font-weight:700;}
+/* ── Actions */
+.actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.action{background:var(--n3);border:1px solid var(--faint);border-radius:16px;
+  padding:16px 14px;display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:all .15s;}
+.action:active{border-color:var(--rouge);background:rgba(204,0,0,.07);transform:scale(.97);}
+.action.primary{background:var(--rouge);border-color:transparent;box-shadow:0 6px 24px var(--rouge-glow);}
+.action-icon{width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;}
+.action.primary .action-icon{background:rgba(0,0,0,.2);}
+.action-lbl{font-size:13px;font-weight:700;}
+.action-desc{font-size:11px;color:var(--dim);}
 
-/* ── NOTIF TOAST ── */
-.toast{
-  position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);
-  background:#1a1a1a;border:1px solid var(--rouge);border-radius:12px;
-  padding:12px 20px;font-size:13px;font-weight:600;color:#fff;
-  transition:transform .3s;z-index:999;white-space:nowrap;
-  box-shadow:0 8px 32px rgba(0,0,0,.5);
-}
+/* ── Fan link */
+.fan-link-card{background:linear-gradient(135deg,#0d0d1a,var(--n3));
+  border:1px solid rgba(212,160,23,.25);border-radius:18px;padding:20px;
+  display:flex;align-items:center;gap:14px;}
+.flc-icon{width:44px;height:44px;border-radius:12px;background:var(--or-dim);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.flc-body{flex:1;}
+.flc-title{font-size:14px;font-weight:800;margin-bottom:3px;}
+.flc-url{font-size:11px;color:var(--or);font-weight:600;}
+.flc-btn{background:var(--or-dim);border:1px solid rgba(212,160,23,.3);border-radius:9px;
+  color:var(--or);font-size:12px;font-weight:700;padding:7px 14px;flex-shrink:0;}
+.flc-btn:active{background:rgba(212,160,23,.35);}
+
+/* ── Toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);
+  background:var(--n2);border:1px solid rgba(204,0,0,.45);border-radius:14px;
+  padding:12px 20px;font-size:13px;font-weight:600;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:999;
+  white-space:nowrap;box-shadow:0 8px 40px rgba(0,0,0,.7);}
 .toast.show{transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════ SPLASH -->
-<div class="screen on" id="s-splash">
-  <div class="splash-bg"></div>
-  <div class="splash-overlay"></div>
-  <div class="splash-content">
-    <div class="splash-logo">BA</div>
-    <div class="badge-live"><span class="dot"></span>PLATEFORME OFFICIELLE</div>
-    <div class="splash-title">BEYNAUD<br><span>ARMY</span></div>
-    <div class="splash-sub">L'espace exclusif de Serge Beynaud.<br>Contenu inédit, boutique officielle, communauté.</div>
-    <div class="role-grid">
-      <button class="role-btn" onclick="goArtiste()">
-        <div class="role-icon rouge">🎤</div>
-        <div>
-          <div class="role-label">Serge Beynaud</div>
-          <div class="role-desc">Accéder à mon dashboard artiste</div>
-        </div>
-      </button>
-      <button class="role-btn" onclick="goFan()">
-        <div class="role-icon chrome">⭐</div>
-        <div>
-          <div class="role-label">Espace Fan Premium</div>
-          <div class="role-desc">Membre Inner Circle — Abidjan</div>
-        </div>
-      </button>
+<div class="header">
+  <div class="header-brand">
+    <div class="header-logo">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+        <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+      </svg>
     </div>
+    <div class="header-name">Dashboard Artiste</div>
   </div>
+  <div class="live-pill"><span class="live-dot"></span>EN DIRECT</div>
 </div>
 
-<!-- ═══════════════════════════════════════════════ ARTISTE -->
-<div class="screen" id="s-artiste">
-  <div class="topbar">
-    <div class="topbar-logo">
-      <div class="topbar-mark">BA</div>
-      <div class="topbar-name">Dashboard Artiste</div>
-    </div>
-    <button class="topbar-back" onclick="goBack()">← Retour</button>
+<div class="scroll">
+
+  <div class="greeting">
+    <div class="greeting-sub">Bonjour Serge</div>
+    <div class="greeting-title">TON <span>EMPIRE</span></div>
   </div>
-  <div class="scroll-body">
 
-    <div class="artiste-hero">
-      <div class="artiste-greeting">Bonjour Serge 👋</div>
-      <div class="artiste-name">Bienvenue sur ta plateforme</div>
-      <div class="artiste-stats-row">
-        <div class="astat">
-          <div class="astat-val">2 847</div>
-          <div class="astat-lbl">Membres</div>
-        </div>
-        <div class="astat">
-          <div class="astat-val">4 320 €</div>
-          <div class="astat-lbl">Ce mois</div>
-        </div>
-        <div class="astat">
-          <div class="astat-val">+23</div>
-          <div class="astat-lbl">Cette semaine</div>
-        </div>
-      </div>
+  <!-- Compteur live -->
+  <div class="live-block">
+    <div class="lb-tag"><span class="live-dot"></span>FANS ACTIFS EN TEMPS RÉEL</div>
+    <div class="lb-main">
+      <div class="lb-num" id="fan-counter">2 847</div>
+      <div class="lb-unit">membres</div>
     </div>
-
-    <div class="section-title">Actions rapides</div>
-    <div class="actions-grid">
-      <div class="action-card" onclick="toast('Publication planifiée pour demain 18h')">
-        <div class="action-icon">📸</div>
-        <div class="action-label">Publier du contenu</div>
-        <div class="action-desc">Photo, vidéo, audio inédit</div>
-      </div>
-      <div class="action-card" onclick="toast('Message envoyé à 2 847 membres')">
-        <div class="action-icon">💬</div>
-        <div class="action-label">Message fans</div>
-        <div class="action-desc">Notifier toute ta communauté</div>
-      </div>
-      <div class="action-card" onclick="toast('Boutique : 3 commandes en attente')">
-        <div class="action-icon">🛍️</div>
-        <div class="action-label">Boutique</div>
-        <div class="action-desc">3 commandes à traiter</div>
-      </div>
-      <div class="action-card" onclick="toast('Prochain live : samedi 28 juin 20h')">
-        <div class="action-icon">🔴</div>
-        <div class="action-label">Live exclusif</div>
-        <div class="action-desc">Planifier ou démarrer</div>
-      </div>
-    </div>
-
-    <div class="section-title">Revenus ce mois</div>
-    <div class="revenus-card">
-      <div class="rev-row">
-        <span class="rev-label">Abonnements Backstage (49,99€)</span>
-        <span class="rev-val grn">+1 249 €</span>
-      </div>
-      <div class="rev-row">
-        <span class="rev-label">Abonnements Inner Circle (19,99€)</span>
-        <span class="rev-val grn">+2 159 €</span>
-      </div>
-      <div class="rev-row">
-        <span class="rev-label">Abonnements Supporter (9,99€)</span>
-        <span class="rev-val grn">+912 €</span>
-      </div>
-      <div class="rev-row">
-        <span class="rev-label">Boutique (merch)</span>
-        <span class="rev-val grn">+680 €</span>
-      </div>
-      <div class="rev-row" style="margin-top:4px;">
-        <span class="rev-label" style="font-weight:700;color:#fff;">Total net (70%)</span>
-        <span class="rev-val" style="font-size:17px;color:var(--rouge);">3 024 €</span>
-      </div>
-    </div>
-
-    <div class="section-title">Derniers membres inscrits</div>
-    <div class="fans-list">
-      <div class="fan-row">
-        <div class="fan-info">
-          <div class="fan-name">Kouamé Adjoua</div>
-          <div class="fan-meta">Abidjan · il y a 2h</div>
-        </div>
-        <span class="fan-badge back">Backstage</span>
-      </div>
-      <div class="fan-row">
-        <div class="fan-info">
-          <div class="fan-name">Diallo Mariam</div>
-          <div class="fan-meta">Paris · il y a 5h</div>
-        </div>
-        <span class="fan-badge inner">Inner Circle</span>
-      </div>
-      <div class="fan-row">
-        <div class="fan-info">
-          <div class="fan-name">Brou Yves</div>
-          <div class="fan-meta">Bouaké · hier</div>
-        </div>
-        <span class="fan-badge sup">Supporter</span>
-      </div>
-      <div class="fan-row">
-        <div class="fan-info">
-          <div class="fan-name">Koné Fanta</div>
-          <div class="fan-meta">Abidjan · hier</div>
-        </div>
-        <span class="fan-badge inner">Inner Circle</span>
-      </div>
-    </div>
-
+    <div class="lb-trend" id="fan-trend">+3 inscriptions aujourd'hui · +23 cette semaine</div>
+    <div class="lb-progress"><div class="lb-bar" id="lb-bar"></div></div>
+    <div class="lb-progress-lbl"><span>0</span><span>57 % vers l'objectif 5 000</span><span>5 000</span></div>
   </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-val or">4 320 €</div>
+      <div class="stat-lbl">Revenus ce mois</div>
+      <div class="stat-sub">+18 % vs mois dernier</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val vert">94 %</div>
+      <div class="stat-lbl">Renouvellements</div>
+      <div class="stat-sub">Inner Circle + Backstage</div>
+    </div>
+  </div>
+
+  <!-- Calculateur -->
+  <div class="calc">
+    <div class="block-title">Simulation de revenus</div>
+    <div class="calc-result" id="calc-res">4 320 € / mois</div>
+    <div class="calc-desc" id="calc-desc">à 2 847 membres (situation actuelle)</div>
+    <input type="range" id="calc-slider" min="500" max="10000" value="2847"/>
+    <div class="calc-range-lbl"><span>500 fans</span><span>10 000 fans</span></div>
+  </div>
+
+  <!-- Carte -->
+  <div class="map-block">
+    <div class="block-title">Tes fans dans le monde</div>
+    <div class="map-surface">
+      <div class="map-grid"></div>
+      <div class="mp rouge" style="left:34%;top:58%;"></div>
+      <div class="mp rouge" style="left:36%;top:54%;"></div>
+      <div class="mp rouge" style="left:46%;top:29%;"></div>
+      <div class="mp or"    style="left:47%;top:26%;"></div>
+      <div class="mp or"    style="left:27%;top:51%;"></div>
+      <div class="mp or"    style="left:46%;top:31%;"></div>
+      <div class="mp chrome" style="left:22%;top:29%;"></div>
+      <div class="mp chrome" style="left:24%;top:35%;"></div>
+    </div>
+    <div class="cities">
+      <div class="city"><div class="city-dot" style="background:var(--rouge);"></div>Abidjan 1 284</div>
+      <div class="city"><div class="city-dot" style="background:var(--rouge);"></div>Paris 523</div>
+      <div class="city"><div class="city-dot" style="background:var(--or);"></div>Bruxelles 198</div>
+      <div class="city"><div class="city-dot" style="background:var(--or);"></div>Dakar 211</div>
+      <div class="city"><div class="city-dot" style="background:var(--chrome-dim);"></div>Montréal 142</div>
+      <div class="city"><div class="city-dot" style="background:var(--chrome-dim);"></div>New York 89</div>
+    </div>
+  </div>
+
+  <!-- Feed inscriptions -->
+  <div class="block-title" style="margin-bottom:10px;">Inscriptions en direct</div>
+  <div class="notif-list" id="notif-list">
+    <div class="notif">
+      <div class="nav">K</div>
+      <div class="notif-body">
+        <div class="notif-name">Kouamé Adjoua</div>
+        <div class="notif-sub">Abidjan · vient de rejoindre</div>
+      </div>
+      <div class="badge back">Backstage</div>
+      <div class="notif-time">2 min</div>
+    </div>
+    <div class="notif">
+      <div class="nav" style="background:linear-gradient(135deg,var(--or),#8B6914);">D</div>
+      <div class="notif-body">
+        <div class="notif-name">Diallo Mariam</div>
+        <div class="notif-sub">Paris · vient de rejoindre</div>
+      </div>
+      <div class="badge inner">Inner Circle</div>
+      <div class="notif-time">5 min</div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="block-title" style="margin-bottom:10px;">Actions</div>
+  <div class="actions-grid">
+    <div class="action primary" onclick="t('Message envoyé à 2 847 fans — 94% ouvert en moins de 10 min')">
+      <div class="action-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+          <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/>
+        </svg>
+      </div>
+      <div class="action-lbl">Envoyer à tous</div>
+      <div class="action-desc">Notification push · 2 847 fans</div>
+    </div>
+    <div class="action" onclick="t('Live exclusif programmé — 847 places · Notification envoyée')">
+      <div class="action-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--chrome-dim)" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
+          <line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/>
+        </svg>
+      </div>
+      <div class="action-lbl">Live exclusif</div>
+      <div class="action-desc">Backstage members only</div>
+    </div>
+    <div class="action" onclick="t('Publication planifiée : demain 18h00')">
+      <div class="action-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--chrome-dim)" stroke-width="2" stroke-linecap="round">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21,15 16,10 5,21"/>
+        </svg>
+      </div>
+      <div class="action-lbl">Publier</div>
+      <div class="action-desc">Photo, vidéo, audio</div>
+    </div>
+    <div class="action" onclick="t('Boutique : 3 commandes à traiter · CA boutique : 680€ ce mois')">
+      <div class="action-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--chrome-dim)" stroke-width="2" stroke-linecap="round">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+      </div>
+      <div class="action-lbl">Boutique</div>
+      <div class="action-desc">3 commandes ce jour</div>
+    </div>
+  </div>
+
+  <!-- Lien fan -->
+  <div class="fan-link-card" onclick="t('Lien copié : demo-agenceattractor.workers.dev/beynaud/fan.html')">
+    <div class="flc-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="2" stroke-linecap="round">
+        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+      </svg>
+    </div>
+    <div class="flc-body">
+      <div class="flc-title">Lien fan à partager</div>
+      <div class="flc-url">demo.agenceattractor.com/beynaud/fan.html</div>
+    </div>
+    <button class="flc-btn">Copier</button>
+  </div>
+
 </div>
 
-<!-- ═══════════════════════════════════════════════ FAN -->
-<div class="screen" id="s-fan">
-  <div class="fan-hero">
-    <img src="serge-concert.jpg" alt="Serge Beynaud">
-    <div class="fan-hero-overlay">
-      <div class="fan-artist-name">Serge Beynaud</div>
-      <div class="fan-tagline">Artiste officiel · 2M+ fans</div>
-      <div class="fan-plan-badge">⭐ Inner Circle — Abidjan</div>
-    </div>
-  </div>
-
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px 0;">
-    <div class="topbar-name" style="color:rgba(255,255,255,.5);">Espace Membre</div>
-    <button class="topbar-back" onclick="goBack()">← Retour</button>
-  </div>
-
-  <div class="scroll-body">
-
-    <div class="section-title">Contenu exclusif ce mois</div>
-    <div class="content-grid">
-
-      <div class="content-card" onclick="toast('Lecture : Backstage Zénith Paris')">
-        <div class="content-thumb">
-          <img src="serge-creatair.jpg" alt="">
-          <div class="content-play">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><polygon points="5,3 19,12 5,21"/></svg>
-          </div>
-        </div>
-        <div class="content-body">
-          <div class="content-type">Vidéo backstage</div>
-          <div class="content-title">Coulisses — Zénith de Paris</div>
-          <div class="content-meta">12 min · Publié il y a 3 jours</div>
-        </div>
-      </div>
-
-      <div class="content-card" onclick="toast('Lecture : Extrait inédit La Joie')">
-        <div class="content-thumb" style="background:linear-gradient(135deg,#1a0000,#3a0a0a);">
-          <div class="content-play" style="background:var(--or);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><polygon points="5,3 19,12 5,21"/></svg>
-          </div>
-        </div>
-        <div class="content-body">
-          <div class="content-type" style="color:var(--or);">Audio inédit</div>
-          <div class="content-title">La Joie — Version acoustique</div>
-          <div class="content-meta">4 min 22 · Avant sortie officielle</div>
-        </div>
-      </div>
-
-      <div class="content-card" style="position:relative;opacity:.7;">
-        <div class="content-thumb">
-          <div class="lock-overlay">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            <span>BACKSTAGE ONLY</span>
-          </div>
-        </div>
-        <div class="content-body">
-          <div class="content-type" style="color:var(--or);">Live privé</div>
-          <div class="content-title">Répétition — Tournée 2026</div>
-          <div class="content-meta">Réservé aux membres Backstage</div>
-        </div>
-      </div>
-
-      <div class="content-card" onclick="toast('Message vocal de Serge en cours de lecture')">
-        <div class="content-thumb" style="background:linear-gradient(135deg,#001a00,#0a2a0a);">
-          <div class="content-play" style="background:#22C55E;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><polygon points="5,3 19,12 5,21"/></svg>
-          </div>
-        </div>
-        <div class="content-body">
-          <div class="content-type" style="color:#22C55E;">Message vocal</div>
-          <div class="content-title">Serge vous parle en direct</div>
-          <div class="content-meta">1 min 08 · Ce matin</div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="section-title">Boutique officielle</div>
-    <div class="boutique-grid">
-      <div class="product-card">
-        <div class="product-img">👕</div>
-        <div class="product-body">
-          <div class="product-name">T-shirt ARMY</div>
-          <div class="product-badge">Édition limitée 2026</div>
-          <div class="product-price">29 €</div>
-          <button class="btn-add" onclick="toast('Ajouté au panier : T-shirt ARMY')">Ajouter</button>
-        </div>
-      </div>
-      <div class="product-card">
-        <div class="product-img">💿</div>
-        <div class="product-body">
-          <div class="product-name">CD Dédicacé</div>
-          <div class="product-badge">Signature originale</div>
-          <div class="product-price">45 €</div>
-          <button class="btn-add" onclick="toast('Ajouté au panier : CD Dédicacé')">Ajouter</button>
-        </div>
-      </div>
-      <div class="product-card">
-        <div class="product-img">🎽</div>
-        <div class="product-body">
-          <div class="product-name">Hoodie ARMY</div>
-          <div class="product-badge">Rouge & Noir premium</div>
-          <div class="product-price">65 €</div>
-          <button class="btn-add" onclick="toast('Ajouté au panier : Hoodie ARMY')">Ajouter</button>
-        </div>
-      </div>
-      <div class="product-card">
-        <div class="product-img">📸</div>
-        <div class="product-body">
-          <div class="product-name">Photo dédicacée</div>
-          <div class="product-badge">Format A4 encadrée</div>
-          <div class="product-price">35 €</div>
-          <button class="btn-add" onclick="toast('Ajouté au panier : Photo dédicacée')">Ajouter</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
-function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on')); document.getElementById(id).classList.add('on'); window.scrollTo(0,0); }
-function goArtiste(){ show('s-artiste'); }
-function goFan(){ show('s-fan'); }
-function goBack(){ show('s-splash'); }
+let _tt;
+function t(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),2600);}
 
-let _toastTimer;
-function toast(msg){
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(_toastTimer);
-  _toastTimer = setTimeout(()=> el.classList.remove('show'), 2800);
-}
+// Calculateur
+const slider=document.getElementById('calc-slider');
+slider.addEventListener('input',function(){
+  const v=parseInt(this.value);
+  const rev=Math.round((v*.3*9.99+v*.5*19.99+v*.2*49.99)*.7);
+  const fmt=rev>=1000?(Math.round(rev/100)/10)+'k':rev;
+  document.getElementById('calc-res').textContent=fmt+'€ / mois';
+  document.getElementById('calc-desc').textContent='à '+v.toLocaleString('fr-FR')+' membres';
+  const pct=(this.value-500)/(10000-500)*100;
+  this.style.background=`linear-gradient(90deg,var(--rouge) ${pct}%,var(--n5) ${pct}%)`;
+});
+
+// Live fan counter
+let count=2847;
+const notifs=[
+  {i:'A',n:'Awa Traoré',v:'Bouaké',b:'inner',bl:'Inner Circle',g:'linear-gradient(135deg,var(--or),#8B6914)'},
+  {i:'M',n:'Mathis Kouadio',v:'Paris',b:'sup',bl:'Supporter',g:''},
+  {i:'F',n:'Fatou Koné',v:'Dakar',b:'back',bl:'Backstage',g:'linear-gradient(135deg,var(--rouge),#800000)'},
+  {i:'Y',n:'Yannick Brou',v:'Bruxelles',b:'inner',bl:'Inner Circle',g:'linear-gradient(135deg,var(--or),#8B6914)'},
+  {i:'N',n:'Nadia Coulibaly',v:'Abidjan',b:'back',bl:'Backstage',g:'linear-gradient(135deg,var(--rouge),#800000)'},
+];
+let ni=0;
+setInterval(()=>{
+  count++;
+  document.getElementById('fan-counter').textContent=count.toLocaleString('fr-FR');
+  const pct=Math.min(100,(count/5000*100)).toFixed(0);
+  document.getElementById('lb-bar').style.width=pct+'%';
+  document.getElementById('lb-progress-lbl')?.remove();
+  if(ni<notifs.length){
+    const d=notifs[ni++];
+    const feed=document.getElementById('notif-list');
+    const el=document.createElement('div');
+    el.className='notif';
+    el.innerHTML=`<div class="nav" style="${d.g?'background:'+d.g:''}">${d.i}</div>
+      <div class="notif-body"><div class="notif-name">${d.n}</div><div class="notif-sub">${d.v} · vient de rejoindre</div></div>
+      <div class="badge ${d.b}">${d.bl}</div><div class="notif-time">maintenant</div>`;
+    feed.insertBefore(el,feed.firstChild);
+    if(feed.children.length>4)feed.removeChild(feed.lastChild);
+    t('Nouveau membre : '+d.n+' ('+d.v+') — '+d.bl);
+  }
+},9000);
 </script>
 </body>
 </html>
