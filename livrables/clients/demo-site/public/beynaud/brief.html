@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Brief RDV Beynaud — 30 juin</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--noir:#070707;--n3:#171717;--n4:#1f1f1f;--rouge:#CC0000;--or:#D4A017;--vert:#16A34A;
+  --dim:rgba(255,255,255,.45);--faint:rgba(255,255,255,.07);
+  --bebas:'Bebas Neue',sans-serif;--inter:'Inter',sans-serif;}
+body{background:var(--noir);color:#fff;font-family:var(--inter);padding:20px 20px 64px;max-width:480px;margin:0 auto;}
+h1{font-family:var(--bebas);font-size:36px;letter-spacing:1px;line-height:1;margin-bottom:4px;}
+h1 span{color:var(--rouge);}
+.date-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(204,0,0,.12);
+  border:1px solid rgba(204,0,0,.3);border-radius:20px;padding:4px 12px;
+  font-size:11px;font-weight:700;color:var(--rouge);margin-bottom:28px;}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--rouge);animation:p 1.4s infinite;}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Sections */
+.section{margin-bottom:24px;}
+.section-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--dim);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--faint);}
+
+/* Cards */
+.card{background:var(--n3);border:1px solid var(--faint);border-radius:14px;padding:16px;margin-bottom:10px;}
+.card-title{font-size:14px;font-weight:800;margin-bottom:6px;}
+.card-body{font-size:12px;color:rgba(255,255,255,.7);line-height:1.65;}
+.card.rouge{border-color:rgba(204,0,0,.3);background:linear-gradient(135deg,#140000,var(--n3));}
+.card.or{border-color:rgba(212,160,23,.25);background:linear-gradient(135deg,#0d0d00,var(--n3));}
+.card.vert{border-color:rgba(22,163,74,.25);background:linear-gradient(135deg,#001a0a,var(--n3));}
+
+/* Modèles économiques */
+.model{background:var(--n4);border:1px solid var(--faint);border-radius:12px;padding:14px;margin-bottom:8px;}
+.model-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.model-name{font-size:13px;font-weight:800;}
+.model-tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;}
+.model-tag.star{background:rgba(212,160,23,.15);color:var(--or);}
+.model-tag.ok{background:rgba(22,163,74,.15);color:var(--vert);}
+.model-tag.alt{background:var(--faint);color:var(--dim);}
+.model-body{font-size:12px;color:rgba(255,255,255,.65);line-height:1.6;}
+.model-risk{font-size:11px;color:rgba(204,0,0,.8);margin-top:6px;font-weight:600;}
+
+/* Points de négo */
+.nego-item{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px solid var(--faint);}
+.nego-item:last-child{border-bottom:none;}
+.nego-num{width:24px;height:24px;border-radius:50%;background:var(--rouge);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;margin-top:1px;}
+.nego-body{}
+.nego-title{font-size:13px;font-weight:700;margin-bottom:3px;}
+.nego-desc{font-size:12px;color:rgba(255,255,255,.6);line-height:1.55;}
+
+/* Stack */
+.stack-row{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;border-bottom:1px solid var(--faint);}
+.stack-row:last-child{border-bottom:none;}
+.stack-name{font-size:12px;font-weight:700;}
+.stack-role{font-size:11px;color:var(--dim);}
+.stack-cost{font-size:12px;font-weight:700;color:var(--vert);}
+
+/* Questions */
+.q-item{background:var(--n4);border-left:3px solid var(--rouge);border-radius:0 10px 10px 0;
+  padding:10px 14px;margin-bottom:8px;font-size:12px;line-height:1.55;color:rgba(255,255,255,.8);}
+
+/* Tiers */
+.tier-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--faint);}
+.tier-row:last-child{border-bottom:none;}
+.tier-name{font-size:13px;font-weight:800;flex:1;}
+.tier-price{font-family:var(--bebas);font-size:18px;color:var(--rouge);}
+.tier-desc{font-size:11px;color:var(--dim);flex:2;}
+
+/* Links */
+.links{display:flex;flex-direction:column;gap:8px;}
+.link-btn{background:var(--n3);border:1px solid var(--faint);border-radius:12px;
+  padding:12px 16px;display:flex;align-items:center;justify-content:space-between;
+  color:#fff;text-decoration:none;font-size:12px;font-weight:700;}
+.link-btn.primary{background:var(--rouge);border-color:transparent;}
+.link-url{font-size:10px;color:var(--dim);font-weight:500;margin-top:2px;}
+</style>
+</head>
+<body>
+
+<div class="date-badge"><span class="dot"></span>RDV 30 JUIN 2026</div>
+<h1>BRIEF <span>BEYNAUD</span></h1>
+<p style="font-size:13px;color:var(--dim);margin-bottom:28px;">Préparation complète pour la rencontre physique.</p>
+
+<!-- L'ARTISTE -->
+<div class="section">
+  <div class="section-label">L'artiste</div>
+  <div class="card">
+    <div class="card-title">Serge Beynaud — "Latiss"</div>
+    <div class="card-body">
+      Artiste afrobeat ivoirien. 2M+ fans. Appelle ses fans <strong style="color:#fff;">"Fami"</strong> (= Famille). Marque forte, présence digitale massive.<br><br>
+      Le RDV c'est une DMV : il doit <em>vivre</em> la plateforme, pas juste la voir. Lui donner son téléphone avec le lien fan dès le début.
+    </div>
+  </div>
+</div>
+
+<!-- CE QU'ON LUI PROPOSE -->
+<div class="section">
+  <div class="section-label">La proposition</div>
+  <div class="card rouge">
+    <div class="card-title">Une plateforme fan club à son nom</div>
+    <div class="card-body">
+      Espace artiste pour piloter ses membres, ses revenus, ses publications.<br>
+      Espace fan pour vivre l'univers Latiss : contenu exclusif, boutique officielle, live privés.<br><br>
+      <strong style="color:#fff;">Ce n'est pas un site vitrine.</strong> C'est son empire digital. Ses Fami qui payent directement pour être proches de lui.
+    </div>
+  </div>
+  <div class="card" style="padding:14px;">
+    <div class="card-title" style="margin-bottom:10px;">Les 3 tiers</div>
+    <div class="tier-row">
+      <div class="tier-name">Fami</div>
+      <div class="tier-price">9,99 €</div>
+      <div class="tier-desc">Contenu exclusif de base, newsletter, boutique early access</div>
+    </div>
+    <div class="tier-row">
+      <div class="tier-name">Fami Gold</div>
+      <div class="tier-price">19,99 €</div>
+      <div class="tier-desc">Vidéos backstage, audios inédits, replays lives privés</div>
+    </div>
+    <div class="tier-row">
+      <div class="tier-name">Clan Latiss</div>
+      <div class="tier-price">49,99 €</div>
+      <div class="tier-desc">Accès direct Latiss, rencontres VIP, merch réservé, tout le reste</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODÈLES ÉCONOMIQUES -->
+<div class="section">
+  <div class="section-label">3 modèles économiques</div>
+
+  <div class="model">
+    <div class="model-header">
+      <div class="model-name">Modèle A — Abonnement mensuel</div>
+      <div class="model-tag alt">Idéal long terme</div>
+    </div>
+    <div class="model-body">Les Fami payent chaque mois pour accéder à leur tier. Revenus prévisibles et cumulatifs. À 3 000 membres en mix : ~4 500€/mois nets pour Latiss.</div>
+    <div class="model-risk">Contrainte : nécessite un système de renouvellement. XPaye ne gère pas encore le récurrent automatique.</div>
+  </div>
+
+  <div class="model">
+    <div class="model-header">
+      <div class="model-name">Modèle B — Pay-per-event</div>
+      <div class="model-tag ok">Compatible XPaye</div>
+    </div>
+    <div class="model-body">Chaque live exclusif, replay, ou pack de contenu est vendu séparément. Paiement one-shot XPaye. Pas d'abonnement, pas de contrainte récurrente. Revenu concentré sur les temps forts (sorties, concerts, tournées).</div>
+    <div class="model-risk">Risque : revenus irréguliers, dépend du rythme de sortie de Latiss.</div>
+  </div>
+
+  <div class="model">
+    <div class="model-header">
+      <div class="model-name">Modèle C — Boutique + exclusifs offerts</div>
+      <div class="model-tag star">Recommandé pour démarrer</div>
+    </div>
+    <div class="model-body">La boutique officielle génère les revenus. Chaque achat débloque du contenu exclusif en bonus. Exemple : CD signé 45€ → accès 3 audios inédits. Marge solide sur le merch, contenu exclusif = récompense fidélité.</div>
+    <div class="model-risk">Contrainte : qui gère l'inventaire et l'expédition du merch physique ?</div>
+  </div>
+
+</div>
+
+<!-- STACK TECH -->
+<div class="section">
+  <div class="section-label">Stack technique</div>
+  <div class="card">
+    <div class="stack-row">
+      <div><div class="stack-name">Cloudflare Workers</div><div class="stack-role">Hébergement plateforme</div></div>
+      <div class="stack-cost">Gratuit</div>
+    </div>
+    <div class="stack-row">
+      <div><div class="stack-name">Supabase</div><div class="stack-role">Base de données + auth fans</div></div>
+      <div class="stack-cost">0 → 25€/mois</div>
+    </div>
+    <div class="stack-row">
+      <div><div class="stack-name">XPaye</div><div class="stack-role">Paiements (one-shot)</div></div>
+      <div class="stack-cost">Commission %</div>
+    </div>
+    <div class="stack-row">
+      <div><div class="stack-name">YouTube unlisted</div><div class="stack-role">Vidéos exclusives (phase 1)</div></div>
+      <div class="stack-cost">Gratuit</div>
+    </div>
+    <div class="stack-row">
+      <div><div class="stack-name">Cloudflare Stream</div><div class="stack-role">Vidéos pro (phase 2)</div></div>
+      <div class="stack-cost">~5€/mois</div>
+    </div>
+    <div class="stack-row">
+      <div><div class="stack-name">Supabase Storage</div><div class="stack-role">Audios exclusifs (signed URL)</div></div>
+      <div class="stack-cost">Inclus Supabase</div>
+    </div>
+  </div>
+</div>
+
+<!-- POINTS DE NÉGOCIATION -->
+<div class="section">
+  <div class="section-label">Points à valider avec Beynaud</div>
+  <div class="card" style="padding:14px 16px;">
+    <div class="nego-item">
+      <div class="nego-num">1</div>
+      <div class="nego-body">
+        <div class="nego-title">Structure juridique pour encaisser</div>
+        <div class="nego-desc">Il faut une entité (France ou CI) pour activer XPaye. Est-ce que c'est l'agence qui porte, ou Beynaud a déjà une structure ?</div>
+      </div>
+    </div>
+    <div class="nego-item">
+      <div class="nego-num">2</div>
+      <div class="nego-body">
+        <div class="nego-title">Commission agence</div>
+        <div class="nego-desc">30% des revenus plateforme pour l'agence. Fixer ça noir sur blanc avant de commencer.</div>
+      </div>
+    </div>
+    <div class="nego-item">
+      <div class="nego-num">3</div>
+      <div class="nego-body">
+        <div class="nego-title">Engagement de publication</div>
+        <div class="nego-desc">Minimum 4 contenus exclusifs par mois. Sans ça, les Fami ne renouvellent pas. À inclure dans le contrat.</div>
+      </div>
+    </div>
+    <div class="nego-item">
+      <div class="nego-num">4</div>
+      <div class="nego-body">
+        <div class="nego-title">Durée d'engagement</div>
+        <div class="nego-desc">12 mois minimum. Inclure une clause de continuité de la base Fami en cas de résiliation.</div>
+      </div>
+    </div>
+    <div class="nego-item">
+      <div class="nego-num">5</div>
+      <div class="nego-body">
+        <div class="nego-title">Gestion du merch (si Modèle C)</div>
+        <div class="nego-desc">Qui gère le stock, l'emballage, l'expédition ? Beynaud a-t-il déjà un prestataire ou faut-il l'intégrer dans l'offre ?</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUESTIONS À POSER -->
+<div class="section">
+  <div class="section-label">Questions à poser à Beynaud</div>
+  <div class="q-item">Est-ce que tu as déjà essayé de vendre du contenu directement à tes Fami en dehors des concerts ?</div>
+  <div class="q-item">Quel est le moyen de paiement principal de tes fans en CI ? Wave, Orange Money, carte ?</div>
+  <div class="q-item">Tu as une structure (société, auto-entrepreneur) en France ou en CI ?</div>
+  <div class="q-item">Tu as du merch en stock ou c'est à créer ?</div>
+  <div class="q-item">Quelle plateforme tu utilises aujourd'hui pour communiquer avec tes fans en dehors de YouTube/Instagram ?</div>
+</div>
+
+<!-- LIENS DÉMO -->
+<div class="section">
+  <div class="section-label">Liens démo à utiliser pendant le RDV</div>
+  <div class="links">
+    <a class="link-btn primary" href="app.html">
+      <div>
+        <div>Dashboard Artiste</div>
+        <div class="link-url">À montrer à Beynaud sur ton écran</div>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
+    </a>
+    <a class="link-btn" href="fan.html">
+      <div>
+        <div>Espace Fan (Fami Gold)</div>
+        <div class="link-url">À donner à Beynaud sur son téléphone</div>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
+    </a>
+  </div>
+</div>
+
+</body>
+</html>
