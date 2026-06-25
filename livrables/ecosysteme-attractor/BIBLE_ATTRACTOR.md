@@ -290,6 +290,32 @@ Design livrables : exigence pro. Pas de style chatbot générique. Recommandatio
 | Email transactionnel | Resend | SMTP Supabase : noreply@agenceattractor.com |
 | DNS | GoDaddy | agenceattractor.com |
 
+### Architecture Supabase multi-clients (cible Pro)
+
+**Principe :** un seul projet Supabase Pro (25$/mois) avec un schéma PostgreSQL par client.
+
+```
+supabase (projet unique)
+├── schema: public          — Attractor Assists (tables internes)
+├── schema: vies_croisees   — Andréa Koné (épisodes, articles, témoignages, commentaires)
+├── schema: jenvoie_express — J'Envoie Express (voyages, colis, paiements)
+├── schema: [client_N]      — chaque nouveau client = son propre schéma
+```
+
+**Avantages :**
+- Isolation des données par client sans multiplier les projets (et les coûts)
+- Export client propre : `pg_dump --schema=vies_croisees` → fichier SQL portable
+- Facturation transparente : 25€/mois répercutés sur les clients formule Active/Premium
+
+**Ligne commerciale associée :**
+- Formule Essentielle : données hébergées chez Attractor, export sur demande (25€ à la carte)
+- Formule Active / Premium : export de base de données inclus, portabilité garantie
+
+**Situation actuelle (Free plan, temporaire) :**
+- `attractor-assists` (`lgdgbrivnhgeupqhkckd`, eu-west-3) : Assists + tables vc_* Vies Croisées (préfixe temporaire)
+- `jenvoie-express` (eu-west-1) : J'Envoie Express
+- Migration vers l'architecture multi-schéma à planifier au passage en Pro
+
 ### Règles d'architecture
 
 1. **Supabase RLS activée** sur toutes les tables exposées au frontend.

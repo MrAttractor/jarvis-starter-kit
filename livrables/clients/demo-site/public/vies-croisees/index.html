@@ -3,435 +3,896 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vies Croisées — Maquette</title>
+<title>Vies Croisées — par Andréa Koné</title>
+<meta name="description" content="L'émission qui donne la parole à ceux qui ont traversé quelque chose, pour que d'autres se sentent moins seuls sur leur chemin.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --brand:#131A2C;
-  --brand-2:#C9A24A;
-  --ink:#1B2236;
-  --muted:#6B7280;
-  --bg:#F7F3EA;
-  --card:#FFFFFF;
-  --radius:18px;
-  --font-display:'Playfair Display',Georgia,serif;
-  --font:'Inter',system-ui,-apple-system,sans-serif;
+  --brand:#131A2C; --gold:#C9A24A; --gold-bg:rgba(201,162,74,.13);
+  --bg:#F7F3EA; --card:#fff; --ink:#1B2236; --muted:#6B7280; --line:#E7E1D2;
+  --fd:'Playfair Display',Georgia,serif; --ff:'Inter',system-ui,sans-serif;
+  --nav:60px; --bnav:62px; --r:16px;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-h1,h2,h3,h4{font-family:var(--font-display)}
-body{font-family:var(--font);background:linear-gradient(160deg,#0a0e18,#1c2840);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px;color:var(--ink)}
-.stage{display:flex;gap:52px;flex-wrap:wrap;align-items:center;justify-content:center}
-.pitch{max-width:300px;color:#e8edf5}
-.pitch .kicker{color:var(--brand-2);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px}
-.pitch h1{font-size:28px;margin:10px 0 14px;line-height:1.15}
-.pitch p{color:#c7cedb;line-height:1.55;font-size:15px;margin-bottom:20px}
-.pitch .feature{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
-.pitch .feature .dot{width:8px;height:8px;border-radius:50%;background:var(--brand-2);flex-shrink:0;margin-top:5px}
-.pitch .feature span{font-size:13.5px;color:#d3d9e4;line-height:1.4}
-.phone{width:340px;height:720px;background:#000;border-radius:46px;padding:12px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
-.screen{position:relative;width:100%;height:100%;background:var(--bg);border-radius:36px;overflow:hidden;display:flex;flex-direction:column}
-.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:140px;height:26px;background:#000;border-radius:0 0 18px 18px;z-index:5}
-.topbar{background:var(--brand);color:#fff;padding:46px 18px 14px;display:flex;align-items:center;gap:10px}
-.wordmark{width:46px;height:46px;border-radius:14px;background:#0c1322;border:1.5px solid var(--brand-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:15px;color:#fff;text-shadow:0 0 6px rgba(201,162,74,.6);flex:none}
-.wordmark span{color:var(--brand-2)}
-.topbar h2{font-size:16px;font-weight:700}
-.topbar small{display:block;opacity:.85;font-weight:400;font-size:11px}
-.content{flex:1;overflow-y:auto;padding:16px;scrollbar-width:none}
-.content::-webkit-scrollbar{display:none}
-.view{display:none}
-.view.active{display:block;animation:fade .22s}
-@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1}}
-.herohead{margin:0 0 10px;min-height:48px;transition:opacity .25s ease}
-.herohead b{display:block;font-family:var(--font-display);font-size:16px;color:var(--ink);margin-bottom:2px}
-.herohead span{display:block;font-size:12px;line-height:1.45;color:var(--muted)}
-.heroslider{position:relative;height:170px;border-radius:var(--radius);overflow:hidden;margin-bottom:12px;box-shadow:0 6px 22px rgba(19,26,44,.25)}
-.heroslider .slide{position:absolute;inset:0;opacity:0;transform:scale(1.04);transition:opacity .7s ease, transform 6s ease;display:flex;align-items:center;justify-content:center}
-.heroslider .slide.active{opacity:1;transform:scale(1)}
-.heroslider .dots{position:absolute;bottom:12px;right:14px;display:flex;gap:5px;z-index:2}
-.heroslider .dots i{display:block;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 1px 4px rgba(0,0,0,.2);transition:all .35s ease}
-.heroslider .dots i.active{background:var(--brand-2);width:18px;border-radius:5px}
-.heroslider .badge-pill{position:absolute;top:13px;left:14px;z-index:2;background:rgba(15,18,30,.55);backdrop-filter:blur(2px);color:#fff;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:5px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.25)}
-.card{background:var(--card);border-radius:var(--radius);padding:15px;margin-bottom:12px;box-shadow:0 3px 14px rgba(19,26,44,.08)}
-.card h3{font-size:14px;font-weight:700;margin-bottom:5px}
-.card p{font-size:12.5px;color:var(--muted);line-height:1.45}
-.quote{border-left:3px solid var(--brand-2);padding-left:12px;font-style:italic;color:var(--ink);font-size:12.5px;line-height:1.55}
-.row{display:flex;align-items:center;gap:12px}
-.thumb{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--brand-2));flex:none;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff}
-.thumb svg{width:21px;height:21px}
-.ric{width:13px;height:13px;vertical-align:-2px;margin-right:5px;color:var(--muted);flex:none}
-.bic{width:13px;height:13px;vertical-align:-2px;margin-right:4px}
-.btn{display:block;width:100%;text-align:center;background:var(--brand);color:#fff;border:none;padding:13px;border-radius:12px;font-size:14px;font-weight:700;margin-top:10px;cursor:pointer}
-.btn.alt{background:var(--brand-2);color:#3A2D09}
-.ep-actions{display:flex;gap:8px;margin-top:10px}
-.btn-sm{flex:1;text-align:center;border:1.5px solid var(--brand);background:transparent;color:var(--brand);padding:9px 6px;border-radius:10px;font-size:10.5px;font-weight:700;cursor:pointer}
-.btn-sm.alt{background:var(--brand);color:#fff}
-.stat{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #ece6d8}
-.stat:last-child{border:none}
-.stat span{font-size:12.5px;color:var(--muted)}
-.stat b{color:var(--brand);font-size:18px;font-weight:800}
-.tag{display:inline-block;background:rgba(201,162,74,.16);color:#8A6A1F;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;margin:0 5px 5px 0}
-.badge{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:10px}
-.badge.nouveau{background:rgba(201,162,74,.22);color:#7D5F17}
-.badge.programme{background:rgba(201,162,74,.16);color:#8A6A1F}
-.badge.brouillon{background:rgba(107,114,128,.14);color:#4b5563}
-.badge.publie{background:rgba(16,185,129,.14);color:#059669}
-.order-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #ece6d8}
-.order-row:last-child{border:none}
-.order-row .info h4{font-size:13px;font-weight:700;margin-bottom:2px}
-.order-row .info p{font-size:11px;color:var(--muted)}
-.msg{max-width:84%;padding:9px 12px;border-radius:12px;font-size:12px;line-height:1.4;margin-bottom:8px}
-.msg.them{background:#fff;border:1px solid #ece6d8;align-self:flex-start;border-bottom-left-radius:4px}
-.msg-wrap{display:flex;flex-direction:column}
-.msg-wrap .who{font-size:11px;font-weight:700;color:var(--brand);margin-bottom:3px}
-.modeswitch{display:flex;gap:6px;padding:10px 16px;background:var(--brand)}
-.modeswitch button{flex:1;padding:8px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.14);color:#fff;font-size:11px;font-weight:700;cursor:pointer}
-.modeswitch button.active{background:#fff;color:var(--brand)}
-.tabbar{display:flex;background:var(--card);border-top:1px solid #ece6d8}
-.tab{flex:1;padding:9px 4px;text-align:center;font-size:10.5px;color:var(--muted);border:none;background:none;cursor:pointer}
-.tab.active{color:var(--brand);font-weight:700}
-.tab .ic{display:block;width:19px;height:19px;margin:0 auto 3px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--ff);background:var(--bg);color:var(--ink);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4{font-family:var(--fd)}
+img{display:block;max-width:100%}
+button{font-family:var(--ff);cursor:pointer}
+
+/* NAV */
+header{position:sticky;top:0;z-index:100;background:var(--brand);height:var(--nav);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 14px rgba(0,0,0,.3)}
+.logo-lock{display:flex;align-items:center;gap:10px;flex:1;min-width:0;text-decoration:none}
+.logo-lock img{height:38px;width:38px;border-radius:10px;object-fit:cover;flex:none}
+.logo-txt strong{display:block;font-family:var(--fd);font-size:15px;color:#fff;font-weight:700;line-height:1.2}
+.logo-txt span{display:block;font-size:11px;color:var(--gold);font-weight:500}
+.nav-desk{display:none;gap:2px}
+.nav-desk a{color:rgba(255,255,255,.7);font-size:13px;font-weight:500;text-decoration:none;padding:7px 11px;border-radius:8px;white-space:nowrap;transition:background .15s,color .15s}
+.nav-desk a:hover,.nav-desk a.on{background:rgba(255,255,255,.13);color:#fff}
+.nav-desk a.on{font-weight:700}
+#admin-badge{display:none;align-items:center;gap:8px;flex:none}
+#admin-badge em{color:var(--gold);font-size:11px;font-weight:700;font-style:normal;white-space:nowrap}
+#admin-badge button{background:rgba(255,255,255,.12);border:none;color:rgba(255,255,255,.75);font-size:11px;font-weight:600;padding:5px 9px;border-radius:7px}
+@media(min-width:740px){.nav-desk{display:flex}}
+
+/* LAYOUT */
+main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
+@media(min-width:740px){main{max-width:1080px;padding-bottom:48px}}
+.sec{display:none;padding-top:22px}
+.sec.on{display:block}
+
+/* HERO */
+.hero{background:var(--brand);border-radius:var(--r);min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:36px 22px 32px;position:relative;overflow:hidden;margin-bottom:22px}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(201,162,74,.13),transparent 70%)}
+.hero-logo{height:120px;border-radius:14px;box-shadow:0 12px 36px rgba(0,0,0,.5);position:relative;z-index:1;margin-bottom:20px}
+.hero-q{font-family:var(--fd);font-style:italic;font-size:16px;color:rgba(255,255,255,.87);line-height:1.6;max-width:360px;position:relative;z-index:1;margin-bottom:22px}
+.hero-cta{display:inline-block;text-decoration:none;background:var(--gold);color:#2A1D00;font-weight:700;font-size:14px;padding:12px 28px;border-radius:12px;position:relative;z-index:1}
+@media(min-width:740px){.hero{min-height:340px;flex-direction:row;text-align:left;gap:48px;padding:48px 52px}.hero-logo{height:180px;flex:none;margin-bottom:0}.hero-q{font-size:19px;max-width:400px}}
+
+/* SECTION HEADER */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.sh h2{font-size:19px;color:var(--brand)}
+.sh a{font-size:13px;color:var(--gold);font-weight:600;text-decoration:none}
+
+/* CARD */
+.card{background:var(--card);border-radius:var(--r);padding:15px;margin-bottom:11px;box-shadow:0 2px 12px rgba(19,26,44,.07)}
+
+/* EPISODE */
+.ep-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:11px}
+.ep-icon{width:48px;height:48px;border-radius:12px;flex:none;background:linear-gradient(135deg,var(--brand),#2C3A5C);display:flex;align-items:center;justify-content:center}
+.ep-icon svg{width:21px;height:21px;color:var(--gold)}
+.ep-info h3{font-size:14px;margin-bottom:3px;line-height:1.25}
+.ep-info p{font-size:12px;color:var(--muted);line-height:1.4}
+.meta-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:11px}
+.tag{background:var(--gold-bg);color:#7D5F17;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px}
+.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:3px 9px;border-radius:9px}
+.badge.new{background:rgba(201,162,74,.22);color:#7D5F17}
+.badge.soon{background:rgba(99,102,241,.11);color:#4338CA}
+.badge.wip{background:rgba(107,114,128,.11);color:#4b5563}
+.badge.live{background:rgba(16,185,129,.11);color:#059669}
+.ep-btns{display:flex;gap:7px}
+.ep-btn{flex:1;border:1.5px solid var(--brand);background:transparent;color:var(--brand);padding:9px 6px;border-radius:9px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px}
+.ep-btn.fill{background:var(--brand);color:#fff}
+.ep-btn:disabled{opacity:.38;cursor:default}
+
+/* COMMENTS */
+.comment-toggle{display:flex;align-items:center;gap:5px;background:none;border:none;color:var(--muted);font-size:12px;font-weight:600;padding:10px 0 0;width:100%}
+.comment-toggle svg{width:13px;height:13px}
+.comments-wrap{display:none;border-top:1px solid var(--line);margin-top:10px;padding-top:12px}
+.comments-wrap.open{display:block}
+.c-item{padding:8px 0;border-bottom:1px solid var(--line)}
+.c-item:last-of-type{border:none;padding-bottom:0}
+.c-who{font-size:11.5px;font-weight:700;color:var(--brand)}
+.c-msg{font-size:13px;line-height:1.45;margin-top:3px}
+.c-date{font-size:10.5px;color:var(--muted);margin-top:2px}
+.c-form{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.c-form input,.c-form textarea{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:10px 12px;font-size:14px;font-family:var(--ff);color:var(--ink);background:var(--bg);margin-bottom:7px}
+.c-form input:focus,.c-form textarea:focus{outline:none;border-color:var(--gold)}
+.c-form textarea{resize:none;min-height:68px}
+.c-anon{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-bottom:9px;cursor:pointer}
+.c-anon input{width:auto;margin:0}
+.c-submit{background:var(--brand);color:#fff;border:none;border-radius:9px;padding:10px 18px;font-size:13px;font-weight:700}
+.c-ok{font-size:13px;color:#059669;font-weight:600;padding:6px 0}
+.c-empty{font-size:13px;color:var(--muted);padding:6px 0}
+
+/* BLOG */
+.blog-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);gap:12px}
+.blog-row:last-child{border:none;padding-bottom:0}
+.blog-row h4{font-family:var(--fd);font-size:14px;margin-bottom:3px;line-height:1.3}
+.blog-row p{font-size:11.5px;color:var(--muted)}
+.blog-link{font-size:13px;color:var(--gold);font-weight:600;text-decoration:none;display:block;margin-top:5px}
+
+/* QUOTE */
+.q-strip{border-left:3px solid var(--gold);padding-left:13px;font-family:var(--fd);font-style:italic;font-size:14px;color:var(--ink);line-height:1.6;margin-bottom:20px}
+.q-strip small{display:block;margin-top:5px;font-family:var(--ff);font-style:normal;font-size:11.5px;color:var(--muted)}
+
+/* TEMOIGNAGES PUBLIC */
+.temo-form input,.temo-form textarea{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;font-size:15px;font-family:var(--ff);color:var(--ink);background:var(--card);margin-bottom:10px}
+.temo-form input:focus,.temo-form textarea:focus{outline:none;border-color:var(--gold)}
+.temo-form textarea{resize:vertical;min-height:100px}
+
+/* BUTTONS */
+.btn{display:block;width:100%;text-align:center;text-decoration:none;background:var(--brand);color:#fff;border:none;padding:13px;border-radius:13px;font-size:14px;font-weight:700;margin-top:11px}
+.btn.gold{background:var(--gold);color:#2A1D00}
+.btn.out{background:transparent;border:2px solid var(--brand);color:var(--brand)}
+.btn-pair{display:flex;gap:9px;margin-top:11px}
+.btn-pair .btn{flex:1;margin-top:0}
+
+/* STAT */
+.stat-r{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.stat-r:last-child{border:none}
+.stat-r span{font-size:13px;color:var(--muted)}
+.stat-r b{color:var(--brand);font-size:20px;font-weight:800}
+
+/* ADMIN ROWS */
+.a-row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.a-row:last-child{border:none}
+.a-info{flex:1;min-width:0}
+.a-info h4{font-family:var(--fd);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.a-info p{font-size:11.5px;color:var(--muted)}
+.a-acts{display:flex;align-items:center;gap:5px;flex:none}
+.ib{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--line);background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center}
+.ib:hover{border-color:var(--brand);color:var(--brand)}
+.ib.red{color:#dc2626;border-color:rgba(220,38,38,.25)}
+.ib.red:hover{border-color:#dc2626}
+.ib.green{color:#059669;border-color:rgba(5,150,105,.25)}
+.ib.green:hover{border-color:#059669}
+
+/* ADMIN TEMOIGNAGES */
+.in-temo{background:var(--card);border-radius:var(--r);padding:13px 15px;margin-bottom:9px;box-shadow:0 2px 10px rgba(19,26,44,.06)}
+.in-temo.done{opacity:.55}
+.in-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;gap:8px}
+.in-who{font-size:11.5px;font-weight:700;color:var(--brand)}
+.in-date{font-size:10.5px;color:var(--muted);white-space:nowrap}
+.in-msg{font-size:13px;line-height:1.5;font-style:italic}
+.in-done{background:none;border:1px solid var(--line);border-radius:7px;padding:5px 10px;font-size:11.5px;font-weight:600;color:var(--muted);margin-top:7px}
+.in-done:hover{border-color:var(--brand);color:var(--brand)}
+
+/* INBOX TABS */
+.i-tabs{display:flex;background:var(--line);border-radius:10px;padding:3px;margin-bottom:15px}
+.i-tab{flex:1;border:none;background:none;padding:8px;border-radius:7px;font-size:13px;font-weight:600;color:var(--muted)}
+.i-tab.on{background:var(--card);color:var(--brand);box-shadow:0 1px 4px rgba(0,0,0,.09)}
+
+/* FORMS (sheets) */
+.fg{margin-bottom:13px}
+.fg label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+.fg input,.fg textarea,.fg select{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-size:15px;font-family:var(--ff);color:var(--ink);background:var(--bg)}
+.fg input:focus,.fg textarea:focus,.fg select:focus{outline:none;border-color:var(--gold)}
+.fg textarea{resize:vertical;min-height:90px}
+.fg select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+
+/* SHEET (bottom drawer) */
+.sheet{position:fixed;inset:0;z-index:160;background:rgba(12,16,28,.65);display:none;align-items:flex-end}
+.sheet.open{display:flex}
+.sheet-in{background:var(--card);border-radius:20px 20px 0 0;padding:22px 18px;width:100%;max-height:92vh;overflow-y:auto}
+.sheet-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.sheet-hd h3{font-size:17px}
+.sheet-hd button{background:none;border:none;font-size:26px;color:var(--muted);line-height:1;padding:0}
+
+/* VIDEO MODAL */
+.vmod{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.94);display:none;align-items:center;justify-content:center;padding:16px}
+.vmod.open{display:flex}
+.vmod-wrap{width:100%;max-width:700px}
+.vmod-close{position:fixed;top:14px;right:14px;background:rgba(255,255,255,.15);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:20px;display:flex;align-items:center;justify-content:center;z-index:210}
+.vmod-ratio{position:relative;padding-bottom:56.25%;background:#000;border-radius:12px;overflow:hidden}
+.vmod-ratio iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+
+/* ARTICLE MODAL */
+.amod{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;flex-direction:column;overflow-y:auto}
+.amod.open{display:flex}
+.amod-hd{position:sticky;top:0;background:var(--brand);padding:14px 18px;display:flex;align-items:center;gap:12px;z-index:10}
+.amod-hd button{background:none;border:none;color:rgba(255,255,255,.7);font-size:22px;line-height:1;padding:0;flex:none}
+.amod-hd h2{color:#fff;font-size:15px;line-height:1.3;flex:1}
+.amod-body{max-width:640px;margin:0 auto;padding:24px 18px;width:100%}
+.amod-body p{font-size:15px;line-height:1.75;margin-bottom:14px;color:var(--ink)}
+
+/* DESKTOP GRIDS */
+@media(min-width:740px){
+  .ep-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .ep-grid .card{margin-bottom:0}
+  .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .blog-grid .card{margin-bottom:0;display:flex;flex-direction:column}
+  .blog-row{flex-direction:column;align-items:flex-start;border:none;padding:0;flex:1}
+}
+
+/* BOTTOM NAV */
+#bnav,#bnav-a{position:fixed;bottom:0;left:0;right:0;z-index:100;height:var(--bnav);background:var(--card);border-top:1px solid var(--line);display:flex;box-shadow:0 -3px 14px rgba(0,0,0,.08)}
+#bnav-a{display:none;background:var(--brand);border-top:none}
+@media(min-width:740px){#bnav,#bnav-a{display:none}main{padding-bottom:48px}}
+.nb{flex:1;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;font-weight:500;color:var(--muted);padding-bottom:4px}
+.nb.on{color:var(--brand);font-weight:700}
+#bnav-a .nb{color:rgba(255,255,255,.55)}
+#bnav-a .nb.on{color:#fff;font-weight:700}
+.nb svg{width:20px;height:20px}
+
+/* GATE */
+#gate{position:fixed;inset:0;background:rgba(12,16,28,.88);z-index:200;display:none;align-items:center;justify-content:center}
+#gate.open{display:flex}
+.gate-box{background:var(--card);border-radius:20px;padding:30px 26px;width:300px;text-align:center}
+.gate-box h2{font-size:20px;margin-bottom:7px}
+.gate-box p{font-size:13px;color:var(--muted);margin-bottom:18px}
+.gate-box input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-size:15px;font-family:var(--ff);color:var(--ink);background:var(--bg);margin-bottom:11px}
+.gate-box input:focus{outline:none;border-color:var(--gold)}
+.gate-err{font-size:12px;color:#dc2626;margin-bottom:9px;display:none}
+.gate-cancel{margin-top:10px;background:none;border:none;color:var(--muted);font-size:13px;width:100%}
+
+/* SPIN */
+.spin{display:inline-block;width:18px;height:18px;border:2px solid var(--line);border-top-color:var(--brand);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading{text-align:center;padding:24px;color:var(--muted);font-size:13px}
 </style>
 </head>
 <body>
-<svg style="position:absolute;width:0;height:0" aria-hidden="true">
-  <defs>
-    <symbol id="ic-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4 11.5 12 4l8 7.5"/>
-      <path d="M6 10v8.5a1 1 0 0 0 1 1h3.5v-5h3v5H17a1 1 0 0 0 1-1V10"/>
-    </symbol>
-    <symbol id="ic-film" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3.5" y="5.5" width="17" height="13" rx="3"/>
-      <path d="M10.5 9.7v4.6l4-2.3z" fill="currentColor" stroke="none"/>
-    </symbol>
-    <symbol id="ic-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4.5 19.5h3.2L18.6 8.6a2 2 0 0 0-2.9-2.9L4.8 16.6z"/>
-      <path d="M13.2 7.4l3.4 3.4"/>
-    </symbol>
-    <symbol id="ic-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="9.2" cy="8.4" r="2.9"/>
-      <path d="M3.8 18.7c.5-2.7 2.6-4.3 5.4-4.3s4.9 1.6 5.4 4.3"/>
-      <circle cx="16.6" cy="8.9" r="2.3"/>
-      <path d="M15.3 14.6c1.9.3 3.4 1.6 3.8 3.9"/>
-    </symbol>
-    <symbol id="ic-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3.6" y="5.2" width="16.8" height="14.6" rx="2.6"/>
-      <path d="M3.6 9.6h16.8M8 3.4v3.4M16 3.4v3.4"/>
-      <circle cx="8.2" cy="13.6" r=".95" fill="currentColor" stroke="none"/>
-      <circle cx="12" cy="13.6" r=".95" fill="currentColor" stroke="none"/>
-      <circle cx="15.8" cy="13.6" r=".95" fill="currentColor" stroke="none"/>
-    </symbol>
-    <symbol id="ic-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4 20V12.5M9.3 20V6.2M14.6 20v-8M20 20H4"/>
-    </symbol>
-    <symbol id="ic-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3.4" y="4.4" width="17.2" height="12.4" rx="3.4"/>
-      <path d="M8 16.8v3.6l4-3.6"/>
-    </symbol>
-    <symbol id="ic-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="8.6"/>
-      <path d="M10.1 8.7v6.6l5.6-3.3z" fill="currentColor" stroke="none"/>
-    </symbol>
-    <symbol id="ic-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="9.2" y="3.4" width="5.6" height="10.4" rx="2.8"/>
-      <path d="M6.4 11a5.6 5.6 0 0 0 11.2 0"/>
-      <path d="M12 16.6v3.4M9 20h6"/>
-    </symbol>
-  </defs>
-</svg>
-<div class="stage">
 
-  <div class="pitch">
-    <div class="kicker">Média · Émission · Vies Croisées</div>
-    <h1>Vies Croisées — le site</h1>
-    <p>Le site qui prolonge ton émission au-delà de la diffusion : tes spectateurs y retrouvent les teasers, les épisodes complets et tes articles, pendant que toi tu pilotes tout depuis ton espace, sans jongler entre dix outils.</p>
-    <div class="feature"><div class="dot"></div><span>Teasers et épisodes complets, classés par thème, accessibles en un geste</span></div>
-    <div class="feature"><div class="dot"></div><span>Un blog qui prolonge chaque épisode entre deux diffusions</span></div>
-    <div class="feature"><div class="dot"></div><span>Les témoignages de ceux qui veulent partager leur chemin, centralisés</span></div>
-    <div class="feature"><div class="dot"></div><span>Bascule en un tap pour voir ce que vivent tes spectateurs : de la découverte au partage</span></div>
+<svg style="position:absolute;width:0;height:0" aria-hidden="true"><defs>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v8.5a1 1 0 0 0 1 1h3.5v-5h3v5H17a1 1 0 0 0 1-1V10"/></symbol>
+  <symbol id="i-film" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="3"/><path d="M10.5 9.7v4.6l4-2.3z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5h3.2L18.6 8.6a2 2 0 0 0-2.9-2.9L4.8 16.6z"/><path d="M13.2 7.4l3.4 3.4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.2" cy="8.4" r="2.9"/><path d="M3.8 18.7c.5-2.7 2.6-4.3 5.4-4.3s4.9 1.6 5.4 4.3"/><circle cx="16.6" cy="8.9" r="2.3"/><path d="M15.3 14.6c1.9.3 3.4 1.6 3.8 3.9"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M10.1 8.7v6.6l5.6-3.3z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="4.4" width="17.2" height="12.4" rx="3.4"/><path d="M8 16.8v3.6l4-3.6"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="3.4" width="17.2" height="17.2" rx="2.8"/><path d="M3.4 14.4h4.2l1.8 3h5.2l1.8-3h4.2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5.5 6L20 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-dash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V12.5M9.3 20V6.2M14.6 20v-8M20 20H4"/></symbol>
+</defs></svg>
+
+<!-- HEADER -->
+<header>
+  <a class="logo-lock" href="#" onclick="go('accueil');return false" id="logo-tap">
+    <img src="logo.png" alt="Vies Croisées">
+    <div class="logo-txt">
+      <strong>Vies Croisées</strong>
+      <span>par Andréa Koné</span>
+    </div>
+  </a>
+  <nav class="nav-desk">
+    <a href="#" data-sec="accueil" class="on" onclick="go('accueil');return false">Accueil</a>
+    <a href="#" data-sec="episodes" onclick="go('episodes');return false">Épisodes</a>
+    <a href="#" data-sec="blog" onclick="go('blog');return false">Blog</a>
+    <a href="#" data-sec="temoignages" onclick="go('temoignages');return false">Rejoindre</a>
+  </nav>
+  <div id="admin-badge">
+    <em>Espace Andréa</em>
+    <button onclick="exitAdmin()">Quitter</button>
   </div>
+</header>
 
-  <div class="phone"><div class="screen">
-    <div class="notch"></div>
-    <div class="topbar">
-      <div class="wordmark">V<span>C</span></div>
-      <div><h2>Vies Croisées</h2><small>par Andréa Koné — nouvel épisode chaque semaine</small></div>
+<main>
+
+<!-- ── ACCUEIL ──────────────────────────────────────────────── -->
+<section id="accueil" class="sec on">
+  <div class="hero">
+    <img src="logo.png" alt="Vies Croisées" class="hero-logo">
+    <div>
+      <p class="hero-q">« On parle souvent d'arrivée. Rarement du chemin. Pourtant, c'est là que tout se joue. »</p>
+      <a class="hero-cta" href="#" onclick="go('episodes');return false">Voir les épisodes</a>
     </div>
+  </div>
+  <div class="sh"><h2>Dernier épisode</h2><a href="#" onclick="go('episodes');return false">Tout voir</a></div>
+  <div id="home-ep"><div class="loading"><span class="spin"></span></div></div>
+  <div class="q-strip" style="margin-top:20px">
+    Se cacher derrière la force fatigue. S'autoriser à être vulnérable libère.
+    <small>— Aïcha M., épisode 1</small>
+  </div>
+  <div class="sh"><h2>Du blog</h2><a href="#" onclick="go('blog');return false">Tout lire</a></div>
+  <div id="home-arts"><div class="loading"><span class="spin"></span></div></div>
+  <div class="btn-pair" style="margin-top:18px">
+    <a class="btn gold" href="#" onclick="go('temoignages');return false">Rejoindre la communauté</a>
+    <a class="btn out" href="#" onclick="go('episodes');return false">Tous les épisodes</a>
+  </div>
+</section>
 
-    <div class="modeswitch">
-      <button class="active" onclick="setMode('viewer', this)">Le site (vue spectateur)</button>
-      <button onclick="setMode('andrea', this)">Espace Andréa</button>
+<!-- ── ÉPISODES ─────────────────────────────────────────────── -->
+<section id="episodes" class="sec">
+  <div class="sh"><h2>Tous les épisodes</h2></div>
+  <div id="ep-list" class="ep-grid"><div class="loading" style="grid-column:1/-1"><span class="spin"></span></div></div>
+</section>
+
+<!-- ── BLOG ─────────────────────────────────────────────────── -->
+<section id="blog" class="sec">
+  <div class="sh"><h2>Le blog</h2></div>
+  <p style="font-size:13.5px;color:var(--muted);margin-bottom:16px;line-height:1.6">Des textes qui prolongent chaque chemin entre deux diffusions.</p>
+  <div id="blog-list" class="blog-grid"><div class="loading" style="grid-column:1/-1"><span class="spin"></span></div></div>
+</section>
+
+<!-- ── REJOINDRE ────────────────────────────────────────────── -->
+<section id="temoignages" class="sec">
+  <div class="q-strip">
+    Parler de son chemin, c'est tendre la main à quelqu'un d'autre.
+    <small>— le manifeste de Vies Croisées</small>
+  </div>
+  <div class="sh"><h2>Partager mon témoignage</h2></div>
+  <div class="card">
+    <p style="font-size:13.5px;line-height:1.65;margin-bottom:14px">Tu as traversé quelque chose qui pourrait éclairer le chemin d'un autre ? Raconte-le à Andréa.</p>
+    <div id="temo-form-wrap">
+      <form class="temo-form" onsubmit="submitTemo(event)">
+        <input name="prenom" placeholder="Ton prénom" required>
+        <textarea name="message" placeholder="Ton témoignage en quelques lignes..." rows="4" required></textarea>
+        <button type="submit" class="btn gold" id="temo-save">Envoyer mon témoignage</button>
+      </form>
     </div>
-
-    <div class="content">
-
-      <section class="view active" id="v1">
-        <div class="herohead" id="herohead-viewer">
-          <b>Vies Croisées</b>
-          <span>La puissance du chemin comme voie de transformation profonde. Et si leur chemin éclairait le tien ?</span>
-        </div>
-        <div class="heroslider" id="hero-viewer">
-          <span class="badge-pill">Vies Croisées · par Andréa Koné</span>
-          <div class="dots"><i class="active"></i><i></i><i></i></div>
-          <div class="slide active" data-title="Vies Croisées" data-text="La puissance du chemin comme voie de transformation profonde. Et si leur chemin éclairait le tien ?" style="background:linear-gradient(135deg,#1B2438,#2C3A5C)"></div>
-          <div class="slide" data-title="Épisode 1 — Entre Force et Vulnérabilité" data-text="« Se cacher derrière la force fatigue. S'autoriser à être vulnérable libère. » Le teaser est en ligne." style="background:linear-gradient(135deg,#21283F,#5B4A26)"></div>
-          <div class="slide" data-title="Ta vulnérabilité n'est pas une faiblesse" data-text="C'est une porte vers ta transformation. Découvre les chemins de celles et ceux qui ont traversé." style="background:linear-gradient(135deg,#1B2438,#3C3656)"></div>
-        </div>
-        <div class="card">
-          <h3>Le socle de l'émission</h3>
-          <p class="quote">« On parle souvent d'arrivée. Rarement du chemin. Pourtant, c'est là que tout se joue. »</p>
-        </div>
-        <div class="card row">
-          <div class="thumb"><svg><use href="#ic-play"/></svg></div>
-          <div><h3>Dernier épisode</h3><p>"Entre Force et Vulnérabilité" — elle se livre sans masque sur ce qui l'a vraiment transformée.</p></div>
-        </div>
-        <button class="btn" onclick="go('v2',document.querySelectorAll('#tabbar-viewer .tab')[1])">Voir tous les épisodes</button>
-      </section>
-
-      <section class="view" id="v2">
-        <div class="card"><h3>Épisodes</h3><p>Le teaser pour donner envie, l'épisode complet pour aller au bout du chemin.</p></div>
-
-        <div class="card">
-          <div class="row">
-            <div class="thumb"><svg><use href="#ic-film"/></svg></div>
-            <div><h3>Entre Force et Vulnérabilité</h3><p>Avec Aïcha M. — sur la force que cache la vulnérabilité</p></div>
-          </div>
-          <span class="tag">Transformation</span><span class="tag">Authenticité</span><span class="badge nouveau">Nouveau</span>
-          <div class="ep-actions">
-            <button class="btn-sm"><svg class="bic"><use href="#ic-play"/></svg>Teaser · 1 min 30</button>
-            <button class="btn-sm alt"><svg class="bic"><use href="#ic-film"/></svg>Épisode complet · 42 min</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="row">
-            <div class="thumb"><svg><use href="#ic-film"/></svg></div>
-            <div><h3>Partir ou rester : 3 destins croisés</h3><p>Avec Karim S., Fatou B. et Yves D. — trois chemins, trois choix de vie</p></div>
-          </div>
-          <span class="tag">Diaspora</span><span class="tag">Choix de vie</span><span class="badge programme">Vendredi 18h</span>
-          <div class="ep-actions">
-            <button class="btn-sm"><svg class="bic"><use href="#ic-play"/></svg>Teaser · 1 min 45</button>
-            <button class="btn-sm alt"><svg class="bic"><use href="#ic-film"/></svg>Épisode complet · bientôt</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="row">
-            <div class="thumb"><svg><use href="#ic-film"/></svg></div>
-            <div><h3>Le jour où j'ai tout reconstruit</h3><p>Avec Moussa K. — recommencer après avoir tout perdu</p></div>
-          </div>
-          <span class="tag">Résilience</span><span class="tag">Recommencement</span><span class="badge brouillon">À tourner</span>
-          <div class="ep-actions">
-            <button class="btn-sm"><svg class="bic"><use href="#ic-play"/></svg>Teaser · à venir</button>
-            <button class="btn-sm alt"><svg class="bic"><use href="#ic-film"/></svg>Épisode complet · à venir</button>
-          </div>
-        </div>
-
-        <button class="btn alt" onclick="go('v4',document.querySelectorAll('#tabbar-viewer .tab')[3])">Proposer mon témoignage</button>
-      </section>
-
-      <section class="view" id="v3">
-        <div class="card"><h3>Le blog</h3><p>Des textes qui vont plus loin que l'écran, pour prolonger chaque chemin entre deux diffusions.</p></div>
-
-        <div class="order-row">
-          <div class="info">
-            <h4><svg class="ric"><use href="#ic-pen"/></svg>Ta vulnérabilité n'est pas une faiblesse. C'est une porte.</h4>
-            <p>Lié à l'épisode "Entre Force et Vulnérabilité" · 4 min de lecture</p>
-          </div>
-          <span class="badge nouveau">Nouveau</span>
-        </div>
-        <div class="order-row">
-          <div class="info">
-            <h4><svg class="ric"><use href="#ic-pen"/></svg>Et si leur chemin éclairait le tien ?</h4>
-            <p>Réflexion · 3 min de lecture</p>
-          </div>
-          <span class="badge publie">Publié</span>
-        </div>
-        <div class="order-row">
-          <div class="info">
-            <h4><svg class="ric"><use href="#ic-pen"/></svg>5 questions à te poser avant de tout changer</h4>
-            <p>Guide · 5 min de lecture</p>
-          </div>
-          <span class="badge brouillon">À paraître</span>
-        </div>
-
-        <button class="btn">Lire le dernier article</button>
-      </section>
-
-      <section class="view" id="v4">
-        <div class="card">
-          <h3>Et si ton chemin éclairait celui d'un autre ?</h3>
-          <p class="quote">« Parler de son chemin, c'est tendre la main à quelqu'un d'autre. »</p>
-        </div>
-        <div class="card row">
-          <div class="thumb"><svg><use href="#ic-mic"/></svg></div>
-          <div><h3>Proposer mon témoignage</h3><p>Tu as traversé quelque chose qui pourrait éclairer le chemin d'un autre ? Raconte-le ici, en quelques lignes.</p></div>
-        </div>
-        <div class="card"><h3>Ce que dit la communauté</h3><p>7 messages et commentaires cette semaine.</p></div>
-        <div class="msg-wrap">
-          <span class="who">Marc-Aurèle K. — commentaire YouTube</span>
-          <div class="msg them">« Cet épisode m'a parlé direct, j'ai vécu exactement ça. Vous devriez creuser le sujet du retour au pays après plusieurs années. »</div>
-          <span class="who">Fatim D. — message Instagram</span>
-          <div class="msg them">« Est-ce que je peux proposer mon témoignage pour une prochaine vidéo ? Je suis partie d'Abidjan il y a 6 ans. »</div>
-          <span class="who">Yves B. — commentaire blog</span>
-          <div class="msg them">« Article juste et sans filtre. Merci de mettre des mots sur ce qu'on vit tous en silence. »</div>
-        </div>
-        <button class="btn alt">Suivre · YouTube, Instagram, newsletter</button>
-      </section>
-
-      <!-- Espace Andréa — comment elle pilote le site et son émission au quotidien -->
-      <section class="view" id="a1">
-        <div class="herohead" id="herohead-andrea">
-          <b>Bonjour Andréa</b>
-          <span>Ton épisode "Partir ou rester : 3 destins croisés" est prévu vendredi. Le teaser est prêt à publier.</span>
-        </div>
-        <div class="heroslider" id="hero-andrea">
-          <span class="badge-pill">Espace Andréa</span>
-          <div class="dots"><i class="active"></i><i></i><i></i></div>
-          <div class="slide active" data-title="Bonjour Andréa" data-text="Ton épisode 'Partir ou rester : 3 destins croisés' est prévu vendredi. Le teaser est prêt à publier." style="background:linear-gradient(135deg,#1B2438,#2C3A5C)"></div>
-          <div class="slide" data-title="Ton calendrier, déjà prêt" data-text="Teasers, épisodes et articles classés par date de sortie, sans ressaisie ni double gestion." style="background:linear-gradient(135deg,#21283F,#5B4A26)"></div>
-          <div class="slide" data-title="Ta communauté, centralisée" data-text="Les commentaires et messages de tes spectateurs, au même endroit, prêts à recevoir une réponse." style="background:linear-gradient(135deg,#1B2438,#3C3656)"></div>
-        </div>
-        <div class="card">
-          <h3>Cette semaine</h3>
-          <div class="stat"><span>Épisodes programmés</span><b>2</b></div>
-          <div class="stat"><span>Articles en rédaction</span><b>1</b></div>
-          <div class="stat"><span>Messages en attente</span><b>7</b></div>
-        </div>
-        <div class="card row">
-          <div class="thumb"><svg><use href="#ic-play"/></svg></div>
-          <div><h3>Prochaine publication</h3><p>"Partir ou rester : 3 destins croisés" — vendredi 18h</p></div>
-        </div>
-        <button class="btn" onclick="go('a2',document.querySelectorAll('#tabbar-andrea .tab')[1])">Voir le calendrier éditorial</button>
-      </section>
-
-      <section class="view" id="a2">
-        <div class="card"><h3>Calendrier éditorial</h3><p>Teasers, épisodes et articles, classés par date de sortie.</p></div>
-
-        <div class="order-row">
-          <div class="info">
-            <h4><svg class="ric"><use href="#ic-film"/></svg>Partir ou rester : 3 destins croisés</h4>
-            <p>Teaser + épisode · YouTube · Vendredi 12 juin</p>
-          </div>
-          <span class="badge programme">Programmé</span>
-        </div>
-        <div class="order-row">
-          <div class="info">
-            <h4><svg class="ric"><use href="#ic-pen"/></svg>Ta vulnérabilité n'est pas une faiblesse</h4>
-            <p>Article · Blog · Lundi 15 juin</p>
-          </div>
-          <span class="badge brouillon">Brouillon</span>
-        </div>
-        <div class="order-row">
-          <div class="info">
-            <h4><svg class="ric"><use href="#ic-film"/></svg>Le jour où j'ai tout reconstruit</h4>
-            <p>Tournage · Mercredi 17 juin</p>
-          </div>
-          <span class="badge brouillon">À tourner</span>
-        </div>
-        <div class="order-row">
-          <div class="info">
-            <h4><svg class="ric"><use href="#ic-pen"/></svg>Et si leur chemin éclairait le tien ?</h4>
-            <p>Article · Blog · Vendredi 5 juin</p>
-          </div>
-          <span class="badge publie">Publié</span>
-        </div>
-
-        <button class="btn alt">+ Programmer un contenu</button>
-      </section>
-
-      <section class="view" id="a3">
-        <div class="card">
-          <h3>Audience — 7 derniers jours</h3>
-          <div class="stat"><span>Vues YouTube</span><b>18 400</b></div>
-          <div class="stat"><span>Lecteurs du blog</span><b>2 760</b></div>
-          <div class="stat"><span>Nouveaux abonnés</span><b>312</b></div>
-          <div class="stat"><span>Partages Instagram</span><b>540</b></div>
-        </div>
-        <div class="card">
-          <h3>Ce qui résonne le plus en ce moment</h3>
-          <p>Le teaser "Entre Force et Vulnérabilité" continue de tourner 3 semaines après sa sortie. Les commentaires parlent tous de la même chose : se reconnaître dans une histoire qu'on n'osait pas raconter.</p>
-          <span class="tag">Transformation</span>
-          <span class="tag">Authenticité</span>
-          <span class="tag">Témoignage</span>
-        </div>
-      </section>
-
-      <section class="view" id="a4">
-        <div class="card"><h3>Messages de ta communauté</h3><p>7 messages et commentaires à traiter.</p></div>
-        <div class="msg-wrap">
-          <span class="who">Marc-Aurèle K. — commentaire YouTube</span>
-          <div class="msg them">« Cet épisode m'a parlé direct, j'ai vécu exactement ça. Vous devriez creuser le sujet du retour au pays après plusieurs années. »</div>
-          <span class="who">Fatim D. — message Instagram</span>
-          <div class="msg them">« Est-ce que je peux proposer mon témoignage pour une prochaine vidéo ? Je suis partie d'Abidjan il y a 6 ans. »</div>
-          <span class="who">Yves B. — commentaire blog</span>
-          <div class="msg them">« Article juste et sans filtre. Merci de mettre des mots sur ce qu'on vit tous en silence. »</div>
-        </div>
-        <button class="btn">Répondre avec l'assistant</button>
-      </section>
-
+    <div id="temo-success" style="display:none;padding:14px 0">
+      <p style="font-size:14px;font-weight:700;color:#059669;margin-bottom:6px">Merci pour ton témoignage.</p>
+      <p style="font-size:13px;color:var(--muted)">Andréa le recevra directement dans son espace.</p>
     </div>
+  </div>
+  <div class="card" style="margin-top:10px">
+    <p style="font-size:13.5px;font-weight:700;color:var(--brand);margin-bottom:5px">Recevoir chaque nouvel épisode</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:13px;line-height:1.55">Laisse ton contact — email ou numéro WhatsApp. Andréa t'avertit dès qu'un nouveau chemin est partagé.</p>
+    <div id="ab-form-wrap">
+      <form onsubmit="submitAbonne(event)">
+        <input name="prenom" placeholder="Ton prénom" style="width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-size:15px;font-family:var(--ff);color:var(--ink);background:var(--bg);margin-bottom:8px;box-sizing:border-box">
+        <input name="contact" placeholder="Email ou numéro WhatsApp" required style="width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-size:15px;font-family:var(--ff);color:var(--ink);background:var(--bg);margin-bottom:10px;box-sizing:border-box">
+        <button type="submit" class="btn gold" id="ab-save">M'inscrire</button>
+      </form>
+    </div>
+    <div id="ab-success" style="display:none;padding:10px 0">
+      <p style="font-size:14px;font-weight:700;color:#059669;margin-bottom:4px">Tu es inscrit.</p>
+      <p style="font-size:13px;color:var(--muted)">Andréa te préviendra dès le prochain épisode.</p>
+    </div>
+  </div>
+</section>
 
-    <nav class="tabbar" id="tabbar-viewer">
-      <button class="tab active" onclick="go('v1',this)"><svg class="ic"><use href="#ic-home"/></svg>Accueil</button>
-      <button class="tab" onclick="go('v2',this)"><svg class="ic"><use href="#ic-film"/></svg>Épisodes</button>
-      <button class="tab" onclick="go('v3',this)"><svg class="ic"><use href="#ic-pen"/></svg>Blog</button>
-      <button class="tab" onclick="go('v4',this)"><svg class="ic"><use href="#ic-users"/></svg>Rejoindre</button>
-    </nav>
+<!-- ── ADMIN DASHBOARD ──────────────────────────────────────── -->
+<section id="admin-dash" class="sec">
+  <div class="card" style="background:var(--brand);margin-bottom:16px">
+    <p style="color:rgba(255,255,255,.7);font-size:13px;line-height:1.5">Bonjour Andréa. Publie tes épisodes, rédige tes articles, et lis les messages de ta communauté depuis cet espace.</p>
+  </div>
+  <div class="sh"><h2>Cette semaine</h2></div>
+  <div class="card" id="dash-stats"><div class="loading"><span class="spin"></span></div></div>
+  <div class="btn-pair" style="margin-top:18px">
+    <button class="btn" onclick="go('admin-episodes')">Gérer les épisodes</button>
+    <button class="btn" onclick="go('admin-articles')">Gérer les articles</button>
+  </div>
+  <button class="btn" style="margin-top:9px" onclick="go('admin-inbox')">Boîte de réception</button>
+</section>
 
-    <nav class="tabbar" id="tabbar-andrea" style="display:none">
-      <button class="tab active" onclick="go('a1',this)"><svg class="ic"><use href="#ic-home"/></svg>Accueil</button>
-      <button class="tab" onclick="go('a2',this)"><svg class="ic"><use href="#ic-calendar"/></svg>Calendrier</button>
-      <button class="tab" onclick="go('a3',this)"><svg class="ic"><use href="#ic-chart"/></svg>Audience</button>
-      <button class="tab" onclick="go('a4',this)"><svg class="ic"><use href="#ic-chat"/></svg>Communauté</button>
-    </nav>
+<!-- ── ADMIN ÉPISODES ────────────────────────────────────────── -->
+<section id="admin-episodes" class="sec">
+  <div class="sh">
+    <h2>Épisodes</h2>
+    <button onclick="openAddEp()" style="background:var(--gold);color:#2A1D00;border:none;padding:7px 14px;border-radius:9px;font-size:13px;font-weight:700">+ Ajouter</button>
+  </div>
+  <div class="card"><div id="admin-ep-list"><div class="loading"><span class="spin"></span></div></div></div>
+</section>
 
-  </div></div>
+<!-- ── ADMIN ARTICLES ────────────────────────────────────────── -->
+<section id="admin-articles" class="sec">
+  <div class="sh">
+    <h2>Articles</h2>
+    <button onclick="openAddArt()" style="background:var(--gold);color:#2A1D00;border:none;padding:7px 14px;border-radius:9px;font-size:13px;font-weight:700">+ Ajouter</button>
+  </div>
+  <div class="card"><div id="admin-art-list"><div class="loading"><span class="spin"></span></div></div></div>
+</section>
+
+<!-- ── ADMIN INBOX ───────────────────────────────────────────── -->
+<section id="admin-inbox" class="sec">
+  <div class="sh"><h2>Boîte de réception</h2></div>
+  <div class="i-tabs">
+    <button class="i-tab on" id="itab-temo" onclick="showInboxTab('temo')">Témoignages</button>
+    <button class="i-tab" id="itab-com" onclick="showInboxTab('com')">Commentaires</button>
+    <button class="i-tab" id="itab-ab" onclick="showInboxTab('ab')">Abonnés</button>
+  </div>
+  <div id="inbox-temo"><div class="loading"><span class="spin"></span></div></div>
+  <div id="inbox-com" style="display:none"><div class="loading"><span class="spin"></span></div></div>
+  <div id="inbox-ab" style="display:none"><div class="loading"><span class="spin"></span></div></div>
+</section>
+
+</main>
+
+<!-- ── PUBLIC BOTTOM NAV ──────────────────────────────────────── -->
+<nav id="bnav">
+  <button class="nb on" data-sec="accueil" onclick="go('accueil')"><svg><use href="#i-home"/></svg>Accueil</button>
+  <button class="nb" data-sec="episodes" onclick="go('episodes')"><svg><use href="#i-film"/></svg>Épisodes</button>
+  <button class="nb" data-sec="blog" onclick="go('blog')"><svg><use href="#i-pen"/></svg>Blog</button>
+  <button class="nb" data-sec="temoignages" onclick="go('temoignages')"><svg><use href="#i-users"/></svg>Rejoindre</button>
+</nav>
+
+<!-- ── ADMIN BOTTOM NAV ───────────────────────────────────────── -->
+<nav id="bnav-a">
+  <button class="nb on" data-sec="admin-dash" onclick="go('admin-dash')"><svg><use href="#i-dash"/></svg>Tableau</button>
+  <button class="nb" data-sec="admin-episodes" onclick="go('admin-episodes')"><svg><use href="#i-film"/></svg>Épisodes</button>
+  <button class="nb" data-sec="admin-articles" onclick="go('admin-articles')"><svg><use href="#i-pen"/></svg>Articles</button>
+  <button class="nb" data-sec="admin-inbox" onclick="go('admin-inbox')"><svg><use href="#i-inbox"/></svg>Inbox</button>
+</nav>
+
+<!-- ── GATE ───────────────────────────────────────────────────── -->
+<div id="gate">
+  <div class="gate-box">
+    <h2>Espace Andréa</h2>
+    <p>Accès réservé — entrez le mot de passe</p>
+    <input type="password" id="gpwd" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')checkPwd()">
+    <p class="gate-err" id="gerr">Mot de passe incorrect</p>
+    <button class="btn" style="margin-top:0" onclick="checkPwd()">Entrer</button>
+    <button class="gate-cancel" onclick="closeGate()">Annuler</button>
+  </div>
 </div>
 
+<!-- ── EPISODE SHEET ──────────────────────────────────────────── -->
+<div id="ep-sheet" class="sheet">
+  <div class="sheet-in">
+    <div class="sheet-hd">
+      <h3 id="ep-sheet-title">Nouvel épisode</h3>
+      <button onclick="closeEpSheet()">×</button>
+    </div>
+    <form id="ep-form" onsubmit="saveEp(event)">
+      <div class="fg"><label>Titre</label><input name="titre" placeholder="Titre de l'épisode" required></div>
+      <div class="fg"><label>Invité(e)s</label><input name="invites" placeholder="ex : Avec Aïcha M."></div>
+      <div class="fg"><label>Tags (séparés par virgule)</label><input name="tags" placeholder="ex : Transformation,Authenticité"></div>
+      <div class="fg"><label>URL YouTube — Teaser</label><input name="youtube_teaser" placeholder="https://youtu.be/..."></div>
+      <div class="fg"><label>Durée teaser</label><input name="duree_teaser" placeholder="ex : 1 min 30"></div>
+      <div class="fg"><label>URL YouTube — Épisode complet</label><input name="youtube_episode" placeholder="https://youtu.be/..."></div>
+      <div class="fg"><label>Durée épisode</label><input name="duree_episode" placeholder="ex : 42 min"></div>
+      <div class="fg"><label>Description</label><textarea name="description" placeholder="Description de l'épisode"></textarea></div>
+      <div class="fg"><label>Statut</label>
+        <select name="statut">
+          <option value="brouillon">Brouillon</option>
+          <option value="programme">Programmé</option>
+          <option value="publie">Publié</option>
+        </select>
+      </div>
+      <button type="submit" class="btn gold" id="ep-save">Enregistrer</button>
+    </form>
+  </div>
+</div>
+
+<!-- ── ARTICLE SHEET ──────────────────────────────────────────── -->
+<div id="art-sheet" class="sheet">
+  <div class="sheet-in">
+    <div class="sheet-hd">
+      <h3 id="art-sheet-title">Nouvel article</h3>
+      <button onclick="closeArtSheet()">×</button>
+    </div>
+    <form id="art-form" onsubmit="saveArt(event)">
+      <div class="fg"><label>Titre</label><input name="titre" placeholder="Titre de l'article" required></div>
+      <div class="fg"><label>Contenu</label><textarea name="contenu" style="min-height:160px" placeholder="Écris ton article ici..."></textarea></div>
+      <div class="fg"><label>Lié à l'épisode (titre)</label><input name="lien_episode" placeholder="Entre Force et Vulnérabilité"></div>
+      <div class="fg"><label>Durée de lecture</label><input name="duree_lecture" placeholder="ex : 4 min"></div>
+      <div class="fg"><label>Statut</label>
+        <select name="statut">
+          <option value="brouillon">Brouillon</option>
+          <option value="publie">Publié</option>
+        </select>
+      </div>
+      <button type="submit" class="btn gold" id="art-save">Enregistrer</button>
+    </form>
+  </div>
+</div>
+
+<!-- ── VIDEO MODAL ────────────────────────────────────────────── -->
+<div id="vmod" class="vmod" onclick="if(event.target===this)closeVideo()">
+  <button class="vmod-close" onclick="closeVideo()">×</button>
+  <div class="vmod-wrap">
+    <div class="vmod-ratio"><iframe id="yt-frame" src="" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>
+  </div>
+</div>
+
+<!-- ── ARTICLE MODAL ──────────────────────────────────────────── -->
+<div id="amod" class="amod">
+  <div class="amod-hd">
+    <button onclick="closeArticle()">×</button>
+    <h2 id="amod-title"></h2>
+  </div>
+  <div class="amod-body">
+    <div id="amod-body"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-function go(id, el){
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  if(el) el.classList.add('active');
-  document.querySelector('.content').scrollTop = 0;
+// ── SUPABASE ──────────────────────────────────────────────────────
+const SB = supabase.createClient(
+  'https://lgdgbrivnhgeupqhkckd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk'
+);
+
+// ── STATE ─────────────────────────────────────────────────────────
+var eps = [], arts = [], temos = [], coms = [], abonnes = [];
+var editEpId = null, editArtId = null;
+var adminMode = false;
+
+// ── NAVIGATION ────────────────────────────────────────────────────
+function go(id) {
+  document.querySelectorAll('.sec').forEach(function(s){ s.classList.remove('on'); });
+  var s = document.getElementById(id);
+  if (s) s.classList.add('on');
+
+  var isAdmin = id.startsWith('admin');
+  document.getElementById('bnav').style.display   = isAdmin ? 'none' : 'flex';
+  document.getElementById('bnav-a').style.display = isAdmin ? 'flex' : 'none';
+  document.querySelectorAll('.nav-desk a').forEach(function(a){ a.classList.toggle('on', a.dataset.sec === id); });
+  document.querySelectorAll('#bnav .nb').forEach(function(b){ b.classList.toggle('on', b.dataset.sec === id); });
+  document.querySelectorAll('#bnav-a .nb').forEach(function(b){ b.classList.toggle('on', b.dataset.sec === id); });
+  window.scrollTo({ top: 0 });
 }
-function startSlider(rootId, headId, ms){
-  var root = document.getElementById(rootId);
-  if(!root) return;
-  var head = document.getElementById(headId);
-  var slides = root.querySelectorAll('.slide');
-  var dots = root.querySelectorAll('.dots i');
-  var i = 0;
-  function writeHead(idx){
-    if(!head) return;
-    head.querySelector('b').textContent = slides[idx].getAttribute('data-title');
-    head.querySelector('span').textContent = slides[idx].getAttribute('data-text');
+
+// ── ADMIN ACCESS ──────────────────────────────────────────────────
+var taps = 0, tapT;
+document.getElementById('logo-tap').addEventListener('click', function(){
+  taps++; clearTimeout(tapT);
+  tapT = setTimeout(function(){ taps = 0; }, 2000);
+  if (taps >= 5) { taps = 0; openGate(); }
+});
+function openGate(){
+  document.getElementById('gate').classList.add('open');
+  setTimeout(function(){ document.getElementById('gpwd').focus(); }, 80);
+}
+function closeGate(){
+  document.getElementById('gate').classList.remove('open');
+  document.getElementById('gerr').style.display = 'none';
+  document.getElementById('gpwd').value = '';
+}
+function checkPwd(){
+  if (document.getElementById('gpwd').value === 'andrea2026') {
+    closeGate(); adminMode = true;
+    document.getElementById('admin-badge').style.display = 'flex';
+    document.querySelector('.nav-desk').style.display = 'none';
+    loadAdminData(); go('admin-dash');
+  } else {
+    document.getElementById('gerr').style.display = 'block';
   }
-  setInterval(function(){
-    slides[i].classList.remove('active');
-    dots[i].classList.remove('active');
-    i = (i + 1) % slides.length;
-    slides[i].classList.add('active');
-    dots[i].classList.add('active');
-    if(head){
-      head.style.opacity = 0;
-      setTimeout(function(){ writeHead(i); head.style.opacity = 1; }, 220);
-    }
-  }, ms);
 }
-startSlider('hero-viewer', 'herohead-viewer', 4200);
-startSlider('hero-andrea', 'herohead-andrea', 4700);
-function setMode(mode, btn){
-  document.querySelectorAll('.modeswitch button').forEach(b => b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-  document.getElementById('tabbar-viewer').style.display = (mode === 'viewer') ? 'flex' : 'none';
-  document.getElementById('tabbar-andrea').style.display = (mode === 'andrea') ? 'flex' : 'none';
-  var firstViewId = (mode === 'viewer') ? 'v1' : 'a1';
-  var firstTabbar = document.getElementById(mode === 'viewer' ? 'tabbar-viewer' : 'tabbar-andrea');
-  go(firstViewId, firstTabbar.querySelector('.tab'));
+function exitAdmin(){
+  adminMode = false;
+  document.getElementById('admin-badge').style.display = 'none';
+  document.querySelector('.nav-desk').style.display = '';
+  go('accueil');
 }
+
+// ── DATA LOADING ──────────────────────────────────────────────────
+async function loadPublicData() {
+  var r1 = await SB.from('vc_episodes').select('*').in('statut',['publie','programme']).order('created_at',{ascending:false});
+  var r2 = await SB.from('vc_articles').select('*').eq('statut','publie').order('created_at',{ascending:false});
+  eps  = r1.data || [];
+  arts = r2.data || [];
+  renderHome(); renderEpList(); renderBlogList();
+}
+async function loadAdminData() {
+  var r1 = await SB.from('vc_episodes').select('*').order('created_at',{ascending:false});
+  var r2 = await SB.from('vc_articles').select('*').order('created_at',{ascending:false});
+  var r3 = await SB.from('vc_temoignages').select('*').order('created_at',{ascending:false});
+  var r4 = await SB.from('vc_commentaires').select('*').order('created_at',{ascending:false});
+  var r5 = await SB.from('vc_abonnes').select('*').order('created_at',{ascending:false});
+  eps      = r1.data || [];
+  arts     = r2.data || [];
+  temos    = r3.data || [];
+  coms     = r4.data || [];
+  abonnes  = r5.data || [];
+  renderHome(); renderEpList(); renderBlogList();
+  renderAdminDash(); renderAdminEps(); renderAdminArts(); renderInboxTemo(); renderInboxCom(); renderInboxAbonnes();
+}
+
+// ── PUBLIC RENDER ─────────────────────────────────────────────────
+function renderHome(){
+  var latest = eps.find(function(e){ return e.statut === 'publie'; });
+  var el = document.getElementById('home-ep');
+  el.innerHTML = latest ? '<div class="card">' + epHtml(latest) + '</div>'
+    : '<div class="card"><p style="color:var(--muted);font-size:13px">Le premier épisode arrive bientôt.</p></div>';
+
+  var artEl = document.getElementById('home-arts');
+  if (arts.length) {
+    artEl.innerHTML = '<div class="card">' + arts.slice(0,2).map(function(a){
+      return '<div class="blog-row"><div><h4>' + x(a.titre) + '</h4>'
+        + '<p>' + (a.lien_episode ? 'Lié à l\'épisode · ' : '') + (a.duree_lecture || '') + '</p></div>'
+        + '<span class="badge ' + stClass(a.statut) + '" style="flex:none">' + stLabel(a.statut) + '</span></div>';
+    }).join('') + '</div>';
+  } else {
+    artEl.innerHTML = '';
+  }
+}
+
+function renderEpList(){
+  var el = document.getElementById('ep-list');
+  if (!eps.length) { el.innerHTML = '<div class="card" style="grid-column:1/-1"><p style="color:var(--muted);font-size:13px">Les épisodes arrivent bientôt.</p></div>'; return; }
+  el.innerHTML = eps.map(function(e){ return '<div class="card">' + epHtml(e) + '</div>'; }).join('');
+}
+
+function renderBlogList(){
+  var el = document.getElementById('blog-list');
+  if (!arts.length) { el.innerHTML = '<div class="card" style="grid-column:1/-1"><p style="color:var(--muted);font-size:13px">Les articles arrivent bientôt.</p></div>'; return; }
+  el.innerHTML = arts.map(function(a){
+    var hasContent = a.contenu && a.contenu.trim() && a.contenu !== 'À écrire...';
+    return '<div class="card"><div class="blog-row" style="flex-direction:column;align-items:flex-start;border:none;padding:0;gap:7px">'
+      + '<span class="badge ' + stClass(a.statut) + '">' + stLabel(a.statut) + '</span>'
+      + '<h4>' + x(a.titre) + '</h4>'
+      + '<p>' + (a.lien_episode ? 'Lié à &ldquo;' + x(a.lien_episode) + '&rdquo; · ' : '') + (a.duree_lecture ? a.duree_lecture + ' de lecture' : '') + '</p>'
+      + (hasContent
+          ? '<a href="#" class="blog-link" onclick="openArticle(\'' + a.id + '\');return false">Lire l\'article →</a>'
+          : '<span style="font-size:13px;color:var(--muted)">Bientôt disponible</span>')
+      + '</div></div>';
+  }).join('');
+}
+
+// Episode HTML (shared public + admin)
+function epHtml(ep) {
+  var tags = (ep.tags || '').split(',').filter(Boolean).map(function(t){ return '<span class="tag">' + x(t.trim()) + '</span>'; }).join('');
+  var statBadge = '<span class="badge ' + stClass(ep.statut) + '">' + stLabel(ep.statut) + '</span>';
+  var hasT = !!ep.youtube_teaser, hasE = !!ep.youtube_episode;
+  return '<div class="ep-head">'
+    + '<div class="ep-icon"><svg><use href="#i-film"/></svg></div>'
+    + '<div class="ep-info"><h3>' + x(ep.titre) + '</h3><p>' + x(ep.invites || '') + '</p></div>'
+    + '</div>'
+    + '<div class="meta-row">' + tags + statBadge + '</div>'
+    + '<div class="ep-btns">'
+    + '<button class="ep-btn" ' + (!hasT ? 'disabled' : 'onclick="openVideo(\'' + x(ep.youtube_teaser) + '\')"') + '>'
+    + '<svg width="13" height="13"><use href="#i-play"/></svg>' + (ep.duree_teaser ? 'Teaser · ' + x(ep.duree_teaser) : 'Teaser') + '</button>'
+    + '<button class="ep-btn fill" ' + (!hasE ? 'disabled' : 'onclick="openVideo(\'' + x(ep.youtube_episode) + '\')"') + '>'
+    + '<svg width="13" height="13"><use href="#i-film"/></svg>' + (ep.duree_episode ? ep.duree_episode : 'Épisode complet') + '</button>'
+    + '</div>'
+    + commentToggle(ep.id);
+}
+
+// Comment toggle per episode
+function commentToggle(epId) {
+  return '<button class="comment-toggle" onclick="toggleComments(\'' + epId + '\')">'
+    + '<svg><use href="#i-chat"/></svg><span id="ctxt-' + epId + '">Commentaires</span></button>'
+    + '<div class="comments-wrap" id="cw-' + epId + '">'
+    + '<div id="clist-' + epId + '" class="c-empty">Chargement...</div>'
+    + '<div class="c-form">'
+    + '<form onsubmit="submitComment(event,\'' + epId + '\')">'
+    + '<input name="prenom" placeholder="Ton prénom (optionnel)">'
+    + '<textarea name="message" placeholder="Ton commentaire..." rows="3" required></textarea>'
+    + '<label class="c-anon"><input type="checkbox" name="anon"> Rester anonyme</label>'
+    + '<button type="submit" class="c-submit">Publier</button>'
+    + '</form>'
+    + '<div id="cok-' + epId + '" style="display:none" class="c-ok">Commentaire envoyé. Il sera visible après validation.</div>'
+    + '</div></div>';
+}
+
+function toggleComments(epId) {
+  var wrap = document.getElementById('cw-' + epId);
+  var open = wrap.classList.contains('open');
+  if (!open) {
+    wrap.classList.add('open');
+    loadComments(epId);
+  } else {
+    wrap.classList.remove('open');
+  }
+}
+async function loadComments(epId) {
+  var el = document.getElementById('clist-' + epId);
+  var query = SB.from('vc_commentaires').select('*').eq('episode_id', epId).order('created_at');
+  if (!adminMode) query = query.eq('visible', true);
+  var { data } = await query;
+  var items = data || [];
+  document.getElementById('ctxt-' + epId).textContent = 'Commentaires (' + items.length + ')';
+  if (!items.length) { el.innerHTML = '<span class="c-empty">Sois le premier à commenter.</span>'; return; }
+  el.innerHTML = items.map(function(c){
+    return '<div class="c-item">'
+      + '<div class="c-who">' + x(c.prenom || 'Anonyme')
+      + (adminMode && !c.visible ? ' <span style="color:#dc2626;font-size:10px"> — en attente</span>' : '') + '</div>'
+      + '<div class="c-msg">' + x(c.message) + '</div>'
+      + '<div class="c-date">' + fmt(c.created_at) + '</div>'
+      + (adminMode ? '<div style="display:flex;gap:6px;margin-top:6px">'
+        + (!c.visible ? '<button class="ib green" style="width:auto;padding:0 8px;font-size:11px;font-weight:700" onclick="approuverCom(\'' + c.id + '\',\'' + epId + '\')"><svg width="13" height="13"><use href="#i-check"/></svg> Approuver</button>' : '<span style="font-size:11px;color:#059669;font-weight:600">Approuvé</span>')
+        + '<button class="ib red" onclick="supprimerCom(\'' + c.id + '\',\'' + epId + '\')"><svg width="13" height="13"><use href="#i-x"/></svg></button>'
+        + '</div>' : '')
+      + '</div>';
+  }).join('');
+}
+async function submitComment(e, epId) {
+  e.preventDefault();
+  var f = e.target;
+  var prenom = f.anon.checked ? '' : (f.prenom.value.trim() || '');
+  var msg = f.message.value.trim();
+  if (!msg) return;
+  var btn = f.querySelector('button[type=submit]');
+  btn.disabled = true; btn.textContent = 'Envoi...';
+  await SB.from('vc_commentaires').insert({ episode_id: epId, prenom: prenom, message: msg, visible: false });
+  btn.disabled = false; btn.textContent = 'Publier';
+  f.reset();
+  document.getElementById('cok-' + epId).style.display = 'block';
+  setTimeout(function(){ document.getElementById('cok-' + epId).style.display = 'none'; }, 4000);
+}
+async function approuverCom(id, epId) {
+  await SB.from('vc_commentaires').update({ visible: true }).eq('id', id);
+  await loadComments(epId); renderInboxCom();
+}
+async function supprimerCom(id, epId) {
+  if (!confirm('Supprimer ce commentaire ?')) return;
+  await SB.from('vc_commentaires').delete().eq('id', id);
+  await loadComments(epId); renderInboxCom();
+}
+
+// ── ADMIN RENDER ──────────────────────────────────────────────────
+function renderAdminDash() {
+  var pubE = eps.filter(function(e){ return e.statut === 'publie'; }).length;
+  var pubA = arts.filter(function(a){ return a.statut === 'publie'; }).length;
+  var unreadT = temos.filter(function(t){ return !t.traite; }).length;
+  var unreadC = coms.filter(function(c){ return !c.visible; }).length;
+  document.getElementById('dash-stats').innerHTML =
+    '<div class="stat-r"><span>Épisodes publiés</span><b>' + pubE + ' / ' + eps.length + '</b></div>'
+    + '<div class="stat-r"><span>Articles publiés</span><b>' + pubA + ' / ' + arts.length + '</b></div>'
+    + '<div class="stat-r"><span>Abonnés notifications</span><b>' + abonnes.length + '</b></div>'
+    + '<div class="stat-r"><span>Témoignages à traiter</span><b>' + unreadT + '</b></div>'
+    + '<div class="stat-r"><span>Commentaires à approuver</span><b>' + unreadC + '</b></div>';
+}
+function renderAdminEps() {
+  var el = document.getElementById('admin-ep-list');
+  if (!eps.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0">Aucun épisode. Cliquez sur + Ajouter.</p>'; return; }
+  el.innerHTML = eps.map(function(ep){
+    return '<div class="a-row"><div class="a-info"><h4>' + x(ep.titre) + '</h4>'
+      + '<p>' + x(ep.invites || '') + '</p></div>'
+      + '<div class="a-acts"><span class="badge ' + stClass(ep.statut) + '">' + stLabel(ep.statut) + '</span>'
+      + '<button class="ib" onclick="editEp(\'' + ep.id + '\')"><svg width="15" height="15"><use href="#i-pen"/></svg></button>'
+      + '<button class="ib red" onclick="deleteEp(\'' + ep.id + '\')"><svg width="15" height="15"><use href="#i-x"/></svg></button>'
+      + '</div></div>';
+  }).join('');
+}
+function renderAdminArts() {
+  var el = document.getElementById('admin-art-list');
+  if (!arts.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0">Aucun article. Cliquez sur + Ajouter.</p>'; return; }
+  el.innerHTML = arts.map(function(a){
+    return '<div class="a-row"><div class="a-info"><h4>' + x(a.titre) + '</h4>'
+      + '<p>' + (a.duree_lecture || '') + '</p></div>'
+      + '<div class="a-acts"><span class="badge ' + stClass(a.statut) + '">' + stLabel(a.statut) + '</span>'
+      + '<button class="ib" onclick="editArt(\'' + a.id + '\')"><svg width="15" height="15"><use href="#i-pen"/></svg></button>'
+      + '<button class="ib red" onclick="deleteArt(\'' + a.id + '\')"><svg width="15" height="15"><use href="#i-x"/></svg></button>'
+      + '</div></div>';
+  }).join('');
+}
+function renderInboxTemo() {
+  var el = document.getElementById('inbox-temo');
+  if (!temos.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucun témoignage reçu.</p>'; return; }
+  var unread = temos.filter(function(t){ return !t.traite; });
+  var read   = temos.filter(function(t){ return t.traite; });
+  el.innerHTML = (unread.length ? '<p style="font-size:12px;font-weight:700;color:var(--brand);margin-bottom:8px">À traiter (' + unread.length + ')</p>' + unread.map(temoHtml).join('') : '')
+    + (read.length ? '<p style="font-size:12px;font-weight:700;color:var(--muted);margin:14px 0 8px">Traités</p>' + read.map(temoHtml).join('') : '');
+}
+function temoHtml(t) {
+  return '<div class="in-temo ' + (t.traite ? 'done' : '') + '">'
+    + '<div class="in-head"><span class="in-who">' + x(t.prenom) + '</span><span class="in-date">' + fmt(t.created_at) + '</span></div>'
+    + '<div class="in-msg">« ' + x(t.message) + ' »</div>'
+    + (!t.traite ? '<button class="in-done" onclick="markTemo(\'' + t.id + '\')">Marquer comme traité</button>' : '<span style="font-size:11px;color:var(--muted);display:block;margin-top:5px">Traité</span>')
+    + '</div>';
+}
+function renderInboxCom() {
+  var el = document.getElementById('inbox-com');
+  var pending = coms.filter(function(c){ return !c.visible; });
+  var approved = coms.filter(function(c){ return c.visible; });
+  if (!coms.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucun commentaire reçu.</p>'; return; }
+
+  function comHtml(c) {
+    var epTitle = (eps.find(function(e){ return e.id === c.episode_id; }) || {}).titre || 'Episode';
+    return '<div class="in-temo ' + (c.visible ? 'done' : '') + '">'
+      + '<div class="in-head"><span class="in-who">' + x(c.prenom || 'Anonyme') + ' — <em style="font-style:normal;color:var(--muted)">' + x(epTitle) + '</em></span><span class="in-date">' + fmt(c.created_at) + '</span></div>'
+      + '<div class="in-msg">' + x(c.message) + '</div>'
+      + '<div style="display:flex;gap:6px;margin-top:7px">'
+      + (!c.visible ? '<button class="ib green" style="width:auto;padding:0 10px;font-size:11px;font-weight:700;gap:4px" onclick="approuverComInbox(\'' + c.id + '\')">'
+        + '<svg width="13" height="13"><use href="#i-check"/></svg> Approuver</button>' : '<span style="font-size:11px;color:#059669;font-weight:600">Approuvé</span>')
+      + '<button class="ib red" onclick="supprimerComInbox(\'' + c.id + '\')"><svg width="13" height="13"><use href="#i-x"/></svg></button>'
+      + '</div></div>';
+  }
+  el.innerHTML = (pending.length ? '<p style="font-size:12px;font-weight:700;color:var(--brand);margin-bottom:8px">À approuver (' + pending.length + ')</p>' + pending.map(comHtml).join('') : '')
+    + (approved.length ? '<p style="font-size:12px;font-weight:700;color:var(--muted);margin:14px 0 8px">Approuvés</p>' + approved.map(comHtml).join('') : '');
+}
+
+async function approuverComInbox(id) {
+  await SB.from('vc_commentaires').update({ visible: true }).eq('id', id);
+  await loadAdminData();
+}
+async function supprimerComInbox(id) {
+  if (!confirm('Supprimer ce commentaire ?')) return;
+  await SB.from('vc_commentaires').delete().eq('id', id);
+  await loadAdminData();
+}
+
+// Inbox tabs
+function showInboxTab(tab) {
+  document.getElementById('itab-temo').classList.toggle('on', tab === 'temo');
+  document.getElementById('itab-com').classList.toggle('on', tab === 'com');
+  document.getElementById('itab-ab').classList.toggle('on', tab === 'ab');
+  document.getElementById('inbox-temo').style.display = tab === 'temo' ? 'block' : 'none';
+  document.getElementById('inbox-com').style.display  = tab === 'com'  ? 'block' : 'none';
+  document.getElementById('inbox-ab').style.display   = tab === 'ab'   ? 'block' : 'none';
+}
+function renderInboxAbonnes() {
+  var el = document.getElementById('inbox-ab');
+  if (!abonnes.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucun abonné pour l\'instant.</p>'; return; }
+  el.innerHTML = '<p style="font-size:12px;font-weight:700;color:var(--brand);margin-bottom:10px">' + abonnes.length + ' abonné' + (abonnes.length > 1 ? 's' : '') + '</p>'
+    + abonnes.map(function(a){
+      return '<div class="in-temo">'
+        + '<div class="in-head"><span class="in-who">' + x(a.prenom || 'Anonyme') + '</span><span class="in-date">' + fmt(a.created_at) + '</span></div>'
+        + '<div style="font-size:13px;margin-top:3px">' + x(a.contact) + '</div>'
+        + '</div>';
+    }).join('');
+}
+
+// ── EPISODE CRUD ──────────────────────────────────────────────────
+function openAddEp(){ editEpId = null; document.getElementById('ep-form').reset(); document.getElementById('ep-sheet-title').textContent = 'Nouvel épisode'; document.getElementById('ep-sheet').classList.add('open'); }
+function editEp(id){
+  editEpId = id;
+  var ep = eps.find(function(e){ return e.id === id; }); if (!ep) return;
+  var f = document.getElementById('ep-form');
+  f.titre.value = ep.titre || ''; f.invites.value = ep.invites || ''; f.tags.value = ep.tags || '';
+  f.youtube_teaser.value = ep.youtube_teaser || ''; f.duree_teaser.value = ep.duree_teaser || '';
+  f.youtube_episode.value = ep.youtube_episode || ''; f.duree_episode.value = ep.duree_episode || '';
+  f.description.value = ep.description || ''; f.statut.value = ep.statut || 'brouillon';
+  document.getElementById('ep-sheet-title').textContent = 'Modifier l\'épisode';
+  document.getElementById('ep-sheet').classList.add('open');
+}
+function closeEpSheet(){ document.getElementById('ep-sheet').classList.remove('open'); }
+async function saveEp(e){
+  e.preventDefault(); var f = e.target;
+  var d = { titre: f.titre.value.trim(), invites: f.invites.value.trim(), tags: f.tags.value.trim(),
+    youtube_teaser: f.youtube_teaser.value.trim(), duree_teaser: f.duree_teaser.value.trim(),
+    youtube_episode: f.youtube_episode.value.trim(), duree_episode: f.duree_episode.value.trim(),
+    description: f.description.value.trim(), statut: f.statut.value };
+  if (!d.titre) return;
+  var btn = document.getElementById('ep-save'); btn.disabled = true; btn.textContent = 'Enregistrement...';
+  if (editEpId) { await SB.from('vc_episodes').update(d).eq('id', editEpId); }
+  else { await SB.from('vc_episodes').insert(d); }
+  btn.disabled = false; btn.textContent = 'Enregistrer';
+  closeEpSheet(); await loadAdminData();
+}
+async function deleteEp(id){ if (!confirm('Supprimer cet épisode ?')) return; await SB.from('vc_episodes').delete().eq('id', id); await loadAdminData(); }
+
+// ── ARTICLE CRUD ──────────────────────────────────────────────────
+function openAddArt(){ editArtId = null; document.getElementById('art-form').reset(); document.getElementById('art-sheet-title').textContent = 'Nouvel article'; document.getElementById('art-sheet').classList.add('open'); }
+function editArt(id){
+  editArtId = id;
+  var a = arts.find(function(ar){ return ar.id === id; }); if (!a) return;
+  var f = document.getElementById('art-form');
+  f.titre.value = a.titre || ''; f.contenu.value = a.contenu || ''; f.lien_episode.value = a.lien_episode || '';
+  f.duree_lecture.value = a.duree_lecture || ''; f.statut.value = a.statut || 'brouillon';
+  document.getElementById('art-sheet-title').textContent = 'Modifier l\'article';
+  document.getElementById('art-sheet').classList.add('open');
+}
+function closeArtSheet(){ document.getElementById('art-sheet').classList.remove('open'); }
+async function saveArt(e){
+  e.preventDefault(); var f = e.target;
+  var d = { titre: f.titre.value.trim(), contenu: f.contenu.value.trim(), lien_episode: f.lien_episode.value.trim(), duree_lecture: f.duree_lecture.value.trim(), statut: f.statut.value };
+  if (!d.titre) return;
+  var btn = document.getElementById('art-save'); btn.disabled = true; btn.textContent = 'Enregistrement...';
+  if (editArtId) { await SB.from('vc_articles').update(d).eq('id', editArtId); }
+  else { await SB.from('vc_articles').insert(d); }
+  btn.disabled = false; btn.textContent = 'Enregistrer';
+  closeArtSheet(); await loadAdminData();
+}
+async function deleteArt(id){ if (!confirm('Supprimer cet article ?')) return; await SB.from('vc_articles').delete().eq('id', id); await loadAdminData(); }
+
+// ── TEMOIGNAGES ───────────────────────────────────────────────────
+async function submitTemo(e){
+  e.preventDefault(); var f = e.target;
+  var btn = document.getElementById('temo-save'); btn.disabled = true; btn.textContent = 'Envoi...';
+  var { error } = await SB.from('vc_temoignages').insert({ prenom: f.prenom.value.trim(), message: f.message.value.trim() });
+  btn.disabled = false; btn.textContent = 'Envoyer mon témoignage';
+  if (!error) { document.getElementById('temo-form-wrap').style.display = 'none'; document.getElementById('temo-success').style.display = 'block'; }
+}
+async function submitAbonne(e){
+  e.preventDefault(); var f = e.target;
+  var contact = f.contact.value.trim(); if (!contact) return;
+  var btn = document.getElementById('ab-save'); btn.disabled = true; btn.textContent = 'Inscription...';
+  var { error } = await SB.from('vc_abonnes').insert({ prenom: f.prenom.value.trim(), contact: contact });
+  btn.disabled = false; btn.textContent = 'M\'inscrire';
+  if (!error) { document.getElementById('ab-form-wrap').style.display = 'none'; document.getElementById('ab-success').style.display = 'block'; }
+}
+async function markTemo(id){ await SB.from('vc_temoignages').update({ traite: true }).eq('id', id); await loadAdminData(); }
+
+// ── VIDEO ─────────────────────────────────────────────────────────
+function ytId(url){ var m = (url||'').match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/); return m ? m[1] : null; }
+function openVideo(url){ var id = ytId(url); if (!id) return; document.getElementById('yt-frame').src = 'https://www.youtube.com/embed/' + id + '?autoplay=1'; document.getElementById('vmod').classList.add('open'); }
+function closeVideo(){ document.getElementById('vmod').classList.remove('open'); document.getElementById('yt-frame').src = ''; }
+
+// ── ARTICLE READER ────────────────────────────────────────────────
+function openArticle(id){
+  var a = arts.find(function(ar){ return ar.id === id; }); if (!a) return;
+  document.getElementById('amod-title').textContent = a.titre;
+  document.getElementById('amod-body').innerHTML = (a.contenu || '').split('\n\n').map(function(p){ return '<p>' + x(p) + '</p>'; }).join('');
+  document.getElementById('amod').classList.add('open');
+}
+function closeArticle(){ document.getElementById('amod').classList.remove('open'); }
+
+// ── HELPERS ───────────────────────────────────────────────────────
+function x(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmt(iso){ if (!iso) return ''; return new Date(iso).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}); }
+function stLabel(s){ return {publie:'Publié',programme:'Programmé',brouillon:'Brouillon'}[s]||s; }
+function stClass(s){ return {publie:'live',programme:'soon',brouillon:'wip'}[s]||'wip'; }
+
+// ── INIT ──────────────────────────────────────────────────────────
+loadPublicData();
 </script>
 </body>
 </html>
