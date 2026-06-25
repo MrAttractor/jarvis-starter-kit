@@ -543,7 +543,7 @@ const loaders = {
 // ============================================================
 async function loadATraiter() {
   const { data } = await sb.from('demandes')
-    .select('*, clients(nom,whatsapp), nom_expediteur, wa_expediteur')
+    .select('*, clients(nom,whatsapp), nom_expediteur, wa_expediteur, voyages(route, date_depart)')
     .in('statut', ['en_attente', 'acceptee'])
     .order('created_at', { ascending: false })
   window._demandes = data || []
@@ -570,12 +570,16 @@ async function loadATraiter() {
     const nom = nomFormulaire + nomSuffix
     const wa = d.wa_expediteur || d.clients?.whatsapp || '—'
     const collecte = (d.contact_reception || '').split(' | Collecte: ')[1] || ''
+    const voyageLabel = d.voyages
+      ? `${routeLabel(d.voyages.route)} · départ ${fmtVoyage(d.voyages.date_depart)}`
+      : ''
     return `
       <div style="background:rgba(0,31,92,.35);border:1px solid rgba(91,184,245,.15);border-radius:12px;padding:1rem;margin-bottom:.6rem;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;flex-wrap:wrap;">
           <div>
             <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:white;">${nom}</div>
-            <div style="font-size:.72rem;color:var(--sky);margin-top:2px;">${wa} · ${routeLabel(d.voyages?.route || '')}</div>
+            <div style="font-size:.72rem;color:var(--sky);margin-top:2px;">${wa}</div>
+            ${voyageLabel ? `<div style="font-size:.72rem;color:var(--gold);margin-top:3px;font-family:'Syne',sans-serif;font-weight:600;">✈ ${voyageLabel}</div>` : ''}
           </div>
           <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
             ${d.statut === 'en_attente' ? `
@@ -767,6 +771,7 @@ function closeModal(id) { document.getElementById(id).classList.remove('open') }
 // HELPERS
 // ============================================================
 const routeLabel = r => r === 'ABJ_ORY' ? '🇨🇮 ABJ→ORY 🇫🇷' : '🇫🇷 ORY→ABJ 🇨🇮'
+const fmtVoyage = d => new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })
 const statutPill = s => {
   const map = { en_attente:['s-attente','En attente'], collecte:['s-collecte','Collecté'], transit:['s-transit','En transit'], douane:['s-douane','En douane'], livre:['s-livre','Livré ✓'] }
   const [cls, label] = map[s] || ['s-attente', s]
@@ -1112,8 +1117,11 @@ function openAcceptModal(id) {
   const wa = d?.wa_expediteur || d?.clients?.whatsapp || '—'
   const articles = d?.articles || '—'
   const poids = d?.poids_estime ? `${d.poids_estime} kg` : 'Non précisé'
+  const voyage = d.voyages
+    ? `${routeLabel(d.voyages.route)} · départ ${fmtVoyage(d.voyages.date_depart)}`
+    : 'Aucun voyage sélectionné'
   document.getElementById('modal-accept-info').innerHTML =
-    `<strong>${nom}</strong> · ${wa}<br>Articles : ${articles}<br>Poids estimé : ${poids}`
+    `<strong>${nom}</strong> · ${wa}<br>✈ <strong style="color:var(--gold);">${voyage}</strong><br>Articles : ${articles}<br>Poids estimé : ${poids}`
   document.getElementById('f-accept-poids').value = d?.poids_estime || ''
   document.getElementById('f-accept-montant').value = ''
   openModal('modal-accept')
@@ -1177,13 +1185,20 @@ async function confirmAccept() {
   if (waRaw) {
     const prenom = nomRaw.split(' ')[0]
     const lignes = [
-      `Bonjour ${prenom}, votre demande d'envoi J'Envoie Express a bien été acceptée ✅`,
+      `Bonjour ${prenom}, votre demande J'Envoie Express a été acceptée ✅`,
       ``,
       `📦 Numéro de colis : *${numero}*`,
-      montant ? `💶 Montant à régler : *${montant}€*` : null,
       poids ? `⚖️ Poids confirmé : *${poids} kg*` : null,
+      montant ? `💶 Montant à régler : *${montant}€*` : `💶 Montant : sera confirmé prochainement`,
       ``,
-      lienSuivi ? `Suivez votre colis en temps réel ici :\n${lienSuivi}` : `Nous vous enverrons votre numéro de suivi très bientôt.`,
+      `💳 *Comment régler :*`,
+      `• Wave · MTN · Orange Money → *+225 07 08 68 21 16*`,
+      `• Wero · Virement → contactez-nous sur WhatsApp`,
+      `• Espèces → à remettre lors du dépôt`,
+      ``,
+      lienSuivi
+        ? `🔗 *Copiez ce lien pour suivre votre colis en temps réel :*\n${lienSuivi}`
+        : `Votre lien de suivi vous sera envoyé dès confirmation.`,
       ``,
       `Merci de votre confiance ! 🙏`
     ].filter(l => l !== null).join('\n')
