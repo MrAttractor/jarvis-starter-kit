@@ -59,7 +59,6 @@ INSERT INTO produits (id, nom_fr, description_fr, prix_eur, prix_fcfa, stock, st
 ('PROD_15', 'Combinaison Mandia',        'Pièce forte · Allure inégalée · Collection premium',   120, 79000, 10, 'disponible', 'EXCLUSIF',   NULL,                              'Combinaisons'),
 ('PROD_16', 'Perfecto Armelia',          'Version simple · Perfecto wax · Pièce iconique',       100, 65500, 10, 'disponible', 'NOUVEAU',    'images/PROD_16_principale.jpg',   'Vestes'),
 ('PROD_17', 'Perfecto Armelia Réversible','Double face · Deux looks en un · Pièce collector',   120, 79000, 10, 'disponible', 'EXCLUSIF',   'images/PROD_17_principale.jpg',   'Vestes'),
-('PROD_18', 'Veste Réversible Yaya',     'Double face · Polyvalence absolue · Style unique',     120, 79000, 10, 'disponible', 'BESTSELLER', 'images/PROD_18_principale.jpg',   'Vestes'),
 ('PROD_19', 'Paréo Anaëlle',             'Réversible · Pied de poule · Liberté créative',        80,  52500, 10, 'disponible', 'NOUVEAU',    NULL,                              'Accessoires'),
 ('PROD_20', 'Ensemble Maelys',           'Jupe & haut · Coordonnés · Élégance naturelle',        65,  43000, 10, 'disponible', 'LOOK DUO',   NULL,                              'Ensembles'),
 ('PROD_21', 'Pantalon Ayêla',            'Coupe tendance · Confort premium · Porter au quotidien',70, 46000, 10, 'disponible', 'NOUVEAU',    NULL,                              'Pantalons'),

@@ -273,35 +273,33 @@ body{font-family:var(--fb);background:var(--white);color:var(--black);overflow-x
   .nav-logo img{height:42px;}
   .burger{display:none!important;}
   .nav-desktop{display:flex!important;}
-  .hero{height:90vh;max-height:700px;}
-  .hc{left:60px;bottom:60px;}
-  .h-title{font-size:64px;}
-  .pay-section{padding:22px 40px;}
-  .pay-grid{grid-template-columns:repeat(6,1fr);gap:12px;}
+  .hero{height:92vh;max-height:820px;}
+  .hc{left:72px;bottom:72px;}
+  .h-title{font-size:72px;}
   .soc-bar{padding:12px 40px;}
-  .section{padding:56px 40px;}
+  .section{padding:64px 40px;max-width:1320px;margin-left:auto;margin-right:auto;}
   .prod-grid{grid-template-columns:repeat(4,1fr);}
-  .surp-body{padding:48px 40px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+  .surp-body{padding:56px 40px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;max-width:1320px;margin:0 auto;}
   .surp-grid{grid-template-columns:repeat(4,1fr);}
-  .biman-body{padding:56px 40px;display:grid;grid-template-columns:1fr 1fr;gap:60px;}
-  .biman-banner{height:340px;}
-  .biman-banner-title{font-size:52px;}
-  .about-layout{display:grid;grid-template-columns:1fr 1.3fr;}
-  .about-img-wrap{aspect-ratio:auto;height:100%;}
-  .about-body{padding:60px 48px;}
-  .about-title{font-size:46px;}
+  .biman-body{padding:64px 40px;display:grid;grid-template-columns:1fr 1fr;gap:80px;max-width:1320px;margin:0 auto;}
+  .biman-banner{height:380px;}
+  .biman-banner-title{font-size:56px;}
+  .about-layout{display:grid;grid-template-columns:1fr 1.4fr;}
+  .about-img-wrap{aspect-ratio:auto;height:100%;min-height:600px;}
+  .about-body{padding:72px 56px;}
+  .about-title{font-size:52px;}
   .f-grid{grid-template-columns:repeat(4,1fr);}
   .bc{padding:10px 40px;}
   .filters{padding:0 40px;}
-  .footer{padding:44px 40px 0;}
-  .popup-ev-inner{flex-direction:row;min-height:600px;}
-  .popup-affiche{width:45%;flex-shrink:0;}
-  .popup-affiche img{height:100%;object-fit:cover;}
-  .popup-ev-content{flex:1;padding:56px 52px;display:flex;flex-direction:column;justify-content:center;}
-  .popup-ev-title{font-size:80px;}
-  .popup-ev-cta{width:auto;display:inline-flex;}
-  .popup-ev-video{margin-left:0;margin-right:0;display:flex;justify-content:center;}
-  .popup-ev-video video{max-width:220px;border-radius:12px;}
+  .footer{padding:56px 40px 0;}
+  /* POPUP EVENT */
+  .popup-ev-inner{flex-direction:row;min-height:520px;max-width:1300px;margin:0 auto;}
+  .popup-affiche{width:42%;flex-shrink:0;}
+  .popup-affiche img{height:100%;object-fit:cover;object-position:center top;}
+  .popup-ev-content{flex:1;padding:56px 60px;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden;}
+  .popup-ev-title{font-size:72px;margin-bottom:20px;}
+  .popup-ev-cta{width:auto;display:inline-flex;margin-top:32px;}
+  .popup-ev-video{display:none;}
 }
 @media(max-width:767px){
   .nav-desktop{display:none;}
@@ -324,7 +322,7 @@ var SUPABASE_CONFIG = {
 // Données de secours si le sheet est inaccessible
 var FALLBACK = {
   produits: [
-    {id:'PROD_01',nom_fr:'Robe Oloa',description_fr:'Dentelle · 4 coloris (blanc, rose, jaune, bleu)',prix_eur:'65',prix_fcfa:'43000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',categorie:'Robes'},
+    {id:'PROD_01',nom_fr:'Robe Oloa',description_fr:'Dentelle · 4 coloris (blanc, rose, jaune, bleu)',prix_eur:'65',prix_fcfa:'43000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_01_principale.jpg',categorie:'Robes'},
     {id:'PROD_02',nom_fr:'Robe Lia',description_fr:'Coupe élégante · Fluidité naturelle',prix_eur:'50',prix_fcfa:'33000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'',categorie:'Robes'},
     {id:'PROD_03',nom_fr:'Robe Eliora Court',description_fr:'Bleu ciel · Coupe courte · Légèreté estivale',prix_eur:'50',prix_fcfa:'33000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',categorie:'Robes'},
     {id:'PROD_04',nom_fr:'Robe Eliora Court',description_fr:'Corail · Coupe courte · Disponible en bleu ciel',prix_eur:'65',prix_fcfa:'43000',stock:'10',statut:'disponible',badge:'LOOK DUO',photo_principale:'',categorie:'Robes'},
@@ -332,24 +330,24 @@ var FALLBACK = {
     {id:'PROD_05',nom_fr:'Robe Kimono',description_fr:'Jaune & corail · Manches kimono · Fluidité naturelle',prix_eur:'50',prix_fcfa:'33000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'',categorie:'Robes'},
     {id:'PROD_06',nom_fr:'Robe Elena',description_fr:'Élégance raffinée · Silhouette soignée',prix_eur:'60',prix_fcfa:'39000',stock:'10',statut:'disponible',badge:'BESTSELLER',photo_principale:'',categorie:'Robes'},
     {id:'PROD_07',nom_fr:'Robe Teecya',description_fr:'Style contemporain · Allure affirmée',prix_eur:'60',prix_fcfa:'39000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',categorie:'Robes'},
-    {id:'PROD_08',nom_fr:'Ensemble Aymerik',description_fr:'Culotte & haut · Look coordonné · Porter ensemble ou séparé',prix_eur:'70',prix_fcfa:'46000',stock:'10',statut:'disponible',badge:'LOOK DUO',photo_principale:'',categorie:'Ensembles'},
-    {id:'PROD_09',nom_fr:'Pantalon Yasmine',description_fr:'Coupe ample · Confort et élégance au quotidien',prix_eur:'40',prix_fcfa:'26000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',categorie:'Pantalons'},
-    {id:'PROD_10',nom_fr:'Boubou Renée',description_fr:'Vert · Boubou contemporain · Pièce signature',prix_eur:'85',prix_fcfa:'56000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'',categorie:'Robes'},
-    {id:'PROD_11',nom_fr:'Ensemble Naïla',description_fr:'Pantalon & haut · Silhouette fluide',prix_eur:'40',prix_fcfa:'26000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',categorie:'Ensembles'},
+    {id:'PROD_08',nom_fr:'Ensemble Aymerik',description_fr:'Culotte & haut · Look coordonné · Porter ensemble ou séparé',prix_eur:'70',prix_fcfa:'46000',stock:'10',statut:'disponible',badge:'LOOK DUO',photo_principale:'images/PROD_08_principale.jpg',categorie:'Ensembles'},
+    {id:'PROD_09',nom_fr:'Pantalon Yasmine',description_fr:'Coupe ample · Confort et élégance au quotidien',prix_eur:'40',prix_fcfa:'26000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_09_principale.jpg',categorie:'Pantalons'},
+    {id:'PROD_10',nom_fr:'Boubou Renée',description_fr:'Rayures vert & bleu · Boubou contemporain · Pièce signature',prix_eur:'85',prix_fcfa:'56000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'images/PROD_10_principale.jpg',categorie:'Boubous'},
+    {id:'PROD_11',nom_fr:'Ensemble Naïla',description_fr:'Pantalon & haut · Silhouette fluide',prix_eur:'40',prix_fcfa:'26000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_11_principale.jpg',categorie:'Ensembles'},
     {id:'PROD_12',nom_fr:'Robe Désirée',description_fr:'Jaune & blanc · Éclat naturel · Imprimé délicat',prix_eur:'70',prix_fcfa:'46000',stock:'10',statut:'disponible',badge:'BESTSELLER',photo_principale:'',categorie:'Robes'},
-    {id:'PROD_13',nom_fr:'Robe Lirane',description_fr:'Élégance intemporelle · Coupe longue',prix_eur:'75',prix_fcfa:'49000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'',categorie:'Robes'},
-    {id:'PROD_14',nom_fr:'Combinaison Nourah',description_fr:'Jumpsuit élégant · Confort moderne · Allure unique',prix_eur:'75',prix_fcfa:'49000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',categorie:'Combinaisons'},
-    {id:'PROD_15',nom_fr:'Combinaison Mandia',description_fr:'Pièce forte · Allure inégalée · Collection premium',prix_eur:'120',prix_fcfa:'79000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'',categorie:'Combinaisons'},
+    {id:'PROD_13',nom_fr:'Robe Lirane',description_fr:'Élégance intemporelle · Coupe longue',prix_eur:'75',prix_fcfa:'49000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'images/PROD_13_principale.jpg',categorie:'Robes'},
+    {id:'PROD_14',nom_fr:'Combinaison Nourah',description_fr:'Kimono · Jumpsuit élégant · Allure unique',prix_eur:'75',prix_fcfa:'49000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_14_principale.jpg',categorie:'Combinaisons'},
+    {id:'PROD_15',nom_fr:'Combinaison Mandia',description_fr:'Pièce forte · Allure inégalée · Collection premium',prix_eur:'120',prix_fcfa:'79000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'images/PROD_15_principale.jpg',categorie:'Combinaisons'},
     {id:'PROD_16',nom_fr:'Perfecto Armelia',description_fr:'Version simple · Perfecto wax · Pièce iconique',prix_eur:'100',prix_fcfa:'65500',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_16_principale.jpg',categorie:'Vestes'},
     {id:'PROD_17',nom_fr:'Perfecto Armelia Réversible',description_fr:'Double face · Deux looks en un · Pièce collector',prix_eur:'120',prix_fcfa:'79000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'images/PROD_17_principale.jpg',categorie:'Vestes'},
-    {id:'PROD_18',nom_fr:'Veste Réversible Yaya',description_fr:'Double face · Polyvalence absolue · Style unique',prix_eur:'120',prix_fcfa:'79000',stock:'10',statut:'disponible',badge:'BESTSELLER',photo_principale:'images/PROD_18_principale.jpg',categorie:'Vestes'},
+    {id:'PROD_18',nom_fr:'Boubou Makeba',description_fr:'Boubou africain contemporain · Pièce signature · Elegance naturelle',prix_eur:'75',prix_fcfa:'49000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_18_principale.jpg',categorie:'Boubous'},
     {id:'PROD_19',nom_fr:'Paréo Anaëlle',description_fr:'Réversible · Pied de poule · Liberté créative',prix_eur:'80',prix_fcfa:'52500',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',categorie:'Accessoires'},
-    {id:'PROD_20',nom_fr:'Ensemble Maelys',description_fr:'Jupe & haut · Coordonnés · Élégance naturelle',prix_eur:'65',prix_fcfa:'43000',stock:'10',statut:'disponible',badge:'LOOK DUO',photo_principale:'',categorie:'Ensembles'},
-    {id:'PROD_21',nom_fr:'Pantalon Ayêla',description_fr:'Coupe tendance · Confort premium · Porter au quotidien',prix_eur:'70',prix_fcfa:'46000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',categorie:'Pantalons'},
+    {id:'PROD_20',nom_fr:'Ensemble Maelys',description_fr:'Jupe & haut · Coordonnés · Élégance naturelle',prix_eur:'65',prix_fcfa:'43000',stock:'10',statut:'disponible',badge:'LOOK DUO',photo_principale:'images/PROD_20_principale.jpg',categorie:'Ensembles'},
+    {id:'PROD_21',nom_fr:'Pantalon Ayêla',description_fr:'Coupe tendance · Confort premium · Porter au quotidien',prix_eur:'75',prix_fcfa:'49000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',categorie:'Pantalons'},
     {id:'PROD_22',nom_fr:'Robe Mahi',description_fr:'Marron & orange · Chaleur ivoirienne · Coupe fluide',prix_eur:'40',prix_fcfa:'26000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'',categorie:'Robes'}
   ],
   hero: [
-    {ordre:'1',titre_fr:'Yaya,\nla réversible',photo:'images/HERO_01.jpg',id_produit:'PROD_18',badge:'BESTSELLER',actif:'OUI'},
+    {ordre:'1',titre_fr:'Perfecto\nArmelia, la réversible',photo:'images/PROD_17_principale.jpg',id_produit:'PROD_17',badge:'EXCLUSIF',actif:'OUI'},
     {ordre:'2',titre_fr:'Armelia,\nl\'icône',photo:'images/HERO_02.jpg',id_produit:'PROD_16',badge:'EXCLUSIF',actif:'OUI'},
     {ordre:'3',titre_fr:'Armelia,\nla pièce',photo:'images/HERO_03.jpg',id_produit:'PROD_16',badge:'NOUVEAU',actif:'OUI'},
     {ordre:'4',titre_fr:'Armelia,\nle collector',photo:'images/HERO_04.jpg',id_produit:'PROD_17',badge:'EXCLUSIF',actif:'OUI'}
@@ -589,18 +587,7 @@ document.addEventListener('DOMContentLoaded', function(){
     <div class="h-dots" id="hDots"></div>
   </div>
 
-  <div class="pay-section">
-    <p class="pay-title">Moyens de paiement acceptés</p>
-    <div class="pay-grid">
-      <div class="pay-card"><div class="pay-logo pl-pp"><span class="pl-txt">PayPal</span></div><span class="pay-name">PayPal</span></div>
-      <div class="pay-card"><div class="pay-logo pl-wv"><span class="pl-txt">Wave</span></div><span class="pay-name">Wave</span></div>
-      <div class="pay-card"><div class="pay-logo pl-om"><span class="pl-txt">OM</span></div><span class="pay-name">Orange Money</span></div>
-      <div class="pay-card"><div class="pay-logo pl-vi"><span class="pl-txt" style="font-style:italic;letter-spacing:2px;">VISA</span></div><span class="pay-name">Visa</span></div>
-      <div class="pay-card"><div class="pay-logo" style="background:transparent;"><div class="mc-wrap"><div class="mc-r"></div><div class="mc-o"></div></div></div><span class="pay-name">Mastercard</span></div>
-      <div class="pay-card"><div class="pay-logo pl-wa"><span class="pl-txt">WA</span></div><span class="pay-name">WhatsApp</span></div>
-    </div>
-    <p class="pay-note">Coordination &amp; validation via WhatsApp · Délais variables</p>
-  </div>
+
 
   <div class="soc-bar">
     <a class="soc-link" href="https://www.instagram.com/nugo_by_ekd/" target="_blank">Instagram @nugo_by_ekd</a>
@@ -695,7 +682,7 @@ document.addEventListener('DOMContentLoaded', function(){
   </div>
   <div class="f-grid">
     <div><p class="f-col-title">La marque</p><ul class="f-links"><li onclick="goPage('modes')">La Collection</li><li onclick="goPage('about')">À Propos</li></ul></div>
-    <div><p class="f-col-title">Paiement</p><ul class="f-links"><li>PayPal</li><li>Wave</li><li>Orange Money</li><li>Visa · Mastercard</li></ul></div>
+    <div><p class="f-col-title">Paiement</p><ul class="f-links"><li>PayPal</li><li>Wave</li><li>Orange Money</li><li>Visa · Mastercard</li><li>WhatsApp</li></ul></div>
     <div><p class="f-col-title">Livraison</p><ul class="f-links"><li>Afrique</li><li>Europe</li><li>Délais variables</li></ul></div>
     <div><p class="f-col-title">Informations</p><ul class="f-links"><li onclick="wa('les CGV MY NUGO')">CGV &amp; Retours</li><li onclick="wa('contacter MY NUGO')">Contact</li></ul></div>
   </div>
