@@ -259,10 +259,10 @@ body{font-family:var(--fb);background:var(--white);color:var(--black);overflow-x
 .popup-ev-label{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--g500);flex-shrink:0;min-width:64px;padding-top:3px;font-family:var(--fb);}
 .popup-ev-val{font-size:13px;color:var(--g300);line-height:1.6;}
 .popup-ev-val b{color:var(--white);font-weight:600;}
-.popup-ev-cta{display:inline-flex;align-items:center;gap:10px;font-size:9px;letter-spacing:3px;text-transform:uppercase;font-weight:600;color:var(--black);background:var(--white);border:none;padding:15px 28px;cursor:pointer;font-family:var(--fb);transition:background .2s;}
+.popup-ev-cta{display:flex;justify-content:center;align-items:center;gap:10px;font-size:9px;letter-spacing:3px;text-transform:uppercase;font-weight:600;color:var(--black);background:var(--white);border:none;padding:15px 28px;cursor:pointer;font-family:var(--fb);transition:background .2s;width:100%;margin-top:20px;}
 .popup-ev-cta:hover{background:var(--g100);}
-.popup-ev-video{margin-top:20px;}
-.popup-ev-video video{width:100%;display:block;max-height:220px;object-fit:cover;}
+.popup-ev-video{margin-top:20px;margin-left:-20px;margin-right:-20px;}
+.popup-ev-video video{width:100%;aspect-ratio:9/16;display:block;object-fit:cover;}
 
 /* WA FLOAT */
 .wa-float{position:fixed;bottom:20px;right:20px;background:#25D366;color:var(--white);width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:100;box-shadow:0 3px 14px rgba(0,0,0,.25);text-decoration:none;}
@@ -299,7 +299,9 @@ body{font-family:var(--fb);background:var(--white);color:var(--black);overflow-x
   .popup-affiche img{height:100%;object-fit:cover;}
   .popup-ev-content{flex:1;padding:56px 52px;display:flex;flex-direction:column;justify-content:center;}
   .popup-ev-title{font-size:80px;}
-  .popup-ev-video video{max-height:none;}
+  .popup-ev-cta{width:auto;display:inline-flex;}
+  .popup-ev-video{margin-left:0;margin-right:0;display:flex;justify-content:center;}
+  .popup-ev-video video{max-width:220px;border-radius:12px;}
 }
 @media(max-width:767px){
   .nav-desktop{display:none;}
@@ -629,12 +631,12 @@ document.addEventListener('DOMContentLoaded', function(){
             <span class="popup-ev-val">19 Rue du Banquier<br>75013 Paris</span>
           </div>
         </div>
-        <button class="popup-ev-cta" onclick="wa('Pop-Up MY NUGO Paris — 01 au 04 juillet 2026 · 19 rue du Banquier 75013')">Je participe →</button>
         <div class="popup-ev-video">
           <video autoplay muted loop playsinline>
             <source src="images/popup-video.mp4" type="video/mp4"/>
           </video>
         </div>
+        <button class="popup-ev-cta" onclick="wa('Pop-Up MY NUGO Paris — 01 au 04 juillet 2026 · 19 rue du Banquier 75013')">Je participe →</button>
       </div>
     </div>
   </div>
