@@ -109,6 +109,11 @@ export default function App() {
   useEffect(() => {
     // Lien public assistant client (?c={slug}) — bascule AVANT toute logique d'auth
     const urlParams = new URLSearchParams(window.location.search);
+
+    // Tracker source d'acquisition — ?src=facebook_groupe, tiktok, linkedin…
+    const src = urlParams.get('src');
+    if (src) localStorage.setItem('aa_src', src);
+
     const c = urlParams.get('c');
     if (c) { setPublicSlug(c); return; }
 

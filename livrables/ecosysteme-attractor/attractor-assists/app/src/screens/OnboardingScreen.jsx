@@ -275,20 +275,24 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
       if (!user) throw new Error('session perdue');
 
       const referralCode = user.id.replace(/-/g, '').slice(0, 8).toUpperCase();
+      const sourceAcquisition = localStorage.getItem('aa_src') || null;
 
       const { error: profileErr } = await supabase.from('profiles').update({
-        prenom:          prenom.trim() || '',
-        nom_assistant:   (nomAss || 'Assists').trim(),
-        activite:        anamnData.activite || null,
-        zone:            anamnData.zone?.trim() || '',
-        profil_type:     profilType || 'entrepreneur',
-        onboarding_done: true,
-        referral_code:   referralCode,
-        public_slug:     slug.trim() || null,
-        template_id:     templateId || '1a',
-        brand_color:     brandColor || '#FF6B35',
+        prenom:              prenom.trim() || '',
+        nom_assistant:       (nomAss || 'Assists').trim(),
+        activite:            anamnData.activite || null,
+        zone:                anamnData.zone?.trim() || '',
+        profil_type:         profilType || 'entrepreneur',
+        onboarding_done:     true,
+        referral_code:       referralCode,
+        public_slug:         slug.trim() || null,
+        template_id:         templateId || '1a',
+        brand_color:         brandColor || '#FF6B35',
+        source_acquisition:  sourceAcquisition,
       }).eq('id', user.id);
       if (profileErr) throw profileErr;
+
+      if (sourceAcquisition) localStorage.removeItem('aa_src');
 
       // Non-bloquant : échec silencieux si table absente ou schéma différent
       if (anamnData.activite) {
