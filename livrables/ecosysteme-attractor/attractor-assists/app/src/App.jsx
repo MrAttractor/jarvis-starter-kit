@@ -114,7 +114,11 @@ export default function App() {
     const src = urlParams.get('src');
     if (src) localStorage.setItem('aa_src', src);
 
-    const c = urlParams.get('c');
+    // ?c=slug (direct) ou /b/slug (redirection depuis demo.agenceattractor.com)
+    const pathSlug = window.location.pathname.startsWith('/b/')
+      ? window.location.pathname.slice(3).split('/')[0]
+      : null;
+    const c = urlParams.get('c') || pathSlug || null;
     if (c) { setPublicSlug(c); return; }
 
     // Détection retour paiement XPaye (?payment_done=1&plan=growth)
