@@ -203,6 +203,19 @@ export function PublicAssistantScreen({ slug }) {
       if (orderRes.ok) {
         const [order] = await orderRes.json();
         setOrderId(order?.id);
+        // Notifier l'entrepreneur
+        if (owner?.user_id) {
+          fetch(`${SUPABASE_URL}/functions/v1/notify-order`, {
+            method: 'POST',
+            headers: { ...fnHeaders, 'content-type': 'application/json' },
+            body: JSON.stringify({
+              owner_id: owner.user_id,
+              client_name: contact?.prenom || 'Client',
+              total_fcfa: cartTotal,
+              items: cart,
+            }),
+          }).catch(() => {});
+        }
       }
     } catch {}
     setAppState('confirmation');
