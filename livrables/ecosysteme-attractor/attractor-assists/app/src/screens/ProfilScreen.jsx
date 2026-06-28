@@ -58,7 +58,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
 
   const slug        = profile?.public_slug;
   const templateId  = profile?.template_id || '1a';
-  const boutiqueUrl = slug ? `https://demo.agenceattractor.com/template-${templateId}/?c=${slug}` : null;
+  const boutiqueUrl = slug ? `https://demo.agenceattractor.com/${slug}` : null;
   const initials    = (profile?.prenom || 'AA').slice(0, 2).toUpperCase();
   const photoUrl    = profile?.photo_url || null;
 
@@ -212,7 +212,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
             <div className="px-4 pt-3.5 pb-1 flex items-center justify-between">
               <div>
                 <div className="text-[10px] font-bold text-g400 uppercase tracking-[.1em]">Ma boutique</div>
-                <div className="text-[12px] font-mono text-orange mt-0.5 break-all">template-{templateId}/?c={slug}</div>
+                <div className="text-[12px] font-mono text-orange mt-0.5 break-all">demo.agenceattractor.com/{slug}</div>
               </div>
               <div className="w-7 h-7 rounded-lg bg-vert/10 flex items-center justify-center">
                 <Icon name="check" size={14} className="text-vert" />
@@ -305,7 +305,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
           <Divider />
           <Row
             label="Lien boutique"
-            sub={slug ? `/?c=${slug}` : 'Créer un identifiant'}
+            sub={slug ? `demo.agenceattractor.com/${slug}` : 'Créer un identifiant'}
             right="Modifier"
             onClick={() => { setSlugValue(profile?.public_slug || ''); setIsSlugAvail(null); setSheetOpen('slug'); }}
           />
@@ -401,7 +401,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
             <div className="bg-charbon rounded-xl px-4 py-3">
               <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Aperçu</p>
               <p className="text-white font-mono text-[13px] break-all">
-                www.assists.agenceattractor.com/?c=<span className="text-orange font-bold">{slugValue || '...'}</span>
+                demo.agenceattractor.com/<span className="text-orange font-bold">{slugValue || '...'}</span>
               </p>
             </div>
 

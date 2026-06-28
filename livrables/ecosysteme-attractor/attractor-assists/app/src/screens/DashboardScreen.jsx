@@ -236,7 +236,7 @@ export function DashboardScreen({ go, notify, profile }) {
           {profile?.public_slug && (
             <button
               onClick={() => {
-                navigator.clipboard.writeText(`${window.location.origin}/?c=${profile.public_slug}`);
+                navigator.clipboard.writeText(`https://demo.agenceattractor.com/${profile.public_slug}`);
                 notify('Lien boutique copié !');
               }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-vert/10 border border-vert/20 active:bg-vert/15 transition ml-auto"
