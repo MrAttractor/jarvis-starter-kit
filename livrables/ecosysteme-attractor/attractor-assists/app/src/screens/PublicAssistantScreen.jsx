@@ -83,13 +83,15 @@ export function PublicAssistantScreen({ slug }) {
   const conversationIdRef = useRef(null);
   const scroller = useRef(null);
 
-  const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
+  const SUPABASE_URL  = import.meta.env.VITE_SUPABASE_URL  || '';
+  const SUPABASE_ANON = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+  const fnHeaders = { 'Authorization': `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json' };
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/public-assistant?slug=${encodeURIComponent(slug)}`);
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/public-assistant?slug=${encodeURIComponent(slug)}`, { headers: fnHeaders });
         const data = await res.json();
         if (cancelled) return;
         if (!res.ok || data?.error) { setAppState('notfound'); return; }
@@ -144,7 +146,7 @@ export function PublicAssistantScreen({ slug }) {
     try {
       const res = await fetch(`${SUPABASE_URL}/functions/v1/chat-assistant`, {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: { ...fnHeaders, 'content-type': 'application/json' },
         body: JSON.stringify({
           messages: newMsgs.filter((m, i) => !(i === 0 && m.from === 'bot')),
           mode: 'public',
