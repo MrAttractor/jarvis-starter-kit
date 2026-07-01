@@ -409,18 +409,18 @@ Web apps métiers sur mesure (conception + abonnement) et Attractor Assists (bra
 - **GetWinWorld** (personal shopper) : avant, il envoyait des dizaines de photos produit une par une sur WhatsApp — bon produit, mais chaotique et chronophage. Aujourd'hui : catalogue centralisé, suivi individuel par client, tout tracé, charge mentale en moins.
 - **J'Envoie Express** (livraison colis Paris/Abidjan) : avant, un voyageur seul qui gérait plusieurs clients et colis sans système. Aujourd'hui : vitrine pro pour ses clients, vision temps réel côté admin, lien de suivi personnel pour chaque colis.
 
-## BARÈME — jamais un prix hors de cette grille, jamais un chiffre inventé
-Famille A (app sur mesure) : SOLO 220€/67€ mois (1 utilisateur) · ÉQUIPE 520€/180€ mois (jusqu'à 5) · ENTERPRISE sur devis à partir de 760€.
-Famille B (consulting méthode ATTRACTOR) : STARTER 150€ · RUNNER 350€ · EAGLE 800€.
+## BARÈME — jamais un prix hors de cette grille, jamais un chiffre inventé, jamais confondre mise en place et mensuel
+Famille A (app sur mesure), toujours DEUX montants distincts — mise en place (une seule fois) PUIS mensuel (récurrent) :
+- SOLO (1 utilisateur) : 220€ de mise en place + 67€/mois ensuite
+- ÉQUIPE (jusqu'à 5 utilisateurs) : 520€ de mise en place + 180€/mois ensuite
+- ENTERPRISE (multi-utilisateurs, sur mesure) : mise en place à partir de 760€, mensuel sur devis
+Famille B (consulting méthode ATTRACTOR), prix unique sans mensuel : STARTER 150€ · RUNNER 350€ · EAGLE 800€.
 Attractor Assists : freemium, gratuit pour commencer.
+Quand tu annonces un prix, formule TOUJOURS ainsi pour éviter toute ambiguïté : "X€ de mise en place, puis Y€ par mois" — jamais "X€/mois" seul si X est en réalité le montant de mise en place.
 Si on te demande un chiffre précis au-delà de ces paliers, ou un cas qui ne rentre pas clairement dedans : donne la fourchette la plus proche et dis que tu reviens avec un chiffrage exact une fois le besoin qualifié — jamais d'improvisation.
 
 ## TON RÔLE ICI
 Répondre librement aux questions (ce que tu fais, combien ça coûte, les délais, si tu peux faire tel secteur) en t'appuyant sur ce qui précède. Si le visiteur montre un vrai intérêt à devenir client, qualifie-le EN CONVERSATION NATURELLE (jamais un formulaire déguisé) : son prénom, son activité, son besoin principal, sa zone (Côte d'Ivoire / France-Europe / autre), et un moyen de le recontacter (WhatsApp). Une seule question à la fois, jamais toutes d'un coup.
-
-Dès que tu as ces 5 informations (prénom, activité, besoin, zone, whatsapp), termine ta réponse par un marker en toute fin de message, rien après, au format EXACT suivant (JSON valide sur une seule ligne, zone = exactement "Côte d'Ivoire" ou "France / Europe" ou "Les deux") :
-[[LEAD_QUALIFIE:{"prenom":"...","activite":"...","besoin":"...","zone":"...","whatsapp":"..."}]]
-N'utilise ce marker qu'une seule fois, quand la qualification est réellement complète — jamais avant.
 
 ## TON STYLE
 Tutoiement. Direct, chaleureux, jamais de flagornerie ni de discours commercial creux. Phrases courtes. Zéro emoji, zéro markdown (pas de **gras** ni de listes à puces) — un vrai message comme si tu l'écrivais toi-même sur WhatsApp.`;
@@ -736,7 +736,45 @@ serve(async (req) => {
       const siteData = await siteRes.json();
       const siteReply = siteData?.content?.[0]?.text?.trim() ?? "Je reviens vers toi dans un instant.";
 
-      return new Response(JSON.stringify({ reply: siteReply }), {
+      // ─── Extraction déterministe du lead — appel séparé, tâche unique ────
+      // Plus fiable qu'un marker à repérer dans la réponse conversationnelle :
+      // ce second appel n'a qu'un seul travail (lire et extraire), pas besoin
+      // de "se souvenir" d'injecter un format spécial au bon moment.
+      let lead: any = null;
+      try {
+        const transcript = [...formattedSiteMessages, { role: "assistant", content: siteReply }]
+          .map((m: any) => `${m.role === "user" ? "Visiteur" : "Mac"}: ${m.content}`)
+          .join("\n");
+
+        const extractRes = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": ANTHROPIC_API_KEY,
+            "anthropic-version": "2023-06-01",
+          },
+          body: JSON.stringify({
+            model: "claude-haiku-4-5-20251001",
+            max_tokens: 200,
+            system: `Tu lis une conversation entre un visiteur et un chatbot commercial. Ta seule tâche : dire si le visiteur a donné, n'importe où dans l'échange, ces 5 informations : son prénom, son activité, son besoin principal, sa zone géographique, et un moyen de contact (whatsapp ou téléphone).
+Réponds UNIQUEMENT en JSON strict, aucun texte autour :
+{"complete": true|false, "prenom": "..." ou null, "activite": "..." ou null, "besoin": "..." ou null, "zone": "Côte d'Ivoire" ou "France / Europe" ou "Les deux" ou null, "whatsapp": "..." ou null}
+"complete" est true UNIQUEMENT si les 5 champs sont non-null.`,
+            messages: [{ role: "user", content: transcript }],
+          }),
+        });
+        const extractData = await extractRes.json();
+        const extractRaw = (extractData?.content?.[0]?.text ?? "{}").trim();
+        const parsed = JSON.parse(extractRaw.replace(/```json|```/g, "").trim());
+        if (parsed?.complete) {
+          lead = {
+            prenom: parsed.prenom, activite: parsed.activite, besoin: parsed.besoin,
+            zone: parsed.zone, whatsapp: parsed.whatsapp,
+          };
+        }
+      } catch { /* non-bloquant — pas de lead extrait ce tour-ci */ }
+
+      return new Response(JSON.stringify({ reply: siteReply, lead }), {
         headers: { "Content-Type": "application/json", ...CORS },
       });
     }

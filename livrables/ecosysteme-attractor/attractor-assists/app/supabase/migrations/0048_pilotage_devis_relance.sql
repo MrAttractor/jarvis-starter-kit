@@ -15,7 +15,7 @@ COMMENT ON COLUMN public.pilotage_pipeline.derniere_action_at IS 'Horodatage de 
 -- mais rattachée à pilotage_pipeline pour rester dans le seul cockpit décidé comme source unique).
 CREATE TABLE IF NOT EXISTS public.pilotage_devis (
   id uuid primary key default gen_random_uuid(),
-  dossier_id uuid not null references public.pilotage_pipeline(id) on delete cascade,
+  dossier_id text not null references public.pilotage_pipeline(id) on delete cascade,
   numero text not null,
   famille text,
   niveau text,

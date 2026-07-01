@@ -1561,24 +1561,20 @@ async function sendMsg() {
   setTyping(true);
 
   try {
+    const CHAT_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
     const res = await fetch(CHAT_FN_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'apikey': CHAT_ANON, 'Authorization': 'Bearer ' + CHAT_ANON },
       body: JSON.stringify({ mode: 'site', messages: chatHistory }),
     });
     const data = await res.json();
     setTyping(false);
-    let reply = data?.reply || "Je reviens vers toi dans un instant.";
+    const reply = data?.reply || "Je reviens vers toi dans un instant.";
 
-    const markerMatch = reply.match(/\[\[LEAD_QUALIFIE:(\{.*?\})\]\]\s*$/);
-    if (markerMatch && !chatLeadSent) {
-      reply = reply.replace(markerMatch[0], '').trim();
-      try {
-        const lead = JSON.parse(markerMatch[1]);
-        chatLeadSent = true;
-        sendProspect(lead);
-        track('chat_completed', lead);
-      } catch { /* JSON invalide, on ignore silencieusement le marker */ }
+    if (data?.lead && !chatLeadSent) {
+      chatLeadSent = true;
+      sendProspect(data.lead);
+      track('chat_completed', data.lead);
     }
 
     addMsg(reply, 'mac');
