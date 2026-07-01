@@ -635,7 +635,7 @@ function NouveauProspectModal({ onConfirm, onCancel }) {
 }
 
 /* ── PIPELINE ─────────────────────────────────────────── */
-function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact, onEditSetup, onEditMensuel }) {
+function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact, onEditSetup, onEditMensuel, onEditField }) {
   const parseAmount = (raw) => { const n = parseInt((raw||'').replace(/[^\d]/g,''),10); return isNaN(n) ? null : n; };
   const famColor = d.famille === 'A' ? 'org' : d.famille === 'B' ? 'blu' : 'grn';
   const [devis, setDevis] = useState(null);
@@ -677,15 +677,28 @@ function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact, onEdi
     <div className="card anim col" style={{ overflow:'hidden', animationDelay:(i*70)+'ms' }}>
       <div style={{ padding:'14px 16px 12px' }}>
         <div className="row between" style={{ marginBottom:10 }}>
-          <div className="col g4">
-            <div className="row g6" style={{ flexWrap:'wrap', marginBottom:2 }}>
-              {d.famille && <span className={'badge '+famColor} style={{ fontSize:10, padding:'2px 7px' }}>Fam. {d.famille}</span>}
-              {d.zone && <span className="badge neu" style={{ fontSize:10, padding:'2px 7px' }}>{d.zone}</span>}
+          <div className="col g4" style={{ minWidth:0, flex:1 }}>
+            <div className="row g6" style={{ flexWrap:'wrap', marginBottom:2, alignItems:'center' }}>
+              <select value={d.famille || ''} onChange={e => onEditField(d, 'famille', e.target.value || null)}
+                className={'badge '+(d.famille?famColor:'neu')}
+                style={{ fontSize:10, padding:'2px 4px', border:'none', cursor:'pointer', fontFamily:'inherit', fontWeight:700 }}>
+                <option value="">Famille ?</option>
+                <option value="A">Fam. A</option>
+                <option value="B">Fam. B</option>
+                <option value="C">Fam. C</option>
+                <option value="D">Fam. D</option>
+              </select>
+              <select value={d.zone || ''} onChange={e => onEditField(d, 'zone', e.target.value || null)}
+                className="badge neu" style={{ fontSize:10, padding:'2px 4px', border:'none', cursor:'pointer', fontFamily:'inherit', fontWeight:700 }}>
+                <option value="">Zone ?</option>
+                <option value="CI">CI</option>
+                <option value="France">France</option>
+                <option value="International">International</option>
+              </select>
               {d.source === 'inbound_site' && <span className="badge org" style={{ fontSize:10, padding:'2px 7px' }}>Site</span>}
-              {!d.famille && <span className="t-xs mut">{d.type}</span>}
             </div>
-            <span className="b" style={{ fontSize:15 }}>{d.nom}</span>
-            {d.activite && <span className="t-xs mut" style={{ marginTop:1 }}>{d.activite}</span>}
+            <EditField value={d.nom || ''} onSave={v => onEditField(d, 'nom', v)} style={{ fontSize:15, fontWeight:700 }} />
+            <EditField value={d.activite || ''} onSave={v => onEditField(d, 'activite', v)} style={{ fontSize:11.5, color:'var(--ink2)', marginTop:1 }} />
           </div>
           <StatutBadge statut={d.statut} statut_color={d.statut_color} onEdit={(label, color) => onEditStatut(d, label, color)} />
         </div>
@@ -713,11 +726,20 @@ function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact, onEdi
             <span className="b" style={{ fontSize:13, color: d.urgent ? 'var(--red)' : 'var(--acc)' }}>{d.date_action}</span>
           </div>
         </div>
-        <div style={{ padding:'10px 12px', borderRadius:10, background:'rgba(0,0,0,.04)', borderLeft:'2px solid rgba(0,0,0,.1)' }}>
+        <div style={{ padding:'10px 12px', borderRadius:10, background:'rgba(0,0,0,.04)', borderLeft:'2px solid rgba(0,0,0,.1)', marginBottom:8 }}>
           <div className="t-xs mut b" style={{ marginBottom:4 }}>→ PROCHAINE ACTION</div>
           <EditField
             value={d.prochaine}
             onSave={v => onEditProchaine(d, v)}
+            style={{ fontSize:11.5, color:'var(--ink2)', lineHeight:1.5 }}
+            multiline
+          />
+        </div>
+        <div style={{ padding:'10px 12px', borderRadius:10, background:'rgba(0,0,0,.04)', borderLeft:'2px solid rgba(0,0,0,.1)' }}>
+          <div className="t-xs mut b" style={{ marginBottom:4 }}>BESOIN (utilisé par l'auto-devis)</div>
+          <EditField
+            value={d.besoin || ''}
+            onSave={v => onEditField(d, 'besoin', v)}
             style={{ fontSize:11.5, color:'var(--ink2)', lineHeight:1.5 }}
             multiline
           />
@@ -840,7 +862,138 @@ function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact, onEdi
   );
 }
 
-function TabPipeline({ pipeline, onEditProchaine, onEditStatut, onEditContact, onEditSetup, onEditMensuel, onAddProspect }) {
+/* ── DÉCHARGE VOCALE (Pipeline) ──────────────────────────── */
+function DechargeVocalePipeline({ onAddProspect }) {
+  const [phase, setPhase] = useState('idle'); // idle | recording | processing | review
+  const [errMsg, setErrMsg] = useState('');
+  const [transcript, setTranscript] = useState('');
+  const [draft, setDraft] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const recorderRef = useRef(null);
+  const chunksRef = useRef([]);
+
+  const startRecording = async () => {
+    setErrMsg('');
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream, { mimeType: MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4' });
+      chunksRef.current = [];
+      recorder.ondataavailable = e => { if (e.data.size > 0) chunksRef.current.push(e.data); };
+      recorder.onstop = () => { stream.getTracks().forEach(t => t.stop()); processAudio(recorder.mimeType); };
+      recorderRef.current = recorder;
+      recorder.start(250);
+      setPhase('recording');
+    } catch {
+      setErrMsg("Accès micro refusé — autorise le micro dans les paramètres du navigateur.");
+    }
+  };
+
+  const stopRecording = () => {
+    if (recorderRef.current?.state === 'recording') {
+      recorderRef.current.stop();
+      setPhase('processing');
+    }
+  };
+
+  const processAudio = async (mimeType) => {
+    try {
+      const blob = new Blob(chunksRef.current, { type: mimeType });
+      if (blob.size < 1000) { setPhase('idle'); setErrMsg('Enregistrement trop court — maintiens et parle.'); return; }
+      const audio_b64 = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onloadend = () => res(r.result.split(',')[1]);
+        r.onerror = rej;
+        r.readAsDataURL(blob);
+      });
+      const { data, error } = await SB.functions.invoke('process-dump-pilotage', { body: { audio_b64, audio_type: mimeType } });
+      if (error || data?.error) { setPhase('idle'); setErrMsg(data?.error || 'Erreur de traitement'); return; }
+      setTranscript(data.transcript || '');
+      setDraft({
+        nom: data.prospect?.nom || '',
+        activite: data.prospect?.activite || '',
+        besoin: data.prospect?.besoin || '',
+        zone: data.prospect?.zone || 'CI',
+        contact: data.prospect?.contact || '',
+      });
+      setPhase('review');
+    } catch { setPhase('idle'); setErrMsg('Erreur réseau'); }
+  };
+
+  const confirmDraft = async () => {
+    if (!draft?.nom?.trim() || saving) return;
+    setSaving(true);
+    const { data, error } = await SB.from('pilotage_pipeline').insert({
+      nom: draft.nom.trim(),
+      activite: draft.activite || null,
+      besoin: draft.besoin || null,
+      contact: draft.contact || null,
+      zone: draft.zone,
+      famille: 'A',
+      type: 'App Métier',
+      statut: 'Nouveau',
+      statut_color: 'neu',
+      prochaine: 'Qualifier le besoin',
+      date_action: new Date().toLocaleDateString('fr-FR'),
+      priorite: 99,
+      urgent: false,
+    }).select().single();
+    setSaving(false);
+    if (!error && data) { onAddProspect(data); reset(); }
+  };
+
+  const reset = () => { setPhase('idle'); setTranscript(''); setDraft(null); setErrMsg(''); };
+
+  if (phase === 'idle') {
+    return (
+      <button onClick={startRecording}
+        style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:6, width:44, height:44, borderRadius:10, border:'1.5px solid var(--acc)', background:'var(--acc-s)', color:'var(--acc)', cursor:'pointer', flexShrink:0 }}
+        title="Ajouter un prospect en parlant">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>
+      </button>
+    );
+  }
+
+  return (
+    <div className="card anim col" style={{ padding:14, marginBottom:14, width:'100%', flexBasis:'100%' }}>
+      {phase === 'recording' && (
+        <div className="col g8" style={{ alignItems:'center' }}>
+          <div className="t-xs mut">Parle : prénom, activité, besoin, zone, contact…</div>
+          <button onClick={stopRecording}
+            style={{ width:56, height:56, borderRadius:100, border:'none', background:'var(--red)', color:'#fff', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+          </button>
+          <div className="t-xs mut">Touche pour arrêter</div>
+        </div>
+      )}
+      {phase === 'processing' && <div className="t-xs mut" style={{ textAlign:'center' }}>Transcription en cours…</div>}
+      {errMsg && <div className="t-xs" style={{ color:'var(--red)', textAlign:'center' }}>{errMsg}</div>}
+      {phase === 'review' && draft && (
+        <div className="col g8">
+          {transcript && <div className="t-xs mut" style={{ fontStyle:'italic' }}>"{transcript}"</div>}
+          <input value={draft.nom} onChange={e=>setDraft({...draft, nom:e.target.value})} placeholder="Nom / prénom *" style={iStyle} />
+          <input value={draft.activite} onChange={e=>setDraft({...draft, activite:e.target.value})} placeholder="Activité" style={iStyle} />
+          <input value={draft.besoin} onChange={e=>setDraft({...draft, besoin:e.target.value})} placeholder="Besoin" style={iStyle} />
+          <div className="row g8">
+            <select value={draft.zone} onChange={e=>setDraft({...draft, zone:e.target.value})} style={{...iStyle, flex:1}}>
+              <option value="CI">Côte d'Ivoire</option>
+              <option value="France">France</option>
+              <option value="International">International</option>
+            </select>
+            <input value={draft.contact} onChange={e=>setDraft({...draft, contact:e.target.value})} placeholder="WhatsApp" style={{...iStyle, flex:1}} />
+          </div>
+          <div className="row g8">
+            <button onClick={reset} style={{ flex:1, minHeight:40, borderRadius:10, border:'1.5px solid var(--bdr)', background:'transparent', color:'var(--mut)', fontWeight:700, fontSize:12, cursor:'pointer', fontFamily:'inherit' }}>Annuler</button>
+            <button onClick={confirmDraft} disabled={!draft.nom.trim() || saving} style={{ flex:2, minHeight:40, borderRadius:10, border:'none', background:'var(--acc)', color:'#fff', fontWeight:800, fontSize:12, cursor:'pointer', fontFamily:'inherit' }}>
+              {saving ? 'Création…' : 'Créer le dossier →'}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TabPipeline({ pipeline, onEditProchaine, onEditStatut, onEditContact, onEditSetup, onEditMensuel, onAddProspect, onEditField }) {
   const [showNouveau, setShowNouveau] = useState(false);
   const totalSetup = pipeline.reduce((s,d) => s + (d.setup||0), 0);
   const totalMensuel = pipeline.reduce((s,d) => s + (d.mensuel||0), 0);
@@ -860,8 +1013,8 @@ function TabPipeline({ pipeline, onEditProchaine, onEditStatut, onEditContact, o
               <span className="b num" style={{ fontSize:15, color:'var(--grn)' }}>{fmt(totalMensuel)}/mois</span>
             </div>
           </div>
-          <div className="col g6" style={{ alignItems:'flex-end' }}>
-            {nbUrgents > 0 && <span className="badge red" style={{ marginBottom:4 }}>{nbUrgents} urgent{nbUrgents>1?'s':''}</span>}
+          <div className="row g8" style={{ alignItems:'flex-start', flexWrap:'wrap' }}>
+            <DechargeVocalePipeline onAddProspect={onAddProspect} />
             <button onClick={() => setShowNouveau(true)}
               style={{ display:'flex', alignItems:'center', gap:6, minHeight:44, padding:'0 14px', borderRadius:10, border:'none',
                 background:'var(--acc)', color:'#fff', fontWeight:800, fontSize:12, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap' }}>
@@ -870,9 +1023,10 @@ function TabPipeline({ pipeline, onEditProchaine, onEditStatut, onEditContact, o
             </button>
           </div>
         </div>
+        {nbUrgents > 0 && <div style={{ marginTop:8 }}><span className="badge red">{nbUrgents} urgent{nbUrgents>1?'s':''}</span></div>}
       </div>
 
-      {pipeline.map((d,i) => <DossierCard key={d.id} d={d} i={i} onEditProchaine={onEditProchaine} onEditStatut={onEditStatut} onEditContact={onEditContact} onEditSetup={onEditSetup} onEditMensuel={onEditMensuel} />)}
+      {pipeline.map((d,i) => <DossierCard key={d.id} d={d} i={i} onEditProchaine={onEditProchaine} onEditStatut={onEditStatut} onEditContact={onEditContact} onEditSetup={onEditSetup} onEditMensuel={onEditMensuel} onEditField={onEditField} />)}
 
       {showNouveau && (
         <NouveauProspectModal
@@ -1374,6 +1528,32 @@ function CoachFinancier({ finances }) {
   const entreesPro = mois.filter(f=>f.type==='entree'&&f.categorie==='pro').reduce((s,f)=>s+f.montant,0);
   const sortiesPro = mois.filter(f=>f.type==='sortie'&&f.categorie==='pro').reduce((s,f)=>s+f.montant,0);
 
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatMsgs, setChatMsgs] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+
+  const sendToRoland = async () => {
+    const txt = chatInput.trim();
+    if (!txt || chatLoading) return;
+    setChatInput('');
+    const isFirst = chatMsgs.length === 0;
+    const contexte = isFirst
+      ? `Contexte chiffré du mois : ${fmt(entreesPro)} encaissé (pro), ${fmt(sortiesPro)} de sorties (pro).\n\n${txt}`
+      : txt;
+    const newMsgs = [...chatMsgs, { from:'me', text: txt }];
+    setChatMsgs(newMsgs);
+    setChatLoading(true);
+    try {
+      const { data, error } = await SB.functions.invoke('chat-assistant', {
+        body: { assistant_id: 'roland', messages: [...newMsgs.slice(0,-1), { from:'me', text: contexte }] },
+      });
+      const reply = (!error && data?.reply) ? data.reply : "Petit souci de connexion, réessaie.";
+      setChatMsgs(prev => [...prev, { from:'roland', text: reply }]);
+    } catch { setChatMsgs(prev => [...prev, { from:'roland', text: "Petit souci de connexion, réessaie." }]); }
+    setChatLoading(false);
+  };
+
   const diagnostics = [];
   if (entreesPro > 0) {
     const epargne = entreesPro * 0.20;
@@ -1414,6 +1594,39 @@ function CoachFinancier({ finances }) {
           ))}
         </div>
       )}
+      <div style={{ padding:'10px 14px', borderTop:'1px solid rgba(238,124,31,.15)' }}>
+        <button onClick={() => setChatOpen(o => !o)}
+          style={{ width:'100%', minHeight:36, borderRadius:9, border:'1.5px solid var(--acc)', background: chatOpen ? 'var(--acc)' : 'var(--acc-s)', color: chatOpen ? '#fff' : 'var(--acc)', fontWeight:800, fontSize:11.5, cursor:'pointer', fontFamily:'inherit' }}>
+          {chatOpen ? 'Fermer la discussion' : 'Discuter avec Roland (donner des détails)'}
+        </button>
+        {chatOpen && (
+          <div style={{ marginTop:10 }}>
+            {chatMsgs.length === 0 && (
+              <div className="t-xs mut" style={{ marginBottom:8, fontStyle:'italic' }}>Donne un détail (une dépense exceptionnelle, un projet d'investissement…) — Roland réagit avec le contexte du mois.</div>
+            )}
+            <div className="col g8" style={{ marginBottom:8, maxHeight:220, overflowY:'auto' }}>
+              {chatMsgs.map((m,i) => (
+                <div key={i} style={{ alignSelf: m.from==='me' ? 'flex-end' : 'flex-start', maxWidth:'85%',
+                  background: m.from==='me' ? 'var(--acc)' : 'var(--card)', color: m.from==='me' ? '#fff' : 'var(--ink)',
+                  border: m.from==='me' ? 'none' : '1px solid var(--bdr)', borderRadius:10, padding:'8px 11px', fontSize:12, lineHeight:1.5 }}>
+                  {m.text}
+                </div>
+              ))}
+              {chatLoading && <div className="t-xs mut">Roland réfléchit…</div>}
+            </div>
+            <div className="row g6">
+              <input value={chatInput} onChange={e=>setChatInput(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') sendToRoland(); }}
+                placeholder="Ex : j'ai eu une grosse dépense imprévue ce mois…"
+                style={{ ...iStyle, flex:1, padding:'9px 12px', fontSize:12.5 }} />
+              <button onClick={sendToRoland} disabled={chatLoading}
+                style={{ minHeight:38, padding:'0 14px', borderRadius:9, border:'none', background:'var(--acc)', color:'#fff', fontWeight:800, fontSize:12, cursor: chatLoading ? 'default':'pointer', fontFamily:'inherit', opacity: chatLoading ? .6 : 1 }}>
+                →
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -1643,6 +1856,12 @@ function App() {
   const handlePipeAdd = (newDossier) => {
     setPipeline(prev => [newDossier, ...prev]);
   };
+  // Handler générique pour les champs simples (nom, activité, besoin, famille, zone)
+  const handlePipeField = async (d, field, val) => {
+    setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, [field]: val } : p));
+    const { ok } = await saveField('pilotage_pipeline', d.id, { [field]: val });
+    if (!ok) { setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, [field]: d[field] } : p)); showError('Non enregistré, réessaie'); }
+  };
 
   /* Projets handlers */
   const handleProjetProchaine = async (p, val) => {
@@ -1684,7 +1903,7 @@ function App() {
 
       <div className="content">
         {tab === 'today'    && <TabAujourdHui cap={cap} focus={focus} finances={finances} onCapChange={setCap} onFocusToggle={handleFocusToggle} onFocusEdit={handleFocusEdit} onGoFinance={() => setTab('finance')} onError={showError} />}
-        {tab === 'pipeline' && <TabPipeline pipeline={pipeline} onEditProchaine={handlePipeProchaine} onEditStatut={handlePipeStatut} onEditContact={handlePipeContact} onEditSetup={handlePipeSetup} onEditMensuel={handlePipeMensuel} onAddProspect={handlePipeAdd} />}
+        {tab === 'pipeline' && <TabPipeline pipeline={pipeline} onEditProchaine={handlePipeProchaine} onEditStatut={handlePipeStatut} onEditContact={handlePipeContact} onEditSetup={handlePipeSetup} onEditMensuel={handlePipeMensuel} onAddProspect={handlePipeAdd} onEditField={handlePipeField} />}
         {tab === 'plan'     && <TabPlan />}
         {tab === 'projets'  && <TabProjets projets={projets} onEditProchaine={handleProjetProchaine} />}
         {tab === 'finance'  && <TabFinance finances={finances} enveloppes={enveloppes} onAdd={handleFinanceAdd} onUpdateEnveloppe={handleEnveloppeUpdate} />}
