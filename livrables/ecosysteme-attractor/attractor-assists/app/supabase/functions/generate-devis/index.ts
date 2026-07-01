@@ -35,19 +35,19 @@ DEVISES
 - Zone EU / diaspora / France → EUR
 
 FAMILLE A — App / système sur mesure (conception + abonnement)
-| Niveau     | Pour qui                              | Setup EUR | MRR EUR | Setup FCFA   | MRR FCFA |
-|------------|---------------------------------------|-----------|---------|--------------|----------|
-| SOLO       | App simple, 1 utilisateur             | 220 €     | 67 €    | 150 000 FCFA | 45 000 FCFA |
-| ÉQUIPE     | Jusqu'à 5 utilisateurs, workflows     | 520 €     | 180 €   | 350 000 FCFA | 120 000 FCFA |
-| ENTERPRISE | Multi-utilisateurs, sur mesure        | 760 € min | Devis   | 500 000 FCFA | Devis |
+| Niveau     | Pour qui                              | Setup FCFA   | MRR FCFA     | Setup EUR | MRR EUR |
+|------------|---------------------------------------|--------------|--------------|-----------|---------|
+| SOLO       | App simple, 1 utilisateur             | 150 000 FCFA | 45 000 FCFA  | 220 €     | 67 €    |
+| ÉQUIPE     | Jusqu'à 5 utilisateurs, workflows     | 350 000 FCFA | 120 000 FCFA | 520 €     | 180 €   |
+| ENTERPRISE | Multi-utilisateurs, sur mesure        | 500 000 FCFA | Devis        | 760 € min | Devis   |
 
 FAMILLE B — Consulting Méthode ATTRACTOR
-| Offre    | EUR  | FCFA          | Format |
-|----------|------|---------------|--------|
-| STARTER  | 150€ | 100 000 FCFA  | Cadrage + reco, 48h |
-| RUNNER   | 350€ | 230 000 FCFA  | Structuration marketing, 72h |
-| EAGLE    | 800€ | 525 000 FCFA  | Coaching CEO + pilotage, 8 semaines |
-| CONSEIL  | 80€/h| 52 000 FCFA/h | À la demande |
+| Offre    | FCFA          | EUR  | Format |
+|----------|---------------|------|--------|
+| STARTER  | 100 000 FCFA  | 150€ | Cadrage + reco, 48h |
+| RUNNER   | 230 000 FCFA  | 350€ | Structuration marketing, 72h |
+| EAGLE    | 525 000 FCFA  | 800€ | Coaching CEO + pilotage, 8 semaines |
+| CONSEIL  | 52 000 FCFA/h | 80€/h| À la demande |
 
 FAMILLE C — Attractor Assists
 Freemium. NE PAS chiffrer. Répondre : "Attractor Assists est en modèle freemium — pas de devis chiffré pour l'instant."

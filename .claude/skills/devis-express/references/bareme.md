@@ -19,16 +19,18 @@
 
 ## Devise par zone
 
-- Diaspora / France : **EUR**
-- Côte d'Ivoire : **FCFA** (1 EUR ≈ 655,957 FCFA, arrondir proprement)
+- **FCFA en premier, équivalent EUR ensuite** — la cible principale est en Côte d'Ivoire. Toujours présenter le prix ainsi : "150 000 FCFA (≈ 220 €)".
+- Diaspora / France : EUR reste la devise de facturation réelle.
+- Côte d'Ivoire : FCFA reste la devise de facturation réelle.
+- Taux de conversion : 1 EUR ≈ 655,957 FCFA, arrondir proprement.
 
 ## Famille A — App / système sur mesure (conception + abonnement)
 
 | Niveau | Pour qui | Setup | Abonnement |
 |--------|----------|-------|------------|
-| **SOLO** | App simple, 1 utilisateur | 220 € / 150 000 FCFA | 67 €/mois / 45 000 FCFA |
-| **ÉQUIPE** | Jusqu'à 5 utilisateurs, workflows partagés | 520 € / 350 000 FCFA | 180 €/mois / 120 000 FCFA |
-| **ENTERPRISE** | Multi-utilisateurs, sur mesure | Sur devis, à partir de 760 € / 500 000 FCFA | Sur devis |
+| **SOLO** | App simple, 1 utilisateur | 150 000 FCFA / 220 € | 45 000 FCFA / 67 €/mois |
+| **ÉQUIPE** | Jusqu'à 5 utilisateurs, workflows partagés | 350 000 FCFA / 520 € | 120 000 FCFA / 180 €/mois |
+| **ENTERPRISE** | Multi-utilisateurs, sur mesure | Sur devis, à partir de 500 000 FCFA / 760 € | Sur devis |
 
 Ancrage de référence : **J'envoie Express = SOLO**.
 
@@ -36,10 +38,10 @@ Ancrage de référence : **J'envoie Express = SOLO**.
 
 | Offre | Prix | Format |
 |-------|------|--------|
-| STARTER | 150 € / 100 000 FCFA | Cadrage + reco, 48h |
-| RUNNER | 350 € / 230 000 FCFA | Structuration marketing, 72h |
-| EAGLE | 800 € / 525 000 FCFA | Coaching CEO + pilotage, 10h (séances planifiées avec le client) |
-| CONSEIL | 80 €/h / 52 000 FCFA/h | À la demande |
+| STARTER | 100 000 FCFA / 150 € | Cadrage + reco, 48h |
+| RUNNER | 230 000 FCFA / 350 € | Structuration marketing, 72h |
+| EAGLE | 525 000 FCFA / 800 € | Coaching CEO + pilotage, 10h (séances planifiées avec le client) |
+| CONSEIL | 52 000 FCFA/h / 80 €/h | À la demande |
 
 ## Famille C — Attractor Assists (abonnement)
 
@@ -50,8 +52,8 @@ Modèle **freemium** : l'app est gratuite avec des limitations d'usage. La progr
 Pour un client avec un business déjà existant et mesurable (comptabilité, CA/bénéfice suivi), où la mission de l'agence est une transformation stratégique/digitale dont l'impact doit se voir sur la rentabilité, pas seulement sur des livrables.
 
 **Modèle de référence : Beracca Mastery Group** (ERP agro-distribution) —
-- Mise en place : 150 € / 100 000 FCFA
-- Mensuel : 150 € / 100 000 FCFA
+- Mise en place : 100 000 FCFA / 150 €
+- Mensuel : 100 000 FCFA / 150 €
 - Commission : **10% sur le bénéfice réalisé au-dessus de la moyenne des 3 derniers trimestres** (jamais sur le CA brut — toujours sur le delta de bénéfice vs une moyenne mobile de référence)
 
 Quand l'utiliser : le prospect a une activité physique/commerciale établie avec des chiffres vérifiables, et accepte un alignement sur la performance plutôt qu'un forfait fixe intégral. Adapter la période de référence (3 trimestres par défaut) et le taux de commission (10% par défaut) selon la taille du deal, mais toujours documenter clairement la base de calcul dans le contrat pour éviter toute ambiguïté au moment de facturer la commission.
