@@ -50,3 +50,22 @@ CREATE POLICY "gw_commandes_admin_all" ON public.gw_commandes
   FOR ALL
   USING      (auth.uid() = '62d7867d-ee1b-4ef3-acbc-0cf089ea8ef9'::uuid)
   WITH CHECK (auth.uid() = '62d7867d-ee1b-4ef3-acbc-0cf089ea8ef9'::uuid);
+
+-- Récupération d'espace sur un nouvel appareil (localStorage perdu).
+-- Fonction dédiée plutôt qu'une policy SELECT publique : une policy USING(true)
+-- permettrait à n'importe qui de lister TOUS les clients de Charles via la clé
+-- anon. Ici, un visiteur ne peut récupérer qu'UNE ligne, et seulement s'il
+-- connaît déjà le numéro WhatsApp exact associé au compte.
+CREATE OR REPLACE FUNCTION public.gw_find_client_by_whatsapp(p_whatsapp text)
+RETURNS TABLE(id uuid, nom text, whatsapp text, email text, ville text)
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT id, nom, whatsapp, email, ville
+  FROM public.gw_clients
+  WHERE whatsapp = p_whatsapp
+  LIMIT 1;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.gw_find_client_by_whatsapp(text) TO anon, authenticated;
