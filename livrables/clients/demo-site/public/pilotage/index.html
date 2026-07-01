@@ -640,6 +640,23 @@ function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact, onEdi
   const famColor = d.famille === 'A' ? 'org' : d.famille === 'B' ? 'blu' : 'grn';
   const [devis, setDevis] = useState(null);
   const [devisLoading, setDevisLoading] = useState(false);
+  const [payPct, setPayPct] = useState('50');
+  const [payChannel, setPayChannel] = useState('WAVECI');
+  const [payLoading, setPayLoading] = useState(false);
+  const [payResult, setPayResult] = useState(null);
+
+  const generatePayment = async () => {
+    if (!devis?.devis_id) return;
+    setPayLoading(true); setPayResult(null);
+    try {
+      const { data, error } = await SB.functions.invoke('init-pilotage-payment', {
+        body: { devis_id: devis.devis_id, percentage: Number(payPct), channel: payChannel },
+      });
+      if (error || data?.error) setPayResult({ __error: data?.error || 'Erreur génération du lien' });
+      else setPayResult(data);
+    } catch { setPayResult({ __error: 'Erreur réseau' }); }
+    setPayLoading(false);
+  };
 
   const generateDevis = async () => {
     setDevisLoading(true); setDevis(null);
@@ -770,6 +787,51 @@ function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact, onEdi
                 style={{ width:'100%', minHeight:38, borderRadius:9, border:'none', background:'var(--grn)', color:'#fff', fontWeight:800, fontSize:12, cursor:'pointer', fontFamily:'inherit' }}>
                 Valider ce devis
               </button>
+            )}
+
+            {/* Lien de paiement XPaye — uniquement devis validé + en FCFA (gateway CI) */}
+            {devis.statut === 'valide' && devis.devise === 'FCFA' && (
+              <div style={{ marginTop:10, paddingTop:10, borderTop:'1px solid var(--bdr)' }}>
+                <div className="t-xs mut b" style={{ marginBottom:6 }}>PAIEMENT XPAYE</div>
+                <div className="row g8" style={{ marginBottom:8 }}>
+                  <div className="col g3" style={{ flex:1 }}>
+                    <span className="t-xs mut">% du setup</span>
+                    <input type="number" min="1" max="100" value={payPct} onChange={e=>setPayPct(e.target.value)}
+                      style={{ ...iStyle, padding:'8px 10px', fontSize:13 }} />
+                  </div>
+                  <div className="col g3" style={{ flex:2 }}>
+                    <span className="t-xs mut">Canal</span>
+                    <select value={payChannel} onChange={e=>setPayChannel(e.target.value)}
+                      style={{ ...iStyle, padding:'8px 10px', fontSize:13 }}>
+                      <option value="WAVECI">Wave</option>
+                      <option value="MOMOCI">MTN Money</option>
+                      <option value="OMCIV2">Orange Money</option>
+                      <option value="CARD">Carte bancaire</option>
+                    </select>
+                  </div>
+                </div>
+                <button onClick={generatePayment} disabled={payLoading}
+                  style={{ width:'100%', minHeight:38, borderRadius:9, border:'none', background:'var(--acc)', color:'#fff', fontWeight:800, fontSize:12, cursor: payLoading ? 'default' : 'pointer', fontFamily:'inherit', opacity: payLoading ? .6 : 1 }}>
+                  {payLoading ? 'Génération…' : `Générer le lien (${payPct}% = ${Math.round(devis.setup_ht * Number(payPct||0) / 100)} FCFA)`}
+                </button>
+                {payResult?.__error && (
+                  <div style={{ marginTop:8, padding:'8px 10px', borderRadius:8, background:'var(--red-s)', color:'var(--red)', fontSize:11.5, fontWeight:600 }}>{payResult.__error}</div>
+                )}
+                {payResult?.url && (
+                  <div style={{ marginTop:8 }}>
+                    <a href={payResult.url} target="_blank"
+                      style={{ display:'block', textAlign:'center', padding:'9px', borderRadius:8, background:'var(--grn-s)', color:'var(--grn)', fontWeight:700, fontSize:12, textDecoration:'none', marginBottom:6 }}>
+                      Ouvrir le lien de paiement ({payResult.montant} FCFA)
+                    </a>
+                    {d.contact && (
+                      <a href={`https://wa.me/${d.contact.replace(/[\s+\-()]/g,'')}?text=${encodeURIComponent(`Voici le lien pour ton acompte (${payResult.montant} FCFA) : ${payResult.url}`)}`} target="_blank"
+                        style={{ display:'block', textAlign:'center', padding:'9px', borderRadius:8, background:'#25D366', color:'#fff', fontWeight:700, fontSize:12, textDecoration:'none' }}>
+                        Envoyer le lien par WhatsApp
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
           </div>
         )}

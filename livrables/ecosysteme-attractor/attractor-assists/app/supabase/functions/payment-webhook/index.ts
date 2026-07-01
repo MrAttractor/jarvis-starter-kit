@@ -38,6 +38,32 @@ Deno.serve(async (req) => {
     return new Response("Missing reference", { status: 400 });
   }
 
+  const success = isSuccess(body);
+  const newStatus = success ? "success" : "failed";
+
+  // Référence Pilotage (préfixe distinct) — pas de compte utilisateur à activer
+  if (reference.startsWith("PILOTAGE-")) {
+    const { data: pilotagePayment } = await supabase
+      .from("pilotage_payments")
+      .select("*")
+      .eq("reference", reference)
+      .single();
+
+    if (!pilotagePayment) {
+      console.error("payment-webhook: paiement pilotage introuvable", reference);
+      return new Response("Payment not found", { status: 404 });
+    }
+
+    await supabase.from("pilotage_payments").update({
+      statut:           newStatus,
+      gateway_response: body,
+      updated_at:       new Date().toISOString(),
+    }).eq("reference", reference);
+
+    console.log(`payment-webhook: pilotage_payments reference=${reference} statut=${newStatus}`);
+    return new Response("OK", { status: 200 });
+  }
+
   const { data: payment } = await supabase
     .from("payments")
     .select("*")
@@ -48,9 +74,6 @@ Deno.serve(async (req) => {
     console.error("payment-webhook: paiement introuvable", reference);
     return new Response("Payment not found", { status: 404 });
   }
-
-  const success = isSuccess(body);
-  const newStatus = success ? "success" : "failed";
 
   await supabase.from("payments").update({
     status:           newStatus,
