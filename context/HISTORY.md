@@ -7,6 +7,119 @@
 
 ---
 
+## 2026-07-01 (session 78 — GetWinWorld refonte + déploiement + leçon Pages/Workers)
+
+### GetWinWorld — refonte hero vidéo + admin + guide client
+- `index.html` : retrait du splash vendeur, hero plein écran en vidéo 9:16, titre "Votre Personal Shopper"
+- `admin.html` créé : espace de publication du catalogue en autonomie pour Charles
+- `guide.html` créé : guide de démarrage imprimable, Formule Active (350€ setup + 65€/mois), 6 sections (modules, parcours client, process 0 stock, publication, partage du lien, contact agence)
+- Schémas SQL `supabase-schema.sql` + `supabase-schema-02-panier.sql` (comptes clients `gw_clients` + demandes groupées `gw_commandes`), à exécuter côté Supabase si pas déjà fait
+- Bloc "Pourquoi GetWinWorld / comment ça marche" ajouté sous le hero de la vitrine (3 étapes : Charles déniche chaque jour → le visiteur choisit → Charles gère le reste), visible sur les 3 sous-onglets
+
+### Leçon déploiement — demo.agenceattractor.com = Cloudflare Pages, pas le Worker homonyme
+- `wrangler deploy` (Worker `demo-agenceattractor`) a semblé réussir mais ne touchait que son `.workers.dev` — le vrai domaine ne changeait pas
+- Root cause : deux ressources Cloudflare portent le même nom `demo-agenceattractor` (un Worker + un projet Pages), seul le projet Pages possède le custom domain
+- Fix : toujours déployer avec `npx wrangler pages deploy public --project-name=demo-agenceattractor`
+- CONTEXT.md corrigé (il indiquait à tort "Worker" à un endroit et "Pages" à un autre) + mémoire créée (`project_demo_site_deploy.md`) pour ne plus reproduire l'erreur
+
+### GetWinWorld — onglet Conseils + récupération d'espace WhatsApp
+- Onglet "Vidéos" remplacé par "Conseils" (Charles n'a pas encore de vidéos) : 5 fiches pratiques (occasion costume, mesures, entretien cuir, costume vs blazer, délais livraison) + lien vers le conseiller
+- "Mon espace" : bouton "Déjà un espace ? Le retrouver" — lookup par WhatsApp via fonction Postgres SECURITY DEFINER (`gw_find_client_by_whatsapp`), exécutée en prod. Corrige la perte d'accès sur changement d'appareil (identité stockée en localStorage, pas de login)
+
+---
+
+## 2026-06-29 (session 77 — Assists acquisition-ready + routing boutique universel)
+
+### Attractor Assists — migration Netlify → Cloudflare Pages
+- Build minutes Netlify épuisées : deploy bloqué → migré sur Cloudflare Pages (projet `assists-agenceattractor`)
+- GoDaddy : CNAME `assists.agenceattractor.com` → `assists-agenceattractor.pages.dev` mis à jour manuellement
+- Deploy via `npx wrangler pages deploy ./dist --project-name assists-agenceattractor`
+
+### Lien boutique unifié `demo.agenceattractor.com/[slug]`
+- 5 écrans modifiés : MonAppScreen, DashboardScreen, CommandesScreen, OnboardingScreen, ProfilScreen
+- Plus aucun `?c=slug` ni `template-X/?c=slug` dans le code
+- Routing universel : `_redirects` dans demo-site (pages statiques 200 + catch-all `/:slug → assists/b/:slug 302`) + App.jsx lit le slug depuis `/b/[slug]` en plus de `?c=`
+- Pages statiques existantes (creal, ethsun, beynaud...) restent prioritaires sur le catch-all
+
+### Tracker source d'acquisition
+- Param `?src=` capturé au lancement → `localStorage('aa_src')` → `profiles.source_acquisition` à l'onboarding
+- Migration SQL `0046_source_acquisition.sql` appliquée en prod
+
+### Notification commande in-app
+- Edge function `notify-order` déployée (no-verify-jwt, service role key)
+- Appelée fire-and-forget depuis `handlePayment` dans PublicAssistantScreen
+- Insère une notification dans `notifications` pour l'entrepreneur : "Nouvelle commande — X vient de commander : 2× Multicreal. Total : 7 500 F."
+- Prochain : CallMeBot pour notification WhatsApp hors-app (non implémenté)
+
+### Facebook Login annulé
+- Jamais implémenté dans la version actuelle de LoginScreen.jsx
+- Scope définitivement fermé : OTP email uniquement
+
+### Coaching Kezey (C'Real) — données business capturées
+- Session WA du 20/06/2026 analysée : 7 variétés, ventes jan-mai (pic mars 108 unités), budget structuré 310.000 FCFA (emballages 2× + eau production + fonds urgence)
+- Gap produit identifié : Zoé entrepreneur-side doit pouvoir recevoir un dump de données brutes et produire un audit structuré (comme Mac Arthur l'a fait manuellement)
+- Données sauvegardées en mémoire (`project_creal_coaching.md`)
+
+---
+
+## 2026-06-28 (session 76 — My Nugo corrections catalogue + pop-up countdown)
+
+### My Nugo — corrections catalogue et pop-up
+- Lien Instagram mis à jour : `@mynugo_` avec igsh (4 occurrences nav/footer/about)
+- Robe Eliora Court → Robe Eliora Long (PROD_03 + PROD_04, description "Coupe longue")
+- Ensemble Naïla → Pantalon Naïla (PROD_11)
+- "La Collection" → "La Collection RENAISSANCE" partout (nav, footer, section titre)
+- Compte à rebours J- ajouté sur la section Pop-Up Paris (cible : 1er juillet 2026, 00:00 Paris) — affiche "En cours" une fois démarré
+- supabase-schema.sql synchronisé avec les corrections de noms
+
+---
+
+## 2026-06-27 (session 75 — My Nugo corrections post-deploy + sécurité XSS)
+
+### My Nugo — corrections et mise en production
+- Deploy Cloudflare Pages corrigé : branche `master` (preview) → `main` (production) via `--branch=main`
+- Error 522 résolue définitivement : Custom Domain ajouté dans Pages dashboard AVANT activation Proxied DNS
+- Logo manquant corrigé : `Logo My Nugo.png` copié depuis context/import/
+- Galerie multi-angles lightbox : openLb(), swipe tactile, navigation clavier
+- Collection nommée "RENAISSANCE 2026" dans ticker et sous-titre section catalogue
+- WhatsApp : 6 fonctions spécialisées par contexte (waCommander, waDecouvrir, waCollection, waPopup, waContact, waCGV)
+- Guide gestionnaire WhatsApp créé : wa-guide.html (catalogue 23 produits + 7 templates copier-coller + checklist commande)
+- Photos nouvelles intégrées : 6 nouvelles principales + 15 angles multi-vues dans FALLBACK
+
+### Sécurité XSS — 3 vulnérabilités corrigées
+- renderHero et renderProduits réécrits intégralement en DOM API
+- Plus aucun innerHTML avec données dynamiques Supabase
+- Règle : createElement + textContent pour les textes, setAttribute pour les attributs, addEventListener pour les handlers
+- Validation regex `/^[A-Za-z0-9_-]{1,32}$/` sur les IDs produits avant usage dans GALLERIES
+- Supabase prêt à connecter sans risque XSS (URL/ANON_KEY à renseigner, schema SQL déjà en place)
+
+---
+
+## 2026-06-25 (session 74 — My Nugo mise à jour + migration Supabase)
+
+### My Nugo — site mis à jour et pushé
+- Nouvelle collection 2026 : FALLBACK passé de 12 → 22 produits
+- Nugo Surprise et Nugo Biman supprimés (nav réduite à 2 items : La Collection / À Propos)
+- 7 photos de vestes uploadées : HERO_01-04 (Yaya / Armelia x3) + PROD_16/17/18_principale
+- Google Sheets remplacé par Supabase dans index.html (SUPABASE_CONFIG)
+- `livrables/clients/my-nugo/supabase-schema.sql` créé (tables produits + hero_slides + RLS + seed 22 produits)
+- Pushé sur GitHub : MrAttractor/mynugo (commit 6884d2c)
+
+### Migration Supabase — en standby
+- Code côté site 100% prêt, schema SQL prêt
+- Reste 3 étapes Mac Arthur : créer projet Supabase + coller SQL + renseigner URL/ANON_KEY dans index.html
+- À reprendre dans une prochaine session
+
+### Migration hébergement — Netlify → Cloudflare Pages
+- Build minutes Netlify épuisées : tous les deploys bloqués (GitHub CI, CLI, API direct)
+- Déployé sur Cloudflare Pages : projet `mynugo-store` → `https://mynugo-store.pages.dev`
+- GoDaddy : A record Netlify (75.2.60.5) supprimé + CNAME _domainconnect supprimé
+- DNS `mynugo.store` migré sur Cloudflare : nameservers `noor.ns.cloudflare.com` + `tate.ns.cloudflare.com`
+- CNAME racine `@` → `mynugo-store.pages.dev` (proxied orange) ajouté dans la zone CF
+- Propagation en cours — mynugo.store servira la nouvelle collection dès résolution
+
+---
+
 ## 2026-06-24 (session 73 — Beynaud DMV V2 + Bible Attractor + migrations infra)
 
 ### Beynaud DMV V2 — RDV 30 juin
