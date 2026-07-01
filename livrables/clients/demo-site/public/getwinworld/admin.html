@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>GetWinWorld — Espace Charles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --vert:    #1B3A2D;
+      --vert-m:  #2D5A42;
+      --vert-d:  rgba(27,58,45,0.07);
+      --vert-b:  rgba(27,58,45,0.22);
+      --rouge:   #C0392B;
+      --rouge-d: rgba(192,57,43,0.07);
+      --rouge-b: rgba(192,57,43,0.2);
+      --blanc:   #FAFAF9;
+      --sable:   #F2ECE4;
+      --sable2:  #E4DAD0;
+      --ink:     #1A1614;
+      --ink2:    #3A3330;
+      --muted:   #8A8078;
+      --muted2:  #C0B8B0;
+      --border:  #E0D8CF;
+      --border2: #D0C8BE;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html,body { height:100%; background:var(--blanc); color:var(--ink); font-family:'Space Grotesk',sans-serif; }
+    .app { max-width:430px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; background:var(--blanc); }
+
+    /* ── LOGIN ── */
+    #login-screen { flex:1; display:flex; flex-direction:column; justify-content:center; padding:32px 28px; }
+    .login-mark { width:48px; height:48px; background:var(--vert); display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:500; color:#fff; margin-bottom:20px; }
+    .login-title { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:400; margin-bottom:4px; }
+    .login-sub { font-size:12px; color:var(--muted); margin-bottom:28px; }
+    .field { margin-bottom:14px; }
+    .field label { display:block; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; font-weight:600; }
+    .field input, .field select, .field textarea { width:100%; padding:12px 14px; border:1px solid var(--border); background:var(--blanc); font-family:'Space Grotesk',sans-serif; font-size:14px; color:var(--ink); }
+    .field input:focus, .field select:focus, .field textarea:focus { outline:none; border-color:var(--vert); }
+    .btn-primary { width:100%; padding:14px; background:var(--vert); color:#fff; border:none; font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.04em; cursor:pointer; margin-top:6px; }
+    .btn-primary:disabled { opacity:0.5; }
+    .btn-secondary { width:100%; padding:12px; background:var(--blanc); color:var(--ink2); border:1px solid var(--border); font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:600; cursor:pointer; }
+    .login-error { font-size:12px; color:var(--rouge); margin-top:10px; display:none; }
+    .login-error.show { display:block; }
+
+    /* ── DASHBOARD ── */
+    #dash-screen { display:none; flex:1; flex-direction:column; }
+    #dash-screen.active { display:flex; }
+    .header { position:sticky; top:0; z-index:100; background:rgba(250,250,249,0.97); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:14px 20px 12px; display:flex; align-items:center; justify-content:space-between; }
+    .brand { display:flex; align-items:center; gap:10px; }
+    .brand-mark { width:30px; height:30px; background:var(--vert); display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:12px; font-weight:500; color:#fff; }
+    .brand-name { font-family:'Cormorant Garamond',serif; font-size:17px; font-weight:500; color:var(--ink); }
+    .brand-sub  { font-size:9px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-top:1px; }
+    .logout-btn { font-size:11px; color:var(--muted); cursor:pointer; text-decoration:underline; }
+
+    .tabs { display:flex; border-bottom:1px solid var(--border); background:var(--blanc); position:sticky; top:60px; z-index:99; }
+    .tab { flex:1; padding:12px 4px; text-align:center; cursor:pointer; font-size:10px; font-weight:600; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; border-bottom:2px solid transparent; }
+    #demandes-badge { background:var(--rouge); color:#fff; font-size:9px; font-weight:600; border-radius:8px; padding:1px 6px; margin-left:3px; }
+    .tab.active { color:var(--vert); border-bottom-color:var(--vert); }
+
+    .panel { display:none; padding:16px; flex:1; overflow-y:auto; }
+    .panel.active { display:block; }
+
+    .add-btn { width:100%; padding:14px; background:var(--vert); color:#fff; border:none; font-size:12px; font-weight:600; letter-spacing:0.04em; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:16px; }
+
+    .prod-row { display:flex; gap:12px; padding:10px; border:1px solid var(--border); background:var(--blanc); margin-bottom:8px; align-items:center; }
+    .prod-row img { width:52px; height:52px; object-fit:cover; flex-shrink:0; }
+    .prod-row .info { flex:1; min-width:0; }
+    .prod-row .nom { font-family:'Cormorant Garamond',serif; font-size:14px; margin-bottom:2px; }
+    .prod-row .meta { font-size:10px; color:var(--muted); }
+    .prod-row .actions { display:flex; flex-direction:column; gap:4px; align-items:flex-end; }
+    .pill { font-size:9px; padding:3px 8px; border:1px solid var(--border); cursor:pointer; letter-spacing:0.04em; white-space:nowrap; }
+    .pill.on { background:var(--vert); color:#fff; border-color:var(--vert); }
+    .pill.offre { font-size:9px; padding:3px 8px; border:1px solid var(--rouge-b); cursor:pointer; letter-spacing:0.04em; white-space:nowrap; color:var(--rouge); }
+    .pill.offre.on { background:var(--rouge); color:#fff; border-color:var(--rouge); }
+    .pill.edit { color:var(--vert); border-color:var(--vert-b); }
+
+    .res-row { padding:14px; border:1px solid var(--border); border-left:3px solid var(--border); background:var(--blanc); margin-bottom:8px; }
+    .res-row.untreated { border-left-color:var(--rouge); }
+    .res-row .top { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; }
+    .res-row .produit { font-family:'Cormorant Garamond',serif; font-size:14px; }
+    .res-row .date { font-size:9px; color:var(--muted); }
+    .res-row .client { font-size:12px; margin-bottom:4px; }
+    .res-row .client a { color:var(--vert); text-decoration:none; font-weight:600; }
+    .res-row .msg { font-size:11px; color:var(--muted); margin-bottom:8px; font-style:italic; }
+    .res-row .traitee-btn { font-size:10px; padding:5px 10px; border:1px solid var(--border); cursor:pointer; }
+    .res-row .traitee-btn.on { background:var(--vert-d); border-color:var(--vert-b); color:var(--vert); }
+
+    .empty-state { text-align:center; padding:40px 20px; color:var(--muted); font-size:12px; }
+
+    /* ── MODAL PUBLIER ── */
+    .modal-overlay { position:fixed; inset:0; background:rgba(26,22,20,0.6); z-index:500; display:none; align-items:flex-end; }
+    .modal-overlay.open { display:flex; }
+    .modal-sheet { background:var(--blanc); width:100%; max-width:430px; margin:0 auto; max-height:88vh; overflow-y:auto; padding:20px; }
+    .modal-sheet-title { font-family:'Cormorant Garamond',serif; font-size:20px; margin-bottom:16px; }
+    .photo-input-zone { border:1.5px dashed var(--border2); padding:20px; text-align:center; margin-bottom:14px; cursor:pointer; position:relative; }
+    .photo-input-zone img { max-width:100%; max-height:160px; display:block; margin:0 auto; }
+    .photo-input-zone .placeholder { font-size:11px; color:var(--muted); }
+    .photo-input-zone input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; }
+    .toggle-row { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-top:1px solid var(--border); margin-top:8px; }
+    .toggle-row span { font-size:12px; }
+    .switch { position:relative; width:40px; height:22px; background:var(--border2); cursor:pointer; flex-shrink:0; }
+    .switch.on { background:var(--vert); }
+    .switch::after { content:''; position:absolute; top:2px; left:2px; width:18px; height:18px; background:#fff; transition:left 0.15s; }
+    .switch.on::after { left:20px; }
+    .modal-actions { display:flex; gap:8px; margin-top:18px; }
+    .upload-status { font-size:11px; color:var(--muted); margin-top:8px; text-align:center; display:none; }
+    .upload-status.show { display:block; }
+
+    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; padding:10px 18px; font-size:12px; z-index:600; white-space:nowrap; opacity:0; transition:opacity 0.3s; pointer-events:none; }
+    .toast.show { opacity:1; }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- LOGIN -->
+  <div id="login-screen">
+    <div class="login-mark">GW</div>
+    <div class="login-title">Espace Charles</div>
+    <div class="login-sub">Administration GetWinWorld — réservé à Charles</div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="login-email" autocomplete="username" placeholder="charles@...">
+    </div>
+    <div class="field">
+      <label>Mot de passe</label>
+      <input type="password" id="login-password" autocomplete="current-password">
+    </div>
+    <button class="btn-primary" id="login-btn" onclick="doLogin()">Se connecter</button>
+    <div class="login-error" id="login-error">Identifiants incorrects.</div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dash-screen">
+    <div class="header">
+      <div class="brand">
+        <div class="brand-mark">GW</div>
+        <div>
+          <div class="brand-name">GetWinWorld</div>
+          <div class="brand-sub">Espace Charles</div>
+        </div>
+      </div>
+      <div class="logout-btn" onclick="doLogout()">Déconnexion</div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('catalogue',this)">Catalogue</div>
+      <div class="tab" onclick="switchTab('reservations',this)">Demandes <span id="demandes-badge" style="display:none"></span></div>
+      <div class="tab" onclick="switchTab('inscriptions',this)">Inscriptions</div>
+    </div>
+
+    <!-- CATALOGUE -->
+    <div class="panel active" id="panel-catalogue">
+      <button class="add-btn" onclick="openProductForm()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Publier un arrivage
+      </button>
+      <div id="products-list"></div>
+    </div>
+
+    <!-- RÉSERVATIONS -->
+    <div class="panel" id="panel-reservations">
+      <div id="reservations-list"></div>
+    </div>
+
+    <!-- INSCRIPTIONS -->
+    <div class="panel" id="panel-inscriptions">
+      <div id="inscriptions-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PUBLIER / ÉDITER -->
+<div class="modal-overlay" id="product-modal-overlay">
+  <div class="modal-sheet">
+    <div class="modal-sheet-title" id="product-modal-title">Publier un arrivage</div>
+
+    <div class="photo-input-zone" id="photo-zone">
+      <div class="placeholder" id="photo-placeholder">Touchez pour prendre ou choisir une photo</div>
+      <img id="photo-preview" style="display:none">
+      <input type="file" accept="image/*" capture="environment" id="photo-input" onchange="onPhotoSelected(event)">
+    </div>
+
+    <div class="field">
+      <label>Nom de la pièce</label>
+      <input type="text" id="f-nom" placeholder="Ex. Loafer Cuir Noir">
+    </div>
+    <div class="field">
+      <label>Prix</label>
+      <input type="text" id="f-prix" placeholder="Ex. 450 €">
+    </div>
+    <div class="field">
+      <label>Catégorie</label>
+      <input type="text" id="f-categorie" list="cat-list" placeholder="Ex. Chaussures">
+      <datalist id="cat-list"></datalist>
+    </div>
+    <div class="field">
+      <label>Maison (optionnel)</label>
+      <input type="text" id="f-maison" placeholder="Ex. Filangieri 1966 — Italy">
+    </div>
+
+    <div class="toggle-row">
+      <span>Marquer comme offre du jour</span>
+      <div class="switch" id="f-offre" onclick="this.classList.toggle('on')"></div>
+    </div>
+
+    <div class="upload-status" id="upload-status">Envoi en cours...</div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeProductForm()" style="flex:1">Annuler</button>
+      <button class="btn-primary" id="save-product-btn" onclick="saveProduct()" style="flex:1">Publier</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://lgdgbrivnhgeupqhkckd.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+let products = [];
+let pendingPhotoBlob = null;
+let editingId = null;
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2600);
+}
+
+// ── AUTH ──────────────────────────────────────────────────
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('login-error');
+  err.classList.remove('show');
+  if (!email || !password) return;
+  btn.disabled = true; btn.textContent = 'Connexion...';
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  btn.disabled = false; btn.textContent = 'Se connecter';
+  if (error) {
+    err.classList.add('show');
+    return;
+  }
+  enterDashboard();
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+  location.reload();
+}
+
+async function checkSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) enterDashboard();
+}
+
+function enterDashboard() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dash-screen').classList.add('active');
+  loadProducts();
+  loadReservations();
+  loadInscriptions();
+}
+
+// ── NAVIGATION ───────────────────────────────────────────
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+}
+
+// ── CATALOGUE ────────────────────────────────────────────
+async function loadProducts() {
+  const { data, error } = await sb.from('gw_produits').select('*').order('created_at', { ascending:false });
+  if (error) { showToast('Erreur de chargement catalogue'); return; }
+  products = data || [];
+  renderProducts();
+  renderCategoryDatalist();
+}
+
+function renderProducts() {
+  const el = document.getElementById('products-list');
+  if (!products.length) { el.innerHTML = '<div class="empty-state">Aucun produit publié pour l\'instant.</div>'; return; }
+  el.innerHTML = products.map(p => `
+    <div class="prod-row">
+      <img src="${p.photo_url}" alt="">
+      <div class="info">
+        <div class="nom">${escapeHtml(p.nom)}</div>
+        <div class="meta">${escapeHtml(p.categorie)} · ${escapeHtml(p.prix)}</div>
+      </div>
+      <div class="actions">
+        <div class="pill ${p.est_actif?'on':''}" onclick="toggleActif('${p.id}', ${!p.est_actif})">${p.est_actif?'Actif':'Archivé'}</div>
+        <div class="pill offre ${p.est_offre_du_jour?'on':''}" onclick="toggleOffre('${p.id}', ${!p.est_offre_du_jour})">Offre du jour</div>
+        <div class="pill edit" onclick="openProductForm('${p.id}')">Éditer</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderCategoryDatalist() {
+  const cats = [...new Set(products.map(p=>p.categorie).filter(Boolean))];
+  document.getElementById('cat-list').innerHTML = cats.map(c=>`<option value="${escapeHtml(c)}">`).join('');
+}
+
+async function toggleActif(id, value) {
+  const { error } = await sb.from('gw_produits').update({ est_actif: value }).eq('id', id);
+  if (error) { showToast('Erreur'); return; }
+  await loadProducts();
+}
+
+async function toggleOffre(id, value) {
+  const { error } = await sb.from('gw_produits').update({ est_offre_du_jour: value }).eq('id', id);
+  if (error) { showToast('Erreur'); return; }
+  await loadProducts();
+}
+
+function openProductForm(id) {
+  editingId = id || null;
+  pendingPhotoBlob = null;
+  document.getElementById('photo-preview').style.display = 'none';
+  document.getElementById('photo-placeholder').style.display = 'block';
+  document.getElementById('photo-input').value = '';
+
+  if (id) {
+    const p = products.find(x=>x.id===id);
+    document.getElementById('product-modal-title').textContent = 'Éditer la pièce';
+    document.getElementById('f-nom').value = p.nom || '';
+    document.getElementById('f-prix').value = p.prix || '';
+    document.getElementById('f-categorie').value = p.categorie || '';
+    document.getElementById('f-maison').value = p.maison || '';
+    document.getElementById('f-offre').classList.toggle('on', !!p.est_offre_du_jour);
+    document.getElementById('photo-preview').src = p.photo_url;
+    document.getElementById('photo-preview').style.display = 'block';
+    document.getElementById('photo-placeholder').style.display = 'none';
+    document.getElementById('save-product-btn').textContent = 'Enregistrer';
+  } else {
+    document.getElementById('product-modal-title').textContent = 'Publier un arrivage';
+    document.getElementById('f-nom').value = '';
+    document.getElementById('f-prix').value = '';
+    document.getElementById('f-categorie').value = '';
+    document.getElementById('f-maison').value = '';
+    document.getElementById('f-offre').classList.remove('on');
+    document.getElementById('save-product-btn').textContent = 'Publier';
+  }
+  document.getElementById('product-modal-overlay').classList.add('open');
+}
+
+function closeProductForm() {
+  document.getElementById('product-modal-overlay').classList.remove('open');
+}
+
+// Redimensionnement côté client avant upload (cap 1600px, JPEG qualité 0.82)
+function resizeImage(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = e => { img.src = e.target.result; };
+    reader.onerror = reject;
+    img.onload = () => {
+      const maxSide = 1600;
+      let { width, height } = img;
+      if (width > maxSide || height > maxSide) {
+        if (width > height) { height = Math.round(height * maxSide / width); width = maxSide; }
+        else { width = Math.round(width * maxSide / height); height = maxSide; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.82);
+    };
+    img.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function onPhotoSelected(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  pendingPhotoBlob = await resizeImage(file);
+  const preview = document.getElementById('photo-preview');
+  preview.src = URL.createObjectURL(pendingPhotoBlob);
+  preview.style.display = 'block';
+  document.getElementById('photo-placeholder').style.display = 'none';
+}
+
+function slugify(str) {
+  return str.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+}
+
+async function saveProduct() {
+  const nom = document.getElementById('f-nom').value.trim();
+  const prix = document.getElementById('f-prix').value.trim();
+  const categorie = document.getElementById('f-categorie').value.trim() || 'Divers';
+  const maison = document.getElementById('f-maison').value.trim() || 'GetWinWorld Sélection';
+  const estOffre = document.getElementById('f-offre').classList.contains('on');
+
+  if (!nom || !prix) { showToast('Nom et prix obligatoires'); return; }
+  if (!editingId && !pendingPhotoBlob) { showToast('Ajoutez une photo'); return; }
+
+  const status = document.getElementById('upload-status');
+  const btn = document.getElementById('save-product-btn');
+  status.classList.add('show'); btn.disabled = true;
+
+  try {
+    let photoUrl = editingId ? products.find(p=>p.id===editingId).photo_url : null;
+
+    if (pendingPhotoBlob) {
+      const path = `charles/${Date.now()}-${slugify(nom)}.jpg`;
+      const { error: upErr } = await sb.storage.from('gw-photos').upload(path, pendingPhotoBlob, { contentType:'image/jpeg', upsert:true });
+      if (upErr) throw upErr;
+      const { data: pub } = sb.storage.from('gw-photos').getPublicUrl(path);
+      photoUrl = pub.publicUrl;
+    }
+
+    const payload = { nom, prix, categorie, maison, photo_url: photoUrl, est_offre_du_jour: estOffre };
+
+    if (editingId) {
+      const { error } = await sb.from('gw_produits').update(payload).eq('id', editingId);
+      if (error) throw error;
+      showToast('Pièce mise à jour');
+    } else {
+      const { error } = await sb.from('gw_produits').insert(payload);
+      if (error) throw error;
+      showToast('Arrivage publié');
+    }
+
+    closeProductForm();
+    await loadProducts();
+  } catch (e) {
+    showToast('Erreur : ' + (e.message || 'envoi échoué'));
+  } finally {
+    status.classList.remove('show'); btn.disabled = false;
+  }
+}
+
+// ── DEMANDES (paniers envoyés par les clients) ───────────
+async function loadReservations() {
+  const { data, error } = await sb.from('gw_commandes').select('*').order('created_at', { ascending:false });
+  const el = document.getElementById('reservations-list');
+  const badge = document.getElementById('demandes-badge');
+  if (error) { el.innerHTML = '<div class="empty-state">Erreur de chargement.</div>'; return; }
+  const untraitees = data.filter(c => !c.traitee).length;
+  if (badge) {
+    if (untraitees) { badge.textContent = untraitees; badge.style.display = 'inline-block'; }
+    else { badge.style.display = 'none'; }
+  }
+  if (!data.length) { el.innerHTML = '<div class="empty-state">Aucune demande pour l\'instant.</div>'; return; }
+  el.innerHTML = data.map(c => {
+    const lignes = (c.produits || []).map(p =>
+      `${p.nom} × ${p.quantite}${p.commentaire ? ` — <em>${escapeHtml(p.commentaire)}</em>` : ''}`
+    ).join('<br>');
+    return `
+    <div class="res-row ${c.traitee?'':'untreated'}">
+      <div class="top">
+        <div class="produit">${escapeHtml(c.client_nom)}</div>
+        <div class="date">${new Date(c.created_at).toLocaleDateString('fr')}</div>
+      </div>
+      <div class="client"><a href="https://wa.me/${normalizeWa(c.client_wa)}" target="_blank">${escapeHtml(c.client_wa)}</a></div>
+      <div class="msg">${lignes}</div>
+      <div class="traitee-btn ${c.traitee?'on':''}" onclick="toggleTraitee('${c.id}', ${!c.traitee})">${c.traitee?'Traitée':'Marquer traitée'}</div>
+    </div>`;
+  }).join('');
+}
+
+async function toggleTraitee(id, value) {
+  const { error } = await sb.from('gw_commandes').update({ traitee: value }).eq('id', id);
+  if (error) { showToast('Erreur'); return; }
+  await loadReservations();
+}
+
+// ── INSCRIPTIONS ─────────────────────────────────────────
+async function loadInscriptions() {
+  const { data, error } = await sb.from('gw_inscriptions').select('*').order('created_at', { ascending:false });
+  const el = document.getElementById('inscriptions-list');
+  if (error) { el.innerHTML = '<div class="empty-state">Erreur de chargement.</div>'; return; }
+  if (!data.length) { el.innerHTML = '<div class="empty-state">Aucune inscription pour l\'instant.</div>'; return; }
+  el.innerHTML = data.map(i => `
+    <div class="res-row">
+      <div class="top">
+        <div class="produit">${escapeHtml(i.client_nom)}</div>
+        <div class="date">${new Date(i.created_at).toLocaleDateString('fr')}</div>
+      </div>
+      <div class="client"><a href="https://wa.me/${normalizeWa(i.client_wa)}" target="_blank">${escapeHtml(i.client_wa)}</a></div>
+    </div>`).join('');
+}
+
+// ── UTILS ────────────────────────────────────────────────
+function normalizeWa(wa) { return (wa||'').replace(/[^0-9]/g,''); }
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str ?? '';
+  return d.innerHTML;
+}
+
+checkSession();
+</script>
+</body>
+</html>

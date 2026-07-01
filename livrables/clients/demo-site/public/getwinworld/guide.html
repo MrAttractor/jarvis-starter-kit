@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GetWinWorld — Guide de démarrage</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --vert:    #1B3A2D;
+      --vert-d:  rgba(27,58,45,0.07);
+      --vert-b:  rgba(27,58,45,0.18);
+      --rouge:   #C0392B;
+      --ink:     #1A1614;
+      --ink2:    #3A3330;
+      --muted:   #8A8078;
+      --border:  #E0D8CF;
+      --bg:      #F2ECE4;
+      --blanc:   #FAFAF9;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Space Grotesk',sans-serif;
+      color:var(--ink);
+      background:#fff;
+      max-width:680px;
+      margin:0 auto;
+      padding:40px 32px 72px;
+      line-height:1.6;
+    }
+
+    /* HEADER */
+    .doc-header { display:flex; align-items:center; justify-content:space-between; padding-bottom:24px; border-bottom:2px solid var(--vert); margin-bottom:32px; }
+    .doc-brand  { display:flex; align-items:center; gap:10px; }
+    .doc-mark   { width:36px; height:36px; background:var(--vert); display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Cormorant Garamond',serif; font-size:14px; font-weight:500; }
+    .doc-name   { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:500; }
+    .doc-sub    { font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-top:1px; }
+    .doc-meta   { text-align:right; font-size:12px; color:var(--muted); }
+    .doc-meta strong { color:var(--ink); display:block; font-size:13px; margin-bottom:2px; }
+
+    /* HERO */
+    .hero { background:var(--vert); color:#fff; padding:28px 28px 24px; margin-bottom:32px; }
+    .hero-label { font-size:10px; letter-spacing:0.16em; text-transform:uppercase; opacity:0.65; margin-bottom:8px; }
+    .hero-title { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:300; line-height:1.25; margin-bottom:8px; }
+    .hero-title em { font-style:italic; }
+    .hero-sub { font-size:13px; opacity:0.85; line-height:1.55; }
+
+    /* FORMULE BADGE */
+    .formule-badge { display:inline-flex; align-items:center; gap:10px; border:1px solid var(--vert-b); background:var(--vert-d); padding:14px 20px; margin-bottom:32px; width:100%; }
+    .fb-mark { width:32px; height:32px; background:var(--vert); display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:400; flex-shrink:0; }
+    .fb-name { font-family:'Cormorant Garamond',serif; font-size:17px; font-weight:500; color:var(--vert); }
+    .fb-price { font-size:12px; color:var(--muted); margin-top:1px; }
+
+    /* SECTIONS */
+    .section { margin-bottom:36px; }
+    .section-num   { font-size:10px; color:var(--rouge); letter-spacing:0.16em; text-transform:uppercase; font-weight:600; margin-bottom:6px; }
+    .section-title { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400; margin-bottom:12px; }
+    .section-text  { font-size:13px; color:var(--ink2); line-height:1.7; margin-bottom:14px; }
+
+    /* INCLUS LIST */
+    .inclus { display:flex; flex-direction:column; gap:8px; }
+    .inclus-item { display:flex; align-items:flex-start; gap:12px; padding:13px 16px; border:1px solid var(--border); background:var(--blanc); }
+    .inclus-icon { width:28px; height:28px; background:var(--vert); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .inclus-icon svg { color:#fff; }
+    .inclus-body .inclus-title { font-size:13px; font-weight:600; color:var(--ink); margin-bottom:2px; }
+    .inclus-body .inclus-desc  { font-size:12px; color:var(--muted); line-height:1.5; }
+
+    .non-inclus { margin-top:12px; padding:12px 16px; background:var(--bg); border:1px solid var(--border); }
+    .non-inclus-label { font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:8px; }
+    .non-inclus-item { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); padding:3px 0; }
+    .ni-dot { width:4px; height:4px; background:var(--border); border-radius:50%; flex-shrink:0; }
+
+    /* STEPS */
+    .steps { display:flex; flex-direction:column; gap:0; }
+    .step { display:flex; gap:16px; padding:16px 0; border-bottom:1px solid var(--border); }
+    .step:last-child { border-bottom:none; }
+    .step-num { width:28px; height:28px; background:var(--rouge); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; flex-shrink:0; font-family:'Cormorant Garamond',serif; margin-top:1px; }
+    .step-title { font-size:14px; font-weight:600; color:var(--ink); margin-bottom:3px; }
+    .step-desc  { font-size:12px; color:var(--muted); line-height:1.55; }
+
+    /* PROCESS */
+    .process { display:flex; flex-direction:column; gap:8px; }
+    .proc-item { display:flex; gap:12px; align-items:flex-start; padding:14px 16px; border:1px solid var(--border); background:var(--blanc); }
+    .proc-badge { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:300; color:var(--border); line-height:1; flex-shrink:0; width:28px; text-align:center; }
+    .proc-title { font-size:13px; font-weight:600; color:var(--ink); margin-bottom:3px; }
+    .proc-desc  { font-size:12px; color:var(--muted); line-height:1.5; }
+
+    /* HIGHLIGHT BOX */
+    .highlight { background:var(--vert); color:#fff; padding:20px 22px; margin-bottom:14px; }
+    .highlight-label { font-size:9px; letter-spacing:0.16em; text-transform:uppercase; opacity:0.6; margin-bottom:6px; }
+    .highlight-text  { font-size:13px; line-height:1.65; opacity:0.9; }
+    .highlight-text strong { font-weight:600; opacity:1; }
+
+    /* INFO BOX */
+    .info-box { border-left:3px solid var(--vert); background:var(--vert-d); padding:16px 18px; }
+    .info-box-label { font-size:9px; color:var(--vert); letter-spacing:0.14em; text-transform:uppercase; font-weight:600; margin-bottom:6px; }
+    .info-box-text  { font-size:12px; color:var(--ink2); line-height:1.6; }
+    .info-box-text strong { color:var(--ink); }
+
+    /* CONTACT */
+    .contact-card { border:1px solid var(--vert-b); background:var(--vert-d); padding:20px; display:flex; gap:14px; align-items:flex-start; }
+    .contact-init { width:44px; height:44px; background:var(--vert); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:300; flex-shrink:0; }
+    .contact-name  { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:400; margin-bottom:2px; }
+    .contact-role  { font-size:11px; color:var(--muted); margin-bottom:10px; }
+    .contact-btn   { display:inline-flex; align-items:center; gap:7px; background:var(--vert); color:#fff; padding:10px 16px; font-size:12px; font-weight:600; cursor:pointer; text-decoration:none; font-family:'Space Grotesk',sans-serif; }
+
+    /* CTA */
+    .cta-block { border:1px solid var(--border); padding:20px; text-align:center; margin-top:32px; }
+    .cta-label { font-size:10px; color:var(--muted); letter-spacing:0.14em; text-transform:uppercase; margin-bottom:8px; }
+    .cta-title { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:300; margin-bottom:14px; }
+    .cta-btn   { display:inline-flex; align-items:center; gap:8px; background:var(--rouge); color:#fff; padding:13px 24px; font-size:13px; font-weight:600; text-decoration:none; font-family:'Space Grotesk',sans-serif; }
+
+    /* FOOTER */
+    .doc-footer { margin-top:40px; padding-top:20px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+    .footer-brand { font-size:12px; color:var(--muted); }
+    .footer-brand strong { color:var(--ink); }
+    .footer-note  { font-size:11px; color:var(--muted); text-align:right; }
+
+    /* PRINT */
+    .print-btn { position:fixed; bottom:24px; right:24px; background:var(--rouge); color:#fff; border:none; padding:12px 20px; font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; cursor:pointer; letter-spacing:0.03em; display:flex; align-items:center; gap:8px; }
+    @media print { .print-btn { display:none; } body { padding:24px 28px; } }
+    @media (max-width:600px) { body { padding:24px 18px 80px; } .compare { grid-template-columns:1fr; } .print-btn { bottom:16px; right:16px; } }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="doc-brand">
+      <div class="doc-mark">GW</div>
+      <div>
+        <div class="doc-name">GetWinWorld</div>
+        <div class="doc-sub">Personal Shopper</div>
+      </div>
+    </div>
+    <div class="doc-meta">
+      <strong>Guide de démarrage</strong>
+      Préparé pour Charles<br>
+      Juin 2026
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-label">Votre espace client est actif</div>
+    <div class="hero-title">Bienvenue, Charles.<br><em>Voici comment ça marche.</em></div>
+    <div class="hero-sub">Ce guide vous explique ce que vous avez, ce que vos clients peuvent faire, et comment gérer votre plateforme au quotidien.</div>
+  </div>
+
+  <!-- FORMULE ACTIVE -->
+  <div class="formule-badge">
+    <div class="fb-mark">II</div>
+    <div>
+      <div class="fb-name">Formule Active</div>
+      <div class="fb-price">350 € · installation + 65 €/mois tout inclus</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 : CE QUE VOUS AVEZ -->
+  <div class="section">
+    <div class="section-num">01 · Ce que vous avez</div>
+    <div class="section-title">Votre plateforme en 4 modules</div>
+    <div class="section-text">Un lien unique, partagé sur WhatsApp. Vos clients l'ouvrent directement dans leur navigateur — sans téléchargement. Voici ce qu'ils trouvent à l'intérieur.</div>
+
+    <div class="inclus">
+      <div class="inclus-item">
+        <div class="inclus-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="inclus-body">
+          <div class="inclus-title">Vitrine catalogue</div>
+          <div class="inclus-desc">Vos pièces sont présentées en grille : photo, maison, nom, prix. Vos clients naviguent, cliquent sur une pièce et demandent à l'acheter en un tap. 3 onglets : Vestimentaire, Événements, Vidéos.</div>
+        </div>
+      </div>
+      <div class="inclus-item">
+        <div class="inclus-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="inclus-body">
+          <div class="inclus-title">Conseiller IA 24h/24</div>
+          <div class="inclus-desc">Un assistant répond automatiquement aux questions de vos clients : délais, disponibilités, occasion à habiller, conseils de style. Vous n'intervenez pas — il gère.</div>
+        </div>
+      </div>
+      <div class="inclus-item">
+        <div class="inclus-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10"/><rect x="1" y="3" width="22" height="7" rx="1"/></svg>
+        </div>
+        <div class="inclus-body">
+          <div class="inclus-title">Suivi des commandes</div>
+          <div class="inclus-desc">Chaque demande reçoit une référence automatique (GWW-2026-XXX). Vos clients voient l'état de leurs commandes en temps réel : en transit, livré.</div>
+        </div>
+      </div>
+      <div class="inclus-item">
+        <div class="inclus-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="inclus-body">
+          <div class="inclus-title">Espace client VIP</div>
+          <div class="inclus-desc">Chaque client a son espace : préférences style, historique complet, adresses de livraison. Et un bouton WhatsApp direct pour vous contacter.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="non-inclus">
+      <div class="non-inclus-label">Non inclus dans la Formule Active</div>
+      <div class="non-inclus-item"><div class="ni-dot"></div>Vidéos hébergées + plateforme VIP (réservé à la Formule Premium)</div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 : COMMENT VOS CLIENTS L'UTILISENT -->
+  <div class="section">
+    <div class="section-num">02 · Ce que font vos clients</div>
+    <div class="section-title">L'expérience de A à Z</div>
+    <div class="section-text">Voici exactement ce qui se passe quand un client reçoit votre lien.</div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">Ils reçoivent votre lien sur WhatsApp</div>
+          <div class="step-desc">Un message simple : "Voici mon catalogue, commandez directement ici." Ils cliquent, la page s'ouvre dans leur navigateur. Aucune appli à installer.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">Ils voient votre splash de présentation</div>
+          <div class="step-desc">Un écran vendeur qui présente vos 3 services, le concept 0 stock, et l'entrée dans l'app. Professionnel, immersif. Ils appuient sur le bouton pour entrer.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-title">Ils naviguent dans votre catalogue</div>
+          <div class="step-desc">Vitrine par grille, fiches produits détaillées avec photos, prix, délai de livraison. Ils cliquent sur une pièce qui les intéresse.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <div class="step-title">Ils demandent une pièce</div>
+          <div class="step-desc">"Demander cette pièce" : la commande est enregistrée avec une référence automatique. Un écran de confirmation s'affiche. Vous êtes notifié.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div>
+          <div class="step-title">Ils suivent leur commande</div>
+          <div class="step-desc">Dans l'onglet "Commandes", ils voient toutes leurs demandes en cours avec la progression. Fini les relances WhatsApp "c'est où ?"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 : QUAND UNE COMMANDE ARRIVE -->
+  <div class="section">
+    <div class="section-num">03 · Quand une commande arrive</div>
+    <div class="section-title">Ce que vous faites, étape par étape</div>
+
+    <div class="highlight">
+      <div class="highlight-label">Principe de base</div>
+      <div class="highlight-text">Vous travaillez en <strong>0 stock</strong>. Quand un client commande, vous recevez une notification, vous commandez auprès de votre maison partenaire, vous livrez. L'app gère la traçabilité.</div>
+    </div>
+
+    <div class="process">
+      <div class="proc-item">
+        <div class="proc-badge">01</div>
+        <div>
+          <div class="proc-title">Vous recevez la réservation dans votre tableau de bord</div>
+          <div class="proc-desc">Onglet "Réservations" de votre espace admin : la pièce demandée, et les coordonnées du client (nom + WhatsApp).</div>
+        </div>
+      </div>
+      <div class="proc-item">
+        <div class="proc-badge">02</div>
+        <div>
+          <div class="proc-title">Vous confirmez la disponibilité</div>
+          <div class="proc-desc">Vous contactez votre maison partenaire pour vérifier que la pièce est disponible dans la bonne taille.</div>
+        </div>
+      </div>
+      <div class="proc-item">
+        <div class="proc-badge">03</div>
+        <div>
+          <div class="proc-title">Vous répondez au client</div>
+          <div class="proc-desc">WhatsApp direct depuis l'espace client de l'app. Vous confirmez le délai, les modalités de paiement et la livraison.</div>
+        </div>
+      </div>
+      <div class="proc-item">
+        <div class="proc-badge">04</div>
+        <div>
+          <div class="proc-title">Vous commandez et livrez</div>
+          <div class="proc-desc">La pièce est commandée, puis livrée. Le statut est mis à jour dans l'app (manuellement ou via l'agence selon votre formule).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 : MISES A JOUR -->
+  <div class="section">
+    <div class="section-num">04 · Vos mises à jour catalogue</div>
+    <div class="section-title">Mises à jour illimitées, en autonomie</div>
+    <div class="section-text">Avec la Formule Active, vous publiez vous-même vos arrivages, directement depuis votre téléphone, sans passer par l'agence.</div>
+
+    <div class="info-box">
+      <div class="info-box-label">Comment publier un arrivage</div>
+      <div class="info-box-text">
+        Ouvrez votre espace de publication :<br><br>
+        <strong>1.</strong> Connectez-vous sur <strong>admin.html</strong> avec votre email et votre mot de passe<br>
+        <strong>2.</strong> Onglet "Catalogue" → "Publier un arrivage"<br>
+        <strong>3.</strong> Photo (prise directement avec votre téléphone), nom, prix, catégorie<br>
+        <strong>4.</strong> Marquez "Offre du jour" si la pièce est à mettre en avant<br><br>
+        C'est en ligne immédiatement sur votre vitrine, sans délai. Vous pouvez aussi archiver ou éditer une pièce existante à tout moment depuis le même espace.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 : PARTAGE DU LIEN -->
+  <div class="section">
+    <div class="section-num">05 · Comment partager votre lien</div>
+    <div class="section-title">Un seul lien, partout</div>
+    <div class="section-text">Votre espace client est accessible à cette adresse :</div>
+
+    <div style="background:var(--bg); border:1px solid var(--border); padding:16px 20px; margin-bottom:16px; font-family:monospace; font-size:13px; color:var(--vert); word-break:break-all;">
+      https://demo.agenceattractor.com/getwinworld
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">•</div>
+        <div>
+          <div class="step-title">Sur WhatsApp</div>
+          <div class="step-desc">Copiez le lien et envoyez-le directement à vos clients, ou ajoutez-le dans votre bio WhatsApp Business pour qu'ils y accèdent à tout moment.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">•</div>
+        <div>
+          <div class="step-title">En signature</div>
+          <div class="step-desc">Ajoutez le lien dans vos messages WhatsApp habituels : "Retrouvez toute ma collection ici →"</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">•</div>
+        <div>
+          <div class="step-title">Sur les réseaux sociaux</div>
+          <div class="step-desc">Partagez le lien en bio Instagram ou en story. Vos abonnés accèdent directement à la vitrine.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 : CONTACT -->
+  <div class="section">
+    <div class="section-num">06 · Votre contact agence</div>
+    <div class="section-title">Une question ? Un problème ?</div>
+    <div class="section-text">Pour toute demande liée à votre plateforme — mise à jour, ajout de pièce, question technique — contactez Mac-Arthur directement.</div>
+
+    <div class="contact-card">
+      <div class="contact-init">MA</div>
+      <div>
+        <div class="contact-name">Mac-Arthur Kouassi</div>
+        <div class="contact-role">Agence Mr Attractor · Votre référent technique</div>
+        <a class="contact-btn" href="https://wa.me/33753902323">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+          Contacter sur WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-block">
+    <div class="cta-label">Tester votre espace</div>
+    <div class="cta-title">Ouvrez votre plateforme comme le ferait un client</div>
+    <a class="cta-btn" href="./index.html">
+      Voir l'app GetWinWorld
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    <div class="footer-brand">Préparé par <strong>Mac-Arthur Kouassi</strong><br>Agence Mr Attractor · agenceattractor.com</div>
+    <div class="footer-note">Formule Active · Juillet 2026<br>Réf. GWW-GUIDE-001</div>
+  </div>
+
+  <button class="print-btn" onclick="window.print()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Imprimer / Enregistrer PDF
+  </button>
+
+</body>
+</html>
