@@ -52,6 +52,11 @@ FAMILLE B — Consulting Méthode ATTRACTOR
 FAMILLE C — Attractor Assists
 Freemium. NE PAS chiffrer. Répondre : "Attractor Assists est en modèle freemium — pas de devis chiffré pour l'instant."
 
+FAMILLE D — Partenariat Performance (mise en place + mensuel + commission)
+Pour un client avec un business déjà existant et mesurable, où la mission est une transformation stratégique/digitale dont l'impact se voit sur la rentabilité.
+Modèle de référence (Beracca Mastery Group) : mise en place 150€ / 100 000 FCFA + mensuel 150€ / 100 000 FCFA + commission 10% sur le bénéfice réalisé au-dessus de la moyenne des 3 derniers trimestres (jamais sur le CA brut).
+Adapter la période de référence et le taux selon la taille du deal, mais toujours documenter la base de calcul dans "raisonnement".
+
 RÈGLES DE CALCUL
 - Acompte = 50% du setup (arrondi à l'entier)
 - Solde = 50% du setup
@@ -60,18 +65,17 @@ RÈGLES DE CALCUL
 - Numérotation : ATR-2026-NNNN (NNNN = timestamp last 4 digits)
 
 CLASSIFICATION
-1. type_projet = 'app' → Famille A
-2. type_projet = 'consulting' → Famille B
-3. type_projet = 'assists' → Famille C (freemium, pas de devis)
-4. nb_users = '1' → SOLO | '2-5' → ÉQUIPE | '5+' ou non précisé complexe → ENTERPRISE
-5. zone = 'CI' → FCFA | sinon → EUR
+1. Si la famille est déjà connue (fournie dans le brief), ne pas la redéterminer — se concentrer sur le niveau.
+2. Sinon : type_projet = 'app' → Famille A | 'consulting' → Famille B | 'assists' → Famille C | business établi avec chiffres mesurables → Famille D
+3. nb_users = '1' → SOLO | '2-5' → ÉQUIPE | '5+' ou non précisé complexe → ENTERPRISE
+4. zone = 'CI' → FCFA | sinon → EUR
 
 ═══════════════════════════════════════════════════════════
 
 FORMAT DE RÉPONSE — JSON strict, aucun texte autour :
 {
-  "famille": "A" | "B" | "C",
-  "niveau": "SOLO" | "ÉQUIPE" | "ENTERPRISE" | "STARTER" | "RUNNER" | "EAGLE" | "CONSEIL" | "FREEMIUM",
+  "famille": "A" | "B" | "C" | "D",
+  "niveau": "SOLO" | "ÉQUIPE" | "ENTERPRISE" | "STARTER" | "RUNNER" | "EAGLE" | "CONSEIL" | "FREEMIUM" | "PARTENARIAT",
   "devise": "EUR" | "FCFA",
   "setup_ht": <nombre ou null>,
   "mrr": <nombre ou null si famille B>,
@@ -87,11 +91,56 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
 
   try {
-    const { prospect_id } = await req.json();
-    if (!prospect_id) return json({ error: "prospect_id requis" }, 400);
+    const { prospect_id, dossier_id } = await req.json();
+    if (!prospect_id && !dossier_id) return json({ error: "prospect_id ou dossier_id requis" }, 400);
 
     const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
 
+    // ─── Mode pilotage externe (source unique décidée) — table pilotage_pipeline ───
+    if (dossier_id) {
+      const { data: dossier, error: dErr0 } = await supabase
+        .from("pilotage_pipeline")
+        .select("*")
+        .eq("id", dossier_id)
+        .single();
+      if (dErr0 || !dossier) return json({ error: "Dossier introuvable" }, 404);
+
+      const { count } = await supabase
+        .from("pilotage_devis")
+        .select("*", { count: "exact", head: true });
+      const numero = `ATR-2026-${String((count ?? 0) + 1).padStart(4, "0")}`;
+
+      const brief = [
+        `Prénom / nom : ${dossier.nom}`,
+        dossier.activite ? `Activité : ${dossier.activite}` : null,
+        dossier.besoin   ? `Besoin : ${dossier.besoin}` : null,
+        dossier.contexte ? `Contexte : ${dossier.contexte}` : null,
+        dossier.famille  ? `Famille déjà choisie : ${dossier.famille}` : null,
+        `Nombre d'utilisateurs : ${dossier.nb_users || "1"}`,
+        `Zone : ${dossier.zone || "France"}`,
+      ].filter(Boolean).join("\n");
+
+      const parsed = await callClaudeBareme(brief);
+      if (parsed.__error) return json({ error: parsed.__error, raw: parsed.__raw }, 502);
+
+      const { data: devis, error: insErr } = await supabase
+        .from("pilotage_devis")
+        .insert({
+          dossier_id, numero,
+          famille: parsed.famille, niveau: parsed.niveau, devise: parsed.devise,
+          setup_ht: parsed.setup_ht, mrr: parsed.mrr, acompte: parsed.acompte,
+          solde: parsed.solde, total_m1: parsed.total_m1,
+          raisonnement: parsed.raisonnement, questions_manquantes: parsed.questions_manquantes,
+          statut: "brouillon",
+        })
+        .select()
+        .single();
+      if (insErr) return json({ error: insErr.message }, 500);
+
+      return json({ devis_id: devis.id, numero, ...parsed });
+    }
+
+    // ─── Mode legacy (app Assists, MacCockpitScreen) — table prospects ───
     const { data: prospect, error: pErr } = await supabase
       .from("prospects")
       .select("*")
@@ -115,34 +164,8 @@ serve(async (req) => {
       `Zone : ${prospect.zone || "EU"}`,
     ].filter(Boolean).join("\n");
 
-    const apiRes = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 600,
-        system: BAREME_SYSTEM,
-        messages: [{ role: "user", content: brief }],
-      }),
-    });
-
-    const apiData = await apiRes.json();
-    const raw = (apiData?.content ?? [])
-      .filter((b: any) => b.type === "text")
-      .map((b: any) => b.text)
-      .join("")
-      .trim();
-
-    let parsed: any;
-    try {
-      parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
-    } catch {
-      return json({ error: "JSON invalide", raw }, 502);
-    }
+    const parsed = await callClaudeBareme(brief);
+    if (parsed.__error) return json({ error: parsed.__error, raw: parsed.__raw }, 502);
 
     // Sauvegarder le devis brouillon
     const { data: devis, error: dErr } = await supabase
@@ -186,4 +209,34 @@ function json(body: unknown, status = 200) {
     status,
     headers: { ...CORS, "content-type": "application/json" },
   });
+}
+
+async function callClaudeBareme(brief: string): Promise<any> {
+  const apiRes = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": ANTHROPIC_API_KEY,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 600,
+      system: BAREME_SYSTEM,
+      messages: [{ role: "user", content: brief }],
+    }),
+  });
+
+  const apiData = await apiRes.json();
+  const raw = (apiData?.content ?? [])
+    .filter((b: any) => b.type === "text")
+    .map((b: any) => b.text)
+    .join("")
+    .trim();
+
+  try {
+    return JSON.parse(raw.replace(/```json|```/g, "").trim());
+  } catch {
+    return { __error: "JSON invalide", __raw: raw };
+  }
 }

@@ -1,6 +1,8 @@
 # Barème ATTRACTOR (source de vérité tarifaire)
 
 > Grille de référence pour produire les devis. Quand Mac Arthur envoie des infos brutes, on classe le besoin dans une famille, on applique le tarif, on ajoute les add-ons. Les prix ci-dessous sont la référence unique : en cas de contradiction avec le site ou une ancienne grille, c'est CE fichier qui fait foi.
+>
+> **⚠️ Synchronisation manuelle obligatoire** : ce barème est aussi dupliqué en dur dans `livrables/ecosysteme-attractor/attractor-assists/app/supabase/functions/generate-devis/index.ts` (constante `BAREME_SYSTEM`), utilisé par l'auto-devis Claude du Pilotage (`demo.agenceattractor.com/pilotage`). **Si tu modifies ce fichier, reporte le même changement dans `generate-devis/index.ts`**, sinon l'auto-devis appliquera un barème obsolète.
 
 ## Identité (bas de devis)
 
@@ -42,6 +44,23 @@ Ancrage de référence : **J'envoie Express = SOLO**.
 ## Famille C — Attractor Assists (abonnement)
 
 Modèle **freemium** : l'app est gratuite avec des limitations d'usage. La progression via le coaching privé crée l'envie de rester. Les utilisateurs paient pour continuer à progresser. **Tarifs définitifs à fixer lors de la refonte de l'app** (ne pas chiffrer un devis Assists tant que ce n'est pas tranché).
+
+## Famille D — Partenariat Performance (mise en place + mensuel + commission)
+
+Pour un client avec un business déjà existant et mesurable (comptabilité, CA/bénéfice suivi), où la mission de l'agence est une transformation stratégique/digitale dont l'impact doit se voir sur la rentabilité, pas seulement sur des livrables.
+
+**Modèle de référence : Beracca Mastery Group** (ERP agro-distribution) —
+- Mise en place : 150 € / 100 000 FCFA
+- Mensuel : 150 € / 100 000 FCFA
+- Commission : **10% sur le bénéfice réalisé au-dessus de la moyenne des 3 derniers trimestres** (jamais sur le CA brut — toujours sur le delta de bénéfice vs une moyenne mobile de référence)
+
+Quand l'utiliser : le prospect a une activité physique/commerciale établie avec des chiffres vérifiables, et accepte un alignement sur la performance plutôt qu'un forfait fixe intégral. Adapter la période de référence (3 trimestres par défaut) et le taux de commission (10% par défaut) selon la taille du deal, mais toujours documenter clairement la base de calcul dans le contrat pour éviter toute ambiguïté au moment de facturer la commission.
+
+À appeler en premier réflexe dès qu'un nouveau prospect ressemble à ce profil (business établi, chiffres suivables) — ne pas repartir de zéro sur la structure du deal.
+
+## Rabais volontaires — stratégie assumée, pas une erreur
+
+Sur les petits deals Famille A locaux (ex. GetWinWorld, J'Envoie Express), les prix réels sont parfois sous le barème. C'est une décision stratégique assumée : le rabais est compensé par la communication générée (cas clients réels, bouche-à-oreille, réputation, futurs prospects similaires attirés par la preuve). Ne pas "corriger" ces deals a posteriori — mais rester conscient que cette compensation doit être réelle (le deal doit effectivement générer de la com/des références), sinon c'est du rabais perdu.
 
 ## Add-ons (à confirmer avec Mac Arthur)
 

@@ -400,6 +400,31 @@ Si tu ne sais pas encore qui il est, tu poses UNE question directe : "Tu cherche
 - Tu expliques toujours EN SITUATION : "Par exemple, si tu as une cliente qui n'a pas donné signe de vie depuis 3 semaines..."
 - Tutoiement. Voix CI. Phrases courtes. Tu racontes, tu ne récites pas.`;
 
+const SITE_MAC_SYSTEM = `Tu es Mac Arthur Kouassi, fondateur de l'agence Mr Attractor. Tu réponds toi-même aux visiteurs du site agenceattractor.com — pas un agent générique, toi directement, à la première personne ("je", "mon agence").
+
+## CE QUE TU FAIS
+Web apps métiers sur mesure (conception + abonnement) et Attractor Assists (bras droit IA freemium). Tu accompagnes surtout des entrepreneurs en Côte d'Ivoire et dans la diaspora.
+
+## PREUVES CONCRÈTES À CITER QUAND C'EST PERTINENT (jamais inventées, uniquement celles-ci)
+- **GetWinWorld** (personal shopper) : avant, il envoyait des dizaines de photos produit une par une sur WhatsApp — bon produit, mais chaotique et chronophage. Aujourd'hui : catalogue centralisé, suivi individuel par client, tout tracé, charge mentale en moins.
+- **J'Envoie Express** (livraison colis Paris/Abidjan) : avant, un voyageur seul qui gérait plusieurs clients et colis sans système. Aujourd'hui : vitrine pro pour ses clients, vision temps réel côté admin, lien de suivi personnel pour chaque colis.
+
+## BARÈME — jamais un prix hors de cette grille, jamais un chiffre inventé
+Famille A (app sur mesure) : SOLO 220€/67€ mois (1 utilisateur) · ÉQUIPE 520€/180€ mois (jusqu'à 5) · ENTERPRISE sur devis à partir de 760€.
+Famille B (consulting méthode ATTRACTOR) : STARTER 150€ · RUNNER 350€ · EAGLE 800€.
+Attractor Assists : freemium, gratuit pour commencer.
+Si on te demande un chiffre précis au-delà de ces paliers, ou un cas qui ne rentre pas clairement dedans : donne la fourchette la plus proche et dis que tu reviens avec un chiffrage exact une fois le besoin qualifié — jamais d'improvisation.
+
+## TON RÔLE ICI
+Répondre librement aux questions (ce que tu fais, combien ça coûte, les délais, si tu peux faire tel secteur) en t'appuyant sur ce qui précède. Si le visiteur montre un vrai intérêt à devenir client, qualifie-le EN CONVERSATION NATURELLE (jamais un formulaire déguisé) : son prénom, son activité, son besoin principal, sa zone (Côte d'Ivoire / France-Europe / autre), et un moyen de le recontacter (WhatsApp). Une seule question à la fois, jamais toutes d'un coup.
+
+Dès que tu as ces 5 informations (prénom, activité, besoin, zone, whatsapp), termine ta réponse par un marker en toute fin de message, rien après, au format EXACT suivant (JSON valide sur une seule ligne, zone = exactement "Côte d'Ivoire" ou "France / Europe" ou "Les deux") :
+[[LEAD_QUALIFIE:{"prenom":"...","activite":"...","besoin":"...","zone":"...","whatsapp":"..."}]]
+N'utilise ce marker qu'une seule fois, quand la qualification est réellement complète — jamais avant.
+
+## TON STYLE
+Tutoiement. Direct, chaleureux, jamais de flagornerie ni de discours commercial creux. Phrases courtes. Zéro emoji, zéro markdown (pas de **gras** ni de listes à puces) — un vrai message comme si tu l'écrivais toi-même sur WhatsApp.`;
+
 const PASSIVE_SUFFIX = `
 
 IMPORTANT — MODE PASSIF :
@@ -682,6 +707,36 @@ serve(async (req) => {
       } catch { /* non-bloquant */ }
 
       return new Response(JSON.stringify({ reply: publicReply, conversation_id: convId }), {
+        headers: { "Content-Type": "application/json", ...CORS },
+      });
+    }
+
+    // ─── Mode site — chatbot "doublure" sur agenceattractor.com ─────────────
+    if (mode === "site") {
+      const formattedSiteMessages = (messages as Array<{ from: string; text: string }>).map((m) => ({
+        role: m.from === "me" ? "user" : "assistant",
+        content: m.text,
+      }));
+
+      const siteRes = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": ANTHROPIC_API_KEY,
+          "anthropic-version": "2023-06-01",
+        },
+        body: JSON.stringify({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 400,
+          system: SITE_MAC_SYSTEM,
+          messages: formattedSiteMessages,
+        }),
+      });
+
+      const siteData = await siteRes.json();
+      const siteReply = siteData?.content?.[0]?.text?.trim() ?? "Je reviens vers toi dans un instant.";
+
+      return new Response(JSON.stringify({ reply: siteReply }), {
         headers: { "Content-Type": "application/json", ...CORS },
       });
     }

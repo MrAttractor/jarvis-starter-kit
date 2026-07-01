@@ -90,6 +90,24 @@ body{background:var(--bg);color:var(--ink);overflow-x:hidden;}
 const TODAY = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
 const fmt = (n) => n == null ? '—' : n.toLocaleString('fr-FR') + ' €';
 
+/* ── SAVE HELPER (fiabilité — plus jamais d'échec silencieux) */
+async function saveField(table, id, patch) {
+  const { error } = await SB.from(table).update(patch).eq('id', id);
+  return { ok: !error, error };
+}
+
+/* ── TOAST ─────────────────────────────────────────────── */
+function Toast({ message }) {
+  if (!message) return null;
+  return (
+    <div style={{ position:'fixed', bottom:24, left:'50%', transform:'translateX(-50%)', zIndex:999,
+      background:'var(--red)', color:'#fff', padding:'11px 18px', borderRadius:12, fontSize:13, fontWeight:700,
+      boxShadow:'0 8px 24px rgba(0,0,0,.35)', maxWidth:'90%', textAlign:'center' }}>
+      {message}
+    </div>
+  );
+}
+
 /* ── EDITABLE FIELD (contentEditable, pas de layout shift) */
 function EditField({ value, onSave, style }) {
   const ref = useRef();
@@ -101,7 +119,7 @@ function EditField({ value, onSave, style }) {
 
   const save = () => {
     const txt = (ref.current?.innerText || '').trim();
-    if (txt && txt !== value) onSave(txt);
+    if (txt !== (value || '')) onSave(txt);
     else if (ref.current) ref.current.innerText = value || '';
   };
 
@@ -306,7 +324,7 @@ const JALONS = [
 ];
 
 /* ── CAP CARD ─────────────────────────────────────────── */
-function CapCard({ cap, onChange }) {
+function CapCard({ cap, onChange, onError }) {
   if (!cap) return null;
   const pct_conf = Math.min(100, (cap.confirme / cap.objectif) * 100);
   const pct_pipe = Math.min(100 - pct_conf, (cap.pipeline_val / cap.objectif) * 100);
@@ -315,14 +333,18 @@ function CapCard({ cap, onChange }) {
   const saveConfirme = async (raw) => {
     const n = parseInt((raw||'').replace(/[^\d]/g,''), 10);
     if (isNaN(n)) return;
+    const prev = cap.confirme;
     onChange({ ...cap, confirme: n });
-    await SB.from('pilotage_cap').update({ confirme: n }).eq('id', cap.id);
+    const { ok } = await saveField('pilotage_cap', cap.id, { confirme: n });
+    if (!ok) { onChange({ ...cap, confirme: prev }); onError?.('Non enregistré, réessaie'); }
   };
   const savePipeline = async (raw) => {
     const n = parseInt((raw||'').replace(/[^\d]/g,''), 10);
     if (isNaN(n)) return;
+    const prev = cap.pipeline_val;
     onChange({ ...cap, pipeline_val: n });
-    await SB.from('pilotage_cap').update({ pipeline_val: n }).eq('id', cap.id);
+    const { ok } = await saveField('pilotage_cap', cap.id, { pipeline_val: n });
+    if (!ok) { onChange({ ...cap, pipeline_val: prev }); onError?.('Non enregistré, réessaie'); }
   };
 
   return (
@@ -455,10 +477,10 @@ function FinanceSummaryMini({ finances, onGoFinance }) {
   );
 }
 
-function TabAujourdHui({ cap, focus, finances, onCapChange, onFocusToggle, onFocusEdit, onGoFinance }) {
+function TabAujourdHui({ cap, focus, finances, onCapChange, onFocusToggle, onFocusEdit, onGoFinance, onError }) {
   return (
     <Fragment>
-      <CapCard cap={cap} onChange={onCapChange} />
+      <CapCard cap={cap} onChange={onCapChange} onError={onError} />
       <FinanceSummaryMini finances={finances} onGoFinance={onGoFinance} />
       <div className="card" style={{ padding:'16px 18px' }}>
         <div className="sect-label">Focus du jour</div>
@@ -616,6 +638,24 @@ function NouveauProspectModal({ onConfirm, onCancel }) {
 function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact, onEditSetup, onEditMensuel }) {
   const parseAmount = (raw) => { const n = parseInt((raw||'').replace(/[^\d]/g,''),10); return isNaN(n) ? null : n; };
   const famColor = d.famille === 'A' ? 'org' : d.famille === 'B' ? 'blu' : 'grn';
+  const [devis, setDevis] = useState(null);
+  const [devisLoading, setDevisLoading] = useState(false);
+
+  const generateDevis = async () => {
+    setDevisLoading(true); setDevis(null);
+    try {
+      const { data, error } = await SB.functions.invoke('generate-devis', { body: { dossier_id: d.id } });
+      if (error || data?.error) setDevis({ __error: data?.error || 'Erreur génération devis' });
+      else setDevis(data);
+    } catch { setDevis({ __error: 'Erreur réseau' }); }
+    setDevisLoading(false);
+  };
+
+  const validerDevis = async () => {
+    if (!devis?.devis_id) return;
+    await SB.from('pilotage_devis').update({ statut: 'valide' }).eq('id', devis.devis_id);
+    setDevis(prev => ({ ...prev, statut: 'valide' }));
+  };
   return (
     <div className="card anim col" style={{ overflow:'hidden', animationDelay:(i*70)+'ms' }}>
       <div style={{ padding:'14px 16px 12px' }}>
@@ -689,6 +729,49 @@ function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact, onEdi
             <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             WA pré-écrit
           </a>
+        )}
+      </div>
+
+      {/* Auto-devis Claude — brouillon à valider, jamais envoyé automatiquement */}
+      <div style={{ padding:'10px 16px 14px', borderTop:'1px solid var(--bdr)' }}>
+        {!devis && !devisLoading && (
+          <button onClick={generateDevis}
+            style={{ width:'100%', minHeight:40, borderRadius:10, border:'1.5px solid var(--acc)', background:'var(--acc-s)', color:'var(--acc)', fontWeight:800, fontSize:12, cursor:'pointer', fontFamily:'inherit' }}>
+            Générer devis (Claude · barème officiel)
+          </button>
+        )}
+        {devisLoading && <div className="t-xs mut" style={{ textAlign:'center', padding:'8px 0' }}>Calcul du devis…</div>}
+        {devis?.__error && (
+          <div style={{ padding:'8px 10px', borderRadius:8, background:'var(--red-s)', color:'var(--red)', fontSize:11.5, fontWeight:600 }}>{devis.__error}</div>
+        )}
+        {devis && !devis.__error && (
+          <div style={{ padding:'12px', borderRadius:12, background:'var(--card2)', border:'1px solid var(--bdr)' }}>
+            <div className="row between" style={{ marginBottom:8 }}>
+              <span className="b" style={{ fontSize:12.5 }}>Devis {devis.numero}</span>
+              {devis.statut === 'valide'
+                ? <span className="badge grn" style={{ fontSize:10 }}>Validé</span>
+                : <span className="badge org" style={{ fontSize:10 }}>Brouillon</span>}
+            </div>
+            <div className="col g4" style={{ marginBottom: devis.raisonnement ? 8 : 0 }}>
+              <div className="row between"><span className="t-xs mut">Famille / Niveau</span><span className="t-xs b">{devis.famille} — {devis.niveau}</span></div>
+              {devis.setup_ht != null && <div className="row between"><span className="t-xs mut">Setup</span><span className="t-xs b">{devis.setup_ht} {devis.devise}</span></div>}
+              {devis.mrr != null && <div className="row between"><span className="t-xs mut">Mensuel</span><span className="t-xs b">{devis.mrr} {devis.devise}</span></div>}
+              {devis.acompte != null && <div className="row between"><span className="t-xs mut">Acompte 50%</span><span className="t-xs b" style={{ color:'var(--acc)' }}>{devis.acompte} {devis.devise}</span></div>}
+            </div>
+            {devis.raisonnement && <div className="t-xs mut" style={{ fontStyle:'italic', marginBottom:8 }}>"{devis.raisonnement}"</div>}
+            {devis.questions_manquantes && devis.questions_manquantes !== 'null' && (
+              <div style={{ padding:'6px 9px', borderRadius:8, background:'rgba(238,124,31,.1)', marginBottom:8 }}>
+                <span className="t-xs" style={{ color:'var(--acc)', fontWeight:700 }}>À préciser : </span>
+                <span className="t-xs">{devis.questions_manquantes}</span>
+              </div>
+            )}
+            {devis.statut !== 'valide' && (
+              <button onClick={validerDevis}
+                style={{ width:'100%', minHeight:38, borderRadius:9, border:'none', background:'var(--grn)', color:'#fff', fontWeight:800, fontSize:12, cursor:'pointer', fontFamily:'inherit' }}>
+                Valider ce devis
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>
@@ -1427,6 +1510,14 @@ function App() {
   const [finances, setFinances]     = useState([]);
   const [enveloppes, setEnveloppes] = useState([]);
   const [loading, setLoading]       = useState(true);
+  const [toast, setToast]           = useState(null);
+  const toastTimer = useRef();
+
+  const showError = (msg) => {
+    clearTimeout(toastTimer.current);
+    setToast(msg);
+    toastTimer.current = setTimeout(() => setToast(null), 3000);
+  };
 
   useEffect(() => {
     Promise.all([
@@ -1452,33 +1543,40 @@ function App() {
   const handleFocusToggle = async (item) => {
     const updated = !item.done;
     setFocus(prev => prev.map(f => f.id === item.id ? { ...f, done: updated } : f));
-    await SB.from('pilotage_focus').update({ done: updated }).eq('id', item.id);
+    const { ok } = await saveField('pilotage_focus', item.id, { done: updated });
+    if (!ok) { setFocus(prev => prev.map(f => f.id === item.id ? { ...f, done: item.done } : f)); showError('Non enregistré, réessaie'); }
   };
   const handleFocusEdit = async (item, val) => {
     setFocus(prev => prev.map(f => f.id === item.id ? { ...f, description: val } : f));
-    await SB.from('pilotage_focus').update({ description: val }).eq('id', item.id);
+    const { ok } = await saveField('pilotage_focus', item.id, { description: val });
+    if (!ok) { setFocus(prev => prev.map(f => f.id === item.id ? { ...f, description: item.description } : f)); showError('Non enregistré, réessaie'); }
   };
 
   /* Pipeline handlers */
   const handlePipeProchaine = async (d, val) => {
     setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, prochaine: val } : p));
-    await SB.from('pilotage_pipeline').update({ prochaine: val }).eq('id', d.id);
+    const { ok } = await saveField('pilotage_pipeline', d.id, { prochaine: val });
+    if (!ok) { setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, prochaine: d.prochaine } : p)); showError('Non enregistré, réessaie'); }
   };
   const handlePipeStatut = async (d, statut, statut_color) => {
     setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, statut, statut_color } : p));
-    await SB.from('pilotage_pipeline').update({ statut, statut_color }).eq('id', d.id);
+    const { ok } = await saveField('pilotage_pipeline', d.id, { statut, statut_color });
+    if (!ok) { setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, statut: d.statut, statut_color: d.statut_color } : p)); showError('Non enregistré, réessaie'); }
   };
   const handlePipeContact = async (d, val) => {
     setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, contact: val } : p));
-    await SB.from('pilotage_pipeline').update({ contact: val }).eq('id', d.id);
+    const { ok } = await saveField('pilotage_pipeline', d.id, { contact: val });
+    if (!ok) { setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, contact: d.contact } : p)); showError('Non enregistré, réessaie'); }
   };
   const handlePipeSetup = async (d, val) => {
     setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, setup: val } : p));
-    await SB.from('pilotage_pipeline').update({ setup: val }).eq('id', d.id);
+    const { ok } = await saveField('pilotage_pipeline', d.id, { setup: val });
+    if (!ok) { setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, setup: d.setup } : p)); showError('Non enregistré, réessaie'); }
   };
   const handlePipeMensuel = async (d, val) => {
     setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, mensuel: val } : p));
-    await SB.from('pilotage_pipeline').update({ mensuel: val }).eq('id', d.id);
+    const { ok } = await saveField('pilotage_pipeline', d.id, { mensuel: val });
+    if (!ok) { setPipeline(prev => prev.map(p => p.id === d.id ? { ...p, mensuel: d.mensuel } : p)); showError('Non enregistré, réessaie'); }
   };
   const handlePipeAdd = (newDossier) => {
     setPipeline(prev => [newDossier, ...prev]);
@@ -1487,7 +1585,8 @@ function App() {
   /* Projets handlers */
   const handleProjetProchaine = async (p, val) => {
     setProjets(prev => prev.map(pr => pr.id === p.id ? { ...pr, prochaine_action: val } : pr));
-    await SB.from('pilotage_projets').update({ prochaine_action: val }).eq('id', p.id);
+    const { ok } = await saveField('pilotage_projets', p.id, { prochaine_action: val });
+    if (!ok) { setProjets(prev => prev.map(pr => pr.id === p.id ? { ...pr, prochaine_action: p.prochaine_action } : pr)); showError('Non enregistré, réessaie'); }
   };
 
   /* Finance handlers */
@@ -1522,13 +1621,14 @@ function App() {
       </div>
 
       <div className="content">
-        {tab === 'today'    && <TabAujourdHui cap={cap} focus={focus} finances={finances} onCapChange={setCap} onFocusToggle={handleFocusToggle} onFocusEdit={handleFocusEdit} onGoFinance={() => setTab('finance')} />}
+        {tab === 'today'    && <TabAujourdHui cap={cap} focus={focus} finances={finances} onCapChange={setCap} onFocusToggle={handleFocusToggle} onFocusEdit={handleFocusEdit} onGoFinance={() => setTab('finance')} onError={showError} />}
         {tab === 'pipeline' && <TabPipeline pipeline={pipeline} onEditProchaine={handlePipeProchaine} onEditStatut={handlePipeStatut} onEditContact={handlePipeContact} onEditSetup={handlePipeSetup} onEditMensuel={handlePipeMensuel} onAddProspect={handlePipeAdd} />}
         {tab === 'plan'     && <TabPlan />}
         {tab === 'projets'  && <TabProjets projets={projets} onEditProchaine={handleProjetProchaine} />}
         {tab === 'finance'  && <TabFinance finances={finances} enveloppes={enveloppes} onAdd={handleFinanceAdd} onUpdateEnveloppe={handleEnveloppeUpdate} />}
         {tab === 'demos'    && <TabDemos />}
       </div>
+      <Toast message={toast} />
     </div>
   );
 }

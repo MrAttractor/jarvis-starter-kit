@@ -1,0 +1,48 @@
+{
+  "name": "Campagne — Réveil Testeurs Assists",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "node-manual",
+      "name": "Déclenchement manuel",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "a1", "name": "etape", "type": "number", "value": 1 },
+            { "id": "a2", "name": "jours_silence", "type": "number", "value": 5 },
+            { "id": "a3", "name": "campagne", "type": "string", "value": "reveil_testeurs_juillet2026" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-params",
+      "name": "Paramètres (à éditer avant chaque envoi)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const SUPABASE_URL = 'https://lgdgbrivnhgeupqhkckd.supabase.co';\nconst SERVICE_ROLE_KEY = $env.SUPABASE_SERVICE_ROLE_KEY;\nconst ANTHROPIC_API_KEY = $env.ANTHROPIC_API_KEY;\nconst RESEND_API_KEY = $env.RESEND_API_KEY;\n\nconst { etape, jours_silence, campagne } = $input.first().json;\n\n// ── 1. Récupérer les testeurs éligibles à cette étape ──────────────────\nconst rpcRes = await this.helpers.httpRequest({\n  method: 'POST',\n  url: `${SUPABASE_URL}/rest/v1/rpc/get_testeurs_reveil`,\n  headers: {\n    apikey: SERVICE_ROLE_KEY,\n    Authorization: `Bearer ${SERVICE_ROLE_KEY}`,\n    'Content-Type': 'application/json',\n  },\n  body: JSON.stringify({ p_jours_silence: jours_silence, p_campagne: campagne, p_etape: etape }),\n  json: true,\n});\n\nconst testeurs = Array.isArray(rpcRes) ? rpcRes : [];\nif (testeurs.length === 0) {\n  return [{ json: { message: 'Aucun testeur éligible pour cette étape', etape, envoyes: 0 } }];\n}\n\n// ── 2. Contexte par étape (angle de la relance) ─────────────────────────\nconst ANGLES = {\n  1: \"Objectif : réchauffement doux. Rappelle-lui concrètement ce qu'on a fait ensemble (utilise la mémoire fournie si elle existe, sinon reste général sur son activité). Mentionne une nouveauté utile livrée récemment dans Assists (notifications de commande instantanées, suivi client). Invite-le simplement à revenir jeter un oeil. Ton personnel, pas commercial.\",\n  2: \"Objectif : preuve concrète. Donne un exemple réel et court de ce qu'Assists permet de faire pour un entrepreneur comme lui (mets en avant une action précise adaptée à son profil : clarté si perdu, structuration si désorganisé, automatisation si non scalé). CTA clair vers son lien personnel.\",\n  3: \"Objectif : dernier rappel avant qu'on referme l'accès prioritaire des tout premiers testeurs. Ton direct, honnête, sans pression artificielle ni fausse urgence. Une seule question simple : est-ce qu'il veut continuer avec Assists ou non.\",\n};\n\nconst results = [];\n\nfor (const t of testeurs) {\n  const lienPerso = 'https://assists.agenceattractor.com';\n  const contexteMemoire = t.memoire_cache ? `Ce qu'on a fait ensemble : ${t.memoire_cache}` : \"Pas d'historique détaillé disponible — reste général sur son activité.\";\n\n  const systemPrompt = `Tu écris au nom de Mac Arthur (Mr Attractor), fondateur d'Attractor Assists, un email court à un testeur gratuit qui n'a plus ouvert l'app depuis un moment.\nRègles strictes : français, tutoiement, direct et chaleureux, zéro emoji, zéro markdown (pas de **gras**, pas de listes à puces), zéro flagornerie, zéro exclamation en excès. Une seule idée par email, 80 à 120 mots maximum. Signature simple \"Mac Arthur\" à la fin, pas de bloc de signature formel.\nTermine toujours par une phrase du type \"Réponds STOP si tu ne veux plus recevoir ces messages.\"\nRenvoie UNIQUEMENT un JSON strict de la forme {\"objet\": \"...\", \"corps\": \"...\"} — le corps en texte brut avec des retours à la ligne \\n, sans HTML.\n\n${ANGLES[etape] || ANGLES[1]}`;\n\n  const userPrompt = `Prénom : ${t.prenom || 'là'}\\nActivité : ${t.activite || 'non précisée'}\\nProfil : ${t.profil_type || 'non détecté'}\\nDernière connexion : ${t.last_seen || 'jamais revenu depuis l\\'inscription'}\\n${contexteMemoire}\\nLien personnel à inclure : ${lienPerso}`;\n\n  let objet = 'Des nouvelles d\\'Attractor Assists';\n  let corps = null;\n  try {\n    const claudeRes = await this.helpers.httpRequest({\n      method: 'POST',\n      url: 'https://api.anthropic.com/v1/messages',\n      headers: {\n        'x-api-key': ANTHROPIC_API_KEY,\n        'anthropic-version': '2023-06-01',\n        'Content-Type': 'application/json',\n      },\n      body: JSON.stringify({\n        model: 'claude-haiku-4-5-20251001',\n        max_tokens: 400,\n        system: systemPrompt,\n        messages: [{ role: 'user', content: userPrompt }],\n      }),\n      json: true,\n    });\n    const raw = claudeRes?.content?.[0]?.text?.trim() || '{}';\n    const parsed = JSON.parse(raw.replace(/^```json\\n?/, '').replace(/```$/, ''));\n    objet = parsed.objet || objet;\n    corps = parsed.corps || null;\n  } catch (e) {\n    results.push({ user_id: t.user_id, email: t.email, ok: false, step: 'claude', error: e.message });\n    continue;\n  }\n\n  if (!corps) {\n    results.push({ user_id: t.user_id, email: t.email, ok: false, step: 'claude_empty' });\n    continue;\n  }\n\n  const htmlBody = corps.split('\\n').map(l => l ? `<p style=\\\"margin:0 0 12px;font-family:sans-serif;color:#1A1714;font-size:15px;line-height:1.5\\\">${l}</p>` : '').join('');\n\n  // ── 3. Envoi via Resend ────────────────────────────────────────────\n  try {\n    await this.helpers.httpRequest({\n      method: 'POST',\n      url: 'https://api.resend.com/emails',\n      headers: {\n        Authorization: `Bearer ${RESEND_API_KEY}`,\n        'Content-Type': 'application/json',\n      },\n      body: JSON.stringify({\n        from: 'Mac Arthur <noreply@agenceattractor.com>',\n        to: t.email,\n        subject: objet,\n        html: htmlBody,\n      }),\n      json: true,\n    });\n  } catch (e) {\n    results.push({ user_id: t.user_id, email: t.email, ok: false, step: 'resend', error: e.message });\n    continue;\n  }\n\n  // ── 4. Log anti-doublon ────────────────────────────────────────────\n  try {\n    await this.helpers.httpRequest({\n      method: 'POST',\n      url: `${SUPABASE_URL}/rest/v1/campagne_envois`,\n      headers: {\n        apikey: SERVICE_ROLE_KEY,\n        Authorization: `Bearer ${SERVICE_ROLE_KEY}`,\n        'Content-Type': 'application/json',\n        Prefer: 'return=minimal',\n      },\n      body: JSON.stringify({ user_id: t.user_id, campagne, etape }),\n      json: true,\n    });\n  } catch (e) { /* non-bloquant : au pire un doublon possible au prochain run */ }\n\n  results.push({ user_id: t.user_id, email: t.email, ok: true, objet });\n\n  // Petite pause pour rester raisonnable sur les rate limits Resend/Anthropic\n  await new Promise(r => setTimeout(r, 600));\n}\n\nreturn [{ json: { etape, total: testeurs.length, envoyes: results.filter(r => r.ok).length, echecs: results.filter(r => !r.ok), details: results } }];"
+      },
+      "id": "node-campagne",
+      "name": "Générer + envoyer (par testeur)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [700, 300]
+    }
+  ],
+  "connections": {
+    "Déclenchement manuel": {
+      "main": [[{ "node": "Paramètres (à éditer avant chaque envoi)", "type": "main", "index": 0 }]]
+    },
+    "Paramètres (à éditer avant chaque envoi)": {
+      "main": [[{ "node": "Générer + envoyer (par testeur)", "type": "main", "index": 0 }]]
+    }
+  }
+}
