@@ -46,6 +46,7 @@ INSERT INTO produits (id, nom_fr, description_fr, prix_eur, prix_fcfa, stock, st
 ('PROD_03', 'Robe Eliora Long',           'Bleu ciel · Coupe longue · Légèreté estivale',         65,  43000, 10, 'disponible', 'NOUVEAU',    NULL,                              'Robes'),
 ('PROD_04', 'Robe Eliora Long',           'Corail · Coupe longue · Disponible en bleu ciel',      65,  43000, 10, 'disponible', 'LOOK DUO',   NULL,                              'Robes'),
 ('PROD_23', 'Robe Eliora Long',          'Bleu ciel · Coupe longue · Légèreté estivale',          65,  43000,  7, 'disponible', 'NOUVEAU',    NULL,                              'Robes'),
+('PROD_24', 'Robe Eliora Court',         'Coupe courte · Légèreté estivale',                      50,  33000, 10, 'disponible', 'NOUVEAU',    'images/PROD_24_principale.png',   'Robes'),
 ('PROD_05', 'Robe Kimono',               'Jaune & corail · Manches kimono · Fluidité naturelle', 50,  33000, 10, 'disponible', 'EXCLUSIF',   NULL,                              'Robes'),
 ('PROD_06', 'Robe Elena',                'Élégance raffinée · Silhouette soignée',               60,  39000, 10, 'disponible', 'BESTSELLER', NULL,                              'Robes'),
 ('PROD_07', 'Robe Teecya',               'Style contemporain · Allure affirmée',                 60,  39000, 10, 'disponible', 'NOUVEAU',    NULL,                              'Robes'),
