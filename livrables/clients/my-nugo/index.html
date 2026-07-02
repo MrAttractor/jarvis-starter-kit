@@ -124,7 +124,7 @@ body{font-family:var(--fb);background:var(--white);color:var(--black);overflow-x
 /* PRODUCTS */
 .prod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--g200);}
 .prod-card{background:var(--white);position:relative;cursor:pointer;}
-.prod-img{width:100%;aspect-ratio:3/4;overflow:hidden;background:var(--g100);}
+.prod-img{width:100%;aspect-ratio:3/4;overflow:hidden;background:var(--g100);position:relative;}
 .prod-img img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .5s;}
 .prod-card:hover .prod-img img{transform:scale(1.04);}
 .prod-tag{position:absolute;top:10px;left:10px;background:var(--black);color:var(--white);font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:5px 9px;font-weight:600;}
@@ -145,6 +145,20 @@ body{font-family:var(--fb);background:var(--white);color:var(--black);overflow-x
 
 /* BACK TOP */
 .back-top{display:flex;align-items:center;justify-content:center;padding:16px;border-top:0.5px solid var(--g200);cursor:pointer;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--g400);gap:6px;font-weight:500;}
+/* PROD CARD — indicateur multi-photos */
+.prod-img{cursor:zoom-in;}
+.prod-photo-count{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.55);color:var(--white);font-size:9px;letter-spacing:1px;padding:3px 7px;border-radius:2px;}
+/* LIGHTBOX */
+.lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:300;align-items:center;justify-content:center;}
+.lb.open{display:flex;}
+.lb-img{max-height:88vh;max-width:92vw;object-fit:contain;display:block;user-select:none;}
+.lb-close{position:absolute;top:14px;right:18px;background:none;border:none;color:var(--white);font-size:30px;cursor:pointer;line-height:1;z-index:301;padding:4px 8px;opacity:.8;}
+.lb-close:hover{opacity:1;}
+.lb-prev,.lb-next{position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--white);font-size:42px;cursor:pointer;padding:16px;z-index:301;line-height:1;opacity:.7;}
+.lb-prev:hover,.lb-next:hover{opacity:1;}
+.lb-prev{left:0;}
+.lb-next{right:0;}
+.lb-counter{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:3px;color:var(--g400);}
 .back-top:hover{color:var(--black);}
 
 /* SURPRISE */
@@ -264,6 +278,14 @@ body{font-family:var(--fb);background:var(--white);color:var(--black);overflow-x
 .popup-ev-video{margin-top:20px;margin-left:-20px;margin-right:-20px;}
 .popup-ev-video video{width:100%;aspect-ratio:9/16;display:block;object-fit:cover;}
 
+/* COUNTDOWN POP-UP */
+.popup-cntd{display:flex;gap:12px;margin-bottom:24px;}
+.popup-cntd-block{display:flex;flex-direction:column;align-items:center;min-width:44px;}
+.popup-cntd-num{font-family:var(--fs);font-size:36px;font-weight:300;font-style:italic;color:var(--white);line-height:1;}
+.popup-cntd-lbl{font-size:7px;letter-spacing:3px;text-transform:uppercase;color:var(--g500);margin-top:4px;font-family:var(--fb);}
+.popup-cntd-sep{font-family:var(--fs);font-size:28px;font-weight:300;color:var(--g700);align-self:flex-start;padding-top:4px;}
+.popup-cntd-done{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--white);font-family:var(--fb);background:rgba(255,255,255,.08);padding:10px 16px;border:0.5px solid var(--g700);display:inline-block;}
+
 /* WA FLOAT */
 .wa-float{position:fixed;bottom:20px;right:20px;background:#25D366;color:var(--white);width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:100;box-shadow:0 3px 14px rgba(0,0,0,.25);text-decoration:none;}
 
@@ -322,29 +344,29 @@ var SUPABASE_CONFIG = {
 // Données de secours si le sheet est inaccessible
 var FALLBACK = {
   produits: [
-    {id:'PROD_01',nom_fr:'Robe Oloa',description_fr:'Dentelle · 4 coloris (blanc, rose, jaune, bleu)',prix_eur:'65',prix_fcfa:'43000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_01_principale.jpg',categorie:'Robes'},
-    {id:'PROD_02',nom_fr:'Robe Lia',description_fr:'Coupe élégante · Fluidité naturelle',prix_eur:'50',prix_fcfa:'33000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'',categorie:'Robes'},
-    {id:'PROD_03',nom_fr:'Robe Eliora Court',description_fr:'Bleu ciel · Coupe courte · Légèreté estivale',prix_eur:'50',prix_fcfa:'33000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',categorie:'Robes'},
-    {id:'PROD_04',nom_fr:'Robe Eliora Court',description_fr:'Corail · Coupe courte · Disponible en bleu ciel',prix_eur:'65',prix_fcfa:'43000',stock:'10',statut:'disponible',badge:'LOOK DUO',photo_principale:'',categorie:'Robes'},
-    {id:'PROD_23',nom_fr:'Robe Eliora Long',description_fr:'Bleu ciel · Coupe longue · Légèreté estivale',prix_eur:'65',prix_fcfa:'43000',stock:'7',statut:'disponible',badge:'NOUVEAU',photo_principale:'',categorie:'Robes'},
-    {id:'PROD_05',nom_fr:'Robe Kimono',description_fr:'Jaune & corail · Manches kimono · Fluidité naturelle',prix_eur:'50',prix_fcfa:'33000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'',categorie:'Robes'},
-    {id:'PROD_06',nom_fr:'Robe Elena',description_fr:'Élégance raffinée · Silhouette soignée',prix_eur:'60',prix_fcfa:'39000',stock:'10',statut:'disponible',badge:'BESTSELLER',photo_principale:'',categorie:'Robes'},
-    {id:'PROD_07',nom_fr:'Robe Teecya',description_fr:'Style contemporain · Allure affirmée',prix_eur:'60',prix_fcfa:'39000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',categorie:'Robes'},
-    {id:'PROD_08',nom_fr:'Ensemble Aymerik',description_fr:'Culotte & haut · Look coordonné · Porter ensemble ou séparé',prix_eur:'70',prix_fcfa:'46000',stock:'10',statut:'disponible',badge:'LOOK DUO',photo_principale:'images/PROD_08_principale.jpg',categorie:'Ensembles'},
-    {id:'PROD_09',nom_fr:'Pantalon Yasmine',description_fr:'Coupe ample · Confort et élégance au quotidien',prix_eur:'40',prix_fcfa:'26000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_09_principale.jpg',categorie:'Pantalons'},
-    {id:'PROD_10',nom_fr:'Boubou Renée',description_fr:'Rayures vert & bleu · Boubou contemporain · Pièce signature',prix_eur:'85',prix_fcfa:'56000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'images/PROD_10_principale.jpg',categorie:'Boubous'},
-    {id:'PROD_11',nom_fr:'Ensemble Naïla',description_fr:'Pantalon & haut · Silhouette fluide',prix_eur:'40',prix_fcfa:'26000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_11_principale.jpg',categorie:'Ensembles'},
-    {id:'PROD_12',nom_fr:'Robe Désirée',description_fr:'Jaune & blanc · Éclat naturel · Imprimé délicat',prix_eur:'70',prix_fcfa:'46000',stock:'10',statut:'disponible',badge:'BESTSELLER',photo_principale:'',categorie:'Robes'},
-    {id:'PROD_13',nom_fr:'Robe Lirane',description_fr:'Élégance intemporelle · Coupe longue',prix_eur:'75',prix_fcfa:'49000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'images/PROD_13_principale.jpg',categorie:'Robes'},
-    {id:'PROD_14',nom_fr:'Combinaison Nourah',description_fr:'Kimono · Jumpsuit élégant · Allure unique',prix_eur:'75',prix_fcfa:'49000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_14_principale.jpg',categorie:'Combinaisons'},
-    {id:'PROD_15',nom_fr:'Combinaison Mandia',description_fr:'Pièce forte · Allure inégalée · Collection premium',prix_eur:'120',prix_fcfa:'79000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'images/PROD_15_principale.jpg',categorie:'Combinaisons'},
-    {id:'PROD_16',nom_fr:'Perfecto Armelia',description_fr:'Version simple · Perfecto wax · Pièce iconique',prix_eur:'100',prix_fcfa:'65500',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_16_principale.jpg',categorie:'Vestes'},
-    {id:'PROD_17',nom_fr:'Perfecto Armelia Réversible',description_fr:'Double face · Deux looks en un · Pièce collector',prix_eur:'120',prix_fcfa:'79000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'images/PROD_17_principale.jpg',categorie:'Vestes'},
-    {id:'PROD_18',nom_fr:'Boubou Makeba',description_fr:'Boubou africain contemporain · Pièce signature · Elegance naturelle',prix_eur:'75',prix_fcfa:'49000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_18_principale.jpg',categorie:'Boubous'},
-    {id:'PROD_19',nom_fr:'Paréo Anaëlle',description_fr:'Réversible · Pied de poule · Liberté créative',prix_eur:'80',prix_fcfa:'52500',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',categorie:'Accessoires'},
-    {id:'PROD_20',nom_fr:'Ensemble Maelys',description_fr:'Jupe & haut · Coordonnés · Élégance naturelle',prix_eur:'65',prix_fcfa:'43000',stock:'10',statut:'disponible',badge:'LOOK DUO',photo_principale:'images/PROD_20_principale.jpg',categorie:'Ensembles'},
-    {id:'PROD_21',nom_fr:'Pantalon Ayêla',description_fr:'Coupe tendance · Confort premium · Porter au quotidien',prix_eur:'75',prix_fcfa:'49000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',categorie:'Pantalons'},
-    {id:'PROD_22',nom_fr:'Robe Mahi',description_fr:'Marron & orange · Chaleur ivoirienne · Coupe fluide',prix_eur:'40',prix_fcfa:'26000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'',categorie:'Robes'}
+    {id:'PROD_01',nom_fr:'Robe Oloa',description_fr:'Dentelle · 4 coloris (blanc, rose, jaune, bleu)',prix_eur:'65',prix_fcfa:'43000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_01_principale.jpg',galerie:['images/PROD_01_angle2.jpg'],categorie:'Robes'},
+    {id:'PROD_02',nom_fr:'Robe Lia',description_fr:'Coupe élégante · Fluidité naturelle',prix_eur:'50',prix_fcfa:'33000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'images/PROD_02_principale.jpg',galerie:[],categorie:'Robes'},
+    {id:'PROD_03',nom_fr:'Robe Eliora Long',description_fr:'Bleu ciel · Coupe longue · Légèreté estivale',prix_eur:'65',prix_fcfa:'43000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_03_principale.jpg',galerie:['images/PROD_03_angle2.jpg'],categorie:'Robes'},
+    {id:'PROD_04',nom_fr:'Robe Eliora Long',description_fr:'Corail · Coupe longue · Disponible en bleu ciel',prix_eur:'65',prix_fcfa:'43000',stock:'10',statut:'disponible',badge:'LOOK DUO',photo_principale:'',galerie:[],categorie:'Robes'},
+    {id:'PROD_23',nom_fr:'Robe Eliora Long',description_fr:'Bleu ciel · Coupe longue · Légèreté estivale',prix_eur:'65',prix_fcfa:'43000',stock:'7',statut:'disponible',badge:'NOUVEAU',photo_principale:'',galerie:[],categorie:'Robes'},
+    {id:'PROD_05',nom_fr:'Robe Kimono',description_fr:'Jaune & corail · Manches kimono · Fluidité naturelle',prix_eur:'50',prix_fcfa:'33000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'images/PROD_05_principale.jpg',galerie:['images/PROD_05_angle2.jpg','images/PROD_05_angle3.jpg'],categorie:'Robes'},
+    {id:'PROD_06',nom_fr:'Robe Elena',description_fr:'Élégance raffinée · Silhouette soignée',prix_eur:'60',prix_fcfa:'39000',stock:'10',statut:'disponible',badge:'BESTSELLER',photo_principale:'images/PROD_06_principale.jpg',galerie:[],categorie:'Robes'},
+    {id:'PROD_07',nom_fr:'Robe Teecya',description_fr:'Style contemporain · Allure affirmée',prix_eur:'60',prix_fcfa:'39000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',galerie:[],categorie:'Robes'},
+    {id:'PROD_08',nom_fr:'Ensemble Aymerik',description_fr:'Culotte & haut · Look coordonné · Porter ensemble ou séparé',prix_eur:'70',prix_fcfa:'46000',stock:'10',statut:'disponible',badge:'LOOK DUO',photo_principale:'images/PROD_08_principale.jpg',galerie:['images/PROD_08_angle2.jpg','images/PROD_08_angle3.jpg'],categorie:'Ensembles'},
+    {id:'PROD_09',nom_fr:'Pantalon Yasmine',description_fr:'Coupe ample · Confort et élégance au quotidien',prix_eur:'40',prix_fcfa:'26000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_09_principale.jpg',galerie:['images/PROD_09_angle2.jpg','images/PROD_09_angle3.jpg'],categorie:'Pantalons'},
+    {id:'PROD_10',nom_fr:'Boubou Renée',description_fr:'Rayures vert & bleu · Boubou contemporain · Pièce signature',prix_eur:'85',prix_fcfa:'56000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'images/PROD_10_principale.jpg',galerie:['images/PROD_10_angle2.jpg'],categorie:'Boubous'},
+    {id:'PROD_11',nom_fr:'Pantalon Naïla',description_fr:'Coupe ample · Silhouette fluide',prix_eur:'40',prix_fcfa:'26000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_11_principale.jpg',galerie:['images/PROD_11_angle2.jpg'],categorie:'Ensembles'},
+    {id:'PROD_12',nom_fr:'Robe Désirée',description_fr:'Jaune & blanc · Éclat naturel · Imprimé délicat',prix_eur:'70',prix_fcfa:'46000',stock:'10',statut:'disponible',badge:'BESTSELLER',photo_principale:'images/PROD_12_principale.jpg',galerie:['images/PROD_12_angle2.jpg','images/PROD_12_angle3.jpg'],categorie:'Robes'},
+    {id:'PROD_13',nom_fr:'Robe Lirane',description_fr:'Élégance intemporelle · Coupe longue',prix_eur:'75',prix_fcfa:'49000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'images/PROD_13_principale.jpg',galerie:['images/PROD_13_angle2.jpg','images/PROD_13_angle3.jpg'],categorie:'Robes'},
+    {id:'PROD_14',nom_fr:'Combinaison Nourah',description_fr:'Kimono · Jumpsuit élégant · Allure unique',prix_eur:'75',prix_fcfa:'49000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_14_principale.jpg',galerie:['images/PROD_14_angle2.jpg'],categorie:'Combinaisons'},
+    {id:'PROD_15',nom_fr:'Combinaison Mandia',description_fr:'Pièce forte · Allure inégalée · Collection premium',prix_eur:'120',prix_fcfa:'79000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'images/PROD_15_principale.jpg',galerie:[],categorie:'Combinaisons'},
+    {id:'PROD_16',nom_fr:'Perfecto Armelia',description_fr:'Version simple · Perfecto wax · Pièce iconique',prix_eur:'100',prix_fcfa:'65500',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_16_principale.jpg',galerie:['images/PROD_16_angle2.jpg','images/PROD_16_angle3.jpg'],categorie:'Vestes'},
+    {id:'PROD_17',nom_fr:'Perfecto Armelia Réversible',description_fr:'Double face · Deux looks en un · Pièce collector',prix_eur:'120',prix_fcfa:'79000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'images/PROD_17_principale.jpg',galerie:['images/PROD_17_angle2.jpg'],categorie:'Vestes'},
+    {id:'PROD_18',nom_fr:'Boubou Makeba',description_fr:'Boubou africain contemporain · Pièce signature · Elegance naturelle',prix_eur:'75',prix_fcfa:'49000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'images/PROD_18_principale.jpg',galerie:['images/PROD_18_angle2.jpg'],categorie:'Boubous'},
+    {id:'PROD_19',nom_fr:'Paréo Anaëlle',description_fr:'Réversible · Pied de poule · Liberté créative',prix_eur:'80',prix_fcfa:'52500',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',galerie:[],categorie:'Accessoires'},
+    {id:'PROD_20',nom_fr:'Ensemble Maelys',description_fr:'Jupe & haut · Coordonnés · Élégance naturelle',prix_eur:'65',prix_fcfa:'43000',stock:'10',statut:'disponible',badge:'LOOK DUO',photo_principale:'images/PROD_20_principale.jpg',galerie:['images/PROD_20_angle2.jpg'],categorie:'Ensembles'},
+    {id:'PROD_21',nom_fr:'Pantalon Ayêla',description_fr:'Coupe tendance · Confort premium · Porter au quotidien',prix_eur:'75',prix_fcfa:'49000',stock:'10',statut:'disponible',badge:'NOUVEAU',photo_principale:'',galerie:[],categorie:'Pantalons'},
+    {id:'PROD_22',nom_fr:'Robe Mahi',description_fr:'Marron & orange · Chaleur ivoirienne · Coupe fluide',prix_eur:'40',prix_fcfa:'26000',stock:'10',statut:'disponible',badge:'EXCLUSIF',photo_principale:'images/PROD_22_principale.jpg',galerie:['images/PROD_22_angle2.jpg'],categorie:'Robes'}
   ],
   hero: [
     {ordre:'1',titre_fr:'Perfecto\nArmelia, la réversible',photo:'images/PROD_17_principale.jpg',id_produit:'PROD_17',badge:'EXCLUSIF',actif:'OUI'},
@@ -405,35 +427,58 @@ function renderHero() {
   track.innerHTML = '';
   dots.innerHTML = '';
 
-  // Filtrer les slides vides (lignes vides du sheet)
   var heroValides = STATE.hero.filter(function(slide){
-    var p = Object.values(slide).join('');
-    return p.trim() !== '';
+    return Object.values(slide).join('').trim() !== '';
   });
 
   heroValides.forEach(function(slide, i) {
-    var titre = (slide.titre_fr || slide["titre_fr"] || "MY NUGO") + "";
-    var photo = (slide["photo"] || slide.photo || "") + "";
-    var badge = (slide["badge"] || slide.badge || "") + "";
-    var idProd = slide["id_produit_lié"] || slide.id_produit || "";
-    var titreHTML = titre.replace(/\\n/g,"\n").split("\n").join("<br>");
-    var produit = STATE.produits.find(function(p){ return (p.id||"") === idProd; }) || {};
-    var nomProd = produit.nom_fr || idProd || "MY NUGO";
+    var titre  = (slide.titre_fr  || 'MY NUGO') + '';
+    var photo  = (slide.photo     || '') + '';
+    var badge  = (slide.badge     || '') + '';
+    var idProd = slide.id_produit || '';
+    var produit = STATE.produits.find(function(p){ return (p.id||'') === idProd; }) || {};
+    var nomProd = produit.nom_fr || idProd || 'MY NUGO';
 
     var div = document.createElement('div');
     div.className = 'hero-slide';
-    div.innerHTML =
-      '<img src="' + photo + '" alt="' + nomProd + '" loading="' + (i===0?'eager':'lazy') + '"/>' +
-      '<div class="ov"></div>' +
-      '<div class="hc">' +
-        '<h1 class="h-title">' + titreHTML + '</h1>' +
-        '<button class="h-btn" onclick="wa(\'' + nomProd.replace(/'/g,"\\'") + '\')">Découvrir →</button>' +
-      '</div>' +
-      '<div class="h-badge">' + (badge||'') + '</div>';
+
+    var img = document.createElement('img');
+    img.setAttribute('src', photo);
+    img.setAttribute('alt', nomProd);
+    img.setAttribute('loading', i === 0 ? 'eager' : 'lazy');
+    div.appendChild(img);
+
+    var ov = document.createElement('div');
+    ov.className = 'ov';
+    div.appendChild(ov);
+
+    var hc = document.createElement('div');
+    hc.className = 'hc';
+
+    var h1 = document.createElement('h1');
+    h1.className = 'h-title';
+    titre.replace(/\\n/g, '\n').split('\n').forEach(function(line, li) {
+      if (li > 0) h1.appendChild(document.createElement('br'));
+      h1.appendChild(document.createTextNode(line));
+    });
+    hc.appendChild(h1);
+
+    var btn = document.createElement('button');
+    btn.className = 'h-btn';
+    btn.textContent = 'Découvrir →';
+    btn.addEventListener('click', (function(n){ return function(){ waDecouvrir(n); }; })(nomProd));
+    hc.appendChild(btn);
+    div.appendChild(hc);
+
+    var badgeEl = document.createElement('div');
+    badgeEl.className = 'h-badge';
+    badgeEl.textContent = badge;
+    div.appendChild(badgeEl);
+
     track.appendChild(div);
 
     var dot = document.createElement('div');
-    dot.className = 'h-dot' + (i===0?' active':'');
+    dot.className = 'h-dot' + (i === 0 ? ' active' : '');
     dot.onclick = (function(idx){ return function(){ hGo(idx); }; })(i);
     dots.appendChild(dot);
   });
@@ -442,39 +487,145 @@ function renderHero() {
   hRender();
 }
 
+// ── GALERIES (lookup produitId → [photo_principale, ...galerie]) ──
+var GALLERIES = {};
+
 // ── PRODUITS DYNAMIQUES ──
 function renderProduits() {
   var grid = document.getElementById('prodGrid');
   if (!grid) return;
   var produits = STATE.produits.filter(function(p){ return p.photo_principale; });
+  GALLERIES = {};
+  produits.forEach(function(p) {
+    if (!/^[A-Za-z0-9_-]{1,32}$/.test(p.id || '')) return;
+    var g = (p.galerie || []).filter(Boolean);
+    GALLERIES[p.id] = [p.photo_principale].concat(g);
+  });
   grid.innerHTML = '';
   produits.forEach(function(p) {
-    var rupture = p.statut === 'rupture';
+    if (!/^[A-Za-z0-9_-]{1,32}$/.test(p.id || '')) return;
+    var rupture  = p.statut === 'rupture';
     var prix_eur = parseFloat(p.prix_eur) || 38;
     var prix_fcfa = parseInt(p.prix_fcfa) || 25000;
+    var photos   = GALLERIES[p.id] || [p.photo_principale];
+    var hasMulti = photos.length > 1;
+    var nomFr    = p.nom_fr || '';
 
     var card = document.createElement('div');
-    card.className = 'prod-card' + (rupture?' prod-rupture':'');
-    card.innerHTML =
-      '<div class="prod-img">' + (p.photo_principale ? '<img src="' + p.photo_principale + '" alt="' + p.nom_fr + '" loading="lazy"/>' : '') + '</div>' +
-      (p.badge ? '<div class="prod-tag">' + p.badge + '</div>' : '') +
-      '<div class="prod-info">' +
-        '<p class="prod-name">' + p.nom_fr + '</p>' +
-        '<p class="prod-desc">' + p.description_fr + '</p>' +
-        '<div class="prod-bot">' +
-          '<div>' +
-            '<span class="prod-price">' + prix_eur + ' €</span>' +
-            '<span class="prod-fcfa">' + parseInt(prix_fcfa).toLocaleString('fr-FR') + ' FCFA</span>' +
-          '</div>' +
-          (rupture
-            ? '<span class="prod-rupture-label">Rupture de stock</span>'
-            : '<button class="prod-order" onclick="wa(\'' + p.nom_fr.replace(/'/g,"\\'") + '\')">Commander →</button>'
-          ) +
-        '</div>' +
-      '</div>';
+    card.className = 'prod-card' + (rupture ? ' prod-rupture' : '');
+
+    // Zone image
+    var imgWrap = document.createElement('div');
+    imgWrap.className = 'prod-img';
+    (function(id) { imgWrap.addEventListener('click', function() { openLb(id, 0); }); })(p.id);
+
+    if (p.photo_principale) {
+      var img = document.createElement('img');
+      img.setAttribute('src', p.photo_principale);
+      img.setAttribute('alt', nomFr);
+      img.setAttribute('loading', 'lazy');
+      imgWrap.appendChild(img);
+    }
+    if (hasMulti) {
+      var countEl = document.createElement('div');
+      countEl.className = 'prod-photo-count';
+      countEl.textContent = '⊞ ' + photos.length;
+      imgWrap.appendChild(countEl);
+    }
+    card.appendChild(imgWrap);
+
+    // Badge
+    if (p.badge) {
+      var tagEl = document.createElement('div');
+      tagEl.className = 'prod-tag';
+      tagEl.textContent = p.badge;
+      card.appendChild(tagEl);
+    }
+
+    // Infos produit
+    var info = document.createElement('div');
+    info.className = 'prod-info';
+
+    var nameEl = document.createElement('p');
+    nameEl.className = 'prod-name';
+    nameEl.textContent = nomFr;
+    info.appendChild(nameEl);
+
+    var descEl = document.createElement('p');
+    descEl.className = 'prod-desc';
+    descEl.textContent = p.description_fr || '';
+    info.appendChild(descEl);
+
+    var bot = document.createElement('div');
+    bot.className = 'prod-bot';
+
+    var pricesWrap = document.createElement('div');
+    var priceEl = document.createElement('span');
+    priceEl.className = 'prod-price';
+    priceEl.textContent = prix_eur + ' €';
+    var fcfaEl = document.createElement('span');
+    fcfaEl.className = 'prod-fcfa';
+    fcfaEl.textContent = parseInt(prix_fcfa).toLocaleString('fr-FR') + ' FCFA';
+    pricesWrap.appendChild(priceEl);
+    pricesWrap.appendChild(fcfaEl);
+    bot.appendChild(pricesWrap);
+
+    if (rupture) {
+      var ruptureEl = document.createElement('span');
+      ruptureEl.className = 'prod-rupture-label';
+      ruptureEl.textContent = 'Rupture de stock';
+      bot.appendChild(ruptureEl);
+    } else {
+      var orderBtn = document.createElement('button');
+      orderBtn.className = 'prod-order';
+      orderBtn.textContent = 'Commander →';
+      orderBtn.addEventListener('click', (function(n) {
+        return function(e) { e.stopPropagation(); waCommander(n); };
+      })(nomFr));
+      bot.appendChild(orderBtn);
+    }
+
+    info.appendChild(bot);
+    card.appendChild(info);
     grid.appendChild(card);
   });
 }
+
+// ── LIGHTBOX ──
+var LB_PHOTOS = [], LB_IDX = 0, LB_TOUCH_X = 0;
+function openLb(prodId, idx) {
+  LB_PHOTOS = GALLERIES[prodId] || [];
+  if (!LB_PHOTOS.length) return;
+  LB_IDX = idx || 0;
+  lbRender();
+  document.getElementById('lb').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLb() {
+  document.getElementById('lb').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function lbMove(d) {
+  LB_IDX = (LB_IDX + d + LB_PHOTOS.length) % LB_PHOTOS.length;
+  lbRender();
+}
+function lbRender() {
+  var img = document.getElementById('lbImg');
+  var counter = document.getElementById('lbCounter');
+  var prev = document.getElementById('lbPrev');
+  var next = document.getElementById('lbNext');
+  if (img) { img.src = LB_PHOTOS[LB_IDX]; img.alt = ''; }
+  if (counter) counter.textContent = LB_PHOTOS.length > 1 ? (LB_IDX+1) + ' / ' + LB_PHOTOS.length : '';
+  if (prev) prev.style.display = LB_PHOTOS.length > 1 ? '' : 'none';
+  if (next) next.style.display = LB_PHOTOS.length > 1 ? '' : 'none';
+}
+document.addEventListener('keydown', function(e) {
+  var lb = document.getElementById('lb');
+  if (!lb || !lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLb();
+  if (e.key === 'ArrowLeft') lbMove(-1);
+  if (e.key === 'ArrowRight') lbMove(1);
+});
 
 // ── MASQUER L'ÉCRAN DE CHARGEMENT ──
 function hideLanding() {
@@ -509,12 +660,89 @@ function toggleMenu(){
 }
 
 // ── WHATSAPP ──
+var WA = '2250151939394';
+function waOpen(msg){ window.open('https://wa.me/'+WA+'?text='+encodeURIComponent(msg),'_blank'); }
+
 function wa(item){
-  var t='Bonjour MY NUGO 👋\nJe souhaite des informations sur '+item+'.\n\nMerci !';
-  window.open('https://wa.me/2250151939394?text='+encodeURIComponent(t),'_blank');
+  // fallback générique (anciens appels)
+  waOpen('Bonjour MY NUGO 👋\n\nJe souhaite des informations.\n\nMerci 🙏');
+}
+function waCommander(nom){
+  waOpen('Bonjour MY NUGO 👋\n\nJe souhaite commander *'+nom+'*.\n\nPourriez-vous me communiquer les modes de paiement disponibles s\'il vous plaît ?\n\nMerci 🙏');
+}
+function waDecouvrir(nom){
+  waOpen('Bonjour MY NUGO 👋\n\nJe suis intéressé(e) par *'+nom+'* que j\'ai découvert sur votre site.\n\nPouvez-vous m\'en dire plus ?\n\nMerci 🙏');
+}
+function waCollection(){
+  waOpen('Bonjour MY NUGO 👋\n\nJe viens de découvrir votre Collection RENAISSANCE et je souhaite passer commande.\n\nQuels articles sont disponibles et quels sont vos modes de paiement ?\n\nMerci 🙏');
+}
+function waPopup(){
+  waOpen('Bonjour MY NUGO 👋\n\nJe souhaite participer au *Pop-Up Store MY NUGO à Paris* du 01 au 04 Juillet 2026 (19 Rue du Banquier, 75013).\n\nPouvez-vous me donner plus d\'informations (horaires, réservation) ?\n\nMerci 🙏');
+}
+function waContact(){
+  waOpen('Bonjour MY NUGO 👋\n\nJe souhaite contacter la fondatrice.\n\nPouvez-vous me donner ses disponibilités pour un échange ?\n\nMerci 🙏');
+}
+function waCGV(){
+  waOpen('Bonjour MY NUGO 👋\n\nJe souhaite obtenir des informations sur les conditions de vente, les délais de livraison et la politique de retours.\n\nMerci 🙏');
 }
 
 
+
+// ── COMPTE À REBOURS POP-UP ──
+function initCountdown() {
+  var el = document.getElementById('popupCntd');
+  if (!el) return;
+  var target = new Date('2026-07-01T00:00:00+02:00').getTime();
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function render() {
+    var now  = Date.now();
+    var diff = target - now;
+    if (diff <= 0) {
+      el.innerHTML = '';
+      var done = document.createElement('div');
+      done.className = 'popup-cntd-done';
+      done.textContent = 'En cours · 01 — 04 Juillet';
+      el.appendChild(done);
+      return;
+    }
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+
+    var blocks = [
+      { n: d,      l: 'jours' },
+      { n: pad(h), l: 'heures' },
+      { n: pad(m), l: 'min' },
+      { n: pad(s), l: 'sec' }
+    ];
+    el.innerHTML = '';
+    blocks.forEach(function(b, i) {
+      var block = document.createElement('div');
+      block.className = 'popup-cntd-block';
+      var num = document.createElement('span');
+      num.className = 'popup-cntd-num';
+      num.textContent = b.n;
+      var lbl = document.createElement('span');
+      lbl.className = 'popup-cntd-lbl';
+      lbl.textContent = b.l;
+      block.appendChild(num);
+      block.appendChild(lbl);
+      el.appendChild(block);
+      if (i < 3) {
+        var sep = document.createElement('span');
+        sep.className = 'popup-cntd-sep';
+        sep.textContent = ':';
+        el.appendChild(sep);
+      }
+    });
+  }
+
+  render();
+  setInterval(render, 1000);
+}
 
 // ── LANCEMENT ──
 document.addEventListener('DOMContentLoaded', function(){
@@ -525,6 +753,8 @@ document.addEventListener('DOMContentLoaded', function(){
     hw.addEventListener('mouseenter', function(){ clearInterval(heroTimer); });
     hw.addEventListener('mouseleave', function(){ heroTimer=setInterval(function(){ hMove(1); },5000); });
   }
+  // Compte à rebours
+  initCountdown();
   // Charger les données
   initApp();
 });
@@ -540,7 +770,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <!-- TICKER -->
 <div class="tk">
   <div class="tk-i">
-    <div class="tk-item"><b>✦</b> Nouvelle Collection 2026</div>
+    <div class="tk-item"><b>✦</b> Collection RENAISSANCE 2026</div>
     <div class="tk-item"><b>·</b> RÉSISTER · CRÉER · INSPIRER</div>
     <div class="tk-item"><b>✦</b> Livraison Afrique &amp; Europe</div>
     <div class="tk-item"><b>·</b> Commandez via WhatsApp</div>
@@ -556,22 +786,22 @@ document.addEventListener('DOMContentLoaded', function(){
   <div class="nav-logo"><img src="logo.png" alt="My Nugo"/></div>
   <div class="nav-desktop">
     <ul class="nav-links">
-      <li class="active" onclick="goPage('modes')">La Collection</li>
+      <li class="active" onclick="goPage('modes')">La Collection RENAISSANCE</li>
       <li onclick="goPage('about')">À Propos</li>
     </ul>
-    <button class="nav-cta" onclick="wa('la collection MY NUGO')">Commandez</button>
+    <button class="nav-cta" onclick="waCollection()">Commandez</button>
   </div>
   <div class="burger" id="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
 </nav>
 
 <!-- MOBILE MENU -->
 <div class="mob-menu" id="mobMenu">
-  <div class="mob-item active" onclick="goPage('modes');toggleMenu()">La Collection</div>
+  <div class="mob-item active" onclick="goPage('modes');toggleMenu()">La Collection RENAISSANCE</div>
   <div class="mob-item" onclick="goPage('about');toggleMenu()">À Propos</div>
   <div class="mob-tag">RÉSISTER · CRÉER · INSPIRER</div>
-  <button class="mob-cta" onclick="wa('la collection MY NUGO');toggleMenu()">Commandez maintenant</button>
+  <button class="mob-cta" onclick="waCollection();toggleMenu()">Commandez maintenant</button>
   <div class="mob-soc">
-    <a href="https://www.instagram.com/nugo_by_ekd/" target="_blank">Instagram</a>
+    <a href="https://www.instagram.com/mynugo_?igsh=OXBqZDJiN25wb3Nx" target="_blank">Instagram</a>
     <a href="https://www.tiktok.com/@nugobyekd" target="_blank">TikTok</a>
   </div>
 </div>
@@ -590,7 +820,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
   <div class="soc-bar">
-    <a class="soc-link" href="https://www.instagram.com/nugo_by_ekd/" target="_blank">Instagram @nugo_by_ekd</a>
+    <a class="soc-link" href="https://www.instagram.com/mynugo_?igsh=OXBqZDJiN25wb3Nx" target="_blank">Instagram @nugo_by_ekd</a>
     <a class="soc-link" href="https://www.tiktok.com/@nugobyekd" target="_blank">TikTok @nugobyekd</a>
   </div>
 
@@ -604,6 +834,7 @@ document.addEventListener('DOMContentLoaded', function(){
         <p class="popup-ev-eye">Événement éphémère · Paris</p>
         <h2 class="popup-ev-title">Pop-Up<br>Paris</h2>
         <p class="popup-ev-sub">MY NUGO DÉBARQUE DANS LA CAPITALE</p>
+        <div id="popupCntd" class="popup-cntd"></div>
         <div class="popup-ev-details">
           <div class="popup-ev-row">
             <span class="popup-ev-label">Dates</span>
@@ -623,14 +854,14 @@ document.addEventListener('DOMContentLoaded', function(){
             <source src="images/popup-video.mp4" type="video/mp4"/>
           </video>
         </div>
-        <button class="popup-ev-cta" onclick="wa('Pop-Up MY NUGO Paris — 01 au 04 juillet 2026 · 19 rue du Banquier 75013')">Je participe →</button>
+        <button class="popup-ev-cta" onclick="waPopup()">Je participe →</button>
       </div>
     </div>
   </div>
 
   <div class="section">
     <div class="sec-hd">
-      <div><h2 class="sec-title">La collection</h2><p class="sec-sub">Nouvelle collection — 2026</p></div>
+      <div><h2 class="sec-title">La Collection RENAISSANCE</h2><p class="sec-sub">Collection 2026</p></div>
       <span class="see-all">Voir tout →</span>
     </div>
     <div class="prod-grid" id="prodGrid">
@@ -661,8 +892,8 @@ document.addEventListener('DOMContentLoaded', function(){
       <div class="about-ev"><span class="about-yr">2018</span><p class="about-ev-txt">Rémission. La force retrouvée. MY NUGO prend son envol.</p></div>
       <div class="about-ev"><span class="about-yr">Auj.</span><p class="about-ev-txt">Créatrice MY NUGO · Fondatrice Nugo Biman · Alumna du Programme AWF piloté par la Fondation SEPHIS.</p></div>
       <div class="about-ctas">
-        <button class="about-cta" onclick="wa('contacter la fondatrice MY NUGO')">Me contacter</button>
-        <a class="about-cta" href="https://www.instagram.com/nugo_by_ekd/" target="_blank">Instagram</a>
+        <button class="about-cta" onclick="waContact()">Me contacter</button>
+        <a class="about-cta" href="https://www.instagram.com/mynugo_?igsh=OXBqZDJiN25wb3Nx" target="_blank">Instagram</a>
         <a class="about-cta" href="https://www.tiktok.com/@nugobyekd" target="_blank">TikTok</a>
       </div>
     </div>
@@ -676,19 +907,28 @@ document.addEventListener('DOMContentLoaded', function(){
   <p class="f-tagline">RÉSISTER · CRÉER · INSPIRER</p>
   <p class="f-brand-tag">Mode africaine contemporaine.<br>Créé avec intention, porté avec fierté.<br>Abidjan, Côte d'Ivoire.</p>
   <div class="f-soc">
-    <a class="f-soc-link" href="https://www.instagram.com/nugo_by_ekd/" target="_blank">Instagram</a>
+    <a class="f-soc-link" href="https://www.instagram.com/mynugo_?igsh=OXBqZDJiN25wb3Nx" target="_blank">Instagram</a>
     <a class="f-soc-link" href="https://www.tiktok.com/@nugobyekd" target="_blank">TikTok</a>
     <a class="f-soc-link" href="https://wa.me/2250151939394" target="_blank">WhatsApp</a>
   </div>
   <div class="f-grid">
-    <div><p class="f-col-title">La marque</p><ul class="f-links"><li onclick="goPage('modes')">La Collection</li><li onclick="goPage('about')">À Propos</li></ul></div>
+    <div><p class="f-col-title">La marque</p><ul class="f-links"><li onclick="goPage('modes')">La Collection RENAISSANCE</li><li onclick="goPage('about')">À Propos</li></ul></div>
     <div><p class="f-col-title">Paiement</p><ul class="f-links"><li>PayPal</li><li>Wave</li><li>Orange Money</li><li>Visa · Mastercard</li><li>WhatsApp</li></ul></div>
     <div><p class="f-col-title">Livraison</p><ul class="f-links"><li>Afrique</li><li>Europe</li><li>Délais variables</li></ul></div>
-    <div><p class="f-col-title">Informations</p><ul class="f-links"><li onclick="wa('les CGV MY NUGO')">CGV &amp; Retours</li><li onclick="wa('contacter MY NUGO')">Contact</li></ul></div>
+    <div><p class="f-col-title">Informations</p><ul class="f-links"><li onclick="waCGV()">CGV &amp; Retours</li><li onclick="waContact()">Contact</li></ul></div>
   </div>
   <div class="footer-bottom"><span>© 2026 MY NUGO — Tous droits réservés</span><span>Abidjan, Côte d'Ivoire</span></div>
   <div class="f-resist">RÉSISTER · CRÉER · INSPIRER</div>
 </footer>
+
+<!-- LIGHTBOX -->
+<div id="lb" class="lb" onclick="closeLb()">
+  <button class="lb-close" onclick="closeLb()">×</button>
+  <button id="lbPrev" class="lb-prev" onclick="event.stopPropagation();lbMove(-1)">&#8249;</button>
+  <img id="lbImg" class="lb-img" onclick="event.stopPropagation()" ontouchstart="LB_TOUCH_X=event.touches[0].clientX" ontouchend="if(event.changedTouches[0].clientX-LB_TOUCH_X>50)lbMove(-1);else if(LB_TOUCH_X-event.changedTouches[0].clientX>50)lbMove(1)"/>
+  <button id="lbNext" class="lb-next" onclick="event.stopPropagation();lbMove(1)">&#8250;</button>
+  <div id="lbCounter" class="lb-counter"></div>
+</div>
 
 <a class="wa-float" href="https://wa.me/2250151939394?text=Bonjour%20MY%20NUGO%20%F0%9F%91%8B" target="_blank">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
