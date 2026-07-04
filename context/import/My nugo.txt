@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="MY NUGO — Mode africaine contemporaine. RÉSISTER · CRÉER · INSPIRER."/>
+<meta name="theme-color" content="#000000"/>
+<title>MY NUGO — RÉSISTER · CRÉER · INSPIRER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --black:#000000;--white:#FFFFFF;
+  --g100:#F7F6F2;--g200:#EEECEC;--g300:#CCCCCC;
+  --g400:#999999;--g500:#666666;--g700:#333333;--g800:#1A1A1A;
+  --wave:#009FE3;--om:#FF6600;--paypal:#003087;--visa:#1A1F71;
+  --fs:'Cormorant Garamond',serif;--fb:'Montserrat',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--fb);background:var(--white);color:var(--black);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+
+/* LOADING */
+.loading-screen{position:fixed;inset:0;background:var(--black);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .5s;}
+.loading-screen.hidden{opacity:0;pointer-events:none;}
+.loading-logo{font-family:var(--fs);font-size:42px;font-style:italic;font-weight:300;color:var(--white);margin-bottom:16px;}
+.loading-tag{font-size:8px;letter-spacing:5px;text-transform:uppercase;color:var(--g500);margin-bottom:32px;}
+.loading-bar{width:120px;height:1px;background:var(--g700);position:relative;overflow:hidden;}
+.loading-bar::after{content:'';position:absolute;left:-100%;top:0;height:100%;width:100%;background:var(--white);animation:load 1.2s ease forwards;}
+@keyframes load{to{left:100%;}}
+
+/* STOCK BADGE */
+.stock-rupture{opacity:.5;}
+.stock-faible .prod-tag::after{content:' · Stock limité';font-size:7px;}
+
+/* TICKER */
+.tk{background:var(--black);padding:9px 0;overflow:hidden;}
+.tk-i{display:flex;gap:48px;white-space:nowrap;animation:tick 26s linear infinite;}
+.tk-item{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--g400);flex-shrink:0;}
+.tk-item b{color:var(--g300);font-weight:400;margin-right:8px;}
+@keyframes tick{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:13px 20px;border-bottom:0.5px solid var(--g200);background:var(--white);position:sticky;top:0;z-index:50;}
+.nav-logo img{height:38px;filter:invert(1);}
+.nav-desktop{display:flex;align-items:center;gap:28px;}
+.nav-links{display:flex;gap:24px;list-style:none;}
+.nav-links li{font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:500;cursor:pointer;padding-bottom:3px;border-bottom:1.5px solid transparent;color:var(--black);transition:border-color .2s;}
+.nav-links li.active{border-bottom-color:var(--black);}
+.nav-links li:hover{border-bottom-color:var(--g300);}
+.nav-cta{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:600;background:var(--black);color:var(--white);padding:10px 20px;cursor:pointer;border:none;font-family:var(--fb);}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.burger span{display:block;width:22px;height:1.5px;background:var(--black);transition:all .3s;}
+.burger.open span:nth-child(1){transform:rotate(45deg) translate(4.5px,4.5px);}
+.burger.open span:nth-child(2){opacity:0;}
+.burger.open span:nth-child(3){transform:rotate(-45deg) translate(4.5px,-4.5px);}
+
+/* MOBILE MENU */
+.mob-menu{position:fixed;inset:0;background:var(--black);z-index:40;display:flex;flex-direction:column;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+.mob-menu.open{opacity:1;pointer-events:all;}
+.mob-item{font-family:var(--fs);font-size:44px;font-style:italic;font-weight:300;color:var(--g700);cursor:pointer;padding:12px 0;width:100%;text-align:center;transition:color .2s;}
+.mob-item:hover,.mob-item.active{color:var(--white);}
+.mob-tag{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--g500);margin-top:6px;text-align:center;}
+.mob-cta{margin-top:28px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--white);border:1px solid var(--g700);padding:13px 32px;cursor:pointer;background:transparent;font-family:var(--fb);}
+.mob-soc{display:flex;gap:20px;margin-top:22px;}
+.mob-soc a{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--g500);text-decoration:none;transition:color .2s;}
+.mob-soc a:hover{color:var(--white);}
+
+/* BREADCRUMB */
+.bc{padding:10px 20px;border-bottom:0.5px solid var(--g200);background:var(--g100);display:flex;align-items:center;gap:8px;}
+.bc-back{display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--black);cursor:pointer;font-weight:600;margin-right:auto;}
+.bc-back svg{width:13px;height:13px;}
+.bc-item{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--g400);cursor:pointer;}
+.bc-cur{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--black);font-weight:600;}
+.bc-sep{font-size:10px;color:var(--g300);}
+
+/* HERO */
+.hero{position:relative;width:100%;height:88vh;max-height:680px;overflow:hidden;}
+.hero-track{display:flex;height:100%;transition:transform .8s cubic-bezier(.25,.46,.45,.94);}
+.hero-slide{flex-shrink:0;width:100%;height:100%;position:relative;}
+.hero-slide img{width:100%;height:100%;object-fit:cover;object-position:center top;}
+.ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55) 0%,rgba(0,0,0,.05) 55%,transparent 100%);}
+.hc{position:absolute;bottom:44px;left:28px;right:28px;}
+.h-title{font-family:var(--fs);font-size:50px;font-weight:300;font-style:italic;line-height:.95;color:var(--white);margin-bottom:22px;}
+.h-btn{display:inline-flex;align-items:center;gap:10px;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:600;color:var(--black);background:var(--white);padding:13px 24px;cursor:pointer;border:none;font-family:var(--fb);}
+.h-badge{position:absolute;top:18px;right:18px;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);color:var(--white);font-size:8px;letter-spacing:3px;text-transform:uppercase;padding:6px 12px;border:0.5px solid rgba(255,255,255,.2);}
+.h-prev,.h-next{position:absolute;top:50%;transform:translateY(-50%);background:transparent;border:none;color:rgba(255,255,255,.45);width:38px;height:60px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:26px;z-index:5;}
+.h-prev{left:6px;}.h-next{right:6px;}
+.h-prev:hover,.h-next:hover{color:var(--white);}
+.h-dots{position:absolute;bottom:18px;right:18px;display:flex;gap:6px;}
+.h-dot{width:20px;height:1.5px;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s;}
+.h-dot.active{background:var(--white);width:32px;}
+
+/* PAIEMENTS */
+.pay-section{padding:22px 20px;border-bottom:0.5px solid var(--g200);}
+.pay-title{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--g400);margin-bottom:16px;text-align:center;font-weight:500;}
+.pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.pay-card{background:var(--g100);border:0.5px solid var(--g200);border-radius:6px;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.pay-logo{height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;padding:0 8px;min-width:42px;}
+.pl-pp{background:var(--paypal);}.pl-wv{background:var(--wave);}.pl-om{background:var(--om);}
+.pl-vi{background:var(--visa);}.pl-wa{background:#25D366;}
+.pl-txt{font-size:9px;font-weight:700;color:var(--white);font-family:var(--fb);}
+.mc-wrap{display:flex;align-items:center;}
+.mc-r{width:16px;height:16px;border-radius:50%;background:#EB001B;}
+.mc-o{width:16px;height:16px;border-radius:50%;background:#F79E1B;margin-left:-7px;}
+.pay-name{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--g500);font-weight:500;text-align:center;}
+.pay-note{text-align:center;font-size:9px;color:var(--g400);margin-top:14px;line-height:1.6;}
+
+/* SOCIAL */
+.soc-bar{padding:11px 20px;border-bottom:0.5px solid var(--g200);display:flex;align-items:center;justify-content:center;gap:24px;}
+.soc-link{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--black);text-decoration:none;border-bottom:1px solid var(--black);padding-bottom:1px;font-weight:500;}
+
+
+
+/* SECTION */
+.section{padding:40px 20px;}
+.sec-hd{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px;}
+.sec-title{font-family:var(--fs);font-size:34px;font-weight:300;font-style:italic;}
+.sec-sub{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--g400);margin-top:5px;}
+.see-all{font-size:9px;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid var(--black);cursor:pointer;padding-bottom:1px;color:var(--black);font-weight:500;white-space:nowrap;}
+
+/* PRODUCTS */
+.prod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--g200);}
+.prod-card{background:var(--white);position:relative;cursor:pointer;}
+.prod-img{width:100%;aspect-ratio:3/4;overflow:hidden;background:var(--g100);}
+.prod-img img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .5s;}
+.prod-card:hover .prod-img img{transform:scale(1.04);}
+.prod-tag{position:absolute;top:10px;left:10px;background:var(--black);color:var(--white);font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:5px 9px;font-weight:600;}
+.prod-info{padding:14px;}
+.prod-name{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--black);margin-bottom:5px;font-weight:500;}
+.prod-desc{font-size:10px;color:var(--g400);margin-bottom:12px;line-height:1.6;}
+.prod-bot{display:flex;align-items:center;justify-content:space-between;}
+.prod-price{font-family:var(--fs);font-size:20px;color:var(--black);}
+.prod-fcfa{font-size:9px;color:var(--g300);display:block;margin-top:1px;}
+.prod-order{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--black);border-bottom:1px solid var(--black);padding-bottom:1px;cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--fb);font-weight:600;}
+.prod-rupture{opacity:.5;pointer-events:none;}
+.prod-rupture .prod-order{display:none;}
+.prod-rupture-label{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--g400);}
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
+
+/* BACK TOP */
+.back-top{display:flex;align-items:center;justify-content:center;padding:16px;border-top:0.5px solid var(--g200);cursor:pointer;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--g400);gap:6px;font-weight:500;}
+.back-top:hover{color:var(--black);}
+
+/* SURPRISE */
+.surp-banner{background:var(--black);padding:52px 20px 44px;text-align:center;}
+.surp-eye{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--g500);margin-bottom:14px;}
+.surp-title{font-family:var(--fs);font-size:44px;font-weight:300;font-style:italic;color:var(--white);line-height:1.05;margin-bottom:14px;}
+.surp-desc{font-size:12px;color:var(--g400);line-height:1.9;max-width:480px;margin:0 auto;}
+.surp-body{padding:32px 20px;}
+.surp-sect-title{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--g400);margin-bottom:16px;font-weight:500;}
+.surp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:32px;}
+.surp-opt{border:0.5px solid var(--g200);padding:20px 16px;cursor:pointer;transition:all .2s;}
+.surp-opt:hover,.surp-opt.selected{border-color:var(--black);background:var(--g100);}
+.surp-icon{font-size:16px;margin-bottom:10px;color:var(--g300);}
+.surp-opt-name{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--black);margin-bottom:6px;font-weight:500;}
+.surp-opt-price{font-family:var(--fs);font-size:22px;color:var(--g400);}
+.surp-steps{margin-bottom:32px;border-top:0.5px solid var(--g200);padding-top:28px;}
+.surp-step{display:flex;gap:16px;padding:16px 0;border-bottom:0.5px solid var(--g200);}
+.surp-step:last-child{border-bottom:none;}
+.surp-step-n{font-family:var(--fs);font-size:26px;color:var(--g200);flex-shrink:0;line-height:1;}
+.surp-step-ttl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--black);margin-bottom:5px;font-weight:600;}
+.surp-step-txt{font-size:11px;color:var(--g500);line-height:1.7;}
+.surp-form{background:var(--g100);border:0.5px solid var(--g200);padding:24px 20px;}
+.surp-form-title{font-family:var(--fs);font-size:24px;font-style:italic;margin-bottom:22px;}
+.fg{margin-bottom:16px;}
+.fl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--g500);display:block;margin-bottom:7px;font-weight:500;}
+.fi,.fs,.ft{width:100%;background:var(--white);border:0.5px solid var(--g300);color:var(--black);padding:12px 14px;font-size:12px;font-family:var(--fb);outline:none;}
+.fi:focus,.fs:focus,.ft:focus{border-color:var(--black);}
+.fs{appearance:none;-webkit-appearance:none;}
+.ft{resize:vertical;min-height:80px;}
+.f-submit{width:100%;background:var(--black);color:var(--white);border:none;padding:15px;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:600;font-family:var(--fb);cursor:pointer;margin-top:8px;}
+.f-note{font-size:9px;color:var(--g400);text-align:center;margin-top:12px;line-height:1.7;}
+.f-success{display:none;text-align:center;padding:24px;background:var(--black);margin-top:14px;}
+.f-success p{font-family:var(--fs);font-size:22px;font-style:italic;color:var(--white);margin-bottom:6px;}
+.f-success span{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--g500);}
+
+/* BIMAN */
+.biman-banner{width:100%;height:300px;position:relative;overflow:hidden;}
+.biman-banner img{width:100%;height:100%;object-fit:cover;object-position:center 20%;}
+.biman-ov{position:absolute;inset:0;background:rgba(0,0,0,.65);}
+.biman-banner-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;}
+.biman-eye{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--g400);margin-bottom:14px;}
+.biman-banner-title{font-family:var(--fs);font-size:36px;font-weight:300;font-style:italic;color:var(--white);line-height:1.1;}
+.biman-body{padding:40px 20px;}
+.biman-title{font-family:var(--fs);font-size:32px;font-weight:300;font-style:italic;margin-bottom:18px;line-height:1.15;}
+.biman-desc{font-size:13px;color:var(--g500);line-height:2;margin-bottom:14px;}
+.biman-quote{border-left:2px solid var(--black);padding-left:18px;margin:24px 0;}
+.biman-qt{font-family:var(--fs);font-size:19px;font-style:italic;line-height:1.5;}
+.biman-cta{display:inline-flex;align-items:center;gap:10px;font-size:9px;letter-spacing:3px;text-transform:uppercase;font-weight:600;color:var(--black);border:1.5px solid var(--black);padding:12px 20px;cursor:pointer;background:transparent;font-family:var(--fb);margin-top:8px;transition:all .2s;}
+.biman-cta:hover{background:var(--black);color:var(--white);}
+.biman-stats{display:grid;grid-template-columns:repeat(3,1fr);border:0.5px solid var(--g200);margin:28px 0;}
+.biman-stat{padding:22px 10px;text-align:center;border-right:0.5px solid var(--g200);}
+.biman-stat:last-child{border-right:none;}
+.biman-num{font-family:var(--fs);font-size:36px;font-weight:300;display:block;}
+.biman-lbl{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--g300);display:block;margin-top:4px;}
+.biman-tags-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--g400);margin-bottom:12px;margin-top:28px;font-weight:500;}
+.biman-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.biman-tag{font-size:9px;letter-spacing:1px;text-transform:uppercase;border:0.5px solid var(--g200);padding:7px 13px;color:var(--g500);}
+.biman-found-quote{background:var(--black);padding:28px 20px;margin-top:28px;}
+.biman-found-quote p{font-family:var(--fs);font-size:18px;font-style:italic;color:var(--white);line-height:1.7;margin-bottom:12px;}
+.biman-found-quote span{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--g500);}
+.biman-partners{background:var(--g100);border-top:0.5px solid var(--g200);padding:20px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:center;}
+.biman-partners-lbl{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--g300);width:100%;text-align:center;margin-bottom:4px;}
+.biman-partner{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--g500);}
+
+/* ABOUT */
+.about-img-wrap{width:100%;aspect-ratio:4/5;overflow:hidden;position:relative;}
+.about-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:top center;}
+.about-img-cap{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.75);padding:14px 20px;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--g300);}
+.about-body{padding:40px 20px;}
+.about-eye{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--g400);margin-bottom:14px;font-weight:500;}
+.about-title{font-family:var(--fs);font-size:38px;font-weight:300;font-style:italic;margin-bottom:22px;line-height:1.1;}
+.about-text{font-size:13px;color:var(--g500);line-height:2;margin-bottom:14px;}
+.about-quote{border-left:2px solid var(--black);padding-left:18px;margin:24px 0;}
+.about-qt{font-family:var(--fs);font-size:19px;font-style:italic;line-height:1.5;}
+.about-tl-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--g400);margin-bottom:16px;margin-top:28px;font-weight:500;}
+.about-ev{display:flex;gap:14px;padding:14px 0;border-bottom:0.5px solid var(--g200);}
+.about-ev:last-child{border-bottom:none;}
+.about-yr{font-family:var(--fs);font-size:17px;color:var(--g300);flex-shrink:0;min-width:42px;}
+.about-ev-txt{font-size:11px;color:var(--g500);line-height:1.7;}
+.about-ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;}
+.about-cta{display:inline-flex;align-items:center;gap:8px;font-size:9px;letter-spacing:3px;text-transform:uppercase;font-weight:600;color:var(--black);border:1.5px solid var(--black);padding:11px 18px;cursor:pointer;background:transparent;font-family:var(--fb);text-decoration:none;transition:all .2s;}
+.about-cta:hover{background:var(--black);color:var(--white);}
+
+/* FOOTER */
+.footer{background:var(--black);color:var(--white);padding:44px 20px 0;}
+.f-logo-wrap{margin-bottom:14px;}
+.f-logo-wrap img{height:34px;}
+.f-tagline{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--g500);margin-bottom:6px;}
+.f-brand-tag{font-size:11px;color:var(--g400);line-height:1.9;margin-bottom:20px;}
+.f-soc{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;padding-bottom:28px;border-bottom:0.5px solid var(--g700);}
+.f-soc-link{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--g300);border:0.5px solid var(--g700);padding:7px 14px;text-decoration:none;transition:all .2s;}
+.f-soc-link:hover{color:var(--white);}
+.f-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;margin-bottom:28px;}
+.f-col-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--g500);margin-bottom:16px;font-weight:500;}
+.f-links{list-style:none;}
+.f-links li{font-size:11px;color:var(--g400);margin-bottom:10px;cursor:pointer;transition:color .2s;}
+.f-links li:hover{color:var(--white);}
+.footer-bottom{border-top:0.5px solid var(--g700);padding:18px 0;display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;}
+.footer-bottom span{font-size:9px;color:var(--g500);}
+.f-resist{font-size:8px;letter-spacing:5px;text-transform:uppercase;color:var(--g700);text-align:center;padding:16px 0;border-top:0.5px solid var(--g800);}
+
+/* WA FLOAT */
+.wa-float{position:fixed;bottom:20px;right:20px;background:#25D366;color:var(--white);width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:100;box-shadow:0 3px 14px rgba(0,0,0,.25);text-decoration:none;}
+
+/* DESKTOP */
+@media(min-width:768px){
+  .nav{padding:14px 40px;}
+  .nav-logo img{height:42px;}
+  .burger{display:none!important;}
+  .nav-desktop{display:flex!important;}
+  .hero{height:90vh;max-height:700px;}
+  .hc{left:60px;bottom:60px;}
+  .h-title{font-size:64px;}
+  .pay-section{padding:22px 40px;}
+  .pay-grid{grid-template-columns:repeat(6,1fr);gap:12px;}
+  .soc-bar{padding:12px 40px;}
+  .section{padding:56px 40px;}
+  .prod-grid{grid-template-columns:repeat(4,1fr);}
+  .surp-body{padding:48px 40px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+  .surp-grid{grid-template-columns:repeat(4,1fr);}
+  .biman-body{padding:56px 40px;display:grid;grid-template-columns:1fr 1fr;gap:60px;}
+  .biman-banner{height:340px;}
+  .biman-banner-title{font-size:52px;}
+  .about-layout{display:grid;grid-template-columns:1fr 1.3fr;}
+  .about-img-wrap{aspect-ratio:auto;height:100%;}
+  .about-body{padding:60px 48px;}
+  .about-title{font-size:46px;}
+  .f-grid{grid-template-columns:repeat(4,1fr);}
+  .bc{padding:10px 40px;}
+  .filters{padding:0 40px;}
+  .footer{padding:44px 40px 0;}
+}
+@media(max-width:767px){
+  .nav-desktop{display:none;}
+  .burger{display:flex;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ CONNEXION GOOGLE SHEETS ══
+     Remplace COLLE_TA_CLE_ICI par ta vraie clé API Google
+     Ne partage jamais cette clé publiquement
+-->
+<script>
+var SHEETS_CONFIG = {
+  API_KEY: 'AIzaSyD0mcctzkIuSJBt8r00HGO1UIG3BfVsG2A',
+  SHEET_ID: '1n9ltI3mHVsPUQvFlAZ--E5r7efGYaEpbmA0VlnRffGY',
+  BASE_URL: 'https://sheets.googleapis.com/v4/spreadsheets'
+};
+
+// Données de secours si le sheet est inaccessible
+var FALLBACK = {
+  produits: [
+    {id:'PROD_01',nom_fr:'Robe Rayée Lin & Wax',description_fr:'Lin · Wax vert · Sans manches',prix_eur:'38',prix_fcfa:'25000',stock:'10',statut:'disponible',badge:'Nouveau',photo_principale:'images/PROD_01_principale.jpg',categorie:'Robes'},
+    {id:'PROD_02',nom_fr:'Ensemble Bleu Duo',description_fr:'Lin bleu · Wax vert · Veste + pantalon',prix_eur:'38',prix_fcfa:'25000',stock:'8',statut:'disponible',badge:'Look duo',photo_principale:'images/PROD_02_principale.jpg',categorie:'Ensembles'},
+    {id:'PROD_03',nom_fr:'Robe Blanche Kimono',description_fr:'Satin ivoire · Broderie wax',prix_eur:'38',prix_fcfa:'25000',stock:'3',statut:'faible',badge:'Exclusif',photo_principale:'images/PROD_03_principale.jpg',categorie:'Robes'},
+    {id:'PROD_04',nom_fr:'Robe Marron & Crème',description_fr:'Lin · Poches crème · Boutons wax',prix_eur:'38',prix_fcfa:'25000',stock:'6',statut:'disponible',badge:'Bestseller',photo_principale:'images/PROD_04_principale.jpg',categorie:'Robes'}
+  ],
+  hero: [
+    {ordre:'1',titre_fr:'Lin rayé,\nâme wax',photo:'images/HERO_01.jpg',id_produit:'PROD_01',badge:'Nouveau',actif:'OUI'},
+    {ordre:'2',titre_fr:'Ensemble,\non avance',photo:'images/HERO_02.jpg',id_produit:'PROD_02',badge:'Look duo',actif:'OUI'},
+    {ordre:'3',titre_fr:'Abidjan,\nma scène',photo:'images/HERO_03.jpg',id_produit:'PROD_03',badge:'Exclusif',actif:'OUI'},
+    {ordre:'4',titre_fr:'Terre &\nlumière',photo:'images/HERO_04.jpg',id_produit:'PROD_04',badge:'Bestseller',actif:'OUI'}
+  ]
+};
+
+// ── FETCH DEPUIS GOOGLE SHEETS ──
+async function fetchSheet(sheetName) {
+  var url = SHEETS_CONFIG.BASE_URL + '/' + SHEETS_CONFIG.SHEET_ID +
+    '/values/' + sheetName + '?key=' + SHEETS_CONFIG.API_KEY;
+  var res = await fetch(url);
+  if (!res.ok) throw new Error('Sheet inaccessible');
+  var data = await res.json();
+  var rows = data.values;
+  if (!rows || rows.length < 2) return [];
+  var headers = rows[0].map(function(h){ return h.toLowerCase().replace(/ /g,'_'); });
+  return rows.slice(1).map(function(row){
+    var obj = {};
+    headers.forEach(function(h,i){ obj[h] = row[i] || ''; });
+    return obj;
+  });
+}
+
+// ── INITIALISATION ──
+var STATE = { produits:[], hero:[], loaded:false };
+
+async function initApp() {
+  // Afficher le site immédiatement avec données de secours
+  STATE.produits = FALLBACK.produits;
+  STATE.hero = FALLBACK.hero;
+  renderHero();
+  renderProduits();
+  hideLanding();
+
+  // Puis tenter de charger depuis Google Sheets
+  try {
+    var produits = await fetchSheet('PRODUITS');
+    var hero = await fetchSheet('HERO');
+
+    // Normaliser les clés (gérer espaces, majuscules)
+    var heroFiltré = hero.filter(function(h){
+      var actif = '';
+      Object.keys(h).forEach(function(k){
+        if(k.toLowerCase().trim() === 'actif') actif = h[k];
+      });
+      return actif.toString().trim().toUpperCase() === 'OUI';
+    });
+
+    // Normaliser photo et titre pour hero
+    heroFiltré = heroFiltré.map(function(h){
+      var obj = {};
+      Object.keys(h).forEach(function(k){
+        obj[k.toLowerCase().trim()] = h[k];
+      });
+      return obj;
+    });
+
+    if (produits.length) {
+      STATE.produits = produits.map(function(p){
+        var obj = {};
+        Object.keys(p).forEach(function(k){ obj[k.toLowerCase().trim()] = p[k]; });
+        return obj;
+      });
+    }
+    if (heroFiltré.length) STATE.hero = heroFiltré;
+
+    console.log('✅ Google Sheets connecté — ' + STATE.produits.length + ' produits, ' + STATE.hero.length + ' slides hero');
+
+    // Re-render avec données réelles
+    renderHero();
+    renderProduits();
+  } catch(e) {
+    console.warn('⚠️ Sheet inaccessible, données de secours utilisées:', e.message);
+  }
+  STATE.loaded = true;
+}
+
+// ── HERO DYNAMIQUE ──
+function renderHero() {
+  var track = document.getElementById('heroTrack');
+  var dots = document.getElementById('hDots');
+  if (!track) return;
+  track.innerHTML = '';
+  dots.innerHTML = '';
+
+  // Filtrer les slides vides (lignes vides du sheet)
+  var heroValides = STATE.hero.filter(function(slide){
+    var p = Object.values(slide).join('');
+    return p.trim() !== '';
+  });
+
+  heroValides.forEach(function(slide, i) {
+    var titre = (slide.titre_fr || slide["titre_fr"] || "MY NUGO") + "";
+    var photo = (slide["photo"] || slide.photo || "") + "";
+    var badge = (slide["badge"] || slide.badge || "") + "";
+    var idProd = slide["id_produit_lié"] || slide.id_produit || "";
+    var titreHTML = titre.replace(/\\n/g,"\n").split("\n").join("<br>");
+    var produit = STATE.produits.find(function(p){ return (p.id||"") === idProd; }) || {};
+    var nomProd = produit.nom_fr || idProd || "MY NUGO";
+
+    var div = document.createElement('div');
+    div.className = 'hero-slide';
+    div.innerHTML =
+      '<img src="' + photo + '" alt="' + nomProd + '" loading="' + (i===0?'eager':'lazy') + '"/>' +
+      '<div class="ov"></div>' +
+      '<div class="hc">' +
+        '<h1 class="h-title">' + titreHTML + '</h1>' +
+        '<button class="h-btn" onclick="wa(\'' + nomProd.replace(/'/g,"\\'") + '\')">Découvrir →</button>' +
+      '</div>' +
+      '<div class="h-badge">' + (badge||'') + '</div>';
+    track.appendChild(div);
+
+    var dot = document.createElement('div');
+    dot.className = 'h-dot' + (i===0?' active':'');
+    dot.onclick = (function(idx){ return function(){ hGo(idx); }; })(i);
+    dots.appendChild(dot);
+  });
+
+  HERO_TOT = heroValides.length;
+  hRender();
+}
+
+// ── PRODUITS DYNAMIQUES ──
+function renderProduits() {
+  var grid = document.getElementById('prodGrid');
+  if (!grid) return;
+  var produits = STATE.produits;
+  grid.innerHTML = '';
+  produits.forEach(function(p) {
+    var rupture = p.statut === 'rupture';
+    var prix_eur = parseFloat(p.prix_eur) || 38;
+    var prix_fcfa = parseInt(p.prix_fcfa) || 25000;
+
+    var card = document.createElement('div');
+    card.className = 'prod-card' + (rupture?' prod-rupture':'');
+    card.innerHTML =
+      '<div class="prod-img"><img src="' + p.photo_principale + '" alt="' + p.nom_fr + '" loading="lazy"/></div>' +
+      (p.badge ? '<div class="prod-tag">' + p.badge + '</div>' : '') +
+      '<div class="prod-info">' +
+        '<p class="prod-name">' + p.nom_fr + '</p>' +
+        '<p class="prod-desc">' + p.description_fr + '</p>' +
+        '<div class="prod-bot">' +
+          '<div>' +
+            '<span class="prod-price">' + prix_eur + ' €</span>' +
+            '<span class="prod-fcfa">' + parseInt(prix_fcfa).toLocaleString('fr-FR') + ' FCFA</span>' +
+          '</div>' +
+          (rupture
+            ? '<span class="prod-rupture-label">Rupture de stock</span>'
+            : '<button class="prod-order" onclick="wa(\'' + p.nom_fr.replace(/'/g,"\\'") + '\')">Commander →</button>'
+          ) +
+        '</div>' +
+      '</div>';
+    grid.appendChild(card);
+  });
+}
+
+// ── MASQUER L'ÉCRAN DE CHARGEMENT ──
+function hideLanding() {
+  setTimeout(function(){
+    var s = document.getElementById('loadingScreen');
+    if (s) { s.classList.add('hidden'); setTimeout(function(){ s.remove(); },500); }
+  }, 600);
+}
+
+// ── HERO CAROUSEL ──
+var HERO_CUR = 0, HERO_TOT = 4, heroTimer;
+function hMove(d){ HERO_CUR=(HERO_CUR+d+HERO_TOT)%HERO_TOT; hRender(); }
+function hGo(i){ HERO_CUR=i; hRender(); }
+function hRender(){
+  var track = document.getElementById('heroTrack');
+  if(track) track.style.transform='translateX(-'+(HERO_CUR*100)+'%)';
+  document.querySelectorAll('.h-dot').forEach(function(d,i){ d.classList.toggle('active',i===HERO_CUR); });
+}
+
+// ── NAVIGATION ──
+function goPage(n){
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('page-'+n).classList.add('active');
+  var m=['modes','surprise','biman','about'];
+  document.querySelectorAll('.nav-links li').forEach(function(l,i){ l.classList.toggle('active',m[i]===n); });
+  document.querySelectorAll('.mob-item').forEach(function(l,i){ l.classList.toggle('active',m[i]===n); });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleMenu(){
+  document.getElementById('burger').classList.toggle('open');
+  document.getElementById('mobMenu').classList.toggle('open');
+}
+
+// ── COFFRET ──
+function selectCoffret(el,nom,prix){
+  document.querySelectorAll('.surp-opt').forEach(function(o){ o.classList.remove('selected'); });
+  el.classList.add('selected');
+  document.getElementById('coffretSelected').value=nom+' — '+prix;
+}
+function submitSurprise(){
+  var c=document.getElementById('coffretSelected').value;
+  if(!c||c.indexOf('lectionnez')>-1||c.indexOf('lectionnez')>-1){ alert('Veuillez choisir un coffret.'); return; }
+  var n=document.getElementById('clientNom').value;
+  var p=document.getElementById('clientTel').value;
+  var o=document.getElementById('clientOcc').value;
+  var m=document.getElementById('clientMsg').value;
+  var t='Bonjour MY NUGO 👋\n\nCoffret : *'+c+'*';
+  if(n) t+='\nNom : '+n;
+  if(p) t+='\nTél : '+p;
+  if(o) t+='\nOccasion : '+o;
+  if(m) t+='\nMessage : '+m;
+  t+='\n\nMerci de me rappeler pour finaliser.';
+  window.open('https://wa.me/2250151939394?text='+encodeURIComponent(t),'_blank');
+  document.getElementById('fSuccess').style.display='block';
+}
+
+// ── WHATSAPP ──
+function wa(item){
+  var t='Bonjour MY NUGO 👋\nJe souhaite des informations sur '+item+'.\n\nMerci !';
+  window.open('https://wa.me/2250151939394?text='+encodeURIComponent(t),'_blank');
+}
+
+
+
+// ── LANCEMENT ──
+document.addEventListener('DOMContentLoaded', function(){
+  // Hero auto
+  heroTimer = setInterval(function(){ hMove(1); }, 5000);
+  var hw = document.getElementById('heroWrap');
+  if(hw){
+    hw.addEventListener('mouseenter', function(){ clearInterval(heroTimer); });
+    hw.addEventListener('mouseleave', function(){ heroTimer=setInterval(function(){ hMove(1); },5000); });
+  }
+  // Charger les données
+  initApp();
+});
+</script>
+
+<!-- LOADING SCREEN -->
+<div id="loadingScreen" class="loading-screen">
+  <div class="loading-logo">My Nugo</div>
+  <div class="loading-tag">RÉSISTER · CRÉER · INSPIRER</div>
+  <div class="loading-bar"></div>
+</div>
+
+<!-- TICKER -->
+<div class="tk">
+  <div class="tk-i">
+    <div class="tk-item"><b>✦</b> Collection Résilience 2026</div>
+    <div class="tk-item"><b>·</b> RÉSISTER · CRÉER · INSPIRER</div>
+    <div class="tk-item"><b>✦</b> Livraison Afrique &amp; Europe</div>
+    <div class="tk-item"><b>·</b> Commandez via WhatsApp</div>
+    <div class="tk-item"><b>✦</b> Collection Résilience 2026</div>
+    <div class="tk-item"><b>·</b> RÉSISTER · CRÉER · INSPIRER</div>
+    <div class="tk-item"><b>✦</b> Livraison Afrique &amp; Europe</div>
+    <div class="tk-item"><b>·</b> Commandez via WhatsApp</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo"><img src="logo.png" alt="My Nugo"/></div>
+  <div class="nav-desktop">
+    <ul class="nav-links">
+      <li class="active" onclick="goPage('modes')">Nugo Modes</li>
+      <li onclick="goPage('surprise')">Nugo Surprise</li>
+      <li onclick="goPage('biman')">Nugo Biman</li>
+      <li onclick="goPage('about')">À Propos</li>
+    </ul>
+    <button class="nav-cta" onclick="wa('la collection MY NUGO')">Commandez</button>
+  </div>
+  <div class="burger" id="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mobMenu">
+  <div class="mob-item active" onclick="goPage('modes');toggleMenu()">Nugo Modes</div>
+  <div class="mob-item" onclick="goPage('surprise');toggleMenu()">Nugo Surprise</div>
+  <div class="mob-item" onclick="goPage('biman');toggleMenu()">Nugo Biman</div>
+  <div class="mob-item" onclick="goPage('about');toggleMenu()">À Propos</div>
+  <div class="mob-tag">RÉSISTER · CRÉER · INSPIRER</div>
+  <button class="mob-cta" onclick="wa('la collection MY NUGO');toggleMenu()">Commandez maintenant</button>
+  <div class="mob-soc">
+    <a href="https://www.instagram.com/nugo_by_ekd/" target="_blank">Instagram</a>
+    <a href="https://www.tiktok.com/@nugobyekd" target="_blank">TikTok</a>
+  </div>
+</div>
+
+<!-- PAGE MODES -->
+<div class="page active" id="page-modes">
+  <div class="hero" id="heroWrap">
+    <div class="hero-track" id="heroTrack">
+      <!-- Généré dynamiquement par JS depuis Google Sheets -->
+    </div>
+    <div class="h-prev" onclick="hMove(-1)">&#8249;</div>
+    <div class="h-next" onclick="hMove(1)">&#8250;</div>
+    <div class="h-dots" id="hDots"></div>
+  </div>
+
+  <div class="pay-section">
+    <p class="pay-title">Moyens de paiement acceptés</p>
+    <div class="pay-grid">
+      <div class="pay-card"><div class="pay-logo pl-pp"><span class="pl-txt">PayPal</span></div><span class="pay-name">PayPal</span></div>
+      <div class="pay-card"><div class="pay-logo pl-wv"><span class="pl-txt">Wave</span></div><span class="pay-name">Wave</span></div>
+      <div class="pay-card"><div class="pay-logo pl-om"><span class="pl-txt">OM</span></div><span class="pay-name">Orange Money</span></div>
+      <div class="pay-card"><div class="pay-logo pl-vi"><span class="pl-txt" style="font-style:italic;letter-spacing:2px;">VISA</span></div><span class="pay-name">Visa</span></div>
+      <div class="pay-card"><div class="pay-logo" style="background:transparent;"><div class="mc-wrap"><div class="mc-r"></div><div class="mc-o"></div></div></div><span class="pay-name">Mastercard</span></div>
+      <div class="pay-card"><div class="pay-logo pl-wa"><span class="pl-txt">WA</span></div><span class="pay-name">WhatsApp</span></div>
+    </div>
+    <p class="pay-note">Coordination &amp; validation via WhatsApp · Délais variables</p>
+  </div>
+
+  <div class="soc-bar">
+    <a class="soc-link" href="https://www.instagram.com/nugo_by_ekd/" target="_blank">Instagram @nugo_by_ekd</a>
+    <a class="soc-link" href="https://www.tiktok.com/@nugobyekd" target="_blank">TikTok @nugobyekd</a>
+  </div>
+
+  
+
+  <div class="section">
+    <div class="sec-hd">
+      <div><h2 class="sec-title">La collection</h2><p class="sec-sub">Résilience — 2026</p></div>
+      <span class="see-all">Voir tout →</span>
+    </div>
+    <div class="prod-grid" id="prodGrid">
+      <!-- Généré dynamiquement par JS depuis Google Sheets -->
+    </div>
+  </div>
+  <div class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Retour en haut</div>
+</div>
+
+<!-- PAGE SURPRISE -->
+<div class="page" id="page-surprise">
+  <div class="bc"><span class="bc-back" onclick="goPage('modes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>Retour</span><span class="bc-item" onclick="goPage('modes')">Accueil</span><span class="bc-sep">›</span><span class="bc-cur">Nugo Surprise</span></div>
+  <div class="surp-banner"><p class="surp-eye">✦ Nugo Surprise</p><h2 class="surp-title">Un coffret,<br>mille émotions</h2><p class="surp-desc">On a tous besoin de s'offrir un présent ou de faire plaisir à un être aimé.</p></div>
+  <div class="surp-body">
+    <div>
+      <p class="surp-sect-title">Choisissez votre coffret</p>
+      <div class="surp-grid">
+        <div class="surp-opt" onclick="selectCoffret(this,'Coffret Argent','38 €')"><div class="surp-icon">◇</div><p class="surp-opt-name">Argent</p><p class="surp-opt-price">38 €<br><span style='font-size:11px;color:var(--g400);'>25 000 FCFA</span></p></div>
+        <div class="surp-opt" onclick="selectCoffret(this,'Coffret Gold','76 €')"><div class="surp-icon">◈</div><p class="surp-opt-name">Gold</p><p class="surp-opt-price">76 €<br><span style='font-size:11px;color:var(--g400);'>50 000 FCFA</span></p></div>
+        <div class="surp-opt" onclick="selectCoffret(this,'Coffret Platine','114 €')"><div class="surp-icon">◆</div><p class="surp-opt-name">Platine</p><p class="surp-opt-price">114 €<br><span style='font-size:11px;color:var(--g400);'>75 000 FCFA</span></p></div>
+        <div class="surp-opt" onclick="selectCoffret(this,'Coffret sur mesure','Devis')"><div class="surp-icon">✦</div><p class="surp-opt-name">Coffret sur mesure</p><p class="surp-opt-price">Sur devis</p></div>
+      </div>
+      <div class="surp-steps">
+        <p class="surp-sect-title">Comment ça marche</p>
+        <div class="surp-step"><span class="surp-step-n">01</span><div><p class="surp-step-ttl">Choisissez</p><p class="surp-step-txt">Sélectionnez votre coffret parmi nos propositions.</p></div></div>
+        <div class="surp-step"><span class="surp-step-n">02</span><div><p class="surp-step-ttl">Exprimez votre besoin</p><p class="surp-step-txt">Remplissez le formulaire — occasion, message personnalisé.</p></div></div>
+        <div class="surp-step"><span class="surp-step-n">03</span><div><p class="surp-step-ttl">On vous rappelle</p><p class="surp-step-txt">Notre équipe vous contacte sous 24h pour validation et devis.</p></div></div>
+        <div class="surp-step"><span class="surp-step-n">04</span><div><p class="surp-step-ttl">Livraison surprise</p><p class="surp-step-txt">Délai variable selon composition. Emballage cadeau inclus.</p></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="surp-form">
+        <p class="surp-form-title">Choisir mon offre</p>
+        <div class="fg"><label class="fl">Coffret choisi</label><input class="fi" id="coffretSelected" readonly value="" placeholder="— Cliquez sur un coffret ci-dessus —"/></div>
+        <div class="fg"><label class="fl">Votre prénom &amp; nom</label><input class="fi" id="clientNom" type="text" placeholder="Ex : Aminata Koné"/></div>
+        <div class="fg"><label class="fl">Votre WhatsApp</label><input class="fi" id="clientTel" type="tel" placeholder="+225 07 00 00 00 00"/></div>
+        <div class="fg"><label class="fl">Occasion</label><select class="fs" id="clientOcc"><option value="">Sélectionner...</option><option>Anniversaire</option><option>Fête des mères</option><option>Mariage / Fiançailles</option><option>Cadeau d'amour</option><option>Me faire plaisir</option><option>Autre</option></select></div>
+        <div class="fg"><label class="fl">Dites-nous un peu plus sur ce que vous recherchez</label><textarea class="ft" id="clientMsg" placeholder="Quelle occasion, quels goûts, quelle taille... Tout ce qui nous aidera à vous conseiller."></textarea></div>
+        <button class="f-submit" onclick="submitSurprise()">Envoyer via WhatsApp →</button>
+        <p class="f-note">Rappel sous 24h · Emballage cadeau inclus · Délais variables</p>
+        <div class="f-success" id="fSuccess"><p>Demande envoyée ✦</p><span>Nous vous rappelons sous 24h</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Retour en haut</div>
+</div>
+
+<!-- PAGE BIMAN -->
+<div class="page" id="page-biman">
+  <div class="bc"><span class="bc-back" onclick="goPage('modes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>Retour</span><span class="bc-item" onclick="goPage('modes')">Accueil</span><span class="bc-sep">›</span><span class="bc-cur">Nugo Biman</span></div>
+  <div class="biman-banner"><img src="images/BIMAN_01.jpg" alt="Nugo Biman"/><div class="biman-ov"></div><div class="biman-banner-text"><p class="biman-eye">✦ Nugo Biman — Volet RSE</p><h2 class="biman-banner-title">Tout le monde a droit<br>à une seconde vie</h2></div></div>
+  <div class="biman-body">
+    <div>
+      <h3 class="biman-title">Réinsérer,<br>former, élever</h3>
+      <p class="biman-desc">Nugo Biman est le volet RSE de MY NUGO. Nous accompagnons de jeunes femmes victimes de prostitution et jeunes désœuvrés dans un processus complet de réinsertion sociale.</p>
+      <p class="biman-desc">Nous les formons. Nous les aidons à restaurer leur âme et leur dignité. Nous leur donnons les outils pour écrire un nouveau chapitre — parce que tout le monde a droit à une seconde chance.</p>
+      <div class="biman-quote"><p class="biman-qt">"Donner une seconde chance, c'est croire que chaque vie mérite d'être réécrite."</p></div>
+      <button class="biman-cta" onclick="wa('en savoir plus sur Nugo Biman')">Soutenir le programme →</button>
+      <div class="biman-stats">
+        <div class="biman-stat"><span class="biman-num">47</span><span class="biman-lbl">Jeunes accompagnées</span></div>
+        <div class="biman-stat"><span class="biman-num">6</span><span class="biman-lbl">Métiers enseignés</span></div>
+        <div class="biman-stat" style="border-right:none;"><span class="biman-num">3</span><span class="biman-lbl">Ans de programme</span></div>
+      </div>
+      <p class="biman-tags-title">Métiers enseignés</p>
+      <div class="biman-tags"><span class="biman-tag">Chapellerie</span><span class="biman-tag">Bijouterie</span><span class="biman-tag">Maroquinerie</span><span class="biman-tag">Stylisme</span><span class="biman-tag">Modélisme</span><span class="biman-tag">Teinturerie</span></div>
+      <div class="biman-found-quote"><p>"Durant mes années au Ghana, j'ai côtoyé de nombreuses jeunes filles s'adonnant à la prostitution. Cela ne m'a jamais laissée indifférente. Aujourd'hui, j'ai les moyens d'agir."</p><span>— Maimounata Kouma Epse Effi, Fondatrice</span></div>
+    </div>
+  </div>
+  <div class="biman-partners"><span class="biman-partners-lbl">Partenaires &amp; programmes</span><span class="biman-partner">Programme AWF</span><span style="color:var(--g700);">·</span><span class="biman-partner">Fondation Sephis</span><span style="color:var(--g700);">·</span><span class="biman-partner">Fondation Biman</span></div>
+  <div class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Retour en haut</div>
+</div>
+
+<!-- PAGE ABOUT -->
+<div class="page" id="page-about">
+  <div class="bc"><span class="bc-back" onclick="goPage('modes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>Retour</span><span class="bc-item" onclick="goPage('modes')">Accueil</span><span class="bc-sep">›</span><span class="bc-cur">À Propos</span></div>
+  <div class="about-layout">
+    <div class="about-img-wrap"><img src="images/FONDATRICE_01.jpg" alt="Maimounata Kouma Epse Effi"/><div class="about-img-cap">Maimounata Kouma Epse Effi — Fondatrice, MY NUGO</div></div>
+    <div class="about-body">
+      <p class="about-eye">✦ La Fondatrice</p>
+      <h2 class="about-title">Maimounata<br>Kouma Effi</h2>
+      <p class="about-text">Diplômée en Marketing Général, Maimounata a consacré de nombreuses années au secteur privé, dont plusieurs années aux Nations Unies en tant qu'assistante administrative et commerciale.</p>
+      <p class="about-text">En 2015, elle est foudroyée par un cancer. En pleine lutte, elle fait naître MY NUGO en 2017 — la création comme acte de résistance. La rémission vient en 2018.</p>
+      <div class="about-quote"><p class="about-qt">"Cette épreuve m'a confirmé mon rêve d'enfant : créer, résister, et m'engager pour celles qui en ont besoin."</p></div>
+      <p class="about-text">Aujourd'hui, elle est la promotrice de MY NUGO — sa marque, son bébé, née en 2017. 9 ans de création, de résilience et d'engagement. Mode africaine contemporaine doublée d'une mission sociale forte à travers Nugo Biman.</p>
+      <p class="about-tl-title">Parcours</p>
+      <div class="about-ev"><span class="about-yr">Ghana</span><p class="about-ev-txt">Licence d'anglais à Accra. Rencontre avec des réalités sociales qui ne la laisseront jamais indifférente.</p></div>
+      <div class="about-ev"><span class="about-yr">2008</span><p class="about-ev-txt">Intègre les Nations Unies. Des années au service d'organisations internationales.</p></div>
+      <div class="about-ev"><span class="about-yr">2015</span><p class="about-ev-txt">Diagnostic d'un cancer. Arrêt forcé. Début d'un combat intense.</p></div>
+      <div class="about-ev"><span class="about-yr">2017</span><p class="about-ev-txt">MY NUGO naît — en pleine lutte contre la maladie. La création comme thérapie.</p></div>
+      <div class="about-ev"><span class="about-yr">2018</span><p class="about-ev-txt">Rémission. La force retrouvée. MY NUGO prend son envol.</p></div>
+      <div class="about-ev"><span class="about-yr">Auj.</span><p class="about-ev-txt">Créatrice MY NUGO · Fondatrice Nugo Biman · Alumna du Programme AWF piloté par la Fondation SEPHIS.</p></div>
+      <div class="about-ctas">
+        <button class="about-cta" onclick="wa('contacter la fondatrice MY NUGO')">Me contacter</button>
+        <a class="about-cta" href="https://www.instagram.com/nugo_by_ekd/" target="_blank">Instagram</a>
+        <a class="about-cta" href="https://www.tiktok.com/@nugobyekd" target="_blank">TikTok</a>
+      </div>
+    </div>
+  </div>
+  <div class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Retour en haut</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="f-logo-wrap"><img src="logo.png" alt="My Nugo"/></div>
+  <p class="f-tagline">RÉSISTER · CRÉER · INSPIRER</p>
+  <p class="f-brand-tag">Mode africaine contemporaine.<br>Créé avec intention, porté avec fierté.<br>Abidjan, Côte d'Ivoire.</p>
+  <div class="f-soc">
+    <a class="f-soc-link" href="https://www.instagram.com/nugo_by_ekd/" target="_blank">Instagram</a>
+    <a class="f-soc-link" href="https://www.tiktok.com/@nugobyekd" target="_blank">TikTok</a>
+    <a class="f-soc-link" href="https://wa.me/2250151939394" target="_blank">WhatsApp</a>
+  </div>
+  <div class="f-grid">
+    <div><p class="f-col-title">Univers</p><ul class="f-links"><li onclick="goPage('modes')">Nugo Modes</li><li onclick="goPage('surprise')">Nugo Surprise</li><li onclick="goPage('biman')">Nugo Biman</li><li onclick="goPage('about')">À Propos</li></ul></div>
+    <div><p class="f-col-title">Paiement</p><ul class="f-links"><li>PayPal</li><li>Wave</li><li>Orange Money</li><li>Visa · Mastercard</li></ul></div>
+    <div><p class="f-col-title">Livraison</p><ul class="f-links"><li>Afrique</li><li>Europe</li><li>Délais variables</li></ul></div>
+    <div><p class="f-col-title">Informations</p><ul class="f-links"><li onclick="wa('les CGV MY NUGO')">CGV &amp; Retours</li><li onclick="wa('contacter MY NUGO')">Contact</li><li onclick="goPage('biman')">Nugo Biman RSE</li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 MY NUGO — Tous droits réservés</span><span>Abidjan, Côte d'Ivoire</span></div>
+  <div class="f-resist">RÉSISTER · CRÉER · INSPIRER</div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/2250151939394?text=Bonjour%20MY%20NUGO%20%F0%9F%91%8B" target="_blank">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+</body>
+</html>

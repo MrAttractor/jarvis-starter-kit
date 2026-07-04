@@ -340,6 +340,64 @@ supabase (projet unique)
 - Workers URL : `[nom-worker].myattractor1.workers.dev`
 - Pages URL : `[projet].pages.dev` + domaine custom si besoin
 
+### Incidents résolus — patterns à ne jamais réapprendre
+
+#### Cloudflare Pages : deploy en production, pas en preview
+
+**Symptôme :** le site ne se met pas à jour après `npx wrangler pages deploy` — les changements apparaissent sur une URL preview mais pas sur le domaine custom.
+
+**Cause :** wrangler déploie sur la branche `master` (preview) par défaut. La branche de production Cloudflare Pages est `main`.
+
+**Fix définitif :**
+```bash
+npx wrangler pages deploy . --project-name [nom-projet] --branch=main --commit-dirty=true
+```
+
+Règle : toujours préciser `--branch=main` pour que le deploy soit en production.
+
+---
+
+#### Error 522 Cloudflare — résolution définitive
+
+**Symptôme :** Error 522 (Connection Timed Out) qui revient après quelques jours ou un changement DNS.
+
+**Cause :** les CNAME sont en mode "DNS only" (gris). Cloudflare ne peut pas proxifier vers Pages si le Custom Domain n'est pas déclaré dans le dashboard Pages.
+
+**Séquence correcte :**
+1. Aller dans Pages → projet → Custom Domains → ajouter `www.mondomaine.com`
+2. Attendre que le statut passe à "Actif"
+3. Seulement ensuite passer les CNAME en "Proxied" (nuage orange) dans DNS
+
+Dans cet ordre : jamais de 522. Dans l'autre ordre : 522 garanti.
+
+---
+
+#### XSS sur apps métiers HTML statiques avec Supabase
+
+**Symptôme :** données Supabase injectées dans des chaînes `innerHTML` sans échappement — vecteur XSS si un admin insère du contenu malveillant dans la base.
+
+**Cause :** pattern `element.innerHTML = '<div>' + data.champ + '</div>'` avec concaténation de chaînes.
+
+**Fix définitif — DOM API obligatoire :**
+
+```javascript
+// INTERDIT
+card.innerHTML = '<p>' + p.nom_fr + '</p>';
+
+// OBLIGATOIRE
+var el = document.createElement('p');
+el.textContent = p.nom_fr;
+card.appendChild(el);
+```
+
+Règle complémentaire :
+- Attributs : `element.setAttribute('src', valeur)` (jamais concaténation dans la chaîne)
+- Handlers : `addEventListener('click', fn)` (jamais `onclick="..."` construit en chaîne)
+- IDs issus de la BDD : valider avec regex avant usage (`/^[A-Za-z0-9_-]{1,32}$/`)
+- Exception autorisée : `container.innerHTML = ''` pour vider un conteneur (pas de données variables)
+
+Référence d'implémentation : `livrables/clients/my-nugo/index.html` (fonctions `renderHero` et `renderProduits`, session 75).
+
 ---
 
 ## CHAPITRE 7 — L'ÉQUIPE AGENTS

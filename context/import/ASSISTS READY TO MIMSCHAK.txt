@@ -1,0 +1,313 @@
+📘 BRIEF PRODUIT – ASSISTS (VERSION DEV SENIOR)
+1. VISION GLOBALE
+
+ASSISTS est une plateforme SaaS qui permet à un entrepreneur de créer en quelques minutes :
+
+un site web public + un assistant IA + un CRM léger intégré
+
+Mais derrière cette simplicité apparente, le système est une agence digitale autonome composée d’agents IA spécialisés.
+
+2. POSITIONNEMENT PRODUIT
+
+ASSISTS n’est pas :
+
+un chatbot
+un site builder
+un CRM
+
+ASSISTS est :
+
+une infrastructure de présence digitale intelligente pour entrepreneurs, automatisée par IA.
+
+3. ARCHITECTURE GLOBALE
+3.1 Acteurs du système
+1. Prospect / Client final
+crée son espace ASSISTS
+possède son site + assistant
+vend ses produits/services
+2. Carelle (Agent d’onboarding central)
+
+Carelle est le point d’entrée humain simulé par IA.
+
+Rôle :
+
+accueillir le client
+qualifier le besoin
+collecter les données business
+guider étape par étape
+construire le site
+préparer la base CRM
+transmettre à l’assistant bras droit
+
+Carelle est aussi :
+
+superviseur des autres agents
+orchestratrice du flux interne
+3. Assistant “Bras Droit” (agent opérationnel client)
+
+Une fois le site créé :
+
+prend le relais client
+gère les conversations business
+répond aux prospects finaux
+exécute les actions CRM légères
+4. Back-office ASSISTS (plateforme interne)
+dashboard admin
+gestion des tenants
+monitoring
+gestion des agents
+upsells
+4. PARCOURS UTILISATEUR (END-TO-END)
+ÉTAPE 1 – LANDING PAGE
+
+CTA :
+
+“Créer mon site intelligent”
+
+ÉTAPE 2 – ONBOARDING CARELLE
+
+Carelle guide l’utilisateur en conversation structurée.
+
+Données collectées :
+A. Identité
+Nom entreprise
+Activité
+Contact
+Branding
+B. Contenu site
+images (max 3)
+produits / services
+prix
+description
+C. Objectifs business
+vendre
+prise de contact
+réservation
+catalogue
+D. Paiement
+moyen de paiement (Wave, Stripe, etc.)
+ÉTAPE 3 – GÉNÉRATION AUTOMATIQUE DU SITE
+
+Carelle déclenche :
+
+Création du tenant
+client.assists.ai/{tenant_id}
+Structure du site :
+Hero section
+bannière image (1 à 3 images défilantes)
+message principal généré par IA
+Section produits
+liste produits/services
+prix
+bouton achat
+Paiement intégré
+checkout automatique
+confirmation transaction
+ÉTAPE 4 – OPTION DOMAINE
+Par défaut :
+client.assists.ai
+Option premium :
+connexion domaine externe :
+www.client.com
+Si domaine déjà pris :
+Carelle propose alternatives
+ÉTAPE 5 – TRANSITION VERS L’ASSISTANT
+
+Une fois le site actif :
+
+Carelle introduit :
+
+“Votre bras droit digital est prêt à prendre le relais”
+
+ÉTAPE 6 – ACTIVATION ASSISTANT BRAS DROIT
+
+L’assistant :
+
+répond aux clients
+gère conversations
+suit prospects
+remonte insights
+5. DASHBOARD CLIENT
+Vue principale
+trafic
+conversations
+ventes
+leads
+performance assistant
+CRM léger intégré
+
+Chaque prospect est stocké :
+
+nom
+contact
+historique conversation
+statut
+intérêt
+Insights automatiques
+questions fréquentes
+produits les plus demandés
+taux de conversion
+recommandations IA
+6. CARELLE (MOTEUR CENTRAL)
+Rôle technique
+
+Carelle n’est pas un simple chatbot.
+
+C’est un :
+
+orchestration engine + data collector + product builder
+
+Fonctions
+1. Onboarding guidé
+conversation adaptative
+collecte structurée
+2. Génération de site
+template dynamique
+insertion contenu
+3. Création CRM initial
+segmentation clients
+4. Transmission agent
+handover vers assistant bras droit
+5. Upsell intelligent
+détecte usage
+propose upgrade
+7. MULTI-AGENT SYSTEM
+Flux interne :
+Carelle
+  ↓
+Structuration data
+  ↓
+Génération site
+  ↓
+Création CRM
+  ↓
+Activation assistant
+  ↓
+Monitoring Carelle
+8. MODÈLE TECHNIQUE (DEV)
+8.1 Multi-tenant architecture
+
+Chaque client :
+
+tenant_id
+
+Contient :
+
+site data
+assistant config
+CRM data
+conversations
+analytics
+
+---
+
+## 8.2 Modules backend
+
+### Core services :
+
+- User Service
+- Tenant Service
+- Carelle Engine
+- Assistant Engine
+- Payment Engine
+- Domain Manager
+- CRM Engine
+- Analytics Engine
+
+---
+
+## 8.3 Frontend
+
+### 3 interfaces :
+
+1. Landing + onboarding Carelle
+2. Site public client
+3. Dashboard client
+
+---
+
+## 8.4 AI Layer
+
+- Carelle LLM agent
+- Assistant LLM agent
+- Upsell detection model
+- Insight generator
+
+---
+
+# 9. LOGIQUE DE DOMAINES
+
+## Structure par défaut :
+
+```text
+client.assists.ai
+Custom domain :
+www.client.com → mapped to tenant_id
+
+DNS routing :
+
+reverse proxy
+tenant resolution layer
+10. LOGIQUE BUSINESS
+Plans :
+Free
+site ASSISTS
+assistant basique
+Pro
+CRM léger
+analytics
+assistant avancé
+Business
+domaine custom
+automation
+multi-agent support
+Upsell automatique :
+
+Déclenché par Carelle et assistant :
+
+volume de leads
+trafic
+usage CRM
+conversions
+11. EXPÉRIENCE DIFFÉRENCIANTE
+
+ASSISTS doit donner cette perception :
+
+“Je suis accompagné par une agence digitale complète 24h/24”
+
+Même si techniquement :
+
+tout est automatisé
+Carelle simule une équipe
+12. ROADMAP D’EXÉCUTION (IMPORTANT DEV)
+PHASE 1 (MVP)
+Carelle onboarding
+génération site simple
+assistant basique
+sous-domaine ASSISTS
+PHASE 2
+CRM léger
+dashboard client
+analytics
+paiement intégré
+PHASE 3
+custom domain
+assistant bras droit avancé
+upsell automation
+PHASE 4
+multi-agent system complet
+marketplace assistants
+scaling mass utilisateur
+13. OBJECTIF FINAL
+
+ASSISTS devient :
+
+un système vivant de création d’entreprises digitales automatisées
+
+🔥 POINT CLÉ POUR LE DEV SENIOR
+
+Le cœur du système n’est pas le site.
+
+C’est :
+
+la relation entre Carelle → données business → assistant → performance → upsell

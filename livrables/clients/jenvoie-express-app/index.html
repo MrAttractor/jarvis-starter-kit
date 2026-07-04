@@ -14,7 +14,10 @@
   --sky: #0BB5FF;
   --sky-mid: #0090D4;
   --gold: #F5C200;
+  --gold-grad: linear-gradient(135deg, #FFE9A6 0%, #F5C200 48%, #B8860B 100%);
   --green: #25D366;
+  --shadow-card: 0 16px 40px rgba(0, 8, 35, .38);
+  --shadow-card-hover: 0 22px 50px rgba(0, 8, 35, .48);
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -26,6 +29,16 @@ body {
   color: #fff;
   overflow-x: hidden;
   max-width: 100vw;
+  position: relative;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: .025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
@@ -62,19 +75,20 @@ a { color: inherit; text-decoration: none; }
   justify-content: center;
   gap: 8px;
   background: var(--green);
-  border-radius: 8px;
+  border-radius: 100px;
   color: #fff;
   font-family: 'Inter', sans-serif;
   font-size: 16px;
   font-weight: 500;
   white-space: nowrap;
-  transition: opacity 0.2s;
+  box-shadow: 0 6px 16px rgba(37, 211, 102, .3);
+  transition: transform 0.2s, box-shadow 0.2s;
   /* Mobile: carré 44x44 */
   width: 44px;
   height: 44px;
   padding: 0;
 }
-.btn-wa:hover { opacity: 0.85; }
+.btn-wa:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(37, 211, 102, .4); }
 .btn-wa svg { width: 20px; height: 20px; flex-shrink: 0; }
 .btn-wa .btn-label { display: none; }
 /* Desktop: avec texte */
@@ -106,13 +120,16 @@ a { color: inherit; text-decoration: none; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(11, 181, 255, 0.12);
-  border: 1px solid rgba(11, 181, 255, 0.35);
-  border-radius: 24px;
-  padding: 8px 16px;
+  background: rgba(11, 181, 255, 0.08);
+  border: 1px solid rgba(11, 181, 255, 0.3);
+  border-radius: 100px;
+  padding: 9px 18px;
+  backdrop-filter: blur(8px);
   font-family: 'Sora', sans-serif;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   color: var(--sky);
   margin-bottom: 24px;
 }
@@ -121,9 +138,15 @@ a { color: inherit; text-decoration: none; }
   font-weight: 800;
   font-size: clamp(32px, 8vw, 64px);
   line-height: 1.05;
+  letter-spacing: -0.5px;
   margin-bottom: 16px;
 }
-.hero h1 span { color: var(--gold); }
+.hero h1 span {
+  background: var(--gold-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 .hero-sub {
   font-size: 18px;
   color: rgba(255, 255, 255, 0.65);
@@ -147,16 +170,18 @@ a { color: inherit; text-decoration: none; }
   .hero-routes { flex-direction: row; justify-content: center; }
 }
 .route-pill {
-  background: rgba(11, 181, 255, 0.1);
-  border: 1px solid rgba(11, 181, 255, 0.3);
-  border-radius: 8px;
-  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(11, 181, 255, 0.28);
+  border-radius: 100px;
+  padding: 12px 22px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 8, 35, .3);
   font-family: 'Sora', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--sky);
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, .7);
 }
-.route-pill strong { color: var(--gold); }
+.route-pill strong { color: var(--gold); font-weight: 700; }
 
 /* === TRACKING === */
 .track-wrap {
@@ -164,8 +189,9 @@ a { color: inherit; text-decoration: none; }
   margin: 0 auto;
   background: rgba(0, 10, 40, 0.65);
   border: 1px solid rgba(11, 181, 255, 0.25);
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 24px 16px;
+  box-shadow: var(--shadow-card);
 }
 .track-title {
   font-family: 'Sora', sans-serif;
@@ -198,7 +224,7 @@ a { color: inherit; text-decoration: none; }
 .track-btn {
   height: 48px;
   padding: 0 20px;
-  background: var(--sky-mid);
+  background: linear-gradient(135deg, var(--sky), var(--sky-mid));
   border: none;
   border-radius: 8px;
   color: #fff;
@@ -208,9 +234,22 @@ a { color: inherit; text-decoration: none; }
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: background 0.2s;
+  box-shadow: 0 6px 18px rgba(11, 181, 255, .3);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
-.track-btn:hover { background: var(--sky); }
+.track-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(11, 181, 255, .4); }
+.interdits-details { width:100%; margin-top:8px; }
+.interdits-details summary::-webkit-details-marker { display:none; }
+.interdits-details summary::marker { display:none; }
+.interdits-summary { display:flex; align-items:center; gap:8px; cursor:pointer; padding:9px 12px; background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.2); border-radius:8px; font-size:12px; font-weight:600; color:#EF4444; user-select:none; list-style:none; }
+.interdits-summary:hover { background:rgba(239,68,68,.12); }
+.interdits-details[open] .interdits-chevron { transform:rotate(180deg); }
+.interdits-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
+@media (max-width:500px) { .interdits-grid { grid-template-columns:1fr; } }
+.i-item { display:flex; align-items:flex-start; gap:10px; background:rgba(239,68,68,.05); border:1px solid rgba(239,68,68,.1); border-radius:8px; padding:10px 12px; }
+.i-icon { width:16px; height:16px; flex-shrink:0; margin-top:2px; stroke:#EF4444; }
+.i-title { font-weight:600; font-size:12px; color:#fff; margin-bottom:2px; }
+.i-desc { font-size:11px; color:rgba(255,255,255,.4); line-height:1.4; }
 .track-result { margin-top: 16px; }
 .t-step {
   display: flex;
@@ -256,7 +295,12 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.15;
   margin-bottom: 32px;
 }
-.title span { color: var(--gold); }
+.title span {
+  background: var(--gold-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
 /* === SERVICES === */
 .grid-3 {
@@ -268,12 +312,20 @@ a { color: inherit; text-decoration: none; }
   .grid-3 { grid-template-columns: repeat(3, 1fr); }
 }
 .card {
-  background: rgba(0, 43, 127, 0.45);
-  border: 1px solid rgba(11, 181, 255, 0.2);
-  border-radius: 16px;
-  padding: 24px;
+  background: rgba(0, 43, 127, 0.4);
+  border: 1px solid rgba(11, 181, 255, 0.18);
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: var(--shadow-card);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
 }
-.card.gold-border { border-color: var(--gold); background: rgba(245, 194, 0, 0.06); }
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(11, 181, 255, 0.32);
+}
+.card.gold-border { border-color: rgba(245, 194, 0, .55); background: rgba(245, 194, 0, 0.05); }
+.card.gold-border:hover { border-color: var(--gold); }
 .card-icon {
   width: 48px; height: 48px;
   border-radius: 12px;
@@ -294,12 +346,15 @@ a { color: inherit; text-decoration: none; }
   font-family: 'Sora', sans-serif;
   font-size: 40px;
   font-weight: 800;
-  color: var(--gold);
+  background: var(--gold-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   line-height: 1;
   margin-bottom: 8px;
 }
 .card-price sup { font-size: 20px; vertical-align: super; }
-.card-price sub { font-size: 16px; color: rgba(255,255,255,0.5); font-family: 'Inter', sans-serif; font-weight: 400; }
+.card-price sub { font-size: 16px; color: rgba(255,255,255,0.5); -webkit-text-fill-color: rgba(255,255,255,0.5); font-family: 'Inter', sans-serif; font-weight: 400; }
 .card-list { font-size: 16px; color: rgba(255, 255, 255, 0.55); line-height: 2; }
 
 /* === WHY === */
@@ -314,9 +369,12 @@ a { color: inherit; text-decoration: none; }
 .why-item {
   background: rgba(0, 43, 127, 0.3);
   border: 1px solid rgba(11, 181, 255, 0.12);
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 16px;
+  padding: 20px 16px;
+  box-shadow: 0 10px 24px rgba(0, 8, 35, .25);
+  transition: transform .2s ease, box-shadow .2s ease;
 }
+.why-item:hover { transform: translateY(-3px); box-shadow: 0 14px 28px rgba(0, 8, 35, .32); }
 .why-icon {
   width: 40px; height: 40px;
   border-radius: 8px;
@@ -391,7 +449,7 @@ a { color: inherit; text-decoration: none; }
   height: 56px;
   background: linear-gradient(135deg, var(--sky-mid), var(--navy));
   border: 1px solid rgba(11, 181, 255, 0.4);
-  border-radius: 10px;
+  border-radius: 100px;
   color: #fff;
   font-family: 'Sora', sans-serif;
   font-size: 16px;
@@ -399,9 +457,10 @@ a { color: inherit; text-decoration: none; }
   cursor: pointer;
   width: 100%;
   margin-top: 8px;
-  transition: opacity 0.2s;
+  box-shadow: 0 10px 26px rgba(0, 43, 127, .4);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
-.btn-submit:hover { opacity: 0.85; }
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0, 43, 127, .5); }
 .form-ok {
   display: none;
   background: rgba(34, 197, 94, 0.1);
@@ -487,16 +546,20 @@ a { color: inherit; text-decoration: none; }
   padding: 0 32px;
   height: 52px;
   line-height: 52px;
-  background: var(--gold);
-  color: var(--navy-dark);
+  background: var(--gold-grad);
+  color: #2A1F00;
   font-family: 'Sora', sans-serif;
   font-size: 16px;
   font-weight: 700;
-  border-radius: 10px;
+  border-radius: 100px;
   text-decoration: none;
-  transition: opacity 0.2s;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 10px 28px rgba(245, 194, 0, .3);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
-.btn-demande-hero:hover { opacity: 0.88; }
+.btn-demande-hero:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 14px 32px rgba(245, 194, 0, .4);
+}
 
 /* === FOOTER === */
 .footer {
@@ -547,7 +610,7 @@ a { color: inherit; text-decoration: none; }
   <p class="hero-detail">Suivi temps réel · Livraison à domicile disponible</p>
   <div class="hero-routes">
     <div class="route-pill">🇫🇷 Paris → Abidjan · à partir de <strong><span class="price-paris-abj">14</span>€/kg</strong></div>
-    <div class="route-pill">🇨🇮 Abidjan → Paris · à partir de <strong><span class="price-abj-paris">10</span>€/kg</strong></div>
+    <div class="route-pill">🇨🇮 Abidjan → Paris · à partir de <strong><span class="price-abj-paris-fcfa">6 500</span> FCFA/kg</strong> <span style="opacity:.7;font-size:12px;">(≈ <span class="price-abj-paris">10</span>€/kg)</span></div>
   </div>
   <div class="departs-wrap" id="prochains-departs">
     <div class="departs-toggle" onclick="toggleDeparts()">
@@ -568,7 +631,7 @@ a { color: inherit; text-decoration: none; }
     <div class="track-title">Suivre mon colis</div>
     <div class="track-row">
       <input class="track-input" id="track-q" placeholder="N° — ex: JE-20240615-001" onkeydown="if(event.key==='Enter')doTrack()">
-      <button class="track-btn" onclick="doTrack()">Suivre</button>
+      <button class="track-btn" onclick="doTrack()">Rechercher</button>
     </div>
     <div class="track-result" id="track-result"></div>
   </div>
@@ -597,7 +660,8 @@ a { color: inherit; text-decoration: none; }
         <svg viewBox="0 0 24 24"><path d="M5 8h14M5 8a2 2 0 1 0 0-4h-.5C3.1 4 2 5.1 2 6.5V17a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6.5C22 5.1 20.9 4 19.5 4H19a2 2 0 1 0 0 4M5 8v10m14-10v10"/></svg>
       </div>
       <div class="card-name">🇨🇮 Abidjan → Paris 🇫🇷</div>
-      <div class="card-price"><sup>à partir de </sup><span class="price-abj-paris">10</span><sub>€/kg</sub></div>
+      <div class="card-price"><sup>à partir de </sup><span class="price-abj-paris-fcfa">6 500</span><sub>FCFA/kg</sub></div>
+      <div style="opacity:.6;font-size:12px;margin-top:-8px;margin-bottom:12px;">≈ <span class="price-abj-paris">10</span>€/kg</div>
       <div class="card-list">
         Cosmétiques · Miel<br>
         Nourriture · Médicaments<br>
@@ -675,7 +739,6 @@ a { color: inherit; text-decoration: none; }
           <option>Wave</option>
           <option>Espèces</option>
           <option>PayPal</option>
-          <option>MTN Money</option>
           <option>Orange Money</option>
           <option>Wero</option>
           <option>Virement bancaire</option>
@@ -694,6 +757,28 @@ a { color: inherit; text-decoration: none; }
       <div class="f-col full">
         <label class="f-label">Liste des articles</label>
         <textarea class="f-textarea" id="d-articles" placeholder="Ex: 1 téléphone Samsung, 2 paires de chaussures, 1 parfum..."></textarea>
+        <details class="interdits-details">
+          <summary class="interdits-summary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Produits non acceptés — vérifiez avant d'envoyer
+            <svg class="interdits-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;margin-left:auto;transition:transform .2s;"><polyline points="6 9 12 15 18 9"/></svg>
+          </summary>
+          <div class="interdits-grid">
+            <div class="i-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="i-icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg><div><div class="i-title">Armes &amp; munitions</div><div class="i-desc">Armes à feu, couteaux, explosifs, gaz lacrymogène</div></div></div>
+            <div class="i-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="i-icon"><path d="M10.5 20.5 3.5 13.5a5 5 0 0 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z"/><line x1="9" y1="9" x2="15" y2="15"/></svg><div><div class="i-title">Drogues &amp; stupéfiants</div><div class="i-desc">Toute substance illicite ou médicament sans ordonnance</div></div></div>
+            <div class="i-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="i-icon"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg><div><div class="i-title">Espèces &amp; devises</div><div class="i-desc">Billets de banque, chèques, valeurs au porteur</div></div></div>
+            <div class="i-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="i-icon"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg><div><div class="i-title">Matières dangereuses</div><div class="i-desc">Produits inflammables, acides, gaz sous pression, aérosols</div></div></div>
+            <div class="i-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="i-icon"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg><div><div class="i-title">Animaux vivants</div><div class="i-desc">Tout animal, insecte ou organisme vivant</div></div></div>
+            <div class="i-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="i-icon"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg><div><div class="i-title">Denrées périssables</div><div class="i-desc">Viande, poisson, produits frais non emballés</div></div></div>
+            <div class="i-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="i-icon"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="15" y1="10" x2="9" y2="16"/></svg><div><div class="i-title">Contrefaçons</div><div class="i-desc">Faux documents, marques contrefaites, produits piratés</div></div></div>
+            <div class="i-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="i-icon"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M22 11h-4v2h4"/><line x1="6" y1="11" x2="6" y2="13"/></svg><div><div class="i-title">Batteries lithium seules</div><div class="i-desc">Batteries non montées dans un appareil électronique</div></div></div>
+            <div class="i-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="i-icon"><path d="M9 2h6l1 5H8L9 2z"/><path d="M8 7v13a1 1 0 001 1h6a1 1 0 001-1V7"/><line x1="10" y1="12" x2="14" y2="12"/></svg><div><div class="i-title">Produits éclaircissants</div><div class="i-desc">Crèmes, savons et produits dépigmentants interdits à l'importation</div></div></div>
+            <div class="i-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="i-icon"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/><line x1="7" y1="7" x2="17" y2="17"/></svg><div><div class="i-title">Viande de brousse</div><div class="i-desc">Animaux sauvages de brousse (singes, pangolins, civettes...) et leurs produits dérivés</div></div></div>
+            <div class="i-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="i-icon"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg><div><div class="i-title">Cigarettes &amp; tabac</div><div class="i-desc">Tabac en quantité commerciale, cigarettes électroniques avec liquide</div></div></div>
+            <div class="i-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="i-icon"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 5v7m0 4h.01"/></svg><div><div class="i-title">Compléments alimentaires</div><div class="i-desc">Produits non homologués, hormones, stéroïdes, brûleurs de graisses</div></div></div>
+          </div>
+          <p style="font-size:11px;color:rgba(255,255,255,.3);margin-top:10px;line-height:1.5;">Un doute sur un article ? Contactez-nous avant d'envoyer. Tout colis contenant un produit interdit sera refusé sans remboursement.</p>
+        </details>
       </div>
       <div id="collecte-france" style="display:contents">
         <div class="f-col full">
@@ -801,7 +886,7 @@ a { color: inherit; text-decoration: none; }
           <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
         </div>
         <div class="why-title">Multi-paiement</div>
-        <div class="why-text">Wave · PayPal · Espèces · MTN · Orange · Wero</div>
+        <div class="why-text">Wave · PayPal · Espèces · Orange Money · Wero</div>
       </div>
       <div class="why-item">
         <div class="why-icon">
@@ -895,6 +980,7 @@ a { color: inherit; text-decoration: none; }
   </div>
 </div>
 
+
 <!-- FOOTER -->
 <footer class="footer">
   <img src="logo.jpg" alt="J'Envoie Express">
@@ -965,7 +1051,11 @@ async function loadPrix() {
   if (!data) return
   const p = Object.fromEntries(data.map(r => [r.cle, r.valeur]))
   if (p.tarif_paris_abj) document.querySelectorAll('.price-paris-abj').forEach(el => el.textContent = p.tarif_paris_abj)
-  if (p.tarif_abj_paris) document.querySelectorAll('.price-abj-paris').forEach(el => el.textContent = p.tarif_abj_paris)
+  if (p.tarif_abj_paris) {
+    document.querySelectorAll('.price-abj-paris').forEach(el => el.textContent = p.tarif_abj_paris)
+    const fcfa = Math.floor(parseFloat(p.tarif_abj_paris) * 655.957 / 500) * 500
+    document.querySelectorAll('.price-abj-paris-fcfa').forEach(el => el.textContent = fcfa.toLocaleString('fr-FR'))
+  }
 }
 loadPrix()
 
@@ -1021,7 +1111,7 @@ async function doTrack() {
   const el = document.getElementById('track-result')
   if (!q) return
   el.innerHTML = '<p style="color:rgba(255,255,255,.4);font-size:16px;padding:12px 0">Recherche...</p>'
-  const { data } = await sb.from('colis').select('numero,statut').ilike('numero', `%${q}%`).limit(1).maybeSingle()
+  const { data } = await sb.from('colis').select('numero,statut,paye,montant').ilike('numero', `%${q}%`).limit(1).maybeSingle()
   if (!data) {
     el.innerHTML = '<p style="color:#EF4444;font-size:16px;padding:12px 0">Numéro introuvable. Vérifiez et réessayez.</p>'
     return
@@ -1035,6 +1125,15 @@ async function doTrack() {
           <div class="t-dot ${i<idx?'done':i===idx?'current':''}"></div>
           <span class="${i===idx?'t-current':i<idx?'t-done':''}">${LABELS[s]}</span>
         </div>`).join('')}
+      <div style="margin:12px 0 4px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.04);font-size:.82rem;display:flex;align-items:center;gap:8px;">
+        <span style="color:rgba(255,255,255,.5);">💶 Paiement :</span>
+        ${data.paye
+          ? `<span style="color:#22C55E;font-weight:700;">Payé ✓</span>`
+          : data.montant
+            ? `<span style="color:var(--gold);">En attente — ${data.montant}€ à régler</span>`
+            : `<span style="color:rgba(255,255,255,.35);">En attente de confirmation</span>`
+        }
+      </div>
       <div class="wa-row">
         <a href="https://wa.me/2250708682116" onclick="openWA('suivi'); return false;" target="_blank" class="btn-wa">
           <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.116-.006-.232-.01-.349-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>

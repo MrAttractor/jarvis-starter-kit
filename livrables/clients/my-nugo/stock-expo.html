@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>MY NUGO — Suivi stock exposition</title>
+<style>
+:root{
+  --black:#141210; --white:#fff; --g100:#f5f3f0; --g200:#e8e4de;
+  --g400:#9a938a; --g600:#6b655c; --orange:#c9781f; --red:#c0392b; --green:#2d7a3e;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--g100);color:var(--black);padding-bottom:100px;}
+header{position:sticky;top:0;background:var(--black);color:var(--white);padding:16px;z-index:20;}
+header h1{margin:0;font-size:15px;letter-spacing:2px;text-transform:uppercase;font-weight:600;}
+header .sub{font-size:11px;color:var(--g400);margin-top:4px;}
+.summary{display:flex;gap:1px;background:var(--g200);margin:0 0 1px 0;}
+.summary-item{flex:1;background:var(--white);padding:14px 10px;text-align:center;}
+.summary-num{font-size:20px;font-weight:700;line-height:1;}
+.summary-lbl{font-size:8.5px;letter-spacing:1px;text-transform:uppercase;color:var(--g600);margin-top:6px;}
+.ca-bar{display:flex;gap:1px;background:var(--g200);margin:0 0 1px 0;}
+.ca-item{flex:1;background:var(--black);color:var(--white);padding:14px 10px;text-align:center;}
+.ca-num{font-size:20px;font-weight:700;line-height:1;color:var(--orange);}
+.ca-lbl{font-size:8.5px;letter-spacing:1px;text-transform:uppercase;color:var(--g400);margin-top:6px;}
+.search-wrap{padding:12px 16px;background:var(--white);border-bottom:1px solid var(--g200);}
+.search-wrap input{width:100%;padding:12px 14px;border:1px solid var(--g200);border-radius:8px;font-size:15px;background:var(--g100);}
+.list{padding:8px 16px 0;}
+.card{background:var(--white);border:1px solid var(--g200);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+.card-head{display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer;}
+.card-head.rupture{background:#fdf3f2;}
+.card-name{flex:1;min-width:0;}
+.card-name .n{font-size:13.5px;font-weight:600;line-height:1.3;}
+.card-name .m{font-size:10.5px;color:var(--g600);margin-top:2px;}
+.card-total{text-align:right;flex-shrink:0;}
+.card-total .num{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;}
+.card-total.zero .num{color:var(--red);}
+.card-total .lbl{font-size:8.5px;color:var(--g600);text-transform:uppercase;letter-spacing:.5px;}
+.chevron{font-size:11px;color:var(--g400);flex-shrink:0;transition:transform .15s;}
+.card.open .chevron{transform:rotate(90deg);}
+.card-body{display:none;border-top:1px solid var(--g200);}
+.card.open .card-body{display:block;}
+.size-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--g100);}
+.size-row:last-child{border-bottom:none;}
+.size-label{width:38px;flex-shrink:0;font-size:12px;font-weight:600;color:var(--g600);text-transform:uppercase;}
+.size-ctrl{flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px;}
+.btn{width:40px;height:40px;border-radius:8px;border:1px solid var(--g200);background:var(--white);font-size:19px;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;}
+.btn:active{background:var(--g200);}
+.btn-minus{color:var(--red);}
+.btn-plus{color:var(--green);}
+.stock-num{min-width:28px;text-align:center;font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;}
+.stock-num.zero{color:var(--red);}
+.note{padding:10px 14px;font-size:10.5px;color:var(--g600);background:var(--g100);}
+footer{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--g200);padding:12px 16px;display:flex;gap:10px;z-index:20;}
+.footer-btn{flex:1;padding:14px;border-radius:8px;border:none;font-size:11.5px;letter-spacing:1px;text-transform:uppercase;font-weight:600;cursor:pointer;}
+.footer-btn.reset{background:var(--g100);color:var(--g600);border:1px solid var(--g200);}
+.footer-btn.export{background:var(--black);color:var(--white);}
+.disclaimer{padding:12px 16px;font-size:10.5px;color:var(--g600);line-height:1.5;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>My Nugo — Suivi stock</h1>
+  <div class="sub">Exposition · détail par taille · mis à jour en direct sur cet appareil</div>
+</header>
+
+<div class="ca-bar">
+  <div class="ca-item"><div class="ca-num" id="caJour">–</div><div class="ca-lbl">CA du jour</div></div>
+  <div class="ca-item"><div class="ca-num" id="caTotal">–</div><div class="ca-lbl">CA total expo</div></div>
+</div>
+
+<div class="summary">
+  <div class="summary-item"><div class="summary-num" id="sumTotal">–</div><div class="summary-lbl">Pièces restantes</div></div>
+  <div class="summary-item"><div class="summary-num" id="sumVendu">–</div><div class="summary-lbl">Vendues</div></div>
+  <div class="summary-item"><div class="summary-num" id="sumRupture">–</div><div class="summary-lbl">Ruptures taille</div></div>
+</div>
+
+<div class="search-wrap">
+  <input type="text" id="search" placeholder="Rechercher un modèle...">
+</div>
+
+<div class="disclaimer">Stocks de départ basés uniquement sur les 7 fiches papier "STOCK EXPO NUGO" (context/import, relues en direct le 02/07/2026), détail par couleur et taille. Le CA du jour repart automatiquement à 0 chaque nouvelle date sur cet appareil (basé sur l'horloge du téléphone). Quelques écarts entre le total encerclé sur la fiche et le détail ligne par ligne sont signalés modèle par modèle — ajustements manuels possibles directement dans l'outil (+/−).</div>
+
+<div class="list" id="list"></div>
+
+<footer>
+  <button class="footer-btn reset" id="resetBtn">Réinitialiser</button>
+  <button class="footer-btn export" id="exportBtn">Copier le récap</button>
+</footer>
+
+<script>
+var LOCAL_KEY = 'mynugo_stock_expo_v4';
+
+// Source principale : 7 photos "STOCK EXPO NUGO" (fiches papier de l'expo, Google Drive, lues le 02/07/2026)
+// Ces fiches papier remplacent le fichier Excel "nouvelle collection" comme source de vérité :
+// plusieurs quantités et couleurs étaient différentes entre les deux documents.
+// Items 23-27 : non retrouvés sur les fiches papier (photo illisible ou modèle absent) — encore basés sur l'Excel, non vérifiés physiquement.
+var CATALOGUE = [
+  {id:'01', nom:'Perfecto Armelia Simple', meta:'', prix:'100€', sizes:[['S',4],['M',2],['L',4],['XL',1]]},
+  {id:'02', nom:'Perfecto Armelia Réversible', meta:'Orange', prix:'120€', sizes:[['Standard',3]]},
+  {id:'03', nom:'Veste Blanc Noir', meta:'Nouveau modèle repéré sur la fiche papier, absent du fichier Excel', prix:'100€', sizes:[['L',1],['XL',1]]},
+  {id:'04', nom:'Veste Réversible Yaya', meta:'', prix:'120€', sizes:[
+    ['Orange-Noir S',1],['Orange-Noir M',1],['Orange-Noir XL',1],
+    ['Orange-Bleu S',1],['Orange-Bleu M',1],['Orange-Bleu XL',1],
+    ['Orange-Gris M',2],['Orange-Gris XL',1],
+    ['Beige-Nzassa L',2]
+  ]},
+  {id:'05', nom:'Veste Simple Yaya', meta:"N'Zassa (Kita) · fiche papier indique 100€ et 1 pièce (Excel disait 90€ et 2 pièces)", prix:'100€', sizes:[['M',1]]},
+  {id:'06', nom:'Pantalon Ayêla', meta:'Bleu nuit avec tracts blanc-rouge-bleu', prix:'70€', sizes:[['S',1],['M',1],['L',2],['XL',1]]},
+  {id:'07', nom:'Robe Lirane', meta:'Jaune blanc, dentelle en bas', prix:'75€', sizes:[['M',3],['L',3],['XL',1]]},
+  {id:'08', nom:'Combinaison Nourah', meta:'', prix:'75€', sizes:[
+    ['Gris S',2],['Gris M',1],['Gris L',2],['Gris XL',1],
+    ['Noir fleuri S',1],['Noir fleuri M',3],['Noir fleuri L',1],
+    ['Noir bande colorée L',1],
+    ['Bleu acier clair M',1],['Bleu acier clair L',2]
+  ]},
+  {id:'09', nom:'Combinaison Mandia', meta:'', prix:'120€', sizes:[
+    ['Noir-Rouge S',1],['Noir-Rouge M',2],['Noir-Rouge XL',1],
+    ['Noir-Rouge-Blanc S',1],['Noir-Rouge-Blanc M',2],
+    ['Rouge Bordeaux L',1],
+    ['Bleu ciel M',1],['Bleu ciel L',4]
+  ]},
+  {id:'10', nom:'Pantalon Yasmine', meta:'Bleu fleuri', prix:'40€', sizes:[['S',6],['M',2],['L',3],['XL',2],['2XL',2]]},
+  {id:'11', nom:'Robe Mahi', meta:'Beige-Marron', prix:'40€', sizes:[['S',1],['L',1],['XL',2]]},
+  {id:'12', nom:'Robe Oloa', meta:'', prix:'65€', note:"Le cercle sur la fiche indique 18, le détail lu donne 16 — écart à vérifier physiquement", sizes:[
+    ['Rose S',1],['Rose M',2],['Rose L',1],
+    ['Blanc S',1],['Blanc M',1],['Blanc L',2],
+    ['Bleu S',1],['Bleu L',1],['Bleu XL',2],
+    ['Jaune S',2],['Jaune M',1],['Jaune XL',1]
+  ]},
+  {id:'13', nom:'Paréo Anaëlle', meta:'Tunique réversible · prix non confirmé sur la fiche papier', prix:'80€', sizes:[['Bleu Standard',1],['Marron Standard',2]]},
+  {id:'14', nom:'Robe Lia', meta:'', prix:'50€', sizes:[['Bleu-Vert S',3],['Bleu-Vert L',2],['Bleu-Bleu S',1],['Bleu-Bleu M',2],['Bleu-Bleu L',2]]},
+  {id:'15', nom:'Pantalon Naïla', meta:'Beige-Marron', prix:'40€', sizes:[['S',7],['M',1],['L',4],['XL',2]]},
+  {id:'16', nom:'Boubou Renée', meta:'', prix:'85€', sizes:[
+    ['Bleu-Marron S',1],['Bleu-Marron M',3],['Bleu-Marron L',4],['Bleu-Marron XL',1],
+    ['Violet-Bleu L',1],
+    ['Bleu-Violet foncé M',1],
+    ['Vert-Rouge M',3],['Vert-Rouge L',1],
+    ['Bleu-Bleu S',1],['Bleu-Bleu M',2],['Bleu-Bleu L',1],
+    ['Vert-Bleu S',1],['Vert-Bleu M',2],['Vert-Bleu L',1],
+    ['Vert-Vert L',1],['Vert-Vert XL',1],
+    ['Vert-Violet XL',1],
+    ['Orange-Vert M',1],
+    ['Bleu vert menthe L',1]
+  ]},
+  {id:'17', nom:'Boubou États-Unis', meta:'Nouveau modèle repéré sur la fiche papier · prix estimé identique à Boubou Renée, à confirmer', prix:'85€', sizes:[['Bleu Nuit XL',1]]},
+  {id:'18', nom:'Robe Elena', meta:'', prix:'60€', sizes:[['Vert L',1],['Vert XL',1]]},
+  {id:'19', nom:'Robe Désirée', meta:'', prix:'70€', sizes:[
+    ['Beige S',1],['Beige M',1],['Beige L',1],
+    ['Jaune S',1],['Jaune XL',2],
+    ['Blanc S',5],['Blanc M',7],['Blanc XL',2]
+  ]},
+  {id:'20', nom:'Robe Teecya', meta:'', prix:'60€', note:"Le cercle sur la fiche indique 13, le détail lu donne 12 (un chiffre raturé) — écart à vérifier physiquement", sizes:[
+    ['Vert foncé S',1],['Vert foncé M',2],['Vert foncé XL',5],
+    ['Vert olive M',1],['Vert olive L',1],
+    ['Vert foncé imprimé vert S',1],['Vert foncé imprimé vert XL',1]
+  ]},
+  {id:'21', nom:'Boubou Makeba', meta:'', prix:'75€', sizes:[['L',1],['XL',2]]},
+  {id:'22', nom:'Robe Lena', meta:'Peut-être le même modèle que Robe Elena sous un autre nom sur la fiche papier — à vérifier', prix:'60€', sizes:[['Rose L',2],['Jaune M',4],['Jaune L',3],['Jaune XL',2]]},
+  {id:'23', nom:'Ensemble Culotte Aymerik', meta:'', prix:'70€', sizes:[['Jaune S',2],['Jaune M',2],['Jaune XL',2]]},
+  {id:'24', nom:'Robe Kimono', meta:'', prix:'50€', sizes:[['Rose S',2],['Rose L',1],['Rose XL',1],['Jaune S',1],['Jaune L',2],['Vert M',1]]},
+  {id:'25', nom:'Robe Eliora Court', meta:'', prix:'50€', note:"Dernière ligne (Rose L) partiellement coupée sur la photo, quantité estimée", sizes:[['Bleu-Bleu S',3],['Bleu-Bleu M',2],['Bleu-Bleu L',2],['Rose S',1],['Rose M',1],['Rose L',2]]},
+  {id:'26', nom:'Robe Eliora Long', meta:'', prix:'65€', sizes:[['Bleu-Bleu S',1],['Rose S',2],['Rose M',2],['Rose L',1]]},
+  {id:'27', nom:'Ensemble Maelys', meta:'Jupe & haut', prix:'65€', sizes:[['Bleu-Bleu S',2],['Bleu-Bleu M',3],['Bleu-Bleu L',1],['Bleu-Marron M',1],['Bleu-Rouge S',1]]}
+];
+
+var BASELINE_KEY = 'mynugo_stock_baseline_v4';
+var BASELINE_DATE_KEY = 'mynugo_stock_baseline_date_v4';
+
+function parsePrix(str){
+  var n = parseInt(String(str).replace(/[^0-9]/g,''), 10);
+  return isNaN(n) ? null : n;
+}
+
+function todayStr(){
+  var d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function makeState(){
+  var saved = {};
+  try{ saved = JSON.parse(localStorage.getItem(LOCAL_KEY) || '{}'); }catch(e){}
+  return CATALOGUE.map(function(p){
+    return {
+      id: p.id, nom: p.nom, meta: p.meta, prix: p.prix, prixNum: parsePrix(p.prix), note: p.note,
+      sizes: p.sizes.map(function(s){
+        var key = p.id + '_' + s[0];
+        var val = (saved[key] !== undefined) ? saved[key] : s[1];
+        return { label: s[0], stockInit: s[1], stock: val, key: key };
+      })
+    };
+  });
+}
+
+function saveState(state){
+  var map = {};
+  state.forEach(function(p){
+    p.sizes.forEach(function(s){ map[s.key] = s.stock; });
+  });
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(map));
+}
+
+function loadBaseline(state){
+  var storedDate = localStorage.getItem(BASELINE_DATE_KEY);
+  var today = todayStr();
+  var baseline = {};
+  if (storedDate === today){
+    try{ baseline = JSON.parse(localStorage.getItem(BASELINE_KEY) || '{}'); }catch(e){ baseline = {}; }
+  }
+  // Nouvelle journée (ou premier lancement) : on fige le stock actuel comme point de départ du jour
+  if (storedDate !== today || !baseline || Object.keys(baseline).length === 0){
+    baseline = {};
+    state.forEach(function(p){ p.sizes.forEach(function(s){ baseline[s.key] = s.stock; }); });
+    localStorage.setItem(BASELINE_KEY, JSON.stringify(baseline));
+    localStorage.setItem(BASELINE_DATE_KEY, today);
+  }
+  return baseline;
+}
+
+var STATE = makeState();
+var BASELINE = loadBaseline(STATE);
+var OPEN = {};
+
+function checkDateRollover(){
+  if (localStorage.getItem(BASELINE_DATE_KEY) !== todayStr()){
+    BASELINE = loadBaseline(STATE);
+  }
+}
+
+function render(){
+  checkDateRollover();
+  var q = document.getElementById('search').value.trim().toLowerCase();
+  var listEl = document.getElementById('list');
+  listEl.innerHTML = '';
+
+  var totalRestant = 0, totalVendu = 0, totalRupture = 0, caJour = 0, caTotal = 0, sansPrix = false;
+
+  STATE.forEach(function(p){
+    var restantModele = 0, initModele = 0;
+    p.sizes.forEach(function(s){
+      restantModele += s.stock;
+      initModele += s.stockInit;
+      totalRestant += s.stock;
+      totalVendu += (s.stockInit - s.stock);
+      if (s.stock <= 0) totalRupture++;
+
+      var venduTotal = Math.max(0, s.stockInit - s.stock);
+      var baseJour = (BASELINE[s.key] !== undefined) ? BASELINE[s.key] : s.stockInit;
+      var venduJour = Math.max(0, baseJour - s.stock);
+
+      if (p.prixNum !== null){
+        caTotal += venduTotal * p.prixNum;
+        caJour += venduJour * p.prixNum;
+      } else if (venduTotal > 0) {
+        sansPrix = true;
+      }
+    });
+
+    if (q && p.nom.toLowerCase().indexOf(q) === -1 && (p.meta||'').toLowerCase().indexOf(q) === -1) return;
+
+    var card = document.createElement('div');
+    card.className = 'card' + (OPEN[p.id] ? ' open' : '');
+
+    var head = document.createElement('div');
+    head.className = 'card-head' + (restantModele <= 0 ? ' rupture' : '');
+    head.addEventListener('click', function(){ OPEN[p.id] = !OPEN[p.id]; render(); });
+
+    var chevron = document.createElement('div');
+    chevron.className = 'chevron';
+    chevron.textContent = '›';
+
+    var name = document.createElement('div');
+    name.className = 'card-name';
+    var n = document.createElement('div'); n.className = 'n'; n.textContent = p.nom;
+    var m = document.createElement('div'); m.className = 'm'; m.textContent = p.prix + (p.meta ? ' · ' + p.meta : '');
+    name.appendChild(n); name.appendChild(m);
+
+    var total = document.createElement('div');
+    total.className = 'card-total' + (restantModele <= 0 ? ' zero' : '');
+    var num = document.createElement('div'); num.className = 'num'; num.textContent = restantModele + '/' + initModele;
+    var lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = 'restant';
+    total.appendChild(num); total.appendChild(lbl);
+
+    head.appendChild(name);
+    head.appendChild(total);
+    head.appendChild(chevron);
+    card.appendChild(head);
+
+    var body = document.createElement('div');
+    body.className = 'card-body';
+
+    p.sizes.forEach(function(s){
+      var row = document.createElement('div');
+      row.className = 'size-row';
+
+      var label = document.createElement('div');
+      label.className = 'size-label';
+      label.textContent = s.label;
+
+      var ctrl = document.createElement('div');
+      ctrl.className = 'size-ctrl';
+
+      var minus = document.createElement('button');
+      minus.className = 'btn btn-minus';
+      minus.textContent = '−';
+      minus.addEventListener('click', function(e){
+        e.stopPropagation();
+        if (s.stock > 0){ s.stock--; saveState(STATE); render(); }
+      });
+
+      var numEl = document.createElement('div');
+      numEl.className = 'stock-num' + (s.stock <= 0 ? ' zero' : '');
+      numEl.textContent = s.stock;
+
+      var plus = document.createElement('button');
+      plus.className = 'btn btn-plus';
+      plus.textContent = '+';
+      plus.addEventListener('click', function(e){
+        e.stopPropagation();
+        s.stock++; saveState(STATE); render();
+      });
+
+      ctrl.appendChild(minus);
+      ctrl.appendChild(numEl);
+      ctrl.appendChild(plus);
+      row.appendChild(label);
+      row.appendChild(ctrl);
+      body.appendChild(row);
+    });
+
+    if (p.note){
+      var noteEl = document.createElement('div');
+      noteEl.className = 'note';
+      noteEl.textContent = p.note;
+      body.appendChild(noteEl);
+    }
+
+    card.appendChild(body);
+    listEl.appendChild(card);
+  });
+
+  document.getElementById('sumTotal').textContent = totalRestant;
+  document.getElementById('sumVendu').textContent = totalVendu;
+  document.getElementById('sumRupture').textContent = totalRupture;
+  document.getElementById('caJour').textContent = caJour + '€' + (sansPrix ? ' *' : '');
+  document.getElementById('caTotal').textContent = caTotal + '€' + (sansPrix ? ' *' : '');
+}
+
+document.getElementById('search').addEventListener('input', render);
+
+document.getElementById('resetBtn').addEventListener('click', function(){
+  var saisie = prompt('Action irréversible : tout le stock revient aux quantités de départ et le CA du jour repart à 0.\n\nTape RESET en majuscules pour confirmer :');
+  if (saisie === null) return;
+  if (saisie.trim().toUpperCase() !== 'RESET'){
+    alert('Annulé — le texte ne correspondait pas à "RESET".');
+    return;
+  }
+  STATE.forEach(function(p){ p.sizes.forEach(function(s){ s.stock = s.stockInit; }); });
+  saveState(STATE);
+  BASELINE = {};
+  STATE.forEach(function(p){ p.sizes.forEach(function(s){ BASELINE[s.key] = s.stock; }); });
+  localStorage.setItem(BASELINE_KEY, JSON.stringify(BASELINE));
+  localStorage.setItem(BASELINE_DATE_KEY, todayStr());
+  render();
+});
+
+document.getElementById('exportBtn').addEventListener('click', function(){
+  var caJourEl = document.getElementById('caJour').textContent;
+  var caTotalEl = document.getElementById('caTotal').textContent;
+  var lines = ['MY NUGO — Récap stock exposition', 'CA du jour : ' + caJourEl, 'CA total expo : ' + caTotalEl, ''];
+  STATE.forEach(function(p){
+    var restant = 0, init = 0, detail = [];
+    p.sizes.forEach(function(s){
+      restant += s.stock; init += s.stockInit;
+      var vendu = s.stockInit - s.stock;
+      detail.push(s.label + ':' + s.stock + (vendu>0 ? ' (-' + vendu + ')' : ''));
+    });
+    lines.push(p.nom + ' (' + p.prix + ') — ' + restant + '/' + init + ' restant — ' + detail.join(', '));
+  });
+  var text = lines.join('\n');
+  if (navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){
+      alert('Récap copié — colle-le dans WhatsApp ou tes notes.');
+    }).catch(function(){
+      prompt('Copie ce récap :', text);
+    });
+  } else {
+    prompt('Copie ce récap :', text);
+  }
+});
+
+render();
+</script>
+</body>
+</html>

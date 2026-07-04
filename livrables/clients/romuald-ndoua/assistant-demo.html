@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Assistant Commercial IA — Démo Interactive</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --blue:#1877F2;
+  --blue-dark:#0F52BA;
+  --navy:#0D1421;
+  --bg:#E9ECF0;
+  --white:#FFFFFF;
+  --text:#111827;
+  --muted:#6B7280;
+  --green:#25D366;
+  --red:#DC2626;
+  --bubble-user:#D2E3FC;
+}
+
+html,body{
+  height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;
+  background:var(--navy);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+/* ============================
+   SPLASH
+============================ */
+#splash{
+  position:fixed;
+  inset:0;
+  background:var(--navy);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:200;
+  transition:opacity .5s ease, transform .5s ease;
+  padding:32px;
+}
+#splash.out{opacity:0;transform:scale(.96);pointer-events:none}
+
+.splash-icon{
+  width:76px;height:76px;
+  background:var(--blue);
+  border-radius:22px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:24px;
+  box-shadow:0 8px 32px rgba(24,119,242,.4);
+}
+.splash-icon svg{width:42px;height:42px}
+
+.splash-h{font-size:22px;font-weight:700;color:#fff;text-align:center;margin-bottom:10px;line-height:1.3}
+.splash-p{font-size:14px;color:rgba(255,255,255,.5);text-align:center;max-width:300px;line-height:1.6;margin-bottom:36px}
+
+.splash-cta{
+  background:var(--blue);color:#fff;border:none;
+  padding:14px 36px;border-radius:50px;
+  font-size:15px;font-weight:600;cursor:pointer;
+  font-family:inherit;
+  transition:background .2s, transform .15s;
+  box-shadow:0 4px 20px rgba(24,119,242,.35);
+}
+.splash-cta:hover{background:var(--blue-dark);transform:scale(1.03)}
+.splash-cta:active{transform:scale(.98)}
+
+.splash-byline{
+  margin-top:28px;
+  font-size:11px;color:rgba(255,255,255,.25);
+  letter-spacing:1.5px;text-transform:uppercase;
+}
+
+/* ============================
+   WRAPPER & PHONE
+============================ */
+.scene{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;
+}
+.scene-label{
+  font-size:11px;color:rgba(255,255,255,.3);
+  letter-spacing:2px;text-transform:uppercase;
+}
+
+.phone{
+  width:375px;
+  height:790px;
+  background:var(--bg);
+  border-radius:44px;
+  box-shadow:
+    0 0 0 10px #1a1f2e,
+    0 0 0 12px #2a2f3e,
+    0 50px 120px rgba(0,0,0,.7);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+
+/* Notch */
+.phone::before{
+  content:'';
+  position:absolute;
+  top:0;left:50%;transform:translateX(-50%);
+  width:110px;height:26px;
+  background:#1a1f2e;
+  border-radius:0 0 18px 18px;
+  z-index:10;
+}
+
+/* ============================
+   HEADER
+============================ */
+.hdr{
+  background:var(--blue);
+  padding:36px 14px 12px;
+  display:flex;align-items:center;gap:10px;
+  flex-shrink:0;
+}
+.hdr-back{opacity:.75;cursor:pointer;padding:4px}
+.hdr-back svg{display:block}
+
+.hdr-av{
+  width:38px;height:38px;border-radius:50%;
+  background:rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.hdr-info{flex:1}
+.hdr-name{color:#fff;font-size:15px;font-weight:600;line-height:1.2}
+.hdr-status{
+  color:rgba(255,255,255,.7);font-size:11px;
+  display:flex;align-items:center;gap:4px;margin-top:1px;
+}
+.status-dot{
+  width:6px;height:6px;background:#4ade80;border-radius:50%;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ============================
+   CHAT AREA
+============================ */
+.chat{
+  flex:1;
+  overflow-y:auto;
+  padding:12px 10px 6px;
+  display:flex;flex-direction:column;gap:3px;
+  background:var(--bg);
+  scroll-behavior:smooth;
+}
+.chat::-webkit-scrollbar{display:none}
+
+.date-chip{
+  text-align:center;margin:6px 0 10px;
+}
+.date-chip span{
+  background:rgba(0,0,0,.08);color:#555;
+  font-size:11px;padding:3px 12px;border-radius:10px;
+}
+
+/* ============================
+   MESSAGES
+============================ */
+.mrow{display:flex;margin-bottom:1px}
+.mrow.bot{justify-content:flex-start}
+.mrow.user{justify-content:flex-end}
+
+.bubble{
+  max-width:82%;
+  padding:8px 11px 5px;
+  border-radius:18px;
+  font-size:13.5px;line-height:1.55;
+  position:relative;
+  animation:msgIn .22s ease;
+}
+@keyframes msgIn{
+  from{opacity:0;transform:translateY(5px) scale(.97)}
+  to{opacity:1;transform:none}
+}
+
+.bubble.bot{
+  background:var(--white);
+  color:var(--text);
+  border-bottom-left-radius:4px;
+  box-shadow:0 1px 2px rgba(0,0,0,.08);
+}
+.bubble.user{
+  background:var(--bubble-user);
+  color:#0D1B2A;
+  border-bottom-right-radius:4px;
+}
+
+.btime{
+  font-size:10px;color:rgba(0,0,0,.32);
+  text-align:right;margin-top:3px;
+  display:flex;align-items:center;justify-content:flex-end;gap:3px;
+}
+.btime.user{color:rgba(13,27,42,.38)}
+
+/* ============================
+   TYPING INDICATOR
+============================ */
+.typing-row{display:flex;justify-content:flex-start;margin-bottom:1px}
+.typing-bbl{
+  background:var(--white);
+  padding:11px 14px;border-radius:18px;border-bottom-left-radius:4px;
+  display:flex;gap:4px;align-items:center;
+  box-shadow:0 1px 2px rgba(0,0,0,.08);
+  animation:msgIn .2s ease;
+}
+.dot{
+  width:7px;height:7px;background:#9CA3AF;border-radius:50%;
+  animation:blink 1.2s infinite;
+}
+.dot:nth-child(2){animation-delay:.18s}
+.dot:nth-child(3){animation-delay:.36s}
+@keyframes blink{
+  0%,60%,100%{opacity:.3;transform:scale(1)}
+  30%{opacity:1;transform:scale(1.25)}
+}
+
+/* ============================
+   QUICK REPLIES
+============================ */
+.qr{
+  padding:8px 10px 10px;
+  display:flex;flex-wrap:wrap;gap:7px;
+  background:var(--bg);
+  border-top:1px solid rgba(0,0,0,.07);
+  flex-shrink:0;
+  min-height:52px;
+}
+.qr-btn{
+  background:var(--white);
+  border:1.5px solid var(--blue);
+  color:var(--blue);
+  padding:7px 13px;border-radius:20px;
+  font-size:12.5px;font-weight:500;
+  cursor:pointer;transition:all .16s;
+  font-family:inherit;
+  white-space:nowrap;
+}
+.qr-btn:hover,.qr-btn:active{background:var(--blue);color:#fff}
+
+/* ============================
+   ALERT OVERLAY
+============================ */
+.alert-ov{
+  position:absolute;inset:0;
+  background:rgba(8,14,26,.97);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:20px;z-index:50;
+  animation:fadeIn .4s ease;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.alert-check{
+  width:62px;height:62px;background:#16a34a;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;
+  animation:pop .45s cubic-bezier(.175,.885,.32,1.275) .1s both;
+}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.alert-check svg{width:32px;height:32px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+.alert-h{color:#fff;font-size:18px;font-weight:700;margin-bottom:4px;text-align:center}
+.alert-s{color:rgba(255,255,255,.45);font-size:12px;text-align:center;margin-bottom:18px}
+
+.fiche{
+  background:#fff;border-radius:16px;padding:14px 16px;
+  width:100%;margin-bottom:14px;
+}
+.fiche-title{
+  font-size:10.5px;font-weight:700;color:var(--blue);
+  text-transform:uppercase;letter-spacing:1px;
+  margin-bottom:10px;display:flex;align-items:center;gap:5px;
+}
+.fiche-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 0;border-bottom:1px solid #F3F4F6;
+  font-size:13px;
+}
+.fiche-row:last-child{border:none}
+.fl{color:#6B7280}
+.fv{font-weight:600;color:var(--text)}
+.fv.hot{color:var(--red)}
+.fv.ok{color:#16a34a}
+
+.wa-notif{
+  background:rgba(37,211,102,.12);
+  border:1px solid rgba(37,211,102,.25);
+  border-radius:12px;padding:10px 14px;
+  width:100%;display:flex;align-items:center;gap:10px;
+  margin-bottom:18px;
+}
+.wa-ic{
+  width:32px;height:32px;background:#25D366;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:17px;
+}
+.wa-text{font-size:11.5px;color:rgba(255,255,255,.8);line-height:1.45}
+.wa-text strong{color:#4ade80;display:block;font-size:10px;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px}
+
+.replay-btn{
+  background:var(--blue);color:#fff;border:none;
+  padding:12px 28px;border-radius:50px;
+  font-size:14px;font-weight:600;cursor:pointer;
+  font-family:inherit;transition:background .2s, transform .15s;
+}
+.replay-btn:hover{background:var(--blue-dark)}
+.replay-btn:active{transform:scale(.97)}
+
+/* ============================
+   RESPONSIVE
+============================ */
+@media(max-width:500px){
+  html,body{align-items:flex-start}
+  .phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}
+  .phone::before{display:none}
+  .hdr{padding-top:48px}
+  .scene-label{display:none}
+  .scene{gap:0}
+}
+@media(max-height:820px) and (min-width:500px){
+  .phone{height:calc(100dvh - 60px)}
+}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-icon">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="9" cy="10" r="1" fill="white"/>
+      <circle cx="12" cy="10" r="1" fill="white"/>
+      <circle cx="15" cy="10" r="1" fill="white"/>
+    </svg>
+  </div>
+  <div class="splash-h">Assistant Commercial IA<br>— Démo interactive</div>
+  <div class="splash-p">Découvre comment un assistant IA qualifie et convertit tes prospects automatiquement, 24h/24 — exactement comme un humain.</div>
+  <button class="splash-cta" onclick="boot()">Lancer la démo →</button>
+  <div class="splash-byline">Propulsé par Agence Attractor</div>
+</div>
+
+<!-- SCENE -->
+<div class="scene">
+  <div class="scene-label">Démo interactive</div>
+
+  <div class="phone">
+
+    <!-- Header -->
+    <div class="hdr">
+      <div class="hdr-back">
+        <svg width="9" height="15" viewBox="0 0 9 15" fill="none">
+          <path d="M7.5 1.5L1.5 7.5L7.5 13.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="hdr-av">🤖</div>
+      <div class="hdr-info">
+        <div class="hdr-name">Assistant Romuald</div>
+        <div class="hdr-status"><div class="status-dot"></div>En ligne</div>
+      </div>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="3"/><path d="M20.488 9H15M15 9a3 3 0 1 0-6 0M9 9H3.512M3.93 14.917l1.415-1.415M18.657 14.917l-1.415-1.415M12 19.5V22"/>
+      </svg>
+    </div>
+
+    <!-- Chat -->
+    <div class="chat" id="chat">
+      <div class="date-chip"><span>Aujourd'hui</span></div>
+    </div>
+
+    <!-- Quick replies -->
+    <div class="qr" id="qr"></div>
+
+  </div>
+
+  <div style="font-size:11px;color:rgba(255,255,255,.2);letter-spacing:.5px">Agence Attractor — agenceattractor.com</div>
+</div>
+
+<script>
+const chat = document.getElementById('chat');
+const qr   = document.getElementById('qr');
+
+/* ── Helpers ── */
+function t(){
+  return new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+}
+function scroll(){
+  setTimeout(()=>{ chat.scrollTop = chat.scrollHeight; }, 40);
+}
+function clearQR(){ qr.innerHTML=''; }
+
+function addUser(txt){
+  const d=document.createElement('div');
+  d.className='mrow user';
+  d.innerHTML=`<div class="bubble user">${txt}<div class="btime user">${t()} <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5l3 3 9-8" stroke="#1877F2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 5l3 3 5-8" stroke="#1877F2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity=".5"/></svg></div></div>`;
+  chat.appendChild(d);
+  scroll();
+}
+
+function showTyping(){
+  const d=document.createElement('div');
+  d.className='typing-row'; d.id='typ';
+  d.innerHTML='<div class="typing-bbl"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+  chat.appendChild(d);
+  scroll();
+}
+function killTyping(){ const e=document.getElementById('typ'); if(e)e.remove(); }
+
+/* addBot returns a Promise — awaitable */
+function addBot(html, delay=0, typingMs=null){
+  return new Promise(res=>{
+    setTimeout(()=>{
+      showTyping();
+      const ms = typingMs ?? Math.min(Math.max(html.replace(/<[^>]*>/g,'').length*28,900),2800);
+      setTimeout(()=>{
+        killTyping();
+        const d=document.createElement('div');
+        d.className='mrow bot';
+        d.innerHTML=`<div class="bubble bot">${html}<div class="btime">${t()}</div></div>`;
+        chat.appendChild(d);
+        scroll();
+        res();
+      },ms);
+    },delay);
+  });
+}
+
+function showQR(opts, cb){
+  clearQR();
+  opts.forEach(o=>{
+    const b=document.createElement('button');
+    b.className='qr-btn';
+    b.textContent=o.label;
+    b.onclick=()=>{
+      qr.querySelectorAll('.qr-btn').forEach(x=>{ x.style.pointerEvents='none'; x.style.opacity='.5'; });
+      b.style.background='#1877F2'; b.style.color='#fff'; b.style.opacity='1';
+      setTimeout(()=>{ clearQR(); addUser(o.label); setTimeout(()=>cb(o.value),500); },280);
+    };
+    qr.appendChild(b);
+  });
+}
+
+/* ── Script ── */
+async function runScript(){
+
+  /* Prospect arrive */
+  await pause(800);
+  addUser("Bonjour j'ai besoin d'un compte pub Facebook, mon Business Manager est banni 😔");
+
+  /* 1 — Accueil */
+  await addBot("Bonjour ! Je suis l'assistant de Romuald, spécialiste des comptes publicitaires Facebook professionnels. 👋<br><br>Pour te trouver la bonne solution rapidement, j'ai juste une question :", 700);
+  await addBot("Tu cherches à obtenir un nouveau compte pub professionnel, ou tu as un compte existant qui pose problème ?", 300, 1400);
+
+  showQR([
+    {label:"Compte bloqué / banni", value:"blocked"},
+    {label:"Nouveau compte", value:"new"}
+  ], async (v)=>{
+
+    /* 2 — Qualification type */
+    await addBot("D'accord. C'est ton compte pub qui est suspendu, ou c'est tout ton Business Manager qui est banni ?", 200);
+    showQR([
+      {label:"Mon compte pub est suspendu", value:"pub"},
+      {label:"Mon BM complet est banni", value:"bm"}
+    ], async (v2)=>{
+
+      /* 3 — Usage */
+      await addBot("Compris. Et tu fais ça pour quel type d'activité ?", 200, 900);
+      showQR([
+        {label:"E-commerce", value:"ecom"},
+        {label:"Dropshipping", value:"drop"},
+        {label:"Agence pub", value:"agence"},
+        {label:"Autre", value:"autre"}
+      ], async (v3)=>{
+
+        /* 4 — Urgence */
+        await addBot("Et c'est urgent pour toi ? Tu as des campagnes à relancer rapidement ?", 200, 1000);
+        showQR([
+          {label:"Oui, c'est urgent", value:"urgent"},
+          {label:"Non, je peux attendre", value:"relax"}
+        ], async (v4)=>{
+
+          /* 5 — Explication process */
+          await addBot("Parfait. Je t'explique exactement comment ça marche, pour qu'il n'y ait aucune surprise de ton côté.", 400, 1200);
+          await addBot("Ce qu'on fait concrètement : on associe un compte publicitaire professionnel directement à ton Business Manager. Ce compte est propre, opérationnel, prêt à diffuser immédiatement.", 500);
+          await addBot("Pour faire cette liaison, on a besoin uniquement de ton <strong>BM ID</strong>. C'est un numéro public — pas ton mot de passe, pas ton email, zéro accès à ton compte. Juste un identifiant de liaison.", 600);
+          await addBot("Une fois qu'on a ce numéro, on fait la liaison de notre côté. Tu reçois une notification Facebook pour accepter. C'est tout — le compte est dans ton BM, tu travailles normalement.", 400);
+
+          /* 6 — Prix */
+          await addBot("Selon ce que tu m'as décrit, voilà les formules :<br><br>🔹 <strong>Compte pub standard</strong> — 80 €<br>🔹 <strong>Compte pub + BM solide</strong> — 150 €<br>🔹 <strong>BM complet neuf + compte pub</strong> — 220 €<br><br>Livraison sous 24h. Garantie remplacement si le compte est banni sans raison de ta part.", 700);
+          await addBot("Tu pars sur quelle formule ?", 300, 700);
+
+          showQR([
+            {label:"Standard — 80 €", value:"s"},
+            {label:"BM Pro — 150 €", value:"p"},
+            {label:"BM Complet — 220 €", value:"c"}
+          ], async (v5)=>{
+
+            /* 7 — BM ID request */
+            await addBot("Nickel. Pour finaliser, j'ai besoin de ton BM ID.", 400, 900);
+            await addBot("Pour le trouver en 30 secondes :<br><br>① Va sur <strong>business.facebook.com</strong><br>② Paramètres → Informations sur le compte<br>③ Tu vois un numéro à 15 chiffres sous le nom de ton Business<br><br>Envoie-le ici quand tu l'as.", 300);
+
+            /* User hésite */
+            await pause(2400);
+            addUser("Attends... vous pouvez pas accéder à mon compte avec ça ? J'ai peur de me faire pirater 😅");
+
+            /* 8 — Objection sécurité */
+            await addBot("Ta méfiance est tout à fait normale, je la comprends.", 500, 900);
+            await addBot("Voilà la réalité technique : ton BM ID est un <strong>numéro public</strong>. Il est visible dans l'URL de ton Business Manager quand tu es connecté — n'importe qui peut le voir si tu partages ton écran.", 400);
+            await addBot("Pour accéder à un compte Facebook, il faut : ton email + ton mot de passe + ton code 2FA. On ne te demande aucun de ces éléments. <strong>Jamais.</strong>", 500);
+            await addBot("Tu veux vérifier par toi-même ? Tape <em>\"Facebook Business Manager ID qu'est-ce que c'est\"</em> sur Google — tu verras que c'est une info que Meta elle-même affiche publiquement dans tes paramètres.", 400);
+
+            /* User envoie le BM ID */
+            await pause(2800);
+            addUser("Ok ok je comprends. Voilà mon ID : 487291038492847");
+
+            /* 9 — Confirmation */
+            await addBot("Reçu. 👌", 500, 600);
+            await addBot("Je transmets ça à Romuald maintenant. Il va te contacter dans les prochaines minutes pour confirmer et finaliser la livraison.", 300);
+            await addBot("Merci pour ta confiance — tu es entre de bonnes mains.", 400, 900);
+
+            /* Alert */
+            await pause(1600);
+            showAlert();
+
+          });
+        });
+      });
+    });
+  });
+}
+
+function pause(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+/* ── Alert ── */
+function showAlert(){
+  const o=document.createElement('div');
+  o.className='alert-ov';
+  o.innerHTML=`
+    <div class="alert-check">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div class="alert-h">Lead qualifié !</div>
+    <div class="alert-s">Alerte envoyée à Romuald — maintenant</div>
+
+    <div class="fiche">
+      <div class="fiche-title">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Fiche lead
+      </div>
+      <div class="fiche-row"><span class="fl">Problème</span><span class="fv">BM complet banni</span></div>
+      <div class="fiche-row"><span class="fl">Usage</span><span class="fv">E-commerce</span></div>
+      <div class="fiche-row"><span class="fl">Urgence</span><span class="fv hot">Urgent</span></div>
+      <div class="fiche-row"><span class="fl">Formule choisie</span><span class="fv">BM Pro — 150 €</span></div>
+      <div class="fiche-row"><span class="fl">BM ID reçu</span><span class="fv ok">✓ 487291038492847</span></div>
+    </div>
+
+    <div class="wa-notif">
+      <div class="wa-ic">💬</div>
+      <div class="wa-text">
+        <strong>WhatsApp Romuald</strong>
+        LEAD CHAUD — BM banni, e-commerce, urgent. Formule Pro 150€. BM ID reçu. Intervenir pour conclure.
+      </div>
+    </div>
+
+    <button class="replay-btn" onclick="restart()">↺ Rejouer la démo</button>
+  `;
+  document.querySelector('.phone').appendChild(o);
+}
+
+/* ── Boot / Restart ── */
+function boot(){
+  document.getElementById('splash').classList.add('out');
+  setTimeout(runScript, 600);
+}
+
+function restart(){
+  chat.innerHTML='<div class="date-chip"><span>Aujourd\'hui</span></div>';
+  clearQR();
+  document.querySelector('.alert-ov')?.remove();
+  runScript();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Emmanuela — Media Buying Support</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-chat:#EBE5DC;
+  --bubble-agent:#fff;
+  --bubble-user:#D4E8C2;
+  --hdr:#1C1E2D;
+  --green:#53BD6B;
+  --text:#111;
+}
+html,body{
+  height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;
+  background:#111;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.scene{display:flex;flex-direction:column;align-items:center;gap:14px}
+.scene-tag{font-size:10px;color:rgba(255,255,255,.22);letter-spacing:2px;text-transform:uppercase}
+
+/* PHONE */
+.phone{
+  width:375px;height:812px;
+  background:var(--bg-chat);
+  border-radius:44px;
+  box-shadow:0 0 0 10px #1e1e2e,0 0 0 12px #2e2e3e,0 40px 100px rgba(0,0,0,.7);
+  overflow:hidden;display:flex;flex-direction:column;position:relative;
+}
+.phone::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:112px;height:26px;background:#1e1e2e;border-radius:0 0 16px 16px;z-index:20;
+}
+
+/* HEADER */
+.hdr{
+  background:var(--hdr);padding:36px 14px 12px;
+  display:flex;align-items:center;gap:10px;flex-shrink:0;z-index:10;
+}
+.hdr-back{color:rgba(255,255,255,.6);cursor:pointer;padding:4px}
+.hdr-av{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#D4845A,#B8522A);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:700;color:#fff;
+  font-family:Georgia,serif;
+  box-shadow:0 2px 8px rgba(0,0,0,.35);
+  position:relative;overflow:hidden;
+}
+.hdr-av::after{
+  content:'👤';position:absolute;bottom:-4px;font-size:26px;
+  opacity:0.18;
+}
+.hdr-av span{position:relative;z-index:1}
+.hdr-info{flex:1}
+.hdr-name{color:#fff;font-size:15px;font-weight:600;line-height:1.2}
+.hdr-status{color:rgba(255,255,255,.5);font-size:11px;margin-top:2px;min-height:14px;transition:color .3s}
+.hdr-status.writing{color:#53BD6B}
+.hdr-icons{display:flex;gap:18px}
+
+/* CHAT */
+.chat{
+  flex:1;overflow-y:auto;padding:10px 10px 6px;
+  display:flex;flex-direction:column;gap:2px;
+  background:var(--bg-chat)
+    url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-opacity='.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+  scroll-behavior:smooth;
+}
+.chat::-webkit-scrollbar{display:none}
+.date-chip{text-align:center;margin:8px 0 12px}
+.date-chip span{background:rgba(0,0,0,.12);color:rgba(0,0,0,.5);font-size:11px;padding:3px 12px;border-radius:8px}
+
+/* BUBBLES */
+.mrow{display:flex;margin-bottom:2px}
+.mrow.ag{justify-content:flex-start;padding-left:2px}
+.mrow.us{justify-content:flex-end;padding-right:2px}
+.bubble{
+  max-width:80%;padding:7px 10px 5px;border-radius:10px;
+  font-size:13.5px;line-height:1.55;animation:pop .2s ease;
+  word-break:break-word;
+}
+@keyframes pop{from{opacity:0;transform:translateY(4px) scale(.97)}to{opacity:1;transform:none}}
+.bubble.ag{background:var(--bubble-agent);color:var(--text);border-top-left-radius:2px;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+.bubble.us{background:var(--bubble-user);color:#0a1a0a;border-top-right-radius:2px}
+.btime{font-size:10px;color:rgba(0,0,0,.32);text-align:right;margin-top:2px;display:flex;align-items:center;justify-content:flex-end;gap:2px}
+.btime.us{color:rgba(0,40,0,.38)}
+.checks{color:#53BD6B}
+
+/* TYPING */
+.trow{display:flex;justify-content:flex-start;padding-left:2px;margin-bottom:2px}
+.tbbl{
+  background:var(--bubble-agent);padding:10px 14px;border-radius:10px;border-top-left-radius:2px;
+  display:flex;gap:4px;align-items:center;box-shadow:0 1px 1px rgba(0,0,0,.08);animation:pop .18s ease;
+}
+.tdot{width:7px;height:7px;background:#aaa;border-radius:50%;animation:td 1.2s infinite}
+.tdot:nth-child(2){animation-delay:.15s}
+.tdot:nth-child(3){animation-delay:.30s}
+@keyframes td{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-5px);opacity:1}}
+
+/* SUGGESTIONS */
+.suggs{
+  padding:6px 10px 8px;display:flex;flex-wrap:wrap;gap:6px;
+  background:#F0EBE3;border-top:1px solid rgba(0,0,0,.06);
+  transition:max-height .4s,opacity .4s,padding .4s;
+  overflow:hidden;max-height:80px;
+}
+.suggs.hidden{max-height:0;opacity:0;padding:0}
+.spill{
+  background:#fff;color:rgba(0,0,0,.6);font-size:11.5px;
+  padding:5px 11px;border-radius:14px;cursor:pointer;
+  border:1px solid rgba(0,0,0,.1);transition:all .15s;font-family:inherit;
+}
+.spill:hover{background:#53BD6B;color:#fff;border-color:transparent}
+
+/* INPUT */
+.input-wrap{
+  background:#F0EBE3;padding:8px 10px;
+  display:flex;align-items:flex-end;gap:8px;flex-shrink:0;
+  border-top:1px solid rgba(0,0,0,.07);
+}
+.ibox{
+  flex:1;background:#fff;border:none;outline:none;
+  border-radius:22px;padding:9px 14px;font-size:13.5px;font-family:inherit;
+  color:var(--text);resize:none;max-height:100px;line-height:1.4;
+  box-shadow:0 1px 3px rgba(0,0,0,.1);
+}
+.ibox::placeholder{color:rgba(0,0,0,.33)}
+.sbtn{
+  width:38px;height:38px;background:var(--green);border:none;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
+  transition:background .15s,transform .1s;
+}
+.sbtn:hover{background:#46A85A}
+.sbtn:active{transform:scale(.93)}
+.sbtn svg{margin-left:1px}
+
+/* MOBILE */
+@media(max-width:500px){
+  html,body{align-items:flex-start;background:var(--bg-chat)}
+  .phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}
+  .phone::before{display:none}
+  .hdr{padding-top:50px}
+  .scene-tag{display:none}
+  .scene{gap:0}
+}
+@media(max-height:830px) and (min-width:500px){
+  .phone{height:calc(100dvh - 48px)}
+}
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="scene-tag">Démo conversationnelle</div>
+  <div class="phone">
+
+    <div class="hdr">
+      <div class="hdr-back"><svg width="9" height="15" viewBox="0 0 9 15" fill="none"><path d="M7.5 1.5L1.5 7.5L7.5 13.5" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="hdr-av"><span>E</span></div>
+      <div class="hdr-info">
+        <div class="hdr-name">Emmanuela</div>
+        <div class="hdr-status" id="status">Département Media Buying</div>
+      </div>
+      <div class="hdr-icons">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 .98h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+      </div>
+    </div>
+
+    <div class="chat" id="chat">
+      <div class="date-chip"><span>Aujourd'hui</span></div>
+    </div>
+
+    <div class="suggs" id="suggs">
+      <button class="spill" onclick="injectSugg(this)">Mon BM est banni</button>
+      <button class="spill" onclick="injectSugg(this)">Compte pub suspendu</button>
+      <button class="spill" onclick="injectSugg(this)">C'est quoi un compte agence ?</button>
+    </div>
+
+    <div class="input-wrap">
+      <textarea class="ibox" id="ibox" placeholder="Écrivez votre message…" rows="1"></textarea>
+      <button class="sbtn" onclick="send()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg>
+      </button>
+    </div>
+
+  </div>
+  <div style="font-size:10px;color:rgba(255,255,255,.18);letter-spacing:.5px">Agence Attractor — demo.agenceattractor.com</div>
+</div>
+
+<script>
+// ================================================================
+// MEMORY
+// ================================================================
+const mem = {
+  prenom:null, pays:null, activite:null, produits:null,
+  site:null, bm:null, whatsapp:null, email:null,
+  urgence:null, problem:null
+};
+
+let STATE = 'INITIAL';
+
+// ================================================================
+// UI
+// ================================================================
+const chatEl  = document.getElementById('chat');
+const statusEl= document.getElementById('status');
+const suggsEl = document.getElementById('suggs');
+const iboxEl  = document.getElementById('ibox');
+
+function ts(){ return new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); }
+function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function scroll(){ requestAnimationFrame(()=>{ chatEl.scrollTop=chatEl.scrollHeight; }); }
+function p(ms){ return new Promise(r=>setTimeout(r,ms)); }
+function typingMs(txt){ return Math.min(Math.max(txt.replace(/<[^>]*>/g,'').length*30,900),3000); }
+
+function setStatus(txt,green=false){
+  statusEl.textContent=txt;
+  statusEl.className='hdr-status'+(green?' writing':'');
+}
+
+let typingEl=null;
+function showTyping(){
+  if(typingEl) return;
+  setStatus("en train d'écrire…",true);
+  typingEl=document.createElement('div');
+  typingEl.className='trow';
+  typingEl.innerHTML='<div class="tbbl"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>';
+  chatEl.appendChild(typingEl);
+  scroll();
+}
+function hideTyping(){
+  setStatus('Département Media Buying',false);
+  typingEl?.remove(); typingEl=null;
+}
+
+function bubbleAgent(html){
+  const d=document.createElement('div');
+  d.className='mrow ag';
+  d.innerHTML=`<div class="bubble ag">${html}<div class="btime">${ts()}</div></div>`;
+  chatEl.appendChild(d); scroll();
+}
+function bubbleUser(txt){
+  const d=document.createElement('div');
+  d.className='mrow us';
+  d.innerHTML=`<div class="bubble us">${txt}<div class="btime us">${ts()} <span class="checks">✓✓</span></div></div>`;
+  chatEl.appendChild(d); scroll();
+}
+
+function hideSuggs(){ suggsEl.classList.add('hidden'); }
+
+// Send a sequence of agent messages with realistic typing
+async function say(...msgs){
+  for(let i=0;i<msgs.length;i++){
+    showTyping();
+    await p(typingMs(msgs[i]));
+    hideTyping();
+    bubbleAgent(msgs[i]);
+    if(i<msgs.length-1) await p(rnd(350,750));
+  }
+}
+
+// Fake "checking" pause before important answer
+async function check(interim, ...msgs){
+  await say(interim);
+  setStatus('vérifie votre dossier…',true);
+  await p(rnd(5000,9000));
+  await say(...msgs);
+}
+
+// ================================================================
+// DETECT
+// ================================================================
+function norm(s){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/['']/g,"'");
+}
+
+function detect(raw){
+  const m=norm(raw); const d={};
+
+  // Problem
+  if(/\bbann?i\b/.test(m))                            d.problem='banni';
+  else if(/\bsuspendu\b|\bsuspension\b/.test(m))      d.problem='suspendu';
+  else if(/\bbloque\b|\bblocage\b/.test(m))            d.problem='bloque';
+  else if(/\bdesactiv/.test(m))                        d.problem='desactive';
+  else if(/\brestreint\b|\brestriction\b/.test(m))     d.problem='restreint';
+
+  // Confirmation
+  if(/^(oui|yes|ok\b|ouais|exactement|exact|c'est ca|correct|absolument|tout a fait|bien sur|voila|effectivement)\b/.test(m.trim())) d.oui=true;
+  if(/^(non|no\b|pas vraiment|pas exactement|nan\b)/.test(m.trim())) d.non=true;
+
+  // Urgency
+  if(/urgent|vite|rapidement|immediatement|aujourd.?hui|des que possible/.test(m)) d.urgent=true;
+
+  // Country
+  const pays=[
+    [/ivoire|abidjan/,"Côte d'Ivoire"],[/\bfrance\b|paris|lyon/,"France"],
+    [/senegal|dakar/,"Sénégal"],[/cameroun|douala/,"Cameroun"],
+    [/belgique|bruxelles/,"Belgique"],[/maroc|casablanca/,"Maroc"],
+    [/togo|lome/,"Togo"],[/benin|cotonou/,"Bénin"],
+    [/mali|bamako/,"Mali"],[/gabon|libreville/,"Gabon"],
+    [/canada|montreal/,"Canada"],[/suisse|geneve/,"Suisse"],
+    [/guinee|conakry/,"Guinée"],[/congo|kinshasa|brazzaville/,"Congo"],
+  ];
+  for(const[re,p] of pays){ if(re.test(m)){d.pays=p;break;} }
+
+  // Activity
+  if(/e.?commerce|ecom\b/.test(m))      d.activite='e-commerce';
+  else if(/drop.?shipping|drop\b/.test(m)) d.activite='dropshipping';
+  else if(/\bagence\b/.test(m))          d.activite='agence publicitaire';
+  else if(/formation|coach/.test(m))     d.activite='formation/coaching';
+  else if(/restaurant|restau/.test(m))   d.activite='restauration';
+  else if(/service|prestation/.test(m))  d.activite='services';
+
+  // Price question
+  if(/combien|prix|tarif|cout\b|budget|payer/.test(m)) d.prix=true;
+
+  // Interest
+  if(/interesse|je veux|je prends|d'accord|ca m'interesse|go\b|commencer|on y va/.test(m)) d.interest=true;
+
+  // Objections
+  if(/legal|illegale|autoris|droit\b|risque/.test(m)) d.objLegal=true;
+  if(/recuper|debloqu|ancien compte|reactiv/.test(m)) d.objRecup=true;
+  if(/mensuel|tous les mois|location|abonnement/.test(m)) d.objMensuel=true;
+  if(/pourquoi vous|fiable|confiance|serieux|arnaque|escroc/.test(m)) d.objConfiance=true;
+  if(/recharg|credit line|crediter|alimenter/.test(m)) d.objRecharge=true;
+
+  // Agency question
+  if(/compte agence|c'est quoi|qu'est.ce|comment ca marche/.test(m)) d.askAgence=true;
+
+  // Data
+  const em=raw.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+  if(em) d.email=em[0];
+  const bm=raw.match(/\b\d{13,16}\b/);
+  if(bm) d.bm=bm[0];
+  const ph=raw.match(/[\+]?[\d][\d\s\-\.]{8,14}/);
+  if(ph&&!bm) d.phone=ph[0].trim();
+  const url=raw.match(/(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/\S*)?/);
+  if(url&&!em) d.site=url[0];
+
+  return d;
+}
+
+// Name extraction
+function extractName(raw){
+  const m=raw.match(/(?:je m'?appelle|mon pr[eé]nom(?:\s+est?)?|c'?est|je suis)\s+([A-ZÉÈÀÙÂÊÎÔÛÄËÏÖÜ][a-zéèàùâêîôûäëïöü]{2,})/i);
+  if(m) return m[1];
+  const words=raw.trim().split(/\s+/);
+  const skip=['Oui','Non','Ok','Oui','Bonjour','Bonsoir','Merci','Bien','Urgent','Oui','Voila'];
+  if(words.length<=3){
+    const w=words.find(x=>/^[A-ZÉÈÀÙÂÊÎÔÛÄËÏÖÜ][a-zéèàùâêîôûäëïöü]{2,}$/.test(x)&&!skip.includes(x));
+    if(w) return w;
+  }
+  return null;
+}
+
+function problemLabel(p){
+  return {banni:'Business Manager banni par Meta',suspendu:'compte publicitaire suspendu',
+          bloque:'compte bloqué',desactive:'compte désactivé',restreint:'compte en restriction'}[p]||'compte publicitaire bloqué';
+}
+
+// ================================================================
+// OBJECTION HANDLERS (callable from any state)
+// ================================================================
+async function handleObjLegal(){
+  await say(
+    "C'est une très bonne question.",
+    "L'accès partagé entre Business Managers est une fonctionnalité native de Meta. Toutes les agences travaillent ainsi avec leurs clients — c'est exactement le modèle officiel prévu par la plateforme.",
+    "Donc oui, c'est complètement légal et documenté dans les conditions d'utilisation de Meta Business."
+  );
+  await p(800);
+  await continueQualif();
+}
+
+async function handleObjRecup(){
+  await say(
+    "Je comprends tout à fait que vous souhaitiez récupérer votre ancien compte.",
+    "Le problème, c'est que même quand la récupération réussit, le compte reste fragilisé — Meta a noté l'incident. À la moindre anomalie, il peut être banni à nouveau.",
+    "C'est pour ça qu'on préfère vous proposer une base saine, sur laquelle vous pouvez construire durablement."
+  );
+  await p(800);
+  await continueQualif();
+}
+
+async function handleObjMensuel(){
+  await say(
+    "C'est une question tout à fait légitime.",
+    "En réalité, ce modèle vous protège. Si le compte est banni — même les meilleurs comptes peuvent l'être — on le remplace immédiatement, sans frais supplémentaires.",
+    "Si vous possédiez le compte, chaque incident vous coûterait. Là, c'est notre risque, pas le vôtre."
+  );
+  await p(800);
+  await continueQualif();
+}
+
+async function handleObjConfiance(){
+  await say(
+    "Je comprends votre hésitation, c'est normal.",
+    "Nous accompagnons des e-commerçants et des agences depuis plusieurs années. Notre modèle tient parce que notre priorité est que vos campagnes tournent — c'est comme ça qu'on fidélise.",
+    "Si vous avez des questions spécifiques, je suis là pour y répondre honnêtement."
+  );
+  await p(800);
+  await continueQualif();
+}
+
+async function handleObjRecharge(){
+  await say(
+    "La recharge est simple.",
+    "Vous nous indiquez le montant que vous souhaitez créditer. Vous effectuez le paiement, et notre équipe alimente votre Credit Line dans les 24 heures.",
+    "Le Credit Line fonctionne comme un portefeuille — vous mettez ce dont vous avez besoin pour vos campagnes, sans engagement de montant minimum."
+  );
+  await p(800);
+  await continueQualif();
+}
+
+async function handleAgenceExplain(){
+  await say(
+    "Un compte agence, c'est un compte publicitaire professionnel hébergé sous notre structure d'agence certifiée Meta.",
+    "Concrètement : vous ne passez plus par votre propre compte personnel — vous accédez à notre infrastructure. Ces comptes sont beaucoup plus stables et moins susceptibles d'être bannis.",
+    "Le fonctionnement est en Credit Line : vous rechargez le budget que vous voulez diffuser, et nos équipes s'occupent de la configuration.",
+    "Est-ce que ça répond à votre question ?"
+  );
+  STATE='CHECK_INTEREST';
+}
+
+// ================================================================
+// QUALIFICATION FLOW
+// ================================================================
+async function continueQualif(){
+  if(!mem.prenom)   { await say("Pour continuer, puis-je connaître votre prénom ?"); STATE='QUALIFY_NAME'; return; }
+  if(!mem.pays)     { await say(`${mem.prenom}, vous êtes basé dans quel pays ?`); STATE='QUALIFY_COUNTRY'; return; }
+  if(!mem.activite) { await say("Et quelle est votre activité principale — e-commerce, dropshipping, ou autre chose ?"); STATE='QUALIFY_ACTIVITY'; return; }
+  if(!mem.produits) { await say("Vous travaillez sur quels types de produits ?"); STATE='QUALIFY_PRODUCTS'; return; }
+  if(!mem.urgence)  { await say("Est-ce urgent pour vous ? Vous avez des campagnes à reprendre rapidement ?"); STATE='QUALIFY_URGENCY'; return; }
+  await presentAgence();
+}
+
+async function presentAgence(){
+  STATE='PRESENT';
+  await check(
+    "Un instant, je consulte ce qu'on peut faire pour votre situation…",
+    `${mem.prenom?'Voici ce que je peux vous proposer.':'Permettez-moi d\'être transparente avec vous.'}`,
+    "Nous ne faisons pas de récupération de comptes. Aujourd'hui cette méthode est rarement efficace — et même quand elle réussit, le compte reste fragilisé.",
+    "Ce que nous proposons est différent : un compte agence professionnel rattaché à notre structure Meta certifiée. Vous reprenez vos campagnes rapidement, sur une base stable.",
+    "Ça vous intéresse que je vous explique comment ça fonctionne concrètement ?"
+  );
+  STATE='CHECK_INTEREST';
+}
+
+// ================================================================
+// STATE MACHINE
+// ================================================================
+let busy=false;
+
+async function respond(raw){
+  if(busy) return;
+  busy=true;
+  const d=detect(raw);
+
+  // Store data
+  if(d.pays     &&!mem.pays)    mem.pays=d.pays;
+  if(d.activite &&!mem.activite)mem.activite=d.activite;
+  if(d.problem  &&!mem.problem) mem.problem=d.problem;
+  if(d.urgent)                  mem.urgence='urgent';
+  if(d.email    &&!mem.email)   mem.email=d.email;
+  if(d.bm       &&!mem.bm)      mem.bm=d.bm;
+  if(d.phone    &&!mem.whatsapp)mem.whatsapp=d.phone;
+  if(d.site     &&!mem.site)    mem.site=d.site;
+  if(d.prenom   &&!mem.prenom)  mem.prenom=d.prenom;
+
+  // Global priority: objections
+  if(d.objLegal)    { await handleObjLegal();    busy=false; return; }
+  if(d.objRecup)    { await handleObjRecup();    busy=false; return; }
+  if(d.objMensuel)  { await handleObjMensuel();  busy=false; return; }
+  if(d.objConfiance){ await handleObjConfiance();busy=false; return; }
+  if(d.objRecharge) { await handleObjRecharge(); busy=false; return; }
+  if(d.askAgence)   { await handleAgenceExplain();busy=false; return; }
+
+  // Price from any late state
+  if(d.prix && ['CHECK_INTEREST','PRESENT','TARIF','QUALIFY_URGENCY'].includes(STATE)){
+    await handleTarif(); busy=false; return;
+  }
+  if(d.interest && ['CHECK_INTEREST','PRESENT'].includes(STATE)){
+    await handleTarif(); busy=false; return;
+  }
+
+  // State routing
+  switch(STATE){
+
+    case 'INITIAL':
+      hideSuggestions();
+      if(d.problem){
+        mem.problem=d.problem;
+        await say(
+          "Je comprends.",
+          `Votre ${problemLabel(d.problem)} — c'est bien cela ?`
+        );
+        STATE='PROBLEM_CONFIRM';
+      } else if(d.oui||d.non||raw.trim().length<4){
+        await say("Comment puis-je vous aider exactement ?");
+      } else {
+        await say(
+          "Je vous lis.",
+          "Pouvez-vous me décrire le problème que vous rencontrez avec votre compte publicitaire ?"
+        );
+        STATE='INITIAL';
+      }
+      break;
+
+    case 'PROBLEM_CONFIRM':
+      if(d.non){
+        await say("D'accord, je comprends mal.", "Quel est exactement le problème avec votre compte ?");
+        STATE='INITIAL';
+      } else {
+        // Any answer (including oui or more detail) moves to qualification
+        await say("Très bien.", "Pour mieux vous accompagner, puis-je connaître votre prénom ?");
+        STATE='QUALIFY_NAME';
+      }
+      break;
+
+    case 'QUALIFY_NAME': {
+      const name=extractName(raw);
+      if(name){ mem.prenom=name; }
+      const n=mem.prenom||'';
+      if(n){
+        if(mem.pays){
+          await say(`${n} 😊`, "Et quelle est votre activité principale — e-commerce, dropshipping, ou autre chose ?");
+          STATE='QUALIFY_ACTIVITY';
+        } else {
+          await say(`${n} 😊`, "Vous êtes basé dans quel pays ?");
+          STATE='QUALIFY_COUNTRY';
+        }
+      } else {
+        await say("Je n'ai pas bien saisi votre prénom.", "Pouvez-vous me l'écrire ?");
+      }
+      break;
+    }
+
+    case 'QUALIFY_COUNTRY':
+      if(mem.pays){
+        await say("D'accord.", "Et quelle est votre activité principale — e-commerce, dropshipping, ou vous gérez une agence ?");
+        STATE='QUALIFY_ACTIVITY';
+      } else {
+        await say("Dans quel pays êtes-vous basé ?");
+      }
+      break;
+
+    case 'QUALIFY_ACTIVITY':
+      if(mem.activite){
+        await say("Je vois.", "Vous travaillez sur quels types de produits ?");
+        STATE='QUALIFY_PRODUCTS';
+      } else {
+        await say("E-commerce, dropshipping, agence — qu'est-ce qui décrit le mieux votre activité ?");
+      }
+      break;
+
+    case 'QUALIFY_PRODUCTS':
+      if(!mem.produits) mem.produits=raw.trim();
+      await say("D'accord.", "Est-ce urgent pour vous ? Vous avez des campagnes à reprendre rapidement ?");
+      STATE='QUALIFY_URGENCY';
+      break;
+
+    case 'QUALIFY_URGENCY':
+      if(!mem.urgence) mem.urgence=d.urgent?'urgent':'pas immédiat';
+      await presentAgence();
+      break;
+
+    case 'CHECK_INTEREST':
+      if(d.oui||d.interest||d.prix){
+        await handleTarif();
+      } else if(d.askAgence){
+        await handleAgenceExplain();
+      } else {
+        // They have more questions — answer then re-ask
+        await say(
+          "Je comprends.",
+          "Est-ce que vous souhaitez qu'on continue sur cette base ?"
+        );
+      }
+      break;
+
+    case 'TARIF':
+      if(d.oui||d.interest){
+        await handlePayment();
+      } else if(d.non){
+        await say(
+          "D'accord, pas de problème.",
+          "Est-ce que le tarif est le frein, ou vous avez d'autres questions ?"
+        );
+      } else {
+        await say("C'est noté.", "Avez-vous des questions avant qu'on avance ?");
+      }
+      break;
+
+    case 'PAYMENT':
+      if(d.bm){
+        await say(
+          "BM ID reçu, merci.",
+          "Notre équipe est en train de configurer votre compte.",
+          "Je vous envoie les accès dans les prochaines minutes."
+        );
+        STATE='DONE';
+      } else {
+        await say(
+          "Parfait.",
+          "Pour finaliser la configuration, auriez-vous votre Business Manager ID ?"
+        );
+      }
+      break;
+
+    default:
+      await say("Je vous lis. Une seconde…");
+      await continueQualif();
+  }
+  busy=false;
+}
+
+async function handleTarif(){
+  STATE='TARIF';
+  await check(
+    "Je vérifie les disponibilités et les formules adaptées à votre profil…",
+    `${mem.prenom?mem.prenom+', voici':'Voici'} ce que je vous propose.`,
+    "La location du compte agence est à <strong>150 € par mois</strong>. Ça couvre l'accès au compte, le support, et le remplacement immédiat en cas de problème.",
+    "Les recharges budget sont disponibles à partir de 50 €, sans plafond.",
+    "Est-ce que ça correspond à ce que vous aviez en tête ?"
+  );
+}
+
+async function handlePayment(){
+  STATE='PAYMENT';
+  await say(
+    `Parfait${mem.prenom?' '+mem.prenom:''}.`,
+    "Je vous prépare le lien de paiement."
+  );
+  setStatus('prépare votre dossier…',true);
+  await p(rnd(4000,6000));
+  await say(
+    "Voici le lien : <strong>pay.romuald-mbm.com/commande</strong>",
+    "Dès que le paiement est effectué, pouvez-vous m'envoyer la capture d'écran ?"
+  );
+}
+
+function hideSuggestions(){ suggsEl.classList.add('hidden'); }
+
+// ================================================================
+// INPUT HANDLING
+// ================================================================
+function send(){
+  const txt=iboxEl.value.trim();
+  if(!txt||busy) return;
+  iboxEl.value=''; iboxEl.style.height='';
+  hideSuggestions();
+  bubbleUser(txt);
+  respond(txt);
+}
+
+function injectSugg(el){
+  const txt=el.textContent;
+  hideSuggestions();
+  bubbleUser(txt);
+  respond(txt);
+}
+
+iboxEl.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); send(); }
+});
+iboxEl.addEventListener('input',()=>{
+  iboxEl.style.height='auto';
+  iboxEl.style.height=Math.min(iboxEl.scrollHeight,100)+'px';
+});
+
+// ================================================================
+// BOOT
+// ================================================================
+async function boot(){
+  await p(1200);
+  await say(
+    "Bonjour 👋",
+    "Je suis Emmanuela, du département Media Buying.",
+    "Nous accompagnons les e-commerçants et les agences dans la gestion de leurs comptes publicitaires Meta.",
+    "Comment puis-je vous aider aujourd'hui ?"
+  );
+  STATE='INITIAL';
+}
+
+boot();
+</script>
+</body>
+</html>

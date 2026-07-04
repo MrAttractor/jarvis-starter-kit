@@ -60,13 +60,32 @@ Une fois validé :
 - [Bullet point 3]
 ```
 
-### Étape 4 : Confirmer
+### Étape 4 : Pousser dans la Knowledge Base Notion
+
+Après avoir mis à jour HISTORY.md et CONTEXT.md, identifier les événements notables de la session et les pousser dans la database Notion "Knowledge Base — Sessions & Bugs" (data source : `collection://179ddada-8eb1-4734-bf0d-fb807af129eb`) via l'outil MCP `notion-create-pages`.
+
+Pour chaque événement notable (bug, solution, décision, session de livraison) :
+- Titre : description courte en une ligne
+- Type : Bug / Solution / Session / Leçon selon le contexte
+- Client : nom du dossier concerné (ou "Tous clients" si cross-projet)
+- Secteur + Type App : déduits du contexte
+- Symptôme : ce qui s'est passé ou le message d'erreur (pour les bugs)
+- Solution : comment le problème a été réglé
+- Tags tech : extraits de la session (Supabase, RLS, React, iOS, Cloudflare, n8n, SQL, etc.)
+- Gravité : Bloquant / Majeur / Mineur / Info
+- Date : date du jour au format AAAA-MM-JJ
+- Session # : numéro de session si connu
+
+Ne créer des entrées que s'il y a des événements notables. Une session sans bug ni décision majeure ne nécessite pas d'entrée.
+
+### Étape 5 : Confirmer
 
 Annonce ce qui a été fait :
 
 ```
 C'est fait. Voici ce que j'ai mis à jour :
-- [Liste des modifications]
+- [Liste des modifications fichiers]
+- Knowledge Base Notion : [N] entrée(s) ajoutée(s) — [titres]
 
 Ton contexte est à jour. Tu peux relancer /prime à ta prochaine session pour vérifier.
 ```

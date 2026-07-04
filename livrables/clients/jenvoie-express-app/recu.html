@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Reçu — J'Envoie Express</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --navy:#0A1628; --sky:#0BB5FF; --gold:#F5A623; --green:#22C55E; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background:#f0f4f8;
+      font-family:'Inter',sans-serif;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      padding:24px 16px 48px;
+    }
+    .receipt {
+      background:#fff;
+      width:100%;
+      max-width:480px;
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:0 8px 40px rgba(0,0,0,.12);
+    }
+    .receipt-header {
+      background:var(--navy);
+      color:#fff;
+      padding:28px 32px 24px;
+    }
+    .brand { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; color:var(--sky); letter-spacing:-.3px; }
+    .brand-sub { font-size:11px; color:rgba(255,255,255,.4); margin-top:2px; letter-spacing:.4px; text-transform:uppercase; }
+    .recu-title { margin-top:20px; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; letter-spacing:1.8px; text-transform:uppercase; color:var(--gold); }
+    .recu-num { font-family:'Syne',sans-serif; font-weight:700; font-size:22px; color:#fff; margin-top:4px; }
+    .paid-badge {
+      display:inline-flex; align-items:center; gap:6px;
+      background:rgba(34,197,94,.15); border:1px solid rgba(34,197,94,.4);
+      color:#22C55E; font-weight:600; font-size:12px;
+      padding:4px 12px; border-radius:100px; margin-top:12px; letter-spacing:.3px;
+    }
+    .receipt-body { padding:28px 32px; }
+    .row {
+      display:flex; justify-content:space-between; align-items:flex-start;
+      padding:10px 0; border-bottom:1px solid #f0f0f0; font-size:14px;
+      gap:12px;
+    }
+    .row:last-child { border-bottom:none; }
+    .row-label { color:#999; font-size:11px; text-transform:uppercase; letter-spacing:.5px; font-weight:500; flex-shrink:0; padding-top:2px; }
+    .row-value { color:#1a1a1a; font-weight:500; text-align:right; line-height:1.4; }
+    .total-row {
+      background:#f5fffe; border:1px solid rgba(11,181,255,.15); border-radius:10px;
+      padding:16px 20px; display:flex; justify-content:space-between; align-items:center; margin-top:16px;
+    }
+    .total-label { font-family:'Syne',sans-serif; font-weight:700; font-size:13px; color:#333; }
+    .total-amount { font-family:'Syne',sans-serif; font-weight:800; font-size:26px; color:var(--navy); }
+    .receipt-footer { background:#f8f9fb; padding:20px 32px; border-top:1px solid #eee; }
+    .footer-text { font-size:11px; color:#aaa; text-align:center; line-height:1.7; }
+    .actions { display:flex; gap:10px; margin-top:20px; width:100%; max-width:480px; }
+    .btn-print, .btn-copy {
+      flex:1; border-radius:10px; padding:14px; font-family:'Syne',sans-serif; font-weight:700;
+      font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; border:2px solid;
+      transition:opacity .15s;
+    }
+    .btn-print:hover, .btn-copy:hover { opacity:.85; }
+    .btn-print { background:var(--navy); color:#fff; border-color:var(--navy); }
+    .btn-copy { background:#fff; color:var(--navy); border-color:var(--navy); }
+    .not-paid { text-align:center; padding:40px 32px; }
+    .not-paid-icon { font-size:40px; margin-bottom:14px; }
+    .not-paid-title { font-family:'Syne',sans-serif; font-weight:700; font-size:18px; color:var(--navy); margin-bottom:8px; }
+    .not-paid-sub { color:#888; font-size:14px; line-height:1.6; }
+
+    @media print {
+      body { background:#fff; padding:0; }
+      .receipt { box-shadow:none; border-radius:0; max-width:100%; }
+      .actions { display:none; }
+      .receipt-header, .paid-badge, .total-row {
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const sb = supabase.createClient(
+      'https://ltydbwkhdsbmmnoahcty.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0eWRid2toZHNibW1ub2FoY3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMzEyMTIsImV4cCI6MjA5NzYwNzIxMn0.S0u-zZfRKp5t1VpXrGN3II8RtwyRZ7HWUHK3-E8pw58'
+    )
+
+    const ROUTES = { ORY_ABJ: 'Paris → Abidjan', ABJ_ORY: 'Abidjan → Paris' }
+
+    function fmtDate(iso) {
+      if (!iso) return null
+      return new Date(iso).toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' })
+    }
+    function fmtDateCourt(d) {
+      return new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' })
+    }
+
+    async function load() {
+      const root = document.getElementById('root')
+      const n = new URLSearchParams(window.location.search).get('n')
+
+      if (!n) {
+        root.innerHTML = '<p style="color:#888;font-size:15px;margin-top:40px;text-align:center;">Numéro de colis manquant dans l\'URL.</p>'
+        return
+      }
+
+      root.innerHTML = '<p style="color:#888;font-size:15px;margin-top:40px;text-align:center;">Chargement...</p>'
+
+      const { data } = await sb
+        .from('colis')
+        .select('numero,articles,poids,montant,paye,date_paiement,nom_expediteur,voyages(route,date_depart)')
+        .ilike('numero', n)
+        .limit(1)
+        .maybeSingle()
+
+      if (!data) {
+        root.innerHTML = '<p style="color:#888;font-size:15px;margin-top:40px;text-align:center;">Colis introuvable.</p>'
+        return
+      }
+
+      if (!data.paye) {
+        root.innerHTML = `
+          <div class="receipt">
+            <div class="receipt-header">
+              <div class="brand">J'Envoie Express</div>
+              <div class="brand-sub">Service de coursier international</div>
+            </div>
+            <div class="not-paid">
+              <div class="not-paid-icon">⏳</div>
+              <div class="not-paid-title">Reçu non disponible</div>
+              <div class="not-paid-sub">
+                Le paiement du colis <strong>${data.numero}</strong> n'a pas encore été confirmé par notre équipe.<br>
+                Ce reçu sera disponible dès que votre paiement est enregistré.
+              </div>
+            </div>
+          </div>`
+        return
+      }
+
+      const datePaiement = data.date_paiement ? fmtDate(data.date_paiement) : fmtDate(new Date().toISOString())
+      const voyageLabel = data.voyages
+        ? `${ROUTES[data.voyages.route] || data.voyages.route} · départ ${fmtDateCourt(data.voyages.date_depart)}`
+        : null
+
+      root.innerHTML = `
+        <div class="receipt">
+          <div class="receipt-header">
+            <div class="brand">J'Envoie Express</div>
+            <div class="brand-sub">Service de coursier international</div>
+            <div class="recu-title">Reçu de paiement</div>
+            <div class="recu-num">${data.numero}</div>
+            <div class="paid-badge">
+              <svg viewBox="0 0 16 16" fill="currentColor" style="width:12px;height:12px"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/></svg>
+              Payé le ${datePaiement}
+            </div>
+          </div>
+          <div class="receipt-body">
+            ${data.nom_expediteur ? `
+            <div class="row">
+              <span class="row-label">Expéditeur</span>
+              <span class="row-value">${data.nom_expediteur}</span>
+            </div>` : ''}
+            <div class="row">
+              <span class="row-label">Articles</span>
+              <span class="row-value">${data.articles || 'Non précisé'}</span>
+            </div>
+            ${data.poids ? `
+            <div class="row">
+              <span class="row-label">Poids</span>
+              <span class="row-value">${data.poids} kg</span>
+            </div>` : ''}
+            ${voyageLabel ? `
+            <div class="row">
+              <span class="row-label">Voyage</span>
+              <span class="row-value">${voyageLabel}</span>
+            </div>` : ''}
+            <div class="total-row">
+              <span class="total-label">Montant réglé</span>
+              <span class="total-amount">${data.montant ? data.montant + ' €' : '—'}</span>
+            </div>
+          </div>
+          <div class="receipt-footer">
+            <div class="footer-text">
+              J'Envoie Express · Jean Yves Gbouablé<br>
+              WhatsApp : +225 07 08 68 21 16<br><br>
+              Ce document constitue un reçu de paiement pour la prestation de transport référencée ci-dessus.
+            </div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn-print" onclick="window.print()">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M17 3H7c-1.1 0-2 .9-2 2v4H3c-1.1 0-2 .9-2 2v6h4v2h14v-2h4v-6c0-1.1-.9-2-2-2h-2V5c0-1.1-.9-2-2-2zm0 4H7V5h10v2zm2 10v-2H5v2H3v-4h18v4h-2z"/></svg>
+            Imprimer
+          </button>
+          <button class="btn-copy" id="btn-copy" onclick="copyLink()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            Partager le lien
+          </button>
+        </div>`
+    }
+
+    function copyLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        const btn = document.getElementById('btn-copy')
+        if (!btn) return
+        const orig = btn.innerHTML
+        btn.textContent = '✓ Lien copié !'
+        btn.style.cssText += ';background:#22C55E;color:#fff;border-color:#22C55E;'
+        setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; btn.style.color = ''; btn.style.borderColor = ''; }, 2500)
+      })
+    }
+
+    load()
+  </script>
+</body>
+</html>

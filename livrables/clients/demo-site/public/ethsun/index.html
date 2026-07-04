@@ -2,1072 +2,493 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-  <title>ETHSUN OS — Démo Agence Attractor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ETHSUN × Agence Attractor — Proposition de Mission</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
-      --bg: #0A0F15;
-      --surface: #111922;
-      --card: #18242F;
-      --border: rgba(201, 151, 58, 0.2);
-      --gold: #C9973A;
-      --gold-light: #E8C46A;
-      --gold-dim: rgba(201, 151, 58, 0.12);
-      --text: #F0EDE8;
-      --text-muted: #7A8A99;
-      --text-dim: #3A4858;
-      --green: #27AE60;
-      --red: #E74C3C;
-      --orange: #F39C12;
-      --blue: #3498DB;
+      --navy: #1A3A6C;
+      --navy-mid: #2D5499;
+      --navy-light: #EEF2F8;
+      --gold: #B8943F;
+      --ink: #0D1B2A;
+      --ink2: #3D4F63;
+      --muted: #7A8898;
+      --border: #E4E2DD;
+      --bg3: #EEF2F8;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Inter', sans-serif;
+      color:var(--ink);
+      background:#fff;
+      max-width:680px;
+      margin:0 auto;
+      padding:40px 32px 60px;
+      line-height:1.6;
     }
 
-    html, body {
-      width: 100%;
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
+    /* ── NDA OVERLAY ── */
+    .nda-overlay {
+      position:fixed; inset:0;
+      background:rgba(10,20,40,0.82);
+      backdrop-filter:blur(3px);
+      z-index:1000;
+      display:flex; align-items:center; justify-content:center;
+      padding:20px;
+      transition:opacity 0.35s;
+    }
+    .nda-overlay.hidden { opacity:0; pointer-events:none; }
+
+    .nda-modal {
+      background:#fff;
+      max-width:480px; width:100%;
+      padding:36px 36px 28px;
+      border-top:4px solid var(--navy);
+    }
+    .nda-modal-label {
+      font-size:10px; letter-spacing:0.2em; text-transform:uppercase;
+      color:var(--gold); font-weight:600; margin-bottom:6px;
+    }
+    .nda-modal-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size:22px; font-weight:400; color:var(--navy);
+      margin-bottom:4px; line-height:1.25;
+    }
+    .nda-modal-date {
+      font-size:11px; color:var(--muted); margin-bottom:22px;
+      padding-bottom:18px; border-bottom:1px solid var(--border);
+    }
+    .nda-modal-parties {
+      display:flex; gap:10px; margin-bottom:18px;
+    }
+    .nda-party {
+      flex:1; padding:10px 12px;
+      background:var(--bg3); border:1px solid var(--border);
+      font-size:12px;
+    }
+    .nda-party-name { font-weight:600; color:var(--navy); margin-bottom:2px; }
+    .nda-party-sub { font-size:11px; color:var(--muted); }
+
+    .nda-modal-body {
+      font-size:12px; color:var(--ink2); line-height:1.75;
+      margin-bottom:20px;
+      border-left:3px solid var(--border);
+      padding-left:14px;
+    }
+    .nda-modal-body strong { color:var(--ink); }
+
+    .nda-check-row {
+      display:flex; align-items:flex-start; gap:10px;
+      font-size:12px; color:var(--ink2); line-height:1.6;
+      margin-bottom:16px; cursor:pointer;
+    }
+    .nda-check-row input {
+      width:16px; height:16px; flex-shrink:0;
+      margin-top:2px; accent-color:var(--navy); cursor:pointer;
+    }
+    .nda-confirm-btn {
+      width:100%; background:var(--navy); color:#fff; border:none;
+      padding:14px 20px;
+      font-family:'Inter',sans-serif; font-size:13px; font-weight:600;
+      letter-spacing:0.03em; cursor:pointer;
+      display:flex; align-items:center; justify-content:center; gap:9px;
+      transition:background 0.2s;
+    }
+    .nda-confirm-btn:disabled { background:var(--border); color:var(--muted); cursor:not-allowed; }
+    .nda-confirm-btn:not(:disabled):hover { background:var(--navy-mid); }
+
+    /* ── DOCUMENT ── */
+    .doc-header { display:flex; align-items:center; justify-content:space-between; padding-bottom:24px; border-bottom:2px solid var(--navy); margin-bottom:32px; }
+    .doc-brand { display:flex; align-items:center; gap:10px; }
+    .doc-mark { width:36px; height:36px; background:var(--navy); display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Cormorant Garamond',serif; font-size:13px; font-weight:500; letter-spacing:0.03em; }
+    .doc-name { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:500; color:var(--navy); }
+    .doc-sub { font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-top:1px; }
+    .doc-meta { text-align:right; font-size:12px; color:var(--muted); }
+    .doc-meta strong { color:var(--ink); display:block; font-size:13px; margin-bottom:2px; }
+
+    .doc-hero { background:var(--navy); color:#fff; padding:28px 28px 24px; margin-bottom:32px; }
+    .doc-hero-label { font-size:10px; letter-spacing:0.18em; text-transform:uppercase; opacity:0.65; margin-bottom:8px; }
+    .doc-hero-title { font-family:'Cormorant Garamond',serif; font-size:27px; font-weight:300; line-height:1.25; margin-bottom:10px; }
+    .doc-hero-title em { font-style:italic; font-weight:400; }
+    .doc-hero-sub { font-size:13px; opacity:0.82; line-height:1.6; }
+
+    .section { margin-bottom:32px; }
+    .section-num { font-size:10px; color:var(--gold); letter-spacing:0.18em; text-transform:uppercase; font-weight:600; margin-bottom:6px; }
+    .section-title { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400; margin-bottom:12px; color:var(--navy); }
+    .section-text { font-size:13px; color:var(--ink2); line-height:1.75; }
+
+    .compare { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px; }
+    .compare-col { padding:14px 16px; }
+    .compare-col.before { background:#FEF2F2; border:1px solid #FECACA; }
+    .compare-col.after { background:var(--bg3); border:1px solid rgba(26,58,108,0.18); }
+    .compare-head { font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; }
+    .compare-head.red { color:#B91C1C; }
+    .compare-head.blue { color:var(--navy); }
+    .compare-item { font-size:12px; color:var(--ink2); padding:4px 0; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; gap:7px; }
+    .compare-item:last-child { border-bottom:none; }
+    .compare-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+    .compare-dot.red { background:#B91C1C; }
+    .compare-dot.blue { background:var(--navy); }
+
+    .features { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+    .feature { padding:14px 16px; border:1px solid var(--border); background:#fff; }
+    .feature-title { font-size:13px; font-weight:600; color:var(--navy); margin-bottom:4px; }
+    .feature-desc { font-size:12px; color:var(--muted); line-height:1.5; }
+
+    .formules { display:flex; flex-direction:column; gap:12px; margin-top:16px; }
+    .formule-card { border:1px solid var(--border); background:#fff; overflow:hidden; position:relative; }
+    .formule-card.recommended { border-color:var(--navy); border-width:2px; }
+    .rec-tag { position:absolute; top:14px; right:14px; background:var(--navy); color:#fff; font-size:9px; padding:3px 8px; letter-spacing:0.12em; text-transform:uppercase; font-weight:600; }
+    .formule-head { padding:18px 20px 14px; border-bottom:1px solid var(--border); }
+    .formule-num { font-family:'Cormorant Garamond',serif; font-size:13px; color:var(--gold); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:4px; }
+    .formule-name { font-family:'Cormorant Garamond',serif; font-size:21px; font-weight:400; color:var(--navy); margin-bottom:10px; }
+    .formule-price-row { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+    .formule-setup { font-family:'Cormorant Garamond',serif; font-size:27px; font-weight:400; color:var(--ink); }
+    .formule-mrr { font-size:13px; color:var(--muted); }
+    .formule-fcfa { font-size:11px; color:var(--muted); margin-top:3px; }
+    .formule-acompte { margin-top:6px; font-size:11px; color:var(--muted); }
+    .formule-acompte strong { color:var(--ink); }
+    .formule-body { padding:16px 20px; }
+    .formule-items { list-style:none; display:flex; flex-direction:column; gap:7px; }
+    .formule-item { display:flex; align-items:flex-start; gap:9px; font-size:12px; color:var(--ink2); line-height:1.45; }
+    .fi-dot { width:14px; height:14px; flex-shrink:0; }
+    .fi-dot.yes { color:#166534; }
+    .fi-dot.no  { color:var(--border); }
+    .formule-note { margin-top:10px; padding:8px 12px; background:var(--bg3); border-left:2px solid var(--navy-mid); font-size:11px; color:var(--ink2); line-height:1.5; }
+    .price-note { font-size:11px; color:var(--muted); margin-top:14px; text-align:center; }
+
+    .steps { margin-top:14px; }
+    .step { display:flex; align-items:flex-start; gap:14px; padding:14px 0; border-bottom:1px solid var(--border); }
+    .step:last-child { border-bottom:none; }
+    .step-num { width:28px; height:28px; background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; flex-shrink:0; font-family:'Cormorant Garamond',serif; }
+    .step-title { font-size:14px; font-weight:600; color:var(--ink); margin-bottom:3px; }
+    .step-desc { font-size:12px; color:var(--muted); line-height:1.5; }
+
+    .doc-footer { margin-top:40px; padding-top:20px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }
+    .footer-brand { font-size:12px; color:var(--muted); line-height:1.7; }
+    .footer-brand strong { color:var(--ink); display:block; }
+    .footer-valid { font-size:11px; color:var(--muted); text-align:right; line-height:1.7; }
+    .footer-legal { margin-top:16px; font-size:10px; color:var(--muted); border-top:1px solid var(--border); padding-top:12px; line-height:1.6; }
+
+    @media print {
+      body { padding:24px 28px; }
+      .no-print { display:none; }
+      .formule-card { break-inside:avoid; }
+      .step { break-inside:avoid; }
+    }
+    .print-btn {
+      position:fixed; bottom:24px; right:24px;
+      background:var(--navy); color:#fff; border:none;
+      padding:12px 20px; font-family:'Inter',sans-serif;
+      font-size:13px; font-weight:600; cursor:pointer; letter-spacing:0.03em;
+      display:flex; align-items:center; gap:8px;
     }
 
-    /* NAV DOTS */
-    .nav-dots {
-      position: fixed;
-      top: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 6px;
-      z-index: 100;
+    @media (max-width:520px) {
+      body { padding:24px 20px 60px; }
+      .compare { grid-template-columns:1fr; }
+      .features { grid-template-columns:1fr; }
+      .doc-footer { flex-direction:column; }
+      .footer-valid { text-align:left; }
+      .nda-modal { padding:28px 22px 22px; }
+      .nda-modal-parties { flex-direction:column; }
     }
-    .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--text-dim);
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    .dot.active {
-      background: var(--gold);
-      width: 20px;
-      border-radius: 3px;
-    }
-
-    /* SCREENS */
-    .screen {
-      display: none;
-      min-height: 100vh;
-      padding: 52px 20px calc(24px + env(safe-area-inset-bottom));
-      flex-direction: column;
-    }
-    .screen.active { display: flex; }
-
-    /* TYPOGRAPHY */
-    .section-label {
-      font-size: 11px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold);
-      font-weight: 500;
-      margin-bottom: 8px;
-    }
-    .screen-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 28px;
-      font-weight: 600;
-      line-height: 1.2;
-      margin-bottom: 6px;
-    }
-
-    /* BUTTONS */
-    .btn-gold {
-      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-      color: #0A0F15;
-      border: none;
-      border-radius: 12px;
-      padding: 15px 24px;
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-      transition: opacity 0.2s, transform 0.1s;
-      letter-spacing: 0.2px;
-    }
-    .btn-gold:active { transform: scale(0.98); opacity: 0.9; }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--gold);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 18px;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.2s;
-      flex-shrink: 0;
-    }
-    .btn-outline:hover { background: var(--gold-dim); }
-
-    .btn-row {
-      display: flex;
-      gap: 10px;
-      margin-top: auto;
-      padding-top: 20px;
-    }
-    .btn-row .btn-gold { flex: 1; }
-
-    /* CARDS */
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px;
-    }
-
-    /* TAGS */
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: var(--gold-dim);
-      border: 1px solid var(--border);
-      color: var(--gold);
-      border-radius: 20px;
-      padding: 5px 12px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    /* STATUS BADGES */
-    .badge {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 4px 9px;
-      border-radius: 6px;
-      white-space: nowrap;
-    }
-    .badge-green { background: rgba(39,174,96,0.15); color: #27AE60; }
-    .badge-orange { background: rgba(243,156,18,0.15); color: #F39C12; }
-    .badge-blue { background: rgba(52,152,219,0.15); color: #3498DB; }
-
-    /* SCROLL AREA */
-    .scroll-area {
-      overflow-y: auto;
-      flex: 1;
-      min-height: 0;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* UTILITIES */
-    .mt-4 { margin-top: 4px; }
-    .mt-8 { margin-top: 8px; }
-    .mt-12 { margin-top: 12px; }
-    .mt-16 { margin-top: 16px; }
-    .mb-8 { margin-bottom: 8px; }
-    .mb-12 { margin-bottom: 12px; }
-    .mb-16 { margin-bottom: 16px; }
-    .text-muted { color: var(--text-muted); }
-    .text-gold { color: var(--gold); }
-    .text-sm { font-size: 13px; }
-    .text-xs { font-size: 11px; }
-    .divider { height: 1px; background: var(--border); margin: 16px 0; }
-
-    /* TOAST */
-    .toast {
-      position: fixed;
-      top: 48px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-100px);
-      background: var(--green);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 24px;
-      font-size: 13px;
-      font-weight: 600;
-      z-index: 999;
-      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
-      white-space: nowrap;
-      box-shadow: 0 4px 20px rgba(39,174,96,0.4);
-    }
-    .toast.show { transform: translateX(-50%) translateY(0); }
-
-    /* WATERMARK */
-    .watermark {
-      position: fixed;
-      bottom: 10px;
-      right: 12px;
-      font-size: 10px;
-      color: var(--text-dim);
-      letter-spacing: 0.5px;
-      pointer-events: none;
-    }
-
-    /* ===================== SCREEN 0 — SPLASH ===================== */
-    #s0 {
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      background: radial-gradient(ellipse at 50% 20%, #1B2E40 0%, var(--bg) 65%);
-      padding: 40px 28px;
-    }
-
-    .logo-box {
-      width: 72px;
-      height: 72px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, rgba(201,151,58,0.2), rgba(232,196,106,0.1));
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 20px;
-    }
-    .logo-box span {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 34px;
-      font-weight: 700;
-      color: var(--gold);
-    }
-
-    .s0-eyebrow {
-      font-size: 11px;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: var(--gold);
-      font-weight: 500;
-      margin-bottom: 12px;
-    }
-    .s0-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 38px;
-      font-weight: 600;
-      line-height: 1.1;
-      margin-bottom: 16px;
-    }
-    .s0-desc {
-      font-size: 15px;
-      color: var(--text-muted);
-      line-height: 1.65;
-      max-width: 300px;
-      margin: 0 auto 28px;
-    }
-    .badge-row {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 36px;
-    }
-
-    /* ===================== SCREEN 1 — PROBLÈME ===================== */
-    .pain-card {
-      background: var(--card);
-      border: 1px solid rgba(231,76,60,0.18);
-      border-radius: 14px;
-      padding: 16px 18px;
-      margin-bottom: 10px;
-    }
-    .pain-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      background: rgba(231,76,60,0.12);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 10px;
-    }
-    .pain-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-    .pain-desc { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
-
-    /* ===================== SCREEN 2 — SOLUTION ===================== */
-    .module-row {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .module-row:hover { border-color: var(--gold); background: rgba(201,151,58,0.05); }
-
-    .module-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 11px;
-      background: var(--gold-dim);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .module-info { flex: 1; }
-    .module-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
-    .module-info p { font-size: 12px; color: var(--text-muted); }
-
-    /* ===================== SCREEN 3 — INSCRIPTION ===================== */
-    .prog-option {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 8px;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .prog-option.selected {
-      border-color: var(--gold);
-      background: var(--gold-dim);
-    }
-    .prog-name { font-size: 14px; font-weight: 600; }
-    .prog-detail { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-    .prog-price { font-size: 15px; font-weight: 700; color: var(--gold); }
-
-    .form-group { margin-bottom: 12px; }
-    .form-label { display: block; font-size: 12px; color: var(--text-muted); font-weight: 500; margin-bottom: 6px; }
-    .form-input, .form-select {
-      width: 100%;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .form-input:focus, .form-select:focus { border-color: var(--gold); }
-    .form-select { appearance: none; }
-
-    /* ===================== SCREEN 3B — CONFIRMATION ===================== */
-    #s3b {
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      background: radial-gradient(ellipse at 50% 30%, #0E2A1A 0%, var(--bg) 65%);
-    }
-    .check-circle {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: rgba(39,174,96,0.12);
-      border: 2px solid var(--green);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 20px;
-    }
-    .confirm-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 30px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    .confirm-sub {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.6;
-      max-width: 280px;
-      margin: 0 auto 24px;
-    }
-    .automation-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .automation-row:last-child { border-bottom: none; }
-    .automation-label { font-size: 13px; }
-
-    /* ===================== SCREEN 4 — DASHBOARD ===================== */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-    .kpi-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-    }
-    .kpi-value {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 30px;
-      font-weight: 600;
-      color: var(--gold);
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-    .kpi-label { font-size: 11px; color: var(--text-muted); font-weight: 500; }
-
-    .ins-row {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .ins-name { font-size: 14px; font-weight: 500; }
-    .ins-detail { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-
-    /* ===================== SCREEN 5 — LIVRE ===================== */
-    .book-hero {
-      background: linear-gradient(135deg, #0E1F14, #172B1D);
-      border: 1px solid rgba(39,174,96,0.2);
-      border-radius: 16px;
-      padding: 24px 20px;
-      text-align: center;
-      margin-bottom: 14px;
-    }
-    .book-cover {
-      width: 90px;
-      height: 128px;
-      background: linear-gradient(160deg, #1A3C26, #2A5A38);
-      border-radius: 6px;
-      margin: 0 auto 14px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 8px;
-      box-shadow: 6px 8px 24px rgba(0,0,0,0.6), inset 1px 0 0 rgba(255,255,255,0.05);
-      border: 1px solid rgba(201,151,58,0.25);
-    }
-    .book-cover-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 9px;
-      font-weight: 700;
-      color: var(--gold-light);
-      text-align: center;
-      line-height: 1.4;
-    }
-    .book-cover-sep {
-      width: 30px;
-      height: 1px;
-      background: rgba(201,151,58,0.4);
-      margin: 6px auto;
-    }
-    .book-cover-sub {
-      font-size: 7px;
-      color: rgba(232,196,106,0.7);
-      text-align: center;
-      font-style: italic;
-    }
-    .book-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    .book-subtitle { font-size: 13px; color: var(--text-muted); font-style: italic; }
-
-    .book-stats {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-    .book-stat {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px;
-      flex: 1;
-      text-align: center;
-    }
-    .book-stat-val {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--gold);
-    }
-    .book-stat-label { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
-
-    /* ===================== SCREEN 6 — CLOSING ===================== */
-    .formula {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 12px;
-      position: relative;
-      overflow: hidden;
-    }
-    .formula.star { border-color: var(--gold); }
-    .rec-tag {
-      position: absolute;
-      top: 0;
-      right: 0;
-      background: var(--gold);
-      color: #0A0F15;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 0 16px 0 10px;
-      letter-spacing: 0.5px;
-    }
-    .formula-tier {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 4px;
-    }
-    .formula-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 22px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-    .formula-price-setup {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--text);
-    }
-    .formula-price-mrr { font-size: 13px; color: var(--text-muted); margin-top: 2px; margin-bottom: 14px; }
-    .formula-features { list-style: none; margin-bottom: 14px; }
-    .formula-features li {
-      font-size: 13px;
-      color: var(--text-muted);
-      padding: 4px 0;
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      line-height: 1.45;
-    }
-    .formula-features li::before { content: "—"; color: var(--gold); flex-shrink: 0; }
-    .formula-acompte { font-size: 11px; color: var(--text-dim); }
-
-    .closing-note {
-      background: var(--gold-dim);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
-    }
-    .closing-note p { font-size: 13px; color: var(--text-muted); text-align: center; line-height: 1.6; }
-    .closing-note strong { color: var(--text); }
   </style>
 </head>
 <body>
 
-<div class="toast" id="toast"></div>
-<div class="nav-dots" id="navDots"></div>
-<div class="watermark">Agence Attractor · Démo</div>
+  <!-- ── NDA OVERLAY ── -->
+  <div class="nda-overlay" id="nda-overlay">
+    <div class="nda-modal">
+      <div class="nda-modal-label">Avant d'accéder au document</div>
+      <div class="nda-modal-title">Accord de Confidentialité</div>
+      <div class="nda-modal-date" id="nda-date">Chargement...</div>
 
-<!-- ===== S0 — SPLASH ===== -->
-<div class="screen active" id="s0">
-  <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center;">
-    <div class="logo-box"><span>E</span></div>
-    <p class="s0-eyebrow">ETHSUN Executive Education</p>
-    <h1 class="s0-title">Votre système<br>opérationnel</h1>
-    <p class="s0-desc">Automatisez vos inscriptions, centralisez votre CRM programmes, et lancez la vente de votre livre — le tout sans intervention manuelle.</p>
-    <div class="badge-row">
-      <span class="tag">20 pays</span>
-      <span class="tag">Oxford · Davos · Singapour</span>
-      <span class="tag">2 500+ dirigeants</span>
-    </div>
-    <button class="btn-gold" onclick="goTo(1)">Voir la démo →</button>
-  </div>
-</div>
-
-<!-- ===== S1 — PROBLÈME ===== -->
-<div class="screen" id="s1">
-  <p class="section-label">Aujourd'hui</p>
-  <h2 class="screen-title">Ce qui vous freine</h2>
-  <p class="text-sm text-muted mb-16">Votre excellence académique mérite une infrastructure à la hauteur.</p>
-
-  <div class="scroll-area">
-    <div class="pain-card">
-      <div class="pain-icon">
-        <svg width="18" height="18" fill="none" stroke="#E74C3C" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      <div class="nda-modal-parties">
+        <div class="nda-party">
+          <div class="nda-party-name">ETHSUN</div>
+          <div class="nda-party-sub">Jean Calvin ETHIEN</div>
+        </div>
+        <div class="nda-party">
+          <div class="nda-party-name">Agence Attractor</div>
+          <div class="nda-party-sub">Mac Arthur Kouassi</div>
+        </div>
       </div>
-      <div class="pain-title">Inscriptions encore manuelles</div>
-      <div class="pain-desc">Chaque inscription = e-mail, suivi, relance à la main. Sur 3 programmes actifs et 20 pays, c'est ingérable à l'échelle.</div>
-    </div>
 
-    <div class="pain-card">
-      <div class="pain-icon">
-        <svg width="18" height="18" fill="none" stroke="#E74C3C" stroke-width="2" viewBox="0 0 24 24"><path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg>
+      <div class="nda-modal-body">
+        Les parties s'engagent à traiter comme <strong>strictement confidentiels</strong> tous les échanges relatifs à l'architecture digitale d'ETHSUN, au manuscrit du livre <em>"L'Afrique des entrepreneurs - Bâtir dans la tempête"</em>, à la stratégie de contenu et aux informations business partagées dans ce cadre.<br><br>
+        Un accord complet sera formalisé à la réunion de cadrage.
       </div>
-      <div class="pain-title">Paiements non centralisés</div>
-      <div class="pain-desc">Virements éparpillés, reçus à créer manuellement, aucun tableau de bord CA global par programme.</div>
-    </div>
 
-    <div class="pain-card">
-      <div class="pain-icon">
-        <svg width="18" height="18" fill="none" stroke="#E74C3C" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-      </div>
-      <div class="pain-title">Le livre sans canal de vente</div>
-      <div class="pain-desc">"L'Afrique des Entrepreneurs" est prêt — mais sans page dédiée, sans paiement intégré, les ventes ne peuvent pas décoller.</div>
-    </div>
+      <label class="nda-check-row">
+        <input type="checkbox" id="nda-check" onchange="toggleConfirm()">
+        <span>J'ai lu et j'accepte cet engagement de confidentialité au nom de ma partie.</span>
+      </label>
 
-    <div class="pain-card">
-      <div class="pain-icon">
-        <svg width="18" height="18" fill="none" stroke="#E74C3C" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      </div>
-      <div class="pain-title">Données dispersées</div>
-      <div class="pain-desc">Aucune vue consolidée : qui est inscrit à quoi, qui a payé, qui relancer, quel CA par programme — vous naviguez à vue.</div>
+      <button class="nda-confirm-btn" id="nda-confirm-btn" disabled onclick="confirmNDA()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Confirmer et accéder à la proposition
+      </button>
     </div>
   </div>
 
-  <div class="btn-row">
-    <button class="btn-outline" onclick="goTo(0)">←</button>
-    <button class="btn-gold" onclick="goTo(2)">La solution →</button>
-  </div>
-</div>
+  <!-- ── DOCUMENT ── -->
 
-<!-- ===== S2 — SOLUTION ===== -->
-<div class="screen" id="s2">
-  <p class="section-label">ETHSUN OS</p>
-  <h2 class="screen-title">Un système,<br>trois modules</h2>
-  <p class="text-sm text-muted mb-16">Tout ce que vous gérez manuellement — automatisé.</p>
-
-  <div class="scroll-area">
-    <div class="module-row" onclick="goTo(3)">
-      <div class="module-icon">
-        <svg width="22" height="22" fill="none" stroke="#C9973A" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-      </div>
-      <div class="module-info">
-        <h4>Module 1 — Inscriptions</h4>
-        <p>Formulaire public · paiement · confirmation automatique</p>
-      </div>
-      <svg width="16" height="16" fill="none" stroke="#C9973A" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-    </div>
-
-    <div class="module-row" onclick="goTo(4)">
-      <div class="module-icon">
-        <svg width="22" height="22" fill="none" stroke="#C9973A" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 17h7m-3.5-3.5v7"/></svg>
-      </div>
-      <div class="module-info">
-        <h4>Module 2 — Dashboard Admin</h4>
-        <p>Inscriptions temps réel · CA · relances auto</p>
-      </div>
-      <svg width="16" height="16" fill="none" stroke="#C9973A" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-    </div>
-
-    <div class="module-row" onclick="goTo(5)">
-      <div class="module-icon">
-        <svg width="22" height="22" fill="none" stroke="#C9973A" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-      </div>
-      <div class="module-info">
-        <h4>Module 3 — Vente du Livre</h4>
-        <p>Page dédiée · paiement intégré · livraison PDF auto</p>
-      </div>
-      <svg width="16" height="16" fill="none" stroke="#C9973A" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-    </div>
-
-    <div class="card mt-12" style="border-color:rgba(39,174,96,0.25);">
-      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-        <svg width="16" height="16" fill="none" stroke="#27AE60" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        <span style="font-size:12px; font-weight:600; color:#27AE60;">Automatisations incluses</span>
-      </div>
-      <p class="text-sm text-muted">Confirmation immédiate, rappels J-7 et J-1, certificat auto en fin de programme, relance des inactifs, rapport CA hebdomadaire — tout tourne sans vous.</p>
-    </div>
-  </div>
-
-  <div class="btn-row">
-    <button class="btn-outline" onclick="goTo(1)">←</button>
-    <button class="btn-gold" onclick="goTo(3)">Essayer en live →</button>
-  </div>
-</div>
-
-<!-- ===== S3 — INSCRIPTION ===== -->
-<div class="screen" id="s3">
-  <p class="section-label">Module 1 · Vue Participant</p>
-  <h2 class="screen-title">Inscription programme</h2>
-  <p class="text-sm text-muted mb-16">Ce que voit votre participant :</p>
-
-  <div class="scroll-area">
-    <div class="prog-option selected" id="opt-ceo" onclick="selectProg('ceo','3 500 €')">
+  <div class="doc-header">
+    <div class="doc-brand">
+      <div class="doc-mark">ES</div>
       <div>
-        <div class="prog-name">CEO Programme</div>
-        <div class="prog-detail">Oxford · 3 jours · Leadership stratégique</div>
+        <div class="doc-name">ETHSUN</div>
+        <div class="doc-sub">Executive Education · Afrique</div>
       </div>
-      <div class="prog-price">3 500 €</div>
     </div>
-    <div class="prog-option" id="opt-cfo" onclick="selectProg('cfo','3 500 €')">
-      <div>
-        <div class="prog-name">CFO Programme</div>
-        <div class="prog-detail">Davos · 3 jours · Finance & gouvernance</div>
-      </div>
-      <div class="prog-price">3 500 €</div>
-    </div>
-    <div class="prog-option" id="opt-ai" onclick="selectProg('ai','1 200 €')">
-      <div>
-        <div class="prog-name">Sprint IA Dirigeants</div>
-        <div class="prog-detail">En ligne · 2 jours · IA opérationnelle</div>
-      </div>
-      <div class="prog-price">1 200 €</div>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="form-group">
-      <label class="form-label">Prénom et nom</label>
-      <input class="form-input" type="text" placeholder="Votre nom complet" value="Dr. Aminata Diallo">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Organisation</label>
-      <input class="form-input" type="text" placeholder="Votre organisation" value="Groupe NSIA">
-    </div>
-    <div class="form-group">
-      <label class="form-label">E-mail professionnel</label>
-      <input class="form-input" type="email" placeholder="vous@organisation.com" value="a.diallo@groupe-nsia.ci">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Pays</label>
-      <select class="form-select">
-        <option>Côte d'Ivoire</option>
-        <option>Sénégal</option>
-        <option>Cameroun</option>
-        <option>France</option>
-        <option>Ghana</option>
-        <option>Autre</option>
-      </select>
+    <div class="doc-meta">
+      <strong>Proposition de Mission</strong>
+      Réf. ATR-2026-0006<br>
+      Juin 2026 · Validité 15 jours
     </div>
   </div>
 
-  <div class="btn-row">
-    <button class="btn-outline" onclick="goTo(2)">←</button>
-    <button class="btn-gold" id="payBtn" onclick="payer()">Payer 3 500 € et s'inscrire →</button>
+  <div class="doc-hero">
+    <div class="doc-hero-label">Agence Attractor × ETHSUN</div>
+    <div class="doc-hero-title">Tout est déjà en place.<br><em>Il faut juste que ça se parle.</em></div>
+    <div class="doc-hero-sub">Dolibarr, HubSpot, votre site, WhatsApp — quatre outils qui travaillent en silo. La mission : les connecter, libérer votre équipe, et propulser le lancement de votre livre.</div>
   </div>
-</div>
 
-<!-- ===== S3B — CONFIRMATION ===== -->
-<div class="screen" id="s3b">
-  <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
-    <div class="check-circle">
-      <svg width="36" height="36" fill="none" stroke="#27AE60" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-    </div>
-    <h2 class="confirm-title">Inscription confirmée</h2>
-    <p class="confirm-sub">Dr. Aminata Diallo est inscrite au CEO Programme. Tout a été déclenché automatiquement.</p>
-
-    <div class="card" style="width:100%; max-width:340px; text-align:left;">
-      <p class="text-xs text-muted mb-8" style="font-weight:600; letter-spacing:1px;">DÉCLENCHÉ AUTOMATIQUEMENT</p>
-      <div class="automation-row">
-        <span class="automation-label">Reçu de paiement</span>
-        <span class="badge badge-green">Envoyé</span>
+  <div class="section">
+    <div class="section-num">01 · Le constat</div>
+    <div class="section-title">Ce qui coûte du temps et de la croissance</div>
+    <div class="section-text">Chaque inscription passe par un email, puis une saisie manuelle dans Dolibarr, puis un message WhatsApp envoyé à la main. HubSpot ne reflète jamais l'état réel. Les relances tombent dans les oublis. Votre équipe passe plus de temps à saisir qu'à accompagner.</div>
+    <div class="compare">
+      <div class="compare-col before">
+        <div class="compare-head red">Aujourd'hui</div>
+        <div class="compare-item"><div class="compare-dot red"></div>Inscription par email, saisie manuelle Dolibarr</div>
+        <div class="compare-item"><div class="compare-dot red"></div>WhatsApp de bienvenue envoyé à la main</div>
+        <div class="compare-item"><div class="compare-dot red"></div>HubSpot non synchronisé, données en retard</div>
+        <div class="compare-item"><div class="compare-dot red"></div>Relances oubliées ou chronophages</div>
+        <div class="compare-item"><div class="compare-dot red"></div>Aucune vision claire du pipeline en temps réel</div>
       </div>
-      <div class="automation-row">
-        <span class="automation-label">Confirmation programme</span>
-        <span class="badge badge-green">Envoyé</span>
-      </div>
-      <div class="automation-row">
-        <span class="automation-label">Rappel J-7</span>
-        <span class="badge badge-orange">Programmé</span>
-      </div>
-      <div class="automation-row">
-        <span class="automation-label">Rappel J-1</span>
-        <span class="badge badge-orange">Programmé</span>
-      </div>
-      <div class="automation-row">
-        <span class="automation-label">Certificat (fin de programme)</span>
-        <span class="badge badge-orange">Programmé</span>
+      <div class="compare-col after">
+        <div class="compare-head blue">Après la mission</div>
+        <div class="compare-item"><div class="compare-dot blue"></div>Formulaire → Dolibarr créé + HubSpot mis à jour en 10 sec</div>
+        <div class="compare-item"><div class="compare-dot blue"></div>WhatsApp de bienvenue automatique, personnalisé</div>
+        <div class="compare-item"><div class="compare-dot blue"></div>HubSpot synchronisé en temps réel à chaque étape</div>
+        <div class="compare-item"><div class="compare-dot blue"></div>Relances planifiées et envoyées automatiquement</div>
+        <div class="compare-item"><div class="compare-dot blue"></div>Dashboard pilotage inscriptions en un coup d'œil</div>
       </div>
     </div>
   </div>
 
-  <div class="btn-row">
-    <button class="btn-gold" onclick="goTo(4)">Voir le dashboard admin →</button>
-  </div>
-</div>
-
-<!-- ===== S4 — DASHBOARD ===== -->
-<div class="screen" id="s4">
-  <p class="section-label">Module 2 · Vue ETHSUN</p>
-  <h2 class="screen-title">Dashboard Admin</h2>
-
-  <div class="scroll-area">
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-value">46</div>
-        <div class="kpi-label">Inscriptions actives</div>
+  <div class="section">
+    <div class="section-num">02 · La mission en 3 chantiers</div>
+    <div class="section-title">Audit, automatisation, puis visibilité</div>
+    <div class="section-text">Trois phases enchaînées dans l'ordre logique — on cartographie avant de construire, on construit avant de rayonner.</div>
+    <div class="features">
+      <div class="feature">
+        <div class="feature-title">Audit Architecture</div>
+        <div class="feature-desc">Cartographie complète de vos flux (inscriptions, paiements, relances). Rapport + recommandation éclairée, fondée sur le terrain. Feuille de route priorisée 30-60-90 jours.</div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-value">€149k</div>
-        <div class="kpi-label">CA en cours</div>
+      <div class="feature">
+        <div class="feature-title">Intégrations N8N</div>
+        <div class="feature-desc">Dolibarr + HubSpot + site + WhatsApp connectés en un flux automatisé. Chaque inscription déclenche tout en simultané.</div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-value">3</div>
-        <div class="kpi-label">Programmes actifs</div>
+      <div class="feature">
+        <div class="feature-title">Stratégie Contenu</div>
+        <div class="feature-desc">Thématiques PPSD (CEO/CFO/assistants), calendrier éditorial 3 canaux, accompagnement à la publication. Les contenus viennent de votre expérience terrain, pas de l'IA.</div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-value">97%</div>
-        <div class="kpi-label">Taux confirmation</div>
+      <div class="feature">
+        <div class="feature-title">Lancement Livre</div>
+        <div class="feature-desc">Stratégie Amazon KDP + édition premium, vente billets conférences, outreach médias. Production vidéo sur devis séparé. Formule III uniquement.</div>
       </div>
-    </div>
-
-    <p class="text-xs text-muted mb-8" style="font-weight:600; letter-spacing:1px; text-transform:uppercase;">Dernières inscriptions</p>
-
-    <div class="ins-row" id="newIns" style="border-color:rgba(52,152,219,0.3); display:none;">
-      <div>
-        <div class="ins-name">Dr. Aminata Diallo</div>
-        <div class="ins-detail">CEO Programme · Groupe NSIA · Côte d'Ivoire</div>
-      </div>
-      <span class="badge badge-blue">Nouveau</span>
-    </div>
-
-    <div class="ins-row">
-      <div>
-        <div class="ins-name">Moussa Traoré</div>
-        <div class="ins-detail">Sprint IA · BNI Sénégal · Sénégal</div>
-      </div>
-      <span class="badge badge-green">Confirmé</span>
-    </div>
-    <div class="ins-row">
-      <div>
-        <div class="ins-name">Aïssa Koné</div>
-        <div class="ins-detail">CFO Programme · Orange CI · Côte d'Ivoire</div>
-      </div>
-      <span class="badge badge-green">Confirmé</span>
-    </div>
-    <div class="ins-row">
-      <div>
-        <div class="ins-name">Pierre Mensah</div>
-        <div class="ins-detail">CEO Programme · Ecobank · Ghana</div>
-      </div>
-      <span class="badge badge-orange">Paiement</span>
-    </div>
-    <div class="ins-row">
-      <div>
-        <div class="ins-name">Fatou Camara</div>
-        <div class="ins-detail">Sprint IA · MTN Cameroun · Cameroun</div>
-      </div>
-      <span class="badge badge-green">Confirmé</span>
-    </div>
-
-    <div class="card mt-12" style="border-color:rgba(243,156,18,0.25);">
-      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-        <svg width="16" height="16" fill="none" stroke="#F39C12" stroke-width="2" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-        <span style="font-size:12px; font-weight:600; color:#F39C12;">Relances automatiques</span>
-      </div>
-      <p class="text-sm text-muted">2 participants sans confirmation depuis 48h. Relance e-mail envoyée automatiquement ce matin à 8h — aucune action requise de votre part.</p>
     </div>
   </div>
 
-  <div class="btn-row">
-    <button class="btn-outline" onclick="goTo(3)">←</button>
-    <button class="btn-gold" onclick="goTo(5)">Module livre →</button>
-  </div>
-</div>
+  <div class="section">
+    <div class="section-num">03 · Choisissez votre formule</div>
+    <div class="section-title">Trois niveaux d'engagement, un seul interlocuteur</div>
+    <div class="section-text">Commencez par l'audit pour savoir exactement où vous en êtes. Montez en puissance selon votre rythme.</div>
 
-<!-- ===== S5 — LIVRE ===== -->
-<div class="screen" id="s5">
-  <p class="section-label">Module 3 · Vente du Livre</p>
+    <div class="formules">
 
-  <div class="scroll-area">
-    <div class="book-hero">
-      <div class="book-cover">
-        <div class="book-cover-title">L'Afrique des Entrepreneurs</div>
-        <div class="book-cover-sep"></div>
-        <div class="book-cover-sub">Bâtir dans la tempête</div>
+      <div class="formule-card">
+        <div class="formule-head">
+          <div class="formule-num">Formule I</div>
+          <div class="formule-name">Cartographie & Audit</div>
+          <div class="formule-price-row">
+            <span class="formule-setup">800 €</span>
+          </div>
+          <div class="formule-fcfa">≈ 525 000 FCFA · Paiement unique</div>
+          <div class="formule-acompte">Acompte au démarrage : <strong>400 €</strong></div>
+        </div>
+        <div class="formule-body">
+          <ul class="formule-items">
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Audit complet : site + Dolibarr + HubSpot + flux WhatsApp</li>
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Mapping 100% des flux manuels et points de friction</li>
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Identification des automatisations à fort impact + estimation charge</li>
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>3 sessions de travail (audit terrain · restitution · feuille de route)</li>
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Livrable : rapport d'audit + recommandation architecture + plan d'action 30-60-90 j</li>
+            <li class="formule-item"><svg class="fi-dot no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span style="color:var(--muted)">Mise en place des automatisations N8N</span></li>
+            <li class="formule-item"><svg class="fi-dot no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span style="color:var(--muted)">Stratégie contenu et calendrier éditorial</span></li>
+          </ul>
+          <div class="formule-note">Idéal pour sécuriser la décision avant d'investir. Le rapport livré peut être exécuté par votre équipe ou upgrader vers la Formule II.</div>
+        </div>
       </div>
-      <div class="book-title">L'Afrique des Entrepreneurs</div>
-      <div class="book-subtitle">Bâtir dans la tempête</div>
-    </div>
 
-    <div class="book-stats">
-      <div class="book-stat">
-        <div class="book-stat-val">PDF</div>
-        <div class="book-stat-label">Format numérique</div>
+      <div class="formule-card recommended">
+        <div class="rec-tag">Recommandée</div>
+        <div class="formule-head">
+          <div class="formule-num">Formule II</div>
+          <div class="formule-name">Intégration & Stratégie</div>
+          <div class="formule-price-row">
+            <span class="formule-setup">2 500 €</span>
+            <span class="formule-mrr">+ 300 €/mois</span>
+          </div>
+          <div class="formule-fcfa">≈ 1 640 000 FCFA setup + 197 000 FCFA/mois</div>
+          <div class="formule-acompte">Acompte au démarrage : <strong>1 250 €</strong></div>
+        </div>
+        <div class="formule-body">
+          <ul class="formule-items">
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Tout le contenu de la Formule I (audit inclus)</li>
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Configuration N8N : formulaire → Dolibarr → HubSpot → WhatsApp en 1 flux</li>
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Tableau de bord pilotage inscriptions (vue temps réel)</li>
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Calendrier éditorial 3 mois + accompagnement à la publication (LinkedIn · Facebook · YouTube)</li>
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>5 sessions stratégie contenu + positionnement leadership — fondé sur votre expérience terrain</li>
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Maintenance intégrations N8N — 3 premiers mois incluse</li>
+            <li class="formule-item"><svg class="fi-dot no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span style="color:var(--muted)">Stratégie lancement livre + conférences + médias</span></li>
+          </ul>
+          <div class="formule-note">L'automation libère votre équipe. Le calendrier contenu structure votre prise de parole. Les publications restent sous votre contrôle — nous vous accompagnons, nous ne publions pas à votre place.</div>
+        </div>
       </div>
-      <div class="book-stat">
-        <div class="book-stat-val">35 €</div>
-        <div class="book-stat-label">Prix de lancement</div>
+
+      <div class="formule-card">
+        <div class="formule-head">
+          <div class="formule-num">Formule III</div>
+          <div class="formule-name">Accélérateur Complet</div>
+          <div class="formule-price-row">
+            <span class="formule-setup">5 000 €</span>
+            <span class="formule-mrr">+ 500 €/mois</span>
+          </div>
+          <div class="formule-fcfa">≈ 3 280 000 FCFA setup + 328 000 FCFA/mois</div>
+          <div class="formule-acompte">Acompte au démarrage : <strong>2 500 €</strong></div>
+        </div>
+        <div class="formule-body">
+          <ul class="formule-items">
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Tout le contenu de la Formule II</li>
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Stratégie complète lancement livre "L'Afrique des entrepreneurs - Bâtir dans la tempête" (Amazon KDP + édition premium 150 000 FCFA)</li>
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Système de vente billets conférences intégré (50 000 FCFA/ticket)</li>
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Dossier de presse + outreach médias (RFI · TV5 · chaînes diaspora)</li>
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Coordination interviews et contenus pré-lancement (production vidéo sur devis séparé selon périmètre)</li>
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Scripts + run-of-show pour la série de conférences</li>
+            <li class="formule-item"><svg class="fi-dot yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Accompagnement stratégie globale sur 6 mois</li>
+          </ul>
+          <div class="formule-note">La Formule III est le programme complet : infrastructure automatisée + visibilité internationale + lancement livre piloté de A à Z.</div>
+        </div>
       </div>
-      <div class="book-stat">
-        <div class="book-stat-val">∞</div>
-        <div class="book-stat-label">Accès immédiat</div>
-      </div>
+
     </div>
-
-    <div class="card mb-12" style="border-color:rgba(39,174,96,0.25);">
-      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-        <svg width="16" height="16" fill="none" stroke="#27AE60" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        <span style="font-size:12px; font-weight:600; color:#27AE60;">Après paiement — automatique</span>
-      </div>
-      <p class="text-sm text-muted">Le PDF est envoyé par e-mail dans la seconde. L'acheteur est ajouté à votre liste ETHSUN. Une relance J+7 lui propose votre prochain programme.</p>
-    </div>
-
-    <button class="btn-gold mb-12" onclick="achatLivre()">Commander le livre — 35 € →</button>
-    <p class="text-xs text-muted" style="text-align:center; margin-bottom:8px;">Paiement sécurisé · Livraison immédiate par e-mail</p>
-  </div>
-
-  <div class="btn-row">
-    <button class="btn-outline" onclick="goTo(4)">←</button>
-    <button class="btn-gold" onclick="goTo(6)">Voir les formules →</button>
-  </div>
-</div>
-
-<!-- ===== S6 — CLOSING ===== -->
-<div class="screen" id="s6">
-  <p class="section-label">Votre investissement</p>
-  <h2 class="screen-title">3 formules,<br>1 décision</h2>
-
-  <div class="scroll-area">
-    <div class="formula">
-      <div class="formula-tier">Essentielle</div>
-      <div class="formula-name">Inscriptions + Livre</div>
-      <div class="formula-price-setup">800 €</div>
-      <div class="formula-price-mrr">+ 80 €/mois</div>
-      <ul class="formula-features">
-        <li>Formulaire d'inscription en ligne</li>
-        <li>Paiement intégré (carte, virement)</li>
-        <li>Confirmations et reçus automatiques</li>
-        <li>Page de vente du livre</li>
-        <li>1 programme actif</li>
-      </ul>
-      <div class="formula-acompte">Acompte de démarrage : 400 €</div>
-    </div>
-
-    <div class="formula star">
-      <div class="rec-tag">RECOMMANDÉE</div>
-      <div class="formula-tier">Active</div>
-      <div class="formula-name">Système Complet</div>
-      <div class="formula-price-setup">2 500 €</div>
-      <div class="formula-price-mrr">+ 200 €/mois</div>
-      <ul class="formula-features">
-        <li>Tout de l'Essentielle</li>
-        <li>Dashboard admin temps réel</li>
-        <li>CRM participants (historique, notes)</li>
-        <li>Relances automatiques J-7, J-1, inactifs</li>
-        <li>Programmes illimités</li>
-        <li>Certificats générés automatiquement</li>
-        <li>Rapport CA hebdomadaire par programme</li>
-      </ul>
-      <div class="formula-acompte">Acompte de démarrage : 1 250 €</div>
-    </div>
-
-    <div class="formula">
-      <div class="formula-tier">Premium</div>
-      <div class="formula-name">Opérations Internationales</div>
-      <div class="formula-price-setup">5 000 €</div>
-      <div class="formula-price-mrr">+ 400 €/mois</div>
-      <ul class="formula-features">
-        <li>Tout de l'Active</li>
-        <li>Multi-zones (CI, France, International)</li>
-        <li>Multi-devises (EUR, XOF, USD)</li>
-        <li>Académies entreprise (inscriptions B2B, groupes)</li>
-        <li>Analytics avancés + exports</li>
-        <li>Intégration vos outils existants</li>
-      </ul>
-      <div class="formula-acompte">Acompte de démarrage : 2 500 €</div>
-    </div>
-
-    <div class="closing-note">
-      <p>Déploiement en <strong>10 à 21 jours</strong>. Hébergement, maintenance et support inclus dans toutes les formules.</p>
-    </div>
-
-    <button class="btn-gold" onclick="cta()">Démarrer avec Agence Attractor →</button>
-    <p class="text-xs text-muted" style="text-align:center; margin-top:10px;">Mac Arthur · +33 7 53 90 23 23</p>
+    <div class="price-note">Tous les prix sont HT · TVA non applicable, article 293 B du CGI · Acompte 50% au démarrage, solde à la livraison</div>
   </div>
 
-  <div class="btn-row" style="padding-top:12px;">
-    <button class="btn-outline" onclick="goTo(5)">←</button>
+  <div class="section">
+    <div class="section-num">04 · Comment ça se passe</div>
+    <div class="section-title">Quatre étapes, zéro surprise</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">Cadrage (Semaine 1)</div>
+          <div class="step-desc">Accès aux outils (Dolibarr, HubSpot, site). Lecture du brouillon du livre. Première session d'audit terrain avec votre équipe.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">Cartographie & Rapport (Semaine 2)</div>
+          <div class="step-desc">Restitution de l'audit. Recommandation éclairée sur l'architecture (site, stack, intégrations) — fondée sur le terrain, pas sur des hypothèses. Validation de la feuille de route et du bon de commande avant tout développement.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-title">Construction (Semaines 3–5)</div>
+          <div class="step-desc">Mise en place des automatisations N8N. Tests complets avec votre équipe. Livraison du tableau de bord et du calendrier contenu.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <div class="step-title">Activation & Suivi (Mois 2–6)</div>
+          <div class="step-desc">Votre système tourne. Maintenance incluse (Formule II+). Sessions stratégie contenu régulières. Lancement livre si Formule III.</div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
-<script>
-  const SCREENS = ['s0','s1','s2','s3','s3b','s4','s5','s6'];
-  const DOT_MAP  = [0,1,2,3,5,6]; // screen indices that have dots (skip s3b)
-  let current = 0;
-  let inscriptionFaite = false;
+  <div class="doc-footer">
+    <div class="footer-brand">
+      <strong>Agence Mr Attractor</strong>
+      Mac Arthur Kouassi<br>
+      myattractor1@gmail.com<br>
+      +33 7 53 90 23 23 · agenceattractor.com
+    </div>
+    <div class="footer-valid">
+      <strong>Validité : 15 jours</strong>
+      À compter du 24 juin 2026<br>
+      Réf. ATR-2026-0006<br>
+      SIRET 98377125400015
+    </div>
+  </div>
+  <div class="footer-legal">
+    TVA non applicable, article 293 B du CGI. Acompte de 50% exigible à la signature. Le solde est dû à la livraison de chaque phase. Toute modification de périmètre après validation du bon de commande fera l'objet d'un avenant. Propriété intellectuelle : les livrables restent la propriété du prestataire jusqu'au paiement intégral du solde.
+  </div>
 
-  // Build nav dots
-  const navEl = document.getElementById('navDots');
-  DOT_MAP.forEach((_, i) => {
-    const d = document.createElement('div');
-    d.className = 'dot' + (i === 0 ? ' active' : '');
-    d.onclick = () => { const idx = DOT_MAP[i]; if(idx !== undefined) goTo(idx); };
-    navEl.appendChild(d);
-  });
+  <button class="print-btn no-print" onclick="window.print()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Imprimer / PDF
+  </button>
 
-  function goTo(idx) {
-    document.getElementById(SCREENS[current]).classList.remove('active');
-    current = idx;
-    document.getElementById(SCREENS[current]).classList.add('active');
+  <script>
+    const now = new Date();
+    const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+    const dateStr = now.toLocaleDateString('fr-FR', opts);
+    const timeStr = now.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+    document.getElementById('nda-date').textContent = dateStr;
 
-    const dotIdx = DOT_MAP.indexOf(idx);
-    document.querySelectorAll('.dot').forEach((d, i) => {
-      d.classList.toggle('active', i === (dotIdx >= 0 ? dotIdx : 0));
-    });
-    window.scrollTo(0, 0);
-  }
-
-  function selectProg(id, price) {
-    document.querySelectorAll('.prog-option').forEach(el => el.classList.remove('selected'));
-    document.getElementById('opt-' + id).classList.add('selected');
-    document.getElementById('payBtn').textContent = 'Payer ' + price + ' et s\'inscrire →';
-  }
-
-  function payer() {
-    showToast('Paiement sécurisé en cours...');
-    inscriptionFaite = true;
-    setTimeout(() => {
-      goTo(4);
-      document.getElementById('newIns').style.display = 'flex';
-    }, 1400);
-  }
-
-  function achatLivre() {
-    showToast('PDF envoyé par e-mail ✓');
-  }
-
-  function cta() {
-    const msg = encodeURIComponent("Bonjour Mac Arthur, j'ai consulté la démo ETHSUN OS et je suis intéressé pour démarrer. Quand pouvons-nous convenir d'un RDV ?");
-    window.open('https://wa.me/33753902323?text=' + msg, '_blank');
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2800);
-  }
-
-  // Keyboard navigation
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' && current < SCREENS.length - 1) goTo(current + 1);
-    if (e.key === 'ArrowLeft' && current > 0) goTo(current - 1);
-  });
-
-  // Touch/swipe navigation
-  let touchStartX = 0;
-  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-  document.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 60) {
-      if (dx < 0 && current < SCREENS.length - 1) goTo(current + 1);
-      if (dx > 0 && current > 0) goTo(current - 1);
+    function toggleConfirm() {
+      document.getElementById('nda-confirm-btn').disabled = !document.getElementById('nda-check').checked;
     }
-  }, { passive: true });
-</script>
+
+    function confirmNDA() {
+      const dt = dateStr + ' à ' + timeStr;
+      const subject = encodeURIComponent('NDA ETHSUN x Agence Attractor - ' + dt);
+      const body = encodeURIComponent(
+        'ACCORD DE CONFIDENTIALITE PRELIMINAIRE\n' +
+        'ETHSUN x Agence Attractor\n' +
+        '--------------------------------\n\n' +
+        'Date et heure : ' + dt + '\n\n' +
+        'Parties :\n' +
+        '- ETHSUN (Jean Calvin ETHIEN)\n' +
+        '- Agence Attractor (Mac Arthur Kouassi - SIRET 98377125400015)\n\n' +
+        'Les parties confirment avoir engage des discussions portant sur :\n' +
+        '- L\'architecture digitale d\'ETHSUN (Dolibarr, HubSpot, site web)\n' +
+        '- Le manuscrit et le lancement du livre "L\'Afrique des entrepreneurs - Batir dans la tempete"\n' +
+        '- La strategie de contenu et de positionnement\n' +
+        '- Les informations business et operationnelles partagees dans ce cadre\n\n' +
+        'Les deux parties s\'engagent a traiter ces informations comme confidentielles, a ne pas les divulguer a des tiers et a ne pas les utiliser a d\'autres fins que l\'evaluation de la collaboration.\n\n' +
+        'Un accord de confidentialite complet sera etabli lors de la reunion de cadrage.\n\n' +
+        'Accord confirme par clic horodate le ' + dt + '\n\n' +
+        '--------------------------------\n' +
+        'Agence Attractor - agenceattractor.com - +33 7 53 90 23 23'
+      );
+
+      document.getElementById('nda-overlay').classList.add('hidden');
+      setTimeout(() => {
+        window.open('mailto:myattractor1@gmail.com?cc=oxford@ethsun.org&subject=' + subject + '&body=' + body);
+      }, 400);
+    }
+  </script>
 </body>
 </html>

@@ -7,6 +7,79 @@
 
 ---
 
+## 2026-07-04 (session 81 — Élévia lien directions + Beynaud protocole envoyé + J'Envoie Express avant migration)
+
+### Club Élévia — lien 3 directions visuelles déployé
+- `directions.html` (comparatif Luxe discret / Club privé / Luxe moderne) existait en local mais n'était pas déployé
+- Déployé sur Cloudflare Pages (`demo-agenceattractor`) : lien envoyé à Mac Arthur **https://demo.agenceattractor.com/elevia/directions**
+- Maquette app : https://demo.agenceattractor.com/elevia
+- Prochaine étape : attendre le choix de direction d'Élise pour appliquer la palette/typo retenue puis envoyer le package contractuel V3 (Jalon 1, 800€)
+
+### Beynaud/STAR FACTORY — protocole d'accord envoyé
+- PDF généré tel quel depuis `PROTOCOLE-ACCORD-Beynaud-StarFactory-MrAttractor-2026-07-01.html` (Chrome headless), 2 champs volontairement laissés en blanc (qualité représentant + RCCM, montant indemnité non-contournement) à compléter à la signature
+- Envoyé par Mac Arthur via WhatsApp le 03/07/2026 (canal de communication actuel avec Serge Beynaud)
+- **Accusé de réception confirmé par Serge Beynaud le 04/07/2026**
+- Statut : en attente de retour signé / des infos manquantes (RCCM, montant indemnité)
+
+### J'Envoie Express — FCFA en premier + design premium + reset base
+- Tarif Abidjan → Paris désormais affiché FCFA en premier : "6 500 FCFA/kg (≈10€/kg)" au lieu de "10€/kg" seul, en hero pill et card service. Paris → Abidjan reste EUR (départ Europe). Calcul dynamique conservé (`loadPrix()` convertit `tarif_abj_paris` de la table `parametres` en FCFA, floor à la centaine de FCFA la plus proche pour un chiffre rond)
+- Design premium appliqué en gardant la palette validée (navy/sky/gold) : grain overlay subtil, badges/pills en verre dépoli (backdrop-blur), ombres profondes + hover lift sur les cards, prix et titres en gradient or (`--gold-grad`), boutons CTA en pill avec dégradé + glow au lieu de couleur plate
+- Vérifié visuellement via capture d'écran headless Chrome (mobile 430px) avant de considérer le travail terminé
+- Base Supabase test (projet `ltydbwkhdsbmmnoahcty`) réinitialisée via Management API : TRUNCATE sur clients/voyages/colis/demandes/revenus/messages/avis/abonnes/achats, `parametres` conservé intact (5 lignes)
+- Mac Arthur prend en charge lui-même l'achat du nom de domaine définitif et la migration complète pour la livraison client
+
+---
+
+## 2026-07-02 (session 80 — Beynaud/STAR FACTORY : accord de principe + protocole d'accord rédigé)
+
+### Accord de principe obtenu
+- Entretien tenu à Paris le 01/07/2026 avec Serge Beynaud (structure **STAR FACTORY**, représentée par M. Serge GNOLOU dit « Serge Beynaud »)
+- Accord de principe donné pour un projet de plateforme fan/communauté, avec demande explicite d'un document officiel de protocole avant contrat définitif
+- Vision précisée par l'artiste : projet de long terme visant ~10M followers cumulés toutes plateformes, la Plateforme ne remplace pas sa communication publique mais en devient l'outil de conversion, contenu exclusif = valeur centrale à monétiser (exigence forte car payant), modèle d'adhésion à faible coût unitaire misant sur le volume, prestataire de contenu tiers à identifier, période de transition pilotée par lui pour préparer son audience, Mr Attractor prend à sa charge les coûts de développement technique (hypothèse de travail)
+- Nouveau volet : partenariat paiement/traçabilité envisagé avec **XPaye**, introduit via **Mme SAKA Rukayatou** — justifié par la surveillance réglementaire accrue du commerce numérique en Côte d'Ivoire ; synthèse des offres officielles XPaye encore à obtenir (pas de fabrication de chiffres, à faire valider par une source réelle)
+- Fenêtre laissée ouverte à d'éventuels partenariats complémentaires d'expertise en monétisation
+
+### Protocole d'accord (pré-contrat) rédigé et déposé
+- Nouveau dossier créé : `livrables/clients/beynaud-star-factory/`
+- Document : `PROTOCOLE-ACCORD-Beynaud-StarFactory-MrAttractor-2026-07-01.html`
+- Structure : préambule + vision/principes (9 sous-points) + clauses engageantes dès signature (NDA 5 ans, non-contournement 24 mois avec clause de transparence en cas de contact direct et exception pour les mises en relation servant la vision commune, exclusivité de négociation 90 jours) + 5 jalons de validation (Cadrage → Modèle économique → Prestataire contenu → Plan de transition → Contrat définitif) + durée de validité du protocole (90 jours) + arbitrage CCJA-OHADA
+- Reste à compléter avant signature : qualité du représentant STAR FACTORY + RCCM + coordonnées de contact, montant de l'indemnité forfaitaire de non-contournement
+- Naming DMV existant (Fami / Fami Gold / Clan Latiss) à réconcilier avec le nouveau modèle low-cost/volume au Jalon 2
+
+---
+
+## 2026-07-01 (session 79 — Club Élévia : package contractuel V3 finalisé)
+
+### Analyse de la contre-proposition d'Élise
+- Élise a transmis sa propre proposition de contrat (18 articles) le 18/06 : scope natif iOS/Android + stores non convenu, calendrier 30/30/30/10, clause PI (renonciation totale), accès techniques, non-réutilisation 5 ans
+- Analyse comparative pour/contre menée point par point avant toute rédaction (checklist rigueur juridique)
+- Décision critique : garder la réserve de réutilisation du code générique (Contrat Art. 10.3/12) plutôt que la renonciation totale d'Élise, pour protéger le Générateur d'Apps Métier
+
+### Package contractuel V3 produit
+- Contrat V3 : calendrier 4 jalons, nouveaux articles Accès techniques et Non-réutilisation (5 ans), garantie étendue à 3 mois, ordre de priorité documentaire revu (Contrat > CDC > Devis > NDA)
+- Devis V3 : mêmes 4 jalons, 3 formules mises à jour
+- CDC-ATR-2026-0005 V2 : premier cahier des charges fonctionnel complet du projet, avec glossaire de définitions et spécifications détaillées par phase (écrans, données, cas particuliers, critères d'acceptation)
+
+### Correction de montant
+- Montant final recalé à 3 500€ (retour à la répartition initiale du 13/06 : 800/700/1350/650), après une itération intermédiaire à 3 000€ dans la V2 du 30/06
+- Calendrier 4 jalons recalculé : 800€ net / 1 050€ / 1 050€ / 350€
+
+### Nettoyage dossier client
+- Suppression des fichiers obsolètes : Devis V2 (absorbé dans le V3 canonique), NDA V1 (remplacé par NDA V2)
+- Un seul fichier canonique par type de document désormais
+
+### Brief créatif reçu (02/07/2026)
+- Positionnement club privé international haut de gamme, à l'opposé des codes classiques du dating
+- Références : Aman/Four Seasons (luxe discret), Soho House (club privé), Raya + Apple (luxe moderne international)
+- Palette Noir Profond/Or Champagne/Ivoire Luxe/Gris Perle, typographies Playfair Display + Inter
+- 3 propositions visuelles distinctes à produire pour orientation, avant refonte de la maquette
+
+### Statut
+- Package prêt à envoyer à Élise pour signature groupée, déclenchant le Jalon 1 (800€ net) et le démarrage du développement
+- En attente : production des 3 directions visuelles avant envoi final
+
+---
+
 ## 2026-07-01 (session 78 — GetWinWorld refonte + déploiement + leçon Pages/Workers)
 
 ### GetWinWorld — refonte hero vidéo + admin + guide client

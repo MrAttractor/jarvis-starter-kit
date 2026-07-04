@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Protocole d'accord — STAR FACTORY (Serge Beynaud) × Mr Attractor</title>
+<style>
+:root{
+  --brand:#0E1A2B;
+  --accent:#C9A84C;
+  --ink:#1A1F2B;
+  --muted:#6B7280;
+  --line:#E5E7EB;
+  --bg-soft:#F7F5EF;
+  --green:#166534;
+  --bg-green:#F0FDF4;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:#f0f2f5;padding:24px;line-height:1.6}
+.page{width:210mm;margin:0 auto 24px auto;background:#fff;padding:18mm 16mm;box-shadow:0 6px 30px rgba(0,0,0,.12)}
+
+.head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--accent);padding-bottom:16px;margin-bottom:20px}
+.brand h1{color:var(--brand);font-size:22px;letter-spacing:.02em}
+.brand .tag{color:var(--muted);font-size:12px;margin-top:2px}
+.docmeta{text-align:right;font-size:13px}
+.docmeta .t{color:var(--accent);font-weight:700;font-size:15px;letter-spacing:.05em;text-transform:uppercase}
+.docmeta .ref{display:inline-block;background:var(--brand);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:4px;letter-spacing:.05em}
+.docmeta div{color:var(--muted);margin-top:2px;font-size:12px}
+
+.intro-box{background:var(--bg-soft);border-left:3px solid var(--accent);padding:14px 16px;margin:0 0 20px 0;font-size:13px;line-height:1.7}
+.intro-box strong{color:var(--brand)}
+
+.notice{background:#FFF8E7;border-left:3px solid var(--accent);padding:10px 14px;margin-bottom:16px;font-size:12px;color:#7A5200}
+
+h2{color:var(--brand);font-size:14px;margin-top:24px;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--line);letter-spacing:.03em;text-transform:uppercase}
+
+.parties{display:flex;gap:16px;margin:12px 0}
+.partie{flex:1;border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:12px}
+.partie .label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.partie strong{color:var(--brand);display:block;margin-bottom:2px}
+
+.article{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:8px 0}
+.article.binding{border-color:var(--accent);background:#FFFDF6}
+.article .num{display:inline-block;background:var(--brand);color:#fff;font-size:10px;font-weight:700;letter-spacing:.05em;padding:3px 9px;border-radius:4px;margin-bottom:10px}
+.article .num.tag-binding{background:var(--accent);color:var(--brand)}
+.sub-section{margin:10px 0 6px 0}
+.sub-title{font-size:12px;font-weight:700;color:var(--brand);margin-bottom:5px}
+p{font-size:12.5px;margin-bottom:8px;line-height:1.6}
+ul{margin:6px 0 10px 20px;font-size:12.5px}
+li{margin-bottom:5px;line-height:1.5}
+strong.inline{color:var(--brand)}
+
+.jalon-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:11.5px}
+.jalon-table th{background:var(--brand);color:#fff;padding:8px 10px;text-align:left;font-size:10px;letter-spacing:.05em;text-transform:uppercase}
+.jalon-table td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.jalon-table tr:last-child td{border-bottom:none}
+.jalon-table tr:nth-child(even){background:var(--bg-soft)}
+.jalon-num{display:inline-block;background:var(--accent);color:var(--brand);font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.exclu-box{background:#FFF1F2;border:1px solid #FECDD3;border-radius:6px;padding:10px 14px;margin:10px 0;font-size:12px}
+.exclu-box .exclu-title{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9F1239;margin-bottom:6px}
+.tbc-box{background:var(--bg-soft);border:1px dashed var(--accent);border-radius:6px;padding:10px 14px;margin:10px 0;font-size:12px}
+.tbc-box .tbc-title{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+
+.signatures{display:flex;gap:20px;margin-top:32px}
+.sig{flex:1;border:1px solid var(--line);border-radius:8px;padding:16px}
+.sig .sig-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.sig .sig-name{color:var(--brand);font-weight:700;font-size:13px}
+.sig .sig-role{color:var(--muted);font-size:12px;margin-top:2px}
+.sig .sig-space{height:52px;border-bottom:1px dotted var(--line);margin:16px 0 8px}
+.sig .sig-date{font-size:12px;color:var(--muted)}
+
+.foot{margin-top:24px;border-top:1px solid var(--line);padding-top:10px;font-size:10px;color:var(--muted);text-align:center;line-height:1.6}
+
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff;padding:0}
+  .page{box-shadow:none;margin:0;width:100%;padding:10mm 12mm}
+  .article{page-break-inside:avoid;padding:8px 12px;margin:5px 0;overflow:visible}
+  .jalon-table{page-break-inside:avoid}
+  .signatures{page-break-inside:avoid}
+  h2{page-break-after:avoid;margin-top:16px}
+  p,li,.jalon-table td{font-size:11px}
+  .notice{display:none}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- EN-TÊTE -->
+  <div class="head">
+    <div class="brand">
+      <h1>Mr Attractor</h1>
+      <div class="tag">Conseil en business développement &amp; digitalisation d'entreprise</div>
+    </div>
+    <div class="docmeta">
+      <div class="t">Protocole d'accord</div>
+      <div class="ref">PRÉ-CONTRAT — Non engageant sur les conditions financières</div>
+      <div>STAR FACTORY (Serge Beynaud) × Mr Attractor</div>
+      <div>1er juillet 2026</div>
+    </div>
+  </div>
+
+  <div class="notice">
+    Ce document est un protocole d'accord (letter of intent). Il pose le cadre général du partenariat envisagé sur la base d'hypothèses de travail. Il n'engage les parties de manière contraignante que sur les clauses de confidentialité (Art. 3), de non-contournement (Art. 4) et d'exclusivité de négociation (Art. 5). Les conditions financières et opérationnelles définitives seront arrêtées dans le contrat de partenariat final, à l'issue des jalons de validation prévus à l'Art. 6.
+  </div>
+
+  <!-- INTRODUCTION -->
+  <div class="intro-box">
+    Suite à l'entretien tenu à Paris le 1er juillet 2026, <strong>STAR FACTORY</strong> (représentée par Serge Beynaud) et <strong>Mr Attractor</strong> conviennent d'un accord de principe pour construire, dans une logique de partenariat de long terme, une plateforme numérique dédiée à la communauté et aux fans de l'Artiste. Le projet vise à engager une part de l'audience cumulée de Serge Beynaud, estimée à environ <strong>10 000 000 de followers</strong> toutes plateformes confondues. Le présent protocole formalise les grandes lignes de ce projet avant la rédaction du contrat de partenariat définitif.
+  </div>
+
+  <!-- PARTIES -->
+  <h2>Les Parties</h2>
+  <div class="parties">
+    <div class="partie">
+      <div class="label">Partie A — Prestataire</div>
+      <strong>Mac Arthur KOUASSI</strong>
+      Mr Attractor — Agence conseil &amp; digitalisation<br/>
+      Auto-entrepreneur — SIRET 98377125400015<br/>
+      Paris, France<br/>
+      myattractor1@gmail.com — +33 7 53 90 23 23
+    </div>
+    <div class="partie">
+      <div class="label">Partie B — Partenaire</div>
+      <strong>STAR FACTORY</strong>
+      Représentée par M. Serge GNOLOU, dit « Serge Beynaud »<br/>
+      Côte d'Ivoire<br/>
+      Qualité du représentant, n° RCCM et coordonnées : <em>à compléter avant signature</em>
+    </div>
+  </div>
+
+  <!-- ART. 1 — OBJET -->
+  <h2>Clauses</h2>
+  <div class="article">
+    <span class="num">ART. 1 — OBJET DU PROTOCOLE</span>
+    <p>Le présent protocole a pour objet de définir le cadre général et les grandes lignes du partenariat envisagé entre les parties pour la conception, le développement et le déploiement d'une plateforme numérique dédiée à la communauté et aux fans de Serge Beynaud (ci-après « la Plateforme »), préalablement à la conclusion d'un contrat de partenariat définitif.</p>
+    <p>Il pose des hypothèses de travail destinées à structurer les discussions et à sécuriser les échanges d'informations sensibles pendant la phase de cadrage. Sauf mention contraire expresse, il ne constitue pas un engagement ferme des parties sur les conditions financières, techniques ou opérationnelles définitives du projet.</p>
+  </div>
+
+  <!-- ART. 2 — VISION ET PRINCIPES -->
+  <div class="article">
+    <span class="num">ART. 2 — VISION ET PRINCIPES DU PROJET</span>
+    <div class="sub-section">
+      <div class="sub-title">2.1 — Un projet de long terme</div>
+      <p>Les parties conviennent que ce projet s'inscrit dans une logique de déploiement progressif sur le long terme, et non dans celle d'un développement ponctuel livré en une seule fois. L'ambition est d'engager une part significative de l'audience cumulée de Serge Beynaud sur l'ensemble de ses plateformes (environ 10 000 000 de followers).</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">2.2 — Complémentarité avec la communication publique de l'Artiste</div>
+      <p>La Plateforme n'a pas vocation à interrompre, remplacer ou réduire la communication publique de l'Artiste sur ses réseaux existants. Elle constitue au contraire l'outil de conversion de l'ensemble de son audience : les canaux publics restent le point d'entrée et de visibilité, la Plateforme devient la relation directe, durable et monétisable avec les followers convertis en membres.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">2.3 — Le contenu exclusif, valeur centrale à monétiser</div>
+      <p>La Plateforme étant payante pour ses utilisateurs finaux, elle doit apporter une valeur ajoutée réelle et clairement différenciante par rapport aux contenus déjà accessibles gratuitement sur les réseaux existants de l'Artiste. Le contenu exclusif, produit spécifiquement pour la Plateforme, constitue la réelle valeur à monétiser : aucune fonctionnalité facturée ne pourra être une simple reproduction de contenu déjà disponible ailleurs gratuitement.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">2.4 — Modèle d'adhésion à faible coût unitaire</div>
+      <p>L'intention exprimée par la Partie B est un modèle d'adhésion à faible coût unitaire (« quasi-gratuit »), la rentabilité étant recherchée par le volume d'adhérents plutôt que par un prix élevé à l'unité. Le niveau de prix précis, ainsi que la structure de rémunération de Mr Attractor sur ce modèle, seront arrêtés au jalon « Modèle économique » défini à l'Art. 6.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">2.5 — Prestataire de contenu tiers</div>
+      <p>La production de contenu exclusif dédié à la Plateforme sera confiée à un prestataire tiers spécialisé. Le périmètre, le coût et le montage contractuel de cette prestation (sous-traitance de Mr Attractor ou contrat direct de la Partie B) seront définis au jalon correspondant (Art. 6). Ce prestataire, dès lors qu'il est introduit par l'une des parties à l'autre, est couvert par les clauses de confidentialité (Art. 3) et de non-contournement (Art. 4) du présent protocole.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">2.6 — Suivi, traçabilité et paiement</div>
+      <p>Pour assurer le suivi et la traçabilité des adhésions et des paiements sur la Plateforme, un partenariat est envisagé avec la solution <strong class="inline">XPaye</strong>, introduite par l'intermédiaire de Mme SAKA Rukayatou. Une négociation distincte sera menée entre les parties concernées afin d'en valider les conditions, dont les conclusions seront intégrées au jalon « Modèle économique » (Art. 6).</p>
+      <p>Ce choix s'appuie sur le constat que le commerce numérique en Côte d'Ivoire fait l'objet d'une surveillance réglementaire accrue, en particulier sur les flux financiers et la conformité des plateformes de paiement. Un projet de cette envergure doit s'adosser à une structure de paiement solide et conforme aux normes en vigueur. Les conditions tarifaires négociées avec XPaye pour le volume propre à ce projet seront présentées aux deux parties, via Mme SAKA Rukayatou, avant la validation du Jalon 2.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">2.7 — Période de transition</div>
+      <p>La Partie B pilote, sur ses propres canaux et selon son propre calendrier, une phase de préparation de son audience avant l'ouverture de la Plateforme, dans le but de sécuriser une adoption rapide au lancement. Le calendrier et le contenu de cette phase sont définis au jalon « Plan de transition » (Art. 6).</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">2.8 — Prise en charge des coûts de développement technique</div>
+      <p>À titre d'hypothèse de travail, Mr Attractor prend à sa charge les coûts liés au développement technique de la Plateforme. Cette répartition des charges sera confirmée et, le cas échéant, précisée au jalon « Modèle économique » (Art. 6).</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">2.9 — Réserve d'expertise en monétisation</div>
+      <p>Les parties conviennent de rester ouvertes à l'élaboration, en cours de projet, de partenariats complémentaires portant spécifiquement sur des questions d'expertise en monétisation (stratégie de pricing, conversion, rétention des adhérents), au-delà du prestataire de contenu (Art. 2.5) et du partenaire de paiement déjà identifié (Art. 2.6). Ces éventuels partenariats seront proposés et validés au cas par cas par les deux parties, dans le respect des clauses de confidentialité (Art. 3) et de non-contournement (Art. 4) du présent protocole.</p>
+    </div>
+  </div>
+
+  <!-- ART. 3 — CONFIDENTIALITÉ -->
+  <div class="article binding">
+    <span class="num tag-binding">ART. 3 — CONFIDENTIALITÉ (NDA) — ENGAGEANT DÈS SIGNATURE</span>
+    <p>Toute information échangée dans le cadre du projet (stratégie, données d'audience, chiffres, code, maquettes, identité du ou des prestataires pressentis, termes des discussions en cours) est strictement confidentielle et ne peut être divulguée à un tiers sans l'accord écrit préalable de l'autre partie.</p>
+    <p>Cette obligation s'applique pendant toute la durée des discussions et du présent protocole, et pendant une durée de <strong class="inline">cinq (5) ans</strong> à compter de son terme, quelle qu'en soit la cause.</p>
+    <p>Sont exclues du périmètre de confidentialité les informations déjà publiques au moment de leur communication, déjà légitimement connues de la partie réceptrice, ou dont la divulgation est exigée par une autorité légale ou judiciaire.</p>
+    <p>Toute violation constatée ouvre droit à réparation du préjudice réellement subi par la partie lésée, sans préjudice des autres recours prévus par le droit applicable.</p>
+  </div>
+
+  <!-- ART. 4 — NON-CONTOURNEMENT -->
+  <div class="article binding">
+    <span class="num tag-binding">ART. 4 — NON-CONTOURNEMENT ET PROTECTION DES RELATIONS D'AFFAIRES — ENGAGEANT DÈS SIGNATURE</span>
+    <div class="sub-section">
+      <div class="sub-title">4.1 — Interdiction de contournement</div>
+      <p>Pendant la durée du présent protocole et pendant une durée de <strong class="inline">vingt-quatre (24) mois</strong> suivant son terme ou la fin de toute relation contractuelle qui lui ferait suite, chaque partie s'interdit de contacter, solliciter ou contracter directement, sans l'accord écrit préalable de l'autre partie, avec toute personne physique ou morale — partenaire, prestataire, investisseur, plateforme technique ou diffuseur — présentée ou introduite par l'autre partie dans le cadre du projet, en particulier le ou les prestataires de création de contenu introduits pour les besoins de la Plateforme.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">4.2 — Finalité de la clause</div>
+      <p>Cette clause vise à protéger les relations d'affaires et le réseau propre à chacune des parties, qui constituent une valeur économique indépendante du projet lui-même, qu'un contrat définitif soit signé ou non.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">4.3 — Sanction</div>
+      <p>Toute violation constatée de la présente clause donne lieu à une indemnité forfaitaire de <em>montant à définir d'un commun accord</em> par infraction constatée, sans préjudice de la réparation du préjudice réel si celui-ci s'avère supérieur à ce forfait.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">4.4 — Transparence en cas de contact direct</div>
+      <p>Si une personne physique ou morale couverte par la présente clause contacte directement l'une des parties de sa propre initiative, la partie contactée le spécifie à l'autre partie par tout moyen, y compris un accord tacite ou un accord écrit signé. Cette déclaration, faite de bonne foi, ne constitue pas en elle-même une violation de la présente clause.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">4.5 — Mises en relation autorisées</div>
+      <p>Sont autorisées, et ne constituent pas une violation de la présente clause, les mises en relation dont l'objet principal est de servir le but et la vision commune du partenariat définis aux Art. 1 et 2.</p>
+    </div>
+  </div>
+
+  <!-- ART. 5 — EXCLUSIVITÉ -->
+  <div class="article binding">
+    <span class="num tag-binding">ART. 5 — EXCLUSIVITÉ DE NÉGOCIATION — ENGAGEANT DÈS SIGNATURE</span>
+    <p>Pendant la durée de validité du présent protocole (Art. 8), la Partie B s'engage à ne pas engager, poursuivre ou conclure de discussion, négociation ou accord avec un tiers portant sur un projet de même nature (plateforme numérique dédiée à sa communauté ou à son fan club).</p>
+    <p>Cette exclusivité prend fin de plein droit à l'expiration du protocole si aucun contrat définitif n'a été signé entre les parties, sans qu'aucune des deux ne puisse s'en prévaloir au-delà de cette échéance.</p>
+  </div>
+
+  <!-- ART. 6 — JALONS DE VALIDATION -->
+  <div class="article">
+    <span class="num">ART. 6 — JALONS DE VALIDATION (STAGE-GATES)</span>
+    <p>Le passage du présent protocole au contrat de partenariat définitif se fait par la validation progressive et écrite (un simple échange d'email suffit) des jalons suivants, dans l'ordre indiqué. Chaque jalon converti en engagement ferme remplace l'hypothèse de travail correspondante posée à l'Art. 2.</p>
+    <table class="jalon-table">
+      <thead>
+        <tr>
+          <th style="width:20%">Jalon</th>
+          <th style="width:40%">Objet</th>
+          <th style="width:40%">Décision attendue</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="jalon-num">JALON 1</span><br/>Cadrage</td>
+          <td>Périmètre fonctionnel de la Plateforme, cible, positionnement, niveaux d'accès envisagés</td>
+          <td>Note de cadrage validée conjointement par les deux parties</td>
+        </tr>
+        <tr>
+          <td><span class="jalon-num">JALON 2</span><br/>Modèle économique</td>
+          <td>Prix d'adhésion, structure de rémunération de Mr Attractor (mise en place + mensuel + éventuel pourcentage), répartition des coûts de développement, simulation de revenus selon plusieurs scénarios de conversion, modalités du partenariat de paiement et de traçabilité (XPaye, via Mme SAKA Rukayatou)</td>
+          <td>Grille tarifaire, répartition économique et conditions XPaye validées et chiffrées</td>
+        </tr>
+        <tr>
+          <td><span class="jalon-num">JALON 3</span><br/>Prestataire contenu</td>
+          <td>Identification du prestataire de création de contenu, périmètre de sa mission, coût, montage contractuel (sous-traitance de Mr Attractor ou contrat direct de la Partie B)</td>
+          <td>Choix du prestataire et modalités contractuelles validés</td>
+        </tr>
+        <tr>
+          <td><span class="jalon-num">JALON 4</span><br/>Plan de transition</td>
+          <td>Calendrier et canaux de préparation de l'audience, pilotés par la Partie B, en amont de l'ouverture de la Plateforme</td>
+          <td>Calendrier de transition validé par les deux parties</td>
+        </tr>
+        <tr>
+          <td><span class="jalon-num">JALON 5</span><br/>Contrat définitif</td>
+          <td>Rédaction du contrat de partenariat définitif intégrant l'ensemble des jalons 1 à 4</td>
+          <td>Signature du contrat définitif par les deux parties</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>L'absence de validation d'un jalon dans un délai de quinze (15) jours suivant sa présentation formelle par l'une des parties suspend l'avancement du protocole, sans le rompre, et sans emporter automatiquement l'expiration prévue à l'Art. 8.</p>
+  </div>
+
+  <!-- ART. 7 — HYPOTHÈSES NON ENGAGEANTES -->
+  <div class="article">
+    <span class="num">ART. 7 — PORTÉE DES HYPOTHÈSES DE TRAVAIL</span>
+    <p>Les montants, taux, pourcentages ou modalités évoqués au cours des échanges préparatoires, y compris ceux figurant à l'Art. 2, sont indicatifs et destinés à faciliter la discussion. Aucune des parties ne peut se prévaloir d'un chiffre mentionné informellement avant sa validation formelle au Jalon 2 (Art. 6).</p>
+  </div>
+
+  <!-- ART. 8 — DURÉE -->
+  <div class="article">
+    <span class="num">ART. 8 — DURÉE DE VALIDITÉ DU PROTOCOLE</span>
+    <p>Le présent protocole entre en vigueur à sa signature pour une durée de <strong class="inline">quatre-vingt-dix (90) jours</strong>.</p>
+    <p>À l'expiration de ce délai, si le contrat de partenariat définitif n'a pas été signé par les deux parties, le présent protocole cesse de produire ses effets pour les articles 1, 2, 5, 6 et 7. Les articles 3 (Confidentialité) et 4 (Non-contournement) survivent selon les durées qui leur sont propres, indépendamment du sort du protocole.</p>
+    <p>Les parties peuvent proroger ce délai d'un commun accord, par simple échange écrit.</p>
+  </div>
+
+  <!-- ART. 9 — LOI ET JURIDICTION -->
+  <div class="article">
+    <span class="num">ART. 9 — LOI APPLICABLE ET RÈGLEMENT DES DIFFÉRENDS</span>
+    <div class="sub-section">
+      <div class="sub-title">9.1 — Médiation amiable obligatoire</div>
+      <p>En cas de différend relatif au présent protocole, les parties s'engagent à épuiser tout recours amiable avant toute saisine d'une juridiction ou d'un arbitre. La partie la plus diligente notifie l'autre par écrit. Les parties disposent de <strong class="inline">soixante (60) jours</strong> pour trouver une solution négociée, assistées si elles le souhaitent d'un médiateur désigné d'un commun accord.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">9.2 — Arbitrage CCJA-OHADA</div>
+      <p>À défaut d'accord amiable, tout litige est soumis à l'arbitrage de la <strong class="inline">Cour Commune de Justice et d'Arbitrage (CCJA — OHADA)</strong>, Abidjan, dont la sentence est définitive et obligatoire pour les deux parties.</p>
+    </div>
+  </div>
+
+  <!-- ART. 10 — DISPOSITIONS GÉNÉRALES -->
+  <div class="article">
+    <span class="num">ART. 10 — DISPOSITIONS GÉNÉRALES</span>
+    <p><strong class="inline">10.1 Nature du document.</strong> Le présent protocole ne constitue ni le contrat de partenariat définitif, ni un engagement de résultat quant à sa conclusion effective. Il n'engage les parties que sur les clauses expressément désignées comme telles (Art. 3, 4 et 5).</p>
+    <p><strong class="inline">10.2 Avenants.</strong> Toute modification du présent protocole fait l'objet d'un avenant écrit signé, ou à défaut d'un accord écrit entre les parties (email suffisant).</p>
+    <p><strong class="inline">10.3 Divisibilité.</strong> Si une clause est déclarée nulle ou inapplicable, les autres clauses conservent leur plein effet.</p>
+    <p><strong class="inline">10.4 Indépendance.</strong> Les parties agissent en tant que co-contractants indépendants. Le présent protocole ne crée ni société, ni association, ni relation de travail subordonné, ni exclusivité au-delà de celle expressément prévue à l'Art. 5.</p>
+  </div>
+
+  <!-- SIGNATURES -->
+  <h2>Signatures</h2>
+  <p style="font-size:12px;margin-bottom:12px">En signant le présent document, les parties reconnaissent avoir lu, compris et accepté l'ensemble des clauses ci-dessus, notamment le caractère engageant des articles 3, 4 et 5.</p>
+  <div class="tbc-box">
+    <div class="tbc-title">À compléter avant signature</div>
+    <p style="margin-bottom:4px"><strong class="inline">Qualité du représentant de STAR FACTORY</strong> (Gérant, Président, etc.) et n° RCCM : __________</p>
+    <p style="margin-bottom:4px"><strong class="inline">Coordonnées de contact STAR FACTORY</strong> (email, téléphone, adresse) : __________</p>
+    <p style="margin-bottom:0"><strong class="inline">Montant de l'indemnité forfaitaire</strong> en cas de violation de la clause de non-contournement (Art. 4.3) : __________</p>
+  </div>
+  <div class="signatures">
+    <div class="sig">
+      <div class="sig-label">Partie A — Prestataire</div>
+      <div class="sig-name">Mac Arthur KOUASSI</div>
+      <div class="sig-role">Mr Attractor — Auto-entrepreneur</div>
+      <div class="sig-space"></div>
+      <div class="sig-date">Fait le __________, à Paris</div>
+    </div>
+    <div class="sig">
+      <div class="sig-label">Partie B — Partenaire</div>
+      <div class="sig-name">STAR FACTORY</div>
+      <div class="sig-role">Représentée par M. Serge GNOLOU (« Serge Beynaud »)</div>
+      <div class="sig-space"></div>
+      <div class="sig-date">Fait le __________, à __________</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015 — Immatriculée le 01/02/2024<br>
+    TVA non applicable, article 293 B du CGI — myattractor1@gmail.com — +33 7 53 90 23 23 — agenceattractor.com<br>
+    Protocole d'accord — Projet V1 — 1er juillet 2026 — STAR FACTORY (Serge Beynaud)
+  </div>
+
+</div>
+</body>
+</html>

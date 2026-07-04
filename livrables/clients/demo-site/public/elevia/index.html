@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Club Privé Élévia</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --espresso:#0C0804;--cognac:#151009;--mahogany:#1E1510;
+  --border:#2E2018;--border-hi:#3D2E1E;
+  --or:#C9A440;--or-deep:#A07828;--or-bright:#F0D470;--or-shadow:#7A5818;
+  --or-bg:rgba(201,164,64,.08);--or-line:rgba(201,164,64,.22);
+  --or-grad:linear-gradient(180deg,#F0D470 0%,#D4A843 42%,#A07828 100%);
+  --blanc:#FAF6EE;--muted:#9A8870;--gris:#6A5A48;--success:#3DBE7A;
+  --cream:#F5EFE6;--sand:#EDE5D8;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{height:100%}
+body{background:#080502;font-family:'DM Sans',sans-serif;color:var(--blanc);display:flex;justify-content:center;height:100%;overflow:hidden}
+
+/* ── SHELL ── */
+.shell{width:100%;max-width:430px;height:100%;background:var(--espresso);display:flex;flex-direction:column;overflow:hidden;position:relative}
+.shell::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ── NAV ── */
+.nav{flex-shrink:0;z-index:200;height:58px;background:rgba(12,8,4,.96);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;justify-content:space-between}
+.nav-logo{font-family:'Cormorant Garamond',serif;display:flex;flex-direction:column;line-height:1.1}
+.nav-logo-club{font-family:'DM Sans',sans-serif;font-size:8px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(201,164,64,.65);margin-bottom:1px}
+.nav-logo-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--blanc)}
+.nav-logo-name span{background:var(--or-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:italic;font-weight:300}
+.nav-back{width:44px;height:44px;border-radius:50%;background:var(--mahogany);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--blanc);flex-shrink:0}
+.nav-back svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav-icons{display:flex;gap:16px;align-items:center}
+.nav-icons svg{width:21px;height:21px;stroke:var(--muted);fill:none;stroke-width:1.5;cursor:pointer}
+.badge-wrap{position:relative}
+.badge-dot{position:absolute;top:-1px;right:-1px;width:7px;height:7px;background:var(--or);border-radius:50%;border:2px solid var(--espresso)}
+
+/* ── SCREENS ── */
+.screen{display:none}
+.screen.active{display:block;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#s-chat.active{overflow:hidden;display:flex;flex-direction:column}
+#s-matching.active{overflow:hidden;display:flex;flex-direction:column}
+
+/* ══ SPLASH ══ */
+@keyframes splashFade{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ringPulse{0%,100%{transform:scale(1);opacity:.45}50%{transform:scale(1.07);opacity:.85}}
+
+.splash{min-height:100%;background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:64px 40px 48px;text-align:center}
+
+.splash-ring-wrap{position:relative;width:110px;height:110px;display:flex;align-items:center;justify-content:center;margin:0 auto 32px;animation:splashFade .9s ease-out both}
+.splash-ring-outer{position:absolute;inset:-22px;border:1px solid rgba(160,120,40,.3);border-radius:50%;animation:ringPulse 3.2s ease-in-out infinite}
+.splash-ring-mid{position:absolute;inset:-10px;border:1px solid rgba(160,120,40,.18);border-radius:50%;animation:ringPulse 3.2s ease-in-out infinite .6s}
+.splash-ring-inner{width:110px;height:110px;border-radius:50%;background:linear-gradient(145deg,rgba(201,164,64,.07),rgba(201,164,64,.02));border:1px solid rgba(201,164,64,.35);display:flex;align-items:center;justify-content:center}
+.splash-ring-inner svg{width:60px;height:32px}
+
+.splash-brand{animation:splashFade .9s .1s ease-out both;display:flex;flex-direction:column;align-items:center;margin-bottom:20px}
+.splash-club{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:600;letter-spacing:5px;text-transform:uppercase;color:#9A8870;margin-bottom:2px}
+.splash-elevia{font-family:'Cormorant Garamond',serif;font-size:62px;font-weight:700;line-height:1;color:#1A0E04;letter-spacing:-1px}
+
+.splash-rule{animation:splashFade .9s .2s ease-out both;width:40px;height:1px;background:linear-gradient(to right,#A07828,#D4A843,#A07828);margin:0 auto 20px}
+
+.splash-tagline{animation:splashFade .9s .25s ease-out both;font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:#5A4230;letter-spacing:.3px;line-height:1.4;margin-bottom:6px}
+.splash-sub{animation:splashFade .9s .3s ease-out both;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:#C4B090;margin-bottom:44px}
+
+.splash-btns{animation:splashFade .9s .35s ease-out both;display:flex;flex-direction:column;gap:12px;width:100%}
+.btn-outline-gold{display:flex;align-items:center;justify-content:center;width:100%;padding:16px 24px;min-height:52px;border-radius:100px;background:transparent;border:1.5px solid rgba(160,120,40,.6);color:#8A6420;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-outline-gold:hover{background:rgba(201,164,64,.06)}
+.splash-legal{animation:splashFade .9s .4s ease-out both;font-family:'DM Sans',sans-serif;font-size:11px;color:#C4B090;text-align:center;line-height:1.6;margin-top:24px;letter-spacing:.3px}
+
+/* ══ BUTTONS ══ */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px 24px;border-radius:100px;border:none;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .18s;min-height:52px}
+.btn-or{background:var(--or-grad);color:#2A1A06;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 2px 0 var(--or-shadow),0 6px 22px rgba(160,120,40,.32)}
+.btn-or:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 0 var(--or-shadow),0 10px 28px rgba(160,120,40,.42);transform:translateY(-1px)}
+.btn-or:active{transform:translateY(0);box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 1px 0 var(--or-shadow),0 3px 10px rgba(160,120,40,.25)}
+.btn-outline{background:transparent;border:1.5px solid rgba(255,255,255,.15);color:var(--blanc);border-radius:100px}
+.btn-ghost{background:transparent;color:var(--muted);font-size:14px}
+
+/* ══ PROGRESS ══ */
+.progress{height:2px;background:var(--border)}
+.progress-fill{height:100%;background:var(--or-grad);transition:width .4s ease}
+
+/* ══ FORM ══ */
+.form-page{padding:28px 20px 80px}
+.step-tag{display:inline-flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--or);margin-bottom:12px}
+.step-tag::before{content:'';width:16px;height:1px;background:var(--or-grad)}
+.form-title{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;line-height:1.1;margin-bottom:8px}
+.form-sub{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:28px}
+.form-group{margin-bottom:16px}
+.form-label{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px}
+.form-input,.form-select{width:100%;padding:15px 16px;background:var(--mahogany);border:1px solid var(--border);border-radius:14px;color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:16px;outline:none;transition:border-color .2s;appearance:none}
+.form-input:focus,.form-select:focus{border-color:rgba(201,164,64,.4)}
+.form-input::placeholder{color:var(--gris)}
+.divider{height:1px;background:var(--border);margin:24px 0}
+.rgpd{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--gris);text-align:center;line-height:1.6;margin-top:16px}
+.rgpd u{color:var(--muted);cursor:pointer}
+
+/* ══ PHOTO GRID ══ */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.photo-slot{aspect-ratio:3/4;background:var(--mahogany);border:1px dashed var(--border);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:border-color .2s;position:relative;overflow:hidden}
+.photo-slot:hover{border-color:var(--or-line)}
+.photo-slot svg{width:20px;height:20px;stroke:var(--gris);fill:none;stroke-width:1.5}
+.photo-slot span{font-family:'DM Sans',sans-serif;font-size:11px;color:var(--gris)}
+.photo-slot.filled{border-style:solid;border-color:var(--or-line)}
+.photo-slot.filled img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
+.photo-check{position:absolute;bottom:6px;right:6px;width:20px;height:20px;background:var(--or-grad);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:2}
+.photo-check svg{width:11px;height:11px;stroke:#2A1A06;fill:none;stroke-width:2.5}
+
+/* ══ INFO CARD ══ */
+.info-card{background:var(--mahogany);border:1px solid var(--border);border-radius:20px;padding:16px;display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
+.info-icon{width:36px;height:36px;border-radius:10px;background:var(--or-bg);border:1px solid var(--or-line);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.info-icon svg{width:16px;height:16px;stroke:var(--or);fill:none;stroke-width:1.5}
+.info-title{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;margin-bottom:2px}
+.info-desc{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);line-height:1.4}
+
+/* ══ KYC ══ */
+.kyc-cam{width:100%;aspect-ratio:3/4;background:#050301;border-radius:24px;border:1px solid var(--border);position:relative;overflow:hidden;margin-bottom:20px;display:flex;align-items:center;justify-content:center}
+.kyc-face{width:170px;height:210px;border-radius:50% 50% 50% 50%/55% 55% 45% 45%;border:2px solid var(--or);position:relative}
+.kyc-face::before{content:'';position:absolute;inset:-10px;border-radius:50% 50% 50% 50%/55% 55% 45% 45%;border:1px solid var(--or-line)}
+.kyc-hint{position:absolute;bottom:16px;left:0;right:0;text-align:center}
+.kyc-hint span{font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(250,246,238,.6);background:rgba(0,0,0,.75);padding:5px 16px;border-radius:100px;backdrop-filter:blur(8px)}
+.kyc-shields{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.kyc-shield{display:flex;align-items:center;gap:14px;background:var(--mahogany);border:1px solid var(--border);border-radius:16px;padding:14px 16px}
+.kyc-shield-ico{width:36px;height:36px;border-radius:10px;flex-shrink:0;background:rgba(61,190,122,.1);border:1px solid rgba(61,190,122,.2);display:flex;align-items:center;justify-content:center}
+.kyc-shield-ico svg{width:16px;height:16px;stroke:var(--success);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.kyc-shield-title{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--blanc);margin-bottom:1px}
+.kyc-shield-sub{font-family:'DM Sans',sans-serif;font-size:11px;color:var(--muted)}
+
+/* ══ CONSEILLÈRE SOPHIE ══ */
+.conseillere-page{display:flex;flex-direction:column;height:100%;background:var(--espresso)}
+.conseillere-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;background:rgba(12,8,4,.97)}
+.conseillere-av{width:44px;height:44px;border-radius:50%;flex-shrink:0;background:var(--or-grad);display:flex;align-items:center;justify-content:center}
+.conseillere-av svg{width:20px;height:20px;stroke:#2A1A06;fill:none;stroke-width:1.5}
+.conseillere-role{font-family:'DM Sans',sans-serif;font-size:11px;color:var(--or);margin-top:2px;letter-spacing:.3px}
+.match-msgs-wrap{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;-webkit-overflow-scrolling:touch}
+.match-responses-wrap{padding:12px 16px 16px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;flex-shrink:0;background:var(--espresso)}
+.match-opt{padding:14px 16px;min-height:44px;background:var(--mahogany);border:1px solid var(--border);border-radius:14px;color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;transition:all .2s;text-align:left;width:100%}
+.match-opt:hover{border-color:var(--or-line);background:var(--or-bg);color:var(--or)}
+.match-free-row{display:flex;gap:8px;margin-top:4px}
+.match-free-input{flex:1;padding:12px 16px;background:var(--mahogany);border:1px solid var(--border);border-radius:100px;color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:16px;outline:none;transition:border-color .2s}
+.match-free-input:focus{border-color:var(--or-line)}
+.match-free-input::placeholder{color:var(--gris)}
+.match-free-send{width:44px;height:44px;border-radius:50%;background:var(--or-grad);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(160,120,40,.35)}
+.match-free-send svg{width:16px;height:16px;stroke:#2A1A06;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.match-or-divider{text-align:center;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--gris);letter-spacing:1px;text-transform:uppercase;margin:4px 0}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.msg-new{animation:msgIn .25s ease-out both}
+
+/* ══ COMMENT ÇA MARCHE ══ */
+.comment-page{min-height:100%;background:var(--cream);display:flex;flex-direction:column;padding:52px 32px 80px}
+.comment-tag{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#A07828;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.comment-tag::before{content:'';width:16px;height:1px;background:linear-gradient(to right,#A07828,#D4A843)}
+.comment-h{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;line-height:1.05;color:#1A0E04;margin-bottom:8px}
+.comment-sub{font-family:'DM Sans',sans-serif;font-size:14px;color:#7A6248;line-height:1.65;margin-bottom:40px}
+.steps-list{display:flex;flex-direction:column;gap:0;flex:1;margin-bottom:36px}
+.step-item{display:flex;gap:20px;padding:24px 0;border-bottom:1px solid #DDD4C4}
+.step-item:last-child{border-bottom:none}
+.step-num-circle{width:40px;height:40px;border-radius:50%;flex-shrink:0;border:1px solid rgba(160,120,40,.5);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:#A07828}
+.step-title-txt{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;color:#1A0E04;margin-bottom:4px}
+.step-desc-txt{font-family:'DM Sans',sans-serif;font-size:13px;color:#7A6248;line-height:1.6}
+.step-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(160,120,40,.1);border:1px solid rgba(160,120,40,.28);border-radius:100px;padding:3px 10px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:#8A6420;margin-top:6px}
+
+/* ══ CALCUL COMPATIBILITÉ ══ */
+.calcul-page{min-height:100%;background:var(--espresso);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 32px;text-align:center}
+.calcul-ring{width:72px;height:72px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--or);animation:spin 1.2s linear infinite;margin-bottom:28px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.calcul-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;line-height:1.15;margin-bottom:8px}
+.calcul-sub{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--muted);margin-bottom:40px}
+.calcul-bars{width:100%;max-width:320px;margin-bottom:36px}
+.calcul-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.calcul-label{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);width:120px;text-align:left;flex-shrink:0}
+.calcul-track{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+@keyframes barGrow{from{width:0}to{width:var(--w)}}
+.calcul-fill{height:100%;border-radius:2px;background:var(--or-grad);width:0;animation:barGrow 1.1s ease-out forwards}
+.calcul-pct{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--or);font-weight:600;width:34px;text-align:right}
+
+/* ══ DISCOVER ══ */
+.discover-page{padding-bottom:80px}
+.filters{padding:16px 20px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;background:var(--espresso)}
+.filters::-webkit-scrollbar{display:none}
+.fchip{padding:8px 16px;border:1px solid var(--border);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);white-space:nowrap;cursor:pointer;transition:all .2s}
+.fchip.on{border-color:var(--or);color:var(--or);background:var(--or-bg)}
+.profiles-grid{padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pcard{border-radius:20px;overflow:hidden;position:relative;cursor:pointer;aspect-ratio:.7;background:var(--mahogany);transition:transform .2s}
+.pcard:hover{transform:scale(.985)}
+.pcard-photo{position:absolute;inset:0;background-size:cover;background-position:top center;transition:transform .3s}
+.pcard:hover .pcard-photo{transform:scale(1.04)}
+.pcard-gradient{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,4,2,.94) 0%,rgba(8,4,2,.4) 45%,rgba(8,4,2,0) 70%)}
+.pcard-body{position:absolute;bottom:58px;left:0;right:0;padding:0 12px}
+.pcard-compat{display:inline-flex;align-items:center;gap:5px;background:rgba(12,8,4,.65);border:1px solid var(--or-line);border-radius:100px;padding:3px 10px 3px 8px;margin-bottom:8px;backdrop-filter:blur(8px)}
+.pcard-compat-dot{width:6px;height:6px;border-radius:50%;background:var(--or)}
+.pcard-compat span{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--or)}
+.pcard-name{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;line-height:1.1;margin-bottom:2px}
+.pcard-meta{font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(250,246,238,.5)}
+.online-dot{position:absolute;top:10px;left:10px;width:9px;height:9px;border-radius:50%;background:var(--success);border:2px solid var(--espresso)}
+.pcard-actions{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:center;gap:16px;padding:12px 12px 14px;z-index:3}
+.pcard-btn{width:46px;height:46px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s,box-shadow .15s;flex-shrink:0}
+.pcard-btn:active{transform:scale(.88)}
+.pcard-pass{background:rgba(250,246,238,.95);box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.pcard-pass svg{width:17px;height:17px;stroke:#6A5A48;fill:none;stroke-width:2.5;stroke-linecap:round}
+.pcard-like{background:var(--or-grad);box-shadow:0 2px 0 var(--or-shadow),0 4px 18px rgba(160,120,40,.5)}
+.pcard-like svg{width:17px;height:17px;stroke:#2A1A06;fill:#2A1A06}
+@keyframes cardOut{to{opacity:0;transform:scale(.92)}}
+.pcard.passing{animation:cardOut .25s ease-out forwards;pointer-events:none}
+
+/* ══ BOTTOM NAV ══ */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(12,8,4,.98);border-top:1px solid var(--border);backdrop-filter:blur(24px);display:flex;padding:10px 0 22px;z-index:100}
+.bnav{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:var(--gris);border:none;background:none;transition:color .2s;position:relative}
+.bnav.on{color:var(--or)}
+.bnav.on::before{content:'';position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:20px;height:2px;background:var(--or-grad);border-radius:1px}
+.bnav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.bnav span{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500}
+
+/* ══ PROFILE DETAIL ══ */
+.profile-detail{padding-bottom:96px}
+.profile-hero{width:100%;height:420px;position:relative;overflow:hidden;background:var(--mahogany)}
+.profile-hero-photo{position:absolute;inset:0;background-size:cover;background-position:top center}
+.profile-hero-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,8,4,1) 0%,rgba(12,8,4,.3) 50%,rgba(12,8,4,.05) 100%)}
+.profile-hero-actions{position:absolute;top:14px;right:14px;display:flex;gap:8px}
+.hero-pill-btn{background:rgba(12,8,4,.72);border:1px solid var(--border-hi);border-radius:100px;padding:7px 14px;display:flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--or);cursor:pointer;backdrop-filter:blur(12px)}
+.hero-pill-btn svg{width:14px;height:14px;stroke:var(--or);fill:none;stroke-width:1.5}
+.profile-body{padding:24px 20px}
+.profile-name-lg{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;line-height:1;margin-bottom:6px}
+.profile-meta-row{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-bottom:24px}
+.profile-meta-row svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.5;flex-shrink:0}
+.section-label{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--or);margin-bottom:12px}
+.about-text{font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.75;color:rgba(250,246,238,.6);margin-bottom:24px}
+.tags-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.tag-or{padding:6px 14px;background:var(--or-bg);border:1px solid var(--or-line);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(201,164,64,.85)}
+.compat-bars{margin-bottom:24px}
+.cbar-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.cbar-label{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);width:110px;flex-shrink:0}
+.cbar-track{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.cbar-fill{height:100%;background:var(--or-grad);border-radius:2px}
+.cbar-pct{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--or);font-weight:600;width:36px;text-align:right}
+.cta-fixed{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;padding:14px 20px 28px;background:rgba(12,8,4,.98);border-top:1px solid var(--border);backdrop-filter:blur(24px);display:flex;gap:12px;z-index:99}
+.btn-ico{width:52px;height:52px;border-radius:14px;background:var(--mahogany);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.btn-ico svg{width:20px;height:20px;stroke:var(--blanc);fill:none;stroke-width:1.5}
+
+/* ══ MATCH SCREEN ══ */
+.match-screen{min-height:100%;background:radial-gradient(ellipse at 50% 35%,#1e1200 0%,#0C0804 65%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 32px;position:relative;overflow:hidden}
+.match-screen::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 25%,rgba(201,164,64,.13) 0%,transparent 55%);pointer-events:none}
+.match-avatars{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:32px;position:relative;z-index:1}
+.match-av{width:80px;height:80px;border-radius:50%;border:2px solid var(--espresso);overflow:hidden;background:var(--mahogany);flex-shrink:0}
+.match-av img{width:100%;height:100%;object-fit:cover;object-position:top}
+.match-av:last-child{margin-left:-20px}
+.match-heart{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;width:32px;height:32px;background:var(--espresso);border-radius:50%;border:2px solid var(--or);display:flex;align-items:center;justify-content:center}
+.match-heart svg{width:14px;height:14px;stroke:var(--or);fill:var(--or)}
+.match-title{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:700;color:var(--or);margin-bottom:8px;position:relative;z-index:1}
+.match-sub{font-family:'DM Sans',sans-serif;font-size:15px;color:rgba(250,246,238,.5);line-height:1.65;max-width:260px;margin:0 auto 10px;position:relative;z-index:1}
+.match-names{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;margin-bottom:40px;position:relative;z-index:1}
+.match-btns{width:100%;display:flex;flex-direction:column;gap:12px;position:relative;z-index:1}
+@keyframes pulse-ring{0%,100%{transform:scale(1);opacity:.28}50%{transform:scale(1.08);opacity:.65}}
+.match-ring{position:absolute;width:240px;height:240px;border-radius:50%;border:1px solid var(--or-line);animation:pulse-ring 2.8s ease-in-out infinite}
+.match-ring:nth-child(2){width:300px;height:300px;animation-delay:.6s}
+
+/* ══ CHAT ══ */
+.chat-page{display:flex;flex-direction:column;height:100%;overflow:hidden}
+.chat-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--espresso)}
+.chat-av{width:42px;height:42px;border-radius:50%;background:var(--mahogany);border:1.5px solid var(--or-line);overflow:hidden;flex-shrink:0}
+.chat-av img{width:100%;height:100%;object-fit:cover;object-position:top}
+.chat-name{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500}
+.chat-status{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--success)}
+.chat-msgs{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;scrollbar-width:none;background:var(--espresso)}
+.chat-msgs::-webkit-scrollbar{display:none}
+.msg{max-width:76%}
+.msg.r{align-self:flex-start}
+.msg.s{align-self:flex-end}
+.msg-bubble{padding:12px 16px;border-radius:18px;font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.5}
+.msg.r .msg-bubble{background:var(--mahogany);border:1px solid var(--border);border-bottom-left-radius:4px}
+.msg.s .msg-bubble{background:rgba(201,164,64,.09);border:1px solid var(--or-line);border-bottom-right-radius:4px}
+.msg-time{font-family:'DM Sans',sans-serif;font-size:11px;color:var(--gris);margin-top:4px;padding:0 4px}
+.msg.s .msg-time{text-align:right}
+.chat-input-row{padding:12px 16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--espresso)}
+.chat-input{flex:1;padding:12px 16px;background:var(--mahogany);border:1px solid var(--border);border-radius:100px;color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+.chat-input:focus{border-color:var(--or-line)}
+.chat-input::placeholder{color:var(--gris)}
+.chat-send{width:44px;height:44px;border-radius:50%;background:var(--or-grad);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 0 var(--or-shadow),0 4px 12px rgba(160,120,40,.3)}
+.chat-send svg{width:17px;height:17px;stroke:#2A1A06;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* ══ EXCLUSIVITÉ ══ */
+.excl-page{min-height:100%;background:linear-gradient(160deg,#080502 0%,#130D07 55%,#1E1410 100%);padding:44px 24px 80px;position:relative;overflow:hidden}
+.excl-page::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(160,120,40,.07) 0%,transparent 70%);pointer-events:none}
+.excl-kicker{font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(201,164,64,.5);margin-bottom:12px}
+.excl-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--blanc);line-height:1.2;margin-bottom:32px}
+.excl-title em{color:var(--or);font-style:italic}
+.accept-badge{display:flex;align-items:center;gap:18px;background:rgba(201,164,64,.07);border:1px solid rgba(201,164,64,.22);border-radius:24px;padding:20px;margin-bottom:36px}
+.accept-pct{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:700;color:var(--or);line-height:1;flex-shrink:0}
+.accept-desc{font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(250,246,238,.6);line-height:1.5}
+.members-kicker{font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,164,64,.45);margin-bottom:18px}
+.members-list{display:flex;flex-direction:column;gap:14px;margin-bottom:40px}
+.member-item{display:flex;align-items:center;gap:14px}
+.member-check{width:26px;height:26px;border-radius:50%;flex-shrink:0;background:rgba(201,164,64,.09);border:1px solid rgba(201,164,64,.3);display:flex;align-items:center;justify-content:center}
+.member-check svg{width:11px;height:11px;stroke:var(--or);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.member-label{font-family:'DM Sans',sans-serif;font-size:15px;color:var(--blanc);font-weight:300;letter-spacing:.2px}
+
+/* ══ POURQUOI ÉLÉVIA ══ */
+.pourquoi-page{min-height:100%;background:var(--cream);padding:36px 20px 80px}
+.pourquoi-kicker{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#A07828;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.pourquoi-kicker::before{content:'';width:16px;height:1px;background:linear-gradient(to right,#A07828,#D4A843)}
+.pourquoi-title{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:700;line-height:1.1;color:#1A0E04;margin-bottom:6px}
+.pourquoi-sub{font-family:'DM Sans',sans-serif;font-size:13px;color:#7A6248;margin-bottom:24px;line-height:1.5}
+.compare-table{width:100%;border-collapse:collapse;margin-bottom:24px}
+.compare-table th{padding:10px 6px;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border-bottom:2px solid #DDD4C4;text-align:left;color:#9A8870}
+.compare-table th:nth-child(2){text-align:center}
+.compare-table th:nth-child(3){text-align:center;color:#A07828}
+.compare-table td{padding:12px 6px;font-family:'DM Sans',sans-serif;font-size:13px;border-bottom:1px solid #EDE5D8;vertical-align:middle;color:#4A3A2A}
+.compare-table td:nth-child(2){text-align:center;color:#C4B090;font-size:14px}
+.compare-table td:nth-child(3){text-align:center;font-size:14px;color:#A07828;font-weight:600}
+.concierge-dark{background:linear-gradient(145deg,#070402 0%,#1C1208 100%);border-radius:24px;padding:24px;margin-bottom:24px;border:1px solid var(--border)}
+.concierge-dark-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;color:var(--or);margin-bottom:4px}
+.concierge-dark-sub{font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(250,246,238,.4);margin-bottom:20px}
+.concierge-list{display:flex;flex-direction:column;gap:14px}
+.concierge-item{display:flex;align-items:flex-start;gap:12px}
+.concierge-ico{width:34px;height:34px;border-radius:10px;flex-shrink:0;background:rgba(201,164,64,.1);border:1px solid rgba(201,164,64,.22);display:flex;align-items:center;justify-content:center}
+.concierge-ico svg{width:15px;height:15px;stroke:var(--or);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.concierge-item-title{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--blanc);margin-bottom:2px}
+.concierge-item-desc{font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(250,246,238,.4);line-height:1.5}
+
+/* ══ ABONNEMENTS ══ */
+.abo-page{min-height:100%;background:var(--espresso);padding:32px 20px 80px}
+.abo-page-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:700;line-height:1.1;margin-bottom:8px}
+.abo-page-sub{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--muted);margin-bottom:32px}
+.abo-cards{display:flex;flex-direction:column;gap:14px;margin-bottom:14px}
+.abo-card{background:var(--mahogany);border:1px solid var(--border);border-radius:24px;padding:24px;position:relative;transition:border-color .2s}
+.abo-card.featured{border:1.5px solid var(--or-line);background:linear-gradient(160deg,#100A04 0%,#1C1208 100%);box-shadow:0 0 56px rgba(160,120,40,.09)}
+.abo-recommended{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--or-grad);color:#2A1A06;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 16px;border-radius:100px;white-space:nowrap;box-shadow:0 2px 8px rgba(160,120,40,.35)}
+.abo-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;margin-bottom:4px;color:var(--blanc)}
+.abo-price{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:700;color:var(--or);line-height:1;margin-bottom:16px}
+.abo-price span{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:300;color:var(--muted)}
+.abo-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.abo-features li{display:flex;align-items:flex-start;gap:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(250,246,238,.7)}
+.abo-features li svg{width:15px;height:15px;stroke:var(--or);fill:none;stroke-width:2;flex-shrink:0;margin-top:1px;stroke-linecap:round;stroke-linejoin:round}
+.abo-btn{width:100%;padding:15px 24px;border-radius:100px;border:none;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;min-height:50px}
+.abo-card.featured .abo-btn{background:var(--or-grad);color:#2A1A06;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 2px 0 var(--or-shadow),0 6px 20px rgba(160,120,40,.32)}
+.abo-card.featured .abo-btn:hover{transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 0 var(--or-shadow),0 10px 28px rgba(160,120,40,.42)}
+.abo-card:not(.featured) .abo-btn{background:transparent;color:var(--or);border:1.5px solid var(--or-line)}
+.abo-cercle{background:linear-gradient(145deg,#0A0702 0%,#1A1206 100%);border:1px solid var(--or-line);border-radius:24px;padding:28px;text-align:center}
+.abo-cercle-name{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--or);margin-bottom:8px}
+.abo-cercle-sub{font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,164,64,.45);margin-bottom:12px}
+.abo-cercle-desc{font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(250,246,238,.5);line-height:1.6;margin-bottom:20px}
+.abo-cercle-btn{width:100%;padding:15px 24px;border-radius:100px;background:transparent;border:1.5px solid var(--or-line);color:var(--or);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s}
+.abo-cercle-btn:hover{background:var(--or-bg)}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <button class="nav-back" id="back-btn" onclick="goBack()" style="display:none">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+  </button>
+  <div class="nav-logo">
+    <span class="nav-logo-club">Club Privé</span>
+    <span class="nav-logo-name"><span>Élévia</span></span>
+  </div>
+  <div class="nav-icons" id="nav-icons">
+    <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    <div class="badge-wrap">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <div class="badge-dot"></div>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ SPLASH ══ -->
+<div class="screen active" id="s-splash">
+  <div class="splash">
+    <div class="splash-ring-wrap">
+      <div class="splash-ring-outer"></div>
+      <div class="splash-ring-mid"></div>
+      <div class="splash-ring-inner">
+        <svg viewBox="0 0 60 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="16" r="13" stroke="#C9A440" stroke-width="1"/>
+          <circle cx="40" cy="16" r="13" stroke="#C9A440" stroke-width="1"/>
+          <path d="M30 5.8C33.5 8.4 36 12 36 16C36 20 33.5 23.6 30 26.2C26.5 23.6 24 20 24 16C24 12 26.5 8.4 30 5.8Z" stroke="#C9A440" stroke-width="1" fill="rgba(245,239,230,.9)"/>
+        </svg>
+      </div>
+    </div>
+    <div class="splash-brand">
+      <span class="splash-club">Club Privé</span>
+      <span class="splash-elevia">Élévia</span>
+    </div>
+    <div class="splash-rule"></div>
+    <p class="splash-tagline">Le cercle privé des<br>rencontres d'exception</p>
+    <p class="splash-sub">Sélection exclusive · Monde entier</p>
+    <div class="splash-btns">
+      <button class="btn btn-or" onclick="goTo('s-exclusivite')">Créer mon profil</button>
+      <button class="btn-outline-gold" onclick="goTo('s-discover')">J'ai déjà un compte</button>
+    </div>
+    <p class="splash-legal">Conforme RGPD · Données chiffrées · Membres vérifiés</p>
+  </div>
+</div>
+
+<!-- ══ EXCLUSIVITÉ ══ -->
+<div class="screen" id="s-exclusivite">
+  <div class="excl-page">
+    <div class="excl-kicker">Qui sommes-nous</div>
+    <h2 class="excl-title">Un cercle, pas<br><em>une application</em></h2>
+    <div class="accept-badge">
+      <div class="accept-pct">27%</div>
+      <div class="accept-desc">des candidatures seulement sont acceptées après vérification complète du profil</div>
+    </div>
+    <div class="members-kicker">Nos membres</div>
+    <div class="members-list">
+      <div class="member-item">
+        <div class="member-check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5"/></svg></div>
+        <span class="member-label">Entrepreneurs</span>
+      </div>
+      <div class="member-item">
+        <div class="member-check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5"/></svg></div>
+        <span class="member-label">Cadres dirigeants</span>
+      </div>
+      <div class="member-item">
+        <div class="member-check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5"/></svg></div>
+        <span class="member-label">Professionnels qualifiés</span>
+      </div>
+      <div class="member-item">
+        <div class="member-check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5"/></svg></div>
+        <span class="member-label">Personnalités ambitieuses</span>
+      </div>
+      <div class="member-item">
+        <div class="member-check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5"/></svg></div>
+        <span class="member-label">Membres vérifiés uniquement</span>
+      </div>
+    </div>
+    <button class="btn btn-or" onclick="goTo('s-pourquoi')">Soumettre ma candidature</button>
+  </div>
+</div>
+
+<!-- ══ POURQUOI ÉLÉVIA ══ -->
+<div class="screen" id="s-pourquoi">
+  <div class="pourquoi-page">
+    <div class="pourquoi-kicker">Notre différence</div>
+    <h2 class="pourquoi-title">Pourquoi<br>Club Privé Élévia ?</h2>
+    <p class="pourquoi-sub">Une approche fondamentalement différente</p>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Critère</th>
+          <th>Autres apps</th>
+          <th>Club Privé Élévia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Approche</td><td>✕ Swipe rapide</td><td>✓ Compatibilité réelle</td></tr>
+        <tr><td>Profils</td><td>✕ Anonymes</td><td>✓ Vérifiés</td></tr>
+        <tr><td>Sélection</td><td>✕ Ouverte à tous</td><td>✓ Qualitative</td></tr>
+        <tr><td>Rencontres</td><td>✕ Aléatoires</td><td>✓ Affinités profondes</td></tr>
+        <tr><td>Communauté</td><td>✕ Isolée</td><td>✓ Événements privés</td></tr>
+        <tr><td>Accompagnement</td><td>✕ Aucun</td><td>✓ Concierge dédié</td></tr>
+      </tbody>
+    </table>
+    <div class="concierge-dark">
+      <div class="concierge-dark-title">Le Concierge Élévia</div>
+      <div class="concierge-dark-sub">Une vraie conseillère, pas un algorithme</div>
+      <div class="concierge-list">
+        <div class="concierge-item">
+          <div class="concierge-ico"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div><div class="concierge-item-title">Aide à la création de profil</div><div class="concierge-item-desc">Conseils pour mettre en valeur votre personnalité</div></div>
+        </div>
+        <div class="concierge-item">
+          <div class="concierge-ico"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+          <div><div class="concierge-item-title">Recommandations personnalisées</div><div class="concierge-item-desc">Profils sélectionnés manuellement pour vous</div></div>
+        </div>
+        <div class="concierge-item">
+          <div class="concierge-ico"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div><div class="concierge-item-title">Coaching premier rendez-vous</div><div class="concierge-item-desc">Préparation, conseils et suivi après la rencontre</div></div>
+        </div>
+        <div class="concierge-item">
+          <div class="concierge-ico"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div><div class="concierge-item-title">Accès aux événements privés</div><div class="concierge-item-desc">Dîners et soirées réservés aux membres Prestige</div></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-or" onclick="goTo('s-comment')">Rejoindre Club Privé Élévia</button>
+  </div>
+</div>
+
+<!-- ══ COMMENT ÇA MARCHE ══ -->
+<div class="screen" id="s-comment">
+  <div class="comment-page">
+    <span class="comment-tag">Notre différence</span>
+    <h2 class="comment-h">Pas une app<br>de rencontres<br>comme les autres.</h2>
+    <p class="comment-sub">Club Privé Élévia sélectionne, vérifie et connecte. Voici comment.</p>
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num-circle">01</div>
+        <div class="step-content">
+          <div class="step-title-txt">Profil vérifié sous 48h</div>
+          <div class="step-desc-txt">Identité vérifiée par vidéo, photos modérées par notre équipe. Aucun faux profil ne passe la sélection.</div>
+          <span class="step-badge">Modération humaine</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">02</div>
+        <div class="step-content">
+          <div class="step-title-txt">Votre compatibilité sur 4 dimensions</div>
+          <div class="step-desc-txt">Valeurs, projets de vie, style de communication. Votre profil évolue à chaque interaction pour affiner votre sélection.</div>
+          <span class="step-badge">Score sur 4 dimensions</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">03</div>
+        <div class="step-content">
+          <div class="step-title-txt">Échangez dans un cadre protégé</div>
+          <div class="step-desc-txt">Photos visibles uniquement par les membres vérifiés. Chat chiffré. Signalement en un geste.</div>
+          <span class="step-badge">Données chiffrées · RGPD</span>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-or" onclick="goTo('s-inscription')">Je commence mon profil</button>
+  </div>
+</div>
+
+<!-- ══ INSCRIPTION ══ -->
+<div class="screen" id="s-inscription">
+  <div class="progress"><div class="progress-fill" style="width:25%"></div></div>
+  <div class="form-page">
+    <span class="step-tag">Étape 1 / 4 — Identité</span>
+    <h2 class="form-title">Parlez-nous<br>de vous.</h2>
+    <p class="form-sub">Ces informations restent privées et ne sont jamais partagées sans votre accord explicite.</p>
+    <div class="form-group">
+      <label class="form-label">Prénom</label>
+      <input class="form-input" type="text" placeholder="Votre prénom">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date de naissance</label>
+      <input class="form-input" type="text" placeholder="JJ / MM / AAAA">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Je recherche</label>
+      <select class="form-select">
+        <option>Une femme</option><option>Un homme</option><option>Peu importe</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nationalité</label>
+      <select class="form-select">
+        <option>Française</option><option>Belge</option><option>Suisse</option>
+        <option>Canadienne</option><option>Ivoirienne</option><option>Sénégalaise</option>
+        <option>Camerounaise</option><option>Marocaine</option><option>Autre</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Pays de résidence</label>
+      <select class="form-select">
+        <option>France</option><option>Belgique</option><option>Suisse</option>
+        <option>Canada</option><option>Côte d'Ivoire</option><option>Sénégal</option>
+        <option>Maroc</option><option>Autre</option>
+      </select>
+    </div>
+    <div class="divider"></div>
+    <button class="btn btn-or" onclick="goTo('s-photos')">Continuer</button>
+    <p class="rgpd">En continuant, vous acceptez nos <u>Conditions d'utilisation</u> et notre <u>Politique de confidentialité</u>. Données traitées conformément au RGPD.</p>
+  </div>
+</div>
+
+<!-- ══ PHOTOS ══ -->
+<div class="screen" id="s-photos">
+  <div class="progress"><div class="progress-fill" style="width:50%"></div></div>
+  <div class="form-page">
+    <span class="step-tag">Étape 2 / 4 — Photos</span>
+    <h2 class="form-title">Montrez-vous<br>authentiquement.</h2>
+    <p class="form-sub">Minimum 2 photos. La première doit montrer clairement votre visage. Modérées sous 24h.</p>
+    <div class="photo-grid">
+      <div class="photo-slot filled">
+        <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=200&h=267&q=80" alt="" width="200" height="267">
+        <div class="photo-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
+      <div class="photo-slot filled">
+        <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=200&h=267&crop=entropy&q=80" alt="" width="200" height="267">
+        <div class="photo-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
+      <div class="photo-slot"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Ajouter</span></div>
+      <div class="photo-slot"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Ajouter</span></div>
+      <div class="photo-slot"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Ajouter</span></div>
+      <div class="photo-slot"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Ajouter</span></div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div>
+        <div class="info-title">Photos protégées</div>
+        <div class="info-desc">Visibles uniquement par les membres vérifiés. Aucun téléchargement ni partage externe.</div>
+      </div>
+    </div>
+    <button class="btn btn-or" onclick="goTo('s-kyc')">Continuer</button>
+  </div>
+</div>
+
+<!-- ══ KYC ══ -->
+<div class="screen" id="s-kyc">
+  <div class="progress"><div class="progress-fill" style="width:75%"></div></div>
+  <div class="form-page">
+    <span class="step-tag">Étape 3 / 4 — Vérification</span>
+    <h2 class="form-title">Votre identité,<br>confirmée.</h2>
+    <p class="form-sub">10 secondes. Résultat communiqué par notre équipe sous 48h.</p>
+    <div class="kyc-cam">
+      <div class="kyc-face"></div>
+      <div class="kyc-hint"><span>Centrez votre visage dans le cadre</span></div>
+    </div>
+    <div class="kyc-shields">
+      <div class="kyc-shield">
+        <div class="kyc-shield-ico">
+          <svg viewBox="0 0 24 24"><path d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3"/></svg>
+        </div>
+        <div class="kyc-shield-body">
+          <div class="kyc-shield-title">Données hébergées en Europe</div>
+          <div class="kyc-shield-sub">Conformité RGPD totale</div>
+        </div>
+      </div>
+      <div class="kyc-shield">
+        <div class="kyc-shield-ico">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        </div>
+        <div class="kyc-shield-body">
+          <div class="kyc-shield-title">Suppression automatique sous 24h</div>
+          <div class="kyc-shield-sub">Aucune donnée biométrique conservée</div>
+        </div>
+      </div>
+      <div class="kyc-shield">
+        <div class="kyc-shield-ico">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="kyc-shield-body">
+          <div class="kyc-shield-title">Vérification humaine</div>
+          <div class="kyc-shield-sub">Par notre équipe, pas automatisée</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-or" onclick="goTo('s-matching')">Lancer l'enregistrement</button>
+  </div>
+</div>
+
+<!-- ══ MATCHING — chat conseillère ══ -->
+<div class="screen" id="s-matching">
+  <div class="conseillere-page">
+    <div class="progress" style="flex-shrink:0"><div class="progress-fill" style="width:100%"></div></div>
+    <div class="conseillere-header">
+      <div class="conseillere-av">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div>
+        <div class="chat-name">Sophie</div>
+        <div class="conseillere-role">Conseillère Club Privé Élévia · Étape 4 / 4</div>
+      </div>
+    </div>
+    <div class="match-msgs-wrap" id="match-msgs"></div>
+    <div class="match-responses-wrap" id="match-responses"></div>
+  </div>
+</div>
+
+<!-- ══ CALCUL COMPATIBILITÉ ══ -->
+<div class="screen" id="s-calcul">
+  <div class="calcul-page">
+    <div class="calcul-ring"></div>
+    <h2 class="calcul-title">Votre profil de<br>compatibilité se calcule.</h2>
+    <p class="calcul-sub">Vos affinités se calculent sur 4 dimensions…</p>
+    <div class="calcul-bars">
+      <div class="calcul-row">
+        <span class="calcul-label">Valeurs</span>
+        <div class="calcul-track"><div class="calcul-fill" style="--w:96%;animation-delay:.2s"></div></div>
+        <span class="calcul-pct">96%</span>
+      </div>
+      <div class="calcul-row">
+        <span class="calcul-label">Projets de vie</span>
+        <div class="calcul-track"><div class="calcul-fill" style="--w:91%;animation-delay:.5s"></div></div>
+        <span class="calcul-pct">91%</span>
+      </div>
+      <div class="calcul-row">
+        <span class="calcul-label">Style de vie</span>
+        <div class="calcul-track"><div class="calcul-fill" style="--w:88%;animation-delay:.8s"></div></div>
+        <span class="calcul-pct">88%</span>
+      </div>
+      <div class="calcul-row">
+        <span class="calcul-label">Communication</span>
+        <div class="calcul-track"><div class="calcul-fill" style="--w:95%;animation-delay:1.1s"></div></div>
+        <span class="calcul-pct">95%</span>
+      </div>
+    </div>
+    <button class="btn btn-or" style="width:100%;max-width:320px" onclick="goTo('s-discover')">Voir mes compatibles</button>
+  </div>
+</div>
+
+<!-- ══ DISCOVER ══ -->
+<div class="screen" id="s-discover">
+  <div class="discover-page">
+    <div class="filters">
+      <div class="fchip on">Tous</div>
+      <div class="fchip">France</div>
+      <div class="fchip">Belgique</div>
+      <div class="fchip">Côte d'Ivoire</div>
+      <div class="fchip">Canada</div>
+      <div class="fchip">Suisse</div>
+    </div>
+    <div class="profiles-grid">
+      <div class="pcard" onclick="goTo('s-profile-aminata')">
+        <div class="pcard-photo" style="background-image:url('https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=400&h=570&q=80')"></div>
+        <div class="pcard-gradient"></div>
+        <div class="online-dot"></div>
+        <div class="pcard-body">
+          <div class="pcard-compat"><div class="pcard-compat-dot"></div><span>94%</span></div>
+          <div class="pcard-name">Aminata, 31</div>
+          <div class="pcard-meta">Paris · Ivoirienne</div>
+        </div>
+        <div class="pcard-actions">
+          <button class="pcard-btn pcard-pass" onclick="event.stopPropagation();passCard(this)"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <button class="pcard-btn pcard-like" onclick="event.stopPropagation();goTo('s-match')"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+      </div>
+      <div class="pcard" onclick="goTo('s-profile-kofi')">
+        <div class="pcard-photo" style="background-image:url('https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=400&h=570&q=80')"></div>
+        <div class="pcard-gradient"></div>
+        <div class="pcard-body">
+          <div class="pcard-compat"><div class="pcard-compat-dot"></div><span>88%</span></div>
+          <div class="pcard-name">Kofi, 35</div>
+          <div class="pcard-meta">Bruxelles · Ghanéen</div>
+        </div>
+        <div class="pcard-actions">
+          <button class="pcard-btn pcard-pass" onclick="event.stopPropagation();passCard(this)"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <button class="pcard-btn pcard-like" onclick="event.stopPropagation();goTo('s-match')"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+      </div>
+      <div class="pcard" onclick="goTo('s-profile-lea')">
+        <div class="pcard-photo" style="background-image:url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&h=570&q=80')"></div>
+        <div class="pcard-gradient"></div>
+        <div class="online-dot"></div>
+        <div class="pcard-body">
+          <div class="pcard-compat"><div class="pcard-compat-dot"></div><span>82%</span></div>
+          <div class="pcard-name">Léa, 29</div>
+          <div class="pcard-meta">Lyon · Française</div>
+        </div>
+        <div class="pcard-actions">
+          <button class="pcard-btn pcard-pass" onclick="event.stopPropagation();passCard(this)"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <button class="pcard-btn pcard-like" onclick="event.stopPropagation();goTo('s-match')"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+      </div>
+      <div class="pcard" onclick="goTo('s-profile-thomas')">
+        <div class="pcard-photo" style="background-image:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=570&q=80')"></div>
+        <div class="pcard-gradient"></div>
+        <div class="pcard-body">
+          <div class="pcard-compat"><div class="pcard-compat-dot"></div><span>79%</span></div>
+          <div class="pcard-name">Thomas, 36</div>
+          <div class="pcard-meta">Bordeaux · Français</div>
+        </div>
+        <div class="pcard-actions">
+          <button class="pcard-btn pcard-pass" onclick="event.stopPropagation();passCard(this)"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <button class="pcard-btn pcard-like" onclick="event.stopPropagation();goTo('s-match')"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <nav class="bottom-nav">
+      <button class="bnav on">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <span>Découvrir</span>
+      </button>
+      <button class="bnav" onclick="goTo('s-match')">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span>Matchs</span>
+      </button>
+      <button class="bnav" onclick="goTo('s-chat')">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>Messages</span>
+      </button>
+      <button class="bnav" onclick="goTo('s-abonnements')">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>Club</span>
+      </button>
+    </nav>
+  </div>
+</div>
+
+<!-- ══ PROFIL AMINATA ══ -->
+<div class="screen" id="s-profile-aminata">
+  <div class="profile-detail">
+    <div class="profile-hero">
+      <div class="profile-hero-photo" style="background-image:url('https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=860&q=85')"></div>
+      <div class="profile-hero-grad"></div>
+      <div class="profile-hero-actions">
+        <div class="hero-pill-btn"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>94% compatible</div>
+      </div>
+    </div>
+    <div class="profile-body">
+      <h2 class="profile-name-lg">Aminata, 31 ans</h2>
+      <div class="profile-meta-row">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Paris, France · Ivoirienne · Membre vérifiée
+      </div>
+      <div class="section-label">À propos</div>
+      <p class="about-text">Entrepreneur dans l'âme, j'ai fondé ma structure à 27 ans. J'aime les gens qui ont une direction, un projet de vie solide. Je cherche quelqu'un de stable, sincère, avec qui construire quelque chose de durable.</p>
+      <div class="section-label">Affinités</div>
+      <div class="tags-row">
+        <span class="tag-or">Voyages</span><span class="tag-or">Entrepreneuriat</span><span class="tag-or">Gastronomie</span><span class="tag-or">Culture</span><span class="tag-or">Sport</span>
+      </div>
+      <div class="section-label">Compatibilité détaillée</div>
+      <div class="compat-bars">
+        <div class="cbar-row"><span class="cbar-label">Valeurs</span><div class="cbar-track"><div class="cbar-fill" style="width:96%"></div></div><span class="cbar-pct">96%</span></div>
+        <div class="cbar-row"><span class="cbar-label">Projets de vie</span><div class="cbar-track"><div class="cbar-fill" style="width:91%"></div></div><span class="cbar-pct">91%</span></div>
+        <div class="cbar-row"><span class="cbar-label">Style de vie</span><div class="cbar-track"><div class="cbar-fill" style="width:88%"></div></div><span class="cbar-pct">88%</span></div>
+        <div class="cbar-row"><span class="cbar-label">Communication</span><div class="cbar-track"><div class="cbar-fill" style="width:95%"></div></div><span class="cbar-pct">95%</span></div>
+      </div>
+      <div style="height:60px"></div>
+    </div>
+  </div>
+  <div class="cta-fixed">
+    <div class="btn-ico"><svg viewBox="0 0 24 24"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3z"/></svg></div>
+    <button class="btn btn-or" style="flex:1" onclick="goTo('s-match')">Envoyer une demande</button>
+  </div>
+</div>
+
+<!-- ══ PROFIL KOFI ══ -->
+<div class="screen" id="s-profile-kofi">
+  <div class="profile-detail">
+    <div class="profile-hero">
+      <div class="profile-hero-photo" style="background-image:url('https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=860&q=85')"></div>
+      <div class="profile-hero-grad"></div>
+      <div class="profile-hero-actions">
+        <div class="hero-pill-btn"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>88% compatible</div>
+      </div>
+    </div>
+    <div class="profile-body">
+      <h2 class="profile-name-lg">Kofi, 35 ans</h2>
+      <div class="profile-meta-row">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Bruxelles, Belgique · Ghanéen · Membre vérifié
+      </div>
+      <div class="section-label">À propos</div>
+      <p class="about-text">Je développe une activité d'import-export entre la Belgique et le Ghana depuis 6 ans. Je construis quelque chose de solide. Je cherche une femme ambitieuse et ancrée, avec qui partager une vision à long terme.</p>
+      <div class="section-label">Affinités</div>
+      <div class="tags-row">
+        <span class="tag-or">Entrepreneuriat</span><span class="tag-or">Voyages</span><span class="tag-or">Famille</span><span class="tag-or">Culture africaine</span><span class="tag-or">Gastronomie</span>
+      </div>
+      <div class="section-label">Compatibilité détaillée</div>
+      <div class="compat-bars">
+        <div class="cbar-row"><span class="cbar-label">Valeurs</span><div class="cbar-track"><div class="cbar-fill" style="width:88%"></div></div><span class="cbar-pct">88%</span></div>
+        <div class="cbar-row"><span class="cbar-label">Projets de vie</span><div class="cbar-track"><div class="cbar-fill" style="width:85%"></div></div><span class="cbar-pct">85%</span></div>
+        <div class="cbar-row"><span class="cbar-label">Style de vie</span><div class="cbar-track"><div class="cbar-fill" style="width:79%"></div></div><span class="cbar-pct">79%</span></div>
+        <div class="cbar-row"><span class="cbar-label">Communication</span><div class="cbar-track"><div class="cbar-fill" style="width:82%"></div></div><span class="cbar-pct">82%</span></div>
+      </div>
+      <div style="height:60px"></div>
+    </div>
+  </div>
+  <div class="cta-fixed">
+    <div class="btn-ico"><svg viewBox="0 0 24 24"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3z"/></svg></div>
+    <button class="btn btn-or" style="flex:1" onclick="goTo('s-match')">Envoyer une demande</button>
+  </div>
+</div>
+
+<!-- ══ PROFIL LÉA ══ -->
+<div class="screen" id="s-profile-lea">
+  <div class="profile-detail">
+    <div class="profile-hero">
+      <div class="profile-hero-photo" style="background-image:url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=860&q=85')"></div>
+      <div class="profile-hero-grad"></div>
+      <div class="profile-hero-actions">
+        <div class="hero-pill-btn"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>82% compatible</div>
+      </div>
+    </div>
+    <div class="profile-body">
+      <h2 class="profile-name-lg">Léa, 29 ans</h2>
+      <div class="profile-meta-row">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Lyon, France · Française · Membre vérifiée
+      </div>
+      <div class="section-label">À propos</div>
+      <p class="about-text">Architecte d'intérieur, passionnée par les espaces qui racontent une histoire. J'ai beaucoup voyagé en Afrique de l'Ouest et j'y ai laissé une partie de mon cœur. Curieuse, ouverte, je cherche une connexion vraie.</p>
+      <div class="section-label">Affinités</div>
+      <div class="tags-row">
+        <span class="tag-or">Architecture</span><span class="tag-or">Voyages</span><span class="tag-or">Art</span><span class="tag-or">Gastronomie</span><span class="tag-or">Nature</span>
+      </div>
+      <div class="section-label">Compatibilité détaillée</div>
+      <div class="compat-bars">
+        <div class="cbar-row"><span class="cbar-label">Valeurs</span><div class="cbar-track"><div class="cbar-fill" style="width:82%"></div></div><span class="cbar-pct">82%</span></div>
+        <div class="cbar-row"><span class="cbar-label">Projets de vie</span><div class="cbar-track"><div class="cbar-fill" style="width:78%"></div></div><span class="cbar-pct">78%</span></div>
+        <div class="cbar-row"><span class="cbar-label">Style de vie</span><div class="cbar-track"><div class="cbar-fill" style="width:84%"></div></div><span class="cbar-pct">84%</span></div>
+        <div class="cbar-row"><span class="cbar-label">Communication</span><div class="cbar-track"><div class="cbar-fill" style="width:80%"></div></div><span class="cbar-pct">80%</span></div>
+      </div>
+      <div style="height:60px"></div>
+    </div>
+  </div>
+  <div class="cta-fixed">
+    <div class="btn-ico"><svg viewBox="0 0 24 24"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3z"/></svg></div>
+    <button class="btn btn-or" style="flex:1" onclick="goTo('s-match')">Envoyer une demande</button>
+  </div>
+</div>
+
+<!-- ══ PROFIL THOMAS ══ -->
+<div class="screen" id="s-profile-thomas">
+  <div class="profile-detail">
+    <div class="profile-hero">
+      <div class="profile-hero-photo" style="background-image:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=860&q=85')"></div>
+      <div class="profile-hero-grad"></div>
+      <div class="profile-hero-actions">
+        <div class="hero-pill-btn"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>79% compatible</div>
+      </div>
+    </div>
+    <div class="profile-body">
+      <h2 class="profile-name-lg">Thomas, 36 ans</h2>
+      <div class="profile-meta-row">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Bordeaux, France · Français · Membre vérifié
+      </div>
+      <div class="section-label">À propos</div>
+      <p class="about-text">Chef cuisinier et gérant de mon restaurant depuis 5 ans. La table est pour moi un lieu de partage et de joie. Discret, fiable, j'apprécie les gens authentiques. Je cherche quelqu'un avec qui construire une vie simple, solide et belle.</p>
+      <div class="section-label">Affinités</div>
+      <div class="tags-row">
+        <span class="tag-or">Gastronomie</span><span class="tag-or">Famille</span><span class="tag-or">Voyages</span><span class="tag-or">Nature</span><span class="tag-or">Entrepreneuriat</span>
+      </div>
+      <div class="section-label">Compatibilité détaillée</div>
+      <div class="compat-bars">
+        <div class="cbar-row"><span class="cbar-label">Valeurs</span><div class="cbar-track"><div class="cbar-fill" style="width:79%"></div></div><span class="cbar-pct">79%</span></div>
+        <div class="cbar-row"><span class="cbar-label">Projets de vie</span><div class="cbar-track"><div class="cbar-fill" style="width:76%"></div></div><span class="cbar-pct">76%</span></div>
+        <div class="cbar-row"><span class="cbar-label">Style de vie</span><div class="cbar-track"><div class="cbar-fill" style="width:81%"></div></div><span class="cbar-pct">81%</span></div>
+        <div class="cbar-row"><span class="cbar-label">Communication</span><div class="cbar-track"><div class="cbar-fill" style="width:75%"></div></div><span class="cbar-pct">75%</span></div>
+      </div>
+      <div style="height:60px"></div>
+    </div>
+  </div>
+  <div class="cta-fixed">
+    <div class="btn-ico"><svg viewBox="0 0 24 24"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3z"/></svg></div>
+    <button class="btn btn-or" style="flex:1" onclick="goTo('s-match')">Envoyer une demande</button>
+  </div>
+</div>
+
+<!-- ══ MATCH ══ -->
+<div class="screen" id="s-match">
+  <div class="match-screen">
+    <div class="match-ring"></div>
+    <div class="match-ring" style="animation-delay:.7s"></div>
+    <div class="match-avatars">
+      <div class="match-av"><img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=160&h=160&q=80" alt="" width="80" height="80"></div>
+      <div class="match-heart"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <div class="match-av"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=160&h=160&q=80" alt="" width="80" height="80"></div>
+    </div>
+    <div class="match-title">C'est un match.</div>
+    <p class="match-sub">Vous et Aminata vous êtes mutuellement sélectionnés au sein du Club Privé Élévia.</p>
+    <div class="match-names">Vous &amp; Aminata</div>
+    <div class="match-btns">
+      <button class="btn btn-or" onclick="goTo('s-abonnements')">Ouvrir la conversation</button>
+      <button class="btn btn-ghost" onclick="goTo('s-discover')">Continuer à explorer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ABONNEMENTS ══ -->
+<div class="screen" id="s-abonnements">
+  <div class="abo-page">
+    <div class="step-tag" style="margin-bottom:12px">Club Privé Élévia</div>
+    <h2 class="abo-page-title">Choisissez<br>votre accès</h2>
+    <p class="abo-page-sub">Rejoignez le cercle. Commencez quand vous voulez.</p>
+    <div class="abo-cards">
+      <div class="abo-card">
+        <div class="abo-name">Membre Élégance</div>
+        <div class="abo-price">29 €<span>/mois</span></div>
+        <ul class="abo-features">
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Profil vérifié et validé</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>5 profils compatibles par semaine</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Messagerie après mise en relation</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Accès à la communauté Élévia</li>
+        </ul>
+        <button class="abo-btn" onclick="goTo('s-chat')">Commencer</button>
+      </div>
+      <div class="abo-card featured">
+        <div class="abo-recommended">Recommandé</div>
+        <div class="abo-name">Membre Prestige</div>
+        <div class="abo-price">79 €<span>/mois</span></div>
+        <ul class="abo-features">
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Tout Élégance inclus</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Découverte illimitée de profils</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Messagerie complète (texte, vocal, photos)</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Accès aux événements privés Élévia</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Conseillère Concierge dédiée</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Coaching premier rendez-vous</li>
+        </ul>
+        <button class="abo-btn" onclick="goTo('s-chat')">Choisir Prestige</button>
+      </div>
+    </div>
+    <div class="abo-cercle">
+      <div class="abo-cercle-sub">Sur sélection uniquement</div>
+      <div class="abo-cercle-name">Cercle Privé Élévia</div>
+      <div class="abo-cercle-desc">Matching manuel par notre équipe, accès VIP à tous les événements, accompagnement premium entièrement personnalisé.</div>
+      <button class="abo-cercle-btn">Déposer ma candidature</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CHAT ══ -->
+<div class="screen" id="s-chat">
+  <div class="chat-page">
+    <div class="chat-header">
+      <div class="chat-av"><img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=84&h=84&q=80" alt="" width="42" height="42"></div>
+      <div style="flex:1">
+        <div class="chat-name">Aminata</div>
+        <div class="chat-status">En ligne</div>
+      </div>
+      <svg style="width:20px;height:20px;stroke:var(--muted);fill:none;stroke-width:1.5;cursor:pointer" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+    </div>
+    <div class="chat-msgs">
+      <div class="msg r"><div class="msg-bubble">Bonjour ! Je suis vraiment contente qu'on soit en contact. J'ai vu que vous êtes aussi entrepreneur. Dans quel domaine ?</div><div class="msg-time">14:32</div></div>
+      <div class="msg s"><div class="msg-bubble">Bonjour Aminata ! Je travaille dans le digital, des applications sur mesure pour les entrepreneurs. Et vous ?</div><div class="msg-time">14:35</div></div>
+      <div class="msg r"><div class="msg-bubble">J'ai lancé une structure de coaching il y a 4 ans. Je pense qu'on a des profils très complémentaires.</div><div class="msg-time">14:37</div></div>
+      <div class="msg s"><div class="msg-bubble">Tout à fait. Vous êtes basée à Paris en ce moment ?</div><div class="msg-time">14:38</div></div>
+      <div class="msg r"><div class="msg-bubble">Oui, dans le 15e. Vous aussi ?</div><div class="msg-time">14:40</div></div>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" type="text" placeholder="Votre message…">
+      <button class="chat-send"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /shell -->
+<script>
+const H=[];
+function updateNav(id){
+  const nav=document.getElementById('nav');
+  nav.style.display=(id==='s-splash')?'none':'flex';
+}
+function goTo(id){
+  const c=document.querySelector('.screen.active');
+  if(c){H.push(c.id);c.classList.remove('active')}
+  document.getElementById(id).classList.add('active');
+  document.getElementById('back-btn').style.display=H.length?'flex':'none';
+  updateNav(id);
+  window.scrollTo(0,0);
+  if(id==='s-matching')initMatchChat();
+}
+function goBack(){
+  if(!H.length)return;
+  const c=document.querySelector('.screen.active');
+  if(c)c.classList.remove('active');
+  const prev=H.pop();
+  document.getElementById(prev).classList.add('active');
+  document.getElementById('back-btn').style.display=H.length?'flex':'none';
+  updateNav(prev);
+  window.scrollTo(0,0);
+}
+function passCard(btn){
+  const card=btn.closest('.pcard');
+  card.classList.add('passing');
+  setTimeout(()=>card.remove(),260);
+}
+
+const CONV=[
+  {
+    sophie:"Bonjour ! Je suis Sophie, votre conseillère Club Privé Élévia. Quelques questions pour préparer votre sélection. Qu'est-ce qui vous a amené à nous rejoindre ?",
+    opts:["Je cherche une relation sérieuse et durable","Je veux rencontrer des personnes qui partagent mes valeurs","Je cherche à élargir mon cercle à l'international"]
+  },
+  {
+    sophie:"Je comprends. Ce qui vous attire avant tout chez quelqu'un, c'est…",
+    opts:["Sa stabilité, son ambition, sa vision","Sa douceur, sa bienveillance, sa présence","Son ouverture, sa curiosité, son humour"]
+  },
+  {
+    sophie:"Et dans votre quotidien idéal à deux, vous vous voyez plutôt…",
+    opts:["Ensemble, avec des projets de vie partagés","Avec un bel équilibre entre complicité et indépendance","Ouverts à vivre à l'international si l'amour le demande"]
+  },
+  {
+    sophie:"Merci pour votre authenticité. Votre profil est précieux. Je lance maintenant votre sélection parmi nos membres actifs.",
+    final:true
+  }
+];
+let matchStep=0;
+
+function addMsg(wrap,cls,text){
+  const d=document.createElement('div');
+  d.className='msg '+cls+' msg-new';
+  d.innerHTML='<div class="msg-bubble">'+text+'</div>';
+  wrap.appendChild(d);
+  wrap.scrollTop=wrap.scrollHeight;
+}
+function renderOpts(step){
+  const opts=step.opts.map(o=>`<button class="match-opt" onclick="matchAnswer(this.textContent)">${o}</button>`).join('');
+  const freeRow=`<div class="match-or-divider">ou</div><div class="match-free-row"><input class="match-free-input" id="match-free" type="text" placeholder="Répondez en vos propres mots…" onkeydown="if(event.key==='Enter')sendMatchFree()"><button class="match-free-send" onclick="sendMatchFree()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div>`;
+  document.getElementById('match-responses').innerHTML=opts+freeRow;
+}
+function sendMatchFree(){
+  const input=document.getElementById('match-free');
+  if(!input)return;
+  const val=input.value.trim();
+  if(!val)return;
+  matchAnswer(val);
+}
+function matchAnswer(answer){
+  const wrap=document.getElementById('match-msgs');
+  const resp=document.getElementById('match-responses');
+  addMsg(wrap,'s',answer);
+  resp.innerHTML='<div style="text-align:center;padding:8px 0;font-family:\'DM Sans\',sans-serif;font-size:12px;color:var(--gris)">Sophie analyse votre réponse…</div>';
+  matchStep++;
+  setTimeout(()=>{
+    if(matchStep<CONV.length){
+      const step=CONV[matchStep];
+      addMsg(wrap,'r',step.sophie);
+      if(step.final){
+        setTimeout(()=>{resp.innerHTML='<button class="btn btn-or" onclick="goTo(\'s-calcul\')">Voir mes compatibles</button>'},700);
+      } else {
+        setTimeout(()=>renderOpts(step),400);
+      }
+    }
+  },900);
+}
+function initMatchChat(){
+  matchStep=0;
+  const wrap=document.getElementById('match-msgs');
+  const resp=document.getElementById('match-responses');
+  if(!wrap||!resp)return;
+  wrap.innerHTML='';resp.innerHTML='';
+  setTimeout(()=>{addMsg(wrap,'r',CONV[0].sophie);setTimeout(()=>renderOpts(CONV[0]),400)},300);
+}
+updateNav('s-splash');
+</script>
+</body>
+</html>

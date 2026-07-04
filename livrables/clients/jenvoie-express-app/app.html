@@ -643,6 +643,8 @@ async function loadEnCours() {
       </td>
       <td>
         <div style="display:flex;gap:.3rem;flex-wrap:wrap;align-items:center;">
+          <button class="${c.paye ? 'btn-green' : 'btn-outline'}" style="font-size:.65rem;padding:.25rem .55rem;" onclick="togglePaye('${c.id}',${!!c.paye})">${c.paye ? '💶 Payé ✓' : '💶 Marquer payé'}</button>
+          ${c.paye && c.numero ? `<button class="btn-outline" style="font-size:.65rem;padding:.25rem .55rem;" onclick="window.open('/recu.html?n='+encodeURIComponent('${c.numero}'),'_blank')">🧾 Reçu</button>` : ''}
           ${wa && c.numero ? `<button class="btn-green" style="font-size:.65rem;padding:.25rem .55rem;" onclick="envoyerSuivi('${c.numero}','${wa}','${prenom}')">📲 Suivi</button>` : ''}
           <button class="btn-outline" style="font-size:.65rem;padding:.25rem .55rem;" onclick="openEditColis('${c.id}')">✏ Modifier</button>
         </div>
@@ -888,6 +890,13 @@ async function markLivre(id) {
   const { error } = await sb.from('colis').update({ statut: 'livre' }).eq('id', id)
   if (error) return toast('Erreur', true)
   toast('Colis marqué livré ✓')
+  loadEnCours()
+}
+
+async function togglePaye(id, isPaye) {
+  const { error } = await sb.from('colis').update({ paye: !isPaye, date_paiement: !isPaye ? new Date().toISOString() : null }).eq('id', id)
+  if (error) return toast('Erreur mise à jour paiement', true)
+  toast(!isPaye ? 'Colis marqué payé ✓' : 'Paiement retiré')
   loadEnCours()
 }
 
@@ -1192,7 +1201,8 @@ async function confirmAccept() {
       montant ? `💶 Montant à régler : *${montant}€*` : `💶 Montant : sera confirmé prochainement`,
       ``,
       `💳 *Comment régler :*`,
-      `• Wave · MTN · Orange Money → *+225 07 08 68 21 16*`,
+      `• Wave · Orange Money → *+225 07 08 68 21 16*`,
+      `• PayPal → *gb.jeanyves@yahoo.fr*`,
       `• Wero · Virement → contactez-nous sur WhatsApp`,
       `• Espèces → à remettre lors du dépôt`,
       ``,

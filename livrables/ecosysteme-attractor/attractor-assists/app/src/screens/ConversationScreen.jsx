@@ -304,6 +304,10 @@ export function ConversationScreen({ go, notify, params, profile }) {
       ? buildCoachOpener(profile, isLocked ? a.name : nomAss)
       : (OPENERS_AGENTS[a.id] || OPENERS_AGENTS.awa)(first, profile);
 
+  const CONV_KEY = `aa_conv_${a.id}`;
+  const MAX_MSGS = 40;
+  const isPersisted = !isDemoMode && !isFamilleAMode;
+
   const [msgs, setMsgs]               = useState([{ from: "bot", text: opener, ts: Date.now() }]);
   const [typing, setTyping]           = useState(false);
   const [input, setInput]             = useState("");
@@ -317,11 +321,36 @@ export function ConversationScreen({ go, notify, params, profile }) {
   const [demoUrl, setDemoUrl]         = useState(null);
   const [maquetteReady, setMaquetteReady]   = useState(false);
   const [showWAModal, setShowWAModal]       = useState(false);
+  const [hasHistory, setHasHistory]         = useState(false);
   const scroller            = useRef();
   const prefillSent         = useRef(false);
   const demoProspectCreated = useRef(false);
   const sessionId           = useRef(`session-${Date.now()}`);
 
+
+  // Charger la conversation précédente depuis localStorage
+  useEffect(() => {
+    if (!isPersisted) return;
+    try {
+      const saved = localStorage.getItem(CONV_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 1) {
+          setMsgs(parsed.slice(-MAX_MSGS));
+          setHasHistory(true);
+        }
+      }
+    } catch {}
+  }, []);
+
+  // Sauvegarder la conversation dans localStorage à chaque changement
+  useEffect(() => {
+    if (!isPersisted) return;
+    if (msgs.length <= 1 && msgs[0]?.from === 'bot') return; // Ne pas sauvegarder juste l'opener
+    try {
+      localStorage.setItem(CONV_KEY, JSON.stringify(msgs.slice(-MAX_MSGS)));
+    } catch {}
+  }, [msgs]);
 
   // Charger le PPSD et l'user_id
   useEffect(() => {
@@ -362,6 +391,12 @@ export function ConversationScreen({ go, notify, params, profile }) {
       return () => clearTimeout(t);
     }
   }, []);
+
+  const clearConversation = () => {
+    localStorage.removeItem(CONV_KEY);
+    setMsgs([{ from: "bot", text: opener, ts: Date.now() }]);
+    setHasHistory(false);
+  };
 
   const sendFlag = async () => {
     if (!flagText.trim() || !userId) return;
@@ -552,6 +587,14 @@ export function ConversationScreen({ go, notify, params, profile }) {
         {isLocked && (
           <button onClick={() => go("paliers")} className="px-3 py-1.5 rounded-full bg-orange text-white text-[12px] font-bold">
             Débloquer
+          </button>
+        )}
+        {isPersisted && hasHistory && (
+          <button onClick={clearConversation} title="Nouvelle conversation"
+            className="w-9 h-9 rounded-full hover:bg-sable flex items-center justify-center text-g400 flex-shrink-0">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
+              <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/>
+            </svg>
           </button>
         )}
         <button onClick={() => setFlagOpen(true)} className="w-9 h-9 rounded-full hover:bg-sable flex items-center justify-center text-g400 flex-shrink-0">

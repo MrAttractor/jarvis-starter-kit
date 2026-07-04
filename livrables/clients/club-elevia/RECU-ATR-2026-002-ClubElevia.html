@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Reçu REÇ-2026-002 — Club Élévia × Mr Attractor</title>
+<style>
+:root{
+  --brand:#0E1A2B;
+  --accent:#C9A84C;
+  --ink:#1A1F2B;
+  --muted:#6B7280;
+  --line:#E5E7EB;
+  --green:#1B5E20;
+  --green-bg:#E8F5E9;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:#f0f2f5;padding:24px;line-height:1.55}
+.page{width:210mm;min-height:auto;margin:0 auto;background:#fff;padding:16mm 16mm;box-shadow:0 6px 30px rgba(0,0,0,.12)}
+
+.head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--accent);padding-bottom:16px;margin-bottom:24px}
+.brand h1{color:var(--brand);font-size:22px;letter-spacing:.02em}
+.brand .tag{color:var(--muted);font-size:12px;margin-top:2px}
+.docmeta{text-align:right}
+.docmeta .t{color:var(--accent);font-weight:700;font-size:18px;letter-spacing:.06em;text-transform:uppercase}
+.docmeta .ref{color:var(--brand);font-weight:700;font-size:13px;margin-top:4px}
+.docmeta .date{color:var(--muted);font-size:12px;margin-top:2px}
+
+.parties{display:flex;gap:16px;margin-bottom:24px}
+.partie{flex:1;border:1px solid var(--line);border-radius:8px;padding:14px 16px;font-size:12.5px}
+.partie .label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.partie strong{color:var(--brand);display:block;font-size:13px;margin-bottom:3px}
+
+.amount-block{background:var(--brand);border-radius:12px;padding:28px 24px;text-align:center;margin-bottom:24px}
+.amount-block .label{color:var(--accent);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.amount-block .value{color:#fff;font-size:48px;font-weight:700;letter-spacing:-.01em}
+.amount-block .currency{color:var(--accent);font-size:22px;font-weight:700;margin-left:4px}
+.amount-block .words{color:#94A3B8;font-size:13px;margin-top:8px;font-style:italic}
+
+.details{border:1px solid var(--line);border-radius:8px;margin-bottom:20px;overflow:hidden}
+.detail-row{display:flex;border-bottom:1px solid var(--line);font-size:12.5px}
+.detail-row:last-child{border-bottom:none}
+.detail-row .key{width:40%;padding:11px 16px;color:var(--muted);background:#FAFAFA;font-weight:600;font-size:11.5px}
+.detail-row .val{padding:11px 16px;color:var(--ink);flex:1}
+.detail-row .val strong{color:var(--brand)}
+
+.legal{background:#F7F5EF;border-left:3px solid var(--accent);padding:12px 16px;font-size:11.5px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+
+.confirm{display:flex;align-items:flex-start;gap:12px;background:var(--green-bg);border:1px solid #A5D6A7;border-radius:8px;padding:14px 16px;margin-bottom:24px}
+.confirm .icon{font-size:22px;line-height:1}
+.confirm .text{font-size:12.5px;color:var(--green);line-height:1.5}
+.confirm .text strong{display:block;margin-bottom:2px;font-size:13px}
+
+.historique{border:1px solid var(--line);border-radius:8px;margin-bottom:20px;overflow:hidden}
+.historique .h-title{padding:10px 16px;background:#FAFAFA;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--line)}
+.h-row{display:flex;align-items:center;border-bottom:1px solid var(--line);font-size:12px;padding:10px 16px;gap:12px}
+.h-row:last-child{border-bottom:none}
+.h-row .h-ref{color:var(--muted);font-size:11px;width:130px;flex-shrink:0}
+.h-row .h-desc{flex:1;color:var(--ink)}
+.h-row .h-amount{font-weight:700;color:var(--brand);text-align:right;min-width:60px}
+.h-total{display:flex;justify-content:flex-end;align-items:center;gap:16px;padding:11px 16px;background:var(--brand);color:#fff;font-size:13px;font-weight:700}
+.h-total span{color:var(--accent)}
+
+.sig-block{border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:20px}
+.sig-block .sig-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.sig-block .sig-name{color:var(--brand);font-weight:700;font-size:13px}
+.sig-block .sig-role{color:var(--muted);font-size:12px;margin-top:2px}
+.sig-block .sig-space{height:44px;border-bottom:1px dotted var(--line);margin:14px 0 8px}
+.sig-block .sig-date{font-size:12px;color:var(--muted)}
+
+.foot{border-top:1px solid var(--line);padding-top:10px;font-size:10px;color:var(--muted);text-align:center;line-height:1.7}
+
+@media print{
+  body{background:#fff;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .page{box-shadow:none;margin:0;width:100%;padding:10mm 12mm}
+  .details,.historique{overflow:visible}
+  .amount-block,.confirm,.detail-row .key,.h-total,.historique .h-title{
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  .amount-block,.details,.detail-row,.historique,.h-row,
+  .confirm,.legal,.sig-block,.parties,.partie{
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
+  @page{size:A4;margin:12mm 14mm}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="head">
+    <div class="brand">
+      <h1>Mr Attractor</h1>
+      <div class="tag">Conception d'applications métier &amp; systèmes intelligents</div>
+    </div>
+    <div class="docmeta">
+      <div class="t">Reçu de paiement</div>
+      <div class="ref">N° REÇ-2026-002</div>
+      <div class="date">Émis le 22 juin 2026</div>
+    </div>
+  </div>
+
+  <div class="parties">
+    <div class="partie">
+      <div class="label">Émetteur — Prestataire</div>
+      <strong>Mac Arthur KOUASSI</strong>
+      Mr Attractor — Auto-entrepreneur<br/>
+      SIRET 98377125400015<br/>
+      Paris, France<br/>
+      myattractor1@gmail.com
+    </div>
+    <div class="partie">
+      <div class="label">Bénéficiaire — Cliente</div>
+      <strong>Elise CAPEL</strong>
+      Porteuse du projet Club privé Élévia<br/>
+      Elisepelagie@outlook.be
+    </div>
+  </div>
+
+  <div class="amount-block">
+    <div class="label">Montant reçu</div>
+    <div class="value">50<span class="currency">€</span></div>
+    <div class="words">Cinquante euros — solde maquette complète</div>
+  </div>
+
+  <div class="details">
+    <div class="detail-row">
+      <div class="key">Référence dossier</div>
+      <div class="val"><strong>ATR-10 — Club privé Élévia</strong></div>
+    </div>
+    <div class="detail-row">
+      <div class="key">Nature du paiement</div>
+      <div class="val">Solde de l'acompte maquette — règlement complet de la maquette interactive à valider par la cliente</div>
+    </div>
+    <div class="detail-row">
+      <div class="key">Date de réception</div>
+      <div class="val">17 juin 2026</div>
+    </div>
+    <div class="detail-row">
+      <div class="key">Moyen de paiement</div>
+      <div class="val">Virement Wero — +33 7 53 90 23 23</div>
+    </div>
+    <div class="detail-row">
+      <div class="key">Réf. reçu précédent</div>
+      <div class="val">REÇ-2026-001 — 200 € reçus le 10 juin 2026</div>
+    </div>
+  </div>
+
+  <div class="historique">
+    <div class="h-title">Récapitulatif des versements — Maquette Club Élévia</div>
+    <div class="h-row">
+      <div class="h-ref">REÇ-2026-001</div>
+      <div class="h-desc">1er versement — 10 juin 2026</div>
+      <div class="h-amount">200 €</div>
+    </div>
+    <div class="h-row">
+      <div class="h-ref">REÇ-2026-002</div>
+      <div class="h-desc">Solde — 17 juin 2026</div>
+      <div class="h-amount">50 €</div>
+    </div>
+    <div class="h-total">
+      Total encaissé &nbsp;—&nbsp; Maquette réglée intégralement <span>250 €</span>
+    </div>
+  </div>
+
+  <div class="confirm">
+    <div class="icon">✓</div>
+    <div class="text">
+      <strong>Acompte soldé — Maquette en cours de finalisation</strong>
+      Mr Attractor confirme la réception de 50 € (cinquante euros), solde de l'acompte maquette convenu. Le montant total de 250 € est intégralement réglé. La maquette complète sera transmise à Madame Elise CAPEL pour validation avant tout démarrage du développement.
+    </div>
+  </div>
+
+  <div class="legal">
+    TVA non applicable, article 293 B du CGI. Ce reçu atteste la bonne réception des fonds. Il ne constitue pas une facture. Une facture d'acompte officielle sera émise dès signature du contrat de prestation et démarrage du développement. Mr Attractor — Micro-entreprise immatriculée le 01/02/2024.
+  </div>
+
+  <div class="sig-block">
+    <div class="sig-label">Signature du Prestataire</div>
+    <div class="sig-name">Mac Arthur KOUASSI</div>
+    <div class="sig-role">Mr Attractor — Auto-entrepreneur</div>
+    <div class="sig-space"></div>
+    <div class="sig-date">Fait le 22 juin 2026, à Paris</div>
+  </div>
+
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015 — Immatriculée le 01/02/2024<br>
+    TVA non applicable, article 293 B du CGI — myattractor1@gmail.com — +33 7 53 90 23 23 — agenceattractor.com<br>
+    Reçu N° REÇ-2026-002 — Projet Club privé Élévia (ATR-10)
+  </div>
+
+</div>
+</body>
+</html>

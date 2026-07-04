@@ -69,8 +69,17 @@ body{font-family:var(--font);color:var(--ink);background:#f0f2f5;padding:24px;li
 .foot{border-top:1px solid var(--line);padding-top:10px;font-size:10px;color:var(--muted);text-align:center;line-height:1.7}
 
 @media print{
-  body{background:#fff;padding:0}
+  body{background:#fff;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .page{box-shadow:none;margin:0;width:100%;padding:10mm 12mm}
+  .details{overflow:visible}
+  .amount-block,.confirm,.detail-row .key,.h-total{
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  .amount-block,.details,.detail-row,.confirm,.legal,.sig-block,.parties,.partie{
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
+  @page{size:A4;margin:12mm 14mm}
 }
 </style>
 </head>

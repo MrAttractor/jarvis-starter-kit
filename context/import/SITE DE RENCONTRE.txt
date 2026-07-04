@@ -1,0 +1,278 @@
+Application de rencontres inter-célibataires
+
+
+CAHIER DES ASPECTS TECHNIQUES À CONSTRUIRE
+Version 1.0 · Mai 2026 · Document confidentiel prospect
+
+Résumé exécutif
+Ce document recense l&#39;ensemble des composants techniques nécessaires à la
+construction de la plateforme InterCéli V1. Il est structuré par module fonctionnel,
+chaque module correspondant à un écran ou un groupe d&#39;écrans présenté dans la
+maquette.
+8 modules fonctionnels · 5 domaines techniques · 3 niveaux de complexité
+
+InterCéli — Cahier technique V1 Confidentiel · Prospect
+
+Page 2 / · InterCéli V1 · Confidentiel
+1. Architecture générale de la plateforme
+Couche Technologie
+recommandée
+
+Rôle
+Frontend mobile React Native / Expo iOS &amp; Android — 1 seule
+
+codebase
+
+Frontend web React.js (Next.js) Version navigateur, admin,
+
+onboarding
+Backend API Node.js + Express ou NestJS API REST / GraphQL
+
+centralisée
+
+Base de données PostgreSQL Données utilisateurs, matchs,
+
+messages
+
+Temps réel WebSocket (Socket.io) Chat live, notifications push
+Stockage médias AWS S3 / Cloudinary Profils, vérification vidéo
+
+temporaire
+
+Authentification JWT + OAuth2 Sessions sécurisées,
+connexion tiers
+
+IA / Matching Python microservice
+
+(FastAPI)
+
+Algorithme de scoring et
+matching
+
+InterCéli — Cahier technique V1 Confidentiel · Prospect
+
+Page 3 / · InterCéli V1 · Confidentiel
+
+2. Modules fonctionnels et complexité technique
+Chaque module correspond à un écran de la maquette. La complexité est évaluée sur 3 niveaux :
+Faible · Moyenne · Élevée
+# Module Écrans maquette Complexité Point clé
+① Onboarding /
+Splash
+
+Accueil, branding
+
+Faible Design + animations
+
+d&#39;entrée
+
+② Inscription &amp;
+compte
+
+Formulaire multi-
+étapes, CGV Moyenne Gestion des étapes,
+
+validation
+
+③ Vérification vidéo Caméra live, anti-
+
+fraude Élevée IA liveness +
+modération humaine
+
+④ Matching
+conversationnel
+
+Chat IA, scoring
+temps réel Élevée NLP + algorithme de
+compatibilité
+
+⑤ Découverte profils Grille filtrée, badges,
+
+scores Moyenne Filtres dynamiques +
+pagination
+
+⑥ Demande de mise
+en relation
+
+Fiche profil, message,
+envoi Moyenne Workflow demande /
+attente / match
+
+⑦
+Notification match Consentement
+mutuel, ouverture
+chat
+
+Faible
+
+Notifications push +
+WebSocket
+
+⑧ CGV &amp; conformité Texte légal,
+
+acceptation / refus Faible Versionnement + logs
+d&#39;acceptation
+
+InterCéli — Cahier technique V1 Confidentiel · Prospect
+
+Page 4 / · InterCéli V1 · Confidentiel
+3. Détail technique par domaine
+3.1 Authentification &amp; sécurité
+Fonctionnalités à construire
+▸ Inscription par email + mot de passe (hash bcrypt)
+▸ Connexion OAuth2 (Google, Apple Sign-In)
+▸ Gestion de session JWT avec refresh token (expiration 15 min / 30 jours)
+▸ Système de pseudonymat : dissociation complète nom réel / pseudo affiché
+▸ Vérification email par lien unique (SendGrid ou AWS SES)
+▸ Réinitialisation de mot de passe sécurisée
+▸ Logs d&#39;acceptation CGV horodatés en base (RGPD)
+▸ Suppression de compte et droit à l&#39;oubli (cascade en base)
+
+3.2 Vérification vidéo (KYC)
+Composants techniques requis
+▸ Accès caméra natif (WebRTC sur web, Camera API sur mobile)
+▸ Détection de vivacité (liveness detection) : clignement, rotation tête, sourire
+▸ Envoi sécurisé de la séquence vidéo chiffrée vers le backend
+▸ Stockage temporaire sur S3 avec TTL 24h (suppression automatique post-validation)
+▸ Interface de modération humaine (back-office) : file d&#39;attente, approve / reject
+▸ Notification push / email du résultat à l&#39;utilisateur (validé ou refusé + motif)
+▸ Statut de profil : en attente / vérifié / refusé — visible sur les cartes profil
+▸ Intégration possible d&#39;une API tierce (Veriff, Onfido) pour la couche IA
+
+3.3 Algorithme de matching conversationnel
+Composants à développer
+▸ Chatbot guidé (arbre de décision + NLP) pour collecter les préférences utilisateur
+▸ Extraction de traits : valeurs, style de vie, projets de vie, humour, centres d&#39;intérêt
+▸ Vectorisation des profils (embedding) pour calcul de similarité cosinus
+▸ Score de compatibilité multi-dimensionnel (valeurs 30%, style de vie 25%, projets 25%, autres
+20%)
+▸ Mise à jour dynamique du score en cours de conversation
+
+InterCéli — Cahier technique V1 Confidentiel · Prospect
+
+Page 5 / · InterCéli V1 · Confidentiel
+
+▸ Stockage des vecteurs de profil en base (pgvector sur PostgreSQL ou Pinecone)
+▸ API de recommandation : retourne les N profils les plus compatibles non encore vus
+▸ Actualisation du modèle selon les interactions (acceptation / refus / messages)
+
+3.4 Système de mise en relation
+Workflow et composants
+▸ Envoi d&#39;une demande de mise en relation avec message d&#39;introduction (280 car. max)
+▸ Statuts de demande : envoyée / vue / acceptée / déclinée (avec possibilité de décliner sans
+justification)
+▸ Notification push + badge en temps réel à la réception d&#39;une demande
+▸ Consentement mutuel obligatoire avant ouverture de la conversation
+▸ Protection anti-spam : limite de X demandes simultanées par utilisateur
+▸ Back-office de supervision : détection de comportements abusifs
+▸ Système de signalement (report) et blocage d&#39;utilisateur
+▸ Log de toutes les mises en relation pour audit de modération
+
+3.5 Messagerie temps réel
+Infrastructure de chat
+▸ WebSocket (Socket.io) pour messages instantanés
+▸ Historique des conversations stocké en base (PostgreSQL)
+▸ Statuts de lecture : envoyé / livré / lu
+▸ Notification push (FCM pour Android, APNs pour iOS) quand l&#39;app est en arrière-plan
+▸ Limite initiale : messagerie texte uniquement (V1) — photos et vocaux en V2
+▸ Chiffrement des messages en transit (TLS) et au repos (AES-256)
+▸ Option de suppression d&#39;un message / d&#39;une conversation
+
+InterCéli — Cahier technique V1 Confidentiel · Prospect
+
+Page 6 / · InterCéli V1 · Confidentiel
+
+4. Conformité légale &amp; RGPD
+InterCéli traite des données sensibles (identité, géolocalisation, préférences affectives). Les
+obligations légales suivantes sont intégrées dès la V1.
+Obligation Implémentation technique
+Consentement explicite CGV Checkbox obligatoire, log horodaté en base, versionnement
+
+des CGV
+
+Droit à l&#39;effacement API DELETE /account : suppression en cascade dans
+
+toutes les tables + S3
+
+Portabilité des données Export JSON des données utilisateur sur demande
+
+(endpoint dédié)
+
+Minimisation des données Seul le pseudo est public. Nom réel, email, vidéo : accès
+
+restreint
+
+Durée de conservation vidéo TTL automatique 24h sur S3 après validation ou refus
+Notification de violation Procédure documentée, délai 72h (CNIL)
+Cookies &amp; tracking Bannière de consentement conforme ePrivacy (V1 :
+
+analytics uniquement)
+
+DPO &amp; registre Registre des traitements à tenir, désignation DPO
+
+recommandée
+
+InterCéli — Cahier technique V1 Confidentiel · Prospect
+
+Page 7 / · InterCéli V1 · Confidentiel
+5. Plan de livraison proposé — V1
+4 sprints de 2 semaines = 8 semaines pour une V1 fonctionnelle et déployée.
+
+Composant Sprint S1–S2 S3–S4 S5–S6 S7–S8
+Architecture &amp; Auth 1 ● ◐ ○ ○
+Inscription &amp; Pseudos 1 ● ◐ ○ ○
+Vérification vidéo (KYC) 1–2 ◐ ● ○ ○
+Matching conversationnel 2 ○ ● ◐ ○
+Découverte &amp; filtres 2–3 ○ ◐ ● ○
+Mise en relation 3 ○ ○ ● ◐
+Messagerie temps réel 3–4 ○ ○ ◐ ●
+Notifications push 4 ○ ○ ◐ ●
+CGV &amp; conformité RGPD 1–4 ● ● ● ●
+Back-office modération 3–4 ○ ◐ ● ●
+Tests &amp; déploiement 4 ○ ○ ◐ ●
+Légende : ● Livraison principale ◐ En cours / partiel ○ Hors périmètre du sprint
+
+InterCéli — Cahier technique V1 Confidentiel · Prospect
+
+Page 8 / · InterCéli V1 · Confidentiel
+6. Hors périmètre V1 — Prévu en V2
+Ces fonctionnalités sont identifiées et documentées mais ne font pas partie de la V1.
+
+Fonctionnalité V2 Raison du report
+Échange de photos dans le chat Modération IA à intégrer — risque RGPD +
+
+sécurité
+
+Messages vocaux Complexité de stockage et lecture temps réel
+Appels vidéo in-app Intégration WebRTC avancée (Twilio / Agora)
+Système de gamification / badges Dépend du volume d&#39;utilisateurs réels post-
+
+V1
+
+Abonnement premium (paywall) Validation du modèle business avant
+
+monétisation
+
+Application Apple Watch / widgets Priorité mobile core d&#39;abord
+Traduction automatique des messages Coût API (DeepL / GPT) à modéliser
+Matching vocal (analyse de la voix) Recherche exploratoire — délai de 6 mois
+
+min.
+
+InterCéli — Cahier technique V1 Confidentiel · Prospect
+
+Page 9 / · InterCéli V1 · Confidentiel
+
+7. Prochaines étapes
+Pour valider ce cadrage et démarrer le projet :
+• Atelier de cadrage technique (2h) : validation de l&#39;architecture, des choix technologiques
+et du périmètre V1
+• Chiffrage détaillé par module : proposition commerciale sur la base du présent document
+• Désignation des interlocuteurs côté client : product owner, responsable légal/RGPD
+• Accès aux éventuels systèmes existants : design system, charte graphique, domaine,
+hébergement préféré
+• Signature du bon de commande et kick-off sprint 1
+
+Ce document reste confidentiel et est établi dans le cadre d&#39;une proposition
+commerciale.
+Il est la propriété exclusive de son émetteur. Toute reproduction ou diffusion sans accord

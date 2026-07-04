@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Cahier des charges fonctionnel — Club Élévia × Mr Attractor</title>
+<style>
+:root{
+  --brand:#0E1A2B;
+  --accent:#C9A84C;
+  --ink:#1A1F2B;
+  --muted:#6B7280;
+  --line:#E5E7EB;
+  --bg-soft:#F7F5EF;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+  --green:#1B5E20;
+  --green-bg:#E8F5E9;
+  --red:#B91C1C;
+  --red-bg:#FFF5F5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:#f0f2f5;padding:24px;line-height:1.6}
+.page{width:210mm;margin:0 auto 24px auto;background:#fff;padding:16mm 16mm;box-shadow:0 6px 30px rgba(0,0,0,.12)}
+
+.head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--accent);padding-bottom:16px;margin-bottom:24px}
+.brand h1{color:var(--brand);font-size:22px;letter-spacing:.02em}
+.brand .tag{color:var(--muted);font-size:12px;margin-top:2px}
+.docmeta{text-align:right}
+.docmeta .t{color:var(--accent);font-weight:700;font-size:16px;letter-spacing:.06em;text-transform:uppercase}
+.docmeta .ref{color:var(--brand);font-weight:700;font-size:13px;margin-top:4px}
+.docmeta .date{color:var(--muted);font-size:12px;margin-top:2px}
+
+h2{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:22px 0 10px 0;padding-bottom:5px;border-bottom:1px solid var(--line)}
+h3{color:var(--brand);font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px}
+.toc{background:var(--bg-soft);border-radius:8px;padding:12px 16px;font-size:11.5px;margin-bottom:8px}
+.toc-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.toc ol{margin-left:16px}
+.toc li{margin-bottom:2px;color:var(--ink)}
+
+.parties{display:flex;gap:16px;margin-bottom:4px}
+.partie{flex:1;border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:12.5px}
+.partie .label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.partie strong{color:var(--brand);display:block;font-size:13px;margin-bottom:2px}
+
+.objet-box{background:var(--bg-soft);border-left:3px solid var(--accent);padding:12px 16px;font-size:12.5px;margin-bottom:4px;line-height:1.6}
+.objet-box strong{color:var(--brand)}
+
+.cadrage-note{background:#EEF2FF;border:1px solid #C7D2FE;border-radius:8px;padding:12px 16px;font-size:12px;color:#3730a3;margin-bottom:16px;line-height:1.5}
+.cadrage-note strong{color:#1e1b7a}
+
+p{font-size:12.5px;margin-bottom:7px;line-height:1.6}
+p:last-child{margin-bottom:0}
+
+/* GLOSSAIRE */
+.glossary{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:8px 0}
+.gloss-row{display:flex;border-bottom:1px solid var(--line);font-size:11.5px}
+.gloss-row:last-child{border-bottom:none}
+.gloss-row:nth-child(even){background:#FAFAFA}
+.gloss-term{width:34%;padding:9px 12px;font-weight:700;color:var(--brand);background:var(--bg-soft);border-right:1px solid var(--line)}
+.gloss-def{flex:1;padding:9px 12px;color:var(--ink);line-height:1.5}
+
+/* Profils utilisateurs */
+.profils{display:flex;gap:12px;margin:8px 0}
+.profil-card{flex:1;border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.profil-card .pc-name{color:var(--brand);font-weight:700;font-size:12.5px;margin-bottom:4px}
+.profil-card .pc-desc{font-size:11.5px;color:var(--muted);line-height:1.5}
+
+/* PHASES */
+.phase{border:1px solid var(--line);border-radius:8px;margin:10px 0;overflow:hidden}
+.phase-head{display:flex;justify-content:space-between;align-items:center;background:var(--brand);padding:12px 16px}
+.phase-head .ph-label{color:var(--accent);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.phase-head .ph-title{color:#fff;font-size:14px;font-weight:700;margin-top:1px}
+.phase-head .ph-amount{color:var(--accent);font-size:16px;font-weight:700}
+.phase-body{padding:14px 16px}
+.phase-body .sub{margin:12px 0 5px;font-size:10.5px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.05em}
+.phase-body .sub:first-child{margin-top:0}
+.phase-body ul{margin:0 0 0 16px}
+.phase-body li{font-size:11.5px;margin-bottom:4px;color:var(--ink);line-height:1.5}
+.screens-ref{background:var(--bg-soft);border-radius:6px;padding:8px 12px;font-size:11px;color:var(--muted);margin-bottom:2px}
+.screens-ref strong{color:var(--brand)}
+.accept-list{list-style:none;margin:4px 0 0 0}
+.accept-list li{font-size:11px;margin-bottom:4px;padding-left:18px;position:relative;color:var(--ink)}
+.accept-list li:before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700}
+.placeholder-note{background:#FFFDF5;border-left:3px solid var(--accent);padding:8px 12px;font-size:10.5px;color:#6b5a1f;margin-top:8px;line-height:1.5}
+.placeholder-note strong{color:#4a3d10}
+
+/* Encadrés inclus/exclus */
+.box-green{background:var(--green-bg);border-left:3px solid #4CAF50;padding:10px 14px;border-radius:0 6px 6px 0;font-size:12px;margin:8px 0}
+.box-red{background:var(--red-bg);border-left:3px solid var(--red);padding:10px 14px;border-radius:0 6px 6px 0;font-size:12px;margin:8px 0}
+.box-amber{background:#FFFDF5;border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 6px 6px 0;font-size:12px;margin:8px 0}
+.box-green strong,.box-red strong,.box-amber strong{display:block;margin-bottom:3px;font-size:12.5px}
+.box-red ul,.box-green ul{margin:6px 0 0 16px}
+.box-red li,.box-green li{font-size:11.5px;margin-bottom:3px}
+
+/* JALONS résumé */
+.jalon-mini{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:8px 0}
+.jm-cell{flex:1;padding:10px 12px;border-right:1px solid var(--line);font-size:11px}
+.jm-cell:last-child{border-right:none}
+.jm-pct{color:var(--accent);font-weight:700;font-size:13px}
+.jm-title{color:var(--brand);font-weight:700;font-size:11.5px;margin:2px 0}
+.jm-desc{color:var(--muted);font-size:10.5px;line-height:1.4}
+
+/* DECLENCHEUR */
+.trigger-box{border:2px solid var(--brand);background:var(--bg-soft);border-radius:8px;padding:14px 16px;margin:12px 0;font-size:12.5px;line-height:1.6}
+.trigger-box .tb-title{color:var(--brand);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+
+/* ACCEPTATION */
+.acceptance{border:2px solid var(--brand);border-radius:8px;padding:16px;margin-top:20px}
+.acceptance .acc-title{color:var(--brand);font-weight:700;font-size:13px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
+.acceptance .acc-text{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6}
+.signatures{display:flex;gap:20px}
+.sig{flex:1}
+.sig .sig-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.sig .sig-name{color:var(--brand);font-weight:700;font-size:13px}
+.sig .sig-role{color:var(--muted);font-size:11.5px;margin-top:1px}
+.sig .sig-space{height:44px;border-bottom:1px dotted var(--line);margin:12px 0 6px}
+.sig .sig-date{font-size:11.5px;color:var(--muted)}
+
+.foot{margin-top:20px;border-top:1px solid var(--line);padding-top:10px;font-size:10px;color:var(--muted);text-align:center;line-height:1.7}
+.pagebreak{page-break-before:always}
+
+@media print{
+  body{background:#fff;padding:0}
+  .page{box-shadow:none;margin:0;width:100%;padding:10mm 12mm}
+  .phase,.glossary,.profils,.jalon-mini{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- EN-TÊTE -->
+  <div class="head">
+    <div class="brand">
+      <h1>Mr Attractor</h1>
+      <div class="tag">Conception d'applications web métier</div>
+    </div>
+    <div class="docmeta">
+      <div class="t">Cahier des charges fonctionnel</div>
+      <div class="ref">Réf. CDC-ATR-2026-0005 — Révision V2</div>
+      <div class="date">Émis le 1er juillet 2026</div>
+    </div>
+  </div>
+
+  <!-- PARTIES -->
+  <h2>Parties</h2>
+  <div class="parties">
+    <div class="partie">
+      <div class="label">Prestataire</div>
+      <strong>Mac Arthur KOUASSI</strong>
+      Mr Attractor — Auto-entrepreneur<br/>
+      SIRET 98377125400015 — Paris, France<br/>
+      myattractor1@gmail.com — +33 7 53 90 23 23
+    </div>
+    <div class="partie">
+      <div class="label">Cliente</div>
+      <strong>Elise CAPEL</strong>
+      Porteuse du projet Club privé Élévia<br/>
+      Elisepelagie@outlook.be
+    </div>
+  </div>
+
+  <!-- NOTE DE CADRAGE -->
+  <div class="cadrage-note" style="margin-top:14px">
+    <strong>Document contractuel — Annexe de rang 2 au Contrat CONTRAT-ATR-2026-0005 V3 (Art. 2).</strong> Cette révision V2 détaille exhaustivement le périmètre fonctionnel validé — écran par écran, donnée par donnée, règle par règle — afin d'éliminer toute ambiguïté de terme ou de compréhension entre les parties. Elle intègre le calendrier de paiement à 4 jalons du Devis V3, ainsi que les clarifications d'accès techniques, de propriété intellectuelle et de durée de non-réutilisation actées avec la Cliente. En cas de divergence avec tout document antérieur, <strong>le présent document fait foi</strong>, conformément à l'Art. 2 du Contrat V3.
+  </div>
+
+  <!-- SOMMAIRE -->
+  <div class="toc">
+    <div class="toc-title">Sommaire</div>
+    <ol>
+      <li>Définitions</li>
+      <li>Objet et vision produit</li>
+      <li>Profils utilisateurs</li>
+      <li>Ce que déclenche la validation de ce document</li>
+      <li>Spécifications fonctionnelles — Phase 1 à Phase 4</li>
+      <li>Exigences transverses</li>
+      <li>Hors périmètre</li>
+      <li>Calendrier de paiement associé</li>
+      <li>Modalités de validation et de recette</li>
+      <li>Validation — bon pour accord</li>
+    </ol>
+  </div>
+
+  <!-- 1. DÉFINITIONS -->
+  <h2>1. Définitions</h2>
+  <p style="font-size:11.5px;color:var(--muted);margin-bottom:6px">Les termes ci-dessous, utilisés dans le présent document ainsi que dans le Contrat V3 et le Devis V3, ont le sens qui leur est donné ici et nulle part ailleurs.</p>
+  <div class="glossary">
+    <div class="gloss-row"><div class="gloss-term">Web App responsive</div><div class="gloss-def">Application accessible via un navigateur internet (Chrome, Safari, etc.), sans installation depuis un store, dont la mise en page s'adapte automatiquement à la taille de l'écran (mobile, tablette, desktop). C'est le périmètre exclusif de la V1.</div></div>
+    <div class="gloss-row"><div class="gloss-term">Application native</div><div class="gloss-def">Application installée depuis l'App Store (iOS) ou le Google Play Store (Android), développée avec les technologies propres à chaque plateforme. <strong>Non incluse en V1</strong>, fera l'objet d'un devis V2 séparé.</div></div>
+    <div class="gloss-row"><div class="gloss-term">Phase</div><div class="gloss-def">Unité de développement indépendante, avec un périmètre fonctionnel propre, un livrable testable et des critères d'acceptation définis dans la Section 5. Il y a 4 phases dans la Formule Complète V1.</div></div>
+    <div class="gloss-row"><div class="gloss-term">Socle validé</div><div class="gloss-def">État du projet une fois les Phases 1 (Identité) et 2 (Confiance) livrées et validées par écrit par la Cliente. Déclenche le Jalon 2.</div></div>
+    <div class="gloss-row"><div class="gloss-term">Version bêta</div><div class="gloss-def">État du projet une fois la Phase 3 (Rencontre) livrée et validée par écrit : matching, découverte et mise en relation fonctionnels, mais application non encore ouverte au grand public. Déclenche le Jalon 3.</div></div>
+    <div class="gloss-row"><div class="gloss-term">Mise en ligne effective</div><div class="gloss-def">Déploiement en production de la Phase 4 (Communauté) validée, sur l'infrastructure définitive, accessible publiquement à l'adresse web du projet. Ne signifie pas et n'implique pas de publication sur un store mobile. Déclenche le Jalon 4 et le début du Plan de continuité.</div></div>
+    <div class="gloss-row"><div class="gloss-term">Jour ouvré</div><div class="gloss-def">Du lundi au vendredi, hors jours fériés légaux français.</div></div>
+    <div class="gloss-row"><div class="gloss-term">Procès-verbal de réception (PV)</div><div class="gloss-def">Document écrit, signé par les deux parties (ou validation écrite équivalente par e-mail), actant que les critères d'acceptation d'une phase sont remplis.</div></div>
+    <div class="gloss-row"><div class="gloss-term">Avenant</div><div class="gloss-def">Document écrit signé par les deux parties, seul moyen valable pour modifier le périmètre, le prix ou le délai fixés par le présent CDC, le Devis V3 ou le Contrat V3.</div></div>
+    <div class="gloss-row"><div class="gloss-term">Défaut de conformité</div><div class="gloss-def">Écart démontré entre un livrable et les critères d'acceptation définis dans la Section 5 du présent document. Sert de base à la garantie du Contrat V3 (Art. 14).</div></div>
+    <div class="gloss-row"><div class="gloss-term">Code générique réutilisable</div><div class="gloss-def">Composants techniques, patterns d'architecture ou méthodes de développement non spécifiques à la marque, au concept ou aux contenus Élévia. Reste la propriété du Prestataire (cf. Contrat V3, Art. 10.3 et Art. 12).</div></div>
+    <div class="gloss-row"><div class="gloss-term">Maquette de référence</div><div class="gloss-def">Fichier <code>maquette-club-elevia-v2.html</code>, prototype interactif consulté et validé par la Cliente, servant de base visuelle et fonctionnelle aux spécifications de la Section 5.</div></div>
+  </div>
+
+  <!-- 2. OBJET -->
+  <h2>2. Objet et vision produit</h2>
+  <div class="objet-box">
+    <strong>Club privé Élévia</strong> est une plateforme web premium de rencontres, pensée comme un cercle privé et non comme une application de masse. Sélection qualitative des membres, vérification d'identité par vidéo, mise en relation fondée sur un score de compatibilité, et messagerie protégée par consentement mutuel. Le service est ouvert à toutes nationalités. Direction artistique Noir &amp; Or, ton exclusif et rassurant.
+  </div>
+
+  <!-- 3. PROFILS -->
+  <h2>3. Profils utilisateurs</h2>
+  <div class="profils">
+    <div class="profil-card">
+      <div class="pc-name">Membre candidat</div>
+      <div class="pc-desc">S'inscrit sous pseudo, complète son profil, passe la vérification vidéo. Accès limité tant que son profil n'est pas validé.</div>
+    </div>
+    <div class="profil-card">
+      <div class="pc-name">Membre vérifié</div>
+      <div class="pc-desc">Profil validé par l'équipe Élévia (badge "Vérifié"). Accède à la découverte de profils, peut demander une mise en relation et échanger une fois la connexion établie.</div>
+    </div>
+    <div class="profil-card">
+      <div class="pc-name">Équipe Élévia (back-office)</div>
+      <div class="pc-desc">Valide ou refuse les vérifications vidéo, modère les signalements, suspend des comptes, consulte le dashboard de pilotage (Elise CAPEL et son équipe).</div>
+    </div>
+  </div>
+
+  <!-- 4. DECLENCHEUR -->
+  <h2>4. Ce que déclenche la validation de ce document</h2>
+  <div class="trigger-box">
+    <div class="tb-title">Déclencheur de démarrage</div>
+    La signature de ce cahier des charges, conjointement à celle du Devis ATR-2026-0005 V3 et du Contrat CONTRAT-ATR-2026-0005 V3, vaut <strong>bon pour démarrage</strong>. Elle déclenche immédiatement : le règlement du <strong>Jalon 1 (800 € net</strong>, après déduction des 250 € déjà reçus), et le <strong>lancement effectif du développement</strong> de la Phase 1. Sans validation signée de ces trois documents, le développement ne démarre pas.
+  </div>
+
+  <div class="pagebreak"></div>
+
+  <!-- 5. SPECS FONCTIONNELLES -->
+  <h2>5. Spécifications fonctionnelles — Formule Complète V1 (3 500 €)</h2>
+  <p style="font-size:11px;color:var(--muted)">Référence visuelle : maquette de référence, section correspondante indiquée pour chaque bloc fonctionnel ci-dessous.</p>
+
+  <!-- PHASE 1 -->
+  <div class="phase">
+    <div class="phase-head">
+      <div><div class="ph-label">Phase 1</div><div class="ph-title">Identité</div></div>
+      <div class="ph-amount">800 €</div>
+    </div>
+    <div class="phase-body">
+      <div class="screens-ref"><strong>Écrans concernés :</strong> Splash / Excellence, Pourquoi Élévia, Mon profil (inscription étape 2/4)</div>
+
+      <div class="sub">Fonctionnalités</div>
+      <ul>
+        <li>Inscription : choix d'un pseudo unique, vérifié en disponibilité en temps réel (message "disponible" / "déjà pris")</li>
+        <li>Sélection du genre (femme / homme — liste extensible sur demande de la Cliente)</li>
+        <li>Pays de résidence (liste des pays à valider avec la Cliente, cf. note ci-dessous)</li>
+        <li>Date de naissance avec contrôle de majorité (18 ans minimum)</li>
+        <li>Case à cocher obligatoire d'acceptation des CGU / politique de confidentialité, case optionnelle d'opt-in aux recommandations par e-mail</li>
+        <li>Authentification sécurisée par code à 6 chiffres envoyé par e-mail (OTP), sans mot de passe à retenir</li>
+        <li>Architecture technique : base de données, hébergement en Europe, API applicative</li>
+        <li>Design system complet Club Élévia : charte Noir &amp; Or, typographies, composants d'interface réutilisables (boutons, champs, cartes)</li>
+        <li>Infrastructure RGPD : politique de confidentialité type, registre des consentements, mentions légales</li>
+      </ul>
+
+      <div class="sub">Données collectées</div>
+      <ul>
+        <li>Pseudo (public), genre, pays de résidence, date de naissance, adresse e-mail (privée), consentements CGU/marketing</li>
+        <li>L'identité réelle (nom, prénom) n'est jamais affichée publiquement ni communiquée aux autres membres</li>
+      </ul>
+
+      <div class="sub">Cas particuliers à gérer</div>
+      <ul>
+        <li>Pseudo déjà utilisé → message d'erreur explicite, proposition de variantes</li>
+        <li>Date de naissance indiquant un âge inférieur à 18 ans → inscription bloquée avec message dédié</li>
+        <li>Refus des CGU → sortie du parcours d'inscription sans création de compte</li>
+      </ul>
+
+      <div class="placeholder-note"><strong>Information requise avant démarrage de cette phase :</strong> liste des pays de résidence proposés à l'inscription (ouverte au monde entier ou restreinte à une sélection de pays cibles), à fournir par la Cliente.</div>
+
+      <div class="sub">Critères d'acceptation</div>
+      <ul class="accept-list">
+        <li>Un visiteur peut créer un compte, choisir un pseudo disponible, renseigner genre/pays/date de naissance, accepter les CGU</li>
+        <li>Un compte de moins de 18 ans ne peut pas être créé</li>
+        <li>Le membre reçoit un code de connexion à 6 chiffres par e-mail et peut se connecter avec</li>
+        <li>L'interface complète respecte la charte graphique Noir &amp; Or sur mobile et desktop, sans débordement horizontal</li>
+        <li>Les données sont hébergées chez un fournisseur européen, conforme RGPD</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase">
+    <div class="phase-head">
+      <div><div class="ph-label">Phase 2</div><div class="ph-title">Confiance</div></div>
+      <div class="ph-amount">700 €</div>
+    </div>
+    <div class="phase-body">
+      <div class="screens-ref"><strong>Écrans concernés :</strong> Vérification vidéo, back-office file de modération</div>
+
+      <div class="sub">Fonctionnalités</div>
+      <ul>
+        <li>Vérification vidéo : activation de la caméra, détection du visage, geste de confirmation (ex. sourire puis tourner la tête) — mesure anti-fraude et anti-photo volée</li>
+        <li>Enregistrement temporaire de la vidéo, transmise à la file d'attente du back-office</li>
+        <li>File d'attente de modération dans le back-office : statuts "en attente" / "validé" / "refusé", horodatage de soumission</li>
+        <li>Vérification effectuée par une personne de l'équipe Élévia — <strong>la décision finale n'est jamais automatisée</strong> par un algorithme</li>
+        <li>Suppression automatique et irréversible de la vidéo dans les 24h suivant la décision (validation ou refus), conformément aux exigences RGPD sur les données biométriques</li>
+        <li>Badge "Profil vérifié" affiché sur les profils validés, visible par les autres membres dans la découverte et les fiches profil</li>
+        <li>Notification au membre du résultat de sa vérification (validé / refusé avec possibilité de renvoyer une nouvelle vidéo)</li>
+      </ul>
+
+      <div class="sub">Cas particuliers à gérer</div>
+      <ul>
+        <li>Vidéo refusée → notification au membre, possibilité de soumettre une nouvelle vidéo sans limite de tentatives (sauf abus manifeste signalé par l'équipe)</li>
+        <li>Caméra non accessible (permissions navigateur refusées) → message d'aide expliquant comment autoriser l'accès</li>
+        <li>Vidéo non traitée sous le délai annoncé → statut "en attente" reste visible au membre, pas de blocage silencieux</li>
+      </ul>
+
+      <div class="placeholder-note"><strong>Information requise avant démarrage de cette phase :</strong> délai cible de traitement des vérifications par l'équipe Élévia (ex. sous 2h, sous 24h), à confirmer par la Cliente pour calibrer le message affiché au membre pendant l'attente.</div>
+
+      <div class="sub">Critères d'acceptation</div>
+      <ul class="accept-list">
+        <li>Une vidéo soumise par un membre apparaît dans la file de modération du back-office avec son statut</li>
+        <li>Un agent Élévia peut visionner la vidéo et valider ou refuser depuis le back-office</li>
+        <li>Le badge "Vérifié" s'affiche automatiquement sur le profil du membre après validation</li>
+        <li>La vidéo est supprimée automatiquement et de façon vérifiable dans les 24h suivant la décision</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase">
+    <div class="phase-head">
+      <div><div class="ph-label">Phase 3</div><div class="ph-title">Rencontre</div></div>
+      <div class="ph-amount">1 350 €</div>
+    </div>
+    <div class="phase-body">
+      <div class="screens-ref"><strong>Écrans concernés :</strong> Parlons de vous (questionnaire), Vos affinités (découverte), fiche profil détaillée / demande de mise en relation, Notification "connexion établie"</div>
+
+      <div class="sub">Fonctionnalités</div>
+      <ul>
+        <li>Questionnaire de matching au format conversationnel (chat) : série de questions sur le mode de vie, les valeurs, les centres d'intérêt</li>
+        <li>Calcul d'un score de compatibilité par profil, affiché en pourcentage global et en détail par critère (ex. valeurs, style de vie, projets de vie, humour)</li>
+        <li>Interface de découverte : grille de profils filtrable (zone géographique, statut "vérifié uniquement"), score de compatibilité affiché, badge vérifié visible</li>
+        <li>Fiche profil détaillée accessible depuis la découverte, avec détail du score de compatibilité par critère</li>
+        <li>Demande de mise en relation : message d'introduction personnalisé (limite de caractères affichée), envoi de la demande</li>
+        <li>Réponse du destinataire : acceptation, refus (passer), blocage, signalement d'un profil</li>
+        <li>Messagerie initiale : un premier échange texte devient possible uniquement après acceptation mutuelle</li>
+        <li>Écran de notification "connexion établie" lors d'une mise en relation réciproque, avec accès direct à la conversation</li>
+        <li>Notifications push : nouvelle suggestion de profil compatible, mise en relation acceptée</li>
+      </ul>
+
+      <div class="sub">Données traitées</div>
+      <ul>
+        <li>Réponses au questionnaire de matching, score de compatibilité calculé entre paires de membres, historique des demandes envoyées/reçues, statuts (en attente / acceptée / refusée / bloquée / signalée)</li>
+      </ul>
+
+      <div class="sub">Cas particuliers à gérer</div>
+      <ul>
+        <li>Demande refusée ("passer") → le comportement affiché à l'expéditeur (silence ou notification de refus) est un choix produit à trancher avec la Cliente ; par défaut, standard du secteur : pas de notification négative, disparition silencieuse de la suggestion</li>
+        <li>Profil signalé → retrait immédiat de la visibilité du profil signalé le temps de l'examen par le back-office (traité en Phase 4)</li>
+        <li>Blocage d'un membre → aucune future mise en relation possible entre les deux comptes, dans les deux sens</li>
+      </ul>
+
+      <div class="placeholder-note"><strong>Information requise avant démarrage de cette phase — bloquant :</strong> les questions exactes du questionnaire de matching, leur nombre, leur formulation, et les critères de compatibilité affichés (ex. valeurs / style de vie / projets de vie / humour, ou autre découpage souhaité par la Cliente) doivent être fournis avant le lancement de cette phase. Un exemple de format figure dans la maquette de référence, à titre d'illustration uniquement. Tout retard dans la fourniture de ces éléments décale le planning de cette phase sans engager la responsabilité du Prestataire (Contrat V3, Art. 6 et Art. 7).</div>
+
+      <div class="sub">Critères d'acceptation</div>
+      <ul class="accept-list">
+        <li>Un membre vérifié peut répondre au questionnaire et obtenir un score de compatibilité par profil rencontré</li>
+        <li>La grille de découverte affiche des profils filtrés (zone, vérifié) avec score et badge</li>
+        <li>Un membre peut envoyer une demande de mise en relation avec message, l'autre peut l'accepter, la refuser, la bloquer ou la signaler</li>
+        <li>Un premier message peut être échangé uniquement après acceptation mutuelle, jamais avant</li>
+        <li>L'écran de connexion établie s'affiche aux deux membres lors d'une mise en relation réciproque</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase">
+    <div class="phase-head">
+      <div><div class="ph-label">Phase 4</div><div class="ph-title">Communauté</div></div>
+      <div class="ph-amount">650 €</div>
+    </div>
+    <div class="phase-body">
+      <div class="screens-ref"><strong>Écrans concernés :</strong> Messagerie complète, back-office modération, dashboard propriétaire</div>
+
+      <div class="sub">Fonctionnalités</div>
+      <ul>
+        <li>Messagerie complète entre membres connectés : texte, message vocal, photo, historique de conversation consultable</li>
+        <li>Back-office de modération complet : traitement des signalements reçus en Phase 3, suspension temporaire ou définitive de comptes, journal des décisions de modération</li>
+        <li>Dashboard propriétaire (Elise CAPEL et son équipe) : nombre d'inscriptions, taux d'activité, taux de mise en relation, statistiques de matching (scores moyens, profils les plus sollicités)</li>
+        <li>Tests de charge et optimisation des performances avant ouverture publique de l'application</li>
+      </ul>
+
+      <div class="sub">Cas particuliers à gérer</div>
+      <ul>
+        <li>Compte suspendu → ses conversations en cours deviennent inaccessibles à l'autre membre, avec message explicatif neutre ("ce membre n'est plus disponible")</li>
+        <li>Envoi de photo dans la messagerie → contrôle de format et de taille de fichier, pas de contrôle automatisé de contenu en V1 (la modération de contenu se fait via signalement manuel)</li>
+      </ul>
+
+      <div class="sub">Critères d'acceptation</div>
+      <ul class="accept-list">
+        <li>Deux membres connectés peuvent échanger texte, message vocal et photo, avec historique conservé et consultable</li>
+        <li>Un agent Élévia peut suspendre un compte et consulter le journal de modération depuis le back-office</li>
+        <li>Le dashboard propriétaire affiche les indicateurs clés à jour</li>
+        <li>L'application reste stable et réactive lors d'un test de charge simulé avant l'ouverture publique</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="pagebreak"></div>
+
+  <!-- 6. EXIGENCES TRANSVERSES -->
+  <h2>6. Exigences transverses</h2>
+  <div class="phase">
+    <div class="phase-body" style="padding-top:14px">
+      <div class="sub">Sécurité et confidentialité</div>
+      <ul>
+        <li>Toutes les communications sont chiffrées (HTTPS)</li>
+        <li>Les identités réelles ne sont jamais exposées publiquement ; seul le pseudo est visible des autres membres</li>
+        <li>Les vidéos de vérification KYC sont supprimées automatiquement sous 24h après décision (Section 5, Phase 2)</li>
+      </ul>
+      <div class="sub">RGPD</div>
+      <ul>
+        <li>Hébergement des données en Europe</li>
+        <li>Politique de confidentialité et registre des consentements dès la Phase 1</li>
+        <li>Droit d'accès, de rectification et de suppression des données pour chaque membre</li>
+      </ul>
+      <div class="sub">Compatibilité et affichage</div>
+      <ul>
+        <li>Web App responsive fonctionnelle sur mobile et desktop, sans débordement horizontal</li>
+        <li>Charte graphique Noir &amp; Or appliquée de façon cohérente sur l'ensemble des écrans</li>
+      </ul>
+      <div class="sub">Langue</div>
+      <ul>
+        <li>Interface en français en V1. Une version multilingue (anglais notamment, cohérent avec l'ouverture à toutes nationalités) pourra faire l'objet d'un devis complémentaire</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 7. HORS PERIMETRE -->
+  <h2>7. Hors périmètre — Formule Complète V1</h2>
+  <div class="box-red">
+    <strong>Non inclus dans la Formule Complète V1 (3 500 €)</strong>
+    <ul>
+      <li>Application mobile native iOS et Android, publication App Store / Google Play — fera l'objet d'un devis V2 séparé</li>
+      <li>Encaissement effectif des abonnements récurrents (Membre Élégance 29 €/mois, Membre Prestige 79 €/mois, Cercle Privé sur sélection) et toute passerelle de paiement associée. L'écran "Rejoindre le Club" de la maquette de référence présente cette grille à titre de <strong>vision produit</strong> uniquement ; sa mise en paiement réel relève de la Phase 5 — Prestige (formule séparée, voir Devis V3)</li>
+      <li>Module Événements club (dîners, brunchs, networking), Espace Concierge Relationnel, billetterie et QR code d'accès — Phase 5 Prestige</li>
+      <li>Version multilingue de l'interface (au-delà du français)</li>
+      <li>Modération automatisée de contenu (photos, messages) par intelligence artificielle — modération manuelle sur signalement uniquement en V1</li>
+      <li>Rédaction juridique complète des CGU/CGV (le texte affiché en Phase 1 est un gabarit générique, à faire valider/compléter par un juriste si souhaité)</li>
+      <li>Conseil en stratégie commerciale, accompagnement business, création de contenus éditoriaux, charte graphique/logo, SEO, campagnes publicitaires, formation des équipes — cf. Contrat V3, Art. 3</li>
+    </ul>
+  </div>
+  <div class="box-amber">
+    <strong>Évolution possible</strong>
+    Toute demande d'ajout d'une de ces fonctionnalités sera chiffrée séparément, sous forme de devis complémentaire ou de mise à niveau vers la Formule Élévia Premium (4 500 €), sur accord écrit préalable de la Cliente (avenant, cf. Définitions).
+  </div>
+
+  <!-- 8. CALENDRIER -->
+  <h2>8. Calendrier de paiement associé — 4 jalons</h2>
+  <div class="jalon-mini">
+    <div class="jm-cell"><div class="jm-pct">30 %</div><div class="jm-title">Jalon 1 — Signature</div><div class="jm-desc">800 € net (1 050 € − 250 € déjà reçus). Démarre la Phase 1.</div></div>
+    <div class="jm-cell"><div class="jm-pct">30 %</div><div class="jm-title">Jalon 2 — Socle validé</div><div class="jm-desc">1 050 €. Phases 1+2 livrées et validées.</div></div>
+    <div class="jm-cell"><div class="jm-pct">30 %</div><div class="jm-title">Jalon 3 — Version bêta</div><div class="jm-desc">1 050 €. Phase 3 livrée et validée.</div></div>
+    <div class="jm-cell"><div class="jm-pct">10 %</div><div class="jm-title">Jalon 4 — Mise en ligne</div><div class="jm-desc">350 €. Phase 4 livrée, validée et déployée.</div></div>
+  </div>
+  <p style="font-size:11px;color:var(--muted)">Détail complet des montants et moyens de paiement dans le Devis ATR-2026-0005 V3. Plan de continuité de 250 €/mois activé au Jalon 4.</p>
+
+  <!-- 9. VALIDATION -->
+  <h2>9. Modalités de validation et de recette</h2>
+  <p>À la livraison de chaque phase, le Prestataire transmet une fiche de livraison listant les fonctionnalités livrées et les critères d'acceptation correspondants (Section 5). La Cliente dispose de <strong>7 jours ouvrés</strong> pour formuler ses retours par écrit ou valider la phase par un <strong>procès-verbal de réception</strong>. Sans retour dans ce délai, la phase est réputée acceptée.</p>
+  <p>Chaque phase inclut <strong>2 rounds de révisions</strong> dans la limite du périmètre défini au présent CDC. Au-delà, toute correction supplémentaire fait l'objet d'un avenant facturé à 65 € HT/heure. Toute demande de fonctionnalité nouvelle ou de modification substantielle du présent CDC est traitée comme un avenant écrit, chiffré et soumis à l'accord de la Cliente avant exécution (Contrat V3, Art. 9).</p>
+
+  <!-- ACCEPTATION -->
+  <div class="acceptance">
+    <div class="acc-title">Bon pour accord — Cahier des charges validé</div>
+    <div class="acc-text">En signant ce document, la Cliente valide le périmètre fonctionnel décrit ci-dessus phase par phase, confirme avoir pris connaissance des définitions (Section 1) et des éléments hors périmètre (Section 7), et autorise le démarrage immédiat de la Phase 1 ainsi que le règlement du Jalon 1 (800 € net).</div>
+    <div class="signatures">
+      <div class="sig">
+        <div class="sig-label">Prestataire</div>
+        <div class="sig-name">Mac Arthur KOUASSI</div>
+        <div class="sig-role">Mr Attractor — Auto-entrepreneur</div>
+        <div class="sig-space"></div>
+        <div class="sig-date">Fait le 1er juillet 2026, à Paris</div>
+      </div>
+      <div class="sig">
+        <div class="sig-label">Cliente — Bon pour accord</div>
+        <div class="sig-name">Elise CAPEL</div>
+        <div class="sig-role">Club privé Élévia</div>
+        <div class="sig-space"></div>
+        <div class="sig-date">Fait le __________, à __________</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015 — Immatriculée le 01/02/2024<br>
+    TVA non applicable, article 293 B du CGI — myattractor1@gmail.com — +33 7 53 90 23 23 — agenceattractor.com<br>
+    Cahier des charges N° CDC-ATR-2026-0005 — Révision V2 — Annexe au Devis V3 et au Contrat V3 — Projet Club privé Élévia
+  </div>
+
+</div>
+</body>
+</html>
