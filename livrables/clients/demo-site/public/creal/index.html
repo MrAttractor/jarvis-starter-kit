@@ -642,6 +642,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
 <script>
 // ── MÉMOIRE CLIENT ──
 const MEMORY_KEY = 'creal_client';
+const CONV_KEY = 'creal_conv_id';
 function readMemory() { try { return JSON.parse(localStorage.getItem(MEMORY_KEY) || '{}'); } catch { return {}; } }
 function saveMemory(data) { try { localStorage.setItem(MEMORY_KEY, JSON.stringify(data)); } catch {} }
 function clearMemory() { localStorage.removeItem(MEMORY_KEY); }
@@ -673,7 +674,7 @@ const PRODUCTS = [
     detail:"Source d'énergie naturelle composée de riz, maïs et sorgho. Riche en fer, calcium, magnésium et vitamines, il soutient l'immunité et la croissance de bébé dès 4 mois." },
   { id:2, name:"Multi C'real",  tag:"Complet",     price:1500, img:"imgs/multi.png",  kcal:365, weight:"200g", prep:"5-10 min",
     desc:"Riz · Maïs · Sorgho · Soja — Mélange complet",
-    detail:"Mélange 4 céréales enrichi en nutriments essentiels. Riche en calories, protéines et micronutriments pour une croissance complète et équilibrée." },
+    detail:"Mélange de riz, maïs, sorgho et soja, enrichi en nutriments essentiels. Riche en calories, protéines et micronutriments pour une croissance complète et équilibrée." },
   { id:3, name:"C'real Sorgho", tag:"Sans gluten", price:1500, img:"imgs/sorgho.png", kcal:339, weight:"200g", prep:"5-10 min",
     desc:"Sans gluten · Protéines · Anti-diarrhée",
     detail:"Farine de sorgho sans gluten, riche en protéines, fibres, vitamines et minéraux. Favorise une bonne digestion, solidifie les os et renforce le système immunitaire. Recommandée en cas de diarrhée." },
@@ -686,9 +687,12 @@ const PRODUCTS = [
   { id:6, name:"C'real Mil",    tag:"Minéraux",    price:1000, img:"imgs/mil.png",    kcal:377, weight:"200g", prep:"5-10 min",
     desc:"Sans gluten · Magnésium · Fer · Zinc",
     detail:"Farine de mil sans gluten, source de protéines, glucides, magnésium (140mg), fer (4,5mg), zinc et vitamines B. Le silicium favorise une belle peau, des cheveux sains et des ongles solides." },
-  { id:7, name:"Kit prise de poids", tag:"Bundle", price:5000, img:"imgs/kit.jpeg", kcal:"—", weight:"4×50g", prep:"5-10 min",
+  { id:7, name:"Kit prise de poids", tag:"Bundle", price:5000, img:"imgs/kit.jpeg?v=2", kcal:365, weight:"4×200g", prep:"5-10 min",
     desc:"Riz · Maïs · Mix C'real · Multicreal — Prise de poids",
     detail:"Le kit comprend 4 farines locales sélectionnées pour booster rapidement la prise de poids de bébé : Riz, Maïs, Mix C'real et Multicreal. Idéal pour les bébés ayant besoin d'un apport calorique renforcé." },
+  { id:8, name:"Mes premières C'real", tag:"4-6 mois", price:1500, img:"imgs/premieres.jpg", kcal:339, weight:"300g", prep:"5-10 min",
+    desc:"Riz · Sorgho — Duo digeste pour bébé",
+    detail:"Un duo Riz et Sorgho, facile à digérer. Idéale pour les premières cuillères de bébé. Uniquement pour les débuts de diversification, 4 à 6 mois." },
 ];
 
 const cart = {};
@@ -954,6 +958,7 @@ async function confirmPayWA() {
         return { id: +id, name: p.name, qty, price: p.price };
       })
   });
+  localStorage.removeItem(CONV_KEY);
 
   const msg = `Bonjour Kezey ! Je viens de payer ${_payTotal.toLocaleString('fr-FR')} FCFA via ${methodLabel}.\n\nClient : ${_clientName}\nWhatsApp : ${_clientPhone}\nAdresse : ${_clientAddress}\n\nMa commande C'Real :\n${lines}\n\nSous-total : ${_payTotal.toLocaleString('fr-FR')} FCFA (livraison non incluse)`;
   window.open(`https://wa.me/${KEZEY}?text=${encodeURIComponent(msg)}`, '_blank');
@@ -1003,6 +1008,7 @@ async function send() {
     });
     const data = await res.json();
     convId = data.conversation_id;
+    if (convId) localStorage.setItem(CONV_KEY, convId);
     const reply = data.reply || "Je reviens vers vous dans un instant.";
     history.push({ from:'bot', text:reply });
     typing.style.display = 'none';
@@ -1023,8 +1029,32 @@ async function send() {
 
 document.getElementById('chat-input').addEventListener('keydown', e => { if (e.key==='Enter') send(); });
 
+async function restoreConversation() {
+  const storedConvId = localStorage.getItem(CONV_KEY);
+  if (!storedConvId) return;
+  try {
+    const res = await fetch(`${SUPABASE}/functions/v1/public-assistant?slug=creal&conversation_id=${encodeURIComponent(storedConvId)}`, {
+      headers: { 'Authorization': `Bearer ${ANON}`, 'apikey': ANON },
+    });
+    const data = await res.json();
+    if (!data.history || data.history.length === 0) { localStorage.removeItem(CONV_KEY); return; }
+    convId = storedConvId;
+    history = data.history.slice();
+    const area = document.getElementById('chat-msgs');
+    area.innerHTML = '';
+    data.history.forEach(m => {
+      const bubble = document.createElement('div');
+      bubble.className = 'msg ' + (m.from === 'me' ? 'me' : 'bot');
+      bubble.textContent = m.text;
+      area.appendChild(bubble);
+    });
+    area.scrollTop = area.scrollHeight;
+  } catch {}
+}
+
 renderProducts();
 initMemory();
+restoreConversation();
 
 // Mise à jour live des prix depuis Assists (Kezey modifie ses produits dans Assists → site synchronisé)
 async function fetchLivePrices() {
