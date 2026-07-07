@@ -795,29 +795,34 @@ function goTab(name, btn) {
 
 /* ── Chat ─────────────────────────────────────────────────────────────── */
 let history=[],convId=null;
+function addBubble(area, cls, text) {
+  const el = document.createElement('div');
+  el.className = cls;
+  el.textContent = text;
+  area.appendChild(el);
+  return el;
+}
 async function send() {
   const inp=document.getElementById('chat-input');
   const text=inp.value.trim(); if(!text) return;
   inp.value='';
   const area=document.getElementById('chat-msgs');
-  area.innerHTML+=`<div class="msg user">${text}</div>`;
-  const typing=document.createElement('div');
-  typing.className='msg bot typing'; typing.textContent='…';
-  area.appendChild(typing); area.scrollTop=area.scrollHeight;
-  history.push({role:'user',content:text});
+  addBubble(area, 'msg user', text);
+  const typing = addBubble(area, 'msg bot typing', '…');
+  area.scrollTop=area.scrollHeight;
+  history.push({from:'me',text});
   try {
-    const r=await fetch(`${SUPABASE}/functions/v1/chat`,{
+    const r=await fetch(`${SUPABASE}/functions/v1/chat-assistant`,{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':`Bearer ${ANON}`},
-      body:JSON.stringify({message:text,history,conv_id:convId,
-        system:`Tu es ${SHOP_ASSISTANT}, conseillère de ${SHOP_NAME}${SHOP_TAGLINE ? ', ' + SHOP_TAGLINE : ''}. Réponds de façon naturelle et experte, sans emojis.`})
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${ANON}`,'apikey':ANON},
+      body:JSON.stringify({mode:'public',slug:SLUG,messages:history,conversation_id:convId})
     });
     const d=await r.json(); typing.remove();
-    if(d.conv_id) convId=d.conv_id;
+    if(d.conversation_id) convId=d.conversation_id;
     const reply=d.reply||'Je reviens vers vous dans un instant.';
-    history.push({role:'assistant',content:reply});
-    area.innerHTML+=`<div class="msg bot">${reply}</div>`;
-  } catch { typing.remove(); area.innerHTML+=`<div class="msg bot">Une erreur s'est produite, réessayez.</div>`; }
+    history.push({from:'bot',text:reply});
+    addBubble(area, 'msg bot', reply);
+  } catch { typing.remove(); addBubble(area, 'msg bot', "Une erreur s'est produite, réessayez."); }
   area.scrollTop=area.scrollHeight;
 }
 document.getElementById('chat-input').addEventListener('keydown',e=>{if(e.key==='Enter')send();});

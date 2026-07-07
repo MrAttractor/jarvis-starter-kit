@@ -7,7 +7,6 @@ const TEMPLATES = [
     id: '1a',
     nom: 'Grille',
     accroche: 'Compact, familier, efficace',
-    url: 'https://demo.agenceattractor.com/creal',
     palette: { bg: '#FAF6F0', brand: '#1A1714', accent: '#F2A33D' },
     mockup: 'grille',
   },
@@ -15,7 +14,6 @@ const TEMPLATES = [
     id: '1b',
     nom: 'Liste',
     accroche: 'Plus d\'infos, scroll fluide',
-    url: 'https://demo.agenceattractor.com/template-1b',
     palette: { bg: '#F3F8F4', brand: '#1B3A2F', accent: '#FF6B35' },
     mockup: 'liste',
   },
@@ -23,11 +21,18 @@ const TEMPLATES = [
     id: '1c',
     nom: 'Magazine',
     accroche: 'Impact visuel, look premium',
-    url: 'https://demo.agenceattractor.com/template-1c',
     palette: { bg: '#FAF8F4', brand: '#0F0A1A', accent: '#C9A84C' },
     mockup: 'magazine',
   },
 ];
+
+// Aperçu = la vraie boutique de l'utilisateur (ses propres produits, pas ceux d'un autre client)
+function previewUrl(tpl, slug) {
+  if (!slug) return null;
+  return tpl.id === '1a'
+    ? `https://assists.agenceattractor.com/b/${encodeURIComponent(slug)}`
+    : `https://demo.agenceattractor.com/template-${tpl.id}?c=${encodeURIComponent(slug)}`;
+}
 
 function MockupGrille({ palette }) {
   const { bg, brand, accent } = palette;
@@ -158,6 +163,14 @@ export function TemplateGalerieScreen({ go, notify, profile }) {
   const [loading, setLoading]     = useState(false);
   const [chosen, setChosen]       = useState(profile?.template_choisi || null);
   const [iframeLoaded, setIframeLoaded] = useState(false);
+  const slug = profile?.public_slug || null;
+
+  const voir = (tpl) => {
+    const url = previewUrl(tpl, slug);
+    if (!url) { notify('Ta boutique doit être configurée avant de prévisualiser un modèle'); return; }
+    setIframeLoaded(false);
+    setPreview({ ...tpl, url });
+  };
 
   const choisir = async (tpl) => {
     setLoading(true);
@@ -206,7 +219,7 @@ export function TemplateGalerieScreen({ go, notify, profile }) {
               <div
                 className="relative cursor-pointer active:opacity-90 transition"
                 style={{ height: 220 }}
-                onClick={() => { setIframeLoaded(false); setPreview(tpl); }}
+                onClick={() => voir(tpl)}
               >
                 <Mockup palette={tpl.palette} />
 
@@ -235,7 +248,7 @@ export function TemplateGalerieScreen({ go, notify, profile }) {
                 </div>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => { setIframeLoaded(false); setPreview(tpl); }}
+                    onClick={() => voir(tpl)}
                     className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-g200 bg-sable text-charbon text-[12.5px] font-bold active:bg-g100 transition"
                   >
                     <Icon name="eye" size={13} />

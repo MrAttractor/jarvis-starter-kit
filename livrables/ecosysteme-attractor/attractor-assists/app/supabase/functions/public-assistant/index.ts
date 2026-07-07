@@ -18,12 +18,13 @@ serve(async (req) => {
   try {
     const url = new URL(req.url);
     const slug = url.searchParams.get("slug");
+    const conversationId = url.searchParams.get("conversation_id");
     if (!slug) return json({ error: "Missing slug" }, 400);
 
     const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
     const { data, error } = await supabase
       .from("profiles")
-      .select("id, prenom, nom_assistant, activite, client_assistant_ready")
+      .select("id, prenom, nom_assistant, activite, client_assistant_ready, template_choisi")
       .eq("public_slug", slug)
       .eq("client_assistant_ready", true)
       .single();
@@ -37,12 +38,39 @@ serve(async (req) => {
       .eq("actif", true)
       .order("categorie");
 
+    // Historique de conversation — seulement si l'id fourni appartient bien à CET entrepreneur
+    let history: Array<{ from: string; text: string }> = [];
+    if (conversationId) {
+      const { data: conv } = await supabase
+        .from("conversations")
+        .select("id")
+        .eq("id", conversationId)
+        .eq("user_id", data.id)
+        .eq("is_public", true)
+        .single();
+
+      if (conv) {
+        const { data: msgs } = await supabase
+          .from("messages")
+          .select("role, contenu, created_at")
+          .eq("conversation_id", conversationId)
+          .order("created_at", { ascending: true });
+
+        history = (msgs ?? []).map((m: any) => ({
+          from: m.role === "user" ? "me" : "bot",
+          text: m.contenu,
+        }));
+      }
+    }
+
     return json({
-      user_id:       data.id,
-      prenom:        data.prenom,
-      nom_assistant: data.nom_assistant || "Assistant",
-      activite:      data.activite,
-      produits:      produits ?? [],
+      user_id:         data.id,
+      prenom:          data.prenom,
+      nom_assistant:   data.nom_assistant || "Assistant",
+      activite:        data.activite,
+      produits:        produits ?? [],
+      history,
+      template_choisi: data.template_choisi || null,
     });
   } catch (e) {
     return json({ error: String(e) }, 500);

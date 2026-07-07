@@ -87,17 +87,33 @@ export function PublicAssistantScreen({ slug }) {
   const SUPABASE_ANON = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
   const fnHeaders = { 'Authorization': `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json' };
 
+  const convStorageKey = `aa_conv_${slug}`;
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/public-assistant?slug=${encodeURIComponent(slug)}`, { headers: fnHeaders });
+        const storedConvId = localStorage.getItem(convStorageKey);
+        const url = `${SUPABASE_URL}/functions/v1/public-assistant?slug=${encodeURIComponent(slug)}` +
+          (storedConvId ? `&conversation_id=${encodeURIComponent(storedConvId)}` : '');
+        const res = await fetch(url, { headers: fnHeaders });
         const data = await res.json();
         if (cancelled) return;
         if (!res.ok || data?.error) { setAppState('notfound'); return; }
+        if (data.template_choisi === '1b' || data.template_choisi === '1c') {
+          window.location.replace(`https://demo.agenceattractor.com/template-${data.template_choisi}?c=${encodeURIComponent(slug)}`);
+          return;
+        }
         setOwner(data);
         setProduits(data.produits || []);
-        if (!cancelled) setAppState('catalogue');
+        if (storedConvId && data.history?.length > 0) {
+          conversationIdRef.current = storedConvId;
+          setMsgs(data.history);
+          setAppState('chat');
+        } else {
+          if (storedConvId) localStorage.removeItem(convStorageKey);
+          setAppState('catalogue');
+        }
       } catch {
         if (!cancelled) setAppState('notfound');
       }
@@ -159,6 +175,7 @@ export function PublicAssistantScreen({ slug }) {
       const data = await res.json();
       if (!res.ok || !data?.reply) throw new Error('no reply');
       conversationIdRef.current = data.conversation_id || conversationIdRef.current;
+      if (conversationIdRef.current) localStorage.setItem(convStorageKey, conversationIdRef.current);
       setTyping(false);
       setMsgs(m => [...m, { from: 'bot', text: data.reply }]);
 
@@ -218,6 +235,7 @@ export function PublicAssistantScreen({ slug }) {
         }
       }
     } catch {}
+    localStorage.removeItem(convStorageKey);
     setAppState('confirmation');
   };
 
