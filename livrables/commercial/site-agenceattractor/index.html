@@ -3,8 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Agence Mr Attractor — Automatisation IA pour entrepreneurs de Côte d'Ivoire et la diaspora. Jusqu'à 80% des tâches automatisées.">
-<title>Mr Attractor — Conçu pour soulager les entreprises.</title>
+<meta name="description" content="Ton app métier sur mesure, prête en 7 jours : catalogue, commandes, paiement, assistant IA. Pour entrepreneurs en Côte d'Ivoire et la diaspora. Maquette cliquable sous 48h, garanti 30 jours ou remboursé.">
+<title>Ton app métier, prête en 7 jours | Mr Attractor</title>
+<link rel="canonical" href="https://agenceattractor.com/">
+<link rel="icon" type="image/png" href="images/logo-attractor.png">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:url" content="https://agenceattractor.com/">
+<meta property="og:site_name" content="Mr Attractor">
+<meta property="og:title" content="Ton app métier, prête en 7 jours | Mr Attractor">
+<meta property="og:description" content="Catalogue, commandes, paiement, assistant IA — ton application sur mesure, clé en main. Pour entrepreneurs en Côte d'Ivoire et la diaspora. Garanti 30 jours ou remboursé.">
+<meta property="og:image" content="https://agenceattractor.com/images/hero-entrepreneur.jpg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ton app métier, prête en 7 jours | Mr Attractor">
+<meta name="twitter:description" content="Catalogue, commandes, paiement, assistant IA — ton application sur mesure, clé en main. Garanti 30 jours ou remboursé.">
+<meta name="twitter:image" content="https://agenceattractor.com/images/hero-entrepreneur.jpg">
+
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
@@ -223,6 +239,23 @@ nav.scrolled { padding: .65rem 2.5rem; box-shadow: var(--shadow); }
 .proof-avatar img { width:100%; height:100%; object-fit:cover; }
 .proof-text { font-size:12px; color:var(--g700); font-weight:600; }
 .proof-text span { color:var(--orange); }
+
+.hero-phone {
+  position:absolute; right:6%; top:50%; transform:translateY(-50%) rotate(-4deg);
+  z-index:2; animation: fadeUp .8s .3s ease both;
+}
+.hero-phone-frame {
+  width:220px; height:440px; background:#111; border-radius:32px;
+  padding:10px; box-shadow:0 30px 60px rgba(0,0,0,.35), 0 0 0 1.5px rgba(0,0,0,.08);
+  overflow:hidden;
+}
+.hero-phone-frame .mock-browser { border-radius:22px; overflow:hidden; }
+.hero-phone-live {
+  display:block; text-align:center; margin-top:10px;
+  font-size:10px; font-weight:700; color:#3DDC84;
+  font-family:'Space Mono',monospace; letter-spacing:.04em;
+}
+@media(max-width:1080px) { .hero-phone{display:none;} }
 
 @media(max-width:768px) { .hero{padding:100px 1.2rem 60px;} .hero-glow{display:none;} }
 
@@ -701,14 +734,13 @@ footer {
     </div>
   </a>
   <div class="nav-links">
-    <a href="ebook.html" data-track="nav_ebook" style="color:var(--orange);font-weight:700;">Ebook gratuit</a>
+    <a href="#apps" data-track="nav_apps" style="color:var(--orange);font-weight:700;">Ton app métier</a>
+    <a href="ebook.html" data-track="nav_ebook">Ebook gratuit</a>
     <a href="challenge.html" data-track="nav_challenge">Challenge 7j</a>
-    <a href="#apps" data-track="nav_apps">Ton app métier</a>
-    <a href="https://assists.agenceattractor.com" data-track="nav_assists">Attractor Assists</a>
     <a href="consulting.html" data-track="nav_consulting">Consulting</a>
   </div>
-  <button id="nav-chat-btn" onclick="openChat()" class="nav-cta" data-track="nav_cta_chat">
-    💬 Discutez avec Mac
+  <button onclick="openAuditModal()" class="nav-cta" data-track="nav_cta_audit">
+    Je veux mon app
   </button>
 </nav>
 
@@ -719,24 +751,24 @@ footer {
   <div class="hero-inner">
 
     <div class="hero-pill">
-      <div class="pill-dot">📖</div>
-      Ebook + challenge 7 jours — offerts
+      <div class="pill-dot">⚡</div>
+      Audit gratuit · maquette cliquable sous 48h
     </div>
 
     <h1 class="hero-h1">
-      Ton entreprise<br>tourne-t-elle sans<br><em>toi ?</em>
+      Ton app métier,<br>prête en <em>7 jours.</em>
     </h1>
 
     <p class="hero-sub">
-      2 minutes pour mesurer ce que ton activité te coûte vraiment. Tu reçois l'ebook <strong>Méthode ATTRACTOR</strong> + 7 emails pour automatiser.
+      Fini le WhatsApp qui déborde et les commandes perdues. On construit ton application sur mesure : catalogue, commandes, paiement, assistant IA. <strong>Garanti 30 jours — ou remboursé.</strong>
     </p>
 
     <div class="hero-ctas">
-      <a href="ebook.html" class="btn-primary" data-track="hero_cta_ebook">
-        Faire le diagnostic — gratuit →
-      </a>
-      <a href="https://assists.agenceattractor.com" class="btn-ghost" target="_blank" data-track="hero_cta_app">
-        Essayer l'app →
+      <button onclick="openAuditModal()" class="btn-primary" data-track="hero_cta_audit" style="border:none;cursor:pointer;font-family:inherit;">
+        Je veux mon app →
+      </button>
+      <a href="#apps" class="btn-ghost" data-track="hero_cta_examples">
+        Voir des exemples →
       </a>
     </div>
 
@@ -744,6 +776,43 @@ footer {
       <div class="proof-text">ou <a href="#" onclick="openChat();return false;" style="color:var(--orange);font-weight:700;text-decoration:none;">discutez avec Mac</a> · <span>25+</span> entrepreneurs accompagnés</div>
     </div>
 
+  </div>
+
+  <div class="hero-phone" aria-hidden="true">
+    <div class="hero-phone-frame">
+      <div class="mock-browser">
+        <div class="mock-bar">
+          <div class="mock-dots"><span></span><span></span><span></span></div>
+          <div class="mock-url">jenvoie-express.app</div>
+        </div>
+        <div class="mock-app-header" style="background:#1a3a6b;">
+          <div>
+            <div class="mock-app-name">J'Envoie Express</div>
+            <div class="mock-status">Paris ↔ Abidjan</div>
+          </div>
+        </div>
+        <div class="mock-body">
+          <div class="mock-stat-row">
+            <div class="mock-stat-box"><div class="mock-stat-num">24</div><div class="mock-stat-lbl">Colis</div></div>
+            <div class="mock-stat-box"><div class="mock-stat-num">3</div><div class="mock-stat-lbl">Voyages</div></div>
+            <div class="mock-stat-box"><div class="mock-stat-num">98%</div><div class="mock-stat-lbl">Livré</div></div>
+          </div>
+          <div class="mock-item">
+            <span class="mock-pill green">Livré</span>
+            <span class="mock-item-text">Colis #1042 · Cocody, Abidjan</span>
+          </div>
+          <div class="mock-item">
+            <span class="mock-pill orange">En route</span>
+            <span class="mock-item-text">Colis #1043 · Paris 11e</span>
+          </div>
+          <div class="mock-item">
+            <span class="mock-pill gray">Prêt</span>
+            <span class="mock-item-text">Voyage du 15 juin · 12 places</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <span class="hero-phone-live">● App réellement en ligne</span>
   </div>
 </section>
 
@@ -769,6 +838,361 @@ footer {
     <span class="ticker-item">Trouve ton Couloir. Cours dedans.</span>
   </div>
 </div>
+
+<!-- ══════════ APPS MÉTIERS ══════════ -->
+<section class="apps-section" id="apps">
+  <div class="section-wrap">
+    <span class="s-tag">Solutions sur mesure</span>
+    <h2 class="s-h2">Ton app métier.<br><em>7 jours. Clé en main.</em></h2>
+    <p class="s-sub">Un audit de 5 minutes. Une maquette en 48h. Tu valides. On développe et on livre. Garanti 30 jours — ou remboursé.</p>
+
+    <div class="apps-grid">
+
+      <!-- C'Real -->
+      <div class="app-card" data-track="app_creal">
+        <div class="app-preview" style="background:#0f0d0b;padding:0;overflow:hidden;">
+          <div class="mock-browser">
+            <div class="mock-bar">
+              <div class="mock-dots"><span></span><span></span><span></span></div>
+              <div class="mock-url">boutiquecreal.com</div>
+            </div>
+            <div class="mock-app-header" style="background:#1A1714;">
+              <div>
+                <div class="mock-app-name">C'Real</div>
+                <div class="mock-status">Farines infantiles · Boutique + assistant IA</div>
+              </div>
+              <span style="font-size:9px;background:rgba(61,220,132,.15);color:#3DDC84;padding:3px 8px;border-radius:100px;font-weight:700;">● En ligne</span>
+            </div>
+            <div class="mock-body">
+              <div class="mock-stat-row">
+                <div class="mock-stat-box"><div class="mock-stat-num">8</div><div class="mock-stat-lbl">Produits</div></div>
+                <div class="mock-stat-box"><div class="mock-stat-num">24/7</div><div class="mock-stat-lbl">Assistant</div></div>
+                <div class="mock-stat-box"><div class="mock-stat-num">0</div><div class="mock-stat-lbl">Commande perdue</div></div>
+              </div>
+              <div class="mock-item">
+                <span class="mock-pill green">Répondu</span>
+                <span class="mock-item-text">"Vous avez quoi pour 4 mois ?" — assistant IA</span>
+              </div>
+              <div class="mock-item">
+                <span class="mock-pill orange">Commande</span>
+                <span class="mock-item-text">Mix C'real ×2 · via WhatsApp</span>
+              </div>
+            </div>
+          </div>
+          <span class="app-live">● Live</span>
+        </div>
+        <div class="app-info">
+          <div class="app-name">C'Real</div>
+          <div class="app-sector">Farines infantiles · Côte d'Ivoire</div>
+          <p class="app-desc">Boutique en ligne avec assistant IA intégré : catalogue, questions clients, commande et paiement WhatsApp en un seul lien.</p>
+          <div class="app-before-after">
+            <div><span class="baa-tag">Avant</span> Kezey répondait aux mêmes questions produit toute la journée sur WhatsApp, avec des commandes qui se perdaient dans les messages.</div>
+            <div><span class="baa-tag baa-after">Aujourd'hui</span> un catalogue à jour en temps réel, un assistant qui répond à sa place, et chaque commande centralisée.</div>
+          </div>
+          <a href="https://boutiquecreal.com" class="app-link" target="_blank" data-track="app_creal_live">Voir le site live →</a>
+        </div>
+      </div>
+
+      <!-- MY NUGO -->
+      <div class="app-card" data-track="app_mynugo">
+        <div class="app-preview" style="background:#0f0d0b;padding:0;overflow:hidden;">
+          <div class="mock-browser">
+            <div class="mock-bar">
+              <div class="mock-dots"><span></span><span></span><span></span></div>
+              <div class="mock-url">mynugo.store</div>
+            </div>
+            <div class="mock-app-header" style="background:#1A1714;border-bottom:1px solid rgba(255,255,255,.06);">
+              <img src="images/logo-mynugo.png" style="height:26px;object-fit:contain;">
+              <span style="font-size:9px;background:rgba(61,220,132,.15);color:#3DDC84;padding:3px 8px;border-radius:100px;font-weight:700;">● En ligne</span>
+            </div>
+            <div class="mock-body">
+              <div class="mock-stat-row">
+                <div class="mock-stat-box"><div class="mock-stat-num">142</div><div class="mock-stat-lbl">Clients</div></div>
+                <div class="mock-stat-box"><div class="mock-stat-num">89%</div><div class="mock-stat-lbl">Payés</div></div>
+                <div class="mock-stat-box"><div class="mock-stat-num">12</div><div class="mock-stat-lbl">Devis</div></div>
+              </div>
+              <div class="mock-item">
+                <span class="mock-pill green">Payée</span>
+                <span class="mock-item-text">Facture #081 · 450 000 FCFA</span>
+              </div>
+              <div class="mock-item">
+                <span class="mock-pill orange">En attente</span>
+                <span class="mock-item-text">Devis #082 · 280 000 FCFA</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="app-info">
+          <div class="app-name">MY NUGO</div>
+          <div class="app-sector">Gestion commerciale · E-commerce</div>
+          <p class="app-desc">Web app complète : clients, devis, facturation, base de données, reporting. Pour PME qui veulent piloter leurs chiffres.</p>
+          <a href="https://mynugo.store/" class="app-link" target="_blank" data-track="app_mynugo_live">Voir le site live →</a>
+        </div>
+      </div>
+
+      <!-- GetWinWorld -->
+      <div class="app-card" data-track="app_getwinworld">
+        <div class="app-preview" style="background:#0f0d0b;padding:0;overflow:hidden;">
+          <div class="mock-browser">
+            <div class="mock-bar">
+              <div class="mock-dots"><span></span><span></span><span></span></div>
+              <div class="mock-url">demo.agenceattractor.com/getwinworld</div>
+            </div>
+            <div class="mock-app-header" style="background:#1B3A2D;">
+              <div>
+                <div class="mock-app-name">GetWinWorld</div>
+                <div class="mock-status">Personal Shopper · Catalogue live</div>
+              </div>
+              <span style="font-size:9px;background:rgba(61,220,132,.15);color:#3DDC84;padding:3px 8px;border-radius:100px;font-weight:700;">● En ligne</span>
+            </div>
+            <div class="mock-body">
+              <div class="mock-stat-row">
+                <div class="mock-stat-box"><div class="mock-stat-num">32</div><div class="mock-stat-lbl">Articles</div></div>
+                <div class="mock-stat-box"><div class="mock-stat-num">14</div><div class="mock-stat-lbl">Clients suivis</div></div>
+                <div class="mock-stat-box"><div class="mock-stat-num">0</div><div class="mock-stat-lbl">Stock à gérer</div></div>
+              </div>
+              <div class="mock-item">
+                <span class="mock-pill green">Suivi</span>
+                <span class="mock-item-text">Costume sur-mesure · Client #12</span>
+              </div>
+              <div class="mock-item">
+                <span class="mock-pill orange">Nouvelle</span>
+                <span class="mock-item-text">Demande conciergerie événement</span>
+              </div>
+            </div>
+          </div>
+          <span class="app-live">● Live</span>
+        </div>
+        <div class="app-info">
+          <div class="app-name">GetWinWorld</div>
+          <div class="app-sector">Personal shopper · Vestimentaire & conciergerie</div>
+          <p class="app-desc">Catalogue en ligne, conseiller IA, suivi commandes, espace client. Zéro stock à gérer, tout piloté en autonomie.</p>
+          <div class="app-before-after">
+            <div><span class="baa-tag">Avant</span> Charles envoyait des dizaines de photos produit une par une sur WhatsApp — du bon produit, mais chaotique et chronophage pour lui.</div>
+            <div><span class="baa-tag baa-after">Aujourd'hui</span> un catalogue centralisé, un suivi individuel par client, tout tracé — la charge mentale en moins.</div>
+          </div>
+          <a href="https://demo.agenceattractor.com/getwinworld/" class="app-link" target="_blank" data-track="app_getwinworld_demo">Voir la maquette →</a>
+        </div>
+      </div>
+
+      <!-- J'envoie Express -->
+      <div class="app-card" data-track="app_jenvoie">
+        <div class="app-preview" style="background:#0f0d0b;padding:0;overflow:hidden;">
+          <div class="mock-browser">
+            <div class="mock-bar">
+              <div class="mock-dots"><span></span><span></span><span></span></div>
+              <div class="mock-url">jenvoie-express.myattractor1.workers.dev</div>
+            </div>
+            <div class="mock-app-header" style="background:#1a3a6b;">
+              <div>
+                <div class="mock-app-name">J'Envoie Express</div>
+                <div class="mock-status">Paris ↔ Abidjan</div>
+              </div>
+              <img src="images/logo-jenvoie.jpg" style="height:28px;border-radius:4px;object-fit:contain;">
+            </div>
+            <div class="mock-body">
+              <div class="mock-stat-row">
+                <div class="mock-stat-box"><div class="mock-stat-num">24</div><div class="mock-stat-lbl">Colis</div></div>
+                <div class="mock-stat-box"><div class="mock-stat-num">3</div><div class="mock-stat-lbl">Voyages</div></div>
+                <div class="mock-stat-box"><div class="mock-stat-num">98%</div><div class="mock-stat-lbl">Livré</div></div>
+              </div>
+              <div class="mock-item">
+                <span class="mock-pill green">Livré</span>
+                <span class="mock-item-text">Colis #1042 · Cocody, Abidjan</span>
+              </div>
+              <div class="mock-item">
+                <span class="mock-pill orange">En route</span>
+                <span class="mock-item-text">Colis #1043 · Paris 11e</span>
+              </div>
+              <div class="mock-item">
+                <span class="mock-pill gray">Prêt</span>
+                <span class="mock-item-text">Voyage du 15 juin · 12 places</span>
+              </div>
+            </div>
+          </div>
+          <span class="app-live">● Live</span>
+        </div>
+        <div class="app-info">
+          <div class="app-name">J'Envoie Express</div>
+          <div class="app-sector">Livraison colis · Paris ↔ Abidjan</div>
+          <p class="app-desc">Dashboard colis, tracking GPS, gestion voyages, CRM clients, assistant IA intégré. Opérationnel en 7 jours.</p>
+          <div class="app-before-after">
+            <div><span class="baa-tag">Avant</span> Jean Yves gérait plusieurs clients et colis à la fois, sans système, en tant que voyageur seul.</div>
+            <div><span class="baa-tag baa-after">Aujourd'hui</span> une vitrine pro pour ses clients, une vision temps réel côté admin, et un lien de suivi personnel pour chaque colis.</div>
+          </div>
+          <a href="https://jenvoie-express.myattractor1.workers.dev" class="app-link" target="_blank" data-track="app_jenvoie_live">Voir l'app en ligne →</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="apps-note">
+      <p>Ces apps sont des exemples de ce qu'on peut construire pour toi. Ton secteur, tes règles, tes couleurs.<br>
+      Un audit de 5 minutes suffit pour qu'on te propose une maquette cliquable sous 48h.</p>
+      <button onclick="openAuditModal()" class="btn-primary" data-track="apps_cta_audit"
+        style="margin-top:1.5rem;display:inline-flex;align-items:center;gap:10px;padding:16px 32px;font-size:16px;">
+        Je veux mon app
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ MODALE AUDIT APP MÉTIER ══════════ -->
+<div id="audit-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:var(--white);border-radius:20px;width:100%;max-width:480px;padding:2rem;position:relative;max-height:90vh;overflow-y:auto;">
+    <button onclick="closeAuditModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;cursor:pointer;color:var(--g400);font-size:20px;line-height:1;">&#x2715;</button>
+    <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--orange);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem;">Audit gratuit</div>
+    <h3 style="font-size:1.4rem;font-weight:800;color:var(--charbon);margin:0 0 .4rem;">Décris ton besoin</h3>
+    <p style="font-size:13px;color:var(--g500);margin:0 0 1.5rem;">Quelques questions. On revient avec une maquette cliquable sous 48h.</p>
+
+    <form id="audit-form" onsubmit="submitAuditForm(event)" style="display:flex;flex-direction:column;gap:1rem;">
+      <div>
+        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Ton prénom *</label>
+        <input id="aud-prenom" type="text" required placeholder="Ex : Bérénice"
+          style="width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--charbon);background:var(--sable);box-sizing:border-box;outline:none;font-family:inherit;">
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Ton secteur d'activité *</label>
+        <input id="aud-activite" type="text" required placeholder="Ex : Farines infantiles, transport de colis, dressing sur mesure..."
+          style="width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--charbon);background:var(--sable);box-sizing:border-box;outline:none;font-family:inherit;">
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Comment tu gères ça aujourd'hui ? *</label>
+        <input id="aud-organisation" type="text" required placeholder="Ex : Tout sur WhatsApp, un cahier, un tableur Excel..."
+          style="width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--charbon);background:var(--sable);box-sizing:border-box;outline:none;font-family:inherit;">
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Qu'est-ce que tu veux que ton app te permette de faire plus facilement ? *</label>
+        <textarea id="aud-besoin" required placeholder="Sois précis : ce qui te prend du temps aujourd'hui, ce que tu voudrais ne plus avoir à faire à la main, ce que tes clients devraient pouvoir faire seuls..."
+          style="width:100%;min-height:90px;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--charbon);background:var(--sable);box-sizing:border-box;outline:none;font-family:inherit;resize:vertical;line-height:1.5;"></textarea>
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Ta zone *</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;" id="aud-zone-btns">
+          <button type="button" onclick="selectZone('CI')" class="zone-btn" data-zone="CI"
+            style="flex:1;min-width:100px;padding:10px;border:1.5px solid var(--g200);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:var(--sable);color:var(--charbon);transition:all .2s;">
+            Côte d'Ivoire
+          </button>
+          <button type="button" onclick="selectZone('EU')" class="zone-btn" data-zone="EU"
+            style="flex:1;min-width:100px;padding:10px;border:1.5px solid var(--g200);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:var(--sable);color:var(--charbon);transition:all .2s;">
+            France / Europe
+          </button>
+          <button type="button" onclick="selectZone('CI')" class="zone-btn" data-zone="LES2"
+            style="flex:1;min-width:100px;padding:10px;border:1.5px solid var(--g200);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:var(--sable);color:var(--charbon);transition:all .2s;">
+            Les deux
+          </button>
+        </div>
+        <input type="hidden" id="aud-zone" value="">
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Ton WhatsApp *</label>
+        <input id="aud-wa" type="tel" required placeholder="Ex : +225 07 12 34 56 78"
+          style="width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--charbon);background:var(--sable);box-sizing:border-box;outline:none;font-family:inherit;">
+      </div>
+      <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
+        <input type="checkbox" id="aud-collab" required style="margin-top:3px;width:16px;height:16px;flex-shrink:0;accent-color:var(--orange);">
+        <span style="font-size:13px;color:var(--charbon);line-height:1.4;">Je veux qu'on construise mon app métier ensemble.</span>
+      </label>
+      <div id="audit-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:10px 14px;font-size:13px;color:#DC2626;"></div>
+      <button type="submit" id="audit-submit"
+        style="background:var(--orange);color:#fff;border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s;">
+        Demander ma maquette gratuite
+      </button>
+    </form>
+
+    <div id="audit-success" style="display:none;text-align:center;padding:1rem 0;">
+      <div style="font-size:2.5rem;margin-bottom:1rem;">&#x2713;</div>
+      <h3 style="font-size:1.2rem;font-weight:800;color:var(--charbon);margin:0 0 .5rem;">Reçu !</h3>
+      <p style="font-size:14px;color:var(--g500);">On revient vers toi sur WhatsApp sous 48h avec ta maquette cliquable.</p>
+    </div>
+  </div>
+</div>
+
+<style>
+.zone-btn.active { background: var(--orange) !important; color: #fff !important; border-color: var(--orange) !important; }
+#audit-modal.open { display: flex !important; }
+</style>
+
+<script>
+let _auditZone = '';
+
+function openAuditModal() {
+  document.getElementById('audit-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', { content_name: 'audit_app_metier' });
+}
+
+function closeAuditModal() {
+  document.getElementById('audit-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function selectZone(val) {
+  _auditZone = val;
+  document.getElementById('aud-zone').value = val;
+  document.querySelectorAll('.zone-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.zone === (val === 'CI' && b.dataset.zone === 'LES2' ? '' : val) || (val === 'CI' && b.dataset.zone === 'CI'));
+  });
+  // Mark exactly the clicked button
+  event.currentTarget.classList.add('active');
+  event.currentTarget.closest('#aud-zone-btns').querySelectorAll('.zone-btn').forEach(b => {
+    if (b !== event.currentTarget) b.classList.remove('active');
+  });
+  _auditZone = event.currentTarget.dataset.zone;
+}
+
+async function submitAuditForm(e) {
+  e.preventDefault();
+  const prenom       = document.getElementById('aud-prenom').value.trim();
+  const activite     = document.getElementById('aud-activite').value.trim();
+  const organisation = document.getElementById('aud-organisation').value.trim();
+  const besoin       = document.getElementById('aud-besoin').value.trim();
+  const wa           = document.getElementById('aud-wa').value.trim();
+  const zone         = _auditZone || document.getElementById('aud-zone').value;
+  const collab       = document.getElementById('aud-collab').checked;
+  const errEl        = document.getElementById('audit-error');
+  const btnEl        = document.getElementById('audit-submit');
+
+  if (!zone) { errEl.textContent = 'Sélectionne ta zone.'; errEl.style.display = 'block'; return; }
+  if (!collab) { errEl.textContent = 'Coche la case pour confirmer que tu veux qu\'on avance ensemble.'; errEl.style.display = 'block'; return; }
+  errEl.style.display = 'none';
+  btnEl.disabled = true; btnEl.style.opacity = '.6';
+
+  const SUPA_URL  = 'https://lgdgbrivnhgeupqhkckd.supabase.co';
+  const SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
+  const zoneLabel = { 'CI': 'CI', 'EU': 'EU', 'LES2': 'CI' };
+
+  try {
+    const res = await fetch(SUPA_URL + '/rest/v1/prospects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPA_ANON, 'Authorization': 'Bearer ' + SUPA_ANON, 'Prefer': 'return=representation' },
+      body: JSON.stringify({
+        prenom, activite, besoin, whatsapp: wa,
+        zone: zoneLabel[_auditZone] || 'CI',
+        canal: 'Site web - App métier',
+        contexte: 'Organisation actuelle : ' + organisation + '. Veut construire ensemble : oui.',
+        type_projet: 'A',
+        nb_users: '1',
+        statut: 'nouveau'
+      })
+    });
+    if (!res.ok) throw new Error('Erreur réseau');
+    if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'audit_app_metier' });
+    document.getElementById('audit-form').style.display = 'none';
+    document.getElementById('audit-success').style.display = 'block';
+    setTimeout(closeAuditModal, 3000);
+  } catch(err) {
+    errEl.textContent = 'Une erreur est survenue. Réessaie ou écris-nous directement sur WhatsApp.';
+    errEl.style.display = 'block';
+    btnEl.disabled = false; btnEl.style.opacity = '1';
+  }
+}
+
+document.getElementById('audit-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeAuditModal();
+});
+</script>
 
 <!-- ══════════ EBOOK BANNER ══════════ -->
 <section style="background:var(--charbon);padding:48px 2.5rem;border-bottom:1px solid rgba(255,255,255,.06);">
@@ -821,345 +1245,6 @@ footer {
     </div>
   </div>
 </section>
-
-<!-- ══════════ APPS MÉTIERS ══════════ -->
-<section class="apps-section" id="apps">
-  <div class="section-wrap">
-    <span class="s-tag">Solutions sur mesure</span>
-    <h2 class="s-h2">Ton app métier.<br><em>7 jours. Clé en main.</em></h2>
-    <p class="s-sub">Un audit de 5 minutes. Une maquette en 48h. Tu valides. On développe et on livre. Garanti 30 jours — ou remboursé.</p>
-
-    <div class="apps-grid">
-
-      <!-- J'envoie Express -->
-      <div class="app-card" data-track="app_jenvoie">
-        <div class="app-preview" style="background:#0f0d0b;padding:0;overflow:hidden;">
-          <div class="mock-browser">
-            <div class="mock-bar">
-              <div class="mock-dots"><span></span><span></span><span></span></div>
-              <div class="mock-url">demo.agenceattractor.com/jenvoie</div>
-            </div>
-            <div class="mock-app-header" style="background:#1a3a6b;">
-              <div>
-                <div class="mock-app-name">J'Envoie Express</div>
-                <div class="mock-status">Paris ↔ Abidjan</div>
-              </div>
-              <img src="images/logo-jenvoie.jpg" style="height:28px;border-radius:4px;object-fit:contain;">
-            </div>
-            <div class="mock-body">
-              <div class="mock-stat-row">
-                <div class="mock-stat-box"><div class="mock-stat-num">24</div><div class="mock-stat-lbl">Colis</div></div>
-                <div class="mock-stat-box"><div class="mock-stat-num">3</div><div class="mock-stat-lbl">Voyages</div></div>
-                <div class="mock-stat-box"><div class="mock-stat-num">98%</div><div class="mock-stat-lbl">Livré</div></div>
-              </div>
-              <div class="mock-item">
-                <span class="mock-pill green">Livré</span>
-                <span class="mock-item-text">Colis #1042 · Cocody, Abidjan</span>
-              </div>
-              <div class="mock-item">
-                <span class="mock-pill orange">En route</span>
-                <span class="mock-item-text">Colis #1043 · Paris 11e</span>
-              </div>
-              <div class="mock-item">
-                <span class="mock-pill gray">Prêt</span>
-                <span class="mock-item-text">Voyage du 15 juin · 12 places</span>
-              </div>
-            </div>
-          </div>
-          <span class="app-live">● Live</span>
-        </div>
-        <div class="app-info">
-          <div class="app-name">J'Envoie Express</div>
-          <div class="app-sector">Livraison colis · Paris ↔ Abidjan</div>
-          <p class="app-desc">Dashboard colis, tracking GPS, gestion voyages, CRM clients, assistant IA intégré. Opérationnel en 7 jours.</p>
-          <div class="app-before-after">
-            <div><span class="baa-tag">Avant</span> Jean Yves gérait plusieurs clients et colis à la fois, sans système, en tant que voyageur seul.</div>
-            <div><span class="baa-tag baa-after">Aujourd'hui</span> une vitrine pro pour ses clients, une vision temps réel côté admin, et un lien de suivi personnel pour chaque colis.</div>
-          </div>
-          <a href="https://demo.agenceattractor.com/jenvoie-express/" class="app-link" target="_blank" data-track="app_jenvoie_demo">Voir la maquette →</a>
-        </div>
-      </div>
-
-      <!-- GetWinWorld -->
-      <div class="app-card" data-track="app_getwinworld">
-        <div class="app-preview" style="background:#0f0d0b;padding:0;overflow:hidden;">
-          <div class="mock-browser">
-            <div class="mock-bar">
-              <div class="mock-dots"><span></span><span></span><span></span></div>
-              <div class="mock-url">demo.agenceattractor.com/getwinworld</div>
-            </div>
-            <div class="mock-app-header" style="background:#1B3A2D;">
-              <div>
-                <div class="mock-app-name">GetWinWorld</div>
-                <div class="mock-status">Personal Shopper · Catalogue live</div>
-              </div>
-              <span style="font-size:9px;background:rgba(61,220,132,.15);color:#3DDC84;padding:3px 8px;border-radius:100px;font-weight:700;">● En ligne</span>
-            </div>
-            <div class="mock-body">
-              <div class="mock-stat-row">
-                <div class="mock-stat-box"><div class="mock-stat-num">32</div><div class="mock-stat-lbl">Articles</div></div>
-                <div class="mock-stat-box"><div class="mock-stat-num">14</div><div class="mock-stat-lbl">Clients suivis</div></div>
-                <div class="mock-stat-box"><div class="mock-stat-num">0</div><div class="mock-stat-lbl">Stock à gérer</div></div>
-              </div>
-              <div class="mock-item">
-                <span class="mock-pill green">Suivi</span>
-                <span class="mock-item-text">Costume sur-mesure · Client #12</span>
-              </div>
-              <div class="mock-item">
-                <span class="mock-pill orange">Nouvelle</span>
-                <span class="mock-item-text">Demande conciergerie événement</span>
-              </div>
-            </div>
-          </div>
-          <span class="app-live">● Live</span>
-        </div>
-        <div class="app-info">
-          <div class="app-name">GetWinWorld</div>
-          <div class="app-sector">Personal shopper · Vestimentaire & conciergerie</div>
-          <p class="app-desc">Catalogue en ligne, conseiller IA, suivi commandes, espace client. Zéro stock à gérer, tout piloté en autonomie.</p>
-          <div class="app-before-after">
-            <div><span class="baa-tag">Avant</span> Charles envoyait des dizaines de photos produit une par une sur WhatsApp — du bon produit, mais chaotique et chronophage pour lui.</div>
-            <div><span class="baa-tag baa-after">Aujourd'hui</span> un catalogue centralisé, un suivi individuel par client, tout tracé — la charge mentale en moins.</div>
-          </div>
-          <a href="https://demo.agenceattractor.com/getwinworld/" class="app-link" target="_blank" data-track="app_getwinworld_demo">Voir la maquette →</a>
-        </div>
-      </div>
-
-      <!-- MY NUGO -->
-      <div class="app-card" data-track="app_mynugo">
-        <div class="app-preview" style="background:#0f0d0b;padding:0;overflow:hidden;">
-          <div class="mock-browser">
-            <div class="mock-bar">
-              <div class="mock-dots"><span></span><span></span><span></span></div>
-              <div class="mock-url">mynugo.store</div>
-            </div>
-            <div class="mock-app-header" style="background:#1A1714;border-bottom:1px solid rgba(255,255,255,.06);">
-              <img src="images/logo-mynugo.png" style="height:26px;object-fit:contain;">
-              <span style="font-size:9px;background:rgba(61,220,132,.15);color:#3DDC84;padding:3px 8px;border-radius:100px;font-weight:700;">● En ligne</span>
-            </div>
-            <div class="mock-body">
-              <div class="mock-stat-row">
-                <div class="mock-stat-box"><div class="mock-stat-num">142</div><div class="mock-stat-lbl">Clients</div></div>
-                <div class="mock-stat-box"><div class="mock-stat-num">89%</div><div class="mock-stat-lbl">Payés</div></div>
-                <div class="mock-stat-box"><div class="mock-stat-num">12</div><div class="mock-stat-lbl">Devis</div></div>
-              </div>
-              <div class="mock-item">
-                <span class="mock-pill green">Payée</span>
-                <span class="mock-item-text">Facture #081 · 450 000 FCFA</span>
-              </div>
-              <div class="mock-item">
-                <span class="mock-pill orange">En attente</span>
-                <span class="mock-item-text">Devis #082 · 280 000 FCFA</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="app-info">
-          <div class="app-name">MY NUGO</div>
-          <div class="app-sector">Gestion commerciale · E-commerce</div>
-          <p class="app-desc">Web app complète : clients, devis, facturation, base de données, reporting. Pour PME qui veulent piloter leurs chiffres.</p>
-          <a href="https://mynugo.store/" class="app-link" target="_blank" data-track="app_mynugo_live">Voir le site live →</a>
-        </div>
-      </div>
-
-      <!-- Attractor Assists -->
-      <div class="app-card" data-track="app_assists">
-        <div class="app-preview" style="background:#1A1714;padding:0;overflow:hidden;">
-          <div class="mock-browser">
-            <div class="mock-bar">
-              <div class="mock-dots"><span></span><span></span><span></span></div>
-              <div class="mock-url">assists.agenceattractor.com</div>
-            </div>
-            <div class="mock-app-header" style="background:linear-gradient(135deg,#2A1F1A,#1A1714);">
-              <div>
-                <div class="mock-app-name">Attractor Assists</div>
-                <div class="mock-status">Bras droit IA · 24h/24</div>
-              </div>
-              <span style="font-size:9px;background:rgba(61,220,132,.15);color:#3DDC84;padding:3px 8px;border-radius:100px;font-weight:700;">● En ligne</span>
-            </div>
-            <div class="mock-body">
-              <div class="mock-stat-row">
-                <div class="mock-stat-box"><div class="mock-stat-num">18h</div><div class="mock-stat-lbl">Récupérées</div></div>
-                <div class="mock-stat-box"><div class="mock-stat-num">×11</div><div class="mock-stat-lbl">Relances</div></div>
-                <div class="mock-stat-box"><div class="mock-stat-num">24/7</div><div class="mock-stat-lbl">Actif</div></div>
-              </div>
-              <div class="mock-item">
-                <span class="mock-pill green">Géré</span>
-                <span class="mock-item-text">Relance client #042 — automatique</span>
-              </div>
-              <div class="mock-item">
-                <span class="mock-pill orange">En attente</span>
-                <span class="mock-item-text">Rapport J7 à envoyer · 8h30</span>
-              </div>
-            </div>
-          </div>
-          <span class="app-live">● Live</span>
-        </div>
-        <div class="app-info">
-          <div class="app-name">Attractor Assists</div>
-          <div class="app-sector">Assistant IA personnel · Freemium</div>
-          <p class="app-desc">Relances, contenu, organisation, finances. Ton bras droit IA, disponible 24h/24. Gratuit pour commencer.</p>
-          <a href="https://assists.agenceattractor.com" class="app-link" target="_blank" data-track="app_assists_live">Essayer gratuitement →</a>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="apps-note">
-      <p>Ces apps sont des exemples de ce qu'on peut construire pour toi. Ton secteur, tes règles, tes couleurs.<br>
-      Un audit de 5 minutes suffit pour qu'on te propose une maquette cliquable sous 48h.</p>
-      <button onclick="openAuditModal()" class="btn-primary" data-track="apps_cta_audit"
-        style="margin-top:1.5rem;display:inline-flex;align-items:center;gap:10px;padding:16px 32px;font-size:16px;">
-        Je veux mon app
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════ MODALE AUDIT APP MÉTIER ══════════ -->
-<div id="audit-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem;">
-  <div style="background:var(--white);border-radius:20px;width:100%;max-width:480px;padding:2rem;position:relative;max-height:90vh;overflow-y:auto;">
-    <button onclick="closeAuditModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;cursor:pointer;color:var(--g400);font-size:20px;line-height:1;">&#x2715;</button>
-    <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--orange);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem;">Audit gratuit</div>
-    <h3 style="font-size:1.4rem;font-weight:800;color:var(--charbon);margin:0 0 .4rem;">Décris ton besoin</h3>
-    <p style="font-size:13px;color:var(--g500);margin:0 0 1.5rem;">5 questions. On revient avec une maquette cliquable sous 48h.</p>
-
-    <form id="audit-form" onsubmit="submitAuditForm(event)" style="display:flex;flex-direction:column;gap:1rem;">
-      <div>
-        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Ton prénom *</label>
-        <input id="aud-prenom" type="text" required placeholder="Ex : Bérénice"
-          style="width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--charbon);background:var(--sable);box-sizing:border-box;outline:none;font-family:inherit;">
-      </div>
-      <div>
-        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Ton activité *</label>
-        <input id="aud-activite" type="text" required placeholder="Ex : Je vends des farines infantiles en CI"
-          style="width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--charbon);background:var(--sable);box-sizing:border-box;outline:none;font-family:inherit;">
-      </div>
-      <div>
-        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Ton problème principal *</label>
-        <input id="aud-besoin" type="text" required placeholder="Ex : Je gère les commandes sur WhatsApp et je perds des clients"
-          style="width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--charbon);background:var(--sable);box-sizing:border-box;outline:none;font-family:inherit;">
-      </div>
-      <div>
-        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Ta zone *</label>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;" id="aud-zone-btns">
-          <button type="button" onclick="selectZone('CI')" class="zone-btn" data-zone="CI"
-            style="flex:1;min-width:100px;padding:10px;border:1.5px solid var(--g200);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:var(--sable);color:var(--charbon);transition:all .2s;">
-            Côte d'Ivoire
-          </button>
-          <button type="button" onclick="selectZone('EU')" class="zone-btn" data-zone="EU"
-            style="flex:1;min-width:100px;padding:10px;border:1.5px solid var(--g200);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:var(--sable);color:var(--charbon);transition:all .2s;">
-            France / Europe
-          </button>
-          <button type="button" onclick="selectZone('CI')" class="zone-btn" data-zone="LES2"
-            style="flex:1;min-width:100px;padding:10px;border:1.5px solid var(--g200);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:var(--sable);color:var(--charbon);transition:all .2s;">
-            Les deux
-          </button>
-        </div>
-        <input type="hidden" id="aud-zone" value="">
-      </div>
-      <div>
-        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Ton WhatsApp *</label>
-        <input id="aud-wa" type="tel" required placeholder="Ex : +225 07 12 34 56 78"
-          style="width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--charbon);background:var(--sable);box-sizing:border-box;outline:none;font-family:inherit;">
-      </div>
-      <div id="audit-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:10px 14px;font-size:13px;color:#DC2626;"></div>
-      <button type="submit" id="audit-submit"
-        style="background:var(--orange);color:#fff;border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s;">
-        Demander ma maquette gratuite
-      </button>
-    </form>
-
-    <div id="audit-success" style="display:none;text-align:center;padding:1rem 0;">
-      <div style="font-size:2.5rem;margin-bottom:1rem;">&#x2713;</div>
-      <h3 style="font-size:1.2rem;font-weight:800;color:var(--charbon);margin:0 0 .5rem;">Reçu !</h3>
-      <p style="font-size:14px;color:var(--g500);">On revient vers toi sur WhatsApp sous 48h avec ta maquette cliquable.</p>
-    </div>
-  </div>
-</div>
-
-<style>
-.zone-btn.active { background: var(--orange) !important; color: #fff !important; border-color: var(--orange) !important; }
-#audit-modal.open { display: flex !important; }
-</style>
-
-<script>
-let _auditZone = '';
-
-function openAuditModal() {
-  document.getElementById('audit-modal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', { content_name: 'audit_app_metier' });
-}
-
-function closeAuditModal() {
-  document.getElementById('audit-modal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function selectZone(val) {
-  _auditZone = val;
-  document.getElementById('aud-zone').value = val;
-  document.querySelectorAll('.zone-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.zone === (val === 'CI' && b.dataset.zone === 'LES2' ? '' : val) || (val === 'CI' && b.dataset.zone === 'CI'));
-  });
-  // Mark exactly the clicked button
-  event.currentTarget.classList.add('active');
-  event.currentTarget.closest('#aud-zone-btns').querySelectorAll('.zone-btn').forEach(b => {
-    if (b !== event.currentTarget) b.classList.remove('active');
-  });
-  _auditZone = event.currentTarget.dataset.zone;
-}
-
-async function submitAuditForm(e) {
-  e.preventDefault();
-  const prenom  = document.getElementById('aud-prenom').value.trim();
-  const activite= document.getElementById('aud-activite').value.trim();
-  const besoin  = document.getElementById('aud-besoin').value.trim();
-  const wa      = document.getElementById('aud-wa').value.trim();
-  const zone    = _auditZone || document.getElementById('aud-zone').value;
-  const errEl   = document.getElementById('audit-error');
-  const btnEl   = document.getElementById('audit-submit');
-
-  if (!zone) { errEl.textContent = 'Sélectionne ta zone.'; errEl.style.display = 'block'; return; }
-  errEl.style.display = 'none';
-  btnEl.disabled = true; btnEl.style.opacity = '.6';
-
-  const SUPA_URL  = 'https://lgdgbrivnhgeupqhkckd.supabase.co';
-  const SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
-  const zoneLabel = { 'CI': 'CI', 'EU': 'EU', 'LES2': 'CI' };
-
-  try {
-    const res = await fetch(SUPA_URL + '/rest/v1/prospects', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPA_ANON, 'Authorization': 'Bearer ' + SUPA_ANON, 'Prefer': 'return=representation' },
-      body: JSON.stringify({
-        prenom, activite, besoin, whatsapp: wa,
-        zone: zoneLabel[_auditZone] || 'CI',
-        canal: 'Site web - App métier',
-        contexte: 'Lead formulaire audit app métier',
-        type_projet: 'A',
-        nb_users: '1',
-        statut: 'nouveau'
-      })
-    });
-    if (!res.ok) throw new Error('Erreur réseau');
-    if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'audit_app_metier' });
-    document.getElementById('audit-form').style.display = 'none';
-    document.getElementById('audit-success').style.display = 'block';
-    setTimeout(closeAuditModal, 3000);
-  } catch(err) {
-    errEl.textContent = 'Une erreur est survenue. Réessaie ou écris-nous directement sur WhatsApp.';
-    errEl.style.display = 'block';
-    btnEl.disabled = false; btnEl.style.opacity = '1';
-  }
-}
-
-document.getElementById('audit-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeAuditModal();
-});
-</script>
 
 <!-- ══════════ CONSULTING ══════════ -->
 <section style="background:var(--white);padding:80px 2.5rem;" id="consulting">
