@@ -7,6 +7,244 @@
 
 ---
 
+## 2026-07-08 (session 90 — J'Envoie Express : fix notif email CORS + tournée livreur CI + fiabilisation numéros)
+
+### Notification email des demandes réparée (bug CORS)
+- Jean Yves ne recevait pas d'email lors des vraies inscriptions
+- Cause : la fonction notify-je-demande n'avait pas d'en-têtes CORS ni de gestion OPTIONS → le navigateur bloquait l'appel en silence (fire-and-forget). Un test direct (curl) passait, d'où la fausse impression que la config email (Resend, secrets) était en cause
+- Fix : en-têtes CORS + gestion OPTIONS, fonction redéployée. Prouvé en réel : la vraie commande "Marie DONGO" (20:18 UTC) a déclenché l'email, livré à Jean Yves 1 s après (Resend last_event delivered)
+
+### Lien de tournée partageable pour le livreur CI
+- Edge function je-tournee (service role + CORS) : actions list / livre, bornée à un voyage précis, aucune table exposée en public (le lien porte l'UUID du voyage)
+- Page livreur.html (mobile-first, sans login) : colis à livrer groupés par quartier, anneau de progression, WhatsApp/appel du destinataire, bouton "Livré" que le livreur coche lui-même, suivi temps réel côté admin
+- Boutons "Envoyer au livreur (WhatsApp)" et "Copier le lien" ajoutés dans la vue Livreur CI de l'admin
+- Recentrée destinataire CI : masque l'info de collecte France (bruit), met le numéro du destinataire en avant, expéditeur en mention secondaire, en-tête "Livraisons à Abidjan · arrivée [date]"
+- Verrou CI confirmé : le sélecteur admin ne propose que les trajets Paris → Abidjan (livraison domicile = Abidjan uniquement)
+
+### Fiabilisation des numéros
+- Formulaire public : champ "Confirmez votre WhatsApp" (retape obligatoire, collage bloqué), demande refusée si les deux numéros diffèrent
+- Admin : nom + WhatsApp expéditeur éditables dans la fenêtre d'acceptation (correction propagée à la demande, au client et au colis) + champ WhatsApp expéditeur ajouté à l'édition du colis
+- Validation +225 : contact destinataire exigé en numéro ivoirien valide quand la livraison à domicile Abidjan est cochée (préfixe forcé +225, format vérifié)
+
+### Note technique
+- Leçon CORS (bug du matin) appliquée d'emblée à je-tournee : en-têtes + OPTIONS dès la création
+- Les modifs app.html de la migration je_ (session 89) restées non committées ont rejoint git au passage
+
+---
+
+## 2026-07-08 (session 89 — Consolidation Supabase Livraison Pro + J'Envoie Express, domaine jenvoiexpress.com, vidéo hero)
+
+### Livraison Pro — panne d'inscription diagnostiquée et réparée
+- Signalé par Mac Arthur : erreurs à l'inscription sur `livraisonpro-demo.vercel.app`
+- Diagnostic : frontend Vercel à jour et fonctionnel, mais le projet Supabase dédié (`jwucinmwrksqfrmkymds`) ne résolvait plus (NXDOMAIN) — en réalité mis en pause (statut INACTIVE), pas supprimé
+- Tentative de réactivation directe bloquée : limite de 2 projets actifs gratuits déjà occupée par `attractor-assists` et `jenvoie-express`
+- Décision Mac Arthur : greffer Livraison Pro sur le projet Supabase partagé `attractor-assists` plutôt que payer un upgrade
+- 6 tables créées avec préfixe `lp_` (`lp_users`, `lp_missions`, `lp_bons`, `lp_alertes`, `lp_avis`, `lp_tracking_gps`), RLS identique à l'original, `config.js`/`utils.js` mis à jour, testé en conditions réelles (insertion + lecture), redéployé sur Vercel
+- Ancien projet Supabase dédié supprimé sur confirmation de Mac Arthur (aucune trace d'utilisateurs réels ni de campagne d'acquisition dans l'historique)
+
+### J'Envoie Express — même consolidation, avec faille de sécurité corrigée
+- Décision Mac Arthur : migrer aussi J'Envoie Express (son propre projet Supabase `ltydbwkhdsbmmnoahcty`) vers le projet partagé, pour libérer un slot et permettre la suppression
+- Schéma live introspecté directement (colonnes réelles différentes du `schema.sql` du repo, resté obsolète) : 10 tables recréées avec préfixe `je_`, données réelles migrées à l'identique (1 client, 3 voyages, 1 colis en transit, 1 demande acceptée, 5 paramètres tarifaires)
+- **Faille de sécurité identifiée et corrigée** : les policies admin de l'ancien projet utilisaient `auth.role() = 'authenticated'`, ce qui sur le projet partagé aurait donné accès aux données de Jean Yves à n'importe quel entrepreneur connecté sur Attractor Assists. Remplacé par un scoping strict sur un UID précis
+- ~40 références de tables et relations imbriquées (`clients(...)`, `voyages(...)`) mises à jour dans les 4 fichiers front (`index.html`, `app.html`, `login.html`, `recu.html`), testé de bout en bout (tracking public, paramètres, connexion admin), redéployé sur le Worker Cloudflare
+- Ancien projet Supabase supprimé par Mac Arthur lui-même en parallèle — confirmé sans impact puisque la migration était déjà complète
+
+### jenvoiexpress.com — domaine propre branché
+- Domaine acheté par Mac Arthur directement sur Cloudflare (zone déjà active, nameservers Cloudflare nativement)
+- Root + `www` attachés au Worker `jenvoie-express` via l'API Workers Custom Domains, SSL provisionné immédiatement, site vérifié en ligne
+- SPF/DMARC non ajoutés : le token wrangler utilisé n'a pas les droits DNS (scope manquant), à faire manuellement ou avec un token élargi
+
+### Vidéo hero J'Envoie Express
+- Vidéo fournie par Mac Arthur via Google Drive, téléchargée directement (HTTP, sans passer le binaire par le contexte), compressée HEVC → H.264 web (976kb/s, ~3.3MB, 27s, muette)
+- Intégrée en fond du hero existant (`<video autoplay muted loop playsinline>` + overlay dégradé pour lisibilité du texte), même pattern que GetWinWorld
+- Vérifié visuellement via capture d'écran Playwright avant déploiement
+
+### Accès admin autonome pour Jean Yves
+- Un compte technique temporaire (`admin.jenvoie-express@agenceattractor.com`) avait été créé pendant la migration pour ne pas bloquer le déploiement
+- Remplacé par un compte lié à son vrai email (`gb.jeanyves@yahoo.fr`, retrouvé via son adresse PayPal enregistrée) : self-service "mot de passe oublié" désormais possible, policies RLS repointées sur son UID, compte technique supprimé
+- Identifiants transmis à Mac Arthur pour transfert à Jean Yves : lien admin `jenvoiexpress.com/app.html` + email + mot de passe
+
+### Décision d'architecture actée
+- Consolidation des backends clients dans le projet Supabase partagé `attractor-assists` (tables préfixées par client) devient la règle par défaut tant que l'agence reste en tier gratuit (limite 2 projets actifs), au lieu de créer un projet dédié par client
+- Règle de sécurité non négociable à chaque greffe : RLS scopée à un UID précis, jamais `auth.role() = 'authenticated'` seul sur un projet partagé
+
+---
+
+## 2026-07-08 (session 88 — ETHSUN bascule en partenariat Sprint IA + veille Ministère Tourisme CI)
+
+### ETHSUN — bascule vers un partenariat "Sprint IA"
+- Jean-Calvin Ethien a transmis 14 PDF (Google Drive, dossier `12hu9zVfrhKvfVuMPTRRjUQzY4_EH_e-K`) : catalogue ETHSUN Executive Education Oxford, "Sprint IA" sectoriels (2 jours intensifs 100% en ligne, 488€ HT/388€ early bird par participant, certificat ETHSUN). 14 secteurs couverts : Sport Business, RH, Dirigeants/Leadership, Stratégie & Gouvernance, Éducation, Collectivités Locales, Finance, Développement Commercial, Opérations, Risques & Conformité, Transformation Numérique, Tourisme, Marchés Publics, Établissements Hospitaliers.
+- Confirmé par Mac Arthur : la relation ETHSUN bascule d'une mission d'audit (proposition du 24/06, encore en attente) vers un **partenariat où Mac Arthur anime les Sprints IA**, rémunération en **revenue-sharing** (% à formaliser par écrit avant toute transmission de document — point juridique déjà noté par Mac Arthur, aucun document réel encore rédigé).
+- **Démarrage : secteur Tourisme & Loisirs**, dossier en cours de prospection côté ETHSUN.
+- Analyse de fit : 3 des 4 intervenants ETHSUN actuels (Ginda, Lenoir, Matey) sont profil académique/conseil ; Mac Arthur apporte une expertise terrain réelle (systèmes IA déployés pour de vraies PME). Sur les 14 secteurs, 3 collent directement à son expertise (Développement Commercial, Transformation Numérique, Opérations) ; le Sprint Tourisme démarre sur un terrain partiellement nouveau.
+- Sprint Tourisme (4 modules) : Expérience Voyageur/chatbots, Revenue Management & Optimisation Tarifaire, Marketing Touristique, Opérations & Excellence de Service. Seul le module Revenue Management (RevPAR, RevPAL, yield/dynamic pricing) est un vrai angle mort de compétence — priorité de préparation identifiée.
+- Dossier créé : `livrables/clients/ethsun/sprint-ia-tourisme/`
+
+### Veille Ministère du Tourisme et des Loisirs Côte d'Ivoire (tourisme.gouv.ci)
+- Stratégie "Sublime Côte d'Ivoire" (ambition top-5 destinations africaines d'ici 2030), plateforme numérique en construction (découverte/réservation/paiement)
+- Avril 2025 : formation IA de 75 cadres dirigeants du ministère (ChatGPT, Perplexity, Claude, Notion AI, Gamma, Zapier, Otter.ai), usage interne
+- Octobre 2025 : formation IA + digitalisation de **120 opérateurs touristiques** (hôtellerie, artisanat, agences de voyage, loisirs), pilotée par la **DIDDS** (Direction Informatique/Digitalisation/Startups, contact **Christian Bohouman**) — Jour 1 automatisation (réservations/paiements), Jour 2 marketing digital. Recoupe directement les modules 1 et 3 du Sprint ETHSUN Tourisme, ne couvre pas le Revenue Management.
+- SATIT 2026 repéré comme événement potentiel ("Artisanat et tourisme à l'ère de l'intelligence artificielle") à creuser pour une possible visibilité/partenariat
+- Conclusion veille : demande marché réelle et institutionnellement validée, mais le vrai argument de vente du Sprint ETHSUN face aux opérateurs déjà sensibilisés gratuitement par le ministère est (1) le module Revenue Management inédit en CI et (2) le certificat international ETHSUN/Oxford. Christian Bohouman/DIDDS identifié comme contact institutionnel clé pour une approche B2G future.
+
+---
+
+## 2026-07-07 (session 87 — My Nugo : trailer vidéo événement Lyon)
+
+### My Nugo — trailer vidéo ajouté à l'encart Expo-Vente Lyon
+- Mac Arthur a déposé une vidéo (`IMG_5027.mov`, 80MB, tournée en 1080x1920) dans son dossier Drive "My nugo", en demandant si elle devait remplacer l'affiche ou défiler à côté
+- Récupérée directement via téléchargement HTTP du fichier Drive (partagé publiquement), sans passer le binaire par le contexte de conversation
+- ffmpeg portable installé via `pip install imageio-ffmpeg` (aucun ffmpeg système disponible) pour inspecter et compresser la vidéo : 58 secondes, trailer avec carton de titre "EXPOSITION MY NUGO LYON", pas un simple fond silencieux
+- Compression H.264 web-friendly : 80MB (HEVC 10-bit) → 14MB (720p, CRF 26, audio conservé), lecture au clic avec le son validée avec Mac Arthur (pas d'autoplay muet, vu que c'est un vrai trailer)
+
+### Itération sur le placement — corrigée après retour utilisateur
+- Premier essai : carrousel swipeable (affiche + vidéo, points de pagination) — déployé, mais Mac Arthur ne voyait pas qu'il fallait swiper pour atteindre la vidéo
+- Ajout d'un badge "▶ Vidéo" + flèche visible en complément, avant de recevoir le vrai retour : la bonne solution était de revenir à l'ancien emplacement fixe (bloc vidéo sous les détails événement, comme le clip Paris précédent), qui n'imposait aucune découverte puisque toujours visible
+- Code du carrousel entièrement retiré (CSS + JS), remplacé par le pattern simple d'origine adapté à une vidéo cliquable (`controls` natif au lieu de `autoplay muted loop`)
+- Leçon : ne pas remplacer un pattern simple déjà éprouvé par une solution plus complexe sans raison suffisante — la mention "défiler de gauche à droite" par Mac Arthur était une question ouverte, pas une demande explicite de carrousel
+
+---
+
+## 2026-07-07 (session 86 — Audit lançabilité Assists/C'Real + système 3 modèles réparé)
+
+### Audit de lançabilité Assists + C'Real
+- Diagnostic demandé par Mac Arthur : Assists est-il prêt pour un lancement à grande échelle, et C'Real ressemble-t-il au produit générique ?
+- Confirmé par lecture du code (pas supposition) : le principe "CLAUDE.md dynamique" cadré en V3 (session 36) est en fait déjà câblé dans `chat-assistant/index.ts` (base de connaissance fixe + profil + mémoire + modules par plan à chaque conversation) — CONTEXT.md indiquait à tort que c'était encore "le chantier suivant"
+- Manques confirmés pour un lancement à grande échelle : pas de facturation récurrente automatique (XPaye ne gère pas le prélèvement mensuel), zéro test automatisé sur le projet, 28 écrans encore en place (simplification V3 "~40% à jeter" jamais faite), pas de test de charge
+- C'Real clarifié : c'est une page sur mesure pour Kezey (identité propre, design travaillé), pas représentative du produit générique Assists — correspond en réalité à la ligne "personnalisation", pas à la ligne "self-serve à grande échelle"
+- Verdict : Assists prêt pour une phase de test progressive et accompagnée (proposé : 3 premiers utilisateurs), pas pour un lancement large livré à lui-même
+
+### Système "3 modèles de boutique" diagnostiqué non fonctionnel puis réparé
+- Diagnostic : la galerie Grille/Liste/Magazine (`TemplateGalerieScreen.jsx`) avait l'air complète mais ne produisait aucun effet — colonne `template_choisi` jamais créée en base (update silencieux), jamais relue nulle part, aperçus montrant les données réelles de Kezey (carte Grille pointait sur son ancienne page) ou des produits fictifs (Liste/Magazine sans slug transmis), chat cassé sur Liste/Magazine (edge function `chat` inexistante, le vrai nom est `chat-assistant`), faille XSS sur le rendu des bulles de chat (`innerHTML` au lieu de `textContent`)
+- Plan validé avec Mac Arthur avant exécution (mode plan) : périmètre limité à ce système, pas la facturation récurrente ni les tests ni la simplification des écrans
+- Corrections apportées et déployées en production : migration `0050_template_choisi.sql`, edge function `public-assistant` étendue, redirection ajoutée dans `PublicAssistantScreen.jsx` (vers le bon template si Liste/Magazine choisi), aperçus de `TemplateGalerieScreen.jsx` corrigés pour montrer les vraies données de l'utilisateur qui prévisualise, chat de `template-1b`/`template-1c` réparé et sécurisé
+- Vérifié par appels directs à l'API (colonne DB, réponse edge function, réponse réelle du chat avec le catalogue C'Real) — le clic réel dans l'app reste à tester manuellement par Mac Arthur avant recrutement
+- Migration DB appliquée en prod avec confirmation explicite de Mac Arthur avant exécution (écriture bloquée par défaut par le classificateur auto-mode)
+
+### Leçon confirmée — piège branche de production Cloudflare Pages
+- Retombé sur le même piège déjà découvert plus tôt dans la journée (cf. entrée précédente) : `demo-agenceattractor` a `master` comme branche de production, pas `main`. Premier déploiement de session parti en Preview sans erreur visible, corrigé après vérification via `wrangler pages deployment list`
+
+### Note — commit `9ec2dfe`
+- Le commit groupe les fichiers validés de cette session (migration, edge function, 2 écrans React, template-1b/1c) avec le correctif de persistance des conversations de la session précédente (déjà présent dans l'arbre de travail, non commité au moment où cette session a commencé) — même fichiers touchés (`public-assistant/index.ts`, `PublicAssistantScreen.jsx`), message de commit qui ne décrit que le chantier des 3 modèles
+
+### C'Real — catalogue enrichi (8e produit + corrections)
+- Nouveau produit "Mes premières C'real" ajouté (Riz/Sorgho, 1500F/300g, 339 kcal, dès 4-6 mois) — catalogue passé à 8 produits
+- Image du Kit prise de poids remplacée par le nouveau visuel transmis par Mac Arthur, versionnée `?v=2` pour casser le cache navigateur (signalé par Mac Arthur : l'ancienne image restait affichée sur son téléphone)
+- Infos Kit prise de poids corrigées : 4×200g (pas 4×50g), 365 kcal/100g (était vide)
+- Mix C'real : description corrigée à 3 céréales (Riz/Maïs/Sorgho, sans soja) après signalement — le soja avait été ajouté par erreur d'interprétation d'une consigne précédente
+- Multi C'real : description complète (modal détail) nomme désormais explicitement les 4 céréales (riz/maïs/sorgho/soja)
+- Déployé sur boutiquecreal.com, commit `ade6ee4`
+- Note propagation DNS : la page de parking Hostinger est brièvement apparue malgré des DNS Cloudflare corrects côté résolveur, propagation en cours à ce moment-là, confirmé résolu depuis
+
+---
+
+## 2026-07-07 (session 85 — C'Real : persistance conversations + domaine boutiquecreal.com + My Nugo Lyon)
+
+### C'Real — persistance des conversations corrigée
+- Signalé par Mac Arthur : les conversations client s'effaçaient à chaque rechargement de page
+- Diagnostic : deux implémentations distinctes servent le chat C'Real — `PublicAssistantScreen.jsx` (composant générique Assists, utilisé par tous les autres clients) ET une page statique `/creal/index.html` développée à part (catalogue + chat + panier hardcodés), qui s'est avérée être la vraie page utilisée en production par les clientes de Kezey, pas la version générique
+- Cause : ni l'une ni l'autre ne sauvegardait l'ID de conversation ; à chaque rechargement, un nouveau fil démarrait côté serveur alors que Supabase gardait déjà l'historique complet (écrit uniquement pour le dashboard entrepreneur, jamais relu côté client)
+- Fix : ID de conversation stocké en localStorage (par boutique), endpoint `public-assistant` étendu pour renvoyer l'historique d'une conversation donnée (avec vérification que la conversation appartient bien à l'entrepreneur demandé), historique effacé après paiement confirmé
+- Appliqué aux deux implémentations, testé de bout en bout via l'API avant déploiement (envoi message → conversation créée → historique récupérable), données de test nettoyées de la base de production
+- Corrige le bug pour **tous** les clients utilisant l'app Assists générique, pas seulement C'Real
+
+### C'Real — domaine propre boutiquecreal.com
+- Mac Arthur a acheté `boutiquecreal.com` sur Hostinger, migré vers Cloudflare (même process que getwinworld.net et mynugo.store)
+- Projet Cloudflare Pages dédié `boutiquecreal` créé, page statique C'Real déployée dessus
+- Nameservers Hostinger basculés vers Cloudflare (`tate`/`noor.ns.cloudflare.com`), domaine + www attachés et actifs (SSL Google, provisionné en quelques minutes après ajout des CNAME manquants)
+- Redirection 301 mise en place depuis l'ancien lien `demo.agenceattractor.com/creal` vers le nouveau domaine
+
+### Leçon technique — piège branche de production Cloudflare Pages
+- Le projet `demo-agenceattractor` a pour branche de production `master`, pas `main` — contrairement à `assists-agenceattractor` et `mynugo-store` dont la prod est bien `main`
+- Un déploiement `wrangler pages deploy --branch=main` sur ce projet spécifique part en Preview et ne touche jamais le domaine custom, sans erreur visible, faisant croire à tort que le déploiement n'a pas propagé
+- A fait perdre du temps en session avant diagnostic — vérifier `wrangler pages deployment list` en cas de doute sur la branche de prod d'un projet
+
+### My Nugo — événement Expo-Vente Défilé Lyon
+- Nouveau visuel événement reçu de Mac Arthur, infos extraites directement de l'affiche : Expo-Vente Défilé, 11 juillet 2026, 11h-21h, 150 Cours Gambetta 69007 Lyon, partenaire Carrefour des Cultures Africaines
+- Encart Pop-Up Paris (terminé depuis le 04/07) remplacé entièrement : image, titre, compte à rebours (cible 11/07 11h), 4 lignes de détails (Date/Horaires/Lieu/Partenaire), message WhatsApp pré-rempli
+- Vérifié visuellement via capture d'écran headless (Playwright, viewport mobile) avant de considérer terminé
+- Déployé sur mynugo.store
+
+---
+
+## 2026-07-06 (session 84 — LS EXPERTISE relancé : conception DMV OS d'agence)
+
+### LS EXPERTISE — relance et conception
+- Projet mentionné à l'origine dans l'inventaire des Projects Claude.ai (`context/import/etat-des-lieux.md`) comme "Plateforme suivi perfs agence", resté sans suite (pas de repo, pas de dossier client). Relancé sur demande de Mac Arthur.
+- Brief complet transmis : concevoir un OS complet pour une agence de création de contenu (~10 personnes) — cycle de vie client Prospect→Fidélisation, 6 départements (Direction/Commercial/Administration/Social Media Mgmt/Production/Community Mgmt), gestion documentaire versionnée, moteur d'automatisation, dashboards par rôle.
+- Dossier créé : `livrables/clients/ls-expertise/` avec `BRIEF-CLIENT.md` (brief source) et `CONCEPTION-DMV.md` (architecture cible, machine à états du cycle de vie, RBAC par département, modèle de données, moteur d'automatisation n8n, 8 angles morts identifiés dans le brief : sous-traitants/freelances, droits d'image, litiges clients, rentabilité réelle par dossier, multi-devise, SLA différenciés, RGPD vs append-only, scalabilité RLS).
+- **Modèle de deal** : pas de facturation. Contact = influenceur marketing, qui utilise l'outil pour son agence et produit des vidéos pour attirer des prospects vers Mr Attractor — partenariat cas d'usage/marketing d'influence, pas un client Famille A classique.
+- Décision de Mac Arthur : la cible est un projet complet (pas un MVP limité), construit en 3 étapes techniques (socle pipeline+doc → social/community+auto n8n → IA/intégrations/rentabilité), chaque étape livrée déclenchant un jalon vidéo réciproque.
+- Risque identifié : sans acompte, pas de garde-fou naturel contre le sur-scope — recommandation de traiter ce partenariat comme le protocole Beynaud (document écrit avant tout dev, jalons réciproques, clause de sortie, propriété du produit si l'OS devient une ligne vendable à d'autres agences).
+- Bloquant avant tout développement : qualifier le contact (identité, audience réelle, clients/outils actuels de son agence), chiffrer la contrepartie vidéo (fréquence/canaux/durée), rédiger le protocole. 3 tâches créées pour le suivi.
+- CONTEXT.md mis à jour avec ce nouveau projet.
+
+---
+
+## 2026-07-05 (session 83 — GetWinWorld domaine propre + facturation + skill Générateur d'Apps Métier + Pilotage Finance)
+
+### Pilotage — onglet Finance enrichi + redesign complet
+- Transactions financières : édition/suppression ajoutées (jusque-là seul l'ajout existait), champ note libre par transaction
+- Nouvelle section "Mes charges" : ajout/édition/suppression de charges fixes/variables (pro/perso), table `pilotage_charges` créée en prod avec RLS ouverte comme le reste des tables pilotage
+- Décharge vocale ajoutée au Coach Financier : bouton micro à côté du chat avec Roland, réutilise la fonction de transcription déjà en place pour le Pipeline (`process-dump-pilotage`)
+- Redesign complet des 6 onglets à la demande de Mac Arthur ("moins linéaire, cartes fun") : bibliothèque d'icônes SVG line-art maison + section thématique colorée par bloc (orange/vert/bleu/charbon selon le sens), bordures colorées, remplace les libellés gris plats uniformes d'avant
+
+### GetWinWorld — domaine propre, facturation, urgence commerciale
+- Domaine `getwinworld.net` acheté par Mac Arthur (registrant = infos agence, pas client, pour rester maître de la vérification ICANN)
+- Projet Cloudflare Pages dédié créé (`getwinworld`), contenu déployé, domaine + www attachés via l'API Pages (le CLI wrangler de cette version n'a pas de sous-commande pour ça)
+- Panne DNS_PROBE_FINISHED_NXDOMAIN : la création automatique des enregistrements DNS ne s'est pas déclenchée via l'API (permissions du token wrangler insuffisantes pour lire/écrire le DNS) — CNAME `@` et `www` ajoutés manuellement par Mac Arthur dans le dashboard, résolu
+- SPF (`v=spf1 -all`) + DMARC (`p=reject`) ajoutés pour bloquer l'usurpation d'email sur le domaine, même sans boîte mail active
+- Redirection 301 mise en place depuis l'ancien lien `demo.agenceattractor.com/getwinworld` vers le nouveau domaine
+- Urgence commerciale intégrée sur tout le parcours (demande explicite de Mac Arthur) : warning "offres journalières, non garanties le lendemain" sur le concept, stock dynamique "Dispo aujourd'hui uniquement" en rouge sur les fiches offre du jour, ligne d'urgence dans la fiche détail, "Mon espace" rebaptisé "Devenir membre" avec 3 privilèges concrets affichés
+- **Facturation** : deal réel clarifié = 150€ setup + 35€/mois (Formule Essentielle), tableau de bord + vidéo hero livrés en plus à titre gracieux pour le lancement, 1er mois de maintenance offert. Facture ATR-2026-0007 créée puis fusionnée avec le reçu de paiement en un seul document (badge "Payée" + bloc "Restant dû" distinct pour le remboursement du nom de domaine, 11,86€/an au prix coûtant Cloudflare, transférable au client sur demande). Transactions enregistrées dans `pilotage_finances`.
+
+### Template contrat + clause de transfert de domaine
+- `template-contrat.md` créé dans `livrables/commercial/process-vente/` (n'existait pas — seuls devis/bon de commande/factures étaient templatés)
+- Article 11 dédié "Accès techniques et nom de domaine" : domaine hébergé chez l'agence par simplicité opérationnelle, transfert intégral sur demande écrite sous 10 jours ouvrés, transfert automatique à la livraison finale ou fin du Plan de continuité
+
+### Stratégie domaines actée
+- Cloudflare Registrar en priorité (prix coûtant, DNS déjà centralisé) ; GoDaddy ou registrar local pour les .ci non vendus par Cloudflare
+- Domaines gardés sous le compte agence pour la continuité opérationnelle (auto-renew + contact de secours avec rôle Billing en cas de carte refusée), compensé par la clause de transfert contractuelle plutôt que par un partage de compte au client (le rôle Billing Cloudflare est au niveau du compte entier, pas du domaine — donc pas question de le donner à un client tant que plusieurs clients partagent le même compte)
+
+### Skill `/generateur-app-metier` créé
+- Analyse de l'architecture commune entre GetWinWorld, J'Envoie Express, C'Real et Pilotage posée dans `references/architecture-commune.md` : stack fixe (HTML/CSS/JS + un seul projet Supabase partagé + Cloudflare Pages), modèle de données récurrent (`produits`/`clients`/`commandes`/`inscriptions`), règle de sécurité multi-tenant non négociable (gating nominatif `auth.uid()`, jamais de policy SELECT publique sur les comptes clients — faille de ce type déjà rencontrée et corrigée sur le bucket photos GetWinWorld le 01/07/2026)
+- Le skill clone GetWinWorld comme référence canonique à adapter plutôt que dupliquer un gabarit abstrait qui deviendrait vite obsolète
+- Estimation d'automatisation globale du pipeline agence (détection → livraison) : ~25-30%, le point le plus faible restant la production réelle de l'app (un seul template vraiment réutilisé jusqu'ici : Livraison colis → J'Envoie Express)
+
+### Leçon technique — piège wrangler pages deploy
+- Un déploiement sans `--branch=main` explicite part sur une branche preview (`master` dans ce repo) et ne touche jamais la production, sans erreur visible — à toujours spécifier explicitement
+
+---
+
+## 2026-07-05 (session 82 — Élévia : direction Luxe moderne appliquée + vision/valeurs/mission intégrées)
+
+### Reskin complet vers la direction "Luxe moderne" (Raya/Apple)
+- Élise a tranché : direction retenue = Luxe moderne (noir/blanc contrasté, or discret, sans-serif bold)
+- Palette token (`:root`) basculée de l'ancien cognac/or chaleureux vers noir neutre (#000/#0A0A0A/#111), blanc pur, gris neutres, or resserré (#C9A86A) réservé aux accents (pourcentages, CTA, icônes)
+- Toute la police 'Cormorant Garamond' (19 occurrences) remplacée par 'DM Sans' bold — plus de serif, cohérent avec l'esthétique minimaliste de la direction retenue
+- 3 écrans auparavant en fond clair (splash, comment ça marche, pourquoi Élévia) basculés en noir avec texte clair — cohérence totale de bout en bout, plus aucun écran clair dans l'app
+- Vérifié visuellement écran par écran (splash, découverte, profil, comparatif, abonnements) via capture headless Chrome avant déploiement
+- Déployé sur `demo.agenceattractor.com/elevia`
+
+### Contenu de marque — vision/valeurs/mission intégrés
+- Élise a transmis par WhatsApp son texte de vision, ses 7 valeurs (Authenticité, Excellence, Confiance, Ouverture sur le monde, Bienveillance, Ambition, Appartenance) et sa mission
+- Intégré dans l'écran `s-exclusivite` (ex "Qui sommes-nous", atteint depuis le splash via "Créer mon profil") : titre accroche tiré de sa propre phrase ("les valeurs précèdent les profils"), vision condensée en conservant son vocabulaire, grille de 7 cartes valeurs, bloc mission + audience cible
+- Ancienne liste générique de types de membres remplacée par ce contenu de marque réel
+- Déployé sur `demo.agenceattractor.com/elevia`
+
+### Revirement le jour même — direction finale = Luxe discret (80%) + touches Club privé (20%)
+- Élise est revenue par mail après avoir vu le rendu desktop : le Luxe moderne (noir/blanc) ne correspond plus à sa vision, elle tranche pour **Luxe discret** (Aman/Four Seasons — ivoire, or feutré, Playfair Display serif) à 80%, avec 20% de chaleur **Club privé** (Soho House — laiton, fond brun profond) réservée aux moments Communauté/Événements
+- Reskin complet refait en sens inverse : palette repassée en ivoire (#FBF9F5) / encre (#181614) / or feutré (#B99A63), Playfair Display réintroduit sur tous les titres, DM Sans conservé pour le corps de texte
+- Les 3 écrans (splash, comment ça marche, pourquoi Élévia) repassés en clair, cohérents avec le reste de l'app
+- La touche "20% Club privé" appliquée précisément à 2 endroits qui incarnent Communauté/Événements : le bloc **Concierge Élévia** (pourquoi-page) et le tier **Cercle Privé Élévia** (abonnements) — cartes brun profond/laiton qui tranchent volontairement sur le reste ivoire de l'app
+- Bug de contraste repéré et corrigé en cours de route : textes de cartes profil (`pcard-name`/`pcard-meta`) et titres d'étapes (`step-title-txt`) qui étaient restés blancs d'un reskin précédent sur un fond désormais clair — vérifié écran par écran avant redéploiement
+- Déployé sur `demo.agenceattractor.com/elevia`
+
+### Statut
+- Package contractuel V3 (Contrat/Devis/CDC) toujours en attente d'envoi groupé — la maquette reflète maintenant la direction définitive validée par Élise, prochaine étape : envoyer le package pour signature et déclencher le Jalon 1 (800€)
+
+---
+
 ## 2026-07-04 (session 81 — Élévia lien directions + Beynaud protocole envoyé + J'Envoie Express avant migration)
 
 ### Club Élévia — lien 3 directions visuelles déployé
