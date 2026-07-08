@@ -83,13 +83,13 @@
       <div class="val" id="ring-val">0%</div>
     </div>
     <div class="progress-txt">
-      <div class="big" id="prog-big">0 / 0 livrés</div>
-      <div class="small">Colis à livrer à domicile pour ce voyage</div>
+      <div class="big" id="prog-big">0 / 0</div>
+      <div class="small" id="prog-sub">Chargement…</div>
     </div>
   </div>
 
   <div id="list"></div>
-  <div class="foot">Mets à jour au fur et à mesure : appuie sur « Livré » après chaque remise.</div>
+  <div class="foot" id="foot-note"></div>
 </div>
 
 <script>
@@ -123,59 +123,81 @@ function fmtDate(d){
   try{return new Date(d+'T00:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'long'})}catch(e){return d}
 }
 
-function setProgress(done,total){
+function setProgress(done,total,label){
   $('progress').style.display='flex'
   const pct=total?Math.round(done/total*100):0
-  $('prog-big').textContent=`${done} / ${total} livrés`
+  $('prog-big').textContent=`${done} / ${total} ${label}`
   $('ring-val').textContent=pct+'%'
   $('ring-fg').style.strokeDashoffset=157-(157*pct/100)
 }
 
 function render(data){
+  const isCol=data.mode==='collecte'
+  const doneStatut=isCol?'collecte':'livre'
   const colis=data.colis||[]
   const total=colis.length
-  const done=colis.filter(c=>c.statut==='livre').length
-  const dArr=data.voyage.date_arrivee||data.voyage.date_depart
-  $('h-sub').textContent=`Livraisons à Abidjan${dArr?' · arrivée '+fmtDate(dArr):''}`
-  setProgress(done,total)
+  const done=colis.filter(c=>c.statut===doneStatut).length
+
+  $('h-title').textContent=isCol?'Ma collecte':'Ma tournée'
+  if(isCol){
+    const dDep=data.voyage.date_depart
+    $('h-sub').textContent=`Collectes à Abidjan · regroupement Faya${dDep?' · départ '+fmtDate(dDep):''}`
+  }else{
+    const dArr=data.voyage.date_arrivee||data.voyage.date_depart
+    $('h-sub').textContent=`Livraisons à Abidjan${dArr?' · arrivée '+fmtDate(dArr):''}`
+  }
+  setProgress(done,total,isCol?'collectés':'livrés')
+  $('prog-sub').textContent=isCol?'Colis à récupérer chez les expéditeurs':'Colis à livrer à domicile pour ce voyage'
+  $('foot-note').textContent=isCol?'Mets à jour au fur et à mesure : appuie sur « Collecté » après chaque récupération.':'Mets à jour au fur et à mesure : appuie sur « Livré » après chaque remise.'
 
   const list=$('list')
-  if(!total){ list.innerHTML='<div class="state">Aucun colis à livrer à domicile pour ce voyage.</div>'; return }
+  if(!total){ list.innerHTML=`<div class="state">Aucun colis à ${isCol?'collecter':'livrer'} pour ce voyage.</div>`; return }
 
-  // regroupement par quartier
+  // regroupement par quartier (collecte = quartier de l'expéditeur / livraison = quartier du destinataire)
   const groups={}
-  colis.forEach(c=>{const q=c.quartier_abidjan||'Quartier non précisé';(groups[q]=groups[q]||[]).push(c)})
+  colis.forEach(c=>{const q=(isCol?c.quartier_collecte:c.quartier_abidjan)||'Quartier non précisé';(groups[q]=groups[q]||[]).push(c)})
 
   let html=''
   Object.keys(groups).forEach(q=>{
     html+=`<div class="quartier">${esc(q)}</div>`
     groups[q].forEach(c=>{
       const exped=(c.je_clients&&c.je_clients.nom)||c.nom_expediteur||''
-      // Destinataire à Abidjan : son numéro est en tête de contact_reception,
-      // avant « | Collecte » (info dépôt France, inutile au livreur, qu'on masque).
-      const recept=(c.contact_reception||'').split('|')[0].trim()
-      const receptTel=(recept.match(/[+0-9][0-9 ]{6,}/)||[])[0]
-      const wa=receptTel||(c.je_clients&&c.je_clients.whatsapp)||c.wa_expediteur||''
-      const dest=recept||wa||'Numéro non précisé'
-      const done=c.statut==='livre'
+      let wa, headLabel, headline, secondary
+      if(isCol){
+        // Collecte : on récupère CHEZ l'expéditeur à Abidjan (son numéro CI)
+        wa=c.wa_expediteur||(c.je_clients&&c.je_clients.whatsapp)||''
+        headLabel='Expéditeur'
+        headline=exped||wa||'Expéditeur'
+        secondary=wa?`<div class="articles"><span style="color:#8b94b3">Tél : </span>${esc(wa)}</div>`:''
+      }else{
+        // Livraison : on va chez le destinataire ; son numéro est en tête de contact_reception
+        // (avant « | Collecte », info dépôt France masquée)
+        const recept=(c.contact_reception||'').split('|')[0].trim()
+        const receptTel=(recept.match(/[+0-9][0-9 ]{6,}/)||[])[0]
+        wa=receptTel||(c.je_clients&&c.je_clients.whatsapp)||c.wa_expediteur||''
+        headLabel='Destinataire'
+        headline=recept||wa||'Numéro non précisé'
+        secondary=exped?`<div class="articles"><span style="color:#8b94b3">Envoyé par </span>${esc(exped)}</div>`:''
+      }
+      const done=c.statut===doneStatut
       const w=waLink(wa), t=telLink(wa)
       html+=`<div class="card ${done?'done':''}" id="c-${c.id}">
         <div class="card-top">
           <div>
             <div class="num">${esc(c.numero||'—')}</div>
-            <div class="lbl-dest">Destinataire</div>
-            <div class="name">${esc(dest)}</div>
+            <div class="lbl-dest">${headLabel}</div>
+            <div class="name">${esc(headline)}</div>
           </div>
-          ${c.prix_livraison?`<div class="prix">${c.prix_livraison}€</div>`:''}
+          ${(!isCol&&c.prix_livraison)?`<div class="prix">${c.prix_livraison}€</div>`:''}
         </div>
-        ${exped?`<div class="articles"><span style="color:#8b94b3">Envoyé par </span>${esc(exped)}</div>`:''}
+        ${secondary}
         ${c.articles?`<div class="articles"><span style="color:#8b94b3">Colis : </span>${esc(c.articles)}</div>`:''}
         <div class="actions">
           ${w?`<a class="wa" href="${w}" target="_blank" rel="noopener">WhatsApp</a>`:''}
           ${t?`<a class="call" href="${t}">📞</a>`:''}
           ${done
-            ?`<span class="badge-done">✓ Livré</span>`
-            :`<button class="btn-livre" onclick="marquer('${c.id}',this)">✓ Marquer livré</button>`}
+            ?`<span class="badge-done">${isCol?'✓ Collecté':'✓ Livré'}</span>`
+            :`<button class="btn-livre" onclick="marquer('${c.id}',this)">${isCol?'✓ Marquer collecté':'✓ Marquer livré'}</button>`}
         </div>
       </div>`
     })
@@ -185,10 +207,12 @@ function render(data){
 
 let STATE=null
 async function marquer(id,btn){
+  const doneStatut=(STATE&&STATE.mode==='collecte')?'collecte':'livre'
+  const orig=btn.textContent
   btn.disabled=true; btn.textContent='…'
-  const r=await call({voyage,action:'livre',colis:id})
-  if(!r.ok){ btn.disabled=false; btn.textContent='✓ Marquer livré'; alert('Erreur, réessaie.'); return }
-  const c=STATE.colis.find(x=>x.id===id); if(c) c.statut='livre'
+  const r=await call({voyage,action:'mark',colis:id})
+  if(!r.ok){ btn.disabled=false; btn.textContent=orig; alert('Erreur, réessaie.'); return }
+  const c=STATE.colis.find(x=>x.id===id); if(c) c.statut=doneStatut
   render(STATE)
 }
 

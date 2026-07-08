@@ -845,9 +845,10 @@ a { color: inherit; text-decoration: none; }
           </div>
         </div>
         <div class="f-col full" id="collecte-ci-depot">
-          <div style="background:rgba(11,181,255,.06);border:1px solid rgba(11,181,255,.25);border-radius:10px;padding:16px 20px;">
-            <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:white;margin-bottom:4px;">Cocody Faya</div>
-            <div style="font-size:16px;color:rgba(255,255,255,.75);">Abidjan, Côte d'Ivoire</div>
+          <label class="f-label">Point de dépôt</label>
+          <div class="livraison-row">
+            <label class="livraison-opt"><input type="radio" name="depot-ci" value="faya" checked> Cocody Faya</label>
+            <label class="livraison-opt"><input type="radio" name="depot-ci" value="yopougon"> Yopougon SIDECI</label>
           </div>
           <span class="f-note" style="margin-top:8px;">Convenez d'un créneau de dépôt avec nous sur WhatsApp avant de vous déplacer.</span>
         </div>
@@ -1199,12 +1200,21 @@ async function submitDemande() {
     clientId = nc?.id
   }
   const route = document.getElementById('d-route').value
+  // Collecte à domicile Abidjan (sens Abidjan → Paris) : capté en structuré pour la tournée livreur
+  const collecteCiRecup = route === 'ABJ_ORY' && document.querySelector('input[name="collecte-ci"]:checked')?.value === 'recup'
+  const quartierCollecte = collecteCiRecup ? document.getElementById('d-quartier-ci').value.trim() : null
+  if (collecteCiRecup && !quartierCollecte) { alert('Merci d\'indiquer votre quartier ou adresse à Abidjan pour la collecte.'); return }
   let pointCollecte
   if (route === 'ABJ_ORY') {
     const modeCi = document.querySelector('input[name="collecte-ci"]:checked')?.value
-    pointCollecte = modeCi === 'depot'
-      ? 'Dépôt CI — Cocody Faya, Abidjan'
-      : `Collecte CI — ${document.getElementById('d-quartier-ci').value}`
+    if (modeCi === 'depot') {
+      const depotPt = document.querySelector('input[name="depot-ci"]:checked')?.value
+      pointCollecte = depotPt === 'yopougon'
+        ? 'Dépôt CI — Yopougon SIDECI, Abidjan'
+        : 'Dépôt CI — Cocody Faya, Abidjan'
+    } else {
+      pointCollecte = `Collecte CI — ${quartierCollecte}`
+    }
   } else {
     const modeCollecte = document.querySelector('input[name="collecte"]:checked')?.value
     if (modeCollecte === 'point') {
@@ -1232,6 +1242,8 @@ async function submitDemande() {
     contact_reception: contactFull + (pointCollecte ? ` | Collecte: ${pointCollecte}` : ''),
     livraison_souhaitee: livraisonOui,
     quartier_abidjan: livraisonOui ? quartier : null,
+    collecte_domicile: collecteCiRecup,
+    quartier_collecte: quartierCollecte,
   })
   if (error) { alert('Erreur. Contactez-nous directement sur WhatsApp.'); return }
 

@@ -447,7 +447,7 @@
     </select>
   </div>
   <div class="card" style="margin-bottom:1rem;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.25);">
-    <div style="font-size:.78rem;color:rgba(255,255,255,.7);margin-bottom:.7rem;">Cette vue liste uniquement les colis à <strong>livrer à domicile</strong> pour le voyage sélectionné. Envoie le lien de tournée au livreur : il verra sa liste triée par quartier et pourra cocher « Livré » lui-même (suivi en temps réel ici).</div>
+    <div style="font-size:.78rem;color:rgba(255,255,255,.7);margin-bottom:.7rem;">Selon le voyage choisi : <strong>livraison à domicile</strong> (Paris → Abidjan) ou <strong>collecte chez l'expéditeur</strong> (Abidjan → Paris, regroupée à Faya). Envoie le lien au livreur : il verra sa liste triée par quartier et cochera « Livré » / « Collecté » lui-même (suivi en temps réel ici).</div>
     <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
       <button class="btn-green" onclick="shareTournee('wa')" style="font-size:.8rem;">📲 Envoyer au livreur (WhatsApp)</button>
       <button onclick="shareTournee('copy')" style="background:rgba(91,184,245,.15);border:1px solid rgba(91,184,245,.35);color:#dff1ff;border-radius:8px;padding:.5rem .9rem;font-size:.8rem;cursor:pointer;">🔗 Copier le lien</button>
@@ -1364,6 +1364,8 @@ async function confirmAccept() {
     contact_reception: d?.contact_reception || null,
     livraison_souhaitee: d?.livraison_souhaitee || false,
     quartier_abidjan: d?.quartier_abidjan || null,
+    collecte_domicile: d?.collecte_domicile || false,
+    quartier_collecte: d?.quartier_collecte || null,
     nom_expediteur: nomEdit,
     wa_expediteur: waEdit,
   }).select('numero').single()
@@ -1488,48 +1490,74 @@ async function loadColisOptions() {
   const lSel = document.getElementById('livreur-voyage-sel')
   while (lSel.options.length > 1) lSel.remove(1)
   const { data: allVoy } = await sb.from('je_voyages').select('id,route,date_depart').order('date_depart', { ascending: false })
-  ;(allVoy||[]).filter(v => v.route === 'ORY_ABJ').forEach(v => lSel.add(new Option(`🇫🇷 ORY→ABJ · ${fmtDate(v.date_depart)}`, v.id)))
+  ;(allVoy||[]).forEach(v => {
+    const lbl = v.route === 'ABJ_ORY'
+      ? `🇨🇮→🇫🇷 Collecte · ${fmtDate(v.date_depart)}`
+      : `🇫🇷→🇨🇮 Livraison · ${fmtDate(v.date_depart)}`
+    const opt = new Option(lbl, v.id)
+    opt.dataset.route = v.route
+    lSel.add(opt)
+  })
 }
 
 // ============================================================
 // VUE LIVREUR CI
 // ============================================================
 async function loadLivreur() {
-  const voyageId = document.getElementById('livreur-voyage-sel').value
+  const sel = document.getElementById('livreur-voyage-sel')
+  const voyageId = sel.value
+  const route = sel.options[sel.selectedIndex]?.dataset?.route || 'ORY_ABJ'
+  const isCol = route === 'ABJ_ORY'
   const tbody = document.getElementById('livreur-tbody')
   const kpisEl = document.getElementById('livreur-kpis')
   if (!voyageId) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Sélectionner un voyage</td></tr>'; kpisEl.innerHTML = ''; return }
 
+  const flag = isCol ? 'collecte_domicile' : 'livraison_souhaitee'
+  const doneStatut = isCol ? 'collecte' : 'livre'
+  const orderCol = isCol ? 'quartier_collecte' : 'quartier_abidjan'
   const { data } = await sb.from('je_colis')
     .select('*, je_clients(nom,whatsapp)')
     .eq('voyage_id', voyageId)
-    .eq('livraison_souhaitee', true)
-    .neq('statut', 'livre')
-    .order('quartier_abidjan')
+    .eq(flag, true)
+    .order(orderCol)
 
-  const total = (data||[]).length
-  const totalLiv = (data||[]).reduce((a,c) => a + (c.prix_livraison||0), 0)
+  const rows = data || []
+  const total = rows.length
+  const doneN = rows.filter(c => c.statut === doneStatut).length
 
   kpisEl.innerHTML = `
-    <div class="kpi" style="min-width:160px;"><div class="kpi-label">COLIS À LIVRER</div><div class="kpi-val">${total} <span>colis</span></div></div>
-    <div class="kpi" style="min-width:160px;"><div class="kpi-label">TOTAL LIVRAISONS</div><div class="kpi-val">${totalLiv.toFixed(0)}<span>€</span></div></div>
+    <div class="kpi" style="min-width:160px;"><div class="kpi-label">${isCol ? 'COLIS À COLLECTER' : 'COLIS À LIVRER'}</div><div class="kpi-val">${total} <span>colis</span></div></div>
+    <div class="kpi" style="min-width:160px;"><div class="kpi-label">${isCol ? 'DÉJÀ COLLECTÉS' : 'DÉJÀ LIVRÉS'}</div><div class="kpi-val">${doneN}<span>/${total}</span></div></div>
   `
 
-  if (!data?.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Aucun colis à livrer pour ce voyage</td></tr>'; return }
-  window.__lastTournee = data.length
-  tbody.innerHTML = data.map(c => `
-    <tr>
+  if (!rows.length) { tbody.innerHTML = `<tr><td colspan="8" class="empty-state">Aucun colis à ${isCol ? 'collecter' : 'livrer'} pour ce voyage</td></tr>`; return }
+  window.__lastTournee = total
+  tbody.innerHTML = rows.map(c => {
+    const done = c.statut === doneStatut
+    const quartier = (isCol ? c.quartier_collecte : c.quartier_abidjan) || '—'
+    const contact = isCol ? (c.wa_expediteur || c.je_clients?.whatsapp || '—') : (c.contact_reception || '—')
+    const wa = isCol ? (c.wa_expediteur || c.je_clients?.whatsapp || '—') : (c.je_clients?.whatsapp || c.wa_expediteur || '—')
+    return `
+    <tr${done ? ' style="opacity:.5;"' : ''}>
       <td><strong>${c.numero}</strong></td>
-      <td>${c.je_clients?.nom || '—'}</td>
-      <td>${c.je_clients?.whatsapp || '—'}</td>
-      <td><strong style="color:var(--gold);">${c.quartier_abidjan || '—'}</strong></td>
-      <td>${c.contact_reception || '—'}</td>
+      <td>${c.je_clients?.nom || c.nom_expediteur || '—'}</td>
+      <td>${wa}</td>
+      <td><strong style="color:var(--gold);">${quartier}</strong></td>
+      <td style="font-size:.72rem;">${contact}</td>
       <td style="font-size:.72rem;max-width:160px;">${c.articles || '—'}</td>
-      <td style="color:var(--gold);">${c.prix_livraison ? c.prix_livraison + '€' : '—'}</td>
+      <td style="color:var(--gold);">${(!isCol && c.prix_livraison) ? c.prix_livraison + '€' : '—'}</td>
       <td>
-        <button class="btn-green" onclick="markLivre('${c.id}').then(()=>loadLivreur())">✓ Livré</button>
+        ${done
+          ? `<span style="color:var(--green);font-size:.72rem;">${isCol ? '✓ Collecté' : '✓ Livré'}</span>`
+          : `<button class="btn-green" onclick="markTournee('${c.id}','${doneStatut}')">✓ ${isCol ? 'Collecté' : 'Livré'}</button>`}
       </td>
-    </tr>`).join('')
+    </tr>`
+  }).join('')
+}
+
+async function markTournee(id, statut) {
+  await sb.from('je_colis').update({ statut }).eq('id', id)
+  loadLivreur()
 }
 
 function shareTournee(mode) {
