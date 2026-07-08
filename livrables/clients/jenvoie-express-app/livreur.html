@@ -43,6 +43,7 @@
   .card.done{opacity:.55;background:#f3f6fc}
   .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
   .num{font-family:'Sora';font-weight:700;font-size:.82rem;color:var(--sky-mid);letter-spacing:.3px}
+  .lbl-dest{font-size:.68rem;color:#8b94b3;margin-top:6px;text-transform:uppercase;letter-spacing:.5px}
   .prix{font-family:'Sora';font-weight:800;font-size:.9rem;color:#0A1230;background:#FFF6D3;
     padding:3px 9px;border-radius:8px;white-space:nowrap}
   .name{font-family:'Sora';font-weight:700;font-size:1.02rem;margin-top:4px}
@@ -134,7 +135,8 @@ function render(data){
   const colis=data.colis||[]
   const total=colis.length
   const done=colis.filter(c=>c.statut==='livre').length
-  $('h-sub').textContent=`${ROUTE[data.voyage.route]||''} · départ ${fmtDate(data.voyage.date_depart)}`
+  const dArr=data.voyage.date_arrivee||data.voyage.date_depart
+  $('h-sub').textContent=`Livraisons à Abidjan${dArr?' · arrivée '+fmtDate(dArr):''}`
   setProgress(done,total)
 
   const list=$('list')
@@ -148,23 +150,25 @@ function render(data){
   Object.keys(groups).forEach(q=>{
     html+=`<div class="quartier">${esc(q)}</div>`
     groups[q].forEach(c=>{
-      const nom=(c.je_clients&&c.je_clients.nom)||c.nom_expediteur||'Client'
-      // Le livreur doit joindre le destinataire à Abidjan : son numéro est en tête
-      // de contact_reception (avant « | Collecte »). Sinon on retombe sur l'expéditeur.
-      const recept=(c.contact_reception||'').split('|')[0]
+      const exped=(c.je_clients&&c.je_clients.nom)||c.nom_expediteur||''
+      // Destinataire à Abidjan : son numéro est en tête de contact_reception,
+      // avant « | Collecte » (info dépôt France, inutile au livreur, qu'on masque).
+      const recept=(c.contact_reception||'').split('|')[0].trim()
       const receptTel=(recept.match(/[+0-9][0-9 ]{6,}/)||[])[0]
       const wa=receptTel||(c.je_clients&&c.je_clients.whatsapp)||c.wa_expediteur||''
+      const dest=recept||wa||'Numéro non précisé'
       const done=c.statut==='livre'
       const w=waLink(wa), t=telLink(wa)
       html+=`<div class="card ${done?'done':''}" id="c-${c.id}">
         <div class="card-top">
           <div>
             <div class="num">${esc(c.numero||'—')}</div>
-            <div class="name">${esc(nom)}</div>
+            <div class="lbl-dest">Destinataire</div>
+            <div class="name">${esc(dest)}</div>
           </div>
           ${c.prix_livraison?`<div class="prix">${c.prix_livraison}€</div>`:''}
         </div>
-        ${c.contact_reception?`<div class="articles"><span style="color:#8b94b3">Réception : </span>${esc(c.contact_reception)}</div>`:''}
+        ${exped?`<div class="articles"><span style="color:#8b94b3">Envoyé par </span>${esc(exped)}</div>`:''}
         ${c.articles?`<div class="articles"><span style="color:#8b94b3">Colis : </span>${esc(c.articles)}</div>`:''}
         <div class="actions">
           ${w?`<a class="wa" href="${w}" target="_blank" rel="noopener">WhatsApp</a>`:''}
