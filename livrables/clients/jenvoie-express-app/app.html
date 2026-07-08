@@ -151,7 +151,7 @@
 <!-- MODAL NOUVEAU CLIENT -->
 <div class="modal-bg" id="modal-client">
   <div class="modal">
-    <div class="modal-title">👤 Nouveau client</div>
+    <div class="modal-title" id="modal-client-title">👤 Nouveau client</div>
     <div class="form-grid">
       <div class="form-group full"><label>NOM COMPLET</label><input type="text" id="f-client-nom" placeholder="Prénom Nom"></div>
       <div class="form-group"><label>WHATSAPP</label><input type="text" id="f-client-wa" placeholder="+225 07 XX XX XX"></div>
@@ -201,7 +201,7 @@
 <!-- MODAL VOYAGE -->
 <div class="modal-bg" id="modal-voyage">
   <div class="modal">
-    <div class="modal-title">✈ Nouveau voyage</div>
+    <div class="modal-title" id="modal-voyage-title">✈ Nouveau voyage</div>
     <div class="form-grid">
       <div class="form-group"><label>DIRECTION</label><select id="f-voy-route"><option value="ABJ_ORY">🇨🇮 Abidjan → 🇫🇷 Orly</option><option value="ORY_ABJ">🇫🇷 Orly → 🇨🇮 Abidjan</option></select></div>
       <div class="form-group"><label>DATE DÉPART</label><input type="date" id="f-voy-depart"></div>
@@ -261,6 +261,31 @@
     </div>
     <div class="nav-item" onclick="showView('parametres',this)" style="font-size:.88rem;padding:.8rem;">
       ⚙ Paramètres
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-item" onclick="showView('dashboard',this)" style="font-size:.88rem;padding:.8rem;">
+      📊 Dashboard
+    </div>
+    <div class="nav-item" onclick="showView('colis',this)" style="font-size:.88rem;padding:.8rem;">
+      📦 Colis (tous)
+      <span class="badge" id="badge-colis">0</span>
+    </div>
+    <div class="nav-item" onclick="showView('clients',this)" style="font-size:.88rem;padding:.8rem;">
+      👤 Clients
+    </div>
+    <div class="nav-item" onclick="showView('voyages',this)" style="font-size:.88rem;padding:.8rem;">
+      ✈ Voyages
+    </div>
+    <div class="nav-item" onclick="showView('demandes',this)" style="font-size:.88rem;padding:.8rem;">
+      📜 Historique demandes
+      <span class="badge" id="badge-demandes">0</span>
+    </div>
+    <div class="nav-item" onclick="showView('tracking',this)" style="font-size:.88rem;padding:.8rem;">
+      🔍 Suivi colis
+    </div>
+    <div class="nav-item" onclick="showView('livreur',this)" style="font-size:.88rem;padding:.8rem;">
+      🛵 Livreur CI
     </div>
   </div>
   <div class="sidebar-bottom">
@@ -362,7 +387,7 @@
 <div id="voyages" class="view">
   <div class="section-header">
     <div class="section-title">✈ <span>Voyages</span></div>
-    <button class="btn-primary" onclick="openModal('modal-voyage')">+ Nouveau voyage</button>
+    <button class="btn-primary" onclick="openNewVoyageModal()">+ Nouveau voyage</button>
   </div>
   <div id="voyages-list"><p class="empty-state">Chargement...</p></div>
 </div>
@@ -391,11 +416,11 @@
 <div id="clients" class="view">
   <div class="section-header">
     <div class="section-title">👤 <span>Clients</span></div>
-    <button class="btn-primary" onclick="openModal('modal-client')">+ Nouveau client</button>
+    <button class="btn-primary" onclick="openNewClientModal()">+ Nouveau client</button>
   </div>
   <div class="table-wrap"><table>
-    <thead><tr><th>Nom</th><th>WhatsApp</th><th>Localisation</th><th>Adresse</th><th>Depuis</th></tr></thead>
-    <tbody id="clients-tbody"><tr><td colspan="5" class="empty-state">Chargement...</td></tr></tbody>
+    <thead><tr><th>Nom</th><th>WhatsApp</th><th>Localisation</th><th>Adresse</th><th>Depuis</th><th>Actions</th></tr></thead>
+    <tbody id="clients-tbody"><tr><td colspan="6" class="empty-state">Chargement...</td></tr></tbody>
   </table></div>
 </div>
 
@@ -419,7 +444,11 @@
     </select>
   </div>
   <div class="card" style="margin-bottom:1rem;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.25);">
-    <div style="font-size:.78rem;color:rgba(255,255,255,.7);">Cette vue liste uniquement les colis à <strong>livrer à domicile</strong> pour le voyage sélectionné. Partager avec le livreur avant chaque départ.</div>
+    <div style="font-size:.78rem;color:rgba(255,255,255,.7);margin-bottom:.7rem;">Cette vue liste uniquement les colis à <strong>livrer à domicile</strong> pour le voyage sélectionné. Envoie le lien de tournée au livreur : il verra sa liste triée par quartier et pourra cocher « Livré » lui-même (suivi en temps réel ici).</div>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+      <button class="btn-green" onclick="shareTournee('wa')" style="font-size:.8rem;">📲 Envoyer au livreur (WhatsApp)</button>
+      <button onclick="shareTournee('copy')" style="background:rgba(91,184,245,.15);border:1px solid rgba(91,184,245,.35);color:#dff1ff;border-radius:8px;padding:.5rem .9rem;font-size:.8rem;cursor:pointer;">🔗 Copier le lien</button>
+    </div>
   </div>
   <div id="livreur-kpis" style="display:flex;gap:1rem;margin-bottom:1rem;flex-wrap:wrap;"></div>
   <div class="table-wrap">
@@ -489,7 +518,7 @@
   <div class="card" style="max-width:480px;margin-top:1rem;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
       <div class="card-title" style="margin-bottom:0;">Prochains départs</div>
-      <button class="btn-primary" style="font-size:.72rem;" onclick="openModal('modal-voyage')">+ Ajouter</button>
+      <button class="btn-primary" style="font-size:.72rem;" onclick="openNewVoyageModal()">+ Ajouter</button>
     </div>
     <div id="params-voyages"><div style="font-size:.78rem;color:rgba(255,255,255,.3);">Aucun départ programmé</div></div>
   </div>
@@ -503,8 +532,8 @@
 // ============================================================
 // CONFIG — Remplacer après création du projet Supabase
 // ============================================================
-const SUPABASE_URL = 'https://ltydbwkhdsbmmnoahcty.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0eWRid2toZHNibW1ub2FoY3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMzEyMTIsImV4cCI6MjA5NzYwNzIxMn0.S0u-zZfRKp5t1VpXrGN3II8RtwyRZ7HWUHK3-E8pw58'
+const SUPABASE_URL = 'https://lgdgbrivnhgeupqhkckd.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk'
 const { createClient } = supabase
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
@@ -542,8 +571,8 @@ const loaders = {
 // VUE : À TRAITER
 // ============================================================
 async function loadATraiter() {
-  const { data } = await sb.from('demandes')
-    .select('*, clients(nom,whatsapp), nom_expediteur, wa_expediteur, voyages(route, date_depart)')
+  const { data } = await sb.from('je_demandes')
+    .select('*, je_clients(nom,whatsapp), nom_expediteur, wa_expediteur, je_voyages(route, date_depart)')
     .in('statut', ['en_attente', 'acceptee'])
     .order('created_at', { ascending: false })
   window._demandes = data || []
@@ -564,14 +593,14 @@ async function loadATraiter() {
     </div>`
 
   const fmtD = d => {
-    const nomFormulaire = d.nom_expediteur || d.clients?.nom || '—'
-    const nomCrm = d.clients?.nom
+    const nomFormulaire = d.nom_expediteur || d.je_clients?.nom || '—'
+    const nomCrm = d.je_clients?.nom
     const nomSuffix = (nomCrm && nomCrm !== nomFormulaire) ? ` <span style="font-size:.65rem;color:rgba(255,255,255,.35);">· CRM: ${nomCrm}</span>` : ''
     const nom = nomFormulaire + nomSuffix
-    const wa = d.wa_expediteur || d.clients?.whatsapp || '—'
+    const wa = d.wa_expediteur || d.je_clients?.whatsapp || '—'
     const collecte = (d.contact_reception || '').split(' | Collecte: ')[1] || ''
-    const voyageLabel = d.voyages
-      ? `${routeLabel(d.voyages.route)} · départ ${fmtVoyage(d.voyages.date_depart)}`
+    const voyageLabel = d.je_voyages
+      ? `${routeLabel(d.je_voyages.route)} · départ ${fmtVoyage(d.je_voyages.date_depart)}`
       : ''
     return `
       <div style="background:rgba(0,31,92,.35);border:1px solid rgba(91,184,245,.15);border-radius:12px;padding:1rem;margin-bottom:.6rem;">
@@ -581,13 +610,14 @@ async function loadATraiter() {
             <div style="font-size:.72rem;color:var(--sky);margin-top:2px;">${wa}</div>
             ${voyageLabel ? `<div style="font-size:.72rem;color:var(--gold);margin-top:3px;font-family:'Syne',sans-serif;font-weight:600;">✈ ${voyageLabel}</div>` : ''}
           </div>
-          <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+          <div style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;">
             ${d.statut === 'en_attente' ? `
               <button class="btn-green" onclick="openAcceptModal('${d.id}')">✓ Accepter</button>
               <button class="btn-red" onclick="refuserDemande('${d.id}')">✗ Refuser</button>
             ` : `
               <span style="font-size:.72rem;color:var(--green);font-weight:600;">✓ Colis créé</span>
             `}
+            <button class="btn-red" style="font-size:.62rem;padding:.25rem .5rem;" onclick="deleteDemande('${d.id}')">🗑</button>
           </div>
         </div>
         ${d.articles ? `<div style="font-size:.76rem;color:rgba(255,255,255,.65);margin-top:.6rem;border-top:1px solid rgba(255,255,255,.06);padding-top:.5rem;">${d.articles}</div>` : ''}
@@ -608,8 +638,8 @@ async function loadATraiter() {
 // VUE : EN COURS
 // ============================================================
 async function loadEnCours() {
-  const { data } = await sb.from('colis')
-    .select('*, clients(nom,whatsapp), voyages(route)')
+  const { data } = await sb.from('je_colis')
+    .select('*, je_clients(nom,whatsapp), je_voyages(route)')
     .neq('statut', 'livre')
     .order('created_at', { ascending: false })
 
@@ -622,10 +652,10 @@ async function loadEnCours() {
     return
   }
   tbody.innerHTML = data.map(c => {
-    const nom = c.clients?.nom || c.nom_expediteur || '<span style="color:rgba(255,255,255,.3);font-style:italic;font-weight:400;">Non enregistré</span>'
-    const wa = c.clients?.whatsapp || c.wa_expediteur || ''
-    const prenom = (c.clients?.nom || c.nom_expediteur || '').split(' ')[0]
-    const route = c.voyages?.route || ''
+    const nom = c.je_clients?.nom || c.nom_expediteur || '<span style="color:rgba(255,255,255,.3);font-style:italic;font-weight:400;">Non enregistré</span>'
+    const wa = c.je_clients?.whatsapp || c.wa_expediteur || ''
+    const prenom = (c.je_clients?.nom || c.nom_expediteur || '').split(' ')[0]
+    const route = c.je_voyages?.route || ''
     return `
     <tr>
       <td><strong>${nom}</strong><br><span style="font-size:.65rem;color:rgba(255,255,255,.4);">${wa}</span></td>
@@ -654,7 +684,7 @@ async function loadEnCours() {
 }
 
 async function loadParametres() {
-  const { data } = await sb.from('parametres').select('cle,valeur')
+  const { data } = await sb.from('je_parametres').select('cle,valeur')
   if (!data) return
   const p = Object.fromEntries(data.map(r => [r.cle, r.valeur]))
   if (p.tarif_paris_abj) document.getElementById('p-paris-abj').value = p.tarif_paris_abj
@@ -663,7 +693,7 @@ async function loadParametres() {
   if (p.tarif_maritime_grand) document.getElementById('p-maritime-grand').value = p.tarif_maritime_grand
   if (p.tarif_maritime_moyen) document.getElementById('p-maritime-moyen').value = p.tarif_maritime_moyen
   const today = new Date().toISOString().split('T')[0]
-  const { data: voys } = await sb.from('voyages').select('route,date_depart,statut').gte('date_depart', today).order('date_depart', { ascending: true }).limit(8)
+  const { data: voys } = await sb.from('je_voyages').select('route,date_depart,statut').gte('date_depart', today).order('date_depart', { ascending: true }).limit(8)
   const el = document.getElementById('params-voyages')
   if (!voys?.length) { el.innerHTML = '<div style="font-size:.78rem;color:rgba(255,255,255,.3);">Aucun départ programmé</div>'; return }
   const fmt = d => new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', { weekday:'short', day:'numeric', month:'short' })
@@ -684,7 +714,7 @@ function openEditColis(id) {
   const c = (window._enCoursData || []).find(x => x.id === id)
   if (!c) return toast('Colis introuvable', true)
   _editColisId = id
-  const nom = c.clients?.nom || c.nom_expediteur || '—'
+  const nom = c.je_clients?.nom || c.nom_expediteur || '—'
   document.getElementById('modal-edit-info').textContent = `N° ${c.numero} · ${nom}`
   document.getElementById('e-montant').value = c.montant || ''
   document.getElementById('e-poids').value = c.poids || ''
@@ -705,7 +735,7 @@ async function saveEditColis() {
     quartier_abidjan:  document.getElementById('e-quartier').value.trim() || null,
     prix_livraison:    parseFloat(document.getElementById('e-prix-livraison').value) || null,
   }
-  const { error } = await sb.from('colis').update(updates).eq('id', _editColisId)
+  const { error } = await sb.from('je_colis').update(updates).eq('id', _editColisId)
   if (error) { toast('Erreur lors de la modification', true); return }
   closeModal('modal-edit-colis')
   toast('Colis mis à jour')
@@ -716,7 +746,7 @@ async function savePrix() {
   const parisAbj = document.getElementById('p-paris-abj').value.trim()
   const abjParis = document.getElementById('p-abj-paris').value.trim()
   if (!parisAbj || !abjParis) { alert('Remplissez les deux tarifs.'); return }
-  await sb.from('parametres').upsert([
+  await sb.from('je_parametres').upsert([
     { cle: 'tarif_paris_abj', valeur: parisAbj },
     { cle: 'tarif_abj_paris', valeur: abjParis }
   ], { onConflict: 'cle' })
@@ -730,7 +760,7 @@ async function saveTarifsMaritime() {
   const grand = document.getElementById('p-maritime-grand').value.trim()
   const moyen = document.getElementById('p-maritime-moyen').value.trim()
   if (!baril || !grand || !moyen) { alert('Remplissez les trois tarifs.'); return }
-  await sb.from('parametres').upsert([
+  await sb.from('je_parametres').upsert([
     { cle: 'tarif_maritime_baril', valeur: baril },
     { cle: 'tarif_maritime_grand', valeur: grand },
     { cle: 'tarif_maritime_moyen', valeur: moyen }
@@ -790,11 +820,11 @@ async function loadDashboard() {
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
 
   const [{ data: allColis }, { data: moisColis }, { data: allClients }, { data: encaiss }, { data: demandesEn }] = await Promise.all([
-    sb.from('colis').select('statut'),
-    sb.from('colis').select('id').gte('created_at', startOfMonth),
-    sb.from('clients').select('id'),
-    sb.from('revenus').select('montant,type').gte('created_at', startOfMonth),
-    sb.from('demandes').select('id').eq('statut','en_attente'),
+    sb.from('je_colis').select('statut'),
+    sb.from('je_colis').select('id').gte('created_at', startOfMonth),
+    sb.from('je_clients').select('id'),
+    sb.from('je_revenus').select('montant,type').gte('created_at', startOfMonth),
+    sb.from('je_demandes').select('id').eq('statut','en_attente'),
   ])
 
   const transit = (allColis || []).filter(c => ['collecte','transit','douane'].includes(c.statut)).length
@@ -808,28 +838,28 @@ async function loadDashboard() {
   document.getElementById('badge-demandes').textContent = (demandesEn||[]).length
 
   // derniers colis
-  const { data: derniersColis } = await sb.from('colis').select('*, clients(nom, whatsapp)').order('created_at', { ascending: false }).limit(5)
+  const { data: derniersColis } = await sb.from('je_colis').select('*, je_clients(nom, whatsapp)').order('created_at', { ascending: false }).limit(5)
   const tbody = document.getElementById('dash-colis-tbody')
   if (!derniersColis?.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Aucun colis enregistré</td></tr>'; return }
   tbody.innerHTML = derniersColis.map(c => `
     <tr>
       <td><strong>${c.numero}</strong></td>
-      <td>${c.clients?.nom || '—'}</td>
-      <td>${routeLabel(c.voyages?.route || '')}</td>
+      <td>${c.je_clients?.nom || '—'}</td>
+      <td>${routeLabel(c.je_voyages?.route || '')}</td>
       <td>${c.poids ? c.poids + ' kg' : '—'}</td>
       <td style="color:var(--gold)">${fmtEur(c.montant)}</td>
       <td>${statutPill(c.statut)}</td>
     </tr>`).join('')
 
   // demandes en attente
-  const { data: demandes } = await sb.from('demandes').select('*, clients(nom, whatsapp), voyages(route)').eq('statut','en_attente').order('created_at', { ascending: false }).limit(5)
+  const { data: demandes } = await sb.from('je_demandes').select('*, je_clients(nom, whatsapp), je_voyages(route)').eq('statut','en_attente').order('created_at', { ascending: false }).limit(5)
   const dtbody = document.getElementById('dash-demandes-tbody')
   if (!demandes?.length) { dtbody.innerHTML = '<tr><td colspan="6" class="empty-state">Aucune demande en attente</td></tr>'; return }
   dtbody.innerHTML = demandes.map(d => `
     <tr>
-      <td><strong>${d.clients?.nom || '—'}</strong></td>
-      <td>${d.clients?.whatsapp || '—'}</td>
-      <td>${routeLabel(d.voyages?.route || '')}</td>
+      <td><strong>${d.je_clients?.nom || '—'}</strong></td>
+      <td>${d.je_clients?.whatsapp || '—'}</td>
+      <td>${routeLabel(d.je_voyages?.route || '')}</td>
       <td>${d.poids_estime ? d.poids_estime + ' kg' : '—'}</td>
       <td style="font-size:.72rem;max-width:180px;">${d.articles || '—'}</td>
       <td><div style="display:flex;gap:.3rem;">
@@ -845,7 +875,7 @@ async function loadDashboard() {
 let allColisData = []
 
 async function loadColis() {
-  const { data, error } = await sb.from('colis').select('*, clients(nom, whatsapp)').order('created_at', { ascending: false })
+  const { data, error } = await sb.from('je_colis').select('*, je_clients(nom, whatsapp)').order('created_at', { ascending: false })
   if (error) return toast('Erreur chargement colis', true)
   allColisData = data || []
   renderColis(allColisData)
@@ -857,8 +887,8 @@ function renderColis(rows) {
   tbody.innerHTML = rows.map(c => `
     <tr>
       <td><strong>${c.numero}</strong></td>
-      <td>${c.clients?.nom || '—'}</td>
-      <td style="font-size:.72rem;">${c.clients?.whatsapp || '—'}</td>
+      <td>${c.je_clients?.nom || '—'}</td>
+      <td style="font-size:.72rem;">${c.je_clients?.whatsapp || '—'}</td>
       <td>${routeLabel(c.route || '')}</td>
       <td>${c.poids ? c.poids + ' kg' : '—'}</td>
       <td style="color:var(--gold)">${fmtEur(c.montant)}</td>
@@ -875,26 +905,37 @@ function renderColis(rows) {
             <option value="douane">En douane</option>
             <option value="livre">Livré</option>
           </select>
-          ${c.clients?.whatsapp && c.numero ? `<button class="btn-primary" style="font-size:.62rem;padding:.2rem .5rem;background:var(--green);border-color:transparent;" onclick="envoyerSuivi('${c.numero}','${c.clients.whatsapp}','${(c.clients.nom||'').split(' ')[0]}')">📲 Suivi</button>` : ''}
+          ${c.je_clients?.whatsapp && c.numero ? `<button class="btn-primary" style="font-size:.62rem;padding:.2rem .5rem;background:var(--green);border-color:transparent;" onclick="envoyerSuivi('${c.numero}','${c.je_clients.whatsapp}','${(c.je_clients.nom||'').split(' ')[0]}')">📲 Suivi</button>` : ''}
+          <button class="btn-red" style="font-size:.62rem;padding:.2rem .5rem;" onclick="deleteColis('${c.id}')">🗑</button>
         </div>
       </td>
     </tr>`).join('')
 }
 
+async function deleteColis(id) {
+  if (!confirm('Supprimer ce colis ? Cette action est définitive.')) return
+  const { error } = await sb.from('je_colis').delete().eq('id', id)
+  if (error) return toast('Erreur suppression', true)
+  toast('Colis supprimé')
+  loadColis()
+  loadEnCours()
+  loadDashboard()
+}
+
 function filterColis() {
   const q = document.getElementById('search-colis').value.toLowerCase()
-  renderColis(allColisData.filter(c => (c.numero||'').toLowerCase().includes(q) || (c.clients?.nom||'').toLowerCase().includes(q)))
+  renderColis(allColisData.filter(c => (c.numero||'').toLowerCase().includes(q) || (c.je_clients?.nom||'').toLowerCase().includes(q)))
 }
 
 async function markLivre(id) {
-  const { error } = await sb.from('colis').update({ statut: 'livre' }).eq('id', id)
+  const { error } = await sb.from('je_colis').update({ statut: 'livre' }).eq('id', id)
   if (error) return toast('Erreur', true)
   toast('Colis marqué livré ✓')
   loadEnCours()
 }
 
 async function togglePaye(id, isPaye) {
-  const { error } = await sb.from('colis').update({ paye: !isPaye, date_paiement: !isPaye ? new Date().toISOString() : null }).eq('id', id)
+  const { error } = await sb.from('je_colis').update({ paye: !isPaye, date_paiement: !isPaye ? new Date().toISOString() : null }).eq('id', id)
   if (error) return toast('Erreur mise à jour paiement', true)
   toast(!isPaye ? 'Colis marqué payé ✓' : 'Paiement retiré')
   loadEnCours()
@@ -902,7 +943,7 @@ async function togglePaye(id, isPaye) {
 
 async function updateStatutColis(id, statut) {
   if (!statut) return
-  const { error } = await sb.from('colis').update({ statut }).eq('id', id)
+  const { error } = await sb.from('je_colis').update({ statut }).eq('id', id)
   if (error) return toast('Erreur', true)
   toast('Statut mis à jour')
   loadEnCours()
@@ -921,7 +962,7 @@ async function saveColis() {
     quartier_abidjan: livraisonOui ? document.getElementById('f-colis-quartier').value : null,
     prix_livraison: livraisonOui ? parseFloat(document.getElementById('f-colis-prix-livraison').value) || null : null,
   }
-  const { error } = await sb.from('colis').insert(payload)
+  const { error } = await sb.from('je_colis').insert(payload)
   if (error) return toast('Erreur enregistrement', true)
   toast('Colis créé ✓')
   closeModal('modal-colis')
@@ -936,15 +977,58 @@ async function saveColis() {
 // ============================================================
 // VOYAGES
 // ============================================================
+let _editVoyageId = null
+let _voyagesCache = []
+
+function openNewVoyageModal() {
+  _editVoyageId = null
+  document.getElementById('modal-voyage-title').textContent = '✈ Nouveau voyage'
+  document.getElementById('f-voy-route').value = 'ORY_ABJ'
+  document.getElementById('f-voy-depart').value = ''
+  document.getElementById('f-voy-arrivee').value = ''
+  document.getElementById('f-voy-capacite').value = 50
+  document.getElementById('f-voy-tarif').value = ''
+  openModal('modal-voyage')
+}
+
+function editVoyage(id) {
+  const v = _voyagesCache.find(x => x.id === id)
+  if (!v) return
+  _editVoyageId = id
+  document.getElementById('modal-voyage-title').textContent = '✈ Modifier le voyage'
+  document.getElementById('f-voy-route').value = v.route
+  document.getElementById('f-voy-depart').value = v.date_depart
+  document.getElementById('f-voy-arrivee').value = v.date_arrivee || ''
+  document.getElementById('f-voy-capacite').value = v.capacite_totale
+  document.getElementById('f-voy-tarif').value = v.tarif_kg || ''
+  openModal('modal-voyage')
+}
+
+async function deleteVoyage(id) {
+  if (!confirm('Supprimer ce voyage ? Les colis et demandes liés seront conservés mais détachés.')) return
+  const { error } = await sb.from('je_voyages').delete().eq('id', id)
+  if (error) return toast('Erreur suppression', true)
+  toast('Voyage supprimé')
+  loadVoyages()
+  loadColisOptions()
+}
+
 async function loadVoyages() {
-  const { data } = await sb.from('voyages').select('*').order('date_depart', { ascending: false })
+  const { data } = await sb.from('je_voyages').select('*').order('date_depart', { ascending: false })
+  _voyagesCache = data || []
   const el = document.getElementById('voyages-list')
   if (!data?.length) { el.innerHTML = '<p class="empty-state">Aucun voyage enregistré</p>'; return }
   el.innerHTML = data.map(v => {
     const pct = v.capacite_totale ? Math.round((1 - v.capacite_restante/v.capacite_totale)*100) : 0
     const route = v.route === 'ABJ_ORY' ? '🇨🇮 Abidjan → 🇫🇷 Orly' : '🇫🇷 Orly → 🇨🇮 Abidjan'
     return `<div class="card">
-      <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;margin-bottom:.6rem;">${route}</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;margin-bottom:.6rem;">
+        <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;">${route}</div>
+        <div style="display:flex;gap:.3rem;flex-shrink:0;">
+          <button class="btn-outline" style="font-size:.65rem;padding:.25rem .55rem;" onclick="editVoyage('${v.id}')">✏ Modifier</button>
+          <button class="btn-red" style="font-size:.65rem;padding:.25rem .55rem;" onclick="deleteVoyage('${v.id}')">🗑 Supprimer</button>
+        </div>
+      </div>
       <div style="display:flex;gap:1.5rem;flex-wrap:wrap;font-size:.78rem;margin-bottom:.8rem;">
         <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">DÉPART</div>${fmtDate(v.date_depart)}</div>
         <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">ARRIVÉE</div>${fmtDate(v.date_arrivee)}</div>
@@ -963,18 +1047,25 @@ async function loadVoyages() {
 }
 
 async function saveVoyage() {
+  const capacite = parseFloat(document.getElementById('f-voy-capacite').value) || 50
   const payload = {
     route: document.getElementById('f-voy-route').value,
     date_depart: document.getElementById('f-voy-depart').value,
     date_arrivee: document.getElementById('f-voy-arrivee').value || null,
-    capacite_totale: parseFloat(document.getElementById('f-voy-capacite').value) || 50,
-    capacite_restante: parseFloat(document.getElementById('f-voy-capacite').value) || 50,
     tarif_kg: parseFloat(document.getElementById('f-voy-tarif').value) || null,
+    capacite_totale: capacite,
   }
-  const { error } = await sb.from('voyages').insert(payload)
+  let error
+  if (_editVoyageId) {
+    ;({ error } = await sb.from('je_voyages').update(payload).eq('id', _editVoyageId))
+  } else {
+    payload.capacite_restante = capacite
+    ;({ error } = await sb.from('je_voyages').insert(payload))
+  }
   if (error) return toast('Erreur', true)
-  toast('Voyage créé ✓')
+  toast(_editVoyageId ? 'Voyage modifié ✓' : 'Voyage créé ✓')
   closeModal('modal-voyage')
+  _editVoyageId = null
   loadVoyages()
   loadColisOptions()
 }
@@ -982,10 +1073,44 @@ async function saveVoyage() {
 // ============================================================
 // REVENUS
 // ============================================================
+let _editRevenuId = null
+let _revenusCache = []
+
+function openRevenu(type) {
+  _editRevenuId = null
+  document.getElementById('f-rev-type').value = type
+  document.getElementById('f-rev-montant').value = ''
+  document.getElementById('f-rev-ref').value = ''
+  document.getElementById('modal-revenu-title').textContent = type === 'encaissement' ? '💶 Enregistrer un encaissement' : '💸 Enregistrer un retrait'
+  openModal('modal-revenu')
+}
+
+function editRevenu(id) {
+  const r = _revenusCache.find(x => x.id === id)
+  if (!r) return
+  _editRevenuId = id
+  document.getElementById('f-rev-type').value = r.type
+  document.getElementById('f-rev-montant').value = r.montant
+  document.getElementById('f-rev-methode').value = r.methode || 'Wave'
+  document.getElementById('f-rev-ref').value = r.reference || ''
+  document.getElementById('modal-revenu-title').textContent = r.type === 'encaissement' ? "💶 Modifier l'encaissement" : '💸 Modifier le retrait'
+  openModal('modal-revenu')
+}
+
+async function deleteRevenu(id) {
+  if (!confirm('Supprimer cette transaction ?')) return
+  const { error } = await sb.from('je_revenus').delete().eq('id', id)
+  if (error) return toast('Erreur suppression', true)
+  toast('Transaction supprimée')
+  loadRevenus()
+  loadDashboard()
+}
+
 async function loadRevenus() {
   const now = new Date()
   const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
-  const { data } = await sb.from('revenus').select('*').order('created_at', { ascending: false })
+  const { data } = await sb.from('je_revenus').select('*').order('created_at', { ascending: false })
+  _revenusCache = data || []
   const mois = (data||[]).filter(r => r.created_at >= start)
   const enc = mois.filter(r => r.type === 'encaissement').reduce((a,r) => a+r.montant, 0)
   const ret = mois.filter(r => r.type === 'retrait').reduce((a,r) => a+r.montant, 0)
@@ -1003,14 +1128,14 @@ async function loadRevenus() {
         <div style="font-size:.8rem;">${r.type === 'encaissement' ? '<span style="color:var(--green)">↑</span>' : '<span style="color:var(--red)">↓</span>'} ${r.reference || r.methode || r.type}</div>
         <div style="font-size:.65rem;color:rgba(255,255,255,.4);">${fmtDate(r.created_at)} · ${r.methode || ''}</div>
       </div>
-      <div class="${r.type === 'encaissement' ? 'rev-credit' : 'rev-debit'}">${r.type === 'encaissement' ? '+' : '-'}${fmtEur(r.montant)}</div>
+      <div style="display:flex;align-items:center;gap:.6rem;">
+        <div class="${r.type === 'encaissement' ? 'rev-credit' : 'rev-debit'}">${r.type === 'encaissement' ? '+' : '-'}${fmtEur(r.montant)}</div>
+        <div style="display:flex;gap:.3rem;">
+          <button class="btn-outline" style="font-size:.6rem;padding:.2rem .4rem;" onclick="editRevenu('${r.id}')">✏</button>
+          <button class="btn-red" style="font-size:.6rem;padding:.2rem .4rem;" onclick="deleteRevenu('${r.id}')">🗑</button>
+        </div>
+      </div>
     </div>`).join('')
-}
-
-function openRevenu(type) {
-  document.getElementById('f-rev-type').value = type
-  document.getElementById('modal-revenu-title').textContent = type === 'encaissement' ? '💶 Enregistrer un encaissement' : '💸 Enregistrer un retrait'
-  openModal('modal-revenu')
 }
 
 async function saveRevenu() {
@@ -1021,10 +1146,13 @@ async function saveRevenu() {
     reference: document.getElementById('f-rev-ref').value || null,
   }
   if (!payload.montant) return toast('Montant requis', true)
-  const { error } = await sb.from('revenus').insert(payload)
+  const { error } = _editRevenuId
+    ? await sb.from('je_revenus').update(payload).eq('id', _editRevenuId)
+    : await sb.from('je_revenus').insert(payload)
   if (error) return toast('Erreur', true)
-  toast('Transaction enregistrée ✓')
+  toast(_editRevenuId ? 'Transaction modifiée ✓' : 'Transaction enregistrée ✓')
   closeModal('modal-revenu')
+  _editRevenuId = null
   document.getElementById('f-rev-montant').value = ''
   document.getElementById('f-rev-ref').value = ''
   loadRevenus()
@@ -1034,10 +1162,46 @@ async function saveRevenu() {
 // ============================================================
 // CLIENTS
 // ============================================================
+let _editClientId = null
+let _clientsCache = []
+
+function openNewClientModal() {
+  _editClientId = null
+  document.getElementById('modal-client-title').textContent = '👤 Nouveau client'
+  document.getElementById('f-client-nom').value = ''
+  document.getElementById('f-client-wa').value = ''
+  document.getElementById('f-client-loc').value = 'Abidjan 🇨🇮'
+  document.getElementById('f-client-adresse').value = ''
+  openModal('modal-client')
+}
+
+function editClient(id) {
+  const c = _clientsCache.find(x => x.id === id)
+  if (!c) return
+  _editClientId = id
+  document.getElementById('modal-client-title').textContent = '👤 Modifier le client'
+  document.getElementById('f-client-nom').value = c.nom || ''
+  document.getElementById('f-client-wa').value = c.whatsapp || ''
+  document.getElementById('f-client-loc').value = c.localisation || 'Abidjan 🇨🇮'
+  document.getElementById('f-client-adresse').value = c.adresse || ''
+  openModal('modal-client')
+}
+
+async function deleteClient(id) {
+  if (!confirm('Supprimer ce client ? Les colis et demandes liés seront conservés mais détachés du client.')) return
+  const { error } = await sb.from('je_clients').delete().eq('id', id)
+  if (error) return toast('Erreur suppression', true)
+  toast('Client supprimé')
+  loadClients()
+  loadColisOptions()
+  loadDashboard()
+}
+
 async function loadClients() {
-  const { data } = await sb.from('clients').select('*').order('created_at', { ascending: false })
+  const { data } = await sb.from('je_clients').select('*').order('created_at', { ascending: false })
+  _clientsCache = data || []
   const tbody = document.getElementById('clients-tbody')
-  if (!data?.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Aucun client</td></tr>'; return }
+  if (!data?.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Aucun client</td></tr>'; return }
   tbody.innerHTML = data.map(c => `
     <tr>
       <td><strong>${c.nom}</strong></td>
@@ -1045,16 +1209,25 @@ async function loadClients() {
       <td>${c.localisation || '—'}</td>
       <td style="font-size:.75rem;">${c.adresse || '—'}</td>
       <td style="font-size:.72rem;color:rgba(255,255,255,.4);">${fmtDate(c.created_at)}</td>
+      <td>
+        <div style="display:flex;gap:.3rem;">
+          <button class="btn-outline" style="font-size:.65rem;padding:.25rem .55rem;" onclick="editClient('${c.id}')">✏ Modifier</button>
+          <button class="btn-red" style="font-size:.65rem;padding:.25rem .55rem;" onclick="deleteClient('${c.id}')">🗑 Supprimer</button>
+        </div>
+      </td>
     </tr>`).join('')
 }
 
 async function saveClient() {
   const payload = { nom: document.getElementById('f-client-nom').value, whatsapp: document.getElementById('f-client-wa').value, localisation: document.getElementById('f-client-loc').value, adresse: document.getElementById('f-client-adresse').value }
   if (!payload.nom) return toast('Nom requis', true)
-  const { error } = await sb.from('clients').insert(payload)
+  const { error } = _editClientId
+    ? await sb.from('je_clients').update(payload).eq('id', _editClientId)
+    : await sb.from('je_clients').insert(payload)
   if (error) return toast('Erreur', true)
-  toast('Client ajouté ✓')
+  toast(_editClientId ? 'Client modifié ✓' : 'Client ajouté ✓')
   closeModal('modal-client')
+  _editClientId = null
   document.getElementById('f-client-nom').value = ''
   document.getElementById('f-client-wa').value = ''
   document.getElementById('f-client-adresse').value = ''
@@ -1067,30 +1240,42 @@ async function saveClient() {
 // DEMANDES
 // ============================================================
 async function loadDemandes() {
-  const { data } = await sb.from('demandes').select('*, clients(nom,whatsapp), voyages(route), nom_expediteur, wa_expediteur').order('created_at', { ascending: false })
+  const { data } = await sb.from('je_demandes').select('*, je_clients(nom,whatsapp), je_voyages(route), nom_expediteur, wa_expediteur').order('created_at', { ascending: false })
   window._demandes = data || []
   const tbody = document.getElementById('demandes-tbody')
   if (!data?.length) { tbody.innerHTML = '<tr><td colspan="9" class="empty-state">Aucune demande</td></tr>'; return }
   tbody.innerHTML = data.map(d => `
     <tr>
-      <td><strong>${d.clients?.nom || d.nom_expediteur || '—'}</strong></td>
-      <td style="font-size:.72rem;">${d.clients?.whatsapp || d.wa_expediteur || '—'}</td>
-      <td>${routeLabel(d.voyages?.route || '')}</td>
+      <td><strong>${d.je_clients?.nom || d.nom_expediteur || '—'}</strong></td>
+      <td style="font-size:.72rem;">${d.je_clients?.whatsapp || d.wa_expediteur || '—'}</td>
+      <td>${routeLabel(d.je_voyages?.route || '')}</td>
       <td>${d.poids_estime ? d.poids_estime + ' kg' : '—'}</td>
       <td style="font-size:.72rem;max-width:160px;">${d.articles || '—'}</td>
       <td style="font-size:.72rem;">${d.methode_paiement || '—'}</td>
       <td style="font-size:.72rem;">${d.contact_reception || '—'}</td>
       <td>${statutPill(d.statut)}</td>
       <td>
-        ${d.statut === 'en_attente' ? `
-        <div style="display:flex;gap:.3rem;">
-          <button class="btn-green" onclick="openAcceptModal('${d.id}')">✓</button>
-          <button class="btn-red" onclick="refuserDemande('${d.id}')">✗</button>
-        </div>` : d.statut === 'acceptee' ? `
-        <button class="btn-primary" onclick="convertirEnColis('${d.id}')" style="font-size:.72rem;padding:.3rem .7rem;">Créer le colis →</button>
-        ` : '—'}
+        <div style="display:flex;gap:.3rem;align-items:center;flex-wrap:wrap;">
+          ${d.statut === 'en_attente' ? `
+            <button class="btn-green" onclick="openAcceptModal('${d.id}')">✓</button>
+            <button class="btn-red" onclick="refuserDemande('${d.id}')">✗</button>
+          ` : d.statut === 'acceptee' ? `
+            <button class="btn-primary" onclick="convertirEnColis('${d.id}')" style="font-size:.72rem;padding:.3rem .7rem;">Créer le colis →</button>
+          ` : ''}
+          <button class="btn-red" style="font-size:.62rem;padding:.2rem .5rem;" onclick="deleteDemande('${d.id}')">🗑</button>
+        </div>
       </td>
     </tr>`).join('')
+}
+
+async function deleteDemande(id) {
+  if (!confirm('Supprimer cette demande ?')) return
+  const { error } = await sb.from('je_demandes').delete().eq('id', id)
+  if (error) return toast('Erreur suppression', true)
+  toast('Demande supprimée')
+  loadDemandes()
+  loadATraiter()
+  loadDashboard()
 }
 
 function convertirEnColis(demandeId) {
@@ -1122,12 +1307,12 @@ function openAcceptModal(id) {
   const d = (window._demandes || []).find(x => x.id === id)
   if (!d) return
   window._acceptDemandeId = id
-  const nom = d?.nom_expediteur || d?.clients?.nom || 'Client'
-  const wa = d?.wa_expediteur || d?.clients?.whatsapp || '—'
+  const nom = d?.nom_expediteur || d?.je_clients?.nom || 'Client'
+  const wa = d?.wa_expediteur || d?.je_clients?.whatsapp || '—'
   const articles = d?.articles || '—'
   const poids = d?.poids_estime ? `${d.poids_estime} kg` : 'Non précisé'
-  const voyage = d.voyages
-    ? `${routeLabel(d.voyages.route)} · départ ${fmtVoyage(d.voyages.date_depart)}`
+  const voyage = d.je_voyages
+    ? `${routeLabel(d.je_voyages.route)} · départ ${fmtVoyage(d.je_voyages.date_depart)}`
     : 'Aucun voyage sélectionné'
   document.getElementById('modal-accept-info').innerHTML =
     `<strong>${nom}</strong> · ${wa}<br>✈ <strong style="color:var(--gold);">${voyage}</strong><br>Articles : ${articles}<br>Poids estimé : ${poids}`
@@ -1143,13 +1328,13 @@ async function confirmAccept() {
   const montant = parseFloat(document.getElementById('f-accept-montant').value) || null
   const d = (window._demandes || []).find(x => x.id === id)
 
-  const { error: eD } = await sb.from('demandes').update({ statut: 'acceptee' }).eq('id', id)
+  const { error: eD } = await sb.from('je_demandes').update({ statut: 'acceptee' }).eq('id', id)
   if (eD) return toast('Erreur mise à jour demande', true)
 
   // Auto-créer le client si la demande vient du formulaire public (pas de client_id)
   let clientId = d?.client_id || null
   if (!clientId && (d?.nom_expediteur || d?.wa_expediteur)) {
-    const { data: nc } = await sb.from('clients').insert({
+    const { data: nc } = await sb.from('je_clients').insert({
       nom: d.nom_expediteur || 'Expéditeur',
       whatsapp: d.wa_expediteur || null,
       localisation: 'France 🇫🇷'
@@ -1157,7 +1342,7 @@ async function confirmAccept() {
     if (nc) clientId = nc.id
   }
 
-  const { data: newColis, error: eC } = await sb.from('colis').insert({
+  const { data: newColis, error: eC } = await sb.from('je_colis').insert({
     client_id: clientId,
     voyage_id: d?.voyage_id || null,
     poids,
@@ -1166,15 +1351,15 @@ async function confirmAccept() {
     contact_reception: d?.contact_reception || null,
     livraison_souhaitee: d?.livraison_souhaitee || false,
     quartier_abidjan: d?.quartier_abidjan || null,
-    nom_expediteur: d?.nom_expediteur || d?.clients?.nom || null,
-    wa_expediteur: d?.wa_expediteur || d?.clients?.whatsapp || null,
+    nom_expediteur: d?.nom_expediteur || d?.je_clients?.nom || null,
+    wa_expediteur: d?.wa_expediteur || d?.je_clients?.whatsapp || null,
   }).select('numero').single()
   if (eC) return toast('Erreur création colis', true)
 
   // Enregistrer l'encaissement automatiquement si montant renseigné
   if (montant) {
-    const nomClient = d?.nom_expediteur || d?.clients?.nom || 'Client'
-    await sb.from('revenus').insert({
+    const nomClient = d?.nom_expediteur || d?.je_clients?.nom || 'Client'
+    await sb.from('je_revenus').insert({
       type: 'encaissement',
       montant,
       methode: d?.methode_paiement || 'À percevoir',
@@ -1187,8 +1372,8 @@ async function confirmAccept() {
   loadATraiter()
   loadEnCours()
 
-  const waRaw = d?.wa_expediteur || d?.clients?.whatsapp
-  const nomRaw = d?.nom_expediteur || d?.clients?.nom || 'client'
+  const waRaw = d?.wa_expediteur || d?.je_clients?.whatsapp
+  const nomRaw = d?.nom_expediteur || d?.je_clients?.nom || 'client'
   const numero = newColis?.numero || ''
   const lienSuivi = numero ? `https://jenvoie-express.myattractor1.workers.dev?n=${encodeURIComponent(numero)}` : ''
   if (waRaw) {
@@ -1218,14 +1403,14 @@ async function confirmAccept() {
 
 async function refuserDemande(id) {
   if (!confirm('Confirmer le refus de cette demande ?')) return
-  const { error } = await sb.from('demandes').update({ statut: 'refusee' }).eq('id', id)
+  const { error } = await sb.from('je_demandes').update({ statut: 'refusee' }).eq('id', id)
   if (error) return toast('Erreur', true)
   toast('Demande refusée')
   loadATraiter()
 }
 
 async function updateDemandeStatut(id, statut) {
-  const { error } = await sb.from('demandes').update({ statut }).eq('id', id)
+  const { error } = await sb.from('je_demandes').update({ statut }).eq('id', id)
   if (error) return toast('Erreur', true)
   toast(statut === 'acceptee' ? 'Demande acceptée ✓' : 'Statut mis à jour')
   loadATraiter()
@@ -1241,7 +1426,7 @@ const statutLabels = { en_attente:'Demande reçue', collecte:'Colis collecté', 
 async function searchTracking() {
   const q = document.getElementById('track-input').value.trim()
   if (!q) return
-  const { data, error } = await sb.from('colis').select('*, clients(nom,whatsapp)').ilike('numero', `%${q}%`).limit(1).maybeSingle()
+  const { data, error } = await sb.from('je_colis').select('*, je_clients(nom,whatsapp)').ilike('numero', `%${q}%`).limit(1).maybeSingle()
   const el = document.getElementById('tracking-result')
   if (error || !data) { el.innerHTML = '<div class="card" style="color:var(--red);">Aucun colis trouvé pour ce numéro.</div>'; return }
   const idx = statutOrder.indexOf(data.statut)
@@ -1252,7 +1437,7 @@ async function searchTracking() {
   el.innerHTML = `<div class="card">
     <div class="card-title">📦 ${data.numero}</div>
     <div style="display:flex;gap:1.5rem;flex-wrap:wrap;font-size:.78rem;margin-bottom:1rem;">
-      <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">CLIENT</div>${data.clients?.nom || '—'}</div>
+      <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">CLIENT</div>${data.je_clients?.nom || '—'}</div>
       <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">POIDS</div>${data.poids ? data.poids + ' kg' : '—'}</div>
       <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">MONTANT</div>${fmtEur(data.montant)}</div>
       <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">RÉCUPÉRATION</div>${data.contact_reception || '—'}</div>
@@ -1265,7 +1450,7 @@ async function searchTracking() {
 }
 
 async function markLivreTracking(id) {
-  await sb.from('colis').update({ statut: 'livre' }).eq('id', id)
+  await sb.from('je_colis').update({ statut: 'livre' }).eq('id', id)
   toast('Livré ✓')
   searchTracking()
   loadDashboard()
@@ -1276,8 +1461,8 @@ async function markLivreTracking(id) {
 // ============================================================
 async function loadColisOptions() {
   const [{ data: clients }, { data: voyages }] = await Promise.all([
-    sb.from('clients').select('id,nom').order('nom'),
-    sb.from('voyages').select('id,route,date_depart').eq('statut','ouvert').order('date_depart'),
+    sb.from('je_clients').select('id,nom').order('nom'),
+    sb.from('je_voyages').select('id,route,date_depart').eq('statut','ouvert').order('date_depart'),
   ])
   const cSel = document.getElementById('f-colis-client')
   const vSel = document.getElementById('f-colis-voyage')
@@ -1289,7 +1474,7 @@ async function loadColisOptions() {
   // also populate livreur voyage selector
   const lSel = document.getElementById('livreur-voyage-sel')
   while (lSel.options.length > 1) lSel.remove(1)
-  const { data: allVoy } = await sb.from('voyages').select('id,route,date_depart').order('date_depart', { ascending: false })
+  const { data: allVoy } = await sb.from('je_voyages').select('id,route,date_depart').order('date_depart', { ascending: false })
   ;(allVoy||[]).filter(v => v.route === 'ORY_ABJ').forEach(v => lSel.add(new Option(`🇫🇷 ORY→ABJ · ${fmtDate(v.date_depart)}`, v.id)))
 }
 
@@ -1302,8 +1487,8 @@ async function loadLivreur() {
   const kpisEl = document.getElementById('livreur-kpis')
   if (!voyageId) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Sélectionner un voyage</td></tr>'; kpisEl.innerHTML = ''; return }
 
-  const { data } = await sb.from('colis')
-    .select('*, clients(nom,whatsapp)')
+  const { data } = await sb.from('je_colis')
+    .select('*, je_clients(nom,whatsapp)')
     .eq('voyage_id', voyageId)
     .eq('livraison_souhaitee', true)
     .neq('statut', 'livre')
@@ -1318,11 +1503,12 @@ async function loadLivreur() {
   `
 
   if (!data?.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Aucun colis à livrer pour ce voyage</td></tr>'; return }
+  window.__lastTournee = data.length
   tbody.innerHTML = data.map(c => `
     <tr>
       <td><strong>${c.numero}</strong></td>
-      <td>${c.clients?.nom || '—'}</td>
-      <td>${c.clients?.whatsapp || '—'}</td>
+      <td>${c.je_clients?.nom || '—'}</td>
+      <td>${c.je_clients?.whatsapp || '—'}</td>
       <td><strong style="color:var(--gold);">${c.quartier_abidjan || '—'}</strong></td>
       <td>${c.contact_reception || '—'}</td>
       <td style="font-size:.72rem;max-width:160px;">${c.articles || '—'}</td>
@@ -1331,6 +1517,24 @@ async function loadLivreur() {
         <button class="btn-green" onclick="markLivre('${c.id}').then(()=>loadLivreur())">✓ Livré</button>
       </td>
     </tr>`).join('')
+}
+
+function shareTournee(mode) {
+  const sel = document.getElementById('livreur-voyage-sel')
+  const voyageId = sel.value
+  if (!voyageId) { alert('Sélectionne d\'abord un voyage.'); return }
+  const label = sel.options[sel.selectedIndex]?.text || ''
+  const link = `${location.origin}/livreur.html?v=${voyageId}`
+  if (mode === 'copy') {
+    navigator.clipboard.writeText(link).then(
+      () => alert('Lien de tournée copié :\n' + link),
+      () => prompt('Copie ce lien pour le livreur :', link)
+    )
+    return
+  }
+  // WhatsApp
+  const txt = `🛵 Ta tournée J'Envoie Express${label ? ' — ' + label : ''}\n\nOuvre ce lien pour voir tes colis à livrer (triés par quartier) et cocher chaque livraison :\n${link}`
+  window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank')
 }
 </script>
 </body>
