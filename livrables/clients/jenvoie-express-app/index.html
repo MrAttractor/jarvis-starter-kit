@@ -1089,6 +1089,8 @@ const LABELS = { en_attente:'Demande reçue', collecte:'Colis collecté', transi
 
 function toggleLivraison(on) {
   document.getElementById('quartier-field').style.display = on ? 'flex' : 'none'
+  // Livraison à domicile = Abidjan : le destinataire doit être joignable en +225
+  if (on) document.getElementById('d-contact-prefix').value = '+225'
 }
 
 function toggleCollecte(mode) {
@@ -1178,6 +1180,14 @@ async function submitDemande() {
   const livraisonOui = document.querySelector('input[name="livraison"]:checked')?.value === 'oui'
   const quartier = document.getElementById('d-quartier').value.trim()
   if (livraisonOui && !quartier) { alert('Merci d\'indiquer votre quartier pour la livraison.'); return }
+  // Livraison à domicile = Abidjan : le contact du destinataire doit être ivoirien (+225)
+  if (livraisonOui) {
+    const cPrefix = document.getElementById('d-contact-prefix').value
+    const cNum = document.getElementById('d-contact').value.replace(/[\s\-\(\)]/g, '')
+    if (!cNum) { alert('Merci d\'indiquer le numéro du destinataire à Abidjan.'); return }
+    if (cPrefix !== '+225') { alert('Pour une livraison à Abidjan, le contact du destinataire doit être un numéro ivoirien (+225).'); return }
+    if (!/^0?[0-9]{8,9}$/.test(cNum)) { alert('Le numéro ivoirien du destinataire semble invalide. Vérifiez-le (ex : 07 08 68 21 16).'); return }
+  }
   let clientId = null
   const { data: existing } = await sb.from('je_clients').select('id').ilike('whatsapp', wa).maybeSingle()
   if (existing) { clientId = existing.id }
