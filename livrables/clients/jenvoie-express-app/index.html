@@ -109,12 +109,31 @@ a { color: inherit; text-decoration: none; }
 
 /* === HERO === */
 .hero {
+  position: relative;
   padding: 48px 16px 40px;
-  background:
-    radial-gradient(ellipse at 65% 0%, rgba(11, 181, 255, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse at 10% 80%, rgba(245, 194, 0, 0.07) 0%, transparent 50%),
-    var(--navy);
+  background: var(--navy);
   text-align: center;
+  overflow: hidden;
+}
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+}
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 65% 0%, rgba(11, 181, 255, 0.22) 0%, transparent 55%),
+    radial-gradient(ellipse at 10% 80%, rgba(245, 194, 0, 0.1) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(2, 12, 36, 0.55) 0%, var(--navy) 92%);
+}
+.hero > *:not(.hero-video):not(.hero-video-overlay) {
+  position: relative;
+  z-index: 1;
 }
 .hero-badge {
   display: inline-flex;
@@ -604,6 +623,8 @@ a { color: inherit; text-decoration: none; }
 
 <!-- HERO -->
 <section class="hero">
+  <video class="hero-video" src="hero.mp4" poster="hero-poster.jpg" autoplay muted loop playsinline preload="metadata"></video>
+  <div class="hero-video-overlay"></div>
   <div class="hero-badge">✈ Paris · Abidjan · Chaque semaine</div>
   <h1>Expédiez plus,<br>payez <span>moins.</span></h1>
   <p class="hero-sub">Vos colis entre Paris et Abidjan, livrés avec soin.</p>
@@ -707,6 +728,10 @@ a { color: inherit; text-decoration: none; }
           </select>
           <input class="f-input tel-num" id="d-wa" placeholder="07 08 68 21 16">
         </div>
+      </div>
+      <div class="f-col">
+        <label class="f-label">Confirmez votre WhatsApp</label>
+        <input class="f-input" id="d-wa-confirm" placeholder="Retapez le même numéro" inputmode="tel" autocomplete="off" onpaste="return false" oncontextmenu="return false">
       </div>
       <div class="f-col">
         <label class="f-label">Direction</label>
@@ -1009,13 +1034,13 @@ function openWA(key) {
   window.open('https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(WA_MSG[key] || WA_MSG.contact), '_blank', 'noopener')
 }
 
-const SUPABASE_URL = 'https://ltydbwkhdsbmmnoahcty.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0eWRid2toZHNibW1ub2FoY3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMzEyMTIsImV4cCI6MjA5NzYwNzIxMn0.S0u-zZfRKp5t1VpXrGN3II8RtwyRZ7HWUHK3-E8pw58'
+const SUPABASE_URL = 'https://lgdgbrivnhgeupqhkckd.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk'
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 async function loadProchainsDepartsPublic() {
   const today = new Date().toISOString().split('T')[0]
-  const { data } = await sb.from('voyages')
+  const { data } = await sb.from('je_voyages')
     .select('route, date_depart')
     .eq('statut', 'ouvert')
     .gte('date_depart', today)
@@ -1047,7 +1072,7 @@ if (_urlN) {
 }
 
 async function loadPrix() {
-  const { data } = await sb.from('parametres').select('cle,valeur')
+  const { data } = await sb.from('je_parametres').select('cle,valeur')
   if (!data) return
   const p = Object.fromEntries(data.map(r => [r.cle, r.valeur]))
   if (p.tarif_paris_abj) document.querySelectorAll('.price-paris-abj').forEach(el => el.textContent = p.tarif_paris_abj)
@@ -1079,7 +1104,7 @@ function toggleCollecteCi(mode) {
 
 async function loadVoyagesPublic(route) {
   const today = new Date().toISOString().split('T')[0]
-  const { data } = await sb.from('voyages')
+  const { data } = await sb.from('je_voyages')
     .select('id, route, date_depart')
     .eq('statut', 'ouvert')
     .eq('route', route)
@@ -1111,7 +1136,7 @@ async function doTrack() {
   const el = document.getElementById('track-result')
   if (!q) return
   el.innerHTML = '<p style="color:rgba(255,255,255,.4);font-size:16px;padding:12px 0">Recherche...</p>'
-  const { data } = await sb.from('colis').select('numero,statut,paye,montant').ilike('numero', `%${q}%`).limit(1).maybeSingle()
+  const { data } = await sb.from('je_colis').select('numero,statut,paye,montant').ilike('numero', `%${q}%`).limit(1).maybeSingle()
   if (!data) {
     el.innerHTML = '<p style="color:#EF4444;font-size:16px;padding:12px 0">Numéro introuvable. Vérifiez et réessayez.</p>'
     return
@@ -1146,16 +1171,18 @@ async function doTrack() {
 async function submitDemande() {
   const nom = document.getElementById('d-nom').value.trim()
   const waNum = document.getElementById('d-wa').value.replace(/[\s\-\(\)]/g, '')
+  const waConfirm = document.getElementById('d-wa-confirm').value.replace(/[\s\-\(\)]/g, '')
   const wa = document.getElementById('d-prefix').value + waNum
   if (!nom || !waNum) { alert('Nom et WhatsApp requis.'); return }
+  if (waNum !== waConfirm) { alert('Les deux numéros WhatsApp ne correspondent pas. Merci de vérifier.'); return }
   const livraisonOui = document.querySelector('input[name="livraison"]:checked')?.value === 'oui'
   const quartier = document.getElementById('d-quartier').value.trim()
   if (livraisonOui && !quartier) { alert('Merci d\'indiquer votre quartier pour la livraison.'); return }
   let clientId = null
-  const { data: existing } = await sb.from('clients').select('id').ilike('whatsapp', wa).maybeSingle()
+  const { data: existing } = await sb.from('je_clients').select('id').ilike('whatsapp', wa).maybeSingle()
   if (existing) { clientId = existing.id }
   else {
-    const { data: nc } = await sb.from('clients').insert({
+    const { data: nc } = await sb.from('je_clients').insert({
       nom, whatsapp: wa,
       localisation: document.getElementById('d-route').value === 'ORY_ABJ' ? 'Paris 🇫🇷' : 'Abidjan 🇨🇮'
     }).select('id').single()
@@ -1182,21 +1209,31 @@ async function submitDemande() {
   const contactFull = contactNum ? document.getElementById('d-contact-prefix').value + contactNum : ''
 
   const voyageId = document.getElementById('d-voyage').value || null
-  const { error } = await sb.from('demandes').insert({
+  const articlesVal = document.getElementById('d-articles').value
+  const poidsVal = parseFloat(document.getElementById('d-poids').value) || null
+  const { error } = await sb.from('je_demandes').insert({
     client_id: clientId,
     nom_expediteur: nom,
     wa_expediteur: wa,
     voyage_id: voyageId,
-    articles: document.getElementById('d-articles').value,
-    poids_estime: parseFloat(document.getElementById('d-poids').value) || null,
+    articles: articlesVal,
+    poids_estime: poidsVal,
     methode_paiement: document.getElementById('d-paiement').value,
     contact_reception: contactFull + (pointCollecte ? ` | Collecte: ${pointCollecte}` : ''),
     livraison_souhaitee: livraisonOui,
     quartier_abidjan: livraisonOui ? quartier : null,
   })
   if (error) { alert('Erreur. Contactez-nous directement sur WhatsApp.'); return }
+
+  // Notifier Jean Yves sur WhatsApp (fire-and-forget, ne bloque jamais le client)
+  fetch(`${SUPABASE_URL}/functions/v1/notify-je-demande`, {
+    method: 'POST',
+    headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ nom, wa, route, poids: poidsVal, articles: articlesVal }),
+  }).catch(() => {})
+
   document.getElementById('form-ok').style.display = 'block'
-  ;['d-nom','d-wa','d-articles','d-poids','d-contact','d-quartier'].forEach(id => {
+  ;['d-nom','d-wa','d-wa-confirm','d-articles','d-poids','d-contact','d-quartier'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = ''
   })
 }

@@ -188,6 +188,8 @@
     <div class="modal-title">✓ Accepter la demande</div>
     <div id="modal-accept-info" style="background:rgba(91,184,245,.08);border:1px solid rgba(91,184,245,.2);border-radius:10px;padding:.8rem 1rem;margin-bottom:1.2rem;font-size:.82rem;color:rgba(255,255,255,.75);line-height:1.6;"></div>
     <div class="form-grid">
+      <div class="form-group"><label>NOM EXPÉDITEUR</label><input type="text" id="f-accept-nom" placeholder="Prénom Nom"></div>
+      <div class="form-group"><label>WHATSAPP (corriger si erreur)</label><input type="text" id="f-accept-wa" placeholder="+225 07 XX XX XX XX"></div>
       <div class="form-group"><label>POIDS RÉEL (kg)</label><input type="number" id="f-accept-poids" step="0.1" placeholder="ex: 3.5"></div>
       <div class="form-group"><label>MONTANT À PAYER (€)</label><input type="number" id="f-accept-montant" placeholder="ex: 49"></div>
     </div>
@@ -225,6 +227,7 @@
       <div class="form-group"><label>MONTANT PAYÉ (€)</label><input type="number" id="e-montant" step="0.01" placeholder="ex: 120"></div>
       <div class="form-group"><label>POIDS RÉEL (kg)</label><input type="number" id="e-poids" step="0.1" placeholder="ex: 3.5"></div>
       <div class="form-group full"><label>ARTICLES</label><textarea id="e-articles" rows="3" placeholder="Ex: 1 téléphone Samsung, 2 paires de chaussures..."></textarea></div>
+      <div class="form-group full"><label>WHATSAPP EXPÉDITEUR</label><input type="text" id="e-wa" placeholder="+225 07 XX ou +33 6 XX"></div>
       <div class="form-group full"><label>CONTACT RÉCUPÉRATION</label><input type="text" id="e-contact" placeholder="+225 07 XX ou +33 6 XX"></div>
       <div class="form-group"><label>QUARTIER ABIDJAN</label><input type="text" id="e-quartier" placeholder="Ex: Cocody, Marcory..."></div>
       <div class="form-group"><label>PRIX LIVRAISON ABJ (€)</label><input type="number" id="e-prix-livraison" step="0.01" placeholder="ex: 5"></div>
@@ -719,6 +722,7 @@ function openEditColis(id) {
   document.getElementById('e-montant').value = c.montant || ''
   document.getElementById('e-poids').value = c.poids || ''
   document.getElementById('e-articles').value = c.articles || ''
+  document.getElementById('e-wa').value = c.wa_expediteur || c.je_clients?.whatsapp || ''
   document.getElementById('e-contact').value = c.contact_reception || ''
   document.getElementById('e-quartier').value = c.quartier_abidjan || ''
   document.getElementById('e-prix-livraison').value = c.prix_livraison || ''
@@ -731,6 +735,7 @@ async function saveEditColis() {
     montant:           parseFloat(document.getElementById('e-montant').value) || null,
     poids:             parseFloat(document.getElementById('e-poids').value) || null,
     articles:          document.getElementById('e-articles').value.trim() || null,
+    wa_expediteur:     document.getElementById('e-wa').value.trim() || null,
     contact_reception: document.getElementById('e-contact').value.trim() || null,
     quartier_abidjan:  document.getElementById('e-quartier').value.trim() || null,
     prix_livraison:    parseFloat(document.getElementById('e-prix-livraison').value) || null,
@@ -1315,7 +1320,9 @@ function openAcceptModal(id) {
     ? `${routeLabel(d.je_voyages.route)} · départ ${fmtVoyage(d.je_voyages.date_depart)}`
     : 'Aucun voyage sélectionné'
   document.getElementById('modal-accept-info').innerHTML =
-    `<strong>${nom}</strong> · ${wa}<br>✈ <strong style="color:var(--gold);">${voyage}</strong><br>Articles : ${articles}<br>Poids estimé : ${poids}`
+    `✈ <strong style="color:var(--gold);">${voyage}</strong><br>Articles : ${articles}<br>Poids estimé : ${poids}`
+  document.getElementById('f-accept-nom').value = d?.nom_expediteur || d?.je_clients?.nom || ''
+  document.getElementById('f-accept-wa').value = d?.wa_expediteur || d?.je_clients?.whatsapp || ''
   document.getElementById('f-accept-poids').value = d?.poids_estime || ''
   document.getElementById('f-accept-montant').value = ''
   openModal('modal-accept')
@@ -1328,15 +1335,21 @@ async function confirmAccept() {
   const montant = parseFloat(document.getElementById('f-accept-montant').value) || null
   const d = (window._demandes || []).find(x => x.id === id)
 
-  const { error: eD } = await sb.from('je_demandes').update({ statut: 'acceptee' }).eq('id', id)
+  // Valeurs éventuellement corrigées par Jean Yves (erreur de saisie du demandeur)
+  const nomEdit = document.getElementById('f-accept-nom').value.trim() || d?.nom_expediteur || d?.je_clients?.nom || 'Expéditeur'
+  const waEdit = document.getElementById('f-accept-wa').value.trim() || d?.wa_expediteur || d?.je_clients?.whatsapp || null
+
+  const { error: eD } = await sb.from('je_demandes').update({ statut: 'acceptee', nom_expediteur: nomEdit, wa_expediteur: waEdit }).eq('id', id)
   if (eD) return toast('Erreur mise à jour demande', true)
 
-  // Auto-créer le client si la demande vient du formulaire public (pas de client_id)
+  // Client : mettre à jour l'existant (numéro corrigé) ou en créer un
   let clientId = d?.client_id || null
-  if (!clientId && (d?.nom_expediteur || d?.wa_expediteur)) {
+  if (clientId) {
+    await sb.from('je_clients').update({ nom: nomEdit, whatsapp: waEdit }).eq('id', clientId)
+  } else if (nomEdit || waEdit) {
     const { data: nc } = await sb.from('je_clients').insert({
-      nom: d.nom_expediteur || 'Expéditeur',
-      whatsapp: d.wa_expediteur || null,
+      nom: nomEdit,
+      whatsapp: waEdit,
       localisation: 'France 🇫🇷'
     }).select('id').single()
     if (nc) clientId = nc.id
@@ -1351,8 +1364,8 @@ async function confirmAccept() {
     contact_reception: d?.contact_reception || null,
     livraison_souhaitee: d?.livraison_souhaitee || false,
     quartier_abidjan: d?.quartier_abidjan || null,
-    nom_expediteur: d?.nom_expediteur || d?.je_clients?.nom || null,
-    wa_expediteur: d?.wa_expediteur || d?.je_clients?.whatsapp || null,
+    nom_expediteur: nomEdit,
+    wa_expediteur: waEdit,
   }).select('numero').single()
   if (eC) return toast('Erreur création colis', true)
 
