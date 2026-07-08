@@ -7,6 +7,20 @@
 
 ---
 
+## 2026-07-09 (session 90 suite — J'Envoie Express : tournée de collecte Abidjan → Paris)
+
+### Tournée de collecte pour le livreur CI (miroir de la livraison)
+- Besoin exprimé par Mac Arthur : dans le sens Abidjan → Paris, le livreur doit pouvoir récupérer les colis chez les expéditeurs dans différentes communes d'Abidjan, avant regroupement chez Jean Yves à Faya
+- Migration DB : colonnes `collecte_domicile` + `quartier_collecte` ajoutées sur `je_demandes` et `je_colis` (miroir de `livraison_souhaitee`/`quartier_abidjan`), appliquée en prod (non destructif)
+- Formulaire public : 2 points de dépôt au choix pour "Je dépose moi-même" (Cocody Faya / Yopougon SIDECI) au lieu d'un seul ; la collecte à domicile est désormais captée en structuré (flag + quartier) au lieu d'être noyée dans un texte libre
+- Edge function `je-tournee` : détecte automatiquement le sens du voyage → mode livraison (ORY_ABJ, marque "livré") ou collecte (ABJ_ORY, marque "collecté"). Un seul type de lien, la page bascule seule
+- Page livreur : en mode collecte, titre "Ma collecte" + "regroupement Faya", groupé par quartier de collecte, contact = l'expéditeur à Abidjan (numéro CI), bouton "Marquer collecté"
+- Admin : sélecteur Livreur CI propose les deux sens (🇫🇷→🇨🇮 Livraison / 🇨🇮→🇫🇷 Collecte), table + KPIs adaptés ; case "collecte à domicile" + quartier de collecte ajoutés à l'édition du colis (pour marquer d'anciens colis antérieurs à la captation structurée)
+- Testé de bout en bout (mode collecte : list + mark ; non-régression du mode livraison confirmée), rendu validé par capture d'écran, données de test créées puis supprimées, sécurité inchangée (service role, rien exposé en public)
+- Migration versionnée dans le repo : `livrables/clients/jenvoie-express-app/supabase/0003_collecte_domicile.sql`
+
+---
+
 ## 2026-07-08 (session 90 — J'Envoie Express : fix notif email CORS + tournée livreur CI + fiabilisation numéros)
 
 ### Notification email des demandes réparée (bug CORS)
