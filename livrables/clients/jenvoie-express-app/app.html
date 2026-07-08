@@ -229,8 +229,14 @@
       <div class="form-group full"><label>ARTICLES</label><textarea id="e-articles" rows="3" placeholder="Ex: 1 téléphone Samsung, 2 paires de chaussures..."></textarea></div>
       <div class="form-group full"><label>WHATSAPP EXPÉDITEUR</label><input type="text" id="e-wa" placeholder="+225 07 XX ou +33 6 XX"></div>
       <div class="form-group full"><label>CONTACT RÉCUPÉRATION</label><input type="text" id="e-contact" placeholder="+225 07 XX ou +33 6 XX"></div>
-      <div class="form-group"><label>QUARTIER ABIDJAN</label><input type="text" id="e-quartier" placeholder="Ex: Cocody, Marcory..."></div>
+      <div class="form-group"><label>QUARTIER ABIDJAN (livraison)</label><input type="text" id="e-quartier" placeholder="Ex: Cocody, Marcory..."></div>
       <div class="form-group"><label>PRIX LIVRAISON ABJ (€)</label><input type="number" id="e-prix-livraison" step="0.01" placeholder="ex: 5"></div>
+      <div class="form-group full"><label>COLLECTE À DOMICILE (Abidjan → Paris)</label>
+        <label style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:white;cursor:pointer;padding-top:.3rem;">
+          <input type="checkbox" id="e-collecte" style="width:auto;accent-color:var(--sky);"> Colis à récupérer chez l'expéditeur
+        </label>
+      </div>
+      <div class="form-group full"><label>QUARTIER DE COLLECTE (Abidjan)</label><input type="text" id="e-quartier-collecte" placeholder="Ex: Yopougon, Abobo..."></div>
     </div>
     <div class="modal-actions">
       <button class="btn-outline" onclick="closeModal('modal-edit-colis')">Annuler</button>
@@ -726,6 +732,8 @@ function openEditColis(id) {
   document.getElementById('e-contact').value = c.contact_reception || ''
   document.getElementById('e-quartier').value = c.quartier_abidjan || ''
   document.getElementById('e-prix-livraison').value = c.prix_livraison || ''
+  document.getElementById('e-collecte').checked = !!c.collecte_domicile
+  document.getElementById('e-quartier-collecte').value = c.quartier_collecte || ''
   openModal('modal-edit-colis')
 }
 
@@ -739,6 +747,8 @@ async function saveEditColis() {
     contact_reception: document.getElementById('e-contact').value.trim() || null,
     quartier_abidjan:  document.getElementById('e-quartier').value.trim() || null,
     prix_livraison:    parseFloat(document.getElementById('e-prix-livraison').value) || null,
+    collecte_domicile: document.getElementById('e-collecte').checked,
+    quartier_collecte: document.getElementById('e-quartier-collecte').value.trim() || null,
   }
   const { error } = await sb.from('je_colis').update(updates).eq('id', _editColisId)
   if (error) { toast('Erreur lors de la modification', true); return }
