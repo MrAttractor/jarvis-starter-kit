@@ -35,12 +35,13 @@ DEVISES
 - Zone CI / Afrique → FCFA (1 EUR = 655.957 FCFA)
 - Zone EU / diaspora / France → EUR
 
-FAMILLE A — App / système sur mesure (conception + abonnement)
-| Niveau     | Pour qui                              | Setup FCFA   | MRR FCFA     | Setup EUR | MRR EUR |
-|------------|---------------------------------------|--------------|--------------|-----------|---------|
-| SOLO       | App simple, 1 utilisateur             | 150 000 FCFA | 45 000 FCFA  | 220 €     | 67 €    |
-| ÉQUIPE     | Jusqu'à 5 utilisateurs, workflows     | 350 000 FCFA | 120 000 FCFA | 520 €     | 180 €   |
-| ENTERPRISE | Multi-utilisateurs, sur mesure        | 500 000 FCFA | Devis        | 760 € min | Devis   |
+FAMILLE A — App métier sur mesure (grille produit)
+Composantes : vitrine (e-commerce, choix du produit ou demande type essayage/RDV) + tableau de bord (mise en ligne articles + suivi stock + CA) + lien livreur (contact/coordonnées client + jour de visite).
+| Niveau     | Périmètre                                                        | Setup FCFA   | Setup EUR   | MRR         |
+|------------|------------------------------------------------------------------|--------------|-------------|-------------|
+| App simple | Vitrine + commandes, dashboard basique, hébergement 1 an offert  | 165 000 FCFA | 250 €       | 0 (1 an offert) |
+| App pro    | + lien de suivi livreur + visibilité stock                       | 320 000 FCFA | 490 € min   | à définir   |
+| App pro+   | Multi-utilisateurs + BDD pro + assistance (rapports, messagerie) | 790 000 FCFA | 1 200 € min | à définir   |
 
 FAMILLE B — Consulting Méthode ATTRACTOR
 | Offre    | FCFA          | EUR  | Format |
@@ -68,7 +69,7 @@ RÈGLES DE CALCUL
 CLASSIFICATION
 1. Si la famille est déjà connue (fournie dans le brief), ne pas la redéterminer — se concentrer sur le niveau.
 2. Sinon : type_projet = 'app' → Famille A | 'consulting' → Famille B | 'assists' → Famille C | business établi avec chiffres mesurables → Famille D
-3. nb_users = '1' → SOLO | '2-5' → ÉQUIPE | '5+' ou non précisé complexe → ENTERPRISE
+3. périmètre simple (vitrine + commandes) → App simple | + suivi livreur / visibilité stock → App pro | multi-utilisateurs / administration générale / BDD pro + assistance → App pro+
 4. zone = 'CI' → FCFA | sinon → EUR
 
 ═══════════════════════════════════════════════════════════
@@ -76,7 +77,7 @@ CLASSIFICATION
 FORMAT DE RÉPONSE — JSON strict, aucun texte autour :
 {
   "famille": "A" | "B" | "C" | "D",
-  "niveau": "SOLO" | "ÉQUIPE" | "ENTERPRISE" | "STARTER" | "RUNNER" | "EAGLE" | "CONSEIL" | "FREEMIUM" | "PARTENARIAT",
+  "niveau": "App simple" | "App pro" | "App pro+" | "STARTER" | "RUNNER" | "EAGLE" | "CONSEIL" | "FREEMIUM" | "PARTENARIAT",
   "devise": "EUR" | "FCFA",
   "setup_ht": <nombre ou null>,
   "mrr": <nombre ou null si famille B>,

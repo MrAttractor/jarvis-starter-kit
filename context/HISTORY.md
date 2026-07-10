@@ -7,6 +7,80 @@
 
 ---
 
+## 2026-07-10 (session 93 — AYELA : maquette + partenariat par échange, nouveau prospect All Eyes on yoo, grille tarifaire mise à jour)
+
+### AYELA / Ayêla SARL — maquette de closing + proposition d'échange
+- Nouveau dossier client : marque de spiritueux et liqueurs premium à Abidjan (CEO Lorraine). Contenu récupéré du dossier Drive « Ayela » : 7 fiches produits + présentation de marque + logo officiel + photos. Prix extraits du catalogue WhatsApp (liqueurs 50cl 10 000 F / pocket 100ml 700 F ; cocktails canette DG et MAÏKE 3 000 F).
+- Cadré avec Mac Arthur (AskUserQuestion) : livrable = maquette de closing d'abord (pas encore signé), communauté/salon reportée V2.
+- **Maquette live : demo.agenceattractor.com/ayela** — page unique, 2 téléphones cliquables côte à côte : la boutique que voient ses clients (catalogue 7 produits, fiches, panier, commande WhatsApp, page Marque) + le tableau de bord de la gérante (production/LANEMA, stock + alertes, POS Abidjan géolocalisés, KPIs + point du jour). Palette premium espresso/orange/or tirée du logo. Vraies photos produits optimisées, vrais prix.
+- **Bug lien corrigé** : le lien sans slash final (`/ayela`) tombait sur le catch-all `_redirects` et servait l'app Assists (« lien plus actif » côté prospect). Ajout de la règle `/ayela → /ayela/index.html 200` avant le catch-all, redéployé. Les deux formes servent désormais la maquette. Leçon : tout nouveau client statique de demo-site doit avoir sa règle explicite dans `_redirects`.
+- **Modèle de deal = partenariat par échange** (décidé par Mac Arthur, 80€ setup) : logique « cheval de Troie, on attire les clients par la DMV ». Le build quasi-offert (forfait technique 80€/50 000 FCFA seul) est une Démonstration de Valeur ; le vrai gain = la contrepartie **recommandations réseau** (Lorraine recommande l'agence dans son réseau d'entrepreneurs locaux et son réseau pro bars/hôtels/restos/épiceries = prospects apps métier) + visibilité + vidéo témoignage. Logique cheval-de-Troie gardée interne, jamais écrite au client.
+- Document d'échange à la marque produit via le template standard (`livrables/clients/ayela/ECHANGE-AYELA.html/.md` + PDF) + message WhatsApp d'accompagnement. Prêt à envoyer.
+- À obtenir avant le build réel : confirmer 2 prix (Cocktail DG, formats Pocket) + liste réelle des POS.
+
+### Nouveau prospect — All Eyes on yoo
+- Marque de lunettes/montures. Besoin app métier hors partenariat : vitrine e-commerce (choix monture ou demande d'essayage) + tableau de bord (mise en ligne articles, stock, CA) + lien livreur (contact/coordonnées client + jour de visite).
+
+### Grille tarifaire app métier mise à jour
+- Grille produit confirmée par Mac Arthur : **App simple 250€** (vitrine + commandes, hébergement 1 an offert) / **App pro dès 490€** (+ lien de suivi livreur + visibilité stock) / **App pro+ dès 1200€** (multi-utilisateurs, BDD pro, assistance rapports/messagerie). Remplace l'ancienne grille SOLO/ÉQUIPE/ENTERPRISE (220/520/760).
+- Synchronisé dans les deux sources : `.claude/skills/devis-express/references/bareme.md` ET l'edge function `generate-devis/index.ts` (BAREME_SYSTEM). Reste à redéployer `generate-devis` sur Supabase pour que l'auto-devis du Pilotage applique la nouvelle grille.
+
+---
+
+## 2026-07-09 (session 92 — Studio Créatif IA : recadrage d'un CDC surdimensionné + entrée en phase promotion/partenariats)
+
+### Contexte : partenariat par échange avec une agence IA générative
+- Mac Arthur a un partenariat avec une agence IA générative (créateur visuel d'Abidjan/Bénin, photo/vidéo/image IA). Échange marchandise : Mr Attractor conçoit leur site, le studio l'accompagne sur sa campagne d'influence par IA (personnage Awa).
+- Fichier reçu au départ : une maquette portfolio HTML esthétique mais coquille vide (formulaire mort, filtres décoratifs, tout en placeholder) — révèle leur force (créatif visuel) et leur faiblesse (fonctionnel/dev), donc complémentarité réelle avec Mr Attractor.
+
+### Le CDC reçu était une plateforme complète, pas un site
+- Le cahier des charges transmis décrivait un SaaS + e-commerce + LMS + CMS (espace client, auth, paiement, configurateur de devis, réservation RDV, formations en ligne, blog SEO, back-office 12 entités, chat IA, favoris, comparateur avant/après, multilingue, WCAG, 3D Three.js). En valeur marché : plusieurs milliers d'euros. Disproportionné pour un troc.
+- Deux incompatibilités techniques signalées : ils imposaient **Stripe** (incompatible avec l'exclusivité XPaye + inadapté à la CI) et une stack **Next.js/Vercel/Sanity** (ni la stack Générateur d'Apps Métier, ni celle d'Assists → repart de zéro, ne capitalise rien).
+
+### Recadrage produit
+- Périmètre ramené à une **Phase 1** : site vitrine premium + capture de leads (entrée cinématique, portfolio à filtres fonctionnels, formulaire de devis connecté Supabase + notif, formations en vitrine, témoignages, FAQ, contact). Tout le reste = évolutions payantes hors troc.
+- Contrepartie clarifiée par Mac Arthur : le studio ne produit pas les vidéos (Mac Arthur les produit lui-même via Magnific + CapCut), il apporte un **coaching** pour concevoir et déployer la campagne (DA, outils IA, méthode de cohérence du personnage, workflow de production, déploiement plateformes). Point de vigilance acté : un coaching est diffus → à borner (nb séances, durée, livrables qui restent : workflow + méthode cohérence).
+- Précision de cadrage : ce n'est pas « la campagne Awa » mais une **campagne d'influence par IA** où l'on crée une influenceuse virtuelle avec une vraie identité, Awa étant le personnage principal.
+- Deal complété par un **forfait technique symbolique de 80 € / 50 000 FCFA** à la charge du studio (domaine + hébergement + mise en ligne, domaine à leur nom) — introduit un garde-fou financier minimal, ce qui répond au risque « partenariat en nature sans acompte ».
+
+### Livrables produits
+- Dossier `livrables/clients/studio-ia-partenaire/` : documents de cadrage (recadrage périmètre, besoin/contrepartie Awa, versions à envoyer) + **document d'échange fusionné** `ECHANGE-STUDIO-AWA.html/.md` + **PDF de marque** généré (Chrome headless, écriture bloquée sur OneDrive → passage par le scratchpad puis copie) + message WhatsApp d'accompagnement.
+- Statut : document prêt à envoyer, en attente que le studio précise ce qu'il couvre sur le coaching avant de formaliser le protocole d'échange.
+
+### Virage stratégique acté : phase promotion + multiplication des partenariats
+- Mac Arthur annonce l'entrée en **phase de promotion** avec une stratégie de **nombreux partenariats visibilité et business**. Ce partenariat studio est le premier cas réel.
+- Décision méthodo : créer un **template standard de proposition d'échange** réutilisable pour tous les futurs partenariats de ce type, pour ne pas repartir de zéro et garder chaque échange équilibré. Créé : `livrables/commercial/process-vente/template-proposition-echange.md`.
+- CONTEXT.md mis à jour (nouveau projet + note de virage stratégique).
+
+---
+
+## 2026-07-09 (session 91 — Club Élévia : contrat signé, faille de périmètre corrigée par avenant, package réaligné)
+
+### Contexte : Élise a signé SA propre proposition de contrat
+- Mac Arthur a signé la proposition de contrat rédigée par Élise (18 articles), en clarifiant le périmètre (web app) **uniquement par un appel téléphonique**
+- Conséquence : le contrat Mr Attractor (`CONTRAT-ATR-2026-0005`) est **caduc**, c'est le contrat d'Élise qui fait foi. Ordre de priorité de son Art. 2 : Contrat > CDC > Cession PI > Devis > NDA → le contrat prime sur le devis et le CDC
+
+### Faille de périmètre identifiée et corrigée (le point sérieux)
+- Son contrat signé engage explicitement au **natif iOS + Android + publication stores** (Art. 1 « application mobile », Art. 3 « développer l'app iOS / Android », Art. 4 Phase 5, Art. 10 comptes Apple/Google), alors que le périmètre réel voulu = **Web App uniquement**
+- La clarification orale (appel) ne pèse rien face à l'Art. 3 écrit, et le devis (rang 4) ne peut pas contredire le contrat (rang 1) : Mac Arthur était exposé à devoir livrer le natif + stores pour 3 500 €
+- Correctif : **`AVENANT-01-PERIMETRE-ClubElevia.html`** créé, qui modifie noir sur blanc les Art. 1/3/4/10 → périmètre = Web App responsive V1, natif/stores = Phase 5 hors périmètre (devis V2 séparé). À faire co-signer par Élise
+
+### Propriété intellectuelle : renonciation totale assumée
+- Son Art. 8 = renonciation totale du Prestataire (tout le code/BDD/algorithmes transféré après paiement, aucune réserve) + Art. 12 = non-réutilisation du projet pendant 5 ans
+- C'est l'inverse de la réserve de réutilisation que Mac Arthur avait tenu à garder en juin pour le Générateur d'Apps Métier. Décision de Mac Arthur : il assume, « je garde mon expertise, je ne recopie pas le code, je ne perds rien »
+- Traduit dans les docs : clause de réserve retirée, remplacée par une distinction **savoir-faire du Prestataire (reste à lui) vs livrables Élévia (transférés)** — juridiquement sain (know-how ≠ livrables)
+
+### Package réaligné et PDF générés
+- **Devis V4** : les 3 formules retirées sur demande de Mac Arthur, **prix unique 3 500 €**, 250 € déjà perçus → Jalon 1 = 800 € net, calendrier 30/30/30/10 (signature / validation maquettes / livraison bêta / mise en ligne), 5 phases de production (Phase 5 stores hors périmètre), liste des livrables transférés, clause frais de tiers (domaine/hébergement achetés par la Cliente à son nom, hors devis)
+- **CDC V3** : périmètre fonctionnel gardé intégralement mais réorganisé en 4 modules (Identité/Confiance/Rencontre/Communauté) traversant les 5 phases cycle de vie ; tous les renvois recalés sur les vrais articles d'Élise (PI = Art. 8, validation/PV = Art. 6, paiement = Art. 7, accès/domaine = Art. 10, maintenance = Art. 13) ; correction d'une erreur : le CDC prétendait « faire foi » sur tout alors qu'il est rang 2 → respecte désormais l'ordre de priorité Art. 2
+- 3 PDF générés (Chrome headless, `--no-pdf-header-footer`) : Avenant n°1, Devis V4, CDC V3
+- Prochaine étape : faire signer Avenant n°1 + Devis V4 + CDC V3 (contrat + NDA déjà signés) → déclenche Jalon 1 (800 € net) + démarrage Phase 1 Maquettes
+
+### Leçon
+- Quand un client fait signer SON propre contrat, ne jamais se contenter d'une clarification orale de périmètre : formaliser par un avenant écrit et co-signé qui modifie les articles concernés. Le document signé prime sur toute parole, et le devis ne rattrape pas un contrat contradictoire (ordre de priorité)
+
+---
+
 ## 2026-07-09 (session 90 suite — J'Envoie Express : tournée de collecte Abidjan → Paris)
 
 ### Tournée de collecte pour le livreur CI (miroir de la livraison)

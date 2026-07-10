@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ayêla — Boutique & Tableau de bord</title>
+<meta name="description" content="Ayêla SARL — la vitrine de vente connectée au tableau de bord de la gérante. Maquette Mr Attractor.">
+<style>
+:root{
+  --brand:#DA6A1E;      /* orange Ayêla */
+  --brand-2:#C29433;    /* or */
+  --brand-3:#8C1D2A;    /* rubis (hibiscus) accent */
+  --ink:#2A1D12;
+  --muted:#7c6a58;
+  --bg:#F7EFE2;         /* crème */
+  --card:#FFFFFF;
+  --espresso:#1c130c;
+  --radius:20px;
+  --serif:'Georgia','Times New Roman',serif;
+  --sans:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:hidden;max-width:100%}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:#f3e9dc;background:
+  radial-gradient(1200px 700px at 80% -10%,rgba(218,106,30,.18),transparent 60%),
+  radial-gradient(900px 600px at 0% 20%,rgba(194,148,51,.12),transparent 55%),
+  linear-gradient(165deg,#150e08,#241811 60%,#1a1109);min-height:100vh}
+.wrap{max-width:1180px;margin:0 auto;padding:34px 20px 70px}
+
+/* ---------- HEADER / PITCH ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:30px}
+.brandline{display:flex;align-items:center;gap:14px}
+.brandline img{height:56px;width:auto;border-radius:12px;background:#fff;padding:6px 10px}
+.brandline .co{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand-2)}
+.agency{font-size:12px;color:#b9a68f;text-align:right;line-height:1.5}
+.agency b{color:#f3e9dc}
+
+.hero-pitch{display:grid;grid-template-columns:1.1fr .9fr;gap:34px;align-items:center;margin-bottom:14px}
+@media(max-width:840px){.hero-pitch{grid-template-columns:1fr}}
+.kicker{color:var(--brand);font-weight:800;letter-spacing:.16em;text-transform:uppercase;font-size:12px}
+.hero-pitch h1{font-family:var(--serif);font-size:clamp(25px,6.4vw,40px);line-height:1.12;margin:12px 0 16px;color:#fff;font-weight:600;overflow-wrap:break-word}
+.hero-pitch h1 span{color:var(--brand-2);font-style:italic}
+.hero-pitch p{color:#cdbca6;font-size:16px;line-height:1.6;max-width:520px}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#e9dcc9;font-size:12.5px;padding:8px 14px;border-radius:30px}
+.chip b{color:var(--brand-2)}
+.heroimg{border-radius:24px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);aspect-ratio:4/3}
+.heroimg img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* ---------- SECTION LABELS ---------- */
+.sect{margin:56px 0 22px;text-align:center}
+.sect .k{color:var(--brand-2);font-weight:800;letter-spacing:.16em;text-transform:uppercase;font-size:12px}
+.sect h2{font-family:var(--serif);font-size:clamp(22px,5.4vw,30px);color:#fff;margin:8px 0 8px;font-weight:600}
+.sect p{color:#bda98f;font-size:14.5px;max-width:640px;margin:0 auto}
+
+/* ---------- STAGE (deux téléphones) ---------- */
+.stage{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start;justify-content:center}
+.device{display:flex;flex-direction:column;align-items:center;gap:14px}
+.device .dlabel{text-align:center;max-width:340px}
+.device .dlabel .t{display:inline-flex;align-items:center;gap:8px;font-weight:800;color:#fff;font-size:15px}
+.device .dlabel .t .dot{width:9px;height:9px;border-radius:50%;background:var(--brand)}
+.device .dlabel .t.g .dot{background:var(--brand-2)}
+.device .dlabel p{color:#b7a48b;font-size:13px;margin-top:5px;line-height:1.5}
+
+.phone{width:344px;height:726px;background:#0b0805;border-radius:48px;padding:12px;box-shadow:0 34px 80px rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.08)}
+.screen{position:relative;width:100%;height:100%;background:var(--bg);border-radius:38px;overflow:hidden;display:flex;flex-direction:column;color:var(--ink)}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:132px;height:24px;background:#0b0805;border-radius:0 0 16px 16px;z-index:20}
+
+.topbar{background:linear-gradient(120deg,var(--espresso),#3a251400);position:relative;color:#fff;padding:40px 16px 14px;display:flex;align-items:center;gap:11px;overflow:hidden}
+.topbar.shop{background:linear-gradient(120deg,#2a1608,#5a2f11)}
+.topbar.dash{background:linear-gradient(120deg,#1c130c,#3d3111)}
+.topbar .blogo{height:30px;background:#fff;border-radius:7px;padding:3px 6px}
+.topbar h2{font-size:16px;font-family:var(--serif)}
+.topbar small{display:block;opacity:.82;font-weight:400;font-size:10.5px}
+
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.content::-webkit-scrollbar{width:0}
+.pad{padding:16px}
+.view{display:none}
+.view.active{display:block;animation:fade .28s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+
+/* shop pieces */
+.banner{position:relative;border-radius:18px;overflow:hidden;height:172px;margin-bottom:14px}
+.banner img{width:100%;height:100%;object-fit:cover}
+.banner .ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,10,4,.05),rgba(20,10,4,.82));display:flex;flex-direction:column;justify-content:flex-end;padding:14px}
+.banner .ov .tt{font-family:var(--serif);color:#fff;font-size:19px;line-height:1.15}
+.banner .ov .st{color:#ffe6c9;font-size:11.5px;margin-top:3px}
+.pay{display:flex;gap:7px;align-items:center;background:#fff;border:1px solid #efe2cf;border-radius:14px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--muted)}
+.pay b{color:var(--ink)}
+.pay .m{margin-left:auto;display:flex;gap:5px}
+.pay .m span{background:#fdece9;color:#b8402f;font-weight:700;font-size:10.5px;padding:3px 8px;border-radius:20px}
+.pay .m span.ok{background:#e7f4ea;color:#1f7a44}
+
+.secttitle{display:flex;align-items:center;justify-content:space-between;margin:6px 2px 10px}
+.secttitle h3{font-family:var(--serif);font-size:16px;color:var(--ink)}
+.secttitle a{font-size:11.5px;color:var(--brand);font-weight:700;text-decoration:none;cursor:pointer}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.pcard{background:var(--card);border:1px solid #efe3d1;border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.pcard:active{transform:scale(.98)}
+.pcard .im{height:118px;background:#f0e6d5;overflow:hidden}
+.pcard .im img{width:100%;height:100%;object-fit:cover}
+.pcard .b{padding:9px 10px 11px}
+.pcard .nm{font-weight:700;font-size:13px;color:var(--ink);display:flex;align-items:center;gap:6px}
+.pcard .badge{font-size:9px;font-weight:800;color:#fff;background:var(--brand-3);padding:2px 6px;border-radius:20px}
+.pcard .badge.rtd{background:var(--brand)}
+.pcard .mt{font-size:10.5px;color:var(--muted);margin:3px 0 7px}
+.pcard .pr{font-weight:800;color:var(--brand);font-size:13.5px}
+.pcard .pr small{color:var(--muted);font-weight:600;font-size:10px}
+
+/* product detail */
+.detail .dim{height:230px;border-radius:18px;overflow:hidden;margin-bottom:12px;background:#f0e6d5}
+.detail .dim img{width:100%;height:100%;object-fit:cover}
+.detail h3{font-family:var(--serif);font-size:22px;color:var(--ink)}
+.detail .deg{display:inline-block;background:#f3e7d2;color:#7a5a1f;font-weight:800;font-size:11px;padding:3px 10px;border-radius:20px;margin:6px 0}
+.detail p.desc{font-size:13px;color:#5f5040;line-height:1.55;margin:6px 0 12px}
+.fmt{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #efe3d1;border-radius:14px;padding:11px 13px;margin-bottom:9px}
+.fmt .l{font-size:12.5px;color:var(--ink);font-weight:600}
+.fmt .l small{display:block;color:var(--muted);font-weight:400;font-size:10.5px}
+.fmt .p{font-weight:800;color:var(--brand);font-size:14px}
+.note{font-size:11px;color:var(--muted);line-height:1.5;margin:8px 2px}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;text-align:center;background:var(--brand);color:#fff;border:none;padding:14px;border-radius:14px;font-size:14.5px;font-weight:700;margin-top:6px;cursor:pointer;text-decoration:none}
+.btn.wa{background:#1f9d54}
+.btn.gold{background:linear-gradient(120deg,var(--brand-2),#a97e22)}
+.btn.ghost{background:#fff;color:var(--brand);border:1.5px solid var(--brand)}
+
+/* cart */
+.line{display:flex;align-items:center;gap:11px;background:#fff;border:1px solid #efe3d1;border-radius:14px;padding:10px;margin-bottom:9px}
+.line .im{width:46px;height:46px;border-radius:10px;overflow:hidden;flex:none;background:#f0e6d5}
+.line .im img{width:100%;height:100%;object-fit:cover}
+.line .nm{font-size:12.5px;font-weight:700;color:var(--ink)}
+.line .mt{font-size:10.5px;color:var(--muted)}
+.line .pr{margin-left:auto;font-weight:800;color:var(--brand);font-size:13px}
+.tot{display:flex;justify-content:space-between;align-items:center;padding:12px 2px;font-size:14px}
+.tot b{font-size:19px;color:var(--ink)}
+
+/* about */
+.about .q{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--ink);line-height:1.35;margin-bottom:10px}
+.about p{font-size:12.8px;color:#5f5040;line-height:1.6;margin-bottom:10px}
+.vals{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.val{background:#fff;border:1px solid #efe3d1;border-radius:12px;padding:9px 11px}
+.val .vt{font-weight:800;font-size:12px;color:var(--brand)}
+.val .vd{font-size:10.5px;color:var(--muted);line-height:1.4;margin-top:2px}
+
+/* ---------- DASHBOARD ---------- */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.kpi{background:#fff;border:1px solid #efe3d1;border-radius:16px;padding:13px}
+.kpi .lab{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.kpi .num{font-family:var(--serif);font-size:23px;font-weight:700;color:var(--ink);margin-top:3px}
+.kpi .num.g{color:var(--brand)}
+.kpi .sub{font-size:10.5px;margin-top:2px}
+.kpi .sub.up{color:#1f7a44}.kpi .sub.dn{color:#b8402f}
+.dcard{background:#fff;border:1px solid #efe3d1;border-radius:16px;padding:14px;margin-bottom:12px}
+.dcard h3{font-size:13.5px;color:var(--ink);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.dcard h3 .pill{margin-left:auto;font-size:10px;font-weight:800;color:#fff;background:var(--brand);padding:3px 8px;border-radius:20px}
+
+.prow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f1e7d7}
+.prow:last-child{border:none}
+.prow .ic{width:34px;height:34px;border-radius:9px;background:#f6ecdb;display:flex;align-items:center;justify-content:center;font-size:15px;flex:none}
+.prow .nm{font-size:12.5px;font-weight:700;color:var(--ink)}
+.prow .mt{font-size:10.5px;color:var(--muted)}
+.prow .st{margin-left:auto;font-size:10px;font-weight:800;padding:3px 9px;border-radius:20px}
+.st.wait{background:#fff3e0;color:#a5670a}.st.prog{background:#e6eefc;color:#295bd0}.st.done{background:#e7f4ea;color:#1f7a44}.st.lab{background:#f3e8fb;color:#7a3fbf}
+
+.bar{height:8px;border-radius:8px;background:#f0e6d5;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,var(--brand),var(--brand-2))}
+.stkrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f1e7d7}
+.stkrow:last-child{border:none}
+.stkrow .nm{font-size:12px;font-weight:700;color:var(--ink);flex:1}
+.stkrow .nm small{display:block;color:var(--muted);font-weight:400;font-size:10px}
+.stkrow .q{font-weight:800;font-size:13px;color:var(--ink);min-width:52px;text-align:right}
+.stkrow .q.low{color:#b8402f}
+
+.posc{border:1px solid #efe3d1;border-radius:14px;padding:11px 12px;margin-bottom:10px;background:#fff}
+.posc .h{display:flex;align-items:center;gap:8px}
+.posc .h .nm{font-size:13px;font-weight:800;color:var(--ink)}
+.posc .h .zone{margin-left:auto;font-size:10px;font-weight:700;color:var(--brand);background:#fbeadb;padding:2px 8px;border-radius:20px}
+.posc .meta{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;margin-top:9px}
+.posc .meta div{font-size:10.8px;color:var(--muted)}
+.posc .meta b{color:var(--ink);font-weight:700}
+.posc .del{margin-top:9px;display:flex;justify-content:space-between;align-items:center;font-size:10.8px}
+.posc .del .next{color:var(--brand);font-weight:800}
+.map{position:relative;height:150px;border-radius:14px;overflow:hidden;margin-bottom:12px;background:linear-gradient(135deg,#e9dcc4,#d8c39f)}
+.map .grid-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.4) 1px,transparent 1px);background-size:26px 26px}
+.map .pin{position:absolute;width:14px;height:14px;background:var(--brand);border:2px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,.3);transform:translate(-50%,-50%)}
+.map .pin.g{background:var(--brand-2)}
+.map .cap{position:absolute;left:10px;bottom:8px;font-size:10px;color:#5a4326;background:rgba(255,255,255,.7);padding:3px 8px;border-radius:20px}
+
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:4px}
+.act{background:#fff;border:1px solid #efe3d1;border-radius:13px;padding:11px;text-align:center;cursor:pointer}
+.act .ic{font-size:19px}
+.act .t{font-size:11px;font-weight:700;color:var(--ink);margin-top:4px}
+
+/* tabbar */
+.tabbar{display:flex;background:#fff;border-top:1px solid #eaddc8}
+.tab{flex:1;padding:9px 3px 8px;text-align:center;font-size:10px;color:var(--muted);border:none;background:none;cursor:pointer;font-weight:600}
+.tab.active{color:var(--brand);font-weight:800}
+.tab .ic{display:block;font-size:17px;margin-bottom:2px}
+.tab.dash.active{color:var(--brand-2)}
+
+/* ---------- CLOSING ---------- */
+.closing{margin-top:64px;background:linear-gradient(135deg,rgba(218,106,30,.14),rgba(194,148,51,.1));border:1px solid rgba(255,255,255,.12);border-radius:26px;padding:34px 26px;text-align:center}
+.closing h2{font-family:var(--serif);color:#fff;font-size:clamp(21px,5.2vw,28px);margin-bottom:12px}
+.closing p{color:#cdbca6;font-size:15px;line-height:1.6;max-width:640px;margin:0 auto 8px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:760px;margin:26px auto 0}
+@media(max-width:680px){.steps{grid-template-columns:1fr}}
+.step{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:18px}
+.step .n{width:30px;height:30px;border-radius:50%;background:var(--brand);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.step h4{color:#fff;font-size:14px;margin-bottom:5px}
+.step p{color:#bda98f;font-size:12.5px;line-height:1.5}
+.wa-cta{display:inline-flex;align-items:center;gap:9px;background:#1f9d54;color:#fff;text-decoration:none;font-weight:700;padding:14px 26px;border-radius:40px;margin-top:26px;font-size:15px}
+
+.foot{text-align:center;color:#8a7860;font-size:11.5px;margin-top:34px;line-height:1.7}
+.foot b{color:#b9a68f}
+@media(max-width:480px){
+  .wrap{padding:22px 16px 60px}
+  .hero-pitch h1{font-size:25px}
+  .sect h2{font-size:23px}
+  .closing{padding:26px 18px}
+  .closing h2{font-size:22px}
+  .heroimg{aspect-ratio:16/11}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="top">
+    <div class="brandline">
+      <img src="assets/logo.jpg" alt="Ayêla">
+      <div>
+        <div class="co">Ayêla SARL · Abidjan</div>
+        <div style="font-size:13px;color:#e9dcc9;margin-top:2px">L'élégance du terroir africain</div>
+      </div>
+    </div>
+    <div class="agency">Maquette conçue par <b>Mr Attractor</b><br>Agence business &amp; développement</div>
+  </div>
+
+  <!-- PITCH -->
+  <div class="hero-pitch">
+    <div>
+      <div class="kicker">Vitrine de vente × Tableau de bord</div>
+      <h1>Ta marque en ligne,<br><span>pilotée d'un seul endroit.</span></h1>
+      <p>D'un côté, une boutique premium où tes clients découvrent chaque création, voient les prix et commandent en un geste. De l'autre, ton tableau de bord de gérante : production, stock, points de vente et chiffres du jour. Les deux, connectés.</p>
+      <div class="chips">
+        <span class="chip"><b>7</b> créations en ligne</span>
+        <span class="chip">Paiement <b>OM / Wave</b></span>
+        <span class="chip">Suivi <b>POS</b> Abidjan</span>
+        <span class="chip">Stock &amp; production <b>en direct</b></span>
+      </div>
+    </div>
+    <div class="heroimg"><img src="assets/hero.jpg" alt="Ayêla, cocktails du terroir"></div>
+  </div>
+
+  <div class="sect">
+    <div class="k">Touche les écrans — c'est cliquable</div>
+    <h2>Deux faces d'un même système</h2>
+    <p>À gauche, ce que vivent tes clients. À droite, ce que tu pilotes. Ouvre-le sur ton téléphone et navigue dans les onglets.</p>
+  </div>
+
+  <!-- STAGE -->
+  <div class="stage">
+
+    <!-- ========== PHONE 1 : BOUTIQUE ========== -->
+    <div class="device">
+      <div class="dlabel"><span class="t"><span class="dot"></span> La boutique de tes clients</span>
+        <p>Catalogue, fiches produits, commande WhatsApp, histoire de la marque.</p></div>
+      <div class="phone"><div class="screen">
+        <div class="notch"></div>
+        <div class="topbar shop">
+          <img class="blogo" src="assets/logo.jpg" alt="">
+          <div><h2>Ayêla</h2><small>Liqueurs &amp; cocktails du terroir</small></div>
+        </div>
+        <div class="content">
+
+          <!-- Accueil boutique -->
+          <section class="view active pad" id="s-home">
+            <div class="banner">
+              <img src="assets/dg-poster.jpg" alt="">
+              <div class="ov"><div class="tt">Naturellement délicieuse</div><div class="st">Découvre le DG · coco, souchet, gingembre</div></div>
+            </div>
+            <div class="pay">
+              <span>💳</span><div><b>Paiement mobile</b><br>Orange Money · Wave</div>
+              <div class="m"><span class="ok">OM</span><span class="ok">Wave</span></div>
+            </div>
+            <div class="secttitle"><h3>Nos créations</h3><a onclick="go('s-cat',shopTabs[1])">Tout voir →</a></div>
+            <div class="grid">
+              <div class="pcard" onclick="openP('dg')"><div class="im"><img src="assets/dg.jpg"></div><div class="b"><div class="nm">DG <span class="badge rtd">RTD</span></div><div class="mt">Canette 33cl · 12%</div><div class="pr">3 000 F</div></div></div>
+              <div class="pcard" onclick="openP('maike')"><div class="im"><img src="assets/maike.jpg"></div><div class="b"><div class="nm">MAÏKE <span class="badge rtd">RTD</span></div><div class="mt">Canette 33cl · 10%</div><div class="pr">3 000 F</div></div></div>
+              <div class="pcard" onclick="openP('1722')"><div class="im"><img src="assets/1722.jpg"></div><div class="b"><div class="nm">1722</div><div class="mt">Hibiscus · 15%</div><div class="pr">10 000 F <small>/ 50cl</small></div></div></div>
+              <div class="pcard" onclick="openP('passion')"><div class="im"><img src="assets/passion.jpg"></div><div class="b"><div class="nm">Passion</div><div class="mt">Fruit passion · 25%</div><div class="pr">10 000 F <small>/ 50cl</small></div></div></div>
+            </div>
+          </section>
+
+          <!-- Catalogue -->
+          <section class="view pad" id="s-cat">
+            <div class="secttitle"><h3>Le catalogue Ayêla</h3><span style="font-size:11px;color:var(--muted)">7 créations</span></div>
+            <div class="grid">
+              <div class="pcard" onclick="openP('dg')"><div class="im"><img src="assets/dg.jpg"></div><div class="b"><div class="nm">DG <span class="badge rtd">RTD</span></div><div class="mt">Canette 33cl · 12%</div><div class="pr">3 000 F</div></div></div>
+              <div class="pcard" onclick="openP('maike')"><div class="im"><img src="assets/maike.jpg"></div><div class="b"><div class="nm">MAÏKE <span class="badge rtd">RTD</span></div><div class="mt">Canette 33cl · 10%</div><div class="pr">3 000 F</div></div></div>
+              <div class="pcard" onclick="openP('miel')"><div class="im"><img src="assets/miel.jpg"></div><div class="b"><div class="nm">Nuit de Miel</div><div class="mt">Miel · gingembre · 30%</div><div class="pr">10 000 F <small>/ 50cl</small></div></div></div>
+              <div class="pcard" onclick="openP('caramel')"><div class="im"><img src="assets/caramel.jpg"></div><div class="b"><div class="nm">Caramel Citron</div><div class="mt">Caramel · citron · 30%</div><div class="pr">10 000 F <small>/ 50cl</small></div></div></div>
+              <div class="pcard" onclick="openP('chocolat')"><div class="im"><img src="assets/chocolat.jpg"></div><div class="b"><div class="nm">Chocolat Écrémé</div><div class="mt">Cacao · lait · 25%</div><div class="pr">10 000 F <small>/ 50cl</small></div></div></div>
+              <div class="pcard" onclick="openP('1722')"><div class="im"><img src="assets/1722.jpg"></div><div class="b"><div class="nm">1722</div><div class="mt">Hibiscus · anis · 15%</div><div class="pr">10 000 F <small>/ 50cl</small></div></div></div>
+              <div class="pcard" onclick="openP('passion')"><div class="im"><img src="assets/passion.jpg"></div><div class="b"><div class="nm">Passion</div><div class="mt">Fruit passion · 25%</div><div class="pr">10 000 F <small>/ 50cl</small></div></div></div>
+            </div>
+            <div class="note">Format Pocket 100ml disponible dès 700 F sur la gamme liqueurs.</div>
+          </section>
+
+          <!-- Fiche produit (remplie dynamiquement) -->
+          <section class="view pad detail" id="s-prod">
+            <div class="dim"><img id="p-img" src="assets/dg.jpg"></div>
+            <h3 id="p-name">Cocktail DG</h3>
+            <span class="deg" id="p-deg">12% vol · Canette 33cl</span>
+            <p class="desc" id="p-desc"></p>
+            <div id="p-fmts"></div>
+            <button class="btn wa" onclick="go('s-cart',shopTabs[2])">🛒 Ajouter &amp; commander</button>
+            <button class="btn ghost" style="margin-top:9px" onclick="go('s-cat',shopTabs[1])">← Retour au catalogue</button>
+          </section>
+
+          <!-- Panier / commande -->
+          <section class="view pad" id="s-cart">
+            <div class="secttitle"><h3>Ma commande</h3></div>
+            <div class="line"><div class="im"><img src="assets/dg.jpg"></div><div><div class="nm">Cocktail DG ×2</div><div class="mt">Canette 33cl</div></div><div class="pr">6 000 F</div></div>
+            <div class="line"><div class="im"><img src="assets/miel.jpg"></div><div><div class="nm">Nuit de Miel ×1</div><div class="mt">50cl verre</div></div><div class="pr">10 000 F</div></div>
+            <div class="line"><div class="im"><img src="assets/passion.jpg"></div><div><div class="nm">Passion ×1</div><div class="mt">Pocket 100ml</div></div><div class="pr">700 F</div></div>
+            <div class="tot"><span>Total</span><b>16 700 F</b></div>
+            <div class="pay"><span>📍</span><div><b>Livraison Abidjan</b><br>Cocody, Marcory, Plateau…</div><div class="m"><span class="ok">OM</span><span class="ok">Wave</span></div></div>
+            <a class="btn wa" href="https://wa.me/2250748844513?text=Bonjour%20Ay%C3%AAla%2C%20je%20souhaite%20commander%20%3A%202%20DG%2C%201%20Nuit%20de%20Miel%2C%201%20Passion%20pocket." target="_blank">💬 Confirmer sur WhatsApp</a>
+            <div class="note">La commande part sur le WhatsApp d'Ayêla (+225 07 48 84 45 13). Paiement Orange Money ou Wave.</div>
+          </section>
+
+          <!-- À propos / marque -->
+          <section class="view pad about" id="s-brand">
+            <div class="banner"><img src="assets/story.jpg" alt=""><div class="ov"><div class="tt">Ayêla, « l'Amour »</div><div class="st">Créée en Côte d'Ivoire · inspirée par l'Afrique</div></div></div>
+            <div class="q">« L'amour de notre terre, des traditions, du partage et du travail bien fait. »</div>
+            <p>Ayêla est née d'une vision : transformer les richesses naturelles de la Côte d'Ivoire en spiritueux d'exception. Cacao, gingembre, hibiscus, miel, souchet, fruits tropicaux : chaque bouteille raconte une Afrique créative, élégante et tournée vers l'avenir.</p>
+            <div class="vals">
+              <div class="val"><div class="vt">Authenticité</div><div class="vd">Nos racines, nos saveurs naturelles.</div></div>
+              <div class="val"><div class="vt">Excellence</div><div class="vd">Qualité constante, chaque lot.</div></div>
+              <div class="val"><div class="vt">Innovation</div><div class="vd">Des associations inédites.</div></div>
+              <div class="val"><div class="vt">Fierté africaine</div><div class="vd">Le savoir-faire ivoirien, haut.</div></div>
+            </div>
+          </section>
+
+        </div>
+        <nav class="tabbar">
+          <button class="tab active" onclick="go('s-home',this)"><span class="ic">🏠</span>Accueil</button>
+          <button class="tab" onclick="go('s-cat',this)"><span class="ic">🍾</span>Catalogue</button>
+          <button class="tab" onclick="go('s-cart',this)"><span class="ic">🛒</span>Panier</button>
+          <button class="tab" onclick="go('s-brand',this)"><span class="ic">✨</span>Marque</button>
+        </nav>
+      </div></div>
+    </div>
+
+    <!-- ========== PHONE 2 : TABLEAU DE BORD ========== -->
+    <div class="device">
+      <div class="dlabel"><span class="t g"><span class="dot"></span> Le tableau de bord de la gérante</span>
+        <p>Production, stock, points de vente, chiffres du jour. Ce que tu pilotes.</p></div>
+      <div class="phone"><div class="screen">
+        <div class="notch"></div>
+        <div class="topbar dash">
+          <img class="blogo" src="assets/logo.jpg" alt="">
+          <div><h2>Pilotage Ayêla</h2><small>Bonjour 👋 · Mardi 9 juillet</small></div>
+        </div>
+        <div class="content">
+
+          <!-- Accueil dashboard -->
+          <section class="view active pad" id="d-home">
+            <div class="kpis">
+              <div class="kpi"><div class="lab">Ventes du jour</div><div class="num g">142 000 F</div><div class="sub up">▲ 18% vs hier</div></div>
+              <div class="kpi"><div class="lab">Commandes</div><div class="num">23</div><div class="sub up">6 en attente</div></div>
+              <div class="kpi"><div class="lab">Alertes stock</div><div class="num" style="color:#b8402f">2</div><div class="sub dn">à réapprovisionner</div></div>
+              <div class="kpi"><div class="lab">POS actifs</div><div class="num">5</div><div class="sub">Abidjan</div></div>
+            </div>
+            <div class="dcard">
+              <h3>📌 Point du jour <span class="pill">3 actions</span></h3>
+              <div class="prow"><div class="ic">🚚</div><div><div class="nm">Livraison Marcory</div><div class="mt">36 bouteilles · prévue 14h</div></div><span class="st prog">à faire</span></div>
+              <div class="prow"><div class="ic">🍯</div><div><div class="nm">Nuit de Miel — stock bas</div><div class="mt">Reste 18 unités</div></div><span class="st wait">alerte</span></div>
+              <div class="prow"><div class="ic">🧪</div><div><div class="nm">Lot 1722 — retour LANEMA</div><div class="mt">Analyse reçue ✓</div></div><span class="st done">ok</span></div>
+            </div>
+            <div class="actions">
+              <div class="act" onclick="go('d-prod',dashTabs[1])"><div class="ic">🏭</div><div class="t">Voir production</div></div>
+              <div class="act" onclick="go('d-stock',dashTabs[2])"><div class="ic">📦</div><div class="t">Gérer le stock</div></div>
+              <div class="act" onclick="go('d-pos',dashTabs[3])"><div class="ic">📍</div><div class="t">Mes points de vente</div></div>
+              <div class="act"><div class="ic">➕</div><div class="t">Nouvelle commande</div></div>
+            </div>
+          </section>
+
+          <!-- Production -->
+          <section class="view pad" id="d-prod">
+            <div class="secttitle"><h3 style="font-family:var(--serif)">Suivi de production</h3></div>
+            <div class="dcard">
+              <h3>🧪 Lot #A-142 · 1722 <span class="pill" style="background:var(--brand-2)">Macération</span></h3>
+              <div class="prow"><div><div class="nm">Hibiscus · cannelle · anis</div><div class="mt">Début 28/06 · 220 L</div></div><span class="st lab">J+11</span></div>
+              <div class="bar"><i style="width:72%"></i></div>
+              <div class="note">Mise en bouteille estimée : 15/07</div>
+            </div>
+            <div class="dcard">
+              <h3>🍯 Lot #A-140 · Nuit de Miel <span class="pill" style="background:#295bd0">Embouteillage</span></h3>
+              <div class="prow"><div><div class="nm">Miel · gingembre · girofle</div><div class="mt">380 bouteilles 50cl</div></div><span class="st prog">en cours</span></div>
+              <div class="bar"><i style="width:46%"></i></div>
+            </div>
+            <div class="dcard">
+              <h3>🧫 Contrôle qualité — LANEMA</h3>
+              <div class="prow"><div class="ic">✓</div><div><div class="nm">1722</div><div class="mt">Conforme · 15% vol</div></div><span class="st done">validé</span></div>
+              <div class="prow"><div class="ic">⏳</div><div><div class="nm">Caramel Citron</div><div class="mt">Échantillon déposé</div></div><span class="st wait">en attente</span></div>
+            </div>
+          </section>
+
+          <!-- Stock -->
+          <section class="view pad" id="d-stock">
+            <div class="secttitle"><h3 style="font-family:var(--serif)">Stock en direct</h3><span style="font-size:11px;color:var(--muted)">MAJ 12h40</span></div>
+            <div class="dcard">
+              <div class="stkrow"><div class="nm">Cocktail DG <small>Canette 33cl</small></div><div class="q">214</div></div>
+              <div class="stkrow"><div class="nm">MAÏKE <small>Canette 33cl</small></div><div class="q">176</div></div>
+              <div class="stkrow"><div class="nm">Passion <small>50cl verre</small></div><div class="q">58</div></div>
+              <div class="stkrow"><div class="nm">Nuit de Miel <small>50cl verre</small></div><div class="q low">18 ⚠</div></div>
+              <div class="stkrow"><div class="nm">Chocolat Écrémé <small>50cl verre</small></div><div class="q">44</div></div>
+              <div class="stkrow"><div class="nm">Caramel Citron <small>50cl verre</small></div><div class="q low">11 ⚠</div></div>
+              <div class="stkrow"><div class="nm">1722 <small>Pocket 100ml</small></div><div class="q">130</div></div>
+            </div>
+            <button class="btn gold">📥 Enregistrer un réapprovisionnement</button>
+          </section>
+
+          <!-- POS -->
+          <section class="view pad" id="d-pos">
+            <div class="secttitle"><h3 style="font-family:var(--serif)">Points de vente</h3><span style="font-size:11px;color:var(--muted)">5 actifs</span></div>
+            <div class="map">
+              <div class="grid-lines"></div>
+              <div class="pin" style="left:38%;top:40%"></div>
+              <div class="pin" style="left:60%;top:56%"></div>
+              <div class="pin g" style="left:30%;top:66%"></div>
+              <div class="pin" style="left:70%;top:34%"></div>
+              <div class="pin" style="left:52%;top:24%"></div>
+              <div class="cap">📍 Abidjan · 5 dépôts</div>
+            </div>
+            <div class="posc">
+              <div class="h"><span class="nm">Cave Gourmande</span><span class="zone">Cocody</span></div>
+              <div class="meta"><div>📞 <b>07 01 22 33 44</b></div><div>👤 <b>Mme Aka</b></div><div>📦 Stock déposé <b>48</b></div><div>🧾 Vendu <b>31</b></div></div>
+              <div class="del"><span>Dernière livraison : 02/07</span><span class="next">Prochaine : 11/07</span></div>
+            </div>
+            <div class="posc">
+              <div class="h"><span class="nm">Lounge Le Baoulé</span><span class="zone">Marcory</span></div>
+              <div class="meta"><div>📞 <b>05 66 77 88 99</b></div><div>👤 <b>Serge K.</b></div><div>📦 Stock déposé <b>36</b></div><div>🧾 Vendu <b>29</b></div></div>
+              <div class="del"><span>Dernière livraison : 05/07</span><span class="next">Prochaine : aujourd'hui 14h</span></div>
+            </div>
+            <div class="posc">
+              <div class="h"><span class="nm">Épicerie Fine Plateau</span><span class="zone">Plateau</span></div>
+              <div class="meta"><div>📞 <b>01 44 55 66 77</b></div><div>👤 <b>M. Diallo</b></div><div>📦 Stock déposé <b>22</b></div><div>🧾 Vendu <b>20</b></div></div>
+              <div class="del"><span>Dernière livraison : 03/07</span><span class="next">Prochaine : 12/07</span></div>
+            </div>
+          </section>
+
+        </div>
+        <nav class="tabbar">
+          <button class="tab dash active" onclick="go('d-home',this)"><span class="ic">📊</span>Accueil</button>
+          <button class="tab dash" onclick="go('d-prod',this)"><span class="ic">🏭</span>Production</button>
+          <button class="tab dash" onclick="go('d-stock',this)"><span class="ic">📦</span>Stock</button>
+          <button class="tab dash" onclick="go('d-pos',this)"><span class="ic">📍</span>POS</button>
+        </nav>
+      </div></div>
+    </div>
+
+  </div>
+
+  <!-- CLOSING -->
+  <div class="closing">
+    <h2>Ce que tu vois là peut être à toi</h2>
+    <p>Cette maquette n'est pas une image : c'est le point de départ concret de ta boutique et de ton pilotage. On la connecte à une vraie base de données, on met tes vrais stocks, tes vrais points de vente, et elle devient ton outil quotidien.</p>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h4>On cadre</h4><p>On valide ensemble les produits, prix et modules du tableau de bord.</p></div>
+      <div class="step"><div class="n">2</div><h4>On construit</h4><p>Vitrine + tableau de bord connectés, à ton nom de domaine.</p></div>
+      <div class="step"><div class="n">3</div><h4>Tu pilotes</h4><p>Tu vends en ligne et tu suis prod, stock et POS d'un seul endroit.</p></div>
+    </div>
+    <a class="wa-cta" href="https://wa.me/2250748844513" target="_blank">💬 En parler sur WhatsApp</a>
+  </div>
+
+  <div class="foot">
+    <b>Ayêla SARL</b> · +225 07 48 84 45 13 · Abidjan, Côte d'Ivoire<br>
+    Maquette de démonstration réalisée par <b>Mr Attractor</b> — Agence business &amp; développement.<br>
+    Certaines données du tableau de bord sont illustratives et seront remplacées par les vraies à la mise en place.
+  </div>
+
+</div>
+
+<script>
+var PRODUCTS = {
+  dg:{name:'Cocktail DG',deg:'12% vol · Canette 33cl',img:'assets/dg.jpg',
+     desc:"Le prêt-à-boire signature : lait de coco, lait de souchet et gingembre. Crémeux, exotique, légèrement épicé. À servir très frais.",
+     fmts:[['Canette 33cl','Prêt-à-boire, à emporter','3 000 F']]},
+  maike:{name:'Cocktail MAÏKE',deg:'10% vol · Canette 33cl',img:'assets/maike.jpg',
+     desc:"Frais et audacieux : citron greffé et mandarine. Vif, fruité, désaltérant. Le cocktail nomade et festif.",
+     fmts:[['Canette 33cl','Prêt-à-boire, à emporter','3 000 F']]},
+  '1722':{name:'Ayêla 1722',deg:'15% vol · Liqueur',img:'assets/1722.jpg',
+     desc:"Hibiscus (bissap), cannelle et anis étoilé. Une signature florale, épicée et douce. Si tu aimes le Porto ou le Martini rouge, tu vas adorer.",
+     fmts:[['Bouteille 50cl','Verre premium','10 000 F'],['Pocket 100ml','Format nomade PET','700 F']]},
+  passion:{name:'Ayêla Passion',deg:'25% vol · Liqueur',img:'assets/passion.jpg',
+     desc:"Fruit de la passion soigneusement sélectionné. Fraîcheur, douceur maîtrisée et finale exotique persistante. Pure, sur glace ou en cocktail.",
+     fmts:[['Bouteille 50cl','Verre premium','10 000 F'],['Pocket 100ml','Format nomade PET','700 F']]},
+  chocolat:{name:'Chocolat Écrémé',deg:'25% vol · Liqueur',img:'assets/chocolat.jpg',
+     desc:"Cacao de qualité et lait écrémé : texture veloutée, intensité chocolatée, douceur équilibrée. Idéale dégustation et pâtisserie. (Contient du lait.)",
+     fmts:[['Bouteille 50cl','Verre premium','10 000 F'],['Pocket 100ml','Format nomade PET','700 F']]},
+  miel:{name:'Nuit de Miel',deg:'30% vol · Liqueur',img:'assets/miel.jpg',
+     desc:"Miel naturel, gingembre frais et clou de girofle. Douce au palais, intensément parfumée, finale chaleureuse. Enveloppante.",
+     fmts:[['Bouteille 50cl','Verre premium','10 000 F'],['Pocket 100ml','Format nomade PET','700 F']]},
+  caramel:{name:'Caramel Citron',deg:'30% vol · Liqueur',img:'assets/caramel.jpg',
+     desc:"Caramel gourmand et fraîcheur acidulée du citron. Rondeur et vivacité. Dégustation, mixologie et pâtisserie.",
+     fmts:[['Bouteille 50cl','Verre premium','10 000 F'],['Pocket 100ml','Format nomade PET','700 F']]}
+};
+var shopTabs, dashTabs;
+window.addEventListener('DOMContentLoaded',function(){
+  var navs = document.querySelectorAll('.tabbar');
+  shopTabs = navs[0].querySelectorAll('.tab');
+  dashTabs = navs[1].querySelectorAll('.tab');
+});
+function openP(key){
+  var p = PRODUCTS[key]; if(!p) return;
+  document.getElementById('p-img').src = p.img;
+  document.getElementById('p-name').textContent = p.name;
+  document.getElementById('p-deg').textContent = p.deg;
+  document.getElementById('p-desc').textContent = p.desc;
+  var h='';
+  p.fmts.forEach(function(f){ h+='<div class="fmt"><div class="l">'+f[0]+'<small>'+f[1]+'</small></div><div class="p">'+f[2]+'</div></div>'; });
+  document.getElementById('p-fmts').innerHTML = h;
+  go('s-prod', shopTabs[1]);
+}
+function go(id, el){
+  var screen = document.getElementById(id).closest('.screen');
+  screen.querySelectorAll('.view').forEach(function(v){v.classList.remove('active')});
+  document.getElementById(id).classList.add('active');
+  if(el){
+    var bar = el.closest('.tabbar');
+    if(bar){ bar.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')}); el.classList.add('active'); }
+  }
+  screen.querySelector('.content').scrollTop = 0;
+}
+</script>
+</body>
+</html>

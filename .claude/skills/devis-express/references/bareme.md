@@ -24,15 +24,19 @@
 - Côte d'Ivoire : FCFA reste la devise de facturation réelle.
 - Taux de conversion : 1 EUR ≈ 655,957 FCFA, arrondir proprement.
 
-## Famille A — App / système sur mesure (conception + abonnement)
+## Famille A — App métier sur mesure (grille produit, confirmée 10/07/2026)
 
-| Niveau | Pour qui | Setup | Abonnement |
-|--------|----------|-------|------------|
-| **SOLO** | App simple, 1 utilisateur | 150 000 FCFA / 220 € | 45 000 FCFA / 67 €/mois |
-| **ÉQUIPE** | Jusqu'à 5 utilisateurs, workflows partagés | 350 000 FCFA / 520 € | 120 000 FCFA / 180 €/mois |
-| **ENTERPRISE** | Multi-utilisateurs, sur mesure | Sur devis, à partir de 500 000 FCFA / 760 € | Sur devis |
+Composantes récurrentes d'une app métier : **vitrine** (e-commerce, choix du produit directement ou demande type essayage/RDV), **tableau de bord** (autonomie mise en ligne des articles + suivi stock + chiffre d'affaires), **lien livreur** (voit contact + coordonnées du client + jour de visite).
 
-Ancrage de référence : **J'envoie Express = SOLO**.
+| Niveau | Pour qui / périmètre | Prix (setup) |
+|--------|----------------------|--------------|
+| **App simple** | Vitrine + traitement des commandes. Vitrine connectée à un tableau de bord basique. **Hébergement 1 an offert.** | 165 000 FCFA / **250 €** |
+| **App pro** | Vitrine + traitement des commandes + lien de suivi (livreur) + visibilité stock. | à partir de 320 000 FCFA / **490 €** |
+| **App pro+** | Multi-utilisateurs (équipe + administration générale), base de données pro, assistance (rapports, messagerie, etc.). | à partir de 790 000 FCFA / **1 200 €** |
+
+Abonnement / maintenance : App simple = hébergement 1 an offert, puis maintenance à définir ; App pro / pro+ = maintenance mensuelle selon périmètre. Ne pas oublier d'activer le MRR à la livraison (SOP).
+
+Ancrage de référence : **J'Envoie Express, GetWinWorld, C'Real**. Partenariat par échange (DMV) : forfait technique symbolique 80 €/50 000 FCFA seul, cf. règle des rabais volontaires ci-dessous.
 
 ## Famille B — Consulting Méthode ATTRACTOR
 
@@ -83,9 +87,9 @@ Sur les petits deals Famille A locaux (ex. GetWinWorld, J'Envoie Express), les p
 À partir des infos brutes, déterminer :
 1. **Famille** : besoin d'une app/un système → A ; accompagnement/conseil → B ; assistant IA perso → C (freemium, pas de devis chiffré pour l'instant).
 2. **Niveau (Famille A)** :
-   - 1 utilisateur, périmètre simple → **SOLO**
-   - jusqu'à 5 utilisateurs / workflows partagés → **ÉQUIPE**
-   - multi-utilisateurs, sur mesure, backend lourd → **ENTERPRISE**
+   - vitrine + traitement des commandes, périmètre simple → **App simple** (250 €)
+   - vitrine + commandes + lien de suivi livreur + visibilité stock → **App pro** (dès 490 €)
+   - multi-utilisateurs / administration générale / BDD pro + assistance → **App pro+** (dès 1 200 €)
 3. **Add-ons** selon les intégrations citées (paiement mobile, WhatsApp, domaine).
 4. **Devise** selon la zone (EUR / FCFA).
 
