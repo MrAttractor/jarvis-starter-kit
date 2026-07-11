@@ -273,6 +273,12 @@ nav.scrolled { padding: .65rem 2.5rem; box-shadow: var(--shadow); }
   .logo-sub { display:none; }
   nav { gap:8px; }
 }
+/* Grilles multi-colonnes forcees en 1 colonne sur mobile (styles inline inclus) */
+@media(max-width:640px) {
+  #expertise-grid { grid-template-columns:1fr !important; }
+  [style*="grid-template-columns:repeat(3"], [style*="grid-template-columns: repeat(3"] { grid-template-columns:1fr !important; }
+  [style*="grid-template-columns:repeat(2"], [style*="grid-template-columns: repeat(2"] { grid-template-columns:1fr !important; }
+}
 
 /* ═══════════════════════════════════════
    TICKER
