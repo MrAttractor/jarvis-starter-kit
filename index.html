@@ -67,14 +67,16 @@ fbq('track', 'PageView');
 }
 
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
+html { scroll-behavior:smooth; overflow-x:hidden; max-width:100%; }
 body {
   background: var(--sable);
   color: var(--charbon);
   font-family: 'Sora', sans-serif;
   overflow-x: hidden;
+  max-width: 100%;
   cursor: none;
 }
+img, svg, video { max-width:100%; }
 
 /* ═══════════════════════════════════════
    CURSEUR CUSTOM
@@ -257,7 +259,20 @@ nav.scrolled { padding: .65rem 2.5rem; box-shadow: var(--shadow); }
 }
 @media(max-width:1080px) { .hero-phone{display:none;} }
 
-@media(max-width:768px) { .hero{padding:100px 1.2rem 60px;} .hero-glow{display:none;} }
+@media(max-width:768px) {
+  .hero { min-height:auto; padding:92px 1.2rem 44px; }
+  .hero-glow { display:none; }
+  .hero-inner { max-width:100%; }
+  .hero-h1 { font-size:2.25rem; }
+  .hero-sub { max-width:100%; margin-bottom:1.6rem; }
+  /* Contraste : voile crème quasi opaque, la photo devient une texture subtile */
+  .hero-bg::after { background: linear-gradient(180deg, rgba(250,246,240,.93) 0%, rgba(250,246,240,.9) 100%); }
+  .hero-ctas { width:100%; flex-direction:column; }
+  .hero-ctas .btn-primary, .hero-ctas .btn-ghost { width:100%; justify-content:center; }
+  .nav-cta { font-size:11px; padding:9px 14px; text-transform:none; letter-spacing:0; white-space:nowrap; }
+  .logo-sub { display:none; }
+  nav { gap:8px; }
+}
 
 /* ═══════════════════════════════════════
    TICKER
@@ -764,7 +779,7 @@ footer {
     <a href="consulting.html" data-track="nav_consulting">Consulting</a>
   </div>
   <a href="https://demo.agenceattractor.com/diagnostic" class="nav-cta" data-track="nav_cta_diagnostic" style="text-decoration:none;">
-    Faire mon diagnostic
+    Mon diagnostic
   </a>
 </nav>
 
