@@ -740,6 +740,36 @@ footer {
    ANIMATIONS
 ═══════════════════════════════════════ */
 @keyframes fadeUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
+
+/* ════════════════════════════════════════════════════════════
+   MOBILE-FIRST — passe UX complète (réf. UX_SYSTEM.md)
+   Contenu toujours visible · grilles empilées · aucun déplacement
+   latéral · texte de corps ≥16px · boutons pleine largeur (tap ≥44)
+════════════════════════════════════════════════════════════ */
+@media (max-width:640px) {
+  /* 1. Contenu toujours visible — fin des "trous" dus aux animations d'apparition */
+  .app-card, .expertise-card, .step, .testi-card { opacity:1 !important; transform:none !important; }
+
+  /* 2. Tout s'empile : grilles → 1 colonne, plus de carrousel horizontal */
+  .apps-grid { flex-direction:column; overflow:visible; padding-bottom:0; }
+  .app-card { flex:0 0 auto !important; width:100% !important; }
+  #expertise-grid, .consulting-grid, .testi-grid, .process-steps { grid-template-columns:1fr !important; }
+  [style*="grid-template-columns:repeat(3"], [style*="grid-template-columns: repeat(3"],
+  [style*="grid-template-columns:repeat(2"], [style*="grid-template-columns: repeat(2"] { grid-template-columns:1fr !important; }
+
+  /* 3. Rythme vertical (grille 8px) */
+  section { padding:56px 20px; }
+
+  /* 4. Lisibilité — corps de texte ≥16px */
+  .hero-sub, .s-sub, .cta-p, .testi-text, .step-title { font-size:16px; }
+  .step-desc { font-size:15px; }
+  .footer-links a { font-size:14px; }
+
+  /* 5. Boutons pleine largeur, tap confortable */
+  .btn-primary, .btn-ghost, .btn-light { width:100%; justify-content:center; min-height:48px; }
+  .cta-btns { flex-direction:column; }
+  .nav-cta { min-height:40px; display:inline-flex; align-items:center; }
+}
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.5;transform:scale(1.4);} }
 
 /* Icônes expertise Lucide */
