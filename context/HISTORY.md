@@ -7,6 +7,182 @@
 
 ---
 
+## 2026-07-12 → 13 (session 97 — J'Envoie Express changement de vol, réunion générale d'audit des agents, discipline de travail, récupération n8n)
+
+### J'Envoie Express — changement de vol côté admin + date de départ côté suivi client
+- Cas remonté par Jean Yves : une cliente veut changer de vol après coup. Constat : la fenêtre "Modifier le colis" ne permettait pas de réassigner le voyage (le vol se choisissait uniquement à la création).
+- Ajout d'un sélecteur "VOYAGE (VOL)" dans `modal-edit-colis` (pré-rempli sur le vol actuel), `saveEditColis` met à jour `voyage_id`. Le numéro et le suivi restent intacts.
+- Suivi public enrichi : la date de départ prévue s'affiche désormais sur le lien de suivi (jointure `je_voyages`), et se met à jour automatiquement si le vol change. Vérifié en réel (lecture anon `je_voyages` + jointure OK). Déployé sur le Worker `jenvoie-express` (jenvoiexpress.com). Commit `275e485`.
+
+### Réunion générale d'audit de performance et d'efficacité des 15 agents (point zéro)
+- Menée par le Chief of Staff, baseline = blueprint fondateur (`RECAP_Ecosysteme_Agents_Attractor.md`). Aucun CR de réunion antérieure → cet audit devient la réunion de référence.
+- Verdict (preuves croisées HISTORY/livrables/git via 3 agents Explore) : seuls 4 agents portent réellement l'agence (BÂTISSEUR/dev, VENDEUR/maquette-devis, MIROIR déployé en prod, PINCEAU/charte). 8 dormants ou jamais activés (PILOTE, GARDIEN, TRÉSORIER, COMPTES, BOUSSOLE, CARBURANT, ÉDITO, AMBASSADEUR). 3 par intermittence (ÉCLAIREUR, VOIX, PONT).
+- Constats : la phase promotion tourne avec l'équipe promotion (ÉDITO/VOIX/CARBURANT) à l'arrêt ; chaîne financière aveugle ; bug de déploiement récurrent non filtré ; registre PONT gelé au 17/06 ; blueprint périmé (stack).
+- Décision : garde-fous d'abord. Sort des 8 dormants reporté.
+- LIVRÉ : GARDIEN (checklist + carte de déploiement `.claude/skills/gardien/references/checklist-deploiement.md` ; hook `deploy-guard.js` étendu aux commandes wrangler, testé 3 cas) + PONT (registre `decisions-actees.md` réactivé, décisions 009-013). CR archivé `livrables/ecosysteme-attractor/reunions/CR-audit-agents-2026-07-12.md`. Commit `8d08d3f`.
+
+### Discipline de travail — sortir de l'opérationnel + rituel du dimanche
+- Créé `livrables/ecosysteme-attractor/DISCIPLINE-TRAVAIL.md` : 1 filtre (actif réutilisable vs one-shot), 1 rituel (réunion hebdo "sur l'entreprise" dimanche 21h-22h, 3 questions), 1 métrique (% de l'activité qui tourne sans ses mains). Échelle de sortie (client autonome / Générateur / agents promotion / MIROIR).
+- **Événement récurrent créé sur l'agenda** (myattractor1@gmail.com) : "Réunion sur l'entreprise (audit hebdo)", tous les dimanches 21h-22h Europe/Paris, rappel 30 min. Première vraie session : dimanche 19/07 (le créneau du 12/07 était déjà passé). Commit `316f537`.
+
+### Blueprint réaligné (stack + charte)
+- `RECAP_Ecosysteme_Agents_Attractor.md` : section "Stack technique de référence" ajoutée (Supabase/Cloudflare/n8n Railway/Claude/XPaye/HTML+React réels ; obsolètes listés : Netlify, Google Sheets backend, Facebook Login, Next/Vercel/Sanity, Stripe/PayDunya). Charte graphique arrêtée : Orange #F25C05, Charbon #1A1714, Sable #FAF6F0, Vert croissance #1E5631, typo Sora+Inter (source BIBLE + design-system). Mentions serif/Google Sheet corrigées. Commit `316f537`.
+
+### n8n — grosse session de récupération et diagnostic
+- Départ : Mac Arthur veut mettre n8n au cœur du système (moteur inbound de la phase promotion). Check initial : instance Railway `n8n-production-3bfc.up.railway.app` répondait `/healthz` ok mais l'API renvoyait `503 "Database is not ready!"` → n8n avait perdu sa base.
+- Diagnostic clé : **n8n était mort depuis ~2 semaines** (dernière exécution 26/06 → 12/07). Le health-check lui-même s'était arrêté, donc aucune alerte n'est partie. Leçon majeure : un monitoring qui tombe avec le système ne sert à rien.
+- Confusion "je ne sais plus si j'ai n8n" élucidée : **deux n8n** existaient. Un compte n8n Cloud (app.n8n.cloud) **vide** (No workspace, à ignorer) + le vrai auto-hébergé sur Railway. `.env` pointait à tort sur `localhost:5678` (Docker local éteint) avec une clé API invalide pour Railway (401).
+- Redémarrage du service n8n sur Railway → DB reconnectée (503 → 401 → 200). SMTP Resend ajouté sur le service n8n (le reset email n8n n'est jamais parti malgré un sender valide, problème côté n8n, non résolu). Accès repris via la commande `n8n user-management:reset` (Custom Start Command Railway) : compte owner remis à zéro **sans perdre les workflows**. Nouveau compte owner créé, nouvelle clé API générée, `.env` corrigé (`N8N_API_KEY` Railway + `N8N_BASE_URL` = URL Railway).
+- **État réel constaté via l'API** : seulement **2 workflows**, tous deux "actifs" : "Veille Santé — Attractor Assists" (exécutions success, mais interrompues 26/06 → 12/07) et "WhatsApp - Attractor Assists" (**0 exécution, jamais fonctionné**). Le "WhatsApp" est un bot auto-réponse Claude (webhook Meta → extraire message → appel Claude → renvoi WhatsApp), branché sur aucune logique métier, prototype jamais mis en service. Le moteur inbound (`brief-inbound.json`) n'a **jamais été déployé** sur cette instance (juste un fichier repo).
+- Signaux relevés dans les logs à traiter : "No encryption key found - Auto-generating" à chaque redémarrage (clé de chiffrement non persistée → credentials fragiles), et erreur webhook WhatsApp en double.
+
+### À faire demain (reprise)
+- n8n : fiabiliser d'abord (`N8N_ENCRYPTION_KEY` fixe, nettoyer le webhook WhatsApp doublon), décider du sort du bot WhatsApp (activer pour de vrai avec logique métier, ou archiver), puis construire/importer le moteur inbound OU basculer sur une fonction Supabase + cron vu la fragilité de n8n.
+- Mac Arthur finit ses chantiers en cours en parallèle (Club Élévia, Beynaud, demo-site, etc.).
+
+---
+
+## 2026-07-11 (session 96 — La Beynaumania : construction de la vraie plateforme fan de Serge Beynaud)
+
+### Le virage : de la maquette à la production
+- Départ : Latiss (Serge Beynaud) veut tester la plateforme. Constat honnête posé à Mac Arthur : les fichiers existants (`beynaud/fan.html`, `app.html`) étaient des **maquettes cliquables sans backend**. Déployées telles quelles d'abord (2 corrections : badge « INNER CIRCLE » → vocabulaire artiste, URL Workers obsolète).
+- Décision de Mac Arthur : **« On produit »** — construire la vraie plateforme. Logique **cheval de Troie** : avec ~10M followers, la visibilité de Serge est le vrai gain, le produit devient sa pub.
+- Nom acté : **La BEYNAUMANIA**.
+
+### Modèle économique cadré (par échanges successifs avec Mac Arthur)
+- **Adhésion gratuite** : on maximise le volume et les ambassadeurs d'abord. Le fan est un privilégié qu'on transforme en ambassadeur.
+- Monétisation = **one-shot XPaye uniquement** : événements payants ponctuels + série spéciale payante + **replays de concert payants**. Pas d'abonnement récurrent → enterre le blocage « XPaye ne fait pas le prélèvement mensuel ».
+- Inscription retenue : **prénom + WhatsApp + lieu de connexion** (le WhatsApp = trésor pour le broadcast V2).
+
+### Ce qui a été construit et testé en réel (backend Supabase partagé, tables `bey_`)
+- **Socle** : inscription + reconnexion, **moteur ambassadeur** (lien `?ref=`, compteur de filleuls, passage Membre→Ambassadeur à 5 parrainages), mur « Envoyer à mon armée » (diffusion in-app), dashboard artiste (membres temps réel, top ambassadeurs, répartition par lieu, inscriptions récentes). Sécurité : RLS partout, tout via edge functions `bey-public` (fan, sans JWT) et `bey-admin` (Serge, gaté sur son UID), WhatsApp jamais exposé, dashboard refusé sans login (401 vérifié).
+- **Engagement** : **likes + commentaires** sur les messages de Serge, **galerie photos** (upload Serge via bucket public `bey-photos`), séries YouTube gatées.
+- **Auto-modération hybride** (validée sur 5 cas) : filtre de mots FR + nouchi (attrape même l'évasion espacée « s a l o p e ») + **Claude Haiku** (attrape la menace sans gros mot, laisse passer le nouchi amical). Auto-masquage + motif visible par Serge, jamais de suppression auto, fail-open si l'IA est indisponible.
+- **Live YouTube gaté** : Serge « passe en direct » (colle un lien), bloc EN DIRECT en haut de l'espace fan, bouton « Terminer ».
+- **Sondages** (activation/rétention) : Latiss crée un sondage, les fans votent 1× (revote ignoré), résultats en direct côté fan et admin.
+- **PWA installable** : la page fan s'ajoute à l'écran d'accueil avec **la photo de Serge en icône** (manifest + service worker + apple-touch-icon iOS, Content-Type manifest corrigé via `_headers`).
+- Compte admin Serge : `admin.beynaud@agenceattractor.com` / `BeynaudArmy2026!` (technique, rebasculable).
+
+### Live pro Cloudflare Stream : différé, chiffré, à proposer à Latiss
+- Pas prêt à activer Stream (produit payant). Deviendra une **offre premium « Concerts »** proposée à Latiss : live pro depuis sa **régie OBS** (RTMPS/SRT, confirmé compatible), **replays payants protégés** (URLs signées — YouTube ne peut pas paywaller), billetterie XPaye.
+- Coûts chiffrés dans `livrables/clients/beynaud-star-factory/COUTS-LIVE-PRO.md` : ~1 $/1 000 min vues (~0,06 $/fan/h). Ex. 10 000 fans × 1h ≈ 600 $, couvert par la billetterie. Règle : **YouTube pour la portée gratuite, Stream pour le premium payant**.
+
+### Vérifications
+- Backend testé de bout en bout par appels réels (inscription, parrainage, feed gaté, sécurité admin, like/commentaire, modération, upload photo, live, vote). Code JS réel des 2 pages exécuté contre le backend live (harness DOM Node). Données de test systématiquement nettoyées. Déploiements sur Cloudflare Pages `demo-agenceattractor` branche **master** (piège connu respecté).
+- Migrations versionnées : `beynaud-star-factory/supabase/` (0001 socle, 0002 engagement, 0003 motif, 0004 sondages).
+
+### Reste à faire
+- Obtenir les **vrais titres des 2 séries** (seedées en placeholder). Remplir la plateforme de vrais membres. Présenter l'offre premium Concerts à Latiss quand la base est là. Protocole d'accord toujours en attente retour STAR FACTORY.
+
+---
+
+## 2026-07-11 (session 95 — GetWinWorld : parcours d'achat bascule en "sélection → WhatsApp direct")
+
+### Le fond du changement
+- Avant : le client devait créer un compte, sa demande tombait silencieusement dans `gw_commandes`, et c'était Charles qui devait faire le premier pas pour contacter le client sur WhatsApp
+- Après : le client déclenche lui-même la conversation WhatsApp, Charles n'a plus qu'à répondre pour vendre et livrer
+
+### Ce qui a été fait sur `getwinworld/index.html`
+- **Barre panier flottante** ("Voir ma sélection · Commander") qui apparaît en bas dès qu'un article est sélectionné, visible depuis la vitrine (le bouton n'est plus planqué dans l'onglet Membre)
+- Bouton **"Commander sur WhatsApp"** sur l'écran sélection ; `sendCommande()` réécrit : ouvre `wa.me/33613057138` avec un message pré-rempli (produits, quantités, commentaires), `window.open` appelé en premier dans le geste utilisateur pour éviter le blocage popup
+- **Compte membre rendu optionnel** : retiré du chemin d'achat, relégué en section "Optionnel · Devenir membre" sous la sélection (liste prioritaire) ; commander sans compte est possible (WhatsApp porte l'identité du client). Onglet "Membre" renommé **"Sélection"**
+- **Trace `gw_commandes` conservée en best-effort** (n'empêche jamais l'ouverture WhatsApp) : `client_nom = "Client via WhatsApp"` / `client_wa = "—"` quand pas de compte, le vrai contact restant dans le fil WhatsApp de Charles. Pas de migration DB nécessaire (placeholder au lieu de rendre les colonnes NOT NULL nullable)
+- Textes reformulés (how3, hint, toast) pour refléter "WhatsApp s'ouvre" au lieu de "Charles vous contacte", FR + EN
+- Périmètre volontairement limité au flux d'achat : conseiller IA, Événements, Conseils laissés intacts (décidé avec Mac Arthur via AskUserQuestion)
+
+### Vérifications avant déploiement
+- Serveur statique local + Chrome headless (pas de Playwright/Puppeteer dispo) : capture vitrine + écran sélection avec panier seedé
+- Sonde iframe : **overflow horizontal = 0** (règle de rejet UX_SYSTEM respectée), les 4 onglets tiennent
+- Message WhatsApp généré vérifié conforme ; `GW_WHATSAPP` confirmé résolu en portée (`wa.me/undefined` initial n'était qu'un artefact de test, un `const` top-level n'étant pas propriété de `window`)
+- Fichiers de test temporaires supprimés du dossier avant déploiement
+
+### Déploiement
+- Projet Cloudflare Pages `getwinworld`, **branche prod `main`** (vérifiée avant via `deployment list` pour éviter le piège Preview) ; propagation confirmée sur getwinworld.net (plusieurs edges, cache-buster)
+- Numéro de Charles `+33 6 13 05 71 38` confirmé par Mac Arthur comme bon numéro de réception des commandes
+
+### Lien de l'article dans le message WhatsApp (suite immédiate)
+- Besoin exprimé par Mac Arthur : Charles doit pouvoir "aller voir l'article" depuis la commande. Deux options envisagées : un code à rechercher dans le backend, ou le lien de l'article pré-écrit dans WhatsApp
+- Choix : le **lien photo pré-écrit** est le plus simple. `photo_url` existe déjà (bucket `gw-photos` public), il est permanent (une page article `?p=…` casserait après 24h vu que le catalogue ne charge que les articles < 24h), et il évite tout système de code + recherche admin
+- Implémenté : la photo est stockée dans l'article dès l'ajout à la sélection ; `buildOrderMessage` ajoute une ligne "Voir l'article : <url>" par pièce. Chemins relatifs (`photos/…`) résolus en URL absolue `getwinworld.net/…`, URL Supabase déjà absolues gardées telles quelles. Le message inclut aussi la maison (marque) entre parenthèses
+- Vérifié headless (résolution relative + absolue OK) puis redéployé sur getwinworld.net
+
+### Note admin
+- Les commandes passées sans compte apparaissent avec un contact placeholder dans l'admin de Charles. Amélioration possible plus tard (mini-champ "ton numéro" optionnel avant WhatsApp) si ça le gêne, mais écartée pour l'instant pour ne pas réintroduire de friction
+
+---
+
+## 2026-07-10 → 11 (session 94 — Emmanuel Yao / Agence Innovation Créative : identité du partenaire Studio IA + site studio construit et déployé)
+
+### Le partenaire "Studio Créatif IA" a un nom : Emmanuel Yao / Agence Innovation Créative
+- Mac Arthur transmet un projet de partenariat IA avec **Emmanuel Yao** + le contenu de ses formations. En croisant le dossier Drive ("Emmanuel Yao IA Generative Partenaire", rangé sous "Partenaire Studio IA") et le logo récupéré, confirmé : Emmanuel Yao est le fondateur de l'**Agence Innovation Créative**, et c'est **le même partenaire que le "Studio Créatif IA"** de la session 92. Cadrage validé avec Mac Arthur (AskUserQuestion) : même partenaire, même échange (site ↔ coaching campagne d'influence IA Awa + forfait 80 €), périmètre = vitrine studio + formations en section, formations renvoyées vers leurs pages d'hébergement.
+- Son offre réelle : portfolio de vidéos IA de marques (KFC, NASCO, FIFA World Cup, Oraimo, Himra…), formations **IMAG'IN 1** (images, 30 000 F), **IMAG'IN 2** (vidéos, 30 000 F), **IMAG'IN 3** (offre complète, 50 000 F), et **coaching privé** (1 séance 3h / Premium 2 séances).
+
+### Site V1 construit et déployé
+- Site vitrine premium monté dans `livrables/clients/studio-ia-partenaire/site/index.html` (fusionné dans le dossier du partenaire) : écran d'entrée cinématique, hero, présentation + compteurs, portfolio à filtres, services, Formations IMAG'IN (contenu réel), Coaching privé, témoignages, FAQ, contact/devis, footer. DA sombre premium + accent **ambre/orange tiré de son vrai logo** (le CDC session 92 parlait de bleu/violet néon, écarté pour coller au logo réel, signalé à Mac Arthur).
+- Déployé en préview sur **demo.agenceattractor.com/innovation-creative** (Cloudflare Pages `demo-agenceattractor`, branche prod `master`, règle `_redirects` explicite ajoutée façon AYELA). Vérifié en live (desktop + mobile, aucun débordement horizontal, sonde scrollW=innerW OK).
+
+### Coaching privé ajouté + prix corrigés
+- À la demande de Mac Arthur, ajout d'une section **Coaching privé** (2 formules) + le **formulaire d'inscription complet en 8 blocs** en modal (infos, niveau, objectifs, besoin, projet, formule, dispos, validation ; récap prêt pour WhatsApp à l'envoi).
+- Prix corrigés aux vrais coûts : Coaching privé 1 séance 3h = **150 000 F** (au lieu de 100 000), Premium 2 séances = **200 000 F** (au lieu de 150 000). Mis à jour partout (cartes + boutons + formulaire), redéployé et vérifié en live.
+
+### Liens de paiement des formations branchés
+- Emmanuel a envoyé ses pages de paiement Chariow : **IMAG'IN 1** → `realiteaugmenteia.mychariow.shop/realite-augmentee-par-ia-2026/checkout`, **IMAG'IN 2** → `.../videoiapro/checkout`. Branchés dans le CONFIG du site (bouton "Je m'inscris" ouvre le checkout en nouvel onglet). **IMAG'IN 3 (offre complète) n'a pas encore de lien** → ce bouton renvoie au contact en attendant (pas de lien mort).
+
+### Écran d'entrée cinématique conforme au CDC (vidéo Himra)
+- Le CDC session 92 prévoyait une entrée cinématique avec vidéo plein écran ; elle manquait faute de vidéo d'accueil. Mac Arthur a choisi de mettre en fond une des vidéos du portfolio, la **vidéo Himra**.
+- Récupérée du Drive via gdown (213 Mo, 1920×1080, 2min48s), compressée avec ffmpeg (imageio-ffmpeg) : segment de 18s, 720p, muette, boucle → **1,86 Mo** + poster JPEG 63 Ko. Intégrée en fond plein écran de l'écran d'entrée (overlay sombre pour lisibilité). Bonus : la signature "Réalisé par Emmanuel Yao" est incrustée dans la vidéo. Vérifié desktop + mobile, déployé, propagation confirmée.
+
+### Domaine propre aicreatioon.com
+- Mac Arthur a acheté **aicreatioon.com** via Cloudflare. Projet Cloudflare Pages dédié `aicreatioon` créé (branche prod `main`), site déployé à la racine, domaine + www attachés par Mac Arthur dans le dashboard (DNS + SSL auto vu que la zone est dans le compte agence). Vérifié en live (200, vidéo et logo servis).
+- Redirection **301** posée depuis l'ancienne préview `demo.agenceattractor.com/innovation-creative` vers `https://aicreatioon.com` (règle `_redirects` du demo-site, même pattern que getwinworld/boutiquecreal), vérifiée active.
+- Note deal : domaine sous le compte agence (auto-renew, DNS centralisé), transférable à Emmanuel sur demande — le forfait 80€ prévoyait le domaine à son nom, à clarifier avec lui pour éviter toute ambiguïté.
+
+### Portfolio réel branché (vidéos + images) + lightbox
+- Récupéré du Drive (gdown) et compressé (ffmpeg) : 8 vidéos de marques (KFC, NASCO, FIFA, Oraimo, Youki Moka, SNA, Réflexe, Didier) + 10 images ultra-réalistes. Total ~4 Mo au départ (vignettes carrées 640, posters légers).
+- **Effet lightbox** ajouté : clic sur une vignette (image ou vidéo) → ouverture en grand dans un overlay (image agrandie + légende ; vidéo avec contrôles natifs, lecture auto, boucle). Fermeture croix / clic extérieur / Échap. Curseur zoom + icône "agrandir" au survol.
+- **Correction demandée par Emmanuel (aperçus trop courts + sans son)** : les 8 vidéos réencodées en **format d'origine, jusqu'à 30s, AVEC piste audio** (~16 Mo au total). Muet au survol sur la grille (attribut `muted`), son actif dans le lightbox. `preload="none"` pour la perf.
+
+### Bug "espaces vides" corrigé (crash JS)
+- Après branchement des contacts, une ligne orpheline ciblait un élément supprimé (`getElementById('waLink')`) : comme le WhatsApp était renseigné, elle s'exécutait, plantait le script, et l'observateur d'apparition (`.reveal`) ne tournait plus → des sections restaient invisibles. Lignes retirées, tous les `getElementById` recroisés avec les id existants, page vérifiée pleine de bout en bout.
+
+### Contacts + coordonnées branchés
+- Emmanuel a fourni WhatsApp Business (+225 07 59 24 98 41) et email (emmanueldebeing.ed@gmail.com) : câblés dans le CONFIG, affichés dans la section contact, et les formulaires (devis + coaching) envoient désormais un récap pré-rempli vers son WhatsApp (wa.me, pas de backend).
+- Prix coaching confirmés aux vrais coûts : 1 séance 3h = 150 000 F, Premium 2 séances = 200 000 F.
+
+### Nettoyage des notes internes (demande Mac Arthur)
+- Retrait de toutes les mentions placeholder visibles (présentation à personnaliser, stats "à confirmer", "à renseigner", note formations, FAQ paiement) ; **section Témoignages retirée** (que du placeholder) + son JS ; visuel studio vide rempli.
+
+### Lot d'ajustements Emmanuel (il adore le site, "très frais")
+- **Vidéo d'intro** remplacée par sa vidéo "animation site ACCUEIL" (15s, 2,8 Mo) — remplace la vidéo Himra provisoire (Himra supprimée du projet).
+- **Photo studio** = sa vraie photo pro (fichier Drive "Debeing (13).png", cardigan jaune, lunettes) dans le bloc "L'IA au service de vos idées".
+- **Compteur** "8 années d'expérience" (au lieu de 3).
+- **Réalisations sur l'accueil réduites à 6 en vedette** + bouton "Voir toutes les réalisations" → **nouvelle page dédiée `/realisations`** (les 18 réalisations + filtres Tout/Vidéos/Images + lightbox). Le champ `featured` dans `assets/works.js` pilote les vedettes.
+- **Coaching** : badge "Offert : tout coaching privé inclut l'accès gratuit à la formation IMAG'IN 3 (offre complète)" + un point dans chaque formule.
+- **Commande vidéo IA** : note (formulaire de devis + carte service) demandant de préciser la durée et le format (16:9 / 9:16 / carré).
+- **Réseaux sociaux** : Telegram retiré → Facebook (fb.com/EmmanuelDebeing) + Instagram (@emmanuel_debeing) + TikTok (@emmanuelyao.ia), vrais liens.
+- **Refactor technique** : CSS extrait dans `assets/styles.css` et liste des réalisations dans `assets/works.js`, partagés entre `index.html` et `realisations.html` (une seule source à maintenir).
+
+### Tableau de pilotage — Phase 1 (capture des demandes + notif + admin)
+- Cadré avec Mac Arthur (AskUserQuestion) : CA mis de côté, on démarre par la capture des demandes + notif (le plus urgent, ne plus perdre de lead).
+- **Backend** : compte auth Emmanuel créé (UID `b1635d9d-e970-4293-9674-871cde1e639a`, mdp temp `AicPilotage2026!`) ; table `aic_demandes` sur le Supabase partagé avec RLS scopée à son UID (lecture/écriture réservées à lui, aucune policy anonyme) ; edge function `aic-demande` déployée (`--no-verify-jwt`) qui **insère la demande (service role) + envoie une notif email à Emmanuel** (Resend), CORS géré d'emblée.
+- **Frontend** : les formulaires devis + coaching appellent la fonction en plus d'ouvrir WhatsApp → la demande est captée même si le prospect ne finalise pas WhatsApp.
+- **Admin** `aicreatioon.com/admin` : login (compte Emmanuel, self-service mdp oublié), vue de toutes ses demandes (nouvelles en avant), compteurs, filtres, bouton WhatsApp 1 clic, "Marquer traité".
+- **Testé de bout en bout** : capture → connexion Emmanuel → il voit ses demandes → un anonyme ne lit rien (`[]`, RLS confirmée) → nettoyage. Migration versionnée dans `studio-ia-partenaire/supabase/0001_aic_demandes.sql`.
+- Reste : Phase 2 (portfolio upload/suppression + site public dynamique), Phase 3 (CA, en attente).
+
+### Contrepartie du partenariat active — coaching Emmanuel démarré
+- Le coaching d'Emmanuel (contrepartie de l'échange : il accompagne Mac Arthur sur la campagne d'influence par IA, personnage Awa) a démarré. Il a transmis sa méthode de production et recommandé de décortiquer des vidéos IA ultra-réalistes.
+- Capturé et restructuré dans le dossier Awa : `METHODE-PERSONNAGE-IA.md` (playbook : fiche personnage 7 étapes → préparation continuité → choix du moteur, + checklist) et `GRILLE-DECORTICAGE-VIDEO-IA.md` (grille d'analyse au visionnage).
+- Prochaine étape concrète : construire la fiche personnage d'Awa en commençant par son visage officiel (Magnific), sur GO de Mac Arthur.
+
+### Reste à obtenir d'Emmanuel pour finaliser
+- Le **lien de paiement IMAG'IN 3** (offre complète) — les 1 et 2 sont branchés, IMAG'IN 3 renvoie au contact en attendant.
+- Ses **stats réelles** (les compteurs 500+/40/8/200+ sont des valeurs de départ à valider) et de **vrais témoignages** (section réactivable en 2 min).
+- La curation des **6 réalisations en vedette** de l'accueil (à ajuster dans `works.js`).
+- Le document d'échange (site ↔ coaching campagne Awa + forfait 80€) reste à envoyer en parallèle, en attente des précisions coaching.
+
+---
+
 ## 2026-07-10 (session 93 — AYELA : maquette + partenariat par échange, nouveau prospect All Eyes on yoo, grille tarifaire mise à jour)
 
 ### AYELA / Ayêla SARL — maquette de closing + proposition d'échange
