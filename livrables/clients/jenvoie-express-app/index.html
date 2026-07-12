@@ -1139,15 +1139,24 @@ async function doTrack() {
   const el = document.getElementById('track-result')
   if (!q) return
   el.innerHTML = '<p style="color:rgba(255,255,255,.4);font-size:16px;padding:12px 0">Recherche...</p>'
-  const { data } = await sb.from('je_colis').select('numero,statut,paye,montant').ilike('numero', `%${q}%`).limit(1).maybeSingle()
+  const { data } = await sb.from('je_colis').select('numero,statut,paye,montant,je_voyages(route,date_depart)').ilike('numero', `%${q}%`).limit(1).maybeSingle()
   if (!data) {
     el.innerHTML = '<p style="color:#EF4444;font-size:16px;padding:12px 0">Numéro introuvable. Vérifiez et réessayez.</p>'
     return
   }
   const idx = STATUTS.indexOf(data.statut)
+  const voy = data.je_voyages
+  const fmtDep = d => new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+  const departLigne = voy && voy.date_depart
+    ? `<div style="margin-bottom:12px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.04);font-size:.82rem;display:flex;align-items:center;gap:8px;">
+        <span style="color:rgba(255,255,255,.5);">✈ Départ prévu :</span>
+        <span style="color:var(--gold);font-weight:700;">${fmtDep(voy.date_depart)}</span>
+      </div>`
+    : ''
   el.innerHTML = `
     <div style="margin-top:12px;background:rgba(0,10,40,.6);border:1px solid rgba(11,181,255,.2);border-radius:12px;padding:16px">
       <div style="font-family:Syne,sans-serif;font-weight:700;font-size:16px;color:var(--sky);margin-bottom:12px">${data.numero}</div>
+      ${departLigne}
       ${STATUTS.map((s,i) => `
         <div class="t-step">
           <div class="t-dot ${i<idx?'done':i===idx?'current':''}"></div>

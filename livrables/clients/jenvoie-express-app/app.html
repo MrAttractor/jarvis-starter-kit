@@ -138,7 +138,7 @@
       </div>
       <div id="f-colis-livraison-fields" style="display:none;contents;">
         <div class="form-group"><label>QUARTIER ABIDJAN</label><input type="text" id="f-colis-quartier" placeholder="Ex: Cocody, Marcory..."></div>
-        <div class="form-group"><label>PRIX LIVRAISON (€)</label><input type="number" id="f-colis-prix-livraison" placeholder="ex: 5"></div>
+        <div class="form-group"><label>PRIX LIVRAISON (FCFA)</label><input type="number" id="f-colis-prix-livraison" step="100" placeholder="ex: 2000"></div>
       </div>
     </div>
     <div class="modal-actions">
@@ -224,13 +224,14 @@
     <div class="modal-title">✏ Modifier le colis</div>
     <div id="modal-edit-info" style="background:rgba(91,184,245,.08);border:1px solid rgba(91,184,245,.2);border-radius:10px;padding:.7rem 1rem;margin-bottom:1.2rem;font-size:.82rem;color:rgba(255,255,255,.75);"></div>
     <div class="form-grid">
+      <div class="form-group full"><label>VOYAGE (VOL)</label><select id="e-voyage"><option value="">— Aucun vol —</option></select></div>
       <div class="form-group"><label>MONTANT PAYÉ (€)</label><input type="number" id="e-montant" step="0.01" placeholder="ex: 120"></div>
       <div class="form-group"><label>POIDS RÉEL (kg)</label><input type="number" id="e-poids" step="0.1" placeholder="ex: 3.5"></div>
       <div class="form-group full"><label>ARTICLES</label><textarea id="e-articles" rows="3" placeholder="Ex: 1 téléphone Samsung, 2 paires de chaussures..."></textarea></div>
       <div class="form-group full"><label>WHATSAPP EXPÉDITEUR</label><input type="text" id="e-wa" placeholder="+225 07 XX ou +33 6 XX"></div>
       <div class="form-group full"><label>CONTACT RÉCUPÉRATION</label><input type="text" id="e-contact" placeholder="+225 07 XX ou +33 6 XX"></div>
       <div class="form-group"><label>QUARTIER ABIDJAN (livraison)</label><input type="text" id="e-quartier" placeholder="Ex: Cocody, Marcory..."></div>
-      <div class="form-group"><label>PRIX LIVRAISON ABJ (€)</label><input type="number" id="e-prix-livraison" step="0.01" placeholder="ex: 5"></div>
+      <div class="form-group"><label>PRIX LIVRAISON ABJ (FCFA)</label><input type="number" id="e-prix-livraison" step="100" placeholder="ex: 2000"></div>
       <div class="form-group full"><label>COLLECTE À DOMICILE (Abidjan → Paris)</label>
         <label style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:white;cursor:pointer;padding-top:.3rem;">
           <input type="checkbox" id="e-collecte" style="width:auto;accent-color:var(--sky);"> Colis à récupérer chez l'expéditeur
@@ -719,12 +720,18 @@ async function loadParametres() {
 // ============================================================
 let _editColisId = null
 
-function openEditColis(id) {
+async function openEditColis(id) {
   const c = (window._enCoursData || []).find(x => x.id === id)
   if (!c) return toast('Colis introuvable', true)
   _editColisId = id
   const nom = c.je_clients?.nom || c.nom_expediteur || '—'
   document.getElementById('modal-edit-info').textContent = `N° ${c.numero} · ${nom}`
+  // Sélecteur de vol : liste tous les voyages, pré-sélectionne le vol actuel
+  const eVoy = document.getElementById('e-voyage')
+  eVoy.innerHTML = '<option value="">— Aucun vol —</option>'
+  const { data: voys } = await sb.from('je_voyages').select('id,route,date_depart').order('date_depart', { ascending: false })
+  ;(voys || []).forEach(v => eVoy.add(new Option(`${routeLabel(v.route)} · ${fmtDate(v.date_depart)}`, v.id)))
+  eVoy.value = c.voyage_id || ''
   document.getElementById('e-montant').value = c.montant || ''
   document.getElementById('e-poids').value = c.poids || ''
   document.getElementById('e-articles').value = c.articles || ''
@@ -740,6 +747,7 @@ function openEditColis(id) {
 async function saveEditColis() {
   if (!_editColisId) return
   const updates = {
+    voyage_id:         document.getElementById('e-voyage').value || null,
     montant:           parseFloat(document.getElementById('e-montant').value) || null,
     poids:             parseFloat(document.getElementById('e-poids').value) || null,
     articles:          document.getElementById('e-articles').value.trim() || null,
@@ -1555,7 +1563,7 @@ async function loadLivreur() {
       <td><strong style="color:var(--gold);">${quartier}</strong></td>
       <td style="font-size:.72rem;">${contact}</td>
       <td style="font-size:.72rem;max-width:160px;">${c.articles || '—'}</td>
-      <td style="color:var(--gold);">${(!isCol && c.prix_livraison) ? c.prix_livraison + '€' : '—'}</td>
+      <td style="color:var(--gold);">${(!isCol && c.prix_livraison) ? Number(c.prix_livraison).toLocaleString('fr-FR') + ' FCFA' : '—'}</td>
       <td>
         ${done
           ? `<span style="color:var(--green);font-size:.72rem;">${isCol ? '✓ Collecté' : '✓ Livré'}</span>`
