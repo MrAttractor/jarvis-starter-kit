@@ -3,6 +3,7 @@
 > Document de référence pour déploiement (VS Code).
 > Cadre : Agence Mr Attractor — produit fondateur **Attractor Assists**.
 > Principe directeur : **Mac Arthur a une idée → le système la transforme en plan exécutable.** Aucun code livré sans GO explicite.
+> **Mis à jour le 12/07/2026 (réunion d'audit) : stack technique réalignée sur la réalité (voir section Stack).**
 
 ---
 
@@ -35,6 +36,30 @@ L'organisation est un **organisme vivant** : des agents travaillent quotidiennem
 
 ---
 
+## 1bis. Stack technique de référence (à jour 12/07/2026)
+
+> Section ajoutée à la réunion d'audit. Le blueprint d'origine figeait "Google + Netlify + PWA", périmé. Voici la stack réelle.
+
+**Socle à garder :**
+- **Backend** : Supabase (projet partagé `attractor-assists`, région Paris), tables préfixées par client, RLS scopée à un UID précis (jamais `auth.role()='authenticated'` seul sur le projet partagé).
+- **Hébergement + DNS** : Cloudflare Pages (mini-sites statiques clients) et Workers (apps servant des assets). Tous les domaines centralisés sur Cloudflare.
+- **Apps clients** : HTML/CSS/JS vanilla, produites via le **Générateur d'Apps Métier**. App Assists : React + Vite + Tailwind v4 + Supabase.
+- **Automatisation** : n8n sur Railway (système nerveux : déclencheur → Claude Haiku → action).
+- **IA** : Claude (Haiku 4.5 pour les assistants clients, Opus pour le dev).
+- **Paiement** : XPaye/PaiementPro (exclusif). Encaissement : Wave, MTN, PayPal, Wero, Revolut, Djamo.
+- **Auth** : OTP email (Facebook Login annulé définitivement).
+- **Monitoring** : UptimeRobot (5 min) + workflow n8n santé (2h).
+- **Contenu** : Magnific + CapCut. Support : Notion (CRM), Google Workspace, Canva Pro.
+
+**Obsolète, ne plus utiliser :**
+- Netlify (remplacé par Cloudflare Pages/Workers).
+- Google Sheets / Apps Script comme backend (remplacé par Supabase).
+- Facebook Login (OTP email uniquement).
+- Next.js / Vercel / Sanity comme stack de build ; Stripe / PayDunya comme paiement.
+- Vercel : plus qu'un orphelin (Livraison Pro), à migrer sur Cloudflare.
+
+---
+
 ## 2. PÔLE R&D / CTO — Capter les missions à déclencher
 
 5 agents. Chaîne de traitement fixe. Chaque agent collecte aussi de la donnée terrain transmise au Pôle Stratégy en fin de cycle.
@@ -43,7 +68,7 @@ L'organisation est un **organisme vivant** : des agents travaillent quotidiennem
 |---|---|---|
 | Head of R&D / CTO | PILOTE | Reçoit briefs/idées, reformule, lance la chaîne, présente le plan final, décide GO/ajuster/écarter |
 | Veille & Captation | ÉCLAIREUR | Cherche toute l'info (concurrents CI+EU, coûts, marché, faisabilité, risques) — Fiche en 24-48h |
-| Architecte Solution | BÂTISSEUR | Plan technique : stack (Google + Netlify + PWA), schéma données, frictions (CORS, iOS Safari), 3 options chiffrées Simple/Solide/Complète |
+| Architecte Solution | BÂTISSEUR | Plan technique : stack Supabase + Cloudflare (voir section Stack), schéma données, frictions (CORS, iOS Safari), 3 options chiffrées Simple/Solide/Complète |
 | Stratégie Commerciale | VENDEUR | Mapping pilier, offre irrésistible (Produit + Bonus + Limiteur), prix FCFA + €, argumentaire PASA/AIDA |
 | Cohérence & Audit | GARDIEN | Dernier filtre. Bloque tout livrable générique ou non aligné ATTRACTOR |
 
@@ -199,14 +224,15 @@ VOIX/ÉDITO préparent les contenus
 **Constat :** l'interface de chat actuelle ne publie pas directement sur Meta/Instagram/TikTok/LinkedIn. Il faut un **pont technique**.
 
 ### Options (par ordre d'alignement avec l'écosystème)
-1. **n8n** (déjà installé en local, container `n8n-prod`, port 5678) → connecte Meta Graph API + LinkedIn API, publie sur calendrier. **Option recommandée.**
-2. **Apps Script + APIs officielles** → déclenché depuis le MasterSheet (colonne STATUT = VALIDÉ → publication).
-3. **Outil tiers** (Metricool / Buffer / Publer) → plus simple, abonnement mensuel.
+1. **n8n** (déployé sur Railway : `n8n-production-3bfc.up.railway.app`) → connecte Meta Graph API + LinkedIn API, publie sur calendrier. **Option recommandée et retenue.**
+2. **Outil tiers** (Metricool / Buffer / Publer) → plus simple, abonnement mensuel.
+
+> Ancienne option Apps Script + MasterSheet Google : abandonnée (plus de backend Google Sheets, cf. section Stack).
 
 ### Circuit cible
 ```
-VOIX/ÉDITO préparent → Mac Arthur valide (STATUT=VALIDÉ dans Sheet)
-   → n8n détecte → publie via API → log retour dans Sheet
+VOIX/ÉDITO préparent → Mac Arthur valide (statut VALIDÉ dans la file, Notion)
+   → n8n détecte → publie via API → log retour dans Notion
 ```
 
 ### Limites techniques à connaître
@@ -244,13 +270,13 @@ Ne plus demander à Canva de « créer ». Composer une fois une structure vide,
 │                         │
 │                         │ VIDE (respiration ~40%)
 │                         │
-│  Votre assistant.       │ TITRE serif énorme (80-110px), aligné GAUCHE
+│  Votre assistant.       │ TITRE Sora énorme (80-110px), aligné GAUCHE
 │  Pas un robot           │ (le mot clé sur sa propre ligne, interligne 0.9)
 │  de plus.               │
 │                         │
 │  ─────                  │ filet fin (2px, largeur ~80px)
 │                         │
-│  ATTRACTOR ASSISTS      │ sous-texte sans-serif condensé caps (petit)
+│  ATTRACTOR ASSISTS      │ sous-texte Inter condensé caps (petit)
 └─────────────────────────┘
 ```
 Marge gauche constante : 80px. Tout aligné sur cette marge.
@@ -264,8 +290,14 @@ Marge gauche constante : 80px. Tout aligné sur cette marge.
 
 ## 12. Points en suspens / à traiter
 
-1. **Identité graphique Attractor Assists en mutation** (travail en cours avec Claude Design). Ne pas figer l'ancienne charte (noir #0D0D0D / or #C9A84C-#D4A843 / bordeaux #8B2020). → Fournir la nouvelle charte (codes hex + polices) avant de monter le template maître Canva.
-2. **Recommandation identité éditoriale** : 2-3 couleurs max, 2 polices, pour un rendu épuré réussi.
+1. **Charte graphique — ARRÊTÉE (12/07/2026).** L'ancienne charte (noir #0D0D0D / or #C9A84C-#D4A843 / bordeaux #8B2020) est abandonnée. Charte de référence, source de vérité `BIBLE_ATTRACTOR.md` + `design-system.md` :
+   - **Orange `#F25C05`** = signature, couleur primaire.
+   - **Charbon `#1A1714`** = fond sombre.
+   - **Sable `#FAF6F0`** = fond clair.
+   - **Vert croissance `#1E5631`** = accent seulement (progression/succès, jamais en surface dominante). Le duo orange + vert fait écho au drapeau ivoirien (levier de fierté).
+   - **Typographie** : **Sora** (titres), **Inter** (corps).
+   - Règle de rejet UX/UI : `UX_SYSTEM.md` (mobile-first, grille 8px, zéro débordement horizontal, tap ≥ 44px).
+2. **Identité éditoriale** : 2-3 couleurs max, 2 polices. Respecté par la charte ci-dessus (orange + vert + neutres charbon/sable, Sora + Inter).
 3. **Calendrier éditorial de référence** : à intégrer à l'écosystème (VOIX/ÉDITO produisent selon le calendrier, PINCEAU habille, Mac Arthur valide, le pont publie).
 4. **Connexion réseaux sociaux** : choisir le pont (n8n recommandé) et lancer les autorisations OAuth.
 
@@ -273,7 +305,7 @@ Marge gauche constante : 80px. Tout aligné sur cette marge.
 
 ## 13. Prochaines étapes proposées (ordre de construction)
 
-1. Récupérer la **nouvelle identité Claude Design** (couleurs + polices) → monter le **template maître Canva**.
+1. Monter le **template maître Canva** avec la charte arrêtée (orange #F25C05 / charbon / sable / vert #1E5631, Sora + Inter). La charte n'est plus un préalable, elle est fixée.
 2. Mettre en place le **fichier "décisions actées" Head of** (géré par PONT).
 3. Construire le **pont de publication** (n8n + APIs réseaux) avec circuit validation Mac Arthur.
 4. Intégrer le **calendrier éditorial** à VOIX/ÉDITO.
