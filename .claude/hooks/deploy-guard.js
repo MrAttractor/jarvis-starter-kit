@@ -9,26 +9,56 @@ const path = require('path');
 
 // Lire l'input du tool Bash depuis stdin (format JSON Claude Code)
 let rawInput = '';
-process.stdin.on('data', d => rawInput += d);
-process.stdin.on('end', () => {
+let dispatched = false;
+
+function extractCmd() {
   try {
     const payload = JSON.parse(rawInput || '{}');
-    const cmd = (payload.tool_input?.command || payload.command || '').toLowerCase();
-    if (!cmd.includes('git push')) process.exit(0);
+    return (payload.tool_input?.command || payload.command || '').toLowerCase();
   } catch {
-    // Fallback : vérifier CLAUDE_TOOL_INPUT
-    const env = (process.env.CLAUDE_TOOL_INPUT || '').toLowerCase();
-    if (!env.includes('git push')) process.exit(0);
+    return (process.env.CLAUDE_TOOL_INPUT || '').toLowerCase();
   }
-  runGuard();
-});
+}
 
-// Timeout safety : si stdin ne se ferme pas, on part en runGuard après 500ms
-setTimeout(() => {
-  const env = (process.env.CLAUDE_TOOL_INPUT || '').toLowerCase();
-  if (!env.includes('git push')) process.exit(0);
-  runGuard();
-}, 500);
+// Route selon la commande : git push → audit structure, wrangler → rappel déploiement
+function dispatch() {
+  if (dispatched) return;
+  dispatched = true;
+  const cmd = extractCmd();
+  if (cmd.includes('wrangler') && cmd.includes('deploy')) return runDeployReminder(cmd);
+  if (cmd.includes('git push')) return runGuard();
+  process.exit(0);
+}
+
+process.stdin.on('data', d => rawInput += d);
+process.stdin.on('end', dispatch);
+
+// Timeout safety : si stdin ne se ferme pas, on dispatche après 500ms
+setTimeout(dispatch, 500);
+
+// Rappel des pièges de déploiement Cloudflare (déclenché sur commande wrangler)
+function runDeployReminder(cmd) {
+  const SEP = '─'.repeat(46);
+  console.error(`\n🛡️  GARDIEN — DÉPLOIEMENT\n${SEP}`);
+
+  const isPages  = cmd.includes('pages deploy');
+  const isDemo   = cmd.includes('demo-agenceattractor') || cmd.includes('demo-site');
+
+  if (isDemo) {
+    console.error('    • demo-agenceattractor : branche de prod = MASTER (pas main).');
+    console.error('    • C\'est un projet PAGES. Jamais "wrangler deploy" seul (ça vise le Worker homonyme).');
+  }
+  if (isPages && cmd.includes('--branch=main') && isDemo) {
+    console.error('    🔴 --branch=main sur demo-agenceattractor part en PREVIEW, pas en prod.');
+  }
+  if (isPages) {
+    console.error('    • Vérifier la branche de prod : wrangler pages deployment list --project-name=<projet>');
+  }
+  console.error('    • Après déploiement : tester le VRAI domaine (avec ?v=timestamp), pas juste le "Success".');
+  console.error('    • Liens testés, zéro débordement horizontal, résidus de template éliminés.');
+  console.error('    → Détail : .claude/skills/gardien/references/checklist-deploiement.md\n');
+  process.exit(0);
+}
 
 function runGuard() {
   const ROOT  = path.resolve(__dirname, '../../livrables/ecosysteme-attractor/attractor-assists/app/src');

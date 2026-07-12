@@ -6,6 +6,67 @@
 
 ---
 
+[2026-07-12] — DÉCISION 013
+Pôle concerné : Transverse / tous
+Décision : Réunion générale d'audit de performance et d'efficacité des 15 agents (référence : blueprint fondateur). Constat : 4 agents portent réellement l'agence (BÂTISSEUR, VENDEUR, MIROIR, PINCEAU), 8 sont dormants ou jamais activés, 3 par intermittence. Priorité de remise en route validée : les GARDE-FOUS d'abord (GARDIEN + PONT). Sort des 8 dormants : à trancher plus tard.
+Validé par : Mac Arthur
+Impacte : Tous les pôles (gouvernance)
+Actions déclenchées :
+  → GARDIEN : checklist + carte de déploiement créées (.claude/skills/gardien/references/checklist-deploiement.md) ; hook deploy-guard.js étendu aux commandes wrangler (FAIT)
+  → PONT : registre de décisions réactivé, mois de juillet rattrapé (FAIT)
+  → Chief of Staff : CR d'audit archivé comme réunion de référence pour la prochaine
+Statut : ACTÉE (garde-fous livrés ; réactivation des autres agents à séquencer)
+
+---
+
+[2026-07-11] — DÉCISION 012
+Pôle concerné : Produit / Stratégy
+Décision : La Beynaumania (plateforme fan Serge Beynaud) construite en vraie plateforme, pas maquette. Adhésion GRATUITE (maximiser volume + ambassadeurs), monétisation en one-shot XPaye uniquement (événements payants + série spéciale + replays concert), ce qui enterre le blocage "XPaye ne fait pas le récurrent". Logique cheval de Troie : la visibilité de Serge (~10M followers) est le vrai gain.
+Validé par : Mac Arthur
+Impacte : Produit, Stratégy, Commercial
+Actions déclenchées :
+  → Live pro Cloudflare Stream différé, à proposer à Latiss comme offre premium "Concerts"
+  → Remplir la plateforme de vrais membres ; protocole STAR FACTORY toujours en attente
+Statut : ACTÉE
+
+---
+
+[2026-07-10] — DÉCISION 011
+Pôle concerné : Commercial / Stratégy
+Décision : Nouvelle grille tarifaire app métier : App simple 250€ / App pro dès 490€ / App pro+ dès 1200€. Remplace l'ancienne grille SOLO/ÉQUIPE/ENTERPRISE.
+Validé par : Mac Arthur
+Impacte : Commercial (devis), R&D (edge function generate-devis)
+Actions déclenchées :
+  → Barème synchronisé dans devis-express ET generate-devis/index.ts
+  → Redéployer generate-devis sur Supabase pour que l'auto-devis applique la nouvelle grille
+Statut : ACTÉE (redéploiement generate-devis à confirmer)
+
+---
+
+[2026-07-09] — DÉCISION 010
+Pôle concerné : Stratégy / Commercial
+Décision : Virage en phase de PROMOTION + multiplication des partenariats visibilité et business. Chaque partenariat de ce type se cadre avec le template standard de proposition d'échange (livrables/commercial/process-vente/template-proposition-echange.md). Premiers cas : Studio IA (Emmanuel Yao), Ayela.
+Validé par : Mac Arthur
+Impacte : Commercial, Contenu, tous
+Actions déclenchées :
+  → Cadrer chaque échange (périmètre borné côté presta, contrepartie chiffrée, forfait tiers domaine/hébergement)
+  → Note d'audit 12/07 : la phase promotion suppose de réveiller ÉDITO/VOIX/CARBURANT (aujourd'hui dormants)
+Statut : ACTÉE
+
+---
+
+[2026-07-08] — DÉCISION 009
+Pôle concerné : R&D / Architecture
+Décision : Consolidation des backends clients dans le projet Supabase partagé attractor-assists (tables préfixées par client) tant que l'agence reste en tier gratuit (limite 2 projets actifs), au lieu d'un projet dédié par client. Règle de sécurité non négociable à chaque greffe : RLS scopée à un UID précis, jamais auth.role()='authenticated' seul.
+Validé par : Mac Arthur
+Impacte : R&D (tous les nouveaux backends clients)
+Actions déclenchées :
+  → J'Envoie Express (je_), Livraison Pro (lp_), Beynaud (bey_), Studio IA (aic_) greffés sur le projet partagé
+  → Faille corrigée sur J'Envoie Express (policy admin scopée à l'UID de Jean Yves)
+Statut : ACTÉE
+
+---
+
 [2026-06-17] — DÉCISION 008
 Pôle concerné : Produit / R&D
 Décision : Carelle est la première duplication de Mac Arthur. Son brief est réécrit à partir du cas Kezey / C'real (premier cas réel validé en production). Elle automatise exactement ce que Mac Arthur a fait manuellement : collecte → 3 modèles → génération site → branchement Supabase → livraison lien. Plus de programmeur dans la boucle. Standard UX/UI impeccable sur les 3 templates.
