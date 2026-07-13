@@ -49,6 +49,15 @@
 - **Ajout d'un champ email + re-saisie du numéro** : ÉCARTÉ. Le champ contact accepte déjà "WhatsApp ou email". Re-saisie = friction non justifiée sur un formulaire de haut de tunnel (contrairement à J'Envoie Express qui est un paiement engagé). Le formulaire reste tel quel.
 - Principe retenu : la qualité du diagnostic suit la qualité de l'input, mais on ne force pas l'input par de la friction ; on filtre les non-sérieux en aval (ignorer vite), et le vrai enjeu est "la suite" (qualif → maquette → devis → close), aujourd'hui 100% manuelle, à observer sur le cas Franck avant d'automatiser quoi que ce soit.
 
+### Moteur inbound LIVRÉ : message WhatsApp auto-rédigé (edge function `diagnostic`)
+- Extension déployée en prod : Claude génère désormais aussi un **premier message WhatsApp prêt à envoyer** (se présente, reprend activité + douleur, reformule le levier, propose un échange), affiché dans l'email de notif (bloc "Message prêt à envoyer") et pré-rempli dans le lien wa.me. Objectif : ne plus perdre les 24h qu'on a perdues sur Franck.
+- Playbook suivi : testé le prompt sur le vrai référentiel méthode (cas type), corrigé 2 défauts (ne se présentait pas ; glissait un tiret long → garde-fou déterministe `replace` dans le code, pas juste une consigne au prompt), déployé, **testé de bout en bout en prod** (emails reçus avec le message + lien), **données de test nettoyées** (2 lignes/table supprimées). Commit `4086de6`. Défaut résiduel assumé : Claude glisse parfois un "tu" au lieu de "vous" (brouillon relu avant envoi, non bloquant).
+
+### Bot WhatsApp Cloud API : MIS AU FRIGO (décidé, ne pas relancer)
+- Élucidation du "je ne sais pas si ça marche" : le workflow n8n "WhatsApp - Attractor Assists" n'a **jamais tourné** (0 exécution), et il existait 2 tentatives inachevées en parallèle (n8n + ancien plan Manychat). En connectant son numéro principal +225 05 76 87 70 70 au Cloud API Meta, Mac Arthur a perdu l'usage de l'app WhatsApp Business dessus (un numéro sur l'API ne peut plus servir dans l'app).
+- Décision (choix de Mac Arthur) : **récupérer + archiver.** Workflow n8n WhatsApp **désactivé** (via API, stoppe aussi l'erreur webhook au démarrage) ; idée Manychat marquée ÉCARTÉE dans idees-pipeline. Numéro +225 à récupérer dans l'app WhatsApp Business (supprimer du WABA Meta → réenregistrer par SMS).
+- Raison : les 2 objectifs (prospects ↔ agence / gestion utilisateurs Assists) sont déjà couverts sans l'API (wa.me + chat web + message auto). Règle d'or gravée : un vrai bot WhatsApp un jour = numéro DÉDIÉ, jamais le principal.
+
 ---
 
 ## 2026-07-11 (session 96 — La Beynaumania : construction de la vraie plateforme fan de Serge Beynaud)
