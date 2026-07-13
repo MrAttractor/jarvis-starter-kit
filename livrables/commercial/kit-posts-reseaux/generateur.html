@@ -299,14 +299,30 @@ function fitScale(W,H){
 }
 window.addEventListener('resize', ()=>{ const [W,H]=FORMATS[state.format]; fitScale(W,H); });
 
+async function captureCanvas(){
+  await document.fonts.ready;
+  const [W,H]=FORMATS[state.format];
+  const scaleEl=document.getElementById('scale');
+  const prevT=scaleEl.style.transform, prevW=scaleEl.style.width, prevH=scaleEl.style.height;
+  // capture à taille réelle : on retire l'échelle d'aperçu
+  scaleEl.style.transform='none'; scaleEl.style.width=W+'px'; scaleEl.style.height=H+'px';
+  await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+  let canvas;
+  try{
+    canvas=await html2canvas(document.getElementById('stage'),{
+      width:W, height:H, windowWidth:W, windowHeight:H, scale:1,
+      backgroundColor:null, useCORS:true, scrollX:0, scrollY:0, logging:false });
+  } finally {
+    scaleEl.style.transform=prevT; scaleEl.style.width=prevW; scaleEl.style.height=prevH;
+  }
+  return canvas;
+}
+
 document.getElementById('btn-dl').addEventListener('click', async ()=>{
   const btn=document.getElementById('btn-dl'); const old=btn.textContent;
   btn.textContent='Génération…'; btn.disabled=true;
   try{
-    await document.fonts.ready;
-    const [W,H]=FORMATS[state.format];
-    const stage=document.getElementById('stage');
-    const canvas=await html2canvas(stage,{width:W,height:H,scale:1,backgroundColor:null,useCORS:true,logging:false});
+    const canvas=await captureCanvas();
     const a=document.createElement('a');
     a.download='post-attractor-'+state.model+'-'+state.format+'.png';
     a.href=canvas.toDataURL('image/png'); a.click();
@@ -328,6 +344,18 @@ document.getElementById('btn-dl').addEventListener('click', async ()=>{
 })();
 
 syncFields(); render();
+
+// sonde de vérification : ?probe=1 affiche le PNG réellement produit par html2canvas
+if(new URLSearchParams(location.search).get('probe')){
+  setTimeout(async ()=>{
+    try{
+      const canvas=await captureCanvas();
+      const [W,H]=FORMATS[state.format];
+      document.body.style.cssText='margin:0;background:#000;display:block';
+      document.body.innerHTML='<img src="'+canvas.toDataURL('image/png')+'" style="display:block;width:'+W+'px;height:'+H+'px">';
+    }catch(e){ document.body.innerHTML='<pre style="color:#fff">PROBE ERR: '+e.message+'</pre>'; }
+  }, 700);
+}
 </script>
 </body>
 </html>
