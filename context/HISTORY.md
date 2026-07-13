@@ -7,6 +7,61 @@
 
 ---
 
+## 2026-07-13 (session 98 — Générateur de posts FB/IG, migration Livraison Pro + support terrain, numéro WhatsApp agence)
+
+### Générateur de posts réseaux (kit-posts-reseaux)
+- Besoin : automatiser les posts FB/IG. Cadré : "créer vite + programmer" (template maître + planificateur gratuit Meta Business Suite), pas d'infra fragile ni de publication 100% autonome (contre la règle VOIX). Plateformes : FB + IG.
+- L'IA de Canva ne respecte pas la charte (couleurs/typos ratées, rendu générique proche d'Orange CI). Pivot : **générateur HTML autonome** sur la charte exacte du site (Sora titres + Space Mono labels ; orange #F25C05 + charbon #1A1714 + sable #FAF6F0 ; **vert ivoirien en accent bicolore** #3DDC84/#1E5631 pour se démarquer du télécom Orange).
+- Livré : `livrables/commercial/kit-posts-reseaux/generateur.html`. 4 formats (Feed 4:5 / Carré 1:1 / Story 9:16 / Bannière), 2 thèmes (sombre/clair), 4 modèles (Accroche / Offre / Preuve / **Téléphone** avec mockup montrant le vrai site d'un client dans l'écran + illustration de fond). Image + dégradé, download PNG pleine résolution (html2canvas), presets par URL, mode export `?shot=1`. Illustration de fond de démo générée via Magnific.
+- Bugs corrigés : champ titre/accroche invisible (`display:''` repris par la règle CSS `[data-only]{display:none}` → `display:block`) ; PNG téléchargé à mauvaise échelle (transformation d'aperçu appliquée par html2canvas → neutralisée avant capture, taille réelle forcée). Rendus vérifiés headless (le "débordement" observé n'était qu'un artefact de capture headless, viewport simulé > fenêtre).
+
+### Numéro WhatsApp agence unifié
+- Le **+225 05 76 87 70 70** (WhatsApp Business récupéré de l'API Meta, cf. session 97) devient le contact WhatsApp de l'agence. Page **diagnostic** (demo-site) bascule dessus (challenge l'utilisait déjà). Numéros affichés (mentions légales, PDF) laissés en France (choix Mac Arthur, « juste le WhatsApp »).
+
+### Livraison Pro — migration Vercel → Cloudflare Pages + sous-domaine propre
+- Migré sur projet Cloudflare Pages dédié `livraisonpro` (branche prod **main**), backend déjà sur le Supabase partagé (tables `lp_`). Sous-domaine **livraisonpro.agenceattractor.com** ACTIF (CNAME chez GoDaddy → `livraisonpro.pages.dev`, SSL Cloudflare provisionné). Ancien `livraisonpro-demo.vercel.app` à retirer.
+- **DNS de agenceattractor.com toujours chez GoDaddy** (nameservers domaincontrol). Sous-domaines Cloudflare Pages = CNAME manuels chez GoDaddy → `*.pages.dev`. Migration DNS complète vers Cloudflare **PARKED** : à faire à froid en vérifiant que les enregistrements **Resend/email** (SPF/DKIM/DMARC) sont importés AVANT de changer les nameservers, sinon tous les envois cassent.
+
+### Support de vente terrain (pitch) + capture d'avis à chaud
+- `livraisonpro/pitch/index.html` : support mobile **swipeable** (tactile + flèches + clavier) pour le commercial terrain. 8 slides (problème → solution → côté marchand → côté livreur → cas pratique en 5 étapes → rejoindre les testeurs (2 boutons vers la vraie app) → avis à chaud). Charte LP (orange + vert ivoirien #009A44).
+- Capture des avis : edge function **`lp-feedback`** (service role, CORS, notif email Resend) → table **`lp_feedback`** (migration 0003, créée via Management API Supabase avec le token). Param **`?c=<commercial>`** pour attribuer chaque avis. Testé de bout en bout ({ok:true} + ligne insérée + nettoyée).
+- Lien : **livraisonpro.agenceattractor.com/pitch**.
+
+### À faire / parked
+- Migration DNS agenceattractor.com → Cloudflare (préserver Resend). Test réel du pitch par Mac Arthur (envoi d'avis → email + ligne). Retirer le projet Vercel de Livraison Pro.
+
+---
+
+## 2026-07-13 (session 98 — Air Côte d'Ivoire : note d'accroche de partenariat + RDV du 22/07)
+
+### Le contexte
+- Mac Arthur porte, via J'Envoie Express + Mr Attractor, une proposition de partenariat à Air Côte d'Ivoire. Concept : marketplace qui centralise le flux informel de colis Paris ⇄ Abidjan, migration des transporteurs de Corsair vers Air CI, et en phase 2 un service encadré de transporteurs freelance (billet A/R 72h, compteur de livraisons, franchise 3 bagages à négocier).
+- **RDV présentiel déjà fixé : mercredi 22 juillet 2026** dans les bureaux d'Air CI, avec le DG et Mme Hermance Alloh (Direction Marketing & Développement Commercial). Le livrable n'est donc pas une demande d'entretien mais un support que la responsable lira en amont.
+
+### Décisions de cadrage (AskUserQuestion)
+- Format = note d'accroche (pas dossier complet), les calculs/analytics réservés à la phase 2 / à l'oral.
+- Volet transporteurs freelance = présenté en **phase 2 encadrée** (KYC, colis déclarés/tracés, conformité douane), pas comme argument phare brut, pour ne pas inquiéter une compagnie prudente sur la sûreté.
+- Support = un **lien web** à envoyer (présentation agence + preuve J'Envoie Express + concept).
+
+### Ce qui a été construit et mis en ligne
+- Page premium `livrables/clients/demo-site/public/air-cote-divoire/index.html`, déployée sur **demo.agenceattractor.com/air-cote-divoire** (Cloudflare Pages `demo-agenceattractor`, branche master, règle `_redirects` explicite ajoutée avant le catch-all). Titres **Sora** + corps **Inter** (charte agence), aucun débordement horizontal (vérifié captures 390/1440), tirets longs retirés.
+- Structure : hero (corridor Paris ⇄ Abidjan) → double bloc crédibilité (Air France 2016 + créateur de contenu Air CI) → agence → preuve J'Envoie Express (lien jenvoiexpress.com) → constat → concept 2 temps → **parti pris "on vend une expérience, pas du fret"** → apports Air CI → **résonance avec leurs actifs réels (sMiles, Ivoire Fret Express, axe Paris-Abidjan, IOSA, via WebFetch du site officiel)** → section RDV 22/07.
+
+### Deux corrections importantes demandées par Mac Arthur
+- **RDV déjà pris** : retrait de tout "demander un entretien", badge "Document de préparation à notre rencontre du mercredi 22 juillet" + section finale réorientée.
+- **Parler avec réserve avant tout développement** : la complémentarité avec le cargo (Ivoire Fret Express) et le flux concurrence mis au conditionnel ("pourrait", "à qualifier avec vous", "semblerait"), rien affirmé.
+
+### Levier majeur révélé
+- Mac Arthur a été **coopté comme créateur de contenu par Air Côte d'Ivoire pour le vol inaugural Abidjan-Libreville-Abidjan**. Relation de confiance déjà engagée, intégrée à la page comme 2e ligne de crédibilité (sûr à écrire car le document s'adresse à Air CI elle-même). Date et format du vol à préciser.
+
+### Personnalisation + email
+- En-tête personnalisé "À l'attention de Mme Hermance Alloh". Email d'accompagnement rédigé (à copier) pour lui transmettre le lien avant le 22.
+
+### Points laissés à la main de Mac Arthur
+- Email pro affiché = myattractor1@gmail.com (pas d'adresse au domaine agence, chantier email perso non fini). Détail chocolat : "20e Salon du Chocolat" écarté (c'était 2014, incohérent avec 2016), gardé "600 kg de fret en soute, 2016, Salon du Chocolat de Paris".
+
+---
+
 ## 2026-07-12 → 13 (session 97 — J'Envoie Express changement de vol, réunion générale d'audit des agents, discipline de travail, récupération n8n)
 
 ### J'Envoie Express — changement de vol côté admin + date de départ côté suivi client
