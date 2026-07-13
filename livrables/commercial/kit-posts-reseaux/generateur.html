@@ -144,6 +144,8 @@ Hébergement 1 an offert</textarea></div>
     <div class="grp-title" id="grp-img">Image de fond</div>
     <div class="fld"><label id="lab-img">Ton illustration / photo</label><input type="file" id="f-img" accept="image/*"></div>
     <div class="hint" id="hint-img">Astuce : mets un sujet à droite et laisse l'espace à gauche pour le texte. Sans image, un dégradé de marque est utilisé.</div>
+    <div class="fld" data-only="telephone" style="margin-top:16px"><label>Illustration de fond (optionnel)</label><input type="file" id="f-bg" accept="image/*"></div>
+    <div class="hint" data-only="telephone">Fond derrière le téléphone. Sans elle, un dégradé de marque est utilisé.</div>
 
     <div class="grp-title">Signature</div>
     <div class="fld"><label>Marque</label><input type="text" id="f-brand" value="Mr Attractor"></div>
@@ -161,7 +163,7 @@ Hébergement 1 an offert</textarea></div>
 
 <script>
 const FORMATS = { feed:[1080,1350], carre:[1080,1080], story:[1080,1920], banner:[1640,624] };
-const state = { format:'feed', theme:'sombre', model:'accroche', imgUrl:'' };
+const state = { format:'feed', theme:'sombre', model:'accroche', imgUrl:'', bgUrl:'' };
 
 function seg(id, key){
   document.querySelectorAll('#'+id+' button').forEach(b=>{
@@ -191,6 +193,11 @@ document.getElementById('f-img').addEventListener('change', e=>{
   const file=e.target.files[0]; if(!file) return;
   if(state.imgUrl) URL.revokeObjectURL(state.imgUrl);
   state.imgUrl=URL.createObjectURL(file); render();
+});
+document.getElementById('f-bg').addEventListener('change', e=>{
+  const file=e.target.files[0]; if(!file) return;
+  if(state.bgUrl) URL.revokeObjectURL(state.bgUrl);
+  state.bgUrl=URL.createObjectURL(file); render();
 });
 
 const val = id => (document.getElementById(id)?.value || '');
@@ -236,7 +243,8 @@ function render(){
         <div class="sub" style="font-size:${c.sub}px;line-height:1.55;max-width:${col?720:480}px">${esc(val('f-sub')).replace(/\n/g,'<br>')}</div>
         ${footerHtml(c,40)}
       </div>`;
-    stage.innerHTML = brandBg(state.theme) + grad + `
+    const pbg = state.bgUrl ? '<div class="bg" style="background-image:url('+state.bgUrl+')"></div>' : brandBg(state.theme);
+    stage.innerHTML = pbg + grad + `
       <div class="wrap" style="padding:${c.pad}px; flex-direction:${col?'column':'row'}; align-items:center; justify-content:center; gap:${state.format==='banner'?54:64}px">
         ${text}${phone}
       </div>`;
@@ -340,6 +348,7 @@ document.getElementById('btn-dl').addEventListener('click', async ()=>{
       b.classList.add('on'); state[k]=v; }
   });
   const img=p.get('img'); if(img) state.imgUrl=decodeURIComponent(img);
+  const bgp=p.get('bg'); if(bgp) state.bgUrl=decodeURIComponent(bgp);
   if(p.get('shot')) document.body.classList.add('shot');
 })();
 
