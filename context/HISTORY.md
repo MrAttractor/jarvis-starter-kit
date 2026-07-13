@@ -40,6 +40,15 @@
 - n8n : fiabiliser d'abord (`N8N_ENCRYPTION_KEY` fixe, nettoyer le webhook WhatsApp doublon), décider du sort du bot WhatsApp (activer pour de vrai avec logique métier, ou archiver), puis construire/importer le moteur inbound OU basculer sur une fonction Supabase + cron vu la fragilité de n8n.
 - Mac Arthur finit ses chantiers en cours en parallèle (Club Élévia, Beynaud, demo-site, etc.).
 
+### Inbound réel + décision "moteur inbound = edge function Supabase, pas n8n/Cowork"
+- Recherche sur Claude Cowork (sorti 2026) comme remplaçant n8n : verdict = ni Cowork ni n8n pour le temps réel. Cowork ne déclenche pas nativement sur webhook/formulaire (immature) et brûle le quota Max ; n8n est fragile. **Le moteur inbound existe déjà à 90% : l'edge function `diagnostic/index.ts`** (formulaire → Claude qualifie famille/synthèse/problèmes/opportunités → prospect + pilotage_pipeline + email avec lien WhatsApp). Décision : étendre cette edge function (Claude rédige aussi le 1er message WhatsApp prêt à envoyer), pas d'outil externe. Playbook réutilisable créé : `.claude/skills/generateur-app-metier/references/edge-functions-playbook.md` (pattern + 12 erreurs à ne jamais refaire : CORS, fire-and-forget silencieux, RLS UID, secrets, JSON Claude à parser, etc.).
+- **2 vrais leads inbound reçus le 12/07** via le formulaire diagnostic : Franck Azaria (+2250789470057, guides PDF via WhatsApp, Famille B, diagnostic pertinent ~8,5/10) → **contacté par Mac Arthur** (message maquette-first, angle page de vente = app simple 250€). Et "legbere com" (numéro +2250000000000 bidon, com B2B) → curieux qui a pollué le formulaire volontairement, injoignable, ignoré.
+
+### Fixes formulaire diagnostic ÉCARTÉS (décidé le 13/07, ne pas y revenir)
+- **Validation du numéro WhatsApp** (rejet des faux comme legbere) : ÉCARTÉ. Un pollueur délibéré retape des zéros, la validation ne l'arrête pas ; elle ajoute de la friction pour les vrais prospects sans bloquer les curieux. Les curieux sont inévitables et sans coût (un email ignoré). On ne code pas contre un faux problème.
+- **Ajout d'un champ email + re-saisie du numéro** : ÉCARTÉ. Le champ contact accepte déjà "WhatsApp ou email". Re-saisie = friction non justifiée sur un formulaire de haut de tunnel (contrairement à J'Envoie Express qui est un paiement engagé). Le formulaire reste tel quel.
+- Principe retenu : la qualité du diagnostic suit la qualité de l'input, mais on ne force pas l'input par de la friction ; on filtre les non-sérieux en aval (ignorer vite), et le vrai enjeu est "la suite" (qualif → maquette → devis → close), aujourd'hui 100% manuelle, à observer sur le cas Franck avant d'automatiser quoi que ce soit.
+
 ---
 
 ## 2026-07-11 (session 96 — La Beynaumania : construction de la vraie plateforme fan de Serge Beynaud)
