@@ -347,6 +347,17 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
     <button class="btn" onclick="go('admin-articles')">Gérer les articles</button>
   </div>
   <button class="btn" style="margin-top:9px" onclick="go('admin-inbox')">Boîte de réception</button>
+  <div class="sh" style="margin-top:24px"><h2>Mon mot de passe</h2></div>
+  <div class="card">
+    <p style="font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:13px">Tu peux changer ton mot de passe d'accès à cet espace quand tu veux. Note bien le nouveau, c'est le seul moyen d'entrer.</p>
+    <form onsubmit="changePwd(event)">
+      <div class="fg"><label>Nouveau mot de passe</label><input type="text" name="np" placeholder="Ton nouveau mot de passe" autocomplete="off" required></div>
+      <button type="submit" class="btn gold" id="pwd-save">Enregistrer le nouveau mot de passe</button>
+    </form>
+    <div id="pwd-ok" style="display:none;padding-top:10px">
+      <p style="font-size:13px;color:#059669;font-weight:700">Mot de passe mis à jour.</p>
+    </div>
+  </div>
 </section>
 
 <!-- ── ADMIN ÉPISODES ────────────────────────────────────────── -->
@@ -492,6 +503,7 @@ const SB = supabase.createClient(
 var eps = [], arts = [], temos = [], coms = [], abonnes = [];
 var editEpId = null, editArtId = null;
 var adminMode = false;
+var ADMIN_PWD = 'andrea2026';
 
 // ── NAVIGATION ────────────────────────────────────────────────────
 function go(id) {
@@ -525,7 +537,7 @@ function closeGate(){
   document.getElementById('gpwd').value = '';
 }
 function checkPwd(){
-  if (document.getElementById('gpwd').value === 'andrea2026') {
+  if (document.getElementById('gpwd').value === ADMIN_PWD) {
     closeGate(); adminMode = true;
     document.getElementById('admin-badge').style.display = 'flex';
     document.querySelector('.nav-desk').style.display = 'none';
@@ -542,6 +554,26 @@ function exitAdmin(){
 }
 
 // ── DATA LOADING ──────────────────────────────────────────────────
+async function loadConfig() {
+  try {
+    var { data } = await SB.from('vc_config').select('valeur').eq('cle', 'admin_password').single();
+    if (data && data.valeur) ADMIN_PWD = data.valeur;
+  } catch (e) {}
+}
+async function changePwd(e) {
+  e.preventDefault();
+  var f = e.target;
+  var np = f.np.value.trim();
+  if (np.length < 4) { alert('Choisis un mot de passe d\'au moins 4 caractères.'); return; }
+  var btn = document.getElementById('pwd-save'); btn.disabled = true; btn.textContent = 'Enregistrement...';
+  var { error } = await SB.from('vc_config').update({ valeur: np, updated_at: new Date().toISOString() }).eq('cle', 'admin_password');
+  btn.disabled = false; btn.textContent = 'Enregistrer le nouveau mot de passe';
+  if (!error) {
+    ADMIN_PWD = np; f.reset();
+    document.getElementById('pwd-ok').style.display = 'block';
+    setTimeout(function(){ document.getElementById('pwd-ok').style.display = 'none'; }, 4000);
+  } else { alert('Erreur, réessaie.'); }
+}
 async function loadPublicData() {
   var r1 = await SB.from('vc_episodes').select('*').in('statut',['publie','programme']).order('created_at',{ascending:false});
   var r2 = await SB.from('vc_articles').select('*').eq('statut','publie').order('created_at',{ascending:false});
@@ -892,7 +924,18 @@ function stLabel(s){ return {publie:'Publié',programme:'Programmé',brouillon:'
 function stClass(s){ return {publie:'live',programme:'soon',brouillon:'wip'}[s]||'wip'; }
 
 // ── INIT ──────────────────────────────────────────────────────────
+loadConfig();
 loadPublicData();
+
+// Lien personnel de pilotage d'Andréa : ?pilotage (ou #pilotage) ouvre
+// directement sa fenêtre de connexion, sans passer par les 5 taps sur le logo.
+(function(){
+  var s = (location.search || '').toLowerCase();
+  var h = (location.hash || '').toLowerCase();
+  if (s.indexOf('pilotage') > -1 || s.indexOf('andrea') > -1 || h.indexOf('pilotage') > -1 || h.indexOf('andrea') > -1) {
+    openGate();
+  }
+})();
 </script>
 </body>
 </html>

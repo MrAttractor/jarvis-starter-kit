@@ -7,6 +7,28 @@
 
 ---
 
+## 2026-07-13 (session 99 — Vies Croisées : mise en ligne sur domaine propre viescroiseesci.com + lien de pilotage Andréa + mot de passe self-service)
+
+### Domaine propre + déploiement
+- Mac Arthur a acheté **viescroiseesci.com** (via Cloudflare, zone déjà dans le compte agence, nameservers `tate`/`noor`). Objectif : connecter et déployer le vrai site Vies Croisées (jusque-là servi sur `demo.agenceattractor.com/vies-croisees`).
+- **Projet Cloudflare Pages dédié `viescroiseesci`** créé (branche prod `main`). Déployé le seul dossier utile depuis le scratchpad : `index.html` + `logo.png`. **La proposition de vente `proposition-vies-croisees.html` volontairement exclue** du déploiement public.
+- Domaine + www **attachés au projet via l'API Cloudflare** (le token OAuth wrangler 4.x n'a pas de sous-commande `pages domain`, et pas de scope DNS). Cloudflare n'a pas auto-créé les CNAME → Mac Arthur les a posés dans le dashboard (`@` et `www` → `viescroiseesci.pages.dev`, proxied). Résultat vérifié : **root + www `active`, SSL valide (Google CA), code 200**, la page servie est bien `<title>Vies Croisées — par Andréa Koné</title>`.
+- **Redirection 301** `demo.agenceattractor.com/vies-croisees` (+ `/*`) → `https://viescroiseesci.com` ajoutée dans le `_redirects` du demo-site, demo-site redéployé (branche `master`, piège connu respecté), redirection testée active.
+
+### Lien de pilotage personnel d'Andréa (remplace les 5 taps)
+- Constat de Mac Arthur : le geste des 5 taps sur le logo pour ouvrir l'admin est trop contraignant pour Andréa. Besoin : un lien personnel qu'elle met en favori.
+- Livré : **`viescroiseesci.com/?pilotage`** ouvre directement la fenêtre de connexion. Choix du `?pilotage` (query) plutôt que `/pilotage` (path) car Cloudflare Pages 308-redirige `/pilotage` vers `/` (comportement clean-URL quand la cible `_redirects` est `/index.html`), ce qui cassait le déclencheur. Les 5 taps restent actifs en secours.
+
+### Mot de passe modifiable par Andréa elle-même (demande "laisse simple")
+- En l'état le mdp `andrea2026` était en dur dans le JS → elle ne pouvait pas le changer. Mac Arthur : "laisse simple, elle pourra changer d'elle-même".
+- Solution simple : table **`vc_config`** sur le Supabase partagé (migration versionnée `livrables/clients/vies-croisees/0002_vc_config.sql`), même modèle d'accès que les autres tables `vc_` (RLS + policies `public true`, gate côté client). Le mdp est chargé au démarrage (`loadConfig`), `checkPwd` compare à la valeur en base, et un bloc **"Mon mot de passe"** dans l'onglet Tableau permet à Andréa de le changer (fonction `changePwd`, stocké en base → valable sur tous ses appareils). Flux lecture+update testé en réel avec la clé anon puis remis à `andrea2026`.
+- Note posture sécurité assumée : site de contenu (épisodes/articles/témoignages), pas de données sensibles ni de paiement → gate léger suffisant, cohérent avec l'existant.
+
+### Récap client
+- Message de remise rédigé pour Andréa (2 liens : site public + espace `?pilotage`, mot de passe, consigne de le changer dès la 1re connexion, liste de ce qu'elle peut faire dans son espace). Vouvoiement par défaut (remise à une cliente).
+
+---
+
 ## 2026-07-13 (session 98 — Générateur de posts FB/IG, migration Livraison Pro + support terrain, numéro WhatsApp agence)
 
 ### Générateur de posts réseaux (kit-posts-reseaux)
