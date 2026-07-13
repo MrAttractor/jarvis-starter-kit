@@ -173,7 +173,7 @@ seg('seg-format','format'); seg('seg-theme','theme'); seg('seg-model','model');
 
 function syncFields(){
   document.querySelectorAll('[data-only]').forEach(el=>{
-    el.style.display = el.dataset.only.split(' ').includes(state.model) ? '' : 'none';
+    el.style.display = el.dataset.only.split(' ').includes(state.model) ? 'block' : 'none';
   });
   document.getElementById('lab-title').textContent =
     state.model==='offre' ? 'Titre (service)' : (state.model==='telephone' ? 'Accroche' : 'Titre / accroche');
