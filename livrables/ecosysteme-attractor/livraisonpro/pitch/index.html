@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Livraison Pro — Présentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --or:#F25C05; --or-d:#D94F02; --vt:#009A44; --vt-d:#007A35; --vt-l:#D4F5E2;
+    --noir:#1A1714; --noir2:#2A2420; --gris:#9C9189; --g700:#4A3F35;
+    --sable:#FAF6F0; --gris-b:#E8E2DA; --blanc:#fff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{font-family:'Sora',sans-serif;background:var(--noir);color:var(--sable);overflow:hidden;}
+  /* Piste de slides horizontale, swipe natif */
+  .deck{position:relative;width:100%;height:100dvh;overflow:hidden;}
+  .slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .3s ease;
+    display:flex;flex-direction:column;justify-content:center;padding:64px 26px 96px;overflow-y:auto;overflow-x:hidden;}
+  .slide.on{opacity:1;visibility:visible;}
+  .wrap{width:100%;max-width:440px;margin:0 auto;}
+  /* barre de progression */
+  .prog{position:fixed;top:0;left:0;right:0;height:4px;background:rgba(255,255,255,.12);z-index:20;}
+  .prog i{display:block;height:100%;width:0;background:var(--or);transition:width .3s ease;}
+  /* nav */
+  .nav{position:fixed;bottom:22px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 22px;z-index:20;pointer-events:none;}
+  .nav button{pointer-events:auto;width:52px;height:52px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:#fff;font-size:22px;cursor:pointer;backdrop-filter:blur(6px);}
+  .nav button:disabled{opacity:.25;}
+  .dots{display:flex;gap:6px;pointer-events:auto;}
+  .dots span{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.25);transition:.2s;}
+  .dots span.on{background:var(--or);width:20px;border-radius:4px;}
+  /* éléments */
+  .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,154,68,.14);color:#5be89a;border:1px solid rgba(0,154,68,.3);border-radius:999px;padding:7px 14px;font-size:12px;font-weight:700;margin-bottom:22px;}
+  .badge .dot{width:8px;height:8px;border-radius:50%;background:var(--vt);box-shadow:0 0 10px var(--vt);}
+  .kicker{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:14px;}
+  h1{font-size:clamp(30px,8.6vw,42px);line-height:1.05;font-weight:900;letter-spacing:-.02em;margin-bottom:16px;overflow-wrap:break-word;}
+  h2{font-size:clamp(24px,7vw,32px);line-height:1.1;font-weight:800;letter-spacing:-.02em;margin-bottom:14px;overflow-wrap:break-word;}
+  .lead{overflow-wrap:break-word;}
+  .em{color:var(--or);} .emv{color:var(--vt);}
+  .lead{font-size:17px;line-height:1.55;color:var(--gris-b);}
+  .card{background:var(--noir2);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:16px 18px;margin-top:12px;display:flex;gap:14px;align-items:flex-start;}
+  .card .ic{width:40px;height:40px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;}
+  .card .ic.vt{background:var(--vt-l);} .card .ic.or{background:var(--or-l,rgba(242,92,5,.12));}
+  .card b{font-size:15px;display:block;margin-bottom:2px;color:#fff;}
+  .card p{font-size:13.5px;color:var(--gris);line-height:1.45;}
+  .stats{display:flex;gap:10px;margin-top:22px;}
+  .stat{flex:1;background:var(--noir2);border-radius:14px;padding:14px 8px;text-align:center;}
+  .stat .n{font-size:22px;font-weight:900;color:var(--or);} .stat.v .n{color:var(--vt);}
+  .stat .l{font-size:10.5px;color:var(--gris);margin-top:2px;line-height:1.3;}
+  .steps{margin-top:8px;} .step{display:flex;gap:14px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+  .step:last-child{border:none;}
+  .step .num{width:30px;height:30px;border-radius:50%;background:var(--or);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .step.v .num{background:var(--vt);}
+  .step b{font-size:15px;color:#fff;} .step p{font-size:13px;color:var(--gris);}
+  .btnrow{display:flex;flex-direction:column;gap:12px;margin-top:22px;}
+  .btn{display:flex;align-items:center;gap:12px;text-decoration:none;border:none;cursor:pointer;text-align:left;
+    padding:16px 18px;border-radius:14px;font-family:inherit;font-size:16px;font-weight:800;}
+  .btn.vt{background:var(--vt);color:#fff;} .btn.or{background:var(--or);color:#fff;}
+  .btn small{display:block;font-weight:500;font-size:12px;opacity:.85;margin-top:2px;}
+  .btn .a{margin-left:auto;font-size:20px;}
+  /* form avis */
+  label{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gris);margin:14px 0 7px;}
+  input,textarea{width:100%;background:var(--noir2);border:1px solid rgba(255,255,255,.1);border-radius:11px;color:var(--sable);font-family:inherit;font-size:15px;padding:12px 14px;outline:none;}
+  input:focus,textarea:focus{border-color:var(--or);}
+  textarea{min-height:66px;resize:vertical;}
+  .seg{display:flex;gap:8px;flex-wrap:wrap;}
+  .seg button{flex:1;min-width:calc(33% - 8px);background:var(--noir2);border:1px solid rgba(255,255,255,.1);color:var(--gris-b);font-family:inherit;font-size:13px;font-weight:700;padding:11px 6px;border-radius:11px;cursor:pointer;}
+  .seg button.on{background:var(--or);border-color:var(--or);color:#fff;}
+  .seg.v button.on{background:var(--vt);border-color:var(--vt);}
+  .submit{width:100%;margin-top:20px;background:var(--or);color:#fff;border:none;font-family:inherit;font-size:16px;font-weight:800;padding:16px;border-radius:13px;cursor:pointer;}
+  .submit:disabled{opacity:.6;}
+  .hint{font-size:11px;color:var(--g700);margin-top:10px;text-align:center;}
+  .swipehint{position:absolute;bottom:78px;left:0;right:0;text-align:center;font-size:12px;color:var(--gris);animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+  .done{text-align:center;}
+  .done .big{font-size:56px;margin-bottom:10px;}
+</style>
+</head>
+<body>
+<div class="prog"><i id="prog"></i></div>
+
+<div class="deck" id="deck">
+
+  <!-- 1. COUVERTURE -->
+  <section class="slide" style="background:radial-gradient(120% 80% at 70% 10%, rgba(242,92,5,.22), transparent 55%), var(--noir)">
+    <div class="wrap">
+      <div class="badge"><span class="dot"></span> La livraison certifiée 🇨🇮</div>
+      <h1>Trouvez le bon livreur.<br><span class="em">En 2 minutes.</span></h1>
+      <p class="lead">Des livreurs vérifiés près de chez vous. Bon de livraison automatique. Zéro litige, zéro paperasse.</p>
+      <div class="swipehint">Glissez pour découvrir →</div>
+    </div>
+  </section>
+
+  <!-- 2. LE PROBLÈME -->
+  <section class="slide">
+    <div class="wrap">
+      <div class="kicker">Le vrai problème</div>
+      <h2>La livraison, aujourd'hui, c'est la galère.</h2>
+      <div class="card"><div class="ic or">🏪</div><div><b>Côté marchand</b><p>Des livreurs qu'on ne connaît pas, des colis perdus, des litiges, du temps passé au téléphone.</p></div></div>
+      <div class="card"><div class="ic vt">🛵</div><div><b>Côté livreur</b><p>Pas de clients réguliers, on court après le travail, aucune preuve de son sérieux.</p></div></div>
+    </div>
+  </section>
+
+  <!-- 3. LA SOLUTION -->
+  <section class="slide">
+    <div class="wrap">
+      <div class="kicker">La solution</div>
+      <h2>Une place de marché qui relie <span class="em">marchands</span> et <span class="emv">livreurs certifiés</span>, en direct.</h2>
+      <p class="lead">Chaque livreur est vérifié (CNI + photo) avant d'apparaître. Le marchand choisit, le bon de livraison est généré tout seul. Tout est tracé.</p>
+      <div class="stats">
+        <div class="stat"><div class="n">100%</div><div class="l">Livreurs vérifiés</div></div>
+        <div class="stat v"><div class="n">2min</div><div class="l">Pour trouver</div></div>
+        <div class="stat"><div class="n">0 F</div><div class="l">Pour démarrer</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. CÔTÉ MARCHAND -->
+  <section class="slide">
+    <div class="wrap">
+      <div class="kicker" style="color:var(--vt)">Côté marchand · e-commerçant</div>
+      <h2>Trouvez un livreur disponible dans votre zone, maintenant.</h2>
+      <div class="card"><div class="ic vt">✅</div><div><b>Des livreurs vérifiés</b><p>CNI + photo contrôlés. Vous savez à qui vous confiez vos colis.</p></div></div>
+      <div class="card"><div class="ic vt">📄</div><div><b>Bon de livraison automatique</b><p>Généré à chaque course. Une preuve, zéro paperasse.</p></div></div>
+      <div class="card"><div class="ic vt">🛡️</div><div><b>Zéro litige</b><p>Tout est tracé de la prise en charge à la remise du colis.</p></div></div>
+    </div>
+  </section>
+
+  <!-- 5. CÔTÉ LIVREUR -->
+  <section class="slide">
+    <div class="wrap">
+      <div class="kicker">Côté livreur</div>
+      <h2>Fais-toi vérifier, accède à des <span class="em">centaines d'entrepreneurs</span>.</h2>
+      <div class="card"><div class="ic or">📈</div><div><b>Des clients qui viennent à toi</b><p>Une fois vérifié, tu apparais dans le catalogue de ta zone.</p></div></div>
+      <div class="card"><div class="ic or">🏅</div><div><b>Ton sérieux prouvé</b><p>Le badge « vérifié » rassure les marchands et te fait choisir.</p></div></div>
+      <div class="card"><div class="ic or">💸</div><div><b>0 FCFA pour démarrer</b><p>Tu t'inscris, tu te fais vérifier, tu travailles. C'est tout.</p></div></div>
+    </div>
+  </section>
+
+  <!-- 6. CAS PRATIQUE -->
+  <section class="slide">
+    <div class="wrap">
+      <div class="kicker">En pratique</div>
+      <h2>Une course, de A à Z.</h2>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><div><b>Awa a un colis à livrer</b><p>Marchande à Cocody, elle ouvre Livraison Pro.</p></div></div>
+        <div class="step v"><div class="num">2</div><div><b>Elle voit les livreurs vérifiés</b><p>Dans sa zone, avec leurs zones de couverture.</p></div></div>
+        <div class="step"><div class="num">3</div><div><b>Kofi accepte la course</b><p>Livreur certifié moto, dispo à Marcory.</p></div></div>
+        <div class="step v"><div class="num">4</div><div><b>Bon de livraison + suivi</b><p>Généré automatiquement, tout le monde est couvert.</p></div></div>
+        <div class="step"><div class="num">5</div><div><b>Colis remis, zéro litige</b><p>La preuve est enregistrée. Prochaine course.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. REJOINDRE -->
+  <section class="slide" style="background:radial-gradient(120% 80% at 30% 90%, rgba(0,154,68,.18), transparent 55%), var(--noir)">
+    <div class="wrap">
+      <div class="kicker">Rejoignez les testeurs</div>
+      <h2>Gratuit, sans engagement. Choisissez votre côté :</h2>
+      <div class="btnrow">
+        <a class="btn vt" href="../app.html?role=marchand"><span>🏪</span><span>Je suis marchand<small>Je cherche des livreurs fiables</small></span><span class="a">›</span></a>
+        <a class="btn or" href="../app.html?role=livreur"><span>🛵</span><span>Je suis livreur<small>Je veux des clients réguliers</small></span><span class="a">›</span></a>
+      </div>
+      <p class="hint">Puis donnez-nous votre avis à la page suivante →</p>
+    </div>
+  </section>
+
+  <!-- 8. AVIS À CHAUD -->
+  <section class="slide">
+    <div class="wrap" id="avis-wrap">
+      <div class="kicker">Votre avis compte</div>
+      <h2>À chaud, qu'en pensez-vous ?</h2>
+      <label>Vous êtes plutôt</label>
+      <div class="seg v" id="seg-role">
+        <button data-v="marchand">Marchand</button>
+        <button data-v="livreur">Livreur</button>
+        <button data-v="autre">Autre</button>
+      </div>
+      <label>Ça vous intéresse ?</label>
+      <div class="seg" id="seg-interet">
+        <button data-v="tres_interesse">Très intéressé</button>
+        <button data-v="a_convaincre">À convaincre</button>
+        <button data-v="pas_pour_moi">Pas pour moi</button>
+      </div>
+      <label>Ce qui vous a marqué (ou ce qui bloque)</label>
+      <textarea id="f-marque" placeholder="En quelques mots…"></textarea>
+      <label>Votre prénom</label>
+      <input id="f-nom" type="text" placeholder="Prénom">
+      <label>WhatsApp (pour recevoir le lien)</label>
+      <input id="f-wa" type="tel" inputmode="tel" placeholder="+225 07 …">
+      <label>Votre zone</label>
+      <input id="f-zone" type="text" placeholder="Cocody, Yopougon…">
+      <button class="submit" id="send">Envoyer mon avis</button>
+      <p class="hint" id="err" style="color:#ff8a5c;display:none"></p>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" aria-label="précédent">‹</button>
+  <div class="dots" id="dots"></div>
+  <button id="next" aria-label="suivant">›</button>
+</div>
+
+<script>
+const FN_URL = "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/lp-feedback";
+const commercial = new URLSearchParams(location.search).get('c') || '';
+const deck = document.getElementById('deck');
+const slides = [...document.querySelectorAll('.slide')];
+const N = slides.length;
+const dotsC = document.getElementById('dots');
+slides.forEach((_,i)=>{const s=document.createElement('span');if(i===0)s.className='on';dotsC.appendChild(s);});
+const dots=[...dotsC.children];
+const state={role:'',interet:''};
+
+let idx=0;
+function refresh(){
+  document.getElementById('prog').style.width=((idx+1)/N*100)+'%';
+  dots.forEach((d,k)=>d.classList.toggle('on',k===idx));
+  document.getElementById('prev').disabled=idx===0;
+  document.getElementById('next').disabled=idx===N-1;
+}
+function show(i){ idx=Math.max(0,Math.min(N-1,i)); slides.forEach((s,k)=>s.classList.toggle('on',k===idx)); slides[idx].scrollTop=0; refresh(); }
+document.getElementById('next').onclick=()=>show(idx+1);
+document.getElementById('prev').onclick=()=>show(idx-1);
+dots.forEach((d,k)=>d.onclick=()=>show(k));
+// swipe tactile (horizontal dominant)
+let x0=null,y0=null;
+deck.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;y0=e.touches[0].clientY;},{passive:true});
+deck.addEventListener('touchend',e=>{ if(x0==null)return; const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;
+  if(Math.abs(dx)>45 && Math.abs(dx)>Math.abs(dy)) show(idx+(dx<0?1:-1)); x0=null; });
+window.addEventListener('keydown',e=>{if(e.key==='ArrowRight')show(idx+1);if(e.key==='ArrowLeft')show(idx-1);});
+
+function seg(id,key){document.querySelectorAll('#'+id+' button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#'+id+' button').forEach(x=>x.classList.remove('on'));b.classList.add('on');state[key]=b.dataset.v;});}
+seg('seg-role','role');seg('seg-interet','interet');
+const jump=new URLSearchParams(location.search).get('s');
+show(jump ? +jump : 0);
+
+document.getElementById('send').onclick=async()=>{
+  const btn=document.getElementById('send'), err=document.getElementById('err');
+  err.style.display='none';
+  if(!state.role||!state.interet){err.textContent='Choisissez votre profil et votre niveau d\'intérêt.';err.style.display='block';return;}
+  btn.disabled=true;btn.textContent='Envoi…';
+  const payload={role:state.role,interet:state.interet,marque:document.getElementById('f-marque').value,
+    nom:document.getElementById('f-nom').value,whatsapp:document.getElementById('f-wa').value,
+    zone:document.getElementById('f-zone').value,commercial};
+  try{
+    const r=await fetch(FN_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const d=await r.json();
+    if(!d.ok) throw new Error(d.error||'erreur');
+    document.getElementById('avis-wrap').innerHTML='<div class="done"><div class="big">🙏</div><h2>Merci !</h2><p class="lead">Votre avis est enregistré. On vous envoie le lien pour tester sur WhatsApp.</p></div>';
+  }catch(e){ err.textContent='Souci réseau, réessayez. ('+e.message+')';err.style.display='block';btn.disabled=false;btn.textContent='Envoyer mon avis';}
+};
+refresh();
+</script>
+</body>
+</html>
