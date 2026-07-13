@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Votre diagnostic gratuit · Mr Attractor</title>
+<style>
+:root{--orange:#F25C05;--orange-2:#FF7A30;--orange-d:#D94F02;--ink:#1A1714;--creme:#FAF6F0;--white:#FFFFFF;--sable:#E8E2DA;--muted:#9C9189;--muted-2:#4A3F35;--green:#1E9E52;--green-bg:#E7F5EC;--shadow:0 8px 30px rgba(26,23,20,.08);--font:'Segoe UI',system-ui,-apple-system,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:var(--creme);line-height:1.55;min-height:100vh;overflow-x:hidden}
+.wrap{max-width:600px;margin:0 auto;padding:22px 18px 60px;min-height:100vh;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.logo{font-size:19px;font-weight:800}.logo span{color:var(--orange)}
+.prog{height:6px;background:var(--sable);border-radius:6px;overflow:hidden;margin-bottom:8px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--orange-2),var(--orange-d));width:0;transition:width .3s}
+.prog-lab{font-size:11px;color:var(--muted);text-align:right;margin-bottom:26px}
+.intro{text-align:center;margin:auto 0}
+.intro h1{font-size:27px;line-height:1.2;margin-bottom:12px}.intro h1 em{color:var(--orange);font-style:normal}
+.intro p{color:var(--muted-2);font-size:15px;max-width:440px;margin:0 auto 26px}
+.step{flex:1;display:flex;flex-direction:column;justify-content:center}
+.step .q{font-size:22px;font-weight:800;line-height:1.25;margin-bottom:8px}
+.step .hint{font-size:13.5px;color:var(--muted);margin-bottom:20px}
+input,textarea{width:100%;padding:15px 16px;border:1.5px solid var(--sable);border-radius:12px;font-size:16px;font-family:inherit;color:var(--ink);background:var(--white)}
+textarea{resize:vertical;min-height:100px;line-height:1.5}
+input:focus,textarea:focus{outline:none;border-color:var(--orange)}
+.choices{display:flex;flex-direction:column;gap:10px}
+.choice{padding:16px;border:1.5px solid var(--sable);border-radius:12px;background:var(--white);font-size:15px;font-weight:600;cursor:pointer;text-align:left;font-family:inherit;color:var(--ink);transition:.15s}
+.choice:hover{border-color:var(--orange-2)}
+.choice.on{border-color:var(--orange);background:#FEF4EC;color:var(--orange-d)}
+.nav{display:flex;align-items:center;gap:14px;margin-top:26px}
+.back{background:none;border:none;color:var(--muted);font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;padding:8px}
+.btn{flex:1;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:800;font-family:inherit;color:#fff;background:linear-gradient(135deg,var(--orange-2),var(--orange-d));cursor:pointer;box-shadow:0 6px 18px rgba(242,92,5,.3);transition:opacity .15s}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.center{text-align:center;margin:auto 0}
+.spin{width:44px;height:44px;border:4px solid var(--sable);border-top-color:var(--orange);border-radius:50%;margin:0 auto 18px;animation:r 1s linear infinite}
+@keyframes r{to{transform:rotate(360deg)}}
+.done .circle{width:74px;height:74px;border-radius:50%;background:var(--green-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+.done .circle svg{width:36px;height:36px;stroke:var(--green);stroke-width:3;fill:none}
+.done h2{font-size:23px;margin-bottom:10px}
+.synth{background:#FCF8EC;border-left:3px solid var(--orange);border-radius:0 10px 10px 0;padding:15px 17px;text-align:left;font-size:14.5px;color:var(--ink);line-height:1.55;margin:18px 0}
+.block{text-align:left;margin:16px 0}
+.block h3{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:8px}
+.block ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.block li{position:relative;padding-left:22px;font-size:14px;color:var(--muted-2)}
+.block li::before{content:"";position:absolute;left:4px;top:7px;width:8px;height:8px;border-radius:50%;background:var(--orange)}
+.block.opp li::before{background:var(--green)}
+.wa{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;text-decoration:none;font-weight:800;font-size:15px;padding:15px 24px;border-radius:12px;margin-top:10px}
+.wa svg{width:18px;height:18px;fill:#fff}
+.foot{text-align:center;font-size:11px;color:var(--muted);margin-top:26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="logo">Mr <span>Attractor</span></div><div style="font-size:12px;color:var(--muted);font-weight:600">Diagnostic gratuit · 2 min</div></div>
+  <div id="progwrap" style="display:none"><div class="prog"><i id="prog"></i></div><div class="prog-lab" id="prog-lab"></div></div>
+
+  <div class="intro" id="intro">
+    <h1>Faisons le point sur <em>votre activité</em>, en 2 minutes.</h1>
+    <p>Quelques questions simples, et on vous renvoie un diagnostic clair : ce qui vous fait perdre du temps, et comment on peut vous aider à aller plus vite. Gratuit, sans engagement.</p>
+    <button class="btn" style="max-width:280px;margin:0 auto" onclick="start()">Commencer mon diagnostic</button>
+  </div>
+
+  <div class="step" id="step" style="display:none">
+    <div class="q" id="q"></div>
+    <div class="hint" id="q-hint"></div>
+    <div id="field"></div>
+    <div class="nav"><button class="back" id="back" onclick="prev()">← Retour</button><button class="btn" id="next" onclick="next()">Continuer</button></div>
+  </div>
+
+  <div class="center" id="loading" style="display:none"><div class="spin"></div><p style="color:var(--muted-2)">On analyse votre situation…</p></div>
+
+  <div class="center done" id="done" style="display:none">
+    <div class="circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <h2>Voici votre diagnostic</h2>
+    <div class="synth" id="d-synth"></div>
+    <div class="block" id="d-prob-w"><h3>Ce qui vous freine</h3><ul id="d-prob"></ul></div>
+    <div class="block opp" id="d-opp-w"><h3>Ce qu'on peut débloquer</h3><ul id="d-opp"></ul></div>
+    <p style="color:var(--muted-2);font-size:14px;margin-top:8px">Mac Arthur a reçu votre diagnostic et revient vers vous très vite avec une proposition claire. Une question tout de suite ?</p>
+    <a class="wa" id="d-wa" target="_blank"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Z"/></svg>Écrire à Mac Arthur</a>
+    <div class="foot">Agence Mr Attractor — agenceattractor.com</div>
+  </div>
+</div>
+
+<script>
+const API="https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/diagnostic";
+const WA_HELP="2250576877070";
+const STEPS=[
+  {key:"activite", q:"Votre activité, en une phrase ?", hint:"Le plus précis possible (ex. « farine infantile », pas « alimentaire »).", type:"text", ph:"Ex. Je vends des farines infantiles à Abidjan"},
+  {key:"offre", q:"Qu'est-ce que vous proposez concrètement ?", hint:"Vos produits ou services principaux.", type:"textarea", ph:"Décrivez ce que vous vendez"},
+  {key:"clients", q:"Qui sont vos clients ?", hint:"À qui vous vendez, où, quel profil.", type:"textarea", ph:"Ex. jeunes mamans, diaspora, entreprises…"},
+  {key:"canal", q:"Comment recevez-vous vos commandes aujourd'hui ?", hint:"", type:"textarea", ph:"Ex. WhatsApp, appels, en boutique, un mélange…"},
+  {key:"douleur", q:"Qu'est-ce qui vous prend le plus de temps ou vous fatigue le plus ?", hint:"Votre vraie douleur, dans vos mots.", type:"textarea", ph:"Ex. je note tout à la main, je relance sans arrêt…"},
+  {key:"objectif", q:"Votre objectif principal en ce moment ?", hint:"", type:"choice", options:["Vendre plus","Mieux m'organiser","Me faire connaître"]},
+  {key:"nom", q:"Comment vous appelez-vous ?", hint:"", type:"text", ph:"Prénom et nom"},
+  {key:"contact", q:"Votre WhatsApp ou email ?", hint:"Pour vous renvoyer votre diagnostic et vous recontacter.", type:"text", ph:"+225… / +33… ou vous@email.com"},
+];
+const answers={}; let idx=0;
+const $=id=>document.getElementById(id);
+
+function start(){ $("intro").style.display='none'; $("progwrap").style.display=''; $("step").style.display='flex'; idx=0; render(); }
+function render(){
+  const s=STEPS[idx];
+  $("prog").style.width=((idx)/STEPS.length*100)+"%";
+  $("prog-lab").textContent="Question "+(idx+1)+" / "+STEPS.length;
+  $("q").textContent=s.q; $("q-hint").textContent=s.hint||""; $("q-hint").style.display=s.hint?'':'none';
+  $("back").style.visibility=idx===0?'hidden':'visible';
+  const val=answers[s.key]||"";
+  if(s.type==="choice"){
+    $("field").innerHTML='<div class="choices">'+s.options.map(o=>`<button type="button" class="choice${val===o?' on':''}" data-v="${o}">${o}</button>`).join("")+'</div>';
+    $("field").querySelectorAll('.choice').forEach(b=>b.onclick=()=>{ answers[s.key]=b.dataset.v; render(); setTimeout(next,180); });
+  } else if(s.type==="textarea"){
+    $("field").innerHTML=`<textarea id="inp" placeholder="${s.ph||''}">${val.replace(/"/g,'&quot;')}</textarea>`;
+    wire();
+  } else {
+    $("field").innerHTML=`<input id="inp" type="text" placeholder="${s.ph||''}" value="${val.replace(/"/g,'&quot;')}">`;
+    wire();
+  }
+  $("next").textContent = idx===STEPS.length-1 ? "Voir mon diagnostic" : "Continuer";
+  updateNext();
+}
+function wire(){ const inp=$("inp"); if(!inp)return; inp.focus(); inp.oninput=()=>{ answers[STEPS[idx].key]=inp.value; updateNext(); }; inp.onkeydown=e=>{ if(e.key==='Enter'&&STEPS[idx].type==='text'&&!e.shiftKey){ e.preventDefault(); if(!$("next").disabled) next(); } }; }
+function updateNext(){ const s=STEPS[idx]; const v=(answers[s.key]||"").trim(); $("next").disabled = !v; }
+function prev(){ if(idx>0){ idx--; render(); } }
+function next(){ const s=STEPS[idx]; if(!(answers[s.key]||"").trim())return; if(idx<STEPS.length-1){ idx++; render(); } else submit(); }
+
+async function submit(){
+  $("step").style.display='none'; $("progwrap").style.display='none'; $("loading").style.display='';
+  let d={};
+  try{
+    const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({answers,nom:answers.nom,contact:answers.contact})});
+    d=await r.json();
+  }catch(e){ d={}; }
+  $("loading").style.display='none'; $("done").style.display='';
+  $("d-synth").textContent = d.synthese || "Merci ! On a bien reçu votre situation, Mac Arthur revient vers vous très vite.";
+  fill("d-prob", d.problemes, "d-prob-w"); fill("d-opp", d.opportunites, "d-opp-w");
+  $("d-wa").href="https://wa.me/"+WA_HELP+"?text="+encodeURIComponent("Bonjour Mac Arthur, je viens de faire le diagnostic en ligne. ");
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function fill(id, arr, wrapId){ if(Array.isArray(arr)&&arr.length){ $(id).innerHTML=arr.map(x=>`<li>${String(x).replace(/</g,'&lt;')}</li>`).join(""); } else { $(wrapId).style.display='none'; } }
+</script>
+</body>
+</html>
