@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Générateur de posts · Mr Attractor</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root{
+    --orange:#F25C05; --orange-d:#B84403; --charbon:#1A1714; --black:#0A0A0A;
+    --sable:#FAF6F0; --g200:#E7E1D8; --g400:#9A938B; --g700:#4A443E; --green:#3DDC84;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Sora',sans-serif; background:#141210; color:var(--sable);
+    display:grid; grid-template-columns:380px 1fr; min-height:100vh;}
+  /* ----- Panneau de contrôle ----- */
+  .panel{background:#1d1a17; border-right:1px solid #2a2621; padding:26px 24px; overflow-y:auto; height:100vh;}
+  .panel h1{font-size:19px; font-weight:800; letter-spacing:-.01em;}
+  .panel h1 span{color:var(--orange);}
+  .panel .lead{font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--g400); margin:4px 0 22px;}
+  .fld{margin-bottom:16px;}
+  .fld label{display:block; font-family:'Space Mono',monospace; font-size:10.5px;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--g400); margin-bottom:7px;}
+  .fld input[type=text], .fld textarea, .fld select{
+    width:100%; background:#141210; border:1px solid #33302b; border-radius:9px;
+    color:var(--sable); font-family:'Sora',sans-serif; font-size:14px; padding:10px 12px; outline:none;}
+  .fld textarea{resize:vertical; min-height:64px; line-height:1.4;}
+  .fld input:focus, .fld textarea:focus, .fld select:focus{border-color:var(--orange);}
+  .seg{display:flex; gap:6px; flex-wrap:wrap;}
+  .seg button{flex:1; min-width:64px; background:#141210; border:1px solid #33302b; color:var(--g200);
+    font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.04em; padding:9px 6px;
+    border-radius:8px; cursor:pointer;}
+  .seg button.on{background:var(--orange); border-color:var(--orange); color:#fff; font-weight:700;}
+  .btn-dl{width:100%; margin-top:10px; background:var(--orange); color:#fff; border:none;
+    font-family:'Sora',sans-serif; font-weight:800; font-size:15px; padding:14px; border-radius:11px; cursor:pointer;}
+  .btn-dl:hover{background:var(--orange-d);}
+  .hint{font-family:'Space Mono',monospace; font-size:10px; color:var(--g700); margin-top:8px; line-height:1.5;}
+  .grp-title{font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--orange); margin:22px 0 12px; padding-top:16px; border-top:1px solid #2a2621;}
+  [data-only]{display:none;}
+  /* ----- Zone d'aperçu ----- */
+  .stageWrap{display:flex; align-items:center; justify-content:center; padding:30px; overflow:auto; height:100vh;}
+  .stageScale{transform-origin:center center;}
+  /* ----- Le POST (dimensions réelles, mises à l'échelle pour l'aperçu) ----- */
+  .stage{position:relative; overflow:hidden; background:var(--charbon); font-family:'Sora',sans-serif;}
+  .stage .bg{position:absolute; inset:0; background-size:cover; background-position:center;}
+  .stage .grad{position:absolute; inset:0;}
+  .stage .wrap{position:absolute; inset:0; display:flex; flex-direction:column;}
+  .stage .kicker{font-family:'Space Mono',monospace; font-weight:700; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--orange); display:flex; align-items:center; gap:14px;}
+  .stage .kicker::before{content:""; height:2px; background:var(--orange); display:inline-block;}
+  .stage .grpmain{margin-top:auto;}
+  .stage .title{font-weight:800; line-height:1.02; letter-spacing:-.02em; color:var(--sable);}
+  .stage .title .acc{color:var(--orange);}
+  .stage .rule{background:var(--orange); border-radius:2px;}
+  .stage .sub{font-family:'Space Mono',monospace; font-weight:400; color:var(--g200);}
+  .stage .price{font-weight:900; color:var(--sable); line-height:1; letter-spacing:-.02em;}
+  .stage .price .cur{color:var(--orange);}
+  .stage .feats{list-style:none; margin-top:6px;}
+  .stage .feats li{font-family:'Space Mono',monospace; color:var(--g200); display:flex; gap:12px; align-items:flex-start;}
+  .stage .feats li::before{content:""; background:var(--green); border-radius:50%; flex-shrink:0;}
+  .stage .cta{display:inline-block; background:var(--orange); color:#fff; font-weight:800;
+    font-family:'Sora',sans-serif; border-radius:999px;}
+  .stage .quote{font-weight:700; line-height:1.12; letter-spacing:-.01em; color:var(--sable);}
+  .stage .quote .qmark{color:var(--orange);}
+  .stage .author{font-family:'Space Mono',monospace; color:var(--g200); text-transform:uppercase; letter-spacing:.08em;}
+  .stage .footer{display:flex; align-items:center; gap:14px; font-family:'Space Mono',monospace;
+    font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--sable);}
+  .stage .footer .dot{border-radius:50%; background:var(--green); box-shadow:0 0 12px rgba(61,220,132,.7);}
+  .stage .footer .sep{color:var(--g400); font-weight:400;}
+  .stage .footer .site{color:var(--g400); letter-spacing:.1em;}
+  /* Thème clair */
+  .stage.clair{background:var(--sable);}
+  .stage.clair .title, .stage.clair .price, .stage.clair .quote{color:var(--charbon);}
+  .stage.clair .sub, .stage.clair .feats li, .stage.clair .author{color:var(--g700);}
+  .stage.clair .footer{color:var(--charbon);}
+  .stage.clair .footer .sep, .stage.clair .footer .site{color:var(--g400);}
+</style>
+</head>
+<body>
+  <div class="panel">
+    <h1>Générateur de posts <span>·</span> Mr Attractor</h1>
+    <div class="lead">Charte du site · FB + IG</div>
+
+    <div class="fld"><label>Format</label>
+      <div class="seg" id="seg-format">
+        <button data-v="feed" class="on">Feed 4:5</button>
+        <button data-v="carre">Carré 1:1</button>
+        <button data-v="story">Story 9:16</button>
+      </div>
+    </div>
+    <div class="fld"><label>Thème</label>
+      <div class="seg" id="seg-theme">
+        <button data-v="sombre" class="on">Sombre</button>
+        <button data-v="clair">Clair</button>
+      </div>
+    </div>
+    <div class="fld"><label>Modèle</label>
+      <div class="seg" id="seg-model">
+        <button data-v="accroche" class="on">Accroche</button>
+        <button data-v="offre">Offre</button>
+        <button data-v="preuve">Preuve</button>
+      </div>
+    </div>
+
+    <div class="grp-title">Contenu</div>
+    <div class="fld"><label>Kicker (petit label du haut)</label><input type="text" id="f-kicker" value="Méthode Attractor"></div>
+
+    <div data-only="accroche offre">
+      <div class="fld"><label id="lab-title">Titre</label><textarea id="f-title">Trouvez votre couloir. Devenez numéro 1.</textarea></div>
+      <div class="fld"><label>Mot(s) en orange (dans le titre)</label><input type="text" id="f-acc" value="numéro 1"></div>
+    </div>
+    <div class="fld" data-only="accroche"><label>Sous-titre</label><textarea id="f-sub">Business et développement humain pour les entrepreneurs de Côte d'Ivoire et de la diaspora.</textarea></div>
+
+    <div data-only="offre">
+      <div class="fld"><label>Prix</label><input type="text" id="f-price" value="250 000 F"></div>
+      <div class="fld"><label>Points inclus (une ligne = un point)</label><textarea id="f-feats">Vitrine de commande + admin autonome
+Conseiller IA sur votre catalogue
+Hébergement 1 an offert</textarea></div>
+      <div class="fld"><label>Bouton (CTA)</label><input type="text" id="f-cta" value="Je réserve ma place"></div>
+    </div>
+
+    <div data-only="preuve">
+      <div class="fld"><label>Citation / résultat</label><textarea id="f-quote">Depuis mon app, je ne perds plus une seule commande sur WhatsApp.</textarea></div>
+      <div class="fld"><label>Auteur (nom · activité)</label><input type="text" id="f-author" value="Kezey · C'Real, farines infantiles"></div>
+    </div>
+
+    <div class="grp-title">Image de fond</div>
+    <div class="fld"><label>Ton illustration / photo</label><input type="file" id="f-img" accept="image/*"></div>
+    <div class="hint">Astuce : mets un sujet à droite et laisse l'espace à gauche pour le texte. Sans image, un dégradé de marque est utilisé.</div>
+
+    <div class="grp-title">Signature</div>
+    <div class="fld"><label>Marque</label><input type="text" id="f-brand" value="Mr Attractor"></div>
+    <div class="fld"><label>Site</label><input type="text" id="f-site" value="agenceattractor.com"></div>
+
+    <button class="btn-dl" id="btn-dl">Télécharger le PNG</button>
+    <div class="hint">Le PNG se télécharge en pleine résolution. Ensuite : Meta Business Suite → Planifier.</div>
+  </div>
+
+  <div class="stageWrap">
+    <div class="stageScale" id="scale">
+      <div class="stage" id="stage"></div>
+    </div>
+  </div>
+
+<script>
+const FORMATS = { feed:[1080,1350], carre:[1080,1080], story:[1080,1920] };
+const state = { format:'feed', theme:'sombre', model:'accroche', imgUrl:'' };
+
+function seg(id, key){
+  document.querySelectorAll('#'+id+' button').forEach(b=>{
+    b.onclick=()=>{ document.querySelectorAll('#'+id+' button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on'); state[key]=b.dataset.v; syncFields(); render(); };
+  });
+}
+seg('seg-format','format'); seg('seg-theme','theme'); seg('seg-model','model');
+
+function syncFields(){
+  document.querySelectorAll('[data-only]').forEach(el=>{
+    el.style.display = el.dataset.only.split(' ').includes(state.model) ? '' : 'none';
+  });
+  document.getElementById('lab-title').textContent = state.model==='offre' ? 'Titre (service)' : 'Titre';
+}
+['f-kicker','f-title','f-acc','f-sub','f-price','f-feats','f-cta','f-quote','f-author','f-brand','f-site']
+  .forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input', render); });
+
+document.getElementById('f-img').addEventListener('change', e=>{
+  const file=e.target.files[0]; if(!file) return;
+  if(state.imgUrl) URL.revokeObjectURL(state.imgUrl);
+  state.imgUrl=URL.createObjectURL(file); render();
+});
+
+const val = id => (document.getElementById(id)?.value || '');
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function accentize(title, acc){
+  title = esc(title); acc = (acc||'').trim();
+  if(acc){ const e=esc(acc); title = title.split(e).join('<span class="acc">'+e+'</span>'); }
+  return title.replace(/\n/g,'<br>');
+}
+
+function render(){
+  const [W,H] = FORMATS[state.format];
+  const stage = document.getElementById('stage');
+  stage.style.width=W+'px'; stage.style.height=H+'px';
+  stage.className = 'stage'+(state.theme==='clair'?' clair':'');
+
+  // échelle typo selon le format
+  const big = state.format==='story';
+  const pad = big?110:88;
+  const tSize = state.model==='offre' ? (big?76:66) : (big?96:88);
+
+  // dégradé (sombre par défaut, clair si thème clair)
+  const gradDark = 'linear-gradient(90deg, rgba(10,10,10,.94) 0%, rgba(10,10,10,.72) 38%, rgba(10,10,10,.12) 66%, rgba(10,10,10,0) 82%), linear-gradient(0deg, rgba(10,10,10,.9) 0%, rgba(10,10,10,.25) 34%, rgba(10,10,10,0) 58%)';
+  const gradLight = 'linear-gradient(90deg, rgba(250,246,240,.96) 0%, rgba(250,246,240,.78) 40%, rgba(250,246,240,.15) 68%, rgba(250,246,240,0) 84%), linear-gradient(0deg, rgba(250,246,240,.92) 0%, rgba(250,246,240,.2) 34%, rgba(250,246,240,0) 58%)';
+  const bg = state.imgUrl
+    ? '<div class="bg" style="background-image:url('+state.imgUrl+')"></div>'
+    : '<div class="bg" style="background:radial-gradient(120% 90% at 80% 20%, rgba(242,92,5,.28), transparent 55%),'+(state.theme==='clair'?'#efe7db':'#141210')+'"></div>';
+  const grad = '<div class="grad" style="background:'+(state.theme==='clair'?gradLight:gradDark)+'"></div>';
+
+  let main='';
+  if(state.model==='accroche'){
+    main = `
+      <div class="title" style="font-size:${tSize}px;max-width:${big?900:640}px">${accentize(val('f-title'), val('f-acc'))}</div>
+      <div class="rule" style="width:66px;height:4px;margin:${big?42:34}px 0 ${big?36:30}px"></div>
+      <div class="sub" style="font-size:${big?26:22}px;line-height:1.55;max-width:${big?720:540}px">${esc(val('f-sub')).replace(/\n/g,'<br>')}</div>`;
+  } else if(state.model==='offre'){
+    const feats = val('f-feats').split('\n').filter(x=>x.trim()).map(f=>
+      `<li style="font-size:${big?24:20}px;margin-bottom:12px;line-height:1.4"><span style="width:12px;height:12px;margin-top:9px"></span>${esc(f)}</li>`).join('');
+    main = `
+      <div class="title" style="font-size:${tSize}px;max-width:${big?900:640}px">${accentize(val('f-title'), val('f-acc'))}</div>
+      <div class="price" style="font-size:${big?92:80}px;margin:${big?30:24}px 0 ${big?26:20}px"><span class="cur"></span>${esc(val('f-price'))}</div>
+      <ul class="feats">${feats}</ul>
+      <div class="cta" style="font-size:${big?26:22}px;padding:${big?18:15}px ${big?38:32}px;margin-top:${big?40:32}px">${esc(val('f-cta'))}</div>`;
+  } else {
+    main = `
+      <div class="quote" style="font-size:${big?70:60}px;max-width:${big?860:660}px"><span class="qmark">«</span> ${accentize(val('f-quote'), val('f-acc'))} <span class="qmark">»</span></div>
+      <div class="rule" style="width:66px;height:4px;margin:${big?42:34}px 0 ${big?26:22}px"></div>
+      <div class="author" style="font-size:${big?22:19}px">${esc(val('f-author'))}</div>`;
+  }
+
+  stage.innerHTML = bg + grad + `
+    <div class="wrap" style="padding:${big?120:pad}px ${pad}px ${big?96:80}px">
+      <div class="kicker" style="font-size:${big?26:22}px">${esc(val('f-kicker'))}</div>
+      <div class="grpmain">
+        ${main}
+        <div class="footer" style="font-size:${big?20:18}px;margin-top:${big?70:56}px">
+          <span class="dot" style="width:11px;height:11px"></span> ${esc(val('f-brand'))}
+          <span class="sep">/</span> <span class="site">${esc(val('f-site'))}</span>
+        </div>
+      </div>
+    </div>`;
+  // largeur du filet kicker
+  stage.querySelector('.kicker').style.setProperty('--x','0');
+  fitScale(W,H);
+}
+// le trait avant le kicker
+const styleKicker = document.createElement('style');
+styleKicker.textContent = '.stage .kicker::before{width:38px}';
+document.head.appendChild(styleKicker);
+
+function fitScale(W,H){
+  const wrap=document.querySelector('.stageWrap');
+  const availW=wrap.clientWidth-60, availH=wrap.clientHeight-60;
+  const s=Math.min(availW/W, availH/H, 1);
+  document.getElementById('scale').style.transform='scale('+s+')';
+  document.getElementById('scale').style.width=W+'px';
+  document.getElementById('scale').style.height=H+'px';
+}
+window.addEventListener('resize', ()=>{ const [W,H]=FORMATS[state.format]; fitScale(W,H); });
+
+document.getElementById('btn-dl').addEventListener('click', async ()=>{
+  const btn=document.getElementById('btn-dl'); const old=btn.textContent;
+  btn.textContent='Génération…'; btn.disabled=true;
+  try{
+    await document.fonts.ready;
+    const [W,H]=FORMATS[state.format];
+    const stage=document.getElementById('stage');
+    const canvas=await html2canvas(stage,{width:W,height:H,scale:1,backgroundColor:null,useCORS:true,logging:false});
+    const a=document.createElement('a');
+    a.download='post-attractor-'+state.model+'-'+state.format+'.png';
+    a.href=canvas.toDataURL('image/png'); a.click();
+  }catch(e){ alert('Erreur de génération : '+e.message); }
+  btn.textContent=old; btn.disabled=false;
+});
+
+// presets par URL : ?format=story&theme=clair&model=offre
+(function(){
+  const p=new URLSearchParams(location.search);
+  [['format','seg-format'],['theme','seg-theme'],['model','seg-model']].forEach(([k,id])=>{
+    const v=p.get(k); if(!v) return;
+    const b=document.querySelector('#'+id+' button[data-v="'+v+'"]');
+    if(b){ document.querySelectorAll('#'+id+' button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on'); state[k]=v; }
+  });
+})();
+
+syncFields(); render();
+</script>
+</body>
+</html>

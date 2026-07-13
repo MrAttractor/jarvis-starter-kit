@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --orange:#F25C05; --charbon:#1A1714; --black:#0A0A0A; --sable:#FAF6F0;
+    --g200:#E7E1D8; --g400:#9A938B; --green:#3DDC84;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:1080px;height:1350px;}
+  .post{
+    position:relative; width:1080px; height:1350px; overflow:hidden;
+    background:var(--charbon); font-family:'Sora',sans-serif;
+  }
+  .bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+  /* Dégradé pour lisibilité : sombre à gauche + bas, transparent à droite */
+  .grad{position:absolute; inset:0;
+    background:
+      linear-gradient(90deg, rgba(10,10,10,.94) 0%, rgba(10,10,10,.72) 38%, rgba(10,10,10,.12) 66%, rgba(10,10,10,0) 82%),
+      linear-gradient(0deg, rgba(10,10,10,.88) 0%, rgba(10,10,10,.25) 32%, rgba(10,10,10,0) 55%);
+  }
+  .wrap{position:absolute; inset:0; display:flex; flex-direction:column;
+    padding:96px 88px 80px;}
+  .kicker{font-family:'Space Mono',monospace; font-weight:700; font-size:22px;
+    letter-spacing:.22em; text-transform:uppercase; color:var(--orange);
+    display:flex; align-items:center; gap:14px;}
+  .kicker::before{content:""; width:38px; height:2px; background:var(--orange); display:inline-block;}
+  .titlegroup{margin-top:auto; max-width:640px;}
+  .title{font-family:'Sora',sans-serif; font-weight:800; font-size:88px;
+    line-height:1.02; letter-spacing:-.02em; color:var(--sable);}
+  .title .acc{color:var(--orange);}
+  .rule{width:66px; height:4px; background:var(--orange); margin:34px 0 30px; border-radius:2px;}
+  .sub{font-family:'Space Mono',monospace; font-weight:400; font-size:22px;
+    line-height:1.55; color:var(--g200); max-width:540px;}
+  .footer{margin-top:56px; display:flex; align-items:center; gap:16px;
+    font-family:'Space Mono',monospace; font-weight:700; font-size:18px;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--sable);}
+  .footer .dot{width:10px; height:10px; border-radius:50%; background:var(--green);
+    box-shadow:0 0 12px rgba(61,220,132,.7);}
+  .footer .sep{color:var(--g400); font-weight:400;}
+  .footer .site{color:var(--g400); letter-spacing:.1em;}
+</style>
+</head>
+<body>
+  <div class="post">
+    <img class="bg" src="illu_B.jpg" alt="">
+    <div class="grad"></div>
+    <div class="wrap">
+      <div class="kicker">Méthode Attractor</div>
+      <div class="titlegroup">
+        <div class="title">Trouvez votre couloir.<br>Devenez <span class="acc">numéro 1</span>.</div>
+        <div class="rule"></div>
+        <div class="sub">Business et développement humain pour les entrepreneurs de Côte d'Ivoire et de la diaspora.</div>
+        <div class="footer">
+          <span class="dot"></span> Mr Attractor <span class="sep">/</span> <span class="site">agenceattractor.com</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
