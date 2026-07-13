@@ -1,7 +1,10 @@
 /* ===== LIVRAISON PRO — CONFIG SUPABASE ===== */
 
-const SUPABASE_URL  = 'https://jwucinmwrksqfrmkymds.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3dWNpbm13cmtzcWZybWt5bWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMDQyODYsImV4cCI6MjA5NjU4MDI4Nn0.CsDqzi2be1jm1ApkCr_AIU5mOrwp9PzvsTsv90Qi_Eg';
+/* Projet Supabase partagé attractor-assists (tables préfixées lp_) —
+   le projet dédié jwucinmwrksqfrmkymds a été mis en pause (limite 2 projets
+   actifs gratuits atteinte), greffé ici le 08/07/2026. */
+const SUPABASE_URL  = 'https://lgdgbrivnhgeupqhkckd.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
 
 /* Version app */
 const APP_VERSION = '2.0.0';

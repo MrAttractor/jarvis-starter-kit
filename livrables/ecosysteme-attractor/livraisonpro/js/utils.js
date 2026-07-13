@@ -97,7 +97,7 @@ async function api(params) {
 }
 
 async function apiCreateUser({ nom, tel, role, commune, vehicule, zones }) {
-  const { data, error } = await sb.from('users').insert({
+  const { data, error } = await sb.from('lp_users').insert({
     nom, tel, role, commune,
     ...(vehicule && { vehicule }),
     ...(zones    && { zones }),
@@ -111,13 +111,13 @@ async function apiCreateUser({ nom, tel, role, commune, vehicule, zones }) {
 }
 
 async function apiGetUser({ tel }) {
-  const { data, error } = await sb.from('users').select('*').eq('tel', tel).single();
+  const { data, error } = await sb.from('lp_users').select('*').eq('tel', tel).single();
   if (error || !data) return { ok: false, error: 'Numéro non trouvé' };
   return { ok: true, user: data };
 }
 
 async function apiGetMissions({ userId }) {
-  const { data, error } = await sb.from('missions')
+  const { data, error } = await sb.from('lp_missions')
     .select('*')
     .or(`marchand_id.eq.${userId},livreur_id.eq.${userId}`)
     .order('created_at', { ascending: false });
@@ -126,7 +126,7 @@ async function apiGetMissions({ userId }) {
 }
 
 async function apiGetLivreurs({ commune }) {
-  const { data, error } = await sb.from('users').select('*').eq('role', 'livreur').eq('disponible', true);
+  const { data, error } = await sb.from('lp_users').select('*').eq('role', 'livreur').eq('disponible', true);
   if (error) return { ok: false, error: error.message };
   const result = (data || []).filter(l =>
     !commune || l.commune === commune ||
@@ -136,18 +136,18 @@ async function apiGetLivreurs({ commune }) {
 }
 
 async function apiGetAlertes({ userId }) {
-  const { data: mMissions } = await sb.from('missions').select('id')
+  const { data: mMissions } = await sb.from('lp_missions').select('id')
     .or(`marchand_id.eq.${userId},livreur_id.eq.${userId}`);
   if (!mMissions || !mMissions.length) return { ok: true, alertes: [] };
   const ids = mMissions.map(m => m.id);
-  const { data, error } = await sb.from('alertes').select('*').in('mission_id', ids)
+  const { data, error } = await sb.from('lp_alertes').select('*').in('mission_id', ids)
     .order('created_at', { ascending: false });
   if (error) return { ok: false, error: error.message };
   return { ok: true, alertes: data || [] };
 }
 
 async function apiUpdateDispo({ userId, disponible }) {
-  const { error } = await sb.from('users').update({ disponible }).eq('id', userId);
+  const { error } = await sb.from('lp_users').update({ disponible }).eq('id', userId);
   if (error) return { ok: false, error: error.message };
   return { ok: true };
 }
@@ -157,7 +157,7 @@ async function apiCreateMission({
   dest_nom, dest_tel, adresse_depart, adresse, commune, description,
   frais, mode_paiement, distance_km, date_souhaitee
 }) {
-  const { data, error } = await sb.from('missions').insert({
+  const { data, error } = await sb.from('lp_missions').insert({
     marchand_id, marchand_nom,
     livreur_id:     livreur_id     || null,
     livreur_nom:    livreur_nom    || null,
@@ -181,13 +181,13 @@ async function apiUpdateStatus({ id, status }) {
   const tsCol = { accepte: 'accepted_at', recupere: 'recupere_at', enroute: 'enroute_at', livre: 'livre_at' };
   const upd = { status };
   if (tsCol[status]) upd[tsCol[status]] = new Date().toISOString();
-  const { error } = await sb.from('missions').update(upd).eq('id', id);
+  const { error } = await sb.from('lp_missions').update(upd).eq('id', id);
   if (error) return { ok: false, error: error.message };
   return { ok: true };
 }
 
 async function apiSendAlerte({ mission_id, from_role, from_nom, type, description }) {
-  const { error } = await sb.from('alertes').insert({
+  const { error } = await sb.from('lp_alertes').insert({
     mission_id, from_role, from_nom, type,
     description: description || null,
     lu: false,
