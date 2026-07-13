@@ -7,6 +7,27 @@
 
 ---
 
+## 2026-07-13 (session 100 — Mission L'Armée du Seigneur : site vitrine Phase 1a, un DON à sa communauté)
+
+### Le cadre
+- Mac Arthur transmet le CDC complet d'une plateforme web pour la **Mission L'Armée du Seigneur** (mission chrétienne CI + France qu'il accompagne comme coach de l'équipe comm). Cadre tranché après clarification : **c'est un DON à sa communauté** (pas de facturation, pas de devis), mais soigné comme un livrable pro (aussi une vitrine agence).
+- Décisions de cadrage (posées avant de coder) : (1) vitrine réelle qui sert aussi de démo, pas de maquette jetable ; (2) **vitrine d'abord (Phase 1a), pilotage Communication ensuite (Phase 1b)** — le CDC « Phase 1 » empilait en réalité un site de contenu + un vrai outil collaboratif éditorial ; (3) don.
+
+### Livré (Phase 1a) — vitrine publique + back-office
+- Dossier `livrables/clients/demo-site/public/armee-du-seigneur/` (index.html + admin.html + assets). Backend Supabase partagé, tables préfixées `als_` (dirigeants, departements, actualites, evenements, albums, medias, temoignages, contact). Migrations versionnées dans `livrables/clients/armee-du-seigneur/supabase/` (0001 schéma+RLS, 0002 seed, 0003 storage). Bucket public `als-medias`. Compte admin créé (UID `e9b37342-…`).
+- **Sécurité multi-tenant vérifiée** (projet Supabase partagé) : admin gaté nominativement `auth.uid()=UID`, lecture publique restreinte au contenu publié, `als_contact` = insert public sans lecture publique. Testé de bout en bout : anon lit le publié mais pas les messages, ne peut rien écrire ; admin écrit ; formulaire contact OK (vraie librairie supabase-js, `return=minimal`). Données de test QA nettoyées.
+- **Admin** `/armee-du-seigneur/admin` : CRUD config-driven de toutes les sections + boîte de réception des messages + upload d'images. Login email/mdp, self-service mot de passe oublié.
+
+### DA retravaillée (retour de Mac Arthur : « ça fait un peu ai slop »)
+- 1re version : tout en bleu nuit + grilles de cartes identiques → jugée trop template. Corrigée en **alternance clair/sombre** (hero/mandat/vie/galerie/témoignages sombres ; vision/histoire/dirigeants/départements/contact clairs ivoire/blanc), **photos des dirigeants en grand format** alternées (le Révérend en prédication passe aussi dans le hero), **vision en numéros éditoriaux 01–05**, **histoire en 2 colonnes** (récit + frise), **départements en liste sobre numérotée**, **or en détail fin**, **virgule arc-en-ciel retirée** sauf une touche discrète en footer. Logo (AS chromé + globe+épée noir) présenté en **médaillon blanc encadré** (fond blanc car le globe noir disparaîtrait en transparent sur le bleu nuit).
+- Correction contenu : bio du Révérend, retiré « née officiellement le 8 janvier 2017 » (redondant avec la timeline). DA propre à la Mission (bleu nuit + or + Cinzel/Inter), pas la charte agence.
+- Vérifs : zéro débordement horizontal (sonde scrollWidth=clientWidth OK), mobile propre, icônes SVG (zéro emoji). Déployé sur Cloudflare Pages demo-site (branche master, piège connu respecté), règle `_redirects` explicite avant le catch-all.
+
+### Reste à obtenir de Mac Arthur pour finaliser le contenu
+- Bloc CONFIG du index.html (WhatsApp, adresses FR/CI, Maps) ; responsables + photos des départements ; premiers contenus (actus/événements/galeries/témoignages) ; validation des bios (brouillons).
+
+---
+
 ## 2026-07-13 (session 99 — Vies Croisées : mise en ligne sur domaine propre viescroiseesci.com + lien de pilotage Andréa + mot de passe self-service)
 
 ### Domaine propre + déploiement

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mission L'Armée du Seigneur — Une armée pour Christ, en Côte d'Ivoire et en France</title>
+<meta name="description" content="Mission L'Armée du Seigneur : œuvre missionnaire et humanitaire née le 8 janvier 2017. Préparer le retour de Christ, former une armée de disciples, manifester la puissance de Dieu et exercer la compassion. Implantée en Côte d'Ivoire et en France." />
+<meta property="og:title" content="Mission L'Armée du Seigneur" />
+<meta property="og:description" content="Préparer le retour de Christ, former une armée de disciples, manifester la puissance de Dieu, exercer la compassion." />
+<meta property="og:type" content="website" />
+<meta name="theme-color" content="#0A1730" />
+<link rel="icon" type="image/png" href="assets/logo-as.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  /* sombre */
+  --nuit:#0A1730;--nuit-2:#0F2143;--carte-d:#0e1f3d;
+  --or:#C9A34E;--or-clair:#E4C97E;
+  --txt-d:#EAF0FB;--txt-d2:#AEBAD2;--txt-d3:#7688A8;
+  --bd-d:rgba(255,255,255,.10);--bd-or:rgba(201,163,78,.28);
+  /* clair */
+  --ivoire:#F6F1E7;--blanc:#FCFAF5;--carte-l:#FFFFFF;
+  --encre:#0C1B36;--encre2:#3C4A66;--encre3:#6B7793;
+  --or-ink:#9A7826;               /* or lisible sur clair */
+  --bd-l:rgba(12,27,54,.10);--bd-orl:rgba(154,120,38,.30);
+  --maxw:1160px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--nuit);color:var(--txt-d);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,.cinzel{font-family:'Cinzel',serif;font-weight:700;letter-spacing:.012em}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+
+/* labels */
+.kick{display:inline-block;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;margin-bottom:16px}
+.dark .kick{color:var(--or-clair)}
+.light .kick{color:var(--or-ink)}
+.rule{width:44px;height:2px;background:var(--or);margin-bottom:20px}
+.light .rule{background:var(--or-ink)}
+
+/* ---------- HEADER ---------- */
+header{position:sticky;top:0;z-index:60;background:rgba(9,18,40,.82);backdrop-filter:blur(16px);border-bottom:1px solid var(--bd-d)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand img{width:42px;height:42px;object-fit:contain;background:#fff;border-radius:10px;padding:4px}
+.brand b{font-family:'Cinzel',serif;font-size:15px;line-height:1.1;color:#fff}
+.brand small{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--or-clair);font-weight:600}
+.menu{display:flex;gap:2px;align-items:center}
+.menu a{font-size:13px;font-weight:500;color:var(--txt-d2);padding:9px 11px;border-radius:8px;transition:.15s;white-space:nowrap}
+.menu a:hover{color:#fff;background:rgba(255,255,255,.06)}
+.menu a.cta{background:var(--or);color:#25190a;font-weight:700;margin-left:6px}
+.menu a.cta:hover{background:var(--or-clair)}
+.burger{display:none;background:none;border:1px solid var(--bd-or);color:#fff;width:44px;height:44px;border-radius:11px;cursor:pointer;align-items:center;justify-content:center}
+.burger svg{width:22px;height:22px}
+.drawer{display:none}
+@media(max-width:980px){
+  .menu{display:none}.burger{display:flex}
+  .drawer{display:block;position:fixed;inset:68px 0 auto 0;z-index:59;background:var(--nuit-2);border-bottom:1px solid var(--bd-d);transform:translateY(-120%);transition:.28s;padding:8px 22px 18px}
+  .drawer.open{transform:translateY(0)}
+  .drawer a{display:block;padding:13px 6px;border-bottom:1px solid var(--bd-d);color:var(--txt-d2);font-weight:500}
+  .drawer a:last-child{border:none}
+}
+
+/* ---------- SECTIONS ---------- */
+.sec{padding:88px 0}
+.dark{background:var(--nuit);color:var(--txt-d)}
+.light{background:var(--ivoire);color:var(--encre)}
+.light.blanc{background:var(--blanc)}
+.dark h2,.dark h1,.dark h3{color:#fff}
+.light h2,.light h3{color:var(--encre)}
+.sec-head{max-width:680px;margin-bottom:52px}
+.sec-head.center{margin:0 auto 52px;text-align:center}
+.sec-head.center .rule{margin-left:auto;margin-right:auto}
+.sec h2{font-size:clamp(25px,3.7vw,38px);line-height:1.16}
+.sec-head p{margin-top:16px;font-size:16.5px}
+.dark .sec-head p{color:var(--txt-d2)}
+.light .sec-head p{color:var(--encre2)}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;overflow:hidden;background:radial-gradient(900px 560px at 82% -10%,rgba(201,163,78,.15),transparent 60%),radial-gradient(680px 460px at 4% 20%,rgba(46,110,209,.14),transparent 62%),linear-gradient(180deg,#0A1730,#0b1a37 55%,#0A1730);padding:70px 0 84px}
+.hero-grid{display:grid;grid-template-columns:1.06fr .94fr;gap:48px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--or-clair);font-weight:700;border:1px solid var(--bd-or);padding:8px 15px;border-radius:100px}
+.eyebrow svg{width:14px;height:14px}
+.hero h1{font-size:clamp(31px,5vw,52px);line-height:1.09;font-weight:800;margin:24px 0 0}
+.hero h1 em{font-style:normal;color:var(--or-clair)}
+.hero .lead{color:var(--txt-d2);font-size:clamp(15px,2.1vw,17.5px);max-width:520px;margin-top:20px}
+.verbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.verb{font-size:12px;font-weight:600;color:var(--txt-d);background:rgba(255,255,255,.05);border:1px solid var(--bd-d);padding:7px 13px;border-radius:100px}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:14.5px;padding:14px 24px;border-radius:12px;cursor:pointer;border:none;transition:.18s;min-height:48px}
+.btn-or{background:var(--or);color:#25190a}.btn-or:hover{background:var(--or-clair);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:#fff;border:1px solid var(--bd-or)}.btn-ghost:hover{background:rgba(255,255,255,.06)}
+.hero-photo{position:relative}
+.hero-photo .frame{position:relative;aspect-ratio:4/4.4;border-radius:20px;overflow:hidden;border:1px solid var(--bd-or);box-shadow:0 30px 70px rgba(0,0,0,.5)}
+.hero-photo .frame img{width:100%;height:100%;object-fit:cover;object-position:center 20%}
+.hero-photo .frame::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(8,15,32,.55))}
+.hero-photo .chip{position:absolute;left:-14px;bottom:22px;background:#fff;border-radius:14px;padding:8px;box-shadow:0 12px 30px rgba(0,0,0,.4);width:74px;height:74px}
+.hero-photo .chip img{width:100%;height:100%;object-fit:contain}
+.hero-badge{margin-top:32px;display:flex;align-items:center;gap:15px;color:var(--txt-d2);font-size:13px}
+.hero-badge b{font-family:'Cinzel',serif;color:var(--or-clair);font-size:30px;line-height:1}
+@media(max-width:880px){
+  .hero-grid{grid-template-columns:1fr;text-align:center;gap:36px}
+  .hero .lead{margin-inline:auto}.verbs,.hero-cta,.hero-badge{justify-content:center}.eyebrow{margin-inline:auto}
+  .hero-photo{order:-1;max-width:340px;margin:0 auto}.hero-photo .chip{left:0}
+}
+
+/* ---------- BANDE MANDAT ---------- */
+.band{background:#091528;border-top:1px solid var(--bd-d);border-bottom:1px solid var(--bd-d);padding:74px 0;text-align:center}
+.band .q{font-family:'Cinzel',serif;font-size:clamp(19px,2.9vw,29px);line-height:1.5;font-weight:500;max-width:900px;margin:0 auto;color:#fff}
+.band .q .g{color:var(--or-clair)}
+.band .sig{margin-top:22px;color:var(--or-clair);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:700}
+.band .dot{width:6px;height:6px;background:var(--or);border-radius:50%;margin:0 auto 26px;box-shadow:0 0 0 6px rgba(201,163,78,.12)}
+
+/* ---------- VISION (piliers editorial) ---------- */
+.piliers{display:grid;grid-template-columns:repeat(auto-fit,minmax(198px,1fr));gap:2px;background:var(--bd-l);border:1px solid var(--bd-l);border-radius:16px;overflow:hidden}
+.pil{background:var(--carte-l);padding:30px 26px;transition:.2s}
+.pil:hover{background:#fffef9}
+.pil .n{font-family:'Cinzel',serif;font-size:30px;color:var(--or-ink);opacity:.55;font-weight:600}
+.pil h3{font-size:16.5px;margin:14px 0 8px;color:var(--encre)}
+.pil p{font-size:14px;color:var(--encre2)}
+
+/* ---------- HISTOIRE (editorial 2 col) ---------- */
+.hist{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.hist .prose p{color:var(--encre2);font-size:15.5px;margin-bottom:16px}
+.hist .prose p strong{color:var(--encre);font-weight:600}
+.hist .prose .lead1{font-size:19px;color:var(--encre);font-family:'Cinzel',serif;line-height:1.5;font-weight:500;margin-bottom:22px}
+.tline{position:relative;padding-left:30px}
+.tline::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--or-ink),rgba(154,120,38,.15))}
+.tl{position:relative;margin-bottom:26px}
+.tl::before{content:"";position:absolute;left:-30px;top:4px;width:14px;height:14px;border-radius:50%;background:var(--blanc);border:3px solid var(--or-ink)}
+.tl .y{font-family:'Cinzel',serif;font-size:19px;color:var(--or-ink);font-weight:700}
+.tl h3{font-size:16px;margin:2px 0 5px;color:var(--encre)}
+.tl p{font-size:14px;color:var(--encre2)}
+@media(max-width:800px){.hist{grid-template-columns:1fr;gap:40px}}
+
+/* ---------- DIRIGEANTS (grand format) ---------- */
+.leader{display:grid;grid-template-columns:.92fr 1.08fr;gap:52px;align-items:center;padding:26px 0}
+.leader:nth-child(even){direction:rtl}
+.leader:nth-child(even)>*{direction:ltr}
+.leader .ph{aspect-ratio:4/4.6;border-radius:18px;overflow:hidden;background:var(--nuit-2);border:1px solid var(--bd-orl);box-shadow:0 24px 54px rgba(12,27,54,.16)}
+.leader .ph img{width:100%;height:100%;object-fit:cover;object-position:center 18%}
+.leader .lieu{font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--or-ink);font-weight:700}
+.leader h3{font-size:clamp(21px,3vw,28px);margin:10px 0 4px;line-height:1.15}
+.leader .role{color:var(--encre2);font-size:14.5px;font-weight:600;margin-bottom:18px}
+.leader .bio{font-size:15.5px;color:var(--encre2)}
+.leader .miss{margin-top:20px;padding-top:18px;border-top:1px solid var(--bd-l)}
+.leader .miss span{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--or-ink);font-weight:700;margin-bottom:6px}
+.leader .miss p{font-size:15px;color:var(--encre);font-family:'Cinzel',serif;line-height:1.5}
+@media(max-width:800px){.leader,.leader:nth-child(even){grid-template-columns:1fr;direction:ltr;gap:24px}.leader .ph{max-width:360px}}
+
+/* ---------- DEPARTEMENTS (liste sobre) ---------- */
+.deps{display:grid;grid-template-columns:1fr 1fr;gap:0 56px}
+.dep{display:grid;grid-template-columns:auto 1fr;gap:16px;padding:20px 0;border-bottom:1px solid var(--bd-l)}
+.dep .n{font-family:'Cinzel',serif;font-size:14px;color:var(--or-ink);font-weight:700;padding-top:2px;min-width:24px}
+.dep h3{font-size:15.5px;margin-bottom:4px;color:var(--encre)}
+.dep p{font-size:13.5px;color:var(--encre2)}
+.dep .resp{font-size:12px;color:var(--or-ink);font-weight:600;margin-top:5px}
+@media(max-width:720px){.deps{grid-template-columns:1fr;gap:0}}
+
+/* ---------- VIE (bande sombre) ---------- */
+.progs{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:24px}
+.prog{position:relative;padding-left:20px}
+.prog::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:2px;background:var(--or)}
+.prog .day{font-family:'Cinzel',serif;color:var(--or-clair);font-size:13px;letter-spacing:.05em;margin-bottom:8px}
+.prog h3{font-size:17px;margin-bottom:6px;color:#fff}
+.prog p{font-size:13.5px;color:var(--txt-d2)}
+
+/* ---------- CARTES (actus) ---------- */
+.grid3{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+.card-a{background:var(--carte-l);border:1px solid var(--bd-l);border-radius:16px;overflow:hidden;transition:.2s;display:flex;flex-direction:column;box-shadow:0 10px 30px rgba(12,27,54,.05)}
+.card-a:hover{transform:translateY(-4px);box-shadow:0 18px 44px rgba(12,27,54,.10)}
+.card-a .im{aspect-ratio:16/10;background:var(--ivoire);overflow:hidden}
+.card-a .im img{width:100%;height:100%;object-fit:cover}
+.card-a .ct{padding:22px;display:flex;flex-direction:column;gap:10px;flex:1}
+.tag{align-self:flex-start;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--or-ink);border:1px solid var(--bd-orl);padding:4px 11px;border-radius:100px}
+.card-a h3{font-size:18px;line-height:1.28;color:var(--encre)}
+.card-a .meta{font-size:12.5px;color:var(--encre3)}
+.card-a .txt{font-size:14px;color:var(--encre2)}
+
+/* ---------- EVENEMENTS ---------- */
+.evs{display:grid;gap:14px}
+.ev{display:grid;grid-template-columns:88px 1fr auto;gap:22px;align-items:center;background:var(--carte-l);border:1px solid var(--bd-l);border-radius:14px;padding:18px 24px;transition:.2s}
+.ev:hover{border-color:var(--bd-orl)}
+.ev .date{text-align:center;border-right:1px solid var(--bd-l);padding-right:18px}
+.ev .date .d{font-family:'Cinzel',serif;font-size:30px;color:var(--or-ink);line-height:1}
+.ev .date .m{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--encre3);margin-top:4px}
+.ev .info h3{font-size:18px;margin-bottom:5px;color:var(--encre)}
+.ev .info .l{font-size:13px;color:var(--encre2);display:flex;flex-wrap:wrap;gap:16px}
+.ev .info .l span{display:inline-flex;align-items:center;gap:6px}
+.ev .info .l svg{width:15px;height:15px;stroke:var(--or-ink)}
+.ev .etype{font-size:11px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--or-ink);white-space:nowrap}
+@media(max-width:620px){.ev{grid-template-columns:72px 1fr;gap:16px}.ev .etype{grid-column:2;justify-self:start;margin-top:2px}.ev .date{border-right:none;padding-right:0}}
+
+/* ---------- GALERIE (sombre) ---------- */
+.albums{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:18px}
+.album{border-radius:16px;overflow:hidden;position:relative;aspect-ratio:4/3;background:var(--nuit-2);border:1px solid var(--bd-d);cursor:pointer;transition:.2s}
+.album:hover{transform:translateY(-3px);border-color:var(--bd-or)}
+.album img{width:100%;height:100%;object-fit:cover;transition:.4s}
+.album:hover img{transform:scale(1.05)}
+.album .ov{position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(6,12,26,.92));display:flex;flex-direction:column;justify-content:flex-end;padding:18px}
+.album .ov h3{font-size:16px;color:#fff}
+.album .ov .m{font-size:12px;color:var(--txt-d2);margin-top:4px}
+.album .count{position:absolute;top:12px;right:12px;background:rgba(9,18,40,.82);border:1px solid var(--bd-d);font-size:12px;padding:5px 11px;border-radius:100px;display:flex;align-items:center;gap:6px}
+.album .count svg{width:14px;height:14px;stroke:var(--or-clair)}
+
+/* ---------- TEMOIGNAGES (sombre) ---------- */
+.temos{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+.temo{background:var(--carte-d);border:1px solid var(--bd-d);border-radius:16px;padding:28px;position:relative}
+.temo .q{font-family:'Cinzel',serif;font-size:56px;color:rgba(201,163,78,.24);line-height:.4;height:26px}
+.temo .tt{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--or-clair);font-weight:700;margin-bottom:12px;display:inline-block}
+.temo p{font-size:14.5px;color:#eef2fb;font-style:italic}
+.temo .who{margin-top:16px;font-size:13px;color:var(--or-clair);font-weight:600}
+
+/* ---------- CONTACT (clair) ---------- */
+.join{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start}
+.contacts{display:grid;gap:16px}
+.cc{background:var(--carte-l);border:1px solid var(--bd-l);border-radius:16px;padding:24px}
+.cc .flag{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--or-ink);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.cc .flag svg{width:16px;height:16px;stroke:var(--or-ink)}
+.cc .row{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--encre2);margin-top:9px}
+.cc .row svg{width:17px;height:17px;stroke:var(--or-ink);flex-shrink:0;margin-top:3px}
+.wa-btn{display:inline-flex;align-items:center;gap:9px;background:#1FA855;color:#fff;font-weight:700;padding:14px 22px;border-radius:12px;font-size:14px;min-height:48px}
+.wa-btn:hover{background:#178a45}.wa-btn svg{width:19px;height:19px}
+.form{background:var(--carte-l);border:1px solid var(--bd-l);border-radius:20px;padding:30px;box-shadow:0 16px 44px rgba(12,27,54,.07)}
+.form h3{font-size:21px;margin-bottom:6px;color:var(--encre)}
+.form .sub{color:var(--encre2);font-size:14px;margin-bottom:22px}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:12.5px;color:var(--encre2);margin-bottom:6px;font-weight:600}
+.field input,.field textarea,.field select{width:100%;background:var(--blanc);border:1px solid var(--bd-l);border-radius:11px;color:var(--encre);padding:13px 14px;font-family:inherit;font-size:14.5px;transition:.15s}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--or-ink)}
+.field textarea{resize:vertical;min-height:112px}
+.msg-ok{background:rgba(31,168,85,.1);border:1px solid rgba(31,168,85,.4);color:#177a3c;padding:14px;border-radius:11px;font-size:14px;margin-top:12px;display:none}
+@media(max-width:820px){.join{grid-template-columns:1fr}}
+
+/* ---------- FOOTER ---------- */
+footer{background:#07122a;border-top:1px solid var(--bd-d);padding:52px 0 30px}
+.foot{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:34px}
+.foot .brand b{font-size:16px}
+.foot p{color:var(--txt-d2);font-size:13.5px;margin-top:14px;max-width:320px}
+.foot h4{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--or-clair);margin-bottom:14px}
+.foot a{display:block;color:var(--txt-d2);font-size:13.5px;padding:5px 0;transition:.15s}
+.foot a:hover{color:#fff}
+.foot-bottom{margin-top:40px;padding-top:22px;border-top:1px solid var(--bd-d);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;color:var(--txt-d3);font-size:12.5px}
+.foot-bottom a{color:var(--or-clair)}
+.rbw{height:3px;width:120px;border-radius:3px;background:linear-gradient(90deg,#2E7DD1,#39B54A,#F4D03F,#F39C12,#E74C3C);margin-top:16px;opacity:.85}
+@media(max-width:720px){.foot{grid-template-columns:1fr;gap:26px}}
+
+.empty{grid-column:1/-1;text-align:center;padding:44px 20px;border:1px dashed;border-radius:14px;font-size:14.5px}
+.light .empty{color:var(--encre3);border-color:var(--bd-l)}
+.dark .empty{color:var(--txt-d3);border-color:var(--bd-d)}
+
+/* LIGHTBOX */
+.lb{position:fixed;inset:0;z-index:100;background:rgba(4,9,22,.95);display:none;align-items:center;justify-content:center;padding:20px}
+.lb.open{display:flex}
+.lb .box{max-width:960px;width:100%}
+.lb .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.lb .head h3{font-size:18px;color:#fff}
+.lb .x{background:rgba(255,255,255,.08);border:1px solid var(--bd-d);color:#fff;width:42px;height:42px;border-radius:11px;cursor:pointer;font-size:20px}
+.lb .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;max-height:74vh;overflow:auto}
+.lb .thumbs img,.lb .thumbs .vid{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;background:#000}
+.lb .thumbs iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:10px}
+
+.reveal{opacity:0;transform:translateY(20px);transition:.6s ease}
+.reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="wrap nav">
+    <a href="#accueil" class="brand">
+      <img src="assets/logo-as.png" alt="Logo Mission L'Armée du Seigneur" />
+      <span><b>L'Armée du Seigneur</b><small>Mission · CI &amp; France</small></span>
+    </a>
+    <nav class="menu">
+      <a href="#vision">Vision</a>
+      <a href="#histoire">Histoire</a>
+      <a href="#dirigeants">Dirigeants</a>
+      <a href="#departements">Départements</a>
+      <a href="#actualites">Actualités</a>
+      <a href="#evenements">Événements</a>
+      <a href="#galerie">Galerie</a>
+      <a href="#temoignages">Témoignages</a>
+      <a href="#contact" class="cta">Nous rejoindre</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+  </div>
+  <div class="drawer" id="drawer">
+    <a href="#vision">Vision</a><a href="#histoire">Notre histoire</a><a href="#dirigeants">Nos dirigeants</a><a href="#departements">Nos départements</a><a href="#actualites">Actualités</a><a href="#evenements">Événements</a><a href="#galerie">Galerie</a><a href="#temoignages">Témoignages</a><a href="#contact">Nous rejoindre</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero dark" id="accueil">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 6.9H22l-5.8 4.3 2.2 6.9L12 16.9 5.6 20.1l2.2-6.9L2 8.9h7.6z"/></svg>Œuvre missionnaire &amp; humanitaire</span>
+      <h1>Une armée levée <em>pour Christ</em>, en Côte d'Ivoire et en France</h1>
+      <p class="lead">Née le 8 janvier 2017, la Mission L'Armée du Seigneur prépare le retour de Jésus-Christ, forme une armée de disciples, manifeste la puissance de Dieu et exerce la compassion envers les plus faibles.</p>
+      <div class="verbs"><span class="verb">Vivre pour Christ</span><span class="verb">Former une armée</span><span class="verb">Puissance</span><span class="verb">Compassion</span><span class="verb">Préparer Son retour</span></div>
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-or"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Rejoindre la Mission</a>
+        <a href="#evenements" class="btn btn-ghost">Cultes &amp; événements</a>
+      </div>
+      <div class="hero-badge"><b>9</b><span>Neuf ans de grâce, de fidélité<br>et de service au Royaume</span></div>
+    </div>
+    <div class="hero-photo">
+      <div class="frame"><img src="assets/rev-zaby.jpg" alt="Le Révérend Zaby Galla Josias Joseph en prédication" /></div>
+      <div class="chip"><img src="assets/logo-as.png" alt="" /></div>
+    </div>
+  </div>
+</section>
+
+<!-- BANDE MANDAT -->
+<section class="band dark">
+  <div class="wrap">
+    <div class="dot"></div>
+    <p class="q">« Préparer le retour de Jésus-Christ, dans l'Église et à travers le monde entier, par la <span class="g">démonstration de Sa puissance</span>, en suscitant une armée forte, engagée et remplie du Saint-Esprit. »</p>
+    <div class="sig">Le mandat de la Mission</div>
+  </div>
+</section>
+
+<!-- VISION -->
+<section class="sec light" id="vision">
+  <div class="wrap">
+    <div class="sec-head center"><div class="rule"></div><span class="kick">Notre vision</span><h2>Cinq piliers qui portent l'œuvre</h2><p>Nous ne construisons pas autour d'une organisation, mais autour d'une mission : conduire chaque vie à courir dans son appel, pour Christ.</p></div>
+    <div class="piliers">
+      <div class="pil reveal"><div class="n">01</div><h3>Vivre pour Christ</h3><p>Le message fondamental : une vie entièrement consacrée au Seigneur.</p></div>
+      <div class="pil reveal"><div class="n">02</div><h3>Former une Armée</h3><p>Susciter des disciples forts, engagés et remplis du Saint-Esprit.</p></div>
+      <div class="pil reveal"><div class="n">03</div><h3>Démonstration de puissance</h3><p>Miracles, guérisons, délivrances : Dieu confirme Sa Parole.</p></div>
+      <div class="pil reveal"><div class="n">04</div><h3>Compassion</h3><p>Soutenir les démunis, les veufs, les veuves et les orphelins.</p></div>
+      <div class="pil reveal"><div class="n">05</div><h3>Préparer le retour de Christ</h3><p>Veiller, annoncer l'Évangile et hâter la venue du Seigneur.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTOIRE -->
+<section class="sec light blanc" id="histoire">
+  <div class="wrap">
+    <div class="sec-head"><div class="rule"></div><span class="kick">Notre histoire</span><h2>De l'appel reçu à une mission internationale</h2></div>
+    <div class="hist">
+      <div class="prose reveal">
+        <p class="lead1">Chaque grande œuvre commence par un appel.</p>
+        <p>La Mission L'Armée du Seigneur est une <strong>œuvre à caractère missionnaire et humanitaire</strong>. Elle est portée par la conviction que Dieu suscite, en ce temps, une armée forte et remplie du Saint-Esprit pour préparer le retour de Jésus-Christ.</p>
+        <p>Au cœur de cette œuvre, une attention constante pour les plus vulnérables : les démunis, les veufs, les veuves et particulièrement les enfants orphelins. <strong>Parce que le cœur de Dieu bat pour les plus faibles.</strong></p>
+        <p>Aujourd'hui implantée en Côte d'Ivoire et en France, la Mission poursuit sa marche avec la vision de rejoindre demain d'autres nations.</p>
+      </div>
+      <div class="tline reveal">
+        <div class="tl"><div class="y">2011</div><h3>L'appel reçu</h3><p>Le Seigneur pose dans le cœur de Son serviteur la vision d'une armée levée pour Christ.</p></div>
+        <div class="tl"><div class="y">8 janvier 2017</div><h3>La naissance officielle</h3><p>La Mission naît officiellement, fondée par le Révérend Zaby Galla Josias Joseph et son épouse, la Révérende Veroly Zaby Galla.</p></div>
+        <div class="tl"><div class="y">Aujourd'hui</div><h3>Entre deux continents</h3><p>Une œuvre vivante en Côte d'Ivoire et en France. Neuf ans de grâce et de fidélité.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIRIGEANTS -->
+<section class="sec light" id="dirigeants">
+  <div class="wrap">
+    <div class="sec-head center"><div class="rule"></div><span class="kick">Nos dirigeants</span><h2>Ceux qui portent la vision</h2><p>Un couple de serviteurs, deux continents, une seule mission.</p></div>
+    <div id="leaders"></div>
+  </div>
+</section>
+
+<!-- DEPARTEMENTS -->
+<section class="sec light blanc" id="departements">
+  <div class="wrap">
+    <div class="sec-head"><div class="rule"></div><span class="kick">Nos départements</span><h2>Une armée organisée, chacun à son poste</h2><p>Une armée fonctionne avec des rôles définis et des missions claires. Chaque département sert la vision commune.</p></div>
+    <div class="deps" id="deps"></div>
+  </div>
+</section>
+
+<!-- VIE DE LA MISSION -->
+<section class="sec dark" id="vie">
+  <div class="wrap">
+    <div class="sec-head center"><div class="rule"></div><span class="kick">La vie de la Mission</span><h2>Nos rendez-vous spirituels</h2></div>
+    <div class="progs">
+      <div class="prog reveal"><div class="day">Chaque jeudi</div><h3>Enseignement</h3><p>Formation, révélation et croissance spirituelle.</p></div>
+      <div class="prog reveal"><div class="day">Chaque dimanche</div><h3>Culte de louange</h3><p>Nous élevons le nom du Seigneur dans l'adoration.</p></div>
+      <div class="prog reveal"><div class="day">3 premiers jours du mois</div><h3>Jeûne &amp; prière</h3><p>Unis et connectés pour chercher la face de Dieu.</p></div>
+      <div class="prog reveal"><div class="day">2ᵉ dimanche</div><h3>Solidarité</h3><p>Nous semons dans l'amour et la responsabilité.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTUALITES -->
+<section class="sec light" id="actualites">
+  <div class="wrap">
+    <div class="sec-head"><div class="rule"></div><span class="kick">Actualités</span><h2>La Mission en mouvement</h2><p>Les dernières nouvelles, enseignements et temps forts de l'œuvre.</p></div>
+    <div class="grid3" id="actus"></div>
+  </div>
+</section>
+
+<!-- EVENEMENTS -->
+<section class="sec light blanc" id="evenements">
+  <div class="wrap">
+    <div class="sec-head"><div class="rule"></div><span class="kick">Événements</span><h2>Cultes, croisades, conférences &amp; retraites</h2><p>Rejoignez-nous lors de nos prochains rassemblements, en présentiel comme en ligne.</p></div>
+    <div class="evs" id="evs"></div>
+  </div>
+</section>
+
+<!-- GALERIE -->
+<section class="sec dark" id="galerie">
+  <div class="wrap">
+    <div class="sec-head"><div class="rule"></div><span class="kick">Galerie</span><h2>Les moments de grâce en images</h2><p>Albums photos et vidéos de nos cultes, événements et départements.</p></div>
+    <div class="albums" id="albums"></div>
+  </div>
+</section>
+
+<!-- TEMOIGNAGES -->
+<section class="sec dark" id="temoignages" style="background:#091528;border-top:1px solid var(--bd-d)">
+  <div class="wrap">
+    <div class="sec-head center"><div class="rule"></div><span class="kick">Témoignages</span><h2>« Regarde ce que Dieu fait »</h2><p>Miracles, conversions, guérisons et vies transformées.</p></div>
+    <div class="temos" id="temos"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="sec light" id="contact">
+  <div class="wrap">
+    <div class="sec-head center"><div class="rule"></div><span class="kick">Nous rejoindre</span><h2>Faites un pas vers la Mission</h2><p>Que vous découvriez la Mission ou que vous vouliez vous engager, écrivez-nous. Nous serons heureux de vous répondre.</p></div>
+    <div class="join">
+      <div class="contacts">
+        <div class="cc reveal">
+          <div class="flag"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>Côte d'Ivoire</div>
+          <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z"/></svg><span id="adr-ci"></span></div>
+          <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2H7a2 2 0 0 1 2 1.7c.1 1 .3 1.9.6 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.8.6A2 2 0 0 1 22 16.9z"/></svg><span id="tel-ci"></span></div>
+        </div>
+        <div class="cc reveal">
+          <div class="flag"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>France</div>
+          <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z"/></svg><span id="adr-fr"></span></div>
+          <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2H7a2 2 0 0 1 2 1.7c.1 1 .3 1.9.6 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.8.6A2 2 0 0 1 22 16.9z"/></svg><span id="tel-fr"></span></div>
+        </div>
+        <a class="wa-btn" id="wa" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.15-1.7-.85-2-.95-.26-.1-.45-.15-.64.15-.19.28-.73.94-.9 1.13-.16.19-.33.21-.61.07a8.2 8.2 0 0 1-2.4-1.48 9 9 0 0 1-1.67-2.07c-.17-.3 0-.46.13-.6.13-.13.28-.34.42-.51.14-.17.19-.29.28-.48.1-.19.05-.36-.02-.5-.07-.15-.64-1.55-.88-2.12-.23-.55-.47-.48-.64-.49h-.55c-.19 0-.5.07-.76.36-.26.28-1 .98-1 2.38s1.02 2.76 1.16 2.95c.14.19 2 3.06 4.86 4.29.68.29 1.2.47 1.62.6.68.22 1.3.19 1.79.11.55-.08 1.7-.69 1.94-1.36.24-.67.24-1.24.17-1.36-.07-.12-.26-.19-.55-.34zM12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2z"/></svg>Nous écrire sur WhatsApp</a>
+      </div>
+      <form class="form reveal" id="cform">
+        <h3>Envoyez-nous un message</h3>
+        <p class="sub">Prière, demande d'information, ou envie de rejoindre la Mission.</p>
+        <div class="field"><label>Votre nom</label><input required name="nom" placeholder="Nom &amp; prénom" /></div>
+        <div class="field"><label>Vous nous écrivez depuis</label><select name="pays"><option>Côte d'Ivoire</option><option>France</option><option>Autre pays</option></select></div>
+        <div class="field"><label>WhatsApp ou email</label><input required name="coordonnee" placeholder="Pour vous répondre" /></div>
+        <div class="field"><label>Votre message</label><textarea required name="message" placeholder="Dites-nous comment nous pouvons prier pour vous ou vous accompagner…"></textarea></div>
+        <button type="submit" class="btn btn-or" style="width:100%;justify-content:center">Envoyer le message</button>
+        <div class="msg-ok" id="okmsg">Merci, votre message a bien été reçu. La Mission vous répondra très bientôt. Soyez béni !</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <div class="brand"><img src="assets/logo-as.png" alt="" style="width:46px;height:46px"><b class="cinzel">L'Armée du Seigneur</b></div>
+        <p>Œuvre missionnaire et humanitaire née le 8 janvier 2017. Une armée levée pour Christ, en Côte d'Ivoire et en France.</p>
+        <div class="rbw"></div>
+      </div>
+      <div><h4>La Mission</h4><a href="#vision">Notre vision</a><a href="#histoire">Notre histoire</a><a href="#dirigeants">Nos dirigeants</a><a href="#departements">Nos départements</a></div>
+      <div><h4>Participer</h4><a href="#evenements">Événements &amp; cultes</a><a href="#temoignages">Témoignages</a><a href="#galerie">Galerie</a><a href="#contact">Nous rejoindre</a></div>
+    </div>
+    <div class="foot-bottom"><span>© <span id="yr"></span> Mission L'Armée du Seigneur. Tous droits réservés.</span><span>Site officiel · réalisé avec foi par <a href="https://agenceattractor.com" target="_blank" rel="noopener">Agence Attractor</a></span></div>
+  </div>
+</footer>
+
+<div class="lb" id="lb"><div class="box"><div class="head"><h3 id="lb-title"></h3><button class="x" id="lb-close" aria-label="Fermer">×</button></div><div class="thumbs" id="lb-thumbs"></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ===== CONFIG (à compléter par la Mission) ===== */
+const CONFIG={
+  whatsapp:"225XXXXXXXXXX",
+  whatsappMsg:"Bonjour, je découvre la Mission L'Armée du Seigneur et je souhaite en savoir plus.",
+  adresseCI:"Adresse à préciser · Côte d'Ivoire",
+  telCI:"Contact CI à préciser",
+  adresseFR:"Adresse à préciser · France",
+  telFR:"Contact FR à préciser"
+};
+const SB_URL="https://lgdgbrivnhgeupqhkckd.supabase.co";
+const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
+const sb=supabase.createClient(SB_URL,SB_KEY);
+const $=s=>document.querySelector(s);
+const esc=s=>(s||"").toString().replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MONTHS=["JAN","FÉV","MAR","AVR","MAI","JUIN","JUIL","AOÛT","SEP","OCT","NOV","DÉC"];
+
+$("#burger").addEventListener("click",()=>$("#drawer").classList.toggle("open"));
+$("#drawer").querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>$("#drawer").classList.remove("open")));
+$("#yr").textContent=(document.lastModified||"").slice(-4)||"2026";
+$("#adr-ci").textContent=CONFIG.adresseCI;$("#tel-ci").textContent=CONFIG.telCI;
+$("#adr-fr").textContent=CONFIG.adresseFR;$("#tel-fr").textContent=CONFIG.telFR;
+$("#wa").href=`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(CONFIG.whatsappMsg)}`;
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.1});
+const obs=()=>document.querySelectorAll(".reveal:not(.in)").forEach(el=>io.observe(el));
+obs();
+
+async function loadLeaders(){
+  const {data}=await sb.from("als_dirigeants").select("*").order("ordre");
+  const el=$("#leaders");
+  if(!data||!data.length){el.innerHTML=`<div class="empty">Présentation des dirigeants à venir.</div>`;return;}
+  el.innerHTML=data.map(d=>`
+    <article class="leader reveal">
+      <div class="ph">${d.photo_url?`<img src="${esc(d.photo_url)}" alt="${esc(d.nom)}" loading="lazy">`:""}</div>
+      <div>
+        <div class="lieu">${esc(d.lieu||"")}</div>
+        <h3>${esc(d.nom)}</h3>
+        <div class="role">${esc(d.role||"")}</div>
+        <p class="bio">${esc(d.bio||"")}</p>
+        ${d.mission?`<div class="miss"><span>Sa mission</span><p>${esc(d.mission)}</p></div>`:""}
+      </div>
+    </article>`).join("");
+  obs();
+}
+async function loadDeps(){
+  const {data}=await sb.from("als_departements").select("*").eq("actif",true).order("ordre");
+  const el=$("#deps");
+  if(!data||!data.length){el.innerHTML=`<div class="empty">Départements à venir.</div>`;return;}
+  el.innerHTML=data.map((d,i)=>`
+    <article class="dep reveal">
+      <div class="n">${String(i+1).padStart(2,"0")}</div>
+      <div><h3>${esc(d.nom)}</h3><p>${esc(d.mission||d.description||"")}</p>${d.responsable?`<div class="resp">Responsable · ${esc(d.responsable)}</div>`:""}</div>
+    </article>`).join("");
+  obs();
+}
+async function loadActus(){
+  const {data}=await sb.from("als_actualites").select("*").eq("publie",true).order("date_pub",{ascending:false}).limit(9);
+  const el=$("#actus");
+  if(!data||!data.length){el.innerHTML=`<div class="empty">Les premières actualités seront publiées très bientôt.</div>`;return;}
+  el.innerHTML=data.map(a=>`
+    <article class="card-a reveal">
+      ${a.image_url?`<div class="im"><img src="${esc(a.image_url)}" alt="${esc(a.titre)}" loading="lazy"></div>`:""}
+      <div class="ct">${a.categorie?`<span class="tag">${esc(a.categorie)}</span>`:""}<h3>${esc(a.titre)}</h3>
+      <div class="meta">${a.date_pub?fmtDate(a.date_pub):""}${a.auteur?" · "+esc(a.auteur):""}</div>
+      <p class="txt">${esc((a.contenu||"").slice(0,160))}${(a.contenu||"").length>160?"…":""}</p></div>
+    </article>`).join("");
+  obs();
+}
+async function loadEvents(){
+  const {data}=await sb.from("als_evenements").select("*").eq("publie",true).order("date_event",{ascending:true});
+  const el=$("#evs");
+  if(!data||!data.length){el.innerHTML=`<div class="empty">Le calendrier des prochains événements arrive bientôt.</div>`;return;}
+  el.innerHTML=data.map(e=>{const dt=e.date_event?new Date(e.date_event):null;return `
+    <article class="ev reveal">
+      <div class="date"><div class="d">${dt?dt.getDate():"·"}</div><div class="m">${dt?MONTHS[dt.getMonth()]:""}</div></div>
+      <div class="info"><h3>${esc(e.titre)}</h3><div class="l">
+        ${e.heure?`<span><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>${esc(e.heure)}</span>`:""}
+        ${e.lieu?`<span><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z"/></svg>${esc(e.lieu)}</span>`:""}
+      </div>${e.description?`<p class="txt" style="margin-top:8px;font-size:13.5px;color:var(--encre2)">${esc(e.description.slice(0,140))}${e.description.length>140?"…":""}</p>`:""}</div>
+      <div class="etype">${esc(e.type||"")}</div>
+    </article>`;}).join("");
+  obs();
+}
+let ALBUMS=[];
+async function loadGalerie(){
+  const {data:albums}=await sb.from("als_albums").select("*").order("annee",{ascending:false}).order("ordre");
+  const el=$("#albums");
+  if(!albums||!albums.length){el.innerHTML=`<div class="empty">Les albums photos et vidéos seront bientôt en ligne.</div>`;return;}
+  const {data:medias}=await sb.from("als_medias").select("*").order("ordre");
+  ALBUMS=albums.map(a=>({...a,medias:(medias||[]).filter(m=>m.album_id===a.id)}));
+  el.innerHTML=ALBUMS.map((a,i)=>{const cov=a.couverture_url||(a.medias.find(m=>m.type==='photo')||{}).url||"";return `
+    <div class="album reveal" data-i="${i}">${cov?`<img src="${esc(cov)}" alt="${esc(a.titre)}" loading="lazy">`:""}
+      <div class="count"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>${a.medias.length}</div>
+      <div class="ov"><h3>${esc(a.titre)}</h3><div class="m">${[a.annee,a.evenement,a.departement].filter(Boolean).map(esc).join(" · ")}</div></div>
+    </div>`;}).join("");
+  el.querySelectorAll(".album").forEach(x=>x.addEventListener("click",()=>openAlbum(+x.dataset.i)));
+  obs();
+}
+function ytEmbed(u){const m=(u||"").match(/(?:youtu\.be\/|v=|embed\/)([\w-]{11})/);return m?`https://www.youtube.com/embed/${m[1]}`:null;}
+function openAlbum(i){const a=ALBUMS[i];$("#lb-title").textContent=a.titre;
+  $("#lb-thumbs").innerHTML=a.medias.map(m=>{if(m.type==="video"){const y=ytEmbed(m.url);return y?`<iframe src="${y}" allowfullscreen loading="lazy"></iframe>`:`<video class="vid" src="${esc(m.url)}" controls></video>`;}return `<img src="${esc(m.url)}" alt="${esc(m.legende||'')}" loading="lazy">`;}).join("")||`<div class="empty" style="color:#889">Album vide pour l'instant.</div>`;
+  $("#lb").classList.add("open");}
+$("#lb-close").addEventListener("click",()=>$("#lb").classList.remove("open"));
+$("#lb").addEventListener("click",e=>{if(e.target===$("#lb"))$("#lb").classList.remove("open")});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#lb").classList.remove("open")});
+async function loadTemos(){
+  const {data}=await sb.from("als_temoignages").select("*").eq("publie",true).order("cree_le",{ascending:false});
+  const el=$("#temos");
+  if(!data||!data.length){el.innerHTML=`<div class="empty">Les premiers témoignages seront partagés bientôt. « Regarde ce que Dieu fait. »</div>`;return;}
+  el.innerHTML=data.map(t=>`<article class="temo reveal"><div class="q">”</div>${t.type?`<span class="tt">${esc(t.type)}</span>`:""}<p>${esc(t.texte)}</p>${t.auteur?`<div class="who">— ${esc(t.auteur)}</div>`:""}</article>`).join("");
+  obs();
+}
+$("#cform").addEventListener("submit",async e=>{
+  e.preventDefault();const f=e.target,btn=f.querySelector("button[type=submit]");
+  btn.disabled=true;btn.textContent="Envoi…";
+  const {error}=await sb.from("als_contact").insert({nom:f.nom.value.trim(),pays:f.pays.value,coordonnee:f.coordonnee.value.trim(),message:f.message.value.trim()});
+  if(error){btn.disabled=false;btn.textContent="Envoyer le message";alert("Une erreur est survenue. Réessayez ou écrivez-nous sur WhatsApp.");return;}
+  f.reset();$("#okmsg").style.display="block";btn.textContent="Message envoyé";
+  setTimeout(()=>{btn.disabled=false;btn.textContent="Envoyer le message";},4000);
+});
+function fmtDate(d){try{return new Date(d).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});}catch{return d;}}
+loadLeaders();loadDeps();loadActus();loadEvents();loadGalerie();loadTemos();
+</script>
+</body>
+</html>
