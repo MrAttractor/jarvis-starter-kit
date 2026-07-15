@@ -1,33 +1,36 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, Spinner } from '../components/ui';
+import { boutiqueUrl } from '../lib/boutique';
+import { synthese, PERIODS, fmtMoney } from '../lib/stats';
 
 const STATUS_LABEL = { new: 'En attente', preparing: 'En cours', delivered: 'Livrée', cancelled: 'Annulée' };
+
+/** Une mesure du business. `evol` en % vs la période précédente, null si incomparable. */
+function Tuile({ label, valeur, evol, accent }) {
+  const hausse = evol > 0;
+  return (
+    <div className="bg-white rounded-2xl border border-g200 p-3 shadow-soft min-w-0">
+      <div className={`font-display font-extrabold text-[17px] leading-tight truncate ${accent ? 'text-orange' : 'text-charbon'}`}>
+        {valeur}
+      </div>
+      <div className="flex items-center gap-1.5 mt-0.5">
+        <span className="text-[11px] text-g500 truncate">{label}</span>
+        {evol !== null && evol !== undefined && evol !== 0 && (
+          <span className={`text-[10.5px] font-bold flex-shrink-0 ${hausse ? 'text-vert' : 'text-g400'}`}>
+            {hausse ? '+' : ''}{evol}%
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
 const STATUS_COLOR = {
   new:       'bg-orange/10 text-orange',
   preparing: 'bg-amber/10 text-amber-600',
   delivered: 'bg-vert/10 text-vert',
   cancelled: 'bg-g100 text-g400',
 };
-
-const PERIODS = [
-  { key: 'today', label: "Aujourd'hui" },
-  { key: '7d',    label: '7 jours'    },
-  { key: '30d',   label: '30 jours'   },
-];
-
-function periodStart(key) {
-  const d = new Date();
-  if (key === 'today') { d.setHours(0, 0, 0, 0); return d; }
-  if (key === '7d')  { d.setDate(d.getDate() - 7); return d; }
-  if (key === '30d') { d.setDate(d.getDate() - 30); return d; }
-  return d;
-}
-
-function fmtMoney(n) {
-  if (!n) return '—';
-  return n.toLocaleString('fr-FR') + ' F';
-}
 
 function fmtTime(iso) {
   return new Date(iso).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
@@ -138,17 +141,12 @@ export function CommandesScreen({ go, notify, profile }) {
     loadOrders();
   };
 
-  // Stats sur la période sélectionnée
-  const start = periodStart(period);
-  const inPeriod = orders.filter(o => new Date(o.created_at) >= start);
-  const notCancelled = inPeriod.filter(o => o.status !== 'cancelled');
-  const ca        = notCancelled.reduce((s, o) => s + (o.total_fcfa || 0), 0);
-  const panierMoy = notCancelled.length ? Math.round(ca / notCancelled.length) : 0;
-  const clientsUniq = new Set(notCancelled.map(o => o.client_wa || o.client_name).filter(Boolean)).size;
+  // Synthèse de la période — calculée par lib/stats.js, la même source que le coach
+  const s = synthese(orders, period);
 
   const TABS = ['new', 'preparing', 'delivered'];
   const filtered = orders.filter(o => o.status === tab);
-  const enAttente = orders.filter(o => o.status === 'new').length;
+  const enAttente = s.enAttente;
 
   return (
     <div className="flex flex-col h-full bg-sable">
@@ -156,7 +154,7 @@ export function CommandesScreen({ go, notify, profile }) {
       {/* Header */}
       <div className="px-4 pt-14 pb-3 flex-shrink-0">
         <div className="flex items-center justify-between mb-3">
-          <div className="font-display font-bold text-[20px] text-charbon">Commandes & stats</div>
+          <div className="font-display font-bold text-[20px] text-charbon">Tableau de bord</div>
           {enAttente > 0 && (
             <span className="px-2.5 py-1 rounded-full bg-orange text-white text-[12px] font-bold">
               {enAttente} en attente
@@ -179,23 +177,30 @@ export function CommandesScreen({ go, notify, profile }) {
           ))}
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-2">
-          <div className="bg-white rounded-2xl border border-g200 p-3 shadow-soft">
-            <div className="font-display font-extrabold text-[16px] text-orange leading-tight truncate">
-              {fmtMoney(ca)}
-            </div>
-            <div className="text-[11px] text-g500 mt-0.5">CA</div>
-          </div>
-          <div className="bg-white rounded-2xl border border-g200 p-3 shadow-soft">
-            <div className="font-display font-extrabold text-[16px] text-charbon">{notCancelled.length}</div>
-            <div className="text-[11px] text-g500 mt-0.5">Commandes</div>
-          </div>
-          <div className="bg-white rounded-2xl border border-g200 p-3 shadow-soft">
-            <div className="font-display font-extrabold text-[16px] text-charbon">{panierMoy ? fmtMoney(panierMoy) : clientsUniq}</div>
-            <div className="text-[11px] text-g500 mt-0.5">{panierMoy ? 'Panier moy.' : 'Clients'}</div>
-          </div>
+        {/* Stats — les 4 chiffres tiennent ensemble : plus de tuile qui en cache une autre */}
+        <div className="grid grid-cols-2 gap-2">
+          <Tuile label="Chiffre d'affaires" valeur={fmtMoney(s.ca)} evol={s.evolution.ca} accent />
+          <Tuile label="Commandes" valeur={String(s.commandes)} evol={s.evolution.commandes} />
+          <Tuile label="Panier moyen" valeur={s.panierMoyen ? fmtMoney(s.panierMoyen) : '—'} />
+          <Tuile label="Clients" valeur={String(s.clients)} />
         </div>
+
+        {/* Top produits — la donnée était dans chaque commande, jamais additionnée */}
+        {s.top.length > 0 && (
+          <div className="mt-2 bg-white rounded-2xl border border-g200 p-3 shadow-soft">
+            <div className="text-[11px] font-bold text-g400 uppercase tracking-[.08em] mb-2">Ce qui se vend</div>
+            <div className="flex flex-col gap-1.5">
+              {s.top.map((p, i) => (
+                <div key={p.nom} className="flex items-center gap-2.5">
+                  <span className="w-4 text-[11px] font-bold text-g400 flex-shrink-0">{i + 1}</span>
+                  <span className="flex-1 text-[13px] text-charbon truncate">{p.nom}</span>
+                  <span className="text-[12px] text-g400 flex-shrink-0">{p.qty} vendu{p.qty > 1 ? 's' : ''}</span>
+                  <span className="text-[12.5px] font-bold text-charbon flex-shrink-0 tabular-nums">{fmtMoney(p.ca)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Banner quota gratuit */}
@@ -390,7 +395,7 @@ function EmptyState({ tab, profile, notify }) {
       {profile?.public_slug && (
         <button
           onClick={() => {
-            const url = `https://demo.agenceattractor.com/${profile.public_slug}`;
+            const url = boutiqueUrl(profile.public_slug);
             if (navigator.share) {
               navigator.share({ title: 'Commande ici', url }).catch(() => {});
             } else {

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, TypingDots } from '../components/ui';
+import { boutiqueUrl } from '../lib/boutique';
 
 function fmtTime() {
   return new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
@@ -80,7 +81,6 @@ export function DashboardScreen({ go, notify, profile }) {
 
   const scroller   = useRef();
   const inputRef   = useRef();
-  const sessionId  = useRef(`jarvis-${Date.now()}`);
 
   // Horloge
   useEffect(() => {
@@ -129,19 +129,39 @@ export function DashboardScreen({ go, notify, profile }) {
     if (scroller.current) scroller.current.scrollTop = scroller.current.scrollHeight;
   }, [msgs, typing]);
 
-  // Extraction mémoires au démontage (>= 4 échanges)
+  // Extraction des mémoires du coach.
+  //
+  // C'était un cleanup de useEffect avec [msgs] en dépendances : il se rejouait à
+  // CHAQUE message passé le 4e, relançant une extraction sur tout l'historique
+  // (doublons + appels Claude en série). Et sur mobile, fermer l'onglet ne joue
+  // aucun cleanup, donc dans le cas le plus fréquent rien n'était jamais extrait.
+  //
+  // Désormais : au départ de l'écran (démontage réel) et quand l'app passe en
+  // arrière-plan, ce qui couvre la fermeture d'onglet sur mobile.
+  const msgsRef = useRef(msgs);
+  msgsRef.current = msgs;
+  const extractedRef = useRef(0);
+
   useEffect(() => {
-    return () => {
-      if (!userId || !msgs) return;
-      const real = msgs.filter((m, i) => !(i === 0 && m.from === 'bot'));
-      if (real.length >= 4) {
-        const formatted = real.map(m => ({ role: m.from === 'me' ? 'user' : 'assistant', content: m.text }));
-        supabase.functions.invoke('extract-memories', {
-          body: { user_id: userId, session_id: sessionId.current, messages: formatted },
-        }).catch(() => {});
-      }
+    const extract = () => {
+      const current = msgsRef.current || [];
+      const real = current.filter((m, i) => !(i === 0 && m.from === 'bot'));
+      // Rien de neuf depuis la dernière extraction : on ne rejoue pas.
+      if (!userId || real.length < 4 || real.length === extractedRef.current) return;
+      extractedRef.current = real.length;
+      const formatted = real.map(m => ({ role: m.from === 'me' ? 'user' : 'assistant', content: m.text }));
+      supabase.functions.invoke('extract-memories', {
+        body: { user_id: userId, messages: formatted },
+      }).then(() => {}, () => {});
     };
-  }, [msgs, userId]);
+
+    const onHidden = () => { if (document.visibilityState === 'hidden') extract(); };
+    document.addEventListener('visibilitychange', onHidden);
+    return () => {
+      document.removeEventListener('visibilitychange', onHidden);
+      extract();
+    };
+  }, [userId]);
 
   const send = async (text) => {
     if (!text?.trim() || typing) return;
@@ -176,10 +196,10 @@ export function DashboardScreen({ go, notify, profile }) {
       setTyping(false);
       setMsgs(m => [...m, { from: 'bot', text: data.reply, ts: Date.now() }]);
 
-      // Sauvegarder le nouveau résumé mémoire
-      if (data.nouveau_resume && userId) {
-        supabase.from('profiles').update({ memoire_cache: data.nouveau_resume }).eq('id', userId).catch(() => {});
-      }
+      // La mémoire est écrite côté serveur (chat-assistant), en mode accumulation.
+      // Le faire aussi ici l'écrasait, et surtout `.catch()` n'existe pas sur une
+      // requête Supabase : le TypeError tombait dans le catch ci-dessous et affichait
+      // « Je reviens dans un instant » juste après une réponse pourtant réussie.
     } catch {
       setTyping(false);
       setMsgs(m => [...m, { from: 'bot', text: 'Je reviens dans un instant. Réessaie.', ts: Date.now() }]);
@@ -236,7 +256,7 @@ export function DashboardScreen({ go, notify, profile }) {
           {profile?.public_slug && (
             <button
               onClick={() => {
-                navigator.clipboard.writeText(`https://demo.agenceattractor.com/${profile.public_slug}`);
+                navigator.clipboard.writeText(boutiqueUrl(profile.public_slug));
                 notify('Lien boutique copié !');
               }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-vert/10 border border-vert/20 active:bg-vert/15 transition ml-auto"

@@ -27,7 +27,8 @@ const CI_CHANNELS = ["WAVECI", "MOMOCI", "OMCIV2"];
 // Sandbox : sandbox.paiementpro.net — Production : www.paiementpro.net
 const PP_SANDBOX_URL = "https://sandbox.paiementpro.net/webservice/onlinepayment/init/curl-init.php";
 const PP_PROD_URL    = "https://www.paiementpro.net/webservice/onlinepayment/js/initialize/initialize.php";
-const RETURN_URL     = "https://assists.agenceattractor.com/?payment_done=1";
+// /app : la racine sert désormais la landing publique, pas l'app.
+const RETURN_URL     = "https://assists.agenceattractor.com/app?payment_done=1";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });

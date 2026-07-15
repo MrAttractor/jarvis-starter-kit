@@ -455,7 +455,12 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
       if (error || !data?.url) { notify('Erreur génération maquette — vérifie la Edge Function'); }
       else {
         setGeneratedUrl(data.url);
-        await supabase.from('prospects').update({ maquette_url: data.url }).eq('id', prospect.id).catch(() => {});
+        // `.catch()` n'existe pas sur une requête Supabase (thenable, pas Promise) :
+        // le TypeError tombait dans le catch et affichait « Erreur réseau »
+        // alors que la maquette venait d'être générée.
+        try {
+          await supabase.from('prospects').update({ maquette_url: data.url }).eq('id', prospect.id);
+        } catch { /* la maquette est générée, l'enregistrement du lien est secondaire */ }
         notify('Maquette générée !');
       }
     } catch { notify('Erreur réseau'); }

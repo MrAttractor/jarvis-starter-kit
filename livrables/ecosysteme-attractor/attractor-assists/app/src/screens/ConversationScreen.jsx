@@ -450,9 +450,11 @@ export function ConversationScreen({ go, notify, params, profile }) {
       setDemoUrl(blobUrl);
 
       // Sauvegarder en base — demo_url séparé de demo_html pour éviter l'échec global si SQL 0025 pas encore appliqué
+      // `.then(ok, ko)` et non `.catch()` : une requête Supabase est un thenable,
+      // pas une Promise — `.catch` y est undefined et lève un TypeError.
       if (userId) {
-        supabase.from('profiles').update({ demo_url: 'generated' }).eq('id', userId).catch(() => {});
-        supabase.from('profiles').update({ demo_html: html }).eq('id', userId).catch(() => {});
+        supabase.from('profiles').update({ demo_url: 'generated' }).eq('id', userId).then(() => {}, () => {});
+        supabase.from('profiles').update({ demo_html: html }).eq('id', userId).then(() => {}, () => {});
       }
 
       // Journal prospect (fire-and-forget)
@@ -568,7 +570,7 @@ export function ConversationScreen({ go, notify, params, profile }) {
     <div className="flex flex-col bg-sable overflow-hidden" style={{ height: '100%' }}>
       {/* Header */}
       <div className="flex items-center gap-3 px-4 pt-6 pb-3 bg-white border-b border-g200 sticky top-0 z-10">
-        <button onClick={() => go("assistants")} className="w-10 h-10 rounded-full hover:bg-sable flex items-center justify-center text-charbon">
+        <button onClick={() => go("dashboard")} className="w-10 h-10 rounded-full hover:bg-sable flex items-center justify-center text-charbon">
           <Icon name="back" size={20} />
         </button>
         {a.photo ? (

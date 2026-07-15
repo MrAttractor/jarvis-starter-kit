@@ -363,43 +363,41 @@ Dès les premiers messages, tu lis ces signaux :
 
 Si tu ne sais pas encore qui il est, tu poses UNE question directe : "Tu cherches à quoi exactement là — t'organiser, te faire connaître, ou vendre plus ?"
 
-## TOUT CE QUE TU CONNAIS — L'APP COMPLÈTE
+## L'APP QUE TU CONNAIS — ne parle JAMAIS d'autre chose
 
-**1. Bras droit (Coach)** — Gratuit, illimité. Répond à tout, coache selon la méthode ATTRACTOR, produit des livrables. Accessible via le FAB orange.
+L'app tient en quatre écrans, pas un de plus. Ne mentionne aucune fonctionnalité
+absente de cette liste : si elle n'est pas ici, elle n'existe pas.
 
-**2. Awa — Prospection & vente** (Gratuit) — Écrit tes messages de relance, séquences de closing, premiers contacts. Tu lui donnes le nom du prospect et ce que tu vends — elle produit le message WhatsApp en 1 tap.
+1. Assists (toi) — le coach. Répond, conseille selon la méthode ATTRACTOR, produit
+   des livrables. Voit ses vraies commandes et son vrai chiffre d'affaires.
+2. Catalogue — ses produits : nom, prix, photo, catégorie. Il peut aussi
+   photographier sa carte ou sa liste de prix, et l'app en extrait les produits.
+   C'est aussi là qu'il choisit le modèle de sa boutique parmi trois, et sa couleur.
+3. Tableau de bord — chiffre d'affaires, commandes, panier moyen, clients, ce qui se
+   vend le plus, et la liste de ses commandes à traiter.
+4. Profil — son lien de boutique à partager, son WhatsApp, réapprendre son métier à
+   son assistant, et l'option nom de domaine.
 
-**3. Carnet d'affaires** (Bras Droit) — CRM léger. Enregistre clients et prospects, WhatsApp direct depuis chaque fiche, alerte automatique si un client n'a plus eu de nouvelles depuis 14 jours.
-
-**4. Décharge vocale** (Bras Droit) — Tu parles, l'app écoute. Whisper transcrit ta voix, l'IA extrait automatiquement tes tâches, rappels, idées, et noms de clients.
-
-**5. Agenda** (Gratuit) — Tâches avec priorités, sections Aujourd'hui / À venir.
-
-**6. La Méthode ATTRACTOR** (Gratuit) — 6 ebooks du fondateur Mac Arthur. Framework PPSD interactif.
-
-**7. Fidelys** (Bras Droit) — Programme de fidélité clients. Points, récompenses, espace client personnalisé.
-
-**8. Veille & DMV** (Bras Droit) — Action commerciale quotidienne basée sur les tendances de ton secteur. Chaque matin, une opportunité concrète.
-
-**9. Miriam — Présence digitale** (Bras Droit) — Posts, calendrier éditorial, broadcasts WhatsApp. Elle connaît les heures où ta cible CI scrolle.
-
-**10. Serge — Organisation** (Team) — Brief de semaine chaque lundi, suivi de tes engagements, alertes deadlines.
-
-**11. Roland — Finance & marges** (Team) — Point financier mensuel, calcul de marge en direct, projection sur 3 chiffres.
-
-**12. Kofi — Storytelling & Campagnes** (Team) — Campagne complète : film de marque, 7 posts séquencés, 3 broadcasts WhatsApp.
-
-**13. Carelle — Chief of Staff** (Bras Droit = demo, Team = complet) — Coordonne tous tes projets, pilote l'équipe.
+Sa boutique publique : un lien qu'il partage à ses clients (WhatsApp, bio Instagram,
+QR code). Ses clients y voient son catalogue, discutent avec son assistant, et
+commandent. La commande lui arrive sur son WhatsApp et dans son tableau de bord.
 
 ### Les plans
-**Gratuit — 0 €** : Coach illimité + Awa + Agenda + Méthode ATTRACTOR + 20 messages/jour.
-**Bras Droit — 9 900 FCFA/mois (15 €)** : Messages illimités, mémoire long terme, Carnet d'affaires, Décharge vocale, Fidelys, Veille DMV, Miriam, Carelle complet.
-**Attractor Team — ≈ 25 500 FCFA/mois (39 €)** : Tout le Bras Droit + Serge, Roland, Kofi.
+Gratuit — 0 F : boutique, catalogue illimité, assistant client, coach, 20 commandes par mois.
+Bras Droit — 9 900 FCFA/mois (15 €) : commandes illimitées, Fidelys (fidélité clients), veille quotidienne.
+Nom de domaine personnalisé : 10 000 F/an, sur demande.
 
 ## RÈGLES D'EXPLICATION
 - UNE fonctionnalité à la fois. Tu confirmes que c'est clair, puis "On continue ?"
-- Tu expliques toujours EN SITUATION : "Par exemple, si tu as une cliente qui n'a pas donné signe de vie depuis 3 semaines..."
-- Tutoiement. Voix CI. Phrases courtes. Tu racontes, tu ne récites pas.`;
+- Tu expliques toujours EN SITUATION : "Par exemple, si une cliente te demande si tu livres à Yopougon..."
+- Tutoiement. Voix CI. Phrases courtes. Tu racontes, tu ne récites pas.
+
+## FORME DE TES RÉPONSES
+- ZÉRO markdown. Pas d'astérisques, pas de dièses, pas de listes à puces balisées.
+  L'app affiche ton texte tel quel : un "**mot**" s'affiche avec les étoiles et fait
+  amateur. Pour insister, utilise les mots, pas la mise en forme.
+- ZÉRO emoji.
+- Des paragraphes courts séparés par une ligne vide. C'est tout ce que l'app rend.`;
 
 const SITE_MAC_SYSTEM = `Tu es Mac Arthur Kouassi, fondateur de l'agence Mr Attractor. Tu réponds toi-même aux visiteurs du site agenceattractor.com — pas un agent générique, toi directement, à la première personne ("je", "mon agence").
 
@@ -491,21 +489,58 @@ async function loadUserProfile(supabase: any, user_id: string) {
 
 // ─── Chargement des données contextuelles live ───────────────────────────────
 async function loadContextualData(supabase: any, user_id: string, plan_code: string) {
-  const result: { pendingOrders: any[]; todayDmv: any } = { pendingOrders: [], todayDmv: null };
+  const result: { pendingOrders: any[]; todayDmv: any; business: any } = {
+    pendingOrders: [], todayDmv: null, business: null,
+  };
 
-  if (!plan_code || plan_code === "gratuit") return result;
-
-  // Commandes en attente
+  // Le business de l'entrepreneur n'est PAS une option payante : un coach qui ne
+  // voit pas les commandes de celui qu'il conseille ne sert à rien. Seule la DMV
+  // (veille sectorielle) reste réservée aux plans payants, plus bas.
+  //
+  // Les colonnes lues ici étaient toutes fausses (`user_id`, `statut`, `produit`
+  // au lieu de `owner_id`, `status`, `items`) et l'erreur était avalée par le
+  // catch : le bloc « commandes en attente » n'a donc jamais été injecté une seule
+  // fois depuis la création de la table.
   try {
+    const debutMois = new Date();
+    debutMois.setDate(1);
+    debutMois.setHours(0, 0, 0, 0);
+
     const { data: orders } = await supabase
       .from("orders")
-      .select("client_contact, produit, statut")
-      .eq("user_id", user_id)
-      .in("statut", ["en_attente", "en_cours"])
-      .order("created_at", { ascending: false })
-      .limit(5);
-    result.pendingOrders = orders ?? [];
-  } catch {}
+      .select("client_name, client_wa, items, total_fcfa, status, created_at, delivery_address")
+      .eq("owner_id", user_id)
+      .gte("created_at", debutMois.toISOString())
+      .order("created_at", { ascending: false });
+
+    const list = orders ?? [];
+    result.pendingOrders = list.filter((o: any) => o.status === "new").slice(0, 5);
+
+    const facturables = list.filter((o: any) => o.status !== "cancelled");
+    const ca = facturables.reduce((s: number, o: any) => s + (o.total_fcfa || 0), 0);
+
+    // Produit le plus vendu du mois, agrégé depuis les lignes de commande
+    const parProduit: Record<string, number> = {};
+    for (const o of facturables) {
+      for (const it of (Array.isArray(o.items) ? o.items : [])) {
+        if (!it?.nom) continue;
+        parProduit[it.nom] = (parProduit[it.nom] || 0) + (Number(it.qty) || 1);
+      }
+    }
+    const top = Object.entries(parProduit).sort((a, b) => b[1] - a[1])[0];
+
+    result.business = {
+      ca,
+      commandes: facturables.length,
+      enAttente: result.pendingOrders.length,
+      clients: new Set(facturables.map((o: any) => o.client_wa || o.client_name).filter(Boolean)).size,
+      topProduit: top ? { nom: top[0], qty: top[1] } : null,
+    };
+  } catch (e) {
+    console.error("loadContextualData orders:", e);
+  }
+
+  if (!plan_code || plan_code === "gratuit") return result;
 
   // DMV du jour
   try {
@@ -591,13 +626,76 @@ function buildModulesBlock(plan_code: string): string {
   return `\n\n## MODULES ACTIFS DE CET ENTREPRENEUR\n${modules.map(m => `• ${m}`).join("\n")}`;
 }
 
+/**
+ * Nettoie la réponse du modèle avant affichage.
+ *
+ * L'app rend le texte brut : un "**mot**" s'affiche avec ses étoiles, un "## titre"
+ * avec ses dièses. Et la marque interdit les emojis et le style chatbot générique.
+ *
+ * La consigne dans le prompt ne suffit pas — vérifié : malgré une interdiction
+ * explicite, le modèle renvoyait titres, gras, séparateurs et emojis. Le garde-fou
+ * doit donc être déterministe, pas déclaratif.
+ */
+function nettoyerReponse(txt: string): string {
+  return (txt || "")
+    // emojis et pictogrammes
+    .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}]/gu, "")
+    // gras / italique / code
+    .replace(/\*\*(.+?)\*\*/gs, "$1")
+    .replace(/__(.+?)__/gs, "$1")
+    .replace(/`{1,3}([^`]+)`{1,3}/gs, "$1")
+    // titres markdown
+    .replace(/^\s{0,3}#{1,6}\s+/gm, "")
+    // filets de séparation
+    .replace(/^\s*([-*_]\s*){3,}$/gm, "")
+    // puces : on garde une liste lisible, sans balisage
+    .replace(/^\s*[*+]\s+/gm, "- ")
+    // tirets longs : la marque écrit avec des virgules — mais pas de virgule
+    // collée derrière un point, ce qui donnerait « … qu'un., c'est peu »
+    .replace(/([.!?…])\s*[—–]\s*/g, "$1 ")
+    .replace(/\s*[—–]\s*/g, ", ")
+    // espaces et lignes vides laissés par les remplacements (dont les emojis retirés)
+    .replace(/^[ \t]+/gm, "")
+    .replace(/[ \t]+$/gm, "")
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 // ─── Construction du bloc données contextuelles live ─────────────────────────
-function buildDonneesBlock(pendingOrders: any[], todayDmv: any): string {
+function buildDonneesBlock(pendingOrders: any[], todayDmv: any, business: any): string {
   let block = "";
+
+  // Le coach sait où en est son entrepreneur avant qu'il ait dit un mot.
+  // C'est la différence entre un chatbot et un bras droit.
+  if (business) {
+    const fcfa = (n: number) => (n || 0).toLocaleString("fr-FR") + " FCFA";
+    if (business.commandes > 0) {
+      block += `\n\n## SON BUSINESS CE MOIS-CI (données réelles de sa boutique)`
+            + `\n- Chiffre d'affaires : ${fcfa(business.ca)}`
+            + `\n- Commandes : ${business.commandes}`
+            + `\n- Clients différents : ${business.clients}`;
+      if (business.topProduit) {
+        block += `\n- Ce qui se vend le plus : ${business.topProduit.nom} (${business.topProduit.qty} vendus)`;
+      }
+      if (business.enAttente > 0) {
+        block += `\n- ${business.enAttente} commande(s) en attente de traitement`;
+      }
+      block += `\nCe sont ses vrais chiffres. Appuie-toi dessus quand tu le conseilles, cite-les quand c'est utile.`
+            + ` Ne les invente jamais, ne les extrapole pas : si tu as besoin d'un chiffre absent d'ici, demande-lui.`;
+    } else {
+      block += `\n\n## SON BUSINESS CE MOIS-CI\nAucune commande reçue sur sa boutique ce mois-ci.`
+            + ` S'il cherche quoi faire, l'enjeu numéro un est d'amener ses premiers clients sur son lien de boutique.`;
+    }
+  }
 
   if (pendingOrders.length > 0) {
     const list = pendingOrders
-      .map((o: any) => `• ${o.client_contact || "Client"} — ${o.produit || "Commande"} [${o.statut}]`)
+      .map((o: any) => {
+        const quoi = (Array.isArray(o.items) ? o.items : []).map((i: any) => `${i.nom} x${i.qty || 1}`).join(", ");
+        const ou = o.delivery_address ? ` → ${o.delivery_address}` : "";
+        return `• ${o.client_name || "Client"} — ${quoi || "commande"} — ${(o.total_fcfa || 0).toLocaleString("fr-FR")} FCFA${ou}`;
+      })
       .join("\n");
     block += `\n\n## COMMANDES EN ATTENTE (${pendingOrders.length})\n${list}\nSi l'utilisateur parle de ses commandes, utilise ces données directement.`;
   }
@@ -801,14 +899,16 @@ Réponds UNIQUEMENT en JSON strict, aucun texte autour :
     let dbProfile: any = null;
     let pendingOrders: any[] = [];
     let todayDmv: any = null;
+    let business: any = null;
 
     if (user_id) {
       dbProfile = await loadUserProfile(supabase, user_id);
-      if (dbProfile?.plan_code) {
-        const ctxData = await loadContextualData(supabase, user_id, dbProfile.plan_code);
-        pendingOrders = ctxData.pendingOrders;
-        todayDmv = ctxData.todayDmv;
-      }
+      // Plus de condition sur plan_code ici : un profil sans plan (le cas de tout
+      // nouvel inscrit) n'avait AUCUN contexte business chargé.
+      const ctxData = await loadContextualData(supabase, user_id, dbProfile?.plan_code);
+      pendingOrders = ctxData.pendingOrders;
+      todayDmv = ctxData.todayDmv;
+      business = ctxData.business;
     }
 
     // ─── Principes MIROIR ────────────────────────────────────────────────────
@@ -866,7 +966,7 @@ Réponds UNIQUEMENT en JSON strict, aucun texte autour :
 
     const profileBlock  = buildProfileBlock(dbProfile, profileFromFrontend, ppsdFromFrontend);
     const modulesBlock  = buildModulesBlock(dbProfile?.plan_code ?? (profileFromFrontend as any)?.plan_code ?? "gratuit");
-    const donneesBlock  = buildDonneesBlock(pendingOrders, todayDmv);
+    const donneesBlock  = buildDonneesBlock(pendingOrders, todayDmv, business);
 
     // Mémoire des sessions (DB en priorité, frontend en fallback)
     const memoireSource = dbProfile?.memoire_cache || memoireCacheFromFrontend;
@@ -882,7 +982,9 @@ Réponds UNIQUEMENT en JSON strict, aucun texte autour :
     }));
 
     const model = "claude-haiku-4-5-20251001";
-    const max_tokens = assistant_id === "coach" ? 350 : 500;
+    // 350 tokens coupaient le coach en plein milieu d'un livrable que son propre
+    // prompt lui demande de produire en entier.
+    const max_tokens = assistant_id === "coach" ? 1500 : 500;
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -895,7 +997,7 @@ Réponds UNIQUEMENT en JSON strict, aucun texte autour :
     });
 
     const data = await response.json();
-    const reply = data?.content?.[0]?.text?.trim() ?? "Je reviens vers toi dans un instant.";
+    const reply = nettoyerReponse(data?.content?.[0]?.text?.trim() ?? "Je reviens vers toi dans un instant.");
 
     // ─── Résumé de session — généré toutes les 2 réponses du bot ────────────
     let nouveau_resume: string | null = null;

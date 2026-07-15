@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="fr" data-layout="1a">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- noindex par défaut : tant que le slug n'est pas résolu, cette page est une coquille.
+     Passé en index seulement quand une vraie boutique s'affiche (voir boot()). -->
+<meta name="robots" content="noindex">
+<title>Boutique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   LA BOUTIQUE — un seul fichier, trois habillages.
+
+   Elle remplace quatre implémentations qui faisaient la même chose et avaient
+   divergé (PublicAssistantScreen.jsx, template-1b, template-1c, creal/index.html).
+   Règle : tout ce qui est commun est écrit UNE fois. Seule la présentation du
+   catalogue change selon [data-layout]. Un correctif de logique profite aux trois.
+
+   1a Grille    — deux colonnes, compact, familier
+   1b Liste     — pleine largeur, plus d'infos, scroll fluide
+   1c Magazine  — première pièce en vedette, look premium
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* --brand est écrasé au chargement par la couleur choisie par l'entrepreneur */
+  --brand: #FF6B35;
+  --brand-soft: rgba(255,107,53,.10);
+  --bg: #FAF7F2;
+  --surface: #FFFFFF;
+  --text: #1A1714;
+  --muted: #6B6560;
+  --line: #E9E4DC;
+  --radius: 16px;
+  --shadow: 0 8px 24px -12px rgba(26,23,20,.18);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+
+html, body { max-width: 100%; overflow-x: hidden; }
+
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  padding-bottom: calc(84px + var(--safe-b));
+}
+
+img { max-width: 100%; display: block; }
+button { font: inherit; color: inherit; cursor: pointer; border: none; background: none; }
+input, textarea { font: inherit; color: inherit; width: 100%; }
+
+.wrap { max-width: 780px; margin: 0 auto; padding: 0 16px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.hidden { display: none !important; }
+
+/* ── En-tête ─────────────────────────────────────────────────────────────── */
+.top {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  padding: 18px 0 14px;
+  position: sticky; top: 0; z-index: 20;
+}
+.top-in { display: flex; align-items: center; gap: 12px; }
+.badge {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  background: var(--brand); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 17px; letter-spacing: -.02em;
+}
+.shop-name { font-size: 17px; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; }
+.shop-tag { font-size: 12.5px; color: var(--muted); margin-top: 1px; }
+
+/* ── Onglets ─────────────────────────────────────────────────────────────── */
+.tabs { display: flex; gap: 6px; margin-top: 14px; }
+.tab {
+  flex: 1; padding: 9px 8px; border-radius: 10px; font-size: 13.5px; font-weight: 700;
+  color: var(--muted); background: transparent; transition: background .15s, color .15s;
+}
+.tab[aria-selected="true"] { background: var(--brand); color: #fff; }
+
+/* ── Catalogue : le SEUL bloc qui change d'un habillage à l'autre ─────────── */
+.catalogue { display: grid; gap: 12px; padding: 18px 0; }
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  overflow: hidden; display: flex; flex-direction: column; text-align: left;
+}
+.card-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: var(--bg); }
+.card-body { padding: 11px 12px 13px; display: flex; flex-direction: column; gap: 3px; flex: 1; }
+.card-cat { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
+.card-name { font-size: 14px; font-weight: 700; line-height: 1.3; }
+.card-price { font-size: 15px; font-weight: 800; color: var(--brand); margin-top: auto; padding-top: 6px; }
+.card-add {
+  margin-top: 8px; padding: 9px; border-radius: 10px; background: var(--brand-soft);
+  color: var(--brand); font-weight: 700; font-size: 12.5px; text-align: center;
+}
+
+/* 1a — Grille : deux colonnes serrées */
+[data-layout="1a"] .catalogue { grid-template-columns: 1fr 1fr; }
+
+/* 1b — Liste : une colonne, image à gauche, respiration */
+[data-layout="1b"] .catalogue { grid-template-columns: 1fr; }
+[data-layout="1b"] .card { flex-direction: row; align-items: stretch; }
+[data-layout="1b"] .card-img { width: 116px; aspect-ratio: 1/1; flex-shrink: 0; }
+[data-layout="1b"] .card-body { padding: 13px 14px; }
+[data-layout="1b"] .card-add { margin-top: 8px; align-self: flex-start; padding: 8px 18px; }
+
+/* 1c — Magazine : la première pièce en vedette, le reste en grille */
+[data-layout="1c"] .catalogue { grid-template-columns: 1fr 1fr; }
+[data-layout="1c"] .card:first-child { grid-column: 1 / -1; }
+[data-layout="1c"] .card:first-child .card-img { aspect-ratio: 16/10; }
+[data-layout="1c"] .card:first-child .card-name { font-size: 19px; }
+[data-layout="1c"] .card:first-child .card-price { font-size: 18px; }
+[data-layout="1c"] .card { border: none; box-shadow: var(--shadow); }
+
+@media (min-width: 640px) {
+  [data-layout="1a"] .catalogue,
+  [data-layout="1c"] .catalogue { grid-template-columns: repeat(3, 1fr); }
+  [data-layout="1c"] .card:first-child { grid-column: 1 / -1; }
+}
+
+/* ── Filtres catégories ──────────────────────────────────────────────────── */
+.filters { display: flex; gap: 7px; overflow-x: auto; padding: 14px 0 2px; scrollbar-width: none; }
+.filters::-webkit-scrollbar { display: none; }
+.chip {
+  flex-shrink: 0; padding: 7px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 700;
+  background: var(--surface); border: 1px solid var(--line); color: var(--muted); white-space: nowrap;
+}
+.chip[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: #fff; }
+
+/* ── État vide / introuvable ─────────────────────────────────────────────── */
+.empty { text-align: center; padding: 56px 24px; color: var(--muted); }
+.empty h2 { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.empty p { font-size: 14px; max-width: 320px; margin: 0 auto; }
+
+/* ── Chat ────────────────────────────────────────────────────────────────── */
+.chat { display: flex; flex-direction: column; height: calc(100vh - 210px); min-height: 340px; }
+.chat-log { flex: 1; overflow-y: auto; padding: 16px 0; display: flex; flex-direction: column; gap: 10px; }
+.bubble { max-width: 82%; padding: 10px 13px; border-radius: 15px; font-size: 14px; line-height: 1.45; white-space: pre-wrap; word-break: break-word; }
+.bubble.bot { background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 5px; align-self: flex-start; }
+.bubble.me { background: var(--brand); color: #fff; border-bottom-right-radius: 5px; align-self: flex-end; }
+.chat-form { display: flex; gap: 8px; padding: 12px 0 16px; border-top: 1px solid var(--line); background: var(--bg); }
+.chat-input { padding: 11px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); font-size: 15px; }
+.chat-input:focus { outline: 2px solid var(--brand); outline-offset: -1px; }
+.chat-send { width: 44px; height: 44px; border-radius: 50%; background: var(--brand); color: #fff; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.typing { display: flex; gap: 4px; padding: 12px 14px; }
+.typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); opacity: .4; animation: blink 1.2s infinite; }
+.typing i:nth-child(2) { animation-delay: .2s; } .typing i:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%,60%,100% { opacity: .25; } 30% { opacity: .9; } }
+
+/* ── Barre panier ────────────────────────────────────────────────────────── */
+.cartbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  background: var(--text); color: #fff;
+  padding: 13px 16px calc(13px + var(--safe-b));
+  display: flex; align-items: center; gap: 12px;
+  transform: translateY(110%); transition: transform .22s ease;
+}
+.cartbar.show { transform: translateY(0); }
+.cartbar-txt { flex: 1; min-width: 0; }
+.cartbar-n { font-size: 12px; opacity: .65; }
+.cartbar-total { font-size: 16px; font-weight: 800; }
+.cartbar-cta { background: var(--brand); color: #fff; padding: 11px 20px; border-radius: 11px; font-weight: 800; font-size: 14px; flex-shrink: 0; }
+
+/* ── Modale ──────────────────────────────────────────────────────────────── */
+.sheet { position: fixed; inset: 0; z-index: 40; background: rgba(0,0,0,.5); display: flex; align-items: flex-end; }
+.sheet-in {
+  width: 100%; max-height: 92vh; overflow-y: auto; background: var(--bg);
+  border-radius: 24px 24px 0 0; padding: 20px 16px calc(28px + var(--safe-b));
+}
+@media (min-width: 640px) {
+  .sheet { align-items: center; justify-content: center; }
+  .sheet-in { max-width: 460px; border-radius: 20px; }
+}
+.sheet-grip { width: 38px; height: 4px; border-radius: 999px; background: var(--line); margin: 0 auto 16px; }
+.sheet-title { font-size: 18px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 14px; }
+.field { margin-bottom: 13px; }
+.label { display: block; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 6px; }
+.input { padding: 12px 14px; border-radius: 11px; border: 1px solid var(--line); background: var(--surface); font-size: 15.5px; }
+.input:focus { outline: 2px solid var(--brand); outline-offset: -1px; }
+.err { font-size: 12.5px; color: #C0392B; margin-top: 5px; }
+
+.recap { background: var(--surface); border: 1px solid var(--line); border-radius: 13px; padding: 13px; margin-bottom: 13px; }
+.recap-l { display: flex; justify-content: space-between; gap: 12px; font-size: 13.5px; padding: 4px 0; }
+.recap-l.tot { border-top: 1px solid var(--line); margin-top: 7px; padding-top: 9px; font-weight: 800; font-size: 15px; }
+.recap-l .q { color: var(--muted); }
+
+.payinfo { background: var(--brand-soft); border-radius: 13px; padding: 13px; margin-bottom: 14px; }
+.payinfo h4 { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--brand); margin-bottom: 5px; }
+.payinfo p { font-size: 13.5px; line-height: 1.5; white-space: pre-wrap; }
+
+.btn-main { width: 100%; padding: 15px; border-radius: 13px; background: var(--brand); color: #fff; font-weight: 800; font-size: 15px; }
+.btn-main:disabled { opacity: .45; }
+.btn-ghost { width: 100%; padding: 12px; font-size: 13.5px; font-weight: 700; color: var(--muted); margin-top: 4px; }
+
+.note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 11px; line-height: 1.5; }
+.done { text-align: center; padding: 12px 0 4px; }
+.done-ico { width: 54px; height: 54px; border-radius: 50%; background: var(--brand-soft); color: var(--brand); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
+.done h3 { font-size: 19px; font-weight: 800; margin-bottom: 7px; }
+.done p { font-size: 14px; color: var(--muted); line-height: 1.55; margin-bottom: 18px; }
+
+.foot { text-align: center; padding: 26px 16px 12px; font-size: 11.5px; color: var(--muted); }
+.foot a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="top-in">
+      <div class="badge" id="badge"></div>
+      <div style="min-width:0">
+        <div class="shop-name" id="shopName">Chargement…</div>
+        <div class="shop-tag" id="shopTag"></div>
+      </div>
+    </div>
+    <div class="tabs" role="tablist" id="tabs" hidden>
+      <button class="tab" role="tab" aria-selected="true"  data-tab="catalogue">Boutique</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="chat" id="tabChat">Poser une question</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- Introuvable / erreur -->
+  <div id="viewError" class="empty hidden">
+    <h2 id="errTitle">Boutique introuvable</h2>
+    <p id="errText">Ce lien ne correspond à aucune boutique. Vérifiez l'adresse auprès du vendeur.</p>
+  </div>
+
+  <!-- Catalogue -->
+  <section id="viewCatalogue" class="hidden">
+    <div class="filters" id="filters"></div>
+    <div class="catalogue" id="catalogue"></div>
+    <div id="catalogueEmpty" class="empty hidden">
+      <h2>Le catalogue arrive</h2>
+      <p id="catalogueEmptyTxt">Aucun article en ligne pour le moment. Posez votre question, on vous répond.</p>
+    </div>
+  </section>
+
+  <!-- Chat -->
+  <section id="viewChat" class="chat hidden">
+    <div class="chat-log" id="chatLog"></div>
+    <form class="chat-form" id="chatForm">
+      <input class="chat-input" id="chatInput" placeholder="Votre question…" autocomplete="off">
+      <button class="chat-send" type="submit" aria-label="Envoyer">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </form>
+  </section>
+</main>
+
+<footer class="foot" id="foot" hidden>
+  Boutique propulsée par <a href="https://assists.agenceattractor.com" rel="noopener">Attractor Assists</a>
+</footer>
+
+<!-- Barre panier -->
+<div class="cartbar" id="cartbar">
+  <div class="cartbar-txt">
+    <div class="cartbar-n" id="cartCount">0 article</div>
+    <div class="cartbar-total" id="cartTotal">0 F</div>
+  </div>
+  <button class="cartbar-cta" id="cartCta">Commander</button>
+</div>
+
+<!-- Modale commande -->
+<div class="sheet hidden" id="sheet">
+  <div class="sheet-in" id="sheetIn">
+    <div class="sheet-grip"></div>
+
+    <!-- Étape 1 : coordonnées -->
+    <div id="stepInfo">
+      <div class="sheet-title">Votre commande</div>
+      <div class="recap" id="recap"></div>
+      <div class="field">
+        <label class="label" for="fName">Votre prénom</label>
+        <input class="input" id="fName" autocomplete="given-name" placeholder="Ex : Aïcha">
+        <div class="err hidden" id="eName">Indiquez votre prénom.</div>
+      </div>
+      <div class="field">
+        <label class="label" for="fWa">Votre WhatsApp</label>
+        <input class="input" id="fWa" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ex : +225 07 00 00 00 00">
+        <div class="err hidden" id="eWa">Indiquez un numéro valide, avec l'indicatif.</div>
+      </div>
+      <div class="field">
+        <label class="label" for="fAddr">Adresse de livraison</label>
+        <input class="input" id="fAddr" autocomplete="street-address" placeholder="Quartier, rue, point de repère">
+        <div class="err hidden" id="eAddr">Indiquez où livrer.</div>
+      </div>
+      <div id="livraisonBlock" class="payinfo hidden">
+        <h4>Livraison</h4>
+        <p id="livraisonTxt"></p>
+      </div>
+      <div id="paiementBlock" class="payinfo hidden">
+        <h4>Comment payer</h4>
+        <p id="paiementTxt"></p>
+      </div>
+      <button class="btn-main" id="btnSend">Envoyer ma commande</button>
+      <div class="err hidden" id="eSend" style="text-align:center"></div>
+      <button class="btn-ghost" id="btnCancel">Continuer mes achats</button>
+      <p class="note" id="sendNote"></p>
+    </div>
+
+    <!-- Étape 2 : confirmée -->
+    <div id="stepDone" class="hidden">
+      <div class="done">
+        <div class="done-ico">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3>Commande envoyée</h3>
+        <p id="doneTxt"></p>
+        <a class="btn-main" id="btnWa" style="display:block;text-decoration:none;text-align:center" target="_blank" rel="noopener">Confirmer sur WhatsApp</a>
+        <button class="btn-ghost" id="btnClose">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   Logique — écrite une seule fois pour les trois habillages.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+const SUPABASE = 'https://lgdgbrivnhgeupqhkckd.supabase.co';
+const ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
+
+/* ── Résolution du slug ────────────────────────────────────────────────────
+   Ordre : sous-domaine → chemin → query.
+   Le jour où les boutiques passent sur [slug].boutik.ci, seule WILDCARD_SUFFIXES
+   change : le reste du fichier l'ignore.                                        */
+const APP_HOSTS = [
+  'assists.agenceattractor.com', 'assists-agenceattractor.pages.dev',
+  'localhost', '127.0.0.1',
+];
+const WILDCARD_SUFFIXES = ['.boutik.ci'];
+const CUSTOM_DOMAINS = {};              // ex : 'boutiquecreal.com': 'creal'
+
+function resolveSlug() {
+  const host = location.hostname.toLowerCase();
+
+  for (const suffix of WILDCARD_SUFFIXES) {
+    if (host.endsWith(suffix)) {
+      const sub = host.slice(0, -suffix.length);
+      if (sub && sub !== 'www') return sub;
+    }
+  }
+  if (!APP_HOSTS.includes(host) && CUSTOM_DOMAINS[host]) return CUSTOM_DOMAINS[host];
+
+  const seg = location.pathname.split('/').filter(Boolean);
+  if (seg[0] === 'b' && seg[1]) return decodeURIComponent(seg[1]);
+  if (seg.length === 1 && seg[0] !== 'boutique') return decodeURIComponent(seg[0]);
+
+  return new URLSearchParams(location.search).get('c');
+}
+
+const SLUG = resolveSlug();
+const PREVIEW = new URLSearchParams(location.search).get('preview'); // aperçu d'un modèle, sans rien écrire
+const CONV_KEY = 'aa_conv_' + SLUG;
+
+let SHOP = null;
+let PRODUITS = [];
+let CART = {};        // id -> qty
+let CATEGORIE = null;
+let convId = localStorage.getItem(CONV_KEY) || null;
+let chatHistory = [];
+let sending = false;
+
+/* ── Accès données ───────────────────────────────────────────────────────── */
+const headers = { apikey: ANON, Authorization: 'Bearer ' + ANON, 'Content-Type': 'application/json' };
+
+async function rpc(name, body) {
+  const res = await fetch(SUPABASE + '/rest/v1/rpc/' + name, {
+    method: 'POST', headers, body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(name + ' ' + res.status);
+  return res.json();
+}
+
+const getBoutiqueInfo = () => rpc('get_boutique_info', { p_slug: SLUG });
+const getCatalogue    = () => rpc('get_catalogue', { p_slug: SLUG });
+const getHistory      = () => rpc('get_public_conversation', { p_slug: SLUG, p_conversation_id: convId });
+
+function saveOrder(name, wa, items, total, address) {
+  return rpc('save_order', {
+    p_slug: SLUG, p_client_name: name, p_client_wa: wa,
+    p_items: items, p_total_fcfa: total, p_delivery_address: address,
+  });
+}
+
+async function sendChat(messages) {
+  const res = await fetch(SUPABASE + '/functions/v1/chat-assistant', {
+    method: 'POST', headers,
+    body: JSON.stringify({ mode: 'public', slug: SLUG, messages, conversation_id: convId }),
+  });
+  if (!res.ok) throw new Error('chat ' + res.status);
+  return res.json();
+}
+
+/* ── Utilitaires ─────────────────────────────────────────────────────────── */
+const $ = (id) => document.getElementById(id);
+const money = (n) => (n || 0).toLocaleString('fr-FR').replace(/ | /g, ' ') + ' F';
+const digits = (s) => (s || '').replace(/\D/g, '');
+
+/** Rendu de texte venu de la base (nom de produit, consigne de paiement…).
+    textContent et jamais innerHTML : ce texte est saisi par l'entrepreneur et
+    lu par ses clients — l'injecter en HTML serait une faille. */
+function setText(el, txt) { el.textContent = txt || ''; }
+
+function cartItems() {
+  return PRODUITS.filter(p => CART[p.id]).map(p => ({
+    id: p.id, nom: p.nom, prix: Number(p.prix) || 0, qty: CART[p.id],
+  }));
+}
+const cartTotal = () => cartItems().reduce((s, i) => s + i.prix * i.qty, 0);
+const cartCount = () => cartItems().reduce((s, i) => s + i.qty, 0);
+
+/* ── Rendu catalogue — le SEUL endroit qui dépend de l'habillage ──────────── */
+function renderCatalogue() {
+  const box = $('catalogue');
+  box.textContent = '';
+
+  const list = CATEGORIE ? PRODUITS.filter(p => p.categorie === CATEGORIE) : PRODUITS;
+
+  if (!PRODUITS.length) {
+    $('catalogueEmpty').classList.remove('hidden');
+    return;
+  }
+  $('catalogueEmpty').classList.add('hidden');
+
+  for (const p of list) {
+    const card = document.createElement('article');
+    card.className = 'card';
+
+    if (p.photo_url) {
+      const img = document.createElement('img');
+      img.className = 'card-img';
+      img.loading = 'lazy';
+      img.src = p.photo_url;
+      img.alt = p.nom || '';
+      card.appendChild(img);
+    }
+
+    const body = document.createElement('div');
+    body.className = 'card-body';
+
+    if (p.categorie) {
+      const c = document.createElement('div');
+      c.className = 'card-cat';
+      setText(c, p.categorie);
+      body.appendChild(c);
+    }
+
+    const n = document.createElement('h3');
+    n.className = 'card-name';
+    setText(n, p.nom);
+    body.appendChild(n);
+
+    const pr = document.createElement('div');
+    pr.className = 'card-price';
+    const unite = p.unite && !['unité', 'piece', 'pièce'].includes(String(p.unite).toLowerCase()) ? ' / ' + p.unite : '';
+    setText(pr, Number(p.prix) ? money(p.prix) + unite : 'Prix sur demande');
+    body.appendChild(pr);
+
+    const add = document.createElement('button');
+    add.className = 'card-add';
+    add.type = 'button';
+    setText(add, CART[p.id] ? 'Dans le panier (' + CART[p.id] + ')' : 'Ajouter');
+    add.addEventListener('click', () => {
+      CART[p.id] = (CART[p.id] || 0) + 1;
+      renderCatalogue();
+      renderCart();
+    });
+    body.appendChild(add);
+
+    card.appendChild(body);
+    box.appendChild(card);
+  }
+}
+
+function renderFilters() {
+  const cats = [...new Set(PRODUITS.map(p => p.categorie).filter(Boolean))];
+  const box = $('filters');
+  box.textContent = '';
+  if (cats.length < 2) return;
+
+  const mk = (label, value) => {
+    const b = document.createElement('button');
+    b.className = 'chip';
+    b.type = 'button';
+    b.setAttribute('aria-pressed', String(CATEGORIE === value));
+    setText(b, label);
+    b.addEventListener('click', () => { CATEGORIE = value; renderFilters(); renderCatalogue(); });
+    return b;
+  };
+  box.appendChild(mk('Tout', null));
+  cats.forEach(c => box.appendChild(mk(c, c)));
+}
+
+function renderCart() {
+  const n = cartCount();
+  $('cartbar').classList.toggle('show', n > 0);
+  setText($('cartCount'), n + (n > 1 ? ' articles' : ' article'));
+  setText($('cartTotal'), money(cartTotal()));
+}
+
+function renderRecap() {
+  const box = $('recap');
+  box.textContent = '';
+  for (const i of cartItems()) {
+    const l = document.createElement('div');
+    l.className = 'recap-l';
+    const left = document.createElement('span');
+    setText(left, i.nom);
+    const right = document.createElement('span');
+    right.className = 'q';
+    setText(right, i.qty + ' × ' + money(i.prix));
+    l.append(left, right);
+    box.appendChild(l);
+  }
+  const t = document.createElement('div');
+  t.className = 'recap-l tot';
+  const tl = document.createElement('span'); setText(tl, 'Total');
+  const tr = document.createElement('span'); setText(tr, money(cartTotal()));
+  t.append(tl, tr);
+  box.appendChild(t);
+}
+
+/* ── Chat ────────────────────────────────────────────────────────────────── */
+function renderChat() {
+  const log = $('chatLog');
+  log.textContent = '';
+  for (const m of chatHistory) {
+    const b = document.createElement('div');
+    b.className = 'bubble ' + (m.from === 'me' ? 'me' : 'bot');
+    setText(b, m.text);
+    log.appendChild(b);
+  }
+  if (sending) {
+    const t = document.createElement('div');
+    t.className = 'bubble bot typing';
+    t.append(document.createElement('i'), document.createElement('i'), document.createElement('i'));
+    log.appendChild(t);
+  }
+  log.scrollTop = log.scrollHeight;
+}
+
+async function onChatSubmit(e) {
+  e.preventDefault();
+  const val = $('chatInput').value.trim();
+  if (!val || sending) return;
+
+  chatHistory.push({ from: 'me', text: val });
+  $('chatInput').value = '';
+  sending = true;
+  renderChat();
+
+  try {
+    const data = await sendChat(chatHistory.map(m => ({ from: m.from, text: m.text })));
+    if (data.conversation_id && data.conversation_id !== convId) {
+      convId = data.conversation_id;
+      try { localStorage.setItem(CONV_KEY, convId); } catch {}
+    }
+    chatHistory.push({ from: 'bot', text: data.reply || 'Je reviens vers vous très vite.' });
+  } catch {
+    chatHistory.push({ from: 'bot', text: "Je n'ai pas pu répondre à l'instant. Réessayez, ou passez votre commande directement." });
+  }
+  sending = false;
+  renderChat();
+}
+
+/* ── Onglets ─────────────────────────────────────────────────────────────── */
+function showTab(name) {
+  $('viewCatalogue').classList.toggle('hidden', name !== 'catalogue');
+  $('viewChat').classList.toggle('hidden', name !== 'chat');
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.tab === name)));
+  if (name === 'chat') {
+    if (!chatHistory.length) {
+      chatHistory.push({
+        from: 'bot',
+        text: 'Bonjour, je suis ' + (SHOP.nom_assistant || 'l\'assistant') + '. Posez-moi vos questions sur les produits, la livraison ou le paiement.',
+      });
+    }
+    renderChat();
+    setTimeout(() => $('chatInput').focus(), 60);
+  }
+}
+
+/* ── Commande ────────────────────────────────────────────────────────────── */
+function openCommande() {
+  if (!cartCount()) return;
+  renderRecap();
+  $('stepInfo').classList.remove('hidden');
+  $('stepDone').classList.add('hidden');
+  $('sheet').classList.remove('hidden');
+  $('eSend').classList.add('hidden');
+  setTimeout(() => $('fName').focus(), 60);
+}
+
+function closeSheet() { $('sheet').classList.add('hidden'); }
+
+function validate() {
+  const name = $('fName').value.trim();
+  const wa   = digits($('fWa').value);
+  const addr = $('fAddr').value.trim();
+  let ok = true;
+
+  $('eName').classList.toggle('hidden', !!name);
+  if (!name) ok = false;
+
+  const waOk = wa.length >= 8 && wa.length <= 15;
+  $('eWa').classList.toggle('hidden', waOk);
+  if (!waOk) ok = false;
+
+  // Adresse exigée pour tout le monde : sans elle, la commande arrive chez
+  // l'entrepreneur sans lieu de livraison. C'était le cas d'un des anciens
+  // modèles, qui l'enregistrait en silence à vide.
+  $('eAddr').classList.toggle('hidden', !!addr);
+  if (!addr) ok = false;
+
+  return ok ? { name, wa, addr } : null;
+}
+
+async function submitCommande() {
+  const v = validate();
+  if (!v) return;
+
+  const btn = $('btnSend');
+  btn.disabled = true;
+  setText(btn, 'Envoi…');
+  $('eSend').classList.add('hidden');
+
+  try {
+    const items = cartItems();
+    const total = cartTotal();
+    await saveOrder(v.name, v.wa, items, total, v.addr);
+
+    // Message WhatsApp prérempli : l'entrepreneur reçoit le détail, le client
+    // n'a qu'à appuyer sur envoyer.
+    const lignes = items.map(i => '- ' + i.nom + ' x' + i.qty + ' : ' + money(i.prix * i.qty)).join('\n');
+    const msg = 'Bonjour ' + (SHOP.nom_boutique || '') + ', je viens de passer commande sur votre boutique.\n\n'
+              + lignes + '\nTotal : ' + money(total) + '\n\n'
+              + 'Nom : ' + v.name + '\nLivraison : ' + v.addr;
+
+    const wa = SHOP.whatsapp;
+    $('btnWa').href = wa ? 'https://wa.me/' + wa + '?text=' + encodeURIComponent(msg)
+                         : 'https://wa.me/?text=' + encodeURIComponent(msg);
+
+    setText($('doneTxt'), (SHOP.nom_boutique || 'Le vendeur') + ' a reçu votre commande'
+      + (SHOP.whatsapp ? '. Confirmez sur WhatsApp pour convenir du paiement et de la livraison.' : '.'));
+
+    CART = {};
+    renderCart();
+    renderCatalogue();
+    $('stepInfo').classList.add('hidden');
+    $('stepDone').classList.remove('hidden');
+  } catch (err) {
+    const quota = String(err && err.message || '').includes('400');
+    setText($('eSend'), quota
+      ? "La boutique ne peut pas recevoir de nouvelle commande pour le moment. Contactez le vendeur directement."
+      : "L'envoi a échoué. Vérifiez votre connexion et réessayez.");
+    $('eSend').classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+    setText(btn, 'Envoyer ma commande');
+  }
+}
+
+/* ── Démarrage ───────────────────────────────────────────────────────────── */
+function showError(title, text) {
+  $('viewError').classList.remove('hidden');
+  $('viewCatalogue').classList.add('hidden');
+  $('viewChat').classList.add('hidden');
+  setText($('errTitle'), title);
+  setText($('errText'), text);
+  setText($('shopName'), 'Boutique');
+  document.title = 'Boutique introuvable';
+}
+
+async function boot() {
+  if (!SLUG) return showError('Boutique introuvable', "Ce lien ne correspond à aucune boutique.");
+
+  let info, produits;
+  try {
+    [info, produits] = await Promise.all([getBoutiqueInfo(), getCatalogue()]);
+  } catch {
+    return showError('Boutique indisponible', "La boutique n'a pas pu être chargée. Réessayez dans un instant.");
+  }
+
+  if (!info) return showError('Boutique introuvable', "Ce lien ne correspond à aucune boutique. Vérifiez l'adresse auprès du vendeur.");
+
+  SHOP = info;
+  // Jamais de catalogue de démonstration : une boutique vide le dit,
+  // elle n'invente pas des produits que l'entrepreneur ne vend pas.
+  PRODUITS = Array.isArray(produits) ? produits : [];
+
+  // Habillage + couleur, avant tout affichage
+  const layout = PREVIEW || SHOP.layout || '1a';
+  document.documentElement.dataset.layout = ['1a', '1b', '1c'].includes(layout) ? layout : '1a';
+  if (SHOP.brand_color) {
+    document.documentElement.style.setProperty('--brand', SHOP.brand_color);
+    document.documentElement.style.setProperty('--brand-soft', SHOP.brand_color + '1A');
+  }
+
+  const nom = SHOP.nom_boutique || 'Boutique';
+  document.title = nom;
+  setText($('shopName'), nom);
+  setText($('shopTag'), SHOP.tagline || '');
+  setText($('badge'), nom.trim().slice(0, 1).toUpperCase());
+  $('tabs').hidden = false;
+  $('foot').hidden = false;
+
+  // Une vraie boutique : elle mérite d'être indexée.
+  document.querySelector('meta[name="robots"]').setAttribute('content', 'index,follow');
+
+  if (SHOP.livraison) { setText($('livraisonTxt'), SHOP.livraison); $('livraisonBlock').classList.remove('hidden'); }
+  if (SHOP.paiement)  { setText($('paiementTxt'),  SHOP.paiement);  $('paiementBlock').classList.remove('hidden'); }
+  setText($('sendNote'), SHOP.nom_assistant
+    ? SHOP.nom_assistant + ' confirme votre commande et vous explique la suite sur WhatsApp.'
+    : 'Le vendeur vous confirme votre commande sur WhatsApp.');
+
+  $('viewCatalogue').classList.remove('hidden');
+  renderFilters();
+  renderCatalogue();
+  renderCart();
+
+  if (convId) {
+    try {
+      const h = await getHistory();
+      if (Array.isArray(h) && h.length) chatHistory = h;
+    } catch { /* historique optionnel */ }
+  }
+}
+
+/* Écouteurs */
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));
+$('cartCta').addEventListener('click', openCommande);
+$('btnSend').addEventListener('click', submitCommande);
+$('btnCancel').addEventListener('click', closeSheet);
+$('btnClose').addEventListener('click', closeSheet);
+$('sheet').addEventListener('click', (e) => { if (e.target === $('sheet')) closeSheet(); });
+$('chatForm').addEventListener('submit', onChatSubmit);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheet(); });
+
+boot();
+</script>
+</body>
+</html>

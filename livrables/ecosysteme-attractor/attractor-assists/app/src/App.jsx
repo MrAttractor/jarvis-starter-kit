@@ -5,28 +5,16 @@ import { LoginScreen } from './screens/LoginScreen';
 import { OnboardingScreen } from './screens/OnboardingScreen';
 import { DashboardScreen } from './screens/DashboardScreen';
 import { ProfilScreen } from './screens/ProfilScreen';
-import { AssistantsScreen } from './screens/AssistantsScreen';
 import { ConversationScreen } from './screens/ConversationScreen';
-import { AxesScreen } from './screens/AxesScreen';
 import { InstallGuide, detectPlatform } from './screens/InstallScreen';
-import { ActivationScreen } from './screens/ActivationScreen';
-import { BroadcastsScreen } from './screens/BroadcastsScreen';
 import { PaliersScreen } from './screens/PaliersScreen';
-import { AgendaScreen } from './screens/AgendaScreen';
 import { NotificationsScreen } from './screens/NotificationsScreen';
-import { AdminScreen } from './screens/AdminScreen';
 import { MacCockpitScreen } from './screens/MacCockpitScreen';
-import { MéthodeScreen } from './screens/MéthodeScreen';
-import { CarnetAffairesScreen } from './screens/CarnetAffairesScreen';
-import { DechargeVocaleScreen } from './screens/DechargeVocaleScreen';
-import { MarketplaceScreen } from './screens/MarketplaceScreen';
 import MonAppScreen from './screens/MonAppScreen';
-import { PublicAssistantScreen } from './screens/PublicAssistantScreen';
 import { FidelysScreen } from './screens/FidelysScreen';
 import { CatalogueScreen } from './screens/CatalogueScreen';
 import { CommandesScreen } from './screens/CommandesScreen';
 import { TemplateGalerieScreen } from './screens/TemplateGalerieScreen';
-import { FormationScreen } from './screens/FormationScreen';
 
 const TABS_V3 = [
   { id: "dashboard",  label: "Assists",   icon: "chat"    },
@@ -36,15 +24,12 @@ const TABS_V3 = [
 ];
 const TABS_ADMIN = [
   { id: "dashboard",   label: "Accueil",    icon: "home"   },
-  { id: "assistants",  label: "Mon équipe", icon: "users"  },
-  { id: "marketplace", label: "Marketplace",icon: "grid"   },
   { id: "cockpit",     label: "Cockpit",    icon: "bolt"   },
   { id: "profil",      label: "Profil",     icon: "user"   },
 ];
 
 export default function App() {
   const [phase, setPhase] = useState("loading"); // loading | login | onboarding | app
-  const [publicSlug, setPublicSlug] = useState(null); // ?c={slug} → assistant client public, sans auth
   const [loginKey, setLoginKey] = useState(0);   // force remount LoginScreen si loadProfile échoue
   const deferredPromptRef = useRef(null);
   const paymentReturnRef = useRef(null); // plan_id si retour paiement
@@ -54,7 +39,7 @@ export default function App() {
   const [dark, setDark] = useState(() => localStorage.getItem('aa-dark') === '1');
   const handleSetDark = (val) => { localStorage.setItem('aa-dark', val ? '1' : '0'); setDark(val); };
   const [toastNode, notify] = useToast();
-  const [navBadges, setNavBadges] = useState({ assistants: 0, marketplace: 0 });
+  const [navBadges] = useState({});
 
   // Toast de confirmation paiement après chargement du profil
   useEffect(() => {
@@ -82,8 +67,6 @@ export default function App() {
       }
       if (!prof?.onboarding_done) {
         setPhase("onboarding");
-      } else if (!prof?.activation_done) {
-        setPhase("activation");
       } else {
         setPhase("app");
       }
@@ -92,12 +75,6 @@ export default function App() {
       setLoginKey(k => k + 1);
       setPhase("login");
     }
-  };
-
-  const doneActivation = async (screen = "dashboard", params = {}) => {
-    setScreen(screen);
-    setParams(params);
-    setPhase("app");
   };
 
   useEffect(() => {
@@ -114,12 +91,12 @@ export default function App() {
     const src = urlParams.get('src');
     if (src) localStorage.setItem('aa_src', src);
 
-    // ?c=slug (direct) ou /b/slug (redirection depuis demo.agenceattractor.com)
-    const pathSlug = window.location.pathname.startsWith('/b/')
-      ? window.location.pathname.slice(3).split('/')[0]
-      : null;
-    const c = urlParams.get('c') || pathSlug || null;
-    if (c) { setPublicSlug(c); return; }
+    // Les boutiques ne sont plus servies par l'app : elles ont leur propre page
+    // (public/boutique/index.html), atteinte par /[slug] et /b/[slug] via _redirects.
+    // Reste les anciens liens en ?c=slug, déjà partagés à des clients : on les
+    // renvoie vers la nouvelle adresse au lieu de les laisser tomber sur le login.
+    const c = urlParams.get('c');
+    if (c) { window.location.replace('/' + encodeURIComponent(c)); return; }
 
     // Détection retour paiement XPaye (?payment_done=1&plan=growth)
     if (urlParams.get('payment_done') === '1') {
@@ -134,18 +111,6 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  useEffect(() => {
-    const loadBadges = async () => {
-      try {
-        const [{ count: mktCount }] = await Promise.all([
-          supabase.from('prestataires').select('id', { count: 'exact', head: true }).eq('statut', 'visible'),
-        ]);
-        setNavBadges(b => ({ ...b, assistants: 6, marketplace: mktCount || 0 }));
-      } catch {}
-    };
-    loadBadges();
-  }, []);
-
   const go = (s, p = {}) => {
     if (s === "logout") { supabase.auth.signOut(); return; }
     if (s === "onboarding") { setPhase("onboarding"); return; }
@@ -153,9 +118,6 @@ export default function App() {
     const scroller = document.getElementById("aa-scroll");
     if (scroller) scroller.scrollTop = 0;
   };
-
-  // Lien public assistant client — écran isolé, sans auth ni navigation interne
-  if (publicSlug) return <Frame dark={false}><PublicAssistantScreen slug={publicSlug} /></Frame>;
 
   if (phase === "loading") return (
     <Frame dark={false}>
@@ -170,33 +132,22 @@ export default function App() {
 
   if (phase === "login")      return <Frame dark={dark}><MobileFrame><LoginScreen key={loginKey} onAuthed={loadProfile} /></MobileFrame>{toastNode}</Frame>;
   if (phase === "onboarding") return <Frame dark={dark}><MobileFrame><OnboardingScreen onDone={loadProfile} installPromptRef={deferredPromptRef} /></MobileFrame>{toastNode}</Frame>;
-  if (phase === "activation") return <Frame dark={dark}><MobileFrame><ActivationScreen profile={profile} onDone={doneActivation} /></MobileFrame>{toastNode}</Frame>;
 
   const screens = {
     dashboard:   <DashboardScreen go={go} notify={notify} profile={profile} />,
-    assistants:  <DashboardScreen go={go} notify={notify} profile={profile} />,
     catalogue:   <CatalogueScreen go={go} notify={notify} profile={profile} />,
     commandes:   <CommandesScreen go={go} notify={notify} profile={profile} />,
     profil:      <ProfilScreen go={go} notify={notify} dark={dark} setDark={handleSetDark} profile={profile} reloadProfile={loadProfile} />,
     conversation:<ConversationScreen key={`${params?.assistant||'coach'}-${params?.mode||'default'}`} go={go} notify={notify} params={params} profile={profile} />,
-    axes:        <AxesScreen go={go} notify={notify} />,
-    broadcasts:  <BroadcastsScreen go={go} notify={notify} />,
     paliers:     <PaliersScreen go={go} notify={notify} profile={profile} />,
-    agenda:        <AgendaScreen go={go} profile={profile} />,
     notifications: <NotificationsScreen go={go} />,
-    admin:         <AdminScreen go={go} notify={notify} />,
     cockpit:  <MacCockpitScreen go={go} notify={notify} section="cockpit"  profile={profile} />,
     carelle:  <MacCockpitScreen go={go} notify={notify} section="carelle"  profile={profile} />,
     pipeline: <MacCockpitScreen go={go} notify={notify} section="pipeline" profile={profile} />,
     hub:      <MacCockpitScreen go={go} notify={notify} section="hub"      profile={profile} />,
     veille:   <MacCockpitScreen go={go} notify={notify} section="veille"   profile={profile} />,
     intel:    <MacCockpitScreen go={go} notify={notify} section="intel"    profile={profile} />,
-    methode:       <MéthodeScreen go={go} />,
-    formation:     <FormationScreen go={go} />,
-    carnet:        <CarnetAffairesScreen go={go} />,
-    dump:          <DechargeVocaleScreen go={go} profile={profile} />,
     fidelys:       <FidelysScreen go={go} notify={notify} profile={profile} />,
-    marketplace:   <MarketplaceScreen go={go} notify={notify} />,
     'mon-app':     <MonAppScreen go={go} profile={profile} />,
     'galerie-templates': <TemplateGalerieScreen go={go} notify={notify} profile={profile} />,
     install:     <InstallGuide
@@ -213,11 +164,10 @@ export default function App() {
   const isChat = screen === "dashboard" || screen === "conversation";
   const COCKPIT_SECTIONS = ['carelle', 'pipeline', 'hub', 'veille', 'intel'];
   const SUBSCREEN_PARENT = {
-    paliers: 'profil', methode: 'profil', notifications: 'profil', install: 'profil',
-    fidelys: 'profil', agenda: 'profil', carnet: 'profil', formation: 'profil',
+    paliers: 'profil', notifications: 'profil', install: 'profil',
+    fidelys: 'profil', 'mon-app': 'profil',
     'galerie-templates': 'catalogue',
-    conversation: 'dashboard', dump: 'dashboard',
-    axes: 'dashboard', broadcasts: 'dashboard',
+    conversation: 'dashboard',
   };
   const activeTab = TABS.find(t => t.id === screen)
     ? screen

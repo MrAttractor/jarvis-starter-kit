@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon } from '../components/ui';
 import { InstallGuide, detectPlatform } from './InstallScreen';
+import { Anamnese } from '../components/Anamnese';
+import { checkSlug } from '../lib/slug';
+import { boutiqueUrl } from '../lib/boutique';
 
 function ProgressBar({ step, total = 4 }) {
   return (
@@ -127,6 +130,11 @@ function slugify(str) {
     .slice(0, 20);
 }
 
+// Le numéro part dans un lien wa.me : chiffres uniquement, indicatif pays compris.
+function normalizeWa(v) {
+  return (v || '').replace(/\D/g, '');
+}
+
 const LOCAL_KEY = 'aa_onboarding_v1';
 
 export function OnboardingScreen({ onDone, installPromptRef }) {
@@ -145,11 +153,13 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   const [saveErr, setSaveErr]     = useState('');
   const [templateId, setTemplateId] = useState('1a');
   const [brandColor, setBrandColor] = useState('#FF6B35');
+  const [whatsapp, setWhatsapp]     = useState('');
 
   // Slug
   const [slug, setSlug]                   = useState('');
   const [slugChecking, setSlugChecking]   = useState(false);
   const [isSlugAvailable, setIsSlugAvailable] = useState(null);
+  const [slugError, setSlugError]         = useState('');
 
   const inputRef  = useRef(null);
   const chatRef   = useRef(null);
@@ -174,16 +184,16 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     }, 50);
   };
 
-  // Vérification disponibilité slug (debounce 600ms)
+  // Vérification disponibilité slug (debounce 600ms).
+  // Passe par slug_available() : forme + mots réservés + unicité en un appel,
+  // sans exposer de lignes de `profiles` au rôle anon.
   useEffect(() => {
-    if (!slug || slug.length < 3) { setIsSlugAvailable(null); return; }
+    if (!slug || slug.length < 3) { setIsSlugAvailable(null); setSlugError(''); return; }
     setSlugChecking(true);
     const timer = setTimeout(async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      let q = supabase.from('profiles').select('id').eq('public_slug', slug);
-      if (user?.id) q = q.neq('id', user.id);
-      const { data } = await q.maybeSingle();
-      setIsSlugAvailable(!data);
+      const { ok, error } = await checkSlug(slug);
+      setIsSlugAvailable(ok);
+      setSlugError(error || '');
       setSlugChecking(false);
     }, 600);
     return () => clearTimeout(timer);
@@ -206,6 +216,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
       if (s.templateId)  setTemplateId(s.templateId);
       if (s.brandColor)  setBrandColor(s.brandColor);
       if (s.slug)        setSlug(s.slug);
+      if (s.whatsapp)    setWhatsapp(s.whatsapp);
       if (s.produits)    setProduits(s.produits);
       setPhase(s.phase);
     } catch {}
@@ -220,10 +231,10 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     try {
       localStorage.setItem(LOCAL_KEY, JSON.stringify({
         phase, prenom, nomAss, profilType, anamnData, anamnQ,
-        baptemeQ, chatHistory, templateId, brandColor, slug, produits,
+        baptemeQ, chatHistory, templateId, brandColor, slug, whatsapp, produits,
       }));
     } catch {}
-  }, [phase, prenom, nomAss, profilType, anamnData, anamnQ, baptemeQ, chatHistory, templateId, brandColor, slug, produits]);
+  }, [phase, prenom, nomAss, profilType, anamnData, anamnQ, baptemeQ, chatHistory, templateId, brandColor, slug, whatsapp, produits]);
 
   // ── Upload photo produit ──────────────────────────────────────────────────────
 
@@ -265,8 +276,13 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     setCleanStatus('');
   };
 
-  // ── Sauvegarde finale ──────────────────────────────────────────────────────────
+  // ── Sauvegarde de la boutique, puis anamnèse ───────────────────────────────────
 
+  // Écrit le profil et le catalogue, puis envoie vers les 7 questions.
+  // `onboarding_done` n'est PAS posé ici : tant que l'assistant n'existe pas, la
+  // boutique n'a rien à répondre aux clients. Si l'entrepreneur ferme l'app entre
+  // les deux, il reprend au même endroit (progression en localStorage) au lieu
+  // d'atterrir dans l'app avec une boutique muette.
   const handleSave = async () => {
     setSaving(true);
     setSaveErr('');
@@ -283,10 +299,10 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
         activite:            anamnData.activite || null,
         zone:                anamnData.zone?.trim() || '',
         profil_type:         profilType || 'entrepreneur',
-        onboarding_done:     true,
         referral_code:       referralCode,
         public_slug:         slug.trim() || null,
-        template_id:         templateId || '1a',
+        whatsapp:            normalizeWa(whatsapp),
+        template_choisi:     templateId || '1a',
         brand_color:         brandColor || '#FF6B35',
         source_acquisition:  sourceAcquisition,
       }).eq('id', user.id);
@@ -294,32 +310,22 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
       if (sourceAcquisition) localStorage.removeItem('aa_src');
 
-      // Non-bloquant : échec silencieux si table absente ou schéma différent
-      if (anamnData.activite) {
-        supabase.from('business_anamnese').upsert({
-          user_id:           user.id,
-          ce_quil_vend:      anamnData.activite || null,
-          activite_detectee: anamnData.activite || null,
-          updated_at:        new Date().toISOString(),
-        }, { onConflict: 'user_id' }).then(() => {}).catch(() => {});
-      }
-
+      // Produits saisis pendant l'onboarding. Insérés une seule fois : on ne
+      // revient pas sur cette phase une fois passée à l'anamnèse.
       const actifsOnly = produits.filter(p => p.actif);
       if (actifsOnly.length > 0) {
-        await supabase.from('produits_user').insert(
+        const { error: prodErr } = await supabase.from('produits_user').insert(
           actifsOnly.map(p => ({
             user_id:   user.id,
             nom:       p.nom.trim(),
             prix:      parseInt(p.prix) || 0,
-            unite:     'FCFA',
+            unite:     'unité',
             actif:     true,
             photo_url: p.photo_url || null,
           }))
         );
+        if (prodErr) throw prodErr;
       }
-
-      supabase.functions.invoke('generate-client-assistant', { body: { user_id: user.id } })
-        .then(() => {}).catch(() => {});
 
       // Non-bloquant : échec silencieux si pas de parrain
       try {
@@ -338,13 +344,29 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
         }
       } catch { /* referral optionnel */ }
 
-      localStorage.removeItem(LOCAL_KEY);
-      setPhase('pret');
+      setPhase('assistant');
     } catch (err) {
       console.error('[Onboarding] handleSave error:', err);
       setSaveErr('Une erreur est survenue. Réessaie.');
     } finally {
       setSaving(false);
+    }
+  };
+
+  // L'assistant client est prêt : le tunnel est terminé pour de bon.
+  const finishOnboarding = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('session perdue');
+      const { error } = await supabase.from('profiles')
+        .update({ onboarding_done: true })
+        .eq('id', user.id);
+      if (error) throw error;
+      localStorage.removeItem(LOCAL_KEY);
+      setPhase('pret');
+    } catch (err) {
+      console.error('[Onboarding] finishOnboarding error:', err);
+      setSaveErr('Ton assistant est créé, mais la finalisation a échoué. Réessaie.');
     }
   };
 
@@ -704,7 +726,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
         <div className="bg-charbon rounded-2xl px-4 py-4">
           <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2">Aperçu de ton lien</p>
           <p className="text-white font-mono text-[13px] break-all leading-relaxed">
-            demo.agenceattractor.com/<span className="text-orange font-bold">{slug || '...'}</span>
+            assists.agenceattractor.com/<span className="text-orange font-bold">{slug || '...'}</span>
           </p>
         </div>
 
@@ -718,9 +740,10 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
               type="text"
               value={slug}
               onChange={e => {
-                const val = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 20);
+                const val = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '').replace(/^-+/, '').slice(0, 20);
                 setSlug(val);
                 setIsSlugAvailable(null);
+                setSlugError('');
               }}
               placeholder="ex: macarthur"
               className="w-full px-4 py-3.5 rounded-xl border-2 bg-white text-[15px] font-mono text-charbon outline-none transition pr-10 focus:border-orange border-g200"
@@ -742,9 +765,12 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
           {isSlugAvailable === true && (
             <p className="text-[12px] text-vert font-semibold mt-1.5">Disponible.</p>
           )}
-          {isSlugAvailable === false && (
+          {isSlugAvailable === false && slugError && (
             <p className="text-[12px] text-red-500 mt-1.5">
-              Déjà pris. Essaie <button className="font-bold underline" onClick={() => setSlug(slug + '2')}>{slug}2</button> ou <button className="font-bold underline" onClick={() => setSlug(slug + 'ci')}>{slug}ci</button>.
+              {slugError}{' '}
+              {slug.length >= 3 && (
+                <>Essaie <button className="font-bold underline" onClick={() => setSlug(slug + '2')}>{slug}2</button> ou <button className="font-bold underline" onClick={() => setSlug(slug + 'ci')}>{slug}ci</button>.</>
+              )}
             </p>
           )}
           <p className="text-[11px] text-g400 mt-2">
@@ -755,9 +781,56 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
       <div className="px-5 pb-10 pt-3">
         <PrimaryBtn
-          onClick={() => setPhase('upload')}
+          onClick={() => setPhase('whatsapp')}
           disabled={!isSlugAvailable || slugChecking || slug.length < 3}
         >
+          Continuer
+        </PrimaryBtn>
+      </div>
+    </div>
+  );
+
+  // ── 8. Numéro WhatsApp — la destination des commandes ──────────────────────────
+  // Sans lui, le bouton « Commander » de la boutique n'a nulle part où aller.
+
+  const waDigits = normalizeWa(whatsapp);
+  const waValide = waDigits.length >= 8 && waDigits.length <= 15;
+
+  if (phase === 'whatsapp') return (
+    <div className="h-full flex flex-col bg-sable">
+      <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
+        <ProgressBar step={3} />
+        <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Ton WhatsApp</h2>
+        <p className="text-[12.5px] text-g500 mt-0.5">C'est là que tes commandes arrivent.</p>
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-5 pt-6 flex flex-col gap-5" style={{ scrollbarWidth: 'none' }}>
+        <div>
+          <label className="text-[11.5px] font-bold text-charbon uppercase tracking-[.1em] mb-2 block">
+            Numéro avec l'indicatif du pays
+          </label>
+          <input
+            type="tel"
+            inputMode="tel"
+            value={whatsapp}
+            onChange={e => setWhatsapp(e.target.value)}
+            placeholder="Ex : +225 07 58 68 02 79"
+            className="w-full px-4 py-3.5 rounded-xl border-2 bg-white text-[16px] text-charbon outline-none transition focus:border-orange border-g200"
+            autoFocus
+          />
+          {whatsapp.trim().length > 0 && !waValide && (
+            <p className="text-[12px] text-red-500 mt-1.5">
+              Numéro incomplet. N'oublie pas l'indicatif : +225 pour la Côte d'Ivoire, +33 pour la France.
+            </p>
+          )}
+          <p className="text-[11px] text-g400 mt-2 leading-snug">
+            Quand un client valide sa commande, elle t'arrive sur ce numéro. Vérifie-le bien, c'est ton lien avec tes clients.
+          </p>
+        </div>
+      </div>
+
+      <div className="px-5 pb-10 pt-3">
+        <PrimaryBtn onClick={() => setPhase('upload')} disabled={!waValide}>
           Continuer
         </PrimaryBtn>
       </div>
@@ -863,7 +936,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
       </div>
       <div className="px-4 pb-10 pt-3 flex flex-col gap-2">
         <PrimaryBtn onClick={handleSave} disabled={saving}>
-          {saving ? 'Création en cours…' : `Lancer ${assistName}`}
+          {saving ? 'Enregistrement…' : 'Continuer'}
         </PrimaryBtn>
         {produits.length === 0 && !saving && (
           <button onClick={handleSave} className="text-center text-[13px] text-g400 font-semibold py-2">
@@ -875,7 +948,31 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     </div>
   );
 
-  // ── 8. Prêt ────────────────────────────────────────────────────────────────────
+  // ── 9. Création de l'assistant ─────────────────────────────────────────────────
+  // L'étape qui donne sa valeur au produit. Elle existait, mais aucun bouton n'y menait :
+  // l'assistant était généré à partir du seul prénom + activité, puis marqué « prêt ».
+
+  if (phase === 'assistant') return (
+    <div className="h-full flex flex-col bg-sable">
+      <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
+        <ProgressBar step={4} />
+        <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Apprends-lui ton métier</h2>
+        <p className="text-[12.5px] text-g500 mt-0.5">7 questions. C'est ce qui fait qu'il répondra comme toi.</p>
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-5 pt-6 pb-10" style={{ scrollbarWidth: 'none' }}>
+        <Anamnese
+          profile={{ prenom }}
+          onGenerated={finishOnboarding}
+        />
+        {saveErr && <p className="text-center text-[12.5px] text-red-500 mt-3">{saveErr}</p>}
+      </div>
+    </div>
+  );
+
+  // ── 10. Prêt ───────────────────────────────────────────────────────────────────
+
+  const lien = boutiqueUrl(slug);
 
   if (phase === 'pret') return (
     <div className="h-full flex flex-col bg-sable px-5 pt-14 pb-10">
@@ -887,29 +984,29 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
         />
         <div>
           <h1 className="font-display font-extrabold text-[28px] text-charbon leading-[1.2] mb-3">
-            {assistName} est prêt.
+            Ta boutique est en ligne.
           </h1>
           <p className="text-[14.5px] text-g500 leading-relaxed max-w-[280px] mx-auto">
-            {prenom ? `${prenom}, ton` : 'Ton'} bras droit est configuré.
+            {prenom ? `${prenom}, ` : ''}{assistName} connaît tes produits et répond à tes clients. Partage ton lien.
           </p>
         </div>
 
         {/* Lien boutique mis en avant */}
-        {slug && (
+        {lien && (
           <div className="w-full bg-white rounded-2xl border border-g200 shadow-soft p-4 text-left">
             <p className="text-[11px] font-bold text-g400 uppercase tracking-wider mb-2">Ton lien boutique</p>
             <p className="font-mono text-[12px] text-charbon break-all mb-3">
-              demo.agenceattractor.com/<span className="text-orange font-bold">{slug}</span>
+              assists.agenceattractor.com/<span className="text-orange font-bold">{slug}</span>
             </p>
             <div className="flex gap-2">
               <button
-                onClick={() => navigator.clipboard.writeText(`https://demo.agenceattractor.com/${slug}`)}
+                onClick={() => navigator.clipboard.writeText(lien)}
                 className="flex-1 py-2.5 rounded-xl bg-orange/10 text-orange font-bold text-[13px] active:bg-orange/20 transition"
               >
                 Copier le lien
               </button>
               <a
-                href={`https://wa.me/?text=${encodeURIComponent(`Commande directement sur ma boutique : https://demo.agenceattractor.com/${slug}`)}`}
+                href={`https://wa.me/?text=${encodeURIComponent(`Commande directement sur ma boutique : ${lien}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 py-2.5 rounded-xl bg-vert/10 text-vert font-bold text-[13px] flex items-center justify-center gap-1.5 active:bg-vert/20 transition"

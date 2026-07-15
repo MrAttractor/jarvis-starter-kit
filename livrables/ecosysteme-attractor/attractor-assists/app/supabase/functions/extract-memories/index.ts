@@ -30,12 +30,24 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
 
   try {
-    const { user_id, session_id, messages } = await req.json();
+    const { user_id, messages } = await req.json();
     if (!user_id || !messages?.length) {
       return new Response(JSON.stringify({ ok: true, extracted: 0 }), { headers: { ...CORS, "Content-Type": "application/json" } });
     }
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Le user_id du body ne prouve rien : cette fonction écrit avec la clé de
+    // service, donc sans ce contrôle n'importe qui pouvait injecter des souvenirs
+    // dans la mémoire du coach d'un autre entrepreneur. Même contrôle que
+    // chat-assistant.
+    const token = req.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
+    const { data: { user: jwtUser }, error: jwtError } = await supabase.auth.getUser(token);
+    if (jwtError || !jwtUser || jwtUser.id !== user_id) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...CORS, "Content-Type": "application/json" },
+      });
+    }
 
     // Formater la conversation pour Claude
     const conv = messages
@@ -68,15 +80,37 @@ serve(async (req) => {
       return new Response(JSON.stringify({ ok: true, extracted: 0 }), { headers: { ...CORS, "Content-Type": "application/json" } });
     }
 
-    // Sauvegarder les nouvelles mémoires
-    const rows = extracted.map(m => ({
-      user_id,
-      categorie: m.categorie,
-      contenu:   m.contenu,
-      importance: m.importance || 1,
-    }));
+    // Dédoublonnage : l'extraction repasse sur tout l'historique de la conversation,
+    // donc les mêmes faits ressortent à chaque appel. Sans ce filtre, la mémoire se
+    // remplit de doublons et finit par chasser les vrais souvenirs (le coach n'en
+    // relit que les 20 derniers).
+    const { data: existantes } = await supabase
+      .from("memories")
+      .select("contenu")
+      .eq("user_id", user_id)
+      .order("created_at", { ascending: false })
+      .limit(100);
 
-    await supabase.from("memories").insert(rows);
+    const norm = (s: string) => (s || "").toLowerCase().trim().replace(/\s+/g, " ");
+    const deja = new Set((existantes ?? []).map((m: any) => norm(m.contenu)));
+
+    const rows = extracted
+      .filter(m => m.contenu && !deja.has(norm(m.contenu)))
+      .map(m => ({
+        user_id,
+        categorie: m.categorie,
+        contenu:   m.contenu,
+        importance: m.importance || 1,
+      }));
+
+    if (rows.length === 0) {
+      return new Response(JSON.stringify({ ok: true, extracted: 0, doublons: extracted.length }), {
+        headers: { ...CORS, "Content-Type": "application/json" },
+      });
+    }
+
+    const { error: insErr } = await supabase.from("memories").insert(rows);
+    if (insErr) throw insErr;
 
     return new Response(JSON.stringify({ ok: true, extracted: rows.length }), {
       headers: { ...CORS, "Content-Type": "application/json" },

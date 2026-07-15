@@ -1,122 +1,16 @@
 import { useState } from 'react';
-import { supabase } from '../lib/supabase';
-import { Icon, Sheet, Input, Btn, Spinner } from '../components/ui';
+import { Icon, Sheet } from '../components/ui';
+import { Anamnese } from '../components/Anamnese';
+import { boutiqueUrl } from '../lib/boutique';
 import { generateDemoHtml } from '../lib/demoTemplate';
 
 const PLAN_RANK = { gratuit: 0, decouverte: 0, decouverte_eu: 0, growth: 1, growth_eu: 1, team: 2, personnalise: 3 };
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
 
-// ─── Anamnèse — comprendre l'activité pour générer l'assistant client ────────
-const ANAMNESE_QUESTIONS = [
-  { id: 'ce_quil_vend',   text: "Qu'est-ce que tu vends exactement ? (produits, services, prix si tu en as)", placeholder: "Ex : Farine infantile 1er et 2e âge, sachets 400g à 5 500 FCFA..." },
-  { id: 'clients',        text: "Qui sont tes clients, et comment ils achètent chez toi d'habitude ?", placeholder: "Ex : Des mamans à Abidjan, elles commandent sur WhatsApp..." },
-  { id: 'faq',            text: "Quelles questions reviennent le plus souvent de la part de tes clients ?", placeholder: "Ex : Vous livrez où ? C'est pour quel âge ? Comment je paye ?..." },
-  { id: 'stock',          text: "Comment tu gères ton stock ?", placeholder: "Ex : Je compte chaque soir, je recommande au grossiste le lundi..." },
-  { id: 'paiement',       text: "Comment tes clients te payent ?", placeholder: "Ex : Mobile Money Wave/Orange, espèces à la livraison..." },
-  { id: 'livraison',      text: "Comment se passe la livraison ou la remise de commande ?", placeholder: "Ex : Je livre moi-même à Cocody, ailleurs c'est Yango/Wave..." },
-  { id: 'ce_qui_fatigue', text: "Qu'est-ce qui te prend le plus de temps avec tes clients, et que tu aimerais déléguer ?", placeholder: "Ex : Répondre 50 fois par jour aux mêmes questions..." },
-];
-
-function AnamneseSheet({ profile, onClose, onGenerated }) {
-  const [qIdx, setQIdx]       = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [current, setCurrent] = useState('');
-  const [step, setStep]       = useState('questions'); // questions | generating | error
-  const q = ANAMNESE_QUESTIONS[qIdx];
-  const progress = Math.round(((qIdx + 1) / ANAMNESE_QUESTIONS.length) * 100);
-
-  const generate = async (data) => {
-    setStep('generating');
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('session perdue');
-
-      const { error: anamneseErr } = await supabase.from('business_anamnese').upsert({
-        user_id:        user.id,
-        ce_quil_vend:   data.ce_quil_vend,
-        clients:        data.clients,
-        faq:            [data.faq],
-        stock:          data.stock,
-        paiement:       data.paiement,
-        livraison:      data.livraison,
-        ce_qui_fatigue: data.ce_qui_fatigue,
-        updated_at:     new Date().toISOString(),
-      });
-      if (anamneseErr) throw anamneseErr;
-
-      const { data: gen, error: genErr } = await supabase.functions.invoke('generate-client-assistant', {
-        body: { user_id: user.id },
-      });
-      if (genErr || !gen?.slug) throw new Error('génération échouée');
-      onGenerated(gen);
-    } catch {
-      setStep('error');
-    }
-  };
-
-  const submit = () => {
-    if (current.trim().length < 2) return;
-    const next = { ...answers, [q.id]: current.trim() };
-    setAnswers(next);
-    setCurrent('');
-    if (qIdx < ANAMNESE_QUESTIONS.length - 1) setQIdx(qIdx + 1);
-    else generate(next);
-  };
-
-  if (step === 'generating') {
-    return (
-      <Sheet title="On y est presque" onClose={() => {}}>
-        <div className="flex flex-col items-center text-center gap-3 py-6">
-          <Spinner className="w-9 h-9" />
-          <p className="font-display font-bold text-[15px] text-charbon">Carelle construit ton assistant client…</p>
-          <p className="text-[13px] text-g400">Ça prend quelques secondes — il apprend tout ce que tu viens de lui dire.</p>
-        </div>
-      </Sheet>
-    );
-  }
-
-  if (step === 'error') {
-    return (
-      <Sheet title="Petit souci" onClose={onClose}>
-        <div className="flex flex-col gap-3">
-          <p className="text-[14px] text-g500">La génération n'a pas abouti. Tes réponses sont enregistrées — réessaie dans un instant.</p>
-          <Btn onClick={() => generate(answers)} className="w-full">Réessayer</Btn>
-        </div>
-      </Sheet>
-    );
-  }
-
-  return (
-    <Sheet title="Génère ton assistant client" onClose={onClose}>
-      <div className="flex flex-col gap-4">
-        <div>
-          <p className="text-[12px] font-bold text-g400 mb-1.5">Question {qIdx + 1} / {ANAMNESE_QUESTIONS.length}</p>
-          <div className="h-[4px] bg-g100 rounded-full overflow-hidden">
-            <div className="h-full bg-orange rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
-          </div>
-        </div>
-        <p className="font-display font-bold text-[16px] text-charbon leading-snug">{q.text}</p>
-        <Input
-          placeholder={q.placeholder}
-          value={current}
-          onChange={e => setCurrent(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && current.trim().length >= 2 && submit()}
-          autoFocus
-        />
-        <Btn onClick={submit} iconRight={qIdx < ANAMNESE_QUESTIONS.length - 1 ? 'arrow' : 'check'}
-          className={`w-full ${current.trim().length < 2 ? 'opacity-40 pointer-events-none' : ''}`}>
-          {qIdx < ANAMNESE_QUESTIONS.length - 1 ? 'Suivant' : 'Générer mon assistant'}
-        </Btn>
-        <p className="text-[11.5px] text-g400 text-center">{profile?.prenom ? `${profile.prenom}, ` : ''}tes réponses servent uniquement à personnaliser l'assistant que tu vas partager à tes clients.</p>
-      </div>
-    </Sheet>
-  );
-}
-
 function ClientAssistantCard({ profile, dark }) {
   const [open, setOpen]       = useState(false);
-  const [link, setLink]       = useState(profile?.public_slug ? `https://demo.agenceattractor.com/${profile.public_slug}` : null);
+  const [link, setLink]       = useState(boutiqueUrl(profile?.public_slug));
   const [copied, setCopied]   = useState(false);
   const ready = !!profile?.client_assistant_ready && !!link;
 
@@ -144,7 +38,15 @@ function ClientAssistantCard({ profile, dark }) {
         <button onClick={() => setOpen(true)} className={`text-[12px] font-semibold ${dark ? 'text-white/50' : 'text-g400'}`}>
           Régénérer avec de nouvelles infos
         </button>
-        {open && <AnamneseSheet profile={profile} onClose={() => setOpen(false)} onGenerated={(g) => { setLink(g.url); setOpen(false); }} />}
+        {open && (
+          <Sheet title="Apprends-lui ton métier" onClose={() => setOpen(false)}>
+            <Anamnese
+              profile={profile}
+              onClose={() => setOpen(false)}
+              onGenerated={(g) => { setLink(boutiqueUrl(g.slug)); setOpen(false); }}
+            />
+          </Sheet>
+        )}
       </div>
     );
   }

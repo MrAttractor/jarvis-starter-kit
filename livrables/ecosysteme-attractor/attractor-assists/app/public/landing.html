@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Attractor Assists — ta boutique en ligne et ton assistant qui répond à tes clients</title>
+<meta name="description" content="Monte ta boutique en ligne en 15 minutes depuis ton téléphone. Un assistant répond à tes clients et prend leurs commandes, même quand tu es occupé. Gratuit pour commencer.">
+<meta name="theme-color" content="#F25C05">
+<link rel="icon" href="/icon-192.png">
+<meta property="og:title" content="Attractor Assists — ta boutique et ton assistant">
+<meta property="og:description" content="Ta boutique en ligne en 15 minutes. Un assistant répond à tes clients et prend leurs commandes.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Charte agence : Sora titres, Inter corps, orange signature, vert en accent. */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --orange:#F25C05; --charbon:#1A1714; --sable:#FAF6F0; --vert:#1E5631;
+  --g500:#6B6560; --g200:#E9E4DC; --white:#fff;
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+html,body{max-width:100%;overflow-x:hidden}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--sable);color:var(--charbon);line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:Sora,Inter,sans-serif;letter-spacing:-.03em;line-height:1.12}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* En-tête */
+.nav{position:sticky;top:0;z-index:30;background:rgba(250,246,240,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--g200)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}
+.logo{display:flex;align-items:center;gap:9px;font-family:Sora;font-weight:800;font-size:17px;text-decoration:none}
+.logo-mark{width:30px;height:30px;border-radius:8px;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;border-radius:12px;text-decoration:none;transition:transform .12s,opacity .12s;white-space:nowrap}
+.btn:active{transform:scale(.98)}
+.btn-p{background:var(--orange);color:#fff;padding:14px 24px;font-size:15px;box-shadow:0 10px 24px -10px rgba(242,92,5,.7)}
+.btn-s{background:transparent;color:var(--charbon);padding:10px 16px;font-size:14px;border:1px solid var(--g200)}
+.btn-sm{padding:9px 16px;font-size:13.5px}
+
+/* Hero */
+.hero{padding:52px 0 44px}
+.tag{display:inline-flex;align-items:center;gap:7px;background:rgba(30,86,49,.09);color:var(--vert);font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:999px;margin-bottom:20px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--vert)}
+h1{font-size:clamp(31px,7vw,54px);font-weight:800;margin-bottom:18px}
+h1 em{font-style:normal;color:var(--orange)}
+.lead{font-size:clamp(16px,2.4vw,19px);color:var(--g500);max-width:600px;margin-bottom:28px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.rassure{font-size:13px;color:var(--g500);margin-top:14px}
+
+/* Sections */
+section{padding:52px 0}
+.eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+h2{font-size:clamp(24px,4vw,36px);font-weight:800;margin-bottom:12px}
+.sub{font-size:15.5px;color:var(--g500);max-width:620px;margin-bottom:32px}
+
+/* Étapes */
+.steps{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:760px){.steps{grid-template-columns:repeat(4,1fr)}}
+.step{background:var(--white);border:1px solid var(--g200);border-radius:18px;padding:22px 20px}
+.step-n{font-family:Sora;font-weight:800;font-size:13px;color:var(--orange);margin-bottom:10px}
+.step h3{font-size:16.5px;font-weight:700;margin-bottom:6px}
+.step p{font-size:13.5px;color:var(--g500);line-height:1.5}
+
+/* Deux faces */
+.faces{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:860px){.faces{grid-template-columns:1fr 1fr}}
+.face{border-radius:22px;padding:30px 26px}
+.face-c{background:var(--charbon);color:#fff}
+.face-c .face-t{color:rgba(255,255,255,.5)}
+.face-e{background:var(--white);border:1px solid var(--g200)}
+.face-e .face-t{color:var(--g500)}
+.face-t{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.face h3{font-size:21px;font-weight:800;margin-bottom:16px}
+.face-c h3{color:#fff}
+.list{display:flex;flex-direction:column;gap:11px}
+.li{display:flex;gap:11px;align-items:flex-start;font-size:14.5px}
+.li svg{flex-shrink:0;margin-top:3px}
+.face-c .li{color:rgba(255,255,255,.82)}
+.face-e .li{color:var(--charbon)}
+
+/* Prix */
+.prices{display:grid;gap:14px;grid-template-columns:1fr;max-width:780px}
+@media(min-width:700px){.prices{grid-template-columns:1fr 1fr}}
+.price{background:var(--white);border:1px solid var(--g200);border-radius:20px;padding:26px 24px;position:relative}
+.price.hi{border-color:var(--orange);border-width:2px}
+.price-badge{position:absolute;top:-11px;right:20px;background:var(--orange);color:#fff;font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px}
+.price-n{font-size:13px;font-weight:700;color:var(--g500);margin-bottom:7px}
+.price-v{font-family:Sora;font-size:30px;font-weight:800;margin-bottom:3px}
+.price-p{font-size:13px;color:var(--g500);margin-bottom:18px}
+.price .list{margin-bottom:0}
+.price .li{font-size:13.5px}
+
+/* Bas de page */
+.final{background:var(--charbon);color:#fff;border-radius:26px;padding:44px 28px;text-align:center;margin:12px 0 46px}
+.final h2{color:#fff;margin-bottom:12px}
+.final p{color:rgba(255,255,255,.62);font-size:15.5px;max-width:480px;margin:0 auto 26px}
+.foot{border-top:1px solid var(--g200);padding:26px 0 34px;font-size:13px;color:var(--g500);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
+.foot a{text-decoration:none}
+.foot a:hover{color:var(--charbon)}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="/">
+      <span class="logo-mark">A</span> Attractor Assists
+    </a>
+    <a class="btn btn-s btn-sm" href="/app">J'ai déjà un compte</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <div class="tag"><span class="dot"></span> Gratuit pour commencer</div>
+    <h1>Ta boutique en ligne,<br>et un assistant qui <em>répond à tes clients</em>.</h1>
+    <p class="lead">
+      Tu montes ta boutique en quinze minutes, depuis ton téléphone. Tes clients y voient
+      tes produits, posent leurs questions, et commandent. La commande t'arrive sur WhatsApp.
+      Même quand tu es occupé ailleurs.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-p" href="/app">Créer ma boutique</a>
+      <a class="btn btn-s" href="#comment">Voir comment ça marche</a>
+    </div>
+    <p class="rassure">Sans carte bancaire. Ton lien est prêt à partager à la fin.</p>
+  </section>
+
+  <section id="comment" class="wrap">
+    <div class="eyebrow">Comment ça marche</div>
+    <h2>Quatre étapes, une seule fois.</h2>
+    <p class="sub">Tu réponds à des questions sur ton activité. À la fin, ta boutique est en ligne et ton assistant connaît ton métier.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">01</div>
+        <h3>Tu choisis ton style</h3>
+        <p>Trois modèles de boutique, ta couleur. C'est la tienne, pas un modèle générique.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">02</div>
+        <h3>Tu mets tes produits</h3>
+        <p>Nom, prix, photo. Ou tu photographies ta carte, et l'app en sort tes produits toute seule.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">03</div>
+        <h3>Tu formes ton assistant</h3>
+        <p>Sept questions sur ton activité : ce que tu vends, comment on te paye, comment tu livres.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">04</div>
+        <h3>Tu partages ton lien</h3>
+        <p>Sur WhatsApp, dans ta bio, sur tes affiches. Tes clients commandent, tu reçois.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="eyebrow">Les deux côtés</div>
+    <h2>Ce qu'ils voient. Ce que tu vois.</h2>
+    <p class="sub">Un seul cerveau, qui connaît ton business. Deux portes : celle de tes clients, et la tienne.</p>
+    <div class="faces">
+      <div class="face face-c">
+        <div class="face-t">Côté client</div>
+        <h3>Ta boutique</h3>
+        <div class="list">
+          <div class="li"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F25C05" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Ton catalogue, tes couleurs, ton nom</div>
+          <div class="li"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F25C05" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Un assistant qui répond aux questions, jour et nuit</div>
+          <div class="li"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F25C05" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Il explique tes prix, ta livraison, ton paiement</div>
+          <div class="li"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F25C05" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Ils commandent, tu reçois tout sur WhatsApp</div>
+        </div>
+      </div>
+      <div class="face face-e">
+        <div class="face-t">Côté toi</div>
+        <h3>Ton tableau de bord</h3>
+        <div class="list">
+          <div class="li"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1E5631" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Ton chiffre d'affaires, tes commandes, tes clients</div>
+          <div class="li"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1E5631" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Ce qui se vend le plus, sans rien calculer</div>
+          <div class="li"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1E5631" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Un coach formé à la méthode ATTRACTOR</div>
+          <div class="li"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1E5631" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Il voit tes vrais chiffres et te dit quoi faire</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="eyebrow">Ce que ça coûte</div>
+    <h2>Commence gratuitement.</h2>
+    <p class="sub">Tu ne payes que le jour où ta boutique tourne assez pour que ça vaille le coup.</p>
+    <div class="prices">
+      <div class="price">
+        <div class="price-n">Gratuit</div>
+        <div class="price-v">0 F</div>
+        <div class="price-p">Pour démarrer et tester</div>
+        <div class="list">
+          <div class="li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1E5631" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Ta boutique et ton lien</div>
+          <div class="li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1E5631" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Catalogue illimité</div>
+          <div class="li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1E5631" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Ton assistant client</div>
+          <div class="li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1E5631" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Ton coach</div>
+          <div class="li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1E5631" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 20 commandes par mois</div>
+        </div>
+      </div>
+      <div class="price hi">
+        <div class="price-badge">Quand ça décolle</div>
+        <div class="price-n">Bras Droit</div>
+        <div class="price-v">9 900 F</div>
+        <div class="price-p">par mois, ou 15 € · sans engagement</div>
+        <div class="list">
+          <div class="li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F25C05" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Commandes illimitées</div>
+          <div class="li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F25C05" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Fidelys : tes clients fidèles récompensés</div>
+          <div class="li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F25C05" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Une action commerciale chaque matin</div>
+          <div class="li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F25C05" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Ton nom de domaine, 10 000 F/an</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="final">
+      <h2>Ta boutique peut être en ligne ce soir.</h2>
+      <p>Quinze minutes sur ton téléphone. À la fin, tu as un lien à envoyer à tes clients.</p>
+      <a class="btn btn-p" href="/app">Créer ma boutique</a>
+    </div>
+  </div>
+</main>
+
+<footer class="wrap foot">
+  <div>Attractor Assists, une app de l'agence Mr Attractor.</div>
+  <div style="display:flex;gap:18px">
+    <a href="https://agenceattractor.com" rel="noopener">L'agence</a>
+    <a href="/privacy">Confidentialité</a>
+    <a href="/app">Se connecter</a>
+  </div>
+</footer>
+
+</body>
+</html>

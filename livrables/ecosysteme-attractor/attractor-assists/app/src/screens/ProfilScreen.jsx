@@ -2,6 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, Spinner } from '../components/ui';
 import { detectPlatform } from './InstallScreen';
+import { checkSlug } from '../lib/slug';
+import { boutiqueUrl, BOUTIQUE_BASE } from '../lib/boutique';
+import { Anamnese } from '../components/Anamnese';
+
+// Le WhatsApp de l'agence, pour les demandes de nom de domaine.
+const WA_AGENCE = '2250576877070';
 
 function Divider() {
   return <div className="h-px bg-g200 mx-4" />;
@@ -30,7 +36,6 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
   const [fieldValue, setFieldValue]   = useState('');
   const [saving, setSaving]           = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
-  const [regenerating, setRegenerating]    = useState(false);
   const [feedbackType, setFeedbackType]    = useState('bug');
   const [feedbackText, setFeedbackText]    = useState('');
   const [feedbackSending, setFeedbackSending] = useState(false);
@@ -38,27 +43,28 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
   const [slugValue, setSlugValue]           = useState('');
   const [slugChecking, setSlugChecking]     = useState(false);
   const [isSlugAvail, setIsSlugAvail]       = useState(null);
+  const [slugErr, setSlugErr]               = useState('');
 
   const photoInputRef = useRef(null);
   const canInstall = !['installed', 'desktop'].includes(detectPlatform());
 
-  // Vérification disponibilité slug (debounce 600ms, exclut le slug actuel)
+  // Vérification disponibilité slug (debounce 600ms).
+  // slug_available() exclut déjà le slug que l'utilisateur possède lui-même.
   useEffect(() => {
     if (sheetOpen !== 'slug') return;
-    if (!slugValue || slugValue.length < 3) { setIsSlugAvail(null); return; }
-    if (slugValue === profile?.public_slug) { setIsSlugAvail(true); return; }
+    if (!slugValue || slugValue.length < 3) { setIsSlugAvail(null); setSlugErr(''); return; }
     setSlugChecking(true);
     const timer = setTimeout(async () => {
-      const { data } = await supabase.from('profiles').select('id').eq('public_slug', slugValue).maybeSingle();
-      setIsSlugAvail(!data);
+      const { ok, error } = await checkSlug(slugValue);
+      setIsSlugAvail(ok);
+      setSlugErr(error || '');
       setSlugChecking(false);
     }, 600);
     return () => clearTimeout(timer);
   }, [slugValue, sheetOpen]);
 
   const slug        = profile?.public_slug;
-  const templateId  = profile?.template_id || '1a';
-  const boutiqueUrl = slug ? `https://demo.agenceattractor.com/${slug}` : null;
+  const lienBoutique = boutiqueUrl(slug);
   const initials    = (profile?.prenom || 'AA').slice(0, 2).toUpperCase();
   const photoUrl    = profile?.photo_url || null;
 
@@ -107,23 +113,9 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
     setUploadingPhoto(false);
   };
 
-  // ── Régénérer l'assistant client ──────────────────────────────────────────
-
-  const regenerateAssistant = async () => {
-    if (!profile?.id) return;
-    setRegenerating(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('generate-client-assistant', {
-        body: { user_id: profile.id },
-      });
-      if (error || !data?.slug) throw new Error(error?.message || 'Échec de la génération');
-      notify('Assistant mis à jour');
-      if (reloadProfile) reloadProfile();
-    } catch (e) {
-      notify(e?.message || 'Erreur lors de la régénération');
-    }
-    setRegenerating(false);
-  };
+  // Note : il n'y a plus de « régénération » sans anamnèse. Régénérer l'assistant
+  // sans lui redonner d'informations le reconstruisait à partir du seul prénom +
+  // activité, c'est-à-dire vide. On repasse par les 7 questions (sheet `anamnese`).
 
   // ── Feedback ──────────────────────────────────────────────────────────────
 
@@ -207,12 +199,12 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
       <div className="px-4 flex flex-col gap-3">
 
         {/* Carte boutique */}
-        {boutiqueUrl ? (
+        {lienBoutique ? (
           <div className="bg-white rounded-2xl border border-g200 shadow-soft overflow-hidden">
             <div className="px-4 pt-3.5 pb-1 flex items-center justify-between">
               <div>
                 <div className="text-[10px] font-bold text-g400 uppercase tracking-[.1em]">Ma boutique</div>
-                <div className="text-[12px] font-mono text-orange mt-0.5 break-all">demo.agenceattractor.com/{slug}</div>
+                <div className="text-[12px] font-mono text-orange mt-0.5 break-all">{lienBoutique.replace('https://', '')}</div>
               </div>
               <div className="w-7 h-7 rounded-lg bg-vert/10 flex items-center justify-center">
                 <Icon name="check" size={14} className="text-vert" />
@@ -220,14 +212,14 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
             </div>
             <div className="flex gap-2 px-4 pb-3.5 pt-2.5">
               <button
-                onClick={() => { navigator.clipboard.writeText(boutiqueUrl); notify('Lien copié !'); }}
+                onClick={() => { navigator.clipboard.writeText(lienBoutique); notify('Lien copié !'); }}
                 className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-g200 text-[12.5px] font-bold text-charbon bg-sable active:bg-g100 transition"
               >
                 <Icon name="copy" size={13} /> Copier
               </button>
               <button
                 onClick={() => {
-                  const text = encodeURIComponent(`Commande directement sur ma boutique : ${boutiqueUrl}`);
+                  const text = encodeURIComponent(`Commande directement sur ma boutique : ${lienBoutique}`);
                   window.open(`https://wa.me/?text=${text}`, '_blank');
                 }}
                 className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-g200 text-[12.5px] font-bold text-charbon bg-sable active:bg-g100 transition"
@@ -236,12 +228,11 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
                 WA
               </button>
               <button
-                onClick={regenerateAssistant}
-                disabled={regenerating}
-                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-orange/25 text-[12.5px] font-bold text-orange bg-orange/5 active:bg-orange/10 transition disabled:opacity-50"
+                onClick={() => setSheetOpen('anamnese')}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-orange/25 text-[12.5px] font-bold text-orange bg-orange/5 active:bg-orange/10 transition"
               >
-                {regenerating ? <Spinner className="w-3.5 h-3.5 border-orange border-t-transparent" /> : <Icon name="spark" size={13} />}
-                Regen.
+                <Icon name="spark" size={13} />
+                Réapprendre
               </button>
             </div>
           </div>
@@ -261,11 +252,12 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
               <div className="flex-1 min-w-0">
                 <div className="text-[10px] font-bold text-g400 uppercase tracking-[.1em] mb-0.5">Domaine professionnel</div>
                 <p className="text-[12.5px] text-charbon leading-snug">
-                  Passe de <span className="font-mono text-g500 text-[11px]">demo.agenceattractor.com</span> à ton propre nom de domaine.
+                  Passe de <span className="font-mono text-g500 text-[11px]">{BOUTIQUE_BASE.replace('https://', '')}</span> à ton propre nom de domaine.
+                  <span className="text-g400"> 10 000 F/an.</span>
                 </p>
               </div>
               <a
-                href={`https://wa.me/33600000000?text=${encodeURIComponent(`Bonjour ! Je veux un nom de domaine professionnel pour ma boutique Assists. Mon lien actuel : ${boutiqueUrl}`)}`}
+                href={`https://wa.me/${WA_AGENCE}?text=${encodeURIComponent(`Bonjour ! Je veux un nom de domaine professionnel pour ma boutique Assists. Mon lien actuel : ${lienBoutique}`)}`}
                 target="_blank"
                 rel="noreferrer"
                 className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-charbon text-white text-[12.5px] font-bold active:opacity-80 transition whitespace-nowrap"
@@ -305,7 +297,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
           <Divider />
           <Row
             label="Lien boutique"
-            sub={slug ? `demo.agenceattractor.com/${slug}` : 'Créer un identifiant'}
+            sub={slug ? `${BOUTIQUE_BASE.replace('https://', '')}/${slug}` : 'Créer un identifiant'}
             right="Modifier"
             onClick={() => { setSlugValue(profile?.public_slug || ''); setIsSlugAvail(null); setSheetOpen('slug'); }}
           />
@@ -401,7 +393,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
             <div className="bg-charbon rounded-xl px-4 py-3">
               <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Aperçu</p>
               <p className="text-white font-mono text-[13px] break-all">
-                demo.agenceattractor.com/<span className="text-orange font-bold">{slugValue || '...'}</span>
+                {BOUTIQUE_BASE.replace('https://', '')}/<span className="text-orange font-bold">{slugValue || '...'}</span>
               </p>
             </div>
 
@@ -412,9 +404,10 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
                   type="text"
                   value={slugValue}
                   onChange={e => {
-                    const val = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 20);
+                    const val = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '').replace(/^-+/, '').slice(0, 20);
                     setSlugValue(val);
                     setIsSlugAvail(null);
+                    setSlugErr('');
                   }}
                   placeholder="ex: macarthur"
                   className="w-full px-4 py-3.5 rounded-xl border border-g200 bg-sable text-[15px] font-mono text-charbon outline-none focus:border-orange pr-10"
@@ -429,12 +422,20 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
               {isSlugAvail === true && slugValue !== profile?.public_slug && (
                 <p className="text-[12px] text-vert font-semibold mt-1.5">Disponible.</p>
               )}
-              {isSlugAvail === false && (
+              {isSlugAvail === false && slugErr && (
                 <p className="text-[12px] text-red-500 mt-1.5">
-                  Déjà pris. Essaie <button className="font-bold underline" onClick={() => setSlugValue(slugValue + '2')}>{slugValue}2</button>.
+                  {slugErr}{' '}
+                  {slugValue.length >= 3 && (
+                    <>Essaie <button className="font-bold underline" onClick={() => setSlugValue(slugValue + '2')}>{slugValue}2</button>.</>
+                  )}
                 </p>
               )}
               <p className="text-[11px] text-g400 mt-2">Minuscules, chiffres et tirets. 3 à 20 caractères.</p>
+              {slug && slugValue !== slug && (
+                <p className="text-[11px] text-amber-600 mt-2 leading-snug">
+                  Attention : si tu changes, l'ancien lien ne marchera plus. Les clients qui l'ont gardé ne trouveront plus ta boutique.
+                </p>
+              )}
             </div>
 
             <button
@@ -508,6 +509,28 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
             >
               {feedbackSending ? 'Envoi…' : 'Envoyer'}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Réapprendre : les 7 questions, puis régénération de l'assistant */}
+      {sheetOpen === 'anamnese' && (
+        <div className="fixed inset-0 z-50 flex items-end" style={{ background: 'rgba(0,0,0,.45)' }} onClick={() => setSheetOpen(null)}>
+          <div className="w-full bg-white rounded-t-[28px] p-6 pb-10 flex flex-col gap-4 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="w-10 h-1 rounded-full bg-g200 mx-auto mb-1" />
+            <div>
+              <div className="font-display font-bold text-[17px] text-charbon">Réapprends-lui ton métier</div>
+              <p className="text-[12.5px] text-g400 mt-0.5">Tes réponses remplacent les précédentes et ton assistant est reconstruit.</p>
+            </div>
+            <Anamnese
+              profile={profile}
+              onClose={() => setSheetOpen(null)}
+              onGenerated={() => {
+                setSheetOpen(null);
+                notify('Ton assistant a été mis à jour');
+                if (reloadProfile) reloadProfile();
+              }}
+            />
           </div>
         </div>
       )}

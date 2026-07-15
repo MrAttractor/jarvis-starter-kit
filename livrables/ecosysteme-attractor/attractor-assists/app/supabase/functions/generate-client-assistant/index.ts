@@ -22,6 +22,8 @@ Ta mission : écrire le PROMPT SYSTÈME complet d'un assistant IA qui va répond
 RÈGLES ABSOLUES POUR LE PROMPT QUE TU ÉCRIS :
 - L'assistant se présente comme l'assistant DE l'activité (ex : "Je suis l'assistant de [activité/prénom]"), jamais comme une IA générique
 - Il connaît par cœur et utilise activement : ce que vend l'entrepreneur, ses clients types, sa FAQ, sa gestion de stock, ses modes de paiement, sa livraison
+- N'INVENTE AUCUNE INFORMATION que l'entrepreneur ne t'a pas donnée. Tu écris le prompt à partir du brief, rien d'autre : pas de durée de conservation, pas de composition, pas de délai, pas de garantie, pas d'horaire, pas de prix que tu aurais déduits ou supposés. Ce que l'assistant affirmera engage l'entrepreneur devant ses clients.
+- Le prompt doit ordonner explicitement à l'assistant : quand il ne sait pas, il le dit et propose que l'entrepreneur revienne vers le client — il ne comble jamais un trou par une supposition plausible
 - Il prend en charge les clients 24h/24 : répond aux questions produits, prend les commandes, rassure sur les réclamations simples
 - Il demande tôt et naturellement le prénom et le contact WhatsApp du client, pour permettre le suivi par l'entrepreneur
 - Si une question dépasse ce qu'il sait (négociation hors barème, réclamation grave, urgence) → il note la demande et dit que l'entrepreneur revient vers le client rapidement (sous 24h)
@@ -126,14 +128,22 @@ serve(async (req) => {
       .eq("id", user_id);
     if (saveErr) return json({ error: saveErr.message }, 500);
 
-    await supabase.from("journal_agent").insert({
-      agent_id: "carelle",
-      type: "assistant_client_genere",
-      titre: `Assistant client généré — ${profile.prenom || user_id}`,
-      details: { user_id, slug },
-    }).catch(() => {});
+    // Journal interne : accessoire. Il ne doit jamais faire échouer la génération.
+    // `.catch()` ne marche pas sur un PostgrestBuilder (thenable, pas une Promise) :
+    // l'appel levait un TypeError APRÈS que l'assistant ait été correctement écrit,
+    // et l'entrepreneur voyait « la génération n'a pas abouti » alors qu'elle avait réussi.
+    try {
+      await supabase.from("journal_agent").insert({
+        agent_id: "carelle",
+        type: "assistant_client_genere",
+        titre: `Assistant client généré — ${profile.prenom || user_id}`,
+        details: { user_id, slug },
+      });
+    } catch { /* journal non bloquant */ }
 
-    return json({ slug, url: `https://assists.agenceattractor.com/?c=${slug}` });
+    // Même forme que src/lib/boutique.js : le lien partagé aux clients ne doit pas
+    // dépendre de l'endroit où il est fabriqué.
+    return json({ slug, url: `https://assists.agenceattractor.com/${slug}` });
   } catch (e) {
     return json({ error: String(e) }, 500);
   }

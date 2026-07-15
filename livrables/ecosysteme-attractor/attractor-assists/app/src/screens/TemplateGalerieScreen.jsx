@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, Spinner } from '../components/ui';
+import { previewUrl as previewBoutiqueUrl } from '../lib/boutique';
 
 const TEMPLATES = [
   {
@@ -26,13 +27,10 @@ const TEMPLATES = [
   },
 ];
 
-// Aperçu = la vraie boutique de l'utilisateur (ses propres produits, pas ceux d'un autre client)
-function previewUrl(tpl, slug) {
-  if (!slug) return null;
-  return tpl.id === '1a'
-    ? `https://assists.agenceattractor.com/b/${encodeURIComponent(slug)}`
-    : `https://demo.agenceattractor.com/template-${tpl.id}?c=${encodeURIComponent(slug)}`;
-}
+// Aperçu = la vraie boutique de l'utilisateur (ses propres produits, ses couleurs),
+// affichée dans le modèle survolé sans rien écrire en base (?preview=).
+// Les 3 modèles sont désormais la même page : plus de dépendance à demo-site.
+const previewUrl = (tpl, slug) => previewBoutiqueUrl(slug, tpl.id);
 
 function MockupGrille({ palette }) {
   const { bg, brand, accent } = palette;
