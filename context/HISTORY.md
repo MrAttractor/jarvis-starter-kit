@@ -7,6 +7,56 @@
 
 ---
 
+## 2026-07-15 (session 101 — Attractor Assists : refonte sur le tunnel unique. Le produit existait, il était débranché)
+
+### Le déclencheur : un état des lieux chiffré, pas une impression
+- Point demandé sur Assists. Relevé en base plutôt qu'en lisant les fichiers de suivi (le `SUIVI.md` datait de mai et ne reflétait plus rien) : **37 inscrits, 2 onboardings terminés** (Mac Arthur + Marie Kezey), **5 conversations au total**, 0 anamnèse, 0 mémoire, 0 abonnement, 1 commande (un test du 18/06). Les 5 conversations sont toutes des « conversations client » de Kezey : **l'app entrepreneur n'avait jamais servi à personne**.
+- Le « 25 testeurs actifs » du CONTEXT.md était faux depuis des semaines et pilotait les décisions. Les 35 autres inscrits sont des testeurs de mai remis à zéro par `0029_reset_onboarding.sql`, jamais revenus.
+
+### Le recadrage de Mac Arthur
+- Parcours cible posé : Inscription → 3 templates → catalogue → création de l'assistant (guidage détaillé) → boutique en ligne. Puis : boutique avec assistant, tableau de bord, coach formé à la méthode ATTRACTOR.
+- **Découverte qui définit le chantier : ce parcours existait déjà à ~80 % dans le code, débranché à chaque jointure.** Le guidage en 7 questions existait mot pour mot dans `MonAppScreen`, sans aucun bouton pour y aller. Le travail a été de reconnecter, unifier, supprimer. Aucune fonctionnalité ajoutée.
+- Décisions cadrées : supprimer tout le hors-parcours · 3 templates en HTML autonome hors de l'app · **paiement déclaratif** (l'assistant oriente, la boutique n'encaisse pas) · pas de sous-domaine pour l'instant, mais architecture prête · **la racine devient une landing** (une cliente qui remonte depuis une boutique doit découvrir Assists, pas un écran de login).
+
+### Les câbles débranchés (le vrai travail)
+- **Le template et la couleur choisis n'avaient aucun effet** : l'onboarding écrivait `template_id`, la boutique lisait `template_choisi`.
+- **L'anamnèse n'était jamais enregistrée** : écriture dans `activite_detectee`, colonne inexistante, erreur avalée par un `.catch()` vide. Chaque assistant était donc généré depuis un brief vide, puis marqué « prêt ».
+- **Le coach était aveugle deux fois** : il interrogeait `orders` avec 4 colonnes inexistantes dans un catch silencieux (le bloc « commandes en attente » n'a jamais été injecté depuis la création de la table), et son contexte business était réservé aux plans payants alors que 100 % des comptes sont gratuits.
+- **Aucune colonne WhatsApp dans `profiles`**, alors que tout le parcours d'achat finit sur WhatsApp : les templates 1b/1c avaient un numéro placeholder en dur (`2250700000000`), donc toute boutique en Liste ou Magazine aurait envoyé ses clientes chez un inconnu.
+
+### Trois bugs trouvés en EXÉCUTANT le code, pas en le lisant
+- **`.catch()` ne fonctionne pas sur une requête Supabase** (thenable, pas Promise : `.catch` y est `undefined` et lève un TypeError). Motif copié à 4 endroits. Conséquences réelles : l'assistant était **correctement généré** (1 842 caractères) puis la fonction plantait et l'entrepreneur lisait « la génération n'a pas abouti » (explique très probablement la table d'anamnèses vide) ; le chat du coach affichait un faux « Je reviens dans un instant » **après** une réponse réussie ; le cockpit affichait « Erreur réseau » sur une maquette pourtant générée.
+- **L'assistant inventait des informations produit** : sur un jeu de test (vendeuse de jus), il affirmait aux clientes que « les jus se gardent 3 jours au frigo », information absente de l'anamnèse. Sur de l'alimentaire, c'est un engagement pris au nom de l'entrepreneur. Interdiction explicite d'inventer ajoutée au prompt générateur, vérifiée.
+- **Faille d'écriture des commandes, prouvée avant fermeture** : la policy `public_insert WITH CHECK (true)` permettait à n'importe qui, sans compte, avec la clé anon (publique par nature), d'insérer une commande sur le compte de n'importe quel entrepreneur. Testé en réel : commande à 999 999 F acceptée, HTTP 201. Contournait aussi le quota mensuel et Fidelys. Fermée (`0055`), vérifiée (401), sans régression sur `save_order` (200).
+
+### Deux fois, le test a menti avant de dire vrai
+- La **capture d'écran** montrait un débordement horizontal sur mobile : la sonde dans le navigateur mesurait **zéro**. Artefact de rendu headless (polices non chargées), déjà rencontré en session 98.
+- Le **premier test d'attaque a échoué** (« pas de faille »), à cause du paramètre `return=representation` qui déclenchait un SELECT bloqué. Avec `return=minimal`, la faille apparaissait. Leçon : un test qui innocente n'est pas une preuve d'innocence.
+
+### La boutique unifiée
+- **Un seul fichier** `app/public/boutique/index.html` (752 lignes) remplace **4 implémentations** (`PublicAssistantScreen` 541 l., `template-1b` 888 l., `template-1c` 898 l., et par extension `creal` 1 084 l.) dont la **logique** avait déjà divergé : mesuré, 790 lignes différentes entre 1b et 1c dont ~390 de JS. Le 1c promettait « livraison offerte dès 10 000 F » à toute boutique qui le choisissait (un engagement commercial inventé par un habillage) ; le 1b n'exigeait pas l'adresse.
+- Corrigé au passage : `brand_color` enfin appliquée · adresse de livraison obligatoire **et enregistrée** (elle était demandée dans le chat, jamais écrite) · paiement déclaré affiché à l'écran (les 4 boutons Wave/MTN/Orange/CB n'encaissaient rien) · **catalogue de démo retiré** (une boutique vide le dit, au lieu de proposer de l'attiéké à de vraies clientes) · `textContent` partout (les noms de produits étaient injectés en `innerHTML`, XSS stocké).
+
+### Architecture des URL (nouveau) + un piège Cloudflare coûteux
+- `assists.agenceattractor.com/` = **landing publique** · `/app` = app entrepreneur · **`/[slug]` = lien de boutique canonique** (remplace `demo.agenceattractor.com/[slug]`) · `/b/[slug]` conservé pour les liens déjà partagés.
+- **Cloudflare Pages transforme toute réécriture (200) vers un fichier `.html` en redirection 308 vers l'URL propre**, ce qui perd la query donc le slug. Vérifié en production : `/[slug]` redirigeait vers `/boutique/` sans le slug, et **`/privacy` bouclait sur lui-même** (défaut préexistant, sur une page obligatoire). Deuxième surprise : une règle `/:slug` capture `/app` et `/privacy` **avant** leurs propres fichiers. Solution : `public/_worker.js` (mode advanced, `_redirects` supprimé) + `scripts/postbuild.mjs` qui met chaque page à son vrai chemin. Trois déploiements pour y arriver.
+
+### Livré et vérifié en réel contre la base de production
+- Tunnel complet, boutique unifiée (commande passée de bout en bout : adresse enregistrée, Fidelys alimenté, WhatsApp vers le bon numéro), tableau de bord (CA, commandes, panier moyen, clients, évolution, **top produits** — la donnée était dans chaque commande, jamais additionnée), coach citant les vrais chiffres, landing (zéro débordement sur les 6 résolutions).
+- **Garde-fou anti-slop déterministe** : interdire le markdown dans le prompt n'a **pas** suffi (vérifié, le coach répondait avec astérisques, dièses et emojis). Nettoyage fait dans le code, comme la leçon des tirets longs de la session 97.
+- Suppressions : 13 écrans hors parcours, `agentGating.js`, `template-1b` et `1c`. `src/` passe de **15 327 à ~9 000 lignes**. Commit `d8bc627` (45 fichiers, +2 222 / −8 718).
+- Données de test supprimées, base revenue à l'identique (37 profils).
+
+### Le cas Kezey, clarifié
+- Ce n'est pas un cas séparé : **c'est le moteur Assists sous une carrosserie faite main**. Son catalogue, son assistante Zoé, ses conversations clientes et ses commandes vivent dans Assists (elle s'est connectée le 15/07) ; `boutiquecreal.com` ne fait qu'appeler le même backend. Donc tout changement backend la touche : vérifié après la refonte, sa boutique et Zoé répondent.
+- À traiter : son anamnèse est vide (le prompt de Zoé a été écrit autrement, un « Réapprendre » le régénérerait) ; son catalogue sert **11 produits dont 3 doublons** à ses clientes depuis juin ; son WhatsApp n'est pas renseigné (prérequis à une bascule).
+
+### Ce que ce chantier ne fait pas
+- **Le produit est réparé, il n'est pas rempli.** Les 35 testeurs de mai ne reviendront pas d'eux-mêmes. Prochaine étape : 3 utilisateurs en test accompagné, et regarder où ils décrochent.
+- Non déployé : `demo-site` (choix de Mac Arthur), donc `demo.agenceattractor.com/template-1b` reste servi. Non fait : bascule de Kezey, sous-domaine `[slug].boutik.ci`, RAG de la base de connaissance.
+
+---
+
 ## 2026-07-13 (session 100 — Mission L'Armée du Seigneur : site vitrine Phase 1a, un DON à sa communauté)
 
 ### Le cadre
