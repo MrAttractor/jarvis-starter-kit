@@ -93,12 +93,13 @@ Famille : A = besoin d'une app/outil métier ; B = besoin de conseil/structurati
       const apiRes = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: { "content-type": "application/json", "x-api-key": ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
-        body: JSON.stringify({ model: "claude-haiku-4-5-20251001", max_tokens: 1100, system: SYSTEM, messages: [{ role: "user", content: brief }] }),
+        body: JSON.stringify({ model: "claude-haiku-4-5-20251001", max_tokens: 2000, system: SYSTEM, messages: [{ role: "user", content: brief }, { role: "assistant", content: "{" }] }),
       });
       const apiData = await apiRes.json();
       aiDebug.status = apiRes.status;
       aiDebug.apiErr = apiData?.error?.message || null;
-      const raw = (apiData?.content ?? []).filter((b: any) => b.type === "text").map((b: any) => b.text).join("").trim();
+      // Prefill "{" : force la réponse en JSON. Sur un input pauvre, le modèle partait en prose et cassait le parsing.
+      const raw = "{" + (apiData?.content ?? []).filter((b: any) => b.type === "text").map((b: any) => b.text).join("").trim();
       aiDebug.rawHead = raw.slice(0, 140);
       const m = raw.match(/\{[\s\S]*\}/);
       parsed = JSON.parse((m ? m[0] : raw));
@@ -113,8 +114,12 @@ Famille : A = besoin d'une app/outil métier ; B = besoin de conseil/structurati
       parsed.message_whatsapp = parsed.message_whatsapp.replace(/\s*[—–]\s*/g, ", ").trim();
     }
 
-    // Filet famille : si Claude a omis la clé (~2/5 des cas), on la rattrape par une classification ciblée.
-    if (!parsed.famille) {
+    // Filet famille : Claude omet parfois la clé (~2/5) ou met une valeur non conforme ("À définir").
+    // On normalise en lettre ; si ce n'est pas A/B/C/D, on rattrape par une classification ciblée.
+    const famRaw = String(parsed.famille ?? "").trim().toUpperCase();
+    if (/^[ABCD]$/.test(famRaw)) {
+      parsed.famille = famRaw;
+    } else {
       parsed.famille = await classifyFamille(brief);
       if (new URL(req.url).searchParams.get("debug")) aiDebug.familleFallback = parsed.famille;
     }
@@ -156,9 +161,14 @@ Famille : A = besoin d'une app/outil métier ; B = besoin de conseil/structurati
     const resendKey = Deno.env.get("RESEND_API_KEY");
     const notifyEmail = Deno.env.get("NOTIFY_DEVIS_EMAIL") || "myattractor1@gmail.com";
     if (resendKey) {
+      const isEmail = String(contact || "").includes("@");
       const waNum = String(contact || "").replace(/[\s+\-()]/g, "");
       const waMsg = (parsed.message_whatsapp && String(parsed.message_whatsapp).trim()) || `Bonjour ${nom || ""}, merci pour votre diagnostic. `;
-      const waReply = waNum ? `https://wa.me/${waNum}?text=${encodeURIComponent(waMsg)}` : "";
+      // Si le prospect a laissé un email (pas un numéro), le bouton doit ouvrir un mail, pas un wa.me cassé.
+      const waReply = isEmail
+        ? `mailto:${String(contact).trim()}?subject=${encodeURIComponent("Votre diagnostic Mr Attractor")}&body=${encodeURIComponent(waMsg)}`
+        : (waNum ? `https://wa.me/${waNum}?text=${encodeURIComponent(waMsg)}` : "");
+      const replyLabel = isEmail ? "Répondre par email" : "Répondre sur WhatsApp";
       const list = (arr: any[], color: string) => Array.isArray(arr) && arr.length
         ? `<ul style="margin:6px 0 0;padding-left:18px">${arr.map((x) => `<li style="font-size:13.5px;color:#4A3F35;margin-bottom:4px">${esc(x)}</li>`).join("")}</ul>` : "<p style='color:#9C9189;font-size:13px;margin:4px 0 0'>—</p>";
       const html = `<!doctype html><html><body style="margin:0;background:#FAF6F0;font-family:'Segoe UI',system-ui,sans-serif;color:#1A1714">
@@ -178,7 +188,7 @@ Famille : A = besoin d'une app/outil métier ; B = besoin de conseil/structurati
             <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#9C9189;margin-top:12px">Opportunités</div>${list(parsed.opportunites, "#1E9E52")}
             ${parsed.message_whatsapp ? `<div style="background:#EAF7EF;border-left:3px solid #25D366;border-radius:0 8px 8px 0;padding:12px 14px;margin:16px 0 0"><div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#128C4B;margin-bottom:4px">Message prêt à envoyer</div><div style="font-size:14px;color:#1A1714;line-height:1.55;white-space:pre-wrap">${esc(parsed.message_whatsapp)}</div></div>` : ""}
             <div style="margin-top:22px">
-              ${waReply ? `<a href="${waReply}" style="display:inline-block;background:#25D366;color:#fff;text-decoration:none;font-weight:800;font-size:14px;padding:13px 20px;border-radius:10px;margin:0 8px 8px 0">Répondre sur WhatsApp</a>` : ""}
+              ${waReply ? `<a href="${waReply}" style="display:inline-block;background:${isEmail ? "#1A6FF2" : "#25D366"};color:#fff;text-decoration:none;font-weight:800;font-size:14px;padding:13px 20px;border-radius:10px;margin:0 8px 8px 0">${replyLabel}</a>` : ""}
               <a href="https://demo.agenceattractor.com/pilotage" style="display:inline-block;background:#1A1714;color:#fff;text-decoration:none;font-weight:800;font-size:14px;padding:13px 20px;border-radius:10px;margin:0 8px 8px 0">Ouvrir Pilotage → créer la proposition</a>
             </div>
           </div>
