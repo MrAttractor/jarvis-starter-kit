@@ -26,6 +26,33 @@ function zoneFromContact(c: string): string {
   return "France";
 }
 
+// Filet de secours pour la famille : Claude Haiku omet par intermittence la clé "famille"
+// du gros JSON (~2/5 des cas, JSON valide et complet, ce n'est PAS une troncature).
+// Comme la famille aiguille tout le parcours, on relance une classification ULTRA-ciblée
+// (une seule lettre) quand elle manque. Testé fiable à 100% en isolé.
+const CLASSIF_SYSTEM = `Tu classes le besoin d'un entrepreneur en UNE seule lettre, à partir de sa situation.
+A = besoin d'une application ou d'un outil métier (vitrine, catalogue, commandes, tableau de bord, stock).
+B = besoin de conseil, de structuration ou d'accompagnement (stratégie, modèle économique, marketing).
+C = besoin d'un assistant IA personnel (rare).
+D = business déjà établi avec des chiffres mesurables, où on aligne la mission sur la performance (commission).
+Réponds UNIQUEMENT par la lettre A, B, C ou D. Rien d'autre, aucune ponctuation.`;
+
+async function classifyFamille(brief: string): Promise<string | null> {
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-api-key": ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
+      body: JSON.stringify({ model: "claude-haiku-4-5-20251001", max_tokens: 5, system: CLASSIF_SYSTEM, messages: [{ role: "user", content: brief }] }),
+    });
+    const data = await res.json();
+    const raw = (data?.content ?? []).filter((b: any) => b.type === "text").map((b: any) => b.text).join("").trim();
+    const m = raw.toUpperCase().match(/[ABCD]/);
+    return m ? m[0] : null;
+  } catch {
+    return null;
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   const result: Record<string, unknown> = {};
@@ -84,6 +111,12 @@ Famille : A = besoin d'une app/outil métier ; B = besoin de conseil/structurati
     // Garde-fou déterministe : pas de tiret long (préférence Mr Attractor), le prompt seul ne suffit pas.
     if (parsed && typeof parsed.message_whatsapp === "string") {
       parsed.message_whatsapp = parsed.message_whatsapp.replace(/\s*[—–]\s*/g, ", ").trim();
+    }
+
+    // Filet famille : si Claude a omis la clé (~2/5 des cas), on la rattrape par une classification ciblée.
+    if (!parsed.famille) {
+      parsed.famille = await classifyFamille(brief);
+      if (new URL(req.url).searchParams.get("debug")) aiDebug.familleFallback = parsed.famille;
     }
 
     const zone = zoneFromContact(contact);

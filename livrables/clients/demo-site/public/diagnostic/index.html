@@ -44,6 +44,16 @@ input:focus,textarea:focus{outline:none;border-color:var(--orange)}
 .block li{position:relative;padding-left:22px;font-size:14px;color:var(--muted-2)}
 .block li::before{content:"";position:absolute;left:4px;top:7px;width:8px;height:8px;border-radius:50%;background:var(--orange)}
 .block.opp li::before{background:var(--green)}
+.svc-list{display:flex;flex-direction:column;gap:10px}
+.svc{position:relative;display:block;width:100%;padding:15px 16px 15px 46px;border:1.5px solid var(--sable);border-radius:12px;background:var(--white);cursor:pointer;text-align:left;font-family:inherit;transition:.15s}
+.svc:hover{border-color:var(--orange-2)}
+.svc.on{border-color:var(--orange);background:#FEF4EC}
+.svc .mk{position:absolute;left:14px;top:15px;width:20px;height:20px;border:2px solid var(--sable);border-radius:6px;display:flex;align-items:center;justify-content:center;transition:.15s}
+.svc.on .mk{border-color:var(--orange);background:var(--orange)}
+.svc .mk svg{width:12px;height:12px;stroke:#fff;stroke-width:3;fill:none;opacity:0;transition:.15s}
+.svc.on .mk svg{opacity:1}
+.svc .st{display:block;font-weight:700;font-size:15px;color:var(--ink)}
+.svc .sd{display:block;font-size:13px;color:var(--muted-2);margin-top:3px;line-height:1.45}
 .wa{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;text-decoration:none;font-weight:800;font-size:15px;padding:15px 24px;border-radius:12px;margin-top:10px}
 .wa svg{width:18px;height:18px;fill:#fff}
 .foot{text-align:center;font-size:11px;color:var(--muted);margin-top:26px}
@@ -75,7 +85,12 @@ input:focus,textarea:focus{outline:none;border-color:var(--orange)}
     <div class="synth" id="d-synth"></div>
     <div class="block" id="d-prob-w"><h3>Ce qui vous freine</h3><ul id="d-prob"></ul></div>
     <div class="block opp" id="d-opp-w"><h3>Ce qu'on peut débloquer</h3><ul id="d-opp"></ul></div>
-    <p style="color:var(--muted-2);font-size:14px;margin-top:8px">Mac Arthur a reçu votre diagnostic et revient vers vous très vite avec une proposition claire. Une question tout de suite ?</p>
+    <div class="block" id="d-svc-w" style="display:none">
+      <h3>Comment on pourrait vous aider</h3>
+      <p style="font-size:13.5px;color:var(--muted-2);margin:-2px 0 12px">Voici ce qu'on sait faire. Sélectionnez ce qui vous parle, même plusieurs. Ça aide Mac Arthur à préparer votre proposition.</p>
+      <div class="svc-list" id="d-svc"></div>
+    </div>
+    <p style="color:var(--muted-2);font-size:14px;margin-top:8px">Mac Arthur a reçu votre diagnostic et revient vers vous très vite avec une proposition claire. Envoyez-lui votre sélection ou posez-lui une question tout de suite :</p>
     <a class="wa" id="d-wa" target="_blank"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Z"/></svg>Écrire à Mac Arthur</a>
     <div class="foot">Agence Mr Attractor — agenceattractor.com</div>
   </div>
@@ -133,10 +148,34 @@ async function submit(){
   $("loading").style.display='none'; $("done").style.display='';
   $("d-synth").textContent = d.synthese || "Merci ! On a bien reçu votre situation, Mac Arthur revient vers vous très vite.";
   fill("d-prob", d.problemes, "d-prob-w"); fill("d-opp", d.opportunites, "d-opp-w");
-  $("d-wa").href="https://wa.me/"+WA_HELP+"?text="+encodeURIComponent("Bonjour Mac Arthur, je viens de faire le diagnostic en ligne. ");
+  renderSvc(); updateWa();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function fill(id, arr, wrapId){ if(Array.isArray(arr)&&arr.length){ $(id).innerHTML=arr.map(x=>`<li>${String(x).replace(/</g,'&lt;')}</li>`).join(""); } else { $(wrapId).style.display='none'; } }
+
+// Briefing services : le prospect découvre l'éventail (il ne connaît pas les "familles"), en choisit un ou plusieurs,
+// et sa sélection part dans le message WhatsApp qu'il envoie à Mac Arthur (dont l'appel reste le déclencheur).
+const SERVICES=[
+  {id:"app",     t:"Une application pour votre métier", d:"Votre vitrine, votre catalogue, vos commandes et votre stock au même endroit. Vos clients commandent, vous pilotez."},
+  {id:"conseil", t:"Un accompagnement pour structurer", d:"On clarifie ensemble votre modèle, votre offre et votre plan d'action, pour arrêter de tout porter dans votre tête."},
+  {id:"video",   t:"De la vidéo et du lancement",       d:"On produit vos vidéos et on orchestre votre lancement pour vous faire connaître."},
+  {id:"autre",   t:"Je ne sais pas encore",             d:"Vous sentez qu'il faut bouger mais vous ne savez pas par où. On en parle et on trouve ensemble."}
+];
+const SVC_LABEL={app:"une application pour mon métier",conseil:"un accompagnement pour structurer mon business",video:"de la vidéo et du lancement",autre:"un conseil pour savoir par où commencer"};
+const CHECK='<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+const svcSel=new Set();
+function renderSvc(){
+  $("d-svc-w").style.display='';
+  $("d-svc").innerHTML=SERVICES.map(s=>`<button type="button" class="svc${svcSel.has(s.id)?' on':''}" data-id="${s.id}"><span class="mk">${CHECK}</span><span class="st">${s.t}</span><span class="sd">${s.d}</span></button>`).join("");
+  $("d-svc").querySelectorAll('.svc').forEach(b=>b.onclick=()=>{ const id=b.dataset.id; if(svcSel.has(id))svcSel.delete(id); else svcSel.add(id); renderSvc(); updateWa(); });
+}
+function updateWa(){
+  const picks=[...svcSel].map(id=>SVC_LABEL[id]);
+  let msg="Bonjour Mac Arthur, je viens de faire le diagnostic en ligne. ";
+  if(picks.length){ msg += "Je suis intéressé(e) par : "+picks.join(", ")+". "; }
+  $("d-wa").href="https://wa.me/"+WA_HELP+"?text="+encodeURIComponent(msg);
+  $("d-wa").innerHTML='<svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Z"/></svg>'+(picks.length?"Envoyer ma sélection à Mac Arthur":"Écrire à Mac Arthur");
+}
 </script>
 </body>
 </html>

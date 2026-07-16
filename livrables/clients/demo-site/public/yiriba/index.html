@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Votre devis — Yiriba Nature · Mr Attractor</title>
+<meta name="robots" content="noindex">
+<!--
+  DEVIS DE CONFIRMATION MR ATTRACTOR — Yiriba Nature (Faveur Ingryd Brou).
+  Deal fermé au téléphone (accompagnement EAGLE + plateforme incluse, 525 000 FCFA / 800 €).
+  Ce n'est PAS un devis à composer : le périmètre et le prix sont actés, la cliente valide.
+  Bloc CONFIG (const DEVIS) plus bas ; la validation POST vers l'edge function devis-accept.
+-->
+<style>
+:root{
+  --orange:#F25C05; --orange-2:#FF7A30; --orange-d:#D94F02;
+  --ink:#1A1714; --creme:#FAF6F0; --white:#FFFFFF; --sable:#E8E2DA;
+  --muted:#9C9189; --muted-2:#4A3F35; --green:#1E9E52; --green-bg:#E7F5EC;
+  --shadow:0 8px 30px rgba(26,23,20,.08); --shadow-2:0 4px 14px rgba(26,23,20,.06);
+  --font:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--font);color:var(--ink);background:var(--creme);line-height:1.55;overflow-x:hidden;padding-bottom:120px}
+.wrap{max-width:720px;margin:0 auto;padding:20px 18px 40px}
+img{max-width:100%}
+
+/* header */
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:6px 0 18px;border-bottom:2px solid var(--orange)}
+.logo{font-size:20px;font-weight:800;letter-spacing:.01em;color:var(--ink)}
+.logo span{color:var(--orange)}
+.logo .sub{display:block;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.02em;margin-top:2px}
+.meta{text-align:right;font-size:12px;color:var(--muted)}
+.meta .k{color:var(--orange);font-weight:800;text-transform:uppercase;letter-spacing:.1em;font-size:12px}
+
+/* intro */
+.hero{margin-top:22px}
+.hero h1{font-size:26px;line-height:1.2;letter-spacing:-.01em}
+.hero h1 em{color:var(--orange);font-style:normal}
+.hero p{margin-top:10px;color:var(--muted-2);font-size:14.5px}
+
+/* sections */
+.sec{margin-top:26px}
+.sec-h{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.sec-h .num{flex:0 0 26px;height:26px;border-radius:50%;background:var(--orange);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.sec-h h2{font-size:16px}
+.sec-sub{color:var(--muted);font-size:13px;margin:2px 0 14px 36px}
+
+/* choice cards */
+.opt{display:block;position:relative;background:var(--white);border:1.5px solid var(--sable);border-radius:14px;padding:15px 16px 15px 52px;margin-bottom:12px;cursor:pointer;box-shadow:var(--shadow-2);transition:border-color .15s,box-shadow .15s,transform .08s}
+.opt:hover{border-color:var(--orange-2)}
+.opt.on{border-color:var(--orange);box-shadow:0 0 0 3px rgba(242,92,5,.12),var(--shadow-2)}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.mark{position:absolute;left:16px;top:16px;width:22px;height:22px;border:2px solid var(--sable);background:#fff;display:flex;align-items:center;justify-content:center;transition:.15s}
+.opt[data-type="radio"] .mark{border-radius:50%}
+.opt[data-type="check"] .mark{border-radius:6px}
+.opt.on .mark{border-color:var(--orange);background:var(--orange)}
+.mark svg{width:13px;height:13px;stroke:#fff;stroke-width:3.2;fill:none;opacity:0;transition:.15s}
+.opt.on .mark svg{opacity:1}
+.opt[data-type="radio"].on .mark::after{content:"";width:9px;height:9px;border-radius:50%;background:#fff}
+.opt[data-type="radio"] .mark svg{display:none}
+.opt-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.opt-nom{font-weight:700;font-size:15px}
+.badge{display:inline-block;background:var(--orange);color:#fff;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:20px;margin-left:7px;vertical-align:middle}
+.opt-prix{font-weight:800;font-size:15px;color:var(--ink);white-space:nowrap}
+.opt-prix .ap{display:block;font-size:9.5px;font-weight:600;color:var(--muted);text-align:right}
+.opt-desc{color:var(--muted-2);font-size:12.5px;margin-top:5px}
+.opt-format{display:inline-block;margin-top:8px;font-size:11px;color:var(--muted);border:1px solid var(--sable);border-radius:20px;padding:2px 9px}
+.opt-more{display:inline-block;margin-top:11px;background:none;border:none;padding:0;color:var(--orange-d);font-weight:700;font-size:12px;font-family:inherit;cursor:pointer;text-decoration:underline}
+.opt-detail{margin-top:11px;padding-top:11px;border-top:1px dashed var(--sable)}
+.opt-detail .dl{font-size:12px;color:var(--muted-2);margin-bottom:9px;line-height:1.55}
+.opt-detail .dl:last-child{margin-bottom:0}
+.opt-detail .dl b{display:block;color:var(--ink);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.opt-detail ul{margin:3px 0 0 17px;padding:0}
+.opt-detail li{margin-bottom:4px}
+.opt-detail .geo{color:var(--orange-d);font-weight:600}
+
+/* market anchor */
+.value{margin-top:26px;border:2px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.value .m{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:13px 16px;background:#fff;font-size:13px;color:var(--muted-2)}
+.value .m .s{text-decoration:line-through;text-decoration-color:#C0392B;font-weight:800;font-size:15px;color:var(--ink);white-space:nowrap}
+.value .l{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:15px 16px;background:var(--ink);color:#fff}
+.value .l .lab{font-size:13px;font-weight:600}
+.value .l .amt{font-size:22px;font-weight:800;color:var(--orange-2);white-space:nowrap}
+.value .l .amt small{display:block;font-size:10px;font-weight:600;color:#C9BEB2;text-align:right}
+.value .cap{padding:11px 16px;font-size:11.5px;color:var(--muted);background:#fff;border-top:1px solid var(--sable)}
+
+/* bonus */
+.bonus{margin-top:22px;border:1.5px solid var(--orange);background:#FEF4EC;border-radius:14px;padding:16px}
+.bonus h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--orange-d);margin-bottom:10px}
+.bonus ul{list-style:none}
+.bonus li{position:relative;padding-left:24px;font-size:12.5px;margin-bottom:7px;color:var(--muted-2)}
+.bonus li::before{content:"";position:absolute;left:3px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--orange)}
+.bonus b{color:var(--ink)}
+.bonus .off{color:var(--green);font-weight:800}
+
+/* limiter */
+.limit{margin-top:14px;background:var(--green-bg);border-radius:12px;padding:13px 15px;font-size:12px;color:var(--muted-2);line-height:1.6}
+.limit b{color:var(--ink)}
+
+/* validation */
+.valid{margin-top:26px;background:#fff;border:1.5px solid var(--sable);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
+.valid h3{font-size:17px;margin-bottom:4px}
+.valid .hint{color:var(--muted);font-size:12.5px;margin-bottom:16px}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--muted-2);margin-bottom:5px}
+.field input,.field textarea{width:100%;padding:12px 14px;border:1.5px solid var(--sable);border-radius:10px;font-size:15px;font-family:inherit;color:var(--ink);background:var(--creme)}
+.field textarea{resize:vertical;min-height:76px;line-height:1.5}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--orange);background:#fff}
+.accord{display:flex;gap:10px;align-items:flex-start;margin:16px 0;cursor:pointer;font-size:12.5px;color:var(--muted-2)}
+.accord input{margin-top:2px;width:18px;height:18px;accent-color:var(--orange);flex:0 0 auto}
+.recap{background:var(--creme);border-radius:12px;padding:13px 15px;font-size:12.5px;margin-bottom:16px}
+.recap .r{display:flex;justify-content:space-between;padding:3px 0;color:var(--muted-2)}
+.recap .r.tot{border-top:1px dashed var(--sable);margin-top:6px;padding-top:8px;font-weight:800;color:var(--ink);font-size:14px}
+.btn{display:block;width:100%;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:800;font-family:inherit;color:#fff;background:linear-gradient(135deg,var(--orange-2),var(--orange-d));cursor:pointer;box-shadow:0 6px 18px rgba(242,92,5,.32);transition:transform .08s,opacity .15s}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+.btn-ghost{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;text-align:center;margin-top:12px;padding:14px;border:1.5px solid var(--sable);border-radius:12px;font-size:14px;font-weight:700;color:var(--muted-2);background:#fff;text-decoration:none}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange-d)}
+.btn-ghost svg{width:18px;height:18px;fill:#25D366}
+.ask{margin-top:14px;text-align:center;font-size:12.5px;color:var(--muted)}
+.ask a{color:var(--orange-d);font-weight:700;text-decoration:none}
+
+/* sticky total */
+.sticky{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--sable);box-shadow:0 -6px 22px rgba(26,23,20,.08);z-index:40}
+.sticky .in{max-width:720px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.sticky .lab{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.sticky .amt{font-size:23px;font-weight:800;color:var(--ink);line-height:1.1}
+.sticky .amt small{font-size:11px;font-weight:600;color:var(--muted);display:block}
+.sticky .cta{border:none;background:var(--orange);color:#fff;font-weight:800;font-family:inherit;font-size:14px;padding:12px 18px;border-radius:11px;cursor:pointer;white-space:nowrap}
+
+/* confirmation */
+.done{display:none;text-align:center;padding:40px 20px}
+.done.show{display:block}
+.done .circle{width:74px;height:74px;border-radius:50%;background:var(--green-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+.done .circle svg{width:36px;height:36px;stroke:var(--green);stroke-width:3;fill:none}
+.done h2{font-size:22px;margin-bottom:8px}
+.done p{color:var(--muted-2);font-size:14px;max-width:420px;margin:0 auto}
+
+.foot{margin-top:30px;text-align:center;font-size:10.5px;color:var(--muted);line-height:1.7}
+
+@media (max-width:420px){
+  .hero h1{font-size:23px}
+  .value .l .amt{font-size:19px}
+  .sticky .cta{padding:11px 14px;font-size:13px}
+}
+
+/* deal card (confirmation) */
+.deal{margin-top:16px;background:#fff;border:1.5px solid var(--sable);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.deal-row{padding:16px 18px;border-bottom:1px solid var(--sable)}
+.deal-row:last-child{border-bottom:none}
+.deal-row .dh{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.deal-row .dt{font-weight:800;font-size:15px}
+.deal-row .dp{font-weight:800;font-size:14.5px;white-space:nowrap;text-align:right}
+.deal-row .dp small{display:block;font-size:10px;font-weight:600;color:var(--muted)}
+.deal-row .dp .inc{color:var(--green)}
+.deal-row .dd{color:var(--muted-2);font-size:12.5px;margin-top:6px}
+.deal-row ul{margin:9px 0 0 17px;padding:0}
+.deal-row li{font-size:12.5px;color:var(--muted-2);margin-bottom:4px}
+.deal-tag{display:inline-block;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:20px;margin-left:7px;vertical-align:middle}
+.deal-tag.core{background:var(--orange);color:#fff}
+.deal-tag.inc{background:var(--green-bg);color:var(--green)}
+
+/* payment plan */
+.pay{margin-top:22px;border:1.5px solid var(--sable);border-radius:16px;background:#fff;overflow:hidden;box-shadow:var(--shadow-2)}
+.pay h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:15px 18px 4px}
+.pay-row{display:flex;align-items:center;gap:13px;padding:13px 18px;border-top:1px solid var(--sable)}
+.pay-row .n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--creme);border:1.5px solid var(--sable);color:var(--ink);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.pay-row.first .n{background:var(--orange);border-color:var(--orange);color:#fff}
+.pay-row .pm{flex:1}
+.pay-row .pm .pl{font-weight:700;font-size:13.5px}
+.pay-row .pm .ps{font-size:11.5px;color:var(--muted);margin-top:1px}
+.pay-row .pv{font-weight:800;font-size:14px;white-space:nowrap;text-align:right}
+.pay-row .pv small{display:block;font-size:10px;font-weight:600;color:var(--muted)}
+
+@media print{
+  body{background:#fff;padding-bottom:0}
+  .sticky,.btn,.btn-ghost,.ask,.accord,.valid .hint{display:none!important}
+  .wrap{max-width:100%}
+  .sec,.value,.bonus,.limit,.valid,.pay,.deal,.hero{break-inside:avoid;overflow:visible}
+  .opt,.pay-row,.deal-row{break-inside:avoid}
+  a[href]::after{content:""}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<main class="wrap" id="app">
+
+  <div class="top">
+    <div class="logo">Mr <span>Attractor</span><span class="sub" id="c-tag">Conseil en business &amp; applications métier</span></div>
+    <div class="meta">
+      <div class="k">Devis</div>
+      <div id="c-num">—</div>
+      <div id="c-date">—</div>
+    </div>
+  </div>
+
+  <section class="hero">
+    <h1 id="c-titre"></h1>
+    <p id="c-intro"></p>
+  </section>
+
+  <!-- 1. CE QU'ON A ACTÉ -->
+  <section class="sec">
+    <div class="sec-h"><span class="num">1</span><h2>Ce qu'on a acté ensemble</h2></div>
+    <p class="sec-sub">Un accompagnement pour reprendre le contrôle de Yiriba Nature, et l'outil qui le porte, inclus.</p>
+    <div class="deal" id="grp-deal"></div>
+  </section>
+
+  <!-- 2. OFFRE (valeur incluse, pas d'addition qui fait peur) -->
+  <div class="value">
+    <div class="m"><span id="v-market-lab"></span><span class="s" id="v-market"></span></div>
+    <div class="l"><span class="lab" id="v-lab"></span><span class="amt" id="v-total">—</span></div>
+    <div class="cap" id="v-cap"></div>
+  </div>
+
+  <!-- 3. PLAN DE RÈGLEMENT -->
+  <section class="sec">
+    <div class="sec-h"><span class="num">2</span><h2>Votre règlement, en 3 fois</h2></div>
+    <p class="sec-sub">Vous démarrez dès la première tranche. Pas de gros montant d'un coup.</p>
+    <div class="pay" id="grp-pay"><h3 id="pay-h"></h3></div>
+  </section>
+
+  <!-- BONUS -->
+  <div class="bonus">
+    <h3 id="bonus-h">Ce qui est compris</h3>
+    <ul id="grp-bonus"></ul>
+  </div>
+
+  <!-- CONTREPARTIE -->
+  <section class="sec">
+    <div class="sec-h"><span class="num">3</span><h2>Notre accord de visibilité</h2></div>
+    <p class="sec-sub" id="cp-sub"></p>
+    <div class="bonus" style="border-color:var(--green);background:var(--green-bg)">
+      <ul id="grp-cp"></ul>
+    </div>
+  </section>
+
+  <!-- LIMITEUR -->
+  <div class="limit" id="c-limit"></div>
+
+  <!-- VALIDATION -->
+  <section class="valid" id="form-block">
+    <h3>Je valide et je démarre</h3>
+    <p class="hint">Confirmez votre nom et votre WhatsApp, cochez l'accord, et validez. Une question avant ? Le bouton WhatsApp plus bas vous met en lien direct avec Mac Arthur.</p>
+
+    <div class="recap" id="recap"></div>
+
+    <div class="field"><label for="f-nom">Votre nom</label><input id="f-nom" type="text" placeholder="Prénom et nom" autocomplete="name"></div>
+    <div class="field"><label for="f-contact">Votre WhatsApp</label><input id="f-contact" type="text" placeholder="+225..." autocomplete="tel" inputmode="tel"></div>
+    <div class="field"><label for="f-demande">Une précision à ajouter ? (optionnel)</label><textarea id="f-demande" rows="3" placeholder="Une question, une précision sur votre gamme ou vos revendeurs..."></textarea></div>
+
+    <label class="accord"><input type="checkbox" id="f-accord"><span id="accord-txt"></span></label>
+
+    <button class="btn" id="btn-valider" disabled>Je valide et je démarre</button>
+    <a class="btn-ghost" id="btn-help" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.16c-.25.7-1.44 1.33-1.99 1.36-.53.05-1.02.24-3.4-.71-2.86-1.13-4.68-4.06-4.82-4.25-.14-.19-1.14-1.52-1.14-2.9s.72-2.06.98-2.34c.25-.28.55-.35.73-.35l.53.01c.17 0 .4-.06.62.48.25.6.85 2.07.92 2.22.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.28.29-.12.57.17.28.74 1.22 1.59 1.98 1.1.98 2.02 1.28 2.3 1.42.28.14.44.12.6-.07.17-.19.7-.81.89-1.09.18-.28.37-.23.62-.14.25.09 1.6.76 1.87.9.28.14.46.21.53.33.07.12.07.68-.18 1.38Z"/></svg>Une question ? Écrire à Mac Arthur sur WhatsApp</a>
+    <p class="ask">ou par email : <a href="mailto:myattractor1@gmail.com">myattractor1@gmail.com</a></p>
+  </section>
+
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015<br>
+    TVA non applicable, article 293 B du CGI — myattractor1@gmail.com — agenceattractor.com
+  </div>
+
+  <!-- CONFIRMATION -->
+  <div class="done" id="done">
+    <div class="circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <h2>C'est validé, merci !</h2>
+    <p id="done-msg"></p>
+  </div>
+
+</main>
+
+<!-- STICKY -->
+<div class="sticky" id="sticky">
+  <div class="in">
+    <div><div class="lab" id="s-lab">Votre accompagnement + plateforme</div><div class="amt" id="s-total">—</div></div>
+    <button class="cta" id="s-cta">Valider →</button>
+  </div>
+</div>
+
+<script>
+/* ================= CONFIG — la seule chose à changer pour un autre client ================= */
+const DEVIS = {
+  numero: "ATR-2026-0010",
+  date: "16 juillet 2026",
+  valide: "31 juillet 2026",
+  client: "Faveur Ingryd Brou",
+  projet: "Yiriba Nature",
+  submitUrl: "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/devis-accept",
+  waHelp: "2250576877070",
+  waHelpText: "Bonjour Mac Arthur, je regarde le devis Yiriba Nature (ATR-2026-0010) et j'ai une question : ",
+  tag: "Conseil en business & applications métier",
+  titre: 'Reprendre le contrôle de <em>Yiriba Nature</em>',
+  intro: "Voici, noir sur blanc, ce qu'on a acté ensemble par téléphone. Un accompagnement pour clarifier votre modèle, séparer vos revendeurs de vos clientes finales et voir enfin vos vrais chiffres, et l'outil qui porte tout ça, votre plateforme de vente et de suivi. Le tout compris dans un seul montant, réglable en trois fois.",
+
+  // Le produit acheté = l'accompagnement. La plateforme est INCLUSE (c'est l'outil sur lequel l'accompagnement s'appuie).
+  deal: [
+    { tag:"Le produit", tagClass:"core", nom:"Accompagnement Eagle",
+      prix:"525 000 FCFA", ap:"≈ 800 €",
+      desc:"Dix heures d'accompagnement avec Mac Arthur, réparties sur deux mois, pour poser votre modèle et reprendre la main. Vos conseils pratiques sur vos points urgents se traitent pendant ces séances.",
+      li:["Votre modèle clarifié : gros, demi-gros, clients finaux, ce qui vous rapporte vraiment","La séparation nette entre vos revendeurs (B2B) et vos clientes finales (B2C)","Votre grille de prix propre : tarifs gros et demi-gros posés une bonne fois","Un plan d'action concret pour piloter votre stock et vos ventes","10h de séances planifiées avec vous, sur 2 mois"] },
+    { tag:"Inclus", tagClass:"inc", nom:"Votre plateforme Yiriba Nature",
+      prix:"Comprise", ap:"valeur 320 000 FCFA / 490 €", inc:true,
+      desc:"L'outil qui porte l'accompagnement, on ne le facture pas à part : il est compris dans votre offre.",
+      li:["Votre catalogue centralisé, avec prix gros et demi-gros","Prise de commande structurée, revendeurs et clientes finales séparés","Visibilité sur votre stock : ce qui rentre, ce qui sort, ce qu'il reste","Tableau de bord de vos ventes : qui achète quoi, à quel rythme, qui a payé","Hébergement de la 1re année offert"] }
+  ],
+
+  marcheLabel: "Le même accompagnement + la même plateforme, confiés séparément à une agence classique",
+  marche: "1 300 € et +",
+  valLab: "Votre offre complète, tout compris",
+  valTotal: "525 000 FCFA",
+  valTotalAp: "≈ 800 €",
+  valCap: "L'accompagnement Eagle vaut à lui seul 525 000 FCFA. La plateforme (valeur 320 000 FCFA) est comprise parce qu'elle est l'outil de l'accompagnement. Vous ne réglez jamais tout d'un coup : le montant se répartit en trois tranches ci-dessous.",
+
+  payTitre: "Trois tranches de 175 000 FCFA (≈ 267 €)",
+  pay: [
+    { first:true, label:"Tranche 1 — au démarrage", sub:"Votre versement lance l'accompagnement et la construction de la plateforme.", val:"175 000 FCFA", ap:"≈ 267 €" },
+    { label:"Tranche 2 — à mi-parcours", sub:"Une fois le modèle posé et la plateforme en construction.", val:"175 000 FCFA", ap:"≈ 267 €" },
+    { label:"Tranche 3 — à la mise en ligne", sub:"Quand votre plateforme est en ligne et prise en main.", val:"175 000 FCFA", ap:"≈ 267 €" }
+  ],
+
+  bonusH: "Ce qui est compris dans votre offre",
+  bonus: [
+    'Vos <b>conseils pratiques</b> sur vos points urgents — <span class="off">compris</span> dans les 10h d\'accompagnement',
+    'Le <b>branchement du nom de domaine</b> + la mise en ligne — <span class="off">compris</span>',
+    'L\'<b>hébergement de votre plateforme</b> la 1re année — <span class="off">offert</span>',
+    'Une <b>séance de prise en main</b> de l\'outil avec vous — <span class="off">comprise</span>'
+  ],
+
+  cpSub: "Notre tarif de lancement est possible parce que Yiriba Nature devient une vitrine de notre travail. Voici ce qu'on se dit clairement, de part et d'autre.",
+  cp: [
+    'Une <b>courte vidéo témoignage</b> une fois votre plateforme en main, sur ce qu\'elle vous apporte au quotidien',
+    'Une <b>recommandation</b> de l\'agence auprès des entrepreneurs de votre réseau (revendeuses, commerçantes) qui ont les mêmes besoins',
+    'L\'autorisation de citer <b>Yiriba Nature</b> comme cas client (nom + visuels de la plateforme)'
+  ],
+
+  limite: "Cette offre de lancement est réservée jusqu'au <b>31/07/2026</b>. Votre créneau de démarrage est bloqué dès réception de la première tranche (175 000 FCFA).",
+  accord: "Je confirme notre accord : l'accompagnement Eagle et la plateforme Yiriba Nature, pour 525 000 FCFA (≈ 800 €) réglés en 3 tranches de 175 000 FCFA, et je souhaite démarrer.",
+  doneMsg: "Votre accord est bien enregistré et transmis à Mac Arthur. Vous allez recevoir les coordonnées pour régler la première tranche et caler la première séance. On démarre Yiriba Nature."
+};
+/* ========================================================================================= */
+
+const $ = (id)=>document.getElementById(id);
+
+// header + textes
+$("c-tag").textContent = DEVIS.tag;
+$("c-num").textContent = "N° " + DEVIS.numero;
+$("c-date").textContent = DEVIS.date + " · valable jusqu'au " + DEVIS.valide;
+$("c-titre").innerHTML = DEVIS.titre;
+$("c-intro").textContent = DEVIS.intro;
+$("v-market-lab").textContent = DEVIS.marcheLabel;
+$("v-market").textContent = DEVIS.marche;
+$("v-lab").textContent = DEVIS.valLab;
+$("v-total").innerHTML = DEVIS.valTotal + '<small>' + DEVIS.valTotalAp + '</small>';
+$("v-cap").textContent = DEVIS.valCap;
+$("bonus-h").textContent = DEVIS.bonusH;
+$("grp-bonus").innerHTML = DEVIS.bonus.map(b=>"<li>"+b+"</li>").join("");
+$("cp-sub").textContent = DEVIS.cpSub;
+$("grp-cp").innerHTML = DEVIS.cp.map(b=>"<li>"+b+"</li>").join("");
+$("c-limit").innerHTML = "<b>À noter.</b> " + DEVIS.limite;
+$("accord-txt").textContent = DEVIS.accord;
+$("done-msg").textContent = DEVIS.doneMsg;
+$("s-total").innerHTML = DEVIS.valTotal + '<small>' + DEVIS.valTotalAp + '</small>';
+$("btn-help").href = "https://wa.me/"+DEVIS.waHelp+"?text="+encodeURIComponent(DEVIS.waHelpText);
+
+// bloc "ce qu'on a acté"
+$("grp-deal").innerHTML = DEVIS.deal.map(d=>`
+  <div class="deal-row">
+    <div class="dh">
+      <div class="dt">${d.nom}<span class="deal-tag ${d.tagClass}">${d.tag}</span></div>
+      <div class="dp"><span class="${d.inc?'inc':''}">${d.prix}</span>${d.ap?`<small>${d.ap}</small>`:''}</div>
+    </div>
+    <div class="dd">${d.desc}</div>
+    <ul>${d.li.map(x=>`<li>${x}</li>`).join("")}</ul>
+  </div>`).join("");
+
+// plan de règlement
+$("pay-h").textContent = DEVIS.payTitre;
+$("grp-pay").insertAdjacentHTML("beforeend", DEVIS.pay.map((p,i)=>`
+  <div class="pay-row ${p.first?'first':''}">
+    <div class="n">${i+1}</div>
+    <div class="pm"><div class="pl">${p.label}</div><div class="ps">${p.sub}</div></div>
+    <div class="pv">${p.val}<small>${p.ap}</small></div>
+  </div>`).join(""));
+
+// récap fixe (deal fermé, pas de composition)
+$("recap").innerHTML =
+  '<div class="r"><span>Accompagnement Eagle (10h / 2 mois)</span><span>525 000 FCFA</span></div>'
+  + '<div class="r"><span>Plateforme Yiriba Nature</span><span>comprise</span></div>'
+  + '<div class="r tot"><span>Total, réglable en 3 fois</span><span>525 000 FCFA · 800 €</span></div>';
+
+// validation
+function checkForm(){
+  const ok = $("f-nom").value.trim() && $("f-contact").value.trim() && $("f-accord").checked;
+  $("btn-valider").disabled = !ok;
+}
+["f-nom","f-contact"].forEach(id=>$(id).addEventListener('input',checkForm));
+$("f-accord").addEventListener('change',checkForm);
+$("s-cta").addEventListener('click',()=>$("form-block").scrollIntoView({behavior:'smooth'}));
+
+// submit
+$("btn-valider").addEventListener('click', async ()=>{
+  const btn=$("btn-valider"); btn.disabled=true; btn.textContent="Envoi en cours...";
+  const payload = {
+    numero: DEVIS.numero, client: DEVIS.client, projet: DEVIS.projet,
+    nom: $("f-nom").value.trim(), contact: $("f-contact").value.trim(), demande: $("f-demande").value.trim(),
+    selection: ["Accompagnement Eagle (10h / 2 mois)", "Plateforme Yiriba Nature (comprise)", "Règlement en 3 tranches de 175 000 FCFA"],
+    total: 525000, devise: "FCFA", apartir: false,
+    total_label: "525 000 FCFA (≈ 800 €), 3 x 175 000 FCFA"
+  };
+  try{
+    await fetch(DEVIS.submitUrl, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload) });
+  }catch(err){ /* fire-and-forget : on confirme quand même côté cliente */ }
+  $("app").querySelectorAll('.sec,.hero,.value,.bonus,.limit,#form-block,.top,.foot').forEach(el=>el.style.display='none');
+  $("sticky").style.display='none';
+  $("done").classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+checkForm();
+</script>
+</body>
+</html>

@@ -7,6 +7,38 @@
 
 ---
 
+## 2026-07-16 (session 102 — Yiriba Nature : lead diagnostic converti en 24h, devis de confirmation + décision barème + idée formulaire intelligent)
+
+### Le lead et sa conversion rapide
+- Faveur Ingryd Brou (Yiriba Nature, cosmétiques naturels CI, +225 07 18 41 42 48) a rempli le **formulaire diagnostic du site le 15/07 à 00h45**. Email de notif reçu avec synthèse, problèmes, opportunités et message WhatsApp pré-rédigé. Cette fois le lead a été **traité en ~24h** (Mac Arthur l'a eue au téléphone), pas laissé refroidir comme Franck Azaria.
+- Closé au téléphone : elle part sur l'**offre EAGLE 800 € étalée sur 3 mois** (site web + accompagnement + conseils pratiques).
+
+### Cadrage du deal (barème + questions ciblées)
+- Décisions actées via AskUserQuestion : les 3 mois = **paiement en 3 fois** (l'accompagnement reste sur 2 mois, seul le règlement s'étale) ; site = **App pro + double grille B2B/B2C** ; acompte déclencheur = **Tranche 1 de 175 000 FCFA** ; conseils pratiques = **inclus dans les 10h EAGLE** (pas une ligne à part).
+- Vérité chiffrée posée à Mac Arthur : à 800 €, il vend ~1 300 € de barème (EAGLE 800 + App pro majorée), rabais ~40 %. Le vrai coût n'est pas le prix mais **le temps** (10h d'accompagnement + une app avec stock et double tarif). Rabais autorisé par le barème (rabais volontaires) **à condition que la compensation com soit réelle** → contrepartie visibilité écrite dans le devis, pas espérée.
+
+### Devis de CONFIRMATION (pas un devis à composer)
+- Distinction clé retenue : elle a déjà dit oui à 800 €. Un devis à composer (type Fleur) lui rouvrirait une négo gagnée et la ferait descendre. Construit donc un **devis de confirmation** : périmètre et prix actés, un seul bouton « Je valide et je démarre » → POST `devis-accept`. Dérogation assumée à la règle des 3 formules (elle sert à empêcher une négo à la baisse, inutile sur un deal fermé).
+- Format offre irrésistible (pas d'addition qui fait peur) : produit acheté = EAGLE (525 000 FCFA / 800 €), **plateforme affichée « comprise, valeur 320 000 FCFA / 490 € »** car c'est l'outil de l'accompagnement. Plan de règlement en 3 tranches. Contrepartie visibilité en section dédiée.
+- **N° ATR-2026-0010** (prochain numéro libre vérifié : 0005 Élévia, 0007 GetWinWorld, 0008 LS Expertise, 0009 Fleur déjà pris). Source `livrables/clients/demo-site/public/yiriba/index.html` (template Fleur adapté). Vérifs : syntaxe JS OK, cross-check des IDs JS↔HTML OK, **zéro débordement mesuré à la sonde DOM** (scrollWidth ≤ innerWidth ; la capture headless montrait des prix coupés = artefact connu des sessions 98/101, pas un vrai débordement), FCFA en premier, CSS d'impression ajouté.
+- Déployé sur **demo.agenceattractor.com/yiriba**. Piège du catch-all `/:slug → assists.agenceattractor.com/b/:slug` respecté : règle explicite `/yiriba /yiriba/index.html 200` ajoutée dans `_redirects` avant le catch-all (sinon le lien serait tombé sur la boutique Assists). Déploiement Cloudflare Pages branche master, lien vérifié (titre servi = le devis Yiriba, pas la redirection).
+
+### Décision barème : CONSEIL réhaussé + entrée découverte 1h
+- Mac Arthur tranche : le tarif CONSEIL réel est **120 €/h** (pas 80). L'ancien 80 € devient une **entrée découverte 1h à 80 €** (au lieu de 120), porte d'entrée à faible engagement pour un prospect indécis qui veut traiter SON point urgent. `bareme.md` mis à jour (2 lignes CONSEIL) avec la consigne : ne jamais proposer le 1h-découverte à un prospect déjà closé sur un package (ça lui ouvre une porte de sortie). Répercussion dans `generate-devis` (auto-devis) laissée en attente, cf. idée capturée ci-dessous.
+
+### Idée « formulaire intelligent » capturée + 3 bloquants
+- Remarque de Mac Arthur : le formulaire diagnostic n'est pas percutant, en le remplissant on devrait sortir le devis au barème. **Constat de lecture du code (motif session 101) : les briques existent et sont débranchées.** `diagnostic/index.ts` qualifie et crée un `pilotage_pipeline` avec `dossier_id` ; `generate-devis/index.ts` chiffre au barème et accepte précisément ce `dossier_id`, mais n'est déclenché qu'à la main. Jointure = un appel.
+- **3 bloquants à corriger AVANT de brancher** (capturés dans `idees-pipeline.md`) : (1) **barème désynchronisé** (`bareme.md` EAGLE = 10h/2 mois, copie en dur `generate-devis` = « 8 semaines » ; section Mr Attractor Films absente de l'auto-devis) ; (2) **numérotation qui collisionne** (`count+1` sur `pilotage_devis`/`devis_prospects` ignore les devis faits main 0005/0007/0008/0009 → réattribution de numéros signés) ; (3) **acompte 50 % en dur**, incompatible avec un paiement en 3 tranches. Suite naturelle = brancher sur le devis web interactif (`devis-accept` + cas Fleur).
+- Défaut voisin relevé : l'email diagnostic Yiriba est arrivé avec « Famille ? » alors que le parse Claude a réussi (synthèse + message présents). Cause non établie, à prouver en exécutant (`?debug=1`), pas en lisant.
+
+### Le sujet de fond nommé par Mac Arthur : modèle économique instable
+- « Le modèle économique est encore instable, c'est en même temps une difficulté avec mon style d'accompagnement, il faudra qu'on établisse une règle. » Analyse posée : le barème modélise des produits séparés (A app, B consulting) mais Mac Arthur ne vend **jamais** un produit seul (Yiriba, Beracca, Studio IA, Ayela, Cabinet DAB = tous des combos). Le barème est incomplet (pas de règle pour composer A+B ni valoriser une contrepartie en nature), donc chaque deal se recompose au téléphone et atterrit sous la grille. Et rien ne borne le volume d'heures que son style d'accompagnement donne. **Renvoyé à la réunion « sur l'entreprise » du dimanche 21h** (créneau agenda déjà créé) plutôt qu'un arbitrage à chaud.
+
+### Livrables de la session
+- Devis ATR-2026-0010 live + vérifié · `bareme.md` mis à jour (CONSEIL) · `idees-pipeline.md` (idée formulaire + 3 bloquants) · `livrables/clients/yiriba-nature/BRIEF-CLIENT.md` · message WhatsApp de remise rédigé (suivi, pas relance à froid).
+
+---
+
 ## 2026-07-15 (session 101 — Attractor Assists : refonte sur le tunnel unique. Le produit existait, il était débranché)
 
 ### Le déclencheur : un état des lieux chiffré, pas une impression
@@ -54,6 +86,34 @@
 ### Ce que ce chantier ne fait pas
 - **Le produit est réparé, il n'est pas rempli.** Les 35 testeurs de mai ne reviendront pas d'eux-mêmes. Prochaine étape : 3 utilisateurs en test accompagné, et regarder où ils décrochent.
 - Non déployé : `demo-site` (choix de Mac Arthur), donc `demo.agenceattractor.com/template-1b` reste servi. Non fait : bascule de Kezey, sous-domaine `[slug].boutik.ci`, RAG de la base de connaissance.
+
+---
+
+## 2026-07-15 (session 101 — Club Élévia : accord à 3 000 €, maquettes validées, package V5 aligné sur 40 jours ouvrés)
+
+### Ce qu'Élise et Mac Arthur ont acté au téléphone
+- **Maquettes validées** (Phase 1 terminée). **Prix ramené à 3 500 € → 3 000 €**, dont les **250 € déjà réglés** (REÇ-2026-001 + 002) qui couvrent la maquette. **Durée de développement estimée à 40 jours ouvrés** (≈ 2 mois : dev + tests + corrections). Demande : **accorder les tranches de règlement sur le calendrier de dev**.
+- Élise se dit prête à poursuivre le **déploiement V2 (stores)** avec l'agence. Rappel de la politique maison : rester partenaire sur les projets d'envergure via consulting/stratégie et création de contenu.
+
+### La lecture du contrat signé a débloqué la marge de manœuvre (point clé)
+- Son **Art. 7** dit « Le montant total sera fixé dans le devis » et présente le **30/30/30/10 comme une répartition recommandée**, pas imposée. Son **Art. 4** dit « Les dates précises seront fixées dans le devis ».
+- Conséquence : changer le prix ET le calendrier se fait **dans le devis, sans avenant supplémentaire**. Pas de re-signature du contrat à demander.
+
+### Garde-fou délai posé (le vrai risque de l'engagement sur 40 jours)
+- Son **Art. 14** : retard > 15 jours ouvrés non justifié → mise en demeure, **suspension des paiements**, résiliation. Son **Art. 6** : validation écrite obligatoire à chaque phase, qui conditionne le passage à la suivante. Graver « 40 jours ouvrés » sans border, c'était s'engager sur une date non contrôlée (elle met 10 jours à valider la bêta, et c'est Mac Arthur qui est en retard).
+- Corrigé : le Devis V5 définit les 40 jours comme des jours de **production effective**, avec **clause de suspension de plein droit** pendant (a) ses validations (≤ 7 j ouvrés/phase, CDC §11), (b) l'attente d'un élément/contenu/décision lui incombant, (c) l'attente d'une tranche échue, (d) l'attente des frais de tiers (domaine, hébergement). Un décalage dû à ces causes est **réputé justifié et non imputable au Prestataire au sens de l'Art. 14**. Notion « Jour de production effective » ajoutée au glossaire du CDC.
+
+### Package V5 produit (le V4 est caduc, ne plus l'envoyer)
+- **Devis V5** (3 000 €, émis le 15/07, valable jusqu'au 14/08) : bandeau « Où en est le projet » (maquettes validées, ce qui change vs V4), Phase 1 marquée *Réalisée & validée*, Phases 2-4 fenêtrées (J0→J+15, J+16→J+30, J+31→J+40), section **Calendrier de réalisation** + clause de suspension, **4 tranches** : **T1 900 − 250 = 650 € net** (son versement fixe le **J0**), **T2 900 €** (prototype), **T3 900 €** (bêta), **T4 300 €** (mise en ligne) → **reste 2 750 €**. Le découpage garde le 30/30/30/10 de son propre Art. 7, ce qui le rend difficile à contester.
+- **Date de démarrage laissée ouverte** (choix de Mac Arthur) : le compteur part au versement de T1, aucune date gravée. Évite de s'engager sur un calendrier traversant août.
+- **Plan de continuité 250 €/mois retiré du devis** (choix de Mac Arthur, à vendre séparément après la mise en ligne). Garde-fou ajouté pour ne pas laisser croire à une maintenance illimitée incluse : le devis mentionne les 3 mois de garantie (Art. 13) et précise que la maintenance au-delà fera l'objet d'une proposition distincte.
+- **V2 stores + partenariat consulting/contenu : rien d'écrit pour l'instant** (choix de Mac Arthur, à aborder à la mise en ligne). Ces prestations sont déjà listées hors périmètre au CDC §9, donc vendables à part sans retoucher le package.
+- **CDC V4** recalé (montants, tranches, cycle de vie, déclencheur de démarrage = Phase 2 et non plus Phase 1) et **Avenant n°1** corrigé : sa clause « Dispositions inchangées » affirmait encore « ne modifie ni le prix total, ni le calendrier de paiement » et citait le 30/30/30/10 — reformulée pour renvoyer au Devis V5 conformément aux Art. 4 et 7.
+- 3 PDF régénérés (Chrome headless, passage par le scratchpad car OneDrive bloque l'écriture directe). Vérifiés par extraction de texte : **zéro résidu** de 3 500 / 1 050 / 800 € / Jalon / Plan de continuité, et rendu contrôlé par capture (pas de débordement, pas de texte sur texte).
+
+### Prochaine étape
+- Faire signer **Avenant n°1 + Devis V5 + CDC V4** (contrat et NDA déjà signés) → déclenche la **Tranche 1 (650 € net)**, fixe le J0 et lance la Phase 2.
+- À surveiller : le MRR retiré du devis est un MRR qu'on ne fait pas signer avec le reste, donc à reproposer explicitement à la mise en ligne, sinon il ne se signe jamais.
 
 ---
 

@@ -42,10 +42,13 @@ Ancrage de référence : **J'Envoie Express, GetWinWorld, C'Real**. Partenariat 
 
 | Offre | Prix | Format |
 |-------|------|--------|
-| STARTER | 100 000 FCFA / 150 € | Cadrage + reco, 48h |
-| RUNNER | 230 000 FCFA / 350 € | Structuration marketing, 72h |
-| EAGLE | 525 000 FCFA / 800 € | Coaching CEO + pilotage, 10h (séances planifiées avec le client) |
-| CONSEIL | 52 000 FCFA/h / 80 €/h | À la demande |
+| STARTER | 100 000 FCFA / 150 € | Un document (diagnostic + reco), **livré sous 48h** |
+| RUNNER | 230 000 FCFA / 350 € | Un dossier de structuration marketing, **livré sous 72h** |
+| EAGLE | 525 000 FCFA / 800 € | Accompagnement : **volume de 10h à répartir sur 2 mois max**, en séances planifiées avec le client |
+| CONSEIL | 80 000 FCFA/h / 120 €/h | À la demande, tarif horaire standard |
+| CONSEIL — Entrée découverte | 52 000 FCFA / 80 € | **1 heure unique** pour traiter LE point le plus urgent du prospect (au lieu de 120 €). Porte d'entrée à faible engagement : un prospect indécis commence petit, sur sa vraie douleur, et l'agence prouve sa valeur en une séance. Ne pas proposer à un prospect déjà closé sur un package (ça lui ouvre une porte de sortie). |
+
+> **Attention cohérence des formats** : 48h et 72h (Starter/Runner) sont des **délais de livraison** d'un livrable one-shot ; les 10h d'Eagle sont un **volume horaire d'accompagnement** (pas un délai). Ne jamais les présenter côte à côte comme s'ils étaient comparables (ex. "48h / 72h / 10h" est ambigu et fait croire à tort que 10h < 72h). Décrire chaque palier par ce qu'il est.
 
 ## Famille C — Attractor Assists (abonnement)
 
@@ -67,6 +70,20 @@ Quand l'utiliser : le prospect a une activité physique/commerciale établie ave
 ## Rabais volontaires — stratégie assumée, pas une erreur
 
 Sur les petits deals Famille A locaux (ex. GetWinWorld, J'Envoie Express), les prix réels sont parfois sous le barème. C'est une décision stratégique assumée : le rabais est compensé par la communication générée (cas clients réels, bouche-à-oreille, réputation, futurs prospects similaires attirés par la preuve). Ne pas "corriger" ces deals a posteriori — mais rester conscient que cette compensation doit être réelle (le deal doit effectivement générer de la com/des références), sinon c'est du rabais perdu.
+
+## Service Vidéo — Mr Attractor Films (studio maison)
+
+Prestations vidéo pro (tournage 4K, 1 à 2 cadreurs). **Réservé aux projets en Côte d'Ivoire ou en Île-de-France** (tournage sur place). Prix **HT + défraiement** (transport/hébergement/repas selon le lieu). Briefing à valider 72h avant le tournage. Acompte 50 % / solde 50 %.
+
+> **On ne vend pas « une vidéo » mais un accompagnement de lancement, à géométrie variable selon l'ambition du client** : de la production vidéo seule → à la **direction artistique + plan de promotion** → jusqu'au **pilotage complet du lancement** (on orchestre tout). Les packs ci-dessous sont le socle production ; la DA, le plan de promo et le pilotage se chiffrent sur mesure en plus. Toujours présenter la vidéo comme la porte d'entrée d'un lancement piloté, pas comme un livrable isolé.
+
+| Pack | Prix | Détail |
+|------|------|--------|
+| **Captation / événement / spectacle** | 280 € à 571 € HT | 1 cadreur, tournage + montage, ½ journée, rendu 48h |
+| **Film d'entreprise / clip / film promotionnel** | 354 € à 1 405 € HT | 2 cadreurs, tournage + montage + post-prod, 1 journée, interviews + sound design en option, rendu 72h, livraison numérique |
+| **Package Créa** (graphisme/branding) | dès 250 € sur devis | identité visuelle, logo, visuels promo réseaux, affiches event, bannières/visuels 1:1 |
+
+Source : `Mr Attractor Films.pdf` (Drive). Contact studio : +33 7 53 90 23 23.
 
 ## Add-ons (à confirmer avec Mac Arthur)
 
