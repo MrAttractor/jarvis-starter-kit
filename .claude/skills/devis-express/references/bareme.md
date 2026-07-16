@@ -67,6 +67,14 @@ Quand l'utiliser : le prospect a une activité physique/commerciale établie ave
 
 À appeler en premier réflexe dès qu'un nouveau prospect ressemble à ce profil (business établi, chiffres suivables) — ne pas repartir de zéro sur la structure du deal.
 
+## Remise volume — automatique au-dessus de 1 200 €
+
+**Tout devis dont le total dépasse 1 200 € (ou l'équivalent FCFA) reçoit automatiquement 20 % de remise** (décidé le 16/07/2026). Objectif : récompenser les gros engagements et faciliter le closing des combos (app + accompagnement + vidéo). La remise s'applique sur le total composé, s'affiche clairement au client (montant barré → montant remisé), et le point d'entrée reste l'acompte de la formule choisie. Câblée dans le devis web interactif (`recompute()` : `total > 1200 → -20 %`).
+
+## Moyens de paiement affichés APRÈS validation (règle UX, 16/07/2026)
+
+Sur le devis web interactif, les moyens de paiement n'apparaissent **jamais avant** : ils s'affichent sur l'écran de confirmation, **une fois le devis validé** par le client. Cohérent avec le principe « l'appel déclenche la demande, le prix ne se montre pas à froid ». Méthodes affichées selon la zone/devise (France : PayPal / Wero / Revolut ; CI : Wave / MTN / Djamo).
+
 ## Rabais volontaires — stratégie assumée, pas une erreur
 
 Sur les petits deals Famille A locaux (ex. GetWinWorld, J'Envoie Express), les prix réels sont parfois sous le barème. C'est une décision stratégique assumée : le rabais est compensé par la communication générée (cas clients réels, bouche-à-oreille, réputation, futurs prospects similaires attirés par la preuve). Ne pas "corriger" ces deals a posteriori — mais rester conscient que cette compensation doit être réelle (le deal doit effectivement générer de la com/des références), sinon c'est du rabais perdu.

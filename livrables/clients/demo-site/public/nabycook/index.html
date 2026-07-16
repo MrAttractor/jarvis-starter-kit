@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Votre devis — Nabycook · Mr Attractor</title>
+<meta name="robots" content="noindex">
+<!--
+  DEVIS INTERACTIF MR ATTRACTOR — template réutilisable.
+  Pour un nouveau client : ne toucher qu'au bloc CONFIG (const DEVIS = {...}) plus bas.
+  Le prospect coche, le total se calcule, il valide → POST vers l'edge function devis-accept.
+-->
+<style>
+:root{
+  --orange:#F25C05; --orange-2:#FF7A30; --orange-d:#D94F02;
+  --ink:#1A1714; --creme:#FAF6F0; --white:#FFFFFF; --sable:#E8E2DA;
+  --muted:#9C9189; --muted-2:#4A3F35; --green:#1E9E52; --green-bg:#E7F5EC;
+  --shadow:0 8px 30px rgba(26,23,20,.08); --shadow-2:0 4px 14px rgba(26,23,20,.06);
+  --font:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--font);color:var(--ink);background:var(--creme);line-height:1.55;overflow-x:hidden;padding-bottom:120px}
+.wrap{max-width:720px;margin:0 auto;padding:20px 18px 40px}
+img{max-width:100%}
+
+/* header */
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:6px 0 18px;border-bottom:2px solid var(--orange)}
+.logo{font-size:20px;font-weight:800;letter-spacing:.01em;color:var(--ink)}
+.logo span{color:var(--orange)}
+.logo .sub{display:block;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.02em;margin-top:2px}
+.meta{text-align:right;font-size:12px;color:var(--muted)}
+.meta .k{color:var(--orange);font-weight:800;text-transform:uppercase;letter-spacing:.1em;font-size:12px}
+
+/* intro */
+.hero{margin-top:22px}
+.hero h1{font-size:26px;line-height:1.2;letter-spacing:-.01em}
+.hero h1 em{color:var(--orange);font-style:normal}
+.hero p{margin-top:10px;color:var(--muted-2);font-size:14.5px}
+
+/* sections */
+.sec{margin-top:26px}
+.sec-h{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.sec-h .num{flex:0 0 26px;height:26px;border-radius:50%;background:var(--orange);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.sec-h h2{font-size:16px}
+.sec-sub{color:var(--muted);font-size:13px;margin:2px 0 14px 36px}
+
+/* choice cards */
+.opt{display:block;position:relative;background:var(--white);border:1.5px solid var(--sable);border-radius:14px;padding:15px 16px 15px 52px;margin-bottom:12px;cursor:pointer;box-shadow:var(--shadow-2);transition:border-color .15s,box-shadow .15s,transform .08s}
+.opt:hover{border-color:var(--orange-2)}
+.opt.on{border-color:var(--orange);box-shadow:0 0 0 3px rgba(242,92,5,.12),var(--shadow-2)}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.mark{position:absolute;left:16px;top:16px;width:22px;height:22px;border:2px solid var(--sable);background:#fff;display:flex;align-items:center;justify-content:center;transition:.15s}
+.opt[data-type="radio"] .mark{border-radius:50%}
+.opt[data-type="check"] .mark{border-radius:6px}
+.opt.on .mark{border-color:var(--orange);background:var(--orange)}
+.mark svg{width:13px;height:13px;stroke:#fff;stroke-width:3.2;fill:none;opacity:0;transition:.15s}
+.opt.on .mark svg{opacity:1}
+.opt[data-type="radio"].on .mark::after{content:"";width:9px;height:9px;border-radius:50%;background:#fff}
+.opt[data-type="radio"] .mark svg{display:none}
+.opt-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.opt-nom{font-weight:700;font-size:15px}
+.badge{display:inline-block;background:var(--orange);color:#fff;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:20px;margin-left:7px;vertical-align:middle}
+.opt-prix{font-weight:800;font-size:15px;color:var(--ink);white-space:nowrap}
+.opt-prix .ap{display:block;font-size:9.5px;font-weight:600;color:var(--muted);text-align:right}
+.opt-desc{color:var(--muted-2);font-size:12.5px;margin-top:5px}
+.opt-format{display:inline-block;margin-top:8px;font-size:11px;color:var(--muted);border:1px solid var(--sable);border-radius:20px;padding:2px 9px}
+.opt-more{display:inline-block;margin-top:11px;background:none;border:none;padding:0;color:var(--orange-d);font-weight:700;font-size:12px;font-family:inherit;cursor:pointer;text-decoration:underline}
+.opt-detail{margin-top:11px;padding-top:11px;border-top:1px dashed var(--sable)}
+.opt-detail .dl{font-size:12px;color:var(--muted-2);margin-bottom:9px;line-height:1.55}
+.opt-detail .dl:last-child{margin-bottom:0}
+.opt-detail .dl b{display:block;color:var(--ink);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.opt-detail ul{margin:3px 0 0 17px;padding:0}
+.opt-detail li{margin-bottom:4px}
+.opt-detail .geo{color:var(--orange-d);font-weight:600}
+
+/* market anchor */
+.value{margin-top:26px;border:2px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.value .m{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:13px 16px;background:#fff;font-size:13px;color:var(--muted-2)}
+.value .m .s{text-decoration:line-through;text-decoration-color:#C0392B;font-weight:800;font-size:15px;color:var(--ink);white-space:nowrap}
+.value .l{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:15px 16px;background:var(--ink);color:#fff}
+.value .l .lab{font-size:13px;font-weight:600}
+.value .l .amt{font-size:22px;font-weight:800;color:var(--orange-2);white-space:nowrap}
+.value .l .amt small{display:block;font-size:10px;font-weight:600;color:#C9BEB2;text-align:right}
+.value .cap{padding:11px 16px;font-size:11.5px;color:var(--muted);background:#fff;border-top:1px solid var(--sable)}
+
+/* bonus */
+.bonus{margin-top:22px;border:1.5px solid var(--orange);background:#FEF4EC;border-radius:14px;padding:16px}
+.bonus h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--orange-d);margin-bottom:10px}
+.bonus ul{list-style:none}
+.bonus li{position:relative;padding-left:24px;font-size:12.5px;margin-bottom:7px;color:var(--muted-2)}
+.bonus li::before{content:"";position:absolute;left:3px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--orange)}
+.bonus b{color:var(--ink)}
+.bonus .off{color:var(--green);font-weight:800}
+
+/* limiter */
+.limit{margin-top:14px;background:var(--green-bg);border-radius:12px;padding:13px 15px;font-size:12px;color:var(--muted-2);line-height:1.6}
+.limit b{color:var(--ink)}
+
+/* validation */
+.valid{margin-top:26px;background:#fff;border:1.5px solid var(--sable);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
+.valid h3{font-size:17px;margin-bottom:4px}
+.valid .hint{color:var(--muted);font-size:12.5px;margin-bottom:16px}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--muted-2);margin-bottom:5px}
+.field input,.field textarea{width:100%;padding:12px 14px;border:1.5px solid var(--sable);border-radius:10px;font-size:15px;font-family:inherit;color:var(--ink);background:var(--creme)}
+.field textarea{resize:vertical;min-height:76px;line-height:1.5}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--orange);background:#fff}
+.accord{display:flex;gap:10px;align-items:flex-start;margin:16px 0;cursor:pointer;font-size:12.5px;color:var(--muted-2)}
+.accord input{margin-top:2px;width:18px;height:18px;accent-color:var(--orange);flex:0 0 auto}
+.recap{background:var(--creme);border-radius:12px;padding:13px 15px;font-size:12.5px;margin-bottom:16px}
+.recap .r{display:flex;justify-content:space-between;padding:3px 0;color:var(--muted-2)}
+.recap .r.tot{border-top:1px dashed var(--sable);margin-top:6px;padding-top:8px;font-weight:800;color:var(--ink);font-size:14px}
+.btn{display:block;width:100%;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:800;font-family:inherit;color:#fff;background:linear-gradient(135deg,var(--orange-2),var(--orange-d));cursor:pointer;box-shadow:0 6px 18px rgba(242,92,5,.32);transition:transform .08s,opacity .15s}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+.btn-ghost{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;text-align:center;margin-top:12px;padding:14px;border:1.5px solid var(--sable);border-radius:12px;font-size:14px;font-weight:700;color:var(--muted-2);background:#fff;text-decoration:none}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange-d)}
+.btn-ghost svg{width:18px;height:18px;fill:#25D366}
+.ask{margin-top:14px;text-align:center;font-size:12.5px;color:var(--muted)}
+.ask a{color:var(--orange-d);font-weight:700;text-decoration:none}
+
+/* sticky total */
+.sticky{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--sable);box-shadow:0 -6px 22px rgba(26,23,20,.08);z-index:40}
+.sticky .in{max-width:720px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.sticky .lab{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.sticky .amt{font-size:23px;font-weight:800;color:var(--ink);line-height:1.1}
+.sticky .amt small{font-size:11px;font-weight:600;color:var(--muted);display:block}
+.sticky .cta{border:none;background:var(--orange);color:#fff;font-weight:800;font-family:inherit;font-size:14px;padding:12px 18px;border-radius:11px;cursor:pointer;white-space:nowrap}
+
+/* confirmation */
+.done{display:none;text-align:center;padding:40px 20px}
+.done.show{display:block}
+.done .circle{width:74px;height:74px;border-radius:50%;background:var(--green-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+.done .circle svg{width:36px;height:36px;stroke:var(--green);stroke-width:3;fill:none}
+.done h2{font-size:22px;margin-bottom:8px}
+.done p{color:var(--muted-2);font-size:14px;max-width:420px;margin:0 auto}
+
+.pay-block{margin-top:24px;text-align:left;background:var(--creme);border:1.5px solid var(--sable);border-radius:14px;padding:18px}
+.pay-block h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--orange-d);margin-bottom:12px}
+.pay-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--sable)}
+.pay-row:last-of-type{border-bottom:none}
+.pay-row .pm{font-weight:700;font-size:14.5px;color:var(--ink)}
+.pay-row .pd{font-size:13.5px;color:var(--muted-2);white-space:nowrap}
+.pay-block #pay-note{margin-top:12px;font-size:12.5px;color:var(--muted-2);line-height:1.55}
+.foot{margin-top:30px;text-align:center;font-size:10.5px;color:var(--muted);line-height:1.7}
+
+@media (max-width:420px){
+  .hero h1{font-size:23px}
+  .value .l .amt{font-size:19px}
+  .sticky .cta{padding:11px 14px;font-size:13px}
+}
+</style>
+</head>
+<body>
+
+<main class="wrap" id="app">
+
+  <div class="top">
+    <div class="logo">Mr <span>Attractor</span><span class="sub" id="c-tag">Conseil en business &amp; applications métier</span></div>
+    <div class="meta">
+      <div class="k">Devis</div>
+      <div id="c-num">—</div>
+      <div id="c-date">—</div>
+    </div>
+  </div>
+
+  <section class="hero">
+    <h1 id="c-titre"></h1>
+    <p id="c-intro"></p>
+  </section>
+
+  <!-- 1. CONSEIL -->
+  <section class="sec">
+    <div class="sec-h"><span class="num">1</span><h2>Votre accompagnement conseil</h2></div>
+    <p class="sec-sub">On pose les fondations avant de construire. Choisissez le niveau qui correspond à votre ambition.</p>
+    <div id="grp-conseil"></div>
+  </section>
+
+  <!-- 2. VIDÉO & LANCEMENT -->
+  <section class="sec">
+    <div class="sec-h"><span class="num">2</span><h2>Votre vidéo et votre lancement</h2></div>
+    <p class="sec-sub">Optionnel. Pour montrer votre univers et faire connaître votre offre, pas juste un clip isolé.</p>
+    <div id="grp-site"></div>
+  </section>
+  <div id="grp-options" hidden></div>
+
+  <!-- ANCRAGE MARCHÉ -->
+  <div class="value">
+    <div class="m"><span id="v-market-lab"></span><span class="s" id="v-market"></span></div>
+    <div class="l"><span class="lab">Votre sélection, en offre de lancement</span><span class="amt" id="v-total">—</span></div>
+    <div class="cap">Vous ne réglez jamais la totalité d'un coup : chaque étape se paie à son lancement, et vous démarrez pour le seul acompte de la première.</div>
+  </div>
+
+  <!-- BONUS -->
+  <div class="bonus">
+    <h3>Offre de lancement — bonus inclus</h3>
+    <ul id="grp-bonus"></ul>
+  </div>
+
+  <!-- LIMITEUR -->
+  <div class="limit" id="c-limit"></div>
+
+  <!-- VALIDATION -->
+  <section class="valid" id="form-block">
+    <h3>Valider ma sélection</h3>
+    <p class="hint">Composez votre offre ci-dessus, puis validez. Une question avant de vous décider ? Le bouton WhatsApp plus bas vous met en lien direct avec Mac Arthur. Aucun engagement de paiement à cette étape.</p>
+
+    <div class="recap" id="recap"></div>
+
+    <div class="field"><label for="f-nom">Votre nom</label><input id="f-nom" type="text" placeholder="Prénom et nom" autocomplete="name"></div>
+    <div class="field"><label for="f-contact">Votre WhatsApp ou email</label><input id="f-contact" type="text" placeholder="+33... ou vous@email.com" autocomplete="email"></div>
+    <div class="field"><label for="f-demande">Un besoin particulier ? (optionnel)</label><textarea id="f-demande" rows="3" placeholder="Décrivez votre besoin en quelques mots et on vous fera un devis taillé sur mesure. Vous pouvez aussi combiner avec les options ci-dessus."></textarea></div>
+
+    <label class="accord"><input type="checkbox" id="f-accord"><span>Je souhaite être recontactée pour démarrer ou affiner ma demande. (Sans paiement à cette étape.)</span></label>
+
+    <button class="btn" id="btn-valider" disabled>Je valide ma sélection</button>
+    <a class="btn-ghost" id="btn-help" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.16c-.25.7-1.44 1.33-1.99 1.36-.53.05-1.02.24-3.4-.71-2.86-1.13-4.68-4.06-4.82-4.25-.14-.19-1.14-1.52-1.14-2.9s.72-2.06.98-2.34c.25-.28.55-.35.73-.35l.53.01c.17 0 .4-.06.62.48.25.6.85 2.07.92 2.22.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.28.29-.12.57.17.28.74 1.22 1.59 1.98 1.1.98 2.02 1.28 2.3 1.42.28.14.44.12.6-.07.17-.19.7-.81.89-1.09.18-.28.37-.23.62-.14.25.09 1.6.76 1.87.9.28.14.46.21.53.33.07.12.07.68-.18 1.38Z"/></svg>Une question ? Écrire à Mac Arthur sur WhatsApp</a>
+    <p class="ask">ou par email : <a href="mailto:myattractor1@gmail.com">myattractor1@gmail.com</a></p>
+  </section>
+
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015<br>
+    TVA non applicable, article 293 B du CGI — myattractor1@gmail.com — agenceattractor.com
+  </div>
+
+  <!-- CONFIRMATION -->
+  <div class="done" id="done">
+    <div class="circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <h2>C'est validé, merci !</h2>
+    <p id="done-msg"></p>
+    <div class="pay-block" id="pay-block" style="display:none">
+      <h3>Comment régler votre acompte</h3>
+      <div id="pay-list"></div>
+      <p id="pay-note"></p>
+    </div>
+  </div>
+
+</main>
+
+<!-- STICKY TOTAL -->
+<div class="sticky" id="sticky">
+  <div class="in">
+    <div><div class="lab">Total offre de lancement</div><div class="amt" id="s-total">—</div></div>
+    <button class="cta" id="s-cta">Valider →</button>
+  </div>
+</div>
+
+<script>
+/* ================= CONFIG — la seule chose à changer pour un autre client ================= */
+const DEVIS = {
+  numero: "ATR-2026-0011",
+  date: "16 juillet 2026",
+  client: "Nabyntou (Nabycook)",
+  projet: "Nabycook",
+  // Devise du devis : "EUR" (Europe) · "FCFA" (Côte d'Ivoire) · "both" (zone inconnue → les deux affichés).
+  // Les prix ci-dessous sont saisis en EUR ; le FCFA est calculé (taux barème 655,957).
+  devise: "EUR",
+  submitUrl: "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/devis-accept",
+  waHelp: "33753902323",
+  waHelpText: "Bonjour Mac Arthur, je regarde le devis Nabycook (ATR-2026-0011) et j'ai une question : ",
+  tag: "Conseil en business & création de contenu",
+  titre: 'Vendre <em>Nabycook</em> aussi bien que vous cuisinez',
+  intro: "Vous avez une offre riche (ateliers, traiteur, épicerie) et un vrai univers. Ce qui manque, ce n'est pas le talent, c'est de transformer tout ça en offres qui se vendent, et de le faire savoir. On avance en deux temps : d'abord structurer et écrire vos offres par cible, puis les mettre en image pour vous faire connaître. Composez ci-dessous ce qui vous parle, le total se calcule tout seul.",
+  marcheLabel: "Le même travail (structuration + création de contenu) confié à une agence classique",
+  marche: "2 000 – 4 000 €",
+  conseil: [
+    { id:"decouverte", nom:"Séance découverte", prix:80, format:"1 heure, en visio ou par téléphone", desc:"Une heure pour traiter LE point le plus urgent : clarifier une offre, débloquer votre promotion.",
+      avantage:"Vous voulez avancer vite sur un point précis, sans gros engagement pour commencer.",
+      limite:"C'est une séance ciblée, pas un accompagnement complet ni un dossier écrit.",
+      livrables:["1h de conseil en direct sur votre priorité","Des pistes d'action concrètes tout de suite"] },
+    { id:"starter", nom:"Starter", prix:150, format:"Livré sous 48h", desc:"Un document pour y voir clair vite : diagnostic + recommandations prioritaires.",
+      avantage:"Vous voulez un premier cap écrit, sans engager un gros budget.",
+      limite:"C'est un point de départ : il ne structure pas encore toute votre offre.",
+      livrables:["Un document de synthèse (diagnostic + priorités)","Vos 3 prochaines actions concrètes"] },
+    { id:"runner",  nom:"Runner",  prix:350, format:"Livré sous 72h", reco:true, defaut:true, desc:"Le cœur de ce dont vous avez besoin : structurer votre positionnement, vos cibles, écrire vos offres qui vendent, et poser votre plan de promotion.",
+      avantage:"Vous savez cuisiner et accueillir. Vous voulez enfin savoir quoi dire, à qui, et comment le vendre.",
+      limite:"Se concentre sur la structuration et le marketing, pas sur un suivi de plusieurs semaines.",
+      livrables:["Votre positionnement et vos cibles clarifiés","Vos offres écrites par cible (B2C, RSE entreprise, événementiel...)","Votre plan de promotion : quoi publier, où, quand","Une feuille de route pour vendre plus"] },
+    { id:"eagle",   nom:"Eagle",   prix:800, format:"10h à répartir sur 2 mois max", desc:"Un accompagnement complet : on structure votre business, vos offres et votre plan d'action, ensemble, dans la durée.",
+      avantage:"Vous voulez tout poser proprement et être accompagnée sur 2 mois, pas juste un document.",
+      limite:"Demande votre implication (10h de séances). C'est un accompagnement, pas un livrable rapide.",
+      livrables:["Tout ce qu'il y a dans Runner","10h de coaching + pilotage avec vous sur 2 mois","Le suivi de votre mise en œuvre","Tous les bonus de lancement ci-dessous"] }
+  ],
+  // Vidéo = 3 paliers FERMES, un seul à choisir (mono-sélection gérée en JS). Défraiement chiffré à l'appel.
+  site: [
+    { id:"video-essentiel", nom:"Essentiel — Captation", prix:350, geo:true, desc:"On filme un atelier ou un événement et on en tire un contenu prêt à publier.",
+      avantage:"Vous voulez montrer l'ambiance et la magie de vos ateliers, en vrai.",
+      limite:"1 cadreur, tournage + montage, demi-journée, rendu 48h. Prix HT + défraiement selon le lieu de tournage (nul en Île-de-France).",
+      livrables:["Tournage + montage d'un atelier ou d'un événement","Un format vidéo prêt à poster","Rendu sous 48h"] },
+    { id:"video-signature", nom:"Signature — Film + lancement", prix:690, geo:true, desc:"Un vrai film de marque, avec la direction artistique et le plan de promotion de votre lancement.",
+      avantage:"Vous voulez un film qui incarne Nabycook et savoir exactement où et quand le diffuser.",
+      limite:"2 cadreurs, tournage + montage + post-production, une journée, rendu 72h. Prix HT + défraiement selon le lieu.",
+      livrables:["Production vidéo pro (tournage 4K, montage, post-prod)","Direction artistique : l'univers et le ton de Nabycook","Plan de promotion : quoi publier, où, quand","Rendu sous 72h"] },
+    { id:"video-lancement", nom:"Lancement — Pilotage complet", prix:1290, geo:true, desc:"Le film Signature, et on orchestre tout votre lancement de bout en bout avec vous.",
+      avantage:"Vous voulez marquer les esprits et être accompagnée sur tout le lancement, pas juste recevoir une vidéo.",
+      limite:"Tout le pack Signature + pilotage du lancement. Prix HT + défraiement selon le lieu.",
+      livrables:["Tout le pack Signature","Le pilotage complet de votre lancement (calendrier, diffusion, suivi)","Des déclinaisons pour les réseaux","Un point de suivi après le lancement"] }
+  ],
+  options: [],
+  bonus: [
+    'Une séance de cadrage de 30 min pour lancer le travail — <span class="off">offerte</span>',
+    'Vos offres relues et ajustées une fois après livraison — <span class="off">offert</span>',
+    'Tarif de lancement garanti sur la vidéo si engagée dans les 30 jours',
+    'Des conseils de promotion applicables tout de suite, dès la première séance'
+  ],
+  limite: "Cette offre de lancement (bonus inclus) est réservée jusqu'au <b>31/07/2026</b>. Pour rester pleinement disponible sur chaque projet, un nombre limité d'accompagnements est ouvert par mois : votre créneau de démarrage est bloqué dès réception de l'acompte.",
+  doneMsg: "Votre sélection a bien été enregistrée et transmise à Mac Arthur. Vous serez recontactée très vite pour caler votre première séance et lancer le travail sur Nabycook.",
+  // Moyens de paiement révélés seulement après validation, par devise.
+  paiement: {
+    EUR: [
+      { m:"PayPal", d:"@Myattractor" },
+      { m:"Wero / Revolut", d:"+33 7 53 90 23 23" }
+    ],
+    FCFA: [
+      { m:"Wave", d:"+225 05 76 87 70 70" },
+      { m:"MTN Money", d:"+225 05 76 87 70 70" },
+      { m:"Djamo", d:"+225 05 76 87 70 70" }
+    ]
+  },
+  paiementNote: "Réglez l'acompte de la formule choisie par l'un de ces moyens, puis envoyez-moi la preuve sur WhatsApp. On démarre dès réception."
+};
+/* ========================================================================================= */
+
+const CHECK = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+const $ = (id)=>document.getElementById(id);
+const state = { conseil:null, site:{} };
+
+// Affichage devise selon la zone du prospect. Prix saisis en EUR, FCFA calculé (arrondi au millier propre).
+const TAUX_FCFA = 655.957;
+function toFCFA(eur){ return Math.round(eur*TAUX_FCFA/1000)*1000; }
+function fmt(eur){
+  const e = eur.toLocaleString('fr-FR') + " €";
+  const f = toFCFA(eur).toLocaleString('fr-FR') + " FCFA";
+  if(DEVIS.devise === "FCFA") return f;
+  if(DEVIS.devise === "both") return f + " (≈ " + e + ")";
+  return e;
+}
+
+// header + textes
+$("c-tag").textContent = DEVIS.tag;
+$("c-num").textContent = "N° " + DEVIS.numero;
+$("c-date").textContent = DEVIS.date;
+$("c-titre").innerHTML = DEVIS.titre;
+$("c-intro").textContent = DEVIS.intro;
+$("v-market-lab").textContent = DEVIS.marcheLabel;
+$("v-market").textContent = DEVIS.marche;
+$("c-limit").innerHTML = "<b>À noter.</b> " + DEVIS.limite;
+$("done-msg").textContent = DEVIS.doneMsg;
+$("grp-bonus").innerHTML = DEVIS.bonus.map(b=>"<li>"+b+"</li>").join("");
+$("btn-help").href = "https://wa.me/"+DEVIS.waHelp+"?text="+encodeURIComponent(DEVIS.waHelpText);
+
+const CHECKS = [...DEVIS.site, ...(DEVIS.options||[])];
+
+// rendu d'une option
+function card(o, type){
+  const ap = o.apartir ? '<span class="ap">à partir de</span>' : '';
+  const li = (o.livrables||[]).map(x=>`<li>${x}</li>`).join("");
+  const detail = (o.avantage||o.limite||li) ? `
+    <div class="opt-detail" hidden>
+      ${o.avantage?`<p class="dl"><b>Idéal si</b>${o.avantage}</p>`:''}
+      ${o.limite?`<p class="dl"><b>À savoir</b>${o.limite}</p>`:''}
+      ${li?`<div class="dl"><b>Ce qu'on vous livre</b><ul>${li}</ul></div>`:''}
+      ${o.geo?`<p class="dl geo">Service disponible pour les projets en Côte d'Ivoire ou en Île-de-France.</p>`:''}
+    </div>
+    <button class="opt-more" type="button">Voir le détail</button>` : '';
+  return `<label class="opt" data-type="${type}" data-id="${o.id}">
+    <input type="${type==='radio'?'radio':'checkbox'}" name="${type==='radio'?'conseil':o.id}" value="${o.id}">
+    <span class="mark">${CHECK}</span>
+    <span class="opt-top">
+      <span class="opt-nom">${o.nom}${o.reco?'<span class="badge">Recommandé</span>':''}</span>
+      <span class="opt-prix">${fmt(o.prix)}${ap}</span>
+    </span>
+    <span class="opt-desc">${o.desc}</span>
+    ${o.format?`<span class="opt-format">${o.format}</span>`:''}
+    ${detail}
+  </label>`;
+}
+$("grp-conseil").innerHTML = DEVIS.conseil.map(o=>card(o,'radio')).join("");
+$("grp-site").innerHTML = DEVIS.site.map(o=>card(o,'check')).join("");
+if(DEVIS.options && DEVIS.options.length) $("grp-options").innerHTML = DEVIS.options.map(o=>card(o,'check')).join("");
+
+// accordéon détail (ne déclenche pas la sélection)
+document.querySelectorAll('.opt-more').forEach(btn=>{
+  btn.addEventListener('click',(e)=>{
+    e.stopPropagation(); e.preventDefault();
+    const det = btn.parentElement.querySelector('.opt-detail');
+    const open = det.hasAttribute('hidden');
+    if(open){ det.removeAttribute('hidden'); btn.textContent='Masquer le détail'; }
+    else { det.setAttribute('hidden',''); btn.textContent='Voir le détail'; }
+  });
+});
+document.querySelectorAll('.opt-detail').forEach(d=> d.addEventListener('click', e=>e.stopPropagation()));
+
+// défauts
+DEVIS.conseil.forEach(o=>{ if(o.defaut){ state.conseil=o.id; } });
+CHECKS.forEach(o=>{ if(o.defaut){ state.site[o.id]=true; } });
+
+function syncUI(){
+  document.querySelectorAll('.opt').forEach(el=>{
+    const id=el.dataset.id, type=el.dataset.type;
+    const on = type==='radio' ? state.conseil===id : !!state.site[id];
+    el.classList.toggle('on', on);
+    const input=el.querySelector('input'); if(input) input.checked=on;
+  });
+  recompute();
+}
+// Remise volume : 20 % automatiques dès que le total dépasse 1 200 €.
+function computeTotals(){
+  let total=0, apartir=false; const lignes=[];
+  const c = DEVIS.conseil.find(o=>o.id===state.conseil);
+  if(c){ total+=c.prix; lignes.push({nom:"Conseil — "+c.nom, prix:c.prix, ap:false}); }
+  CHECKS.forEach(o=>{ if(state.site[o.id]){ total+=o.prix; if(o.apartir) apartir=true; lignes.push({nom:o.nom, prix:o.prix, ap:o.apartir}); } });
+  const remise = total>1200 ? Math.round(total*0.2) : 0;
+  const net = total - remise;
+  return { total, remise, net, apartir, lignes };
+}
+function recompute(){
+  const { total, remise, net, apartir, lignes } = computeTotals();
+  const label = (apartir?"à partir de ":"") + fmt(net);
+  const sub = remise>0 ? '<small>remise de 20 % incluse ('+fmt(remise)+')</small>' : (apartir?'<small>montant précisé après le cadrage</small>':'');
+  $("v-total").innerHTML = total>0 ? label + sub : "—";
+  $("s-total").innerHTML = total>0 ? label : "—";
+  $("recap").innerHTML = lignes.length
+    ? lignes.map(l=>`<div class="r"><span>${l.nom}</span><span>${l.ap?'à partir de ':''}${fmt(l.prix)}</span></div>`).join("")
+      + (remise>0?`<div class="r"><span>Remise 20 % (au-delà de 1 200 €)</span><span>- ${fmt(remise)}</span></div>`:'')
+      + `<div class="r tot"><span>Total offre de lancement</span><span>${label}</span></div>`
+    : '<div class="r"><span>Faites votre sélection ci-dessus</span><span></span></div>';
+  checkForm();
+}
+
+// interactions
+document.querySelectorAll('.opt').forEach(el=>{
+  el.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const id=el.dataset.id, type=el.dataset.type;
+    if(type==='radio'){ state.conseil = id; }
+    else {
+      const turningOn = !state.site[id];
+      // Paliers vidéo = un seul à la fois : cocher l'un décoche les autres "video-".
+      if(turningOn && id.indexOf('video-')===0){ CHECKS.forEach(o=>{ if(o.id.indexOf('video-')===0) state.site[o.id]=false; }); }
+      state.site[id] = turningOn;
+    }
+    syncUI();
+  });
+});
+
+// form
+function checkForm(){
+  const hasSel = state.conseil || CHECKS.some(o=>state.site[o.id]) || $("f-demande").value.trim();
+  const ok = hasSel && $("f-nom").value.trim() && $("f-contact").value.trim() && $("f-accord").checked;
+  $("btn-valider").disabled = !ok;
+}
+["f-nom","f-contact","f-demande"].forEach(id=>$(id).addEventListener('input',checkForm));
+$("f-accord").addEventListener('change',checkForm);
+$("s-cta").addEventListener('click',()=>$("form-block").scrollIntoView({behavior:'smooth'}));
+
+// submit
+$("btn-valider").addEventListener('click', async ()=>{
+  const btn=$("btn-valider"); btn.disabled=true; btn.textContent="Envoi en cours...";
+  const c = DEVIS.conseil.find(o=>o.id===state.conseil);
+  const selection=[];
+  if(c){ selection.push("Conseil — "+c.nom+" ("+fmt(c.prix)+")"); }
+  CHECKS.forEach(o=>{ if(state.site[o.id]){ selection.push(o.nom+" ("+(o.apartir?'à partir de ':'')+fmt(o.prix)+")"); } });
+  const { total, remise, net, apartir } = computeTotals();
+  if(remise>0) selection.push("Remise 20 % (au-delà de 1 200 €) : - "+fmt(remise));
+  const payload = {
+    numero: DEVIS.numero, client: DEVIS.client, projet: DEVIS.projet,
+    nom: $("f-nom").value.trim(), contact: $("f-contact").value.trim(), demande: $("f-demande").value.trim(),
+    selection, total: net, total_brut: total, remise, devise: DEVIS.devise, apartir,
+    total_label: (apartir?"à partir de ":"")+fmt(net)
+  };
+  try{
+    await fetch(DEVIS.submitUrl, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload) });
+  }catch(err){ /* fire-and-forget : on confirme quand même côté cliente */ }
+  renderPaiement();
+  $("app").querySelectorAll('.sec,.hero,.value,.bonus,.limit,#form-block,.top,.foot').forEach(el=>el.style.display='none');
+  $("sticky").style.display='none';
+  $("done").classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+// Moyens de paiement : révélés UNIQUEMENT après validation, selon la devise du devis.
+function renderPaiement(){
+  const P = DEVIS.paiement || {};
+  const list = DEVIS.devise === "FCFA" ? (P.FCFA||[])
+    : DEVIS.devise === "both" ? [...(P.FCFA||[]), ...(P.EUR||[])]
+    : (P.EUR||[]);
+  if(!list.length) return;
+  $("pay-list").innerHTML = list.map(p=>`<div class="pay-row"><span class="pm">${p.m}</span><span class="pd">${p.d}</span></div>`).join("");
+  if(DEVIS.paiementNote) $("pay-note").textContent = DEVIS.paiementNote;
+  $("pay-block").style.display='';
+}
+
+syncUI();
+</script>
+</body>
+</html>
