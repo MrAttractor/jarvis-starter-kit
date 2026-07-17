@@ -113,6 +113,31 @@ body{background:radial-gradient(120% 55% at 50% -12%, rgba(242,92,5,.05), transp
   .rubh .ill{width:50px;height:50px;padding:8px;border-radius:15px;}
 }
 @media(max-width:384px){ .rubh .ill{display:none;} .hdr-left .title{font-size:20px;} }
+/* aperçu dossier (accueil) */
+.dpv{display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--card);border:1px solid var(--bdr);border-radius:14px;box-shadow:var(--sh);margin-bottom:10px;cursor:pointer;}
+.dpv .dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto;}
+.dpv .m{flex:1;min-width:0;}
+.dpv .nm{font-weight:700;font-size:14.5px;}
+.dpv .nx{font-size:11.5px;color:var(--ink2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dpv .nx b{color:var(--acc-d);}
+.seeall{display:block;width:100%;text-align:center;padding:12px;border-radius:12px;border:1.5px solid var(--bdr);background:transparent;color:var(--ink2);font-weight:700;font-size:12.5px;font-family:inherit;cursor:pointer;}
+/* carte courbe entrées */
+.spark-c{background:linear-gradient(155deg,#241C15,#191410);border-radius:18px;padding:18px;color:#F5EEE3;box-shadow:var(--sh);cursor:pointer;}
+.spark-c .k{font-size:10.5px;letter-spacing:.8px;text-transform:uppercase;color:#C9BAA6;}
+.spark-c .v{font-size:25px;font-weight:800;margin-top:4px;letter-spacing:-.5px;font-variant-numeric:tabular-nums;}
+.spark-c .v small{font-size:12px;color:#9FE0B8;font-weight:700;margin-left:6px;}
+/* enveloppes à jauges */
+.envc{background:var(--card);border:1px solid var(--bdr);border-radius:18px;padding:16px;box-shadow:var(--sh);margin-top:12px;display:flex;flex-direction:column;gap:15px;}
+.env{display:flex;align-items:center;gap:12px;}
+.env-ic{width:38px;height:38px;border-radius:12px;background:var(--card2);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;flex:0 0 auto;color:var(--gold);}
+.env-ic svg{width:19px;height:19px;}
+.env-m{flex:1;min-width:0;}
+.env-t{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}
+.env-n{font-weight:700;font-size:13.5px;}
+.env-a{font-size:12px;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.env-a b{color:var(--ink);}
+.jauge{height:7px;background:var(--card2);border:1px solid var(--bdr);border-radius:99px;margin-top:8px;overflow:hidden;}
+.jauge > i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--acc));}
 `;
 (function(){ const s=document.createElement('style'); s.textContent=T; document.head.appendChild(s); })();
 
@@ -572,13 +597,71 @@ function RubriqueHeader({ eyebrow, title, intro, ill }) {
   );
 }
 
-function TabAujourdHui({ cap, focus, finances, onCapChange, onFocusToggle, onFocusEdit, onGoFinance, onError }) {
+function TabAujourdHui({ cap, focus, finances, pipeline, enveloppes, onCapChange, onFocusToggle, onFocusEdit, onGoFinance, onGoPipeline, onError }) {
+  const now = new Date();
+  const moisStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+  const regleMois = finances.filter(f=>f.type==='entree'&&f.categorie==='pro'&&f.date>=moisStart).reduce((s,f)=>s+f.montant,0);
+  // Courbe des entrées, 6 derniers mois
+  const spark = (() => {
+    const sums = [];
+    for (let i=5;i>=0;i--){ const a=new Date(now.getFullYear(), now.getMonth()-i, 1), b=new Date(now.getFullYear(), now.getMonth()-i+1, 1);
+      const as=a.toISOString().split('T')[0], bs=b.toISOString().split('T')[0];
+      sums.push(finances.filter(f=>f.type==='entree'&&f.date>=as&&f.date<bs).reduce((s,f)=>s+f.montant,0)); }
+    const total = sums.reduce((s,v)=>s+v,0), max = Math.max(1, ...sums), W=300, H=54;
+    const pts = sums.map((v,i)=>[ (i/(sums.length-1||1))*W, H-(v/max)*(H-8)-4 ]);
+    const line = pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(0)+' '+p[1].toFixed(0)).join(' ');
+    return { total, W, H, line, area: line+` L${W} ${H} L0 ${H} Z`, last: pts[pts.length-1] };
+  })();
+  const topD = [...(pipeline||[])].sort((a,b)=>{ const u=(b.urgent?1:0)-(a.urgent?1:0); if(u) return u; return (a.date_action||'9999')<(b.date_action||'9999')?-1:1; }).slice(0,3);
+  const envs = [...(enveloppes||[])].sort((a,b)=>(a.priorite??99)-(b.priorite??99)).slice(0,3);
+  const famColor = f => f==='A'?'var(--acc)':f==='D'?'var(--gold)':f==='B'?'var(--blu)':'var(--grn)';
   return (
     <Fragment>
-      <RubriqueHeader eyebrow="Ta journée" title="Aujourd'hui, l'essentiel d'abord" intro="Ton cap du mois, tes finances et le focus à traiter, sans le reste." ill="jour" />
+      <RubriqueHeader eyebrow="Ta journée" title="Aujourd'hui, l'essentiel d'abord" intro="Ton cap du mois, tes dossiers chauds et le focus, sans le reste." ill="jour" />
       <CapCard cap={cap} onChange={onCapChange} onError={onError} />
-      <RubriqueHeader eyebrow="Ton coach" title="Tes finances ce mois" intro="Ce qui rentre, ce qui sort, et où tu en es de l'objectif." ill="coach" />
-      <FinanceSummaryMini finances={finances} onGoFinance={onGoFinance} />
+
+      <RubriqueHeader eyebrow="Le pipeline" title="Tes dossiers chauds" intro="Les trois à regarder en premier. Touche pour tout voir." ill="pipeline" />
+      {topD.length === 0
+        ? <div className="card" style={{ padding:'14px 16px' }}><span className="t-sm mut">Aucun dossier pour l'instant.</span></div>
+        : topD.map(d => (
+          <div key={d.id} className="dpv" onClick={onGoPipeline}>
+            <span className="dot" style={{ background:famColor(d.famille) }} />
+            <div className="m">
+              <div className="nm truncate">{d.nom || '—'}</div>
+              <div className="nx">{d.date_action && <b>{d.date_action} · </b>}{d.prochaine || '—'}</div>
+            </div>
+          </div>
+        ))}
+      <button className="seeall" onClick={onGoPipeline}>Voir tous les dossiers →</button>
+
+      <RubriqueHeader eyebrow="Ton coach" title="L'argent, rangé avant d'être dépensé" intro="Ce qui rentre, et tes enveloppes qui se remplissent." ill="coach" />
+      <div className="spark-c" onClick={onGoFinance}>
+        <div className="k">Entrées · 6 derniers mois</div>
+        <div className="v">{fmt(spark.total)}<small>+{fmt(regleMois)} ce mois</small></div>
+        <svg viewBox={`0 0 ${spark.W} ${spark.H}`} width="100%" height="56" preserveAspectRatio="none" style={{ marginTop:12, display:'block' }}>
+          <defs><linearGradient id="spg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#F8752C" stopOpacity=".35"/><stop offset="1" stopColor="#F8752C" stopOpacity="0"/></linearGradient></defs>
+          <path d={spark.area} fill="url(#spg)" />
+          <path d={spark.line} stroke="#F8752C" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          {spark.last && <circle cx={spark.last[0]} cy={spark.last[1]} r="4" fill="#F8752C" />}
+        </svg>
+      </div>
+      {envs.length > 0 && (
+        <div className="envc">
+          {envs.map(e => {
+            const ep = Number(e.epargne||0), ci = Number(e.cible||0), pct = Math.min(100, Math.round((ep/Math.max(1,ci))*100));
+            return (
+              <div key={e.id} className="env">
+                <span className="env-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8h16v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M4 8l8-4 8 4"/></svg></span>
+                <div className="env-m">
+                  <div className="env-t"><span className="env-n truncate">{e.nom}</span><span className="env-a"><b>{fmt(ep)}</b> / {fmt(ci)}</span></div>
+                  <div className="jauge"><i style={{ width:pct+'%' }} /></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       <RubriqueHeader eyebrow="À traiter" title="Le focus du jour" intro="Peu de choses, mais les bonnes." ill="focus" />
       <div className="card" style={{ padding:'6px 18px 10px' }}>
         {focus.map((f,i) => (
@@ -2529,7 +2612,7 @@ function App() {
       </div>
 
       <div className="content">
-        {tab === 'today'    && <TabAujourdHui cap={cap} focus={focus} finances={finances} onCapChange={setCap} onFocusToggle={handleFocusToggle} onFocusEdit={handleFocusEdit} onGoFinance={() => setTab('finance')} onError={showError} />}
+        {tab === 'today'    && <TabAujourdHui cap={cap} focus={focus} finances={finances} pipeline={pipeline} enveloppes={enveloppes} onCapChange={setCap} onFocusToggle={handleFocusToggle} onFocusEdit={handleFocusEdit} onGoFinance={() => setTab('finance')} onGoPipeline={() => setTab('pipeline')} onError={showError} />}
         {tab === 'pipeline' && <TabPipeline pipeline={pipeline} onEditProchaine={handlePipeProchaine} onEditStatut={handlePipeStatut} onEditContact={handlePipeContact} onEditSetup={handlePipeSetup} onEditMensuel={handlePipeMensuel} onAddProspect={handlePipeAdd} onEditField={handlePipeField} />}
         {tab === 'plan'     && <TabPlan />}
         {tab === 'projets'  && <TabProjets projets={projets} onEditProchaine={handleProjetProchaine} />}
