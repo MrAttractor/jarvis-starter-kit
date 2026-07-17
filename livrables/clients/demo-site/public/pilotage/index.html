@@ -1391,6 +1391,7 @@ function TabPipeline({ pipeline, onEditProchaine, onEditStatut, onEditContact, o
 
   return (
     <Fragment>
+      <RubriqueHeader eyebrow="Le pipeline" title="Tes dossiers" intro="Du plus chaud au plus calme. Touche une fiche pour la déplier." ill="pipeline" />
       <SOPCadre />
 
       <div className="card" style={{ padding:'14px 16px', borderLeft:'4px solid var(--acc)' }}>
@@ -1510,7 +1511,8 @@ function TabProjets({ projets, onEditProchaine }) {
 
   return (
     <Fragment>
-      <div className="card" style={{ padding:'14px 16px', borderLeft:'4px solid var(--blu)' }}>
+      <RubriqueHeader eyebrow="Le cap" title="Tes projets et objectifs" intro="Là où tu vas, par horizon de temps." ill="projets" />
+      <div className="card" style={{ padding:'14px 16px' }}>
         <div className="row between center">
           <div className="row g10" style={{ alignItems:'center' }}>
             <div style={{ width:34, height:34, borderRadius:11, flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center', background:'var(--blu-s)' }}>
@@ -1653,7 +1655,8 @@ function TabPlan() {
   ];
   return (
     <Fragment>
-      <div className="card" style={{ padding:'16px 18px', background:'linear-gradient(135deg,#FFF8F2,#FFF0E0)', borderColor:'rgba(238,124,31,.25)', borderLeft:'4px solid var(--acc)' }}>
+      <RubriqueHeader eyebrow="La stratégie" title="Ton plan de revenus" intro="Les flux qui te mènent à l'objectif du mois." ill="plan" />
+      <div className="card" style={{ padding:'18px 20px', background:'linear-gradient(150deg,#FFF8F2,#FFEFDE)', borderColor:'rgba(242,92,5,.16)' }}>
         <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
           <Ic name="target" size={13} color="var(--acc)" />
           <span className="t-xs mut sb">OBJECTIF CENTRAL</span>
@@ -2314,8 +2317,9 @@ function TabFinance({ finances, enveloppes, charges, onAdd, onEditEntry, onDelet
 
   return (
     <Fragment>
+      <RubriqueHeader eyebrow="Ton coach" title="Tes finances" intro="Ce qui rentre, ce qui sort, tes charges et tes enveloppes." ill="finance" />
       {/* Recap mois */}
-      <div className="card" style={{ padding:'16px 18px', background:'linear-gradient(135deg,#F2FFF6,#E8F8EC)', borderColor:'rgba(26,148,72,.2)', borderLeft:'4px solid var(--grn)' }}>
+      <div className="card" style={{ padding:'18px 20px', background:'linear-gradient(150deg,#F2FFF6,#E6F6EB)', borderColor:'rgba(30,122,82,.18)' }}>
         <SectionHead icon="wallet" color="var(--grn)" bg="var(--grn-s)" label={moisLabel.toUpperCase()} />
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:14 }}>
           <div className="col g4">
@@ -2439,12 +2443,11 @@ const TABS = [
   { id:'pipeline', label:'Pipeline' },
   { id:'projets',  label:'Projets' },
   { id:'finance',  label:'Finance' },
-  { id:'demos',    label:'Démos' },
   { id:'plan',     label:'Plan' },
 ];
 
 function App() {
-  const [tab, setTab]           = useState(() => { const h=(location.hash||'').replace('#',''); return ['today','pipeline','plan','projets','finance','demos'].includes(h) ? h : 'today'; });
+  const [tab, setTab]           = useState(() => { const h=(location.hash||'').replace('#',''); return ['today','pipeline','plan','projets','finance'].includes(h) ? h : 'today'; });
   const [cap, setCap]           = useState(null);
   const [focus, setFocus]       = useState([]);
   const [pipeline, setPipeline] = useState([]);
@@ -2617,7 +2620,6 @@ function App() {
         {tab === 'plan'     && <TabPlan />}
         {tab === 'projets'  && <TabProjets projets={projets} onEditProchaine={handleProjetProchaine} />}
         {tab === 'finance'  && <TabFinance finances={finances} enveloppes={enveloppes} charges={charges} onAdd={handleFinanceAdd} onEditEntry={handleFinanceEdit} onDeleteEntry={handleFinanceDelete} onUpdateEnveloppe={handleEnveloppeUpdate} onAddCharge={handleChargeAdd} onEditCharge={handleChargeEdit} onDeleteCharge={handleChargeDelete} />}
-        {tab === 'demos'    && <TabDemos />}
       </div>
       <Toast message={toast} />
     </div>
