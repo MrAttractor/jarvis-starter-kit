@@ -87,10 +87,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
-    const sb = supabase.createClient(
-      'https://lgdgbrivnhgeupqhkckd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk'
-    )
+    const SUPABASE_URL = 'https://lgdgbrivnhgeupqhkckd.supabase.co'
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk'
 
     const ROUTES = { ORY_ABJ: 'Paris → Abidjan', ABJ_ORY: 'Abidjan → Paris' }
 
@@ -113,16 +111,27 @@
 
       root.innerHTML = '<p style="color:#888;font-size:15px;margin-top:40px;text-align:center;">Chargement...</p>'
 
-      const { data } = await sb
-        .from('je_colis')
-        .select('numero,articles,poids,montant,paye,date_paiement,nom_expediteur,je_voyages(route,date_depart)')
-        .ilike('numero', n)
-        .limit(1)
-        .maybeSingle()
+      // Reçu via l'edge function je-suivi (vue "recu") : numéro exact requis,
+      // reçu servi uniquement pour un colis payé. Plus de lecture directe.
+      let data = null, nonPaye = false
+      try {
+        const resp = await fetch(`${SUPABASE_URL}/functions/v1/je-suivi`, {
+          method: 'POST',
+          headers: { apikey: SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ numero: n, vue: 'recu' }),
+        })
+        const j = await resp.json()
+        if (j.ok) data = j.colis
+        else if (j.error && j.error.indexOf('non payé') > -1) nonPaye = true
+      } catch (e) {}
 
-      if (!data) {
+      if (!data && !nonPaye) {
         root.innerHTML = '<p style="color:#888;font-size:15px;margin-top:40px;text-align:center;">Colis introuvable.</p>'
         return
+      }
+
+      if (nonPaye) {
+        data = { numero: (n || '').toUpperCase(), paye: false }
       }
 
       if (!data.paye) {
@@ -145,8 +154,8 @@
       }
 
       const datePaiement = data.date_paiement ? fmtDate(data.date_paiement) : fmtDate(new Date().toISOString())
-      const voyageLabel = data.je_voyages
-        ? `${ROUTES[data.je_voyages.route] || data.je_voyages.route} · départ ${fmtDateCourt(data.je_voyages.date_depart)}`
+      const voyageLabel = data.voyage
+        ? `${ROUTES[data.voyage.route] || data.voyage.route} · départ ${fmtDateCourt(data.voyage.date_depart)}`
         : null
 
       root.innerHTML = `

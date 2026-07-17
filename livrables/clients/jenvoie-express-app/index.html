@@ -1139,13 +1139,24 @@ async function doTrack() {
   const el = document.getElementById('track-result')
   if (!q) return
   el.innerHTML = '<p style="color:rgba(255,255,255,.4);font-size:16px;padding:12px 0">Recherche...</p>'
-  const { data } = await sb.from('je_colis').select('numero,statut,paye,montant,je_voyages(route,date_depart)').ilike('numero', `%${q}%`).limit(1).maybeSingle()
+  // Suivi via l'edge function je-suivi : numéro exact requis, aucune donnée
+  // personnelle exposée. La lecture directe de je_colis n'est plus publique.
+  let data = null
+  try {
+    const resp = await fetch(`${SUPABASE_URL}/functions/v1/je-suivi`, {
+      method: 'POST',
+      headers: { apikey: SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ numero: q }),
+    })
+    const j = await resp.json()
+    if (j.ok) data = j.colis
+  } catch (e) {}
   if (!data) {
-    el.innerHTML = '<p style="color:#EF4444;font-size:16px;padding:12px 0">Numéro introuvable. Vérifiez et réessayez.</p>'
+    el.innerHTML = '<p style="color:#EF4444;font-size:16px;padding:12px 0">Numéro introuvable. Vérifiez le format (JE-AAAAMMJJ-000) et réessayez.</p>'
     return
   }
   const idx = STATUTS.indexOf(data.statut)
-  const voy = data.je_voyages
+  const voy = data.voyage
   const fmtDep = d => new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
   const departLigne = voy && voy.date_depart
     ? `<div style="margin-bottom:12px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.04);font-size:.82rem;display:flex;align-items:center;gap:8px;">

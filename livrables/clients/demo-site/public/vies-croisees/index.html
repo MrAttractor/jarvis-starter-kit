@@ -416,7 +416,7 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
     <p>Accès réservé — entrez le mot de passe</p>
     <input type="password" id="gpwd" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')checkPwd()">
     <p class="gate-err" id="gerr">Mot de passe incorrect</p>
-    <button class="btn" style="margin-top:0" onclick="checkPwd()">Entrer</button>
+    <button class="btn" id="gbtn" style="margin-top:0" onclick="checkPwd()">Entrer</button>
     <button class="gate-cancel" onclick="closeGate()">Annuler</button>
   </div>
 </div>
@@ -503,7 +503,9 @@ const SB = supabase.createClient(
 var eps = [], arts = [], temos = [], coms = [], abonnes = [];
 var editEpId = null, editArtId = null;
 var adminMode = false;
-var ADMIN_PWD = 'andrea2026';
+// Compte admin d'Andréa. Le mot de passe n'est jamais stocké ici ni en base :
+// il est vérifié par Supabase Auth, côté serveur. L'email n'est pas un secret.
+var ADMIN_EMAIL = 'admin.vies-croisees@agenceattractor.com';
 
 // ── NAVIGATION ────────────────────────────────────────────────────
 function go(id) {
@@ -536,17 +538,23 @@ function closeGate(){
   document.getElementById('gerr').style.display = 'none';
   document.getElementById('gpwd').value = '';
 }
-function checkPwd(){
-  if (document.getElementById('gpwd').value === ADMIN_PWD) {
-    closeGate(); adminMode = true;
-    document.getElementById('admin-badge').style.display = 'flex';
-    document.querySelector('.nav-desk').style.display = 'none';
-    loadAdminData(); go('admin-dash');
-  } else {
-    document.getElementById('gerr').style.display = 'block';
-  }
+async function checkPwd(){
+  var pwd = document.getElementById('gpwd').value;
+  var btn = document.getElementById('gbtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Connexion...'; }
+  var { error } = await SB.auth.signInWithPassword({ email: ADMIN_EMAIL, password: pwd });
+  if (btn) { btn.disabled = false; btn.textContent = 'Entrer'; }
+  if (error) { document.getElementById('gerr').style.display = 'block'; return; }
+  enterAdmin();
 }
-function exitAdmin(){
+function enterAdmin(){
+  closeGate(); adminMode = true;
+  document.getElementById('admin-badge').style.display = 'flex';
+  document.querySelector('.nav-desk').style.display = 'none';
+  loadAdminData(); go('admin-dash');
+}
+async function exitAdmin(){
+  await SB.auth.signOut();
   adminMode = false;
   document.getElementById('admin-badge').style.display = 'none';
   document.querySelector('.nav-desk').style.display = '';
@@ -554,25 +562,19 @@ function exitAdmin(){
 }
 
 // ── DATA LOADING ──────────────────────────────────────────────────
-async function loadConfig() {
-  try {
-    var { data } = await SB.from('vc_config').select('valeur').eq('cle', 'admin_password').single();
-    if (data && data.valeur) ADMIN_PWD = data.valeur;
-  } catch (e) {}
-}
 async function changePwd(e) {
   e.preventDefault();
   var f = e.target;
   var np = f.np.value.trim();
-  if (np.length < 4) { alert('Choisis un mot de passe d\'au moins 4 caractères.'); return; }
+  if (np.length < 8) { alert('Choisis un mot de passe d\'au moins 8 caractères.'); return; }
   var btn = document.getElementById('pwd-save'); btn.disabled = true; btn.textContent = 'Enregistrement...';
-  var { error } = await SB.from('vc_config').update({ valeur: np, updated_at: new Date().toISOString() }).eq('cle', 'admin_password');
+  var { error } = await SB.auth.updateUser({ password: np });
   btn.disabled = false; btn.textContent = 'Enregistrer le nouveau mot de passe';
   if (!error) {
-    ADMIN_PWD = np; f.reset();
+    f.reset();
     document.getElementById('pwd-ok').style.display = 'block';
     setTimeout(function(){ document.getElementById('pwd-ok').style.display = 'none'; }, 4000);
-  } else { alert('Erreur, réessaie.'); }
+  } else { alert('Erreur : ' + error.message); }
 }
 async function loadPublicData() {
   var r1 = await SB.from('vc_episodes').select('*').in('statut',['publie','programme']).order('created_at',{ascending:false});
@@ -924,17 +926,20 @@ function stLabel(s){ return {publie:'Publié',programme:'Programmé',brouillon:'
 function stClass(s){ return {publie:'live',programme:'soon',brouillon:'wip'}[s]||'wip'; }
 
 // ── INIT ──────────────────────────────────────────────────────────
-loadConfig();
 loadPublicData();
 
 // Lien personnel de pilotage d'Andréa : ?pilotage (ou #pilotage) ouvre
 // directement sa fenêtre de connexion, sans passer par les 5 taps sur le logo.
+// Si sa session est encore valide, on la remet directement dans son espace.
 (function(){
   var s = (location.search || '').toLowerCase();
   var h = (location.hash || '').toLowerCase();
-  if (s.indexOf('pilotage') > -1 || s.indexOf('andrea') > -1 || h.indexOf('pilotage') > -1 || h.indexOf('andrea') > -1) {
-    openGate();
-  }
+  var veutPilotage = s.indexOf('pilotage') > -1 || s.indexOf('andrea') > -1 ||
+                     h.indexOf('pilotage') > -1 || h.indexOf('andrea') > -1;
+  SB.auth.getSession().then(function(r){
+    if (r.data.session) { enterAdmin(); }
+    else if (veutPilotage) { openGate(); }
+  });
 })();
 </script>
 </body>
