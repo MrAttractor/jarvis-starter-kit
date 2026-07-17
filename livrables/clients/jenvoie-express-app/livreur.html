@@ -188,7 +188,7 @@ function render(data){
             <div class="lbl-dest">${headLabel}</div>
             <div class="name">${esc(headline)}</div>
           </div>
-          ${(!isCol&&c.prix_livraison)?`<div class="prix">${c.prix_livraison}€</div>`:''}
+          ${(!isCol&&c.prix_livraison)?`<div class="prix">${Number(c.prix_livraison).toLocaleString('fr-FR')} FCFA</div>`:''}
         </div>
         ${secondary}
         ${c.articles?`<div class="articles"><span style="color:#8b94b3">Colis : </span>${esc(c.articles)}</div>`:''}

@@ -633,7 +633,7 @@ a { color: inherit; text-decoration: none; }
     <div class="route-pill">🇫🇷 Paris → Abidjan · à partir de <strong><span class="price-paris-abj">14</span>€/kg</strong></div>
     <div class="route-pill">🇨🇮 Abidjan → Paris · à partir de <strong><span class="price-abj-paris-fcfa">6 500</span> FCFA/kg</strong> <span style="opacity:.7;font-size:12px;">(≈ <span class="price-abj-paris">10</span>€/kg)</span></div>
   </div>
-  <div class="departs-wrap" id="prochains-departs">
+  <div class="departs-wrap open" id="prochains-departs">
     <div class="departs-toggle" onclick="toggleDeparts()">
       <div class="departs-toggle-left">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -1046,15 +1046,15 @@ async function loadProchainsDepartsPublic() {
     .eq('statut', 'ouvert')
     .gte('date_depart', today)
     .order('date_depart', { ascending: true })
-    .limit(6)
+    .limit(50)
   if (!data || data.length === 0) return
   const fmt = d => new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
   const calIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`
   const byRoute = {}
   data.forEach(v => { if (!byRoute[v.route]) byRoute[v.route] = []; byRoute[v.route].push(v.date_depart) })
   const items = []
-  ;(byRoute['ORY_ABJ'] || []).slice(0, 2).forEach(d => items.push(`🇫🇷 Paris → Abidjan · <span class="depart-date">${fmt(d)}</span>`))
-  ;(byRoute['ABJ_ORY'] || []).slice(0, 2).forEach(d => items.push(`🇨🇮 Abidjan → Paris · <span class="depart-date">${fmt(d)}</span>`))
+  ;(byRoute['ORY_ABJ'] || []).forEach(d => items.push(`🇫🇷 Paris → Abidjan · <span class="depart-date">${fmt(d)}</span>`))
+  ;(byRoute['ABJ_ORY'] || []).forEach(d => items.push(`🇨🇮 Abidjan → Paris · <span class="depart-date">${fmt(d)}</span>`))
   const list = document.getElementById('departs-list')
   list.innerHTML = items.map(i => `<div class="depart-item">${calIcon} ${i}</div>`).join('')
   document.getElementById('departs-count').textContent = `${items.length} départ${items.length > 1 ? 's' : ''}`

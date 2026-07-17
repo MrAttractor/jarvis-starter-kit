@@ -210,6 +210,11 @@
       <div class="form-group"><label>DATE ARRIVÉE</label><input type="date" id="f-voy-arrivee"></div>
       <div class="form-group"><label>CAPACITÉ (kg)</label><input type="number" id="f-voy-capacite" value="50"></div>
       <div class="form-group"><label>TARIF (€/kg)</label><input type="number" id="f-voy-tarif" placeholder="8 ou 14"></div>
+      <div class="form-group"><label>STATUT</label><select id="f-voy-statut">
+        <option value="ouvert">Ouvert — visible sur le site</option>
+        <option value="complet">Complet — retiré du site</option>
+        <option value="termine">Terminé — retiré du site</option>
+      </select></div>
     </div>
     <div class="modal-actions">
       <button class="btn-outline" onclick="closeModal('modal-voyage')">Annuler</button>
@@ -546,6 +551,10 @@ const SUPABASE_URL = 'https://lgdgbrivnhgeupqhkckd.supabase.co'
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk'
 const { createClient } = supabase
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+// Domaine public de l'app. Tout lien envoyé à un client ou à un livreur part d'ici,
+// jamais de location.origin : l'admin peut être ouvert depuis une URL technique.
+const SITE_URL = 'https://jenvoiexpress.com'
 
 // ============================================================
 // AUTH GUARD
@@ -1011,6 +1020,7 @@ function openNewVoyageModal() {
   document.getElementById('f-voy-arrivee').value = ''
   document.getElementById('f-voy-capacite').value = 50
   document.getElementById('f-voy-tarif').value = ''
+  document.getElementById('f-voy-statut').value = 'ouvert'
   openModal('modal-voyage')
 }
 
@@ -1024,6 +1034,7 @@ function editVoyage(id) {
   document.getElementById('f-voy-arrivee').value = v.date_arrivee || ''
   document.getElementById('f-voy-capacite').value = v.capacite_totale
   document.getElementById('f-voy-tarif').value = v.tarif_kg || ''
+  document.getElementById('f-voy-statut').value = v.statut || 'ouvert'
   openModal('modal-voyage')
 }
 
@@ -1037,17 +1048,36 @@ async function deleteVoyage(id) {
 }
 
 async function loadVoyages() {
-  const { data } = await sb.from('je_voyages').select('*').order('date_depart', { ascending: false })
+  const [{ data }, { data: colis }] = await Promise.all([
+    sb.from('je_voyages').select('*').order('date_depart', { ascending: false }),
+    sb.from('je_colis').select('voyage_id,poids'),
+  ])
   _voyagesCache = data || []
   const el = document.getElementById('voyages-list')
   if (!data?.length) { el.innerHTML = '<p class="empty-state">Aucun voyage enregistré</p>'; return }
+  // Le remplissage se calcule sur le poids réel des colis. La colonne capacite_restante
+  // n'a jamais été décrémentée à la création d'un colis : elle ne reflète rien.
+  const charge = {}, nonPeses = {}
+  ;(colis || []).forEach(c => {
+    if (!c.voyage_id) return
+    charge[c.voyage_id] = (charge[c.voyage_id] || 0) + (c.poids || 0)
+    if (c.poids == null) nonPeses[c.voyage_id] = (nonPeses[c.voyage_id] || 0) + 1
+  })
   el.innerHTML = data.map(v => {
-    const pct = v.capacite_totale ? Math.round((1 - v.capacite_restante/v.capacite_totale)*100) : 0
+    const kg = Math.round((charge[v.id] || 0) * 100) / 100
+    const restant = Math.round((v.capacite_totale - kg) * 100) / 100
+    const pct = v.capacite_totale ? Math.min(100, Math.round(kg / v.capacite_totale * 100)) : 0
+    const attente = nonPeses[v.id] || 0
+    const barColor = pct >= 100 ? 'var(--red, #ff5a5a)' : pct >= 80 ? 'var(--gold)' : 'var(--green)'
     const route = v.route === 'ABJ_ORY' ? '🇨🇮 Abidjan → 🇫🇷 Orly' : '🇫🇷 Orly → 🇨🇮 Abidjan'
+    const statutLabel = { ouvert: 'ouvert', complet: 'complet', termine: 'terminé' }[v.statut] || v.statut
     return `<div class="card">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;margin-bottom:.6rem;">
         <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;">${route}</div>
-        <div style="display:flex;gap:.3rem;flex-shrink:0;">
+        <div style="display:flex;gap:.3rem;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;">
+          ${v.statut === 'ouvert'
+            ? `<button class="btn-outline" style="font-size:.65rem;padding:.25rem .55rem;" onclick="setVoyageStatut('${v.id}','complet')">Marquer complet</button>`
+            : `<button class="btn-outline" style="font-size:.65rem;padding:.25rem .55rem;" onclick="setVoyageStatut('${v.id}','ouvert')">Rouvrir</button>`}
           <button class="btn-outline" style="font-size:.65rem;padding:.25rem .55rem;" onclick="editVoyage('${v.id}')">✏ Modifier</button>
           <button class="btn-red" style="font-size:.65rem;padding:.25rem .55rem;" onclick="deleteVoyage('${v.id}')">🗑 Supprimer</button>
         </div>
@@ -1055,18 +1085,28 @@ async function loadVoyages() {
       <div style="display:flex;gap:1.5rem;flex-wrap:wrap;font-size:.78rem;margin-bottom:.8rem;">
         <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">DÉPART</div>${fmtDate(v.date_depart)}</div>
         <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">ARRIVÉE</div>${fmtDate(v.date_arrivee)}</div>
-        <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">CAPACITÉ</div>${v.capacite_restante}/${v.capacite_totale} kg</div>
+        <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">RESTE À VENDRE</div>${restant} kg <span style="color:rgba(255,255,255,.35);">sur ${v.capacite_totale}</span></div>
         <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">TARIF</div>${v.tarif_kg ? v.tarif_kg + '€/kg' : '—'}</div>
-        <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">STATUT</div><span style="color:${v.statut==='ouvert'?'var(--green)':v.statut==='complet'?'var(--gold)':'rgba(255,255,255,.4)'};">${v.statut}</span></div>
+        <div><div style="color:rgba(255,255,255,.4);font-size:.65rem;">STATUT</div><span style="color:${v.statut==='ouvert'?'var(--green)':v.statut==='complet'?'var(--gold)':'rgba(255,255,255,.4)'};">${statutLabel}</span>${v.statut!=='ouvert'?' <span style="color:rgba(255,255,255,.35);font-size:.65rem;">(masqué du site)</span>':''}</div>
       </div>
       <div style="display:flex;align-items:center;gap:.6rem;font-size:.65rem;color:rgba(255,255,255,.4);">
-        Remplissage
+        ${kg} kg chargés
         <div style="flex:1;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;">
-          <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--sky),var(--green));border-radius:3px;"></div>
+          <div style="height:100%;width:${pct}%;background:${barColor};border-radius:3px;"></div>
         </div>
-        <span style="color:var(--sky);">${pct}%</span>
+        <span style="color:${barColor};">${pct}%</span>
       </div>
+      ${attente ? `<div style="margin-top:.5rem;font-size:.65rem;color:var(--gold);">⚠ ${attente} colis pas encore pesé${attente>1?'s':''} — le remplissage réel est supérieur</div>` : ''}
+      ${pct >= 100 && v.statut === 'ouvert' ? `<div style="margin-top:.5rem;font-size:.65rem;color:#ff8a8a;">⚠ Capacité atteinte et le voyage est encore proposé sur le site</div>` : ''}
     </div>`}).join('')
+}
+
+async function setVoyageStatut(id, statut) {
+  const { error } = await sb.from('je_voyages').update({ statut }).eq('id', id)
+  if (error) return toast('Erreur', true)
+  toast(statut === 'ouvert' ? 'Voyage rouvert — visible sur le site ✓' : 'Voyage marqué complet — retiré du site ✓')
+  loadVoyages()
+  loadColisOptions()
 }
 
 async function saveVoyage() {
@@ -1077,6 +1117,7 @@ async function saveVoyage() {
     date_arrivee: document.getElementById('f-voy-arrivee').value || null,
     tarif_kg: parseFloat(document.getElementById('f-voy-tarif').value) || null,
     capacite_totale: capacite,
+    statut: document.getElementById('f-voy-statut').value,
   }
   let error
   if (_editVoyageId) {
@@ -1321,7 +1362,7 @@ function convertirEnColis(demandeId) {
 
 function envoyerSuivi(numero, whatsapp, prenom) {
   const num = whatsapp.replace(/[\s\+\-\(\)]/g, '')
-  const lien = `https://jenvoie-express.myattractor1.workers.dev?n=${encodeURIComponent(numero)}`
+  const lien = `${SITE_URL}/?n=${encodeURIComponent(numero)}`
   const msg = encodeURIComponent(`Bonjour ${prenom || 'cher client'}, votre colis J'Envoie Express *${numero}* est en cours d'acheminement.\n\nSuivez votre colis en temps réel ici :\n${lien}`)
   window.open(`https://wa.me/${num}?text=${msg}`, '_blank')
 }
@@ -1408,7 +1449,7 @@ async function confirmAccept() {
   const waRaw = d?.wa_expediteur || d?.je_clients?.whatsapp
   const nomRaw = d?.nom_expediteur || d?.je_clients?.nom || 'client'
   const numero = newColis?.numero || ''
-  const lienSuivi = numero ? `https://jenvoie-express.myattractor1.workers.dev?n=${encodeURIComponent(numero)}` : ''
+  const lienSuivi = numero ? `${SITE_URL}/?n=${encodeURIComponent(numero)}` : ''
   if (waRaw) {
     const prenom = nomRaw.split(' ')[0]
     const lignes = [
@@ -1495,7 +1536,9 @@ async function markLivreTracking(id) {
 async function loadColisOptions() {
   const [{ data: clients }, { data: voyages }] = await Promise.all([
     sb.from('je_clients').select('id,nom').order('nom'),
-    sb.from('je_voyages').select('id,route,date_depart').eq('statut','ouvert').order('date_depart'),
+    // Tous les voyages, pas seulement les ouverts : le statut masque le voyage du site
+    // public, il ne doit pas empêcher l'admin d'y rattacher un colis à la main.
+    sb.from('je_voyages').select('id,route,date_depart,statut').order('date_depart'),
   ])
   const cSel = document.getElementById('f-colis-client')
   const vSel = document.getElementById('f-colis-voyage')
@@ -1503,7 +1546,10 @@ async function loadColisOptions() {
   while (cSel.options.length > 1) cSel.remove(1)
   while (vSel.options.length > 1) vSel.remove(1)
   ;(clients||[]).forEach(c => cSel.add(new Option(c.nom, c.id)))
-  ;(voyages||[]).forEach(v => vSel.add(new Option(`${routeLabel(v.route)} · ${fmtDate(v.date_depart)}`, v.id)))
+  ;(voyages||[]).forEach(v => {
+    const suffix = v.statut && v.statut !== 'ouvert' ? ` · ${v.statut}` : ''
+    vSel.add(new Option(`${routeLabel(v.route)} · ${fmtDate(v.date_depart)}${suffix}`, v.id))
+  })
   // also populate livreur voyage selector
   const lSel = document.getElementById('livreur-voyage-sel')
   while (lSel.options.length > 1) lSel.remove(1)
@@ -1583,7 +1629,7 @@ function shareTournee(mode) {
   const voyageId = sel.value
   if (!voyageId) { alert('Sélectionne d\'abord un voyage.'); return }
   const label = sel.options[sel.selectedIndex]?.text || ''
-  const link = `${location.origin}/livreur.html?v=${voyageId}`
+  const link = `${SITE_URL}/livreur.html?v=${voyageId}`
   if (mode === 'copy') {
     navigator.clipboard.writeText(link).then(
       () => alert('Lien de tournée copié :\n' + link),

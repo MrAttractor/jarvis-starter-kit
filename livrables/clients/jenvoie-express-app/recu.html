@@ -88,8 +88,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
     const sb = supabase.createClient(
-      'https://ltydbwkhdsbmmnoahcty.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0eWRid2toZHNibW1ub2FoY3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMzEyMTIsImV4cCI6MjA5NzYwNzIxMn0.S0u-zZfRKp5t1VpXrGN3II8RtwyRZ7HWUHK3-E8pw58'
+      'https://lgdgbrivnhgeupqhkckd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk'
     )
 
     const ROUTES = { ORY_ABJ: 'Paris → Abidjan', ABJ_ORY: 'Abidjan → Paris' }
@@ -114,8 +114,8 @@
       root.innerHTML = '<p style="color:#888;font-size:15px;margin-top:40px;text-align:center;">Chargement...</p>'
 
       const { data } = await sb
-        .from('colis')
-        .select('numero,articles,poids,montant,paye,date_paiement,nom_expediteur,voyages(route,date_depart)')
+        .from('je_colis')
+        .select('numero,articles,poids,montant,paye,date_paiement,nom_expediteur,je_voyages(route,date_depart)')
         .ilike('numero', n)
         .limit(1)
         .maybeSingle()
@@ -145,8 +145,8 @@
       }
 
       const datePaiement = data.date_paiement ? fmtDate(data.date_paiement) : fmtDate(new Date().toISOString())
-      const voyageLabel = data.voyages
-        ? `${ROUTES[data.voyages.route] || data.voyages.route} · départ ${fmtDateCourt(data.voyages.date_depart)}`
+      const voyageLabel = data.je_voyages
+        ? `${ROUTES[data.je_voyages.route] || data.je_voyages.route} · départ ${fmtDateCourt(data.je_voyages.date_depart)}`
         : null
 
       root.innerHTML = `
