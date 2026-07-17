@@ -85,6 +85,9 @@ body{background:radial-gradient(120% 55% at 50% -12%, rgba(242,92,5,.05), transp
 [contenteditable]:empty:before{content:attr(data-ph);color:var(--faint);}
 .demos-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 @media(max-width:400px){.demos-grid{grid-template-columns:1fr;}}
+.banner{margin:14px 20px 2px;border-radius:16px;background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid var(--bdr);padding:12px 16px;box-shadow:var(--sh);overflow:hidden;}
+.banner svg{display:block;width:100%;height:auto;}
+.rub-title{font-size:20px;font-weight:800;letter-spacing:-.5px;color:var(--ink);line-height:1.1;}
 `;
 (function(){ const s=document.createElement('style'); s.textContent=T; document.head.appendChild(s); })();
 
@@ -2444,6 +2447,25 @@ function App() {
           <div className="title">{salut}, Mac Arthur</div>
         </div>
         <div className="hdr-right">{TODAY}</div>
+      </div>
+
+      <div className="banner" aria-hidden="true">
+        <svg viewBox="0 0 520 100" preserveAspectRatio="xMidYMid meet" fill="none" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="52" cy="30" r="11" stroke="var(--gold)" strokeWidth="2"/>
+          <path d="M52 12v-5M52 53v5M32 30h-5M72 30h5M38 16l-4-4M70 44l4 4M66 16l4-4M38 44l-4 4" stroke="var(--gold)" strokeWidth="2"/>
+          <path d="M16 84 C120 84 165 56 245 50 C335 43 405 31 504 16" stroke="var(--acc)" strokeWidth="2.5"/>
+          <path d="M504 16l-11 1.5M504 16l-1.5 11" stroke="var(--acc)" strokeWidth="2.5"/>
+          <circle cx="150" cy="65" r="4.5" fill="var(--card)" stroke="var(--acc)" strokeWidth="2"/>
+          <circle cx="300" cy="45" r="4.5" fill="var(--card)" stroke="var(--acc)" strokeWidth="2"/>
+          <circle cx="430" cy="27" r="4.5" fill="var(--card)" stroke="var(--acc)" strokeWidth="2"/>
+          <rect x="132" y="74" width="15" height="15" rx="2.5" stroke="var(--mut)" strokeWidth="1.6"/>
+          <path d="M136 79h7" stroke="var(--mut)" strokeWidth="1.6"/>
+          <path d="M286 90v-12h28v12" stroke="var(--mut)" strokeWidth="1.6"/>
+          <path d="M283 78l5-6h24l5 6z" stroke="var(--mut)" strokeWidth="1.6"/>
+          <circle cx="430" cy="82" r="8.5" stroke="var(--mut)" strokeWidth="1.6"/>
+          <path d="M427 78l6 4-6 4z" fill="var(--mut)"/>
+          <path d="M12 94h496" stroke="var(--bdr)" strokeWidth="1.5"/>
+        </svg>
       </div>
 
       <div className="tabs">
