@@ -39,9 +39,16 @@ Un endroit où tu vois, d'un seul écran : mes prospects, mes devis en cours, me
 Quand un devis est généré (le futur constructeur), il crée automatiquement sa ligne dans le cockpit, reliée au dossier. `devis-accept` met déjà à jour le pipeline et envoie le PDF signé. La chaîne **diagnostic → dossier → devis → accepté → PDF signé** devient visible de bout en bout.
 - **Gain :** tu ne perds plus jamais un devis, tu vois l'état de chaque offre sans chercher.
 
-### Phase 2 — Clients et argent dans le cockpit
-Un onglet Clients : **facturé / encaissé / reste dû** par client, alimenté par les factures. Fini le suivi en fichiers et dans CONTEXT.md.
-- **Gain :** tu sais en un coup d'œil qui te doit quoi et ton encaissé du mois.
+### Phase 2 — Le cockpit financier + coach de discipline (spec consolidée 17/07/2026)
+Reformulée avec les précisions de Mac Arthur. Fondation posée : colonne `dossier_id` ajoutée à `pilotage_finances`. Quatre modules :
+
+1. **Déclaration simple des entrées, y compris informelles.** Au démarrage, beaucoup de deals se font via WhatsApp avec son réseau perso, hors tunnel formel. Il faut une saisie en un geste (« +175 € Nabyntou, acompte ») que Mac Arthur déclare. Il va discipliner et déclarer ses entrées.
+2. **Le système SUGGÈRE, Mac Arthur VALIDE (jamais autonome).** L'agent propose des actions à valider dans le cockpit : « devis Nabyntou accepté → confirmer l'encaissement de 175 € ? », « entrée de 500 € → répartition suggérée sur tes enveloppes ? ». Règle « Mac Arthur = source ».
+3. **Vue argent par client :** facturé (devis acceptés) / encaissé (entrées liées au dossier) / reste dû. Rendue possible par `dossier_id` sur les finances.
+4. **Coach de discipline + répartition enveloppes automatisée.** Le point le plus important. Mac Arthur a beaucoup de pulsions de dépense mal organisées. Le coach lit les entrées, et à chaque rentrée d'argent **suggère une répartition sur les 11 enveloppes** (par priorité) qu'il valide → l'épargne s'assigne AVANT qu'il puisse la dépenser (logique « pay yourself first » anti-pulsion). Aujourd'hui : 0 € épargné sur ~76 000 € de cibles. Le coach fait aussi des recommandations récurrentes et suit un chiffre : l'encaissé agence du mois.
+- **Gain :** il sait qui lui doit quoi, son argent s'assigne tout seul (moins de pulsions), et un coach le discipline sans qu'il y pense.
+
+**À construire :** l'app Pilotage est une SPA React (Babel standalone, onglets). Ajouter un onglet « Argent/Coach » + une edge function `coach-repartition` (suggère le split). À faire à tête reposée (build React de prod).
 
 ### Phase 3 — Ta prochaine action + relances automatiques
 Sur chaque dossier : « prochaine action + échéance ». Relances automatiques (devis sans réponse à J+3, acompte non réglé, client à recontacter). C'est l'agent commercial qui dort déjà dans le pipeline.
