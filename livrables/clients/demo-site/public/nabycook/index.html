@@ -6,9 +6,11 @@
 <title>Votre devis — Nabycook · Mr Attractor</title>
 <meta name="robots" content="noindex">
 <!--
-  DEVIS INTERACTIF MR ATTRACTOR — template réutilisable.
-  Pour un nouveau client : ne toucher qu'au bloc CONFIG (const DEVIS = {...}) plus bas.
-  Le prospect coche, le total se calcule, il valide → POST vers l'edge function devis-accept.
+  DEVIS DE CONFIRMATION MR ATTRACTOR — Nabycook (Nabyntou Dosso).
+  Partenariat DMV : série de 3 vidéos promotionnelles (350 €) + site vitrine OFFERT,
+  en échange de promotion + témoignage. Ce n'est PAS un devis à composer : le périmètre
+  et le prix sont actés, la cliente valide. Bloc CONFIG (const DEVIS) plus bas ;
+  la validation POST vers l'edge function devis-accept (numéro ATR-2026-0011 = boucle cockpit).
 -->
 <style>
 :root{
@@ -44,35 +46,6 @@ img{max-width:100%}
 .sec-h .num{flex:0 0 26px;height:26px;border-radius:50%;background:var(--orange);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
 .sec-h h2{font-size:16px}
 .sec-sub{color:var(--muted);font-size:13px;margin:2px 0 14px 36px}
-
-/* choice cards */
-.opt{display:block;position:relative;background:var(--white);border:1.5px solid var(--sable);border-radius:14px;padding:15px 16px 15px 52px;margin-bottom:12px;cursor:pointer;box-shadow:var(--shadow-2);transition:border-color .15s,box-shadow .15s,transform .08s}
-.opt:hover{border-color:var(--orange-2)}
-.opt.on{border-color:var(--orange);box-shadow:0 0 0 3px rgba(242,92,5,.12),var(--shadow-2)}
-.opt input{position:absolute;opacity:0;pointer-events:none}
-.mark{position:absolute;left:16px;top:16px;width:22px;height:22px;border:2px solid var(--sable);background:#fff;display:flex;align-items:center;justify-content:center;transition:.15s}
-.opt[data-type="radio"] .mark{border-radius:50%}
-.opt[data-type="check"] .mark{border-radius:6px}
-.opt.on .mark{border-color:var(--orange);background:var(--orange)}
-.mark svg{width:13px;height:13px;stroke:#fff;stroke-width:3.2;fill:none;opacity:0;transition:.15s}
-.opt.on .mark svg{opacity:1}
-.opt[data-type="radio"].on .mark::after{content:"";width:9px;height:9px;border-radius:50%;background:#fff}
-.opt[data-type="radio"] .mark svg{display:none}
-.opt-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.opt-nom{font-weight:700;font-size:15px}
-.badge{display:inline-block;background:var(--orange);color:#fff;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:20px;margin-left:7px;vertical-align:middle}
-.opt-prix{font-weight:800;font-size:15px;color:var(--ink);white-space:nowrap}
-.opt-prix .ap{display:block;font-size:9.5px;font-weight:600;color:var(--muted);text-align:right}
-.opt-desc{color:var(--muted-2);font-size:12.5px;margin-top:5px}
-.opt-format{display:inline-block;margin-top:8px;font-size:11px;color:var(--muted);border:1px solid var(--sable);border-radius:20px;padding:2px 9px}
-.opt-more{display:inline-block;margin-top:11px;background:none;border:none;padding:0;color:var(--orange-d);font-weight:700;font-size:12px;font-family:inherit;cursor:pointer;text-decoration:underline}
-.opt-detail{margin-top:11px;padding-top:11px;border-top:1px dashed var(--sable)}
-.opt-detail .dl{font-size:12px;color:var(--muted-2);margin-bottom:9px;line-height:1.55}
-.opt-detail .dl:last-child{margin-bottom:0}
-.opt-detail .dl b{display:block;color:var(--ink);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
-.opt-detail ul{margin:3px 0 0 17px;padding:0}
-.opt-detail li{margin-bottom:4px}
-.opt-detail .geo{color:var(--orange-d);font-weight:600}
 
 /* market anchor */
 .value{margin-top:26px;border:2px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
@@ -138,10 +111,10 @@ img{max-width:100%}
 
 .pay-block{margin-top:24px;text-align:left;background:var(--creme);border:1.5px solid var(--sable);border-radius:14px;padding:18px}
 .pay-block h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--orange-d);margin-bottom:12px}
-.pay-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--sable)}
-.pay-row:last-of-type{border-bottom:none}
-.pay-row .pm{font-weight:700;font-size:14.5px;color:var(--ink)}
-.pay-row .pd{font-size:13.5px;color:var(--muted-2);white-space:nowrap}
+.pay-row2{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--sable)}
+.pay-row2:last-of-type{border-bottom:none}
+.pay-row2 .pm{font-weight:700;font-size:14.5px;color:var(--ink)}
+.pay-row2 .pd{font-size:13.5px;color:var(--muted-2);white-space:nowrap}
 .pay-block #pay-note{margin-top:12px;font-size:12.5px;color:var(--muted-2);line-height:1.55}
 .foot{margin-top:30px;text-align:center;font-size:10.5px;color:var(--muted);line-height:1.7}
 
@@ -150,6 +123,44 @@ img{max-width:100%}
   .value .l .amt{font-size:19px}
   .sticky .cta{padding:11px 14px;font-size:13px}
 }
+
+/* deal card (confirmation) */
+.deal{margin-top:16px;background:#fff;border:1.5px solid var(--sable);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.deal-row{padding:16px 18px;border-bottom:1px solid var(--sable)}
+.deal-row:last-child{border-bottom:none}
+.deal-row .dh{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.deal-row .dt{font-weight:800;font-size:15px}
+.deal-row .dp{font-weight:800;font-size:14.5px;white-space:nowrap;text-align:right}
+.deal-row .dp small{display:block;font-size:10px;font-weight:600;color:var(--muted)}
+.deal-row .dp .inc{color:var(--green)}
+.deal-row .dd{color:var(--muted-2);font-size:12.5px;margin-top:6px}
+.deal-row ul{margin:9px 0 0 17px;padding:0}
+.deal-row li{font-size:12.5px;color:var(--muted-2);margin-bottom:4px}
+.deal-tag{display:inline-block;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:20px;margin-left:7px;vertical-align:middle}
+.deal-tag.core{background:var(--orange);color:#fff}
+.deal-tag.inc{background:var(--green-bg);color:var(--green)}
+
+/* payment plan */
+.pay{margin-top:22px;border:1.5px solid var(--sable);border-radius:16px;background:#fff;overflow:hidden;box-shadow:var(--shadow-2)}
+.pay h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:15px 18px 4px}
+.pay-row{display:flex;align-items:center;gap:13px;padding:13px 18px;border-top:1px solid var(--sable)}
+.pay-row .n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--creme);border:1.5px solid var(--sable);color:var(--ink);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.pay-row.first .n{background:var(--orange);border-color:var(--orange);color:#fff}
+.pay-row .pm{flex:1}
+.pay-row .pm .pl{font-weight:700;font-size:13.5px}
+.pay-row .pm .ps{font-size:11.5px;color:var(--muted);margin-top:1px}
+.pay-row .pv{font-weight:800;font-size:14px;white-space:nowrap;text-align:right}
+.pay-row .pv small{display:block;font-size:10px;font-weight:600;color:var(--muted)}
+
+@media print{
+  body{background:#fff;padding-bottom:0}
+  .sticky,.btn,.btn-ghost,.ask,.accord,.valid .hint{display:none!important}
+  .wrap{max-width:100%}
+  .sec,.value,.bonus,.limit,.valid,.pay,.deal,.hero{break-inside:avoid;overflow:visible}
+  .opt,.pay-row,.deal-row{break-inside:avoid}
+  a[href]::after{content:""}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 </style>
 </head>
 <body>
@@ -157,7 +168,7 @@ img{max-width:100%}
 <main class="wrap" id="app">
 
   <div class="top">
-    <div class="logo">Mr <span>Attractor</span><span class="sub" id="c-tag">Conseil en business &amp; applications métier</span></div>
+    <div class="logo">Mr <span>Attractor</span><span class="sub" id="c-tag">Conseil en business &amp; création de contenu</span></div>
     <div class="meta">
       <div class="k">Devis</div>
       <div id="c-num">—</div>
@@ -170,51 +181,59 @@ img{max-width:100%}
     <p id="c-intro"></p>
   </section>
 
-  <!-- 1. CONSEIL -->
+  <!-- 1. CE QU'ON A ACTÉ -->
   <section class="sec">
-    <div class="sec-h"><span class="num">1</span><h2>Votre accompagnement conseil</h2></div>
-    <p class="sec-sub">On pose les fondations avant de construire. Choisissez le niveau qui correspond à votre ambition.</p>
-    <div id="grp-conseil"></div>
+    <div class="sec-h"><span class="num">1</span><h2>Notre partenariat, en clair</h2></div>
+    <p class="sec-sub">Trois vidéos pour faire connaître Nabycook, et votre site vitrine offert par-dessus.</p>
+    <div class="deal" id="grp-deal"></div>
   </section>
 
-  <!-- 2. VIDÉO & LANCEMENT -->
-  <section class="sec">
-    <div class="sec-h"><span class="num">2</span><h2>Votre vidéo et votre lancement</h2></div>
-    <p class="sec-sub">Optionnel. Pour montrer votre univers et faire connaître votre offre, pas juste un clip isolé.</p>
-    <div id="grp-site"></div>
-  </section>
-  <div id="grp-options" hidden></div>
-
-  <!-- ANCRAGE MARCHÉ -->
+  <!-- 2. OFFRE (vrai coût vs prix partenariat) -->
   <div class="value">
     <div class="m"><span id="v-market-lab"></span><span class="s" id="v-market"></span></div>
-    <div class="l"><span class="lab">Votre sélection, en offre de lancement</span><span class="amt" id="v-total">—</span></div>
-    <div class="cap">Vous ne réglez jamais la totalité d'un coup : chaque étape se paie à son lancement, et vous démarrez pour le seul acompte de la première.</div>
+    <div class="l"><span class="lab" id="v-lab"></span><span class="amt" id="v-total">—</span></div>
+    <div class="cap" id="v-cap"></div>
   </div>
+
+  <!-- 3. PLAN DE RÈGLEMENT -->
+  <section class="sec">
+    <div class="sec-h"><span class="num">2</span><h2>Votre règlement, en 2 fois</h2></div>
+    <p class="sec-sub">Vous démarrez dès la première tranche. Pas de gros montant d'un coup.</p>
+    <div class="pay" id="grp-pay"><h3 id="pay-h"></h3></div>
+  </section>
 
   <!-- BONUS -->
   <div class="bonus">
-    <h3>Offre de lancement — bonus inclus</h3>
+    <h3 id="bonus-h">Ce qui est compris</h3>
     <ul id="grp-bonus"></ul>
   </div>
+
+  <!-- CONTREPARTIE -->
+  <section class="sec">
+    <div class="sec-h"><span class="num">3</span><h2>Notre accord de visibilité</h2></div>
+    <p class="sec-sub" id="cp-sub"></p>
+    <div class="bonus" style="border-color:var(--green);background:var(--green-bg)">
+      <ul id="grp-cp"></ul>
+    </div>
+  </section>
 
   <!-- LIMITEUR -->
   <div class="limit" id="c-limit"></div>
 
   <!-- VALIDATION -->
   <section class="valid" id="form-block">
-    <h3>Valider ma sélection</h3>
-    <p class="hint">Composez votre offre ci-dessus, puis validez. Une question avant de vous décider ? Le bouton WhatsApp plus bas vous met en lien direct avec Mac Arthur. Aucun engagement de paiement à cette étape.</p>
+    <h3>Je valide et je démarre</h3>
+    <p class="hint">Confirmez votre nom et votre contact, cochez l'accord, et validez. Une question avant ? Le bouton WhatsApp plus bas vous met en lien direct avec Mac Arthur.</p>
 
     <div class="recap" id="recap"></div>
 
     <div class="field"><label for="f-nom">Votre nom</label><input id="f-nom" type="text" placeholder="Prénom et nom" autocomplete="name"></div>
-    <div class="field"><label for="f-contact">Votre WhatsApp ou email</label><input id="f-contact" type="text" placeholder="+33... ou vous@email.com" autocomplete="email"></div>
-    <div class="field"><label for="f-demande">Un besoin particulier ? (optionnel)</label><textarea id="f-demande" rows="3" placeholder="Décrivez votre besoin en quelques mots et on vous fera un devis taillé sur mesure. Vous pouvez aussi combiner avec les options ci-dessus."></textarea></div>
+    <div class="field"><label for="f-contact">Votre email ou WhatsApp</label><input id="f-contact" type="text" placeholder="vous@email.com ou +33..." autocomplete="email"></div>
+    <div class="field"><label for="f-demande">Une précision à ajouter ? (optionnel)</label><textarea id="f-demande" rows="3" placeholder="Une question, une envie particulière pour vos vidéos, une date de tournage souhaitée..."></textarea></div>
 
-    <label class="accord"><input type="checkbox" id="f-accord"><span>Je souhaite être recontactée pour démarrer ou affiner ma demande. (Sans paiement à cette étape.)</span></label>
+    <label class="accord"><input type="checkbox" id="f-accord"><span id="accord-txt"></span></label>
 
-    <button class="btn" id="btn-valider" disabled>Je valide ma sélection</button>
+    <button class="btn" id="btn-valider" disabled>Je valide et je démarre</button>
     <a class="btn-ghost" id="btn-help" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.16c-.25.7-1.44 1.33-1.99 1.36-.53.05-1.02.24-3.4-.71-2.86-1.13-4.68-4.06-4.82-4.25-.14-.19-1.14-1.52-1.14-2.9s.72-2.06.98-2.34c.25-.28.55-.35.73-.35l.53.01c.17 0 .4-.06.62.48.25.6.85 2.07.92 2.22.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.28.29-.12.57.17.28.74 1.22 1.59 1.98 1.1.98 2.02 1.28 2.3 1.42.28.14.44.12.6-.07.17-.19.7-.81.89-1.09.18-.28.37-.23.62-.14.25.09 1.6.76 1.87.9.28.14.46.21.53.33.07.12.07.68-.18 1.38Z"/></svg>Une question ? Écrire à Mac Arthur sur WhatsApp</a>
     <p class="ask">ou par email : <a href="mailto:myattractor1@gmail.com">myattractor1@gmail.com</a></p>
   </section>
@@ -230,7 +249,7 @@ img{max-width:100%}
     <h2>C'est validé, merci !</h2>
     <p id="done-msg"></p>
     <div class="pay-block" id="pay-block" style="display:none">
-      <h3>Comment régler votre acompte</h3>
+      <h3>Comment régler votre première tranche</h3>
       <div id="pay-list"></div>
       <p id="pay-note"></p>
     </div>
@@ -238,10 +257,10 @@ img{max-width:100%}
 
 </main>
 
-<!-- STICKY TOTAL -->
+<!-- STICKY -->
 <div class="sticky" id="sticky">
   <div class="in">
-    <div><div class="lab">Total offre de lancement</div><div class="amt" id="s-total">—</div></div>
+    <div><div class="lab" id="s-lab">Votre partenariat, tout compris</div><div class="amt" id="s-total">—</div></div>
     <button class="cta" id="s-cta">Valider →</button>
   </div>
 </div>
@@ -250,225 +269,138 @@ img{max-width:100%}
 /* ================= CONFIG — la seule chose à changer pour un autre client ================= */
 const DEVIS = {
   numero: "ATR-2026-0011",
-  date: "16 juillet 2026",
-  client: "Nabyntou (Nabycook)",
+  date: "17 juillet 2026",
+  valide: "31 juillet 2026",
+  client: "Nabyntou Dosso",
   projet: "Nabycook",
-  // Devise du devis : "EUR" (Europe) · "FCFA" (Côte d'Ivoire) · "both" (zone inconnue → les deux affichés).
-  // Les prix ci-dessous sont saisis en EUR ; le FCFA est calculé (taux barème 655,957).
-  devise: "EUR",
   submitUrl: "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/devis-accept",
   waHelp: "33753902323",
   waHelpText: "Bonjour Mac Arthur, je regarde le devis Nabycook (ATR-2026-0011) et j'ai une question : ",
   tag: "Conseil en business & création de contenu",
-  titre: 'Vendre <em>Nabycook</em> aussi bien que vous cuisinez',
-  intro: "Vous avez une offre riche (ateliers, traiteur, épicerie) et un vrai univers. Ce qui manque, ce n'est pas le talent, c'est de transformer tout ça en offres qui se vendent, et de le faire savoir. On avance en deux temps : d'abord structurer et écrire vos offres par cible, puis les mettre en image pour vous faire connaître. Composez ci-dessous ce qui vous parle, le total se calcule tout seul.",
-  marcheLabel: "Le même travail (structuration + création de contenu) confié à une agence classique",
-  marche: "2 000 – 4 000 €",
-  conseil: [
-    { id:"decouverte", nom:"Séance découverte", prix:80, format:"1 heure, en visio ou par téléphone", desc:"Une heure pour traiter LE point le plus urgent : clarifier une offre, débloquer votre promotion.",
-      avantage:"Vous voulez avancer vite sur un point précis, sans gros engagement pour commencer.",
-      limite:"C'est une séance ciblée, pas un accompagnement complet ni un dossier écrit.",
-      livrables:["1h de conseil en direct sur votre priorité","Des pistes d'action concrètes tout de suite"] },
-    { id:"starter", nom:"Starter", prix:150, format:"Livré sous 48h", desc:"Un document pour y voir clair vite : diagnostic + recommandations prioritaires.",
-      avantage:"Vous voulez un premier cap écrit, sans engager un gros budget.",
-      limite:"C'est un point de départ : il ne structure pas encore toute votre offre.",
-      livrables:["Un document de synthèse (diagnostic + priorités)","Vos 3 prochaines actions concrètes"] },
-    { id:"runner",  nom:"Runner",  prix:350, format:"Livré sous 72h", reco:true, defaut:true, desc:"Le cœur de ce dont vous avez besoin : structurer votre positionnement, vos cibles, écrire vos offres qui vendent, et poser votre plan de promotion.",
-      avantage:"Vous savez cuisiner et accueillir. Vous voulez enfin savoir quoi dire, à qui, et comment le vendre.",
-      limite:"Se concentre sur la structuration et le marketing, pas sur un suivi de plusieurs semaines.",
-      livrables:["Votre positionnement et vos cibles clarifiés","Vos offres écrites par cible (B2C, RSE entreprise, événementiel...)","Votre plan de promotion : quoi publier, où, quand","Une feuille de route pour vendre plus"] },
-    { id:"eagle",   nom:"Eagle",   prix:800, format:"10h à répartir sur 2 mois max", desc:"Un accompagnement complet : on structure votre business, vos offres et votre plan d'action, ensemble, dans la durée.",
-      avantage:"Vous voulez tout poser proprement et être accompagnée sur 2 mois, pas juste un document.",
-      limite:"Demande votre implication (10h de séances). C'est un accompagnement, pas un livrable rapide.",
-      livrables:["Tout ce qu'il y a dans Runner","10h de coaching + pilotage avec vous sur 2 mois","Le suivi de votre mise en œuvre","Tous les bonus de lancement ci-dessous"] }
+  titre: 'Faire connaître <em>Nabycook</em>, en vidéo',
+  intro: "Voici, noir sur blanc, notre partenariat. On réalise pour Nabycook une série de 3 vidéos promotionnelles pour faire connaître vos ateliers, votre traiteur et votre épicerie, et on vous offre votre site vitrine par-dessus. En échange, Nabycook devient une vitrine de notre travail. Le tarif partenariat est de 350 €, réglable en deux fois.",
+
+  // Le produit = la série de 3 vidéos. Le site vitrine est OFFERT (bonus du partenariat DMV).
+  deal: [
+    { tag:"Le produit", tagClass:"core", nom:"Série de 3 vidéos promotionnelles",
+      prix:"1 050 €", ap:"valeur réelle",
+      desc:"Trois vidéos pensées pour vendre, pas juste pour décorer : on met en image votre univers et vos offres pour donner envie de réserver un atelier, de commander votre traiteur ou de passer à l'épicerie.",
+      li:["3 vidéos promotionnelles tournées et montées","Des formats verticaux prêts à publier sur Instagram, TikTok et WhatsApp","Une direction claire : quel message pour quelle cible","Tournage en Île-de-France (défraiement en sus hors Île-de-France)"] },
+    { tag:"Bonus partenariat", tagClass:"inc", nom:"Votre site vitrine Nabycook",
+      prix:"Offert", ap:"valeur 490 €", inc:true,
+      desc:"Pour que les gens qui voient vos vidéos vous trouvent et vous contactent, votre vitrine en ligne est comprise, on ne la facture pas.",
+      li:["Votre vitrine : ateliers, traiteur, épicerie présentés clairement","Un bouton de contact et de demande directe (WhatsApp / formulaire)","Le branchement de votre nom de domaine + la mise en ligne","Hébergement de la 1re année offert"] }
   ],
-  // Vidéo = 3 paliers FERMES, un seul à choisir (mono-sélection gérée en JS). Défraiement chiffré à l'appel.
-  site: [
-    { id:"video-essentiel", nom:"Essentiel — Captation", prix:350, geo:true, desc:"On filme un atelier ou un événement et on en tire un contenu prêt à publier.",
-      avantage:"Vous voulez montrer l'ambiance et la magie de vos ateliers, en vrai.",
-      limite:"1 cadreur, tournage + montage, demi-journée, rendu 48h. Prix HT + défraiement selon le lieu de tournage (nul en Île-de-France).",
-      livrables:["Tournage + montage d'un atelier ou d'un événement","Un format vidéo prêt à poster","Rendu sous 48h"] },
-    { id:"video-signature", nom:"Signature — Film + lancement", prix:690, geo:true, desc:"Un vrai film de marque, avec la direction artistique et le plan de promotion de votre lancement.",
-      avantage:"Vous voulez un film qui incarne Nabycook et savoir exactement où et quand le diffuser.",
-      limite:"2 cadreurs, tournage + montage + post-production, une journée, rendu 72h. Prix HT + défraiement selon le lieu.",
-      livrables:["Production vidéo pro (tournage 4K, montage, post-prod)","Direction artistique : l'univers et le ton de Nabycook","Plan de promotion : quoi publier, où, quand","Rendu sous 72h"] },
-    { id:"video-lancement", nom:"Lancement — Pilotage complet", prix:1290, geo:true, desc:"Le film Signature, et on orchestre tout votre lancement de bout en bout avec vous.",
-      avantage:"Vous voulez marquer les esprits et être accompagnée sur tout le lancement, pas juste recevoir une vidéo.",
-      limite:"Tout le pack Signature + pilotage du lancement. Prix HT + défraiement selon le lieu.",
-      livrables:["Tout le pack Signature","Le pilotage complet de votre lancement (calendrier, diffusion, suivi)","Des déclinaisons pour les réseaux","Un point de suivi après le lancement"] }
+
+  marcheLabel: "Les mêmes 3 vidéos pro et un site vitrine, confiés séparément à une agence",
+  marche: "1 540 €",
+  valLab: "Votre prix partenariat, tout compris",
+  valTotal: "350 €",
+  valTotalAp: "3 vidéos + site vitrine",
+  valCap: "Chaque vidéo pro vaut environ 350 €, et le site vitrine 490 € : soit 1 540 € au prix normal. Dans le cadre du partenariat, l'ensemble revient à 350 € et le site est offert. Ce tarif est possible parce que Nabycook devient une vitrine de notre travail (voir l'accord de visibilité). Vous réglez en 2 fois.",
+
+  payTitre: "Deux tranches de 175 €",
+  pay: [
+    { first:true, label:"Tranche 1 — avant le tournage", sub:"Votre versement bloque la date de tournage et lance le projet.", val:"175 €", ap:"" },
+    { label:"Tranche 2 — à la livraison", sub:"Quand vos 3 vidéos et votre site vitrine sont livrés.", val:"175 €", ap:"" }
   ],
-  options: [],
+
+  bonusH: "Ce qui est compris dans le partenariat",
   bonus: [
-    'Une séance de cadrage de 30 min pour lancer le travail — <span class="off">offerte</span>',
-    'Vos offres relues et ajustées une fois après livraison — <span class="off">offert</span>',
-    'Tarif de lancement garanti sur la vidéo si engagée dans les 30 jours',
-    'Des conseils de promotion applicables tout de suite, dès la première séance'
+    'Votre <b>site vitrine Nabycook</b> (valeur 490 €) — <span class="off">offert</span>',
+    'Des <b>déclinaisons réseaux</b> de vos vidéos, formats verticaux prêts à poster — <span class="off">comprises</span>',
+    'Le <b>branchement du nom de domaine</b> + la mise en ligne du site — <span class="off">compris</span>',
+    'Une <b>séance de cadrage</b> pour définir le message de vos vidéos — <span class="off">comprise</span>'
   ],
-  limite: "Cette offre de lancement (bonus inclus) est réservée jusqu'au <b>31/07/2026</b>. Pour rester pleinement disponible sur chaque projet, un nombre limité d'accompagnements est ouvert par mois : votre créneau de démarrage est bloqué dès réception de l'acompte.",
-  doneMsg: "Votre sélection a bien été enregistrée et transmise à Mac Arthur. Vous serez recontactée très vite pour caler votre première séance et lancer le travail sur Nabycook.",
-  // Moyens de paiement révélés seulement après validation, par devise.
-  paiement: {
-    EUR: [
-      { m:"PayPal", d:"@Myattractor" },
-      { m:"Wero / Revolut", d:"+33 7 53 90 23 23" }
-    ],
-    FCFA: [
-      { m:"Wave", d:"+225 05 76 87 70 70" },
-      { m:"MTN Money", d:"+225 05 76 87 70 70" },
-      { m:"Djamo", d:"+225 05 76 87 70 70" }
-    ]
-  },
-  paiementNote: "Réglez l'acompte de la formule choisie par l'un de ces moyens, puis envoyez-moi la preuve sur WhatsApp. On démarre dès réception."
+
+  cpSub: "Ce tarif partenariat est possible parce que Nabycook devient une vitrine de notre travail. Voici ce qu'on se dit clairement, de part et d'autre.",
+  cp: [
+    'Une <b>courte vidéo témoignage</b> une fois vos contenus livrés, sur ce que le partenariat vous a apporté',
+    'Une <b>recommandation</b> de l\'agence auprès des entrepreneurs de votre réseau qui ont les mêmes besoins',
+    'L\'autorisation de citer <b>Nabycook</b> comme cas client (nom + extraits des vidéos et du site)'
+  ],
+
+  limite: "Cette offre de lancement est réservée jusqu'au <b>31/07/2026</b>. Le tournage a lieu en Île-de-France (défraiement en sus hors Île-de-France). Votre date de tournage est bloquée dès réception de la première tranche (175 €).",
+  accord: "Je confirme le partenariat : la série de 3 vidéos promotionnelles et mon site vitrine Nabycook offert, pour 350 € réglés en 2 tranches de 175 €, et je souhaite démarrer.",
+  doneMsg: "Votre accord est bien enregistré et transmis à Mac Arthur. Vous allez recevoir les coordonnées pour régler la première tranche et caler la date de tournage. On lance Nabycook.",
+
+  // Moyens de paiement révélés seulement après validation (zone Europe → EUR).
+  paiement: [
+    { m:"PayPal", d:"@Myattractor" },
+    { m:"Wero / Revolut", d:"+33 7 53 90 23 23" }
+  ],
+  paiementNote: "Réglez la première tranche (175 €) par l'un de ces moyens, puis envoyez-moi la preuve sur WhatsApp. On cale la date de tournage dès réception."
 };
 /* ========================================================================================= */
 
-const CHECK = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
 const $ = (id)=>document.getElementById(id);
-const state = { conseil:null, site:{} };
-
-// Affichage devise selon la zone du prospect. Prix saisis en EUR, FCFA calculé (arrondi au millier propre).
-const TAUX_FCFA = 655.957;
-function toFCFA(eur){ return Math.round(eur*TAUX_FCFA/1000)*1000; }
-function fmt(eur){
-  const e = eur.toLocaleString('fr-FR') + " €";
-  const f = toFCFA(eur).toLocaleString('fr-FR') + " FCFA";
-  if(DEVIS.devise === "FCFA") return f;
-  if(DEVIS.devise === "both") return f + " (≈ " + e + ")";
-  return e;
-}
 
 // header + textes
 $("c-tag").textContent = DEVIS.tag;
 $("c-num").textContent = "N° " + DEVIS.numero;
-$("c-date").textContent = DEVIS.date;
+$("c-date").textContent = DEVIS.date + " · valable jusqu'au " + DEVIS.valide;
 $("c-titre").innerHTML = DEVIS.titre;
 $("c-intro").textContent = DEVIS.intro;
 $("v-market-lab").textContent = DEVIS.marcheLabel;
 $("v-market").textContent = DEVIS.marche;
-$("c-limit").innerHTML = "<b>À noter.</b> " + DEVIS.limite;
-$("done-msg").textContent = DEVIS.doneMsg;
+$("v-lab").textContent = DEVIS.valLab;
+$("v-total").innerHTML = DEVIS.valTotal + '<small>' + DEVIS.valTotalAp + '</small>';
+$("v-cap").textContent = DEVIS.valCap;
+$("bonus-h").textContent = DEVIS.bonusH;
 $("grp-bonus").innerHTML = DEVIS.bonus.map(b=>"<li>"+b+"</li>").join("");
+$("cp-sub").textContent = DEVIS.cpSub;
+$("grp-cp").innerHTML = DEVIS.cp.map(b=>"<li>"+b+"</li>").join("");
+$("c-limit").innerHTML = "<b>À noter.</b> " + DEVIS.limite;
+$("accord-txt").textContent = DEVIS.accord;
+$("done-msg").textContent = DEVIS.doneMsg;
+$("s-total").innerHTML = DEVIS.valTotal + '<small>' + DEVIS.valTotalAp + '</small>';
 $("btn-help").href = "https://wa.me/"+DEVIS.waHelp+"?text="+encodeURIComponent(DEVIS.waHelpText);
 
-const CHECKS = [...DEVIS.site, ...(DEVIS.options||[])];
-
-// rendu d'une option
-function card(o, type){
-  const ap = o.apartir ? '<span class="ap">à partir de</span>' : '';
-  const li = (o.livrables||[]).map(x=>`<li>${x}</li>`).join("");
-  const detail = (o.avantage||o.limite||li) ? `
-    <div class="opt-detail" hidden>
-      ${o.avantage?`<p class="dl"><b>Idéal si</b>${o.avantage}</p>`:''}
-      ${o.limite?`<p class="dl"><b>À savoir</b>${o.limite}</p>`:''}
-      ${li?`<div class="dl"><b>Ce qu'on vous livre</b><ul>${li}</ul></div>`:''}
-      ${o.geo?`<p class="dl geo">Service disponible pour les projets en Côte d'Ivoire ou en Île-de-France.</p>`:''}
+// bloc "notre partenariat"
+$("grp-deal").innerHTML = DEVIS.deal.map(d=>`
+  <div class="deal-row">
+    <div class="dh">
+      <div class="dt">${d.nom}<span class="deal-tag ${d.tagClass}">${d.tag}</span></div>
+      <div class="dp"><span class="${d.inc?'inc':''}">${d.prix}</span>${d.ap?`<small>${d.ap}</small>`:''}</div>
     </div>
-    <button class="opt-more" type="button">Voir le détail</button>` : '';
-  return `<label class="opt" data-type="${type}" data-id="${o.id}">
-    <input type="${type==='radio'?'radio':'checkbox'}" name="${type==='radio'?'conseil':o.id}" value="${o.id}">
-    <span class="mark">${CHECK}</span>
-    <span class="opt-top">
-      <span class="opt-nom">${o.nom}${o.reco?'<span class="badge">Recommandé</span>':''}</span>
-      <span class="opt-prix">${fmt(o.prix)}${ap}</span>
-    </span>
-    <span class="opt-desc">${o.desc}</span>
-    ${o.format?`<span class="opt-format">${o.format}</span>`:''}
-    ${detail}
-  </label>`;
-}
-$("grp-conseil").innerHTML = DEVIS.conseil.map(o=>card(o,'radio')).join("");
-$("grp-site").innerHTML = DEVIS.site.map(o=>card(o,'check')).join("");
-if(DEVIS.options && DEVIS.options.length) $("grp-options").innerHTML = DEVIS.options.map(o=>card(o,'check')).join("");
+    <div class="dd">${d.desc}</div>
+    <ul>${d.li.map(x=>`<li>${x}</li>`).join("")}</ul>
+  </div>`).join("");
 
-// accordéon détail (ne déclenche pas la sélection)
-document.querySelectorAll('.opt-more').forEach(btn=>{
-  btn.addEventListener('click',(e)=>{
-    e.stopPropagation(); e.preventDefault();
-    const det = btn.parentElement.querySelector('.opt-detail');
-    const open = det.hasAttribute('hidden');
-    if(open){ det.removeAttribute('hidden'); btn.textContent='Masquer le détail'; }
-    else { det.setAttribute('hidden',''); btn.textContent='Voir le détail'; }
-  });
-});
-document.querySelectorAll('.opt-detail').forEach(d=> d.addEventListener('click', e=>e.stopPropagation()));
+// plan de règlement
+$("pay-h").textContent = DEVIS.payTitre;
+$("grp-pay").insertAdjacentHTML("beforeend", DEVIS.pay.map((p,i)=>`
+  <div class="pay-row ${p.first?'first':''}">
+    <div class="n">${i+1}</div>
+    <div class="pm"><div class="pl">${p.label}</div><div class="ps">${p.sub}</div></div>
+    <div class="pv">${p.val}${p.ap?`<small>${p.ap}</small>`:''}</div>
+  </div>`).join(""));
 
-// défauts
-DEVIS.conseil.forEach(o=>{ if(o.defaut){ state.conseil=o.id; } });
-CHECKS.forEach(o=>{ if(o.defaut){ state.site[o.id]=true; } });
+// récap fixe (deal fermé, pas de composition)
+$("recap").innerHTML =
+  '<div class="r"><span>Série de 3 vidéos promotionnelles</span><span>1 050 €</span></div>'
+  + '<div class="r"><span>Site vitrine Nabycook</span><span class="inc" style="color:var(--green)">offert</span></div>'
+  + '<div class="r"><span>Tarif partenariat DMV</span><span>350 €</span></div>'
+  + '<div class="r tot"><span>Total, réglable en 2 fois</span><span>350 €</span></div>';
 
-function syncUI(){
-  document.querySelectorAll('.opt').forEach(el=>{
-    const id=el.dataset.id, type=el.dataset.type;
-    const on = type==='radio' ? state.conseil===id : !!state.site[id];
-    el.classList.toggle('on', on);
-    const input=el.querySelector('input'); if(input) input.checked=on;
-  });
-  recompute();
-}
-// Remise volume : 20 % automatiques dès que le total dépasse 1 200 €.
-function computeTotals(){
-  let total=0, apartir=false; const lignes=[];
-  const c = DEVIS.conseil.find(o=>o.id===state.conseil);
-  if(c){ total+=c.prix; lignes.push({nom:"Conseil — "+c.nom, prix:c.prix, ap:false}); }
-  CHECKS.forEach(o=>{ if(state.site[o.id]){ total+=o.prix; if(o.apartir) apartir=true; lignes.push({nom:o.nom, prix:o.prix, ap:o.apartir}); } });
-  const remise = total>1200 ? Math.round(total*0.2) : 0;
-  const net = total - remise;
-  return { total, remise, net, apartir, lignes };
-}
-function recompute(){
-  const { total, remise, net, apartir, lignes } = computeTotals();
-  const label = (apartir?"à partir de ":"") + fmt(net);
-  const sub = remise>0 ? '<small>remise de 20 % incluse ('+fmt(remise)+')</small>' : (apartir?'<small>montant précisé après le cadrage</small>':'');
-  $("v-total").innerHTML = total>0 ? label + sub : "—";
-  $("s-total").innerHTML = total>0 ? label : "—";
-  $("recap").innerHTML = lignes.length
-    ? lignes.map(l=>`<div class="r"><span>${l.nom}</span><span>${l.ap?'à partir de ':''}${fmt(l.prix)}</span></div>`).join("")
-      + (remise>0?`<div class="r"><span>Remise 20 % (au-delà de 1 200 €)</span><span>- ${fmt(remise)}</span></div>`:'')
-      + `<div class="r tot"><span>Total offre de lancement</span><span>${label}</span></div>`
-    : '<div class="r"><span>Faites votre sélection ci-dessus</span><span></span></div>';
-  checkForm();
-}
-
-// interactions
-document.querySelectorAll('.opt').forEach(el=>{
-  el.addEventListener('click', (e)=>{
-    e.preventDefault();
-    const id=el.dataset.id, type=el.dataset.type;
-    if(type==='radio'){ state.conseil = id; }
-    else {
-      const turningOn = !state.site[id];
-      // Paliers vidéo = un seul à la fois : cocher l'un décoche les autres "video-".
-      if(turningOn && id.indexOf('video-')===0){ CHECKS.forEach(o=>{ if(o.id.indexOf('video-')===0) state.site[o.id]=false; }); }
-      state.site[id] = turningOn;
-    }
-    syncUI();
-  });
-});
-
-// form
+// validation
 function checkForm(){
-  const hasSel = state.conseil || CHECKS.some(o=>state.site[o.id]) || $("f-demande").value.trim();
-  const ok = hasSel && $("f-nom").value.trim() && $("f-contact").value.trim() && $("f-accord").checked;
+  const ok = $("f-nom").value.trim() && $("f-contact").value.trim() && $("f-accord").checked;
   $("btn-valider").disabled = !ok;
 }
-["f-nom","f-contact","f-demande"].forEach(id=>$(id).addEventListener('input',checkForm));
+["f-nom","f-contact"].forEach(id=>$(id).addEventListener('input',checkForm));
 $("f-accord").addEventListener('change',checkForm);
 $("s-cta").addEventListener('click',()=>$("form-block").scrollIntoView({behavior:'smooth'}));
 
 // submit
 $("btn-valider").addEventListener('click', async ()=>{
   const btn=$("btn-valider"); btn.disabled=true; btn.textContent="Envoi en cours...";
-  const c = DEVIS.conseil.find(o=>o.id===state.conseil);
-  const selection=[];
-  if(c){ selection.push("Conseil — "+c.nom+" ("+fmt(c.prix)+")"); }
-  CHECKS.forEach(o=>{ if(state.site[o.id]){ selection.push(o.nom+" ("+(o.apartir?'à partir de ':'')+fmt(o.prix)+")"); } });
-  const { total, remise, net, apartir } = computeTotals();
-  if(remise>0) selection.push("Remise 20 % (au-delà de 1 200 €) : - "+fmt(remise));
   const payload = {
     numero: DEVIS.numero, client: DEVIS.client, projet: DEVIS.projet,
     nom: $("f-nom").value.trim(), contact: $("f-contact").value.trim(), demande: $("f-demande").value.trim(),
-    selection, total: net, total_brut: total, remise, devise: DEVIS.devise, apartir,
-    total_label: (apartir?"à partir de ":"")+fmt(net)
+    selection: ["Série de 3 vidéos promotionnelles (valeur 1 050 €)", "Site vitrine Nabycook (offert, valeur 490 €)", "Tarif partenariat DMV : 350 €, réglé en 2 tranches de 175 €"],
+    total: 350, total_brut: 1540, remise: 1190, devise: "EUR", apartir: false,
+    total_label: "350 € (partenariat DMV), 2 x 175 €"
   };
   try{
     await fetch(DEVIS.submitUrl, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload) });
@@ -479,19 +411,17 @@ $("btn-valider").addEventListener('click', async ()=>{
   $("done").classList.add('show');
   window.scrollTo({top:0,behavior:'smooth'});
 });
-// Moyens de paiement : révélés UNIQUEMENT après validation, selon la devise du devis.
+
+// Moyens de paiement : révélés UNIQUEMENT après validation.
 function renderPaiement(){
-  const P = DEVIS.paiement || {};
-  const list = DEVIS.devise === "FCFA" ? (P.FCFA||[])
-    : DEVIS.devise === "both" ? [...(P.FCFA||[]), ...(P.EUR||[])]
-    : (P.EUR||[]);
+  const list = DEVIS.paiement || [];
   if(!list.length) return;
-  $("pay-list").innerHTML = list.map(p=>`<div class="pay-row"><span class="pm">${p.m}</span><span class="pd">${p.d}</span></div>`).join("");
+  $("pay-list").innerHTML = list.map(p=>`<div class="pay-row2"><span class="pm">${p.m}</span><span class="pd">${p.d}</span></div>`).join("");
   if(DEVIS.paiementNote) $("pay-note").textContent = DEVIS.paiementNote;
   $("pay-block").style.display='';
 }
 
-syncUI();
+checkForm();
 </script>
 </body>
 </html>
