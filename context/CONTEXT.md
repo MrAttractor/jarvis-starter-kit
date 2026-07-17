@@ -80,7 +80,7 @@ Mon offre se construit autour de deux piliers, plus du contenu :
 
 ### Objectifs court terme (3 à 6 mois)
 
-- Atteindre **10 000 €/mois d'ici fin août 2026**.
+- Atteindre **10 000 €/mois d'ici mi-2027** (recalé le 17/07/2026 sur la moyenne réelle des ventes agence, ~275 €/mois ; l'échéance d'août 2026 n'était pas tenable). Progression par paliers dans l'onglet Plan du cockpit.
 - ~~Reconstruire et déployer Attractor Assists~~ : **déployée**, mais **pas encore adoptée**. Chiffres réels au 15/07/2026 (relevés en base, pas estimés) : 37 inscrits, **2 onboardings terminés** (Mac Arthur + Marie Kezey), 5 conversations au total, 0 abonnement, 1 commande. Le vrai objectif n'est plus de déployer, il est qu'un entrepreneur aille au bout du tunnel et vende.
 - Vendre directement les **app métiers** (piste la plus rentable) et activer la diaspora en France.
 - Lancer chaque mois une app de l'écosystème.

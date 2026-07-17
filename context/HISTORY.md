@@ -16,7 +16,9 @@
 - **Bug de numérotation corrigé** (`generate-proposition` réattribuait 0001 déjà signé Élévia → désormais continue la vraie série, 0013). **Mode "mettre à jour"** ajouté (retoucher le même devis, même numéro/lien).
 - **Éditeur d'ajustement dans le cockpit** (la demande de Mac Arthur) : réécrire un devis après négo (lignes/prix, conditions, plan de paiement, total forçable), sauvé en `mode:"fixe"` sur le même lien. Page `/proposition` étendue pour rendre le mode fixe. Testé de bout en bout.
 - **Nabycook (DMV)** : devis de confirmation refait à la main (3 vidéos 350 € + site offert, vrai coût 1 540 € barré), dossier cockpit créé, faux positif du 16/07 nettoyé.
-- Prochaine brique validée : construire l'auto-envoi voie rapide (devis à l'écran pour tous + mail pour ceux qui laissent un email). Nouveau chantier ouvert en fin de séance : **refonte de la lisibilité du cockpit Pilotage**.
+- Prochaine brique validée : construire l'auto-envoi voie rapide (devis à l'écran pour tous + mail pour ceux qui laissent un email).
+- **Refonte visuelle complète du cockpit Pilotage** : direction validée via maquette (artifact), puis appliquée à l'app réelle — police **Sora** (design system), fond blanc, palette ATTRACTOR, **bandeau illustré** en masthead, **rubriques éditoriales** (surtitre + titre Sora + intro + illustration line-art) sur tous les onglets, cartes sans rails de dashboard. Accueil recomposé à la maquette (aperçu dossiers + coach avec courbe des entrées + enveloppes à jauges). Onglet **Démos supprimé**. Contrôles d'édition tous préservés. Piège récurrent identifié : latence de propagation Cloudflare Pages (~1 min) qui faisait voir l'ancienne version.
+- **Objectif officiel recalé sur mi-2027** (au lieu de fin août 2026, hors d'atteinte). Décision de Mac Arthur, basée sur la moyenne réelle des ventes agence **~275 €/mois** (juin 100 €, juil. 450 €). Onglet Plan refait : « Où tu en es » (moyenne live) + progression par paliers jusqu'à 10 000 €/mois en juil. 2027. Mis à jour partout : CLAUDE.md, CONTEXT.md, `pilotage_cap.date_objectif` = 2027-07-31.
 
 ---
 

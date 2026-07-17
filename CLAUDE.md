@@ -16,7 +16,7 @@ Ce workspace est l'Assists de Mr Attractor (Mac Arthur). Il a été créé avec 
 
 Je m'appelle Mac Arthur, connu sous la marque Mr Attractor, et je vis dans le 77 (Seine-et-Marne), je travaille à Montreuil. Je suis salarié en CDD de 3 ans à la DGFiP (service recouvrement, gestion des macros et procédures collectives) et, en parallèle, fondateur de mon agence de business et développement humain, qui est ma priorité de fond. Je bâtis l'écosystème ATTRACTOR : des apps maison en freemium (Attractor Assists, Livraison Pro, Fidelys, pilotage) et des web apps métiers sur mesure, pour une cible principale en Côte d'Ivoire et la diaspora en France.
 
-Mes objectifs prioritaires actuels : atteindre 10 000 €/mois d'ici fin août 2026, reconstruire et déployer Attractor Assists, et vendre directement mes app métiers.
+Mes objectifs prioritaires actuels : atteindre 10 000 €/mois d'ici mi-2027, reconstruire et déployer Attractor Assists, et vendre directement mes app métiers.
 
 À long terme : un système qui tourne sans moi (15 000 €/mois et 1000 utilisateurs actifs en 2027), une sortie de la fonction publique et une installation au Canada en 2028, et une boîte qui pilote des projets sur 3 continents.
 
