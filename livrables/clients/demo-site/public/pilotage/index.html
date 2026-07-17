@@ -453,7 +453,7 @@ function CapCard({ cap, onChange, onError }) {
 
       {cap.note && (
         <div style={{ marginTop:12, padding:'8px 11px', borderRadius:8, background:'rgba(238,124,31,.08)', borderLeft:'2.5px solid var(--acc)' }}>
-          <span className="t-xs" style={{ color:'rgba(240,237,232,.65)' }}>{cap.note}</span>
+          <span className="t-xs" style={{ color:'var(--ink2)' }}>{cap.note}</span>
         </div>
       )}
     </div>
@@ -2311,7 +2311,7 @@ const TABS = [
 ];
 
 function App() {
-  const [tab, setTab]           = useState('today');
+  const [tab, setTab]           = useState(() => { const h=(location.hash||'').replace('#',''); return ['today','pipeline','plan','projets','finance','demos'].includes(h) ? h : 'today'; });
   const [cap, setCap]           = useState(null);
   const [focus, setFocus]       = useState([]);
   const [pipeline, setPipeline] = useState([]);
@@ -2470,7 +2470,7 @@ function App() {
 
       <div className="tabs">
         {TABS.map(t => (
-          <button key={t.id} className={'tab'+(tab===t.id?' on':'')} onClick={() => setTab(t.id)}>{t.label}</button>
+          <button key={t.id} className={'tab'+(tab===t.id?' on':'')} onClick={() => { setTab(t.id); try{ location.hash=t.id; }catch(e){} }}>{t.label}</button>
         ))}
       </div>
 
