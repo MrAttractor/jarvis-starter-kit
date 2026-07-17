@@ -674,6 +674,140 @@ function NouveauProspectModal({ onConfirm, onCancel }) {
 }
 
 /* ── PIPELINE ─────────────────────────────────────────── */
+// ── Éditeur d'ajustement : rédiger/retoucher un devis à prix fixe (après négo) ──
+// Produit un config mode:"fixe" et le sauve sur la MÊME proposition (même numéro, même lien).
+function DevisEditor({ d, pid, onSaved }) {
+  const devise = (d.zone === 'CI' || d.zone === "Côte d'Ivoire") ? 'FCFA' : '€';
+  const [open, setOpen] = useState(false);
+  const [lignes, setLignes] = useState([{ nom:'', prix:'', offert:false }]);
+  const [conditions, setConditions] = useState(['']);
+  const [paiement, setPaiement] = useState([{ label:'Acompte au démarrage', montant:'' }]);
+  const [forceTotal, setForceTotal] = useState('');
+  const [titre, setTitre] = useState('');
+  const [intro, setIntro] = useState('');
+  const [limite, setLimite] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(null);
+
+  const fmtN = n => (Number(n)||0).toLocaleString('fr-FR') + ' ' + devise;
+  const sumTotal = lignes.reduce((s,l)=> s + (l.offert ? 0 : (Number(l.prix)||0)), 0);
+  const total = forceTotal !== '' ? (Number(forceTotal)||0) : sumTotal;
+  const setLigne = (i,k,v) => setLignes(a=>a.map((x,j)=>j===i?{...x,[k]:v}:x));
+  const setCond  = (i,v)   => setConditions(a=>a.map((x,j)=>j===i?v:x));
+  const setPay   = (i,k,v) => setPaiement(a=>a.map((x,j)=>j===i?{...x,[k]:v}:x));
+
+  const inp = { width:'100%', padding:'8px 9px', borderRadius:8, border:'1px solid var(--bdr)', background:'var(--bg)', fontSize:12, fontFamily:'inherit', color:'var(--ink)' };
+  const miniBtn = { border:'1px dashed var(--bdr)', background:'transparent', color:'var(--ink2)', borderRadius:8, padding:'6px 10px', fontSize:11.5, fontWeight:700, cursor:'pointer', fontFamily:'inherit' };
+
+  const save = async () => {
+    setSaving(true); setSaved(null);
+    const clean = lignes.filter(l => (l.nom||'').trim());
+    const config = {
+      mode:'fixe',
+      date: new Date().toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }),
+      client: d.nom || '', projet: d.activite || 'votre projet', devise,
+      submitUrl:'https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/devis-accept',
+      waHelp:'33753902323', waHelpText:'Bonjour Mac Arthur, je regarde mon devis et j\'ai une question : ',
+      tag:'Conseil en business & applications métier',
+      titre: titre.trim() || 'Votre devis <em>Attractor</em>',
+      intro: intro.trim(),
+      lignes: clean.map(l => ({ nom:(l.nom||'').trim(), prix:Number(l.prix)||0, offert:!!l.offert })),
+      total,
+      total_label: fmtN(total),
+      conditions: conditions.map(c => (c||'').trim()).filter(Boolean),
+      paiement: paiement.filter(p => (p.label||'').trim()).map(p => ({ label:(p.label||'').trim(), montant:Number(p.montant)||0 })),
+      limite: limite.trim(),
+      doneMsg:'Votre accord a bien été enregistré et transmis à Mac Arthur.'
+    };
+    try {
+      let res;
+      if (pid) res = await SB.functions.invoke('generate-proposition', { body:{ update:true, id:pid, config, total, statut:'brouillon' } });
+      else     res = await SB.functions.invoke('generate-proposition', { body:{ dossier_id:d.id, config } });
+      const data = res.data;
+      if (res.error || data?.error) { setSaved({ __error: data?.error || 'Erreur enregistrement' }); }
+      else {
+        const newId = data.id || pid;
+        if (!pid && newId) { try { await SB.from('pilotage_pipeline').update({ proposition_id:newId }).eq('id', d.id); } catch {} }
+        setSaved({ id:newId, numero:data.numero });
+        onSaved && onSaved(newId, data.numero);
+      }
+    } catch { setSaved({ __error:'Erreur réseau' }); }
+    setSaving(false);
+  };
+
+  return (
+    <div style={{ marginTop:8 }}>
+      <button onClick={() => setOpen(o=>!o)}
+        style={{ width:'100%', minHeight:38, borderRadius:10, border:'1.5px solid var(--acc)', background:'transparent', color:'var(--acc)', fontWeight:800, fontSize:12, cursor:'pointer', fontFamily:'inherit' }}>
+        {open ? '▾ Fermer l\'éditeur' : '✎ Ajuster / rédiger le devis (prix fixe négocié)'}
+      </button>
+      {open && (
+        <div style={{ marginTop:8, padding:12, borderRadius:12, background:'var(--card2)', border:'1px solid var(--bdr)', display:'flex', flexDirection:'column', gap:12 }}>
+          <div className="col g4">
+            <span className="t-xs mut b">Titre (optionnel)</span>
+            <input style={inp} value={titre} onChange={e=>setTitre(e.target.value)} placeholder="Votre devis Attractor" />
+            <span className="t-xs mut b" style={{ marginTop:4 }}>Intro (optionnel)</span>
+            <textarea style={{ ...inp, minHeight:46, resize:'vertical' }} value={intro} onChange={e=>setIntro(e.target.value)} placeholder="Le contexte négocié, en une phrase" />
+          </div>
+
+          <div className="col g6">
+            <span className="t-xs mut b">Lignes du devis</span>
+            {lignes.map((l,i) => (
+              <div key={i} className="row g6" style={{ alignItems:'center' }}>
+                <input style={{ ...inp, flex:2 }} value={l.nom} onChange={e=>setLigne(i,'nom',e.target.value)} placeholder="Prestation" />
+                <input style={{ ...inp, width:74 }} type="number" value={l.prix} onChange={e=>setLigne(i,'prix',e.target.value)} placeholder="Prix" disabled={l.offert} />
+                <label className="t-xs mut" style={{ display:'flex', alignItems:'center', gap:3, whiteSpace:'nowrap' }}><input type="checkbox" checked={l.offert} onChange={e=>setLigne(i,'offert',e.target.checked)} />offert</label>
+                <button onClick={()=>setLignes(a=>a.filter((_,j)=>j!==i))} style={{ ...miniBtn, padding:'6px 8px' }}>✕</button>
+              </div>
+            ))}
+            <button onClick={()=>setLignes(a=>[...a,{ nom:'', prix:'', offert:false }])} style={miniBtn}>+ Ajouter une ligne</button>
+          </div>
+
+          <div className="row between" style={{ alignItems:'center' }}>
+            <span className="t-xs mut b">Total {forceTotal!=='' ? '(forcé)' : '(auto : '+fmtN(sumTotal)+')'}</span>
+            <input style={{ ...inp, width:120 }} type="number" value={forceTotal} onChange={e=>setForceTotal(e.target.value)} placeholder="forcer le total" />
+          </div>
+
+          <div className="col g6">
+            <span className="t-xs mut b">Conditions particulières</span>
+            {conditions.map((c,i) => (
+              <div key={i} className="row g6">
+                <input style={{ ...inp, flex:1 }} value={c} onChange={e=>setCond(i,e.target.value)} placeholder="Ex : délai, périmètre, contrepartie…" />
+                <button onClick={()=>setConditions(a=>a.filter((_,j)=>j!==i))} style={{ ...miniBtn, padding:'6px 8px' }}>✕</button>
+              </div>
+            ))}
+            <button onClick={()=>setConditions(a=>[...a,''])} style={miniBtn}>+ Ajouter une condition</button>
+          </div>
+
+          <div className="col g6">
+            <span className="t-xs mut b">Plan de paiement</span>
+            {paiement.map((p,i) => (
+              <div key={i} className="row g6" style={{ alignItems:'center' }}>
+                <input style={{ ...inp, flex:2 }} value={p.label} onChange={e=>setPay(i,'label',e.target.value)} placeholder="Ex : Tranche 1 au démarrage" />
+                <input style={{ ...inp, width:84 }} type="number" value={p.montant} onChange={e=>setPay(i,'montant',e.target.value)} placeholder="Montant" />
+                <button onClick={()=>setPaiement(a=>a.filter((_,j)=>j!==i))} style={{ ...miniBtn, padding:'6px 8px' }}>✕</button>
+              </div>
+            ))}
+            <button onClick={()=>setPaiement(a=>[...a,{ label:'', montant:'' }])} style={miniBtn}>+ Ajouter une tranche</button>
+          </div>
+
+          <div className="col g4">
+            <span className="t-xs mut b">Mention « À noter » (optionnel)</span>
+            <input style={inp} value={limite} onChange={e=>setLimite(e.target.value)} placeholder="Ex : offre valable jusqu'au 31/07…" />
+          </div>
+
+          <button onClick={save} disabled={saving}
+            style={{ minHeight:42, borderRadius:10, border:'none', background:'var(--acc)', color:'#fff', fontWeight:800, fontSize:13, cursor:'pointer', fontFamily:'inherit', opacity:saving ? 0.6 : 1 }}>
+            {saving ? 'Enregistrement…' : (pid ? 'Enregistrer et mettre à jour le lien' : 'Créer le devis et le lien')}
+          </button>
+          {saved?.__error && <div style={{ color:'var(--red)', fontSize:11.5, fontWeight:600 }}>{saved.__error}</div>}
+          {saved && !saved.__error && <div style={{ color:'var(--grn)', fontSize:11.5, fontWeight:700 }}>✓ Devis {saved.numero||''} à jour. Le lien ci-dessus est prêt à renvoyer (même numéro).</div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact, onEditSetup, onEditMensuel, onEditField }) {
   const parseAmount = (raw) => { const n = parseInt((raw||'').replace(/[^\d]/g,''),10); return isNaN(n) ? null : n; };
   const famColor = d.famille === 'A' ? 'org' : d.famille === 'B' ? 'blu' : 'grn';
@@ -684,6 +818,18 @@ function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact, onEdi
   const [payChannel, setPayChannel] = useState('WAVECI');
   const [payLoading, setPayLoading] = useState(false);
   const [payResult, setPayResult] = useState(null);
+  const [prop, setProp] = useState(null);
+  const [propLoading, setPropLoading] = useState(false);
+
+  const genProposition = async () => {
+    setPropLoading(true); setProp(null);
+    try {
+      const { data, error } = await SB.functions.invoke('generate-proposition', { body: { dossier_id: d.id } });
+      if (error || data?.error) setProp({ __error: data?.error || 'Erreur génération proposition' });
+      else setProp(data);
+    } catch { setProp({ __error: 'Erreur réseau' }); }
+    setPropLoading(false);
+  };
 
   const generatePayment = async () => {
     if (!devis?.devis_id) return;
@@ -809,6 +955,44 @@ function DossierCard({ d, i, onEditProchaine, onEditStatut, onEditContact, onEdi
             WA pré-écrit
           </a>
         )}
+      </div>
+
+      {/* Proposition interactive — lien à envoyer au prospect (il compose, valide, Pilotage se met à jour) */}
+      <div style={{ padding:'10px 16px 14px', borderTop:'1px solid var(--bdr)' }}>
+        {!prop && !d.proposition_id && !propLoading && (
+          <button onClick={genProposition}
+            style={{ width:'100%', minHeight:40, borderRadius:10, border:'none', background:'var(--acc)', color:'#fff', fontWeight:800, fontSize:12, cursor:'pointer', fontFamily:'inherit' }}>
+            Créer le lien proposition (interactif)
+          </button>
+        )}
+        {propLoading && <div className="t-xs mut" style={{ textAlign:'center', padding:'8px 0' }}>Génération de la proposition…</div>}
+        {prop?.__error && (
+          <div style={{ padding:'8px 10px', borderRadius:8, background:'var(--red-s)', color:'var(--red)', fontSize:11.5, fontWeight:600 }}>{prop.__error}</div>
+        )}
+        {(prop?.id || d.proposition_id) && !prop?.__error && (() => {
+          const pid = prop?.id || d.proposition_id;
+          const url = `https://demo.agenceattractor.com/proposition?id=${pid}`;
+          const waMsg = `Bonjour ${d.nom || ''}, voici votre proposition Mr Attractor. Vous composez ce que vous voulez, le total se calcule tout seul, et vous validez en un clic : ${url}`;
+          const waNum = (d.contact || '').replace(/[\s+\-()]/g,'');
+          return (
+            <div style={{ padding:'12px', borderRadius:12, background:'var(--card2)', border:'1px solid var(--bdr)' }}>
+              <div className="b" style={{ fontSize:12.5, marginBottom:8 }}>Lien proposition {prop?.numero ? '· '+prop.numero : ''}</div>
+              <input readOnly value={url} onClick={e => e.target.select()}
+                style={{ width:'100%', padding:'9px 10px', borderRadius:8, border:'1px solid var(--bdr)', background:'var(--bg)', fontSize:11, color:'var(--ink2)', fontFamily:'inherit', marginBottom:8 }} />
+              <div className="row g6">
+                <button onClick={() => { navigator.clipboard.writeText(url); }}
+                  style={{ flex:1, minHeight:40, borderRadius:9, border:'1.5px solid var(--bdr)', background:'transparent', color:'var(--ink2)', fontWeight:700, fontSize:12, cursor:'pointer', fontFamily:'inherit' }}>Copier</button>
+                <a href={url} target="_blank"
+                  style={{ flex:1, minHeight:40, display:'flex', alignItems:'center', justifyContent:'center', borderRadius:9, border:'1.5px solid var(--bdr)', color:'var(--ink2)', fontWeight:700, fontSize:12, textDecoration:'none' }}>Ouvrir</a>
+                {waNum && (
+                  <a href={`https://wa.me/${waNum}?text=${encodeURIComponent(waMsg)}`} target="_blank"
+                    style={{ flex:1.4, minHeight:40, display:'flex', alignItems:'center', justifyContent:'center', gap:5, borderRadius:9, border:'none', background:'#25D366', color:'#fff', fontWeight:800, fontSize:12, textDecoration:'none' }}>Envoyer WA</a>
+                )}
+              </div>
+            </div>
+          );
+        })()}
+        <DevisEditor d={d} pid={prop?.id || d.proposition_id} onSaved={(id, numero) => setProp({ id, numero })} />
       </div>
 
       {/* Auto-devis Claude — brouillon à valider, jamais envoyé automatiquement */}
