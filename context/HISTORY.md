@@ -7,6 +7,50 @@
 
 ---
 
+## 2026-07-16 → 17 (session 103 — Tunnel de vente sans prix + backend de pilotage : boucle devis fermée, coach financier)
+
+> Séance marathon, dans la continuité du closing Yiriba (session 102). Beaucoup de production et plusieurs règles de fond posées par Mac Arthur.
+
+### Nabyntou Dosso / Nabycook — un lead diagnostic mené jusqu'au devis + facture
+- 2e lead entrant via le formulaire diagnostic (consultante culinaire à Paris, Nabycook). Traité vite. D'abord un devis à composer construit (accompagnement + vidéo), puis Mac Arthur l'a eue et le deal réel s'est cadré en **partenariat DMV** : série de 3 vidéos promotionnelles à **350 €** + **site vitrine offert** en échange de promotion active dans son réseau + autorisation de communiquer sur le savoir-faire (témoignage / cas client).
+- Livré : **Devis ATR-2026-0012** (structure vrai coût 1 300 € / coût partenariat 350 €, site offert, contrepartie écrite, acompte 50 %) + **Facture d'acompte ATR-2026-0012-A** (175 €), en HTML et PDF, dans `livrables/clients/nabycook/`. Contact nabycook@gmail.com / +33 7 46 45 71 48.
+
+### Le tunnel de vente, cadré par Mac Arthur (plusieurs règles de fond)
+- **Pas de prix sur le site.** Le prix ne se montre jamais à froid, seulement dans le devis après l'appel. Section « Nos services » unifiée (4 services sans prix : app, accompagnement, vidéo, création de contenus) mise en ligne sur **agenceattractor.com** (déployée via le workflow GitHub Pages `deploy-site.yml` sur push master ; les 3 tarifs consulting retirés).
+- **L'appel déclenche la demande.** Le formulaire est global (le client ne sait pas tout), il éduque et qualifie ; c'est l'appel de Mac Arthur qui crée le désir ; il envoie le lien de devis juste après. Le briefing services (multi-sélection) est ajouté à l'écran de résultat du diagnostic, dont le service « création de contenus ».
+- **Règles de prix nouvelles** (dans le barème) : CONSEIL réhaussé à 120 €/h avec une **entrée découverte 1h à 80 €** ; **remise 20 % automatique au-delà de 1 200 €** ; **moyens de paiement affichés seulement après validation** du devis ; **devise selon la zone** (CI → FCFA, Europe → EUR, inconnu → les deux). Câblées dans le devis à composer (`/nabycook`).
+- **Devis à composer vs devis de confirmation** : sur un deal déjà closé (Yiriba), un devis de confirmation (prix figé) ; sur un prospect qui explore (Nabyntou avant le DMV), un devis à composer.
+
+### Diagnostic fiabilisé (3 bugs prouvés en exécutant, pas en lisant) + un test réutilisable
+- Cause 1 : **Haiku omet la clé `famille` par intermittence (~2/5)** dans un JSON pourtant valide (pas une troncature) ; la famille aiguille le parcours. Fix : micro-relance de classification ciblée (une lettre), fiable à 100 %, + validation stricte A/B/C/D.
+- Cause 2 : **troncature sur les prospects très détaillés** (Nabyntou faisait tout planter par la richesse de ses réponses, `stop_reason=max_tokens`). Fix : `max_tokens` 1100 → 2000.
+- Cause 3 : **sur un input pauvre, Haiku part en prose** et casse le parsing → diagnostic vide. Fix : **prefill `{`** qui force le JSON.
+- Bug voisin : le bouton de contact pointait vers un `wa.me` cassé quand le prospect laisse un **email** au lieu d'un numéro → bascule sur `mailto:`.
+- **Batterie de 10 scénarios réutilisable** créée (`app/tests/diagnostic-battery.mjs`), 10/10, à relancer avant tout changement du tunnel. Réponse directe au « à chaque test il y a des ratés, ça ne rassure pas les prospects ».
+
+### Signature PDF façon YouSign (gratuite) + boucle devis fermée dans le cockpit (Phase 1 backend)
+- Constat de Mac Arthur : « je n'ai pas vraiment de backend pour piloter l'agence ». Relevé : le cockpit Pilotage EXISTE et est peuplé (15 dossiers, finances, enveloppes), mais les devis faits main n'y entrent jamais (motif session 101, briques débranchées). État des lieux dans `ETAT-BACKEND-PILOTAGE.md`.
+- **`devis-accept` étendu** : à la validation d'un devis web, génération d'un **PDF du devis accepté** (pdf-lib en edge function Deno, horodatage + IP) envoyé par mail aux deux (Mac Arthur + cliente si email) = signature façon YouSign, gratuite ; et **fermeture de la boucle** : le devis passe à « valide » dans `pilotage_devis` et son dossier à « Devis accepté ».
+- **Backfill** : les vrais devis (Yiriba EAGLE 0010, Nabyntou DMV 0012) injectés dans le cockpit en remplacement des génériques auto-générés.
+
+### Coach financier (répartition d'épargne) + priorités d'enveloppes remises d'aplomb
+- Demande de Mac Arthur : un coach qui voit les entrées d'argent, fait des recommandations, aide à la discipline (« beaucoup de pulsions de dépense mal organisées ») ; la répartition sur enveloppes doit être **suggérée**, il **valide** (jamais autonome).
+- Lecture DAF sur les vrais chiffres : agence a encaissé ~400 € en 3 semaines, le salaire finance tout, **0 € épargné sur 11 enveloppes (~76 000 € de cibles)**. Objectif 10 000 €/mois d'août jugé hors d'atteinte, à remplacer par une marche réaliste (encaissé agence du mois).
+- Livré : edge function **`coach-repartition`** — suggère comment répartir une entrée sur les enveloppes (logique « pay yourself first », étalée sur les N prioritaires, plafonnée au besoin), mode `apply` pour valider et mettre à jour l'épargne. Colonne `dossier_id` ajoutée à `pilotage_finances` (fondation vue argent par client).
+- **Priorités d'enveloppes revues** avec Mac Arthur : la sécurité était en bas (Matelas urgence stack et Épargne sécurité en priorité 5). Nouvel ordre appliqué : Matelas urgence n°1, Épargne sécurité n°2, grands objectifs lointains (Canada, apport appartement) en bas. Le coach répartit maintenant vers la sécurité d'abord.
+
+### Yiriba — renégociation
+- Ingryd Brou dit ne pas avoir l'argent, préfère vendre son stock actuel pour payer, et demande une baisse. Mac Arthur lui a demandé de faire une proposition. **Décision : tenir, attendre son chiffre.** Levier retenu : c'est une objection de trésorerie, pas de valeur ; l'accompagnement EAGLE est précisément ce qui l'aide à écouler son stock, donc il se rembourse tout seul. Ne pas baisser le prix, plutôt séquencer si besoin.
+
+### Règles de travail posées par Mac Arthur (sauvegardées en mémoire)
+- Proposer le chemin/tunnel complet en amont, pas construire pièce par pièce en réaction.
+- À chaque app, chercher ce qui simplifie l'ergonomie et proposer des automatisations phase par phase, sans attendre.
+
+### Commits
+- `ecaddb4` (Yiriba + parcours), `75cfc81` (fiabilisation diagnostic), `ef86047` (devis Nabycook + page services + règles devis), `a217882` (devis + facture DMV Nabycook), `6f63f29` (boucle devis + signature PDF), `41ef56c` (coach-repartition). Site agenceattractor.com redéployé (GitHub Pages), demo-site redéployé (Cloudflare Pages master), 4 edge functions déployées (diagnostic, devis-accept, coach-repartition).
+
+---
+
 ## 2026-07-16 (session 102 — Yiriba Nature : lead diagnostic converti en 24h, devis de confirmation + décision barème + idée formulaire intelligent)
 
 ### Le lead et sa conversion rapide
