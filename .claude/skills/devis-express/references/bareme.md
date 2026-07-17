@@ -24,6 +24,13 @@
 - Côte d'Ivoire : FCFA reste la devise de facturation réelle.
 - Taux de conversion : 1 EUR ≈ 655,957 FCFA, arrondir proprement.
 
+## URSSAF & marge (règle de prix, ne JAMAIS mettre sur le devis)
+
+- L'URSSAF (cotisations sociales, **~22 % du chiffre d'affaires**) est la charge du prestataire, **pas** celle du client. Elle **ne figure jamais** comme ligne d'un devis ou d'une facture (contrairement à la TVA, elle aussi absente ici via l'art. 293 B).
+- **Elle doit être intégrée dans le prix.** Sur chaque paiement client, ~22 % partent à l'URSSAF. Pour réellement « garder » 100 €, il faut facturer ~130 €. Les prix du barème sont pensés pour absorber cette charge : ne pas descendre en dessous sans conscience de la marge nette (net ≈ 78 % du prix, avant frais d'outils).
+- S'applique à tous les clients (France comme CI) : le CA compte pour l'URSSAF quelle que soit l'origine du paiement.
+- Réflexe cockpit : à chaque encaissement, le coach (`coach-repartition`, param `urssaf:true`) met 22 % en réserve URSSAF avant toute épargne.
+
 ## Famille A — App métier sur mesure (grille produit, confirmée 10/07/2026)
 
 Composantes récurrentes d'une app métier : **vitrine** (e-commerce, choix du produit directement ou demande type essayage/RDV), **tableau de bord** (autonomie mise en ligne des articles + suivi stock + chiffre d'affaires), **lien livreur** (voit contact + coordonnées du client + jour de visite).

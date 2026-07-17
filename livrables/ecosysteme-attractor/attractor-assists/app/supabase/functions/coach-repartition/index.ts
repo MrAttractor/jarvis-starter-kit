@@ -21,7 +21,7 @@ const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   try {
-    const { montant, categorie, taux = 0.2, nb = 3, apply = false, repartition } = await req.json();
+    const { montant, categorie, taux = 0.2, nb = 3, urssaf = false, taux_urssaf = 0.22, apply = false, repartition } = await req.json();
     const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
 
     // --- VALIDATION : appliquer un split déjà validé par Mac Arthur ---
@@ -44,7 +44,15 @@ Deno.serve(async (req) => {
       .from("pilotage_enveloppes")
       .select("id,nom,cible,epargne,categorie,priorite");
 
-    let list = (envs || []).filter((e: any) => Number(e.epargne || 0) < Number(e.cible || 0));
+    // Réserve URSSAF : sur une rentrée client (agence), 22 % partent D'ABORD en réserve
+    // (charge sociale à venir, ce n'est pas de l'argent à toi). Ce n'est PAS une ligne du devis :
+    // le client ne le voit jamais, c'est ta charge, intégrée dans ton prix.
+    const urssafEnv = (envs || []).find((e: any) => /urssaf/i.test(e.nom));
+    const urssafMontant = (urssaf && urssafEnv) ? Math.round(Number(montant) * Number(taux_urssaf)) : 0;
+    const base = Number(montant) - urssafMontant; // ce qui reste réellement répartissable après réserve URSSAF
+
+    // L'enveloppe URSSAF est TOUJOURS exclue de l'épargne normale (elle n'est alimentée que par le prélèvement 22 %).
+    let list = (envs || []).filter((e: any) => Number(e.epargne || 0) < Number(e.cible || 0) && !/urssaf/i.test(e.nom));
     if (categorie) list = list.filter((e: any) => e.categorie === categorie);
     // Cascade : priorité d'abord (1 avant 2...), puis le plus petit reste à combler (victoires rapides).
     list.sort((a: any, b: any) =>
@@ -52,7 +60,7 @@ Deno.serve(async (req) => {
       ((Number(a.cible) - Number(a.epargne || 0)) - (Number(b.cible) - Number(b.epargne || 0)))
     );
 
-    const aMettreDeCote = Math.round(Number(montant) * Number(taux));
+    const aMettreDeCote = Math.round(base * Number(taux));
     // On ÉTALE sur les `nb` premières enveloppes prioritaires (part égale, plafonnée au besoin,
     // le surplus des petites déjà pleines se redistribue) → plusieurs jarres avancent, victoires rapides sur les petites.
     const groupN = Math.max(1, Math.min(Number(nb) || 3, list.length));
@@ -74,17 +82,24 @@ Deno.serve(async (req) => {
       }
       open = next;
     }
-    const repart = group
+    const epargneLines = group
       .filter((e: any) => (alloc[e.id] || 0) > 0)
       .map((e: any) => ({ id: e.id, nom: e.nom, montant: alloc[e.id], avant: Number(e.epargne || 0), apres: Number(e.epargne || 0) + alloc[e.id], cible: Number(e.cible || 0) }));
+    // La réserve URSSAF passe en tête de la répartition (prélevée avant toute épargne).
+    const repart = urssafMontant > 0
+      ? [{ id: urssafEnv.id, nom: urssafEnv.nom, montant: urssafMontant, avant: Number(urssafEnv.epargne || 0), apres: Number(urssafEnv.epargne || 0) + urssafMontant, cible: Number(urssafEnv.cible || 0), urssaf: true }, ...epargneLines]
+      : epargneLines;
     const totalReparti = repart.reduce((s, r) => s + r.montant, 0);
+    const totalEpargne = epargneLines.reduce((s, r) => s + r.montant, 0);
     const depensable = Math.round(Number(montant)) - totalReparti;
     const pct = Math.round(Number(taux) * 100);
-    const message = repart.length
-      ? `Sur ${montant} €, mets ${totalReparti} € de côté (${pct} %) réparti sur ${repart.length} enveloppe(s) prioritaire(s). Il te reste ${depensable} € dépensables, sans culpabilité : l'épargne est déjà faite.`
-      : `Aucune enveloppe à combler${categorie ? " (catégorie " + categorie + ")" : ""}. Tout est atteint, ou aucune enveloppe active.`;
+    const message = urssafMontant > 0
+      ? `Rentrée client de ${montant} € : d'abord ${urssafMontant} € en réserve URSSAF (${Math.round(Number(taux_urssaf) * 100)} %, à ne jamais toucher), puis ${totalEpargne} € d'épargne sur ${epargneLines.length} enveloppe(s). Il te reste ${depensable} € à toi (avant tes frais d'agence). Rappel : l'URSSAF ne figure jamais sur le devis, elle est déjà dans ton prix.`
+      : (epargneLines.length
+        ? `Sur ${montant} €, mets ${totalReparti} € de côté (${pct} %) réparti sur ${epargneLines.length} enveloppe(s) prioritaire(s). Il te reste ${depensable} € dépensables, sans culpabilité : l'épargne est déjà faite.`
+        : `Aucune enveloppe à combler${categorie ? " (catégorie " + categorie + ")" : ""}. Tout est atteint, ou aucune enveloppe active.`);
 
-    return json({ ok: true, montant: Number(montant), taux: Number(taux), total_a_mettre_de_cote: aMettreDeCote, total_reparti: totalReparti, depensable, repartition: repart, message });
+    return json({ ok: true, montant: Number(montant), taux: Number(taux), urssaf: urssafMontant > 0, reserve_urssaf: urssafMontant, base_repartissable: base, total_a_mettre_de_cote: aMettreDeCote, total_reparti: totalReparti, depensable, repartition: repart, message });
   } catch (e) {
     return json({ ok: false, error: String(e) }, 200);
   }
