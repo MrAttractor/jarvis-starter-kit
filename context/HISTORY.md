@@ -7,6 +7,19 @@
 
 ---
 
+## 2026-07-17 (session 104 — Parcours devis acté + éditeur d'ajustement + coach URSSAF)
+
+> Suite directe de la 103. On a d'abord solidifié le côté finances/coach, puis clarifié et outillé tout le parcours de devis.
+
+- **Pocket URSSAF 22 %** ajoutée au coach (`coach-repartition`, param `urssaf:true`) : sur une rentrée client, 22 % partent en réserve URSSAF avant l'épargne. Règle actée : l'URSSAF ne figure JAMAIS sur un devis (charge du prestataire, contrairement à la TVA), elle est intégrée dans le prix (net ≈ 78 %). Documenté dans le barème. Micro-entreprise = prélèvement, pas de salaire : fixer un vrai salaire quand l'agence rentre un montant stable.
+- **Décision parcours : « envoi auto selon la taille du deal ».** Cas simples (prix fixe) → devis cliquable auto après formulaire (brique restante). Cas complexes → devis pré-chiffré t'attend, tu closes, tu ajustes, tu envoies. Génération + retour déjà auto ; l'envoi des gros deals reste ta main.
+- **Bug de numérotation corrigé** (`generate-proposition` réattribuait 0001 déjà signé Élévia → désormais continue la vraie série, 0013). **Mode "mettre à jour"** ajouté (retoucher le même devis, même numéro/lien).
+- **Éditeur d'ajustement dans le cockpit** (la demande de Mac Arthur) : réécrire un devis après négo (lignes/prix, conditions, plan de paiement, total forçable), sauvé en `mode:"fixe"` sur le même lien. Page `/proposition` étendue pour rendre le mode fixe. Testé de bout en bout.
+- **Nabycook (DMV)** : devis de confirmation refait à la main (3 vidéos 350 € + site offert, vrai coût 1 540 € barré), dossier cockpit créé, faux positif du 16/07 nettoyé.
+- Prochaine brique validée : construire l'auto-envoi voie rapide (devis à l'écran pour tous + mail pour ceux qui laissent un email). Nouveau chantier ouvert en fin de séance : **refonte de la lisibilité du cockpit Pilotage**.
+
+---
+
 ## 2026-07-16 → 17 (session 103 — Tunnel de vente sans prix + backend de pilotage : boucle devis fermée, coach financier)
 
 > Séance marathon, dans la continuité du closing Yiriba (session 102). Beaucoup de production et plusieurs règles de fond posées par Mac Arthur.
