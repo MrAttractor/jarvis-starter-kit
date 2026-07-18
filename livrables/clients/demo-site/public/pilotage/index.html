@@ -2639,7 +2639,82 @@ function App() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+/* ── PORTE D'ACCÈS (OTP email) ──────────────────────────────
+   Le cockpit est privé (finances, devis, pipeline). Avant la refonte du
+   17/07/2026 il n'avait AUCUNE authentification et les tables pilotage_*
+   étaient lisibles ET modifiables par tous via la clé anon. Désormais :
+   connexion par code email (Supabase OTP), et les policies pilotage_* sont
+   scopées à ce seul compte. App n'est monté qu'une fois la session établie. */
+const OWNER_EMAIL = 'myattractor1@gmail.com';
+
+function Gate() {
+  const [ready, setReady] = useState(false);
+  const [authed, setAuthed] = useState(false);
+  const [step, setStep] = useState('email');   // 'email' → 'code'
+  const [code, setCode] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+
+  useEffect(() => {
+    SB.auth.getSession().then(({ data }) => {
+      setAuthed(!!data.session);
+      setReady(true);
+    });
+    const { data: sub } = SB.auth.onAuthStateChange((_e, session) => setAuthed(!!session));
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  const sendCode = async () => {
+    setBusy(true); setErr('');
+    const { error } = await SB.auth.signInWithOtp({ email: OWNER_EMAIL, options: { shouldCreateUser: true } });
+    setBusy(false);
+    if (error) { setErr(error.message); return; }
+    setStep('code');
+  };
+
+  const verify = async () => {
+    setBusy(true); setErr('');
+    const { error } = await SB.auth.verifyOtp({ email: OWNER_EMAIL, token: code.trim(), type: 'email' });
+    setBusy(false);
+    if (error) { setErr('Code incorrect ou expiré.'); return; }
+    setAuthed(true);
+  };
+
+  if (!ready) return null;
+  if (authed) return <App />;
+
+  return (
+    <div className="app" style={{alignItems:'center',justifyContent:'center',minHeight:'100dvh',textAlign:'center',padding:'0 24px'}}>
+      <div style={{maxWidth:340,width:'100%'}}>
+        <div style={{fontSize:11,fontWeight:700,letterSpacing:1.4,textTransform:'uppercase',color:'var(--acc)',marginBottom:8}}>Cockpit privé</div>
+        <div style={{fontSize:22,fontWeight:800,color:'var(--ink)',marginBottom:6}}>Pilotage ATTRACTOR</div>
+        <div style={{fontSize:13,color:'var(--mut)',marginBottom:24,lineHeight:1.5}}>
+          Accès réservé. Un code de connexion est envoyé à <b>{OWNER_EMAIL}</b>.
+        </div>
+        {step === 'email' ? (
+          <button className="tab on" style={{width:'100%',height:48,fontSize:14}} disabled={busy} onClick={sendCode}>
+            {busy ? 'Envoi…' : 'Recevoir mon code'}
+          </button>
+        ) : (
+          <Fragment>
+            <input value={code} onChange={e => setCode(e.target.value)} inputMode="numeric" placeholder="Code à 6 chiffres"
+              onKeyDown={e => { if (e.key === 'Enter') verify(); }}
+              style={{width:'100%',height:48,textAlign:'center',fontSize:20,letterSpacing:4,borderRadius:12,border:'1.5px solid var(--bdr)',background:'var(--card)',color:'var(--ink)',marginBottom:12,fontFamily:'inherit'}} autoFocus />
+            <button className="tab on" style={{width:'100%',height:48,fontSize:14}} disabled={busy || code.trim().length < 6} onClick={verify}>
+              {busy ? 'Vérification…' : 'Entrer'}
+            </button>
+            <button className="tab" style={{width:'100%',height:40,fontSize:12,marginTop:8,border:'none',background:'transparent',color:'var(--mut)'}} onClick={() => { setStep('email'); setCode(''); setErr(''); }}>
+              Renvoyer un code
+            </button>
+          </Fragment>
+        )}
+        {err && <div style={{color:'var(--red)',fontSize:12,marginTop:14}}>{err}</div>}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Gate />);
 </script>
 </body>
 </html>
