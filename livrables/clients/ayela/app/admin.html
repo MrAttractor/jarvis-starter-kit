@@ -444,9 +444,10 @@ img{max-width:100%;display:block}
 <div class="ov" id="appro-ov">
   <div class="ms">
     <h3 id="appro-mtitle">Approvisionner le point</h3>
-    <p style="font-size:12.5px;color:var(--muted);margin:-6px 0 14px">Déplace des unités de ton stock central vers ce point de vente. Le stock central est décrémenté automatiquement.</p>
-    <div class="field"><label>Produit à déposer</label><select id="ap-sku"></select></div>
-    <div class="field"><label>Quantité à déposer</label><input id="ap-qte" type="number" inputmode="numeric" min="1" placeholder="0"></div>
+    <p style="font-size:12.5px;color:var(--muted);margin:-6px 0 14px">Dépose plusieurs produits et quantités d'un coup. Le stock central est décrémenté automatiquement.</p>
+    <label style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;margin-bottom:6px">Produits à déposer</label>
+    <div id="ap-lines"></div>
+    <button class="addfmt" onclick="apAddLine()">＋ ajouter un produit</button>
     <div class="ustatus" id="appro-status"></div>
     <div class="mactions">
       <button class="btn sec" onclick="closeOv('appro-ov')" style="flex:1">Annuler</button>
@@ -692,11 +693,18 @@ function renderPos(){
       <div class="postot"><span>Déposé <b>${tDep}</b></span><span>Vendu <b>${tVen}</b></span><span>Reste <b style="color:var(--brand)">${tRes}</b></span><span>CA <b style="color:var(--ok)">${fmtF(caPos)}</b></span></div>`
       : `<div class="postot" style="margin-top:10px"><span>Aucun produit suivi ici pour l'instant.</span></div>`;
     return `<div class="dcard">
-      <div class="dh2"><span class="nm">${esc(p.nom)}</span><span class="zone">${esc(p.zone||'')}</span></div>
+      <div class="dh2"><span class="nm">${esc(p.nom)}</span>${p.demande_reappro?'<span class="st new">Réappro demandé</span>':''}<span class="zone">${esc(p.zone||'')}</span></div>
       <div class="meta">
         <div>📞 <b>${esc(p.contact_tel||'—')}</b></div><div>👤 <b>${esc(p.contact_nom||'—')}</b></div>
         <div>Dernière livr. <b>${frDate(p.derniere_livraison)}</b></div><div>Prochaine <b style="color:var(--brand)">${frDate(p.prochaine_livraison)}</b></div>
       </div>
+      ${p.token?`<div style="margin-top:10px;background:var(--cream);border:1px solid var(--line);border-radius:11px;padding:9px 11px">
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Lien de la gérante${p.maj_gerante?' · dernière saisie '+frDate(p.maj_gerante):' · en attente'}</div>
+        <div style="display:flex;gap:7px">
+          <button class="mini" style="color:var(--brand);border-color:var(--brand)" onclick="copyLink('${p.token}')">Copier le lien</button>
+          <button class="mini" style="color:var(--ok);border-color:var(--ok)" onclick="waLink('${esc(p.nom).replace(/'/g,'')}','${p.token}')">Envoyer (WhatsApp)</button>
+        </div>
+      </div>`:''}
       ${fiche}
       <div class="rowbtns" style="flex-wrap:wrap">
         <button class="mini" style="color:var(--brand);border-color:var(--brand)" onclick="openAppro('${p.id}')">🚚 Approvisionner</button>
@@ -734,37 +742,43 @@ async function savePosLigne(){
 }
 async function delPosLigne(){ if(!editPosLigne)return; if(!confirm('Retirer ce produit de ce point ?'))return; const {error}=await sb.from('ay_pos_lignes').delete().eq('id',editPosLigne); if(error){toast('Erreur');return;} closeOv('pl-ov'); await loadPosLignes(); renderPos(); toast('Retiré'); }
 
-// ── APPROVISIONNER : stock central -> point de vente ──
+// ── LIEN GÉRANTE (portail boutique) ──
+function boutiqueLink(token){ return location.origin+'/boutique?p='+token; }
+function copyLink(token){ const url=boutiqueLink(token); (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(()=>toast('Lien copié'),()=>{prompt('Copie ce lien :',url);}); }
+function waLink(nom,token){ const msg='Bonjour, voici le lien pour suivre la boutique '+nom+' (Ayêla). Indiques-y tes ventes : '+boutiqueLink(token); window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank'); }
+
+// ── APPROVISIONNER : stock central -> point de vente (multi-produits) ──
+let apSkuOpts='';
+function apLineHtml(){
+  return `<div class="fmtline apline" style="grid-template-columns:1fr 84px auto"><select class="ap-sku" style="padding:9px 8px;border:1px solid var(--line2);border-radius:9px;font-size:12.5px;font-family:var(--sans);width:100%">${apSkuOpts}</select><input class="ap-qte" type="number" inputmode="numeric" min="1" placeholder="Qté"><button class="x" onclick="this.closest('.apline').remove()">×</button></div>`;
+}
+function apAddLine(){ document.getElementById('ap-lines').insertAdjacentHTML('beforeend', apLineHtml()); }
 function openAppro(posId){
   apCtxPos=posId;
   const pos=CACHE.pos.find(p=>p.id===posId);
   document.getElementById('appro-mtitle').textContent='Approvisionner — '+(pos?pos.nom:'point');
-  const sel=document.getElementById('ap-sku');
-  sel.innerHTML=CACHE.stk.map(s=>`<option value="${s.id}">${esc(s.produit_nom)} — ${esc(s.format||'')} (dispo ${s.quantite})</option>`).join('') || '<option value="">Aucun produit en stock central</option>';
-  document.getElementById('ap-qte').value='';
+  apSkuOpts=CACHE.stk.map(s=>`<option value="${s.id}">${esc(s.produit_nom)} — ${esc(s.format||'')} (dispo ${s.quantite})</option>`).join('') || '<option value="">Aucun produit en stock</option>';
+  document.getElementById('ap-lines').innerHTML=apLineHtml();
   openOv('appro-ov');
 }
 async function saveAppro(){
-  const sid=document.getElementById('ap-sku').value;
-  const q=parseInt(document.getElementById('ap-qte').value||'0',10);
-  const s=CACHE.stk.find(x=>x.id===sid);
-  if(!s){toast('Choisis un produit');return;}
-  if(q<=0){toast('Quantité invalide');return;}
-  if(q>s.quantite){toast('Stock central insuffisant (dispo '+s.quantite+')');return;}
-  const btnStatus=document.getElementById('appro-status'); btnStatus.classList.add('show'); btnStatus.textContent='Transfert…';
-  // 1) décrémente le stock central
-  let {error:e1}=await sb.from('ay_stock').update({quantite:s.quantite-q,updated_at:new Date().toISOString()}).eq('id',sid);
-  if(e1){btnStatus.classList.remove('show');toast('Erreur stock : '+e1.message);return;}
-  // 2) incrémente la ligne du POS (ou la crée)
-  const existing=CACHE.poslignes.find(l=>l.pos_id===apCtxPos && l.produit_nom===s.produit_nom && (l.format||'')===(s.format||''));
-  let e2;
-  if(existing){ ({error:e2}=await sb.from('ay_pos_lignes').update({depose:(existing.depose||0)+q,updated_at:new Date().toISOString()}).eq('id',existing.id)); }
-  else { ({error:e2}=await sb.from('ay_pos_lignes').insert({pos_id:apCtxPos,produit_nom:s.produit_nom,format:s.format,depose:q,vendu:0})); }
-  btnStatus.classList.remove('show');
-  if(e2){toast('Stock décrémenté mais erreur POS : '+e2.message);}
-  closeOv('appro-ov');
+  const rows=[...document.querySelectorAll('#ap-lines .apline')];
+  const agg={};
+  rows.forEach(r=>{ const sid=r.querySelector('.ap-sku').value; const q=parseInt(r.querySelector('.ap-qte').value||'0',10); if(sid&&q>0) agg[sid]=(agg[sid]||0)+q; });
+  const ids=Object.keys(agg);
+  if(!ids.length){toast('Ajoute au moins un produit et une quantité');return;}
+  for(const sid of ids){ const s=CACHE.stk.find(x=>x.id===sid); if(!s||agg[sid]>s.quantite){toast('Stock insuffisant : '+(s?s.produit_nom+' (dispo '+s.quantite+')':''));return;} }
+  const st=document.getElementById('appro-status'); st.classList.add('show'); st.textContent='Transfert…';
+  for(const sid of ids){
+    const s=CACHE.stk.find(x=>x.id===sid); const q=agg[sid];
+    await sb.from('ay_stock').update({quantite:s.quantite-q,updated_at:new Date().toISOString()}).eq('id',sid);
+    const ex=CACHE.poslignes.find(l=>l.pos_id===apCtxPos && l.produit_nom===s.produit_nom && (l.format||'')===(s.format||''));
+    if(ex){ await sb.from('ay_pos_lignes').update({depose:(ex.depose||0)+q,updated_at:new Date().toISOString()}).eq('id',ex.id); }
+    else { await sb.from('ay_pos_lignes').insert({pos_id:apCtxPos,produit_nom:s.produit_nom,format:s.format,depose:q,vendu:0}); }
+  }
+  st.classList.remove('show'); closeOv('appro-ov');
   await Promise.all([loadStock(),loadPosLignes()]); renderPos(); renderProdFinis(); renderAccueil();
-  toast(q+' × '+s.produit_nom+' déposés');
+  toast('Point approvisionné ('+ids.length+' produit'+(ids.length>1?'s':'')+')');
 }
 
 // ── ENTRÉE EN STOCK : embouteillage d'un lot -> stock + emballages consommés ──
@@ -1006,6 +1020,7 @@ function renderAccueil(){
   CACHE.pos.filter(p=>p.prochaine_livraison).sort((a,b)=>new Date(a.prochaine_livraison)-new Date(b.prochaine_livraison)).slice(0,2).forEach(p=>items.push(['🚚','Livraison '+esc(p.zone||p.nom),'Prévue '+frDate(p.prochaine_livraison),'prog','à faire']));
   CACHE.emb.filter(e=>e.quantite<(e.seuil||100) && !(e.en_commande>0)).slice(0,3).forEach(e=>items.push(['📦',esc(e.nom)+' — vides bas','Commander ('+esc(e.fournisseur||'appro')+' '+embMonths(e.delai_jours)+')','new','à commander']));
   CACHE.emb.filter(e=>e.reception_prevue && e.en_commande>0).sort((a,b)=>new Date(a.reception_prevue)-new Date(b.reception_prevue)).slice(0,2).forEach(e=>items.push(['🚢','Réception '+esc(e.nom),'Prévue '+frDate(e.reception_prevue),'prog','en route']));
+  CACHE.pos.filter(p=>p.demande_reappro).slice(0,3).forEach(p=>items.push(['🏬',esc(p.nom)+' — réappro demandé','La gérante attend un réapprovisionnement','new','à traiter']));
   renderProdFinis();
   document.getElementById('pdj-count').textContent=items.length+' action'+(items.length>1?'s':'');
   const el=document.getElementById('pdj');

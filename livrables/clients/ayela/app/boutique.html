@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Ayêla — Ma boutique</title>
+<link rel="icon" href="assets/logo.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#DA6A1E;--brand-2:#B4841E;--ink:#2A1D12;--ink2:#5f5040;--muted:#8a7a66;--cream:#F7EFE2;--card:#fff;--line:#E9DDCB;--line2:#Decbb2;--ok:#1f7a44;--okbg:#e7f4ea;--danger:#b8402f;--serif:'Cormorant Garamond',Georgia,serif;--sans:'Jost',system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--cream);color:var(--ink);font-family:var(--sans);min-height:100%;line-height:1.5}
+img{max-width:100%;display:block}
+.app{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:40px}
+.hd{background:linear-gradient(120deg,#241811,#3a2514);color:#fff;padding:20px 20px 22px;display:flex;align-items:center;gap:12px}
+.hd img{height:44px;border-radius:9px;background:#fff;padding:4px 7px}
+.hd .co{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand-2)}
+.hd .nm{font-family:var(--serif);font-size:22px;font-weight:600;line-height:1.05}
+.hd .zone{font-size:12px;color:#cdbca6}
+.wrap{padding:16px}
+.lead{font-size:14px;color:var(--ink2);margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:14px;margin-bottom:12px}
+.prow{padding:12px 0;border-bottom:1px solid var(--line)}
+.prow:last-child{border:none}
+.prow .nm{font-size:15px;font-weight:600;font-family:var(--serif)}
+.prow .fmt{font-size:11.5px;color:var(--muted);margin-bottom:8px}
+.prow .grid{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center}
+.box{text-align:center}
+.box .lb{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.box .v{font-family:var(--serif);font-size:20px;font-weight:600}
+.box .v.rest{color:var(--brand)} .box .v.rest.low{color:var(--danger)}
+.qty{display:flex;align-items:center;gap:2px;border:1px solid var(--line2);border-radius:11px;overflow:hidden;background:#fff}
+.qty button{width:40px;height:44px;border:none;background:#fff;color:var(--ink);font-size:20px;cursor:pointer}
+.qty input{width:56px;height:44px;border:none;text-align:center;font-size:17px;font-weight:600;font-family:var(--sans);color:var(--ink)}
+.qty input:focus{outline:none}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:50px;border:none;border-radius:13px;font-family:var(--sans);font-size:15px;font-weight:600;cursor:pointer}
+.btn.pri{background:var(--brand);color:#fff}
+.btn.pri:disabled{opacity:.5}
+.btn.reappro{background:#fff;color:var(--brand);border:1.5px solid var(--brand);margin-top:12px}
+.btn.reappro.on{background:var(--brand);color:#fff}
+.sticky{position:sticky;bottom:0;background:linear-gradient(0deg,var(--cream) 70%,transparent);padding:14px 16px 18px;margin:0 -16px}
+.msg{text-align:center;padding:50px 24px;color:var(--muted)}
+.msg h2{font-family:var(--serif);font-size:24px;color:var(--ink);margin-bottom:8px}
+.foot{text-align:center;color:var(--muted);font-size:11.5px;margin-top:20px;line-height:1.7}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:30px;font-size:12.5px;z-index:50;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+.tot{display:flex;justify-content:space-between;padding:8px 2px;font-size:13px;color:var(--ink2)}
+.tot b{color:var(--brand);font-size:15px}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="msg" id="loading"><h2>Ayêla</h2><p>Chargement de ta boutique…</p></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://lgdgbrivnhgeupqhkckd.supabase.co';
+const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
+const {createClient}=supabase;
+const sb=createClient(SUPABASE_URL,SUPABASE_ANON);
+const TOKEN=new URLSearchParams(location.search).get('p');
+let DATA=null, dirty={};
+
+function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML;}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
+
+async function load(){
+  if(!TOKEN){ document.getElementById('app').innerHTML='<div class="msg"><h2>Lien invalide</h2><p>Demande à Ayêla le lien de ta boutique.</p></div>'; return; }
+  const {data,error}=await sb.rpc('ay_boutique_data',{p_token:TOKEN});
+  if(error || !data){ document.getElementById('app').innerHTML='<div class="msg"><h2>Boutique introuvable</h2><p>Ce lien n\'est plus valide. Contacte Ayêla.</p></div>'; return; }
+  DATA=data; render();
+}
+
+function render(){
+  const lignes=DATA.lignes||[];
+  let body='';
+  if(!lignes.length){
+    body='<div class="card"><div class="msg" style="padding:24px"><p>Aucun produit n\'a encore été déposé dans ta boutique. Ayêla va le faire bientôt.</p></div></div>';
+  } else {
+    body='<div class="lead">Indique ce que tu as <b>vendu</b> pour chaque produit. Le reste se calcule tout seul.</div><div class="card">'+
+      lignes.map(l=>{
+        const reste=(l.depose||0)-(l.vendu||0);
+        return `<div class="prow">
+          <div class="nm">${esc(l.produit_nom)}</div>
+          <div class="fmt">${esc(l.format||'')}</div>
+          <div class="grid">
+            <div class="box"><div class="lb">Déposé</div><div class="v">${l.depose||0}</div></div>
+            <div class="qty">
+              <button onclick="bump('${l.id}',-1)">−</button>
+              <input id="v-${l.id}" type="number" inputmode="numeric" min="0" value="${l.vendu||0}" onchange="setV('${l.id}',this.value)">
+              <button onclick="bump('${l.id}',1)">+</button>
+            </div>
+            <div class="box"><div class="lb">Reste</div><div class="v rest ${reste<=0?'low':''}" id="r-${l.id}">${reste}</div></div>
+          </div>
+        </div>`;
+      }).join('')+'</div>';
+  }
+  document.getElementById('app').innerHTML=`
+    <div class="hd">
+      <img src="assets/logo.jpg" alt="Ayêla">
+      <div><div class="co">Ayêla · Ma boutique</div><div class="nm">${esc(DATA.nom||'')}</div><div class="zone">${esc(DATA.zone||'')}</div></div>
+    </div>
+    <div class="wrap">
+      ${body}
+      <button class="btn reappro ${DATA.demande_reappro?'on':''}" id="reappro-btn" onclick="toggleReappro()">${DATA.demande_reappro?'✓ Réappro demandé':'📦 Demander un réapprovisionnement'}</button>
+      <div class="foot"><b>Ayêla SARL</b> · Merci de tenir ta boutique à jour 🧡<br>Tes saisies remontent directement à Ayêla.</div>
+    </div>
+    ${lignes.length?`<div class="sticky"><button class="btn pri" id="save-btn" onclick="saveAll()">Enregistrer mes ventes</button></div>`:''}`;
+}
+
+function setV(id,val){ dirty[id]=Math.max(0,parseInt(val||'0',10)); recompute(id); }
+function bump(id,d){
+  const inp=document.getElementById('v-'+id);
+  const nv=Math.max(0,parseInt(inp.value||'0',10)+d);
+  inp.value=nv; dirty[id]=nv; recompute(id);
+}
+function recompute(id){
+  const l=(DATA.lignes||[]).find(x=>x.id===id); if(!l) return;
+  const vendu=dirty[id]!=null?dirty[id]:(l.vendu||0);
+  const reste=(l.depose||0)-vendu;
+  const el=document.getElementById('r-'+id);
+  el.textContent=reste; el.classList.toggle('low',reste<=0);
+}
+async function saveAll(){
+  const ids=Object.keys(dirty);
+  if(!ids.length){ toast('Rien de nouveau à enregistrer'); return; }
+  const btn=document.getElementById('save-btn'); btn.disabled=true; btn.textContent='Enregistrement…';
+  let okc=0;
+  for(const id of ids){
+    const {data,error}=await sb.rpc('ay_boutique_vente',{p_token:TOKEN,p_ligne:id,p_vendu:dirty[id]});
+    if(!error && data){ okc++; const l=DATA.lignes.find(x=>x.id===id); if(l) l.vendu=dirty[id]; }
+  }
+  dirty={}; btn.disabled=false; btn.textContent='Enregistrer mes ventes';
+  toast(okc+' produit(s) mis à jour ✅');
+}
+async function toggleReappro(){
+  const nv=!DATA.demande_reappro;
+  const {data,error}=await sb.rpc('ay_boutique_reappro',{p_token:TOKEN,p_val:nv});
+  if(error){ toast('Oups, réessaie'); return; }
+  DATA.demande_reappro=nv;
+  const b=document.getElementById('reappro-btn');
+  b.classList.toggle('on',nv); b.textContent=nv?'✓ Réappro demandé':'📦 Demander un réapprovisionnement';
+  toast(nv?'Réappro signalé à Ayêla':'Demande annulée');
+}
+load();
+</script>
+</body>
+</html>
