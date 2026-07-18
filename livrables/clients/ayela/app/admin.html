@@ -155,6 +155,41 @@ img{max-width:100%;display:block}
 .ustatus.show{display:block}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
+/* sous-titre de section */
+.subh{font-family:var(--serif);font-size:18px;font-weight:600;margin:20px 2px 10px;color:var(--ink);display:flex;align-items:center;gap:8px}
+.subh .meta{font-size:11px;color:var(--muted);font-family:var(--sans);font-weight:400;margin-left:auto}
+/* fiche POS : lignes produit */
+.poslines{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.plrow{display:grid;grid-template-columns:1fr auto auto auto auto;gap:6px 10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
+.plrow:last-child{border:none}
+.plrow .pn{font-size:12px;font-weight:600;color:var(--ink);min-width:0}
+.plrow .pn small{display:block;color:var(--muted);font-weight:400;font-size:10px}
+.plrow .v{font-size:12px;text-align:center;min-width:38px}
+.plrow .v b{font-size:13px}
+.plrow .v.rest b{color:var(--brand)} .plrow .v.rest.low b{color:var(--danger)}
+.plrow .vh{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;display:block}
+.plrow .ed{font-size:15px;color:var(--muted);cursor:pointer;background:none;border:none;padding:2px 4px}
+.plhead{display:grid;grid-template-columns:1fr auto auto auto auto;gap:6px 10px;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;padding-bottom:4px}
+.plhead span{text-align:center}
+.postot{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:var(--muted)}
+.postot b{color:var(--ink);font-size:13px}
+.addline{font-size:11px;color:var(--brand);background:none;border:none;cursor:pointer;padding:8px 0 2px;font-weight:600}
+/* emballages */
+.embc{border:1px solid var(--line);border-radius:13px;padding:12px 13px;margin-bottom:10px;background:#fff}
+.embc.alert{border-color:var(--danger);background:#fff9f7}
+.embc .eh{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.embc .eh .nm{font-size:14px;font-weight:600}
+.embc .eh .tp{font-size:10px;font-weight:700;color:var(--brand);background:#fbeadb;padding:2px 8px;border-radius:20px}
+.embc .big{font-family:var(--serif);font-size:24px;font-weight:600;line-height:1}
+.embc .big.low{color:var(--danger)}
+.embc .sub{font-size:11px;color:var(--muted)}
+.embc .flag{margin-top:8px;font-size:11px;padding:6px 10px;border-radius:8px;display:flex;align-items:center;gap:6px}
+.embc .flag.warn{background:var(--warnbg);color:var(--warn)} .embc .flag.info{background:var(--infobg);color:var(--info)} .embc .flag.ok{background:var(--okbg);color:var(--ok)}
+.pfgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pfbox{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+.pfbox .lb{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.pfbox .n{font-family:var(--serif);font-size:22px;font-weight:600;margin-top:2px}
+.pfbox .n.d{color:var(--danger)}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:30px;font-size:12.5px;z-index:400;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
 .loading{text-align:center;color:var(--muted);padding:30px;font-size:13px}
@@ -218,7 +253,17 @@ img{max-width:100%;display:block}
 
     <!-- PRODUCTION -->
     <div class="panel" id="p-production">
-      <div class="sectlead">Suivi de production</div>
+      <div class="sectlead">Production &amp; approvisionnement</div>
+      <div class="card">
+        <h3>🏭 Produits finis (prêts à vendre)</h3>
+        <div class="pfgrid" id="pf-summary"></div>
+      </div>
+
+      <div class="subh">📦 Emballages vides <span class="meta" id="emb-meta"></span></div>
+      <button class="add" onclick="openEmb()">＋ Ajouter un emballage</button>
+      <div id="emb-list"><div class="loading">Chargement…</div></div>
+
+      <div class="subh">🧪 Lots de production</div>
       <button class="add" onclick="openLot()">＋ Nouveau lot</button>
       <div id="lot-list"><div class="loading">Chargement…</div></div>
     </div>
@@ -345,6 +390,56 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
+<!-- MODAL LIGNE POS -->
+<div class="ov" id="pl-ov">
+  <div class="ms">
+    <h3 id="pl-mtitle">Produit dans ce point de vente</h3>
+    <div class="field"><label>Produit</label><input id="lf2-nom" list="prodnames" placeholder="Nuit de Miel"><datalist id="prodnames"></datalist></div>
+    <div class="field"><label>Format</label><input id="lf2-fmt" placeholder="50cl verre"></div>
+    <div class="two">
+      <div class="field"><label>Déposé</label><input id="lf2-depose" type="number" inputmode="numeric" placeholder="0"></div>
+      <div class="field"><label>Vendu</label><input id="lf2-vendu" type="number" inputmode="numeric" placeholder="0"></div>
+    </div>
+    <div class="ustatus" id="pl-status"></div>
+    <div class="mactions">
+      <button class="btn sec" id="pl-del" onclick="delPosLigne()" style="display:none;color:var(--danger)">Supprimer</button>
+      <button class="btn sec" onclick="closeOv('pl-ov')" style="flex:1">Annuler</button>
+      <button class="btn pri" onclick="savePosLigne()" style="flex:1">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EMBALLAGE -->
+<div class="ov" id="emb-ov">
+  <div class="ms">
+    <h3 id="emb-mtitle">Emballage</h3>
+    <div class="two">
+      <div class="field"><label>Nom</label><input id="ef-nom" placeholder="Bouteille verre 50cl"></div>
+      <div class="field"><label>Type</label><input id="ef-type" list="embtypes" placeholder="Bouteille"><datalist id="embtypes"><option value="Bouteille"><option value="Canette"><option value="Pocket"><option value="Bouchon"><option value="Étiquette"><option value="Autre"></datalist></div>
+    </div>
+    <div class="two">
+      <div class="field"><label>Vides en stock</label><input id="ef-qte" type="number" inputmode="numeric" placeholder="0"></div>
+      <div class="field"><label>Seuil d'alerte</label><input id="ef-seuil" type="number" inputmode="numeric" placeholder="200"></div>
+    </div>
+    <div class="two">
+      <div class="field"><label>Déjà commandé</label><input id="ef-cmd" type="number" inputmode="numeric" placeholder="0"></div>
+      <div class="field"><label>Délai fournisseur (jours)</label><input id="ef-delai" type="number" inputmode="numeric" placeholder="90"></div>
+    </div>
+    <div class="field"><label>Fournisseur</label><input id="ef-fourn" placeholder="Chine"></div>
+    <div class="two">
+      <div class="field"><label>Dernière commande</label><input id="ef-derniere" type="date"></div>
+      <div class="field"><label>Réception prévue</label><input id="ef-reception" type="date"></div>
+    </div>
+    <div class="field"><label>Note</label><input id="ef-note" placeholder="Fournisseur, référence…"></div>
+    <div class="ustatus" id="emb-status"></div>
+    <div class="mactions">
+      <button class="btn sec" id="emb-del" onclick="delEmb()" style="display:none;color:var(--danger)">Supprimer</button>
+      <button class="btn sec" onclick="closeOv('emb-ov')" style="flex:1">Annuler</button>
+      <button class="btn pri" onclick="saveEmb()" style="flex:1">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -354,8 +449,9 @@ const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const {createClient}=supabase;
 const sb=createClient(SUPABASE_URL,SUPABASE_ANON,{auth:{storageKey:'ay-admin-auth',persistSession:true,autoRefreshToken:true}});
 
-let CACHE={cmd:[],stk:[],lots:[],pos:[],prods:[],club:[]};
+let CACHE={cmd:[],stk:[],lots:[],pos:[],prods:[],club:[],poslignes:[],emb:[]};
 let pendingPhoto=null, editProd=null, editStock=null, editLot=null, editPos=null;
+let editPosLigne=null, plCtxPos=null, editEmb=null;
 
 function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML;}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2400);}
@@ -392,8 +488,8 @@ function switchTab(name,el){
 
 // ── LOAD ALL ──
 async function loadAll(){
-  await Promise.all([loadCmd(),loadStock(),loadLots(),loadPos(),loadProds(),loadClub()]);
-  renderAccueil();
+  await Promise.all([loadCmd(),loadStock(),loadLots(),loadPos(),loadPosLignes(),loadProds(),loadClub(),loadEmb()]);
+  renderPos(); renderProdFinis(); renderAccueil();
 }
 
 // ── COMMANDES ──
@@ -533,18 +629,66 @@ async function loadPos(){
   renderPos();
 }
 function renderPos(){
-  const el=document.getElementById('pos-list');
+  const el=document.getElementById('pos-list'); if(!el) return;
+  // datalist des noms de produits pour la saisie des lignes
+  const dl=document.getElementById('prodnames');
+  if(dl) dl.innerHTML=[...new Set(CACHE.prods.map(p=>p.nom))].map(n=>`<option value="${esc(n)}">`).join('');
   if(!CACHE.pos.length){ el.innerHTML='<div class="empty">Aucun point de vente. Ajoute tes dépôts pour les suivre.</div>'; return; }
-  el.innerHTML=CACHE.pos.map(p=>`<div class="dcard">
-    <div class="dh2"><span class="nm">${esc(p.nom)}</span><span class="zone">${esc(p.zone||'')}</span></div>
-    <div class="meta">
-      <div>📞 <b>${esc(p.contact_tel||'—')}</b></div><div>👤 <b>${esc(p.contact_nom||'—')}</b></div>
-      <div>📦 Déposé <b>${p.stock_depose||0}</b></div><div>🧾 Vendu <b>${p.vendu||0}</b></div>
-      <div>Dernière <b>${frDate(p.derniere_livraison)}</b></div><div>Prochaine <b style="color:var(--brand)">${frDate(p.prochaine_livraison)}</b></div>
-    </div>
-    <div class="rowbtns"><button class="mini edit" onclick="openPos('${p.id}')">Éditer</button></div>
-  </div>`).join('');
+  el.innerHTML=CACHE.pos.map(p=>{
+    const lignes=CACHE.poslignes.filter(l=>l.pos_id===p.id);
+    const tDep=lignes.reduce((s,l)=>s+(l.depose||0),0), tVen=lignes.reduce((s,l)=>s+(l.vendu||0),0), tRes=tDep-tVen;
+    const fiche = lignes.length ? `
+      <div class="poslines">
+        <div class="plhead"><span style="text-align:left">Produit</span><span>Déposé</span><span>Vendu</span><span>Reste</span><span></span></div>
+        ${lignes.map(l=>{const r=(l.depose||0)-(l.vendu||0);return `<div class="plrow">
+          <div class="pn">${esc(l.produit_nom)}<small>${esc(l.format||'')}</small></div>
+          <div class="v"><b>${l.depose||0}</b></div>
+          <div class="v"><b>${l.vendu||0}</b></div>
+          <div class="v rest ${r<=0?'low':''}"><b>${r}</b></div>
+          <button class="ed" onclick="openPosLigne('${p.id}','${l.id}')">✎</button>
+        </div>`;}).join('')}
+      </div>
+      <div class="postot"><span>Total déposé <b>${tDep}</b></span><span>Vendu <b>${tVen}</b></span><span>Reste <b style="color:var(--brand)">${tRes}</b></span></div>`
+      : `<div class="postot" style="margin-top:10px"><span>Aucun produit suivi ici pour l'instant.</span></div>`;
+    return `<div class="dcard">
+      <div class="dh2"><span class="nm">${esc(p.nom)}</span><span class="zone">${esc(p.zone||'')}</span></div>
+      <div class="meta">
+        <div>📞 <b>${esc(p.contact_tel||'—')}</b></div><div>👤 <b>${esc(p.contact_nom||'—')}</b></div>
+        <div>Dernière livr. <b>${frDate(p.derniere_livraison)}</b></div><div>Prochaine <b style="color:var(--brand)">${frDate(p.prochaine_livraison)}</b></div>
+      </div>
+      ${fiche}
+      <button class="addline" onclick="openPosLigne('${p.id}')">＋ Ajouter un produit à ce point</button>
+      <div class="rowbtns"><button class="mini edit" onclick="openPos('${p.id}')">Éditer le point</button></div>
+    </div>`;
+  }).join('');
 }
+
+// ── LIGNES DE POS (fiche stock/vente par produit) ──
+async function loadPosLignes(){
+  const {data,error}=await sb.from('ay_pos_lignes').select('*').order('produit_nom',{ascending:true});
+  if(error) return; CACHE.poslignes=data||[];
+}
+function openPosLigne(posId,lineId){
+  plCtxPos=posId; editPosLigne=lineId||null;
+  const l=lineId?CACHE.poslignes.find(x=>x.id===lineId):null;
+  const pos=CACHE.pos.find(p=>p.id===posId);
+  document.getElementById('pl-mtitle').textContent=(pos?pos.nom:'Point de vente')+' — produit';
+  document.getElementById('lf2-nom').value=l?l.produit_nom:'';
+  document.getElementById('lf2-fmt').value=l?(l.format||''):'';
+  document.getElementById('lf2-depose').value=l?(l.depose||0):'';
+  document.getElementById('lf2-vendu').value=l?(l.vendu||0):'';
+  document.getElementById('pl-del').style.display=lineId?'block':'none';
+  openOv('pl-ov');
+}
+async function savePosLigne(){
+  const payload={pos_id:plCtxPos,produit_nom:document.getElementById('lf2-nom').value.trim(),format:document.getElementById('lf2-fmt').value.trim(),
+    depose:parseInt(document.getElementById('lf2-depose').value||'0',10),vendu:parseInt(document.getElementById('lf2-vendu').value||'0',10),updated_at:new Date().toISOString()};
+  if(!payload.produit_nom){toast('Produit requis');return;}
+  const {error}=editPosLigne?await sb.from('ay_pos_lignes').update(payload).eq('id',editPosLigne):await sb.from('ay_pos_lignes').insert(payload);
+  if(error){toast('Erreur : '+error.message);return;}
+  closeOv('pl-ov'); await loadPosLignes(); renderPos(); renderAccueil(); toast('Fiche mise à jour');
+}
+async function delPosLigne(){ if(!editPosLigne)return; if(!confirm('Retirer ce produit de ce point ?'))return; const {error}=await sb.from('ay_pos_lignes').delete().eq('id',editPosLigne); if(error){toast('Erreur');return;} closeOv('pl-ov'); await loadPosLignes(); renderPos(); toast('Retiré'); }
 function openPos(id){
   editPos=id||null;
   const p=id?CACHE.pos.find(x=>x.id===id):null;
@@ -662,6 +806,77 @@ async function loadClub(){
     <a class="wa" href="https://wa.me/${nWa(i.client_wa)}" target="_blank">💬 ${esc(i.client_wa)}</a></div>`).join('');
 }
 
+// ── PRODUITS FINIS (résumé) ──
+function renderProdFinis(){
+  const el=document.getElementById('pf-summary'); if(!el) return;
+  const finis=CACHE.stk.reduce((s,x)=>s+(x.quantite||0),0);
+  const finisLow=CACHE.stk.filter(x=>x.quantite<(x.seuil||20)).length;
+  const vides=CACHE.emb.reduce((s,x)=>s+(x.quantite||0),0);
+  el.innerHTML=`
+    <div class="pfbox"><div class="lb">Produits finis en stock</div><div class="n">${finis.toLocaleString('fr')}</div><div class="lb" style="margin-top:3px">${finisLow} référence(s) en alerte</div></div>
+    <div class="pfbox"><div class="lb">Emballages vides dispo</div><div class="n">${vides.toLocaleString('fr')}</div><div class="lb" style="margin-top:3px">de quoi embouteiller</div></div>`;
+}
+
+// ── EMBALLAGES (appro fournisseur, ex. Chine ~3 mois) ──
+async function loadEmb(){
+  const {data,error}=await sb.from('ay_emballages').select('*').order('nom',{ascending:true});
+  if(error) return; CACHE.emb=data||[];
+  const low=CACHE.emb.filter(e=>e.quantite<(e.seuil||100)).length;
+  const m=document.getElementById('emb-meta'); if(m) m.textContent=CACHE.emb.length+' réf. · '+low+' à commander';
+  renderEmb();
+}
+function embMonths(j){ const mo=Math.round((j||90)/30); return mo<=1?'~1 mois':'~'+mo+' mois'; }
+function renderEmb(){
+  const el=document.getElementById('emb-list'); if(!el) return;
+  if(!CACHE.emb.length){ el.innerHTML='<div class="empty">Aucun emballage suivi. Ajoute tes bouteilles, canettes, pockets pour anticiper l\'appro.</div>'; return; }
+  el.innerHTML=CACHE.emb.map(e=>{
+    const q=e.quantite||0, low=q<(e.seuil||100);
+    const cmd=e.en_commande||0, eta=e.reception_prevue;
+    let flag;
+    if(cmd>0 && eta){ flag=`<div class="flag info">🚢 ${cmd.toLocaleString('fr')} en commande · réception prévue le ${frDate(eta)}</div>`; }
+    else if(low){ flag=`<div class="flag warn">⚠ Stock bas — à commander maintenant (${esc(e.fournisseur||'fournisseur')} : délai ${embMonths(e.delai_jours)})</div>`; }
+    else{ flag=`<div class="flag ok">✓ Stock suffisant (seuil ${e.seuil||100})</div>`; }
+    const lowExtra = (low && !(cmd>0)) ? '' : (low && cmd>0 ? `<div class="flag warn" style="margin-top:6px">⚠ Sous le seuil malgré la commande, surveille la date de réception</div>`:'');
+    return `<div class="embc ${low && !(cmd>0)?'alert':''}">
+      <div class="eh"><span class="nm">${esc(e.nom)}</span>${e.type?`<span class="tp">${esc(e.type)}</span>`:''}</div>
+      <div class="big ${low?'low':''}">${q.toLocaleString('fr')} <span class="sub" style="font-size:12px;font-weight:400">vides · seuil ${e.seuil||100}</span></div>
+      ${flag}${lowExtra}
+      ${e.note?`<div class="sub" style="margin-top:8px">${esc(e.note)}</div>`:''}
+      <div class="rowbtns"><button class="mini edit" onclick="openEmb('${e.id}')">Éditer</button></div>
+    </div>`;
+  }).join('');
+}
+function openEmb(id){
+  editEmb=id||null;
+  const e=id?CACHE.emb.find(x=>x.id===id):null;
+  document.getElementById('emb-mtitle').textContent=id?'Éditer l\'emballage':'Ajouter un emballage';
+  document.getElementById('ef-nom').value=e?e.nom:'';
+  document.getElementById('ef-type').value=e?(e.type||''):'';
+  document.getElementById('ef-qte').value=e?(e.quantite||0):'';
+  document.getElementById('ef-seuil').value=e?(e.seuil||200):200;
+  document.getElementById('ef-cmd').value=e?(e.en_commande||0):'';
+  document.getElementById('ef-delai').value=e?(e.delai_jours||90):90;
+  document.getElementById('ef-fourn').value=e?(e.fournisseur||'Chine'):'Chine';
+  document.getElementById('ef-derniere').value=e&&e.derniere_commande?e.derniere_commande.slice(0,10):'';
+  document.getElementById('ef-reception').value=e&&e.reception_prevue?e.reception_prevue.slice(0,10):'';
+  document.getElementById('ef-note').value=e?(e.note||''):'';
+  document.getElementById('emb-del').style.display=id?'block':'none';
+  openOv('emb-ov');
+}
+async function saveEmb(){
+  const payload={nom:document.getElementById('ef-nom').value.trim(),type:document.getElementById('ef-type').value.trim(),
+    quantite:parseInt(document.getElementById('ef-qte').value||'0',10),seuil:parseInt(document.getElementById('ef-seuil').value||'200',10),
+    en_commande:parseInt(document.getElementById('ef-cmd').value||'0',10),delai_jours:parseInt(document.getElementById('ef-delai').value||'90',10),
+    fournisseur:document.getElementById('ef-fourn').value.trim()||'Chine',
+    derniere_commande:document.getElementById('ef-derniere').value||null,reception_prevue:document.getElementById('ef-reception').value||null,
+    note:document.getElementById('ef-note').value.trim(),updated_at:new Date().toISOString()};
+  if(!payload.nom){toast('Nom requis');return;}
+  const {error}=editEmb?await sb.from('ay_emballages').update(payload).eq('id',editEmb):await sb.from('ay_emballages').insert(payload);
+  if(error){toast('Erreur : '+error.message);return;}
+  closeOv('emb-ov'); await loadEmb(); renderProdFinis(); renderAccueil(); toast('Emballage enregistré');
+}
+async function delEmb(){ if(!editEmb)return; if(!confirm('Supprimer cet emballage ?'))return; const {error}=await sb.from('ay_emballages').delete().eq('id',editEmb); if(error){toast('Erreur');return;} closeOv('emb-ov'); await loadEmb(); renderProdFinis(); renderAccueil(); toast('Supprimé'); }
+
 // ── ACCUEIL ──
 function renderAccueil(){
   const nouv=CACHE.cmd.filter(c=>!c.traitee).length;
@@ -678,6 +893,9 @@ function renderAccueil(){
   low.slice(0,3).forEach(s=>items.push(['📦',esc(s.produit_nom)+' — stock bas','Reste '+s.quantite+' · '+esc(s.format||''),'wait','alerte']));
   CACHE.lots.filter(l=>l.lanema==='depose').slice(0,2).forEach(l=>items.push(['🧪','LANEMA · '+esc(l.produit_nom),'Échantillon déposé','wait','en attente']));
   CACHE.pos.filter(p=>p.prochaine_livraison).sort((a,b)=>new Date(a.prochaine_livraison)-new Date(b.prochaine_livraison)).slice(0,2).forEach(p=>items.push(['🚚','Livraison '+esc(p.zone||p.nom),'Prévue '+frDate(p.prochaine_livraison),'prog','à faire']));
+  CACHE.emb.filter(e=>e.quantite<(e.seuil||100) && !(e.en_commande>0)).slice(0,3).forEach(e=>items.push(['📦',esc(e.nom)+' — vides bas','Commander ('+esc(e.fournisseur||'appro')+' '+embMonths(e.delai_jours)+')','new','à commander']));
+  CACHE.emb.filter(e=>e.reception_prevue && e.en_commande>0).sort((a,b)=>new Date(a.reception_prevue)-new Date(b.reception_prevue)).slice(0,2).forEach(e=>items.push(['🚢','Réception '+esc(e.nom),'Prévue '+frDate(e.reception_prevue),'prog','en route']));
+  renderProdFinis();
   document.getElementById('pdj-count').textContent=items.length+' action'+(items.length>1?'s':'');
   const el=document.getElementById('pdj');
   el.innerHTML=items.length?items.map(it=>`<div class="row"><div class="ic">${it[0]}</div><div><div class="nm">${it[1]}</div><div class="mt">${it[2]}</div></div><span class="st ${it[3]}">${it[4]}</span></div>`).join(''):'<div class="empty" style="padding:20px">Tout est à jour. Rien à traiter dans l\'immédiat 👌</div>';
