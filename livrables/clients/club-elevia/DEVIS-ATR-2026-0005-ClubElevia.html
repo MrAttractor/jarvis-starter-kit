@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Devis ATR-2026-0005 V3 — Club Élévia × Mr Attractor</title>
+<title>Devis ATR-2026-0005 V5 — Club Élévia × Mr Attractor</title>
 <style>
 :root{
   --brand:#0E1A2B;
@@ -41,27 +41,24 @@ h2{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.08em;text-t
 .revision-note{background:#EEF2FF;border:1px solid #C7D2FE;border-radius:8px;padding:12px 16px;font-size:12px;color:#3730a3;margin-bottom:16px;line-height:1.5}
 .revision-note strong{color:#1e1b7a}
 
-.formules-grid{display:flex;gap:12px;margin:12px 0}
-.formule{flex:1;border:2px solid var(--line);border-radius:12px;overflow:hidden;position:relative}
-.formule.featured{border-color:var(--accent)}
-.formule-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--brand);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 12px;border-radius:0 0 8px 8px;white-space:nowrap}
-.formule-head{background:var(--brand);padding:14px 12px 10px;text-align:center}
-.formule.featured .formule-head{background:linear-gradient(135deg,#0E1A2B,#1a3050)}
-.formule-name{color:var(--accent);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
-.formule-price{color:#fff;font-size:22px;font-weight:700;line-height:1}
-.formule-price-sub{color:rgba(255,255,255,.55);font-size:10px;margin-top:2px}
-.formule-mrr{color:var(--accent);font-size:11px;font-weight:600;margin-top:4px}
-.formule-body{padding:12px;font-size:11.5px}
-.formule-body ul{margin:0 0 0 14px}
-.formule-body li{margin-bottom:5px;color:var(--ink);line-height:1.4}
-.formule-scope{font-size:10px;color:var(--muted);font-style:italic;margin:8px 0 4px;font-weight:600}
-.formule-extra{font-size:10px;color:var(--accent);font-weight:600;margin-top:8px;padding-top:6px;border-top:1px dashed var(--line)}
+.prix-hero{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#0E1A2B,#1a3050);border-radius:12px;padding:18px 22px;margin:12px 0}
+.prix-hero .ph-left .ph-name{color:var(--accent);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.prix-hero .ph-left .ph-desc{color:rgba(255,255,255,.7);font-size:11.5px;line-height:1.4;max-width:330px}
+.prix-hero .ph-right{text-align:right}
+.prix-hero .ph-price{color:#fff;font-size:30px;font-weight:700;line-height:1}
+.prix-hero .ph-price-sub{color:rgba(255,255,255,.55);font-size:11px;margin-top:3px}
+.prix-hero .ph-mrr{color:var(--accent);font-size:12px;font-weight:600;margin-top:5px}
 
+/* PHASES */
 .phase{border:1px solid var(--line);border-radius:8px;margin:8px 0;overflow:hidden}
+.phase.hors{border-style:dashed;opacity:.92}
 .phase-head{display:flex;justify-content:space-between;align-items:center;background:var(--brand);padding:11px 16px}
+.phase.hors .phase-head{background:#6B7280}
 .phase-head .ph-label{color:var(--accent);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.phase.hors .phase-head .ph-label{color:#E5E7EB}
 .phase-head .ph-title{color:#fff;font-size:13.5px;font-weight:700;margin-top:1px}
-.phase-head .ph-amount{color:var(--accent);font-size:18px;font-weight:700}
+.phase-head .ph-tag{color:var(--accent);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.phase.hors .phase-head .ph-tag{color:#FDE68A}
 .phase-body{padding:12px 16px}
 .phase-body ul{margin:0 0 0 16px}
 .phase-body li{font-size:12px;margin-bottom:4px;color:var(--ink)}
@@ -87,6 +84,12 @@ h2{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.08em;text-t
 .recap-row.net .rv{font-weight:700;color:var(--brand);font-size:15px}
 .rk{color:var(--ink)}
 .rv{font-weight:600}
+
+/* LIVRABLES */
+.livrables{border:1px solid var(--line);border-radius:8px;padding:12px 16px;font-size:12px;line-height:1.6}
+.livrables-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;margin-top:6px}
+.livrables-grid div{padding-left:16px;position:relative;color:var(--ink)}
+.livrables-grid div:before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700}
 
 .mrr-block{border:2px solid var(--accent);border-radius:8px;overflow:hidden;margin:8px 0}
 .mrr-head{background:var(--accent);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
@@ -120,7 +123,7 @@ h2{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.08em;text-t
 @media print{
   body{background:#fff;padding:0}
   .page{box-shadow:none;margin:0;width:100%;padding:10mm 12mm}
-  .phase,.jalon,.recap,.mrr-block,.formules-grid{page-break-inside:avoid}
+  .phase,.jalon,.recap,.mrr-block,.prix-hero,.livrables{page-break-inside:avoid}
 }
 </style>
 </head>
@@ -135,10 +138,10 @@ h2{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.08em;text-t
     </div>
     <div class="docmeta">
       <div class="t">Devis</div>
-      <div class="ref">N° ATR-2026-0005 — Révision V3</div>
-      <div class="date">Émis le 1er juillet 2026</div>
-      <div class="validite">Valable 30 jours — jusqu'au 31 juillet 2026</div>
-      <div class="v2badge">Calendrier de paiement simplifié</div>
+      <div class="ref">N° ATR-2026-0005 — Révision V5</div>
+      <div class="date">Émis le 15 juillet 2026</div>
+      <div class="validite">Valable 30 jours — jusqu'au 14 août 2026</div>
+      <div class="v2badge">3 000 € · Maquettes validées · 40 jours ouvrés</div>
     </div>
   </div>
 
@@ -160,242 +163,209 @@ h2{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.08em;text-t
     </div>
   </div>
 
-  <!-- NOTE RÉVISION -->
-  <div class="revision-note" style="margin-top:14px">
-    <strong>Révision V3 — 1er juillet 2026.</strong> Ce devis remplace ATR-2026-0005 V2 du 30 juin 2026. Le périmètre technique reste inchangé (<strong>V1 = Web App responsive</strong>, natif iOS/Android en V2 séparée). Seul le <strong>calendrier de paiement</strong> évolue : 8 mouvements répartis phase par phase deviennent <strong>4 jalons</strong> (30 % / 30 % / 30 % / 10 %), pour plus de simplicité.
-  </div>
-
   <!-- OBJET -->
   <h2>Objet</h2>
   <div class="objet-box">
-    Conception et développement de <strong>Club privé Élévia</strong> — plateforme web premium de rencontres avec sélection qualitative, vérification KYC, système de compatibilité et espace communautaire. Déploiement en <strong>V1 Web App responsive</strong>, architecture préparée pour les stores mobile (V2). Périmètre détaillé fonctionnellement dans le cahier des charges CDC-ATR-2026-0005 V2, en <strong>4 phases indépendantes</strong>.
+    Conception et développement de <strong>Club privé Élévia</strong> — plateforme web premium de rencontres avec sélection qualitative, vérification KYC vidéo, système de compatibilité et espace communautaire. Périmètre de la présente prestation : la <strong>Web App responsive mise en ligne</strong> (accessible via navigateur, sans installation depuis un store). Le périmètre fonctionnel détaillé figure dans le cahier des charges CDC-ATR-2026-0005, document contractuel annexé.
   </div>
 
-  <!-- TROIS FORMULES -->
-  <h2>Choisissez votre formule</h2>
-  <div class="formules-grid">
-
-    <div class="formule">
-      <div class="formule-head">
-        <div class="formule-name">Formule Socle</div>
-        <div class="formule-price">2 850 €</div>
-        <div class="formule-price-sub">setup HT</div>
-        <div class="formule-mrr">+ 200 €/mois</div>
-      </div>
-      <div class="formule-body">
-        <div class="formule-scope">Phases 1 + 2 + 3</div>
-        <ul>
-          <li>Architecture web + auth sécurisée</li>
-          <li>Design system Club Élévia</li>
-          <li>Infrastructure RGPD + KYC vidéo</li>
-          <li>Matching qualitatif des profils</li>
-          <li>Interface découverte + mise en relation</li>
-          <li>Messagerie initiale post-mise en relation</li>
-          <li>Back-office modération (basique)</li>
-        </ul>
-        <div class="formule-extra">Phase 4 non incluse (messagerie complète &amp; dashboard)</div>
-      </div>
-    </div>
-
-    <div class="formule featured">
-      <div class="formule-badge">Recommandée</div>
-      <div class="formule-head">
-        <div class="formule-name">Formule Complète V1</div>
-        <div class="formule-price">3 500 €</div>
-        <div class="formule-price-sub">setup HT</div>
-        <div class="formule-mrr">+ 250 €/mois</div>
-      </div>
-      <div class="formule-body">
-        <div class="formule-scope">Phases 1 + 2 + 3 + 4</div>
-        <ul>
-          <li>Tout Formule Socle inclus</li>
-          <li>Messagerie complète (texte + vocal + photos)</li>
-          <li>Back-office modération complet</li>
-          <li>Dashboard propriétaire (stats, membres, taux de mise en relation)</li>
-          <li>Tests de charge avant ouverture</li>
-          <li>2 rounds de révisions par phase</li>
-          <li>Architecture préparée stores V2</li>
-        </ul>
-        <div class="formule-extra">Web App V1 complète. iOS/Android natif = V2 séparé.</div>
-      </div>
-    </div>
-
-    <div class="formule">
-      <div class="formule-head">
-        <div class="formule-name">Formule Élévia Premium</div>
-        <div class="formule-price">5 000 €</div>
-        <div class="formule-price-sub">setup HT</div>
-        <div class="formule-mrr">+ 300 €/mois</div>
-      </div>
-      <div class="formule-body">
-        <div class="formule-scope">Phases 1 + 2 + 3 + 4 + 5</div>
-        <ul>
-          <li>Tout Formule Complète inclus</li>
-          <li>Phase 5 — Prestige :</li>
-          <li>Système d'abonnements natif (Élégance 29€ / Prestige 79€ / Cercle Privé)</li>
-          <li>Module Événements club (dîners, brunchs, networking)</li>
-          <li>Espace Concierge Relationnel (profils + recommandations)</li>
-          <li>Billetterie + QR Code d'accès événements</li>
-        </ul>
-        <div class="formule-extra">Vision complète, y compris la phase de monétisation.</div>
-      </div>
-    </div>
-
+  <!-- OÙ EN EST LE PROJET -->
+  <h2>Où en est le projet</h2>
+  <div class="revision-note">
+    <strong>Les maquettes sont validées.</strong> La Phase 1 (Maquettes UX/UI) est réalisée et a été validée par la Cliente ; elle est intégralement couverte par les <strong>250 € déjà réglés</strong> (REÇ-2026-001 + REÇ-2026-002). Le présent devis, révision V5, remplace la révision V4 et acte les termes arrêtés lors de l'échange téléphonique du 15 juillet 2026 : <strong>prix ramené à 3 000 €</strong>, et <strong>durée de développement estimée à 40 jours ouvrés</strong> (développement, tests et corrections), sur laquelle sont désormais alignées les tranches de règlement. Il ne reste donc plus à réaliser que les Phases 2 à 4, et à régler <strong>2 750 €</strong>.
   </div>
 
-  <!-- DÉTAIL FORMULE COMPLÈTE V1 -->
-  <h2>Détail fonctionnel — Formule Complète V1 (3 500 €)</h2>
+  <!-- PRIX -->
+  <h2>Prix</h2>
+  <div class="prix-hero">
+    <div class="ph-left">
+      <div class="ph-name">Club Élévia — Web App V1</div>
+      <div class="ph-desc">Conception et développement complet de la Web App responsive, de la maquette à la mise en ligne effective. Maquettes validées, développement estimé à 40 jours ouvrés.</div>
+    </div>
+    <div class="ph-right">
+      <div class="ph-price">3 000 €</div>
+      <div class="ph-price-sub">forfait HT — tout compris</div>
+      <div class="ph-mrr">dont 250 € déjà réglés</div>
+    </div>
+  </div>
+
+  <!-- PHASES DE PRODUCTION -->
+  <h2>Périmètre — 5 phases de production</h2>
 
   <div class="phase">
     <div class="phase-head">
-      <div><div class="ph-label">Phase 1</div><div class="ph-title">Identité</div></div>
-      <div class="ph-amount">800 €</div>
+      <div><div class="ph-label">Phase 1</div><div class="ph-title">Maquettes UX/UI</div></div>
+      <div class="ph-tag">Réalisée &amp; validée</div>
     </div>
     <div class="phase-body">
       <ul>
-        <li>Architecture technique Web App (base de données, hébergement, API)</li>
-        <li>Système d'authentification sécurisé (inscription, connexion, OTP)</li>
-        <li>Design system complet : charte graphique Club Élévia, composants UI</li>
-        <li>Infrastructure RGPD : politique de confidentialité, gestion des consentements</li>
-        <li>Données hébergées en Europe — conformité biométrie KYC</li>
+        <li>Conception de toutes les interfaces de l'application (inscription, vérification, découverte, mise en relation, messagerie, back-office, dashboard)</li>
+        <li>Application de la direction artistique Noir &amp; Or validée, design system complet (composants, typographies, couleurs)</li>
+        <li>Prototype cliquable <strong>validé par la Cliente</strong> — phase terminée, couverte par les 250 € déjà réglés</li>
       </ul>
     </div>
   </div>
 
   <div class="phase">
     <div class="phase-head">
-      <div><div class="ph-label">Phase 2</div><div class="ph-title">Confiance</div></div>
-      <div class="ph-amount">700 €</div>
+      <div><div class="ph-label">Phase 2 — J0 à J+15 ouvrés</div><div class="ph-title">Prototype fonctionnel</div></div>
+      <div class="ph-tag">Incluse</div>
     </div>
     <div class="phase-body">
       <ul>
-        <li>KYC vidéo : vérification de vivacité (liveness detection)</li>
-        <li>Vérification humaine par l'équipe Élévia (pas automatisée)</li>
-        <li>Suppression automatique des données vidéo sous 24h (RGPD biométrie)</li>
-        <li>Processus de validation des profils : statuts, file d'attente, tableau admin</li>
-        <li>Badges "Profil vérifié" visibles sur les profils validés</li>
+        <li>Architecture technique : base de données hébergée en Europe, hébergement, API applicative</li>
+        <li>Authentification sécurisée par code à 6 chiffres (OTP e-mail), inscription et gestion de profil</li>
+        <li>Cœur fonctionnel opérationnel sur données réelles : vérification KYC vidéo, score de compatibilité, découverte de profils</li>
+        <li>Livraison et validation écrite du prototype — <strong>déclenche la Tranche 2</strong></li>
       </ul>
     </div>
   </div>
 
   <div class="phase">
     <div class="phase-head">
-      <div><div class="ph-label">Phase 3</div><div class="ph-title">Rencontre</div></div>
-      <div class="ph-amount">1 350 €</div>
+      <div><div class="ph-label">Phase 3 — J+16 à J+30 ouvrés</div><div class="ph-title">Version bêta</div></div>
+      <div class="ph-tag">Incluse</div>
     </div>
     <div class="phase-body">
       <ul>
-        <li>Système de compatibilité qualitative : score basé sur valeurs, style de vie, projet relationnel, localisation</li>
-        <li>Interface de découverte des profils : filtres, favoris, suggestions sélectionnées</li>
-        <li>Système de mise en relation : demandes, acceptations, refus, blocages, signalements</li>
-        <li>Messagerie initiale : premier échange après mise en relation mutuelle acceptée</li>
-        <li>Notifications push (nouvelle suggestion, mise en relation acceptée)</li>
+        <li>Les quatre modules fonctionnels intégrés et testables de bout en bout : Identité, Confiance (KYC), Rencontre (mise en relation + messagerie), Communauté (messagerie complète, back-office, dashboard)</li>
+        <li>Application utilisable en conditions réelles mais non encore ouverte au grand public</li>
+        <li>Livraison et validation écrite de la bêta — <strong>déclenche la Tranche 3</strong></li>
       </ul>
     </div>
   </div>
 
   <div class="phase">
     <div class="phase-head">
-      <div><div class="ph-label">Phase 4</div><div class="ph-title">Communauté</div></div>
-      <div class="ph-amount">650 €</div>
+      <div><div class="ph-label">Phase 4 — J+31 à J+40 ouvrés</div><div class="ph-title">Version finale &amp; mise en ligne</div></div>
+      <div class="ph-tag">Incluse</div>
     </div>
     <div class="phase-body">
       <ul>
-        <li>Messagerie complète : conversations texte + vocal + photos, historique</li>
-        <li>Back-office modération complet : signalements, suspensions, gestion litiges</li>
-        <li>Dashboard propriétaire : inscriptions, taux d'activité, revenus, statistiques matching</li>
-        <li>Tests de charge et optimisation des performances avant ouverture publique</li>
+        <li>Recette complète, corrections des retours, tests de charge et optimisation des performances</li>
+        <li>Déploiement en production sur l'infrastructure définitive, application accessible publiquement à son adresse web</li>
+        <li>Mise en ligne effective de la Web App V1 — <strong>déclenche la Tranche 4</strong></li>
       </ul>
     </div>
   </div>
 
-  <p style="font-size:11px;color:var(--muted);margin:6px 0">Le détail fonctionnel complet écran par écran et les critères d'acceptation de chaque phase figurent dans le cahier des charges <strong>CDC-ATR-2026-0005 V2</strong>, document contractuel annexé.</p>
+  <div class="phase hors">
+    <div class="phase-head">
+      <div><div class="ph-label">Phase 5</div><div class="ph-title">Publication sur les stores</div></div>
+      <div class="ph-tag">Hors périmètre — V2</div>
+    </div>
+    <div class="phase-body">
+      <ul>
+        <li>Application mobile native iOS et Android, publication sur l'App Store et Google Play</li>
+        <li><strong>Non incluse dans le présent devis.</strong> La Web App V1 est conçue pour faciliter cette évolution, qui fera l'objet d'un devis V2 séparé, chiffré selon le périmètre retenu.</li>
+      </ul>
+    </div>
+  </div>
 
-  <!-- CALENDRIER DE PAIEMENT — 4 JALONS -->
-  <h2>Calendrier de paiement — 4 jalons</h2>
+  <p style="font-size:11px;color:var(--muted);margin:6px 0">Le détail fonctionnel complet, écran par écran, et les critères d'acceptation figurent dans le cahier des charges <strong>CDC-ATR-2026-0005</strong>, document contractuel annexé.</p>
+
+  <!-- CALENDRIER DE RÉALISATION -->
+  <h2>Calendrier de réalisation — 40 jours ouvrés</h2>
+  <div class="objet-box">
+    La durée de réalisation des Phases 2 à 4 est estimée à <strong>40 jours ouvrés</strong>, soit environ deux mois, <strong>développement, tests et corrections compris</strong>. Le décompte démarre au versement de la Tranche 1 (jour <strong>J0</strong>) et s'entend en jours de <strong>production effective</strong> du Prestataire.
+  </div>
+  <div class="recap">
+    <div class="recap-row"><span class="rk">Phase 2 — Prototype fonctionnel</span><span class="rv">J0 → J+15 ouvrés</span></div>
+    <div class="recap-row"><span class="rk">Phase 3 — Version bêta</span><span class="rv">J+16 → J+30 ouvrés</span></div>
+    <div class="recap-row"><span class="rk">Phase 4 — Version finale &amp; mise en ligne</span><span class="rv">J+31 → J+40 ouvrés</span></div>
+    <div class="recap-row net"><span class="rk">Mise en ligne effective de la Web App V1</span><span class="rv">J+40 ouvrés</span></div>
+  </div>
+  <div class="conditions">
+    <p><strong>Point de départ :</strong> le jour J0 est celui du versement de la Tranche 1, le Devis et le CDC étant signés. La date de mise en ligne prévisionnelle en découle et sera confirmée par écrit au démarrage.</p>
+    <p><strong>Suspension du décompte :</strong> le décompte des 40 jours ouvrés est suspendu de plein droit, et la date de livraison prévisionnelle décalée d'autant, pendant : <em>(a)</em> les périodes de validation des livrables par la Cliente (jusqu'à 7 jours ouvrés par phase, cf. CDC, Section 11) ; <em>(b)</em> l'attente d'éléments, de contenus ou de décisions incombant à la Cliente ; <em>(c)</em> l'attente du règlement d'une tranche échue ; <em>(d)</em> l'attente des frais de tiers nécessaires au déploiement (nom de domaine, hébergement). Un décalage résultant de l'une de ces causes est réputé justifié et n'est pas imputable au Prestataire au sens de l'Article 14 du Contrat.</p>
+    <p><strong>Jour ouvré :</strong> du lundi au vendredi, hors jours fériés légaux français (cf. CDC, Section 1).</p>
+  </div>
+
+  <!-- CALENDRIER DE PAIEMENT — 4 TRANCHES -->
+  <h2>Calendrier de règlement — 4 tranches (30 / 30 / 30 / 10)</h2>
+  <p style="font-size:11px;color:var(--muted);margin:6px 0">Les tranches suivent la répartition prévue à l'Article 7 du Contrat et sont adossées au calendrier de réalisation ci-dessus : chaque tranche est déclenchée par un livrable présenté et validé.</p>
 
   <div class="jalon">
     <div class="jalon-head">
-      <div><div class="jh-label">Jalon 1 — 30 %</div><div class="jh-title">Signature</div></div>
-      <div class="jh-amount">800 € net</div>
+      <div><div class="jh-label">Tranche 1 — 30 % — J0</div><div class="jh-title">Lancement du développement</div></div>
+      <div class="jh-amount">650 € net</div>
     </div>
-    <div class="jalon-body">Déclenché par la signature conjointe du Contrat V3, du présent Devis V3 et du CDC V2. Montant théorique 1 050 €, dont 250 € déjà réglés (REÇ-2026-001 + REÇ-2026-002) → <strong>800 € restant à régler à la signature</strong>. Déclenche le démarrage effectif du développement (Phase 1).</div>
+    <div class="jalon-body">Déclenchée par la signature du présent Devis et du CDC (le Contrat et son Avenant n°1 étant signés). Montant de la tranche 900 €, dont <strong>250 € déjà réglés</strong> au titre des maquettes (REÇ-2026-001 + REÇ-2026-002) → <strong>650 € restant à régler</strong>. Son versement fixe le jour J0 et lance la Phase 2.</div>
   </div>
 
   <div class="jalon">
     <div class="jalon-head">
-      <div><div class="jh-label">Jalon 2 — 30 %</div><div class="jh-title">Socle validé</div></div>
-      <div class="jh-amount">1 050 €</div>
+      <div><div class="jh-label">Tranche 2 — 30 % — J+15 ouvrés</div><div class="jh-title">Prototype fonctionnel livré</div></div>
+      <div class="jh-amount">900 €</div>
     </div>
-    <div class="jalon-body">Déclenché par la livraison et la validation écrite des Phases 1 (Identité) et 2 (Confiance) : architecture, design system, authentification, KYC vidéo et badges de vérification opérationnels.</div>
+    <div class="jalon-body">Déclenchée par la livraison et la validation écrite du prototype fonctionnel (Phase 2) : socle technique et cœur fonctionnel opérationnels sur données réelles. Lance la Phase 3.</div>
   </div>
 
   <div class="jalon">
     <div class="jalon-head">
-      <div><div class="jh-label">Jalon 3 — 30 %</div><div class="jh-title">Version bêta</div></div>
-      <div class="jh-amount">1 050 €</div>
+      <div><div class="jh-label">Tranche 3 — 30 % — J+30 ouvrés</div><div class="jh-title">Version bêta livrée</div></div>
+      <div class="jh-amount">900 €</div>
     </div>
-    <div class="jalon-body">Déclenché par la livraison et la validation écrite de la Phase 3 (Rencontre) : matching qualitatif, découverte de profils, mise en relation et messagerie initiale fonctionnels.</div>
+    <div class="jalon-body">Déclenchée par la livraison et la validation écrite de la version bêta (Phase 3) : les quatre modules fonctionnels intégrés et testables de bout en bout. Lance la Phase 4 (recette, corrections, mise en ligne).</div>
   </div>
 
   <div class="jalon">
     <div class="jalon-head">
-      <div><div class="jh-label">Jalon 4 — 10 %</div><div class="jh-title">Mise en ligne effective</div></div>
-      <div class="jh-amount">350 €</div>
+      <div><div class="jh-label">Tranche 4 — 10 % — J+40 ouvrés</div><div class="jh-title">Mise en ligne effective</div></div>
+      <div class="jh-amount">300 €</div>
     </div>
-    <div class="jalon-body">Déclenché par la livraison, la validation écrite et le <strong>déploiement en production</strong> de la Phase 4 (Communauté) : Web App V1 complète, testée et mise en ligne.</div>
+    <div class="jalon-body">Déclenchée par la livraison, la validation écrite et le <strong>déploiement en production</strong> de la version finale (Phase 4) : Web App V1 complète, testée et accessible publiquement à son adresse web.</div>
   </div>
 
   <!-- RÉCAP -->
   <h2>Récapitulatif</h2>
   <div class="recap">
-    <div class="recap-row"><span class="rk">Total setup HT (V1 Web App — Formule Complète)</span><span class="rv">3 500 €</span></div>
-    <div class="recap-row acompte"><span class="rk">Acompte reçu (REÇ-2026-001 + REÇ-2026-002 — 200 € + 50 €)</span><span class="rv green">− 250 €</span></div>
-    <div class="recap-row net"><span class="rk">Reste à régler sur les 4 jalons</span><span class="rv">3 250 €</span></div>
+    <div class="recap-row total"><span class="rk">Total HT — Web App V1 mise en ligne</span><span class="rv">3 000 €</span></div>
+    <div class="recap-row acompte"><span class="rk">Déjà réglé — maquettes validées (REÇ-2026-001 + REÇ-2026-002 — 200 € + 50 €)</span><span class="rv green">− 250 €</span></div>
+    <div class="recap-row net"><span class="rk">Reste à régler sur les 4 tranches</span><span class="rv">2 750 €</span></div>
   </div>
 
-  <!-- PLAN DE CONTINUITÉ -->
-  <h2>Plan de continuité — 250 €/mois</h2>
-  <div class="mrr-block">
-    <div class="mrr-head">
-      <div><div class="mh-title">Plan de continuité Club Élévia</div></div>
-      <div><div class="mh-amount">250 €<span class="mh-per"> / mois</span></div></div>
+  <!-- LIVRABLES TRANSFÉRÉS -->
+  <h2>Livrables transférés à la Cliente</h2>
+  <div class="livrables">
+    Au règlement complet du prix, la Cliente devient propriétaire exclusive des livrables suivants, créés pour le projet Club Élévia (cf. Contrat, Art. 8) :
+    <div class="livrables-grid">
+      <div>Code source</div>
+      <div>Éléments graphiques</div>
+      <div>Bases de données</div>
+      <div>Algorithmes développés</div>
+      <div>Maquettes</div>
+      <div>Contenus créés pour le projet</div>
+      <div>Interfaces</div>
+      <div>Documentation</div>
     </div>
-    <div class="mrr-body">
-      <div class="mrr-grid">
-        <div class="mrr-item"><div class="mi-title">Hébergement Europe</div><div class="mi-desc">Infrastructure cloud conforme RGPD, disponibilité 24h/24.</div></div>
-        <div class="mrr-item"><div class="mi-title">Sécurité KYC</div><div class="mi-desc">Correctifs critiques sous 48h. Conformité biométrie et données sensibles.</div></div>
-        <div class="mrr-item"><div class="mi-title">RGPD continu</div><div class="mi-desc">Adaptation aux évolutions réglementaires sur la biométrie et la protection des données.</div></div>
-        <div class="mrr-item"><div class="mi-title">Maintenance corrective</div><div class="mi-desc">Bugs résolus au-delà des 3 mois de garantie. Support technique sous 48h ouvrées.</div></div>
-        <div class="mrr-item"><div class="mi-title">Sauvegardes quotidiennes</div><div class="mi-desc">Données sauvegardées chaque jour. Restauration possible.</div></div>
-        <div class="mrr-item"><div class="mi-title">Suppression auto données</div><div class="mi-desc">Processus automatisé de suppression des vidéos KYC et données à TTL.</div></div>
-      </div>
-      <div class="mrr-note">Activé au Jalon 4 (mise en ligne effective) — facturation mensuelle — résiliable avec 30 jours de préavis. Les 3 premiers mois suivant la mise en ligne sont couverts par la garantie gratuite du Contrat V3 (Art. 14) pour la correction des défauts de conformité ; le Plan de continuité couvre en parallèle l'hébergement, la sécurité et le support, dès la mise en ligne.</div>
-    </div>
+    <p style="font-size:11px;color:var(--muted);margin-top:8px">Le concept, le nom, la marque et le modèle économique Club Élévia demeurent la propriété exclusive de la Cliente (Contrat, Art. 9). Le Prestataire s'interdit toute réutilisation du projet, des maquettes et des éléments graphiques pendant 5 ans (Contrat, Art. 12) ; son savoir-faire général reste en revanche le sien.</p>
   </div>
 
   <!-- CONDITIONS -->
   <h2>Conditions</h2>
   <div class="conditions">
     <p><strong>TVA :</strong> TVA non applicable, article 293 B du CGI.</p>
-    <p><strong>Paiement :</strong> Wero (+33 7 53 90 23 23), Revolut ou virement bancaire. Chaque jalon déclenche l'étape suivante du développement.</p>
+    <p><strong>Paiement :</strong> Wero (+33 7 53 90 23 23), Revolut ou virement bancaire. Chaque tranche déclenche l'étape suivante de la production.</p>
     <p><strong>Révisions :</strong> 2 rounds de révisions inclus par phase. Au-delà : 65 € HT/heure, sur devis avenant.</p>
-    <p><strong>Propriété intellectuelle :</strong> Régie par le Contrat V3 (Art. 10 et 12) — les livrables spécifiques au projet deviennent la propriété exclusive de la Cliente après règlement complet de chaque phase ; le code générique réutilisable reste la propriété du Prestataire.</p>
-    <p><strong>V2 stores :</strong> L'architecture V1 est conçue pour faciliter l'intégration App Store (iOS) et Google Play (Android) dans une V2. Ce périmètre fera l'objet d'un devis séparé.</p>
-    <p><strong>Validité :</strong> Ce devis est valable 30 jours, soit jusqu'au <strong>31 juillet 2026</strong>.</p>
+    <p><strong>Après la mise en ligne :</strong> la correction des anomalies bloquantes est assurée pendant 3 mois (Contrat, Art. 13). Au-delà de cette garantie, la maintenance, la supervision et les évolutions de la plateforme ne sont pas comprises dans le présent devis et feront l'objet d'une proposition d'accompagnement distincte.</p>
+    <p><strong>Propriété intellectuelle :</strong> Régie par le Contrat (Art. 8 et 9). L'ensemble des éléments créés pour le projet Élévia est transféré à la Cliente après paiement intégral ; le concept, le nom et la marque Élévia lui appartiennent en propre.</p>
+    <p><strong>Frais de tiers :</strong> Le nom de domaine et l'ensemble des supports tiers nécessaires à la plateforme (comptes de services externes, licences éventuelles) sont achetés directement par la Cliente, à son nom, et lui appartiennent. Ils ne sont pas inclus dans le présent devis, qui couvre uniquement la prestation de conception et de développement.</p>
+    <p><strong>Publication sur les stores (Phase 5) :</strong> Hors périmètre du présent devis, conformément à l'Avenant n°1 au Contrat. L'architecture V1 est conçue pour faciliter l'intégration App Store (iOS) et Google Play (Android) dans une V2, qui fera l'objet d'un devis séparé.</p>
+    <p><strong>Validité :</strong> Ce devis est valable 30 jours, soit jusqu'au <strong>14 août 2026</strong>. Il remplace et annule la révision V4 du 9 juillet 2026.</p>
   </div>
 
   <!-- ACCEPTATION -->
   <div class="acceptance">
-    <div class="acc-title">Bon pour accord — Formule choisie : ___________________</div>
-    <div class="acc-text">En signant ce devis, la Cliente confirme la formule choisie, accepte les montants et le calendrier de paiement à 4 jalons. Ce devis signé vaut commande et sera complété par le Contrat de prestation CONTRAT-ATR-2026-0005 V3 et le Cahier des charges CDC-ATR-2026-0005 V2.</div>
+    <div class="acc-title">Bon pour accord</div>
+    <div class="acc-text">En signant ce devis, la Cliente accepte le prix unique de 3 000 € HT (dont 250 € déjà réglés au titre des maquettes validées), le périmètre en 5 phases (Phase 5 hors périmètre), la durée de réalisation estimée à 40 jours ouvrés et le calendrier de règlement à 4 tranches. Ce devis signé vaut commande, en cohérence avec le Contrat de prestation signé, son Avenant n°1 (précision de périmètre) et le Cahier des charges CDC-ATR-2026-0005.</div>
     <div class="signatures">
       <div class="sig">
         <div class="sig-label">Prestataire</div>
         <div class="sig-name">Mac Arthur KOUASSI</div>
         <div class="sig-role">Mr Attractor — Auto-entrepreneur</div>
         <div class="sig-space"></div>
-        <div class="sig-date">Fait le 1er juillet 2026, à Paris</div>
+        <div class="sig-date">Fait le 15 juillet 2026, à Paris</div>
       </div>
       <div class="sig">
         <div class="sig-label">Cliente — Bon pour accord</div>
@@ -410,7 +380,7 @@ h2{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.08em;text-t
   <div class="foot">
     Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015 — Immatriculée le 01/02/2024<br>
     TVA non applicable, article 293 B du CGI — myattractor1@gmail.com — +33 7 53 90 23 23 — agenceattractor.com<br>
-    Devis N° ATR-2026-0005 V3 — Projet Club privé Élévia — Valable jusqu'au 31 juillet 2026
+    Devis N° ATR-2026-0005 V5 — Projet Club privé Élévia — Valable jusqu'au 14 août 2026
   </div>
 
 </div>

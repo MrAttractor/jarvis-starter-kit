@@ -247,6 +247,7 @@ Voir les templates dans ce même dossier :
 - `template-facture-acompte.md` — facture 50%
 - `template-facture-solde.md` — facture solde
 - `template-bon-de-commande.md` — validation scope
+- `template-contrat.md` — contrat complet (Famille A/D, projets structurants), inclut la clause de transfert de nom de domaine (Art. 11)
 
 ---
 

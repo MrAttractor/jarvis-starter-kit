@@ -52,7 +52,7 @@ create table je_colis (
   poids numeric,
   articles text,
   montant numeric,
-  statut text default 'en_attente' check (statut in ('en_attente','collecte','transit','douane','livre')),
+  statut text default 'en_attente' check (statut in ('en_attente','collecte','transit','douane','disponible','livre')),
   contact_reception text,
   livraison_souhaitee boolean default false,
   quartier_abidjan text,

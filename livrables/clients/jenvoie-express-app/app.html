@@ -61,6 +61,7 @@
   .s-attente { background:rgba(91,184,245,.15); color:var(--sky); } .s-attente::before { background:var(--sky); }
   .s-collecte { background:rgba(168,85,247,.15); color:#a855f7; } .s-collecte::before { background:#a855f7; }
   .s-douane { background:rgba(239,68,68,.15); color:var(--red); } .s-douane::before { background:var(--red); }
+  .s-disponible { background:rgba(6,182,212,.15); color:#22d3ee; } .s-disponible::before { background:#22d3ee; }
   .card { background:rgba(0,31,92,.3); border:1px solid rgba(91,184,245,.15); border-radius:12px; padding:1.2rem; margin-bottom:1rem; }
   .card-title { font-family:'Syne',sans-serif; font-size:.82rem; font-weight:700; color:var(--sky); margin-bottom:1rem; }
   /* MODAL */
@@ -687,6 +688,7 @@ async function loadEnCours() {
           <option value="collecte" ${c.statut==='collecte'?'selected':''}>Collecté</option>
           <option value="transit" ${c.statut==='transit'?'selected':''}>En transit</option>
           <option value="douane" ${c.statut==='douane'?'selected':''}>En douane</option>
+          <option value="disponible" ${c.statut==='disponible'?'selected':''}>Disponible</option>
           <option value="livre" ${c.statut==='livre'?'selected':''}>Livré</option>
         </select>
       </td>
@@ -837,7 +839,7 @@ function closeModal(id) { document.getElementById(id).classList.remove('open') }
 const routeLabel = r => r === 'ABJ_ORY' ? '🇨🇮 ABJ→ORY 🇫🇷' : '🇫🇷 ORY→ABJ 🇨🇮'
 const fmtVoyage = d => new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })
 const statutPill = s => {
-  const map = { en_attente:['s-attente','En attente'], collecte:['s-collecte','Collecté'], transit:['s-transit','En transit'], douane:['s-douane','En douane'], livre:['s-livre','Livré ✓'] }
+  const map = { en_attente:['s-attente','En attente'], collecte:['s-collecte','Collecté'], transit:['s-transit','En transit'], douane:['s-douane','En douane'], disponible:['s-disponible','Disponible'], livre:['s-livre','Livré ✓'] }
   const [cls, label] = map[s] || ['s-attente', s]
   return `<span class="status-pill ${cls}">${label}</span>`
 }
@@ -859,7 +861,7 @@ async function loadDashboard() {
     sb.from('je_demandes').select('id').eq('statut','en_attente'),
   ])
 
-  const transit = (allColis || []).filter(c => ['collecte','transit','douane'].includes(c.statut)).length
+  const transit = (allColis || []).filter(c => ['collecte','transit','douane','disponible'].includes(c.statut)).length
   const revTotal = (encaiss || []).filter(r => r.type === 'encaissement').reduce((a,r) => a + r.montant, 0)
 
   document.getElementById('kpi-transit').innerHTML = `${transit} <span>colis</span>`
@@ -935,6 +937,7 @@ function renderColis(rows) {
             <option value="collecte">Collecté</option>
             <option value="transit">En transit</option>
             <option value="douane">En douane</option>
+            <option value="disponible">Disponible</option>
             <option value="livre">Livré</option>
           </select>
           ${c.je_clients?.whatsapp && c.numero ? `<button class="btn-primary" style="font-size:.62rem;padding:.2rem .5rem;background:var(--green);border-color:transparent;" onclick="envoyerSuivi('${c.numero}','${c.je_clients.whatsapp}','${(c.je_clients.nom||'').split(' ')[0]}')">📲 Suivi</button>` : ''}
@@ -1494,8 +1497,8 @@ async function updateDemandeStatut(id, statut) {
 // ============================================================
 // TRACKING
 // ============================================================
-const statutOrder = ['en_attente','collecte','transit','douane','livre']
-const statutLabels = { en_attente:'Demande reçue', collecte:'Colis collecté', transit:'En vol', douane:'Contrôle douanier', livre:'Livré' }
+const statutOrder = ['en_attente','collecte','transit','douane','disponible','livre']
+const statutLabels = { en_attente:'Demande reçue', collecte:'Colis collecté', transit:'En vol', douane:'Contrôle douanier', disponible:'Disponible', livre:'Livré' }
 
 async function searchTracking() {
   const q = document.getElementById('track-input').value.trim()

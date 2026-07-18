@@ -7,6 +7,66 @@
 
 ---
 
+## 2026-07-18 (session 107 — Google Workspace : messagerie pro @agenceattractor.com enfin activée)
+
+### Le blocage résolu
+- Chantier « adresse e-mail pro » (ouvert depuis mai, jamais terminé) débloqué. Cause racine : le super-administrateur Workspace est **macarthur@agenceattractor.com**, pas myattractor1@gmail.com (qui est le compte de facturation/récupération). Toutes les tentatives d'accès à admin.google.com échouaient car connexion avec le mauvais compte. Le mot de passe admin n'avait jamais été défini (lien d'activation de mai expiré) → récupéré via « mot de passe oublié ».
+- Découvert en fouillant la boîte : Workspace payé (Business Starter, Flexible Plan, 8,10 €/seat HT) depuis le 1er juin **sans jamais avoir été configuré** (domaine non validé, Gmail inactif) → ~2 mois payés pour rien, sur 2 licences (16,20 €/mois HT).
+
+### Config réalisée (via GoDaddy, DNS du domaine)
+- Domaine agenceattractor.com validé ; Gmail activé (MX Google) ; SPF (géré GoDaddy, inclut `_spf.google.com`) ; **DKIM 2048 bits** activé (`google._domainkey`, « Lancer l'authentification » cliqué) ; DMARC `p=none` présent. **Resend** (`send.agenceattractor.com`, envoi transactionnel Assists) préservé, non impacté.
+- Réduction de 2 à 1 licence : compte **hello@** (Customer Care, inutilisé) supprimé puis recréé en **alias gratuit** sur macarthur@. Coût ~9,72 €/mois TTC au lieu de 19,44 (~117 €/an économisés ; plan flexible = prorata, 2e seat stoppé le 18/07).
+- **hello@agenceattractor.com** = adresse principale (envoi par défaut dans Gmail + réponse depuis l'adresse destinataire). Connexion boîte/admin = macarthur@agenceattractor.com. Détails durables en mémoire `reference_google_workspace`.
+
+---
+
+## 2026-07-18 (session 106 — Nabycook : cahier des charges analysé, requalifié en site associatif 3 phases sur stack maison)
+
+### La vraie nature de Nabycook (correction importante)
+- Le CDC reçu (Google Doc partagé par nabycook@gmail.com, rédigé 16/07) révèle que Nabycook n'est PAS une simple consultante culinaire : c'est une association loi 1901 (ESS, dossier ESUS en cours) portée par Nabintou, foodpreneure à Paris. 3 pôles : ateliers de cuisine (grand public + RSE entreprises), traiteur événementiel, épicerie fine anti-gaspi (Le Point Doux, Bixane, Les Sels du Marché).
+- Palmarès : lauréate ADIE Paris 2025, certifiée HEC Stand Up 2025, 1er Prix de l'Assiette Romainvilloise 2026, incubée Baluchon + Empow'Her. Positionnement 80% Magicienne / 20% Soignante, tagline « La magie africaine dans votre quotidien parisien » (à valider).
+- Principe directeur du site : « une association qui vend, pas une boutique qui fait de l'associatif ». Hiérarchie imposée : 1) notoriété/légitimité institutionnelle (modèle dmpetitecuisine.fr), 2) financement/adhésions, 3) vente en soutien discret.
+
+### Décision de stack + découpage 3 phases
+- Décision de Mac Arthur : abandon de la stack WordPress/Elementor/Infomaniak recommandée dans le CDC, on part sur la stack maison (HTML sur-mesure + Cloudflare Pages + back-office Supabase gaté OTP pour l'autonomie de Nabintou). Toutes les briques externes conservées telles quelles : Jotform (3 formulaires), SumUp, HelloAsso, Brevo, Instagram.
+- Site découpé en 3 phases (doc PHASAGE-SITE.md) : Phase 1 socle institutionnel (Accueil, Univers, Association & Impact, Adhésions, Contact) prêt pour le forum des assos du 5 sept ; Phase 2 conversion (Ateliers + back-office calendrier, Traiteur, Épicerie) ; Phase 3 contenu vivant + autonomie (Journal de bord, CMS, RGPD, SEO, formation 1h).
+
+### Cadrage commercial + livrable envoyé
+- Tension relevée : le deal DMV (16/07) = 3 vidéos 350 € + site vitrine offert, mais le CDC (9 pages + back-office + formation) dépasse largement. Proposition écrite dans le CDC v2 : Phase 1 comprise dans le partenariat, Phases 2-3 facturées en complément. En attente de validation Nabintou.
+- Livrable : nouveau cahier des charges CDC-NABYCOOK-v2.html (charte Adinkra, imprimable) rédigé et ENVOYÉ par email à Nabintou. Dossier livrables/clients/nabycook/ (à côté du devis 0012 et de la facture d'acompte).
+- Charte Adinkra v2.0 : vert profond #0E3D14, vert anis #C3D94F, vert feuille #4C8B2F, terracotta #C8703D, or #D4A24C, crème #F7F2E7 (jamais blanc pur). Pacifico (titres) + Poppins (corps). Domaine nabycook.com réservé. Échéance mise en ligne 1er sept 2026.
+- En attente de Nabintou : validation périmètre + tagline + fourniture des assets (logo HD/vectoriel, photos, textes, codes d'intégration, accès domaine).
+
+---
+
+## 2026-07-17 (session 105 — Air Côte d'Ivoire : veille profonde 8 axes + deck de proposition + programme convoyeurs)
+
+> Préparation de la suite de la proposition Air CI pour le RDV du 22/07. Veille menée en 8 axes parallèles (6 sur Air CI + 2 sur le programme convoyeurs), toutes sourcées.
+
+### Le RDV et les interlocuteurs (changement acté)
+- **RDV confirmé le mercredi 22/07/2026**, bureaux Air CI Paris 8e. Plus le DG : c'est **M. Hervé Abou, Directeur Pays France** (Country Director, nommé sept. 2025, profil commercial ENAC, en copie du mail = hôte et décideur de zone) + un **Business Development Officer** (nom à récupérer par Mac Arthur).
+- **Hermance Alloh** (notée avant comme Direction Marketing Air CI) : la seule personne publiquement identifiable dirige **ALUR Conseil** (conseil marketing, parcours luxe). Possiblement consultante externe, PAS salariée. À ne jamais affirmer.
+
+### La veille (6 axes Air CI) et ce qu'elle change
+- Air CI est **challenger** sur Paris-Abidjan : ligne CDG ouverte 15/10/2025, quotidienne, A330-900neo à remplir, 8 vols/sem été 2026, face à Air France (**actionnaire 11 % + concurrent**, horaires coordonnés) et Corsair. **France = 2e marché (24,1 % du trafic 2024)**, diaspora cible officielle et assumée.
+- **Trou produit béant** : Ivoire Fret Express plafonne à 5 kg, Fret Cargo B2B sans digital. Le colis famille 5-30 kg self-service n'est capté par personne. **sMiles** liste déjà « envois de colis » comme récompense mais n'a aucun partenaire non-aérien ni app = porte entrouverte, effet premier entrant (Kenya Airways et RAM ont déjà des écosystèmes).
+- **Ligne rouge réglementaire** : faire porter du fret dans la franchise bagage d'un passager viole sûreté aérienne (IATA, interdit pour un tiers) + douane (perte franchise « effets personnels »). Le « parti pris expérience / voyageur qui porte le colis » a été **rétrogradé en phase 2**. Le deck mène par le **fret déclaré adossé au cargo**.
+
+### Le lien Grand Retour Diaspora / Esther Boua (signalé par Mac Arthur)
+- Air CI est **partenaire transport officiel du Grand Retour Diaspora** (voyage-mission diaspora à Abidjan 23-30 oct. 2026, promotrice **Esther Boua**, entrepreneure diaspora, 2 Comma Club Award). Preuve qu'ils activent déjà la diaspora. À utiliser en **accroche d'ouverture** du RDV (opération de juin à faire confirmer, non sourcée précisément).
+
+### Le programme convoyeurs (phase 2, quadrillé, gardé en interne)
+- Modèle légal de référence = **onboard courier (OBC)** : fret déclaré sous document de transport, colis inspecté/scellé par l'agence, contrat + KYC + background check, Air CI monétise l'excédent/cargo, convoyeur payé + miles sMiles (levier inédit, aucune compagnie ne le fait). Reformulation propre du deal de Mac Arthur : cabine (~12 kg) au convoyeur, soute = fret déclaré.
+- **Format 72h validé** par les horaires réels (CDG→ABJ 08h-13h30, ABJ→CDG 15h30-23h, un vol/jour : plancher 48h, 72h confortable).
+- **Filtre administratif éliminatoire** : socle = résidents France à titre stable + binationaux avec **passeport ivoirien à jour** ; l'Ivoirien basé en CI a besoin d'un visa de circulation ; le Français sans lien ivoirien à écarter (e-visa ~73€). **Piège** : la binationalité franco-ivoirienne n'est PAS « propre » (art. 48 + refus de passeports 2026). Profil idéal = « Le Convoyeur Ancré » ; viviers prioritaires = retraités bi-résidents + commerçants navette/GP.
+
+### Livrables (dossier `livrables/clients/air-cote-divoire/`)
+- **Deck de proposition** 12 pages print-ready, charte agence, **déployé sur `demo.agenceattractor.com/air-cote-divoire/proposition`** (Cloudflare Pages branche master, règle `_redirects` explicite avant le catch-all, vérifié HTTP 200). Volet convoyeurs gardé en interne (phase 2 discrète dans le deck).
+- `NOTE-ANTICIPATION-OBJECTIONS.md` (10 objections + réponses, ouverture Grand Retour, interlocuteurs) · `DOSSIER-VEILLE-AIR-CI.md` (veille sourcée 8 axes) · `PROGRAMME-CONVOYEURS.md` (grille profils, filtre admin, modèle légal, économie).
+- **À faire avant le 22** : nom du BDO + statut Hermance Alloh + confirmer e-visa CI multi-entrées. Données Air CI à obtenir en séance : grille cargo, capacité soute, taux de remplissage, ouverture API sMiles.
+
+---
+
 ## 2026-07-17 (session 104 — Parcours devis acté + éditeur d'ajustement + coach URSSAF)
 
 > Suite directe de la 103. On a d'abord solidifié le côté finances/coach, puis clarifié et outillé tout le parcours de devis.

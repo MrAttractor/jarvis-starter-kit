@@ -678,7 +678,7 @@ function waCollection(){
   waOpen('Bonjour MY NUGO 👋\n\nJe viens de découvrir votre Collection RENAISSANCE et je souhaite passer commande.\n\nQuels articles sont disponibles et quels sont vos modes de paiement ?\n\nMerci 🙏');
 }
 function waPopup(){
-  waOpen('Bonjour MY NUGO 👋\n\nJe souhaite participer au *Pop-Up Store MY NUGO à Paris* du 01 au 04 Juillet 2026 (19 Rue du Banquier, 75013).\n\nPouvez-vous me donner plus d\'informations (horaires, réservation) ?\n\nMerci 🙏');
+  waOpen('Bonjour MY NUGO 👋\n\nJe souhaite participer à l\'*Expo-Vente Défilé MY NUGO à Lyon* le 11 Juillet 2026 (150 Cours Gambetta, 69007 Lyon).\n\nPouvez-vous me donner plus d\'informations (horaires, réservation) ?\n\nMerci 🙏');
 }
 function waContact(){
   waOpen('Bonjour MY NUGO 👋\n\nJe souhaite contacter la fondatrice.\n\nPouvez-vous me donner ses disponibilités pour un échange ?\n\nMerci 🙏');
@@ -693,7 +693,7 @@ function waCGV(){
 function initCountdown() {
   var el = document.getElementById('popupCntd');
   if (!el) return;
-  var target = new Date('2026-07-01T00:00:00+02:00').getTime();
+  var target = new Date('2026-07-11T11:00:00+02:00').getTime();
 
   function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
@@ -704,7 +704,7 @@ function initCountdown() {
       el.innerHTML = '';
       var done = document.createElement('div');
       done.className = 'popup-cntd-done';
-      done.textContent = 'En cours · 01 — 04 Juillet';
+      done.textContent = 'En cours · 11 Juillet · Lyon';
       el.appendChild(done);
       return;
     }
@@ -825,34 +825,38 @@ document.addEventListener('DOMContentLoaded', function(){
     <a class="soc-link" href="https://www.tiktok.com/@nugobyekd" target="_blank">TikTok @nugobyekd</a>
   </div>
 
-  <!-- POP-UP STORE PARIS -->
+  <!-- EXPO-VENTE DÉFILÉ LYON -->
   <div class="popup-event">
     <div class="popup-ev-inner">
       <div class="popup-affiche">
-        <img src="images/POPUP_AFFICHE.jpg" alt="MY NUGO Pop-Up Paris — 01 au 04 Juillet 2026"/>
+        <img src="images/EVENT_LYON_AFFICHE.jpg" alt="MY NUGO Expo-Vente Défilé Lyon — 11 Juillet 2026"/>
       </div>
       <div class="popup-ev-content">
-        <p class="popup-ev-eye">Événement éphémère · Paris</p>
-        <h2 class="popup-ev-title">Pop-Up<br>Paris</h2>
-        <p class="popup-ev-sub">MY NUGO DÉBARQUE DANS LA CAPITALE</p>
+        <p class="popup-ev-eye">Événement éphémère · Lyon</p>
+        <h2 class="popup-ev-title">Expo-Vente<br>Défilé Lyon</h2>
+        <p class="popup-ev-sub">MY NUGO EN TOURNÉE À LYON</p>
         <div id="popupCntd" class="popup-cntd"></div>
         <div class="popup-ev-details">
           <div class="popup-ev-row">
-            <span class="popup-ev-label">Dates</span>
-            <span class="popup-ev-val"><b>01 — 04 Juillet 2026</b></span>
+            <span class="popup-ev-label">Date</span>
+            <span class="popup-ev-val"><b>11 Juillet 2026</b></span>
           </div>
           <div class="popup-ev-row">
             <span class="popup-ev-label">Horaires</span>
-            <span class="popup-ev-val"><b>10H – 19H</b></span>
+            <span class="popup-ev-val"><b>11H – 21H</b></span>
           </div>
           <div class="popup-ev-row">
             <span class="popup-ev-label">Lieu</span>
-            <span class="popup-ev-val">19 Rue du Banquier<br>75013 Paris</span>
+            <span class="popup-ev-val">150 Cours Gambetta<br>69007 Lyon</span>
+          </div>
+          <div class="popup-ev-row">
+            <span class="popup-ev-label">Partenaire</span>
+            <span class="popup-ev-val">Carrefour des Cultures Africaines</span>
           </div>
         </div>
         <div class="popup-ev-video">
-          <video autoplay muted loop playsinline>
-            <source src="images/popup-video.mp4" type="video/mp4"/>
+          <video controls playsinline poster="images/EVENT_LYON_TEASER_POSTER.jpg">
+            <source src="images/EVENT_LYON_TEASER.mp4" type="video/mp4"/>
           </video>
         </div>
         <button class="popup-ev-cta" onclick="waPopup()">Je participe →</button>

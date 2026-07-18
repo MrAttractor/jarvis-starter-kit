@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cahier des charges — Site nabycook.com (v2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --vert-profond:#0E3D14;
+    --vert-anis:#C3D94F;
+    --vert-feuille:#4C8B2F;
+    --terracotta:#C8703D;
+    --or:#D4A24C;
+    --creme:#F7F2E7;
+    --texte:#22301f;
+    --muted:#5c6b54;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    font-family:'Poppins',system-ui,-apple-system,sans-serif;
+    color:var(--texte);
+    background:var(--creme);
+    line-height:1.6;
+    font-weight:300;
+    overflow-x:hidden;
+  }
+  .page{max-width:940px;margin:0 auto;padding:0 24px 80px;}
+  h1,h2,h3,.script{font-family:'Pacifico',cursive;font-weight:400;}
+
+  /* ---- Masthead ---- */
+  .masthead{
+    background:var(--vert-profond);
+    color:var(--creme);
+    border-radius:0 0 32px 32px;
+    padding:56px 40px 48px;
+    margin:0 -24px 48px;
+    position:relative;
+    overflow:hidden;
+  }
+  .masthead::after{
+    content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;
+    background:radial-gradient(circle,var(--vert-feuille) 0%,transparent 70%);
+    opacity:.35;
+  }
+  .brand{
+    font-family:'Pacifico',cursive;font-size:clamp(38px,7vw,58px);
+    color:var(--vert-anis);line-height:1;margin-bottom:14px;
+  }
+  .masthead .kicker{
+    text-transform:uppercase;letter-spacing:.22em;font-size:12px;font-weight:600;
+    color:var(--or);margin-bottom:20px;
+  }
+  .masthead h1{
+    font-family:'Poppins',sans-serif;font-weight:600;font-size:clamp(20px,3.4vw,26px);
+    color:var(--creme);max-width:640px;position:relative;z-index:1;
+  }
+  .masthead .meta{
+    margin-top:24px;font-size:13px;color:rgba(247,242,231,.75);
+    display:flex;flex-wrap:wrap;gap:6px 22px;position:relative;z-index:1;
+  }
+
+  /* ---- Sections ---- */
+  section{margin-bottom:40px;}
+  .surtitre{
+    text-transform:uppercase;letter-spacing:.18em;font-size:11px;font-weight:700;
+    color:var(--terracotta);margin-bottom:8px;
+  }
+  h2{
+    font-family:'Poppins',sans-serif;font-weight:700;font-size:23px;
+    color:var(--vert-profond);margin-bottom:6px;line-height:1.25;
+  }
+  h2 .accent{color:var(--vert-feuille);}
+  .lead{color:var(--muted);max-width:720px;margin-bottom:20px;}
+  p{margin-bottom:12px;}
+  strong{font-weight:600;color:var(--vert-profond);}
+
+  /* ---- Principe encadré ---- */
+  .principe{
+    background:var(--vert-profond);color:var(--creme);border-radius:18px;
+    padding:26px 30px;margin:8px 0 4px;position:relative;
+  }
+  .principe .q{
+    font-family:'Pacifico',cursive;font-size:22px;color:var(--vert-anis);
+    line-height:1.4;
+  }
+
+  /* ---- Tableau stack ---- */
+  .tbl{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px;background:#fff;border-radius:14px;overflow:hidden;}
+  .tbl th{
+    background:var(--vert-feuille);color:#fff;text-align:left;padding:12px 16px;font-weight:600;font-size:13px;
+  }
+  .tbl td{padding:12px 16px;border-top:1px solid #ece6d6;vertical-align:top;}
+  .tbl tr:nth-child(even) td{background:#faf7ee;}
+  .tbl .keep{color:var(--vert-feuille);font-weight:600;}
+
+  /* ---- Phases ---- */
+  .phase{
+    background:#fff;border-radius:20px;padding:30px 32px;margin-bottom:22px;
+    border-left:8px solid var(--vert-anis);box-shadow:0 4px 18px rgba(14,61,20,.06);
+  }
+  .phase.p1{border-left-color:var(--vert-feuille);}
+  .phase.p2{border-left-color:var(--or);}
+  .phase.p3{border-left-color:var(--terracotta);}
+  .phase-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px;}
+  .phase-num{
+    font-family:'Pacifico',cursive;font-size:30px;color:var(--vert-feuille);line-height:1;
+  }
+  .phase.p2 .phase-num{color:var(--or);}
+  .phase.p3 .phase-num{color:var(--terracotta);}
+  .phase h3{
+    font-family:'Poppins',sans-serif;font-weight:700;font-size:19px;color:var(--vert-profond);
+  }
+  .phase .tag{
+    display:inline-block;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;
+    background:var(--creme);color:var(--vert-feuille);letter-spacing:.03em;
+  }
+  .phase .goal{color:var(--muted);margin:10px 0 16px;font-size:14.5px;}
+  .plist{list-style:none;}
+  .plist li{position:relative;padding-left:26px;margin-bottom:9px;font-size:14.5px;}
+  .plist li::before{
+    content:"";position:absolute;left:0;top:9px;width:11px;height:11px;border-radius:50%;
+    background:var(--vert-anis);border:2px solid var(--vert-feuille);
+  }
+  .plist li strong{color:var(--vert-profond);}
+  .tech-note{
+    margin-top:16px;font-size:13px;color:var(--muted);background:var(--creme);
+    border-radius:12px;padding:12px 16px;
+  }
+  .tech-note b{color:var(--vert-feuille);}
+
+  /* ---- Listes fournir / modalités ---- */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .card{background:#fff;border-radius:16px;padding:22px 24px;box-shadow:0 3px 14px rgba(14,61,20,.05);}
+  .card h4{font-family:'Poppins',sans-serif;font-weight:600;font-size:15px;color:var(--vert-profond);margin-bottom:12px;}
+  .card ul{list-style:none;}
+  .card li{position:relative;padding-left:20px;margin-bottom:8px;font-size:14px;}
+  .card li::before{content:"›";position:absolute;left:0;color:var(--terracotta);font-weight:700;}
+
+  .modalites{background:var(--vert-profond);color:var(--creme);border-radius:20px;padding:30px 34px;}
+  .modalites h2{color:var(--vert-anis);}
+  .modalites .surtitre{color:var(--or);}
+  .modalites .line{
+    display:flex;gap:16px;padding:14px 0;border-bottom:1px solid rgba(247,242,231,.15);align-items:baseline;
+  }
+  .modalites .line:last-child{border-bottom:none;}
+  .modalites .line .ph{font-family:'Pacifico',cursive;color:var(--vert-anis);font-size:20px;min-width:80px;}
+  .modalites .line .d{font-size:14.5px;color:rgba(247,242,231,.9);}
+  .modalites .line .d b{color:#fff;}
+
+  .footer{
+    text-align:center;margin-top:48px;padding-top:24px;border-top:2px solid var(--vert-anis);
+    font-size:13px;color:var(--muted);
+  }
+  .footer .script{color:var(--vert-feuille);font-size:24px;display:block;margin-bottom:6px;}
+
+  @media (max-width:620px){
+    .grid2{grid-template-columns:1fr;}
+    .masthead{padding:40px 24px 36px;margin:0 -24px 36px;}
+    .phase{padding:24px 22px;}
+  }
+
+  /* ---- Impression ---- */
+  @media print{
+    body{background:#fff;}
+    .page{max-width:100%;padding:0;}
+    .masthead{margin:0 0 30px;border-radius:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .phase,.card,.principe,.modalites,.tbl,.tbl th,.masthead,.phase-num,.principe .q{
+      -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    }
+    section,.phase,.card,.principe,.modalites,.tbl,table,tr{break-inside:avoid;overflow:visible;}
+    a{color:inherit;text-decoration:none;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <div class="kicker">Cahier des charges · Version 2</div>
+    <div class="brand">NabyCook</div>
+    <h1>Site nabycook.com — conçu et livré par l'agence Mr Attractor, en 3 phases.</h1>
+    <div class="meta">
+      <span>Association Nabycook · Paris</span>
+      <span>nabycook@gmail.com · +33 7 46 45 71 48</span>
+      <span>Rédigé le 18 juillet 2026</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="surtitre">Le projet, en une phrase</div>
+    <h2>Une <span class="accent">association qui vend</span>, pas une boutique qui fait de l'associatif.</h2>
+    <p class="lead">Nabycook est une association loi 1901 (ESS, dossier ESUS en cours) portée par Nabintou : ateliers de cuisine, traiteur événementiel et épicerie fine anti-gaspi. Le site doit d'abord asseoir la légitimité et l'impact, ensuite porter le financement, et enfin vendre — dans cet ordre, comme le modèle dmpetitecuisine.fr.</p>
+    <div class="principe">
+      <div class="q">« La magie africaine dans votre quotidien parisien. »</div>
+      <p style="margin:10px 0 0;font-size:13px;color:rgba(247,242,231,.7);">Tagline à valider ensemble · Positionnement : 80&nbsp;% Magicienne / 20&nbsp;% Soignante.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="surtitre">Le choix technique</div>
+    <h2>Un site <span class="accent">sur-mesure</span>, tes outils actuels conservés.</h2>
+    <p class="lead">Plutôt que WordPress, le site est développé sur-mesure (plus rapide, plus fidèle à ta charte, sans dette technique). Tous tes outils déjà opérationnels sont gardés tels quels : tu ne changes rien à ton fonctionnement. Ton autonomie pour éditer ateliers, articles et chiffres passe par un petit espace d'administration privé, simple, formé en 1h.</p>
+    <table class="tbl">
+      <thead><tr><th>Besoin</th><th>Solution</th></tr></thead>
+      <tbody>
+        <tr><td>Site &amp; pages</td><td>Développement sur-mesure à la charte Adinkra, hébergé sur infrastructure rapide (Cloudflare)</td></tr>
+        <tr><td>Éditer seule ateliers, articles, chiffres d'impact</td><td>Espace d'administration privé Nabycook (accès par code envoyé par email)</td></tr>
+        <tr><td>Réservations, devis traiteur, partenariats</td><td class="keep">Tes 3 formulaires Jotform, intégrés aux couleurs du site</td></tr>
+        <tr><td>Boutique épicerie</td><td class="keep">Ta boutique SumUp (nabycook.sumupstore.com)</td></tr>
+        <tr><td>Adhésions &amp; dons</td><td class="keep">Tes boutons HelloAsso + QR codes</td></tr>
+        <tr><td>Newsletter &amp; emailing</td><td class="keep">Ton compte Brevo, déjà configuré</td></tr>
+        <tr><td>Preuve sociale</td><td class="keep">Ton flux Instagram, intégré à l'accueil</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="surtitre">Le plan de livraison</div>
+    <h2>Le site construit en <span class="accent">3 phases</span>.</h2>
+    <p class="lead">Le site se déploie par étapes, pour que l'essentiel soit en ligne et présentable au forum des associations du 5 septembre, puis que le reste s'ajoute sans bloquer le lancement.</p>
+
+    <div class="phase p1">
+      <div class="phase-head">
+        <span class="phase-num">1</span>
+        <h3>Le socle institutionnel</h3>
+        <span class="tag">Prêt pour le forum · 1er septembre</span>
+      </div>
+      <p class="goal">Ce qui permet à Nabycook d'exister et d'être crédible : légitimité, impact, financement. Le cœur de la mission.</p>
+      <ul class="plist">
+        <li><strong>Accueil</strong> — hero immersif + tagline, 3 accès rapides, bandeau partenaires « Ils nous font confiance », flux Instagram</li>
+        <li><strong>L'Univers Nabycook</strong> — l'histoire de Nabintou, l'archétype Magicienne / Soignante, la mission anti-gaspi et l'héritage ouest-africain</li>
+        <li><strong>L'Association &amp; l'Impact</strong> — statut Loi 1901 / ESS, chiffres d'impact, logos partenaires, revue de presse</li>
+        <li><strong>Adhésions</strong> — Nabycook'r (50&nbsp;€/an) et La Brigade du cœur (prix libre dès 20&nbsp;€/an), boutons + QR HelloAsso, témoignages</li>
+        <li><strong>Contact &amp; Partenariats</strong> — formulaire de contact + formulaire « devenir partenaire magasin »</li>
+      </ul>
+      <div class="tech-note">Fondation posée dès cette phase : charte Adinkra complète, logo HD, mobile-first, HTTPS, mise en ligne sur nabycook.com. Les chiffres d'impact et partenaires sont déjà modifiables par toi.</div>
+    </div>
+
+    <div class="phase p2">
+      <div class="phase-head">
+        <span class="phase-num">2</span>
+        <h3>La conversion</h3>
+        <span class="tag">Le moteur commercial</span>
+      </div>
+      <p class="goal">Ce qui fait vendre, en soutien discret à la mission : ateliers, traiteur, épicerie.</p>
+      <ul class="plist">
+        <li><strong>Les Ateliers</strong> — calendrier des prochains ateliers que tu mets à jour toi-même, fiche détaillée (thème, durée, tarif, lieu, places restantes), réservation Jotform, volet Privatisation / Team building entreprises</li>
+        <li><strong>Traiteur &amp; Événements</strong> — présentation de l'offre + formulaire de devis Jotform</li>
+        <li><strong>L'Épicerie Nabycook</strong> — Le Point Doux (Box Pause 30&nbsp;€, Équipe 55&nbsp;€, Réunion 80&nbsp;€), Bixane, Les Sels du Marché, présentés en édition limitée / soutien à la mission, liens vers ta boutique SumUp</li>
+      </ul>
+      <div class="tech-note">C'est ici que <b>ton espace d'administration</b> prend tout son sens : tu ajoutes et retires tes ateliers en autonomie, sans nous solliciter.</div>
+    </div>
+
+    <div class="phase p3">
+      <div class="phase-head">
+        <span class="phase-num">3</span>
+        <h3>Le contenu vivant &amp; l'autonomie</h3>
+        <span class="tag">Ce qui fait durer</span>
+      </div>
+      <p class="goal">Ce qui fait vivre le site dans le temps et te rend totalement autonome.</p>
+      <ul class="plist">
+        <li><strong>Le Journal de Bord</strong> — blog anti-gaspi, recettes de saison, coulisses, fiches recettes pas-à-pas, pensé pour le référencement</li>
+        <li><strong>Édition en autonomie</strong> — ateliers, articles, chiffres et partenaires modifiables depuis ton espace privé</li>
+        <li><strong>Conformité RGPD</strong> — bandeau cookies, mentions légales, politique de confidentialité</li>
+        <li><strong>Référencement &amp; performance</strong> — structure SEO propre, images optimisées, chargement rapide (&lt; 2,5&nbsp;s)</li>
+        <li><strong>Transmission</strong> — formation d'1h + guide écrit, remise des accès</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="grid2">
+      <div class="card">
+        <h4>Ce dont nous avons besoin de ta part</h4>
+        <ul>
+          <li>Logo NabyCook en haute résolution (fichier vectoriel si possible)</li>
+          <li>Photos / vidéos des ateliers et produits</li>
+          <li>Textes finaux : ton histoire, chiffres d'impact précis, liste des partenaires à afficher</li>
+          <li>Codes d'intégration : Jotform, HelloAsso, widget Instagram, compte Brevo</li>
+          <li>Accès au nom de domaine nabycook.com</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Échéance</h4>
+        <ul>
+          <li><strong>Mise en ligne visée : 1er septembre 2026</strong></li>
+          <li>Site opérationnel pour le forum des associations du 5 septembre</li>
+          <li>Nom de domaine nabycook.com déjà réservé</li>
+          <li>Une maquette validée avant intégration, un environnement de test avant mise en ligne</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="modalites">
+    <div class="surtitre">Périmètre &amp; modalités</div>
+    <h2>Ce qui est compris, ce qui vient en complément.</h2>
+    <div class="line">
+      <span class="ph">Phase 1</span>
+      <span class="d"><b>Comprise dans notre partenariat</b> (le site vitrine associé aux 3 vidéos promotionnelles). Le socle institutionnel présentable au forum.</span>
+    </div>
+    <div class="line">
+      <span class="ph">Phases 2&nbsp;&amp;&nbsp;3</span>
+      <span class="d"><b>Proposées en complément</b>, chiffrées séparément : le moteur commercial (ateliers, traiteur, épicerie) et le contenu vivant + la formation. Nous en discutons ensemble.</span>
+    </div>
+  </section>
+
+  <div class="footer">
+    <span class="script">Mr Attractor</span>
+    Agence Attractor · webmaster du projet Nabycook · nabycook.com
+  </div>
+
+</div>
+</body>
+</html>

@@ -2,694 +2,594 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Emmanuela — Media Buying Support</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML Ads — Comptes agence Meta certifiés</title>
+<meta name="description" content="Accédez à des comptes publicitaires agence Meta certifiés et légaux. Fini les comptes bloqués. Remplacement inclus, support dédié. Offre d'appel pour l'Afrique.">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg-chat:#EBE5DC;
-  --bubble-agent:#fff;
-  --bubble-user:#D4E8C2;
-  --hdr:#1C1E2D;
-  --green:#53BD6B;
-  --text:#111;
+  --meta:#0866FF;
+  --meta-d:#0A54C9;
+  --ink:#0A1633;
+  --slate:#5B6B8C;
+  --line:#E4E9F2;
+  --bg:#F6F8FC;
+  --card:#FFFFFF;
+  --ok:#16A34A;
+  --grad:linear-gradient(135deg,#0866FF 0%,#7C3AED 60%,#EC4899 100%);
+  --shadow:0 10px 40px rgba(10,22,51,.08);
 }
-html,body{
-  height:100%;
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;
-  background:#111;
-  display:flex;align-items:center;justify-content:center;
-  overflow:hidden;
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{
+  font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink);background:var(--bg);line-height:1.6;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;position:relative;
 }
-.scene{display:flex;flex-direction:column;align-items:center;gap:14px}
-.scene-tag{font-size:10px;color:rgba(255,255,255,.22);letter-spacing:2px;text-transform:uppercase}
+img{max-width:100%;display:block}
+.wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 20px}
+h1,h2,h3{line-height:1.15;letter-spacing:-.02em;font-weight:800}
+h1{font-size:clamp(28px,6vw,52px)}
+h2{font-size:clamp(24px,4.5vw,38px)}
+.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:800;color:var(--meta)}
+.muted{color:var(--slate)}
+.center{text-align:center}
+section{padding:64px 0}
+@media(max-width:640px){section{padding:44px 0}}
 
-/* PHONE */
-.phone{
-  width:375px;height:812px;
-  background:var(--bg-chat);
-  border-radius:44px;
-  box-shadow:0 0 0 10px #1e1e2e,0 0 0 12px #2e2e3e,0 40px 100px rgba(0,0,0,.7);
-  overflow:hidden;display:flex;flex-direction:column;position:relative;
-}
-.phone::before{
-  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
-  width:112px;height:26px;background:#1e1e2e;border-radius:0 0 16px 16px;z-index:20;
-}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:52px;padding:0 26px;border-radius:14px;font-size:16px;font-weight:700;
+  text-decoration:none;cursor:pointer;border:none;transition:transform .12s,box-shadow .2s;font-family:inherit}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--meta);color:#fff;box-shadow:0 8px 24px rgba(8,102,255,.32)}
+.btn-primary:hover{box-shadow:0 12px 32px rgba(8,102,255,.42)}
+.btn-ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
 
-/* HEADER */
-.hdr{
-  background:var(--hdr);padding:36px 14px 12px;
-  display:flex;align-items:center;gap:10px;flex-shrink:0;z-index:10;
-}
-.hdr-back{color:rgba(255,255,255,.6);cursor:pointer;padding:4px}
-.hdr-av{
-  width:42px;height:42px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(135deg,#D4845A,#B8522A);
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;font-weight:700;color:#fff;
-  font-family:Georgia,serif;
-  box-shadow:0 2px 8px rgba(0,0,0,.35);
-  position:relative;overflow:hidden;
-}
-.hdr-av::after{
-  content:'👤';position:absolute;bottom:-4px;font-size:26px;
-  opacity:0.18;
-}
-.hdr-av span{position:relative;z-index:1}
-.hdr-info{flex:1}
-.hdr-name{color:#fff;font-size:15px;font-weight:600;line-height:1.2}
-.hdr-status{color:rgba(255,255,255,.5);font-size:11px;margin-top:2px;min-height:14px;transition:color .3s}
-.hdr-status.writing{color:#53BD6B}
-.hdr-icons{display:flex;gap:18px}
+/* header */
+header{position:sticky;top:0;z-index:40;background:rgba(246,248,252,.85);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:66px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px}
+.brand .dot{width:34px;height:34px;border-radius:10px;background:var(--grad);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0}
+.nav .btn{min-height:44px;padding:0 18px;font-size:14px}
+.nav-support{font-size:12.5px;color:var(--slate);font-weight:600;max-width:330px;text-align:right;line-height:1.35}
+@media(max-width:720px){.nav-support{display:none}}
+@media(max-width:560px){.nav-cta-text{display:none}.nav .btn{padding:0 14px}.brand{font-size:15px}}
 
-/* CHAT */
-.chat{
-  flex:1;overflow-y:auto;padding:10px 10px 6px;
-  display:flex;flex-direction:column;gap:2px;
-  background:var(--bg-chat)
-    url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-opacity='.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
-  scroll-behavior:smooth;
-}
-.chat::-webkit-scrollbar{display:none}
-.date-chip{text-align:center;margin:8px 0 12px}
-.date-chip span{background:rgba(0,0,0,.12);color:rgba(0,0,0,.5);font-size:11px;padding:3px 12px;border-radius:8px}
+/* hero */
+.hero{padding-top:56px;position:relative}
+.hero::before{content:'';position:absolute;top:-120px;right:-160px;width:520px;height:520px;
+  background:radial-gradient(circle,rgba(124,58,237,.14),transparent 65%);z-index:0}
+.hero .wrap{position:relative;z-index:1}
+.badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);
+  border-radius:100px;padding:7px 14px;font-size:13px;font-weight:700;color:var(--ink);box-shadow:var(--shadow)}
+.badge .m{width:18px;height:18px;border-radius:5px;background:var(--grad);flex-shrink:0}
+.hero h1{margin:20px 0 16px;max-width:16ch}
+.hero .lead{font-size:clamp(16px,2.4vw,20px);color:var(--slate);max-width:52ch;margin-bottom:28px}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px}
+@media(max-width:520px){.hero-cta{flex-direction:column;align-items:stretch}.hero-cta .btn{width:100%}}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+@media(max-width:860px){.hero-grid{grid-template-columns:1fr;gap:26px}}
+.badge-alert{border-color:#FBD5D5}
+.badge .lock{font-size:14px}
+.hero-ask{display:flex;align-items:center;gap:8px;margin-top:26px;background:#fff;
+  border:2px solid var(--meta);border-radius:16px;padding:6px 6px 6px 16px;
+  box-shadow:0 12px 34px rgba(8,102,255,.20)}
+.hero-ask input{flex:1;min-width:0;border:none;outline:none;background:transparent;
+  font-size:16px;font-family:inherit;color:var(--ink);padding:8px 0}
+.hero-ask input::placeholder{color:var(--slate)}
+.hero-ask button{flex-shrink:0;width:48px;height:48px;border-radius:12px;background:var(--meta);
+  border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s}
+.hero-ask button:active{transform:scale(.93)}
+.hero-ask-hint{font-size:13px;color:var(--slate);margin-top:12px}
+.hero-ask-hint a{color:var(--meta);font-weight:700}
+.hero-visual img{width:100%;height:auto;border-radius:18px;border:1px solid var(--line);box-shadow:0 24px 60px rgba(10,22,51,.20)}
+@media(max-width:860px){.hero-visual{max-width:440px;margin:4px auto 0}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px;max-width:640px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 16px}
+.stat b{display:block;font-size:clamp(18px,3.5vw,26px);color:var(--meta);font-weight:800}
+.stat span{font-size:13px;color:var(--slate);font-weight:600}
+@media(max-width:520px){.stats{grid-template-columns:1fr 1fr;gap:10px}.stat:last-child{grid-column:1/-1}}
 
-/* BUBBLES */
-.mrow{display:flex;margin-bottom:2px}
-.mrow.ag{justify-content:flex-start;padding-left:2px}
-.mrow.us{justify-content:flex-end;padding-right:2px}
-.bubble{
-  max-width:80%;padding:7px 10px 5px;border-radius:10px;
-  font-size:13.5px;line-height:1.55;animation:pop .2s ease;
-  word-break:break-word;
-}
-@keyframes pop{from{opacity:0;transform:translateY(4px) scale(.97)}to{opacity:1;transform:none}}
-.bubble.ag{background:var(--bubble-agent);color:var(--text);border-top-left-radius:2px;box-shadow:0 1px 1px rgba(0,0,0,.08)}
-.bubble.us{background:var(--bubble-user);color:#0a1a0a;border-top-right-radius:2px}
-.btime{font-size:10px;color:rgba(0,0,0,.32);text-align:right;margin-top:2px;display:flex;align-items:center;justify-content:flex-end;gap:2px}
-.btime.us{color:rgba(0,40,0,.38)}
-.checks{color:#53BD6B}
+/* pain */
+.pain{background:var(--ink);color:#fff}
+.pain h2{color:#fff}
+.pain-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}
+.pcard{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:22px}
+.pcard h3{font-size:17px;margin-bottom:6px}
+.pcard p{font-size:14px;color:#9FB0D0}
+@media(max-width:640px){.pain-grid{grid-template-columns:1fr}}
 
-/* TYPING */
-.trow{display:flex;justify-content:flex-start;padding-left:2px;margin-bottom:2px}
-.tbbl{
-  background:var(--bubble-agent);padding:10px 14px;border-radius:10px;border-top-left-radius:2px;
-  display:flex;gap:4px;align-items:center;box-shadow:0 1px 1px rgba(0,0,0,.08);animation:pop .18s ease;
-}
-.tdot{width:7px;height:7px;background:#aaa;border-radius:50%;animation:td 1.2s infinite}
-.tdot:nth-child(2){animation-delay:.15s}
-.tdot:nth-child(3){animation-delay:.30s}
-@keyframes td{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-5px);opacity:1}}
+/* generic cards */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:36px}
+@media(max-width:820px){.grid3{grid-template-columns:1fr}}
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:18px;margin-top:36px}
+.card .ic svg{width:24px;height:24px;stroke:var(--meta);fill:none}
+.feat .ic svg{width:20px;height:20px;stroke:var(--meta);fill:none}
+.badge .lock svg{width:15px;height:15px;stroke:var(--ink);fill:none;display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:var(--shadow)}
+.card .ic{width:46px;height:46px;border-radius:12px;background:#EEF3FF;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:22px}
+.card h3{font-size:18px;margin-bottom:8px}
+.card p{font-size:15px;color:var(--slate)}
 
-/* SUGGESTIONS */
-.suggs{
-  padding:6px 10px 8px;display:flex;flex-wrap:wrap;gap:6px;
-  background:#F0EBE3;border-top:1px solid rgba(0,0,0,.06);
-  transition:max-height .4s,opacity .4s,padding .4s;
-  overflow:hidden;max-height:80px;
-}
-.suggs.hidden{max-height:0;opacity:0;padding:0}
-.spill{
-  background:#fff;color:rgba(0,0,0,.6);font-size:11.5px;
-  padding:5px 11px;border-radius:14px;cursor:pointer;
-  border:1px solid rgba(0,0,0,.1);transition:all .15s;font-family:inherit;
-}
-.spill:hover{background:#53BD6B;color:#fff;border-color:transparent}
+/* compare */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:36px}
+.col{border-radius:18px;padding:26px;border:1px solid var(--line)}
+.col.bad{background:#FFF5F5;border-color:#FADADA}
+.col.good{background:#F1F8F2;border-color:#CDE9D2}
+.col h3{font-size:18px;margin-bottom:14px}
+.col ul{list-style:none}
+.col li{font-size:14.5px;padding:7px 0 7px 28px;position:relative;color:var(--ink)}
+.col.bad li::before{content:'✕';position:absolute;left:0;color:#DC2626;font-weight:800}
+.col.good li::before{content:'✓';position:absolute;left:0;color:var(--ok);font-weight:800}
+@media(max-width:640px){.compare{grid-template-columns:1fr}}
 
-/* INPUT */
-.input-wrap{
-  background:#F0EBE3;padding:8px 10px;
-  display:flex;align-items:flex-end;gap:8px;flex-shrink:0;
-  border-top:1px solid rgba(0,0,0,.07);
-}
-.ibox{
-  flex:1;background:#fff;border:none;outline:none;
-  border-radius:22px;padding:9px 14px;font-size:13.5px;font-family:inherit;
-  color:var(--text);resize:none;max-height:100px;line-height:1.4;
-  box-shadow:0 1px 3px rgba(0,0,0,.1);
-}
-.ibox::placeholder{color:rgba(0,0,0,.33)}
-.sbtn{
-  width:38px;height:38px;background:var(--green);border:none;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
-  transition:background .15s,transform .1s;
-}
-.sbtn:hover{background:#46A85A}
-.sbtn:active{transform:scale(.93)}
-.sbtn svg{margin-left:1px}
+/* proof */
+.proof{background:var(--ink);color:#fff}
+.proof h2{color:#fff}
+.proof-badge{display:inline-flex;align-items:center;gap:10px;background:#fff;border-radius:12px;padding:10px 16px;margin-top:20px}
+.proof-badge img{height:26px;width:auto;display:block}
+.proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:36px}
+@media(max-width:820px){.proof-grid{grid-template-columns:1fr}}
+.proof-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px}
+.proof-card img{width:100%;height:auto;border-radius:10px;display:block;border:1px solid rgba(255,255,255,.08)}
+.proof-card p{font-size:14px;color:#9FB0D0;margin-top:12px}
+.proof-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:30px}
+.proof-tag{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:100px;padding:8px 16px;font-size:13px;font-weight:600;color:#fff}
 
-/* MOBILE */
-@media(max-width:500px){
-  html,body{align-items:flex-start;background:var(--bg-chat)}
-  .phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}
-  .phone::before{display:none}
-  .hdr{padding-top:50px}
-  .scene-tag{display:none}
-  .scene{gap:0}
-}
-@media(max-height:830px) and (min-width:500px){
-  .phone{height:calc(100dvh - 48px)}
-}
+/* offer */
+.offer{background:var(--grad);color:#fff}
+.offer .wrap{max-width:720px}
+.ocard{background:#fff;color:var(--ink);border-radius:24px;padding:40px 28px;box-shadow:0 30px 80px rgba(10,22,51,.3);text-align:center}
+.anchor{color:var(--slate);font-size:15px}
+.anchor s{color:#B91C1C;text-decoration-thickness:2px}
+.price{margin:14px 0 4px;display:flex;align-items:baseline;justify-content:center;gap:8px;flex-wrap:wrap}
+.price .cur{font-size:clamp(34px,8vw,54px);font-weight:800;color:var(--ink);letter-spacing:-.03em}
+.price .big{font-size:20px;font-weight:800;color:var(--meta)}
+.price .per{font-size:16px;color:var(--slate);font-weight:600}
+.setup{display:inline-block;background:#EEF3FF;color:var(--meta-d);font-weight:700;
+  font-size:14px;padding:8px 16px;border-radius:100px;margin:8px 0 22px}
+.includes{text-align:left;max-width:420px;margin:0 auto 26px}
+.includes li{list-style:none;font-size:15px;padding:8px 0 8px 30px;position:relative}
+.includes li::before{content:'✓';position:absolute;left:0;top:7px;color:var(--ok);font-weight:800;font-size:17px}
+.limiter{font-size:13px;color:var(--slate);margin-top:18px}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:36px}
+.step .n{width:40px;height:40px;border-radius:12px;background:var(--meta);color:#fff;
+  font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.step h3{font-size:16px;margin-bottom:6px}
+.step p{font-size:14px;color:var(--slate)}
+@media(max-width:820px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:440px){.steps{grid-template-columns:1fr}}
+
+/* faq */
+.faq details{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  margin-bottom:12px;overflow:hidden}
+.faq summary{padding:18px 22px;font-weight:700;font-size:16px;cursor:pointer;list-style:none;
+  display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';font-size:24px;color:var(--meta);font-weight:400;flex-shrink:0}
+.faq details[open] summary::after{content:'–'}
+.faq details p{padding:0 22px 20px;color:var(--slate);font-size:15px}
+
+/* assistant highlight */
+.assistant-sec{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.assistant-flex{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+@media(max-width:820px){.assistant-flex{grid-template-columns:1fr;gap:28px}}
+.assistant-sec h2{margin:14px 0}
+.assistant-sec .feat{display:flex;gap:12px;margin-top:16px}
+.assistant-sec .feat .ic{width:38px;height:38px;border-radius:10px;background:#EEF3FF;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:18px}
+.assistant-sec .feat b{display:block;font-size:15px}
+.assistant-sec .feat span{font-size:14px;color:var(--slate)}
+.mockchat{background:var(--bg);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow)}
+.mockchat .mc-hd{display:flex;align-items:center;gap:10px;padding:4px 6px 14px;border-bottom:1px solid var(--line)}
+.mockchat .mc-av{width:40px;height:40px;border-radius:50%;background:var(--grad);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+.mockchat .mc-hd b{font-size:15px}
+.mockchat .mc-hd span{font-size:12px;color:var(--ok);font-weight:600}
+.mb{max-width:82%;padding:10px 14px;border-radius:14px;font-size:14px;margin-top:10px}
+.mb.a{background:#fff;border:1px solid var(--line);border-top-left-radius:4px}
+.mb.u{background:var(--meta);color:#fff;border-top-right-radius:4px;margin-left:auto}
+
+/* footer */
+footer{background:var(--ink);color:#9FB0D0;padding:44px 0;font-size:14px}
+footer .brand{color:#fff;margin-bottom:12px}
+footer a{color:#9FB0D0}
+.legal{margin-top:18px;font-size:12px;color:#6B7BA0;max-width:70ch}
+
+/* ============ CHAT WIDGET ============ */
+#chatFab{position:fixed;bottom:22px;right:22px;z-index:60;
+  display:flex;align-items:center;gap:10px;background:var(--meta);color:#fff;
+  border:none;border-radius:100px;padding:14px 20px 14px 16px;cursor:pointer;
+  box-shadow:0 12px 34px rgba(8,102,255,.44);font-family:inherit;font-weight:700;font-size:15px;
+  transition:transform .15s}
+#chatFab:hover{transform:translateY(-2px)}
+#chatFab .pulse{width:12px;height:12px;border-radius:50%;background:#fff;position:relative;flex-shrink:0}
+#chatFab .pulse::after{content:'';position:absolute;inset:-4px;border-radius:50%;
+  background:rgba(255,255,255,.5);animation:pl 1.8s infinite}
+@keyframes pl{0%{transform:scale(1);opacity:.7}100%{transform:scale(2.4);opacity:0}}
+@media(max-width:520px){#chatFab .fab-txt{display:none}#chatFab{padding:16px;bottom:18px;right:18px}}
+
+#chatPanel{position:fixed;z-index:61;bottom:22px;right:22px;width:390px;max-width:calc(100vw - 24px);
+  height:600px;max-height:calc(100dvh - 40px);background:#fff;border-radius:22px;overflow:hidden;
+  display:none;flex-direction:column;box-shadow:0 30px 90px rgba(10,22,51,.4)}
+#chatPanel.open{display:flex}
+@media(max-width:520px){#chatPanel{bottom:0;right:0;width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;border-radius:0}}
+.cp-hd{background:var(--ink);color:#fff;padding:16px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.cp-av{width:42px;height:42px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+.cp-hd .nm{font-size:15px;font-weight:700}
+.cp-hd .st{font-size:12px;color:#8FE3A6;display:flex;align-items:center;gap:5px}
+.cp-hd .st::before{content:'';width:7px;height:7px;border-radius:50%;background:#25D366}
+.cp-x{margin-left:auto;background:none;border:none;color:#9FB0D0;cursor:pointer;padding:6px;font-size:24px;line-height:1}
+.cp-body{flex:1;overflow-y:auto;padding:16px;background:var(--bg);display:flex;flex-direction:column;gap:10px}
+.cp-body::-webkit-scrollbar{width:6px}.cp-body::-webkit-scrollbar-thumb{background:#CBD5E8;border-radius:3px}
+.cb{max-width:85%;padding:10px 14px;border-radius:15px;font-size:14.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word;animation:cbp .2s ease}
+@keyframes cbp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.cb.a{background:#fff;border:1px solid var(--line);border-top-left-radius:4px;align-self:flex-start}
+.cb.u{background:var(--meta);color:#fff;border-top-right-radius:4px;align-self:flex-end}
+.cp-typing{display:flex;gap:4px;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:15px;align-self:flex-start}
+.cp-typing i{width:7px;height:7px;background:#B9C4DB;border-radius:50%;animation:td 1.2s infinite}
+.cp-typing i:nth-child(2){animation-delay:.15s}.cp-typing i:nth-child(3){animation-delay:.3s}
+@keyframes td{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+.cp-sugg{padding:8px 12px;display:flex;gap:8px;flex-wrap:wrap;background:var(--bg);border-top:1px solid var(--line)}
+.cp-sugg button{background:#fff;border:1px solid var(--line);color:var(--meta-d);font-size:12.5px;
+  padding:7px 12px;border-radius:100px;cursor:pointer;font-family:inherit;font-weight:600}
+.cp-in{display:flex;gap:8px;padding:12px;background:#fff;border-top:1px solid var(--line);flex-shrink:0}
+.cp-in textarea{flex:1;border:1px solid var(--line);border-radius:14px;padding:11px 14px;font-size:14.5px;
+  font-family:inherit;resize:none;max-height:90px;outline:none}
+.cp-in textarea:focus{border-color:var(--meta)}
+.cp-in button{width:46px;height:46px;flex-shrink:0;background:var(--meta);border:none;border-radius:50%;
+  color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.cp-disc{font-size:10.5px;color:var(--slate);text-align:center;padding:4px 12px 8px;background:#fff}
+.cp-sys{align-self:center;font-size:12.5px;color:var(--slate);background:#EDF1F7;border-radius:100px;
+  padding:8px 15px;margin:8px 0;display:flex;align-items:center;gap:8px;max-width:92%}
+.cp-check{color:var(--ok);font-weight:800}
+.cp-spin{width:13px;height:13px;border:2px solid #CBD5E8;border-top-color:var(--meta);border-radius:50%;
+  animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<div class="scene">
-  <div class="scene-tag">Démo conversationnelle</div>
-  <div class="phone">
-
-    <div class="hdr">
-      <div class="hdr-back"><svg width="9" height="15" viewBox="0 0 9 15" fill="none"><path d="M7.5 1.5L1.5 7.5L7.5 13.5" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="hdr-av"><span>E</span></div>
-      <div class="hdr-info">
-        <div class="hdr-name">Emmanuela</div>
-        <div class="hdr-status" id="status">Département Media Buying</div>
-      </div>
-      <div class="hdr-icons">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 .98h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-      </div>
-    </div>
-
-    <div class="chat" id="chat">
-      <div class="date-chip"><span>Aujourd'hui</span></div>
-    </div>
-
-    <div class="suggs" id="suggs">
-      <button class="spill" onclick="injectSugg(this)">Mon BM est banni</button>
-      <button class="spill" onclick="injectSugg(this)">Compte pub suspendu</button>
-      <button class="spill" onclick="injectSugg(this)">C'est quoi un compte agence ?</button>
-    </div>
-
-    <div class="input-wrap">
-      <textarea class="ibox" id="ibox" placeholder="Écrivez votre message…" rows="1"></textarea>
-      <button class="sbtn" onclick="send()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg>
-      </button>
-    </div>
-
+<header>
+  <div class="wrap nav">
+    <div class="brand"><span class="dot">ML</span> ML Ads</div>
+    <div class="nav-support">Un support qui vous accompagne pas à pas et répond à toutes vos questions</div>
   </div>
-  <div style="font-size:10px;color:rgba(255,255,255,.18);letter-spacing:.5px">Agence Attractor — demo.agenceattractor.com</div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-col">
+      <span class="badge badge-alert"><span class="lock"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span> Solution compte publicitaire bloqué</span>
+      <h1>Compte pub bloqué ? On vous en remet un, et vous relancez.</h1>
+      <p class="lead">Un compte agence Meta premium, sans limite de dépense, prêt en 30 min à 2h. On gère votre budget pub pour vous, sans carte bancaire.</p>
+      <div class="hero-ask">
+        <input id="heroInput" type="text" placeholder="Dites-nous votre besoin : compte bloqué, scaler..." autocomplete="off">
+        <button onclick="heroSend()" aria-label="Envoyer"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
+      </div>
+      <div class="hero-ask-hint">Naïma de ML Ads vous répond tout de suite, ici même. · <a href="#offre">Voir l'offre</a></div>
+    </div>
+    <div class="hero-col hero-visual">
+      <img src="proof/compte-bloque.jpg" alt="Compte publicitaire Meta désactivé" loading="eager">
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><b>30 min-2h</b><span>Compte prêt à diffuser</span></div>
+      <div class="stat"><b>Sans carte</b><span>On gère le budget pour vous</span></div>
+      <div class="stat"><b>Sans frais</b><span>Compte remplacé si incident</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section class="pain">
+  <div class="wrap">
+    <span class="eyebrow" style="color:#8FB4FF">Le vrai problème</span>
+    <h2>Tu perds des clients, ton business est bloqué</h2>
+    <div class="pain-grid">
+      <div class="pcard"><h3>Compte perso fragile</h3><p>Au moindre signal, Meta restreint ou bannit. Ton pixel et ton historique de campagnes disparaissent d'un coup.</p></div>
+      <div class="pcard"><h3>Récupération illusoire</h3><p>Même récupéré, le compte reste marqué. Il se refait bannir quelques semaines plus tard, souvent en pleine campagne.</p></div>
+      <div class="pcard"><h3>Diffusion à l'arrêt</h3><p>Chaque blocage, c'est des ventes en moins, du budget gelé et des jours perdus à repartir de zéro.</p></div>
+      <div class="pcard"><h3>Frais qui s'accumulent</h3><p>Nouveau BM, nouvelle carte, nouveau pixel à réchauffer. Le coût réel d'un ban dépasse largement le budget pub.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION / COMPARE -->
+<section id="solution">
+  <div class="wrap center">
+    <span class="eyebrow">La solution</span>
+    <h2>Un compte agence, c'est une base saine et stable</h2>
+    <p class="muted" style="max-width:60ch;margin:12px auto 0">L'accès partagé entre Business Managers est une fonctionnalité 100% native de Meta. C'est le modèle officiel de toutes les agences dans le monde. Ce n'est pas un contournement.</p>
+  </div>
+  <div class="wrap">
+    <div class="compare">
+      <div class="col bad">
+        <h3>Compte personnel</h3>
+        <ul>
+          <li>Fragile, banni au moindre signal</li>
+          <li>Historique de pixel perdu à chaque ban</li>
+          <li>Récupération lente et incertaine</li>
+          <li>Tu gères seul chaque incident</li>
+        </ul>
+      </div>
+      <div class="col good">
+        <h3>Compte agence Meta premium</h3>
+        <ul>
+          <li>Aucune limite de dépense quotidienne</li>
+          <li>Compte optimisé, CPM bas, approbations rapides</li>
+          <li>Budget rechargé pour toi, sans carte bancaire</li>
+          <li>Remplacé sans frais si incident, supervision humaine</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREUVE -->
+<section class="proof">
+  <div class="wrap center">
+    <span class="eyebrow" style="color:#8FB4FF">La preuve</span>
+    <h2>Ce n'est pas du vent. Nos comptes tournent déjà.</h2>
+    <p class="muted" style="max-width:60ch;margin:12px auto 0;color:#9FB0D0">Des comptes agence actifs, de vraies dépenses en dollars, des demandes traitées en continu. Voici les coulisses, sans filtre.</p>
+    <div class="proof-badge"><img src="proof/meta-partners.png" alt="Meta Business Partners"></div>
+  </div>
+  <div class="wrap">
+    <div class="proof-grid">
+      <div class="proof-card">
+        <img src="proof/dashboard.jpg" alt="Tableau de bord des comptes agence actifs" loading="lazy">
+        <p>Nos comptes agence en production, tous en dollars, avec leurs dépenses réelles. Type "Agency", jamais un compte perso fragile.</p>
+      </div>
+      <div class="proof-card">
+        <img src="proof/demandes.jpg" alt="Demandes de comptes traitées" loading="lazy">
+        <p>Les demandes défilent et sont traitées : "compte publicitaire accordé". On livre, tous les jours.</p>
+      </div>
+    </div>
+    <div class="proof-tags">
+      <span class="proof-tag">Comptes US</span>
+      <span class="proof-tag">UK</span>
+      <span class="proof-tag">Chine</span>
+      <span class="proof-tag">MENA</span>
+      <span class="proof-tag">Ligne de crédit Meta</span>
+    </div>
+  </div>
+</section>
+
+<!-- OFFER -->
+<section class="offer" id="offre">
+  <div class="wrap center">
+    <span class="eyebrow" style="color:#fff;opacity:.9">L'offre d'appel</span>
+    <h2 style="color:#fff">Le prix qui change la donne pour l'Afrique</h2>
+    <p style="color:#EAF0FF;max-width:52ch;margin:12px auto 30px">Ailleurs, ce type de compte se loue 250 à 400 dollars par mois et plus. ML Ads ouvre la porte à un tarif pensé pour les annonceurs d'ici.</p>
+    <div class="ocard">
+      <div class="anchor">Ailleurs : <s>250 à 400 $/mois</s></div>
+      <div class="price"><span class="cur">14 900</span> <span class="big">FCFA</span> <span class="per">/ mois (25 $)</span></div>
+      <div class="setup">Ton 1er paiement = ton 1er mois · renouvelé le 5 du mois</div>
+      <ul class="includes">
+        <li>Compte agence Meta premium, prêt en 30 min à 2h</li>
+        <li>Aucune limite de dépense quotidienne</li>
+        <li>Remplacé sans frais en cas d'incident</li>
+        <li>Supervision humaine, un interlocuteur qui te répond</li>
+      </ul>
+      <p style="font-size:13px;color:var(--slate);margin:0 0 22px">Un seul prélèvement clair, pas de frais cachés. Ton budget publicitaire, lui, est rechargé par nos soins sans carte bancaire : sécurisé, traçable, instantané (minimum 50 $). Naïma te détaille tout selon ton cas.</p>
+      <button class="btn btn-primary" style="width:100%" onclick="openChat()">Dites-nous votre besoin</button>
+      <p class="limiter">Naïma, notre chargée clientèle, te répond tout de suite et t'accompagne jusqu'à la mise en route. Offre d'appel de lancement pour le marché africain, places accompagnées limitées.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DIFFERENCE -->
+<section>
+  <div class="wrap center">
+    <span class="eyebrow">La différence</span>
+    <h2>Pendant que d'autres bricolent, nous on livre</h2>
+    <p class="muted" style="max-width:64ch;margin:12px auto 0">Sur Facebook, les charlatans ne manquent pas : ils encaissent, te font patienter des semaines, te font espérer, et au final rien ne bouge. Nous, on a la vraie solution, un compte agency pris chez nous, avec un vrai accompagnement.</p>
+  </div>
+  <div class="wrap">
+    <div class="why-grid">
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></div><h3>On est rapides</h3><p>Compte prêt en 30 min à 2h. On ne te fait pas poireauter des semaines sans réponse.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m8.5 12 2.5 2.5L15.5 10"/></svg></div><h3>On teste les comptes</h3><p>Chaque compte est vérifié avant de t'être remis. Tu diffuses sur une base saine, pas sur du hasard.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div><h3>On supervise l'utilisation</h3><p>On garde un œil sur ton compte pour anticiper les restrictions et réagir vite si besoin.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5.9 1.2 1 2h6c.1-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/></svg></div><h3>On te conseille</h3><p>Des astuces concrètes pour optimiser ton compte et diffuser sans te faire bloquer.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section style="background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap center"><span class="eyebrow">Comment ça marche</span><h2>De la première question au compte prêt</h2></div>
+  <div class="wrap">
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h3>Tu échanges</h3><p>Tu poses tes questions à notre support, à toute heure. On comprend ta situation.</p></div>
+      <div class="step"><div class="n">2</div><h3>On valide</h3><p>Naïma de ML Ads valide ton éligibilité et te présente le compte adapté à ton activité.</p></div>
+      <div class="step"><div class="n">3</div><h3>Tu paies ton 1er mois</h3><p>14 900 FCFA (25 $), renouvelé le 5 du mois. Tu donnes ton ID Business Manager, compte prêt en 30 min à 2h.</p></div>
+      <div class="step"><div class="n">4</div><h3>On recharge, tu diffuses</h3><p>Ton budget est rechargé par nous, sans carte. Tes campagnes tournent. Un souci, on remplace.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ASSISTANT -->
+<section class="assistant-sec">
+  <div class="wrap">
+    <div class="assistant-flex">
+      <div>
+        <span class="eyebrow">Disponible 24h/24</span>
+        <h2>Un support qui vous accompagne pas à pas</h2>
+        <p class="muted">Pas de formulaire, pas d'attente. Tu poses ta question, tu as une réponse claire sur ta situation, à toute heure, jusqu'à ce que ton compte soit prêt à diffuser.</p>
+        <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/></svg></div><div><b>On te répond tout de suite</b><span>Un vrai échange, à n'importe quelle heure.</span></div></div>
+        <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></div><div><b>On comprend ton cas</b><span>Compte bloqué, envie de scaler, débutant : la réponse s'adapte.</span></div></div>
+        <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m16 11 2 2 4-4"/></svg></div><div><b>On t'accompagne de A à Z</b><span>De ta première question jusqu'à ton compte prêt à diffuser.</span></div></div>
+        <button class="btn btn-primary" style="margin-top:26px" onclick="openChat()">Parler à un assistant</button>
+      </div>
+      <div class="mockchat" aria-hidden="true">
+        <div class="mc-hd"><div class="mc-av">N</div><div><b>Naïma de ML Ads</b><br><span>● en ligne</span></div></div>
+        <div class="mb a">Bonjour, moi c'est Naïma de ML Ads. Dites-moi, qu'est-ce qui vous amène ?</div>
+        <div class="mb u">Mon compte Facebook est banni, je vends des vêtements et je suis bloqué</div>
+        <div class="mb a">Ok, donc si je comprends bien, ton activité tourne mais c'est ton compte qui te bloque là, c'est ça ? Raconte-moi un peu, ça fait combien de temps ?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="wrap" style="max-width:800px">
+    <div class="center"><span class="eyebrow">Questions fréquentes</span><h2>Ce que tu veux savoir avant de te lancer</h2></div>
+    <div style="margin-top:32px">
+      <details><summary>C'est vraiment légal ?</summary><p>Oui, à 100%. L'accès partagé entre Business Managers est une fonctionnalité native de Meta, utilisée par toutes les agences. Romuald est représentant officiel Meta. Ce n'est pas un contournement, c'est le modèle prévu par la plateforme.</p></details>
+      <details><summary>Et si le compte se fait bannir ?</summary><p>On intervient immédiatement auprès de Facebook pour faire appel de la suspension, en général le compte est de nouveau opérationnel sous 48h. Et si la suspension est définitive, on transfère ton budget vers un autre compte sans délai, tu ne repaies pas. Le risque n'est plus sur tes épaules.</p></details>
+      <details><summary>Faut-il une carte bancaire pour recharger mes pubs ?</summary><p>Non. C'est nous qui rechargeons ton budget publicitaire, tu n'as pas besoin de ta propre carte. Tu nous dis combien tu veux mettre, on s'occupe du reste. Des frais dégressifs s'appliquent selon ton volume, Naïma te donne la grille.</p></details>
+      <details><summary>Combien ça coûte exactement ?</summary><p>14 900 FCFA (25 $) par mois. Ton premier paiement correspond déjà à ton premier mois, il n'y a pas de frais de mise en place en plus. L'abonnement se renouvelle le 5 de chaque mois, un seul prélèvement clair. Ailleurs, ce type de compte se loue 250 à 400 dollars par mois. Ton budget pub est séparé et rechargé par nos soins.</p></details>
+      <details><summary>Est-ce que je garde le contrôle de mes campagnes ?</summary><p>Oui. Tu crées et gères tes campagnes normalement. Le compte est à toi, sous notre supervision pour gérer les restrictions et t'aider à optimiser.</p></details>
+      <details><summary>En combien de temps j'ai mon compte ?</summary><p>Une fois l'inscription faite, ton compte est prêt en 30 minutes à 2 heures maximum.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="center">
+  <div class="wrap" style="max-width:640px">
+    <h2>Prêt à diffuser sur une base saine ?</h2>
+    <p class="muted" style="margin:12px 0 26px">Dites-nous votre besoin, Naïma vous répond tout de suite et vous met en route, sans engagement.</p>
+    <button class="btn btn-primary" onclick="openChat()">Dites-nous votre besoin</button>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand"><span class="dot" style="display:inline-flex;width:30px;height:30px;font-size:13px;vertical-align:middle;margin-right:8px">ML</span>ML Ads</div>
+    <div>Comptes publicitaires agence Meta certifiés et légaux. Représentant officiel Meta.</div>
+    <div style="margin-top:10px">Une question ? <a href="javascript:void(0)" onclick="openChat()">Écris à Naïma de ML Ads, notre support</a>.</div>
+    <p class="legal">Romuald met à disposition des comptes publicitaires agence dans le cadre prévu par Meta. L'annonceur reste seul responsable du contenu et des produits qu'il diffuse, dans le respect des règles publicitaires de Meta et de la réglementation applicable. « Meta », « Facebook » et « Instagram » sont des marques de Meta Platforms, Inc.</p>
+    <div style="margin-top:16px;font-size:12px">Un site conçu par <a href="https://agenceattractor.com" target="_blank" rel="noopener">Agence Attractor</a></div>
+  </div>
+</footer>
+
+<!-- CHAT WIDGET -->
+<button id="chatFab" onclick="openChat()"><span class="pulse"></span><span class="fab-txt">Parler à un assistant</span></button>
+
+<div id="chatPanel">
+  <div class="cp-hd">
+    <div class="cp-av">N</div>
+    <div><div class="nm">Naïma de ML Ads</div><div class="st">Je vous aide à avoir un nouveau compte pub AGENCY en 30 min</div></div>
+    <button class="cp-x" onclick="closeChat()" aria-label="Fermer">×</button>
+  </div>
+  <div class="cp-body" id="cpBody"></div>
+  <div class="cp-sugg" id="cpSugg">
+    <button onclick="quick('Mon compte Facebook est banni')">Mon compte est banni</button>
+    <button onclick="quick('C\'est quoi un compte agence ?')">C'est quoi un compte agence ?</button>
+    <button onclick="quick('Combien ça coûte ?')">Le prix</button>
+  </div>
+  <div class="cp-in">
+    <textarea id="cpText" rows="1" placeholder="Écris ton message…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+    <button onclick="sendChat()" aria-label="Envoyer"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
+  </div>
+  <div class="cp-disc">Naïma de ML Ads · Réponses indicatives · assistance en ligne</div>
 </div>
 
 <script>
-// ================================================================
-// MEMORY
-// ================================================================
-const mem = {
-  prenom:null, pays:null, activite:null, produits:null,
-  site:null, bm:null, whatsapp:null, email:null,
-  urgence:null, problem:null
-};
+// ── CONFIG ──────────────────────────────────────────────────
+const CHAT_ENDPOINT = "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/romuald-chat";
+const CHAT_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
+const GREETING = "Bonjour, moi c'est Naïma de ML Ads, votre chargée clientèle. Dites-moi, qu'est-ce qui vous amène, en quoi je peux vous aider ?";
 
-let STATE = 'INITIAL';
+let history = [];
+let started = false;
+let connecting = false;
+let busy = false;
 
-// ================================================================
-// UI
-// ================================================================
-const chatEl  = document.getElementById('chat');
-const statusEl= document.getElementById('status');
-const suggsEl = document.getElementById('suggs');
-const iboxEl  = document.getElementById('ibox');
+const panel = document.getElementById('chatPanel');
+const body  = document.getElementById('cpBody');
 
-function ts(){ return new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); }
-function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
-function scroll(){ requestAnimationFrame(()=>{ chatEl.scrollTop=chatEl.scrollHeight; }); }
-function p(ms){ return new Promise(r=>setTimeout(r,ms)); }
-function typingMs(txt){ return Math.min(Math.max(txt.replace(/<[^>]*>/g,'').length*30,900),3000); }
-
-function setStatus(txt,green=false){
-  statusEl.textContent=txt;
-  statusEl.className='hdr-status'+(green?' writing':'');
+function openChat(){
+  panel.classList.add('open');
+  if(!started && !connecting){ startConnect(null); }
+  setTimeout(function(){ document.getElementById('cpText').focus(); }, 100);
 }
-
-let typingEl=null;
-function showTyping(){
-  if(typingEl) return;
-  setStatus("en train d'écrire…",true);
-  typingEl=document.createElement('div');
-  typingEl.className='trow';
-  typingEl.innerHTML='<div class="tbbl"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>';
-  chatEl.appendChild(typingEl);
-  scroll();
+// Barre de saisie du hero : ouvre le chat avec le message tapé
+function heroSend(){
+  var el = document.getElementById('heroInput');
+  var v = el ? el.value.trim() : '';
+  panel.classList.add('open');
+  if(!started && !connecting){ startConnect(v || null); }
+  else if(v){ document.getElementById('cpText').value = v; sendChat(); }
+  if(el) el.value = '';
 }
-function hideTyping(){
-  setStatus('Département Media Buying',false);
-  typingEl?.remove(); typingEl=null;
+// Simule la recherche d'un conseiller disponible, puis met en contact avec Naïma
+function startConnect(pendingMsg){
+  connecting = true;
+  var s = document.createElement('div');
+  s.className = 'cp-sys'; s.id = 'sysConnect';
+  s.innerHTML = '<span class="cp-spin"></span> Recherche d\'un conseiller disponible…';
+  body.appendChild(s); body.scrollTop = body.scrollHeight;
+  setTimeout(function(){
+    s.innerHTML = '<span class="cp-check">✓</span> Vous êtes en contact avec Naïma de ML Ads';
+    setTimeout(function(){
+      started = true; connecting = false;
+      if(pendingMsg){ document.getElementById('cpText').value = pendingMsg; sendChat(); }
+      else { addBubble('a', GREETING); }
+    }, 650);
+  }, 2100);
 }
+function closeChat(){ panel.classList.remove('open'); }
 
-function bubbleAgent(html){
-  const d=document.createElement('div');
-  d.className='mrow ag';
-  d.innerHTML=`<div class="bubble ag">${html}<div class="btime">${ts()}</div></div>`;
-  chatEl.appendChild(d); scroll();
-}
-function bubbleUser(txt){
-  const d=document.createElement('div');
-  d.className='mrow us';
-  d.innerHTML=`<div class="bubble us">${txt}<div class="btime us">${ts()} <span class="checks">✓✓</span></div></div>`;
-  chatEl.appendChild(d); scroll();
-}
-
-function hideSuggs(){ suggsEl.classList.add('hidden'); }
-
-// Send a sequence of agent messages with realistic typing
-async function say(...msgs){
-  for(let i=0;i<msgs.length;i++){
-    showTyping();
-    await p(typingMs(msgs[i]));
-    hideTyping();
-    bubbleAgent(msgs[i]);
-    if(i<msgs.length-1) await p(rnd(350,750));
-  }
-}
-
-// Fake "checking" pause before important answer
-async function check(interim, ...msgs){
-  await say(interim);
-  setStatus('vérifie votre dossier…',true);
-  await p(rnd(5000,9000));
-  await say(...msgs);
-}
-
-// ================================================================
-// DETECT
-// ================================================================
-function norm(s){
-  return s.toLowerCase()
-    .normalize('NFD').replace(/[̀-ͯ]/g,'')
-    .replace(/['']/g,"'");
-}
-
-function detect(raw){
-  const m=norm(raw); const d={};
-
-  // Problem
-  if(/\bbann?i\b/.test(m))                            d.problem='banni';
-  else if(/\bsuspendu\b|\bsuspension\b/.test(m))      d.problem='suspendu';
-  else if(/\bbloque\b|\bblocage\b/.test(m))            d.problem='bloque';
-  else if(/\bdesactiv/.test(m))                        d.problem='desactive';
-  else if(/\brestreint\b|\brestriction\b/.test(m))     d.problem='restreint';
-
-  // Confirmation
-  if(/^(oui|yes|ok\b|ouais|exactement|exact|c'est ca|correct|absolument|tout a fait|bien sur|voila|effectivement)\b/.test(m.trim())) d.oui=true;
-  if(/^(non|no\b|pas vraiment|pas exactement|nan\b)/.test(m.trim())) d.non=true;
-
-  // Urgency
-  if(/urgent|vite|rapidement|immediatement|aujourd.?hui|des que possible/.test(m)) d.urgent=true;
-
-  // Country
-  const pays=[
-    [/ivoire|abidjan/,"Côte d'Ivoire"],[/\bfrance\b|paris|lyon/,"France"],
-    [/senegal|dakar/,"Sénégal"],[/cameroun|douala/,"Cameroun"],
-    [/belgique|bruxelles/,"Belgique"],[/maroc|casablanca/,"Maroc"],
-    [/togo|lome/,"Togo"],[/benin|cotonou/,"Bénin"],
-    [/mali|bamako/,"Mali"],[/gabon|libreville/,"Gabon"],
-    [/canada|montreal/,"Canada"],[/suisse|geneve/,"Suisse"],
-    [/guinee|conakry/,"Guinée"],[/congo|kinshasa|brazzaville/,"Congo"],
-  ];
-  for(const[re,p] of pays){ if(re.test(m)){d.pays=p;break;} }
-
-  // Activity
-  if(/e.?commerce|ecom\b/.test(m))      d.activite='e-commerce';
-  else if(/drop.?shipping|drop\b/.test(m)) d.activite='dropshipping';
-  else if(/\bagence\b/.test(m))          d.activite='agence publicitaire';
-  else if(/formation|coach/.test(m))     d.activite='formation/coaching';
-  else if(/restaurant|restau/.test(m))   d.activite='restauration';
-  else if(/service|prestation/.test(m))  d.activite='services';
-
-  // Price question
-  if(/combien|prix|tarif|cout\b|budget|payer/.test(m)) d.prix=true;
-
-  // Interest
-  if(/interesse|je veux|je prends|d'accord|ca m'interesse|go\b|commencer|on y va/.test(m)) d.interest=true;
-
-  // Objections
-  if(/legal|illegale|autoris|droit\b|risque/.test(m)) d.objLegal=true;
-  if(/recuper|debloqu|ancien compte|reactiv/.test(m)) d.objRecup=true;
-  if(/mensuel|tous les mois|location|abonnement/.test(m)) d.objMensuel=true;
-  if(/pourquoi vous|fiable|confiance|serieux|arnaque|escroc/.test(m)) d.objConfiance=true;
-  if(/recharg|credit line|crediter|alimenter/.test(m)) d.objRecharge=true;
-
-  // Agency question
-  if(/compte agence|c'est quoi|qu'est.ce|comment ca marche/.test(m)) d.askAgence=true;
-
-  // Data
-  const em=raw.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-  if(em) d.email=em[0];
-  const bm=raw.match(/\b\d{13,16}\b/);
-  if(bm) d.bm=bm[0];
-  const ph=raw.match(/[\+]?[\d][\d\s\-\.]{8,14}/);
-  if(ph&&!bm) d.phone=ph[0].trim();
-  const url=raw.match(/(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/\S*)?/);
-  if(url&&!em) d.site=url[0];
-
+function addBubble(role, text){
+  const d = document.createElement('div');
+  d.className = 'cb ' + role;
+  d.textContent = text;
+  body.appendChild(d);
+  body.scrollTop = body.scrollHeight;
   return d;
 }
+function showTyping(){
+  const t = document.createElement('div');
+  t.className = 'cp-typing'; t.id = 'typing';
+  t.innerHTML = '<i></i><i></i><i></i>';
+  body.appendChild(t); body.scrollTop = body.scrollHeight;
+}
+function hideTyping(){ const t = document.getElementById('typing'); if(t) t.remove(); }
 
-// Name extraction
-function extractName(raw){
-  const m=raw.match(/(?:je m'?appelle|mon pr[eé]nom(?:\s+est?)?|c'?est|je suis)\s+([A-ZÉÈÀÙÂÊÎÔÛÄËÏÖÜ][a-zéèàùâêîôûäëïöü]{2,})/i);
-  if(m) return m[1];
-  const words=raw.trim().split(/\s+/);
-  const skip=['Oui','Non','Ok','Oui','Bonjour','Bonsoir','Merci','Bien','Urgent','Oui','Voila'];
-  if(words.length<=3){
-    const w=words.find(x=>/^[A-ZÉÈÀÙÂÊÎÔÛÄËÏÖÜ][a-zéèàùâêîôûäëïöü]{2,}$/.test(x)&&!skip.includes(x));
-    if(w) return w;
+function quick(text){ document.getElementById('cpText').value = text; sendChat(); }
+
+async function sendChat(){
+  const box = document.getElementById('cpText');
+  const msg = box.value.trim();
+  if(!msg || busy) return;
+  box.value = ''; box.style.height = 'auto';
+  document.getElementById('cpSugg').style.display = 'none';
+  addBubble('u', msg);
+  history.push({ role:'user', content: msg });
+  busy = true;
+  showTyping();
+  try{
+    const res = await fetch(CHAT_ENDPOINT, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+CHAT_ANON, 'apikey':CHAT_ANON },
+      body: JSON.stringify({ messages: history })
+    });
+    const data = await res.json();
+    const reply = (data && data.reply) ? data.reply : "Je te réponds dans un instant.";
+    hideTyping();
+    addBubble('a', reply);
+    history.push({ role:'assistant', content: reply });
+  }catch(e){
+    hideTyping();
+    addBubble('a', "Petit souci de connexion de mon côté. Réessaie dans un instant, je reste avec toi.");
   }
-  return null;
+  busy = false;
 }
 
-function problemLabel(p){
-  return {banni:'Business Manager banni par Meta',suspendu:'compte publicitaire suspendu',
-          bloque:'compte bloqué',desactive:'compte désactivé',restreint:'compte en restriction'}[p]||'compte publicitaire bloqué';
-}
-
-// ================================================================
-// OBJECTION HANDLERS (callable from any state)
-// ================================================================
-async function handleObjLegal(){
-  await say(
-    "C'est une très bonne question.",
-    "L'accès partagé entre Business Managers est une fonctionnalité native de Meta. Toutes les agences travaillent ainsi avec leurs clients — c'est exactement le modèle officiel prévu par la plateforme.",
-    "Donc oui, c'est complètement légal et documenté dans les conditions d'utilisation de Meta Business."
-  );
-  await p(800);
-  await continueQualif();
-}
-
-async function handleObjRecup(){
-  await say(
-    "Je comprends tout à fait que vous souhaitiez récupérer votre ancien compte.",
-    "Le problème, c'est que même quand la récupération réussit, le compte reste fragilisé — Meta a noté l'incident. À la moindre anomalie, il peut être banni à nouveau.",
-    "C'est pour ça qu'on préfère vous proposer une base saine, sur laquelle vous pouvez construire durablement."
-  );
-  await p(800);
-  await continueQualif();
-}
-
-async function handleObjMensuel(){
-  await say(
-    "C'est une question tout à fait légitime.",
-    "En réalité, ce modèle vous protège. Si le compte est banni — même les meilleurs comptes peuvent l'être — on le remplace immédiatement, sans frais supplémentaires.",
-    "Si vous possédiez le compte, chaque incident vous coûterait. Là, c'est notre risque, pas le vôtre."
-  );
-  await p(800);
-  await continueQualif();
-}
-
-async function handleObjConfiance(){
-  await say(
-    "Je comprends votre hésitation, c'est normal.",
-    "Nous accompagnons des e-commerçants et des agences depuis plusieurs années. Notre modèle tient parce que notre priorité est que vos campagnes tournent — c'est comme ça qu'on fidélise.",
-    "Si vous avez des questions spécifiques, je suis là pour y répondre honnêtement."
-  );
-  await p(800);
-  await continueQualif();
-}
-
-async function handleObjRecharge(){
-  await say(
-    "La recharge est simple.",
-    "Vous nous indiquez le montant que vous souhaitez créditer. Vous effectuez le paiement, et notre équipe alimente votre Credit Line dans les 24 heures.",
-    "Le Credit Line fonctionne comme un portefeuille — vous mettez ce dont vous avez besoin pour vos campagnes, sans engagement de montant minimum."
-  );
-  await p(800);
-  await continueQualif();
-}
-
-async function handleAgenceExplain(){
-  await say(
-    "Un compte agence, c'est un compte publicitaire professionnel hébergé sous notre structure d'agence certifiée Meta.",
-    "Concrètement : vous ne passez plus par votre propre compte personnel — vous accédez à notre infrastructure. Ces comptes sont beaucoup plus stables et moins susceptibles d'être bannis.",
-    "Le fonctionnement est en Credit Line : vous rechargez le budget que vous voulez diffuser, et nos équipes s'occupent de la configuration.",
-    "Est-ce que ça répond à votre question ?"
-  );
-  STATE='CHECK_INTEREST';
-}
-
-// ================================================================
-// QUALIFICATION FLOW
-// ================================================================
-async function continueQualif(){
-  if(!mem.prenom)   { await say("Pour continuer, puis-je connaître votre prénom ?"); STATE='QUALIFY_NAME'; return; }
-  if(!mem.pays)     { await say(`${mem.prenom}, vous êtes basé dans quel pays ?`); STATE='QUALIFY_COUNTRY'; return; }
-  if(!mem.activite) { await say("Et quelle est votre activité principale — e-commerce, dropshipping, ou autre chose ?"); STATE='QUALIFY_ACTIVITY'; return; }
-  if(!mem.produits) { await say("Vous travaillez sur quels types de produits ?"); STATE='QUALIFY_PRODUCTS'; return; }
-  if(!mem.urgence)  { await say("Est-ce urgent pour vous ? Vous avez des campagnes à reprendre rapidement ?"); STATE='QUALIFY_URGENCY'; return; }
-  await presentAgence();
-}
-
-async function presentAgence(){
-  STATE='PRESENT';
-  await check(
-    "Un instant, je consulte ce qu'on peut faire pour votre situation…",
-    `${mem.prenom?'Voici ce que je peux vous proposer.':'Permettez-moi d\'être transparente avec vous.'}`,
-    "Nous ne faisons pas de récupération de comptes. Aujourd'hui cette méthode est rarement efficace — et même quand elle réussit, le compte reste fragilisé.",
-    "Ce que nous proposons est différent : un compte agence professionnel rattaché à notre structure Meta certifiée. Vous reprenez vos campagnes rapidement, sur une base stable.",
-    "Ça vous intéresse que je vous explique comment ça fonctionne concrètement ?"
-  );
-  STATE='CHECK_INTEREST';
-}
-
-// ================================================================
-// STATE MACHINE
-// ================================================================
-let busy=false;
-
-async function respond(raw){
-  if(busy) return;
-  busy=true;
-  const d=detect(raw);
-
-  // Store data
-  if(d.pays     &&!mem.pays)    mem.pays=d.pays;
-  if(d.activite &&!mem.activite)mem.activite=d.activite;
-  if(d.problem  &&!mem.problem) mem.problem=d.problem;
-  if(d.urgent)                  mem.urgence='urgent';
-  if(d.email    &&!mem.email)   mem.email=d.email;
-  if(d.bm       &&!mem.bm)      mem.bm=d.bm;
-  if(d.phone    &&!mem.whatsapp)mem.whatsapp=d.phone;
-  if(d.site     &&!mem.site)    mem.site=d.site;
-  if(d.prenom   &&!mem.prenom)  mem.prenom=d.prenom;
-
-  // Global priority: objections
-  if(d.objLegal)    { await handleObjLegal();    busy=false; return; }
-  if(d.objRecup)    { await handleObjRecup();    busy=false; return; }
-  if(d.objMensuel)  { await handleObjMensuel();  busy=false; return; }
-  if(d.objConfiance){ await handleObjConfiance();busy=false; return; }
-  if(d.objRecharge) { await handleObjRecharge(); busy=false; return; }
-  if(d.askAgence)   { await handleAgenceExplain();busy=false; return; }
-
-  // Price from any late state
-  if(d.prix && ['CHECK_INTEREST','PRESENT','TARIF','QUALIFY_URGENCY'].includes(STATE)){
-    await handleTarif(); busy=false; return;
-  }
-  if(d.interest && ['CHECK_INTEREST','PRESENT'].includes(STATE)){
-    await handleTarif(); busy=false; return;
-  }
-
-  // State routing
-  switch(STATE){
-
-    case 'INITIAL':
-      hideSuggestions();
-      if(d.problem){
-        mem.problem=d.problem;
-        await say(
-          "Je comprends.",
-          `Votre ${problemLabel(d.problem)} — c'est bien cela ?`
-        );
-        STATE='PROBLEM_CONFIRM';
-      } else if(d.oui||d.non||raw.trim().length<4){
-        await say("Comment puis-je vous aider exactement ?");
-      } else {
-        await say(
-          "Je vous lis.",
-          "Pouvez-vous me décrire le problème que vous rencontrez avec votre compte publicitaire ?"
-        );
-        STATE='INITIAL';
-      }
-      break;
-
-    case 'PROBLEM_CONFIRM':
-      if(d.non){
-        await say("D'accord, je comprends mal.", "Quel est exactement le problème avec votre compte ?");
-        STATE='INITIAL';
-      } else {
-        // Any answer (including oui or more detail) moves to qualification
-        await say("Très bien.", "Pour mieux vous accompagner, puis-je connaître votre prénom ?");
-        STATE='QUALIFY_NAME';
-      }
-      break;
-
-    case 'QUALIFY_NAME': {
-      const name=extractName(raw);
-      if(name){ mem.prenom=name; }
-      const n=mem.prenom||'';
-      if(n){
-        if(mem.pays){
-          await say(`${n} 😊`, "Et quelle est votre activité principale — e-commerce, dropshipping, ou autre chose ?");
-          STATE='QUALIFY_ACTIVITY';
-        } else {
-          await say(`${n} 😊`, "Vous êtes basé dans quel pays ?");
-          STATE='QUALIFY_COUNTRY';
-        }
-      } else {
-        await say("Je n'ai pas bien saisi votre prénom.", "Pouvez-vous me l'écrire ?");
-      }
-      break;
-    }
-
-    case 'QUALIFY_COUNTRY':
-      if(mem.pays){
-        await say("D'accord.", "Et quelle est votre activité principale — e-commerce, dropshipping, ou vous gérez une agence ?");
-        STATE='QUALIFY_ACTIVITY';
-      } else {
-        await say("Dans quel pays êtes-vous basé ?");
-      }
-      break;
-
-    case 'QUALIFY_ACTIVITY':
-      if(mem.activite){
-        await say("Je vois.", "Vous travaillez sur quels types de produits ?");
-        STATE='QUALIFY_PRODUCTS';
-      } else {
-        await say("E-commerce, dropshipping, agence — qu'est-ce qui décrit le mieux votre activité ?");
-      }
-      break;
-
-    case 'QUALIFY_PRODUCTS':
-      if(!mem.produits) mem.produits=raw.trim();
-      await say("D'accord.", "Est-ce urgent pour vous ? Vous avez des campagnes à reprendre rapidement ?");
-      STATE='QUALIFY_URGENCY';
-      break;
-
-    case 'QUALIFY_URGENCY':
-      if(!mem.urgence) mem.urgence=d.urgent?'urgent':'pas immédiat';
-      await presentAgence();
-      break;
-
-    case 'CHECK_INTEREST':
-      if(d.oui||d.interest||d.prix){
-        await handleTarif();
-      } else if(d.askAgence){
-        await handleAgenceExplain();
-      } else {
-        // They have more questions — answer then re-ask
-        await say(
-          "Je comprends.",
-          "Est-ce que vous souhaitez qu'on continue sur cette base ?"
-        );
-      }
-      break;
-
-    case 'TARIF':
-      if(d.oui||d.interest){
-        await handlePayment();
-      } else if(d.non){
-        await say(
-          "D'accord, pas de problème.",
-          "Est-ce que le tarif est le frein, ou vous avez d'autres questions ?"
-        );
-      } else {
-        await say("C'est noté.", "Avez-vous des questions avant qu'on avance ?");
-      }
-      break;
-
-    case 'PAYMENT':
-      if(d.bm){
-        await say(
-          "BM ID reçu, merci.",
-          "Notre équipe est en train de configurer votre compte.",
-          "Je vous envoie les accès dans les prochaines minutes."
-        );
-        STATE='DONE';
-      } else {
-        await say(
-          "Parfait.",
-          "Pour finaliser la configuration, auriez-vous votre Business Manager ID ?"
-        );
-      }
-      break;
-
-    default:
-      await say("Je vous lis. Une seconde…");
-      await continueQualif();
-  }
-  busy=false;
-}
-
-async function handleTarif(){
-  STATE='TARIF';
-  await check(
-    "Je vérifie les disponibilités et les formules adaptées à votre profil…",
-    `${mem.prenom?mem.prenom+', voici':'Voici'} ce que je vous propose.`,
-    "La location du compte agence est à <strong>150 € par mois</strong>. Ça couvre l'accès au compte, le support, et le remplacement immédiat en cas de problème.",
-    "Les recharges budget sont disponibles à partir de 50 €, sans plafond.",
-    "Est-ce que ça correspond à ce que vous aviez en tête ?"
-  );
-}
-
-async function handlePayment(){
-  STATE='PAYMENT';
-  await say(
-    `Parfait${mem.prenom?' '+mem.prenom:''}.`,
-    "Je vous prépare le lien de paiement."
-  );
-  setStatus('prépare votre dossier…',true);
-  await p(rnd(4000,6000));
-  await say(
-    "Voici le lien : <strong>pay.romuald-mbm.com/commande</strong>",
-    "Dès que le paiement est effectué, pouvez-vous m'envoyer la capture d'écran ?"
-  );
-}
-
-function hideSuggestions(){ suggsEl.classList.add('hidden'); }
-
-// ================================================================
-// INPUT HANDLING
-// ================================================================
-function send(){
-  const txt=iboxEl.value.trim();
-  if(!txt||busy) return;
-  iboxEl.value=''; iboxEl.style.height='';
-  hideSuggestions();
-  bubbleUser(txt);
-  respond(txt);
-}
-
-function injectSugg(el){
-  const txt=el.textContent;
-  hideSuggestions();
-  bubbleUser(txt);
-  respond(txt);
-}
-
-iboxEl.addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); send(); }
+document.getElementById('cpText').addEventListener('input', function(){
+  this.style.height='auto'; this.style.height=Math.min(this.scrollHeight,90)+'px';
 });
-iboxEl.addEventListener('input',()=>{
-  iboxEl.style.height='auto';
-  iboxEl.style.height=Math.min(iboxEl.scrollHeight,100)+'px';
-});
-
-// ================================================================
-// BOOT
-// ================================================================
-async function boot(){
-  await p(1200);
-  await say(
-    "Bonjour 👋",
-    "Je suis Emmanuela, du département Media Buying.",
-    "Nous accompagnons les e-commerçants et les agences dans la gestion de leurs comptes publicitaires Meta.",
-    "Comment puis-je vous aider aujourd'hui ?"
-  );
-  STATE='INITIAL';
-}
-
-boot();
+var heroInputEl = document.getElementById('heroInput');
+if(heroInputEl){ heroInputEl.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); heroSend(); } }); }
 </script>
 </body>
 </html>

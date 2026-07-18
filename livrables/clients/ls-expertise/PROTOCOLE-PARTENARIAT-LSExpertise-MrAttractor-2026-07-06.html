@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Protocole d'accord — LS EXPERTISE (Lyle Soboro) × Mr Attractor</title>
+<style>
+:root{
+  --brand:#0E1A2B;
+  --accent:#C9A84C;
+  --ink:#1A1F2B;
+  --muted:#6B7280;
+  --line:#E5E7EB;
+  --bg-soft:#F7F5EF;
+  --green:#166534;
+  --bg-green:#F0FDF4;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:#f0f2f5;padding:24px;line-height:1.6}
+.page{width:210mm;margin:0 auto 24px auto;background:#fff;padding:18mm 16mm;box-shadow:0 6px 30px rgba(0,0,0,.12)}
+
+.head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--accent);padding-bottom:16px;margin-bottom:20px}
+.brand h1{color:var(--brand);font-size:22px;letter-spacing:.02em}
+.brand .tag{color:var(--muted);font-size:12px;margin-top:2px}
+.docmeta{text-align:right;font-size:13px}
+.docmeta .t{color:var(--accent);font-weight:700;font-size:15px;letter-spacing:.05em;text-transform:uppercase}
+.docmeta .ref{display:inline-block;background:var(--brand);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:4px;letter-spacing:.05em}
+.docmeta div{color:var(--muted);margin-top:2px;font-size:12px}
+
+.intro-box{background:var(--bg-soft);border-left:3px solid var(--accent);padding:14px 16px;margin:0 0 20px 0;font-size:13px;line-height:1.7}
+.intro-box strong{color:var(--brand)}
+
+.notice{background:#FFF8E7;border-left:3px solid var(--accent);padding:10px 14px;margin-bottom:16px;font-size:12px;color:#7A5200}
+
+h2{color:var(--brand);font-size:14px;margin-top:24px;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--line);letter-spacing:.03em;text-transform:uppercase}
+
+.parties{display:flex;gap:16px;margin:12px 0}
+.partie{flex:1;border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:12px}
+.partie .label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.partie strong{color:var(--brand);display:block;margin-bottom:2px}
+
+.article{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:8px 0}
+.article.binding{border-color:var(--accent);background:#FFFDF6}
+.article .num{display:inline-block;background:var(--brand);color:#fff;font-size:10px;font-weight:700;letter-spacing:.05em;padding:3px 9px;border-radius:4px;margin-bottom:10px}
+.article .num.tag-binding{background:var(--accent);color:var(--brand)}
+.sub-section{margin:10px 0 6px 0}
+.sub-title{font-size:12px;font-weight:700;color:var(--brand);margin-bottom:5px}
+p{font-size:12.5px;margin-bottom:8px;line-height:1.6}
+ul{margin:6px 0 10px 20px;font-size:12.5px}
+li{margin-bottom:5px;line-height:1.5}
+strong.inline{color:var(--brand)}
+
+.jalon-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:11.5px}
+.jalon-table th{background:var(--brand);color:#fff;padding:8px 10px;text-align:left;font-size:10px;letter-spacing:.05em;text-transform:uppercase}
+.jalon-table td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.jalon-table tr:last-child td{border-bottom:none}
+.jalon-table tr:nth-child(even){background:var(--bg-soft)}
+.jalon-num{display:inline-block;background:var(--accent);color:var(--brand);font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.exclu-box{background:#FFF1F2;border:1px solid #FECDD3;border-radius:6px;padding:10px 14px;margin:10px 0;font-size:12px}
+.exclu-box .exclu-title{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9F1239;margin-bottom:6px}
+.tbc-box{background:var(--bg-soft);border:1px dashed var(--accent);border-radius:6px;padding:10px 14px;margin:10px 0;font-size:12px}
+.tbc-box .tbc-title{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+
+.signatures{display:flex;gap:20px;margin-top:32px}
+.sig{flex:1;border:1px solid var(--line);border-radius:8px;padding:16px}
+.sig .sig-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.sig .sig-name{color:var(--brand);font-weight:700;font-size:13px}
+.sig .sig-role{color:var(--muted);font-size:12px;margin-top:2px}
+.sig .sig-space{height:52px;border-bottom:1px dotted var(--line);margin:16px 0 8px}
+.sig .sig-date{font-size:12px;color:var(--muted)}
+
+.foot{margin-top:24px;border-top:1px solid var(--line);padding-top:10px;font-size:10px;color:var(--muted);text-align:center;line-height:1.6}
+
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff;padding:0}
+  .page{box-shadow:none;margin:0;width:100%;padding:10mm 12mm}
+  .article{page-break-inside:avoid;padding:8px 12px;margin:5px 0;overflow:visible}
+  .jalon-table{page-break-inside:avoid}
+  .signatures{page-break-inside:avoid}
+  h2{page-break-after:avoid;margin-top:16px}
+  p,li,.jalon-table td{font-size:11px}
+  .notice{display:none}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- EN-TÊTE -->
+  <div class="head">
+    <div class="brand">
+      <h1>Mr Attractor</h1>
+      <div class="tag">Conception d'applications métier &amp; systèmes intelligents</div>
+    </div>
+    <div class="docmeta">
+      <div class="t">Protocole d'accord</div>
+      <div class="ref">PARTENARIAT EN NATURE — Engagement vidéo validé (Jalon 1)</div>
+      <div>LS EXPERTISE (Lyle Soboro) × Mr Attractor</div>
+      <div>6 juillet 2026</div>
+    </div>
+  </div>
+
+  <div class="notice">
+    Ce document est un protocole d'accord (letter of intent) qui encadre un partenariat en nature — pas un devis classique. Il n'engage les parties de manière contraignante que sur les clauses de confidentialité (Art. 3), de réserve de réutilisation du code générique (Art. 4) et de non-sollicitation réciproque (Art. 5). Le calendrier précis du contenu vidéo et le rythme de livraison des étapes sont arrêtés progressivement via les jalons de validation prévus à l'Art. 7.
+  </div>
+
+  <!-- INTRODUCTION -->
+  <div class="intro-box">
+    <strong>LS EXPERTISE</strong> (agence de gestion de réseaux sociaux et de production de contenu, Abidjan, représentée par Lyle Soboro) et <strong>Mr Attractor</strong> conviennent d'un partenariat pour la conception et le développement d'un système de gestion interne complet dédié à l'agence LS EXPERTISE (ci-après « la Plateforme »), couvrant l'ensemble de son cycle de vie client — de la prospection commerciale au suivi de production des contenus. En contrepartie de la construction de la Plateforme, LS EXPERTISE l'utilise en conditions réelles et produit du contenu vidéo démontrant sa valeur, destiné à attirer des prospects vers l'agence Mr Attractor. Le présent protocole formalise le cadre de cet échange avant tout développement.
+  </div>
+
+  <!-- PARTIES -->
+  <h2>Les Parties</h2>
+  <div class="parties">
+    <div class="partie">
+      <div class="label">Partie A — Prestataire</div>
+      <strong>Mac Arthur KOUASSI</strong>
+      Mr Attractor — Agence conseil &amp; développement d'applications métier<br/>
+      Micro-entreprise — SIRET 98377125400015<br/>
+      myattractor1@gmail.com — +33 7 53 90 23 23
+    </div>
+    <div class="partie">
+      <div class="label">Partie B — Partenaire</div>
+      <strong>LS EXPERTISE</strong>
+      Représentée par M. Lyle SOBORO<br/>
+      Abidjan, Côte d'Ivoire — +225 07 16 85 64 66<br/>
+      Qualité du représentant et coordonnées complètes : <em>à compléter avant signature</em>
+    </div>
+  </div>
+
+  <!-- ART. 1 — OBJET -->
+  <h2>Clauses</h2>
+  <div class="article">
+    <span class="num">ART. 1 — OBJET DU PROTOCOLE</span>
+    <p>Le présent protocole a pour objet de définir le cadre du partenariat entre les parties pour la conception, le développement et la mise en production d'un système de gestion interne (« la Plateforme ») couvrant le cycle de vie complet des clients de LS EXPERTISE : prospection commerciale, proposition stratégique, contractualisation, calendrier éditorial, production de contenu, publication et suivi.</p>
+    <p>Le périmètre fonctionnel détaillé de la Plateforme est celui décrit dans les documents de conception annexés au présent protocole (<em>Conception du DMV</em> et <em>Brief métier détaillé</em>, versions du 6 juillet 2026), qui en font partie intégrante.</p>
+  </div>
+
+  <!-- ART. 2 — VISION ET PRINCIPES -->
+  <div class="article">
+    <span class="num">ART. 2 — VISION ET PRINCIPES DU PROJET</span>
+    <div class="sub-section">
+      <div class="sub-title">2.1 — Un partenariat en nature, pas un contrat de prestation classique</div>
+      <p>Le présent projet ne fait pas l'objet d'une facturation au tarif normal du prestataire. En contrepartie de la conception et du développement de la Plateforme, la Partie B s'engage à l'utiliser en conditions réelles et à produire <strong class="inline">trois (3) vidéos</strong> et à réaliser <strong class="inline">un (1) live avec Mac Arthur</strong>, démontrant l'usage réel de la Plateforme, destinés à attirer des prospects vers l'agence Mr Attractor. Le calendrier précis de ces contenus n'est pas fixé à l'avance ; ils peuvent être produits successivement, sans attendre la livraison de chaque étape. Le détail est confirmé au Jalon 1 défini à l'Art. 7.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">2.6 — Relation préexistante</div>
+      <p>Les parties se connaissent et collaborent déjà de manière informelle en dehors du présent projet. Le présent protocole formalise ce partenariat spécifique sans remettre en cause cette relation existante ; les clauses de protection (Art. 3, 4, 5) s'appliquent néanmoins pleinement, indépendamment de la confiance personnelle entre les parties.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">2.2 — Contrepartie financière symbolique</div>
+      <p>Un devis d'un montant symbolique de <strong class="inline">100 000 FCFA</strong> (devis n° ATR-2026-0008) accompagne le présent protocole, réglé selon les modalités qui y sont précisées (acompte de 50 000 FCFA à la commande, solde de 50 000 FCFA à la livraison de l'Étape 1). Ce montant ne reflète pas la valeur réelle du projet estimée selon le barème de l'agence (de l'ordre de 1 400 000 FCFA de conception et 320 000 FCFA/mois de maintenance) ; l'écart est compensé par la contrepartie décrite à l'Art. 2.1.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">2.3 — Un projet complet, construit par étapes</div>
+      <p>Les parties conviennent que la cible du projet est une Plateforme complète couvrant l'ensemble des départements décrits dans les documents de conception (Direction, Commercial, Social Media Management, Assistante Administrative, équipes d'exécution). Sa construction est néanmoins séquencée en trois étapes techniques successives (Socle, Social Media &amp; Community Management, Intelligence &amp; intégrations), chacune immédiatement utilisable et démontrable à sa livraison, conformément au phasage détaillé dans la <em>Conception du DMV</em>.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">2.4 — Système multi-utilisateurs en libre-service</div>
+      <p>La Plateforme permet à la Partie B de créer et gérer elle-même les comptes de son équipe (invitation, attribution des rôles) sans intervention de la Partie A après la livraison. Ce système de gestion d'équipe, ainsi que le système de notification interne centralisé qui lui est associé, font partie intégrante du périmètre de l'Étape 1.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">2.5 — Hébergement et infrastructure</div>
+      <p>La Plateforme est développée sur l'infrastructure technique de l'agence Mr Attractor (projet Supabase partagé, hébergement Cloudflare), selon les mêmes standards de sécurité multi-tenant que ses autres réalisations. La Partie A reste responsable de l'hébergement pendant la durée du partenariat ; les conditions de transfert éventuel des accès techniques à la Partie B suivent le même principe que dans les contrats standards de l'agence (transfert sur demande écrite, sous délai raisonnable).</p>
+    </div>
+  </div>
+
+  <!-- ART. 3 — CONFIDENTIALITÉ -->
+  <div class="article binding">
+    <span class="num tag-binding">ART. 3 — CONFIDENTIALITÉ (NDA) — ENGAGEANT DÈS SIGNATURE</span>
+    <p>Toute information échangée dans le cadre du projet (données clients de LS EXPERTISE, chiffres d'activité, stratégie, code, maquettes, accès techniques) est strictement confidentielle et ne peut être divulguée à un tiers sans l'accord écrit préalable de l'autre partie.</p>
+    <p>Cette obligation s'applique pendant toute la durée du présent protocole et de toute relation contractuelle qui lui ferait suite, et pendant une durée de <strong class="inline">cinq (5) ans</strong> à compter de son terme, quelle qu'en soit la cause.</p>
+    <p>Sont exclues du périmètre de confidentialité les informations déjà publiques au moment de leur communication, déjà légitimement connues de la partie réceptrice, ou dont la divulgation est exigée par une autorité légale ou judiciaire.</p>
+  </div>
+
+  <!-- ART. 4 — RÉSERVE DE RÉUTILISATION DU CODE GÉNÉRIQUE -->
+  <div class="article binding">
+    <span class="num tag-binding">ART. 4 — RÉSERVE DE RÉUTILISATION DU CODE GÉNÉRIQUE — ENGAGEANT DÈS SIGNATURE</span>
+    <div class="sub-section">
+      <div class="sub-title">4.1 — Réserve expresse</div>
+      <p>La Partie A conçoit la Plateforme en s'appuyant sur une architecture générique déjà éprouvée sur d'autres réalisations (« le Générateur d'Apps Métier »), et destinée à être réutilisée et adaptée pour d'autres clients de l'agence, y compris d'autres agences de création de contenu. La Partie B reconnaît et accepte que cette architecture générique — modèle de données, mécanismes de gestion des rôles, moteur d'automatisation, gabarits d'interface — n'est ni exclusive à LS EXPERTISE, ni cédée à son profit.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">4.2 — Ce qui reste propre à LS EXPERTISE</div>
+      <p>Restent strictement propres à la Partie B et ne peuvent être réutilisés par la Partie A sans accord écrit préalable : les données de ses clients, sa marque, son identité visuelle, ses contenus, et toute information couverte par l'Art. 3.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">4.3 — Cas d'usage et référence commerciale</div>
+      <p>Si la Partie A décide de commercialiser cette architecture générique comme offre destinée à d'autres agences de création de contenu, la Partie B pourra être présentée comme premier utilisateur réel du système (« client zéro »), dans les mêmes conditions de mise en avant que celles convenues pour le contenu vidéo prévu à l'Art. 2.1 — sans contrepartie financière additionnelle au titre de cette seule mise en avant.</p>
+    </div>
+  </div>
+
+  <!-- ART. 5 — NON-SOLLICITATION RÉCIPROQUE -->
+  <div class="article binding">
+    <span class="num tag-binding">ART. 5 — NON-SOLLICITATION RÉCIPROQUE — ENGAGEANT DÈS SIGNATURE</span>
+    <p>Pendant la durée du présent protocole et pendant une durée de <strong class="inline">douze (12) mois</strong> suivant son terme, chaque partie s'interdit de solliciter directement, pour son propre compte ou celui d'un tiers, les collaborateurs ou prestataires de l'autre partie dont elle a eu connaissance dans le cadre du projet, sans l'accord écrit préalable de cette dernière.</p>
+    <p>Cette clause ne fait pas obstacle aux mises en relation dont l'objet principal est de servir la vision commune du partenariat définie à l'Art. 1 et 2.</p>
+  </div>
+
+  <!-- ART. 6 — PROPRIÉTÉ ET ACCÈS -->
+  <div class="article">
+    <span class="num">ART. 6 — PROPRIÉTÉ DES DONNÉES ET ACCÈS TECHNIQUES</span>
+    <p>Les données saisies par LS EXPERTISE dans la Plateforme (clients, contenus, contrats, factures) lui appartiennent et lui sont accessibles à tout moment via son propre compte administrateur. En cas de fin du partenariat, la Partie A s'engage à fournir un export de ces données dans un format exploitable, sous quinze (15) jours ouvrés suivant la demande écrite de la Partie B.</p>
+  </div>
+
+  <!-- ART. 7 — JALONS DE VALIDATION -->
+  <div class="article">
+    <span class="num">ART. 7 — JALONS DE VALIDATION (STAGE-GATES)</span>
+    <p>Le développement de la Plateforme avance par la validation progressive et écrite (un simple échange d'email ou WhatsApp suffit) des jalons suivants, dans l'ordre indiqué.</p>
+    <table class="jalon-table">
+      <thead>
+        <tr>
+          <th style="width:20%">Jalon</th>
+          <th style="width:40%">Objet</th>
+          <th style="width:40%">Décision attendue</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="jalon-num">JALON 1</span><br/>Contrepartie vidéo</td>
+          <td>Engagement vidéo de la Partie B : 3 vidéos + 1 live avec Mac Arthur, calendrier libre (les contenus peuvent être produits successivement, sans attendre la livraison de chaque étape)</td>
+          <td>✅ Validé le 06/07/2026 par les deux parties (canaux précis à confirmer par Lyle au moment du tournage)</td>
+        </tr>
+        <tr>
+          <td><span class="jalon-num">JALON 2</span><br/>Livraison Étape 1 — Socle</td>
+          <td>Système d'invitation et de rôles, pipeline commercial, espace client documentaire, module Administration, dashboard Direction, système de notification interne</td>
+          <td>Mise en production validée par Lyle Soboro</td>
+        </tr>
+        <tr>
+          <td><span class="jalon-num">JALON 3</span><br/>Livraison Étape 2</td>
+          <td>Social Media Management, Community Management, moteur d'automatisation, dashboards complets par rôle</td>
+          <td>Mise en production validée par Lyle Soboro</td>
+        </tr>
+        <tr>
+          <td><span class="jalon-num">JALON 4</span><br/>Livraison Étape 3 — Projet complet</td>
+          <td>Assistance IA, intégrations réseaux sociaux, suivi de rentabilité, signature électronique, paiement intégré</td>
+          <td>Mise en production validée par Lyle Soboro</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>L'engagement de 3 vidéos + 1 live (Jalon 1) porte sur l'ensemble du projet et n'est pas conditionné à l'ordre des Jalons 2 à 4. Si aucun des contenus n'est produit dans un délai de soixante (60) jours suivant la mise en production de l'Étape 1, la Partie A peut suspendre le développement des étapes suivantes, sans rompre le présent protocole.</p>
+  </div>
+
+  <!-- ART. 8 — HYPOTHÈSES NON ENGAGEANTES -->
+  <div class="article">
+    <span class="num">ART. 8 — PORTÉE DES HYPOTHÈSES DE TRAVAIL</span>
+    <p>Les délais, fréquences et volumes évoqués au cours des échanges préparatoires sont indicatifs. Aucune des parties ne peut se prévaloir d'un chiffre mentionné informellement avant sa validation formelle au Jalon 1 (Art. 7).</p>
+  </div>
+
+  <!-- ART. 9 — DURÉE -->
+  <div class="article">
+    <span class="num">ART. 9 — DURÉE DE VALIDITÉ DU PROTOCOLE</span>
+    <p>Le présent protocole entre en vigueur à sa signature pour une durée de <strong class="inline">quatre-vingt-dix (90) jours</strong>, renouvelable par tacite reconduction tant que les jalons de l'Art. 7 progressent.</p>
+    <p>En cas d'absence de progression sur un jalon pendant plus de soixante (60) jours consécutifs, chaque partie peut notifier par écrit la fin du protocole. Les articles 3 (Confidentialité), 4 (Réserve de réutilisation) et 5 (Non-sollicitation) survivent selon les durées qui leur sont propres, indépendamment du sort du protocole.</p>
+  </div>
+
+  <!-- ART. 10 — LOI ET JURIDICTION -->
+  <div class="article">
+    <span class="num">ART. 10 — LOI APPLICABLE ET RÈGLEMENT DES DIFFÉRENDS</span>
+    <div class="sub-section">
+      <div class="sub-title">10.1 — Médiation amiable obligatoire</div>
+      <p>En cas de différend relatif au présent protocole, les parties s'engagent à épuiser tout recours amiable avant toute saisine d'une juridiction ou d'un arbitre. La partie la plus diligente notifie l'autre par écrit. Les parties disposent de <strong class="inline">soixante (60) jours</strong> pour trouver une solution négociée.</p>
+    </div>
+    <div class="sub-section">
+      <div class="sub-title">10.2 — Arbitrage CCJA-OHADA</div>
+      <p>À défaut d'accord amiable, tout litige est soumis à l'arbitrage de la <strong class="inline">Cour Commune de Justice et d'Arbitrage (CCJA — OHADA)</strong>, Abidjan, dont la sentence est définitive et obligatoire pour les deux parties.</p>
+    </div>
+  </div>
+
+  <!-- ART. 11 — DISPOSITIONS GÉNÉRALES -->
+  <div class="article">
+    <span class="num">ART. 11 — DISPOSITIONS GÉNÉRALES</span>
+    <p><strong class="inline">11.1 Avenants.</strong> Toute modification du présent protocole fait l'objet d'un avenant écrit signé, ou à défaut d'un accord écrit entre les parties (email ou WhatsApp suffisant).</p>
+    <p><strong class="inline">11.2 Divisibilité.</strong> Si une clause est déclarée nulle ou inapplicable, les autres clauses conservent leur plein effet.</p>
+    <p><strong class="inline">11.3 Indépendance.</strong> Les parties agissent en tant que co-contractants indépendants. Le présent protocole ne crée ni société, ni association, ni relation de travail subordonné.</p>
+  </div>
+
+  <!-- SIGNATURES -->
+  <h2>Signatures</h2>
+  <p style="font-size:12px;margin-bottom:12px">En signant le présent document, les parties reconnaissent avoir lu, compris et accepté l'ensemble des clauses ci-dessus, notamment le caractère engageant des articles 3, 4 et 5.</p>
+  <div class="tbc-box">
+    <div class="tbc-title">À compléter avant signature</div>
+    <p style="margin-bottom:0"><strong class="inline">Qualité du représentant de LS EXPERTISE</strong> et coordonnées complètes (email) : __________</p>
+  </div>
+  <div class="signatures">
+    <div class="sig">
+      <div class="sig-label">Partie A — Prestataire</div>
+      <div class="sig-name">Mac Arthur KOUASSI</div>
+      <div class="sig-role">Mr Attractor — Micro-entreprise</div>
+      <div class="sig-space"></div>
+      <div class="sig-date">Fait le __________, à __________</div>
+    </div>
+    <div class="sig">
+      <div class="sig-label">Partie B — Partenaire</div>
+      <div class="sig-name">LS EXPERTISE</div>
+      <div class="sig-role">Représentée par M. Lyle SOBORO</div>
+      <div class="sig-space"></div>
+      <div class="sig-date">Fait le __________, à Abidjan</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015 — Immatriculée le 01/02/2024<br>
+    TVA non applicable, article 293 B du CGI — myattractor1@gmail.com — agenceattractor.com<br>
+    Protocole d'accord — Projet V1 — 6 juillet 2026 — LS EXPERTISE (Lyle Soboro)
+  </div>
+
+</div>
+</body>
+</html>

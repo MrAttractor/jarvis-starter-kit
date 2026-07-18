@@ -1,0 +1,347 @@
+<style>
+:root{
+  --orange:#F25C05; --orange-2:#ff7d34;
+  --charbon:#1A1714; --charbon-2:#241f1a;
+  --sable:#FAF6F0;
+  --vert:#1E5631; --vert-2:#2c7a46;
+  --ink:#2a231d; --muted:#6f6155;
+  --line:rgba(26,23,20,.12);
+  --card:#ffffff;
+  --red:#c0392b;
+  --sans:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  --serif:'Sora','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{max-width:100%;overflow-x:hidden}
+body{font-family:var(--sans);color:var(--ink);background:var(--sable);line-height:1.5;-webkit-font-smoothing:antialiased;padding:0 0 60px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+header{color:var(--sable);padding:30px 0 26px;margin-bottom:26px;
+  background-image:radial-gradient(700px 320px at 90% -30%,rgba(242,92,5,.22),transparent 60%),radial-gradient(600px 340px at -5% 0%,rgba(30,86,49,.2),transparent 58%),linear-gradient(160deg,#15120f,#1f1a15 62%,#191410)}
+.hbar{display:flex;align-items:center;gap:12px}
+.hbar .logo{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--orange),var(--vert));display:grid;place-items:center;color:#fff;font-weight:800;font-size:18px;font-family:var(--serif);flex:none}
+.hbar .name{font-weight:800;font-size:15px;line-height:1.2}
+.hbar .name span{display:block;color:#b7a996;font-weight:600;font-size:11px;letter-spacing:.13em;text-transform:uppercase;margin-top:2px}
+header h1{font-family:var(--serif);font-weight:700;font-size:clamp(22px,4vw,30px);margin:16px 0 6px;text-wrap:balance}
+header p{color:#cbbdad;font-size:14px;max-width:640px}
+.badge-int{display:inline-flex;align-items:center;gap:8px;background:rgba(242,92,5,.14);border:1px solid rgba(242,92,5,.36);color:#f0e6d9;font-size:12px;font-weight:600;padding:6px 12px;border-radius:20px;margin-top:14px}
+
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:22px;align-items:start}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(26,23,20,.05)}
+.panel h2{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--charbon);margin-bottom:4px}
+.panel .sub{font-size:12px;color:var(--muted);margin-bottom:18px}
+
+.ctrl{margin-bottom:20px}
+.ctrl .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
+.ctrl label{font-size:13.5px;font-weight:600;color:var(--ink)}
+.ctrl .hint{font-size:11px;color:var(--muted);font-weight:400}
+.ctrl .val{font-family:var(--serif);font-weight:700;color:var(--orange);font-size:16px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ctrl input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--orange) 0%,var(--orange) var(--pct,50%),#eadfd2 var(--pct,50%),#eadfd2 100%);outline:none}
+.ctrl input[type=range]:focus-visible{outline:2px solid var(--charbon);outline-offset:4px}
+.ctrl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--orange);cursor:pointer;box-shadow:0 2px 8px rgba(242,92,5,.35)}
+.ctrl input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--orange);cursor:pointer}
+.ctrl.green input[type=range]{background:linear-gradient(90deg,var(--vert) 0%,var(--vert) var(--pct,50%),#eadfd2 var(--pct,50%),#eadfd2 100%)}
+.ctrl.green .val{color:var(--vert)}
+.ctrl.green input[type=range]::-webkit-slider-thumb{border-color:var(--vert);box-shadow:0 2px 8px rgba(30,86,49,.3)}
+.ctrl.green input[type=range]::-moz-range-thumb{border-color:var(--vert)}
+
+.toggle{display:flex;gap:8px;background:#f2ebe1;border-radius:12px;padding:4px;margin-bottom:20px}
+.toggle button{flex:1;border:none;background:transparent;padding:9px 10px;border-radius:9px;font-family:var(--sans);font-weight:600;font-size:12.5px;color:var(--muted);cursor:pointer;transition:all .15s}
+.toggle button.on{background:#fff;color:var(--charbon);box-shadow:0 2px 8px rgba(26,23,20,.08)}
+.toggle button:focus-visible{outline:2px solid var(--charbon);outline-offset:2px}
+.toggle button .s{display:block;font-size:10.5px;font-weight:500;color:var(--muted);margin-top:2px}
+
+.hero-res{border-radius:16px;padding:22px;margin-bottom:18px;transition:background .2s}
+.hero-res.pos{background:linear-gradient(135deg,var(--vert),#134023);color:#fff}
+.hero-res.neg{background:linear-gradient(135deg,#7a1f16,var(--red));color:#fff}
+.hero-res .lbl{font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.85;font-weight:600}
+.hero-res .big{font-family:var(--serif);font-weight:700;font-size:clamp(30px,7vw,44px);line-height:1;margin:8px 0;font-variant-numeric:tabular-nums}
+.hero-res .pct{font-size:15px;opacity:.92}
+.hero-res .be{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.2);font-size:13px}
+.hero-res .be b{font-family:var(--serif)}
+
+.bar{display:flex;height:38px;border-radius:10px;overflow:hidden;margin:4px 0 6px;border:1px solid var(--line)}
+.bar span{display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#fff;min-width:0;overflow:hidden;white-space:nowrap}
+.seg-air{background:#8a7c6c}
+.seg-ops{background:#c99a5b}
+.seg-conv{background:var(--orange-2)}
+.seg-marge{background:var(--vert-2)}
+.seg-loss{background:var(--red)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:var(--muted);margin-bottom:16px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+
+.rows{display:grid;gap:2px}
+.row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.row:last-child{border-bottom:none}
+.row .v{font-family:var(--serif);font-weight:700;color:var(--charbon);white-space:nowrap;font-variant-numeric:tabular-nums}
+.row.tot{border-top:2px solid var(--line);border-bottom:none;margin-top:4px;padding-top:12px}
+.row.tot .v{font-size:16px}
+
+.period{margin-top:22px}
+.period h2{margin-bottom:14px}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.pgrid{grid-template-columns:1fr}}
+.pcard{border:1px solid var(--line);border-radius:14px;padding:16px}
+.pcard .k{font-size:11.5px;color:var(--muted);font-weight:600}
+.pcard .n{font-family:var(--serif);font-weight:700;font-size:22px;margin-top:5px;line-height:1.05;font-variant-numeric:tabular-nums}
+.pcard.aci{background:rgba(30,86,49,.06);border-color:rgba(30,86,49,.2)}
+.pcard.aci .n{color:var(--vert)}
+.pcard.jee{background:rgba(242,92,5,.06);border-color:rgba(242,92,5,.22)}
+.pcard.jee .n{color:var(--orange)}
+.pcard .sub{font-size:11px;color:var(--muted);margin-top:3px}
+
+.note{background:#fff;border:1px solid var(--line);border-left:3px solid var(--orange);border-radius:12px;padding:16px 18px;margin-top:22px;font-size:12.5px;color:var(--muted)}
+.note b{color:var(--ink)}
+.note ul{margin:8px 0 0 18px;display:grid;gap:5px}
+
+.reset{margin-top:16px;background:transparent;border:1px solid var(--line);border-radius:20px;padding:9px 18px;font-family:var(--sans);font-weight:600;font-size:12.5px;color:var(--muted);cursor:pointer}
+.reset:hover{border-color:var(--orange);color:var(--orange)}
+.reset:focus-visible{outline:2px solid var(--charbon);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="hbar">
+      <div class="logo">A</div>
+      <div class="name">Mr Attractor<span>× J'Envoie Express</span></div>
+    </div>
+    <h1>Simulateur, Programme Convoyeurs</h1>
+    <p>Bouge les curseurs pour tester l'économie du modèle avant le RDV Air Côte d'Ivoire. Le seul chiffre vraiment inconnu, c'est le tarif Air CI : c'est celui à obtenir en séance.</p>
+    <div class="badge-int">Document de travail interne, ne pas diffuser</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="grid">
+
+    <div class="panel">
+      <h2>Les leviers</h2>
+      <div class="sub">Une mission = un aller-retour de 72h sur un vol Air CI.</div>
+
+      <div class="toggle" id="mode">
+        <button data-mode="opp" class="on">Convoyeur opportuniste<span class="s">voyage déjà, billet non compté</span></button>
+        <button data-mode="ded">Convoyeur dédié<span class="s">on paie son billet</span></button>
+      </div>
+
+      <div class="ctrl green">
+        <div class="top"><label for="cair">Tarif Air CI <span class="hint">le chiffre à négocier</span></label><span class="val" id="v-cair">6,0 €/kg</span></div>
+        <input type="range" id="cair" min="3" max="10" step="0.5" value="6">
+      </div>
+
+      <div class="ctrl">
+        <div class="top"><label for="payload">Emport facturable / mission</label><span class="val" id="v-payload">100 kg</span></div>
+        <input type="range" id="payload" min="20" max="200" step="2" value="100">
+      </div>
+
+      <div class="ctrl">
+        <div class="top"><label for="prix">Prix client <span class="hint">groupage actuel 10-14 €/kg</span></label><span class="val" id="v-prix">12,0 €/kg</span></div>
+        <input type="range" id="prix" min="8" max="18" step="0.5" value="12">
+      </div>
+
+      <div class="ctrl">
+        <div class="top"><label for="prime">Prime convoyeur / mission</label><span class="val" id="v-prime">120 €</span></div>
+        <input type="range" id="prime" min="50" max="300" step="10" value="120">
+      </div>
+
+      <div class="ctrl" id="billet-wrap" style="display:none">
+        <div class="top"><label for="billet">Billet convoyeur <span class="hint">mode dédié</span></label><span class="val" id="v-billet">600 €</span></div>
+        <input type="range" id="billet" min="300" max="900" step="50" value="600">
+      </div>
+
+      <div class="ctrl">
+        <div class="top"><label for="ops">Coût opé J'Envoie Express <span class="hint">collecte, dernier km, KYC, assurance</span></label><span class="val" id="v-ops">3,0 €/kg</span></div>
+        <input type="range" id="ops" min="1" max="6" step="0.5" value="3">
+      </div>
+
+      <div class="ctrl">
+        <div class="top"><label for="nb">Missions sur la période <span class="hint">pilote 90 j</span></label><span class="val" id="v-nb">300</span></div>
+        <input type="range" id="nb" min="10" max="600" step="10" value="300">
+      </div>
+
+      <button class="reset" id="reset" type="button">Réinitialiser les hypothèses</button>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h2>Ta marge, par mission</h2>
+        <div class="sub">J'Envoie Express, après transport Air CI, convoyeur et opé.</div>
+
+        <div class="hero-res pos" id="hero">
+          <div class="lbl">Marge par mission</div>
+          <div class="big" id="marge-mission">+180 €</div>
+          <div class="pct" id="marge-pct">soit 15 % du prix payé par le client</div>
+          <div class="be">Seuil de rentabilité : rentable tant que le tarif Air CI reste sous <b id="breakeven">7,8 €/kg</b></div>
+        </div>
+
+        <div class="bar" id="bar"></div>
+        <div class="legend">
+          <span><i style="background:#8a7c6c"></i>Transport Air CI</span>
+          <span><i style="background:#c99a5b"></i>Opé J'Envoie</span>
+          <span><i style="background:#ff7d34"></i>Convoyeur</span>
+          <span><i style="background:#2c7a46"></i>Ta marge</span>
+        </div>
+
+        <div class="rows">
+          <div class="row"><span>Prix payé par le client</span><span class="v" id="r-rev">1 200 €</span></div>
+          <div class="row"><span>− Transport Air CI</span><span class="v" id="r-air">600 €</span></div>
+          <div class="row"><span>− Opé J'Envoie Express</span><span class="v" id="r-ops">300 €</span></div>
+          <div class="row"><span>− Convoyeur (prime + billet)</span><span class="v" id="r-conv">120 €</span></div>
+          <div class="row tot"><span>= Marge J'Envoie Express</span><span class="v" id="r-marge">180 €</span></div>
+        </div>
+      </div>
+
+      <div class="panel period">
+        <h2>Sur la période</h2>
+        <div class="sub" id="vol-line">300 missions, soit 30,0 tonnes de fret drainées vers Air CI.</div>
+        <div class="pgrid">
+          <div class="pcard aci">
+            <div class="k">Recette cargo Air CI</div>
+            <div class="n" id="p-aci">180 000 €</div>
+            <div class="sub">leur gain, à mettre sur la table au RDV</div>
+          </div>
+          <div class="pcard jee">
+            <div class="k">Marge J'Envoie Express</div>
+            <div class="n" id="p-jee">54 000 €</div>
+            <div class="sub">ton résultat sur la période</div>
+          </div>
+          <div class="pcard">
+            <div class="k">Gains convoyeurs cumulés</div>
+            <div class="n" id="p-conv">36 000 €</div>
+            <div class="sub">redistribués au vivier</div>
+          </div>
+          <div class="pcard">
+            <div class="k">Volume de fret</div>
+            <div class="n" id="p-vol">30,0 t</div>
+            <div class="sub">capacité soute Air CI remplie</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">
+        <b>Rappel de lecture.</b> Les hypothèses sont des ordres de grandeur ancrés sur le marché (groupage 10-14 €/kg, prime type Airmule 150-250 $/A-R). Le tarif cargo Air CI et la capacité soute sont les deux inconnues à obtenir au RDV.
+        <ul>
+          <li>Le modèle bascule dans le rouge dès que le tarif Air CI dépasse le seuil affiché : ta seule demande vraiment critique en séance.</li>
+          <li>Plus l'emport par mission est élevé, plus la prime convoyeur (fixe) s'amortit : privilégier le cargo accompagné.</li>
+          <li>Le mode « dédié » (on paie le billet) casse presque toujours l'économie : le bon profil voyage déjà.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var DEFAULTS = {cair:6, payload:100, prix:12, prime:120, billet:600, ops:3, nb:300};
+  var mode = 'opp';
+  var el = function(id){return document.getElementById(id)};
+  var ids = ['cair','payload','prix','prime','billet','ops','nb'];
+
+  var eur = function(n){return Math.round(n).toLocaleString('fr-FR')+' €'};
+  var dec = function(n){return n.toLocaleString('fr-FR',{minimumFractionDigits:1,maximumFractionDigits:1})};
+
+  function fillTrack(input){
+    var min=+input.min, max=+input.max, v=+input.value;
+    var pct=(v-min)/(max-min)*100;
+    input.style.setProperty('--pct', pct+'%');
+  }
+
+  function compute(){
+    var cair=+el('cair').value, payload=+el('payload').value, prix=+el('prix').value,
+        prime=+el('prime').value, billet=(mode==='ded')?+el('billet').value:0,
+        ops=+el('ops').value, nb=+el('nb').value;
+
+    el('v-cair').textContent = dec(cair)+' €/kg';
+    el('v-payload').textContent = payload+' kg';
+    el('v-prix').textContent = dec(prix)+' €/kg';
+    el('v-prime').textContent = prime+' €';
+    el('v-billet').textContent = billet+' €';
+    el('v-ops').textContent = dec(ops)+' €/kg';
+    el('v-nb').textContent = nb;
+
+    var revenue = payload*prix;
+    var airCost = payload*cair;
+    var opsCost = payload*ops;
+    var conv = prime + billet;
+    var marge = revenue - airCost - opsCost - conv;
+    var margePct = revenue>0 ? (marge/revenue*100) : 0;
+    var breakeven = prix - ops - (conv/payload);
+
+    var hero = el('hero');
+    hero.className = 'hero-res ' + (marge>=0?'pos':'neg');
+    el('marge-mission').textContent = (marge>=0?'+':'') + eur(marge);
+    el('marge-pct').textContent = marge>=0
+      ? 'soit '+Math.round(margePct)+' % du prix payé par le client'
+      : 'le modèle perd de l\'argent à ce tarif';
+    el('breakeven').textContent = dec(Math.max(0,breakeven))+' €/kg';
+
+    el('r-rev').textContent = eur(revenue);
+    el('r-air').textContent = eur(airCost);
+    el('r-ops').textContent = eur(opsCost);
+    el('r-conv').textContent = eur(conv);
+    el('r-marge').textContent = (marge>=0?'+':'')+eur(marge);
+
+    var bar = el('bar');
+    bar.innerHTML='';
+    function seg(cls,amount,label){
+      if(amount<=0) return;
+      var w = revenue>0 ? Math.max(0,(amount/revenue*100)) : 0;
+      var s=document.createElement('span');
+      s.className='seg-'+cls;
+      s.style.width=w+'%';
+      s.textContent = w>11 ? label : '';
+      bar.appendChild(s);
+    }
+    if(marge>=0){
+      seg('air',airCost,'Air CI');
+      seg('ops',opsCost,'Opé');
+      seg('conv',conv,'Conv.');
+      seg('marge',marge,'Marge');
+    } else {
+      var s=document.createElement('span');
+      s.className='seg-loss';s.style.width='100%';s.textContent='Coûts supérieurs au prix client';
+      bar.appendChild(s);
+    }
+
+    var totVolT = payload*nb/1000;
+    var aciRev = airCost*nb;
+    var jeeMarge = marge*nb;
+    var convTot = conv*nb;
+
+    el('vol-line').textContent = nb+' missions, soit '+dec(totVolT)+' tonnes de fret drainées vers Air CI.';
+    el('p-aci').textContent = eur(aciRev);
+    el('p-jee').textContent = eur(jeeMarge);
+    el('p-jee').style.color = jeeMarge>=0 ? 'var(--orange)' : 'var(--red)';
+    el('p-conv').textContent = eur(convTot);
+    el('p-vol').textContent = dec(totVolT)+' t';
+
+    ids.forEach(function(id){fillTrack(el(id))});
+  }
+
+  ids.forEach(function(id){ el(id).addEventListener('input',compute); });
+
+  var mbtns = document.querySelectorAll('#mode button');
+  mbtns.forEach(function(b){
+    b.addEventListener('click',function(){
+      mbtns.forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');
+      mode = b.dataset.mode;
+      el('billet-wrap').style.display = (mode==='ded')?'block':'none';
+      compute();
+    });
+  });
+
+  el('reset').addEventListener('click',function(){
+    for(var k in DEFAULTS){ el(k).value = DEFAULTS[k]; }
+    mbtns.forEach(function(x){x.classList.remove('on')});
+    document.querySelector('#mode button[data-mode="opp"]').classList.add('on');
+    mode='opp'; el('billet-wrap').style.display='none';
+    compute();
+  });
+
+  compute();
+})();
+</script>

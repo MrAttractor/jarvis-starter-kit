@@ -27,12 +27,32 @@ Ton rôle :
 
 Style : phrases courtes, vocabulaire élégant et précis. Jamais de formules génériques ("N'hésitez pas à...", "Je suis ravi de..."). Aucun emoji. Vouvoiement systématique.`;
 
+// Le visiteur choisit sa langue sur le site (FR/EN). On force la langue de réponse
+// pour rester cohérent avec le bouton choisi. Le catalogue est stocké en français :
+// l'assistant traduit les descriptions à la volée quand il répond en anglais, mais
+// ne modifie jamais les noms de maisons ni les prix.
+function langInstruction(lang: string): string {
+  if (lang === "en") {
+    return `\n\nLANGUAGE: Reply ONLY in English, regardless of the language of the catalogue below. Keep house names and prices exactly as written; translate product descriptions into natural English. Same refined, concise tone. No emoji. Use a polite, professional register.`;
+  }
+  return `\n\nLANGUE : Réponds UNIQUEMENT en français.`;
+}
+
+const FALLBACK = {
+  fr: "Je reviens vers vous dans un instant.",
+  en: "I'll get back to you in a moment.",
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
 
   try {
-    const { messages } = await req.json();
+    const { messages, lang } = await req.json();
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Articles retirés après 24h en ligne : l'assistant ne propose que les pièces
+    // mises en ligne il y a moins de 24h (cohérent avec la vitrine publique).
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
     let catalogueBlock = "";
     try {
@@ -40,6 +60,7 @@ serve(async (req) => {
         .from("gw_produits")
         .select("nom, prix, categorie, maison, note_delai, description")
         .eq("est_actif", true)
+        .gte("created_at", since)
         .order("categorie");
 
       if (produits && produits.length > 0) {
@@ -60,20 +81,20 @@ serve(async (req) => {
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
         max_tokens: 500,
-        system: SYSTEM_PROMPT_BASE + catalogueBlock,
+        system: SYSTEM_PROMPT_BASE + catalogueBlock + langInstruction(lang),
         messages,
       }),
     });
 
     const data = await res.json();
     const reply = data?.content?.[0]?.text?.trim()
-      ?? "Je reviens vers vous dans un instant.";
+      ?? FALLBACK[lang === "en" ? "en" : "fr"];
 
     return new Response(JSON.stringify({ reply }), {
       headers: { "Content-Type": "application/json", ...CORS },
     });
   } catch {
-    return new Response(JSON.stringify({ reply: "Je reviens vers vous dans un instant." }), {
+    return new Response(JSON.stringify({ reply: FALLBACK.fr }), {
       status: 200,
       headers: { "Content-Type": "application/json", ...CORS },
     });

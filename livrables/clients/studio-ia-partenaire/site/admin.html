@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tableau de pilotage — Agence Innovation Créative</title>
+<meta name="robots" content="noindex" />
+<link rel="icon" href="assets/img/logo-v2.png" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+<style>
+body{padding:0}
+.admin-wrap{max-width:940px;margin:0 auto;padding:24px}
+/* LOGIN */
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-card{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:36px 32px;text-align:center;box-shadow:var(--shadow)}
+.login-card .mark{width:72px;height:72px;border-radius:18px;overflow:hidden;margin:0 auto 18px}
+.login-card .mark img{width:100%;height:100%;object-fit:cover}
+.login-card h1{font-size:1.5rem;margin-bottom:6px}
+.login-card p{color:var(--muted);font-size:.9rem;margin-bottom:24px}
+.login-card .field{text-align:left;margin-bottom:16px}
+.login-card label{display:block;font-size:.84rem;color:var(--ink-soft);margin-bottom:7px}
+.login-card input{width:100%;padding:13px 15px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);color:var(--ink);font-family:inherit;font-size:.95rem}
+.login-card input:focus{outline:none;border-color:var(--amber)}
+.login-card .btn{width:100%;justify-content:center;margin-top:6px}
+.login-card .link{display:inline-block;margin-top:16px;color:var(--amber);font-size:.85rem;cursor:pointer;background:none;border:0}
+.msg{font-size:.85rem;margin-top:12px;min-height:18px}
+.msg.err{color:#ff8080}.msg.ok{color:var(--amber)}
+/* DASHBOARD */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);margin-bottom:28px;flex-wrap:wrap}
+.topbar .brand{display:flex;align-items:center;gap:12px;font-family:'Space Grotesk';font-weight:600}
+.topbar .logo{width:40px;height:40px;border-radius:11px;overflow:hidden}
+.topbar .logo img{width:100%;height:100%;object-fit:cover}
+.topbar small{display:block;font-family:'Inter';font-weight:400;font-size:.7rem;color:var(--muted)}
+.stat-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:24px}
+.stat{flex:1;min-width:130px;padding:18px 20px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line)}
+.stat .n{font-family:'Space Grotesk';font-size:1.9rem;font-weight:700}
+.stat .l{color:var(--muted);font-size:.82rem;margin-top:2px}
+.tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.tabs button{padding:9px 18px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft);font-size:.86rem;cursor:pointer;min-height:40px}
+.tabs button.active{background:var(--grad);color:#1a1206;border-color:transparent;font-weight:600}
+.dcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;margin-bottom:14px}
+.dcard.nouveau{border-left:3px solid var(--amber)}
+.dcard .head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.dcard .who{font-family:'Space Grotesk';font-weight:600;font-size:1.1rem}
+.dcard .when{color:var(--muted);font-size:.8rem}
+.badge2{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;padding:4px 11px;border-radius:999px;font-weight:600}
+.badge2.devis{background:rgba(246,166,42,.16);color:var(--amber);border:1px solid rgba(246,166,42,.3)}
+.badge2.coaching{background:rgba(120,90,220,.18);color:#b8a6f5;border:1px solid rgba(120,90,220,.35)}
+.dcard .rows{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.9rem;margin-bottom:14px}
+.dcard .rows .k{color:var(--muted)}
+.dcard .rows .v{color:var(--ink)}
+.dcard .actions{display:flex;gap:10px;flex-wrap:wrap}
+.dcard .actions a,.dcard .actions button{font-size:.85rem;padding:9px 16px;border-radius:10px;cursor:pointer;border:1px solid var(--line-2);background:var(--surface-2);color:var(--ink);display:inline-flex;align-items:center;gap:7px;min-height:40px}
+.dcard .actions .wa{background:#25D366;color:#0a2e18;border:0;font-weight:600}
+.dcard.traite{opacity:.62}
+.empty{text-align:center;color:var(--muted);padding:50px 20px}
+.logout{background:var(--surface);border:1px solid var(--line);color:var(--ink-soft);padding:9px 16px;border-radius:10px;cursor:pointer;font-size:.85rem;min-height:40px}
+.hidden{display:none}
+@media(max-width:520px){ .dcard .rows{grid-template-columns:1fr} .dcard .rows .k{margin-top:6px} }
+</style>
+</head>
+<body>
+
+<div class="ambient"><div class="blob b1"></div><div class="blob b2"></div></div>
+
+<!-- LOGIN -->
+<div class="login" id="loginView">
+  <div class="login-card">
+    <div class="mark"><img src="assets/img/logo-v2.png" alt="" /></div>
+    <h1>Tableau de pilotage</h1>
+    <p>Agence Innovation Créative — accès réservé</p>
+    <form id="loginForm">
+      <div class="field"><label>Email</label><input type="email" id="email" required autocomplete="username" /></div>
+      <div class="field"><label>Mot de passe</label><input type="password" id="password" required autocomplete="current-password" /></div>
+      <button type="submit" class="btn btn-primary">Se connecter</button>
+    </form>
+    <button class="link" id="forgot">Mot de passe oublié ?</button>
+    <div class="msg" id="loginMsg"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="admin-wrap hidden" id="dashView">
+  <div class="topbar">
+    <div class="brand">
+      <span class="logo"><img src="assets/img/logo-v2.png" alt="" /></span>
+      <span>Pilotage<small id="whoami"></small></span>
+    </div>
+    <button class="logout" id="logout">Se déconnecter</button>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat"><div class="n" id="statNew">0</div><div class="l">Nouvelles demandes</div></div>
+    <div class="stat"><div class="n" id="statTotal">0</div><div class="l">Total demandes</div></div>
+    <div class="stat"><div class="n" id="statDevis">0</div><div class="l">Devis</div></div>
+    <div class="stat"><div class="n" id="statCoach">0</div><div class="l">Coaching</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="active" data-f="all">Toutes</button>
+    <button data-f="nouveau">Nouvelles</button>
+    <button data-f="devis">Devis</button>
+    <button data-f="coaching">Coaching</button>
+  </div>
+
+  <div id="list"><div class="empty">Chargement…</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPA_URL = 'https://lgdgbrivnhgeupqhkckd.supabase.co';
+const SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
+const sb = supabase.createClient(SUPA_URL, SUPA_ANON);
+
+const loginView = document.getElementById('loginView');
+const dashView = document.getElementById('dashView');
+const loginMsg = document.getElementById('loginMsg');
+let DEMANDES = [], filter = 'all';
+
+function setMsg(t, ok){ loginMsg.textContent = t; loginMsg.className = 'msg ' + (ok?'ok':'err'); }
+
+document.getElementById('loginForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  setMsg('Connexion…', true);
+  const { error } = await sb.auth.signInWithPassword({
+    email: document.getElementById('email').value.trim(),
+    password: document.getElementById('password').value,
+  });
+  if(error){ setMsg('Email ou mot de passe incorrect.', false); return; }
+  showDash();
+});
+
+document.getElementById('forgot').addEventListener('click', async ()=>{
+  const email = document.getElementById('email').value.trim();
+  if(!email){ setMsg('Entrez votre email d\'abord.', false); return; }
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/admin' });
+  setMsg(error ? 'Erreur, réessayez.' : 'Email de réinitialisation envoyé. Vérifiez votre boîte.', !error);
+});
+
+document.getElementById('logout').addEventListener('click', async ()=>{
+  await sb.auth.signOut();
+  dashView.classList.add('hidden'); loginView.classList.remove('hidden');
+});
+
+async function showDash(){
+  const { data:{ user } } = await sb.auth.getUser();
+  if(!user) return;
+  document.getElementById('whoami').textContent = user.email;
+  loginView.classList.add('hidden'); dashView.classList.remove('hidden');
+  await loadDemandes();
+}
+
+async function loadDemandes(){
+  const { data, error } = await sb.from('aic_demandes').select('*').order('created_at', { ascending:false });
+  if(error){ document.getElementById('list').innerHTML = '<div class="empty">Erreur de chargement.</div>'; return; }
+  DEMANDES = data || [];
+  document.getElementById('statTotal').textContent = DEMANDES.length;
+  document.getElementById('statNew').textContent = DEMANDES.filter(d=>d.statut==='nouveau').length;
+  document.getElementById('statDevis').textContent = DEMANDES.filter(d=>d.type==='devis').length;
+  document.getElementById('statCoach').textContent = DEMANDES.filter(d=>d.type==='coaching').length;
+  render();
+}
+
+function fmtDate(s){
+  const d = new Date(s);
+  return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short'}) + ' ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+}
+function esc(s){ const p=document.createElement('div'); p.textContent = s==null?'':String(s); return p.innerHTML; }
+
+function render(){
+  const list = document.getElementById('list');
+  let items = DEMANDES;
+  if(filter==='nouveau') items = items.filter(d=>d.statut==='nouveau');
+  else if(filter==='devis') items = items.filter(d=>d.type==='devis');
+  else if(filter==='coaching') items = items.filter(d=>d.type==='coaching');
+  if(!items.length){ list.innerHTML = '<div class="empty">Aucune demande ici pour le moment.</div>'; return; }
+
+  list.innerHTML = items.map(d=>{
+    const wa = String(d.contact||'').replace(/[\s+\-()]/g,'');
+    const rows = [
+      ['Contact', d.contact], ['Email', d.email], ['Pays', d.pays],
+      ['Besoin', d.besoin], ['Formule', d.formule], ['Message', d.message],
+    ].filter(r=>r[1]).map(r=>`<span class="k">${esc(r[0])}</span><span class="v">${esc(r[1])}</span>`).join('');
+    const done = d.statut==='traite';
+    return `<div class="dcard ${d.statut}">
+      <div class="head">
+        <div><span class="who">${esc(d.nom||'Prospect')}</span></div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="badge2 ${d.type}">${d.type}</span>
+          <span class="when">${fmtDate(d.created_at)}</span>
+        </div>
+      </div>
+      <div class="rows">${rows}</div>
+      <div class="actions">
+        ${wa?`<a class="wa" href="https://wa.me/${wa}" target="_blank" rel="noopener">Répondre WhatsApp</a>`:''}
+        <button data-id="${d.id}" data-to="${done?'nouveau':'traite'}" class="toggle">${done?'Rouvrir':'Marquer traité'}</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  list.querySelectorAll('.toggle').forEach(b=> b.addEventListener('click', async ()=>{
+    await sb.from('aic_demandes').update({ statut:b.dataset.to }).eq('id', b.dataset.id);
+    await loadDemandes();
+  }));
+}
+
+document.querySelectorAll('.tabs button').forEach(b=> b.addEventListener('click', ()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); filter = b.dataset.f; render();
+}));
+
+/* session persistante */
+(async ()=>{ const { data:{ session } } = await sb.auth.getSession(); if(session) showDash(); })();
+</script>
+</body>
+</html>

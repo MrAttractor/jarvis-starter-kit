@@ -71,6 +71,12 @@
     .how-body .how-name { font-size:12.5px; font-weight:600; color:var(--ink); margin-bottom:2px; }
     .how-body .how-desc { font-size:11.5px; color:var(--ink2); line-height:1.5; }
 
+    /* Avertissement sélection journalière */
+    .how-warning { display:flex; gap:10px; align-items:flex-start; margin-top:14px; padding:12px 14px; background:var(--rouge-d); border-left:3px solid var(--rouge); }
+    .how-warning svg { flex-shrink:0; margin-top:1px; color:var(--rouge); }
+    .how-warning-text { font-size:11.5px; color:var(--ink2); line-height:1.55; }
+    .how-warning-text strong { color:var(--rouge); font-weight:600; }
+
     .svc-tabs { display:flex; border-bottom:1px solid var(--border); background:var(--blanc); }
     .svc-tab { flex:1; padding:12px 4px; text-align:center; cursor:pointer; font-size:10px; font-weight:600; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; border-bottom:2px solid transparent; transition:all 0.2s; margin-bottom:-1px; }
     .svc-tab.active { color:var(--vert); border-bottom-color:var(--vert); }
@@ -229,6 +235,27 @@
 
     .toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; padding:10px 18px; font-size:12px; z-index:400; white-space:nowrap; opacity:0; transition:opacity 0.3s; pointer-events:none; }
     .toast.show { opacity:1; }
+
+    /* ── SÉLECTEUR DE LANGUE ── */
+    .hdr-actions { display:flex; align-items:center; gap:8px; }
+    .lang-toggle { min-width:34px; height:34px; padding:0 9px; border-radius:17px; border:1px solid var(--border); background:var(--blanc); color:var(--ink2); font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.06em; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .lang-toggle:active { background:var(--sable); }
+
+    /* ── BULLE WHATSAPP ── */
+    .wa-bubble { position:fixed; bottom:86px; right:16px; width:54px; height:54px; border-radius:50%; background:#25D366; box-shadow:0 6px 20px rgba(37,211,102,0.45); display:flex; align-items:center; justify-content:center; z-index:150; cursor:pointer; text-decoration:none; transition:transform 0.15s; }
+    .wa-bubble:active { transform:scale(0.92); }
+    .wa-bubble svg { width:30px; height:30px; }
+    .wa-bubble.hidden { display:none; }
+    @media (min-width:462px) { .wa-bubble { right:calc(50% - 215px + 16px); } }
+
+    /* ── BARRE PANIER FLOTTANTE ── */
+    .cart-bar { position:fixed; left:50%; transform:translateX(-50%); bottom:80px; width:calc(100% - 24px); max-width:406px; background:var(--vert); color:#fff; display:none; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; border-radius:12px; box-shadow:0 8px 24px rgba(27,58,45,0.38); z-index:150; cursor:pointer; }
+    .cart-bar.show { display:flex; }
+    .cart-bar:active { transform:translateX(-50%) scale(0.99); }
+    .cart-bar-left { font-size:12px; display:flex; align-items:center; gap:9px; min-width:0; }
+    .cart-bar-count { background:var(--rouge); color:#fff; min-width:20px; height:20px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; padding:0 5px; flex-shrink:0; }
+    .cart-bar-label { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .cart-bar-cta { font-size:12px; font-weight:600; display:flex; align-items:center; gap:6px; flex-shrink:0; }
   </style>
 </head>
 <body>
@@ -240,12 +267,15 @@
       <div class="brand-mark">GW</div>
       <div>
         <div class="brand-name">GetWinWorld</div>
-        <div class="brand-sub">Votre Personal Shopper</div>
+        <div class="brand-sub" data-i18n="brand_sub">Votre Personal Shopper</div>
       </div>
     </div>
-    <div class="hdr-btn" onclick="showToast('Nouvelles pièces disponibles')">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      <div class="notif-dot"></div>
+    <div class="hdr-actions">
+      <button class="lang-toggle" id="lang-toggle" onclick="toggleLang()">EN</button>
+      <div class="hdr-btn" onclick="showToast(t('toast_new_pieces'))">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-dot"></div>
+      </div>
     </div>
   </div>
 
@@ -257,54 +287,58 @@
         <video class="hero-video" src="hero.mp4" poster="photos/p30.jpg" autoplay muted loop playsinline preload="metadata"></video>
         <div class="hero-overlay"></div>
         <div class="hero-content">
-          <div class="hero-eyebrow">Sélection · Été 2026</div>
-          <div class="hero-title">L'excellence<br><em>italienne.</em></div>
+          <div class="hero-eyebrow" data-i18n="hero_eyebrow">Sélection · Été 2026</div>
+          <div class="hero-title" data-i18n="hero_title">L'excellence<br><em>italienne.</em></div>
           <div class="hero-badge">
             <svg width="6" height="6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-            0 stock · Sur commande
+            <span data-i18n="hero_badge">Sélection renouvelée chaque jour</span>
           </div>
         </div>
       </div>
 
       <div class="how">
-        <div class="how-eyebrow">Pourquoi GetWinWorld</div>
-        <div class="how-title">Fini de chercher sur dix sites différents.<br><em>Charles s'en charge, chaque jour.</em></div>
+        <div class="how-eyebrow" data-i18n="how_eyebrow">Pourquoi GetWinWorld</div>
+        <div class="how-title" data-i18n="how_title">Fini de chercher sur dix sites différents.<br><em>Charles s'en charge, chaque jour.</em></div>
         <div class="how-steps">
           <div class="how-step">
             <div class="how-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M8 11h6"/></svg></div>
             <div class="how-body">
-              <div class="how-name">Charles déniche les pépites</div>
-              <div class="how-desc">Il sélectionne chaussures et costumes auprès de ses maisons italiennes partenaires, et met à jour les arrivages chaque jour.</div>
+              <div class="how-name" data-i18n="how1_name">Charles déniche les pépites</div>
+              <div class="how-desc" data-i18n="how1_desc">Il sélectionne chaussures et costumes auprès de ses maisons italiennes partenaires, et met à jour les arrivages chaque jour.</div>
             </div>
           </div>
           <div class="how-step">
             <div class="how-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
             <div class="how-body">
-              <div class="how-name">Vous parcourez, vous choisissez</div>
-              <div class="how-desc">Une seule vitrine, mise à jour en continu. Vous ajoutez vos coups de cœur à votre sélection, ou demandez conseil au conseiller.</div>
+              <div class="how-name" data-i18n="how2_name">Vous parcourez, vous choisissez</div>
+              <div class="how-desc" data-i18n="how2_desc">Une seule vitrine, mise à jour en continu. Vous ajoutez vos coups de cœur à votre sélection, ou demandez conseil au conseiller.</div>
             </div>
           </div>
           <div class="how-step">
             <div class="how-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
             <div class="how-body">
-              <div class="how-name">Charles s'occupe du reste</div>
-              <div class="how-desc">Vous envoyez votre demande, il confirme la disponibilité, commande, et vous livre. Vous suivez tout depuis l'app.</div>
+              <div class="how-name" data-i18n="how3_name">Charles s'occupe du reste</div>
+              <div class="how-desc" data-i18n="how3_desc">Vous envoyez votre demande, il confirme la disponibilité, commande, et vous livre. Vous suivez tout depuis l'app.</div>
             </div>
           </div>
+        </div>
+        <div class="how-warning">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <div class="how-warning-text" data-i18n="how_warning"><strong>Offres journalières, non garanties le lendemain.</strong> Charles ne garde rien en stock : chaque pièce vue aujourd'hui peut être commandée par un autre client avant vous. Ne remettez pas votre sélection à demain.</div>
         </div>
       </div>
 
       <div class="svc-tabs">
-        <div class="svc-tab active" onclick="switchSvc('vest',this)">Vestimentaire</div>
-        <div class="svc-tab" onclick="switchSvc('event',this)">Événements</div>
-        <div class="svc-tab" onclick="switchSvc('conseils',this)">Conseils</div>
+        <div class="svc-tab active" onclick="switchSvc('vest',this)" data-i18n="tab_vest">Vestimentaire</div>
+        <div class="svc-tab" onclick="switchSvc('event',this)" data-i18n="tab_event">Événements</div>
+        <div class="svc-tab" onclick="switchSvc('conseils',this)" data-i18n="tab_conseils">Conseils</div>
       </div>
 
       <!-- Vestimentaire -->
       <div class="prod-section active" id="section-vest">
         <div class="inscribe-banner" id="inscribe-banner">
           <div class="inscribe-close" onclick="dismissInscribeBanner(event)">✕</div>
-          <div class="inscribe-text" onclick="openInscriptionForm()"><strong>Voyez les arrivages avant tout le monde.</strong><br>Inscrivez-vous à la liste prioritaire de Charles.</div>
+          <div class="inscribe-text" onclick="openInscriptionForm()" data-i18n="inscribe_banner"><strong>Nouvelle sélection chaque jour.</strong><br>Devenez membre pour être prévenu en priorité, avant tout le monde.</div>
         </div>
         <div class="cat-chips" id="cat-chips"></div>
         <div class="products-grid" id="products-grid"></div>
@@ -314,28 +348,28 @@
       <!-- Événements -->
       <div class="prod-section" id="section-event">
         <div class="conc-hero">
-          <div class="conc-eyebrow">Service exclusif</div>
-          <div class="conc-title">Votre concierge<br><em>privé.</em></div>
-          <div class="conc-sub">Organisation d'événements sur mesure, accès à des espaces et tables privés, expériences VIP. Chaque demande est unique.</div>
+          <div class="conc-eyebrow" data-i18n="conc_eyebrow">Service exclusif</div>
+          <div class="conc-title" data-i18n="conc_title">Votre concierge<br><em>privé.</em></div>
+          <div class="conc-sub" data-i18n="conc_sub">Organisation d'événements sur mesure, accès à des espaces et tables privés, expériences VIP. Chaque demande est unique.</div>
         </div>
         <div class="conc-offers">
           <div class="offer-card">
             <div class="offer-num">01</div>
-            <div class="offer-title">Événements privés</div>
-            <div class="offer-desc">Dîners d'affaires, soirées de gala, célébrations. Charles gère la venue, le traiteur, la décoration et la liste des invités.</div>
-            <div class="offer-cta" onclick="goTo('conseiller',document.querySelectorAll('.nav-item')[1])">Faire une demande <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+            <div class="offer-title" data-i18n="offer1_title">Événements privés</div>
+            <div class="offer-desc" data-i18n="offer1_desc">Dîners d'affaires, soirées de gala, célébrations. Charles gère la venue, le traiteur, la décoration et la liste des invités.</div>
+            <div class="offer-cta" onclick="goTo('conseiller',document.querySelectorAll('.nav-item')[1])"><span data-i18n="offer_cta">Faire une demande</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
           </div>
           <div class="offer-card">
             <div class="offer-num">02</div>
-            <div class="offer-title">Accès & Réservations VIP</div>
-            <div class="offer-desc">Tables dans les meilleurs restaurants, loges privées, accès backstage. Sur simple demande au conseiller.</div>
-            <div class="offer-cta" onclick="goTo('conseiller',document.querySelectorAll('.nav-item')[1])">Faire une demande <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+            <div class="offer-title" data-i18n="offer2_title">Accès & Réservations VIP</div>
+            <div class="offer-desc" data-i18n="offer2_desc">Tables dans les meilleurs restaurants, loges privées, accès backstage. Sur simple demande au conseiller.</div>
+            <div class="offer-cta" onclick="goTo('conseiller',document.querySelectorAll('.nav-item')[1])"><span data-i18n="offer_cta">Faire une demande</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
           </div>
           <div class="offer-card">
             <div class="offer-num">03</div>
-            <div class="offer-title">Déplacements & Séjours</div>
-            <div class="offer-desc">Voyages sur mesure, chauffeurs privés, suites hôtelières. L'expérience de bout en bout.</div>
-            <div class="offer-cta" onclick="goTo('conseiller',document.querySelectorAll('.nav-item')[1])">Faire une demande <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+            <div class="offer-title" data-i18n="offer3_title">Déplacements & Séjours</div>
+            <div class="offer-desc" data-i18n="offer3_desc">Voyages sur mesure, chauffeurs privés, suites hôtelières. L'expérience de bout en bout.</div>
+            <div class="offer-cta" onclick="goTo('conseiller',document.querySelectorAll('.nav-item')[1])"><span data-i18n="offer_cta">Faire une demande</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
           </div>
         </div>
       </div>
@@ -343,40 +377,40 @@
       <!-- Conseils -->
       <div class="prod-section" id="section-conseils">
         <div class="conc-hero">
-          <div class="conc-eyebrow">Le savoir de Charles</div>
-          <div class="conc-title">Conseils <em>style.</em></div>
-          <div class="conc-sub">Ce qu'il faut savoir avant de commander une pièce — occasion, mesures, entretien, délais.</div>
+          <div class="conc-eyebrow" data-i18n="tips_eyebrow">Le savoir de Charles</div>
+          <div class="conc-title" data-i18n="tips_title">Conseils <em>style.</em></div>
+          <div class="conc-sub" data-i18n="tips_sub">Ce qu'il faut savoir avant de commander une pièce — occasion, mesures, entretien, délais.</div>
         </div>
         <div class="conc-offers">
           <div class="offer-card">
             <div class="offer-num">01</div>
-            <div class="offer-title">Choisir son costume selon l'occasion</div>
-            <div class="offer-desc">Cérémonie : coupe classique, tons sombres, unis. Rendez-vous d'affaires : coupe ajustée, gris ou bleu marine. Soirée privée : velours ou tissu texturé, coupe plus affirmée.</div>
+            <div class="offer-title" data-i18n="tip1_title">Choisir son costume selon l'occasion</div>
+            <div class="offer-desc" data-i18n="tip1_desc">Cérémonie : coupe classique, tons sombres, unis. Rendez-vous d'affaires : coupe ajustée, gris ou bleu marine. Soirée privée : velours ou tissu texturé, coupe plus affirmée.</div>
           </div>
           <div class="offer-card">
             <div class="offer-num">02</div>
-            <div class="offer-title">Prendre ses mesures chez soi</div>
-            <div class="offer-desc">Tour de poitrine, longueur de manche (épaule à poignet), tour de taille, longueur d'entrejambe. Un mètre ruban suffit — Charles vous guide en quelques minutes sur WhatsApp si besoin.</div>
+            <div class="offer-title" data-i18n="tip2_title">Prendre ses mesures chez soi</div>
+            <div class="offer-desc" data-i18n="tip2_desc">Tour de poitrine, longueur de manche (épaule à poignet), tour de taille, longueur d'entrejambe. Un mètre ruban suffit — Charles vous guide en quelques minutes sur WhatsApp si besoin.</div>
           </div>
           <div class="offer-card">
             <div class="offer-num">03</div>
-            <div class="offer-title">Entretenir des chaussures en cuir italien</div>
-            <div class="offer-desc">Embauchoirs en bois après chaque port, cirage tous les quinze jours, alternance entre deux paires pour laisser respirer le cuir.</div>
+            <div class="offer-title" data-i18n="tip3_title">Entretenir des chaussures en cuir italien</div>
+            <div class="offer-desc" data-i18n="tip3_desc">Embauchoirs en bois après chaque port, cirage tous les quinze jours, alternance entre deux paires pour laisser respirer le cuir.</div>
           </div>
           <div class="offer-card">
             <div class="offer-num">04</div>
-            <div class="offer-title">Costume complet ou blazer seul</div>
-            <div class="offer-desc">Le costume complet pour les occasions formelles. Le blazer seul, associé à un pantalon différent, pour un usage plus quotidien ou décontracté-chic.</div>
+            <div class="offer-title" data-i18n="tip4_title">Costume complet ou blazer seul</div>
+            <div class="offer-desc" data-i18n="tip4_desc">Le costume complet pour les occasions formelles. Le blazer seul, associé à un pantalon différent, pour un usage plus quotidien ou décontracté-chic.</div>
           </div>
           <div class="offer-card">
             <div class="offer-num">05</div>
-            <div class="offer-title">Délais de livraison : à quoi s'attendre</div>
-            <div class="offer-desc">0 stock signifie chaque pièce commandée sur mesure auprès des maisons partenaires. Cinq à huit jours pour les chaussures, sept à douze jours pour les costumes. La qualité prime sur l'immédiateté.</div>
+            <div class="offer-title" data-i18n="tip5_title">Délais de livraison : à quoi s'attendre</div>
+            <div class="offer-desc" data-i18n="tip5_desc">0 stock signifie chaque pièce commandée sur mesure auprès des maisons partenaires. Cinq à huit jours pour les chaussures, sept à douze jours pour les costumes. La qualité prime sur l'immédiateté.</div>
           </div>
         </div>
         <div class="tips-cta">
-          <div class="tips-cta-text">Une question précise sur votre situation ?</div>
-          <div class="tips-cta-link" onclick="goTo('conseiller',document.querySelectorAll('.nav-item')[1])">Demander conseil au conseiller →</div>
+          <div class="tips-cta-text" data-i18n="tips_cta_text">Une question précise sur votre situation ?</div>
+          <div class="tips-cta-link" onclick="goTo('conseiller',document.querySelectorAll('.nav-item')[1])" data-i18n="tips_cta_link">Demander conseil au conseiller →</div>
         </div>
       </div>
     </div>
@@ -387,30 +421,30 @@
         <div class="chat-hd-top">
           <div class="chat-av">GW</div>
           <div>
-            <div class="chat-title">Votre conseiller</div>
-            <div class="chat-status">Disponible · Répond en quelques secondes</div>
+            <div class="chat-title" data-i18n="chat_title">Votre conseiller</div>
+            <div class="chat-status" data-i18n="chat_status">Disponible · Répond en quelques secondes</div>
           </div>
         </div>
-        <div class="chat-sub">Style, occasion, événement ou pièce en tête — dites-moi tout. Charles s'occupe du reste.</div>
+        <div class="chat-sub" data-i18n="chat_sub">Style, occasion, événement ou pièce en tête — dites-moi tout. Charles s'occupe du reste.</div>
         <div class="quick-chips">
-          <div class="quick-chip" onclick="sendQuick('Je cherche un costume pour une cérémonie')">Cérémonie</div>
-          <div class="quick-chip" onclick="sendQuick('Chaussures pour un voyage business')">Voyage</div>
-          <div class="quick-chip" onclick="sendQuick('Organiser un événement privé')">Événement</div>
-          <div class="quick-chip" onclick="sendQuick('Quels sont les délais de livraison ?')">Délais</div>
-          <div class="quick-chip" onclick="sendQuick('Pièces disponibles cette semaine ?')">Disponibilités</div>
+          <div class="quick-chip" onclick="sendQuick('qs_ceremonie')" data-i18n="quick_ceremonie">Cérémonie</div>
+          <div class="quick-chip" onclick="sendQuick('qs_voyage')" data-i18n="quick_voyage">Voyage</div>
+          <div class="quick-chip" onclick="sendQuick('qs_evenement')" data-i18n="quick_evenement">Événement</div>
+          <div class="quick-chip" onclick="sendQuick('qs_delais')" data-i18n="quick_delais">Délais</div>
+          <div class="quick-chip" onclick="sendQuick('qs_dispo')" data-i18n="quick_dispo">Disponibilités</div>
         </div>
       </div>
       <div class="chat-area" id="chat-area">
         <div class="msg bot">
           <div class="msg-av2">GW</div>
           <div>
-            <div class="msg-bubble">Bonjour. Je suis votre conseiller GetWinWorld.<br><br>Dites-moi quelle est l'occasion, votre style ou une pièce en tête — je vous propose une sélection sur mesure parmi les maisons italiennes de Charles.</div>
-            <div class="msg-time">Maintenant</div>
+            <div class="msg-bubble" data-i18n="greeting">Bonjour. Je suis votre conseiller GetWinWorld.<br><br>Dites-moi quelle est l'occasion, votre style ou une pièce en tête — je vous propose une sélection sur mesure parmi les maisons italiennes de Charles.</div>
+            <div class="msg-time" data-i18n="time_now">Maintenant</div>
           </div>
         </div>
       </div>
       <div class="chat-wrap">
-        <input class="chat-input" id="chat-input" placeholder="Votre demande..." onkeydown="handleKey(event)">
+        <input class="chat-input" id="chat-input" placeholder="Votre demande..." data-i18n-ph="chat_ph" onkeydown="handleKey(event)">
         <button class="chat-send" onclick="sendMessage()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
@@ -420,11 +454,11 @@
     <!-- COMMANDES -->
     <div class="screen" id="screen-commandes">
       <div class="cmd-header">
-        <div class="cmd-title">Mes commandes</div>
-        <div class="cmd-sub">Suivi de vos pièces en cours</div>
+        <div class="cmd-title" data-i18n="cmd_title">Mes commandes</div>
+        <div class="cmd-sub" data-i18n="cmd_sub">Suivi de vos pièces en cours</div>
       </div>
       <div class="order-list">
-        <div class="empty-cat" style="padding:40px 20px">
+        <div class="empty-cat" style="padding:40px 20px" data-i18n="cmd_empty">
           Aucune commande pour l'instant.<br><br>
           Une fois votre demande envoyée depuis la vitrine, Charles vous contacte directement sur WhatsApp pour la confirmation, le paiement et la livraison.
         </div>
@@ -432,69 +466,77 @@
       </div>
     </div>
 
-    <!-- MON ESPACE (CLIENT) -->
+    <!-- MA SÉLECTION (+ membre optionnel) -->
     <div class="screen" id="screen-espace">
 
-      <!-- Création de compte (tant que le visiteur n'est pas inscrit) -->
-      <div id="espace-signup">
-        <div class="cmd-header">
-          <div class="cmd-title">Créer mon espace</div>
-          <div class="cmd-sub">Pour constituer votre sélection et l'envoyer à Charles</div>
-        </div>
-        <div style="padding:16px">
-          <div class="field-mini">
-            <label>Votre nom</label>
-            <input type="text" id="signup-nom" placeholder="Votre nom">
-          </div>
-          <div class="field-mini">
-            <label>Votre WhatsApp</label>
-            <input type="tel" id="signup-wa" placeholder="+225 07 00 00 00 00">
-          </div>
-          <div class="field-mini">
-            <label>Email (optionnel)</label>
-            <input type="email" id="signup-email" placeholder="vous@email.com">
-          </div>
-          <div class="field-mini">
-            <label>Ville / Pays (optionnel)</label>
-            <input type="text" id="signup-ville" placeholder="Abidjan, Côte d'Ivoire">
-          </div>
-          <button class="btn-primary" style="width:100%" onclick="submitSignup()">Créer mon espace</button>
-          <div style="text-align:center;margin-top:14px;font-size:12px;color:var(--muted)">
-            Déjà un espace ? <a href="#" onclick="toggleRetrieve(event)" style="color:var(--vert);font-weight:600;text-decoration:none">Le retrouver</a>
-          </div>
-          <div id="retrieve-box" style="display:none;margin-top:14px">
-            <div class="field-mini">
-              <label>Votre WhatsApp</label>
-              <input type="tel" id="retrieve-wa" placeholder="+225 07 00 00 00 00">
+      <div class="cmd-header">
+        <div class="cmd-title" data-i18n="selection_title">Ma sélection</div>
+        <div class="cmd-sub" data-i18n="selection_sub">Les pièces qui vous intéressent</div>
+      </div>
+
+      <div class="order-list" id="cart-list"></div>
+
+      <div style="padding:0 16px" id="send-commande-wrap">
+        <button class="btn-primary" style="width:100%" id="send-commande-btn" onclick="sendCommande()" data-i18n="btn_order_wa">Commander sur WhatsApp</button>
+        <div style="text-align:center;margin-top:9px;font-size:11px;color:var(--muted);line-height:1.5" data-i18n="order_wa_hint">WhatsApp s'ouvre avec votre sélection. Charles confirme la disponibilité, le paiement et la livraison.</div>
+      </div>
+
+      <!-- Bloc membre (optionnel) -->
+      <div id="membre-block" style="margin:26px 16px 0;border-top:1px solid var(--border);padding-top:18px">
+
+        <!-- Profil (une fois membre) -->
+        <div id="espace-client" style="display:none">
+          <div class="esp-hero" style="border-radius:10px">
+            <div class="prof-init" id="client-init"></div>
+            <div>
+              <div class="prof-name" id="client-nom"></div>
+              <div class="prof-badge" data-i18n="member_badge">Membre GetWinWorld</div>
             </div>
-            <button class="btn-secondary" style="width:100%" onclick="retrieveClient()">Retrouver mon espace</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Espace personnel (une fois inscrit) -->
-      <div id="espace-client" style="display:none">
-        <div class="esp-hero">
-          <div class="prof-init" id="client-init"></div>
-          <div>
-            <div class="prof-name" id="client-nom"></div>
-            <div class="prof-badge">Mon espace</div>
           </div>
         </div>
 
-        <div class="cmd-header">
-          <div class="cmd-title">Ma sélection</div>
-          <div class="cmd-sub">Les pièces qui vous intéressent</div>
+        <!-- Inscription (tant que pas membre) -->
+        <div id="espace-signup">
+          <div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--rouge);font-weight:600;margin-bottom:5px" data-i18n="member_optional_eyebrow">Optionnel</div>
+          <div class="cmd-title" style="font-size:19px;margin-bottom:10px" data-i18n="espace_signup_title">Devenir membre</div>
+          <div class="how-warning" style="background:var(--vert-d);border-left-color:var(--vert)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--vert-m)"><path d="M12 2l2.6 6.9L22 9.3l-5.5 4.8L18 21l-6-3.9L6 21l1.5-6.9L2 9.3l7.4-.4z"/></svg>
+            <div class="how-warning-text" style="color:var(--ink2)" data-i18n="privileges"><strong style="color:var(--vert-m)">Vos privilèges membre :</strong> notifié en priorité des nouvelles pièces avant tout le monde, sélection personnelle sauvegardée d'une visite à l'autre, suivi de vos demandes depuis l'app.</div>
+          </div>
+          <div style="margin-top:16px">
+            <div class="field-mini">
+              <label data-i18n="label_nom">Votre nom</label>
+              <input type="text" id="signup-nom" placeholder="Votre nom" data-i18n-ph="ph_nom">
+            </div>
+            <div class="field-mini">
+              <label data-i18n="label_wa">Votre WhatsApp</label>
+              <input type="tel" id="signup-wa" placeholder="+225 07 00 00 00 00">
+            </div>
+            <div class="field-mini">
+              <label data-i18n="label_email">Email (optionnel)</label>
+              <input type="email" id="signup-email" placeholder="vous@email.com" data-i18n-ph="ph_email">
+            </div>
+            <div class="field-mini">
+              <label data-i18n="label_ville">Ville / Pays (optionnel)</label>
+              <input type="text" id="signup-ville" placeholder="Abidjan, Côte d'Ivoire">
+            </div>
+            <button class="btn-secondary" style="width:100%" onclick="submitSignup()" data-i18n="btn_become">Devenir membre</button>
+            <div style="text-align:center;margin-top:14px;font-size:12px;color:var(--muted)">
+              <span data-i18n="already">Déjà un espace ?</span> <a href="#" onclick="toggleRetrieve(event)" style="color:var(--vert);font-weight:600;text-decoration:none" data-i18n="link_retrieve">Le retrouver</a>
+            </div>
+            <div id="retrieve-box" style="display:none;margin-top:14px">
+              <div class="field-mini">
+                <label data-i18n="label_wa">Votre WhatsApp</label>
+                <input type="tel" id="retrieve-wa" placeholder="+225 07 00 00 00 00">
+              </div>
+              <button class="btn-secondary" style="width:100%" onclick="retrieveClient()" data-i18n="btn_retrieve">Retrouver mon espace</button>
+            </div>
+          </div>
         </div>
 
-        <div class="order-list" id="cart-list"></div>
-
-        <div style="padding:0 16px">
-          <button class="btn-primary" style="width:100%" id="send-commande-btn" onclick="sendCommande()">Envoyer ma demande à Charles</button>
-        </div>
       </div>
 
-      <div style="height:20px"></div>
+      <div style="height:100px"></div>
     </div>
 
   </div>
@@ -503,19 +545,19 @@
   <div class="nav">
     <div class="nav-item active" onclick="goTo('vitrine',this)">
       <span class="nav-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>
-      <span class="nav-label">Vitrine</span>
+      <span class="nav-label" data-i18n="nav_vitrine">Vitrine</span>
     </div>
     <div class="nav-item" onclick="goTo('conseiller',this)">
       <span class="nav-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-      <span class="nav-label">Conseiller</span>
+      <span class="nav-label" data-i18n="nav_conseiller">Conseiller</span>
     </div>
     <div class="nav-item" onclick="goTo('commandes',this)">
       <span class="nav-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10"/><rect x="1" y="3" width="22" height="7" rx="1"/></svg></span>
-      <span class="nav-label">Commandes</span>
+      <span class="nav-label" data-i18n="nav_commandes">Commandes</span>
     </div>
     <div class="nav-item" onclick="goTo('espace',this)" style="position:relative">
       <span class="nav-icon" style="position:relative"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="cart-badge" id="cart-badge" style="display:none">0</span></span>
-      <span class="nav-label">Mon espace</span>
+      <span class="nav-label" data-i18n="nav_membre">Sélection</span>
     </div>
   </div>
 </div>
@@ -534,10 +576,11 @@
         <span id="modal-note"></span>
       </div>
       <div class="modal-desc" id="modal-desc"></div>
+      <div id="modal-urgency" style="display:none;font-size:11.5px;color:var(--rouge);font-weight:600;margin:-8px 0 14px" data-i18n="modal_urgency">Offre du jour — non garantie demain, à réserver aujourd'hui.</div>
       <div class="modal-tags" id="modal-tags"></div>
       <div class="modal-acts">
         <button class="btn-secondary" onclick="closeProductModal()">✕</button>
-        <button class="btn-primary" onclick="addToSelection()">Ajouter à ma sélection</button>
+        <button class="btn-primary" onclick="addToSelection()" data-i18n="modal_add">Ajouter à ma sélection</button>
       </div>
     </div>
   </div>
@@ -548,19 +591,19 @@
   <div class="modal">
     <div class="modal-bar"></div>
     <div class="modal-body">
-      <div class="modal-name">Liste prioritaire</div>
-      <div class="modal-desc">Soyez informé en priorité des nouveaux arrivages de Charles, avant tout le monde.</div>
+      <div class="modal-name" data-i18n="inscription_title">Liste prioritaire</div>
+      <div class="modal-desc" data-i18n="inscription_desc">Soyez informé en priorité des nouveaux arrivages de Charles, avant tout le monde.</div>
       <div class="field-mini">
-        <label>Votre nom</label>
-        <input type="text" id="inscribe-nom" placeholder="Votre nom">
+        <label data-i18n="label_nom">Votre nom</label>
+        <input type="text" id="inscribe-nom" placeholder="Votre nom" data-i18n-ph="ph_nom">
       </div>
       <div class="field-mini">
-        <label>Votre WhatsApp</label>
+        <label data-i18n="label_wa">Votre WhatsApp</label>
         <input type="tel" id="inscribe-wa" placeholder="+225 07 00 00 00 00">
       </div>
       <div class="modal-acts">
-        <button class="btn-secondary" onclick="closeInscriptionForm()">Annuler</button>
-        <button class="btn-primary" onclick="submitInscription()">S'inscrire</button>
+        <button class="btn-secondary" onclick="closeInscriptionForm()" data-i18n="btn_cancel">Annuler</button>
+        <button class="btn-primary" onclick="submitInscription()" data-i18n="btn_subscribe">S'inscrire</button>
       </div>
     </div>
   </div>
@@ -572,13 +615,29 @@
     <div class="confirm-mark">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
-    <div class="confirm-title">Demande transmise</div>
-    <div class="confirm-text">Votre demande a été envoyée à Charles. Il vous contactera dans les 24h pour confirmer la disponibilité et les détails de livraison.</div>
+    <div class="confirm-title" data-i18n="confirm_title">Demande transmise</div>
+    <div class="confirm-text" data-i18n="confirm_text">Votre demande a été envoyée à Charles. Il vous contactera dans les 24h pour confirmer la disponibilité et les détails de livraison.</div>
     <div class="confirm-ref" id="confirm-ref">Réf. GWW-2026-0047</div>
-    <div class="confirm-survey">Commande déjà reçue ? <a href="#" onclick="showToast('Enquête satisfaction'); return false">Donnez votre avis →</a></div>
-    <button class="confirm-btn" onclick="closeConfirm()">Parfait, merci</button>
+    <div class="confirm-survey"><span data-i18n="confirm_survey">Commande déjà reçue ?</span> <a href="#" onclick="showToast(t('toast_survey')); return false" data-i18n="confirm_survey_link">Donnez votre avis →</a></div>
+    <button class="confirm-btn" onclick="closeConfirm()" data-i18n="confirm_btn">Parfait, merci</button>
   </div>
 </div>
+
+<!-- BARRE PANIER FLOTTANTE -->
+<div id="cart-bar" class="cart-bar" onclick="goToSelection()">
+  <span class="cart-bar-left">
+    <span class="cart-bar-count" id="cart-bar-count">0</span>
+    <span class="cart-bar-label" data-i18n="cart_bar_label">Voir ma sélection</span>
+  </span>
+  <span class="cart-bar-cta">
+    <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor"><path d="M16.003 3C9.383 3 4 8.383 4 15.003c0 2.117.553 4.184 1.605 6.006L4 29l8.16-1.57a11.94 11.94 0 0 0 3.84.63h.003C22.62 28.06 28 22.677 28 16.057 28 12.85 26.75 9.836 24.48 7.57 22.213 5.3 19.21 3 16.003 3z"/></svg>
+    <span data-i18n="cart_bar_cta">Commander</span>
+  </span>
+</div>
+
+<a id="wa-bubble" class="wa-bubble" href="#" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 32 32" fill="#fff"><path d="M16.003 3C9.383 3 4 8.383 4 15.003c0 2.117.553 4.184 1.605 6.006L4 29l8.16-1.57a11.94 11.94 0 0 0 3.84.63h.003C22.62 28.06 28 22.677 28 16.057 28 12.85 26.75 9.836 24.48 7.57 22.213 5.3 19.21 3 16.003 3zm0 2.4c2.57 0 4.98 1.003 6.79 2.814a9.54 9.54 0 0 1 2.81 6.79c0 5.29-4.305 9.594-9.6 9.594a9.56 9.56 0 0 1-3.87-.816l-.277-.12-2.87.552.55-2.79-.13-.287a9.51 9.51 0 0 1-.917-4.14c0-5.29 4.305-9.59 9.6-9.59zm-3.24 4.24c-.24 0-.63.09-.96.45-.33.36-1.26 1.23-1.26 3s1.29 3.48 1.47 3.72c.18.24 2.54 3.88 6.15 5.44.86.37 1.53.59 2.05.76.86.27 1.65.23 2.27.14.69-.1 2.13-.87 2.43-1.71.3-.84.3-1.56.21-1.71-.09-.15-.33-.24-.69-.42-.36-.18-2.13-1.05-2.46-1.17-.33-.12-.57-.18-.81.18-.24.36-.93 1.17-1.14 1.41-.21.24-.42.27-.78.09-.36-.18-1.52-.56-2.9-1.79-1.07-.95-1.79-2.13-2-2.49-.21-.36-.02-.55.16-.73.16-.16.36-.42.54-.63.18-.21.24-.36.36-.6.12-.24.06-.45-.03-.63-.09-.18-.81-1.95-1.11-2.67-.29-.7-.59-.61-.81-.62-.21-.01-.45-.01-.69-.01z"/></svg>
+</a>
 
 <div class="toast" id="toast"></div>
 
@@ -589,15 +648,318 @@ const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
+const GW_WHATSAPP = '33613057138'; // numéro WhatsApp de Charles (canal de vente)
 let PRODUCTS = [];
 let currentProduct = null, chatBusy = false;
 let activeCategory = 'Tous';
 let chatHistory = [];
+let currentScreen = 'vitrine';
+
+// ── i18n : FR / EN ──────────────────────────────────────────
+const I18N = {
+  fr: {
+    brand_sub: `Votre Personal Shopper`,
+    toast_new_pieces: `Nouvelles pièces disponibles`,
+    hero_eyebrow: `Sélection · Été 2026`,
+    hero_title: `L'excellence<br><em>italienne.</em>`,
+    hero_badge: `Sélection renouvelée chaque jour`,
+    how_eyebrow: `Pourquoi GetWinWorld`,
+    how_title: `Fini de chercher sur dix sites différents.<br><em>Charles s'en charge, chaque jour.</em>`,
+    how1_name: `Charles déniche les pépites`,
+    how1_desc: `Il sélectionne chaussures et costumes auprès de ses maisons italiennes partenaires, et met à jour les arrivages chaque jour.`,
+    how2_name: `Vous parcourez, vous choisissez`,
+    how2_desc: `Une seule vitrine, mise à jour en continu. Vous ajoutez vos coups de cœur à votre sélection, ou demandez conseil au conseiller.`,
+    how3_name: `Charles s'occupe du reste`,
+    how3_desc: `Vous envoyez votre sélection sur WhatsApp en un clic. Charles confirme la disponibilité, commande et vous livre.`,
+    how_warning: `<strong>Offres journalières, non garanties le lendemain.</strong> Charles ne garde rien en stock : chaque pièce vue aujourd'hui peut être commandée par un autre client avant vous. Ne remettez pas votre sélection à demain.`,
+    tab_vest: `Vestimentaire`,
+    tab_event: `Événements`,
+    tab_conseils: `Conseils`,
+    inscribe_banner: `<strong>Nouvelle sélection chaque jour.</strong><br>Devenez membre pour être prévenu en priorité, avant tout le monde.`,
+    conc_eyebrow: `Service exclusif`,
+    conc_title: `Votre concierge<br><em>privé.</em>`,
+    conc_sub: `Organisation d'événements sur mesure, accès à des espaces et tables privés, expériences VIP. Chaque demande est unique.`,
+    offer1_title: `Événements privés`,
+    offer1_desc: `Dîners d'affaires, soirées de gala, célébrations. Charles gère la venue, le traiteur, la décoration et la liste des invités.`,
+    offer2_title: `Accès & Réservations VIP`,
+    offer2_desc: `Tables dans les meilleurs restaurants, loges privées, accès backstage. Sur simple demande au conseiller.`,
+    offer3_title: `Déplacements & Séjours`,
+    offer3_desc: `Voyages sur mesure, chauffeurs privés, suites hôtelières. L'expérience de bout en bout.`,
+    offer_cta: `Faire une demande`,
+    tips_eyebrow: `Le savoir de Charles`,
+    tips_title: `Conseils <em>style.</em>`,
+    tips_sub: `Ce qu'il faut savoir avant de commander une pièce — occasion, mesures, entretien, délais.`,
+    tip1_title: `Choisir son costume selon l'occasion`,
+    tip1_desc: `Cérémonie : coupe classique, tons sombres, unis. Rendez-vous d'affaires : coupe ajustée, gris ou bleu marine. Soirée privée : velours ou tissu texturé, coupe plus affirmée.`,
+    tip2_title: `Prendre ses mesures chez soi`,
+    tip2_desc: `Tour de poitrine, longueur de manche (épaule à poignet), tour de taille, longueur d'entrejambe. Un mètre ruban suffit — Charles vous guide en quelques minutes sur WhatsApp si besoin.`,
+    tip3_title: `Entretenir des chaussures en cuir italien`,
+    tip3_desc: `Embauchoirs en bois après chaque port, cirage tous les quinze jours, alternance entre deux paires pour laisser respirer le cuir.`,
+    tip4_title: `Costume complet ou blazer seul`,
+    tip4_desc: `Le costume complet pour les occasions formelles. Le blazer seul, associé à un pantalon différent, pour un usage plus quotidien ou décontracté-chic.`,
+    tip5_title: `Délais de livraison : à quoi s'attendre`,
+    tip5_desc: `0 stock signifie chaque pièce commandée sur mesure auprès des maisons partenaires. Cinq à huit jours pour les chaussures, sept à douze jours pour les costumes. La qualité prime sur l'immédiateté.`,
+    tips_cta_text: `Une question précise sur votre situation ?`,
+    tips_cta_link: `Demander conseil au conseiller →`,
+    chat_title: `Votre conseiller`,
+    chat_status: `Disponible · Répond en quelques secondes`,
+    chat_sub: `Style, occasion, événement ou pièce en tête — dites-moi tout. Charles s'occupe du reste.`,
+    quick_ceremonie: `Cérémonie`,
+    quick_voyage: `Voyage`,
+    quick_evenement: `Événement`,
+    quick_delais: `Délais`,
+    quick_dispo: `Disponibilités`,
+    qs_ceremonie: `Je cherche un costume pour une cérémonie`,
+    qs_voyage: `Chaussures pour un voyage business`,
+    qs_evenement: `Organiser un événement privé`,
+    qs_delais: `Quels sont les délais de livraison ?`,
+    qs_dispo: `Pièces disponibles cette semaine ?`,
+    greeting: `Bonjour. Je suis votre conseiller GetWinWorld.<br><br>Dites-moi quelle est l'occasion, votre style ou une pièce en tête — je vous propose une sélection sur mesure parmi les maisons italiennes de Charles.`,
+    time_now: `Maintenant`,
+    chat_ph: `Votre demande...`,
+    cmd_title: `Mes commandes`,
+    cmd_sub: `Suivi de vos pièces en cours`,
+    cmd_empty: `Aucune commande pour l'instant.<br><br>Une fois votre demande envoyée depuis la vitrine, Charles vous contacte directement sur WhatsApp pour la confirmation, le paiement et la livraison.`,
+    espace_signup_title: `Devenir membre`,
+    espace_signup_sub: `Accès prioritaire à la sélection du jour de Charles`,
+    privileges: `<strong style="color:var(--vert-m)">Vos privilèges membre :</strong> notifié en priorité des nouvelles pièces avant tout le monde, sélection personnelle sauvegardée d'une visite à l'autre, suivi de vos demandes depuis l'app.`,
+    label_nom: `Votre nom`,
+    label_wa: `Votre WhatsApp`,
+    label_email: `Email (optionnel)`,
+    label_ville: `Ville / Pays (optionnel)`,
+    ph_nom: `Votre nom`,
+    ph_email: `vous@email.com`,
+    btn_become: `Devenir membre`,
+    already: `Déjà un espace ?`,
+    link_retrieve: `Le retrouver`,
+    btn_retrieve: `Retrouver mon espace`,
+    member_badge: `Membre GetWinWorld`,
+    member_optional_eyebrow: `Optionnel`,
+    selection_title: `Ma sélection`,
+    selection_sub: `Les pièces qui vous intéressent`,
+    btn_send_charles: `Envoyer ma demande à Charles`,
+    btn_order_wa: `Commander sur WhatsApp`,
+    order_wa_hint: `WhatsApp s'ouvre avec votre sélection. Charles confirme la disponibilité, le paiement et la livraison.`,
+    cart_bar_label: `Voir ma sélection`,
+    cart_bar_cta: `Commander`,
+    wa_order_intro: `Bonjour Charles, je souhaite commander depuis GetWinWorld :`,
+    wa_order_intro_named: `Bonjour Charles, c'est {nom}. Je souhaite commander depuis GetWinWorld :`,
+    wa_order_outro: `Merci de me confirmer la disponibilité, le prix et la livraison.`,
+    wa_see_article: `Voir l'article :`,
+    wa_client_placeholder: `Client via WhatsApp`,
+    nav_vitrine: `Vitrine`,
+    nav_conseiller: `Conseiller`,
+    nav_commandes: `Commandes`,
+    nav_membre: `Sélection`,
+    modal_urgency: `Offre du jour — non garantie demain, à réserver aujourd'hui.`,
+    modal_add: `Ajouter à ma sélection`,
+    inscription_title: `Liste prioritaire`,
+    inscription_desc: `Soyez informé en priorité des nouveaux arrivages de Charles, avant tout le monde.`,
+    btn_cancel: `Annuler`,
+    btn_subscribe: `S'inscrire`,
+    confirm_title: `Demande transmise`,
+    confirm_text: `Votre demande a été envoyée à Charles. Il vous contactera dans les 24h pour confirmer la disponibilité et les détails de livraison.`,
+    confirm_survey: `Commande déjà reçue ?`,
+    confirm_survey_link: `Donnez votre avis →`,
+    confirm_btn: `Parfait, merci`,
+    toast_survey: `Enquête satisfaction`,
+    badge_offre: `Offre du jour`,
+    stock_today: `Dispo aujourd'hui uniquement`,
+    stock_order: `Sur commande`,
+    cat_all: `Tous`,
+    catalogue_unavailable: `Catalogue indisponible pour l'instant.`,
+    empty_category: `Aucune pièce dans cette catégorie pour l'instant.`,
+    toast_already_sel: `Déjà dans votre sélection`,
+    toast_added: `Ajouté à votre sélection`,
+    toast_need_name_wa: `Indiquez votre nom et votre WhatsApp`,
+    toast_error_retry: `Erreur, réessayez`,
+    toast_welcome_member: `Bienvenue, vous êtes membre GetWinWorld`,
+    toast_need_wa: `Indiquez votre numéro WhatsApp`,
+    toast_no_space: `Aucun espace trouvé avec ce numéro`,
+    toast_welcome_back: `Bon retour, `,
+    cart_empty: `Votre sélection est vide. Parcourez la vitrine et ajoutez les pièces qui vous intéressent.`,
+    ph_comment: `Commentaire (optionnel)`,
+    btn_remove: `Retirer`,
+    toast_sent_charles: `WhatsApp ouvert — envoyez votre message à Charles pour finaliser`,
+    toast_inscription_ok: `Inscription confirmée — vous serez prévenu en priorité`,
+    chat_reply_fallback: `Je reviens vers vous dans un instant.`,
+    chat_reply_error: `Je reviens vers vous, réessayez dans un instant.`,
+    wa_msg: `Bonjour Charles, je vous contacte depuis GetWinWorld.`,
+  },
+  en: {
+    brand_sub: `Your Personal Shopper`,
+    toast_new_pieces: `New pieces available`,
+    hero_eyebrow: `Selection · Summer 2026`,
+    hero_title: `Italian<br><em>excellence.</em>`,
+    hero_badge: `Selection renewed every day`,
+    how_eyebrow: `Why GetWinWorld`,
+    how_title: `No more searching ten different sites.<br><em>Charles handles it, every day.</em>`,
+    how1_name: `Charles finds the gems`,
+    how1_desc: `He selects shoes and suits from his partner Italian houses, and updates the new arrivals every day.`,
+    how2_name: `You browse, you choose`,
+    how2_desc: `A single storefront, continuously updated. Add your favourites to your selection, or ask the adviser for advice.`,
+    how3_name: `Charles handles the rest`,
+    how3_desc: `You send your selection on WhatsApp in one tap. Charles confirms availability, orders and delivers.`,
+    how_warning: `<strong>Daily offers, not guaranteed the next day.</strong> Charles keeps nothing in stock: every piece seen today may be ordered by another client before you. Don't put off your selection until tomorrow.`,
+    tab_vest: `Clothing`,
+    tab_event: `Events`,
+    tab_conseils: `Tips`,
+    inscribe_banner: `<strong>New selection every day.</strong><br>Become a member to be notified first, before everyone else.`,
+    conc_eyebrow: `Exclusive service`,
+    conc_title: `Your private<br><em>concierge.</em>`,
+    conc_sub: `Bespoke event planning, access to private spaces and tables, VIP experiences. Every request is unique.`,
+    offer1_title: `Private events`,
+    offer1_desc: `Business dinners, gala evenings, celebrations. Charles handles the venue, catering, décor and guest list.`,
+    offer2_title: `VIP Access & Bookings`,
+    offer2_desc: `Tables at the finest restaurants, private boxes, backstage access. Just ask the adviser.`,
+    offer3_title: `Travel & Stays`,
+    offer3_desc: `Bespoke travel, private drivers, hotel suites. The end-to-end experience.`,
+    offer_cta: `Make a request`,
+    tips_eyebrow: `Charles's know-how`,
+    tips_title: `Style <em>tips.</em>`,
+    tips_sub: `What to know before ordering a piece — occasion, measurements, care, timing.`,
+    tip1_title: `Choosing your suit for the occasion`,
+    tip1_desc: `Ceremony: classic cut, dark, plain tones. Business meeting: fitted cut, grey or navy blue. Private evening: velvet or textured fabric, a bolder cut.`,
+    tip2_title: `Taking your measurements at home`,
+    tip2_desc: `Chest, sleeve length (shoulder to wrist), waist, inseam length. A tape measure is enough — Charles guides you in a few minutes on WhatsApp if needed.`,
+    tip3_title: `Caring for Italian leather shoes`,
+    tip3_desc: `Wooden shoe trees after each wear, polish every two weeks, alternate between two pairs to let the leather breathe.`,
+    tip4_title: `Full suit or blazer alone`,
+    tip4_desc: `The full suit for formal occasions. The blazer alone, paired with different trousers, for more everyday or smart-casual wear.`,
+    tip5_title: `Delivery times: what to expect`,
+    tip5_desc: `Zero stock means every piece is made to order from the partner houses. Five to eight days for shoes, seven to twelve days for suits. Quality comes before immediacy.`,
+    tips_cta_text: `A specific question about your situation?`,
+    tips_cta_link: `Ask the adviser →`,
+    chat_title: `Your adviser`,
+    chat_status: `Available · Replies in seconds`,
+    chat_sub: `Style, occasion, event or a piece in mind — tell me everything. Charles handles the rest.`,
+    quick_ceremonie: `Ceremony`,
+    quick_voyage: `Travel`,
+    quick_evenement: `Event`,
+    quick_delais: `Timing`,
+    quick_dispo: `Availability`,
+    qs_ceremonie: `I'm looking for a suit for a ceremony`,
+    qs_voyage: `Shoes for a business trip`,
+    qs_evenement: `Organise a private event`,
+    qs_delais: `What are the delivery times?`,
+    qs_dispo: `Which pieces are available this week?`,
+    greeting: `Hello. I'm your GetWinWorld adviser.<br><br>Tell me the occasion, your style or a piece in mind — I'll suggest a bespoke selection from Charles's Italian houses.`,
+    time_now: `Now`,
+    chat_ph: `Your request...`,
+    cmd_title: `My orders`,
+    cmd_sub: `Track your pieces in progress`,
+    cmd_empty: `No orders yet.<br><br>Once you send your request from the storefront, Charles contacts you directly on WhatsApp for confirmation, payment and delivery.`,
+    espace_signup_title: `Become a member`,
+    espace_signup_sub: `Priority access to Charles's daily selection`,
+    privileges: `<strong style="color:var(--vert-m)">Your member privileges:</strong> notified first of new pieces before everyone, your personal selection saved from one visit to the next, your requests tracked from the app.`,
+    label_nom: `Your name`,
+    label_wa: `Your WhatsApp`,
+    label_email: `Email (optional)`,
+    label_ville: `City / Country (optional)`,
+    ph_nom: `Your name`,
+    ph_email: `you@email.com`,
+    btn_become: `Become a member`,
+    already: `Already have an account?`,
+    link_retrieve: `Retrieve it`,
+    btn_retrieve: `Retrieve my account`,
+    member_badge: `GetWinWorld Member`,
+    member_optional_eyebrow: `Optional`,
+    selection_title: `My selection`,
+    selection_sub: `The pieces you're interested in`,
+    btn_send_charles: `Send my request to Charles`,
+    btn_order_wa: `Order on WhatsApp`,
+    order_wa_hint: `WhatsApp opens with your selection. Charles confirms availability, payment and delivery.`,
+    cart_bar_label: `View my selection`,
+    cart_bar_cta: `Order`,
+    wa_order_intro: `Hello Charles, I'd like to order from GetWinWorld:`,
+    wa_order_intro_named: `Hello Charles, this is {nom}. I'd like to order from GetWinWorld:`,
+    wa_order_outro: `Please confirm availability, price and delivery.`,
+    wa_see_article: `See item:`,
+    wa_client_placeholder: `Client via WhatsApp`,
+    nav_vitrine: `Store`,
+    nav_conseiller: `Adviser`,
+    nav_commandes: `Orders`,
+    nav_membre: `Selection`,
+    modal_urgency: `Today's offer — not guaranteed tomorrow, reserve it today.`,
+    modal_add: `Add to my selection`,
+    inscription_title: `Priority list`,
+    inscription_desc: `Be the first to know about Charles's new arrivals, before everyone else.`,
+    btn_cancel: `Cancel`,
+    btn_subscribe: `Subscribe`,
+    confirm_title: `Request sent`,
+    confirm_text: `Your request has been sent to Charles. He'll contact you within 24h to confirm availability and delivery details.`,
+    confirm_survey: `Order already received?`,
+    confirm_survey_link: `Leave a review →`,
+    confirm_btn: `Perfect, thanks`,
+    toast_survey: `Satisfaction survey`,
+    badge_offre: `Today's offer`,
+    stock_today: `Available today only`,
+    stock_order: `Made to order`,
+    cat_all: `All`,
+    catalogue_unavailable: `Catalogue unavailable right now.`,
+    empty_category: `No pieces in this category right now.`,
+    toast_already_sel: `Already in your selection`,
+    toast_added: `Added to your selection`,
+    toast_need_name_wa: `Enter your name and WhatsApp`,
+    toast_error_retry: `Error, please try again`,
+    toast_welcome_member: `Welcome, you're a GetWinWorld member`,
+    toast_need_wa: `Enter your WhatsApp number`,
+    toast_no_space: `No account found with this number`,
+    toast_welcome_back: `Welcome back, `,
+    cart_empty: `Your selection is empty. Browse the store and add the pieces you like.`,
+    ph_comment: `Comment (optional)`,
+    btn_remove: `Remove`,
+    toast_sent_charles: `WhatsApp opened — send your message to Charles to finalise`,
+    toast_inscription_ok: `Subscription confirmed — you'll be notified first`,
+    chat_reply_fallback: `I'll get back to you in a moment.`,
+    chat_reply_error: `I'll get back to you, please try again in a moment.`,
+    wa_msg: `Hello Charles, I'm reaching out from GetWinWorld.`,
+  },
+};
+
+let LANG = 'fr';
+(function () {
+  let saved = null;
+  try { saved = localStorage.getItem('gw_lang'); } catch (e) {}
+  if (saved === 'fr' || saved === 'en') LANG = saved;
+  else LANG = (navigator.language || '').toLowerCase().startsWith('en') ? 'en' : 'fr';
+})();
+
+function t(key) {
+  return (I18N[LANG] && I18N[LANG][key] != null) ? I18N[LANG][key] : (I18N.fr[key] != null ? I18N.fr[key] : key);
+}
+
+function updateWaBubble() {
+  const b = document.getElementById('wa-bubble');
+  if (b) b.href = 'https://wa.me/33613057138?text=' + encodeURIComponent(t('wa_msg'));
+}
+
+function applyLang(lang) {
+  LANG = lang;
+  try { localStorage.setItem('gw_lang', lang); } catch (e) {}
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = I18N[lang] && I18N[lang][el.getAttribute('data-i18n')];
+    if (v != null) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const v = I18N[lang] && I18N[lang][el.getAttribute('data-i18n-ph')];
+    if (v != null) el.placeholder = v;
+  });
+  const tg = document.getElementById('lang-toggle');
+  if (tg) tg.textContent = lang === 'fr' ? 'EN' : 'FR';
+  if (PRODUCTS.length) { renderCategoryChips(); renderProducts(); }
+  renderCart();
+  updateWaBubble();
+}
+function toggleLang() { applyLang(LANG === 'fr' ? 'en' : 'fr'); }
 
 async function loadProducts() {
   document.getElementById('products-grid').innerHTML = Array.from({length:4}).map(()=>'<div class="product-card skeleton"></div>').join('');
-  const { data, error } = await sb.from('gw_produits').select('*').eq('est_actif', true).order('created_at', { ascending:false });
-  if (error) { document.getElementById('products-grid').innerHTML = '<div class="empty-cat">Catalogue indisponible pour l\'instant.</div>'; return; }
+  // Articles retirés automatiquement après 24h en ligne : on ne charge que les pièces mises en ligne il y a moins de 24h
+  const since = new Date(Date.now() - 24*60*60*1000).toISOString();
+  const { data, error } = await sb.from('gw_produits').select('*').eq('est_actif', true).gte('created_at', since).order('created_at', { ascending:false });
+  if (error) { document.getElementById('products-grid').innerHTML = `<div class="empty-cat">${t('catalogue_unavailable')}</div>`; return; }
   PRODUCTS = data || [];
   renderCategoryChips();
   renderProducts();
@@ -606,7 +968,7 @@ async function loadProducts() {
 function renderCategoryChips() {
   const cats = ['Tous', ...new Set(PRODUCTS.map(p=>p.categorie).filter(Boolean))];
   document.getElementById('cat-chips').innerHTML = cats.map(c=>
-    `<div class="cat-chip ${c===activeCategory?'active':''}" onclick="filterCategory('${c.replace(/'/g,"\\'")}')">${c}</div>`
+    `<div class="cat-chip ${c===activeCategory?'active':''}" onclick="filterCategory('${c.replace(/'/g,"\\'")}')">${c==='Tous'?t('cat_all'):c}</div>`
   ).join('');
 }
 
@@ -624,13 +986,12 @@ function renderProducts() {
   let list = activeCategory === 'Tous' ? PRODUCTS : PRODUCTS.filter(p=>p.categorie===activeCategory);
   list = [...list].sort((a,b) => (b.est_offre_du_jour?1:0) - (a.est_offre_du_jour?1:0));
   if (!list.length) {
-    document.getElementById('products-grid').innerHTML = '<div class="empty-cat">Aucune pièce dans cette catégorie pour l\'instant.</div>';
+    document.getElementById('products-grid').innerHTML = `<div class="empty-cat">${t('empty_category')}</div>`;
     return;
   }
   document.getElementById('products-grid').innerHTML = list.map(p => {
     let badge = '';
-    if (p.est_offre_du_jour) badge = '<div class="product-badge offre">Offre du jour</div>';
-    else if (isNew(p)) badge = '<div class="product-badge">Nouveau</div>';
+    if (p.est_offre_du_jour) badge = `<div class="product-badge offre">${t('badge_offre')}</div>`;
     else if (p.badge) badge = `<div class="product-badge">${p.badge}</div>`;
     return `
     <div class="product-card" onclick="openProduct('${p.id}')">
@@ -640,7 +1001,7 @@ function renderProducts() {
         <div class="product-house">${(p.maison||'').substring(0,18)}</div>
         <div class="product-name">${p.nom}</div>
         <div class="product-price">${p.prix}</div>
-        <div class="product-stock">Sur commande</div>
+        <div class="product-stock"${p.est_offre_du_jour?' style="color:var(--rouge);font-weight:600"':''}>${p.est_offre_du_jour?t('stock_today'):t('stock_order')}</div>
       </div>
     </div>`;
   }).join('');
@@ -662,6 +1023,7 @@ function openProduct(id) {
   document.getElementById('modal-price').textContent = currentProduct.prix;
   document.getElementById('modal-note').textContent  = currentProduct.note_delai || '';
   document.getElementById('modal-desc').textContent  = currentProduct.description || '';
+  document.getElementById('modal-urgency').style.display = currentProduct.est_offre_du_jour ? 'block' : 'none';
   document.getElementById('modal-tags').innerHTML    = `<span class="modal-tag">${currentProduct.categorie}</span>`;
   document.getElementById('product-modal').classList.add('open');
 }
@@ -680,22 +1042,42 @@ function saveCart(cart) {
 function updateCartBadge() {
   const cart = getCart();
   const badge = document.getElementById('cart-badge');
-  if (!badge) return;
-  if (cart.length) { badge.textContent = cart.length; badge.style.display = 'flex'; }
-  else { badge.style.display = 'none'; }
+  if (badge) {
+    if (cart.length) { badge.textContent = cart.length; badge.style.display = 'flex'; }
+    else { badge.style.display = 'none'; }
+  }
+  updateFloatingUI();
+}
+
+// Barre panier flottante + bulle WhatsApp : coordination de l'affichage
+function updateFloatingUI() {
+  const cart = getCart();
+  const barVisible = cart.length > 0 && currentScreen !== 'espace' && currentScreen !== 'conseiller';
+  const bar = document.getElementById('cart-bar');
+  if (bar) {
+    bar.classList.toggle('show', barVisible);
+    const c = document.getElementById('cart-bar-count');
+    if (c) c.textContent = cart.length;
+  }
+  const b = document.getElementById('wa-bubble');
+  if (b) b.classList.toggle('hidden', currentScreen === 'conseiller' || barVisible);
+}
+
+function goToSelection() {
+  goTo('espace', document.querySelectorAll('.nav-item')[3]);
 }
 
 function addToSelection() {
   if (!currentProduct) return;
   const cart = getCart();
   if (cart.some(c => c.produit_id === currentProduct.id)) {
-    showToast('Déjà dans votre sélection');
+    showToast(t('toast_already_sel'));
     closeProductModal();
     return;
   }
-  cart.push({ produit_id: currentProduct.id, nom: currentProduct.nom, prix: currentProduct.prix, quantite: 1, commentaire: '' });
+  cart.push({ produit_id: currentProduct.id, nom: currentProduct.nom, prix: currentProduct.prix, photo: currentProduct.photo_url, maison: currentProduct.maison || '', quantite: 1, commentaire: '' });
   saveCart(cart);
-  showToast('Ajouté à votre sélection');
+  showToast(t('toast_added'));
   closeProductModal();
 }
 
@@ -709,15 +1091,15 @@ function getClient() {
 
 function renderEspace() {
   const client = getClient();
-  if (!client) {
+  if (client) {
+    document.getElementById('espace-signup').style.display = 'none';
+    document.getElementById('espace-client').style.display = 'block';
+    document.getElementById('client-init').textContent = (client.nom || '?').charAt(0).toUpperCase();
+    document.getElementById('client-nom').textContent = client.nom;
+  } else {
     document.getElementById('espace-signup').style.display = 'block';
     document.getElementById('espace-client').style.display = 'none';
-    return;
   }
-  document.getElementById('espace-signup').style.display = 'none';
-  document.getElementById('espace-client').style.display = 'block';
-  document.getElementById('client-init').textContent = (client.nom || '?').charAt(0).toUpperCase();
-  document.getElementById('client-nom').textContent = client.nom;
   renderCart();
 }
 
@@ -726,13 +1108,13 @@ async function submitSignup() {
   const wa  = document.getElementById('signup-wa').value.trim();
   const email = document.getElementById('signup-email').value.trim();
   const ville = document.getElementById('signup-ville').value.trim();
-  if (!nom || !wa) { showToast('Indiquez votre nom et votre WhatsApp'); return; }
+  if (!nom || !wa) { showToast(t('toast_need_name_wa')); return; }
   const { data, error } = await sb.from('gw_clients').insert({
-    nom, whatsapp: wa, email: email || null, ville: ville || null,
+    nom, whatsapp: wa, email: email || null, ville: ville || null, langue: LANG,
   }).select().single();
-  if (error) { showToast('Erreur, réessayez'); return; }
-  localStorage.setItem('gw_client', JSON.stringify({ id: data.id, nom, whatsapp: wa, email, ville }));
-  showToast('Votre espace est prêt');
+  if (error) { showToast(t('toast_error_retry')); return; }
+  localStorage.setItem('gw_client', JSON.stringify({ id: data.id, nom, whatsapp: wa, email, ville, langue: LANG }));
+  showToast(t('toast_welcome_member'));
   renderEspace();
 }
 
@@ -744,12 +1126,12 @@ function toggleRetrieve(e) {
 
 async function retrieveClient() {
   const wa = document.getElementById('retrieve-wa').value.trim();
-  if (!wa) { showToast('Indiquez votre numéro WhatsApp'); return; }
+  if (!wa) { showToast(t('toast_need_wa')); return; }
   const { data, error } = await sb.rpc('gw_find_client_by_whatsapp', { p_whatsapp: wa });
-  if (error || !data || !data.length) { showToast('Aucun espace trouvé avec ce numéro'); return; }
+  if (error || !data || !data.length) { showToast(t('toast_no_space')); return; }
   const client = data[0];
   localStorage.setItem('gw_client', JSON.stringify(client));
-  showToast('Bon retour, ' + client.nom);
+  showToast(t('toast_welcome_back') + client.nom);
   renderEspace();
 }
 
@@ -757,11 +1139,11 @@ function renderCart() {
   const cart = getCart();
   const el = document.getElementById('cart-list');
   if (!cart.length) {
-    el.innerHTML = '<div class="empty-cat" style="padding:30px 20px">Votre sélection est vide. Parcourez la vitrine et ajoutez les pièces qui vous intéressent.</div>';
-    document.getElementById('send-commande-btn').style.display = 'none';
+    el.innerHTML = `<div class="empty-cat" style="padding:30px 20px">${t('cart_empty')}</div>`;
+    document.getElementById('send-commande-wrap').style.display = 'none';
     return;
   }
-  document.getElementById('send-commande-btn').style.display = 'block';
+  document.getElementById('send-commande-wrap').style.display = 'block';
   el.innerHTML = cart.map(item => {
     const prod = PRODUCTS.find(p => p.id === item.produit_id);
     const img = prod ? prod.photo_url : '';
@@ -780,10 +1162,10 @@ function renderCart() {
           <span>${item.quantite}</span>
           <button onclick="changeQty('${item.produit_id}',1)">+</button>
         </div>
-        <input type="text" class="cart-comment" placeholder="Commentaire (optionnel)" value="${item.commentaire.replace(/"/g,'&quot;')}" onchange="updateComment('${item.produit_id}', this.value)">
+        <input type="text" class="cart-comment" placeholder="${t('ph_comment')}" value="${item.commentaire.replace(/"/g,'&quot;')}" onchange="updateComment('${item.produit_id}', this.value)">
       </div>
       <div class="order-btns">
-        <div class="order-btn" onclick="removeFromCart('${item.produit_id}')">Retirer</div>
+        <div class="order-btn" onclick="removeFromCart('${item.produit_id}')">${t('btn_remove')}</div>
       </div>
     </div>`;
   }).join('');
@@ -809,21 +1191,55 @@ function removeFromCart(id) {
   renderCart();
 }
 
+// Lien public de la photo de l'article, pour que Charles voie exactement la pièce
+// depuis WhatsApp. photo_url peut être absolu (bucket Supabase) ou relatif (photos/…).
+function productPhotoUrl(it) {
+  let p = it.photo;
+  if (!p) { const pr = PRODUCTS.find(x => x.id === it.produit_id); p = pr && pr.photo_url; }
+  if (!p) return '';
+  if (/^https?:\/\//i.test(p)) return p;
+  return location.origin + '/' + String(p).replace(/^\//, '');
+}
+
+function buildOrderMessage(cart, client) {
+  const lines = cart.map(it => {
+    let l = '• ' + it.nom + (it.maison ? ' (' + it.maison + ')' : '') + ' — ' + it.prix + (it.quantite > 1 ? ' ×' + it.quantite : '');
+    if (it.commentaire && it.commentaire.trim()) l += '\n   ' + it.commentaire.trim();
+    const ph = productPhotoUrl(it);
+    if (ph) l += '\n   ' + t('wa_see_article') + ' ' + ph;
+    return l;
+  }).join('\n\n');
+  const intro = (client && client.nom)
+    ? t('wa_order_intro_named').replace('{nom}', client.nom)
+    : t('wa_order_intro');
+  return intro + '\n\n' + lines + '\n\n' + t('wa_order_outro');
+}
+
 async function sendCommande() {
-  const client = getClient();
   const cart = getCart();
-  if (!client || !cart.length) return;
-  const { error } = await sb.from('gw_commandes').insert({
-    client_id: client.id,
-    client_nom: client.nom,
-    client_wa: client.whatsapp,
-    produits: cart,
-  });
-  if (error) { showToast('Erreur, réessayez'); return; }
+  if (!cart.length) return;
+  const client = getClient(); // peut être null : commander sans compte est possible
+
+  // Canal principal : WhatsApp s'ouvre avec la sélection pré-remplie.
+  // window.open appelé en premier (dans le geste utilisateur) pour éviter le blocage popup.
+  const url = 'https://wa.me/' + GW_WHATSAPP + '?text=' + encodeURIComponent(buildOrderMessage(cart, client));
+  window.open(url, '_blank');
+
+  // Trace best-effort pour l'admin de Charles (n'empêche jamais la commande).
+  // L'identité réelle du client est portée par WhatsApp ; placeholder si non-membre.
+  try {
+    await sb.from('gw_commandes').insert({
+      client_id:  client && client.id ? client.id : null,
+      client_nom: client && client.nom ? client.nom : t('wa_client_placeholder'),
+      client_wa:  client && client.whatsapp ? client.whatsapp : '—',
+      produits: cart,
+    });
+  } catch (e) { /* trace non bloquante */ }
+
   localStorage.removeItem('gw_cart');
   updateCartBadge();
   renderCart();
-  showToast('Demande envoyée à Charles — il vous contacte sur WhatsApp');
+  showToast(t('toast_sent_charles'));
 }
 
 function openInscriptionForm() { document.getElementById('inscription-modal').classList.add('open'); }
@@ -831,11 +1247,11 @@ function closeInscriptionForm() { document.getElementById('inscription-modal').c
 async function submitInscription() {
   const nom = document.getElementById('inscribe-nom').value.trim();
   const wa  = document.getElementById('inscribe-wa').value.trim();
-  if (!nom || !wa) { showToast('Indiquez votre nom et votre WhatsApp'); return; }
+  if (!nom || !wa) { showToast(t('toast_need_name_wa')); return; }
   const { error } = await sb.from('gw_inscriptions').insert({ client_nom: nom, client_wa: wa });
-  if (error) { showToast('Erreur, réessayez'); return; }
+  if (error) { showToast(t('toast_error_retry')); return; }
   closeInscriptionForm();
-  showToast('Inscription confirmée — vous serez prévenu en priorité');
+  showToast(t('toast_inscription_ok'));
   localStorage.setItem('gw_inscribe_dismissed','1');
   const banner = document.getElementById('inscribe-banner');
   if (banner) banner.style.display = 'none';
@@ -848,7 +1264,7 @@ function dismissInscribeBanner(e) {
 
 function appendMsg(text, type) {
   const area = document.getElementById('chat-area');
-  const now  = new Date().toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'});
+  const now  = new Date().toLocaleTimeString(LANG === 'en' ? 'en-GB' : 'fr',{hour:'2-digit',minute:'2-digit'});
   const d = document.createElement('div');
   d.className = 'msg '+type;
   d.innerHTML = type==='bot'
@@ -874,21 +1290,21 @@ async function sendMessage() {
         'apikey': SUPABASE_ANON,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ messages: chatHistory }),
+      body: JSON.stringify({ messages: chatHistory, lang: LANG }),
     });
     const data = await res.json();
-    const reply = data.reply || 'Je reviens vers vous dans un instant.';
+    const reply = data.reply || t('chat_reply_fallback');
     appendMsg(reply,'bot');
     chatHistory.push({role:'assistant', content:reply});
   } catch (e) {
-    appendMsg('Je reviens vers vous, réessayez dans un instant.','bot');
+    appendMsg(t('chat_reply_error'),'bot');
   } finally {
     chatBusy = false;
   }
 }
-function sendQuick(text) {
+function sendQuick(key) {
   goTo('conseiller', document.querySelectorAll('.nav-item')[1]);
-  document.getElementById('chat-input').value = text;
+  document.getElementById('chat-input').value = t(key);
   sendMessage();
 }
 function handleKey(e) { if(e.key==='Enter') sendMessage(); }
@@ -898,7 +1314,11 @@ function goTo(screen, el) {
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('screen-'+screen).classList.add('active');
   if(el) el.classList.add('active');
+  currentScreen = screen;
   if (screen === 'espace') renderEspace();
+  const sc = document.getElementById('screen-'+screen);
+  if (sc) sc.scrollTop = 0;
+  updateFloatingUI();
 }
 let toastTimer;
 function showToast(msg) {
@@ -914,6 +1334,7 @@ if (localStorage.getItem('gw_inscribe_dismissed')) {
 }
 
 updateCartBadge();
+applyLang(LANG);
 loadProducts();
 </script>
 </body>

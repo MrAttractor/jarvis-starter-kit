@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  @page{ size:1280px 720px; margin:0; }
+  :root{--or:#F25C05;--or-d:#D94F02;--vt:#009A44;--vt-l:#D4F5E2;--noir:#1A1714;--noir2:#241f1b;--sable:#FAF6F0;--gris:#B7ADA3;--gris2:#8A8078;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Sora',sans-serif;color:var(--sable);background:var(--noir);}
+  .slide{width:1280px;height:720px;position:relative;overflow:hidden;background:var(--noir);
+    page-break-after:always;break-after:page;display:flex;flex-direction:column;justify-content:center;padding:76px 88px;}
+  .slide:last-child{page-break-after:auto;}
+  .kick{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+  .kick::before{content:"";width:34px;height:2px;background:var(--vt);}
+  h1{font-size:76px;line-height:1.02;font-weight:900;letter-spacing:-.02em;}
+  h2{font-size:52px;line-height:1.06;font-weight:800;letter-spacing:-.02em;margin-bottom:14px;}
+  .em{color:var(--or);} .emv{color:var(--vt);}
+  .lead{font-size:24px;line-height:1.5;color:var(--gris);max-width:820px;margin-top:14px;}
+  .row{display:flex;gap:24px;margin-top:36px;}
+  .col{flex:1;background:var(--noir2);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:28px 30px;}
+  .col .n{font-family:'Space Mono',monospace;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:10px;}
+  .col.v .n{color:var(--vt);}
+  .col b{font-size:24px;font-weight:800;color:#fff;display:block;margin-bottom:8px;}
+  .col p{font-size:17px;line-height:1.5;color:var(--gris);}
+  .benes{margin-top:34px;display:flex;flex-direction:column;gap:18px;}
+  .bene{display:flex;gap:20px;align-items:flex-start;}
+  .bene .dot{width:16px;height:16px;border-radius:50%;flex-shrink:0;margin-top:6px;background:var(--vt);}
+  .bene.or .dot{background:var(--or);}
+  .bene b{font-size:23px;font-weight:800;color:#fff;} .bene p{font-size:17px;color:var(--gris);line-height:1.45;}
+  .stats{display:flex;gap:26px;margin-top:40px;}
+  .stat{flex:1;background:var(--noir2);border-radius:18px;padding:26px;text-align:center;}
+  .stat .num{font-size:52px;font-weight:900;color:var(--or);line-height:1;} .stat.v .num{color:var(--vt);}
+  .stat .lab{font-family:'Space Mono',monospace;font-size:14px;color:var(--gris2);margin-top:8px;text-transform:uppercase;letter-spacing:.08em;}
+  .steps{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:16px 40px;}
+  .step{display:flex;gap:18px;align-items:flex-start;}
+  .step .b{width:44px;height:44px;border-radius:50%;background:var(--or);color:#fff;font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .step.v .b{background:var(--vt);}
+  .step b{font-size:20px;color:#fff;font-weight:800;} .step p{font-size:15.5px;color:var(--gris);line-height:1.4;}
+  .footer{position:absolute;left:88px;right:88px;bottom:44px;display:flex;justify-content:space-between;align-items:center;font-family:'Space Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--gris2);}
+  .footer .brand{color:var(--sable);font-weight:700;}
+  .badge{display:inline-flex;align-items:center;gap:10px;background:rgba(0,154,68,.14);color:#5be89a;border:1px solid rgba(0,154,68,.3);border-radius:999px;padding:9px 18px;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;letter-spacing:.08em;margin-bottom:26px;width:max-content;}
+  .badge .d{width:9px;height:9px;border-radius:50%;background:var(--vt);}
+  .cta{display:flex;gap:22px;margin-top:40px;}
+  .cta .c{flex:1;border-radius:18px;padding:26px 30px;}
+  .cta .c.vt{background:var(--vt);} .cta .c.or{background:var(--or);}
+  .cta .c b{font-size:24px;font-weight:800;color:#fff;display:block;} .cta .c span{font-size:16px;color:rgba(255,255,255,.9);}
+  .link{margin-top:34px;font-family:'Space Mono',monospace;font-size:20px;color:var(--sable);}
+  .link .u{color:var(--or);}
+  .cover-bg{position:absolute;inset:0;background:radial-gradient(120% 90% at 78% 12%, rgba(242,92,5,.20), transparent 52%), radial-gradient(90% 80% at 10% 95%, rgba(0,154,68,.14), transparent 55%);}
+</style>
+</head>
+<body>
+
+<!-- 1 COUVERTURE -->
+<section class="slide">
+  <div class="cover-bg"></div>
+  <div style="position:relative">
+    <div class="badge"><span class="d"></span> LA LIVRAISON CERTIFIÉE · CÔTE D'IVOIRE</div>
+    <h1>Trouvez le bon livreur.<br><span class="em">En 2 minutes.</span></h1>
+    <p class="lead">La place de marché qui relie les marchands et les livreurs certifiés, en direct. Bon de livraison automatique, zéro litige, zéro paperasse.</p>
+  </div>
+  <div class="footer"><span class="brand">LIVRAISON PRO</span><span>Dossier de présentation</span></div>
+</section>
+
+<!-- 2 PROBLÈME -->
+<section class="slide">
+  <div class="kick">Le vrai problème</div>
+  <h2>La livraison, aujourd'hui, c'est la galère.</h2>
+  <div class="row">
+    <div class="col or"><div class="n">Côté marchand</div><b>On ne sait pas à qui confier ses colis</b><p>Des livreurs qu'on ne connaît pas, des colis perdus, des litiges, du temps passé au téléphone.</p></div>
+    <div class="col v"><div class="n">Côté livreur</div><b>On court après le travail</b><p>Pas de clients réguliers, aucune preuve de son sérieux, des revenus instables.</p></div>
+  </div>
+  <div class="footer"><span class="brand">LIVRAISON PRO</span><span>02</span></div>
+</section>
+
+<!-- 3 SOLUTION -->
+<section class="slide">
+  <div class="kick">La solution</div>
+  <h2>Une place de marché de la livraison <span class="em">certifiée</span>.</h2>
+  <p class="lead">Chaque livreur est vérifié (CNI + photo) avant d'apparaître. Le marchand choisit dans sa zone, le bon de livraison est généré automatiquement, tout est tracé de bout en bout.</p>
+  <div class="stats">
+    <div class="stat"><div class="num">100%</div><div class="lab">Livreurs vérifiés</div></div>
+    <div class="stat v"><div class="num">2 min</div><div class="lab">Pour trouver un livreur</div></div>
+    <div class="stat"><div class="num">0 FCFA</div><div class="lab">Pour démarrer</div></div>
+  </div>
+  <div class="footer"><span class="brand">LIVRAISON PRO</span><span>03</span></div>
+</section>
+
+<!-- 4 CÔTÉ MARCHAND -->
+<section class="slide">
+  <div class="kick" style="color:var(--vt)">Côté marchand · e-commerçant</div>
+  <h2>Un livreur fiable dans votre zone, maintenant.</h2>
+  <div class="benes">
+    <div class="bene"><span class="dot"></span><div><b>Des livreurs vérifiés</b><p>CNI et photo contrôlés. Vous savez à qui vous confiez vos colis.</p></div></div>
+    <div class="bene"><span class="dot"></span><div><b>Bon de livraison automatique</b><p>Généré à chaque course. Une preuve, zéro paperasse.</p></div></div>
+    <div class="bene"><span class="dot"></span><div><b>Zéro litige</b><p>Tout est tracé, de la prise en charge à la remise du colis.</p></div></div>
+  </div>
+  <div class="footer"><span class="brand">LIVRAISON PRO</span><span>04</span></div>
+</section>
+
+<!-- 5 CÔTÉ LIVREUR -->
+<section class="slide">
+  <div class="kick">Côté livreur</div>
+  <h2>Fais-toi vérifier, accède à des <span class="em">centaines d'entrepreneurs</span>.</h2>
+  <div class="benes">
+    <div class="bene or"><span class="dot"></span><div><b>Des clients qui viennent à toi</b><p>Une fois vérifié, tu apparais dans le catalogue de ta zone.</p></div></div>
+    <div class="bene or"><span class="dot"></span><div><b>Ton sérieux prouvé</b><p>Le badge « vérifié » rassure les marchands et te fait choisir.</p></div></div>
+    <div class="bene or"><span class="dot"></span><div><b>0 FCFA pour démarrer</b><p>Tu t'inscris, tu te fais vérifier, tu travailles. C'est tout.</p></div></div>
+  </div>
+  <div class="footer"><span class="brand">LIVRAISON PRO</span><span>05</span></div>
+</section>
+
+<!-- 6 CAS PRATIQUE -->
+<section class="slide">
+  <div class="kick">En pratique</div>
+  <h2>Une course, de A à Z.</h2>
+  <div class="steps">
+    <div class="step"><div class="b">1</div><div><b>Awa a un colis à livrer</b><p>Marchande à Cocody, elle ouvre Livraison Pro.</p></div></div>
+    <div class="step v"><div class="b">2</div><div><b>Elle voit les livreurs vérifiés</b><p>Dans sa zone, avec leurs zones de couverture.</p></div></div>
+    <div class="step"><div class="b">3</div><div><b>Kofi accepte la course</b><p>Livreur certifié moto, disponible à Marcory.</p></div></div>
+    <div class="step v"><div class="b">4</div><div><b>Bon de livraison + suivi</b><p>Généré automatiquement, tout le monde est couvert.</p></div></div>
+    <div class="step"><div class="b">5</div><div><b>Colis remis, zéro litige</b><p>La preuve est enregistrée. Place à la prochaine course.</p></div></div>
+  </div>
+  <div class="footer"><span class="brand">LIVRAISON PRO</span><span>06</span></div>
+</section>
+
+<!-- 7 REJOINDRE -->
+<section class="slide">
+  <div class="cover-bg"></div>
+  <div style="position:relative">
+    <div class="kick">Rejoignez les testeurs</div>
+    <h2>Gratuit, sans engagement.</h2>
+    <div class="cta">
+      <div class="c vt"><b>Je suis marchand</b><span>Je cherche des livreurs fiables</span></div>
+      <div class="c or"><b>Je suis livreur</b><span>Je veux des clients réguliers</span></div>
+    </div>
+    <div class="link">Testez maintenant : <span class="u">livraisonpro.agenceattractor.com</span></div>
+  </div>
+  <div class="footer"><span class="brand">LIVRAISON PRO</span><span>Une app de l'écosystème Mr Attractor</span></div>
+</section>
+
+</body>
+</html>

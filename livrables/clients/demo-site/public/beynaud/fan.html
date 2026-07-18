@@ -3,7 +3,16 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>BEYNAUD ARMY — Espace Fan</title>
+<title>La Beynaumania — Serge Beynaud</title>
+<meta name="theme-color" content="#070707"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+<link rel="icon" href="apple-touch-icon.png"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Beynaumania"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="application-name" content="Beynaumania"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -11,405 +20,396 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
   --noir:#070707;--n2:#0f0f0f;--n3:#171717;--n4:#1f1f1f;--n5:#2a2a2a;
-  --rouge:#CC0000;--rouge-glow:rgba(204,0,0,.4);
-  --chrome:#C8C8C8;--chrome-dim:rgba(200,200,200,.5);
-  --or:#D4A017;--or-dim:rgba(212,160,23,.2);
-  --blanc:#FFFFFF;--dim:rgba(255,255,255,.45);--faint:rgba(255,255,255,.07);
-  --bebas:'Bebas Neue',sans-serif;--inter:'Inter',sans-serif;
+  --rouge:#CC0000;--rouge-vif:#E8000B;--rouge-glow:rgba(204,0,0,.4);
+  --or:#D4A017;--or-dim:rgba(212,160,23,.18);
+  --blanc:#fff;--dim:rgba(255,255,255,.45);--faint:rgba(255,255,255,.07);
+  --vert:#22C55E;--bebas:'Bebas Neue',sans-serif;--inter:'Inter',sans-serif;
 }
-html,body{background:var(--noir);color:var(--blanc);font-family:var(--inter);overflow-x:hidden;}
-button{font-family:var(--inter);cursor:pointer;border:none;outline:none;}
+html,body{background:var(--noir);color:var(--blanc);font-family:var(--inter);overflow-x:hidden;min-height:100%;}
+button,input{font-family:var(--inter);outline:none;}
+button{cursor:pointer;border:none;}
 svg{display:block;}
+.wrap{max-width:560px;margin:0 auto;min-height:100vh;position:relative;}
+.hidden{display:none!important;}
 
-/* ── Hero cinématique */
-.hero{height:58vh;position:relative;overflow:hidden;flex-shrink:0;}
-.hero img{width:100%;height:100%;object-fit:cover;object-position:top center;}
-.hero-grad{position:absolute;inset:0;
-  background:linear-gradient(0deg,var(--noir) 0%,rgba(7,7,7,.55) 50%,rgba(7,7,7,.15) 100%);}
-.hero-content{position:absolute;bottom:0;left:0;right:0;padding:24px 20px;}
-.hero-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-  color:var(--chrome-dim);margin-bottom:8px;}
-.hero-title{font-family:var(--bebas);font-size:56px;letter-spacing:2px;line-height:.95;margin-bottom:12px;}
-.hero-membership{display:inline-flex;align-items:center;gap:6px;
-  background:var(--rouge);border-radius:20px;padding:5px 14px;
-  font-size:11px;font-weight:800;letter-spacing:.5px;margin-bottom:12px;
-  box-shadow:0 4px 16px var(--rouge-glow);}
-.countdown{display:flex;align-items:flex-end;gap:6px;}
-.cdt{background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.1);
-  border-radius:8px;padding:6px 10px;text-align:center;min-width:46px;}
-.cdt-num{font-family:var(--bebas);font-size:24px;line-height:1;color:var(--rouge);}
-.cdt-lbl{font-size:9px;color:var(--dim);letter-spacing:.5px;text-transform:uppercase;}
-.cdt-sep{font-family:var(--bebas);font-size:22px;color:var(--rouge);padding-bottom:4px;}
-.countdown-label{font-size:10px;color:var(--dim);padding-bottom:3px;margin-left:4px;}
+/* JOIN */
+.join-hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:28px 22px 34px;overflow:hidden;}
+.join-bg{position:absolute;inset:0;background:url('serge-hero.jpg') center 15%/cover no-repeat;filter:brightness(.44);}
+.join-ov{position:absolute;inset:0;background:linear-gradient(0deg,var(--noir) 4%,rgba(7,7,7,.6) 46%,rgba(150,0,0,.15) 78%,rgba(7,7,7,.85) 100%);}
+.join-c{position:relative;z-index:2;}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(204,0,0,.5);border-radius:2px;padding:5px 11px;font-size:10px;font-weight:800;color:var(--rouge);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:16px;}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--rouge);animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+.join-title{font-family:var(--bebas);font-size:66px;line-height:.86;letter-spacing:1px;margin-bottom:10px;}
+.join-title .r{color:var(--rouge);}
+.join-sub{font-size:14px;color:rgba(255,255,255,.66);line-height:1.6;margin-bottom:22px;max-width:410px;}
+.ref-note{display:flex;align-items:center;gap:8px;background:var(--or-dim);border:1px solid rgba(212,160,23,.3);border-radius:10px;padding:10px 13px;font-size:12px;color:#e8c778;margin-bottom:18px;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--dim);margin-bottom:6px;}
+.field input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:14px 15px;font-size:15px;color:#fff;}
+.field input:focus{border-color:var(--rouge);background:rgba(255,255,255,.09);}
+.field input::placeholder{color:rgba(255,255,255,.3);}
+.btn-join{width:100%;background:var(--rouge);color:#fff;padding:16px;border-radius:12px;font-size:14px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-top:6px;box-shadow:0 8px 30px var(--rouge-glow);display:flex;align-items:center;justify-content:center;gap:9px;}
+.btn-join:active{background:var(--rouge-vif);}
+.btn-join:disabled{opacity:.55;}
+.join-alt{text-align:center;margin-top:16px;font-size:12px;color:var(--dim);}
+.join-alt a{color:var(--or);font-weight:600;cursor:pointer;}
+.err{color:#ff6b6b;font-size:12px;margin-top:8px;text-align:center;min-height:16px;}
+.legal{font-size:10px;color:rgba(255,255,255,.28);text-align:center;margin-top:14px;line-height:1.5;}
 
-/* ── Scroll body */
-.scroll{padding:20px 20px 72px;}
+/* MEMBER */
+.m-hero{position:relative;padding:26px 20px 22px;overflow:hidden;}
+.m-hero-bg{position:absolute;inset:0;background:url('serge-hero.jpg') center 12%/cover no-repeat;filter:brightness(.34);}
+.m-hero-ov{position:absolute;inset:0;background:linear-gradient(0deg,var(--noir),rgba(7,7,7,.45));}
+.m-hero-c{position:relative;z-index:2;}
+.m-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.brand{display:flex;align-items:center;gap:8px;}
+.brand-logo{width:30px;height:30px;background:var(--rouge);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--bebas);font-size:15px;color:#fff;box-shadow:0 4px 12px var(--rouge-glow);}
+.brand-name{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);}
+.logout{font-size:11px;color:rgba(255,255,255,.35);background:none;}
+.grade-badge{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:5px 13px;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px;}
+.grade-badge.membre{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.12);}
+.grade-badge.ambassadeur{background:var(--or-dim);color:var(--or);border:1px solid rgba(212,160,23,.4);}
+.m-hello{font-family:var(--bebas);font-size:40px;line-height:.95;letter-spacing:1px;}
+.m-hello .r{color:var(--rouge);}
+.m-hello-sub{font-size:13px;color:rgba(255,255,255,.5);margin-top:6px;}
+.scroll{padding:4px 20px 60px;}
+.card{background:var(--n3);border:1px solid var(--faint);border-radius:18px;padding:18px;margin-bottom:14px;}
+.sec-title{font-family:var(--bebas);font-size:24px;letter-spacing:1px;margin:22px 0 12px;}
 
-/* ── Message Serge */
-.serge-msg{background:var(--n3);border:1px solid var(--faint);border-radius:18px;padding:18px;margin-bottom:14px;}
-.sm-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-.sm-avatar{width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid var(--rouge);flex-shrink:0;}
-.sm-avatar img{width:100%;height:100%;object-fit:cover;object-position:top;}
-.sm-id{flex:1;}
-.sm-name{font-size:14px;font-weight:800;}
-.sm-verified{font-size:10px;color:var(--rouge);font-weight:700;margin-top:1px;}
-.sm-time{font-size:10px;color:var(--dim);}
-.sm-bubble{background:var(--n4);border-radius:0 14px 14px 14px;padding:14px 16px;
-  font-size:13px;line-height:1.65;color:rgba(255,255,255,.82);}
+/* Ambassadeur */
+.amb-card{background:linear-gradient(135deg,#160800,var(--n3));border:1px solid rgba(212,160,23,.28);}
+.amb-h{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.amb-h svg{width:20px;height:20px;stroke:var(--or);fill:none;stroke-width:2;}
+.amb-title{font-size:15px;font-weight:800;}
+.amb-desc{font-size:12px;color:var(--dim);line-height:1.55;margin-bottom:14px;}
+.amb-link{display:flex;gap:8px;margin-bottom:14px;}
+.amb-link input{flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 12px;font-size:12px;color:var(--or);min-width:0;}
+.amb-copy{background:var(--or);color:#000;border-radius:10px;padding:0 16px;font-size:12px;font-weight:800;white-space:nowrap;}
+.amb-share{width:100%;background:#25D366;color:#fff;border-radius:11px;padding:13px;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:14px;}
+.amb-prog-lbl{display:flex;justify-content:space-between;font-size:12px;margin-bottom:7px;}
+.amb-prog-lbl b{color:var(--or);}
+.amb-bar{height:8px;background:rgba(255,255,255,.08);border-radius:5px;overflow:hidden;}
+.amb-fill{height:100%;background:linear-gradient(90deg,var(--or),#f0c14b);border-radius:5px;transition:width .5s;}
+.amb-done{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--or);font-weight:700;}
 
-/* ── Player */
-.player{background:linear-gradient(135deg,#140000,var(--n3));
-  border:1px solid rgba(204,0,0,.22);border-radius:18px;padding:20px;margin-bottom:14px;}
-.pt{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
-.pt-cover{width:54px;height:54px;border-radius:11px;overflow:hidden;flex-shrink:0;
-  background:linear-gradient(135deg,var(--rouge),#500000);}
-.pt-cover img{width:100%;height:100%;object-fit:cover;object-position:top;}
-.pt-info{}
-.pt-exclu{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--rouge);margin-bottom:3px;}
-.pt-title{font-size:15px;font-weight:800;}
-.pt-meta{font-size:11px;color:var(--dim);margin-top:2px;}
-.progress-wrap{height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:8px;position:relative;overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--rouge),#ff6060);border-radius:2px;width:32%;
-  transition:width .5s linear;}
-.pt-times{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);margin-bottom:14px;}
-.controls{display:flex;align-items:center;justify-content:center;gap:20px;}
-.ctrl{width:38px;height:38px;border-radius:50%;background:var(--n5);
-  display:flex;align-items:center;justify-content:center;}
-.ctrl-play{width:54px;height:54px;border-radius:50%;background:var(--rouge);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 6px 24px var(--rouge-glow);}
-.ctrl-play .pause-ico{display:none;}
-.ctrl-play.playing .play-ico{display:none;}
-.ctrl-play.playing .pause-ico{display:block;}
+/* Messages + engagement */
+.msg{background:var(--n3);border:1px solid var(--faint);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+.msg-head{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+.msg-av{width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid var(--rouge);flex-shrink:0;}
+.msg-av img{width:100%;height:100%;object-fit:cover;object-position:top;}
+.msg-name{font-size:13px;font-weight:800;}
+.msg-verif{font-size:10px;color:var(--rouge);font-weight:700;}
+.msg-time{font-size:10px;color:var(--dim);margin-left:auto;}
+.msg-body{font-size:13px;line-height:1.6;color:rgba(255,255,255,.85);white-space:pre-wrap;}
+.msg-actions{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:11px;border-top:1px solid var(--faint);}
+.act-btn{display:flex;align-items:center;gap:6px;background:var(--n4);border:1px solid var(--faint);border-radius:9px;padding:7px 12px;font-size:12px;font-weight:700;color:var(--dim);}
+.act-btn svg{width:15px;height:15px;}
+.act-btn.liked{color:var(--rouge);border-color:rgba(204,0,0,.4);background:rgba(204,0,0,.08);}
+.act-btn.liked svg{fill:var(--rouge);stroke:var(--rouge);}
+.comments{margin-top:11px;}
+.cmt{display:flex;gap:8px;padding:8px 0;border-top:1px solid var(--faint);}
+.cmt-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#333,#555);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
+.cmt-b{flex:1;min-width:0;}
+.cmt-name{font-size:11px;font-weight:700;}
+.cmt-name span{color:var(--dim);font-weight:500;margin-left:6px;font-size:10px;}
+.cmt-text{font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;margin-top:2px;word-wrap:break-word;}
+.cmt-form{display:flex;gap:7px;margin-top:10px;}
+.cmt-form input{flex:1;background:rgba(0,0,0,.35);border:1px solid var(--faint);border-radius:9px;padding:9px 11px;font-size:12px;color:#fff;min-width:0;}
+.cmt-form button{background:var(--rouge);color:#fff;border-radius:9px;padding:0 14px;font-size:12px;font-weight:700;}
+.empty{font-size:13px;color:var(--dim);text-align:center;padding:18px;line-height:1.6;}
 
-/* ── Section title */
-.section-title{font-family:var(--bebas);font-size:26px;letter-spacing:1px;margin-bottom:12px;}
+/* Live */
+.live-badge-row{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+.live-badge{display:inline-flex;align-items:center;gap:6px;background:var(--rouge);color:#fff;font-size:10px;font-weight:800;letter-spacing:1px;padding:4px 9px;border-radius:4px;box-shadow:0 4px 14px var(--rouge-glow);}
+.live-dot2{width:6px;height:6px;border-radius:50%;background:#fff;animation:pulse 1s infinite;}
+.live-title{font-size:14px;font-weight:800;}
 
-/* ── Contenu exclusif */
-.exclu-list{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
-.exclu-item{background:var(--n3);border:1px solid var(--faint);border-radius:14px;
-  display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;transition:all .15s;}
-.exclu-item:active{border-color:var(--rouge);}
-.exclu-thumb{width:54px;height:54px;border-radius:11px;flex-shrink:0;overflow:hidden;
-  position:relative;display:flex;align-items:center;justify-content:center;}
-.exclu-thumb img{width:100%;height:100%;object-fit:cover;}
-.exclu-play{position:absolute;width:26px;height:26px;border-radius:50%;
-  background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;}
-.exclu-info{flex:1;}
-.exclu-type{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
-.exclu-name{font-size:13px;font-weight:700;}
-.exclu-meta{font-size:11px;color:var(--dim);margin-top:2px;}
-.exclu-lock .exclu-thumb{background:var(--n5);opacity:.55;}
+/* Sondages */
+.poll-q{font-size:14px;font-weight:800;margin-bottom:12px;line-height:1.4;}
+.poll-opts{display:flex;flex-direction:column;gap:8px;}
+.poll-opt{width:100%;text-align:left;background:var(--n4);border:1px solid var(--faint);border-radius:11px;padding:12px 14px;font-size:13px;font-weight:600;color:#fff;}
+.poll-opt:active{border-color:var(--rouge);background:rgba(204,0,0,.1);}
+.poll-res{position:relative;border-radius:11px;overflow:hidden;background:var(--n4);border:1px solid var(--faint);padding:12px 14px;display:flex;align-items:center;gap:8px;}
+.poll-res.mine{border-color:var(--rouge);}
+.poll-res-bar{position:absolute;left:0;top:0;bottom:0;background:rgba(204,0,0,.2);transition:width .5s;}
+.poll-res-lbl{position:relative;font-size:13px;font-weight:700;flex:1;}
+.poll-res-pct{position:relative;font-size:13px;font-weight:800;color:var(--rouge);}
+.poll-total{font-size:11px;color:var(--dim);margin-top:10px;}
 
-/* ── Fan wall */
-.fan-wall{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
-.fan-msg{background:var(--n3);border:1px solid var(--faint);border-radius:12px;padding:12px 14px;}
-.fm-header{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
-.fm-av{width:30px;height:30px;border-radius:50%;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;}
-.fm-name{font-size:12px;font-weight:700;}
-.fm-flag{font-size:14px;}
-.fm-text{font-size:12px;line-height:1.55;color:rgba(255,255,255,.75);}
-.fm-likes{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;color:var(--dim);}
+/* Contenu */
+.content-item{margin-bottom:16px;}
+.content-tag{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--rouge);margin-bottom:5px;}
+.content-title{font-size:15px;font-weight:800;margin-bottom:3px;}
+.content-desc{font-size:12px;color:var(--dim);margin-bottom:9px;line-height:1.5;}
+.embed{position:relative;padding-bottom:56.25%;height:0;border-radius:14px;overflow:hidden;background:#000;border:1px solid var(--faint);}
+.embed iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
 
-/* ── Boutique */
-.boutique-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.prod{background:var(--n3);border:1px solid var(--faint);border-radius:14px;overflow:hidden;cursor:pointer;}
-.prod:active{border-color:var(--rouge);}
-.prod-visual{height:120px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-.prod-visual img{width:100%;height:100%;object-fit:cover;}
-.prod-badge{position:absolute;top:8px;left:8px;background:var(--rouge);border-radius:5px;
-  font-size:9px;font-weight:800;padding:2px 7px;letter-spacing:.5px;}
-.prod-body{padding:10px 12px 12px;}
-.prod-name{font-size:13px;font-weight:700;}
-.prod-ed{font-size:10px;color:var(--dim);margin-top:1px;}
-.prod-price{font-family:var(--bebas);font-size:20px;color:var(--rouge);margin-top:5px;}
-.prod-add{width:100%;margin-top:8px;padding:9px;background:var(--n5);border-radius:9px;
-  color:#fff;font-size:12px;font-weight:700;}
-.prod-add:active{background:var(--rouge);}
+/* Photos */
+.photo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;}
+.photo-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--faint);}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px;flex-direction:column;gap:12px;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:100%;max-height:82vh;border-radius:12px;}
+.lightbox .lb-cap{font-size:13px;color:rgba(255,255,255,.7);text-align:center;}
+.lightbox .lb-close{position:absolute;top:18px;right:20px;font-size:30px;color:#fff;line-height:1;background:none;}
 
-/* ── Upgrade banner */
-.upgrade{background:linear-gradient(135deg,#0d0000,var(--n3));
-  border:1px solid rgba(212,160,23,.25);border-radius:18px;padding:20px;
-  display:flex;align-items:center;gap:14px;margin-bottom:8px;}
-.upg-icon{width:44px;height:44px;border-radius:12px;background:var(--or-dim);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.upg-title{font-size:14px;font-weight:800;margin-bottom:3px;}
-.upg-sub{font-size:11px;color:var(--dim);line-height:1.5;}
-.upg-btn{background:var(--or);border-radius:9px;color:#000;font-size:12px;font-weight:800;
-  padding:8px 14px;flex-shrink:0;white-space:nowrap;}
-.upg-btn:active{opacity:.8;}
-
-/* ── Toast */
-.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);
-  background:var(--n2);border:1px solid rgba(204,0,0,.45);border-radius:14px;
-  padding:12px 20px;font-size:13px;font-weight:600;
-  transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:999;
-  white-space:nowrap;box-shadow:0 8px 40px rgba(0,0,0,.7);}
+/* Toast */
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(120px);background:var(--n2);border:1px solid rgba(204,0,0,.45);border-radius:13px;padding:12px 20px;font-size:13px;font-weight:600;z-index:1100;transition:transform .3s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 40px rgba(0,0,0,.7);max-width:90vw;text-align:center;}
 .toast.show{transform:translateX(-50%) translateY(0);}
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<!-- Hero cinématique -->
-<div class="hero">
-  <img src="serge-concert.jpg" alt="Serge Beynaud"/>
-  <div class="hero-grad"></div>
-  <div class="hero-content">
-    <div class="hero-label">Fan Club Officiel</div>
-    <div class="hero-title">SERGE<br>BEYNAUD</div>
-    <div class="hero-membership">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="#fff"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-      INNER CIRCLE
-    </div>
-    <div class="countdown">
-      <div class="cdt"><div class="cdt-num" id="cd-j">05</div><div class="cdt-lbl">Jours</div></div>
-      <div class="cdt-sep">:</div>
-      <div class="cdt"><div class="cdt-num" id="cd-h">14</div><div class="cdt-lbl">Heures</div></div>
-      <div class="cdt-sep">:</div>
-      <div class="cdt"><div class="cdt-num" id="cd-m">32</div><div class="cdt-lbl">Min</div></div>
-      <div class="countdown-label">avant le live exclusif</div>
+  <!-- JOIN -->
+  <div id="view-join" class="join-hero">
+    <div class="join-bg"></div><div class="join-ov"></div>
+    <div class="join-c">
+      <div class="eyebrow"><span class="pulse"></span>La Beynaumania · Officiel</div>
+      <div class="join-title">LA<br><span class="r">BEYNAUMANIA</span></div>
+      <p class="join-sub">L'univers officiel de Serge Beynaud. Contenu exclusif, coulisses, séries à suivre uniquement ici. Gratuit. Ta place en 20 secondes.</p>
+      <div id="ref-note" class="ref-note hidden">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+        <span>Tu entres sur l'invitation d'un membre de la Beynaumania.</span>
+      </div>
+      <div class="field"><label>Ton prénom</label><input id="j-prenom" type="text" placeholder="Ex : Awa" autocomplete="given-name"/></div>
+      <div class="field"><label>Ton WhatsApp</label><input id="j-wa" type="tel" placeholder="+225 07 00 00 00 00" autocomplete="tel"/></div>
+      <div class="field"><label>D'où te connectes-tu ?</label><input id="j-lieu" type="text" placeholder="Ex : Abidjan, Paris, Dakar…"/></div>
+      <button id="j-btn" class="btn-join" onclick="doJoin()">Entrer dans la Beynaumania
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </button>
+      <div id="j-err" class="err"></div>
+      <div class="join-alt">Déjà membre ? <a onclick="recover()">Retrouver mon espace</a></div>
+      <div class="legal">En rejoignant, tu acceptes de recevoir les actus officielles de Serge Beynaud sur ton WhatsApp. Désinscription à tout moment.</div>
     </div>
   </div>
-</div>
 
-<div class="scroll">
-
-  <!-- Message Serge -->
-  <div class="serge-msg">
-    <div class="sm-header">
-      <div class="sm-avatar"><img src="serge-creatair.jpg" alt="Serge"/></div>
-      <div class="sm-id">
-        <div class="sm-name">Serge Beynaud</div>
-        <div class="sm-verified">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="var(--rouge)" style="display:inline;margin-right:3px;"><polyline points="20,6 9,17 4,12"/></svg>
-          Artiste vérifié
+  <!-- MEMBER -->
+  <div id="view-member" class="hidden">
+    <div class="m-hero">
+      <div class="m-hero-bg"></div><div class="m-hero-ov"></div>
+      <div class="m-hero-c">
+        <div class="m-top">
+          <div class="brand"><div class="brand-logo">BM</div><span class="brand-name">La Beynaumania</span></div>
+          <button class="logout" onclick="logout()">Se déconnecter</button>
         </div>
-      </div>
-      <div class="sm-time">Il y a 3h</div>
-    </div>
-    <div class="sm-bubble">
-      Fami, j'ai un truc pour vous pour ce live. Vous allez entendre des sons que personne n'a encore entendus. Restez connectés. — Latiss
-    </div>
-  </div>
-
-  <!-- Player audio -->
-  <div class="player">
-    <div class="pt">
-      <div class="pt-cover"><img src="serge-creatair.jpg" alt=""/></div>
-      <div class="pt-info">
-        <div class="pt-exclu">Exclusif Fami Gold</div>
-        <div class="pt-title">La Joie — Version acoustique</div>
-        <div class="pt-meta">Avant sortie officielle · 4:22</div>
-      </div>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-fill" id="prog-fill"></div>
-    </div>
-    <div class="pt-times"><span id="pt-time">1:18</span><span>4:22</span></div>
-    <div class="controls">
-      <div class="ctrl" onclick="t('Titre précédent')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chrome-dim)" stroke-width="2" stroke-linecap="round"><polygon points="19,20 9,12 19,4"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
-      </div>
-      <div class="ctrl-play" id="play-btn" onclick="togglePlay()">
-        <svg class="play-ico" width="20" height="20" viewBox="0 0 24 24" fill="#fff"><polygon points="5,3 19,12 5,21"/></svg>
-        <svg class="pause-ico" width="20" height="20" viewBox="0 0 24 24" fill="#fff"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-      </div>
-      <div class="ctrl" onclick="t('Audio inédit suivant : Femme Idéale')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--chrome-dim)" stroke-width="2" stroke-linecap="round"><polygon points="5,4 15,12 5,20"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
-      </div>
-    </div>
-  </div>
-
-  <!-- Vidéo exclusive -->
-  <div class="section-title">CONTENU EXCLUSIF</div>
-  <div style="border-radius:16px;overflow:hidden;background:#000;margin-bottom:10px;position:relative;">
-    <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-      color:var(--rouge);padding:10px 14px 6px;background:var(--n3);">Exclusif Fami Gold</div>
-    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;">
-      <iframe src="https://www.youtube.com/embed/IenC34xgq9o?rel=0&modestbranding=1&color=red"
-        style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"
-        allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
-        allowfullscreen></iframe>
-    </div>
-    <div style="padding:10px 14px 12px;background:var(--n3);">
-      <div style="font-size:13px;font-weight:700;">Serge Beynaud — Vidéo officielle</div>
-      <div style="font-size:11px;color:var(--dim);margin-top:3px;">Réservé aux membres Fami Gold et Clan Latiss</div>
-    </div>
-  </div>
-  <div class="exclu-list">
-
-    <div class="exclu-item" onclick="t('Lecture : Clan Latiss — Zénith de Paris')">
-      <div class="exclu-thumb">
-        <img src="serge-concert.jpg" alt=""/>
-        <div class="exclu-play"><svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><polygon points="5,3 19,12 5,21"/></svg></div>
-      </div>
-      <div class="exclu-info">
-        <div class="exclu-type" style="color:var(--rouge);">Vidéo backstage</div>
-        <div class="exclu-name">Coulisses — Zénith de Paris</div>
-        <div class="exclu-meta">12 min · Publié il y a 3 jours</div>
-      </div>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
-    </div>
-
-    <div class="exclu-item" onclick="t('Replay disponible jusqu\'au 30 juin')">
-      <div class="exclu-thumb" style="background:linear-gradient(135deg,#1a0000,#2a0a0a);">
-        <div class="exclu-play"><svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><polygon points="5,3 19,12 5,21"/></svg></div>
-      </div>
-      <div class="exclu-info">
-        <div class="exclu-type" style="color:var(--or);">Replay live privé</div>
-        <div class="exclu-name">Répétition tournée 2026</div>
-        <div class="exclu-meta">47 min · Clan Latiss members only</div>
-      </div>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
-    </div>
-
-    <div class="exclu-item exclu-lock" style="opacity:.6;" onclick="t('Passez au Clan Latiss pour débloquer ce contenu')">
-      <div class="exclu-thumb" style="background:var(--n5);">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      </div>
-      <div class="exclu-info">
-        <div class="exclu-type" style="color:var(--or);">Clan Latiss requis</div>
-        <div class="exclu-name">Rencontre VIP — 30 juin Abidjan</div>
-        <div class="exclu-meta">Accès réservé aux membres Clan Latiss</div>
+        <div id="m-grade" class="grade-badge membre">Membre</div>
+        <div class="m-hello">SALUT <span id="m-prenom" class="r">FAMI</span></div>
+        <div class="m-hello-sub">Tu es dans la Beynaumania. Bienvenue chez toi.</div>
       </div>
     </div>
 
-  </div>
+    <div class="scroll">
+      <div id="live-section"></div>
+      <div class="card amb-card">
+        <div class="amb-h">
+          <svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+          <div class="amb-title">Fais grandir la Beynaumania</div>
+        </div>
+        <p class="amb-desc">Partage ton lien. Chaque personne qui entre grâce à toi te rapproche du grade <b style="color:var(--or)">Ambassadeur</b> et de contenus réservés.</p>
+        <div class="amb-link"><input id="amb-url" type="text" readonly/><button class="amb-copy" onclick="copyLink()">Copier</button></div>
+        <button class="amb-share" onclick="shareWa()">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18c-1.5 0-3-.4-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3C4 15.4 3.6 13.7 3.6 12 3.6 7.4 7.4 3.6 12 3.6S20.4 7.4 20.4 12 16.6 20.4 12 20.4z"/><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.6.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.7-.9-2.9-1.6-4-3.5-.3-.5.3-.5.8-1.6.1-.2 0-.4 0-.5C10 8.5 9.5 7.2 9.3 6.7c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.9.9-1.1 2-1 2.3.4 2.3 1.7 3.9 3.7 5.5 2.6 2.1 4.3 2 5.3 1.9.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
+          Inviter sur WhatsApp
+        </button>
+        <div id="amb-progress"></div>
+      </div>
 
-  <!-- Fan wall -->
-  <div class="section-title">CE QUE DISENT TES FANS</div>
-  <div class="fan-wall">
-    <div class="fan-msg">
-      <div class="fm-header">
-        <div class="fm-av" style="background:linear-gradient(135deg,#1a3a00,#2a5a00);">B</div>
-        <div class="fm-name">Bintou K.</div>
-        <div class="fm-flag">🇨🇮</div>
-      </div>
-      <div class="fm-text">Ce live privé c'était INCROYABLE. Serge qui répond aux messages en direct, on se sent vraiment privilégiés. Cette plateforme vaut tellement son prix.</div>
-      <div class="fm-likes">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--rouge)" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        284 · Fami Gold
-      </div>
-    </div>
-    <div class="fan-msg">
-      <div class="fm-header">
-        <div class="fm-av" style="background:linear-gradient(135deg,#001a3a,#002a5a);">M</div>
-        <div class="fm-name">Marcus D.</div>
-        <div class="fm-flag">🇫🇷</div>
-      </div>
-      <div class="fm-text">Depuis Paris, impossible d'aller à chaque concert. Grâce à l'espace membre, j'ai les backstages, les messages, les lives. Je suis dans l'univers de Serge tous les jours.</div>
-      <div class="fm-likes">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--rouge)" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        197 · Fami Gold
-      </div>
-    </div>
-  </div>
+      <div id="poll-section"></div>
 
-  <!-- Boutique -->
-  <div class="section-title">BOUTIQUE OFFICIELLE</div>
-  <div class="boutique-grid">
-    <div class="prod" onclick="t('T-shirt ARMY ajouté au panier — 29€')">
-      <div class="prod-visual" style="background:linear-gradient(135deg,#1a0000,#3a0000);">
-        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="rgba(204,0,0,.35)" stroke-width="1.2" stroke-linecap="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
-        <div class="prod-badge">2026</div>
-      </div>
-      <div class="prod-body">
-        <div class="prod-name">T-shirt ARMY</div>
-        <div class="prod-ed">Sérigraphie exclusive</div>
-        <div class="prod-price">29 €</div>
-        <button class="prod-add">Ajouter</button>
-      </div>
-    </div>
-    <div class="prod" onclick="t('CD Dédicacé ajouté — signature originale')">
-      <div class="prod-visual" style="background:linear-gradient(135deg,#0a0a1a,#1a1a3a);">
-        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="rgba(100,100,200,.3)" stroke-width="1.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-      </div>
-      <div class="prod-body">
-        <div class="prod-name">CD Dédicacé</div>
-        <div class="prod-ed">Signature de Serge</div>
-        <div class="prod-price">45 €</div>
-        <button class="prod-add">Ajouter</button>
-      </div>
-    </div>
-    <div class="prod" onclick="t('Hoodie ARMY ajouté')">
-      <div class="prod-visual" style="background:linear-gradient(135deg,#0f0000,#1f0000);">
-        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="rgba(204,0,0,.3)" stroke-width="1.2" stroke-linecap="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
-        <div class="prod-badge">LIMITED</div>
-      </div>
-      <div class="prod-body">
-        <div class="prod-name">Hoodie ARMY</div>
-        <div class="prod-ed">Broderie premium</div>
-        <div class="prod-price">65 €</div>
-        <button class="prod-add">Ajouter</button>
-      </div>
-    </div>
-    <div class="prod" onclick="t('Photo dédicacée ajoutée — livraison 5-7j')">
-      <div class="prod-visual" style="background:#0a0a0a;">
-        <img src="serge-creatair.jpg" alt="Serge" style="opacity:.45;object-position:top;"/>
-        <div class="prod-badge">RARE</div>
-      </div>
-      <div class="prod-body">
-        <div class="prod-name">Photo dédicacée</div>
-        <div class="prod-ed">Format A4 originale</div>
-        <div class="prod-price">35 €</div>
-        <button class="prod-add">Ajouter</button>
-      </div>
-    </div>
-  </div>
+      <div class="sec-title">LE MOT DE SERGE</div>
+      <div id="msg-wall"></div>
 
-  <!-- Upgrade Clan Latiss -->
-  <div class="upgrade" onclick="t('Redirection vers la page Clan Latiss — 49,99€/mois')">
-    <div class="upg-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="2" stroke-linecap="round">
-        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
-      </svg>
+      <div class="sec-title">PHOTOS EXCLUSIVES</div>
+      <div id="photo-wall"></div>
+
+      <div class="sec-title">CONTENU EXCLUSIF</div>
+      <div id="content-list"></div>
     </div>
-    <div style="flex:1;">
-      <div class="upg-title">Passer Clan Latiss</div>
-      <div class="upg-sub">Rencontre VIP · lives ultra-privés · merch réservé</div>
-    </div>
-    <button class="upg-btn">49,99 €</button>
   </div>
 
 </div>
 
+<div class="lightbox" id="lightbox" onclick="closeLb(event)">
+  <button class="lb-close" onclick="closeLb(event,true)">&times;</button>
+  <img id="lb-img" src="" alt=""/><div class="lb-cap" id="lb-cap"></div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+const SB_URL="https://lgdgbrivnhgeupqhkckd.supabase.co";
+const SB_ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
+const FN=SB_URL+"/functions/v1/bey-public";
+const LS="bey_membre";
+let ME=null, MSGS=[];
 let _tt;
-function t(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),2500);}
+function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>e.classList.remove('show'),2600);}
+function refParam(){return new URLSearchParams(location.search).get('ref');}
+function ambLink(code){return location.origin+location.pathname+'?ref='+code;}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function timeAgo(iso){const s=Math.floor((Date.now()-new Date(iso).getTime())/1000);if(s<60)return "à l'instant";if(s<3600)return Math.floor(s/60)+' min';if(s<86400)return Math.floor(s/3600)+' h';return Math.floor(s/86400)+' j';}
 
-// Countdown
-let secs=5*86400+14*3600+32*60;
-(function tick(){
-  const j=Math.floor(secs/86400),h=Math.floor((secs%86400)/3600),m=Math.floor((secs%3600)/60);
-  document.getElementById('cd-j').textContent=String(j).padStart(2,'0');
-  document.getElementById('cd-h').textContent=String(h).padStart(2,'0');
-  document.getElementById('cd-m').textContent=String(m).padStart(2,'0');
-  if(secs-->0)setTimeout(tick,1000);
-})();
-
-// Player
-let playing=false,progW=32,progInt;
-function togglePlay(){
-  playing=!playing;
-  const btn=document.getElementById('play-btn');
-  if(playing){
-    btn.classList.add('playing');
-    t('Lecture : La Joie — Version acoustique');
-    progInt=setInterval(()=>{
-      progW=Math.min(100,progW+.02);
-      document.getElementById('prog-fill').style.width=progW+'%';
-      const secs2=Math.round(progW/100*262);
-      document.getElementById('pt-time').textContent=Math.floor(secs2/60)+':'+(secs2%60+'').padStart(2,'0');
-    },100);
-  } else {
-    btn.classList.remove('playing');
-    clearInterval(progInt);
-    t('Pause');
-  }
+async function api(body){
+  const r=await fetch(FN,{method:'POST',headers:{'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  return r.json();
 }
+function saveMembre(m){localStorage.setItem(LS,JSON.stringify(m));}
+function getMembre(){try{return JSON.parse(localStorage.getItem(LS)||'null');}catch(e){return null;}}
+
+async function doJoin(){
+  const prenom=document.getElementById('j-prenom').value.trim();
+  const wa=document.getElementById('j-wa').value.trim();
+  const lieu=document.getElementById('j-lieu').value.trim();
+  const err=document.getElementById('j-err'); err.textContent='';
+  if(!prenom){err.textContent='Ton prénom, stp.';return;}
+  if(wa.replace(/\D/g,'').length<8){err.textContent='Un numéro WhatsApp valide (avec indicatif).';return;}
+  const btn=document.getElementById('j-btn'); btn.disabled=true; const old=btn.innerHTML; btn.innerHTML='<span class="spin"></span>';
+  const res=await api({action:'join',prenom,whatsapp:wa,lieu,ref:refParam()});
+  btn.disabled=false; btn.innerHTML=old;
+  if(!res.ok){err.textContent=res.error||'Une erreur est survenue.';return;}
+  saveMembre(res.membre);
+  if(res.returning) toast('Content de te revoir, '+res.membre.prenom+' !');
+  renderMember(res.membre);
+}
+async function recover(){
+  const wa=prompt("Entre le numéro WhatsApp avec lequel tu t'es inscrit (avec indicatif) :");
+  if(!wa) return;
+  const res=await api({action:'me',whatsapp:wa});
+  if(!res.ok){toast("Aucun compte trouvé avec ce numéro.");return;}
+  saveMembre(res.membre); renderMember(res.membre);
+}
+function logout(){localStorage.removeItem(LS);location.href=location.origin+location.pathname;}
+
+function renderProgress(m){
+  const box=document.getElementById('amb-progress');
+  if(m.grade==='ambassadeur'){box.innerHTML='<div class="amb-done"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Tu es AMBASSADEUR · '+m.filleuls+' fans amenés. Respect.</div>';return;}
+  const goal=5,n=Math.min(m.filleuls,goal),pct=Math.round(n/goal*100);
+  box.innerHTML='<div class="amb-prog-lbl"><span>Vers le grade Ambassadeur</span><span><b>'+m.filleuls+'</b> / '+goal+'</span></div><div class="amb-bar"><div class="amb-fill" style="width:'+pct+'%"></div></div>';
+}
+
+async function renderMember(m){
+  ME=m;
+  document.getElementById('view-join').classList.add('hidden');
+  document.getElementById('view-member').classList.remove('hidden');
+  document.getElementById('m-prenom').textContent=(m.prenom||'Fami').toUpperCase();
+  const gb=document.getElementById('m-grade');
+  gb.className='grade-badge '+(m.grade==='ambassadeur'?'ambassadeur':'membre');
+  gb.textContent=m.grade==='ambassadeur'?'★ Ambassadeur':'Membre';
+  document.getElementById('amb-url').value=ambLink(m.code_ambassadeur);
+  renderProgress(m);
+  const res=await api({action:'feed',grade:m.grade,membre_id:m.id});
+  const cont=res.contenus||[];
+  renderLive(cont.filter(c=>c.type==='live'));
+  renderPolls(res.sondages||[]);
+  MSGS=res.messages||[];
+  renderWall();
+  renderPhotos(res.photos||[]);
+  renderContent(cont.filter(c=>c.type!=='live'));
+}
+
+function heart(filled){return '<svg viewBox="0 0 24 24" fill="'+(filled?'currentColor':'none')+'" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';}
+function renderWall(){
+  const el=document.getElementById('msg-wall');
+  if(!MSGS.length){el.innerHTML='<div class="empty">Serge n\'a pas encore posté. Reste connecté, ça arrive.</div>';return;}
+  el.innerHTML=MSGS.map(m=>{
+    const comms=(m.comments||[]).map(c=>`<div class="cmt"><div class="cmt-av">${esc((c.prenom||'?')[0]).toUpperCase()}</div><div class="cmt-b"><div class="cmt-name">${esc(c.prenom)}<span>${timeAgo(c.created_at)}</span></div><div class="cmt-text">${esc(c.contenu)}</div></div></div>`).join('');
+    return `<div class="msg" data-id="${m.id}">
+      <div class="msg-head"><div class="msg-av"><img src="serge-portrait.jpg" alt=""/></div>
+      <div><div class="msg-name">Serge Beynaud</div><div class="msg-verif">✓ Officiel</div></div>
+      <div class="msg-time">${timeAgo(m.created_at)}</div></div>
+      <div class="msg-body">${esc(m.contenu)}</div>
+      <div class="msg-actions">
+        <button class="act-btn like-btn ${m.liked?'liked':''}" onclick="toggleLike('${m.id}')">${heart(m.liked)}<span>${m.likes||0}</span></button>
+        <button class="act-btn" onclick="toggleComments('${m.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>${(m.comments||[]).length}</span></button>
+      </div>
+      <div class="comments hidden" id="cm-${m.id}">
+        <div id="cl-${m.id}">${comms}</div>
+        <div class="cmt-form"><input id="ci-${m.id}" type="text" maxlength="500" placeholder="Écris un commentaire…" onkeydown="if(event.key==='Enter')addComment('${m.id}')"/><button onclick="addComment('${m.id}')">Envoyer</button></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function toggleLike(id){
+  const m=MSGS.find(x=>x.id===id); if(!m)return;
+  m.liked=!m.liked; m.likes=(m.likes||0)+(m.liked?1:-1); renderWall();
+  const res=await api({action:'like',membre_id:ME.id,message_id:id,on:m.liked});
+  if(res.ok){m.likes=res.likes;m.liked=res.liked;renderWall();}
+}
+function toggleComments(id){document.getElementById('cm-'+id).classList.toggle('hidden');}
+async function addComment(id){
+  const inp=document.getElementById('ci-'+id); const v=inp.value.trim(); if(!v)return;
+  inp.value='';
+  const res=await api({action:'comment_add',membre_id:ME.id,message_id:id,contenu:v});
+  if(res.ok&&res.commentaire){
+    if(res.masque){ toast('Ton commentaire sera visible après vérification.'); return; }
+    const m=MSGS.find(x=>x.id===id); (m.comments=m.comments||[]).push(res.commentaire);
+    renderWall(); const box=document.getElementById('cm-'+id); if(box)box.classList.remove('hidden');
+    toast('Commentaire publié.');
+  } else toast('Erreur, réessaie.');
+}
+
+function renderPhotos(photos){
+  const el=document.getElementById('photo-wall');
+  if(!photos.length){el.innerHTML='<div class="empty">Bientôt des photos exclusives.</div>';return;}
+  el.innerHTML='<div class="photo-grid">'+photos.map(p=>`<img src="${esc(p.url)}" alt="${esc(p.legende||'')}" onclick="openLb('${esc(p.url)}','${esc(p.legende||'')}')"/>`).join('')+'</div>';
+}
+function openLb(url,cap){document.getElementById('lb-img').src=url;document.getElementById('lb-cap').textContent=cap||'';document.getElementById('lightbox').classList.add('open');}
+function closeLb(e,force){if(force||e.target.id==='lightbox'||e.target.classList.contains('lb-close'))document.getElementById('lightbox').classList.remove('open');}
+
+let POLLS=[];
+function renderPolls(sondages){
+  POLLS=sondages||[];
+  const el=document.getElementById('poll-section');
+  if(!POLLS.length){el.innerHTML='';return;}
+  el.innerHTML='<div class="sec-title">SONDAGES</div>'+POLLS.map(pollHtml).join('');
+}
+function pollHtml(s){
+  const voted=s.mon_vote!=null, total=s.total||0;
+  const opts=(s.options||[]).map((o,i)=>{
+    if(voted){
+      const c=(s.counts&&s.counts[i])||0, pct=total?Math.round(c/total*100):0, mine=s.mon_vote===i;
+      return `<div class="poll-res ${mine?'mine':''}"><div class="poll-res-bar" style="width:${pct}%"></div><span class="poll-res-lbl">${esc(o)}${mine?' ✓':''}</span><span class="poll-res-pct">${pct}%</span></div>`;
+    }
+    return `<button class="poll-opt" onclick="votePoll('${s.id}',${i})">${esc(o)}</button>`;
+  }).join('');
+  return `<div class="card"><div class="poll-q">${esc(s.question)}</div><div class="poll-opts">${opts}</div><div class="poll-total">${voted?(total+' vote'+(total>1?'s':'')):'Vote pour voir les résultats'}</div></div>`;
+}
+async function votePoll(id,oi){
+  const res=await api({action:'vote',membre_id:ME.id,sondage_id:id,option_index:oi});
+  if(res&&res.ok){const s=POLLS.find(x=>x.id===id);if(s){s.counts=res.counts;s.total=res.total;s.mon_vote=res.mon_vote;}renderPolls(POLLS);toast('Vote enregistré !');}
+  else toast('Erreur, réessaie.');
+}
+function renderLive(lives){
+  const el=document.getElementById('live-section');
+  if(!lives||!lives.length){el.innerHTML='';return;}
+  el.innerHTML='<div class="sec-title" style="color:var(--rouge);margin-top:6px;">EN DIRECT</div>'+lives.map(c=>`
+    <div class="content-item">
+      <div class="live-badge-row"><span class="live-badge"><span class="live-dot2"></span>EN DIRECT</span><span class="live-title">${esc(c.titre)}</span></div>
+      <div class="embed"><iframe src="${esc(c.youtube_url)}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe></div>
+    </div>`).join('');
+}
+function renderContent(items){
+  const el=document.getElementById('content-list');
+  if(!items.length){el.innerHTML='<div class="empty">Le contenu exclusif arrive très vite.</div>';return;}
+  el.innerHTML=items.map(c=>`<div class="content-item">
+    <div class="content-tag">${c.grade_requis==='ambassadeur'?'Réservé Ambassadeurs':'Exclusif Beynaumania'}</div>
+    <div class="content-title">${esc(c.titre)}</div>
+    ${c.description?`<div class="content-desc">${esc(c.description)}</div>`:''}
+    <div class="embed"><iframe src="${esc(c.youtube_url)}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+  </div>`).join('');
+}
+function copyLink(){const i=document.getElementById('amb-url');navigator.clipboard?.writeText(i.value).then(()=>toast('Lien copié ! Partage-le.'),()=>{i.select();document.execCommand('copy');toast('Lien copié !');});}
+function shareWa(){const txt="🔥 Rejoins LA BEYNAUMANIA, l'univers officiel de Serge Beynaud ! Contenu exclusif rien que pour nous. C'est gratuit 👉 "+ambLink(ME.code_ambassadeur);window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');}
+
+(async function(){
+  if(refParam()) document.getElementById('ref-note').classList.remove('hidden');
+  const m=getMembre();
+  if(m&&m.id){const res=await api({action:'me',id:m.id});if(res.ok){saveMembre(res.membre);renderMember(res.membre);return;}localStorage.removeItem(LS);}
+})();
 </script>
 </body>
 </html>

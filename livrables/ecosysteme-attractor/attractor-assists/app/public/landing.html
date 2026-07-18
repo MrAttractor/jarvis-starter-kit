@@ -22,18 +22,39 @@
   --safe-b:env(safe-area-inset-bottom,0px);
 }
 html,body{max-width:100%;overflow-x:hidden}
-body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--sable);color:var(--charbon);line-height:1.55;-webkit-font-smoothing:antialiased}
-h1,h2,h3{font-family:Sora,Inter,sans-serif;letter-spacing:-.03em;line-height:1.12}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--sable);color:var(--charbon);line-height:1.55;-webkit-font-smoothing:antialiased;
+  /* iOS gonfle le texte tout seul selon l'orientation et les reglages d'accessibilite :
+     sans ca, la mise en page ne ressemble plus a ce qui est teste. */
+  -webkit-text-size-adjust:100%;text-size-adjust:100%}
+h1,h2,h3{font-family:Sora,Inter,sans-serif;letter-spacing:-.03em;line-height:1.12;
+  /* un mot long ne doit jamais depasser le bord plutot que de se couper */
+  overflow-wrap:break-word}
 img{max-width:100%;display:block}
 a{color:inherit}
-.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+/* env(safe-area-inset-*) : sur iPhone en paysage, le notch mange les bords. */
+.wrap{max-width:1080px;margin:0 auto;
+  padding-left:max(20px, env(safe-area-inset-left));
+  padding-right:max(20px, env(safe-area-inset-right))}
 
 /* En-tête */
 .nav{position:sticky;top:0;z-index:30;background:rgba(250,246,240,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--g200)}
-.nav-in{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}
-.logo{display:flex;align-items:center;gap:9px;font-family:Sora;font-weight:800;font-size:17px;text-decoration:none}
+.nav-in{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0}
+/* nowrap : sans lui, "Attractor Assists" se casse en deux lignes des 375px et
+   s'ecrase contre le bouton. Le duo logo + bouton doit tenir sur une ligne jusqu'a 320px. */
+.logo{display:flex;align-items:center;gap:9px;font-family:Sora;font-weight:800;font-size:17px;text-decoration:none;white-space:nowrap}
 .logo-mark{width:30px;height:30px;border-radius:8px;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;border-radius:12px;text-decoration:none;transition:transform .12s,opacity .12s;white-space:nowrap}
+/* Le libelle du bouton raccourcit sur petit ecran plutot que de pousser le logo. */
+.court{display:none}
+@media(max-width:430px){
+  .logo{font-size:15px;gap:7px}
+  .logo-mark{width:26px;height:26px;font-size:13px}
+  .btn-sm{padding:9px 13px;font-size:13px}
+  .long{display:none}
+  .court{display:inline}
+}
+/* min-height 44px : regle de rejet du UX_SYSTEM (cible tactile). Sans elle, le
+   bouton de la nav tombait a 41px. */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;border-radius:12px;text-decoration:none;transition:transform .12s,opacity .12s;white-space:nowrap;min-height:44px}
 .btn:active{transform:scale(.98)}
 .btn-p{background:var(--orange);color:#fff;padding:14px 24px;font-size:15px;box-shadow:0 10px 24px -10px rgba(242,92,5,.7)}
 .btn-s{background:transparent;color:var(--charbon);padding:10px 16px;font-size:14px;border:1px solid var(--g200)}
@@ -43,7 +64,7 @@ a{color:inherit}
 .hero{padding:52px 0 44px}
 .tag{display:inline-flex;align-items:center;gap:7px;background:rgba(30,86,49,.09);color:var(--vert);font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:999px;margin-bottom:20px}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--vert)}
-h1{font-size:clamp(31px,7vw,54px);font-weight:800;margin-bottom:18px}
+h1{font-size:clamp(28px,7vw,54px);font-weight:800;margin-bottom:18px}
 h1 em{font-style:normal;color:var(--orange)}
 .lead{font-size:clamp(16px,2.4vw,19px);color:var(--g500);max-width:600px;margin-bottom:28px}
 .cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
@@ -51,6 +72,26 @@ h1 em{font-style:normal;color:var(--orange)}
 
 /* Sections */
 section{padding:52px 0}
+
+/* ── Mobile ────────────────────────────────────────────────────────────────
+   Sur telephone, deux boutons cote a cote passent a la ligne et se retrouvent
+   empiles avec des largeurs differentes : ca fait bancal et le second ne se voit
+   plus comme un bouton. Ils prennent toute la largeur, l'un sous l'autre.
+   Le <br> du titre est retire : a cette largeur il produisait une ligne courte
+   suivie d'un retour a la ligne naturel, donc un pave desequilibre. */
+@media(max-width:560px){
+  .hero{padding:36px 0 32px}
+  section{padding:38px 0}
+  h1{letter-spacing:-.02em}
+  h1 br{display:none}
+  .lead{margin-bottom:24px}
+  .cta-row{flex-direction:column;align-items:stretch;gap:10px}
+  .cta-row .btn{width:100%;padding:15px 20px}
+  .rassure{text-align:center}
+  .final{padding:36px 20px;border-radius:22px}
+  .final .btn-p{display:block;width:100%}
+  .foot{justify-content:center;text-align:center;gap:14px}
+}
 .eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
 h2{font-size:clamp(24px,4vw,36px);font-weight:800;margin-bottom:12px}
 .sub{font-size:15.5px;color:var(--g500);max-width:620px;margin-bottom:32px}
@@ -108,14 +149,16 @@ h2{font-size:clamp(24px,4vw,36px);font-weight:800;margin-bottom:12px}
     <a class="logo" href="/">
       <span class="logo-mark">A</span> Attractor Assists
     </a>
-    <a class="btn btn-s btn-sm" href="/app">J'ai déjà un compte</a>
+    <a class="btn btn-s btn-sm" href="/app"><span class="long">J'ai déjà un compte</span><span class="court">Connexion</span></a>
   </div>
 </header>
 
 <main>
   <section class="hero wrap">
     <div class="tag"><span class="dot"></span> Gratuit pour commencer</div>
-    <h1>Ta boutique en ligne,<br>et un assistant qui <em>répond à tes clients</em>.</h1>
+    <!-- L'espace avant le <br> est indispensable : sur mobile le <br> est masque
+         et sans elle les deux membres se collent ("ligne,et un assistant"). -->
+    <h1>Ta boutique en ligne, <br>et un assistant qui <em>répond à tes clients</em>.</h1>
     <p class="lead">
       Tu montes ta boutique en quinze minutes, depuis ton téléphone. Tes clients y voient
       tes produits, posent leurs questions, et commandent. La commande t'arrive sur WhatsApp.

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML Ads — Pilotage des leads</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--meta:#0866FF;--meta-d:#0A54C9;--ink:#0A1633;--slate:#5B6B8C;--line:#E4E9F2;--bg:#F6F8FC;--card:#fff;--ok:#16A34A;--warn:#F59E0B;--hot:#EF4444}
+body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{width:100%;max-width:1100px;margin:0 auto;padding:0 16px}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit}
+
+/* login */
+.login{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:34px 28px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(10,22,51,.1)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;margin-bottom:6px}
+.brand .dot{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#0866FF,#7C3AED,#EC4899);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
+.login-card h1{font-size:19px;margin:14px 0 4px}
+.login-card p{color:var(--slate);font-size:14px;margin-bottom:20px}
+.fld{margin-bottom:14px}
+.fld label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--slate)}
+.fld input{width:100%;border:1px solid var(--line);border-radius:11px;padding:12px 14px;font-size:15px;outline:none}
+.fld input:focus{border-color:var(--meta)}
+.btn{width:100%;background:var(--meta);color:#fff;border:none;border-radius:12px;padding:13px;font-size:15px;font-weight:700;min-height:48px}
+.btn:hover{background:var(--meta-d)}
+.link{background:none;border:none;color:var(--meta);font-size:13px;font-weight:600;margin-top:12px;display:block;text-align:center;width:100%}
+.msg{font-size:13px;padding:10px 12px;border-radius:10px;margin-bottom:14px;display:none}
+.msg.err{background:#FEF2F2;color:#B91C1C;display:block}
+.msg.ok{background:#F0FDF4;color:#15803D;display:block}
+
+/* app */
+#app{display:none}
+.top{background:var(--ink);color:#fff;padding:16px 0}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.top .brand{color:#fff;margin:0}
+.top .who{font-size:12px;color:#9FB0D0}
+.logout{background:rgba(255,255,255,.1);color:#fff;border:none;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:20px 0}
+@media(max-width:760px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:420px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.kpi b{display:block;font-size:24px;font-weight:800}
+.kpi span{font-size:12px;color:var(--slate);font-weight:600}
+.kpi.hot b{color:var(--hot)}.kpi.pay b{color:var(--ok)}.kpi.follow b{color:var(--warn)}
+.commission{background:#0A1633;color:#fff;border-radius:16px;padding:18px 20px;margin-bottom:20px}
+.commission .ch{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px}
+.commission .ch b{font-size:16px}
+.commission .ch .sub{color:#9FB0D0;font-size:13px}
+.commission .rate{display:flex;align-items:center;gap:8px;font-size:13px;color:#9FB0D0}
+.commission .rate input{width:72px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;padding:7px 10px;font-size:14px;outline:none}
+.comm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:600px){.comm-grid{grid-template-columns:1fr}}
+.comm-cell{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px}
+.comm-cell b{display:block;font-size:22px;font-weight:800}
+.comm-cell.hl b{color:#4ADE80}
+.comm-cell span{font-size:12px;color:#9FB0D0}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chip{background:var(--card);border:1px solid var(--line);color:var(--slate);border-radius:100px;padding:8px 15px;font-size:13px;font-weight:600}
+.chip.active{background:var(--meta);color:#fff;border-color:var(--meta)}
+.lead{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.lead.done{opacity:.6}
+.lead-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.lead-name{font-size:16px;font-weight:700}
+.lead-meta{font-size:13px;color:var(--slate);margin-top:2px}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:.04em}
+.tag.nouveau{background:#EEF3FF;color:var(--meta-d)}
+.tag.a_suivre{background:#FEF6E7;color:#B45309}
+.tag.chaud{background:#FEECEC;color:#B91C1C}
+.tag.paye{background:#EAF7EE;color:#15803D}
+.lead-body{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.wa{display:inline-flex;align-items:center;gap:6px;background:#25D366;color:#fff;text-decoration:none;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:700}
+.lead-body select{border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:13px;background:#fff}
+.done-btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:600;color:var(--ink)}
+.done-btn.on{background:var(--ok);color:#fff;border-color:var(--ok)}
+.note{width:100%;margin-top:12px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;resize:vertical;min-height:38px;outline:none}
+.note:focus{border-color:var(--meta)}
+.empty{text-align:center;color:var(--slate);padding:40px 0}
+.refresh{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 14px;font-size:13px;font-weight:600;margin-left:auto}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login" id="login">
+  <div class="login-card">
+    <div class="brand"><span class="dot">ML</span> ML Ads</div>
+    <h1>Pilotage des leads</h1>
+    <p>Espace réservé à Romuald et son équipe.</p>
+    <div class="msg" id="loginMsg"></div>
+    <div class="fld"><label>Email</label><input type="email" id="email" placeholder="votre email" autocomplete="username"></div>
+    <div class="fld"><label>Mot de passe</label><input type="password" id="pwd" placeholder="votre mot de passe" autocomplete="current-password"></div>
+    <button class="btn" onclick="login()">Se connecter</button>
+    <button class="link" onclick="forgot()">Mot de passe oublié ?</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="top">
+    <div class="wrap">
+      <div class="brand"><span class="dot">ML</span> ML Ads · Leads</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="who" id="who"></span>
+        <button class="logout" onclick="logout()">Déconnexion</button>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="kpis" id="kpis"></div>
+    <div class="commission">
+      <div class="ch">
+        <div><b>Commission Mr Attractor</b> <span class="sub">· estimation d'après les clients payants</span></div>
+        <div class="rate">Commission <b style="color:#fff;font-size:15px">20 %</b> des ventes</div>
+      </div>
+      <div class="comm-grid" id="commGrid"></div>
+    </div>
+    <div class="filters" id="filters">
+      <button class="chip active" data-f="all" onclick="setFilter('all')">Tous</button>
+      <button class="chip" data-f="a_traiter" onclick="setFilter('a_traiter')">À traiter</button>
+      <button class="chip" data-f="chaud" onclick="setFilter('chaud')">Chauds</button>
+      <button class="chip" data-f="paye" onclick="setFilter('paye')">Payés</button>
+      <button class="chip" data-f="a_suivre" onclick="setFilter('a_suivre')">À suivre</button>
+      <button class="chip" data-f="traite" onclick="setFilter('traite')">Traités</button>
+      <button class="refresh" onclick="loadLeads()">Actualiser</button>
+    </div>
+    <div id="list"></div>
+  </div>
+</div>
+
+<script>
+const SB_URL="https://lgdgbrivnhgeupqhkckd.supabase.co";
+const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
+// storageKey dédié : isole la session ML Ads des autres admins du même domaine
+const sb=supabase.createClient(SB_URL,SB_KEY,{auth:{storageKey:'mlads-admin-auth',persistSession:true,autoRefreshToken:true}});
+const STATUTS=[["nouveau","Nouveau"],["a_suivre","À suivre"],["chaud","Chaud"],["paye","Payé"]];
+let LEADS=[], FILTER='all';
+
+async function login(){
+  const email=document.getElementById('email').value.trim();
+  const pwd=document.getElementById('pwd').value;
+  const m=document.getElementById('loginMsg'); m.className='msg';
+  const {error}=await sb.auth.signInWithPassword({email,password:pwd});
+  if(error){ m.className='msg err'; m.textContent="Connexion refusée. Vérifiez vos identifiants."; return; }
+  showApp();
+}
+async function forgot(){
+  const email=document.getElementById('email').value.trim();
+  const m=document.getElementById('loginMsg');
+  if(!email){ m.className='msg err'; m.textContent="Entrez votre email d'abord."; return; }
+  await sb.auth.resetPasswordForEmail(email,{redirectTo:location.href});
+  m.className='msg ok'; m.textContent="Si l'email existe, un lien de réinitialisation vient d'être envoyé.";
+}
+async function logout(){ await sb.auth.signOut(); location.reload(); }
+
+async function showApp(){
+  const {data:{user}}=await sb.auth.getUser();
+  document.getElementById('who').textContent=user?user.email:'';
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='block';
+  loadLeads();
+}
+function setFilter(f){ FILTER=f; document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.f===f)); render(); }
+
+async function loadLeads(){
+  const {data,error}=await sb.from('rom_leads').select('*').order('created_at',{ascending:false});
+  if(error){ document.getElementById('list').innerHTML='<div class="empty">Lecture impossible.</div>'; return; }
+  LEADS=data||[]; renderKpis(); renderCommission(); render();
+}
+// ── Volet commission Mr Attractor ──
+const SUB_PRICE=14900; // FCFA / mois / client (abonnement compte)
+const COMM_RATE=20;    // 20% sur les ventes (deal Mr Attractor, fixe)
+function renderCommission(){
+  const payants=LEADS.filter(l=>l.statut==='paye').length;
+  const mrr=payants*SUB_PRICE;
+  const comm=Math.round(mrr*COMM_RATE/100);
+  const fmt=n=>Math.round(n).toLocaleString('fr-FR');
+  document.getElementById('commGrid').innerHTML=
+    `<div class="comm-cell"><b>${payants}</b><span>Clients payants</span></div>`+
+    `<div class="comm-cell"><b>${fmt(mrr)} F</b><span>Ventes du mois (${payants} × ${fmt(SUB_PRICE)} F)</span></div>`+
+    `<div class="comm-cell hl"><b>${fmt(comm)} F</b><span>Commission Mr Attractor (20% des ventes)</span></div>`;
+}
+function renderKpis(){
+  const c=s=>LEADS.filter(l=>l.statut===s).length;
+  const k=[
+    ['Total',LEADS.length,''],
+    ['Nouveaux',c('nouveau'),''],
+    ['À suivre',c('a_suivre'),'follow'],
+    ['Chauds',c('chaud'),'hot'],
+    ['Payés',c('paye'),'pay'],
+    ['Traités',LEADS.filter(l=>l.traite).length,'']
+  ];
+  document.getElementById('kpis').innerHTML=k.map(([lab,n,cls])=>`<div class="kpi ${cls}"><b>${n}</b><span>${lab}</span></div>`).join('');
+}
+function waLink(num){
+  let d=(num||'').replace(/[^0-9]/g,'');
+  if(!d) return '#';
+  if(d.length===10 && d[0]==='0') d='225'+d;          // CI 10 chiffres
+  else if(d.length===9) d='225'+d;                    // sans le 0
+  return 'https://wa.me/'+d;
+}
+function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function fmtDate(s){ if(!s) return ''; try{ const d=new Date(s); return d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); }catch(e){return '';} }
+
+function render(){
+  let rows=LEADS.slice();
+  if(FILTER==='a_traiter') rows=rows.filter(l=>!l.traite);
+  else if(FILTER==='traite') rows=rows.filter(l=>l.traite);
+  else if(['chaud','paye','a_suivre'].includes(FILTER)) rows=rows.filter(l=>l.statut===FILTER);
+  const list=document.getElementById('list');
+  if(!rows.length){ list.innerHTML='<div class="empty">Aucun lead ici pour le moment.</div>'; return; }
+  list.innerHTML=rows.map(l=>{
+    const label=(STATUTS.find(s=>s[0]===l.statut)||['nouveau','Nouveau'])[1];
+    const opts=STATUTS.map(s=>`<option value="${s[0]}" ${s[0]===l.statut?'selected':''}>${s[1]}</option>`).join('');
+    return `<div class="lead ${l.traite?'done':''}">
+      <div class="lead-top">
+        <div>
+          <div class="lead-name">${esc(l.prenom)||'Sans prénom'} <span class="tag ${l.statut||'nouveau'}">${label}</span></div>
+          <div class="lead-meta">${esc(l.activite)||'activité non précisée'}${l.situation?' · '+esc(l.situation):''}</div>
+          <div class="lead-meta">Reçu le ${fmtDate(l.created_at)}</div>
+        </div>
+      </div>
+      <div class="lead-body">
+        <a class="wa" href="${waLink(l.whatsapp)}" target="_blank" rel="noopener">WhatsApp ${esc(l.whatsapp)}</a>
+        <select onchange="setStatut('${l.id}',this.value)">${opts}</select>
+        <button class="done-btn ${l.traite?'on':''}" onclick="toggleDone('${l.id}',${l.traite?'false':'true'})">${l.traite?'Traité ✓':'Marquer traité'}</button>
+      </div>
+      <textarea class="note" placeholder="Note (relance, contexte...)" onchange="saveNote('${l.id}',this.value)">${esc(l.note)}</textarea>
+    </div>`;
+  }).join('');
+}
+async function setStatut(id,statut){ await sb.from('rom_leads').update({statut,updated_at:new Date().toISOString()}).eq('id',id); const l=LEADS.find(x=>x.id===id); if(l)l.statut=statut; renderKpis(); render(); }
+async function toggleDone(id,val){ const v=(val===true||val==='true'); await sb.from('rom_leads').update({traite:v,updated_at:new Date().toISOString()}).eq('id',id); const l=LEADS.find(x=>x.id===id); if(l)l.traite=v; renderKpis(); render(); }
+async function saveNote(id,note){ await sb.from('rom_leads').update({note,updated_at:new Date().toISOString()}).eq('id',id); const l=LEADS.find(x=>x.id===id); if(l)l.note=note; }
+
+// session persistante
+sb.auth.getSession().then(({data:{session}})=>{ if(session) showApp(); });
+document.getElementById('pwd').addEventListener('keydown',e=>{ if(e.key==='Enter') login(); });
+</script>
+</body>
+</html>
