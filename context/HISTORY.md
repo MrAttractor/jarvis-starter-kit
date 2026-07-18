@@ -7,6 +7,24 @@
 
 ---
 
+## 2026-07-19 (session 108 — Ayêla : V1 réelle livrée + règle GitHub & architecture main/branches)
+
+### Ayêla — de la maquette à la vraie app métier (payée, déployée)
+- **Ayêla a réglé 40 000 / 55 000 F** du forfait technique (reste 15 000 F). Déclenche le passage de la maquette de closing à la **V1 réelle**, construite via la skill `generateur-app-metier` (clone GetWinWorld adapté).
+- **Vitrine réelle** (`livrables/clients/ayela/app/index.html`) connectée à Supabase : catalogue des 7 créations (vrais prix : DG/MAÏKE 3 000 F, liqueurs 10 000 F + Pocket 700 F), fiches à formats, panier localStorage, commande WhatsApp (+225 07 48 84 45 13) enregistrée en base, Club Ayêla (liste prioritaire), mention légale alcool. Charte premium espresso/orange/or, Cormorant Garamond + Jost.
+- **Tableau de bord Lorraine** (`admin.html`) : login email+mot de passe Supabase, onglets Accueil/KPIs, Commandes (badge à traiter), Stock (+/− et seuils d'alerte), Production/LANEMA (lots, avancement), Points de vente, Catalogue (édition prix/photo + upload), Club. Point du jour auto (commandes, stock bas, LANEMA, prochaines livraisons).
+- **Backend** : projet Supabase partagé `lgdgbrivnhgeupqhkckd`, préfixe `ay_` (produits/commandes/inscriptions/stock/lots/pos), **RLS nominatif** sur l'UUID de Lorraine `52992f9a-593f-4b03-b4c6-1e0981d36224`, bucket `ay-photos`. Compte admin créé (`Sonialorraine3@gmail.com` / mot de passe `Lo milliardaire`). Sécurité vérifiée : anon lit le catalogue mais PAS stock/commandes/production.
+- **Déploiement** : projet **Cloudflare Pages dédié `lamaisonayela`** (pas demo-site), live sur `lamaisonayela.pages.dev` (index/admin/guide 200 vérifiés). Domaine **lamaisonayela.com acheté sur Cloudflare Registrar** ; reste à brancher le custom domain au projet (action dashboard, pas de token API en local). La maquette de closing reste sur demo.agenceattractor.com/ayela comme asset de vente.
+- Guide de prise en main `guide.html` (identifiants + tour des 8 onglets) livré dans le dossier app.
+
+### Règle de travail : GitHub source de vérité + architecture main/branches (GO donné)
+- **Nouvelle règle de Mac Arthur** : utiliser GitHub pour les fichiers de tous nos sites (commit+push sans attendre, plus rien qui ne vive qu'en local) et régler l'architecture des branches. Sauvée en mémoire `feedback_github_sites`.
+- **Fait** : tout le workspace commité + poussé (Ayêla incluse). **`master` renommée en `main`** (locale + `origin/main`), `deploy-site.yml` rebasculé sur `main` (agenceattractor.com préservé). Branches obsolètes supprimées : `dev` (déjà fusionnée), 2 branches worktree GetWinWorld, `origin/dev`. Modèle trunk-based adopté (main = source de vérité + prod, `gh-pages` conservée comme artefact Pages).
+- **Restant côté Mac Arthur** (1 clic) : GitHub → Settings → Branches → passer la branche par défaut de `master` à `main`. Ensuite `origin/master` (encore protégée car défaut) pourra être supprimée. Le `GITHUB_TOKEN` du `.env` est périmé (« Bad credentials »), à régénérer pour que l'API GitHub soit pilotable.
+- **Étape suivante proposée** : connecter chaque projet Cloudflare Pages au repo GitHub (Git integration, root dir par projet) pour que `git push main` déploie automatiquement, et sortir les gros médias du repo (vidéo 17 Mo, PDF). Nécessite l'autorisation OAuth Cloudflare↔GitHub dans le dashboard (action Mac Arthur).
+
+---
+
 ## 2026-07-18 (session 107 — Google Workspace : messagerie pro @agenceattractor.com enfin activée)
 
 ### Le blocage résolu
