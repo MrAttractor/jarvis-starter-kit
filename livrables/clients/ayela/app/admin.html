@@ -216,7 +216,10 @@ img{max-width:100%;display:block}
         <div class="bm"><img src="assets/logo.jpg" alt=""></div>
         <div><div class="bn">Pilotage Ayêla</div><div class="bs" id="hd-date"></div></div>
       </div>
-      <div class="lo" onclick="doLogout()">Déconnexion</div>
+      <div style="display:flex;gap:14px;align-items:center">
+        <div class="lo" onclick="openPass()">Mot de passe</div>
+        <div class="lo" onclick="doLogout()">Déconnexion</div>
+      </div>
     </div>
 
     <div class="tabs" id="tabs">
@@ -475,6 +478,21 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
+<!-- MODAL MOT DE PASSE -->
+<div class="ov" id="pass-ov">
+  <div class="ms">
+    <h3>Changer mon mot de passe</h3>
+    <p style="font-size:12.5px;color:var(--muted);margin:-6px 0 14px">Choisis un nouveau mot de passe. Il remplace l'actuel tout de suite, sur tous tes appareils.</p>
+    <div class="field"><label>Nouveau mot de passe</label><input id="np1" type="password" autocomplete="new-password" placeholder="6 caractères minimum"></div>
+    <div class="field"><label>Confirme</label><input id="np2" type="password" autocomplete="new-password"></div>
+    <div class="ustatus" id="pass-status"></div>
+    <div class="mactions">
+      <button class="btn sec" onclick="closeOv('pass-ov')" style="flex:1">Annuler</button>
+      <button class="btn pri" onclick="savePass()" style="flex:1">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -510,6 +528,17 @@ async function doLogin(){
   enter();
 }
 async function doLogout(){ await sb.auth.signOut(); location.reload(); }
+function openPass(){ document.getElementById('np1').value=''; document.getElementById('np2').value=''; openOv('pass-ov'); }
+async function savePass(){
+  const a=document.getElementById('np1').value, b=document.getElementById('np2').value;
+  if(a.length<6){toast('6 caractères minimum');return;}
+  if(a!==b){toast('Les deux mots de passe ne correspondent pas');return;}
+  const st=document.getElementById('pass-status'); st.classList.add('show'); st.textContent='Enregistrement…';
+  const {error}=await sb.auth.updateUser({password:a});
+  st.classList.remove('show');
+  if(error){toast('Erreur : '+error.message);return;}
+  closeOv('pass-ov'); toast('Mot de passe changé ✅');
+}
 async function check(){ const {data:{session}}=await sb.auth.getSession(); if(session) enter(); }
 function enter(){
   document.getElementById('login').style.display='none';
