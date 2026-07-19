@@ -395,17 +395,14 @@ function renderCatalog(){
   if(!list.length){ el.innerHTML='<div class="empty">Aucune création dans cette catégorie pour l\'instant.</div>'; return; }
   el.innerHTML = list.map(p=>{
     const f0 = p.formats[0]||{};
-    const pocket = p.formats.find(f=>/100\s*ml|pocket/i.test(f.label||''));
     const badge = p.badge?`<span class="badge ${p.categorie&&p.categorie.toLowerCase().includes('cocktail')?'rtd':''}">${esc(p.badge)}</span>`:'';
     const priceExtra = p.formats.length>1?` <small>/ ${esc((f0.label||'').replace(/^Bouteille\s*/i,''))}</small>`:'';
-    const pocketHint = pocket?`<div class="pocket">＋ Pocket 100 ml · ${esc(pocket.prix||'700 F')}</div>`:'';
     return `<div class="pcard" onclick="openProduct('${p.id}')">
       <div class="im">${badge}<img src="${esc(p.photo_url)}" alt="${esc(p.nom)}" loading="lazy"></div>
       <div class="b">
         <div class="nm">${esc(p.nom)}</div>
         <div class="mt">${esc(p.degre||'')}</div>
         <div class="pr">${esc(f0.prix||'')}${priceExtra}</div>
-        ${pocketHint}
       </div>
     </div>`;
   }).join('');
