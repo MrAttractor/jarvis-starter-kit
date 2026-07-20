@@ -254,7 +254,7 @@ img{max-width:100%;display:block}
       <div class="kpis" id="stats-kpis"></div>
       <div class="card"><h3>🏆 Points qui vendent le mieux</h3><div id="stats-pos"></div></div>
       <div class="card"><h3>⭐ Produits stars</h3><div id="stats-prod"></div></div>
-      <div class="card"><h3>🧾 Dernières ventes</h3><div id="stats-recent"></div></div>
+      <div class="card"><h3>🧾 Dernières ventes <button class="mini" style="margin-left:auto;color:var(--danger);border-color:#f0c9c0" onclick="resetVentes()">Réinitialiser (test)</button></h3><div id="stats-recent"></div></div>
     </div>
 
     <!-- COMMANDES -->
@@ -1073,6 +1073,22 @@ async function delEmb(){ if(!editEmb)return; if(!confirm('Supprimer cet emballag
 // ── STATS (ventes & commissions Petro Ivoire) ──
 let statsPeriod='mois';
 async function loadVentes(){ const {data}=await sb.from('ay_ventes').select('*').order('date',{ascending:false}); CACHE.ventes=data||[]; renderStats(); }
+const ZERO_UUID='00000000-0000-0000-0000-000000000000';
+async function delVente(id){
+  const vt=CACHE.ventes.find(x=>x.id===id); if(!vt) return;
+  if(!confirm('Supprimer cette vente ?')) return;
+  const l=CACHE.poslignes.find(x=>x.pos_id===vt.pos_id && x.produit_nom===vt.produit_nom && (x.format||'')===(vt.format||''));
+  if(l){ await sb.from('ay_pos_lignes').update({vendu:Math.max(0,(l.vendu||0)-(vt.qte||0))}).eq('id',l.id); }
+  const {error}=await sb.from('ay_ventes').delete().eq('id',id);
+  if(error){toast('Erreur');return;}
+  await Promise.all([loadVentes(),loadPosLignes()]); renderStats(); renderPos(); renderAccueil(); toast('Vente supprimée');
+}
+async function resetVentes(){
+  if(!confirm('Réinitialiser TOUTES les ventes ?\n\nUtile après tes tests : les quantités déposées et le catalogue sont conservés, seules les VENTES repartent à zéro. Action irréversible.')) return;
+  await sb.from('ay_ventes').delete().neq('id',ZERO_UUID);
+  await sb.from('ay_pos_lignes').update({vendu:0}).neq('id',ZERO_UUID);
+  await Promise.all([loadVentes(),loadPosLignes()]); renderStats(); renderPos(); renderAccueil(); toast('Ventes réinitialisées');
+}
 function periodStart(p){ const n=new Date(); if(p==='jour') return new Date(n.getFullYear(),n.getMonth(),n.getDate()).toISOString(); if(p==='mois') return new Date(n.getFullYear(),n.getMonth(),1).toISOString(); return '1970-01-01T00:00:00Z'; }
 function setStatsPeriod(p){ statsPeriod=p; renderStats(); }
 function renderStats(){
@@ -1093,7 +1109,7 @@ function renderStats(){
   const byProd={}; v.forEach(x=>{const kk=x.produit_nom||'?';if(!byProd[kk])byProd[kk]={m:0,q:0};byProd[kk].m+=x.montant||0;byProd[kk].q+=x.qte||0;});
   const prr=Object.entries(byProd).sort((a,b)=>b[1].m-a[1].m);
   const epr=document.getElementById('stats-prod'); if(epr) epr.innerHTML=prr.length?prr.map(([n,o],i)=>`<div class="stk"><div class="nm">${i+1}. ${esc(n)} <small>${o.q} vendu(s)</small></div><div class="q">${fmtF(o.m)}</div></div>`).join(''):'<div class="empty">Aucune vente sur la période.</div>';
-  const er=document.getElementById('stats-recent'); if(er){const rec=v.slice(0,12);er.innerHTML=rec.length?rec.map(x=>`<div class="stk"><div class="nm">${esc(x.produit_nom||'')} <small>${esc(posName(x.pos_id))} · ${new Date(x.date).toLocaleDateString('fr')}</small></div><div class="q">${x.qte}× ${fmtF(x.montant)}</div></div>`).join(''):'<div class="empty">Aucune vente enregistrée.</div>';}
+  const er=document.getElementById('stats-recent'); if(er){const rec=v.slice(0,12);er.innerHTML=rec.length?rec.map(x=>`<div class="stk"><div class="nm">${esc(x.produit_nom||'')} <small>${esc(posName(x.pos_id))} · ${new Date(x.date).toLocaleDateString('fr')}</small></div><div class="q">${x.qte}× ${fmtF(x.montant)}</div><button class="mini" style="margin-left:8px;color:var(--danger);border-color:#f0c9c0;padding:5px 9px" onclick="delVente('${x.id}')">✕</button></div>`).join(''):'<div class="empty">Aucune vente enregistrée.</div>';}
 }
 
 // ── ACCUEIL ──
