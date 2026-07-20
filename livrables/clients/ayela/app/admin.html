@@ -750,6 +750,11 @@ function renderPos(){
         <div>📞 <b>${esc(p.contact_tel||'—')}</b></div><div>👤 <b>${esc(p.contact_nom||'—')}</b></div>
         <div>Dernière livr. <b>${frDate(p.derniere_livraison)}</b></div><div>Prochaine <b style="color:var(--brand)">${frDate(p.prochaine_livraison)}</b></div>
       </div>
+      ${p.demande_reappro?`<div style="margin-top:10px;background:var(--dangerbg);border:1px solid #f0c9c0;border-radius:11px;padding:11px 12px">
+        <div style="font-size:11px;font-weight:700;color:var(--danger);margin-bottom:5px">🔔 Demande de réapprovisionnement</div>
+        ${p.reappro_message?`<div style="font-size:13px;color:var(--ink);white-space:pre-wrap;line-height:1.5">${esc(p.reappro_message)}</div>`:'<div style="font-size:12.5px;color:var(--ink2)">(sans détail)</div>'}
+        <button class="mini" style="margin-top:9px;color:var(--ok);border-color:var(--ok)" onclick="markReapproDone('${p.id}')">✓ Marquer traité</button>
+      </div>`:''}
       ${p.code?`<div style="margin-top:10px;background:var(--cream);border:1px solid var(--line);border-radius:11px;padding:10px 12px">
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Lien de la gérante${p.maj_gerante?' · dernière saisie '+frDate(p.maj_gerante):' · en attente'}</div>
         <div style="font-size:12.5px;color:var(--ink);font-weight:600;margin-bottom:8px">lamaisonayela.com/b/${esc(p.code)}</div>
@@ -800,6 +805,8 @@ async function savePosLigne(){
 }
 async function delPosLigne(){ if(!editPosLigne)return; if(!confirm('Retirer ce produit de ce point ?'))return; const {error}=await sb.from('ay_pos_lignes').delete().eq('id',editPosLigne); if(error){toast('Erreur');return;} closeOv('pl-ov'); await loadPosLignes(); renderPos(); toast('Retiré'); }
 
+async function markReapproDone(id){ const {error}=await sb.from('ay_pos').update({demande_reappro:false,reappro_message:null}).eq('id',id); if(error){toast('Erreur');return;} await loadPos(); renderPos(); renderAccueil(); toast('Réappro marqué traité'); }
+
 // ── LIEN GÉRANTE (portail boutique) ──
 function boutiqueLink(code){ return location.origin+'/b/'+code; }
 function copyLink(token){ const url=boutiqueLink(token); (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(()=>toast('Lien copié'),()=>{prompt('Copie ce lien :',url);}); }
@@ -836,7 +843,7 @@ async function saveAppro(){
     else { await sb.from('ay_pos_lignes').insert({pos_id:apCtxPos,produit_nom:s.produit_nom,format:s.format,depose:q,vendu:0,prix_unitaire:pu,prime_type:pt}); }
   }
   st.classList.remove('show');
-  await sb.from('ay_pos').update({demande_reappro:false}).eq('id',apCtxPos); // l'appro solde la demande de réappro
+  await sb.from('ay_pos').update({demande_reappro:false,reappro_message:null}).eq('id',apCtxPos); // l'appro solde la demande de réappro
   closeOv('appro-ov');
   await Promise.all([loadStock(),loadPosLignes(),loadPos()]); renderPos(); renderProdFinis(); renderAccueil();
   toast('Point approvisionné ('+ids.length+' produit'+(ids.length>1?'s':'')+')');
@@ -1094,7 +1101,10 @@ function renderAccueil(){
   const reappros=CACHE.pos.filter(p=>p.demande_reappro);
   const ra=document.getElementById('reappro-alert');
   if(ra) ra.innerHTML = reappros.length
-    ? `<div style="background:var(--dangerbg);border:1px solid #f0c9c0;border-radius:14px;padding:13px 15px;margin-bottom:14px;color:var(--danger);font-weight:600;font-size:13.5px">🔔 ${reappros.length} point(s) demandent un réapprovisionnement<div style="font-weight:400;font-size:12.5px;margin-top:4px">${reappros.map(p=>esc(p.nom)).join(' · ')}</div></div>`
+    ? `<div style="background:var(--dangerbg);border:1px solid #f0c9c0;border-radius:14px;padding:13px 15px;margin-bottom:14px">
+        <div style="color:var(--danger);font-weight:700;font-size:13.5px;margin-bottom:7px">🔔 ${reappros.length} demande(s) de réapprovisionnement</div>
+        ${reappros.map(p=>`<div style="font-size:12.5px;color:var(--ink);margin-bottom:6px"><b>${esc(p.nom)}</b>${p.reappro_message?'<div style="color:var(--ink2);white-space:pre-wrap;margin-top:2px">'+esc(p.reappro_message)+'</div>':' <span style="color:var(--muted)">(sans détail)</span>'}</div>`).join('')}
+      </div>`
     : '';
   const nouv=CACHE.cmd.filter(c=>!c.traitee).length;
   const low=CACHE.stk.filter(s=>s.quantite<(s.seuil||20));
