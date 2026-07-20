@@ -135,6 +135,15 @@ a{color:inherit}
 .pos-item .n{font-weight:600;font-size:14.5px;color:#fff}
 .pos-item .n .new{font-size:9px;font-weight:700;color:#fff;background:var(--brand);padding:2px 7px;border-radius:20px;margin-left:7px;vertical-align:middle;letter-spacing:.04em}
 .pos-item .a{font-size:12px;color:var(--muted);margin-top:3px}
+.faces{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+@media(max-width:560px){.faces{gap:10px}}
+.face{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--line);background:#20140b;aspect-ratio:3/4}
+.face img{width:100%;height:100%;object-fit:cover}
+.face .cap{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(180deg,transparent,rgba(20,10,4,.9));padding:16px 14px 13px}
+.face .cap .r{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand-2);font-weight:600}
+.face .cap .nm{font-family:var(--serif);font-size:19px;color:#fff;font-weight:600;line-height:1.1;margin-top:2px}
+.epicerie{display:flex;align-items:center;gap:12px}
+.epicerie img{width:46px;height:46px;border-radius:11px;object-fit:cover;background:#fff;flex:none}
 
 /* ---------- PRIORITY LIST ---------- */
 .prio{margin:64px 0 20px;background:linear-gradient(135deg,rgba(218,106,30,.16),rgba(194,148,51,.1));border:1px solid var(--line);border-radius:26px;padding:40px 26px;text-align:center}
@@ -313,6 +322,11 @@ a{color:inherit}
     </div>
   </div>
 
+  <div class="faces">
+    <div class="face"><img src="assets/ceo.jpg" alt="Lorraine, fondatrice d'Ayêla" loading="lazy"><div class="cap"><div class="r">La fondatrice</div><div class="nm">Lorraine</div></div></div>
+    <div class="face"><img src="assets/hotesse.jpg" alt="L'accueil Ayêla en station Petro Ivoire" loading="lazy"><div class="cap"><div class="r">En station Petro Ivoire</div><div class="nm">Notre accueil</div></div></div>
+  </div>
+
   <div class="subh2">Nos stations Petro Ivoire</div>
   <div class="pos-grid">
     <div class="pos-item"><div class="n">Palm Club</div><div class="a">Station St Jacques, au feu de Palm Club</div></div>
@@ -328,8 +342,8 @@ a{color:inherit}
 
   <div class="subh2">Aussi en épiceries fines</div>
   <div class="pos-grid">
-    <div class="pos-item"><div class="n">Boutique Paysanne</div><div class="a">Plateau, en face de la grande mosquée</div></div>
-    <div class="pos-item"><div class="n">Les Épiceries Cachothé</div><div class="a">Riviera 3, en face de la pharmacie Sainte-Agathe</div></div>
+    <div class="pos-item epicerie"><img src="assets/logo-paysanne.jpg" alt="Boutique Paysanne"><div><div class="n">Boutique Paysanne</div><div class="a">Plateau, en face de la grande mosquée</div></div></div>
+    <div class="pos-item epicerie"><img src="assets/logo-cachothe.jpg" alt="Les Épiceries Cachothé"><div><div class="n">Les Épiceries Cachothé</div><div class="a">Riviera 3, en face de la pharmacie Sainte-Agathe</div></div></div>
   </div>
 
   <!-- CLUB / PRIORITÉ -->
