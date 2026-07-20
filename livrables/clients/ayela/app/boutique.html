@@ -74,6 +74,15 @@ img{max-width:100%;display:block}
 .rchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px}
 .rchip{background:var(--cream);border:1px solid var(--line2);border-radius:20px;padding:7px 12px;font-size:12px;color:var(--ink);cursor:pointer;font-family:var(--sans)}
 .rchip span{color:var(--danger);font-weight:600}
+.tracker{display:flex;gap:6px;margin:12px 0 14px}
+.tstep{flex:1;text-align:center;background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:9px 3px}
+.tstep.done{background:var(--okbg);border-color:#cfe8d6}
+.tstep.current{background:var(--brand);border-color:var(--brand)}
+.tstep .tn{display:block;font-weight:700;font-size:13px;color:var(--muted)}
+.tstep.done .tn{color:var(--ok)} .tstep.current .tn{color:#fff}
+.tstep .tl{display:block;font-size:9.5px;color:var(--muted);margin-top:2px;line-height:1.1}
+.tstep.done .tl{color:var(--ok)} .tstep.current .tl{color:#fff}
+.ceo-msg{background:#eef6ff;border:1px solid #cfe2fb;border-radius:12px;padding:11px 13px;font-size:13px;color:var(--ink);margin-bottom:12px;line-height:1.5}
 
 /* sticky save */
 .sticky{position:fixed;bottom:0;left:0;right:0;z-index:20;padding:14px 16px calc(16px + env(safe-area-inset-bottom,0px));background:linear-gradient(0deg,var(--cream) 72%,rgba(247,239,226,0));display:flex;justify-content:center}
@@ -200,13 +209,19 @@ function reapproBox(){
   const lignes=DATA.lignes||[];
   const low=lignes.map(l=>({l,r:(l.depose||0)-venduOf(l)})).filter(x=>x.r<=10).sort((a,b)=>a.r-b.r).slice(0,8);
   const chips = low.length ? `<div class="rhint">Produits bas — touche pour les ajouter :</div><div class="rchips">${low.map(x=>`<button type="button" class="rchip" onclick="addNeed('${esc((x.l.produit_nom+' '+(x.l.format||'')).replace(/'/g,'’'))}')">+ ${esc(x.l.produit_nom)} <span>reste ${x.r}</span></button>`).join('')}</div>` : '';
+  const active=DATA.demande_reappro;
+  const STEPS=[['envoyee','Envoyée'],['en_cours','En cours'],['livre','Livré'],['finalise','Finalisé']];
+  const idx=Math.max(0,STEPS.findIndex(s=>s[0]===(DATA.reappro_statut||'envoyee')));
+  const tracker = active ? `<div class="tracker">${STEPS.map((s,i)=>`<div class="tstep ${i<idx?'done':i===idx?'current':''}"><span class="tn">${i<idx?'✓':i+1}</span><span class="tl">${s[1]}</span></div>`).join('')}</div>` : '';
+  const ceoMsg = active&&DATA.reappro_reponse ? `<div class="ceo-msg">💬 <b>Ayêla :</b> ${esc(DATA.reappro_reponse)}</div>` : '';
   return `<div class="rbox">
-    <div class="rbox-t">📦 Demander un réapprovisionnement</div>
-    <div class="rbox-s">Dis à Ayêla ce qu'il te faut (produits, quantités) et tes remarques.</div>
+    <div class="rbox-t">📦 ${active?'Ta demande de réapprovisionnement':'Demander un réapprovisionnement'}</div>
+    ${tracker}${ceoMsg}
+    <div class="rbox-s">${active?'Suis l\'avancement ci-dessus. Tu peux compléter ta demande puis la renvoyer.':'Dis à Ayêla ce qu\'il te faut (produits, quantités) et tes remarques.'}</div>
     ${chips}
     <textarea id="reappro-msg" placeholder="Ex : 24 Nuit de Miel 50cl, 50 Pocket 1722. Le Chocolat se vend très bien en ce moment.">${esc(DATA.reappro_message||'')}</textarea>
-    <button class="reappro" onclick="sendReappro()">Envoyer ma demande à Ayêla</button>
-    ${DATA.demande_reappro?`<div class="rbox-sent">✓ Demande en cours envoyée à Ayêla. Tu peux la modifier et renvoyer, ou <a onclick="cancelReappro()" style="color:var(--brand);cursor:pointer;text-decoration:underline;font-weight:600">l'annuler</a>.</div>`:''}
+    <button class="reappro" onclick="sendReappro()">${active?'Mettre à jour ma demande':'Envoyer ma demande à Ayêla'}</button>
+    ${active?`<div class="rbox-sent">✓ Demande envoyée à Ayêla. Tu peux la modifier et renvoyer, ou <a onclick="cancelReappro()" style="color:var(--brand);cursor:pointer;text-decoration:underline;font-weight:600">l'annuler</a>.</div>`:''}
   </div>`;
 }
 function addNeed(txt){ const t=document.getElementById('reappro-msg'); t.value=(t.value?t.value.replace(/\s*$/,'')+'\n':'')+txt+' : '; t.focus(); }
@@ -223,6 +238,14 @@ async function cancelReappro(){
   DATA.demande_reappro=false; DATA.reappro_message=null; render(); toast('Demande annulée');
 }
 load();
+// suivi en direct de l'avancement (sans interrompre une saisie en cours)
+setInterval(async()=>{
+  if(!DATA) return;
+  if(document.activeElement && document.activeElement.id==='reappro-msg') return;
+  if(Object.keys(dirty).length) return;
+  const {data}=await sb.rpc('ay_boutique_data',{p_token:TOKEN});
+  if(data){ DATA=data; render(); }
+}, 45000);
 </script>
 </body>
 </html>

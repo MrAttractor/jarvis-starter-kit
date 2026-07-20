@@ -509,6 +509,23 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
+<!-- MODAL TRAITER RÉAPPRO -->
+<div class="ov" id="rea-ov">
+  <div class="ms">
+    <h3>Traiter la demande</h3>
+    <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:5px">Demande de la gérante</div>
+    <div id="rea-msg" style="background:var(--cream);border:1px solid var(--line);border-radius:11px;padding:11px 13px;font-size:13px;color:var(--ink);white-space:pre-wrap;line-height:1.5;margin-bottom:16px"></div>
+    <label style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;margin-bottom:6px">Où en est le traitement ?</label>
+    <div id="rea-steps" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px"></div>
+    <div class="field"><label>Message à la gérante (optionnel)</label><textarea id="rea-rep" placeholder="Ex : Je te livre demain matin. Le Chocolat arrive en fin de semaine."></textarea></div>
+    <div class="mactions">
+      <button class="btn sec" onclick="clotureReappro()" style="color:var(--ok)">Clôturer</button>
+      <button class="btn sec" onclick="closeOv('rea-ov')" style="flex:1">Fermer</button>
+      <button class="btn pri" onclick="saveReappro()" style="flex:1">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -751,9 +768,10 @@ function renderPos(){
         <div>Dernière livr. <b>${frDate(p.derniere_livraison)}</b></div><div>Prochaine <b style="color:var(--brand)">${frDate(p.prochaine_livraison)}</b></div>
       </div>
       ${p.demande_reappro?`<div style="margin-top:10px;background:var(--dangerbg);border:1px solid #f0c9c0;border-radius:11px;padding:11px 12px">
-        <div style="font-size:11px;font-weight:700;color:var(--danger);margin-bottom:5px">🔔 Demande de réapprovisionnement</div>
+        <div style="font-size:11px;font-weight:700;color:var(--danger);margin-bottom:5px">🔔 Réappro — <span style="color:var(--ink)">${statutLabelAdmin(p.reappro_statut)}</span></div>
         ${p.reappro_message?`<div style="font-size:13px;color:var(--ink);white-space:pre-wrap;line-height:1.5">${esc(p.reappro_message)}</div>`:'<div style="font-size:12.5px;color:var(--ink2)">(sans détail)</div>'}
-        <button class="mini" style="margin-top:9px;color:var(--ok);border-color:var(--ok)" onclick="markReapproDone('${p.id}')">✓ Marquer traité</button>
+        ${p.reappro_reponse?`<div style="font-size:12px;color:var(--ink2);margin-top:6px">↩ Ta réponse : ${esc(p.reappro_reponse)}</div>`:''}
+        <button class="mini" style="margin-top:9px;color:var(--brand);border-color:var(--brand)" onclick="openReappro('${p.id}')">Traiter la demande</button>
       </div>`:''}
       ${p.code?`<div style="margin-top:10px;background:var(--cream);border:1px solid var(--line);border-radius:11px;padding:10px 12px">
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Lien de la gérante${p.maj_gerante?' · dernière saisie '+frDate(p.maj_gerante):' · en attente'}</div>
@@ -806,6 +824,33 @@ async function savePosLigne(){
 async function delPosLigne(){ if(!editPosLigne)return; if(!confirm('Retirer ce produit de ce point ?'))return; const {error}=await sb.from('ay_pos_lignes').delete().eq('id',editPosLigne); if(error){toast('Erreur');return;} closeOv('pl-ov'); await loadPosLignes(); renderPos(); toast('Retiré'); }
 
 async function markReapproDone(id){ const {error}=await sb.from('ay_pos').update({demande_reappro:false,reappro_message:null}).eq('id',id); if(error){toast('Erreur');return;} await loadPos(); renderPos(); renderAccueil(); toast('Réappro marqué traité'); }
+let reaCtxPos=null, reaStatut='envoyee';
+const REA_STEPS=[['en_cours','En cours'],['livre','Livré'],['finalise','Finalisé']];
+function statutLabelAdmin(s){return ({envoyee:'Envoyée',en_cours:'En cours',livre:'Livré',finalise:'Finalisé'})[s]||'Envoyée';}
+function renderReaSteps(){
+  document.getElementById('rea-steps').innerHTML=REA_STEPS.map(([v,l])=>`<button class="mini" style="${reaStatut===v?'background:var(--brand);color:#fff;border-color:var(--brand)':''}" onclick="reaStatut='${v}';renderReaSteps()">${l}</button>`).join('');
+}
+function openReappro(posId){
+  reaCtxPos=posId;
+  const p=CACHE.pos.find(x=>x.id===posId); if(!p) return;
+  reaStatut=p.reappro_statut||'envoyee';
+  document.getElementById('rea-msg').textContent=p.reappro_message||'(sans détail)';
+  document.getElementById('rea-rep').value=p.reappro_reponse||'';
+  renderReaSteps();
+  openOv('rea-ov');
+}
+async function saveReappro(){
+  const rep=document.getElementById('rea-rep').value.trim();
+  const {error}=await sb.from('ay_pos').update({reappro_statut:reaStatut,reappro_reponse:rep||null,maj_gerante:new Date().toISOString()}).eq('id',reaCtxPos);
+  if(error){toast('Erreur : '+error.message);return;}
+  closeOv('rea-ov'); await loadPos(); renderPos(); renderAccueil(); toast('Suivi mis à jour');
+}
+async function clotureReappro(){
+  if(!confirm('Clôturer cette demande ? Elle disparaît de tes alertes.')) return;
+  const {error}=await sb.from('ay_pos').update({demande_reappro:false,reappro_message:null,reappro_statut:null,reappro_reponse:null}).eq('id',reaCtxPos);
+  if(error){toast('Erreur');return;}
+  closeOv('rea-ov'); await loadPos(); renderPos(); renderAccueil(); toast('Demande clôturée');
+}
 
 // ── LIEN GÉRANTE (portail boutique) ──
 function boutiqueLink(code){ return location.origin+'/b/'+code; }
