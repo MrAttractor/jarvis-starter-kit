@@ -7,6 +7,35 @@
 
 ---
 
+## 2026-07-19 → 21 (session 109 — Ayêla : de la V1 à un vrai logiciel de gestion de distribution multi-boutique)
+
+> Session marathon. La V1 d'Ayêla a été construite puis étendue en continu selon les retours de la cliente (Lorraine, via Mac Arthur), jusqu'à devenir un back-office de distribution complet, pas une simple vitrine + admin.
+
+### Ce qui a été construit
+- **V1 réelle en ligne sur `lamaisonayela.com`** (domaine acheté sur Cloudflare Registrar, projet Pages dédié `lamaisonayela`, déploiement `wrangler pages deploy --branch=master`). Vitrine premium : catalogue Supabase (12 produits, pockets 100 ml en produits séparés à 700 F), panier, commande WhatsApp, **paiement avant livraison** (lien Wave `pay.wave.com/m/M_YcI2_IEd5L5F/c/ci/` + Orange Money +225 07 48 84 45 13), histoire de marque (origine akyé « mon Amour »), lien Facebook.
+- **Tableau de bord CEO** (admin, login email+mot de passe, Lorraine a changé son mot de passe seule) : catalogue CRUD + photos, commandes (+ annulation), **stock**, **production/LANEMA**, **emballages avec anticipation du délai fournisseur Chine (~90 j)**, points de vente.
+- **Liage d'inventaire complet** : emballages → production (embouteillage) → stock central → approvisionnement multi-produits des POS → ventes. Chaque mouvement ajuste automatiquement les compteurs.
+- **Portail gérante multi-boutique** : chaque point a un **lien court sécurisé `/b/CODE`** (colonne `code` + `token`, fonctions `ay_boutique_*` SECURITY DEFINER scopées, RLS non exposée ; rewrite Cloudflare `/b/* → /boutique` 200). La gérante saisit ses ventes et fait une **demande de réappro détaillée** (message + suggestions produits bas) avec **suivi en 4 étapes (Envoyée → En cours → Livré → Finalisé) + réponse écrite de la CEO**, le tout en refresh live.
+- **Module Stats** : CA du jour / du mois / total, classement des points et produits, **journal de ventes horodaté** (`ay_ventes`), **moteur de commission Petro Ivoire (10 % sur les bouteilles 500 ml, 200 FCFA par pocket 100 ml)**, net Ayêla, suppression d'une vente et réinitialisation des ventes de test.
+- **Réseau Petro Ivoire mis en avant** (force de la marque) : section site racontant l'intégration via le concours **« À chez nous PI » 2026**, les **9 stations + 2 épiceries fines** partenaires (avec logos), et les **portraits fondatrice (Lorraine) + hôtesse** (convertis du HEIF via pillow-heif, recadrés cohérents).
+- Sécurité : **8 migrations SQL** (préfixe `ay_`), RLS nominative multi-tenant sur l'UUID de Lorraine, tout testé de bout en bout à chaque étape.
+
+### Points techniques / leçons
+- **Lien gérante propre** : Cloudflare Pages 308-redirige `/b/CODE` en ajoutant un slash final puis sert la page (200), le code est lu depuis `location.pathname` → OK. Cibler `/boutique` (URL propre) et non `/boutique.html` dans le `_redirects` (sinon 308 perd le code).
+- **Push git en échec (OOM, malloc 500 Mo)** à cause des gros médias du repo → réglé avec `git config pack.windowMemory 64m` + `pack.threads 1` + `git -c pack.window=0 push`. À réutiliser. Les gros médias (vidéo 17 Mo, HEIF, PDF) restent à sortir du repo un jour.
+- **Confusion déposé/vendu** clarifiée : « déposé » = stock livré au point, « vendu » = ce qui crée une vente et alimente les Stats. Vente de démo créée pour que Lorraine s'exerce à supprimer.
+- Autofill navigateur neutralisé sur les champs numériques (déposé se recopiait visuellement dans vendu).
+
+### Valeur & stratégie
+- **Valeur estimée du build : ~1,8 à 3M FCFA (≈ 2 700 – 4 600 €)** en conception + un MRR réaliste 25 000–50 000 FCFA/mois. Livré en **partenariat par échange** (Ayêla a réglé 55 000 F de forfait technique). C'est un **cas de référence phare** et surtout une **ouverture du réseau Petro Ivoire** (pipeline de prospects : stations, épiceries, marques du réseau). Prochaine capitalisation à prévoir : vidéo témoignage de Lorraine + cas d'usage chiffré.
+- Sujet mis en attente : **concept d'attraction du Club** (avantage de bienvenue + parrainage + tirage mensuel) — à construire.
+
+### Divers
+- Mail de handover à Lorraine parti (depuis hello@agenceattractor.com, après reconnexion du connecteur Gmail au compte agence).
+- Règle GitHub (source de vérité, branche `main`) confirmée : tout commité/poussé au fil de l'eau.
+
+---
+
 ## 2026-07-19 (session 108 — Ayêla : V1 réelle livrée + règle GitHub & architecture main/branches)
 
 ### Ayêla — de la maquette à la vraie app métier (payée, déployée)
