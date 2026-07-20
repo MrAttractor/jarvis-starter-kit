@@ -1122,7 +1122,7 @@ function renderAccueil(){
   CACHE.pos.filter(p=>p.prochaine_livraison).sort((a,b)=>new Date(a.prochaine_livraison)-new Date(b.prochaine_livraison)).slice(0,2).forEach(p=>items.push(['🚚','Livraison '+esc(p.zone||p.nom),'Prévue '+frDate(p.prochaine_livraison),'prog','à faire']));
   CACHE.emb.filter(e=>e.quantite<(e.seuil||100) && !(e.en_commande>0)).slice(0,3).forEach(e=>items.push(['📦',esc(e.nom)+' — vides bas','Commander ('+esc(e.fournisseur||'appro')+' '+embMonths(e.delai_jours)+')','new','à commander']));
   CACHE.emb.filter(e=>e.reception_prevue && e.en_commande>0).sort((a,b)=>new Date(a.reception_prevue)-new Date(b.reception_prevue)).slice(0,2).forEach(e=>items.push(['🚢','Réception '+esc(e.nom),'Prévue '+frDate(e.reception_prevue),'prog','en route']));
-  CACHE.pos.filter(p=>p.demande_reappro).slice(0,3).forEach(p=>items.push(['🏬',esc(p.nom)+' — réappro demandé','La gérante attend un réapprovisionnement','new','à traiter']));
+  CACHE.pos.filter(p=>p.demande_reappro).slice(0,3).forEach(p=>items.push(['🏬',esc(p.nom)+' — réappro',p.reappro_message?esc(p.reappro_message.replace(/\n/g,' ').slice(0,70))+'…':'demande de réapprovisionnement','new','à traiter']));
   renderProdFinis();
   document.getElementById('pdj-count').textContent=items.length+' action'+(items.length>1?'s':'');
   const el=document.getElementById('pdj');
