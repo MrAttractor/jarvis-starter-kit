@@ -247,7 +247,7 @@ a{color:inherit}
   </section>
 
   <div class="paystrip">
-    <span>💳 Paiement mobile à la livraison</span>
+    <span>💳 Paiement sécurisé avant livraison</span>
     <span class="pill">Orange Money</span>
     <span class="pill">Wave</span>
   </div>
@@ -348,7 +348,7 @@ a{color:inherit}
   <div class="dbody" id="cart-body"></div>
   <div class="dfoot" id="cart-foot" style="display:none">
     <div class="dtot"><span>Total</span><b id="cart-total">0 F</b></div>
-    <div class="dnote">1. Confirme ta commande sur WhatsApp. 2. Règle par Wave ou Orange Money (ou à la livraison).</div>
+    <div class="dnote"><b style="color:#e9dcc9">Paiement avant livraison.</b> 1. Confirme ta commande sur WhatsApp. 2. Règle par Wave ou Orange Money. Ta livraison part une fois le paiement reçu.</div>
     <button class="btn wa block" onclick="sendCommande()">💬 Confirmer sur WhatsApp</button>
     <div style="display:flex;gap:8px;margin-top:9px">
       <a class="btn block" style="background:#1BA9E1;color:#fff" href="https://pay.wave.com/m/M_YcI2_IEd5L5F/c/ci/" target="_blank" rel="noopener">Payer avec Wave</a>
@@ -504,6 +504,7 @@ function buildOrderMessage(cart){
   let m = 'Bonjour Ayêla, je souhaite commander :\n';
   cart.forEach(it=>{ m += `\n• ${it.qty} × ${it.nom} (${it.format}) — ${fmtPrice(it.prixNum*it.qty)}`; });
   m += `\n\nTotal : ${fmtPrice(cartTotal(cart))}`;
+  m += `\n\nJe règle avant la livraison (Wave ou Orange Money).`;
   return m;
 }
 async function sendCommande(){
