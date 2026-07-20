@@ -234,6 +234,7 @@ img{max-width:100%;display:block}
 
     <!-- ACCUEIL -->
     <div class="panel active" id="p-accueil">
+      <div id="reappro-alert"></div>
       <div class="kpis" id="kpis"></div>
       <div class="card">
         <h3>📌 Point du jour <span class="pill" id="pdj-count">—</span></h3>
@@ -400,8 +401,8 @@ img{max-width:100%;display:block}
     <div class="field"><label>Produit</label><input id="lf2-nom" list="prodnames" placeholder="Nuit de Miel"><datalist id="prodnames"></datalist></div>
     <div class="field"><label>Format</label><input id="lf2-fmt" placeholder="50cl verre"></div>
     <div class="two">
-      <div class="field"><label>Déposé</label><input id="lf2-depose" type="number" inputmode="numeric" placeholder="0"></div>
-      <div class="field"><label>Vendu</label><input id="lf2-vendu" type="number" inputmode="numeric" placeholder="0"></div>
+      <div class="field"><label>Quantité livrée (déposé)</label><input id="lf2-depose" type="number" inputmode="numeric" autocomplete="off" placeholder="0"></div>
+      <div class="field"><label>Déjà vendu</label><input id="lf2-vendu" type="number" inputmode="numeric" autocomplete="off" placeholder="0"></div>
     </div>
     <div class="ustatus" id="pl-status"></div>
     <div class="mactions">
@@ -579,14 +580,16 @@ function renderCmd(){
       <div class="t"><div class="who">${esc(c.client_nom||'Client boutique')}</div><div class="dt">${new Date(c.created_at).toLocaleString('fr',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div></div>
       <div class="li">${lignes||'—'}</div>
       ${c.total?`<div class="tot">Total ${esc(c.total)}</div>`:''}
-      <div style="display:flex;align-items:center;gap:12px">
+      <div style="display:flex;align-items:center;gap:8px">
         ${wa?`<a class="wa" href="https://wa.me/${wa}" target="_blank">💬 ${esc(c.client_wa)}</a>`:''}
-        <button class="mark ${c.traitee?'on':''}" style="margin-left:auto" onclick="toggleCmd('${c.id}',${!c.traitee})">${c.traitee?'✓ Traitée':'Marquer traitée'}</button>
+        <button class="mark" style="margin-left:auto;color:var(--danger);border-color:#f0c9c0" onclick="cancelCmd('${c.id}')">Annuler</button>
+        <button class="mark ${c.traitee?'on':''}" onclick="toggleCmd('${c.id}',${!c.traitee})">${c.traitee?'✓ Traitée':'Traitée'}</button>
       </div>
     </div>`;
   }).join('');
 }
 async function toggleCmd(id,v){ const {error}=await sb.from('ay_commandes').update({traitee:v}).eq('id',id); if(error){toast('Erreur');return;} await loadCmd(); renderAccueil(); }
+async function cancelCmd(id){ if(!confirm('Annuler cette commande ? Elle sera retirée de la liste (à faire si le client a annulé).')) return; const {error}=await sb.from('ay_commandes').delete().eq('id',id); if(error){toast('Erreur');return;} await loadCmd(); renderAccueil(); toast('Commande annulée'); }
 
 // ── STOCK ──
 async function loadStock(){
@@ -722,7 +725,7 @@ function renderPos(){
       <div class="postot"><span>Déposé <b>${tDep}</b></span><span>Vendu <b>${tVen}</b></span><span>Reste <b style="color:var(--brand)">${tRes}</b></span><span>CA <b style="color:var(--ok)">${fmtF(caPos)}</b></span></div>`
       : `<div class="postot" style="margin-top:10px"><span>Aucun produit suivi ici pour l'instant.</span></div>`;
     return `<div class="dcard">
-      <div class="dh2"><span class="nm">${esc(p.nom)}</span>${p.demande_reappro?'<span class="st new">Réappro demandé</span>':''}<span class="zone">${esc(p.zone||'')}</span></div>
+      <div class="dh2"><span class="nm">${esc(p.nom)}</span>${p.demande_reappro?'<span style="background:var(--dangerbg);color:var(--danger);font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;margin-left:6px">🔔 Réappro demandé</span>':''}<span class="zone">${esc(p.zone||'')}</span></div>
       <div class="meta">
         <div>📞 <b>${esc(p.contact_tel||'—')}</b></div><div>👤 <b>${esc(p.contact_nom||'—')}</b></div>
         <div>Dernière livr. <b>${frDate(p.derniere_livraison)}</b></div><div>Prochaine <b style="color:var(--brand)">${frDate(p.prochaine_livraison)}</b></div>
@@ -779,7 +782,7 @@ function waLink(nom,token){ const msg='Bonjour, voici le lien pour suivre la bou
 // ── APPROVISIONNER : stock central -> point de vente (multi-produits) ──
 let apSkuOpts='';
 function apLineHtml(){
-  return `<div class="fmtline apline" style="grid-template-columns:1fr 84px auto"><select class="ap-sku" style="padding:9px 8px;border:1px solid var(--line2);border-radius:9px;font-size:12.5px;font-family:var(--sans);width:100%">${apSkuOpts}</select><input class="ap-qte" type="number" inputmode="numeric" min="1" placeholder="Qté"><button class="x" onclick="this.closest('.apline').remove()">×</button></div>`;
+  return `<div class="fmtline apline" style="grid-template-columns:1fr 84px auto"><select class="ap-sku" style="padding:9px 8px;border:1px solid var(--line2);border-radius:9px;font-size:12.5px;font-family:var(--sans);width:100%">${apSkuOpts}</select><input class="ap-qte" type="number" inputmode="numeric" min="1" autocomplete="off" placeholder="Qté"><button class="x" onclick="this.closest('.apline').remove()">×</button></div>`;
 }
 function apAddLine(){ document.getElementById('ap-lines').insertAdjacentHTML('beforeend', apLineHtml()); }
 function openAppro(posId){
@@ -805,8 +808,10 @@ async function saveAppro(){
     if(ex){ await sb.from('ay_pos_lignes').update({depose:(ex.depose||0)+q,updated_at:new Date().toISOString()}).eq('id',ex.id); }
     else { await sb.from('ay_pos_lignes').insert({pos_id:apCtxPos,produit_nom:s.produit_nom,format:s.format,depose:q,vendu:0}); }
   }
-  st.classList.remove('show'); closeOv('appro-ov');
-  await Promise.all([loadStock(),loadPosLignes()]); renderPos(); renderProdFinis(); renderAccueil();
+  st.classList.remove('show');
+  await sb.from('ay_pos').update({demande_reappro:false}).eq('id',apCtxPos); // l'appro solde la demande de réappro
+  closeOv('appro-ov');
+  await Promise.all([loadStock(),loadPosLignes(),loadPos()]); renderPos(); renderProdFinis(); renderAccueil();
   toast('Point approvisionné ('+ids.length+' produit'+(ids.length>1?'s':'')+')');
 }
 
@@ -1033,6 +1038,11 @@ async function delEmb(){ if(!editEmb)return; if(!confirm('Supprimer cet emballag
 
 // ── ACCUEIL ──
 function renderAccueil(){
+  const reappros=CACHE.pos.filter(p=>p.demande_reappro);
+  const ra=document.getElementById('reappro-alert');
+  if(ra) ra.innerHTML = reappros.length
+    ? `<div style="background:var(--dangerbg);border:1px solid #f0c9c0;border-radius:14px;padding:13px 15px;margin-bottom:14px;color:var(--danger);font-weight:600;font-size:13.5px">🔔 ${reappros.length} point(s) demandent un réapprovisionnement<div style="font-weight:400;font-size:12.5px;margin-top:4px">${reappros.map(p=>esc(p.nom)).join(' · ')}</div></div>`
+    : '';
   const nouv=CACHE.cmd.filter(c=>!c.traitee).length;
   const low=CACHE.stk.filter(s=>s.quantite<(s.seuil||20));
   const enprod=CACHE.lots.filter(l=>l.statut!=='Terminé').length;
@@ -1059,6 +1069,15 @@ function renderAccueil(){
 // ── MODAL HELPERS ──
 function openOv(id){ document.getElementById(id).classList.add('open'); document.body.style.overflow='hidden'; }
 function closeOv(id){ document.getElementById(id).classList.remove('open'); document.body.style.overflow=''; }
+
+// Rafraîchissement auto : quand tu reviens sur l'onglet, et toutes les 60s
+async function refreshLive(){
+  if(!document.getElementById('dash').classList.contains('on')) return;
+  await Promise.all([loadCmd(),loadPos(),loadPosLignes(),loadStock(),loadEmb()]);
+  renderPos(); renderProdFinis(); renderAccueil();
+}
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) refreshLive(); });
+setInterval(()=>{ if(!document.hidden) refreshLive(); }, 60000);
 
 check();
 </script>
