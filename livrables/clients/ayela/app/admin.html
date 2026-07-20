@@ -750,11 +750,12 @@ function renderPos(){
         <div>📞 <b>${esc(p.contact_tel||'—')}</b></div><div>👤 <b>${esc(p.contact_nom||'—')}</b></div>
         <div>Dernière livr. <b>${frDate(p.derniere_livraison)}</b></div><div>Prochaine <b style="color:var(--brand)">${frDate(p.prochaine_livraison)}</b></div>
       </div>
-      ${p.token?`<div style="margin-top:10px;background:var(--cream);border:1px solid var(--line);border-radius:11px;padding:9px 11px">
+      ${p.code?`<div style="margin-top:10px;background:var(--cream);border:1px solid var(--line);border-radius:11px;padding:10px 12px">
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Lien de la gérante${p.maj_gerante?' · dernière saisie '+frDate(p.maj_gerante):' · en attente'}</div>
+        <div style="font-size:12.5px;color:var(--ink);font-weight:600;margin-bottom:8px">lamaisonayela.com/b/${esc(p.code)}</div>
         <div style="display:flex;gap:7px">
-          <button class="mini" style="color:var(--brand);border-color:var(--brand)" onclick="copyLink('${p.token}')">Copier le lien</button>
-          <button class="mini" style="color:var(--ok);border-color:var(--ok)" onclick="waLink('${esc(p.nom).replace(/'/g,'')}','${p.token}')">Envoyer (WhatsApp)</button>
+          <button class="mini" style="color:var(--brand);border-color:var(--brand)" onclick="copyLink('${p.code}')">Copier le lien</button>
+          <button class="mini" style="color:var(--ok);border-color:var(--ok)" onclick="waLink('${esc(p.nom).replace(/'/g,'')}','${p.code}')">Envoyer (WhatsApp)</button>
         </div>
       </div>`:''}
       ${fiche}
@@ -800,7 +801,7 @@ async function savePosLigne(){
 async function delPosLigne(){ if(!editPosLigne)return; if(!confirm('Retirer ce produit de ce point ?'))return; const {error}=await sb.from('ay_pos_lignes').delete().eq('id',editPosLigne); if(error){toast('Erreur');return;} closeOv('pl-ov'); await loadPosLignes(); renderPos(); toast('Retiré'); }
 
 // ── LIEN GÉRANTE (portail boutique) ──
-function boutiqueLink(token){ return location.origin+'/boutique?p='+token; }
+function boutiqueLink(code){ return location.origin+'/b/'+code; }
 function copyLink(token){ const url=boutiqueLink(token); (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(()=>toast('Lien copié'),()=>{prompt('Copie ce lien :',url);}); }
 function waLink(nom,token){ const msg='Bonjour, voici le lien pour suivre la boutique '+nom+' (Ayêla). Indiques-y tes ventes : '+boutiqueLink(token); window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank'); }
 
