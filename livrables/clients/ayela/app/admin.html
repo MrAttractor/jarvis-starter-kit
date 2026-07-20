@@ -224,6 +224,7 @@ img{max-width:100%;display:block}
 
     <div class="tabs" id="tabs">
       <div class="tab active" onclick="switchTab('accueil',this)">Accueil</div>
+      <div class="tab" onclick="switchTab('stats',this)">Stats</div>
       <div class="tab" onclick="switchTab('commandes',this)">Commandes<span class="dot" id="dot-cmd"></span></div>
       <div class="tab" onclick="switchTab('stock',this)">Stock<span class="dot" id="dot-stk"></span></div>
       <div class="tab" onclick="switchTab('production',this)">Production</div>
@@ -240,6 +241,20 @@ img{max-width:100%;display:block}
         <h3>📌 Point du jour <span class="pill" id="pdj-count">—</span></h3>
         <div id="pdj"></div>
       </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="panel" id="p-stats">
+      <div class="sectlead">Ventes &amp; commissions</div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <button class="mini" id="pr-jour" onclick="setStatsPeriod('jour')">Aujourd'hui</button>
+        <button class="mini" id="pr-mois" onclick="setStatsPeriod('mois')">Ce mois</button>
+        <button class="mini" id="pr-tout" onclick="setStatsPeriod('tout')">Tout</button>
+      </div>
+      <div class="kpis" id="stats-kpis"></div>
+      <div class="card"><h3>🏆 Points qui vendent le mieux</h3><div id="stats-pos"></div></div>
+      <div class="card"><h3>⭐ Produits stars</h3><div id="stats-prod"></div></div>
+      <div class="card"><h3>🧾 Dernières ventes</h3><div id="stats-recent"></div></div>
     </div>
 
     <!-- COMMANDES -->
@@ -503,7 +518,7 @@ const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const {createClient}=supabase;
 const sb=createClient(SUPABASE_URL,SUPABASE_ANON,{auth:{storageKey:'ay-admin-auth',persistSession:true,autoRefreshToken:true}});
 
-let CACHE={cmd:[],stk:[],lots:[],pos:[],prods:[],club:[],poslignes:[],emb:[]};
+let CACHE={cmd:[],stk:[],lots:[],pos:[],prods:[],club:[],poslignes:[],emb:[],ventes:[]};
 let pendingPhoto=null, editProd=null, editStock=null, editLot=null, editPos=null;
 let editPosLigne=null, plCtxPos=null, editEmb=null, apCtxPos=null, psLot=null;
 
@@ -514,6 +529,11 @@ function frDate(s){return s?new Date(s).toLocaleDateString('fr'):'—';}
 function parseF(s){const n=parseInt(String(s||'').replace(/[^0-9]/g,''),10);return isNaN(n)?0:n;}
 function fmtF(n){return (n||0).toLocaleString('fr')+' F';}
 function skuPrice(nom,format){const p=CACHE.prods.find(x=>x.nom===nom);if(!p)return 0;const f=(p.formats||[]).find(f=>(f.label||'')===format)||(p.formats||[])[0];return f?parseF(f.prix):0;}
+// Prix + type de prime + commission Petro Ivoire (10% bouteilles / 200 F par pocket)
+function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ').trim();}
+function primeType(fmt){const f=(fmt||'').toLowerCase();if(f.includes('100')||f.includes('pocket'))return 'pocket';if(f.includes('50')||f.includes('500'))return 'bouteille';return 'autre';}
+function lignePrice(nom,pt){const n=norm(nom);let c=CACHE.prods.filter(p=>norm(p.nom)===n||n.includes(norm(p.nom))||norm(p.nom).includes(n));if(!c.length)return 0;const want=(pt==='pocket');c.sort((a,b)=>(norm(a.nom).startsWith('pocket')!==want)-(norm(b.nom).startsWith('pocket')!==want));return parseF((c[0].formats[0]||{}).prix);}
+function commOf(pt,montant,qte){return pt==='bouteille'?Math.round(0.10*montant):pt==='pocket'?200*qte:0;}
 
 // ── AUTH ──
 async function doLogin(){
@@ -556,8 +576,8 @@ function switchTab(name,el){
 
 // ── LOAD ALL ──
 async function loadAll(){
-  await Promise.all([loadCmd(),loadStock(),loadLots(),loadPos(),loadPosLignes(),loadProds(),loadClub(),loadEmb()]);
-  renderPos(); renderProdFinis(); renderAccueil();
+  await Promise.all([loadCmd(),loadStock(),loadLots(),loadPos(),loadPosLignes(),loadProds(),loadClub(),loadEmb(),loadVentes()]);
+  renderPos(); renderProdFinis(); renderStats(); renderAccueil();
 }
 
 // ── COMMANDES ──
@@ -765,12 +785,17 @@ function openPosLigne(posId,lineId){
   openOv('pl-ov');
 }
 async function savePosLigne(){
-  const payload={pos_id:plCtxPos,produit_nom:document.getElementById('lf2-nom').value.trim(),format:document.getElementById('lf2-fmt').value.trim(),
-    depose:parseInt(document.getElementById('lf2-depose').value||'0',10),vendu:parseInt(document.getElementById('lf2-vendu').value||'0',10),updated_at:new Date().toISOString()};
-  if(!payload.produit_nom){toast('Produit requis');return;}
+  const nom=document.getElementById('lf2-nom').value.trim(), fmt=document.getElementById('lf2-fmt').value.trim();
+  if(!nom){toast('Produit requis');return;}
+  const pt=primeType(fmt), pu=lignePrice(nom,pt);
+  const vendu=parseInt(document.getElementById('lf2-vendu').value||'0',10);
+  const oldVendu=editPosLigne?((CACHE.poslignes.find(x=>x.id===editPosLigne)||{}).vendu||0):0;
+  const payload={pos_id:plCtxPos,produit_nom:nom,format:fmt,depose:parseInt(document.getElementById('lf2-depose').value||'0',10),vendu:vendu,prix_unitaire:pu,prime_type:pt,updated_at:new Date().toISOString()};
   const {error}=editPosLigne?await sb.from('ay_pos_lignes').update(payload).eq('id',editPosLigne):await sb.from('ay_pos_lignes').insert(payload);
   if(error){toast('Erreur : '+error.message);return;}
-  closeOv('pl-ov'); await loadPosLignes(); renderPos(); renderAccueil(); toast('Fiche mise à jour');
+  const delta=vendu-oldVendu;
+  if(delta>0){ const montant=delta*pu; await sb.from('ay_ventes').insert({pos_id:plCtxPos,produit_nom:nom,format:fmt,qte:delta,prix_unitaire:pu,montant:montant,commission:commOf(pt,montant,delta),date:new Date().toISOString()}); }
+  closeOv('pl-ov'); await Promise.all([loadPosLignes(),loadVentes()]); renderPos(); renderStats(); renderAccueil(); toast('Fiche mise à jour');
 }
 async function delPosLigne(){ if(!editPosLigne)return; if(!confirm('Retirer ce produit de ce point ?'))return; const {error}=await sb.from('ay_pos_lignes').delete().eq('id',editPosLigne); if(error){toast('Erreur');return;} closeOv('pl-ov'); await loadPosLignes(); renderPos(); toast('Retiré'); }
 
@@ -804,9 +829,10 @@ async function saveAppro(){
   for(const sid of ids){
     const s=CACHE.stk.find(x=>x.id===sid); const q=agg[sid];
     await sb.from('ay_stock').update({quantite:s.quantite-q,updated_at:new Date().toISOString()}).eq('id',sid);
+    const pt=primeType(s.format), pu=lignePrice(s.produit_nom,pt);
     const ex=CACHE.poslignes.find(l=>l.pos_id===apCtxPos && l.produit_nom===s.produit_nom && (l.format||'')===(s.format||''));
-    if(ex){ await sb.from('ay_pos_lignes').update({depose:(ex.depose||0)+q,updated_at:new Date().toISOString()}).eq('id',ex.id); }
-    else { await sb.from('ay_pos_lignes').insert({pos_id:apCtxPos,produit_nom:s.produit_nom,format:s.format,depose:q,vendu:0}); }
+    if(ex){ await sb.from('ay_pos_lignes').update({depose:(ex.depose||0)+q,prix_unitaire:pu,prime_type:pt,updated_at:new Date().toISOString()}).eq('id',ex.id); }
+    else { await sb.from('ay_pos_lignes').insert({pos_id:apCtxPos,produit_nom:s.produit_nom,format:s.format,depose:q,vendu:0,prix_unitaire:pu,prime_type:pt}); }
   }
   st.classList.remove('show');
   await sb.from('ay_pos').update({demande_reappro:false}).eq('id',apCtxPos); // l'appro solde la demande de réappro
@@ -1036,6 +1062,32 @@ async function saveEmb(){
 }
 async function delEmb(){ if(!editEmb)return; if(!confirm('Supprimer cet emballage ?'))return; const {error}=await sb.from('ay_emballages').delete().eq('id',editEmb); if(error){toast('Erreur');return;} closeOv('emb-ov'); await loadEmb(); renderProdFinis(); renderAccueil(); toast('Supprimé'); }
 
+// ── STATS (ventes & commissions Petro Ivoire) ──
+let statsPeriod='mois';
+async function loadVentes(){ const {data}=await sb.from('ay_ventes').select('*').order('date',{ascending:false}); CACHE.ventes=data||[]; renderStats(); }
+function periodStart(p){ const n=new Date(); if(p==='jour') return new Date(n.getFullYear(),n.getMonth(),n.getDate()).toISOString(); if(p==='mois') return new Date(n.getFullYear(),n.getMonth(),1).toISOString(); return '1970-01-01T00:00:00Z'; }
+function setStatsPeriod(p){ statsPeriod=p; renderStats(); }
+function renderStats(){
+  ['jour','mois','tout'].forEach(p=>{const b=document.getElementById('pr-'+p);if(b){b.classList.toggle('on',p===statsPeriod);b.style.background=p===statsPeriod?'var(--brand)':'#fff';b.style.color=p===statsPeriod?'#fff':'var(--ink2)';b.style.borderColor=p===statsPeriod?'var(--brand)':'var(--line2)';}});
+  const start=periodStart(statsPeriod);
+  const v=CACHE.ventes.filter(x=>x.date>=start);
+  const ca=v.reduce((s,x)=>s+(x.montant||0),0), comm=v.reduce((s,x)=>s+(x.commission||0),0), units=v.reduce((s,x)=>s+(x.qte||0),0);
+  const jour=CACHE.ventes.filter(x=>x.date>=periodStart('jour')).reduce((s,x)=>s+(x.montant||0),0);
+  const k=document.getElementById('stats-kpis'); if(k) k.innerHTML=`
+    <div class="kpi"><div class="lab">Chiffre d'affaires</div><div class="num g">${fmtF(ca)}</div><div class="sub">${units} unité(s)</div></div>
+    <div class="kpi"><div class="lab">Commission Petro Ivoire</div><div class="num d">${fmtF(comm)}</div><div class="sub">10% bouteille · 200 F/pocket</div></div>
+    <div class="kpi"><div class="lab">Net Ayêla</div><div class="num">${fmtF(ca-comm)}</div><div class="sub">après commission</div></div>
+    <div class="kpi"><div class="lab">Ventes du jour</div><div class="num">${fmtF(jour)}</div><div class="sub">aujourd'hui</div></div>`;
+  const posName=id=>{const p=CACHE.pos.find(y=>y.id===id);return p?p.nom:'(point supprimé)';};
+  const byPos={}; v.forEach(x=>{byPos[x.pos_id]=(byPos[x.pos_id]||0)+(x.montant||0);});
+  const pr=Object.entries(byPos).sort((a,b)=>b[1]-a[1]);
+  const ep=document.getElementById('stats-pos'); if(ep) ep.innerHTML=pr.length?pr.map(([id,m],i)=>`<div class="stk"><div class="nm">${i+1}. ${esc(posName(id))}</div><div class="q">${fmtF(m)}</div></div>`).join(''):'<div class="empty">Aucune vente sur la période.</div>';
+  const byProd={}; v.forEach(x=>{const kk=x.produit_nom||'?';if(!byProd[kk])byProd[kk]={m:0,q:0};byProd[kk].m+=x.montant||0;byProd[kk].q+=x.qte||0;});
+  const prr=Object.entries(byProd).sort((a,b)=>b[1].m-a[1].m);
+  const epr=document.getElementById('stats-prod'); if(epr) epr.innerHTML=prr.length?prr.map(([n,o],i)=>`<div class="stk"><div class="nm">${i+1}. ${esc(n)} <small>${o.q} vendu(s)</small></div><div class="q">${fmtF(o.m)}</div></div>`).join(''):'<div class="empty">Aucune vente sur la période.</div>';
+  const er=document.getElementById('stats-recent'); if(er){const rec=v.slice(0,12);er.innerHTML=rec.length?rec.map(x=>`<div class="stk"><div class="nm">${esc(x.produit_nom||'')} <small>${esc(posName(x.pos_id))} · ${new Date(x.date).toLocaleDateString('fr')}</small></div><div class="q">${x.qte}× ${fmtF(x.montant)}</div></div>`).join(''):'<div class="empty">Aucune vente enregistrée.</div>';}
+}
+
 // ── ACCUEIL ──
 function renderAccueil(){
   const reappros=CACHE.pos.filter(p=>p.demande_reappro);
@@ -1073,8 +1125,8 @@ function closeOv(id){ document.getElementById(id).classList.remove('open'); docu
 // Rafraîchissement auto : quand tu reviens sur l'onglet, et toutes les 60s
 async function refreshLive(){
   if(!document.getElementById('dash').classList.contains('on')) return;
-  await Promise.all([loadCmd(),loadPos(),loadPosLignes(),loadStock(),loadEmb()]);
-  renderPos(); renderProdFinis(); renderAccueil();
+  await Promise.all([loadCmd(),loadPos(),loadPosLignes(),loadStock(),loadEmb(),loadVentes()]);
+  renderPos(); renderProdFinis(); renderStats(); renderAccueil();
 }
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden) refreshLive(); });
 setInterval(()=>{ if(!document.hidden) refreshLive(); }, 60000);
