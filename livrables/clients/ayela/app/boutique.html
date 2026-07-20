@@ -70,6 +70,10 @@ img{max-width:100%;display:block}
 .rbox textarea:focus{outline:none;border-color:var(--brand)}
 .rbox .reappro{margin-top:11px}
 .rbox-sent{margin-top:11px;font-size:12.5px;color:var(--ok);background:var(--okbg);border:1px solid #cfe8d6;border-radius:11px;padding:10px 12px;line-height:1.5}
+.rhint{font-size:11px;color:var(--muted);margin-bottom:6px}
+.rchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px}
+.rchip{background:var(--cream);border:1px solid var(--line2);border-radius:20px;padding:7px 12px;font-size:12px;color:var(--ink);cursor:pointer;font-family:var(--sans)}
+.rchip span{color:var(--danger);font-weight:600}
 
 /* sticky save */
 .sticky{position:fixed;bottom:0;left:0;right:0;z-index:20;padding:14px 16px calc(16px + env(safe-area-inset-bottom,0px));background:linear-gradient(0deg,var(--cream) 72%,rgba(247,239,226,0));display:flex;justify-content:center}
@@ -194,16 +198,18 @@ async function saveAll(){
 }
 function reapproBox(){
   const lignes=DATA.lignes||[];
-  const low=lignes.map(l=>({l,r:(l.depose||0)-venduOf(l)})).filter(x=>x.r<=10).sort((a,b)=>a.r-b.r);
-  const suggestion = DATA.reappro_message || (low.length ? 'Besoin de :\n'+low.slice(0,6).map(x=>`- ${x.l.produit_nom} (${x.l.format||''}) : reste ${x.r}`).join('\n') : '');
+  const low=lignes.map(l=>({l,r:(l.depose||0)-venduOf(l)})).filter(x=>x.r<=10).sort((a,b)=>a.r-b.r).slice(0,8);
+  const chips = low.length ? `<div class="rhint">Produits bas — touche pour les ajouter :</div><div class="rchips">${low.map(x=>`<button type="button" class="rchip" onclick="addNeed('${esc((x.l.produit_nom+' '+(x.l.format||'')).replace(/'/g,'’'))}')">+ ${esc(x.l.produit_nom)} <span>reste ${x.r}</span></button>`).join('')}</div>` : '';
   return `<div class="rbox">
     <div class="rbox-t">📦 Demander un réapprovisionnement</div>
     <div class="rbox-s">Dis à Ayêla ce qu'il te faut (produits, quantités) et tes remarques.</div>
-    <textarea id="reappro-msg" placeholder="Ex : 24 Nuit de Miel 50cl, 50 Pocket 1722. Le Chocolat se vend très bien en ce moment.">${esc(suggestion)}</textarea>
+    ${chips}
+    <textarea id="reappro-msg" placeholder="Ex : 24 Nuit de Miel 50cl, 50 Pocket 1722. Le Chocolat se vend très bien en ce moment.">${esc(DATA.reappro_message||'')}</textarea>
     <button class="reappro" onclick="sendReappro()">Envoyer ma demande à Ayêla</button>
     ${DATA.demande_reappro?`<div class="rbox-sent">✓ Demande en cours envoyée à Ayêla. Tu peux la modifier et renvoyer, ou <a onclick="cancelReappro()" style="color:var(--brand);cursor:pointer;text-decoration:underline;font-weight:600">l'annuler</a>.</div>`:''}
   </div>`;
 }
+function addNeed(txt){ const t=document.getElementById('reappro-msg'); t.value=(t.value?t.value.replace(/\s*$/,'')+'\n':'')+txt+' : '; t.focus(); }
 async function sendReappro(){
   const msg=(document.getElementById('reappro-msg').value||'').trim();
   if(!msg){ toast('Écris ce dont tu as besoin'); return; }
