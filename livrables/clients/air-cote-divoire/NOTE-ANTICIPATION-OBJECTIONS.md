@@ -28,11 +28,13 @@ C'est ton meilleur angle d'entrée. Air CI est **partenaire transport officiel d
 - **Hervé Abou, Directeur Pays France** (Country Director). Nommé sept. 2025, bureaux Paris 8e (le RDV est probablement chez lui). Profil commercial de carrière (ENAC, ex-ventes Afrique australe), pas un administratif. C'est l'hôte et le décideur de zone, mais la validation d'un partenariat remonte au siège d'Abidjan.
   - Ce qui le fait dire oui : ce qui **remplit la ligne Paris** et **renforce la proximité diaspora**, sans risque réputationnel, et qui est **validable par Abidjan**.
   - Sa phrase publique : « Nous ne sommes pas seulement une compagnie premium africaine, nous sommes une compagnie tournée vers le monde. »
-- **Business Development Officer** (nom non confirmé, probablement son bras commercial ou un rattaché du siège).
-  - Ce qui le fait dire oui : **un chiffre, un KPI ancillaire, un deal qu'il peut s'attribuer**. Il veut mesurer le volume et la recette.
-- **Hermance Alloh** : à NE PAS présumer salariée d'Air CI. La seule personne identifiable dirige ALUR CONSEIL (conseil marketing, parcours luxe Louis Vuitton). Possiblement consultante externe. Si son nom vient, formuler en question (« vous travaillez avec elle sur le développement France ? »), jamais en affirmation.
+- **Hermance Alloh, Business Development Officer.** ✅ **CONFIRMÉ le 21/07/2026 par Mac Arthur : sa signature mail porte le titre de Business Development Officer d'Air Côte d'Ivoire.**
+  - Ce qui la fait dire oui : **un chiffre, un KPI ancillaire, un deal qu'elle peut s'attribuer**. Elle veut mesurer le volume et la recette.
+  - Elle est l'interlocutrice opérationnelle du dossier : c'est elle qui portera le projet en interne après le RDV, et c'est donc elle qu'il faut outiller en chiffres, pas seulement convaincre.
 
-**À récupérer avant le 22 (la veille ne peut pas le faire, appel ou LinkedIn manuel) :** le nom du Business Development Officer, le statut réel d'Hermance Alloh, et une confirmation du parcours d'Hervé Abou.
+> **Correction de la veille (à retenir comme leçon de méthode).** Le dossier de veille du 17/07 concluait qu'Hermance Alloh n'était « pas confirmée salariée d'Air CI » et probablement consultante externe (dirigeante d'ALUR Conseil, parcours luxe). C'était une **déduction à partir de sources publiques**, et elle était fausse. La signature mail est une preuve directe, elle prime. Ne pas relayer l'hypothèse ALUR Conseil en séance : soit c'est une homonyme, soit c'est un parcours antérieur, dans les deux cas ce n'est pas prouvé et ça n'a aucune utilité dans la conversation.
+
+**Reste à confirmer avant le 22 :** le e-visa CI multi-entrées (pour le volet convoyeurs, phase 2) et le parcours d'Hervé Abou.
 
 ---
 
