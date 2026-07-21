@@ -39,9 +39,9 @@ FAMILLE A — App métier sur mesure (grille produit)
 Composantes : vitrine (e-commerce, choix du produit ou demande type essayage/RDV) + tableau de bord (mise en ligne articles + suivi stock + CA) + lien livreur (contact/coordonnées client + jour de visite).
 | Niveau     | Périmètre                                                        | Setup FCFA   | Setup EUR   | MRR              | Accompagnement inclus |
 |------------|------------------------------------------------------------------|--------------|-------------|------------------|----------------------|
-| App simple | Vitrine + commandes, dashboard basique, hébergement 1 an offert  | 165 000 FCFA | 250 €       | 8 000 FCFA / 12 € (après la 1re année) | 2h |
-| App pro    | + lien de suivi livreur + visibilité stock                       | 320 000 FCFA | 490 € min   | 15 000 FCFA / 25 € | 4h |
-| App pro+   | Multi-utilisateurs + BDD pro + assistance (rapports, messagerie) | 790 000 FCFA | 1 200 € min | 25 000 FCFA / 40 € | 8h |
+| App simple | Vitrine + commandes, dashboard basique, hébergement 1 an offert  | 165 000 FCFA | 250 €       | 23 000 FCFA / 35 € (après la 1re année) | 2h |
+| App pro    | + lien de suivi livreur + visibilité stock                       | 320 000 FCFA | 490 € min   | 43 000 FCFA / 65 € | 4h |
+| App pro+   | Multi-utilisateurs + BDD pro + assistance (rapports, messagerie) | 790 000 FCFA | 1 200 € min | 65 000 FCFA / 100 € | 8h |
 
 App simple et App pro = 1 compte admin. Au-delà : add-on utilisateur supplémentaire, ou passage en App pro+.
 

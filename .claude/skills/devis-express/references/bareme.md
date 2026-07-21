@@ -121,11 +121,17 @@ Source : `Mr Attractor Films.pdf` (Drive). Contact studio : +33 7 53 90 23 23.
 
 ### Maintenance mensuelle (MRR) — plus jamais « à définir »
 
+**Grille arrêtée le 21/07/2026.**
+
 | Niveau | MRR | Inclus |
 |--------|-----|--------|
-| App simple | **8 000 FCFA / 12 €** `[À VALIDER]` | Hébergement 1re année offerte, puis ce MRR. Correctifs, disponibilité. |
-| App pro | **15 000 FCFA / 25 €** `[À VALIDER]` | + sauvegardes, petites retouches de contenu. |
-| App pro+ | **25 000 FCFA / 40 €** `[À VALIDER]` | + support prioritaire, évolutions mineures. |
+| App simple | **23 000 FCFA / 35 €** | Hébergement 1re année offerte, puis ce MRR. Correctifs, disponibilité. |
+| App pro | **43 000 FCFA / 65 €** | + sauvegardes, petites retouches de contenu. |
+| App pro+ | **65 000 FCFA / 100 €** | + support prioritaire, évolutions mineures. |
+
+> **D'où viennent ces montants, honnêtement.** Ils sont calés sur les seuls chiffres écrits de l'agence : la facture GetWinWorld ATR-2026-0007 (35 €/mois) et la formule supérieure de son closing (65 €/mois), plus l'estimation Ayêla de la session 109 (25 000–50 000 FCFA/mois). **Ce sont des montants facturés ou estimés, jamais encaissés : au 21/07/2026, l'agence n'a encore perçu aucun MRR.** Cette grille est donc une cible à atteindre, pas la description d'une pratique établie. Ne pas la citer à un prospect comme « notre tarif habituel ».
+>
+> **Le vrai problème n'est pas le montant, c'est l'activation.** Le MRR a toujours été « à définir », donc il n'entrait dans aucun devis, donc il n'était jamais facturé à la livraison. Chiffrer la ligne ne suffira pas : il faut un mécanisme de mise en recouvrement (voir chantier « activation du MRR »).
 
 Le MRR se **présente dans le devis initial**, jamais après la livraison (SOP). Un devis Famille A sans ligne MRR est un devis incomplet.
 
