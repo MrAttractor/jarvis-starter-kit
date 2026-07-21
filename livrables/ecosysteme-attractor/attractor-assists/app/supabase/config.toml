@@ -1,1 +1,14 @@
 project_id = "lgdgbrivnhgeupqhkckd"
+
+# ── Fonctions publiques (appelees par le navigateur SANS cle) ──
+# Sans ces entrees, `supabase functions deploy <nom>` remet verify_jwt=true
+# et casse silencieusement la page cote prospect (401 -> ecran "introuvable").
+# Regression constatee le 21/07/2026 sur generate-proposition.
+[functions.generate-proposition]
+verify_jwt = false
+
+[functions.diagnostic]
+verify_jwt = false
+
+[functions.devis-accept]
+verify_jwt = false
