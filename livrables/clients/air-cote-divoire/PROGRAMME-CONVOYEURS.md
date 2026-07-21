@@ -1,8 +1,14 @@
 # Programme Convoyeurs, J'Envoie Express × Air Côte d'Ivoire
 
-> Note de cadrage business, volet phase 2. Préparée le 17/07/2026 pour le RDV du 22/07.
+> Note de cadrage business. Préparée le 17/07/2026 pour le RDV du 22/07.
 > Interne Mac Arthur. Sert à quadriller le modèle AVANT d'en parler à Air CI, pas à le présenter tel quel.
-> Sources détaillées dans DOSSIER-VEILLE-AIR-CI.md et les rapports de veille.
+> Sources détaillées en fin de document et dans DOSSIER-VEILLE-AIR-CI.md.
+>
+> **⚠️ Mise à jour du 21/07/2026 — lire la section 0 bis en premier.** Mac Arthur a redéfini la phase 1 :
+> on ne recrute pas des convoyeurs, on **agrège ceux qui existent déjà** (aujourd'hui chez Corsair) en
+> échange du statut **sMiles Diamant**, accordable sur invitation. Les sections 1 à 7 restent valables
+> comme détail opérationnel, mais elles décrivent désormais la phase 2, pas l'approche d'entrée.
+> La section 9 documente pourquoi ce modèle a échoué partout ailleurs, et ce qui nous en distingue.
 
 ---
 
@@ -19,6 +25,85 @@ Ton idée de base (« ils utilisent leurs kilos normaux pour le fret, eux garden
 **La reformulation propre de ton deal :** le convoyeur voyage, sa **cabine (les ~12 kg) reste à lui** pour ses affaires personnelles. Sa **soute** transporte du **fret déclaré** que l'agence a préparé et qu'Air CI facture (excédent bagage vendu, ou cargo accompagné). Même géométrie que ton idée, mais le fret est déclaré au lieu d'être planqué. Résultat : Air CI encaisse, le convoyeur est payé et protégé pénalement, toi tu prends ta commission.
 
 > Le mécanisme exact (excédent bagage vendu par Air CI vs cargo accompagné avec LTA) est une **décision à verrouiller avec leur équipe cargo + un transitaire agréé**. C'est même une bonne raison de leur demander un référent fret au RDV.
+
+---
+
+## 0 bis. RÉVISION STRATÉGIQUE DU 21/07/2026 — la vraie phase 1
+
+> Apportée par Mac Arthur. Elle remplace l'approche « recruter des convoyeurs » des sections suivantes, qui deviennent le détail opérationnel de la phase 2. **C'est désormais la lecture directrice du dossier.**
+
+### L'idée
+
+**On ne recrute personne. Ces professionnels existent déjà, et ils travaillent aujourd'hui chez Corsair.**
+
+Leur modèle est simple et parfaitement rodé :
+
+1. Ils voyagent beaucoup sur Paris-Abidjan et cumulent du statut de grand voyageur.
+2. Le statut leur donne de la **franchise bagage supplémentaire**.
+3. Ils **revendent ces kilos de soute** à des particuliers de la diaspora.
+
+Le statut de fidélité n'est pas un avantage annexe de leur activité : **c'est leur outil de production.** Plus ils volent, plus ils ont de kilos, plus ils gagnent.
+
+**Phase 1 = obtenir la caution d'Air Côte d'Ivoire pour se positionner en facilitateur du rassemblement de ces convoyeurs indépendants, et faire basculer leur volume de Corsair vers Air CI.**
+
+Ils déclarent leurs vols chez J'Envoie Express (ou sur leur propre plateforme adossée), et volent désormais sur Air CI.
+
+### Pourquoi c'est très supérieur au modèle précédent
+
+L'objection économique qui bloquait tout disparaît. Dans le modèle « on offre le voyage », le siège était un **coût** que personne ne pouvait financer (un billet offert reste chargé de taxes qui, sur cet axe, avoisinent la recette du fret). Ici, c'est l'inverse :
+
+**Ces convoyeurs paient leurs billets. Beaucoup de billets. Ce sont exactement les passagers les plus fréquents de la ligne, et ils sont aujourd'hui chez un concurrent direct d'Air CI sur Paris-Abidjan.**
+
+On ne demande plus à Air CI de faire une entorse à son yield management. On lui apporte du chiffre d'affaires passager pris à Corsair.
+
+### Le levier existe déjà chez eux : sMiles Diamant
+
+Vérifié à la source le 21/07/2026 sur le programme sMiles :
+
+| Niveau sMiles | Accès | Franchise bagage supplémentaire |
+|---|---|---|
+| 3 étoiles | jusqu'à 24 999 miles, sur simple demande | non spécifiée |
+| 4 étoiles | 25 000 à 59 999 miles | **+10 kg** sur demande à l'avance |
+| 5 étoiles | à partir de 60 000 miles | **+15 kg** sur demande à l'avance |
+| **Diamant** | **100 000 miles OU SUR INVITATION** | **1 pièce de bagage de 32 kg** |
+
+Deux choses en découlent, et elles sont décisives :
+
+1. **La monnaie d'échange est exactement la marchandise du convoyeur.** Le bénéfice Diamant, c'est 32 kg de soute. C'est précisément ce qu'il revend.
+2. **Le Diamant s'obtient sur invitation de la Direction Générale.** Air CI peut donc l'accorder à une cohorte sélectionnée **sans attendre les 100 000 miles**. Le programme est activable immédiatement, sans créer aucun produit nouveau.
+
+### Le premier mover est identifié et il a nommé son prix
+
+**Jean Yves** (contact J'Envoie Express) a dit qu'**il bascule si Air CI le passe en catégorie Diamant**, et qu'il **mobilise ses collègues**. On n'a donc pas à démontrer l'appétence du marché : on a un porte-parole, sa condition, et un effet réseau annoncé.
+
+### Ce qu'on demande à Air CI en phase 1
+
+Pas de sièges. Pas de remise. Trois choses :
+
+1. **Un contingent de statuts Diamant accordés sur invitation** à une cohorte de convoyeurs vérifiés par nos soins.
+2. **Une caution écrite** : l'activité est reconnue, encadrée et autorisée, pas tolérée.
+3. **Un référent** (cargo et fidélité) pour cadrer le mécanisme.
+
+En échange, ils reçoivent le volume de vols d'une population de très grands voyageurs qui alimente aujourd'hui Corsair, et la formalisation d'un flux qui leur échappe entièrement.
+
+### Corsair, ce qu'on sait et ce qu'il faut vérifier
+
+Club Corsair fonctionne en **cagnotte en euros** (pas en miles), avec quatre statuts : Bronze, Silver, Gold, Platinum. Gold et Platinum donnent **un bagage supplémentaire**. Le Bronze ne génère pas de cagnotte.
+
+> **À vérifier avant de bâtir l'argumentaire de bascule** : le poids exact du bagage supplémentaire Gold/Platinum sur Paris-Abidjan, et le montant de cagnotte annuelle qu'un convoyeur y perd en partant. **La cagnotte en euros est un coût de sortie que le statut Diamant seul ne compense peut-être pas.** C'est la première question à poser à Jean Yves, il a le chiffre.
+
+### ⚠️ Le point juridique qui conditionne tout
+
+**Revendre sa franchise bagage à des tiers viole très probablement les conditions générales de transport de n'importe quelle compagnie**, qui interdisent de transporter des marchandises pour le compte d'autrui. C'est précisément ce qui rend l'activité actuelle « informelle ».
+
+Deux conséquences à ne pas contourner :
+
+1. **Faire basculer ces convoyeurs vers Air CI sans cadre écrit ne formalise rien : ça reproduit l'infraction, avec Air CI à la place de Corsair.** La caution n'est pas un argument marketing, c'est la fondation juridique de tout le montage. Sans écrit, il n'y a pas de programme.
+2. **Tension de conception à trancher** : le Diamant octroie de la **franchise bagage**, pas de la capacité fret. Or la règle d'or (section 0) interdit de faire voyager du fret de tiers en bagage personnel. Il faut donc choisir, avec leur cargo et un transitaire :
+   - soit Air CI **autorise explicitement par écrit** cet usage dans le cadre d'un programme nommé (le bagage cesse d'être « personnel », il devient un flux encadré),
+   - soit la marchandise **bascule en fret déclaré** sous LTA, et le Diamant sert alors d'avantage de fidélisation du convoyeur, pas de véhicule de la marchandise.
+
+**Tant que ce point n'est pas tranché, ne rien promettre à Jean Yves ni à ses collègues.**
 
 ---
 
@@ -140,3 +225,89 @@ Trois parties, trois gains, sur chaque mission :
 3. Grille cargo Air CI et condition « diaspora » : à obtenir au RDV pour boucler la marge.
 4. Statut plateforme : simple mise en relation ou commissionnaire de transport ? (impacte ta responsabilité, à valider avec un avocat).
 5. Assurance du flux (dommage/perte) : modèle Cocolis/PiggyBee à répliquer.
+6. **(21/07)** Franchise bagage revendue à des tiers vs conditions générales de transport : obtenir l'autorisation écrite d'Air CI, ou basculer la marchandise en fret déclaré. **Bloquant.**
+7. **(21/07)** Coût de sortie de Corsair pour un convoyeur : combien de cagnotte euros perd-il en partant ? Question à Jean Yves.
+8. **(21/07)** Contingent de statuts Diamant sur invitation : combien, selon quels critères, révocables comment ?
+
+---
+
+## 9. Ce qui a déjà été tenté ailleurs, et pourquoi ça a échoué
+
+> Recherche menée le 21/07/2026, à la demande de Mac Arthur (« est-ce que les compagnies ne font pas déjà ce système ? »). Sources en fin de document.
+
+### Oui, ça a existé, et à grande échelle : l'« air courier travel »
+
+Dans les années 1980-90, une véritable industrie vendait des billets à prix cassés (**parfois un dixième du tarif normal**) à des voyageurs qui cédaient leur franchise bagage à du fret. Annuaires spécialisés, agences dédiées, guides de voyage entiers. **Le modèle imaginé ici n'est donc pas neuf : il a été mainstream, puis il est mort.**
+
+### Les quatre causes de sa mort, et lesquelles nous concernent
+
+| Cause | Nous concerne ? |
+|---|---|
+| Les documents sont passés sur Internet | **Non.** On transporte des biens physiques familiaux (alimentaire, textile, cosmétique), qu'aucun réseau ne dématérialisera. |
+| Le low-cost a rendu la remise dérisoire | **Faiblement.** Pas de low-cost sur Paris-Abidjan, billets à 700-900 €, la remise garde de la valeur. |
+| Le durcissement sûreté post-2001 | **Totalement.** C'est la raison d'être de la règle d'or (section 0). |
+| Les compagnies ont resserré leurs règles tarifaires | **Totalement.** Voir ci-dessous, c'est le point dur. |
+
+### Le contre-argument à connaître : les compagnies ne bradent pas leurs sièges
+
+La doctrine du secteur est documentée et va **à l'inverse** de l'hypothèse « ils remplissent les sièges par une belle com et se rattrapent en fret » : les compagnies **ne bradent pas** leurs derniers sièges, parce que vendre bon marché à quelqu'un qui aurait payé plein tarif détruit leur rendement. En revanche, **le fret en soute peut rendre un vol rentable même avec peu de passagers**.
+
+**Conséquence directe :** mener par le fret déclaré parle leur langue ; demander des sièges à prix cassé demande une entorse à leur doctrine. **C'est exactement pourquoi la révision du 21/07 (section 0 bis) est plus forte : elle ne demande aucun siège, elle apporte des passagers payants.**
+
+Nuance qui joue pour nous : Air CI est un challenger sur une ligne ouverte en octobre 2025, avec un A330-900neo à remplir face à Air France et Corsair. Sa situation n'est pas celle d'un transporteur mature. **À transformer en question au RDV** : « sur CDG-Abidjan, votre enjeu du moment, c'est le remplissage cabine ou le rendement au siège ? »
+
+### Le cimetière des tentatives modernes
+
+- **Airmule** payait 150 $ par place bagage, jusqu'à 600 $ l'aller-retour. **Cessation d'activité en février 2022.**
+- **Grabr**, modèle voisin centré sur l'achat à l'étranger.
+- Après la pandémie, **59 % des plateformes de covalisage ont fermé**, les réseaux actifs passant de **76 à 31**. Constat rapporté : la plupart ne gagnaient pas d'argent.
+- Sur notre marché : **Colis GP** a formalisé le covalisage africain (notation, contractualisation). Le marché des transitaires vers Abidjan reste largement informel, avec des colis perdus et des prix « à la tête du client ».
+
+**Lecture :** le besoin est massif et mal servi, mais **personne n'a encore gagné d'argent avec le covalisage pur.**
+
+### Le vrai différenciateur : le déplacement de la responsabilité
+
+C'est la trouvaille la plus utile de cette recherche.
+
+Quand Airmule vendait ses vols à 99 $ pour Pékin, l'analyse détaillée de l'offre a montré que **le voyageur devenait personnellement responsable de tout ce qui passait la douane**, et que les conditions d'utilisation d'Airmule déclinaient explicitement toute responsabilité sur le contenu. Contrairement à FedEx, UPS ou DHL, protégés par leur statut de transporteur public, le voyageur n'a aucune protection. Même constat sur le marché GP africain : **les covaliseurs assument entièrement les risques, y compris sur le contenu.**
+
+**C'est là qu'est notre avantage réel.** Le montage n'est pas une résurrection de l'air courier travel : c'est **la correction de son défaut fondamental**. Du fret déclaré adossé au cargo d'une compagnie déplace la responsabilité du voyageur vers le transporteur, là où elle doit être. Le convoyeur cesse d'être une mule porteuse d'un risque pénal.
+
+**Aucune des plateformes mortes ne pouvait faire ça, parce qu'aucune n'avait de compagnie aérienne.** C'est aussi le meilleur argument auprès d'Air CI : le seul acteur capable de rendre ce flux officiel, c'est elle, et c'est pour ça qu'aucune plateforme ne pourra le lui reprendre.
+
+### Une question de plus à glisser au RDV
+
+**« Avez-vous déjà été approchés sur du covalisage ou du GP organisé ? »** La réponse dira s'ils ont déjà refusé, et pourquoi.
+
+---
+
+## Sources
+
+**Programme sMiles (vérifié à la source le 21/07/2026)**
+- [Programme sMiles, niveaux et franchises](https://vre.frequentflyer.aero/fr/programme-smiles) — paliers, miles qualifiants, franchise bagage par niveau, accès Diamant « 100 000 miles ou sur invitation »
+- [Air Côte d'Ivoire, Status and benefits](https://www.aircotedivoire.com/en/smiles-en/status-and-benefits/)
+
+**Corsair**
+- [Club Corsair, avantages et statuts (Milesopedia)](https://milesopedia.fr/programme-fidelite/club-corsair/)
+- [Corsair réinvente son programme de fidélité (Air Journal, févr. 2025)](https://www.air-journal.fr/2025-02-06-corsair-reinvente-son-programme-de-fidelite-pour-recompenser-ses-voyageurs-reguliers-5260799.html)
+- [Franchise bagage soute, Corsair](https://pp.flycorsair.com/fr/bagage-en-soute/franchise-bagage-soute)
+
+**Histoire de l'air courier travel**
+- [The Rise and Fall of Air Courier Travel](https://www.mightytravels.com/2024/10/the-rise-and-fall-of-air-courier-travel-a-look-back-at-a-forgotten-budget-travel-hack/)
+- [Air courier travel no longer a bargain (NBC News)](https://www.nbcnews.com/id/wbna21691542)
+
+**Industrie OBC (le modèle légal de référence)**
+- [On Board Couriers, what they really do & how it works](https://usacouriers.com/usa-couriers-blog-spot/on-board-couriers-how-it-works/)
+- [What is an On Board Courier (time:matters)](https://www.time-matters.com/emergency-logistics-glossary/obc-on-board-courier/)
+
+**Plateformes de covalisage et leur échec**
+- [New Apps Allow Air Travelers To Sell Unused Luggage Space (Forbes, 2016)](https://www.forbes.com/sites/grantmartin/2016/04/21/new-apps-allow-passengers-to-sell-unused-checked-luggage-space-grabr-airmule/)
+- [Pandemic Crushed Crowdsourced Shipping Companies](https://ugr.146.myftpupload.com/pandemic-crushed-crowdsourced-shipping-companies/)
+- [$99 Beijing Flights, With A Dangerous Catch (Seat 31B)](https://www.seat31b.com/2017/08/99-beijing-flights-with-a-dangerous-catch/) — l'analyse de responsabilité
+
+**Économie aérienne**
+- [The Hidden Economics of Empty Airline Seats](https://www.globalair.com/articles/the-hidden-economics-of-empty-airline-seats/12308)
+
+**Marché GP / diaspora**
+- [Colis-GP, plateforme de covalisage pour la diaspora](https://www.afrikatech.com/sante/colis-gp-plateforme-de-covalisage-africains-de-diaspora/?lang=fr)
+- [Dans le quotidien des GP, ces coursiers de l'informel (Jeune Afrique)](https://www.jeuneafrique.com/1515403/societe/dans-le-quotidien-des-gp-ces-coursiers-senegalais-de-linformel/)
