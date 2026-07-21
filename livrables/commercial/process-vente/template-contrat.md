@@ -79,7 +79,9 @@ Moyens de paiement acceptés : [Wero/Revolut/Wave/MTN Money selon zone]. TVA non
 
 ## Art. 9 — Recette, validation et révisions
 
-À la livraison, fiche de livraison transmise au Client, qui dispose de [7] jours ouvrés pour valider ou formuler ses retours. Sans retour, la livraison est réputée acceptée. [2] rounds de révisions inclus ; au-delà, tarif horaire de 65 € HT/heure. Toute modification substantielle du périmètre = avenant écrit avant exécution.
+À la livraison, fiche de livraison transmise au Client, qui dispose de [7] jours ouvrés pour valider ou formuler ses retours. Sans retour, la livraison est réputée acceptée. [2] rounds de révisions inclus ; au-delà, tarif horaire de **150 € HT/heure**. Toute modification substantielle du périmètre = avenant écrit avant exécution.
+
+> **Note interne (ne pas laisser dans le contrat envoyé) :** le tarif hors périmètre est volontairement **au-dessus** du tarif conseil de 120 €/h. L'ancienne valeur de 65 €/h était une incitation inversée : elle facturait le travail non planifié à moitié prix du travail cadré. Argument client : « le travail cadré est moins cher parce qu'il est prévisible ».
 
 ## Art. 10 — Propriété intellectuelle
 
@@ -125,7 +127,7 @@ Responsabilité limitée aux dommages directs prouvés, plafonnée au montant to
 
 **17.1** Retard non justifié supérieur à 15 jours ouvrés → mise en demeure puis résiliation possible.
 **17.2** Manquement grave → résiliation de plein droit après mise en demeure sans effet pendant 15 jours.
-**17.3** Résiliation à l'initiative du Client (préavis 15 jours) : phases livrées et validées dues intégralement, phase en cours facturée au prorata (65 €/h), phases non démarrées non dues.
+**17.3** Résiliation à l'initiative du Client (préavis 15 jours) : phases livrées et validées dues intégralement, phase en cours facturée au prorata (120 €/h, tarif conseil du barème), phases non démarrées non dues.
 **17.4** Résiliation à l'initiative du Prestataire en cas de non-paiement persistant (+20 jours) ou manquement grave du Client.
 
 ## Art. 18 — Force majeure

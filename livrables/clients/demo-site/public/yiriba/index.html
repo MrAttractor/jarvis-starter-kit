@@ -93,6 +93,10 @@ img{max-width:100%}
 .bonus li::before{content:"";position:absolute;left:3px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--orange)}
 .bonus b{color:var(--ink)}
 .bonus .off{color:var(--green);font-weight:800}
+/* Le bloc "Ce qui n'est pas inclus" reprend la boîte .bonus mais en neutre :
+   puce en tiret gris, pas en pastille orange (la pastille signifie "compris"). */
+#c-cadre li::before{background:var(--muted);width:8px;height:1.5px;top:8px;border-radius:1px}
+#c-cadre li{padding-left:20px;line-height:1.55}
 
 /* limiter */
 .limit{margin-top:14px;background:var(--green-bg);border-radius:12px;padding:13px 15px;font-size:12px;color:var(--muted-2);line-height:1.6}
@@ -238,6 +242,14 @@ img{max-width:100%}
     </div>
   </section>
 
+  <!-- CADRE — ce qui n'est pas inclus (barème § Règle de périmètre) -->
+  <div class="bonus" id="c-cadre" style="border-color:var(--sable);background:#fff;display:none">
+    <h3 style="color:var(--muted-2)">Ce qui n'est pas inclus</h3>
+    <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:11px" id="cadre-intro"></p>
+    <ul id="grp-cadre"></ul>
+    <p style="margin-top:12px;padding-top:12px;border-top:1px solid var(--sable);font-size:12px;color:var(--muted-2);line-height:1.6" id="cadre-av"></p>
+  </div>
+
   <!-- LIMITEUR -->
   <div class="limit" id="c-limit"></div>
 
@@ -337,6 +349,19 @@ const DEVIS = {
     'L\'autorisation de citer <b>Yiriba Nature</b> comme cas client (nom + visuels de la plateforme)'
   ],
 
+  // Cadre de périmètre — obligatoire (barème § Règle de périmètre, 21/07/2026).
+  // Sur un deal en renégociation, c'est ce qui protège le prix : on borne l'objet au lieu de baisser le montant.
+  cadreIntro: "Pour qu'on avance sereinement, voici noir sur blanc ce que cette offre ne couvre pas. Rien de tout cela n'est un refus : ce sont des étapes qui se chiffrent à part, quand vous en aurez besoin.",
+  cadre: [
+    "Les fonctionnalités qui ne sont pas listées ci-dessus : elles relèvent d'une étape suivante, chiffrée séparément.",
+    "<b>La photographie et la rédaction de vos fiches produits</b> : vous fournissez vos visuels et vos textes, on les met en forme dans votre catalogue.",
+    "Les frais de tiers : achat du nom de domaine, hébergement au-delà de la première année offerte, SMS, commissions des opérateurs de paiement.",
+    "<b>Un compte administrateur</b> est prévu. Les accès supplémentaires (revendeuses, assistante) s'ajoutent en option.",
+    "La reprise de votre catalogue existant au-delà de 50 références.",
+    "<b>Au-delà des 10h d'accompagnement</b>, les séances se poursuivent au tarif horaire conseil."
+  ],
+  cadreAvenant: "Toute demande en dehors du périmètre ci-dessus fait l'objet d'un devis complémentaire, validé par écrit avant d'être réalisée. On ne démarre jamais un travail non chiffré : c'est ce qui protège votre budget autant que nos délais. Deux séries d'ajustements sont incluses à chaque étape livrée.",
+
   limite: "Cette offre de lancement est réservée jusqu'au <b>31/07/2026</b>. Votre créneau de démarrage est bloqué dès réception de la première tranche (175 000 FCFA).",
   accord: "Je confirme notre accord : l'accompagnement Eagle et la plateforme Yiriba Nature, pour 525 000 FCFA (≈ 800 €) réglés en 3 tranches de 175 000 FCFA, et je souhaite démarrer.",
   doneMsg: "Votre accord est bien enregistré et transmis à Mac Arthur. Vous allez recevoir les coordonnées pour régler la première tranche et caler la première séance. On démarre Yiriba Nature."
@@ -360,6 +385,12 @@ $("bonus-h").textContent = DEVIS.bonusH;
 $("grp-bonus").innerHTML = DEVIS.bonus.map(b=>"<li>"+b+"</li>").join("");
 $("cp-sub").textContent = DEVIS.cpSub;
 $("grp-cp").innerHTML = DEVIS.cp.map(b=>"<li>"+b+"</li>").join("");
+if((DEVIS.cadre||[]).length){
+  $("c-cadre").style.display = 'block';
+  $("cadre-intro").textContent = DEVIS.cadreIntro || "";
+  $("grp-cadre").innerHTML = DEVIS.cadre.map(b=>"<li>"+b+"</li>").join("");
+  $("cadre-av").innerHTML = DEVIS.cadreAvenant || "";
+}
 $("c-limit").innerHTML = "<b>À noter.</b> " + DEVIS.limite;
 $("accord-txt").textContent = DEVIS.accord;
 $("done-msg").textContent = DEVIS.doneMsg;

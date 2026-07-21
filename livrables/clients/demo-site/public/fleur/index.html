@@ -94,6 +94,10 @@ img{max-width:100%}
 .bonus .off{color:var(--green);font-weight:800}
 
 /* limiter */
+/* Bloc "Ce qui n'est pas inclus" : boîte .bonus en neutre, puce en tiret gris
+   (la pastille orange signifie "compris", elle ne convient pas ici). */
+#c-cadre li::before{background:var(--muted);width:8px;height:1.5px;top:8px;border-radius:1px}
+#c-cadre li{padding-left:20px;line-height:1.55}
 .limit{margin-top:14px;background:var(--green-bg);border-radius:12px;padding:13px 15px;font-size:12px;color:var(--muted-2);line-height:1.6}
 .limit b{color:var(--ink)}
 
@@ -142,6 +146,17 @@ img{max-width:100%}
   .hero h1{font-size:23px}
   .value .l .amt{font-size:19px}
   .sticky .cta{padding:11px 14px;font-size:13px}
+}
+/* Impression / export PDF — un devis se sauvegarde et se transmet.
+   Aucun bloc ne doit être coupé entre deux pages. */
+@media print{
+  body{background:#fff;padding-bottom:0}
+  .sticky,.btn,.btn-ghost,.ask,.accord,.valid .hint,.opt-more{display:none!important}
+  .wrap{max-width:100%;overflow:visible}
+  .sec,.value,.bonus,.limit,.valid,.hero,.opt{break-inside:avoid;page-break-inside:avoid;overflow:visible}
+  .opt-detail,.opt-detail[hidden]{display:block!important}
+  a[href]::after{content:""}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 </style>
 </head>
@@ -195,6 +210,14 @@ img{max-width:100%}
   <div class="bonus">
     <h3>Offre de lancement — bonus inclus</h3>
     <ul id="grp-bonus"></ul>
+  </div>
+
+  <!-- CADRE — ce qui n'est pas inclus (barème § Règle de périmètre) -->
+  <div class="bonus" id="c-cadre" style="border-color:var(--sable);background:#fff;display:none">
+    <h3 style="color:var(--muted-2)">Ce qui n'est pas inclus</h3>
+    <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:11px" id="cadre-intro"></p>
+    <ul id="grp-cadre"></ul>
+    <p style="margin-top:12px;padding-top:12px;border-top:1px solid var(--sable);font-size:12px;color:var(--muted-2);line-height:1.6" id="cadre-av"></p>
   </div>
 
   <!-- LIMITEUR -->
@@ -293,6 +316,17 @@ const DEVIS = {
     'Séance de suivi à 30 jours pour garder le cap sur votre plan — <span class="off">offerte</span>',
     'Tarif de lancement garanti sur la V2 si engagée dans les 30 jours suivant le cadrage'
   ],
+  // Cadre de périmètre — obligatoire (barème § Règle de périmètre, 21/07/2026).
+  cadreIntro: "Pour qu'on avance sereinement, voici noir sur blanc ce que cette proposition ne couvre pas. Rien de tout cela n'est un refus : ce sont des étapes qui se chiffrent à part, quand vous en aurez besoin.",
+  cadre: [
+    "Les fonctionnalités qui ne sont pas listées ci-dessus : elles relèvent d'une étape suivante, chiffrée séparément.",
+    "La création de vos contenus (photos, textes de présentation, logo) si elle n'est pas explicitement cochée dans votre sélection.",
+    "Les frais de tiers : achat du nom de domaine, hébergement au-delà de la première année offerte, SMS, commissions des opérateurs de paiement.",
+    "Les comptes utilisateurs et points de vente supplémentaires au-delà de ce que prévoit la formule choisie.",
+    "La reprise de vos données existantes au-delà de 50 références."
+  ],
+  cadreAvenant: "Toute demande en dehors du périmètre ci-dessus fait l'objet d'un devis complémentaire, validé par écrit avant d'être réalisée. Deux séries d'ajustements sont incluses à chaque étape livrée.",
+
   limite: "Cette offre de lancement (bonus inclus) est réservée jusqu'au <b>26/07/2026</b>. Pour rester pleinement disponible sur chaque projet, un nombre limité d'accompagnements Boost Camp est ouvert par mois : votre créneau de démarrage est bloqué dès réception de l'acompte.",
   doneMsg: "Votre sélection a bien été enregistrée et transmise à Mac Arthur. Vous serez recontactée très vite pour caler la première séance et lancer le Boost Camp."
 };
@@ -312,6 +346,12 @@ $("c-titre").innerHTML = DEVIS.titre;
 $("c-intro").textContent = DEVIS.intro;
 $("v-market-lab").textContent = DEVIS.marcheLabel;
 $("v-market").textContent = DEVIS.marche;
+if((DEVIS.cadre||[]).length){
+  $("c-cadre").style.display = 'block';
+  $("cadre-intro").textContent = DEVIS.cadreIntro || "";
+  $("grp-cadre").innerHTML = DEVIS.cadre.map(b=>"<li>"+b+"</li>").join("");
+  $("cadre-av").innerHTML = DEVIS.cadreAvenant || "";
+}
 $("c-limit").innerHTML = "<b>À noter.</b> " + DEVIS.limite;
 $("done-msg").textContent = DEVIS.doneMsg;
 $("grp-bonus").innerHTML = DEVIS.bonus.map(b=>"<li>"+b+"</li>").join("");

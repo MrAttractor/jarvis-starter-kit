@@ -58,12 +58,26 @@ Zone : [France / Côte d'Ivoire]
 
 ---
 
+## Ce qui n'est pas inclus
+
+> **Section obligatoire — un devis sans elle n'est pas envoyable.** Un devis qui ne dit pas ce qu'il ne fait pas dit implicitement qu'il fait tout. Adapter les lignes au deal, en garder 3 minimum.
+
+- Les fonctionnalités non listées ci-dessus : elles relèvent d'une étape suivante, chiffrée séparément
+- Les frais de tiers : achat du nom de domaine, hébergement au-delà de la première année offerte, SMS, commissions des opérateurs de paiement
+- La création de vos contenus (photos, textes, logo) si elle n'est pas explicitement listée
+- Les comptes utilisateurs et points de vente au-delà de [N] prévus par la formule
+- La reprise de données existantes au-delà de 50 références
+
+---
+
 ## Conditions
 
 - Acompte de 50% à la commande pour démarrage du projet
 - Solde à la livraison de la version finale
-- Abonnement mensuel débute à la livraison (hébergement + maintenance)
-- Toute fonctionnalité hors périmètre ci-dessus fera l'objet d'un avenant
+- Abonnement mensuel débute à la livraison (hébergement + maintenance) — **ligne MRR obligatoire sur tout devis Famille A**
+- **Accompagnement inclus : [N] heures** (prise en main + suivi). Au-delà : 120 €/h
+- **2 séries d'ajustements incluses** par étape livrée. Au-delà : 150 €/h
+- Toute demande hors périmètre fait l'objet d'un devis complémentaire **validé par écrit avant exécution** (jamais sur la foi d'un appel ou d'un vocal)
 - Validité du devis : 15 jours à compter de la date d'émission
 
 ---

@@ -100,19 +100,77 @@ Prestations vidéo pro (tournage 4K, 1 à 2 cadreurs). **Réservé aux projets e
 
 Source : `Mr Attractor Films.pdf` (Drive). Contact studio : +33 7 53 90 23 23.
 
-## Add-ons (à confirmer avec Mac Arthur)
+## Add-ons — grille chiffrée (21/07/2026)
 
-- Intégration paiement mobile (Wave / Orange Money...) : à définir
-- Intégration WhatsApp : à définir
-- Nom de domaine + mise en ligne : à définir
-- Maintenance mensuelle : incluse dans l'abonnement de la Famille A
-- Maquette express : à définir
+> Écrite le 21/07/2026 pour combler le trou n°1 du tunnel : les add-ons étaient tous « à définir », or **ce sont exactement les demandes qui font déborder un périmètre**. Sans grille d'add-ons, impossible de chiffrer un avenant, donc impossible de refuser proprement une demande hors périmètre.
+>
+> **⚠️ Les montants marqués `[À VALIDER]` sont des propositions calées sur la cohérence de la grille, pas des prix déjà pratiqués. Mac Arthur tranche, puis on retire la mention.**
+
+| Add-on | Prix | Note |
+|--------|------|------|
+| **Commande WhatsApp (deeplink)** | **inclus** | Déjà dans toutes les apps. Ne jamais le facturer, ne jamais le présenter comme un bonus. |
+| **Paiement mobile — lien de paiement** (Wave / Orange Money / MTN) | **60 000 FCFA / 90 €** `[À VALIDER]` | Le client encaisse via son propre lien marchand. Intégration + affichage dans le parcours. |
+| **Paiement mobile — API PSP** (CinetPay, XPaye…) | **165 000 FCFA / 250 €** `[À VALIDER]` | Vraie intégration API, webhooks, réconciliation. Frais PSP à la charge du client. |
+| **WhatsApp Cloud API** (envoi automatisé) | **230 000 FCFA / 350 €** `[À VALIDER]` | Actuellement au frigo côté agence. Ne pas vendre sans revalider la faisabilité. |
+| **Mise en ligne + branchement domaine** | **inclus** (bonus) | Le **coût d'achat du domaine** reste un frais de tiers, refacturé au réel (~12-20 €/an). À dire au client, sinon il croit le domaine offert à vie. |
+| **Utilisateur / rôle supplémentaire** au-delà du forfait | **60 000 FCFA / 90 €** `[À VALIDER]` | App simple et App pro = **1 compte admin**. Au-delà, c'est cet add-on ou le passage en App pro+. |
+| **Point de vente / boutique supplémentaire** | **60 000 FCFA / 90 €** `[À VALIDER]` | Le cas Ayêla. Chaque point qui a son propre accès est un add-on, pas une variante gratuite. |
+| **Reprise de données** (import catalogue > 50 références) | **60 000 FCFA / 90 €** `[À VALIDER]` | En dessous de 50 références, inclus. |
+| **Maquette de closing** | **offerte en phase de vente** | C'est un coût d'acquisition, pas un livrable. Facturée **100 000 FCFA / 150 €** uniquement si le prospect veut la maquette sans donner suite. |
+| **Module hors périmètre** (après verrouillage du scope) | **150 €/h — 98 000 FCFA/h** | Voir la règle de périmètre ci-dessous. |
+
+### Maintenance mensuelle (MRR) — plus jamais « à définir »
+
+| Niveau | MRR | Inclus |
+|--------|-----|--------|
+| App simple | **8 000 FCFA / 12 €** `[À VALIDER]` | Hébergement 1re année offerte, puis ce MRR. Correctifs, disponibilité. |
+| App pro | **15 000 FCFA / 25 €** `[À VALIDER]` | + sauvegardes, petites retouches de contenu. |
+| App pro+ | **25 000 FCFA / 40 €** `[À VALIDER]` | + support prioritaire, évolutions mineures. |
+
+Le MRR se **présente dans le devis initial**, jamais après la livraison (SOP). Un devis Famille A sans ligne MRR est un devis incomplet.
+
+## Règle de composition des combos (21/07/2026)
+
+> Motif : 100 % des deals réels sont des combos (Yiriba, Beracca, Studio IA, Ayêla, Cabinet DAB). Le barème ne modélisait que des produits isolés, donc chaque deal se recomposait au téléphone et atterrissait sous la grille. Cette règle ferme cette porte.
+
+1. **Un combo = la somme des lignes au barème plein.** On additionne, on ne forfaitise pas à la volée.
+2. **Une seule remise s'applique** : la remise volume de 20 % au-dessus de 1 200 €. Pas de dégressivité supplémentaire, pas de remise négociée qui s'ajoute. Si le client négocie encore, on retire une ligne du périmètre, on ne baisse pas le prix.
+3. **Plancher absolu : 70 % de la somme des lignes au barème.** En dessous, ce n'est plus un prix, c'est un rabais volontaire : il doit alors être **documenté comme tel dans le devis** (contrepartie écrite et chiffrée, cf. section rabais volontaires). Un rabais sans contrepartie écrite est un rabais perdu.
+4. **Le volume d'accompagnement est toujours borné** (voir ci-dessous). Un combo « app + accompagnement » sans nombre d'heures écrit est un combo non chiffrable.
+
+## Volume d'accompagnement inclus — bornage obligatoire
+
+> Motif (Mac Arthur, session 104) : « rien ne borne le volume d'heures que mon style d'accompagnement donne ». C'est la fuite la plus silencieuse de l'agence.
+
+| Niveau | Accompagnement inclus |
+|--------|----------------------|
+| App simple | **2h** `[À VALIDER]` (prise en main + point à 30 jours) |
+| App pro | **4h** `[À VALIDER]` |
+| App pro+ | **8h** `[À VALIDER]` |
+| EAGLE | **10h** (déjà borné) |
+
+Au-delà du volume inclus : tarif **CONSEIL 120 €/h**. Le volume inclus doit **figurer en toutes lettres dans le devis**. Un accompagnement non chiffré est un accompagnement illimité.
+
+## Règle de périmètre — verrouillage et avenants (21/07/2026)
+
+> Motif : sur 5 devis clients audités (Élévia, Yiriba, Nabycook, Fleur, Ayêla), **un seul** portait des clauses de périmètre. Résultat mesuré : Ayêla = 2 700 à 4 600 € de valeur livrée pour 84 € encaissés ; Élévia = exposition au natif iOS/Android pour 3 500 € sur une clarification seulement orale.
+
+1. **Tout devis porte une section « Ce qui n'est pas inclus ».** Trois lignes minimum : ce qui est V2, ce qui est un frais de tiers (domaine, hébergement au-delà de l'offert, SMS, frais PSP), ce qui déclenche un avenant. Un devis qui ne dit pas ce qu'il ne fait pas dit implicitement qu'il fait tout.
+2. **2 rounds de révisions inclus** par phase livrée. Au-delà : **150 €/h**.
+3. **Tarif hors périmètre : 150 €/h — au-dessus du tarif conseil (120 €/h), jamais en dessous.** L'ancien 65 €/h du template de contrat était une **incitation inversée** : il facturait le travail non planifié à moitié prix du travail cadré. Se dit très bien au client : « le travail cadré est moins cher parce qu'il est prévisible ».
+4. **Aucune exécution hors périmètre sans accord écrit préalable.** Jamais sur la foi d'un appel ou d'un vocal WhatsApp (leçon Élévia, session 91).
+5. **Le périmètre s'écrit tant qu'il est encore négociable**, c'est-à-dire dans le devis et l'audit métier, pas après le premier débordement.
+
+> **Note posture** : le client qui demande plus ne ment pas, il **découvre son besoin en utilisant l'outil**. C'est normal et prévisible. La règle n'est donc pas défensive : elle transforme la découverte en avenant facturé au lieu de la laisser en travail absorbé.
 
 ## Règles de devis
 
 - **Validité** : 15 jours par défaut.
 - **Acompte** : 50 % à la commande, solde à la livraison (ajustable selon le deal).
 - **Numérotation** : `ATR-AAAA-NNNN` (incrémental).
+- **Section « Ce qui n'est pas inclus » : obligatoire sur tout devis.** Sans elle, le devis n'est pas envoyable (cf. règle de périmètre).
+- **Ligne MRR : obligatoire sur tout devis Famille A.**
+- **Volume d'accompagnement en heures : obligatoire dès qu'il y a de l'accompagnement.**
 
 ## Classification : des infos brutes vers un tarif
 

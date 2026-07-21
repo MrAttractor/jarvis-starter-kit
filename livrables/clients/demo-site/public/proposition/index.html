@@ -78,6 +78,18 @@ img{max-width:100%}
 .bonus .off{color:var(--green);font-weight:800}
 .limit{margin-top:14px;background:var(--green-bg);border-radius:12px;padding:13px 15px;font-size:12px;color:var(--muted-2);line-height:1.6}
 .limit b{color:var(--ink)}
+/* Cadre de la prestation — ce qui n'est pas inclus. Sobre volontairement :
+   c'est une clarification qui rassure, pas un avertissement qui inquiète. */
+.cadre{margin-top:22px;border:1.5px solid var(--sable);background:#fff;border-radius:14px;padding:16px}
+.cadre h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted-2);margin-bottom:7px}
+.cadre .intro{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:11px}
+.cadre ul{list-style:none;margin:0}
+.cadre li{position:relative;padding-left:20px;font-size:12.5px;margin-bottom:7px;color:var(--muted-2);line-height:1.55}
+.cadre li::before{content:"";position:absolute;left:3px;top:8px;width:8px;height:1.5px;background:var(--muted);border-radius:1px}
+.cadre .rule{margin-top:12px;padding-top:12px;border-top:1px solid var(--sable);font-size:12px;color:var(--muted-2);line-height:1.6}
+.cadre .rule b{display:block;color:var(--ink);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.cadre .rule + .rule{margin-top:10px;padding-top:10px}
+.opt-detail .dl.excl b{color:var(--muted-2)}
 .valid{margin-top:26px;background:#fff;border:1.5px solid var(--sable);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
 .valid h3{font-size:17px;margin-bottom:4px}
 .valid .hint{color:var(--muted);font-size:12.5px;margin-bottom:16px}
@@ -114,6 +126,18 @@ img{max-width:100%}
 .state h2{font-size:20px;color:var(--ink);margin-bottom:8px}
 .foot{margin-top:30px;text-align:center;font-size:10.5px;color:var(--muted);line-height:1.7}
 @media (max-width:420px){.hero h1{font-size:23px}.value .l .amt{font-size:19px}.sticky .cta{padding:11px 14px;font-size:13px}}
+/* Impression / export PDF — un devis se sauvegarde et se transmet.
+   Le cadre de périmètre ne doit jamais être coupé entre deux pages. */
+@media print{
+  body{background:#fff}
+  .sticky,.btn,.btn-ghost,#form-block,.opt-more{display:none!important}
+  .wrap,main,#app{overflow:visible!important}
+  .opt-detail{display:block!important}
+  .opt-detail[hidden]{display:block!important}
+  .sec,.value,.bonus,.cadre,.limit,.opt{break-inside:avoid;page-break-inside:avoid;overflow:visible}
+  .cadre{border-color:#8a8078}
+  a[href^="http"]::after{content:""}
+}
 </style>
 </head>
 <body>
@@ -150,6 +174,13 @@ img{max-width:100%}
     <div class="cap">Vous ne réglez jamais la totalité d'un coup : chaque étape se paie à son lancement, et vous démarrez pour le seul acompte de la première.</div>
   </div>
   <div class="bonus"><h3>Offre de lancement — bonus inclus</h3><ul id="grp-bonus"></ul></div>
+  <div class="cadre" id="c-cadre" style="display:none">
+    <h3 id="cadre-titre">Ce qui n'est pas inclus</h3>
+    <p class="intro" id="cadre-intro"></p>
+    <ul id="grp-cadre"></ul>
+    <div class="rule" id="cadre-rev" style="display:none"><b>Ajustements</b><span></span></div>
+    <div class="rule" id="cadre-av" style="display:none"><b>Demande en dehors du périmètre</b><span></span></div>
+  </div>
   <div class="limit" id="c-limit"></div>
 
   <section class="valid" id="form-block">
@@ -193,14 +224,32 @@ function fmt(n){ return n.toLocaleString('fr-FR') + " " + DEVIS.devise; }
   render();
 })();
 
+/* Cadre de la prestation — rendu commun aux deux modes (composable et prix fixe).
+   Si le config n'a pas de bloc `cadre`, on n'affiche rien plutôt que d'inventer des clauses. */
+function renderCadre(D){
+  const c = D && D.cadre;
+  if(!c || !((c.exclusions||[]).length || c.revisions || c.avenant)) return;
+  $("c-cadre").style.display = 'block';
+  if(c.titre) $("cadre-titre").textContent = c.titre;
+  $("cadre-intro").textContent = c.intro || "";
+  if(!c.intro) $("cadre-intro").style.display = 'none';
+  $("grp-cadre").innerHTML = (c.exclusions||[]).map(x=>"<li>"+x+"</li>").join("");
+  if(c.revisions){ $("cadre-rev").style.display='block'; $("cadre-rev").querySelector('span').textContent = c.revisions; }
+  if(c.avenant){ $("cadre-av").style.display='block'; $("cadre-av").querySelector('span').textContent = c.avenant; }
+}
+
 function card(o, type){
   const ap = o.apartir ? '<span class="ap">à partir de</span>' : '';
   const li = (o.livrables||[]).map(x=>`<li>${x}</li>`).join("");
-  const detail = (o.avantage||o.limite||li) ? `
+  const ni = (o.nonInclus||[]).map(x=>`<li>${x}</li>`).join("");
+  const mrr = o.mrr ? `<p class="dl"><b>Suivi mensuel</b>${fmt(o.mrr)} / mois${o.mrrNote?` (${o.mrrNote})`:''}</p>` : '';
+  const detail = (o.avantage||o.limite||li||ni||mrr) ? `
     <div class="opt-detail" hidden>
       ${o.avantage?`<p class="dl"><b>Idéal si</b>${o.avantage}</p>`:''}
       ${o.limite?`<p class="dl"><b>À savoir</b>${o.limite}</p>`:''}
       ${li?`<div class="dl"><b>Ce qu'on vous livre</b><ul>${li}</ul></div>`:''}
+      ${ni?`<div class="dl excl"><b>Ce que cette formule ne couvre pas</b><ul>${ni}</ul></div>`:''}
+      ${mrr}
       ${o.geo?`<p class="dl geo">Service disponible pour les projets en Côte d'Ivoire ou en Île-de-France.</p>`:''}
     </div>
     <button class="opt-more" type="button">Voir le détail</button>` : '';
@@ -228,6 +277,7 @@ function render(){
   $("c-limit").innerHTML = "<b>À noter.</b> "+(DEVIS.limite||"");
   $("done-msg").textContent = DEVIS.doneMsg||"Votre sélection a bien été transmise.";
   $("grp-bonus").innerHTML = (DEVIS.bonus||[]).map(b=>"<li>"+b+"</li>").join("");
+  renderCadre(DEVIS);
   $("btn-help").href = "https://wa.me/"+(DEVIS.waHelp||"")+"?text="+encodeURIComponent(DEVIS.waHelpText||"Bonjour Mac Arthur, j'ai une question sur ma proposition : ");
 
   $("grp-conseil").innerHTML = DEVIS.conseil.map(o=>card(o,'radio')).join("");
@@ -298,7 +348,7 @@ async function submit(){
     selection, total, devise: DEVIS.devise, apartir, total_label:(apartir?"à partir de ":"")+fmt(total)
   };
   try{ await fetch(DEVIS.submitUrl, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) }); }catch(e){}
-  $("app").querySelectorAll('.sec,.hero,.value,.bonus,.limit,#form-block,.top,.foot').forEach(el=>el.style.display='none');
+  $("app").querySelectorAll('.sec,.hero,.value,.bonus,.cadre,.limit,#form-block,.top,.foot').forEach(el=>el.style.display='none');
   $("sticky").style.display='none';
   $("done").classList.add('show');
   window.scrollTo({top:0,behavior:'smooth'});
@@ -323,6 +373,7 @@ function renderFixe(){
   if(conds.length){ const bh=document.querySelector('.bonus h3'); if(bh) bh.textContent = D.conditionsTitre || "Conditions particulières"; $("grp-bonus").innerHTML = conds.map(c=>"<li>"+c+"</li>").join(""); }
   else { const b=document.querySelector('.bonus'); if(b) b.style.display='none'; }
   if(D.limite){ $("c-limit").innerHTML = "<b>À noter.</b> "+D.limite; } else { $("c-limit").style.display='none'; }
+  renderCadre(D);
   $("done-msg").textContent = D.doneMsg||"Votre accord a bien été enregistré et transmis à Mac Arthur.";
   $("btn-help").href = "https://wa.me/"+(D.waHelp||"33753902323")+"?text="+encodeURIComponent(D.waHelpText||"Bonjour Mac Arthur, j'ai une question sur mon devis : ");
   // Récap : lignes figées + total + plan de paiement
@@ -363,7 +414,7 @@ async function submitFixe(){
     total_label: D.total_label || fmt(D.total||0)
   };
   try{ await fetch(D.submitUrl, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}); }catch(e){}
-  $("app").querySelectorAll('.sec,.hero,.value,.bonus,.limit,#form-block,.top,.foot').forEach(el=>el.style.display='none');
+  $("app").querySelectorAll('.sec,.hero,.value,.bonus,.cadre,.limit,#form-block,.top,.foot').forEach(el=>el.style.display='none');
   $("sticky").style.display='none';
   $("done").classList.add('show');
   window.scrollTo({top:0,behavior:'smooth'});
