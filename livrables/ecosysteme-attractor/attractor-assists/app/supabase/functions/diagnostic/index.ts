@@ -30,12 +30,24 @@ function zoneFromContact(c: string): string {
 // du gros JSON (~2/5 des cas, JSON valide et complet, ce n'est PAS une troncature).
 // Comme la famille aiguille tout le parcours, on relance une classification ULTRA-ciblée
 // (une seule lettre) quand elle manque. Testé fiable à 100% en isolé.
-const CLASSIF_SYSTEM = `Tu classes le besoin d'un entrepreneur en UNE seule lettre, à partir de sa situation.
-A = besoin d'une application ou d'un outil métier (vitrine, catalogue, commandes, tableau de bord, stock).
-B = besoin de conseil, de structuration ou d'accompagnement (stratégie, modèle économique, marketing).
-C = besoin d'un assistant IA personnel (rare).
-D = business déjà établi avec des chiffres mesurables, où on aligne la mission sur la performance (commission).
-Réponds UNIQUEMENT par la lettre A, B, C ou D. Rien d'autre, aucune ponctuation.`;
+// Version enrichie du 21/07/2026 : 100 % de justesse sur 45 passages (l'ancienne
+// version, plus courte, plafonnait à 87 % et se trompait systématiquement sur le cas
+// « vraie activité mais problème de prix uniquement », qu'elle classait A au lieu de B).
+const CLASSIF_SYSTEM = `Tu classes le besoin d'un entrepreneur en UNE seule lettre.
+
+Règle de décision, dans cet ordre :
+
+1. D — SEULEMENT si le business est déjà établi ET pilote des chiffres (comptabilité tenue, CA/marge suivis, plusieurs employés ou points de vente) ET le sujet est la rentabilité. Un entrepreneur qui débute n'est JAMAIS D.
+
+2. A — s'il décrit une activité qui VEND déjà quelque chose et perd du temps ou de l'information dans son process : commandes notées à la main ou dans WhatsApp, stock inconnu, prix répétés en boucle, suivi de livraison au téléphone, cahiers qui ne concordent pas, plusieurs vendeurs. Le livrable est un OUTIL. C'est le cas le plus fréquent.
+
+3. B — s'il n'a PAS encore d'offre claire ou de clientèle définie : il ne sait pas quoi vendre, à qui, ni à quel prix, ou il prépare un lancement. Le livrable est une RÉFLEXION, pas un outil.
+
+4. C — assistant IA personnel. Très rare, ne le choisis que si c'est demandé explicitement.
+
+Départager A et B quand les deux semblent possibles : cherche une PERTE D'INFORMATION dans son quotidien (commandes oubliées, stock inconnu, cahiers qui ne concordent, statuts demandés au téléphone). S'il y a une perte d'information, c'est A, même s'il doute aussi de ses prix : l'outil est ce qui se livre. S'il n'y a aucune perte d'information et que le problème est uniquement le prix, le positionnement ou l'offre, c'est B.
+
+Réponds UNIQUEMENT par la lettre A, B, C ou D.`;
 
 async function classifyFamille(brief: string): Promise<string | null> {
   try {
@@ -114,14 +126,26 @@ Famille : A = besoin d'une app/outil métier ; B = besoin de conseil/structurati
       parsed.message_whatsapp = parsed.message_whatsapp.replace(/\s*[—–]\s*/g, ", ").trim();
     }
 
-    // Filet famille : Claude omet parfois la clé (~2/5) ou met une valeur non conforme ("À définir").
-    // On normalise en lettre ; si ce n'est pas A/B/C/D, on rattrape par une classification ciblée.
-    const famRaw = String(parsed.famille ?? "").trim().toUpperCase();
-    if (/^[ABCD]$/.test(famRaw)) {
-      parsed.famille = famRaw;
-    } else {
-      parsed.famille = await classifyFamille(brief);
-      if (new URL(req.url).searchParams.get("debug")) aiDebug.familleFallback = parsed.famille;
+    // FAMILLE : classification dédiée SYSTÉMATIQUE, la famille du gros prompt n'est plus utilisée.
+    //
+    // Mesuré le 21/07/2026 (app/tests/famille-battery.mjs, 9 cas x 3 passages) :
+    //   - famille issue du gros prompt de diagnostic : 37 % de justesse, INSTABLE
+    //     (le même brief donnait B,B,A d'un passage à l'autre)
+    //   - classification dédiée : 87 %, stable
+    //   - classification dédiée enrichie (celle en place) : 100 % sur 45 passages
+    // Le gros prompt est excellent pour la synthèse, mauvais pour trancher une lettre :
+    // noyé dans la méthode ATTRACTOR (très orientée conseil), il répondait B par défaut,
+    // y compris sur des cas d'école d'app métier. Or la famille aiguille tout le parcours :
+    // classer B un prospect A, c'est proposer du conseil à quelqu'un qui aurait signé une app.
+    const famClassif = await classifyFamille(brief);
+    const famPrompt = String(parsed.famille ?? "").trim().toUpperCase();
+    parsed.famille = /^[ABCD]$/.test(String(famClassif))
+      ? famClassif
+      : (/^[ABCD]$/.test(famPrompt) ? famPrompt : "A"); // A = cas le plus fréquent, meilleur défaut que null
+    if (new URL(req.url).searchParams.get("debug")) {
+      aiDebug.familleClassif = famClassif;
+      aiDebug.famillePrompt = famPrompt;
+      aiDebug.familleDivergence = famClassif !== famPrompt;
     }
 
     const zone = zoneFromContact(contact);
