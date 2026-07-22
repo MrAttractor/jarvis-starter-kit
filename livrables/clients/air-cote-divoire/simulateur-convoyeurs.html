@@ -224,8 +224,13 @@ tbody tr:last-child td{border-bottom:none}
       </div>
 
       <div class="ctrl">
-        <div class="top"><label>Bagage offert au convoyeur<span class="hint">le bonus de l'offre, coût réel d'acquisition de la capacité</span></label><span class="val" id="v-offert">23 kg</span></div>
+        <div class="top"><label>Bagage laissé au convoyeur<span class="hint">ses effets personnels, sous sa propre franchise douanière</span></label><span class="val" id="v-offert">23 kg</span></div>
         <input type="range" id="offert" min="0" max="46" step="23" value="23">
+      </div>
+
+      <div class="ctrl">
+        <div class="top"><label>Prix forfaitaire du bagage convoyeur<span class="hint">quasi pure marge : ni fret Air CI ni emballage à notre charge</span></label><span class="val" id="v-prixbagage">49 €</span></div>
+        <input type="range" id="prixbagage" min="0" max="150" step="5" value="49">
       </div>
 
       <div class="sect">Les canaux</div>
@@ -296,9 +301,9 @@ tbody tr:last-child td{border-bottom:none}
 
         <div class="hero-res pos" id="hero">
           <div class="lbl">Marge nette par rotation</div>
-          <div class="big" id="marge-rot">+1 280 €</div>
-          <div class="pct" id="marge-pct">soit 18 % des recettes</div>
-          <div class="be">Rentable tant que le fret Air CI reste sous <b id="breakeven">4,7 €/kg</b></div>
+          <div class="big" id="marge-rot">+1 770 €</div>
+          <div class="pct" id="marge-pct">soit 23 % des recettes</div>
+          <div class="be">Rentable tant que le fret Air CI reste sous <b id="breakeven">5,3 €/kg</b></div>
         </div>
 
         <div class="gauge">
@@ -334,13 +339,13 @@ tbody tr:last-child td{border-bottom:none}
         <div class="split">
           <div class="scard atr">
             <div class="k">Ta part, par rotation</div>
-            <div class="n" id="part-atr">640 €</div>
-            <div class="sub" id="part-atr-mois">2 560 € par mois sur 4 rotations</div>
+            <div class="n" id="part-atr">885 €</div>
+            <div class="sub" id="part-atr-mois">3 540 € par mois sur 4 rotations</div>
           </div>
           <div class="scard jee">
             <div class="k">Part J'Envoie Express</div>
-            <div class="n" id="part-jee">640 €</div>
-            <div class="sub" id="part-jee-mois">2 560 € par mois sur 4 rotations</div>
+            <div class="n" id="part-jee">885 €</div>
+            <div class="sub" id="part-jee-mois">3 540 € par mois sur 4 rotations</div>
           </div>
         </div>
 
@@ -357,14 +362,15 @@ tbody tr:last-child td{border-bottom:none}
           <div class="row"><span>Fret en gros <span class="d" id="d-gros">600 kg</span></span><span class="v" id="r-gros">4 800 €</span></div>
           <div class="row"><span>Fret en direct <span class="d" id="d-detail">160 kg</span></span><span class="v" id="r-detail">1 920 €</span></div>
           <div class="row"><span>Marge sur les sièges <span class="d" id="d-si">10 vendus</span></span><span class="v" id="r-siege">500 €</span></div>
-          <div class="row tot"><span>= Recettes</span><span class="v" id="r-rev">7 220 €</span></div>
+          <div class="row"><span>Bagages convoyeurs <span class="d" id="d-bag">10 × 49 €</span></span><span class="v" id="r-bagage">490 €</span></div>
+          <div class="row tot"><span>= Recettes</span><span class="v" id="r-rev">7 710 €</span></div>
           <div class="row"><span>− Fret accompagné Air CI</span><span class="v" id="r-air">2 280 €</span></div>
           <div class="row"><span>− Opé J'Envoie Express</span><span class="v" id="r-ops">2 660 €</span></div>
           <div class="row"><span>− Frais fixes</span><span class="v" id="r-fixes">600 €</span></div>
           <div class="row"><span>− Campagne d'acquisition</span><span class="v" id="r-cam">400 €</span></div>
-          <div class="row tot"><span>= Marge nette</span><span class="v" id="r-marge">+1 280 €</span></div>
-          <div class="row sub-row"><span>dont Mr Attractor</span><span class="v" id="r-atr">640 €</span></div>
-          <div class="row sub-row"><span>dont J'Envoie Express</span><span class="v" id="r-jee">640 €</span></div>
+          <div class="row tot"><span>= Marge nette</span><span class="v" id="r-marge">+1 770 €</span></div>
+          <div class="row sub-row"><span>dont Mr Attractor</span><span class="v" id="r-atr">885 €</span></div>
+          <div class="row sub-row"><span>dont J'Envoie Express</span><span class="v" id="r-jee">885 €</span></div>
         </div>
       </div>
 
@@ -386,22 +392,22 @@ tbody tr:last-child td{border-bottom:none}
             <tr>
               <td>Pilote 90 jours<span class="d">12 rotations, 1 par semaine</span></td>
               <td id="s1-vol">9,1 t</td>
-              <td id="s1-marge">15 360 €</td>
-              <td class="hl-atr" id="s1-atr">7 680 €</td>
+              <td id="s1-marge">21 240 €</td>
+              <td class="hl-atr" id="s1-atr">10 620 €</td>
               <td class="hl-aci" id="s1-aci">72 960 €</td>
             </tr>
             <tr>
               <td>Année 1<span class="d">39 rotations, 9 mois utiles</span></td>
               <td id="s2-vol">29,6 t</td>
-              <td id="s2-marge">49 920 €</td>
-              <td class="hl-atr" id="s2-atr">24 960 €</td>
+              <td id="s2-marge">69 030 €</td>
+              <td class="hl-atr" id="s2-atr">34 515 €</td>
               <td class="hl-aci" id="s2-aci">237 120 €</td>
             </tr>
             <tr>
               <td>Année 2, bloc doublé<span class="d">78 rotations équivalentes</span></td>
               <td id="s3-vol">59,3 t</td>
-              <td id="s3-marge">99 840 €</td>
-              <td class="hl-atr" id="s3-atr">49 920 €</td>
+              <td id="s3-marge">138 060 €</td>
+              <td class="hl-atr" id="s3-atr">69 030 €</td>
               <td class="hl-aci" id="s3-aci">474 240 €</td>
             </tr>
           </tbody>
@@ -415,7 +421,8 @@ tbody tr:last-child td{border-bottom:none}
           <li><b>La cible de négociation sur le fret est 1 à 1,50 €/kg, pas 3.</b> À 3 €/kg, le canal de gros ne laisse que 1,50 €/kg et la marge de la rotation tombe à 1 280 €. À 1 €/kg elle remonte à 2 800 €. C'est le chiffre le plus sensible de tout le dossier : chaque euro par kilo arraché à la négociation vaut environ 760 € par rotation, soit 30 000 € sur une année.</li>
           <li><b>Modèle A contre modèle B, le vrai arbitrage.</b> En A (Air CI ne facture pas le fret), la marge passe à 3 560 € par rotation, presque le triple. Mais Air CI ne capte alors que les sièges, elle a beaucoup moins de raisons de dire oui, et le fret n'est pas facturé donc pas tracé. <b>B reste le bon choix, à condition d'obtenir un tarif fret bas.</b> C'est ça, la négociation : on leur laisse capter du fret, mais au tarif d'un partenaire de volume, pas au tarif catalogue.</li>
           <li><b>Le retour porte le modèle à lui seul.</b> En aller simple, la marge tombe à 190 € par rotation, autant dire rien. Exploiter les deux sens fait passer la capacité de 460 à 920 kg sans un siège de plus. La tournée de collecte Abidjan existe déjà dans l'app J'Envoie Express, c'est acquis techniquement.</li>
-          <li><b>Le bagage offert est le vrai coût d'acquisition.</b> 23 kg × 10 convoyeurs, c'est 230 kg de capacité rendue par rotation. Mets le curseur à 0 pour voir ce que l'offre coûte réellement, et compare au taux d'acceptation qu'elle permet.</li>
+          <li><b>Le bagage convoyeur finance la campagne.</b> Il coûte 230 kg de capacité par rotation, mais comme ce sont ses effets personnels sous sa propre franchise, il ne supporte ni fret Air CI ni emballage : le forfait est quasi pure marge. À 49 €, il rapporte 490 € par rotation et couvre à lui seul le budget d'acquisition. Mets le curseur du bagage à 0 kg pour voir ce que la capacité récupérée vaut, et arbitre contre le taux d'acceptation que l'offre permet.</li>
+          <li><b>La formation sûreté est donnée à J'Envoie Express, pas aux convoyeurs.</b> C'est ce qui place l'opérateur sur le chemin du régime chargeur connu et agent habilité (Règlement CE 300/2008), et c'est la vraie réponse réglementaire au risque du dossier. C'est aussi un fossé concurrentiel : un opérateur formé et validé par la compagnie ne se réplique pas. Rôles séparés en conséquence : J'Envoie Express emballe et manifeste le fret déclaré, le convoyeur ne fait que voyager avec ses propres affaires.</li>
           <li><b>Deux chiffres viennent d'Air CI et d'eux seuls</b> : le tarif du bloc siège et celui du fret accompagné. <b>Un vient de Jean Yves</b> : le coût opé réel au kilo. Tant qu'ils ne sont pas écrits, tout le reste est une hypothèse.</li>
           <li><b>Le modèle suppose un convoyeur informé</b>, qui signe un mandat de convoyage, et J'Envoie Express déclarant en douane. La formation sûreté assurée par Air CI est ce qui rend ce cadre crédible côté voyageurs.</li>
         </ul>
@@ -427,7 +434,7 @@ tbody tr:last-child td{border-bottom:none}
 
 <script>
 (function(){
-  var DEFAULTS = {sieges:10, tsieges:100, bloc:380, vente:430, franchise:69, offert:23,
+  var DEFAULTS = {sieges:10, tsieges:100, bloc:380, vente:430, franchise:69, offert:23, prixbagage:49,
                   partenaires:12, kgpart:50, prixgros:8, tdetail:50, prixdetail:12,
                   fret:3, ops:3.5, fixes:600, cam:400, part:50};
   var ids = Object.keys(DEFAULTS);
@@ -457,6 +464,7 @@ tbody tr:last-child td{border-bottom:none}
     el('v-vente').textContent      = eur(v.vente);
     el('v-franchise').textContent  = v.franchise+' kg';
     el('v-offert').textContent     = v.offert+' kg';
+    el('v-prixbagage').textContent = eur(v.prixbagage);
     el('v-partenaires').textContent= v.partenaires;
     el('v-kgpart').textContent     = v.kgpart+' kg';
     el('v-prixgros').textContent   = dec(v.prixgros)+' €/kg';
@@ -483,8 +491,9 @@ tbody tr:last-child td{border-bottom:none}
     // recettes
     var recGros  = kgGros * v.prixgros;
     var recDet   = kgDetail * v.prixdetail;
-    var recSiege = siegesVendus * (v.vente - v.bloc);
-    var recettes = recGros + recDet + recSiege;
+    var recSiege  = siegesVendus * (v.vente - v.bloc);
+    var recBagage = (v.offert > 0) ? siegesVendus * v.prixbagage : 0;
+    var recettes  = recGros + recDet + recSiege + recBagage;
 
     // coûts
     var coutAir = kgVendus * fretTarif;
@@ -553,6 +562,8 @@ tbody tr:last-child td{border-bottom:none}
     el('r-gros').textContent   = eur(recGros);
     el('r-detail').textContent = eur(recDet);
     el('r-siege').textContent  = eur(recSiege);
+    el('d-bag').textContent    = (v.offert > 0) ? Math.round(siegesVendus)+' × '+eur(v.prixbagage) : 'aucun bagage vendu';
+    el('r-bagage').textContent = eur(recBagage);
     el('r-rev').textContent    = eur(recettes);
     el('r-air').textContent    = eur(coutAir);
     el('r-ops').textContent    = eur(coutOps);

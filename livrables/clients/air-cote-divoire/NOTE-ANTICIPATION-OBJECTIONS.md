@@ -2,6 +2,59 @@
 
 > Document interne Mac Arthur. NE PAS remettre à Air CI. À relire la veille du RDV.
 > Objectif du RDV (réaliste) : obtenir un sponsor interne (Hervé Abou) + un cadre de pilote + l'accès à la grille cargo. PAS une signature.
+>
+> **⚠️ 22/07/2026, le matin du RDV — lire la section 0 avant tout le reste. Elle change l'axe du pitch.**
+
+---
+
+## 0. RENSEIGNEMENT DE DERNIÈRE MINUTE — la ligne rouge d'Hervé Abou
+
+> **Source :** un convoyeur du même circuit que Jean Yves, qui a des affinités personnelles avec Hervé Abou. Information de **seconde main**, non vérifiable, mais **cohérente avec sa posture publique** (« nous ne sommes pas seulement une compagnie premium africaine »). À traiter comme une **hypothèse de travail forte**, jamais comme un fait qu'on affirme en séance.
+
+### Ce qui a été rapporté
+
+1. **Hervé ne veut pas que la ligne Paris devienne une ligne commerçante.** Son enjeu est le maintien du positionnement premium, pas seulement le remplissage.
+2. La population de voyageurs-commerçants **sature les vols et crée du désordre** (comptoir, embarquement, bagages).
+3. Le **conditionnement en sacs noirs** est le symbole visible du problème.
+4. **Corsair l'accepte parce qu'il opère depuis Orly**, un aéroport au positionnement moins prestigieux que CDG.
+
+### Ce que ça change dans le pitch
+
+**Le blocage d'Hervé n'est pas économique, il est réputationnel.** Tout l'argumentaire « on vous apporte du volume et de la recette » (objections 5 et 6 plus bas) ne le fait donc pas bouger, et l'argument « on vous amène les convoyeurs de Corsair » **l'inquiète activement** : il entend qu'on veut importer le désordre d'Orly dans sa cabine CDG.
+
+**Le retournement, et c'est bien plus fort que l'angle précédent :**
+
+> Aujourd'hui, un commerçant occupe un siège pour convoyer 60 kg de marchandise en sacs noirs, avec la file au comptoir, les bagages hors gabarit et les litiges. Demain, les 60 kg partent en **soute cargo déclarée**, scellés et conditionnés sur un standard, et le siège se revend à un passager normal.
+
+**Air CI encaisse deux fois et récupère sa cabine.** La phrase à porter : **« Le colis voyage, le commerçant reste chez lui. »**
+On ne vient plus remplir la ligne, on vient la **désencombrer**. Le premium cesse d'être l'obstacle, il devient l'argument.
+
+### « Si le commerçant reste chez lui, qui remplit l'avion ? » — les 3 moteurs de remplissage propre
+
+C'est la question qui suit immédiatement, et sans réponse le retournement s'écroule. Trois sources, dans l'ordre de force.
+
+**1. Le même volume rapporte plus, et libère le siège.**
+Aujourd'hui, quand un commerçant fait passer 60 kg dans sa franchise (statut fidélité ou excédent acheté), Air CI encaisse **peu ou rien sur ces kilos** : ils sont largement inclus dans un billet éco vendu au tarif le plus bas, à un client qui achète toujours le moins cher. En **fret déclaré, chaque kilo est facturé au tarif cargo**. À volume de marchandise identique, la recette monte et le siège redevient disponible. On ne demande pas à Hervé de perdre un passager, on lui montre qu'il **vend deux fois ce qu'il vendait une fois**.
+> À valider avec leur grille : c'est vrai tant que le tarif cargo au kilo dépasse la valeur marginale des kilos de franchise. Ne pas l'affirmer comme un calcul, le poser comme la question à instruire ensemble.
+
+**2. Le fichier expéditeurs J'Envoie Express est une base d'acquisition passager.** ⭐ *C'est l'actif, et c'est la vraie réponse à sa question de remplissage.*
+Chaque personne qui envoie un colis est identifiée, KYC, avec une adresse des deux côtés et **un lien familial actif avec Abidjan** : quelqu'un qui prendra l'avion une à deux fois dans l'année, et qu'Air CI ne touche pas aujourd'hui. **Le colis est la porte d'entrée, le billet est la vente suivante.** On ne remplit pas avec des commerçants, on remplit avec les familles qui envoient les colis. Adossé à sMiles, ça devient un canal d'acquisition passager qualifié, sur exactement le profil qu'il veut à bord. C'est notre métier, pas le leur, et aucune plateforme de colis ne le leur a jamais proposé.
+
+**3. Les convoyeurs, moins nombreux et invisibles.**
+On ne les supprime pas, on les concentre. Au lieu de 40 personnes achetant chacune un billet pour leurs kilos, 2 ou 3 convoyeurs sous contrat portent le même volume en soute déclarée. Ils restent de très grands voyageurs payants (le chiffre passager est conservé), mais **37 sièges se libèrent pour des familles** et la cabine redevient normale.
+
+**Ce qu'on ne promet pas :** que les sièges libérés se remplissent tout seuls. On n'a pas leur donnée de demande. Formulation honnête, et elle marque des points : *« Est-ce que la demande diaspora existe pour reprendre ces sièges ? Vous avez la réponse, pas moi. Ce que je peux vous apporter, c'est le fichier pour aller la chercher. »*
+
+### Trois conséquences opérationnelles immédiates
+
+1. **Ne pas sortir le statut Diamant comme demande aujourd'hui.** Offrir 32 kg de franchise bagage à une cohorte de convoyeurs, c'est proposer à Hervé exactement ce qu'il refuse. Le levier Diamant reste valable, mais **reformulé en outil de discipline, pas en cadeau** : statut sur invitation, révocable, conditionné au passage par le circuit fret et au conditionnement normé. Argument à garder en réserve si c'est LUI qui ouvre le sujet : *« Vous ne pouvez pas interdire ces passagers, ils paient leurs billets. Vous pouvez les subir ou les encadrer. Le statut est le seul levier qui obtienne d'eux un comportement, parce que c'est la seule chose qu'ils veulent. »*
+2. **Le conditionnement normé devient un livrable de la proposition.** Housse ou carton J'Envoie Express, gabarit unique, scellé, étiqueté, couleurs neutres. Coût dérisoire, effet visuel immédiat, réponse directe au sac noir. C'est le détail concret qui rend le reste crédible.
+3. **Corsair ne sert plus de preuve, il sert de contraste.** Jamais « Corsair le fait, donc faites-le ». Toujours : *« Corsair peut l'absorber à Orly, ça colle à son positionnement. Vous ne pouvez pas copier ça à CDG, et vous ne devriez pas. C'est pour ça qu'on vous propose l'inverse. »*
+
+### Les deux interdits absolus liés à ce renseignement
+
+- **Ne jamais verbaliser le cadrage « des femmes qui envahissent les vols ».** En séance, ça te disqualifie, et c'est un propos de seconde main. Ce qu'on retient, c'est **le désordre lié au commerce à bord**, jamais qui le produit.
+- **Protéger la source.** Arriver en disant « je sais que vous avez un problème de sacs noirs » pousse Hervé à chercher qui a parlé, et le cercle Jean Yves est petit. **Faire émerger, ne pas révéler.** Question d'amorce : *« Sur cet axe, votre sujet du moment, c'est le remplissage ou l'expérience à bord ? »* S'il le dit lui-même, tu es celui qui comprend, pas celui qui a des informations.
 
 ---
 
@@ -66,6 +119,9 @@ C'est justement l'inverse de notre proposition. Le risque, aujourd'hui, c'est le
 
 ### 9. « On n'a pas de guichet pour ce genre de partenariat. »
 Justement, on vient en direct, en relationnel, c'est le bon format. On ne demande pas une signature aujourd'hui. On demande un pilote de 90 jours à faible risque, un référent cargo, et votre portage du dossier vers Abidjan. Un premier pas cadré, pas un engagement lourd.
+
+### 10 bis. ⭐ « On ne veut pas que cette ligne devienne une ligne de commerçants. » (l'objection n°1 réelle, cf. section 0)
+C'est exactement pour ça qu'on est là. Le flux existe déjà et vous le subissez : il arrive par le comptoir, en cabine, en sacs noirs, et il vous coûte du temps d'escale et de l'image. Nous, on le **sort de votre cabine**. Le colis part en soute, déclaré, scellé, dans un conditionnement normé, et le siège se revend à un passager normal. Vous ne gagnez pas seulement une recette fret, vous **récupérez l'expérience à bord**. Le seul moyen de protéger le premium de cette ligne, ce n'est pas d'interdire ce commerce, c'est de lui donner un circuit propre. Le colis voyage, le commerçant reste chez lui.
 
 ### 10. « sMiles tourne sur une plateforme externe, l'intégration sera compliquée. »
 On le sait (prestataire tiers, frequentflyer.aero). On ne promet pas une intégration miles en temps réel dès le jour 1. Sur le pilote, on peut démarrer avec une **affiliation manuelle** (chaque expéditeur devient membre sMiles), et qualifier l'ouverture d'API en phase 2. On avance par étapes.
