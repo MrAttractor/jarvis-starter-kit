@@ -12,3 +12,19 @@ verify_jwt = false
 
 [functions.devis-accept]
 verify_jwt = false
+
+# ── Signature Attractor ──
+# sign-load / sign-otp / sign-verify sont ouvertes : c'est le jeton du lien
+# personnel qui authentifie le signataire, pas une cle Supabase.
+# sign-create reste ouverte au sens JWT mais est protegee par SIGN_ADMIN_SECRET.
+[functions.sign-create]
+verify_jwt = false
+
+[functions.sign-load]
+verify_jwt = false
+
+[functions.sign-otp]
+verify_jwt = false
+
+[functions.sign-verify]
+verify_jwt = false

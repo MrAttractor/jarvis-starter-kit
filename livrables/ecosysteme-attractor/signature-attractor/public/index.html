@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Signature — Mr Attractor</title>
+<style>
+/* ══════════════════════════════════════════════════════════
+   Signature Attractor — page de signature
+   Charte agence. Mobile first. Grille 8 px. Texte 16 px mini.
+   ══════════════════════════════════════════════════════════ */
+:root{
+  --charbon:#1A1714;
+  --orange:#F25C05;
+  --orange-fonce:#D94F02;
+  --sable:#FAF6F0;
+  --blanc:#FFFFFF;
+  --encre:#1A1714;
+  --gris:#6B625A;
+  --gris-clair:#9C9189;
+  --ligne:#E8E0D6;
+  --vert:#1E9E52;
+  --vert-fond:#EAF7EF;
+  --rouge:#C62828;
+  --rouge-fond:#FDECEC;
+  --rayon:14px;
+  --ombre:0 8px 30px rgba(26,23,20,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{max-width:100%;overflow-x:hidden}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',sans-serif;
+  background:var(--sable);color:var(--encre);
+  font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  padding:0 0 48px;
+}
+img,svg,canvas{max-width:100%;display:block}
+.ic{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+/* ── Ossature ── */
+.enveloppe{max-width:720px;margin:0 auto;padding:0 16px}
+.bandeau{background:var(--charbon);padding:16px 0}
+.bandeau .enveloppe{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{font-size:18px;font-weight:800;color:#fff;letter-spacing:-.01em}
+.logo span{color:var(--orange)}
+.bandeau-note{font-size:13px;color:#C9BEB2;text-align:right;line-height:1.4}
+
+.carte{
+  background:var(--blanc);border:1px solid var(--ligne);border-radius:var(--rayon);
+  padding:24px;margin-bottom:16px;box-shadow:var(--ombre);
+}
+.carte-titre{font-size:19px;font-weight:700;margin-bottom:8px;line-height:1.3}
+.carte-sous{font-size:16px;color:var(--gris);margin-bottom:24px}
+
+/* ── En-tête du dossier ── */
+.dossier{margin-top:24px}
+.dossier-ref{
+  display:inline-block;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--orange);background:#FEF0E6;padding:6px 12px;border-radius:8px;margin-bottom:16px;
+}
+.dossier-titre{font-size:24px;font-weight:800;line-height:1.25;margin-bottom:8px}
+.dossier-client{font-size:16px;color:var(--gris)}
+.mot{
+  background:var(--sable);border-left:3px solid var(--orange);
+  border-radius:0 8px 8px 0;padding:16px;margin-top:16px;font-size:16px;color:var(--gris);
+}
+
+/* ── Fil des étapes ── */
+.fil{display:flex;gap:8px;margin-bottom:24px}
+.fil-pas{flex:1;text-align:center}
+.fil-rond{
+  width:32px;height:32px;border-radius:50%;margin:0 auto 8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;
+  background:var(--ligne);color:var(--gris-clair);transition:.2s;
+}
+.fil-pas.actif .fil-rond{background:var(--orange);color:#fff}
+.fil-pas.fait .fil-rond{background:var(--vert);color:#fff}
+.fil-nom{font-size:13px;color:var(--gris-clair);line-height:1.3}
+.fil-pas.actif .fil-nom{color:var(--encre);font-weight:600}
+
+/* ── Documents ── */
+.doc{
+  display:flex;align-items:center;gap:16px;
+  border:1px solid var(--ligne);border-radius:12px;padding:16px;margin-bottom:8px;
+  transition:border-color .2s,background .2s;
+}
+.doc.lu{border-color:var(--vert);background:var(--vert-fond)}
+.doc-ico{
+  width:40px;height:40px;border-radius:10px;background:var(--sable);
+  display:flex;align-items:center;justify-content:center;color:var(--gris);flex-shrink:0;
+}
+.doc.lu .doc-ico{background:#fff;color:var(--vert)}
+.doc-txt{flex:1;min-width:0}
+.doc-nom{font-size:16px;font-weight:600;line-height:1.35;overflow-wrap:anywhere}
+.doc-ref{font-size:14px;color:var(--gris-clair);overflow-wrap:anywhere}
+.doc-lien{
+  min-height:44px;padding:0 16px;border-radius:10px;
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--charbon);color:#fff;text-decoration:none;
+  font-size:15px;font-weight:600;white-space:nowrap;flex-shrink:0;
+}
+.doc-lien:active{transform:scale(.98)}
+.doc.lu .doc-lien{background:var(--vert)}
+@media (max-width:480px){
+  .doc{flex-wrap:wrap}
+  .doc-lien{width:100%;justify-content:center;margin-top:8px}
+}
+
+/* ── Formulaire ── */
+.champ{margin-bottom:24px}
+.etiquette{display:block;font-size:16px;font-weight:600;margin-bottom:8px}
+.aide{font-size:14px;color:var(--gris);margin-bottom:8px;line-height:1.5}
+.saisie{
+  width:100%;min-height:52px;padding:14px 16px;
+  border:1.5px solid var(--ligne);border-radius:10px;
+  font-family:inherit;font-size:16px;color:var(--encre);background:var(--blanc);
+}
+.saisie:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(242,92,5,.12)}
+
+/* Cadre de signature manuscrite */
+.trace-cadre{position:relative;border:1.5px dashed var(--ligne);border-radius:10px;background:var(--blanc);overflow:hidden}
+.trace-cadre.rempli{border-style:solid;border-color:var(--vert)}
+#trace{width:100%;height:180px;touch-action:none;cursor:crosshair;display:block}
+.trace-repere{
+  position:absolute;left:16px;right:16px;bottom:44px;height:1px;background:var(--ligne);pointer-events:none;
+}
+.trace-indice{
+  position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
+  text-align:center;font-size:15px;color:var(--gris-clair);pointer-events:none;padding:0 16px;
+}
+.trace-cadre.rempli .trace-indice,.trace-cadre.rempli .trace-repere{display:none}
+.trace-actions{display:flex;justify-content:flex-end;margin-top:8px}
+.effacer{
+  min-height:44px;padding:0 16px;background:none;border:none;
+  color:var(--gris);font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px;border-radius:8px;
+}
+.effacer:hover{color:var(--encre);background:var(--sable)}
+
+/* Consentement */
+.consentement{
+  display:flex;gap:12px;align-items:flex-start;
+  background:var(--sable);border-radius:10px;padding:16px;cursor:pointer;
+}
+.consentement input{width:24px;height:24px;margin-top:2px;accent-color:var(--orange);flex-shrink:0;cursor:pointer}
+.consentement span{font-size:15px;line-height:1.5;color:var(--gris)}
+
+/* ── Boutons ── */
+.bouton{
+  width:100%;min-height:56px;padding:16px 24px;
+  border:none;border-radius:12px;background:var(--orange);color:#fff;
+  font-family:inherit;font-size:17px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background .15s,transform .1s;
+}
+.bouton:hover:not(:disabled){background:var(--orange-fonce)}
+.bouton:active:not(:disabled){transform:scale(.99)}
+.bouton:disabled{background:var(--ligne);color:var(--gris-clair);cursor:not-allowed}
+.bouton-secondaire{
+  background:none;color:var(--gris);border:1.5px solid var(--ligne);
+  font-size:16px;font-weight:600;min-height:48px;margin-top:8px;
+}
+.bouton-secondaire:hover:not(:disabled){background:var(--sable);color:var(--encre)}
+
+/* ── Code à 6 chiffres ── */
+.code-info{
+  display:flex;gap:12px;align-items:flex-start;
+  background:var(--sable);border-radius:10px;padding:16px;margin-bottom:24px;
+  font-size:15px;color:var(--gris);line-height:1.5;
+}
+.code-info strong{color:var(--encre)}
+#code{
+  width:100%;text-align:center;font-size:32px;font-weight:700;
+  letter-spacing:.35em;text-indent:.35em;
+  font-family:'Courier New',monospace;min-height:64px;padding:14px 8px;
+}
+
+/* ── Messages ── */
+.message{
+  display:flex;gap:12px;align-items:flex-start;
+  border-radius:10px;padding:16px;margin-bottom:16px;font-size:15px;line-height:1.5;
+}
+.message.erreur{background:var(--rouge-fond);color:var(--rouge);border:1px solid #F5C6C6}
+.message.succes{background:var(--vert-fond);color:#12703A;border:1px solid #B7E3C8}
+.message.info{background:var(--sable);color:var(--gris);border:1px solid var(--ligne)}
+
+/* ── Écran final ── */
+.final{text-align:center;padding:16px 0}
+.final-ico{
+  width:72px;height:72px;border-radius:50%;background:var(--vert-fond);color:var(--vert);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 24px;
+}
+.final-ico .ic{width:36px;height:36px;stroke-width:2}
+.final-titre{font-size:24px;font-weight:800;margin-bottom:8px;line-height:1.3}
+.final-txt{font-size:16px;color:var(--gris);margin-bottom:24px}
+.recap{border:1px solid var(--ligne);border-radius:10px;overflow:hidden;text-align:left}
+.recap-ligne{display:flex;gap:8px;padding:12px 16px;border-bottom:1px solid var(--ligne);font-size:15px}
+.recap-ligne:last-child{border-bottom:none}
+.recap-cle{color:var(--gris);flex-shrink:0;width:40%}
+.recap-val{font-weight:600;overflow-wrap:anywhere;flex:1}
+.empreinte{font-family:'Courier New',monospace;font-size:13px;color:var(--gris-clair);letter-spacing:-.01em}
+
+/* ── Pied ── */
+.pied{
+  max-width:720px;margin:24px auto 0;padding:0 16px;
+  font-size:13px;color:var(--gris-clair);line-height:1.6;text-align:center;
+}
+/* Zone de tap conforme (44 px) meme pour un lien de pied de page. */
+.pied a{
+  color:var(--gris);display:inline-block;
+  min-height:44px;line-height:44px;padding:0 8px;
+}
+
+/* ── États de chargement ── */
+.chargement{text-align:center;padding:64px 16px;color:var(--gris)}
+.rotor{
+  width:32px;height:32px;margin:0 auto 16px;border:3px solid var(--ligne);
+  border-top-color:var(--orange);border-radius:50%;animation:tourne .8s linear infinite;
+}
+@keyframes tourne{to{transform:rotate(360deg)}}
+.cache{display:none !important}
+</style>
+</head>
+<body>
+
+<header class="bandeau">
+  <div class="enveloppe">
+    <div class="logo">Mr <span>Attractor</span></div>
+    <div class="bandeau-note">Signature<br>électronique</div>
+  </div>
+</header>
+
+<main class="enveloppe" id="app">
+  <div class="chargement" id="chargement">
+    <div class="rotor"></div>
+    <p>Ouverture de vos documents…</p>
+  </div>
+</main>
+
+<p class="pied" id="pied"></p>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   Configuration
+   ══════════════════════════════════════════════════════════ */
+const API = "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1";
+
+/* Le jeton vit dans l'adresse : /s/JETON (Cloudflare réécrit vers cette page).
+   On tolère la barre oblique finale ajoutée par la redirection 308. */
+function lireJeton(){
+  const chemin = location.pathname.replace(/\/+$/, "");
+  const m = chemin.match(/\/s\/([A-Za-z0-9_-]+)$/);
+  if (m) return m[1];
+  return new URLSearchParams(location.search).get("s") || "";
+}
+
+const jeton = lireJeton();
+const app = document.getElementById("app");
+const pied = document.getElementById("pied");
+
+let etat = { dossier:null, documents:[], signataire:null, cosignataires:[], lus:new Set() };
+
+/* ══════════════════════════════════════════════════════════
+   Outils
+   ══════════════════════════════════════════════════════════ */
+const ech = s => String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+async function appel(route, corps){
+  const r = await fetch(`${API}/${route}`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify(corps),
+  });
+  try { return await r.json(); }
+  catch { return { ok:false, error:"Le service de signature est momentanément indisponible. Réessayez dans un instant." }; }
+}
+
+const ICONES = {
+  doc:'<svg class="ic" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>',
+  check:'<svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>',
+  oeil:'<svg class="ic" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
+  gomme:'<svg class="ic" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="m15 4 5 5-9 9H6l-3-3z"/></svg>',
+  bouclier:'<svg class="ic" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.4 8.4 8 9 4.6-.6 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>',
+  courrier:'<svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+  alerte:'<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>',
+};
+
+function ecran(html){ app.innerHTML = html; window.scrollTo(0,0); }
+
+function filEtapes(courant){
+  const pas = [["Lire","1"],["Signer","2"],["Confirmer","3"]];
+  return `<div class="fil">${pas.map((p,i)=>{
+    const n = i+1;
+    const cls = n < courant ? "fait" : n === courant ? "actif" : "";
+    return `<div class="fil-pas ${cls}">
+      <div class="fil-rond">${n < courant ? ICONES.check : p[1]}</div>
+      <div class="fil-nom">${p[0]}</div>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+function enteteDossier(){
+  const d = etat.dossier;
+  return `<div class="dossier">
+    ${d.reference ? `<div class="dossier-ref">${ech(d.reference)}</div>` : ""}
+    <h1 class="dossier-titre">${ech(d.titre)}</h1>
+    ${d.client ? `<p class="dossier-client">${ech(d.client)}</p>` : ""}
+    ${d.message ? `<div class="mot">${ech(d.message)}</div>` : ""}
+  </div>`;
+}
+
+function afficherMessage(zone, type, texte){
+  const el = document.getElementById(zone);
+  if (!el) return;
+  el.className = `message ${type}`;
+  el.innerHTML = `${type === "erreur" ? ICONES.alerte : ICONES.check}<div>${ech(texte)}</div>`;
+  el.classList.remove("cache");
+}
+function cacherMessage(zone){
+  const el = document.getElementById(zone);
+  if (el) el.classList.add("cache");
+}
+
+/* ══════════════════════════════════════════════════════════
+   Étape 1 — Lire les documents
+   ══════════════════════════════════════════════════════════ */
+function etape1(){
+  const docs = etat.documents.map((d,i)=>`
+    <div class="doc" id="doc-${i}">
+      <div class="doc-ico">${ICONES.doc}</div>
+      <div class="doc-txt">
+        <div class="doc-nom">${ech(d.nom)}</div>
+        ${d.reference ? `<div class="doc-ref">${ech(d.reference)}</div>` : ""}
+      </div>
+      <a class="doc-lien" href="${ech(d.url)}" target="_blank" rel="noopener" data-doc="${i}">
+        ${ICONES.oeil}<span>Ouvrir</span>
+      </a>
+    </div>`).join("");
+
+  ecran(`
+    ${enteteDossier()}
+    <div class="carte" style="margin-top:24px">
+      ${filEtapes(1)}
+      <h2 class="carte-titre">Lisez d'abord vos documents</h2>
+      <p class="carte-sous">Ouvrez chaque document. Le bouton de signature s'active une fois que vous les avez tous ouverts.</p>
+      ${docs}
+      <div id="msg1" class="message cache"></div>
+      <button class="bouton" id="vers2" disabled style="margin-top:24px">
+        Passer à la signature
+      </button>
+      <p class="aide" style="margin:16px 0 0;text-align:center">
+        <span id="compteur">0</span> document${etat.documents.length>1?"s":""} sur ${etat.documents.length} ouvert${etat.documents.length>1?"s":""}
+      </p>
+    </div>
+  `);
+
+  document.querySelectorAll("[data-doc]").forEach(a=>{
+    a.addEventListener("click", ()=>{
+      const i = a.dataset.doc;
+      etat.lus.add(i);
+      document.getElementById(`doc-${i}`).classList.add("lu");
+      a.querySelector("span").textContent = "Relire";
+      document.getElementById("compteur").textContent = etat.lus.size;
+      if (etat.lus.size === etat.documents.length) {
+        document.getElementById("vers2").disabled = false;
+      }
+      appel("sign-load", { token:jeton, evenement:"document_consulte" });
+    });
+  });
+
+  document.getElementById("vers2").addEventListener("click", etape2);
+}
+
+/* ══════════════════════════════════════════════════════════
+   Étape 2 — Signer
+   ══════════════════════════════════════════════════════════ */
+let toile, ctx, traceRempli = false;
+
+function etape2(){
+  ecran(`
+    ${enteteDossier()}
+    <div class="carte" style="margin-top:24px">
+      ${filEtapes(2)}
+      <h2 class="carte-titre">Votre signature</h2>
+      <p class="carte-sous">Écrivez votre nom, puis signez avec votre doigt ou votre souris.</p>
+
+      <div class="champ">
+        <label class="etiquette" for="nom">Votre nom et prénom</label>
+        <p class="aide">Écrivez-les exactement comme sur vos papiers d'identité.</p>
+        <input class="saisie" type="text" id="nom" autocomplete="name"
+               value="${ech(etat.signataire.nom)}" placeholder="Prénom NOM">
+      </div>
+
+      <div class="champ">
+        <label class="etiquette">Votre signature</label>
+        <p class="aide">Signez dans le cadre, comme sur du papier.</p>
+        <div class="trace-cadre" id="cadre">
+          <canvas id="trace"></canvas>
+          <div class="trace-repere"></div>
+          <div class="trace-indice">Signez ici</div>
+        </div>
+        <div class="trace-actions">
+          <button type="button" class="effacer" id="effacer">${ICONES.gomme} Effacer</button>
+        </div>
+      </div>
+
+      <div class="champ">
+        <label class="consentement">
+          <input type="checkbox" id="accord">
+          <span>J'ai lu les documents ci-dessus et j'en accepte le contenu. Je reconnais que ma signature électronique a la même valeur que ma signature sur papier.</span>
+        </label>
+      </div>
+
+      <div id="msg2" class="message cache"></div>
+      <button class="bouton" id="vers3">Continuer</button>
+      <button class="bouton bouton-secondaire" id="retour1">Revenir aux documents</button>
+    </div>
+  `);
+
+  preparerToile();
+  document.getElementById("effacer").addEventListener("click", effacerTrace);
+  document.getElementById("retour1").addEventListener("click", etape1);
+  document.getElementById("vers3").addEventListener("click", ()=>{
+    const nom = document.getElementById("nom").value.trim();
+    if (nom.length < 3) return afficherMessage("msg2","erreur","Écrivez votre nom et prénom complets.");
+    if (!traceRempli)   return afficherMessage("msg2","erreur","Signez dans le cadre avant de continuer.");
+    if (!document.getElementById("accord").checked)
+      return afficherMessage("msg2","erreur","Cochez la case pour confirmer que vous acceptez les documents.");
+    cacherMessage("msg2");
+    etat.saisieNom = nom;
+    etat.saisieTrace = toile.toDataURL("image/png");
+    etape3();
+  });
+}
+
+function preparerToile(){
+  toile = document.getElementById("trace");
+  const cadre = document.getElementById("cadre");
+  const dpr = window.devicePixelRatio || 1;
+  const l = cadre.clientWidth, h = 180;
+  toile.width = l * dpr; toile.height = h * dpr;
+  toile.style.height = h + "px";
+  ctx = toile.getContext("2d");
+  ctx.scale(dpr, dpr);
+  ctx.lineWidth = 2.2; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#1A1714";
+  traceRempli = false;
+
+  let dessine = false;
+  const point = e => {
+    const r = toile.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX - r.left, y: t.clientY - r.top };
+  };
+  const debut = e => {
+    e.preventDefault(); dessine = true;
+    const p = point(e); ctx.beginPath(); ctx.moveTo(p.x, p.y);
+    if (!traceRempli){ traceRempli = true; cadre.classList.add("rempli"); }
+  };
+  const bouge = e => { if(!dessine) return; e.preventDefault(); const p = point(e); ctx.lineTo(p.x,p.y); ctx.stroke(); };
+  const fin   = () => { dessine = false; };
+
+  toile.addEventListener("mousedown", debut);
+  toile.addEventListener("mousemove", bouge);
+  window.addEventListener("mouseup", fin);
+  toile.addEventListener("touchstart", debut, { passive:false });
+  toile.addEventListener("touchmove", bouge, { passive:false });
+  toile.addEventListener("touchend", fin);
+}
+
+function effacerTrace(){
+  ctx.clearRect(0, 0, toile.width, toile.height);
+  traceRempli = false;
+  document.getElementById("cadre").classList.remove("rempli");
+}
+
+/* ══════════════════════════════════════════════════════════
+   Étape 3 — Confirmer par code
+   ══════════════════════════════════════════════════════════ */
+function etape3(){
+  ecran(`
+    ${enteteDossier()}
+    <div class="carte" style="margin-top:24px">
+      ${filEtapes(3)}
+      <h2 class="carte-titre">Dernière étape : confirmez que c'est bien vous</h2>
+      <p class="carte-sous">Nous envoyons un code à 6 chiffres sur votre adresse email. Vous le recopiez ici, et c'est signé.</p>
+
+      <div class="code-info">
+        ${ICONES.courrier}
+        <div>Le code part sur <strong>${ech(etat.signataire.email_masque)}</strong></div>
+      </div>
+
+      <div id="msg3" class="message cache"></div>
+
+      <div id="zone-envoi">
+        <button class="bouton" id="envoyer">Recevoir mon code</button>
+      </div>
+
+      <div id="zone-code" class="cache">
+        <div class="champ">
+          <label class="etiquette" for="code">Le code reçu par email</label>
+          <p class="aide">6 chiffres. Vérifiez vos courriers indésirables si vous ne le voyez pas.</p>
+          <input class="saisie" type="text" id="code" inputmode="numeric" autocomplete="one-time-code"
+                 maxlength="6" placeholder="000000">
+        </div>
+        <button class="bouton" id="signer">Signer les documents</button>
+        <button class="bouton bouton-secondaire" id="renvoyer">Je n'ai rien reçu, renvoyer un code</button>
+      </div>
+
+      <button class="bouton bouton-secondaire" id="retour2">Revenir à ma signature</button>
+    </div>
+  `);
+
+  document.getElementById("retour2").addEventListener("click", etape2);
+  document.getElementById("envoyer").addEventListener("click", envoyerCode);
+  document.getElementById("renvoyer").addEventListener("click", envoyerCode);
+  document.getElementById("signer").addEventListener("click", signer);
+  document.getElementById("code").addEventListener("input", e => {
+    e.target.value = e.target.value.replace(/\D/g,"").slice(0,6);
+  });
+}
+
+async function envoyerCode(){
+  const b = document.getElementById("envoyer");
+  const r2 = document.getElementById("renvoyer");
+  [b,r2].forEach(x=>{ if(x){ x.disabled = true; }});
+  if (b) b.textContent = "Envoi en cours…";
+  cacherMessage("msg3");
+
+  const rep = await appel("sign-otp", { token:jeton });
+
+  if (!rep.ok){
+    afficherMessage("msg3","erreur", rep.error || "L'envoi du code a échoué.");
+    [b,r2].forEach(x=>{ if(x){ x.disabled = false; }});
+    if (b) b.textContent = "Recevoir mon code";
+    return;
+  }
+  document.getElementById("zone-envoi").classList.add("cache");
+  document.getElementById("zone-code").classList.remove("cache");
+  afficherMessage("msg3","succes",`Code envoyé. Il est valable ${rep.validite_minutes} minutes.`);
+  document.getElementById("code").focus();
+  setTimeout(()=>{ if(r2) r2.disabled = false; }, 45000);
+}
+
+async function signer(){
+  const code = document.getElementById("code").value.trim();
+  if (code.length !== 6) return afficherMessage("msg3","erreur","Le code contient 6 chiffres.");
+
+  const b = document.getElementById("signer");
+  b.disabled = true; b.textContent = "Signature en cours…";
+  cacherMessage("msg3");
+
+  const rep = await appel("sign-verify", {
+    token: jeton,
+    code,
+    signature_nom: etat.saisieNom,
+    signature_trace: etat.saisieTrace,
+    consentement: true,
+  });
+
+  if (!rep.ok){
+    afficherMessage("msg3","erreur", rep.error || "La signature n'a pas pu être enregistrée.");
+    b.disabled = false; b.textContent = "Signer les documents";
+    return;
+  }
+  ecranFinal(rep);
+}
+
+/* ══════════════════════════════════════════════════════════
+   Écran final
+   ══════════════════════════════════════════════════════════ */
+function ecranFinal(rep){
+  ecran(`
+    <div class="carte" style="margin-top:24px">
+      <div class="final">
+        <div class="final-ico">${ICONES.check}</div>
+        <h1 class="final-titre">C'est signé</h1>
+        <p class="final-txt">Merci ${ech(etat.signataire.nom)}. Vous recevez à l'instant votre exemplaire et votre certificat de signature par email.</p>
+        <div class="recap">
+          <div class="recap-ligne"><div class="recap-cle">Documents</div><div class="recap-val">${etat.documents.map(d=>ech(d.nom)).join("<br>")}</div></div>
+          <div class="recap-ligne"><div class="recap-cle">Signé le</div><div class="recap-val">${ech(rep.horodatage)}</div></div>
+          <div class="recap-ligne"><div class="recap-cle">Signataire</div><div class="recap-val">${ech(etat.saisieNom)}</div></div>
+          <div class="recap-ligne"><div class="recap-cle">Empreinte</div><div class="recap-val empreinte">${ech(String(rep.preuve_hash).slice(0,32))}…</div></div>
+        </div>
+        ${!rep.dossier_complet ? `<div class="message info" style="margin-top:16px">${ICONES.bouclier}<div>Mac Arthur contresigne de son côté. Vous recevrez l'exemplaire complet ensuite.</div></div>` : ""}
+      </div>
+    </div>
+    <div class="carte">
+      <h2 class="carte-titre" style="font-size:17px">Conservez votre certificat</h2>
+      <p style="font-size:15px;color:var(--gris)">Le fichier PDF joint à votre email prouve la date de votre signature, votre identité et le contenu exact des documents signés. Gardez-le avec vos documents importants.</p>
+    </div>
+  `);
+  pied.textContent = "";
+}
+
+/* ══════════════════════════════════════════════════════════
+   États particuliers
+   ══════════════════════════════════════════════════════════ */
+function ecranErreur(titre, texte){
+  ecran(`<div class="carte" style="margin-top:24px">
+    <div class="final">
+      <div class="final-ico" style="background:var(--rouge-fond);color:var(--rouge)">${ICONES.alerte}</div>
+      <h1 class="final-titre">${ech(titre)}</h1>
+      <p class="final-txt">${ech(texte)}</p>
+      <a class="bouton" href="mailto:hello@agenceattractor.com?subject=Lien%20de%20signature" style="text-decoration:none">
+        Écrire à Mac Arthur
+      </a>
+    </div>
+  </div>`);
+}
+
+function ecranDejaSigne(){
+  ecran(`${enteteDossier()}
+    <div class="carte" style="margin-top:24px">
+      <div class="final">
+        <div class="final-ico">${ICONES.check}</div>
+        <h1 class="final-titre">Vous avez déjà signé</h1>
+        <p class="final-txt">Ces documents ont été signés le ${ech(new Intl.DateTimeFormat("fr-FR",{dateStyle:"long",timeStyle:"short"}).format(new Date(etat.signataire.signed_at)))}. Votre certificat vous a été envoyé par email.</p>
+      </div>
+    </div>`);
+}
+
+/* ══════════════════════════════════════════════════════════
+   Démarrage
+   ══════════════════════════════════════════════════════════ */
+(async function demarrer(){
+  if (!jeton){
+    return ecranErreur("Lien incomplet","Ce lien de signature n'est pas valide. Ouvrez celui reçu dans votre email, sans le modifier.");
+  }
+  const rep = await appel("sign-load", { token:jeton, evenement:"ouvert" });
+
+  if (!rep.ok){
+    return ecranErreur("Lien introuvable", rep.error || "Ce lien de signature n'existe pas ou a été remplacé.");
+  }
+  etat.dossier = rep.dossier;
+  etat.documents = rep.documents;
+  etat.signataire = rep.signataire;
+  etat.cosignataires = rep.cosignataires;
+
+  pied.innerHTML = `Signature électronique simple, au sens de l'article 1367 du Code civil et du règlement européen eIDAS.<br>
+    Une question ? <a href="mailto:hello@agenceattractor.com">hello@agenceattractor.com</a>`;
+
+  if (rep.expire){
+    return ecranErreur("Ce lien a expiré","Le délai de signature est dépassé. Demandez un nouveau lien à Mac Arthur, cela prend une minute.");
+  }
+  if (etat.signataire.statut === "signe") return ecranDejaSigne();
+  if (!etat.documents.length){
+    return ecranErreur("Aucun document","Ce dossier ne contient aucun document à signer. Prévenez Mac Arthur.");
+  }
+  etape1();
+})();
+</script>
+</body>
+</html>
