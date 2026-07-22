@@ -10,7 +10,7 @@
 <style>
 :root{
   --orange:#F25C05; --orange-2:#ff7d34;
-  --charbon:#1A1714; --charbon-2:#241f1a;
+  --charbon:#1A1714;
   --sable:#FAF6F0;
   --vert:#1E5631; --vert-2:#2c7a46;
   --ink:#2a231d; --muted:#6f6155;
@@ -25,19 +25,17 @@ html,body{max-width:100%;overflow-x:hidden}
 body{font-family:var(--sans);color:var(--ink);background:var(--sable);line-height:1.5;-webkit-font-smoothing:antialiased;padding:0 0 64px}
 .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
 
-/* header */
-header{background:linear-gradient(160deg,#15120f,#1f1a15 62%,#191410);color:var(--sable);padding:32px 0 28px;margin-bottom:24px;
+header{color:var(--sable);padding:32px 0 28px;margin-bottom:24px;
   background-image:radial-gradient(700px 320px at 90% -30%,rgba(242,92,5,.22),transparent 60%),radial-gradient(600px 340px at -5% 0%,rgba(30,86,49,.2),transparent 58%),linear-gradient(160deg,#15120f,#1f1a15 62%,#191410)}
 .hbar{display:flex;align-items:center;gap:12px}
 .hbar .logo{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--orange),var(--vert));display:grid;place-items:center;color:#fff;font-weight:800;font-size:18px;font-family:var(--serif);flex:none}
 .hbar .name{font-weight:800;font-size:15px;line-height:1.2}
 .hbar .name span{display:block;color:#b7a996;font-weight:600;font-size:11px;letter-spacing:.13em;text-transform:uppercase;margin-top:2px}
 header h1{font-family:var(--serif);font-weight:700;font-size:clamp(22px,4vw,30px);margin:16px 0 8px}
-header p{color:#cbbdad;font-size:14px;max-width:680px}
+header p{color:#cbbdad;font-size:14px;max-width:700px}
 .badge-int{display:inline-flex;align-items:center;gap:8px;background:rgba(242,92,5,.14);border:1px solid rgba(242,92,5,.36);color:#f0e6d9;font-size:12px;font-weight:600;padding:8px 14px;border-radius:20px;margin-top:16px}
 .badge-int svg{flex:none}
 
-/* layout */
 .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:22px;align-items:start}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 
@@ -45,10 +43,9 @@ header p{color:#cbbdad;font-size:14px;max-width:680px}
 .panel h2{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--charbon);margin-bottom:4px}
 .panel .sub{font-size:12px;color:var(--muted);margin-bottom:18px}
 
-.sect{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted);margin:22px 0 14px;padding-top:16px;border-top:1px dashed var(--line)}
-.sect:first-of-type{margin-top:0;padding-top:0;border-top:none}
+.sect{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted);margin:24px 0 14px;padding-top:16px;border-top:1px dashed var(--line)}
+.sect.first{margin-top:0;padding-top:0;border-top:none}
 
-/* controls */
 .ctrl{margin-bottom:20px}
 .ctrl .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
 .ctrl label{font-size:13.5px;font-weight:600;color:var(--ink)}
@@ -61,16 +58,14 @@ header p{color:#cbbdad;font-size:14px;max-width:680px}
 .ctrl.green .val{color:var(--vert)}
 .ctrl.green input[type=range]::-webkit-slider-thumb{border-color:var(--vert);box-shadow:0 2px 8px rgba(30,86,49,.3)}
 .ctrl.green input[type=range]::-moz-range-thumb{border-color:var(--vert)}
-.ctrl.key .top label{color:var(--charbon)}
 .ctrl.key{background:rgba(30,86,49,.05);border:1px solid rgba(30,86,49,.2);border-radius:12px;padding:14px 14px 8px}
 
-.toggle{display:flex;gap:8px;background:#f2ebe1;border-radius:12px;padding:5px;margin-bottom:22px}
+.toggle{display:flex;gap:8px;background:#f2ebe1;border-radius:12px;padding:5px;margin-bottom:20px}
 .toggle button{flex:1;border:none;background:transparent;padding:12px 10px;min-height:52px;border-radius:9px;font-family:var(--sans);font-weight:600;font-size:12.5px;color:var(--muted);cursor:pointer;transition:all .15s}
 .toggle button.on{background:#fff;color:var(--charbon);box-shadow:0 2px 8px rgba(26,23,20,.08)}
 .toggle button .s{display:block;font-size:10.5px;font-weight:500;color:var(--muted);margin-top:3px}
 
-/* results */
-.hero-res{border-radius:16px;padding:22px;margin-bottom:18px;transition:background .2s}
+.hero-res{border-radius:16px;padding:22px;margin-bottom:18px}
 .hero-res.pos{background:linear-gradient(135deg,var(--vert),#134023);color:#fff}
 .hero-res.neg{background:linear-gradient(135deg,#7a1f16,var(--red));color:#fff}
 .hero-res .lbl{font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.85;font-weight:600}
@@ -78,6 +73,21 @@ header p{color:#cbbdad;font-size:14px;max-width:680px}
 .hero-res .pct{font-size:15px;opacity:.92}
 .hero-res .be{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.2);font-size:13px}
 .hero-res .be b{font-family:var(--serif)}
+
+/* jauge capacité */
+.gauge{margin-bottom:18px}
+.gauge .gtop{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--muted);margin-bottom:8px}
+.gauge .gtop b{font-family:var(--serif);color:var(--charbon);font-size:14px}
+.gbar{display:flex;height:34px;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#efe6da}
+.gbar span{display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#fff;min-width:0;overflow:hidden;white-space:nowrap}
+.g-gros{background:var(--vert-2)}
+.g-detail{background:var(--orange-2)}
+.glegend{display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:var(--muted);margin-top:8px}
+.glegend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+.alert{margin-top:10px;border-radius:10px;padding:11px 14px;font-size:12.5px;display:flex;gap:9px;align-items:flex-start}
+.alert svg{flex:none;margin-top:1px}
+.alert.warn{background:rgba(242,92,5,.09);border:1px solid rgba(242,92,5,.28);color:#8a3d06}
+.alert.ok{background:rgba(30,86,49,.08);border:1px solid rgba(30,86,49,.24);color:#1E5631}
 
 .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
 @media(max-width:520px){.split{grid-template-columns:1fr}}
@@ -89,8 +99,12 @@ header p{color:#cbbdad;font-size:14px;max-width:680px}
 .scard.atr .n{color:var(--orange)}
 .scard.jee{background:rgba(26,23,20,.04)}
 .scard.jee .n{color:var(--charbon)}
+.scard.gros{background:rgba(30,86,49,.06);border-color:rgba(30,86,49,.2)}
+.scard.gros .n{color:var(--vert)}
+.scard.det{background:rgba(242,92,5,.05);border-color:rgba(242,92,5,.2)}
+.scard.det .n{color:var(--orange)}
+.scard .n.bad{color:var(--red)!important}
 
-/* waterfall */
 .bar{display:flex;height:38px;border-radius:10px;overflow:hidden;margin:4px 0 8px;border:1px solid var(--line)}
 .bar span{display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#fff;min-width:0;overflow:hidden;white-space:nowrap}
 .seg-air{background:#8a7c6c}
@@ -106,12 +120,12 @@ header p{color:#cbbdad;font-size:14px;max-width:680px}
 .row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13px}
 .row:last-child{border-bottom:none}
 .row .v{font-family:var(--serif);font-weight:700;color:var(--charbon);white-space:nowrap}
+.row .d{color:var(--muted);font-size:11.5px}
 .row.sub-row{font-size:12px;color:var(--muted);padding:6px 0 6px 14px}
 .row.sub-row .v{font-weight:600;color:var(--muted)}
 .row.tot{border-top:2px solid var(--line);border-bottom:none;margin-top:4px;padding-top:12px}
 .row.tot .v{font-size:16px}
 
-/* scenarios */
 .tbl-wrap{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;font-size:13px;min-width:520px}
 th,td{text-align:right;padding:11px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
@@ -124,7 +138,7 @@ tbody tr:last-child td{border-bottom:none}
 .hl-atr{color:var(--orange)}
 .hl-aci{color:var(--vert)}
 
-.note{background:#fff;border:1px solid var(--line);border-left:3px solid var(--orange);border-radius:12px;padding:16px 18px;margin-top:4px;font-size:12.5px;color:var(--muted)}
+.note{background:#fff;border:1px solid var(--line);border-left:3px solid var(--orange);border-radius:12px;padding:16px 18px;font-size:12.5px;color:var(--muted)}
 .note b{color:var(--ink)}
 .note ul{margin:8px 0 0 18px;display:grid;gap:6px}
 
@@ -133,9 +147,9 @@ tbody tr:last-child td{border-bottom:none}
 
 @media print{
   body{background:#fff;padding:0}
-  header{background:#15120f !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .grid{display:block}
-  .panel,.note,.scard,.hero-res,.pcard,table,tr,.split{break-inside:avoid;page-break-inside:avoid}
+  .panel,.note,.scard,.hero-res,.gauge,table,tr,.split,.alert{break-inside:avoid;page-break-inside:avoid}
   .panel{box-shadow:none;overflow:visible;margin-bottom:16px}
   .tbl-wrap{overflow:visible}
   table{min-width:0}
@@ -153,7 +167,7 @@ tbody tr:last-child td{border-bottom:none}
       <div class="name">Mr Attractor<span>× J'Envoie Express</span></div>
     </div>
     <h1>Simulateur Bloc Siège, Convoyeurs Paris-Abidjan</h1>
-    <p>Économie de l'offre proposée par Air Côte d'Ivoire le 22 juillet 2026 : 10 sièges bloqués par week-end sur un aller-retour de 72h, le convoyeur voyage avec son bagage cabine, sa soute fait voyager du fret déclaré.</p>
+    <p>Modèle issu du RDV Air Côte d'Ivoire du 22 juillet 2026. Deux populations distinctes : les convoyeurs grand public voyagent et apportent la capacité, les partenaires réseau ne voyagent pas et apportent les kilos.</p>
     <div class="badge-int">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
       Document de travail interne, ne pas diffuser
@@ -175,7 +189,7 @@ tbody tr:last-child td{border-bottom:none}
         <button data-mode="a">Modèle A<span class="s">bloc siège sec</span></button>
       </div>
 
-      <div class="sect">Le vol</div>
+      <div class="sect first">Le vol</div>
 
       <div class="ctrl">
         <div class="top"><label>Sièges bloqués par rotation</label><span class="val" id="v-sieges">10</span></div>
@@ -183,7 +197,7 @@ tbody tr:last-child td{border-bottom:none}
       </div>
 
       <div class="ctrl">
-        <div class="top"><label>Sièges effectivement vendus<span class="hint">le taux d'acceptation de l'offre convoyeur</span></label><span class="val" id="v-tsieges">100 %</span></div>
+        <div class="top"><label>Sièges effectivement vendus<span class="hint">taux d'acceptation de l'offre convoyeur</span></label><span class="val" id="v-tsieges">100 %</span></div>
         <input type="range" id="tsieges" min="40" max="100" step="5" value="100">
       </div>
 
@@ -193,47 +207,74 @@ tbody tr:last-child td{border-bottom:none}
       </div>
 
       <div class="ctrl">
-        <div class="top"><label>Prix de vente au convoyeur<span class="hint">l'appât, doit rester sous le marché</span></label><span class="val" id="v-vente">430 €</span></div>
+        <div class="top"><label>Prix de vente au convoyeur<span class="hint">l'appât, doit rester bien sous le marché</span></label><span class="val" id="v-vente">430 €</span></div>
         <input type="range" id="vente" min="150" max="800" step="10" value="430">
       </div>
 
       <div class="sect">La soute</div>
 
-      <div class="ctrl">
-        <div class="top"><label>Soute mobilisée par convoyeur<span class="hint">franchise pleine = 69 kg (3 × 23)</span></label><span class="val" id="v-soute">60 kg</span></div>
-        <input type="range" id="soute" min="0" max="69" step="1" value="60">
+      <div class="toggle" id="sens">
+        <button data-sens="2" class="on">Aller-retour<span class="s">les deux sens exploités</span></button>
+        <button data-sens="1">Aller seul<span class="s">Paris vers Abidjan</span></button>
       </div>
 
       <div class="ctrl">
-        <div class="top"><label>Soute effectivement remplie<span class="hint">le vrai goulot : la demande de fret</span></label><span class="val" id="v-tkg">80 %</span></div>
-        <input type="range" id="tkg" min="20" max="100" step="5" value="80">
+        <div class="top"><label>Franchise soute par convoyeur<span class="hint">3 pièces de 23 kg</span></label><span class="val" id="v-franchise">69 kg</span></div>
+        <input type="range" id="franchise" min="23" max="92" step="23" value="69">
       </div>
 
       <div class="ctrl">
-        <div class="top"><label>Prix client<span class="hint">groupage aérien actuel 10 à 14 €/kg</span></label><span class="val" id="v-prix">12,0 €/kg</span></div>
-        <input type="range" id="prix" min="6" max="18" step="0.5" value="12">
+        <div class="top"><label>Bagage offert au convoyeur<span class="hint">le bonus de l'offre, coût réel d'acquisition de la capacité</span></label><span class="val" id="v-offert">23 kg</span></div>
+        <input type="range" id="offert" min="0" max="46" step="23" value="23">
       </div>
+
+      <div class="sect">Les canaux</div>
+
+      <div class="ctrl">
+        <div class="top"><label>Partenaires réseau<span class="hint">ils ne voyagent pas, ils apportent les colis</span></label><span class="val" id="v-partenaires">12</span></div>
+        <input type="range" id="partenaires" min="0" max="40" step="1" value="12">
+      </div>
+
+      <div class="ctrl">
+        <div class="top"><label>Kilos par partenaire et par rotation</label><span class="val" id="v-kgpart">50 kg</span></div>
+        <input type="range" id="kgpart" min="10" max="120" step="5" value="50">
+      </div>
+
+      <div class="ctrl">
+        <div class="top"><label>Prix de gros aux partenaires</label><span class="val" id="v-prixgros">8,0 €/kg</span></div>
+        <input type="range" id="prixgros" min="4" max="14" step="0.5" value="8">
+      </div>
+
+      <div class="ctrl">
+        <div class="top"><label>Solde vendu en direct<span class="hint">part de la capacité restante remplie par la campagne</span></label><span class="val" id="v-tdetail">50 %</span></div>
+        <input type="range" id="tdetail" min="0" max="100" step="5" value="50">
+      </div>
+
+      <div class="ctrl">
+        <div class="top"><label>Prix détail client<span class="hint">groupage aérien actuel 10 à 14 €/kg</span></label><span class="val" id="v-prixdetail">12,0 €/kg</span></div>
+        <input type="range" id="prixdetail" min="6" max="18" step="0.5" value="12">
+      </div>
+
+      <div class="sect">Les coûts</div>
 
       <div class="ctrl green key" id="fret-wrap">
         <div class="top"><label>Tarif fret accompagné Air CI<span class="hint">le seul chiffre vraiment à négocier</span></label><span class="val" id="v-fret">3,0 €/kg</span></div>
         <input type="range" id="fret" min="0" max="8" step="0.25" value="3">
       </div>
 
-      <div class="sect">Les coûts</div>
-
       <div class="ctrl">
-        <div class="top"><label>Opé J'Envoie Express<span class="hint">collecte Paris, emballage, manifeste, dernier km Abidjan</span></label><span class="val" id="v-ops">3,5 €/kg</span></div>
+        <div class="top"><label>Opé J'Envoie Express<span class="hint">collecte, emballage, manifeste, dernier km Abidjan</span></label><span class="val" id="v-ops">3,5 €/kg</span></div>
         <input type="range" id="ops" min="1" max="7" step="0.25" value="3.5">
       </div>
 
       <div class="ctrl">
         <div class="top"><label>Frais fixes par rotation<span class="hint">transitaire, formalités, assurance, casse</span></label><span class="val" id="v-fixes">600 €</span></div>
-        <input type="range" id="fixes" min="0" max="2000" step="50" value="600">
+        <input type="range" id="fixes" min="0" max="2500" step="50" value="600">
       </div>
 
       <div class="ctrl">
         <div class="top"><label>Campagne d'acquisition par rotation<span class="hint">déduite avant partage, non négociable</span></label><span class="val" id="v-cam">400 €</span></div>
-        <input type="range" id="cam" min="0" max="2000" step="50" value="400">
+        <input type="range" id="cam" min="0" max="2500" step="50" value="400">
       </div>
 
       <div class="sect">Le partage</div>
@@ -255,21 +296,51 @@ tbody tr:last-child td{border-bottom:none}
 
         <div class="hero-res pos" id="hero">
           <div class="lbl">Marge nette par rotation</div>
-          <div class="big" id="marge-rot">+3 500 €</div>
-          <div class="pct" id="marge-pct">soit 45 % des recettes</div>
-          <div class="be">Rentable tant que le fret Air CI reste sous <b id="breakeven">6,3 €/kg</b></div>
+          <div class="big" id="marge-rot">+1 280 €</div>
+          <div class="pct" id="marge-pct">soit 18 % des recettes</div>
+          <div class="be">Rentable tant que le fret Air CI reste sous <b id="breakeven">4,7 €/kg</b></div>
+        </div>
+
+        <div class="gauge">
+          <div class="gtop">
+            <span>Capacité de la rotation</span>
+            <span><b id="cap-vendu">760 kg</b> vendus sur <b id="cap-brute">920 kg</b></span>
+          </div>
+          <div class="gbar" id="gbar"></div>
+          <div class="glegend">
+            <span><i style="background:#2c7a46"></i>Partenaires réseau (gros)</span>
+            <span><i style="background:#ff7d34"></i>Clients directs (détail)</span>
+            <span><i style="background:#efe6da;border:1px solid rgba(26,23,20,.2)"></i>Capacité invendue</span>
+          </div>
+          <div class="alert ok" id="cap-alert">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            <span id="cap-alert-txt">La demande engagée tient dans la capacité.</span>
+          </div>
+        </div>
+
+        <div class="split">
+          <div class="scard gros">
+            <div class="k">Marge par kilo, en gros</div>
+            <div class="n" id="mkg-gros">1,50 €</div>
+            <div class="sub">prix de gros moins Air CI et opé</div>
+          </div>
+          <div class="scard det">
+            <div class="k">Marge par kilo, en direct</div>
+            <div class="n" id="mkg-detail">5,50 €</div>
+            <div class="sub">prix détail moins Air CI et opé</div>
+          </div>
         </div>
 
         <div class="split">
           <div class="scard atr">
             <div class="k">Ta part, par rotation</div>
-            <div class="n" id="part-atr">1 750 €</div>
-            <div class="sub" id="part-atr-mois">7 000 € par mois sur 4 rotations</div>
+            <div class="n" id="part-atr">640 €</div>
+            <div class="sub" id="part-atr-mois">2 560 € par mois sur 4 rotations</div>
           </div>
           <div class="scard jee">
             <div class="k">Part J'Envoie Express</div>
-            <div class="n" id="part-jee">1 750 €</div>
-            <div class="sub" id="part-jee-mois">7 000 € par mois sur 4 rotations</div>
+            <div class="n" id="part-jee">640 €</div>
+            <div class="sub" id="part-jee-mois">2 560 € par mois sur 4 rotations</div>
           </div>
         </div>
 
@@ -283,16 +354,17 @@ tbody tr:last-child td{border-bottom:none}
         </div>
 
         <div class="rows">
-          <div class="row"><span>Fret vendu <span id="d-kg" style="color:var(--muted);font-size:11.5px">600 kg</span></span><span class="v" id="r-fret">7 200 €</span></div>
-          <div class="row"><span>Marge sur les sièges <span id="d-si" style="color:var(--muted);font-size:11.5px">10 vendus</span></span><span class="v" id="r-siege">500 €</span></div>
-          <div class="row tot"><span>= Recettes</span><span class="v" id="r-rev">7 700 €</span></div>
-          <div class="row"><span>− Fret accompagné Air CI</span><span class="v" id="r-air">1 800 €</span></div>
-          <div class="row"><span>− Opé J'Envoie Express</span><span class="v" id="r-ops">2 100 €</span></div>
+          <div class="row"><span>Fret en gros <span class="d" id="d-gros">600 kg</span></span><span class="v" id="r-gros">4 800 €</span></div>
+          <div class="row"><span>Fret en direct <span class="d" id="d-detail">160 kg</span></span><span class="v" id="r-detail">1 920 €</span></div>
+          <div class="row"><span>Marge sur les sièges <span class="d" id="d-si">10 vendus</span></span><span class="v" id="r-siege">500 €</span></div>
+          <div class="row tot"><span>= Recettes</span><span class="v" id="r-rev">7 220 €</span></div>
+          <div class="row"><span>− Fret accompagné Air CI</span><span class="v" id="r-air">2 280 €</span></div>
+          <div class="row"><span>− Opé J'Envoie Express</span><span class="v" id="r-ops">2 660 €</span></div>
           <div class="row"><span>− Frais fixes</span><span class="v" id="r-fixes">600 €</span></div>
           <div class="row"><span>− Campagne d'acquisition</span><span class="v" id="r-cam">400 €</span></div>
-          <div class="row tot"><span>= Marge nette</span><span class="v" id="r-marge">+2 800 €</span></div>
-          <div class="row sub-row"><span>dont Mr Attractor</span><span class="v" id="r-atr">1 400 €</span></div>
-          <div class="row sub-row"><span>dont J'Envoie Express</span><span class="v" id="r-jee">1 400 €</span></div>
+          <div class="row tot"><span>= Marge nette</span><span class="v" id="r-marge">+1 280 €</span></div>
+          <div class="row sub-row"><span>dont Mr Attractor</span><span class="v" id="r-atr">640 €</span></div>
+          <div class="row sub-row"><span>dont J'Envoie Express</span><span class="v" id="r-jee">640 €</span></div>
         </div>
       </div>
 
@@ -313,24 +385,24 @@ tbody tr:last-child td{border-bottom:none}
           <tbody>
             <tr>
               <td>Pilote 90 jours<span class="d">12 rotations, 1 par semaine</span></td>
-              <td id="s1-vol">7,2 t</td>
-              <td id="s1-marge">33 600 €</td>
-              <td class="hl-atr" id="s1-atr">16 800 €</td>
-              <td class="hl-aci" id="s1-aci">67 800 €</td>
+              <td id="s1-vol">9,1 t</td>
+              <td id="s1-marge">15 360 €</td>
+              <td class="hl-atr" id="s1-atr">7 680 €</td>
+              <td class="hl-aci" id="s1-aci">72 960 €</td>
             </tr>
             <tr>
               <td>Année 1<span class="d">39 rotations, 9 mois utiles</span></td>
-              <td id="s2-vol">23,4 t</td>
-              <td id="s2-marge">109 200 €</td>
-              <td class="hl-atr" id="s2-atr">54 600 €</td>
-              <td class="hl-aci" id="s2-aci">220 350 €</td>
+              <td id="s2-vol">29,6 t</td>
+              <td id="s2-marge">49 920 €</td>
+              <td class="hl-atr" id="s2-atr">24 960 €</td>
+              <td class="hl-aci" id="s2-aci">237 120 €</td>
             </tr>
             <tr>
               <td>Année 2, bloc doublé<span class="d">78 rotations équivalentes</span></td>
-              <td id="s3-vol">46,8 t</td>
-              <td id="s3-marge">218 400 €</td>
-              <td class="hl-atr" id="s3-atr">109 200 €</td>
-              <td class="hl-aci" id="s3-aci">440 700 €</td>
+              <td id="s3-vol">59,3 t</td>
+              <td id="s3-marge">99 840 €</td>
+              <td class="hl-atr" id="s3-atr">49 920 €</td>
+              <td class="hl-aci" id="s3-aci">474 240 €</td>
             </tr>
           </tbody>
         </table>
@@ -338,13 +410,14 @@ tbody tr:last-child td{border-bottom:none}
       </div>
 
       <div class="note">
-        <b>Comment lire ce simulateur.</b> Les valeurs de départ sont des ordres de grandeur ancrés sur le marché (groupage aérien France vers Abidjan à 10-14 €/kg, prix moyen Paris-Abidjan à partir de 344-443 € l'aller). Elles sont là pour être remplacées par les vrais chiffres.
+        <b>Comment lire ce simulateur.</b> Les valeurs de départ sont des ordres de grandeur ancrés sur le marché (groupage aérien France vers Abidjan à 10-14 €/kg, Paris-Abidjan à partir de 344-443 € l'aller). Elles sont là pour être remplacées par les vrais chiffres.
         <ul>
-          <li><b>Deux chiffres viennent d'Air CI et d'eux seuls</b> : le tarif du bloc siège et le tarif du fret accompagné. Tant qu'ils ne sont pas écrits, tout le reste est une hypothèse.</li>
-          <li><b>Un chiffre vient de Jean Yves</b> : le coût opé réel au kilo, collecte Paris et remise Abidjan comprises. C'est la base de la négociation de répartition.</li>
-          <li><b>Le vrai goulot n'est pas le siège, c'est le kilo.</b> Les sièges se vendront. Remplir 600 kg par week-end, soit près de 2,4 tonnes par mois, est le seul risque sérieux du modèle. Baisse le curseur de remplissage à 50 % pour voir ce que ça fait.</li>
-          <li><b>Modèle A contre modèle B.</b> En A, Air CI ne facture que les sièges et ne capte rien sur la valeur des kilos. En B, elle facture aussi le fret : elle gagne plus, et surtout le fret devient déclaré et tracé, ce qui règle la conformité. B est à la fois le meilleur argument commercial et la meilleure protection juridique.</li>
-          <li><b>Le modèle suppose un convoyeur informé</b>, qui signe un mandat de convoyage, et J'Envoie Express déclarant en douane. Sans ça, les chiffres n'ont aucune valeur : une seule interception fait tomber le partenariat.</li>
+          <li><b>La cible de négociation sur le fret est 1 à 1,50 €/kg, pas 3.</b> À 3 €/kg, le canal de gros ne laisse que 1,50 €/kg et la marge de la rotation tombe à 1 280 €. À 1 €/kg elle remonte à 2 800 €. C'est le chiffre le plus sensible de tout le dossier : chaque euro par kilo arraché à la négociation vaut environ 760 € par rotation, soit 30 000 € sur une année.</li>
+          <li><b>Modèle A contre modèle B, le vrai arbitrage.</b> En A (Air CI ne facture pas le fret), la marge passe à 3 560 € par rotation, presque le triple. Mais Air CI ne capte alors que les sièges, elle a beaucoup moins de raisons de dire oui, et le fret n'est pas facturé donc pas tracé. <b>B reste le bon choix, à condition d'obtenir un tarif fret bas.</b> C'est ça, la négociation : on leur laisse capter du fret, mais au tarif d'un partenaire de volume, pas au tarif catalogue.</li>
+          <li><b>Le retour porte le modèle à lui seul.</b> En aller simple, la marge tombe à 190 € par rotation, autant dire rien. Exploiter les deux sens fait passer la capacité de 460 à 920 kg sans un siège de plus. La tournée de collecte Abidjan existe déjà dans l'app J'Envoie Express, c'est acquis techniquement.</li>
+          <li><b>Le bagage offert est le vrai coût d'acquisition.</b> 23 kg × 10 convoyeurs, c'est 230 kg de capacité rendue par rotation. Mets le curseur à 0 pour voir ce que l'offre coûte réellement, et compare au taux d'acceptation qu'elle permet.</li>
+          <li><b>Deux chiffres viennent d'Air CI et d'eux seuls</b> : le tarif du bloc siège et celui du fret accompagné. <b>Un vient de Jean Yves</b> : le coût opé réel au kilo. Tant qu'ils ne sont pas écrits, tout le reste est une hypothèse.</li>
+          <li><b>Le modèle suppose un convoyeur informé</b>, qui signe un mandat de convoyage, et J'Envoie Express déclarant en douane. La formation sûreté assurée par Air CI est ce qui rend ce cadre crédible côté voyageurs.</li>
         </ul>
       </div>
     </div>
@@ -354,14 +427,17 @@ tbody tr:last-child td{border-bottom:none}
 
 <script>
 (function(){
-  var DEFAULTS = {sieges:10, tsieges:100, bloc:380, vente:430, soute:60, tkg:80, prix:12, fret:3, ops:3.5, fixes:600, cam:400, part:50};
+  var DEFAULTS = {sieges:10, tsieges:100, bloc:380, vente:430, franchise:69, offert:23,
+                  partenaires:12, kgpart:50, prixgros:8, tdetail:50, prixdetail:12,
+                  fret:3, ops:3.5, fixes:600, cam:400, part:50};
   var ids = Object.keys(DEFAULTS);
-  var mode = 'b';
+  var mode = 'b', sens = 2;
   var el = function(id){return document.getElementById(id)};
 
   var eur = function(n){return (n<0?'-':'')+Math.round(Math.abs(n)).toLocaleString('fr-FR')+' €'};
   var dec = function(n){return n.toLocaleString('fr-FR',{minimumFractionDigits:1,maximumFractionDigits:1})};
-  var kg  = function(n){return Math.round(n).toLocaleString('fr-FR')+' kg'};
+  var dec2= function(n){return n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})};
+  var kgf = function(n){return Math.round(n).toLocaleString('fr-FR')+' kg'};
 
   function fillTrack(input){
     var min=+input.min, max=+input.max, v=+input.value;
@@ -375,29 +451,42 @@ tbody tr:last-child td{border-bottom:none}
     var fretTarif = (mode==='b') ? v.fret : 0;
 
     // labels
-    el('v-sieges').textContent  = v.sieges;
-    el('v-tsieges').textContent = v.tsieges+' %';
-    el('v-bloc').textContent    = eur(v.bloc);
-    el('v-vente').textContent   = eur(v.vente);
-    el('v-soute').textContent   = v.soute+' kg';
-    el('v-tkg').textContent     = v.tkg+' %';
-    el('v-prix').textContent    = dec(v.prix)+' €/kg';
-    el('v-fret').textContent    = dec(v.fret)+' €/kg';
-    el('v-ops').textContent     = dec(v.ops)+' €/kg';
-    el('v-fixes').textContent   = eur(v.fixes);
-    el('v-cam').textContent     = eur(v.cam);
-    el('v-part').textContent    = v.part+' %';
+    el('v-sieges').textContent     = v.sieges;
+    el('v-tsieges').textContent    = v.tsieges+' %';
+    el('v-bloc').textContent       = eur(v.bloc);
+    el('v-vente').textContent      = eur(v.vente);
+    el('v-franchise').textContent  = v.franchise+' kg';
+    el('v-offert').textContent     = v.offert+' kg';
+    el('v-partenaires').textContent= v.partenaires;
+    el('v-kgpart').textContent     = v.kgpart+' kg';
+    el('v-prixgros').textContent   = dec(v.prixgros)+' €/kg';
+    el('v-tdetail').textContent    = v.tdetail+' %';
+    el('v-prixdetail').textContent = dec(v.prixdetail)+' €/kg';
+    el('v-fret').textContent       = dec(v.fret)+' €/kg';
+    el('v-ops').textContent        = dec(v.ops)+' €/kg';
+    el('v-fixes').textContent      = eur(v.fixes);
+    el('v-cam').textContent        = eur(v.cam);
+    el('v-part').textContent       = v.part+' %';
 
-    // volumes
+    // capacité
     var siegesVendus = v.sieges * v.tsieges/100;
-    var kgVendus     = siegesVendus * v.soute * v.tkg/100;
+    var soutePar     = Math.max(0, v.franchise - v.offert);
+    var capacite     = siegesVendus * soutePar * sens;
+
+    // demande : les partenaires servent en premier, la campagne remplit le solde
+    var demande   = v.partenaires * v.kgpart;
+    var kgGros    = Math.min(demande, capacite);
+    var reste     = capacite - kgGros;
+    var kgDetail  = reste * v.tdetail/100;
+    var kgVendus  = kgGros + kgDetail;
 
     // recettes
-    var recFret  = kgVendus * v.prix;
+    var recGros  = kgGros * v.prixgros;
+    var recDet   = kgDetail * v.prixdetail;
     var recSiege = siegesVendus * (v.vente - v.bloc);
-    var recettes = recFret + recSiege;
+    var recettes = recGros + recDet + recSiege;
 
-    // couts
+    // coûts
     var coutAir = kgVendus * fretTarif;
     var coutOps = kgVendus * v.ops;
     var marge   = recettes - coutAir - coutOps - v.fixes - v.cam;
@@ -405,8 +494,15 @@ tbody tr:last-child td{border-bottom:none}
     var partAtr = marge * v.part/100;
     var partJee = marge - partAtr;
 
-    // seuil : tarif fret Air CI max avant marge nulle
     var breakeven = kgVendus>0 ? (recettes - coutOps - v.fixes - v.cam) / kgVendus : 0;
+
+    // marge au kilo par canal
+    var mkgGros = v.prixgros   - fretTarif - v.ops;
+    var mkgDet  = v.prixdetail - fretTarif - v.ops;
+    el('mkg-gros').textContent  = dec2(mkgGros)+' €';
+    el('mkg-detail').textContent= dec2(mkgDet)+' €';
+    el('mkg-gros').className   = 'n' + (mkgGros<0 ? ' bad' : '');
+    el('mkg-detail').className = 'n' + (mkgDet <0 ? ' bad' : '');
 
     // hero
     el('hero').className = 'hero-res ' + (marge>=0?'pos':'neg');
@@ -416,6 +512,34 @@ tbody tr:last-child td{border-bottom:none}
       : 'le modèle perd de l\'argent avec ces hypothèses';
     el('breakeven').textContent = dec(Math.max(0,breakeven))+' €/kg';
 
+    // jauge capacité
+    el('cap-vendu').textContent = kgf(kgVendus);
+    el('cap-brute').textContent = kgf(capacite);
+    var gbar = el('gbar');
+    gbar.innerHTML = '';
+    if(capacite > 0){
+      [['gros',kgGros,'Gros'],['detail',kgDetail,'Direct']].forEach(function(s){
+        if(s[1] <= 0) return;
+        var w = s[1]/capacite*100;
+        var sp = document.createElement('span');
+        sp.className = 'g-'+s[0];
+        sp.style.width = w+'%';
+        sp.textContent = w>14 ? s[2]+' '+Math.round(s[1])+' kg' : '';
+        gbar.appendChild(sp);
+      });
+    }
+    var alertBox = el('cap-alert'), alertTxt = el('cap-alert-txt');
+    if(demande > capacite){
+      alertBox.className = 'alert warn';
+      alertTxt.textContent = 'La demande engagée ('+kgf(demande)+') dépasse la capacité de '+kgf(demande-capacite)+'. Il faut plus de sièges, ou réduire le bagage offert.';
+    } else if(kgVendus < capacite*0.7){
+      alertBox.className = 'alert warn';
+      alertTxt.textContent = 'Il reste '+kgf(capacite-kgVendus)+' de capacité invendue. C\'est le vrai risque du modèle : la soute vide se paie quand même.';
+    } else {
+      alertBox.className = 'alert ok';
+      alertTxt.textContent = 'La demande engagée tient dans la capacité et le solde se remplit correctement.';
+    }
+
     // split
     el('part-atr').textContent = eur(partAtr);
     el('part-jee').textContent = eur(partJee);
@@ -423,18 +547,20 @@ tbody tr:last-child td{border-bottom:none}
     el('part-jee-mois').textContent = eur(partJee*4)+' par mois sur 4 rotations';
 
     // rows
-    el('d-kg').textContent  = kg(kgVendus);
-    el('d-si').textContent  = Math.round(siegesVendus)+' vendus';
-    el('r-fret').textContent  = eur(recFret);
-    el('r-siege').textContent = eur(recSiege);
-    el('r-rev').textContent   = eur(recettes);
-    el('r-air').textContent   = eur(coutAir);
-    el('r-ops').textContent   = eur(coutOps);
-    el('r-fixes').textContent = eur(v.fixes);
-    el('r-cam').textContent   = eur(v.cam);
-    el('r-marge').textContent = (marge>=0?'+':'')+eur(marge);
-    el('r-atr').textContent   = eur(partAtr);
-    el('r-jee').textContent   = eur(partJee);
+    el('d-gros').textContent   = kgf(kgGros);
+    el('d-detail').textContent = kgf(kgDetail);
+    el('d-si').textContent     = Math.round(siegesVendus)+' vendus';
+    el('r-gros').textContent   = eur(recGros);
+    el('r-detail').textContent = eur(recDet);
+    el('r-siege').textContent  = eur(recSiege);
+    el('r-rev').textContent    = eur(recettes);
+    el('r-air').textContent    = eur(coutAir);
+    el('r-ops').textContent    = eur(coutOps);
+    el('r-fixes').textContent  = eur(v.fixes);
+    el('r-cam').textContent    = eur(v.cam);
+    el('r-marge').textContent  = (marge>=0?'+':'')+eur(marge);
+    el('r-atr').textContent    = eur(partAtr);
+    el('r-jee').textContent    = eur(partJee);
 
     // waterfall
     var bar = el('bar');
@@ -457,7 +583,7 @@ tbody tr:last-child td{border-bottom:none}
       });
     }
 
-    // scenarios : 12 / 39 / 78 rotations
+    // scénarios
     var recAirRot = siegesVendus * v.bloc + coutAir;
     [[1,12],[2,39],[3,78]].forEach(function(sc){
       var n = sc[1];
@@ -472,22 +598,33 @@ tbody tr:last-child td{border-bottom:none}
 
   ids.forEach(function(id){ el(id).addEventListener('input',compute); });
 
-  var mbtns = document.querySelectorAll('#mode button');
-  Array.prototype.forEach.call(mbtns,function(b){
-    b.addEventListener('click',function(){
-      Array.prototype.forEach.call(mbtns,function(x){x.classList.remove('on')});
-      b.classList.add('on');
-      mode = b.dataset.mode;
-      el('fret-wrap').style.display = (mode==='b')?'block':'none';
-      compute();
+  function wireToggle(wrapId, attr, onPick){
+    var btns = document.querySelectorAll('#'+wrapId+' button');
+    Array.prototype.forEach.call(btns,function(b){
+      b.addEventListener('click',function(){
+        Array.prototype.forEach.call(btns,function(x){x.classList.remove('on')});
+        b.classList.add('on');
+        onPick(b.dataset[attr]);
+        compute();
+      });
     });
+    return btns;
+  }
+
+  wireToggle('mode','mode',function(val){
+    mode = val;
+    el('fret-wrap').style.display = (mode==='b')?'block':'none';
   });
+  wireToggle('sens','sens',function(val){ sens = +val; });
 
   el('reset').addEventListener('click',function(){
     ids.forEach(function(k){ el(k).value = DEFAULTS[k]; });
-    Array.prototype.forEach.call(mbtns,function(x){x.classList.remove('on')});
+    ['mode','sens'].forEach(function(w){
+      Array.prototype.forEach.call(document.querySelectorAll('#'+w+' button'),function(x){x.classList.remove('on')});
+    });
     document.querySelector('#mode button[data-mode="b"]').classList.add('on');
-    mode='b'; el('fret-wrap').style.display='block';
+    document.querySelector('#sens button[data-sens="2"]').classList.add('on');
+    mode='b'; sens=2; el('fret-wrap').style.display='block';
     compute();
   });
 
