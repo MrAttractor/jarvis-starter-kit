@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Programme Bloc Siège Convoyeurs · Simulateur de rentabilité Air Côte d'Ivoire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --orange:#F25C05;
+  --charbon:#1A1714;
+  --sable:#FAF6F0;
+  --vert:#1E5631; --vert-2:#2c7a46;
+  --ink:#2a231d; --muted:#6f6155;
+  --line:rgba(26,23,20,.12);
+  --card:#ffffff;
+  --red:#c0392b;
+  --sans:'Inter','Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  --serif:'Sora','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{max-width:100%;overflow-x:hidden}
+body{font-family:var(--sans);color:var(--ink);background:var(--sable);line-height:1.5;-webkit-font-smoothing:antialiased;padding:0 0 64px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+header{color:var(--sable);padding:34px 0 30px;margin-bottom:24px;
+  background-image:radial-gradient(700px 320px at 90% -30%,rgba(242,92,5,.2),transparent 60%),radial-gradient(620px 340px at -5% 0%,rgba(30,86,49,.24),transparent 58%),linear-gradient(160deg,#15120f,#1f1a15 62%,#191410)}
+.hbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hbar .logo{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--orange),var(--vert));display:grid;place-items:center;color:#fff;font-weight:800;font-size:18px;font-family:var(--serif);flex:none}
+.hbar .name{font-weight:800;font-size:15px;line-height:1.2}
+.hbar .name span{display:block;color:#b7a996;font-weight:600;font-size:11px;letter-spacing:.13em;text-transform:uppercase;margin-top:2px}
+header h1{font-family:var(--serif);font-weight:700;font-size:clamp(22px,4vw,31px);margin:18px 0 8px}
+header p{color:#cbbdad;font-size:14px;max-width:720px}
+header p + p{margin-top:8px}
+.pill{display:inline-flex;align-items:center;gap:8px;background:rgba(30,86,49,.2);border:1px solid rgba(44,122,70,.5);color:#e6f0e8;font-size:12px;font-weight:600;padding:8px 14px;border-radius:20px;margin-top:16px}
+.pill svg{flex:none}
+
+.intro{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--vert);border-radius:14px;padding:20px 22px;margin-bottom:22px;font-size:13.5px}
+.intro h2{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--charbon);margin-bottom:8px}
+.intro p{color:var(--muted);margin-bottom:8px}
+.intro p:last-child{margin-bottom:0}
+.intro b{color:var(--ink)}
+
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:22px;align-items:start}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(26,23,20,.05);margin-bottom:22px}
+.panel h2{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--charbon);margin-bottom:4px}
+.panel .sub{font-size:12px;color:var(--muted);margin-bottom:18px}
+
+.sect{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted);margin:24px 0 14px;padding-top:16px;border-top:1px dashed var(--line)}
+.sect.first{margin-top:0;padding-top:0;border-top:none}
+
+.ctrl{margin-bottom:20px}
+.ctrl .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
+.ctrl label{font-size:13.5px;font-weight:600;color:var(--ink)}
+.ctrl .hint{font-size:11px;color:var(--muted);font-weight:400;display:block;margin-top:1px}
+.ctrl .val{font-family:var(--serif);font-weight:700;color:var(--vert);font-size:16px;white-space:nowrap}
+.ctrl input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:8px;border-radius:6px;background:linear-gradient(90deg,var(--vert) 0%,var(--vert) var(--pct,50%),#e2dbd0 var(--pct,50%),#e2dbd0 100%);outline:none;margin:6px 0}
+.ctrl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--vert);cursor:pointer;box-shadow:0 2px 8px rgba(30,86,49,.3)}
+.ctrl input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--vert);cursor:pointer}
+.ctrl.cost .val{color:var(--orange)}
+.ctrl.cost input[type=range]{background:linear-gradient(90deg,var(--orange) 0%,var(--orange) var(--pct,50%),#e2dbd0 var(--pct,50%),#e2dbd0 100%)}
+.ctrl.cost input[type=range]::-webkit-slider-thumb{border-color:var(--orange);box-shadow:0 2px 8px rgba(242,92,5,.3)}
+.ctrl.cost input[type=range]::-moz-range-thumb{border-color:var(--orange)}
+
+.hero-res{border-radius:16px;padding:24px;margin-bottom:18px;background:linear-gradient(135deg,var(--vert),#134023);color:#fff}
+.hero-res.neg{background:linear-gradient(135deg,#7a1f16,var(--red))}
+.hero-res .lbl{font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.85;font-weight:600}
+.hero-res .big{font-family:var(--serif);font-weight:700;font-size:clamp(30px,7vw,44px);line-height:1;margin:8px 0}
+.hero-res .pct{font-size:15px;opacity:.92}
+.hero-res .be{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.2);font-size:13px}
+.hero-res .be b{font-family:var(--serif)}
+
+.split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+@media(max-width:520px){.split{grid-template-columns:1fr}}
+.scard{border:1px solid var(--line);border-radius:14px;padding:16px}
+.scard .k{font-size:11.5px;color:var(--muted);font-weight:600}
+.scard .n{font-family:var(--serif);font-weight:700;font-size:24px;margin-top:5px;line-height:1.05;color:var(--charbon)}
+.scard .sub{font-size:11px;color:var(--muted);margin-top:4px}
+.scard.a{background:rgba(30,86,49,.06);border-color:rgba(30,86,49,.2)}
+.scard.a .n{color:var(--vert)}
+
+.bar{display:flex;height:38px;border-radius:10px;overflow:hidden;margin:4px 0 8px;border:1px solid var(--line)}
+.bar span{display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#fff;min-width:0;overflow:hidden;white-space:nowrap}
+.seg-cs{background:#8a7c6c}
+.seg-cf{background:#c99a5b}
+.seg-m{background:var(--vert-2)}
+.seg-loss{background:var(--red)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:var(--muted);margin-bottom:16px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+
+.rows{display:grid;gap:2px}
+.row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.row:last-child{border-bottom:none}
+.row .v{font-family:var(--serif);font-weight:700;color:var(--charbon);white-space:nowrap}
+.row .d{color:var(--muted);font-size:11.5px}
+.row.tot{border-top:2px solid var(--line);border-bottom:none;margin-top:4px;padding-top:12px}
+.row.tot .v{font-size:16px}
+
+.tbl-wrap{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:540px}
+th,td{text-align:right;padding:11px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal}
+thead th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+tbody td{font-family:var(--serif);font-weight:700;color:var(--charbon)}
+tbody td:first-child{font-family:var(--sans);font-weight:600;color:var(--ink)}
+tbody td .d{display:block;font-family:var(--sans);font-weight:400;font-size:11px;color:var(--muted);margin-top:2px}
+tbody tr:last-child td{border-bottom:none}
+.hl{color:var(--vert)}
+
+.asks{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(26,23,20,.05)}
+.asks h2{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--charbon);margin-bottom:4px}
+.asks .sub{font-size:12px;color:var(--muted);margin-bottom:18px}
+.ask{display:flex;gap:14px;padding:15px 0;border-bottom:1px dashed var(--line)}
+.ask:last-child{border-bottom:none}
+.ask .num{width:28px;height:28px;flex:none;border-radius:50%;background:rgba(30,86,49,.1);color:var(--vert);display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:13px}
+.ask .t{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.ask .x{font-size:12.5px;color:var(--muted)}
+
+.note{background:#fff;border:1px solid var(--line);border-left:3px solid var(--vert);border-radius:12px;padding:16px 18px;margin-top:22px;font-size:12.5px;color:var(--muted)}
+.note b{color:var(--ink)}
+
+.reset{margin-top:8px;background:transparent;border:1px solid var(--line);border-radius:22px;padding:13px 20px;min-height:44px;font-family:var(--sans);font-weight:600;font-size:12.5px;color:var(--muted);cursor:pointer}
+.reset:hover{border-color:var(--vert);color:var(--vert)}
+
+@media print{
+  body{background:#fff;padding:0}
+  header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .grid{display:block}
+  .panel,.note,.scard,.hero-res,.intro,.asks,.ask,table,tr,.split{break-inside:avoid;page-break-inside:avoid}
+  .panel{box-shadow:none;overflow:visible;margin-bottom:16px}
+  .tbl-wrap{overflow:visible}
+  table{min-width:0}
+  .reset{display:none}
+  *{overflow:visible !important}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="hbar">
+      <div class="logo">A</div>
+      <div class="name">Mr Attractor<span>× J'Envoie Express</span></div>
+    </div>
+    <h1>Programme Bloc Siège Convoyeurs, simulateur de rentabilité</h1>
+    <p>Paris — Abidjan — Paris, format week-end 72h. Document préparé à la suite de l'entretien du 22 juillet 2026 à la Direction Pays France.</p>
+    <p>Les curseurs de gauche sont les vôtres : entrez vos coûts marginaux réels, la rentabilité du programme se recalcule immédiatement.</p>
+    <div class="pill">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
+      Toutes les valeurs sont modifiables, aucune n'est figée
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="intro">
+    <h2>Le principe en trois lignes</h2>
+    <p>Air Côte d'Ivoire met à disposition <b>un bloc de 10 sièges par week-end</b> sur la rotation VSD, à tarif négocié. J'Envoie Express les commercialise auprès de voyageurs convoyeurs qui partent avec leur bagage cabine.</p>
+    <p>La soute libérée transporte <b>du fret déclaré</b>, préparé, pesé et manifesté au sol par J'Envoie Express, puis facturé par Air Côte d'Ivoire au titre du fret accompagné.</p>
+    <p><b>Pour la compagnie, les deux recettes sont marginales</b> : des sièges qui seraient partis vides et une capacité soute déjà en vol. C'est ce que ce simulateur met en évidence.</p>
+  </div>
+
+  <div class="grid">
+
+    <div>
+    <div class="panel">
+      <h2>Vos paramètres</h2>
+      <div class="sub">À gauche vos recettes, en dessous vos coûts marginaux.</div>
+
+      <div class="sect first">Vos recettes</div>
+
+      <div class="ctrl">
+        <div class="top"><label>Sièges du bloc, par rotation</label><span class="val" id="v-sieges">10</span></div>
+        <input type="range" id="sieges" min="5" max="30" step="1" value="10">
+      </div>
+
+      <div class="ctrl">
+        <div class="top"><label>Tarif du bloc, par siège<span class="hint">le tarif négocié que vous nous facturez</span></label><span class="val" id="v-bloc">380 €</span></div>
+        <input type="range" id="bloc" min="150" max="700" step="10" value="380">
+      </div>
+
+      <div class="ctrl">
+        <div class="top"><label>Fret embarqué, par rotation<span class="hint">aller et retour cumulés</span></label><span class="val" id="v-kg">760 kg</span></div>
+        <input type="range" id="kg" min="0" max="2000" step="20" value="760">
+      </div>
+
+      <div class="ctrl">
+        <div class="top"><label>Tarif du fret accompagné<span class="hint">votre tarif partenaire de volume</span></label><span class="val" id="v-fret">3,0 €/kg</span></div>
+        <input type="range" id="fret" min="0" max="8" step="0.25" value="3">
+      </div>
+
+      <div class="sect">Vos coûts marginaux</div>
+
+      <div class="ctrl cost">
+        <div class="top"><label>Coût marginal par siège<span class="hint">restauration, carburant lié au poids, enregistrement, distribution</span></label><span class="val" id="v-csiege">80 €</span></div>
+        <input type="range" id="csiege" min="0" max="300" step="5" value="80">
+      </div>
+
+      <div class="ctrl cost">
+        <div class="top"><label>Coût marginal soute<span class="hint">carburant, manutention, documentation</span></label><span class="val" id="v-csoute">1,00 €/kg</span></div>
+        <input type="range" id="csoute" min="0" max="5" step="0.1" value="1">
+      </div>
+
+      <div class="sect">Le rythme</div>
+
+      <div class="ctrl">
+        <div class="top"><label>Rotations par semaine</label><span class="val" id="v-rythme">1</span></div>
+        <input type="range" id="rythme" min="1" max="3" step="1" value="1">
+      </div>
+
+      <div class="ctrl">
+        <div class="top"><label>Semaines exploitées par an<span class="hint">39 semaines = hors haute saison décembre à février</span></label><span class="val" id="v-semaines">39</span></div>
+        <input type="range" id="semaines" min="12" max="52" step="1" value="39">
+      </div>
+
+      <button class="reset" id="reset">Réinitialiser</button>
+    </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h2>Votre rentabilité</h2>
+        <div class="sub">Recette marginale nette des coûts marginaux, par rotation.</div>
+
+        <div class="hero-res" id="hero">
+          <div class="lbl">Marge Air Côte d'Ivoire, par rotation</div>
+          <div class="big" id="marge-rot">+4 520 €</div>
+          <div class="pct" id="marge-pct">soit 74 % de la recette du programme</div>
+          <div class="be">Recette par siège embarqué, fret compris : <b id="par-siege">608 €</b></div>
+        </div>
+
+        <div class="split">
+          <div class="scard a">
+            <div class="k">Recette sièges</div>
+            <div class="n" id="rec-sieges">3 800 €</div>
+            <div class="sub">sur des sièges autrement invendus</div>
+          </div>
+          <div class="scard a">
+            <div class="k">Recette fret</div>
+            <div class="n" id="rec-fret">2 280 €</div>
+            <div class="sub">sur une capacité soute déjà en vol</div>
+          </div>
+        </div>
+
+        <div class="bar" id="bar"></div>
+        <div class="legend">
+          <span><i style="background:#8a7c6c"></i>Coût sièges</span>
+          <span><i style="background:#c99a5b"></i>Coût soute</span>
+          <span><i style="background:#2c7a46"></i>Votre marge</span>
+        </div>
+
+        <div class="rows">
+          <div class="row"><span>Recette sièges <span class="d" id="d-si">10 × 380 €</span></span><span class="v" id="r-si">3 800 €</span></div>
+          <div class="row"><span>Recette fret accompagné <span class="d" id="d-fr">760 kg × 3,00 €</span></span><span class="v" id="r-fr">2 280 €</span></div>
+          <div class="row tot"><span>= Recette du programme</span><span class="v" id="r-rev">6 080 €</span></div>
+          <div class="row"><span>− Coût marginal sièges</span><span class="v" id="r-cs">800 €</span></div>
+          <div class="row"><span>− Coût marginal soute</span><span class="v" id="r-cf">760 €</span></div>
+          <div class="row tot"><span>= Marge Air Côte d'Ivoire</span><span class="v" id="r-marge">+4 520 €</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Court, moyen et long terme</h2>
+        <div class="sub">Sur la base du rythme et du nombre de semaines paramétrés à gauche.</div>
+        <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Horizon</th>
+              <th>Rotations</th>
+              <th>Passagers</th>
+              <th>Fret</th>
+              <th>Marge</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pilote<span class="d">90 jours</span></td>
+              <td id="s1-rot">12</td>
+              <td id="s1-pax">120</td>
+              <td id="s1-t">9,1 t</td>
+              <td class="hl" id="s1-marge">54 240 €</td>
+            </tr>
+            <tr>
+              <td>Année 1<span class="d">montée en charge</span></td>
+              <td id="s2-rot">39</td>
+              <td id="s2-pax">390</td>
+              <td id="s2-t">29,6 t</td>
+              <td class="hl" id="s2-marge">176 280 €</td>
+            </tr>
+            <tr>
+              <td>Année 2<span class="d">bloc élargi, capacité doublée</span></td>
+              <td id="s3-rot">78</td>
+              <td id="s3-pax">780</td>
+              <td id="s3-t">59,3 t</td>
+              <td class="hl" id="s3-marge">352 560 €</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="note">
+          <b>Ce que le tableau ne chiffre pas.</b> Chaque convoyeur est un passager fidélisable sur un axe où la diaspora choisit aujourd'hui la concurrence, et chaque rotation formalise un flux de fret diaspora qui circule actuellement hors de tout cadre. Ces deux effets ne figurent dans aucune ligne ci-dessus.
+        </div>
+      </div>
+
+      <div class="asks">
+        <h2>Ce que nous vous demandons</h2>
+        <div class="sub">Quatre points pour passer du principe au pilote.</div>
+
+        <div class="ask">
+          <div class="num">1</div>
+          <div>
+            <div class="t">Le tarif du bloc siège</div>
+            <div class="x">Sur la rotation VSD, avec la dérogation au séjour minimum de 3 jours actée par écrit dans l'accord tarifaire.</div>
+          </div>
+        </div>
+        <div class="ask">
+          <div class="num">2</div>
+          <div>
+            <div class="t">Le tarif du fret accompagné</div>
+            <div class="x">Un tarif de partenaire de volume, engagé sur la durée du pilote. C'est ce tarif qui décide de la viabilité du programme côté sol.</div>
+          </div>
+        </div>
+        <div class="ask">
+          <div class="num">3</div>
+          <div>
+            <div class="t">Une allocation sans préachat</div>
+            <div class="x">Les sièges sont libérés au fur et à mesure des ventes, avec un préavis de retrait convenu. Aucune immobilisation de trésorerie de part et d'autre pendant la phase pilote.</div>
+          </div>
+        </div>
+        <div class="ask">
+          <div class="num">4</div>
+          <div>
+            <div class="t">Une formation sûreté assurée par vos équipes</div>
+            <div class="x">Chaque convoyeur formé et enregistré avant sa première mission. C'est votre garantie de conformité, et pour nous l'élément qui rend le programme crédible auprès des voyageurs : ils rejoignent un cadre officiel, pas un arrangement.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">
+        <b>Méthode.</b> Les valeurs de départ sont des hypothèses de travail, sans accès à vos données internes. Les coûts marginaux affichés (80 € par siège, 1,00 €/kg en soute) sont des ordres de grandeur destinés à être remplacés par les vôtres. Le volume de fret retenu, 760 kg par rotation, correspond à la capacité que J'Envoie Express s'engage à alimenter, aller et retour cumulés, à partir de son réseau existant de partenaires.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var DEFAULTS = {sieges:10, bloc:380, kg:760, fret:3, csiege:80, csoute:1, rythme:1, semaines:39};
+  var ids = Object.keys(DEFAULTS);
+  var el = function(id){return document.getElementById(id)};
+
+  var eur = function(n){return (n<0?'-':'')+Math.round(Math.abs(n)).toLocaleString('fr-FR')+' €'};
+  var dec = function(n){return n.toLocaleString('fr-FR',{minimumFractionDigits:1,maximumFractionDigits:1})};
+  var dec2= function(n){return n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})};
+  var num = function(n){return Math.round(n).toLocaleString('fr-FR')};
+
+  function fillTrack(input){
+    var min=+input.min, max=+input.max, v=+input.value;
+    input.style.setProperty('--pct', ((v-min)/(max-min)*100)+'%');
+  }
+
+  function compute(){
+    var v = {};
+    ids.forEach(function(id){ v[id] = +el(id).value; });
+
+    el('v-sieges').textContent  = v.sieges;
+    el('v-bloc').textContent    = eur(v.bloc);
+    el('v-kg').textContent      = num(v.kg)+' kg';
+    el('v-fret').textContent    = dec(v.fret)+' €/kg';
+    el('v-csiege').textContent  = eur(v.csiege);
+    el('v-csoute').textContent  = dec2(v.csoute)+' €/kg';
+    el('v-rythme').textContent  = v.rythme;
+    el('v-semaines').textContent= v.semaines;
+
+    var recSieges = v.sieges * v.bloc;
+    var recFret   = v.kg * v.fret;
+    var recette   = recSieges + recFret;
+    var coutS     = v.sieges * v.csiege;
+    var coutF     = v.kg * v.csoute;
+    var marge     = recette - coutS - coutF;
+
+    el('rec-sieges').textContent = eur(recSieges);
+    el('rec-fret').textContent   = eur(recFret);
+
+    el('hero').className = 'hero-res' + (marge<0 ? ' neg' : '');
+    el('marge-rot').textContent = (marge>=0?'+':'')+eur(marge);
+    el('marge-pct').textContent = (recette>0)
+      ? 'soit '+Math.round(marge/recette*100)+' % de la recette du programme'
+      : 'aucune recette avec ces paramètres';
+    el('par-siege').textContent = v.sieges>0 ? eur(recette/v.sieges) : '0 €';
+
+    el('d-si').textContent = v.sieges+' × '+eur(v.bloc);
+    el('d-fr').textContent = num(v.kg)+' kg × '+dec2(v.fret)+' €';
+    el('r-si').textContent = eur(recSieges);
+    el('r-fr').textContent = eur(recFret);
+    el('r-rev').textContent= eur(recette);
+    el('r-cs').textContent = eur(coutS);
+    el('r-cf').textContent = eur(coutF);
+    el('r-marge').textContent = (marge>=0?'+':'')+eur(marge);
+
+    var bar = el('bar');
+    bar.innerHTML = '';
+    if(marge < 0 || recette <= 0){
+      var s = document.createElement('span');
+      s.className='seg-loss'; s.style.width='100%';
+      s.textContent = recette>0 ? 'Coûts supérieurs à la recette' : 'Aucune recette';
+      bar.appendChild(s);
+    } else {
+      [['cs',coutS,'Sièges'],['cf',coutF,'Soute'],['m',marge,'Marge']].forEach(function(seg){
+        if(seg[1] <= 0) return;
+        var w = seg[1]/recette*100;
+        var sp = document.createElement('span');
+        sp.className = 'seg-'+seg[0];
+        sp.style.width = w+'%';
+        sp.textContent = w>12 ? seg[2] : '';
+        bar.appendChild(sp);
+      });
+    }
+
+    // horizons : pilote 90 j = 12 semaines, année 1 = semaines paramétrées, année 2 = capacité doublée
+    var parSemaine = v.rythme;
+    var scenarios = [
+      [1, 12 * parSemaine, 1],
+      [2, v.semaines * parSemaine, 1],
+      [3, v.semaines * parSemaine, 2]
+    ];
+    scenarios.forEach(function(sc){
+      var i = sc[0], rot = sc[1], mult = sc[2];
+      el('s'+i+'-rot').textContent   = num(rot * mult);
+      el('s'+i+'-pax').textContent   = num(rot * mult * v.sieges);
+      el('s'+i+'-t').textContent     = dec(rot * mult * v.kg / 1000)+' t';
+      el('s'+i+'-marge').textContent = eur(marge * rot * mult);
+    });
+
+    ids.forEach(function(id){fillTrack(el(id))});
+  }
+
+  ids.forEach(function(id){ el(id).addEventListener('input',compute); });
+
+  el('reset').addEventListener('click',function(){
+    ids.forEach(function(k){ el(k).value = DEFAULTS[k]; });
+    compute();
+  });
+
+  compute();
+})();
+</script>
+
+</body>
+</html>
