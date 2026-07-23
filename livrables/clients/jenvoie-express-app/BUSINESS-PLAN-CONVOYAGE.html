@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J'Envoie Express · Votre plan pour le programme convoyeurs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark:#0A1628; --navy:#001F5C; --blue:#0057CC; --sky:#5BB8F5; --gold:#F5A623;
+  --ink:#16202f; --muted:#5f6b7c; --line:rgba(16,32,47,.12);
+  --paper:#F6F8FB; --card:#fff; --green:#10B981; --red:#EF4444;
+  --sans:'DM Sans','Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  --display:'Syne','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{max-width:100%;overflow-x:hidden}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.55;-webkit-font-smoothing:antialiased;padding:0 0 64px}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+
+header{color:#fff;padding:36px 0 32px;margin-bottom:32px;
+  background-image:radial-gradient(680px 300px at 88% -25%,rgba(91,184,245,.25),transparent 62%),radial-gradient(560px 320px at -5% 10%,rgba(245,166,35,.16),transparent 58%),linear-gradient(160deg,var(--navy),var(--dark) 70%)}
+.hbar{display:flex;align-items:center;gap:12px}
+.hbar .logo{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,var(--blue),var(--sky));display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;font-family:var(--display);flex:none}
+.hbar .name{font-weight:800;font-size:15px;line-height:1.2}
+.hbar .name span{display:block;color:rgba(255,255,255,.55);font-weight:600;font-size:11px;letter-spacing:.13em;text-transform:uppercase;margin-top:2px}
+header h1{font-family:var(--display);font-weight:800;font-size:clamp(24px,4.6vw,34px);margin:20px 0 10px;line-height:1.15}
+header p{color:rgba(255,255,255,.75);font-size:14.5px;max-width:660px}
+
+h2.sec{font-family:var(--display);font-weight:700;font-size:clamp(19px,3vw,23px);color:var(--dark);margin:40px 0 6px}
+h2.sec:first-of-type{margin-top:0}
+p.lead{color:var(--muted);font-size:14px;margin-bottom:20px;max-width:680px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 8px 26px rgba(16,32,47,.05)}
+
+/* avant / apres */
+.ba{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:stretch}
+@media(max-width:720px){.ba{grid-template-columns:1fr;gap:12px}}
+.ba .side{border-radius:16px;padding:22px}
+.ba .avant{background:#fff;border:1px solid var(--line)}
+.ba .apres{background:linear-gradient(160deg,var(--navy),var(--dark));color:#fff}
+.ba .lbl{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:12px}
+.ba .apres .lbl{color:var(--sky)}
+.ba .big{font-family:var(--display);font-weight:800;font-size:clamp(30px,6vw,40px);line-height:1;margin-bottom:6px}
+.ba .avant .big{color:var(--ink)}
+.ba .apres .big{color:var(--gold)}
+.ba .unit{font-size:13px;color:var(--muted);margin-bottom:16px}
+.ba .apres .unit{color:rgba(255,255,255,.7)}
+.ba ul{list-style:none;display:grid;gap:9px;font-size:13.5px}
+.ba li{display:flex;gap:9px;align-items:flex-start}
+.ba li svg{flex:none;margin-top:4px}
+.ba .avant li svg{color:#b9c2ce}
+.ba .apres li svg{color:var(--sky)}
+.ba .apres li{color:rgba(255,255,255,.9)}
+.arrow{display:grid;place-items:center;color:var(--sky)}
+@media(max-width:720px){.arrow{transform:rotate(90deg);height:32px}}
+.x15{margin-top:18px;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.35);border-radius:12px;padding:14px 16px;font-size:14px;color:var(--dark);text-align:center}
+.x15 b{font-family:var(--display);font-size:19px;color:var(--gold)}
+
+/* chiffres a suivre */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:820px){.kpis{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.kpis{grid-template-columns:1fr}}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;border-top:3px solid var(--sky)}
+.kpi .n{font-family:var(--display);font-weight:800;font-size:30px;color:var(--dark);line-height:1}
+.kpi .t{font-size:13px;font-weight:600;margin-top:6px}
+.kpi .d{font-size:11.5px;color:var(--muted);margin-top:3px}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch;background:#fff;border:1px solid var(--line);border-radius:16px}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+th,td{text-align:right;padding:13px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal}
+thead th{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700;background:rgba(91,184,245,.06)}
+tbody td{font-family:var(--display);font-weight:700;color:var(--dark)}
+tbody td:first-child{font-family:var(--sans);font-weight:600;color:var(--ink)}
+tbody td .d{display:block;font-family:var(--sans);font-weight:400;font-size:11.5px;color:var(--muted);margin-top:2px}
+tbody tr:last-child td{border-bottom:none}
+tbody tr.goal td{background:rgba(16,185,129,.07)}
+tbody tr.goal td:first-child{color:var(--dark)}
+.tot-row td{border-top:2px solid var(--line);background:rgba(91,184,245,.05)}
+
+/* liste investissements */
+.inv{display:grid;gap:10px}
+.ii{display:flex;gap:13px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:13px;padding:15px 17px}
+.ii .ic{width:32px;height:32px;flex:none;border-radius:9px;background:rgba(91,184,245,.14);color:var(--blue);display:grid;place-items:center}
+.ii .t{font-size:14px;font-weight:600}
+.ii .x{font-size:12.5px;color:var(--muted);margin-top:2px}
+.ii .p{margin-left:auto;font-family:var(--display);font-weight:700;font-size:14px;color:var(--dark);white-space:nowrap;padding-left:12px}
+.ii.first{border-color:rgba(245,166,35,.45);background:rgba(245,166,35,.06)}
+.ii.first .ic{background:rgba(245,166,35,.18);color:#b5760e}
+
+/* revenus */
+.rev{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.rev{grid-template-columns:1fr}}
+.rc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px}
+.rc.b{background:linear-gradient(160deg,var(--navy),var(--dark));color:#fff;border:none}
+.rc .k{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.rc.b .k{color:var(--sky)}
+.rc .n{font-family:var(--display);font-weight:800;font-size:32px;margin-top:8px;line-height:1;color:var(--dark)}
+.rc.b .n{color:var(--gold)}
+.rc .x{font-size:13px;color:var(--muted);margin-top:8px}
+.rc.b .x{color:rgba(255,255,255,.78)}
+
+/* chaine */
+.chain{display:grid;gap:10px}
+.step{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px 18px}
+.step .no{width:30px;height:30px;flex:none;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:13px}
+.step .t{font-size:14px;font-weight:600;margin-bottom:2px}
+.step .x{font-size:12.5px;color:var(--muted)}
+
+.note{background:#fff;border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:13px;padding:17px 19px;font-size:13px;color:var(--muted);margin-top:18px}
+.note b{color:var(--ink)}
+.note ul{margin:9px 0 0 18px;display:grid;gap:6px}
+
+.warn{background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.35);border-radius:13px;padding:17px 19px;font-size:13px;color:var(--ink);margin-top:18px}
+.warn b{color:#8a5a04}
+
+footer{margin-top:44px;padding-top:22px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+
+@media print{
+  body{background:#fff;padding:0}
+  header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .card,.kpi,.ii,.step,.rc,.note,.warn,.ba .side,table,tr,.tbl-wrap,.x15{break-inside:avoid;page-break-inside:avoid}
+  .tbl-wrap{overflow:visible}
+  table{min-width:0}
+  h2.sec{break-after:avoid;page-break-after:avoid}
+  *{overflow:visible !important;box-shadow:none !important}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="hbar">
+      <div class="logo">JEE</div>
+      <div class="name">J'Envoie Express<span>× Mr Attractor</span></div>
+    </div>
+    <h1>Votre plan pour le programme convoyeurs</h1>
+    <p>Ce que le partenariat Air Côte d'Ivoire change pour votre activité, ce que vous devez mettre en place, et les chiffres à suivre chaque semaine. Document de travail, juillet 2026.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <h2 class="sec">Ce qui change pour vous</h2>
+  <p class="lead">Aujourd'hui vous portez les colis vous-même. Demain, dix voyageurs les portent à votre place, chaque week-end, et vous ne quittez plus Paris.</p>
+
+  <div class="ba">
+    <div class="side avant">
+      <div class="lbl">Aujourd'hui</div>
+      <div class="big">60 kg</div>
+      <div class="unit">par voyage, quand vous voyagez</div>
+      <ul>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Vous payez votre billet à chaque fois</span></li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Vous partez, donc rien n'avance pendant ce temps</span></li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Le volume est limité par votre corps et votre agenda</span></li>
+      </ul>
+    </div>
+
+    <div class="arrow">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </div>
+
+    <div class="side apres">
+      <div class="lbl">Avec le programme</div>
+      <div class="big">920 kg</div>
+      <div class="unit">par week-end, sans voyager</div>
+      <ul>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Vous ne payez plus de billet, sauf si vous voulez voyager</span></li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Dix voyageurs partent chaque week-end à votre place</span></li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Le volume dépend de votre organisation, plus de votre présence</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="x15">
+    Soit <b>15 fois plus de volume</b> par départ, et vous restez au sol pour tout piloter.
+  </div>
+
+  <div class="warn">
+    <b>Le point que vous n'aviez pas en tête, et c'est le cœur du modèle.</b> Vous n'êtes plus le voyageur : vous êtes celui qui organise les voyageurs des autres. Un réseau de convoyeurs recrutés et payants remplace vos allers-retours. Votre métier ne disparaît pas, il monte d'un cran. <b>Vous devenez le chef des opérations du programme.</b>
+  </div>
+
+  <h2 class="sec">Vos quatre chiffres, chaque semaine</h2>
+  <p class="lead">Rien d'autre à suivre. Si ces quatre chiffres sont bons, le reste suit.</p>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="n">10</div>
+      <div class="t">Convoyeurs embarqués</div>
+      <div class="d">chaque vendredi, sur le bloc de 10 sièges</div>
+    </div>
+    <div class="kpi">
+      <div class="n">920 kg</div>
+      <div class="t">Fret expédié</div>
+      <div class="d">aller et retour cumulés sur la rotation</div>
+    </div>
+    <div class="kpi">
+      <div class="n">12</div>
+      <div class="t">Partenaires actifs</div>
+      <div class="d">ceux qui vous apportent des colis dans la semaine</div>
+    </div>
+    <div class="kpi">
+      <div class="n">0</div>
+      <div class="t">Incident</div>
+      <div class="d">colis perdu, abîmé, ou livré en retard</div>
+    </div>
+  </div>
+
+  <h2 class="sec">Votre montée en charge, sur 90 jours</h2>
+  <p class="lead">On ne démarre pas à dix convoyeurs. On y arrive en trois mois, en construisant le réseau au fur et à mesure.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Période</th>
+          <th>Convoyeurs<br>par week-end</th>
+          <th>Fret<br>par week-end</th>
+          <th>Partenaires<br>actifs</th>
+          <th>Ce sur quoi<br>vous travaillez</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mois 1<span class="d">on apprend le geste</span></td>
+          <td>4</td>
+          <td>370 kg</td>
+          <td>4</td>
+          <td style="font-family:var(--sans);font-weight:400;font-size:12.5px;white-space:normal;text-align:left;color:var(--muted)">Rodage de la chaîne, formation sûreté, premiers partenaires</td>
+        </tr>
+        <tr>
+          <td>Mois 2<span class="d">on fiabilise</span></td>
+          <td>7</td>
+          <td>640 kg</td>
+          <td>8</td>
+          <td style="font-family:var(--sans);font-weight:400;font-size:12.5px;white-space:normal;text-align:left;color:var(--muted)">Recrutement du réseau, régularité des départs, main-d'œuvre</td>
+        </tr>
+        <tr class="goal">
+          <td>Mois 3<span class="d">le rythme de croisière</span></td>
+          <td>10</td>
+          <td>920 kg</td>
+          <td>12</td>
+          <td style="font-family:var(--sans);font-weight:400;font-size:12.5px;white-space:normal;text-align:left;color:var(--muted)">Bloc complet chaque semaine, flux retour Abidjan installé</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="sec">Ce que vous devez mettre en place</h2>
+  <p class="lead">Les montants sont des ordres de grandeur à valider avec vos fournisseurs. L'essentiel est de savoir dans quoi vous mettez l'argent, et pourquoi.</p>
+
+  <div class="inv">
+    <div class="ii first">
+      <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12l1 6H5l1-6Z"/><path d="M5 8h14v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8Z"/><path d="M10 12h4"/></svg></div>
+      <div>
+        <div class="t">Sacs professionnels brandés</div>
+        <div class="x">Votre idée, et c'est la bonne priorité. Un sac à vos couleurs, c'est ce qui vous distingue d'un colis emballé à la maison. Aux yeux d'Air Côte d'Ivoire, du convoyeur et du client, ça dit la même chose : c'est un opérateur, pas un particulier. Comptez une cinquantaine de sacs pour tourner.</div>
+      </div>
+      <div class="p">≈ 1 000 €</div>
+    </div>
+
+    <div class="ii">
+      <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M4 7h16"/><path d="M8 7 4 15a4 4 0 0 0 8 0L8 7Z"/><path d="M16 7l-4 8a4 4 0 0 0 8 0l-4-8Z"/></svg></div>
+      <div>
+        <div class="t">Balance homologuée jusqu'à 300 kg</div>
+        <div class="x">Le poids annoncé doit être le poids réel, au kilo près. C'est ce qui vous protège en cas de litige et ce qui rend votre manifeste crédible.</div>
+      </div>
+      <div class="p">≈ 300 €</div>
+    </div>
+
+    <div class="ii">
+      <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 8l2-4h14l2 4"/><path d="M12 8v13"/></svg></div>
+      <div>
+        <div class="t">Consommables d'emballage</div>
+        <div class="x">Film, cartons, étiquettes, scellés numérotés. Le scellé est important : il prouve que personne n'a ouvert le sac entre chez vous et l'avion.</div>
+      </div>
+      <div class="p">≈ 150 €/mois</div>
+    </div>
+
+    <div class="ii">
+      <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg></div>
+      <div>
+        <div class="t">Un local de collecte en région parisienne</div>
+        <div class="x">Un box ou un petit local où les colis arrivent dans la semaine et où vous emballez le vendredi. Aujourd'hui vous stockez chez vous ; à 920 kg par semaine ce ne sera plus possible.</div>
+      </div>
+      <div class="p">≈ 250 €/mois</div>
+    </div>
+
+    <div class="ii">
+      <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></div>
+      <div>
+        <div class="t">Une personne le vendredi</div>
+        <div class="x">Emballer, peser, étiqueter et charger 920 kg ne se fait pas seul en une journée. Une aide sur la journée du vendredi, c'est ce qui vous permet de tenir le rythme chaque semaine sans vous épuiser.</div>
+      </div>
+      <div class="p">≈ 130 €/rotation</div>
+    </div>
+
+    <div class="ii">
+      <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg></div>
+      <div>
+        <div class="t">Assurance des marchandises</div>
+        <div class="x">À 920 kg par semaine, un seul incident non couvert efface plusieurs mois de bénéfice. À faire chiffrer avant la première rotation.</div>
+      </div>
+      <div class="p">à chiffrer</div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Ce que vous n'avez pas à financer.</b> La plateforme de réservation et de suivi, la campagne de recrutement des convoyeurs et la production des contenus sont portées par Mr Attractor. Votre correspondant à Abidjan et le livreur sont déjà en place. <b>Et vous ne payez plus de billet d'avion</b>, sauf si vous choisissez de voyager vous-même.
+  </div>
+
+  <h2 class="sec">Ce que ça vous rapporte</h2>
+  <p class="lead">Deux choses différentes, à ne pas confondre. Vos frais vous sont remboursés d'un côté, votre bénéfice arrive de l'autre.</p>
+
+  <div class="rev">
+    <div class="rc">
+      <div class="k">1 · Vos frais, remboursés</div>
+      <div class="n">≈ 2 660 €</div>
+      <div class="x">par rotation. C'est la ligne « opérations » du programme, calculée au kilo transporté. Elle couvre le local, la main-d'œuvre, l'emballage, le transport vers l'aéroport et la distribution à Abidjan. Elle est payée avant tout partage : vous n'avancez pas vos frais sur votre bénéfice.</div>
+    </div>
+    <div class="rc b">
+      <div class="k">2 · Votre bénéfice</div>
+      <div class="n">≈ 885 €</div>
+      <div class="x">par rotation, soit environ 3 540 € par mois sur quatre départs. C'est votre part du résultat du programme, une fois tous les frais payés, y compris les vôtres. Le pourcentage exact est le point à négocier avec Mr Attractor.</div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Comment lire ces montants.</b> Ils correspondent au rythme de croisière du mois 3, avec 760 kg effectivement vendus sur les 920 kg de capacité, et un partage à parts égales. Ils bougeront selon deux chiffres qui ne sont pas encore connus : le tarif que nous accorde Air Côte d'Ivoire pour le fret, et votre coût réel au kilo, que vous seul pouvez établir une fois le local et la main-d'œuvre calés. <b>C'est le premier chiffre que nous vous demandons de produire.</b>
+  </div>
+
+  <h2 class="sec">La chaîne que vous devez tenir</h2>
+  <p class="lead">Cinq étapes chaque semaine. Si une seule casse, le vol part sans les colis et il n'y a pas de rattrapage avant sept jours.</p>
+
+  <div class="chain">
+    <div class="step">
+      <div class="no">1</div>
+      <div>
+        <div class="t">Du lundi au jeudi, la collecte</div>
+        <div class="x">Les colis des clients et ceux des douze partenaires arrivent au local. Chaque colis est enregistré à l'arrivée, pesé, et rattaché à son expéditeur. Rien n'entre sans être saisi.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="no">2</div>
+      <div>
+        <div class="t">Le jeudi soir, l'arbitrage</div>
+        <div class="x">Vous savez combien de convoyeurs partent et combien de kilos vous avez. Si vous avez trop, vous décalez au week-end suivant en prévenant. Si vous n'avez pas assez, vous relancez les partenaires. C'est le moment de la semaine où vous pilotez vraiment.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="no">3</div>
+      <div>
+        <div class="t">Le vendredi matin, la préparation</div>
+        <div class="x">Emballage dans les sacs brandés, pesée finale, scellés numérotés, et le manifeste : la liste de ce qui part, sac par sac. C'est ce document qui rend le fret déclaré et vous protège.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="no">4</div>
+      <div>
+        <div class="t">Le vendredi, la remise à l'aéroport</div>
+        <div class="x">Chaque convoyeur reçoit ses sacs préparés. Il n'a rien emballé, rien acheté, rien à déclarer de son côté : il voyage, c'est tout. Vous, vous avez tout préparé et tout signé.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="no">5</div>
+      <div>
+        <div class="t">À Abidjan, la réception et le retour</div>
+        <div class="x">Votre correspondant récupère, dédouane et distribue. Puis il prépare le sens inverse, parce que les mêmes convoyeurs rentrent le dimanche avec 46 kg chacun. <b>Le retour, c'est la moitié de votre volume : ne le laissez jamais partir à vide.</b></div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec">Les trois choses à ne pas rater</h2>
+
+  <div class="note">
+    <ul>
+      <li><b>Le réseau de partenaires, avant tout le reste.</b> Les sièges se rempliront, c'est une campagne de recrutement classique. Les kilos, non. Douze partenaires qui vous apportent régulièrement leurs colis, c'est ce qui décide si le programme tient ou pas. Commencez à les contacter maintenant, avant même la première rotation.</li>
+      <li><b>Votre coût réel au kilo.</b> Tant que vous ne l'avez pas mesuré, personne ne peut dire si le prix de gros de 8 €/kg est tenable. C'est votre chiffre, il conditionne toute la négociation, et vous êtes le seul à pouvoir le produire.</li>
+      <li><b>La régularité.</b> Un partenaire qui vous confie ses colis vous fait confiance sur une date. Une rotation ratée coûte plus cher qu'une rotation à moitié pleine : elle vous fait perdre le partenaire, et il en parle aux autres.</li>
+    </ul>
+  </div>
+
+  <div class="warn">
+    <b>Ce qui reste à négocier entre nous.</b> Le pourcentage de partage du résultat, le périmètre exact du programme convoyeurs par rapport à votre activité actuelle, qui figure au contrat avec Air Côte d'Ivoire, et à qui appartiennent la marque et le fichier des convoyeurs. Ces points se règlent par écrit avant la première rotation, pas après. Un document séparé les reprend un par un.
+  </div>
+
+  <footer>
+    J'Envoie Express × Mr Attractor · Programme convoyeurs Air Côte d'Ivoire · Document de travail, juillet 2026. Les montants sont des ordres de grandeur destinés à être remplacés par les chiffres réels.
+  </footer>
+
+</div>
+
+</body>
+</html>
