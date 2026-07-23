@@ -91,6 +91,7 @@ h1 .o { color:var(--orange); }
 .prix .n { font-family:var(--display); font-weight:800; font-size:clamp(40px,9vw,56px); line-height:.95; color:var(--ink); }
 .prix .n sup { font-size:.42em; font-weight:700; color:var(--orange); top:-.9em; }
 .prix .l { font-size:14.5px; color:var(--muted); padding-bottom:6px; }
+.prix .l s { color:var(--ink-2); font-weight:600; }
 .hcta { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:24px; }
 .hcta .btn { flex:1 1 auto; min-width:190px; }
 @media (min-width:560px) { .hcta .btn { flex:0 0 auto; } }
@@ -141,8 +142,32 @@ h2 { font-family:var(--display); font-weight:700; font-size:clamp(25px,4.4vw,38p
 .opt { margin-top:24px; background:var(--white); border:1px dashed var(--line); border-radius:16px; padding:16px 24px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
 .opt .t { font-weight:600; font-size:15.5px; }
 .opt .x { font-size:14px; color:var(--muted); margin-top:2px; }
-.opt .p { margin-left:auto; font-family:var(--display); font-weight:800; font-size:20px; color:var(--orange-d); }
+.opt .p { margin-left:auto; font-family:var(--display); font-weight:800; font-size:20px; color:var(--orange-d); white-space:nowrap; }
+.opt .p s { color:var(--muted); font-weight:600; font-size:16px; margin-right:8px; }
 @media (max-width:520px) { .opt .p { margin-left:0; } }
+
+/* comparatif */
+.compare { margin-top:24px; background:var(--white); border:1.5px solid var(--orange); border-radius:24px; padding:24px; }
+.compare h3 { font-family:var(--display); font-weight:700; font-size:clamp(18px,2.6vw,21px); margin-bottom:16px; }
+.tbl { display:grid; gap:8px; }
+.tbl .hd, .tbl .ln { display:grid; grid-template-columns:1fr auto auto; gap:8px; align-items:center; }
+.tbl .hd { font-size:11.5px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); padding:0 16px 8px; border-bottom:1px solid var(--line); }
+.tbl .hd span + span, .tbl .ln .av, .tbl .ln .ap { text-align:right; min-width:96px; }
+.tbl .ln { background:var(--creme); border-radius:14px; padding:16px; }
+.tbl .lb { font-weight:600; font-size:15px; }
+.tbl i { display:none; font-style:normal; font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+.tbl .av b { font-weight:500; font-size:15px; color:var(--muted); text-decoration:line-through; }
+.tbl .ap b { font-family:var(--display); font-weight:800; font-size:18px; color:var(--vert-d); }
+.tbl .tot { background:var(--vert-l); border:1px solid rgba(0,158,96,.24); }
+.tbl .tot .ap b { font-size:21px; }
+@media (max-width:560px) {
+  .tbl .hd { display:none; }
+  .tbl .ln { grid-template-columns:1fr 1fr; row-gap:8px; }
+  .tbl .lb { grid-column:1 / -1; }
+  .tbl i { display:block; margin-bottom:2px; }
+  .tbl .av, .tbl .ap { text-align:left; min-width:0; }
+}
+.cnote { margin-top:16px; font-size:13.5px; color:var(--muted); }
 
 /* pourquoi */
 .why { display:grid; gap:16px; align-items:center; }
@@ -262,7 +287,7 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
       <p class="hlead">Vous partez le vendredi matin, vous rentrez le dimanche soir. Un seul jour de congé à poser, deux nuits pleines au pays.</p>
       <div class="prix">
         <div class="n">430 €<sup>*</sup></div>
-        <div class="l">à partir de, aller-retour<br>billet et 10 kg en cabine compris</div>
+        <div class="l">à partir de, aller-retour, 10 kg en cabine compris<br><s>650 à 900 €</s> au tarif public</div>
       </div>
       <div class="hnote">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="color:var(--orange)"><path d="M3 20v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1"/><circle cx="9" cy="8" r="3.4"/><path d="M16 14.2a4.6 4.6 0 0 1 5 4.6V20"/><path d="M15.6 5.2a3.2 3.2 0 0 1 0 5.9"/></svg>
@@ -297,7 +322,7 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
       <div class="fo">
         <div class="k">Le vol</div>
         <div class="n">430 €<sup>*</sup></div>
-        <div class="u">à partir de, aller-retour par personne</div>
+        <div class="u">à partir de, aller-retour par personne, contre 650 à 900 € au tarif public</div>
         <ul>
           <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>Le billet aller-retour</b>, vol direct Paris Abidjan, départ vendredi et retour dimanche</span></li>
           <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>10 kg de bagage en cabine</b>, sans supplément</span></li>
@@ -327,7 +352,30 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
         <div class="t">Vous voulez emporter une valise en plus</div>
         <div class="x">Une seule valise de 23 kg en soute, à titre exceptionnel, à réserver au moment de l'inscription. Elle s'ajoute à la formule de votre choix.</div>
       </div>
-      <div class="p">+ 49 €</div>
+      <div class="p"><s>150 €</s> 99 €</div>
+    </div>
+
+    <div class="compare">
+      <h3>Ce que vous payez ailleurs, ce que vous payez ici</h3>
+      <div class="tbl">
+        <div class="hd"><span></span><span>Au tarif public</span><span>Avec VSD</span></div>
+        <div class="ln">
+          <span class="lb">Le billet aller-retour</span>
+          <span class="av"><i>Tarif public</i><b>650 à 900 €</b></span>
+          <span class="ap"><i>Avec VSD</i><b>430 €</b></span>
+        </div>
+        <div class="ln">
+          <span class="lb">La valise de 23 kg</span>
+          <span class="av"><i>Tarif public</i><b>150 €</b></span>
+          <span class="ap"><i>Avec VSD</i><b>99 €</b></span>
+        </div>
+        <div class="ln tot">
+          <span class="lb">Le week-end, valise comprise</span>
+          <span class="av"><i>Tarif public</i><b>800 à 1 050 €</b></span>
+          <span class="ap"><i>Avec VSD</i><b>529 €</b></span>
+        </div>
+      </div>
+      <p class="cnote">Le tarif public varie selon la période et le moment de la réservation. Le nôtre est le même toute l'année sur les départs ouverts.</p>
     </div>
   </div>
 </section>
@@ -462,10 +510,10 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
         </select>
       </div>
       <div class="field">
-        <label for="f-valise">La valise supplémentaire à 49 €</label>
+        <label for="f-valise">La valise supplémentaire à 99 €</label>
         <select id="f-valise">
           <option>Non, je voyage en cabine uniquement</option>
-          <option>Oui, je veux la valise de 23 kg</option>
+          <option>Oui, je veux la valise de 23 kg, 99 €</option>
           <option>Je déciderai plus tard</option>
         </select>
       </div>
@@ -507,6 +555,10 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
         <div class="a"><p>Non. Le départ du vendredi et le retour du dimanche sont fixes, et c'est cette contrainte qui rend le prix possible. Si vous avez besoin de rester plus longtemps, prenez un billet classique.</p></div>
       </details>
       <details class="q">
+        <summary>Et si je veux rapporter des choses au retour ?</summary>
+        <div class="a"><p>Ajoutez la valise de 23 kg à <b>99 €</b>. Ailleurs, un bagage supplémentaire sur cette ligne vous coûte autour de 150 €, et vous ne l'obtenez pas toujours au dernier moment. Elle est à vous, à l'aller comme au retour.</p><p>Au-delà d'une valise, parlez-nous en : nous expédions déjà des colis vers la France chaque semaine, c'est notre métier.</p></div>
+      </details>
+      <details class="q">
         <summary>Que comprend exactement la formule à 500 € ?</summary>
         <div class="a"><p>Le vol aller-retour, vos 10 kg en cabine, et vos deux nuits du vendredi et du samedi chez notre hôtel partenaire à Abidjan. Un prix rond, tout compris, sans rien à réserver ni à avancer sur place.</p><p>Si vous logez chez la famille, prenez la formule à 430 €, vous ne payez que le vol.</p></div>
       </details>
@@ -524,7 +576,7 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
       <div><b style="color:var(--ink)">VSD by Attractor</b>, le week-end Paris Abidjan</div>
       <div><a href="#liste">Rejoindre la liste d'attente</a></div>
     </div>
-    <p class="legal"><b>*</b> Tarif à partir de 430 €, par personne, aller-retour, variable selon la date de départ et les places disponibles. Comprend le billet aller-retour et 10 kg de bagage en cabine. La formule à 500 € ajoute les deux nuits du vendredi et du samedi chez l'hôtel partenaire à Abidjan, en chambre standard. Valise supplémentaire de 23 kg en option à 49 €, une seule par voyageur. Le tarif suppose de renoncer à la franchise bagage en soute. <b>Le prix se règle en deux fois</b> : 50 € de frais de réservation encaissés par Mr Attractor après validation du dossier, remboursés intégralement si la place ne peut pas être fournie, et le solde correspondant au titre de transport réglé directement à la compagnie sur son propre système de paiement, dans un délai de 48 heures après réception du lien. Passé ce délai la place est réattribuée et les frais de réservation restent acquis. Aucun voyageur ne transporte de marchandise pour le compte d'un tiers : le fret voyage déclaré, sous document de transport, au nom de l'opérateur. Places limitées par départ, inscriptions à l'avance uniquement, closes dix jours avant le vol. Tarif réservé aux inscrits et non revendable. Horaires donnés à titre indicatif et susceptibles d'être modifiés par la compagnie.</p>
+    <p class="legal"><b>*</b> Tarif à partir de 430 €, par personne, aller-retour, variable selon la date de départ et les places disponibles. Comprend le billet aller-retour et 10 kg de bagage en cabine. La formule à 500 € ajoute les deux nuits du vendredi et du samedi chez l'hôtel partenaire à Abidjan, en chambre standard. Valise supplémentaire de 23 kg en option à 99 €, une seule par voyageur, au lieu de 150 € pour un bagage supplémentaire au tarif public. Prix publics de comparaison relevés sur les tarifs affichés de la ligne Paris Abidjan, variables selon la période et la date de réservation. Le tarif suppose de renoncer à la franchise bagage en soute. <b>Le prix se règle en deux fois</b> : 50 € de frais de réservation encaissés par Mr Attractor après validation du dossier, remboursés intégralement si la place ne peut pas être fournie, et le solde correspondant au titre de transport réglé directement à la compagnie sur son propre système de paiement, dans un délai de 48 heures après réception du lien. Passé ce délai la place est réattribuée et les frais de réservation restent acquis. Aucun voyageur ne transporte de marchandise pour le compte d'un tiers : le fret voyage déclaré, sous document de transport, au nom de l'opérateur. Places limitées par départ, inscriptions à l'avance uniquement, closes dix jours avant le vol. Tarif réservé aux inscrits et non revendable. Horaires donnés à titre indicatif et susceptibles d'être modifiés par la compagnie.</p>
   </div>
 </footer>
 

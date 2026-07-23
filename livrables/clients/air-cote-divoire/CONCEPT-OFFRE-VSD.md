@@ -22,7 +22,7 @@ C'est tout. Il n'y a rien d'autre à comprendre pour l'acheter.
 |---|---|---|
 | **Le vol** | **à partir de 430 €** | Billet aller-retour, 10 kg en cabine, accueil à l'aéroport |
 | **Le vol et l'hôtel** | **500 €, prix rond** | Idem, plus les deux nuits chez l'hôtel partenaire à Abidjan |
-| Option | + 49 € | Une seule valise de 23 kg en soute, à titre exceptionnel |
+| Option | **+ 99 €** | Une seule valise de 23 kg en soute, contre 150 € au tarif public |
 
 **La construction du 430, à garder pour nous.** 380 € est le tarif du siège que nous facture la compagnie, 50 € est notre marge. Le prix public part donc de 430 € et jamais en dessous : descendre sous ce seuil, c'est vendre le voyage à perte avant même d'avoir compté le fret.
 
@@ -69,7 +69,7 @@ C'est le cœur du contrat moral de l'offre. Il doit tenir en un écran.
 - **10 kg de bagage en cabine**, inclus
 - **Ses deux nuits d'hôtel comprises** s'il prend la formule à 500 €
 - Deux nuits pleines sur place, vendredi et samedi
-- L'option **une seule valise de 23 kg en soute pour 49 €**, à titre exceptionnel
+- L'option **une seule valise de 23 kg en soute pour 99 €**, contre 150 € au tarif public
 - Ses miles sMiles, sur un billet payant, comme n'importe quel passager
 - Un accompagnement à l'aéroport le jour du départ (on est là, il n'est pas seul)
 
@@ -90,10 +90,28 @@ Cette dernière ligne n'est pas une formalité administrative. **C'est la protec
 | Aller-retour Paris-Abidjan au tarif public | de l'ordre de 650 à 900 € selon la période |
 | Formule Le vol | **à partir de 430 €** |
 | Formule Le vol et l'hôtel | **500 €**, deux nuits comprises |
-| Avec la valise de 23 kg | **+ 49 €** |
+| Avec la valise de 23 kg | **+ 99 €** (150 € au tarif public) |
 | Ce qu'il économise sur le seul billet | **entre 220 et 470 €** |
 
 > **Ce que « à partir de » veut dire, et il faut le tenir.** 430 € est un plancher, pas un tarif unique : il correspond au tarif bloc de 380 € plus 50 € de marge. Les départs de forte demande se vendent au-dessus. Si la compagnie remonte son tarif bloc, c'est le prix public qui monte, jamais la marge qui s'écrase.
+
+### Le discours à tenir : on ne dit pas « c'est pas cher », on montre la comparaison
+
+Un prix seul ne prouve rien, un écart si. Le discours de vente se tient ligne par ligne :
+
+| | Au tarif public | En passant par nous |
+|---|---|---|
+| Le billet aller-retour | 650 à 900 € | **430 €** |
+| La valise de 23 kg | 150 € | **99 €** |
+| **Le week-end, valise comprise** | **800 à 1 050 €** | **529 €** |
+
+Trois règles pour que cette comparaison tienne, y compris devant quelqu'un qui vérifie :
+
+1. **Toujours annoncer une fourchette pour le tarif public**, jamais un chiffre unique. Il varie selon la période et le moment de la réservation, et un client qui trouve 620 € un mardi de septembre aurait raison de nous reprendre.
+2. **Comparer ce qui est comparable** : un aller-retour direct sur la même ligne, pas un vol avec escale à 500 €. Notre argument est le prix, il ne doit pas se payer d'une malhonnêteté sur le produit comparé.
+3. **La valise est le meilleur argument de l'offre après le billet.** 99 € contre 150 €, sur un bagage que les compagnies vendent cher et souvent refusent au dernier moment, parle immédiatement à la diaspora qui ne voyage jamais les mains vides.
+
+**Ce que la valise nous rapporte vraiment.** Elle voyage sous la franchise personnelle du voyageur : elle ne nous coûte ni fret ni emballage. À 99 €, dix valises font **990 € par rotation de marge quasi pure**, soit deux fois notre marge sur les dix sièges. Elle mérite d'être poussée activement au moment de l'inscription, pas laissée en option discrète.
 
 **Le convoyeur n'est jamais payé.** C'est une décision de conception, pas un oubli.
 
@@ -155,9 +173,9 @@ Le sens du flux d'argent décide de qui possède le client. Ce n'est pas un dét
 | Ce qui est vendu | Par qui | Encaissé par | Montant |
 |---|---|---|---|
 | Le siège aller-retour | La compagnie | Son lien de paiement | 380 € |
-| La valise de 23 kg, en option | La compagnie (c'est sa franchise) | Son lien de paiement | 49 € |
+| La valise de 23 kg, en option | Nous (levée d'une restriction de notre offre) | XPaye | 99 € |
 | Le service d'organisation VSD | Nous | XPaye | 50 € |
-| **Total payé par le voyageur** | | | **430 €**, ou 479 € avec la valise |
+| **Total payé par le voyageur** | | | **430 €**, ou 529 € avec la valise |
 
 Le prix affiché ne bouge pas. Ce qui change, c'est qu'il se règle en deux fois, à deux destinataires différents.
 
@@ -215,7 +233,7 @@ Trois bénéfices à souligner en séance :
 
 1. **Le format du lien de paiement** : lien nominatif généré à la demande, ou code de réservation à régler en ligne ? Ça décide de notre délai de bouclage.
 2. **Le délai de validité du lien**, qui doit être compatible avec nos 48 heures.
-3. **Qui facture la valise** : sur leur lien avec le billet, ce qui est le plus propre, ou par nous en achat de franchise.
+3. **La valise est facturée par nous, à confirmer avec eux.** Elle voyage sous la franchise personnelle du voyageur, que notre tarif restreint : les 99 € sont donc la levée d'une restriction de notre offre, pas la vente d'un service aérien. C'est le même mécanisme que le bagage payant chez une compagnie à bas coût. À faire valider par leur équipe pour qu'aucune ambiguïté ne subsiste à l'enregistrement.
 4. **Le point de bascule** : à partir de quand la place est réputée confirmée de leur côté, pour que nous ne bloquions jamais quelque chose qu'ils peuvent nous reprendre.
 
 > **Attention au raccourci.** « La compagnie encaisse et XPaye nous reverse » ne fonctionne pas tel quel : XPaye ne peut prélever que sur un flux qui passe par lui. Si le paiement se fait sur un lien de la compagnie, c'est leur système qui reverse, pas XPaye. Il faut choisir : ou le flux passe par nous, ou le reversement est une écriture comptable entre eux et nous.
@@ -278,7 +296,7 @@ Un client qui part une fois nous coûte cher en acquisition. Un client qui part 
 
 **Chez nous, cette semaine**
 - ~~Le nom commercial définitif.~~ **Tranché le 23/07 : VSD by Attractor.**
-- La valise à 49 € : elle rapporte 490 € par rotation en marge quasi pure, mais elle coûte 230 kg de capacité. Arbitrée le 23/07 en **option exceptionnelle, une seule par voyageur**, ce qui limite la perte de capacité tout en gardant la recette.
+- La valise à 99 € : elle rapporte jusqu'à 990 € par rotation en marge quasi pure (elle voyage sous la franchise personnelle du voyageur, elle ne nous coûte ni fret ni emballage), mais elle coûte 230 kg de capacité fret. Arbitrée en **option exceptionnelle, une seule par voyageur**.
 - **L'hôtel partenaire à Abidjan.** C'est la condition de la formule à 500 €, et elle est tenue par un tiers. Objectif de négociation : la chambre nettement sous 50 € la nuit, sur les deux nuits du vendredi et du samedi, avec un contingent bloqué chaque semaine. Tant que ce n'est pas signé, la formule reste masquée sur le site.
 - Le budget d'acquisition par rotation, aujourd'hui posé à 400 €.
 
