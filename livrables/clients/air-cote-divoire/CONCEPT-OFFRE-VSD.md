@@ -10,13 +10,23 @@
 
 ## 1. L'offre en une phrase
 
-**72h Paris-Abidjan-Paris à partir de 380 €, du vendredi au dimanche, pour ceux qui acceptent de voyager sans soute personnelle.**
+**72h Paris-Abidjan-Paris à partir de 430 €, du vendredi au dimanche, pour ceux qui acceptent de voyager sans soute personnelle.**
 
 C'est tout. Il n'y a rien d'autre à comprendre pour l'acheter.
 
 **La marque, arrêtée le 23/07 :** l'offre s'appelle **VSD by Attractor**. Elle est portée par Mr Attractor avec la compagnie, pas par J'Envoie Express, qui reste l'opérateur du fret en coulisse. Charte aux couleurs du drapeau ivoirien (orange, blanc, vert), les mêmes que celles de la compagnie.
 
-**Le prix comprend trois choses, et rien à ajouter :** le billet aller-retour, 10 kg de bagage en cabine, et une réduction exceptionnelle sur l'hébergement des deux nuits à Abidjan. Une seule valise de 23 kg en soute reste possible, à titre exceptionnel, à 49 €.
+**Deux formules, arrêtées le 23/07 :**
+
+| Formule | Prix | Ce qu'elle comprend |
+|---|---|---|
+| **Le vol** | **à partir de 430 €** | Billet aller-retour, 10 kg en cabine, accueil à l'aéroport |
+| **Le vol et l'hôtel** | **500 €, prix rond** | Idem, plus les deux nuits chez l'hôtel partenaire à Abidjan |
+| Option | + 49 € | Une seule valise de 23 kg en soute, à titre exceptionnel |
+
+**La construction du 430, à garder pour nous.** 380 € est le tarif du siège que nous facture la compagnie, 50 € est notre marge. Le prix public part donc de 430 € et jamais en dessous : descendre sous ce seuil, c'est vendre le voyage à perte avant même d'avoir compté le fret.
+
+**La formule à 500 € est conditionnée au partenariat hôtel.** Tant qu'aucun établissement n'est signé, elle ne doit pas être publiée : le site la fait disparaître partout en basculant `CONFIG.hebergement` sur `false`. À 500 €, il reste 120 € pour couvrir deux nuits et notre marge, ce qui impose de négocier la chambre nettement sous 50 € la nuit. C'est le chiffre à obtenir avant d'annoncer ce prix rond.
 
 ---
 
@@ -55,9 +65,9 @@ Quatre segments, dans l'ordre de facilité de conversion.
 C'est le cœur du contrat moral de l'offre. Il doit tenir en un écran.
 
 **Ce qu'il reçoit**
-- Un aller-retour Paris-Abidjan sur vol direct, **à partir de 380 €**
+- Un aller-retour Paris-Abidjan sur vol direct, **à partir de 430 €**
 - **10 kg de bagage en cabine**, inclus
-- Une **réduction exceptionnelle sur l'hébergement** de ses deux nuits à Abidjan
+- **Ses deux nuits d'hôtel comprises** s'il prend la formule à 500 €
 - Deux nuits pleines sur place, vendredi et samedi
 - L'option **une seule valise de 23 kg en soute pour 49 €**, à titre exceptionnel
 - Ses miles sMiles, sur un billet payant, comme n'importe quel passager
@@ -78,11 +88,12 @@ Cette dernière ligne n'est pas une formalité administrative. **C'est la protec
 | | Montant |
 |---|---|
 | Aller-retour Paris-Abidjan au tarif public | de l'ordre de 650 à 900 € selon la période |
-| Offre VSD | **à partir de 380 €** |
-| Avec la valise de 23 kg | **429 €** |
-| Ce qu'il économise | **entre 250 et 500 €**, hébergement non compris |
+| Formule Le vol | **à partir de 430 €** |
+| Formule Le vol et l'hôtel | **500 €**, deux nuits comprises |
+| Avec la valise de 23 kg | **+ 49 €** |
+| Ce qu'il économise sur le seul billet | **entre 220 et 470 €** |
 
-> **Point de vigilance à traiter dans la négociation.** 380 € est le tarif que le simulateur suppose payé à la compagnie par siège. Vendu 380 € au public, le siège ne laisse aucune marge et l'hébergement réduit s'ajoute au coût. Deux conditions pour que ce prix d'appel tienne : obtenir un tarif bloc sensiblement sous 380 €, et réserver le 380 aux dates creuses, les autres départs se vendant plus haut. C'est le sens du « à partir de ».
+> **Ce que « à partir de » veut dire, et il faut le tenir.** 430 € est un plancher, pas un tarif unique : il correspond au tarif bloc de 380 € plus 50 € de marge. Les départs de forte demande se vendent au-dessus. Si la compagnie remonte son tarif bloc, c'est le prix public qui monte, jamais la marge qui s'écrase.
 
 **Le convoyeur n'est jamais payé.** C'est une décision de conception, pas un oubli.
 
@@ -159,7 +170,7 @@ Un client qui part une fois nous coûte cher en acquisition. Un client qui part 
 **Chez nous, cette semaine**
 - ~~Le nom commercial définitif.~~ **Tranché le 23/07 : VSD by Attractor.**
 - La valise à 49 € : elle rapporte 490 € par rotation en marge quasi pure, mais elle coûte 230 kg de capacité. Arbitrée le 23/07 en **option exceptionnelle, une seule par voyageur**, ce qui limite la perte de capacité tout en gardant la recette.
-- L'hébergement à prix réduit : il faut les partenaires à Abidjan et le montant de la remise. C'est une promesse tenue par des tiers, donc à sécuriser avant la première publicité.
+- **L'hôtel partenaire à Abidjan.** C'est la condition de la formule à 500 €, et elle est tenue par un tiers. Objectif de négociation : la chambre nettement sous 50 € la nuit, sur les deux nuits du vendredi et du samedi, avec un contingent bloqué chaque semaine. Tant que ce n'est pas signé, la formule reste masquée sur le site.
 - Le budget d'acquisition par rotation, aujourd'hui posé à 400 €.
 
 **La règle de rareté, décidée le 23/07 (interne, ne figure nulle part sur le site)**

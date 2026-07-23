@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VSD by Attractor · 72h Paris Abidjan Paris</title>
-<meta name="description" content="72h Paris Abidjan Paris à un tarif imbattable. À partir de 380 €, billet aller-retour, 10 kg en cabine et une réduction exceptionnelle sur l'hébergement. Places limitées, sur liste d'attente.">
+<meta name="description" content="72h Paris Abidjan Paris à un tarif imbattable. À partir de 430 € le vol aller-retour avec 10 kg en cabine, ou 500 € tout compris avec l'hôtel. Places limitées, sur liste d'attente.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -112,7 +112,23 @@ h2 { font-family:var(--display); font-weight:700; font-size:clamp(25px,4.4vw,38p
 .card.o .ic { color:var(--orange-d); }
 .card h3 { font-family:var(--display); font-weight:700; font-size:18px; margin-bottom:8px; line-height:1.3; }
 .card p { color:var(--ink-2); font-size:15.5px; }
-.opt { margin-top:16px; background:var(--white); border:1px dashed var(--line); border-radius:16px; padding:16px 24px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+/* formules */
+.forms { display:grid; gap:16px; }
+@media (min-width:800px) { .forms { grid-template-columns:1fr 1fr; gap:24px; } }
+.fo { position:relative; background:var(--white); border:1.5px solid var(--line); border-radius:24px; padding:32px 24px; display:flex; flex-direction:column; }
+.fo.hi { border-color:var(--orange); background:linear-gradient(170deg,var(--orange-l),var(--white) 62%); box-shadow:0 14px 34px rgba(247,127,0,.14); }
+.rub { position:absolute; top:-13px; left:24px; background:var(--orange); color:#fff; font-size:11.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; padding:8px 16px; border-radius:999px; }
+.fo .k { font-size:12px; font-weight:700; letter-spacing:.11em; text-transform:uppercase; color:var(--muted); }
+.fo.hi .k { color:var(--orange-d); }
+.fo .n { font-family:var(--display); font-weight:800; font-size:clamp(38px,7.4vw,48px); line-height:1; margin:8px 0; }
+.fo .n sup { font-size:.4em; font-weight:700; color:var(--orange); top:-.95em; }
+.fo .u { font-size:14px; color:var(--muted); margin-bottom:24px; }
+.fo ul { list-style:none; display:grid; gap:12px; margin-bottom:24px; font-size:15.5px; color:var(--ink-2); }
+.fo li { display:flex; gap:8px; align-items:flex-start; }
+.fo li svg { margin-top:4px; color:var(--vert); }
+.fo li b { color:var(--ink); }
+.fo .btn { width:100%; margin-top:auto; }
+.opt { margin-top:24px; background:var(--white); border:1px dashed var(--line); border-radius:16px; padding:16px 24px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
 .opt .t { font-weight:600; font-size:15.5px; }
 .opt .x { font-size:14px; color:var(--muted); margin-top:2px; }
 .opt .p { margin-left:auto; font-family:var(--display); font-weight:800; font-size:20px; color:var(--orange-d); }
@@ -208,8 +224,8 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
       <h1>72h Paris, Abidjan, Paris. <span class="o">À un tarif imbattable.</span></h1>
       <p class="hlead">Vous partez le vendredi matin, vous rentrez le dimanche soir. Un seul jour de congé à poser, deux nuits pleines au pays.</p>
       <div class="prix">
-        <div class="n">380 €<sup>*</sup></div>
-        <div class="l">à partir de, aller-retour<br>billet, 10 kg en cabine et l'hébergement à prix réduit</div>
+        <div class="n">430 €<sup>*</sup></div>
+        <div class="l">à partir de, aller-retour<br>billet et 10 kg en cabine compris</div>
       </div>
       <div class="hcta">
         <a class="btn btn-o" href="#liste">Rejoindre la liste d'attente</a>
@@ -232,34 +248,47 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
   </div>
 </header>
 
-<section class="white">
+<section class="white" id="formules">
   <div class="wrap">
     <div class="sec-head">
-      <span class="tag">Ce qui est compris</span>
-      <h2>Trois choses dans le prix, et rien à ajouter</h2>
-      <p>Pas de frais de dossier, pas de supplément au moment de payer.</p>
+      <span class="tag">Les formules</span>
+      <h2>Deux façons de partir, un prix connu à l'avance</h2>
+      <p>Pas de frais de dossier, pas de supplément au moment de payer. Le prix affiché est le prix payé.</p>
     </div>
-    <div class="cards c3">
-      <div class="card o">
-        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5a2.1 2.1 0 0 0-3-3L13 8 4.8 6.2a.5.5 0 0 0-.5.8l3.2 4-2.3 2.3-1.9-.4a.5.5 0 0 0-.5.8L5 16l1.3 2.2a.5.5 0 0 0 .8-.1l1.4-1.6 2.3-2.3 4 3.2a.5.5 0 0 0 .8-.5z"/></svg></div>
-        <h3>Le billet aller-retour</h3>
-        <p>Vol direct Paris Abidjan, à l'aller comme au retour. Départ le vendredi matin, retour le dimanche après-midi.</p>
+
+    <div class="forms">
+      <div class="fo">
+        <div class="k">Le vol</div>
+        <div class="n">430 €<sup>*</sup></div>
+        <div class="u">à partir de, aller-retour par personne</div>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>Le billet aller-retour</b>, vol direct Paris Abidjan, départ vendredi et retour dimanche</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>10 kg de bagage en cabine</b>, sans supplément</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>L'accueil de notre équipe à l'aéroport le jour du départ</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Vous vous logez où vous voulez, chez la famille ou à l'hôtel</span></li>
+        </ul>
+        <a class="btn btn-g" href="#liste">Choisir cette formule</a>
       </div>
-      <div class="card o">
-        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="13" rx="2.4"/><path d="M9 7V5.2A2.2 2.2 0 0 1 11.2 3h1.6A2.2 2.2 0 0 1 15 5.2V7"/><path d="M9 12h6"/></svg></div>
-        <h3>10 kg en cabine</h3>
-        <p>Votre bagage à main part avec vous, sans supplément. De quoi voyager confortablement pour trois jours.</p>
-      </div>
-      <div class="card o">
-        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9.4a1 1 0 0 1 .5-.9l8-4.4a1 1 0 0 1 1 0l8 4.4a1 1 0 0 1 .5.9V21"/><path d="M3 21h18"/><path d="M9.5 21v-5.5h5V21"/></svg></div>
-        <h3>L'hébergement à prix réduit</h3>
-        <p>Une réduction exceptionnelle, négociée pour les voyageurs VSD, sur vos deux nuits à Abidjan. Vous réservez, nous appliquons le tarif.</p>
+
+      <div class="fo hi" id="fo-hotel">
+        <div class="rub">Tout compris</div>
+        <div class="k">Le vol et l'hôtel</div>
+        <div class="n">500 €</div>
+        <div class="u">par personne, tout compris, prix rond</div>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>Tout ce que comprend la formule Le vol</b></span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>Vos deux nuits à Abidjan</b> chez notre hôtel partenaire, vendredi et samedi</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Rien à chercher, rien à réserver, rien à avancer sur place</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Vous arrivez, vous posez vos affaires, votre week-end commence</span></li>
+        </ul>
+        <a class="btn btn-o" href="#liste">Choisir cette formule</a>
       </div>
     </div>
+
     <div class="opt">
       <div>
         <div class="t">Vous voulez emporter une valise en plus</div>
-        <div class="x">Une seule valise de 23 kg en soute, à titre exceptionnel, à réserver au moment de l'inscription.</div>
+        <div class="x">Une seule valise de 23 kg en soute, à titre exceptionnel, à réserver au moment de l'inscription. Elle s'ajoute à la formule de votre choix.</div>
       </div>
       <div class="p">+ 49 €</div>
     </div>
@@ -292,7 +321,7 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
     <div class="tl">
       <div class="row"><div class="h">Vendredi 6h</div><div><div class="t">Rendez-vous à l'aéroport</div><div class="x">Notre équipe vous accueille, vous enregistrez, et vous embarquez.</div></div></div>
       <div class="row"><div class="h">Vendredi 8h</div><div><div class="t">Décollage</div><div class="x">Vol direct, sans escale.</div></div></div>
-      <div class="row"><div class="h">Vendredi 13h30</div><div><div class="t">Arrivée à Abidjan</div><div class="x">Votre après-midi commence, et votre hébergement vous attend au tarif VSD.</div></div></div>
+      <div class="row"><div class="h">Vendredi 13h30</div><div><div class="t">Arrivée à Abidjan</div><div class="x">Votre après-midi commence. En formule tout compris, votre chambre vous attend, vous n'avez rien à réserver.</div></div></div>
       <div class="row"><div class="h">Le week-end</div><div><div class="t">Deux nuits, deux journées pleines</div><div class="x">La famille, la cérémonie, le fournisseur, le chantier. Vous faites ce que vous êtes venu faire.</div></div></div>
       <div class="row"><div class="h">Dimanche 15h30</div><div><div class="t">Décollage retour</div><div class="x">Même vol, même équipe, même organisation.</div></div></div>
       <div class="row"><div class="h">Dimanche 23h</div><div><div class="t">Arrivée à Paris</div><div class="x">Vous dormez chez vous, et vous travaillez le lundi matin.</div></div></div>
@@ -331,6 +360,14 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
       <div class="field">
         <label for="f-date">Le départ qui vous intéresse</label>
         <select id="f-date"></select>
+      </div>
+      <div class="field">
+        <label for="f-formule">Votre formule</label>
+        <select id="f-formule">
+          <option>Le vol seul, à partir de 430 €</option>
+          <option>Le vol et l'hôtel, 500 € tout compris</option>
+          <option>Je veux en parler avant de choisir</option>
+        </select>
       </div>
       <div class="field">
         <label for="f-valise">La valise supplémentaire à 49 €</label>
@@ -373,8 +410,8 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
         <div class="a"><p>Non. Le départ du vendredi et le retour du dimanche sont fixes, et c'est cette contrainte qui rend le prix possible. Si vous avez besoin de rester plus longtemps, prenez un billet classique.</p></div>
       </details>
       <details class="q">
-        <summary>Comment fonctionne la réduction sur l'hébergement ?</summary>
-        <div class="a"><p>Nous avons négocié un tarif réservé aux voyageurs VSD pour vos deux nuits à Abidjan. Au moment de confirmer votre place, nous vous transmettons les adresses partenaires et le code qui vous donne la réduction.</p></div>
+        <summary>Que comprend exactement la formule à 500 € ?</summary>
+        <div class="a"><p>Le vol aller-retour, vos 10 kg en cabine, et vos deux nuits du vendredi et du samedi chez notre hôtel partenaire à Abidjan. Un prix rond, tout compris, sans rien à réserver ni à avancer sur place.</p><p>Si vous logez chez la famille, prenez la formule à 430 €, vous ne payez que le vol.</p></div>
       </details>
       <details class="q">
         <summary>Qui peut s'inscrire ?</summary>
@@ -390,7 +427,7 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
       <div><b style="color:var(--ink)">VSD by Attractor</b>, le week-end Paris Abidjan</div>
       <div><a href="#liste">Rejoindre la liste d'attente</a></div>
     </div>
-    <p class="legal"><b>*</b> Tarif à partir de, par personne, aller-retour, selon la date de départ et les places disponibles. Comprend le billet, 10 kg de bagage en cabine et l'accès au tarif réduit sur l'hébergement partenaire à Abidjan. Valise supplémentaire de 23 kg en option à 49 €, une seule par voyageur. Le tarif suppose de renoncer à la franchise bagage en soute. Aucun voyageur ne transporte de marchandise pour le compte d'un tiers : le fret voyage déclaré, sous document de transport, au nom de l'opérateur. Places limitées par départ, inscriptions à l'avance uniquement, closes dix jours avant le vol. Tarif réservé aux inscrits et non revendable. Horaires donnés à titre indicatif et susceptibles d'être modifiés par la compagnie.</p>
+    <p class="legal"><b>*</b> Tarif à partir de 430 €, par personne, aller-retour, variable selon la date de départ et les places disponibles. Comprend le billet aller-retour et 10 kg de bagage en cabine. La formule à 500 € ajoute les deux nuits du vendredi et du samedi chez l'hôtel partenaire à Abidjan, en chambre standard. Valise supplémentaire de 23 kg en option à 49 €, une seule par voyageur. Le tarif suppose de renoncer à la franchise bagage en soute. Aucun voyageur ne transporte de marchandise pour le compte d'un tiers : le fret voyage déclaré, sous document de transport, au nom de l'opérateur. Places limitées par départ, inscriptions à l'avance uniquement, closes dix jours avant le vol. Tarif réservé aux inscrits et non revendable. Horaires donnés à titre indicatif et susceptibles d'être modifiés par la compagnie.</p>
   </div>
 </footer>
 
@@ -406,6 +443,7 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
 var CONFIG = {
   whatsapp: '2250708682116',
   offre: 'VSD by Attractor',
+  hebergement: true,  // false = la formule à 500 € disparaît partout (tant que l'hôtel partenaire n'est pas signé)
   delaiMini: 21,      // premier départ proposé, en jours à partir d'aujourd'hui
   cloture: 10,        // les inscriptions ferment X jours avant le départ
   nbDeparts: 6,       // nombre de départs affichés
@@ -414,6 +452,14 @@ var CONFIG = {
 };
 
 var MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+
+/* la formule hôtel n'existe que si le partenariat est signé */
+if (!CONFIG.hebergement) {
+  var bloc = document.getElementById('fo-hotel');
+  if (bloc) { bloc.parentNode.removeChild(bloc); }
+  var sel = document.getElementById('f-formule');
+  if (sel && sel.options.length > 1) { sel.remove(1); }
+}
 
 /* les prochains vendredis, à partir du délai minimum */
 function departs() {
@@ -501,6 +547,7 @@ document.getElementById('send').addEventListener('click', function () {
   var nom = document.getElementById('f-nom').value.trim();
   var tel = document.getElementById('f-tel').value.trim();
   var date = document.getElementById('f-date').value;
+  var formule = document.getElementById('f-formule').value;
   var valise = document.getElementById('f-valise').value;
 
   if (!nom) { alert('Merci d\'indiquer votre nom.'); document.getElementById('f-nom').focus(); return; }
@@ -510,6 +557,7 @@ document.getElementById('send').addEventListener('click', function () {
           + 'Nom : ' + nom + '\n'
           + 'Numéro : ' + tel + '\n'
           + 'Départ souhaité : ' + date + '\n'
+          + 'Formule : ' + formule + '\n'
           + 'Valise supplémentaire : ' + valise;
 
   window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(txt), '_blank');
