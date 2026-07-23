@@ -71,6 +71,35 @@ On rentre avec ses montants bruts, on divise nous-mêmes par les kilos. **Ne pas
 
 ---
 
+## Bloc 3 bis. La prospection à Abidjan, à lancer dans cette séance
+
+Le retour n'est pas assuré, et c'est acté : le volume varie, la prospection est à faire. Ce n'est pas un problème à cacher, c'est un chantier à ouvrir avec lui, avec des objectifs bas au départ.
+
+**Les paliers à lui présenter** (capacité retour, et ce qu'on cherche à vendre dessus) :
+
+| | Convoyeurs | Capacité retour | Objectif |
+|---|---|---|---|
+| Mois 1 | 4 | 184 kg | **55 kg**, on apprend |
+| Mois 2 | 7 | 322 kg | **175 kg**, on fiabilise |
+| Mois 3 | 10 | 460 kg | **370 kg**, rythme de croisière |
+
+Un retour à moitié vide au mois 1 est normal. Au mois 3, c'est le signal que le modèle ne tient pas.
+
+14. **« À Abidjan, qui pourrait nous envoyer des marchandises toutes les semaines ? »**
+    On cherche du **B2B régulier**, pas des particuliers. Un partenaire qui expédie 50 kg par semaine vaut vingt colis de famille.
+15. **« Tu connais des marques, des créateurs, des producteurs qui vendent déjà à la diaspora ? »**
+    Cosmétique naturelle, pagne et prêt-à-porter, transformés secs. Ce sont les produits qui passent la douane sans difficulté.
+16. **« Ton correspondant sur place, il peut démarcher, ou il ne fait que réceptionner ? »**
+    Ça décide s'il faut quelqu'un de plus à Abidjan.
+
+**L'argument à leur servir, une seule phrase :** *« Votre commande part le dimanche, elle est à Paris le lundi. Pas dans trois semaines. »* Le délai est le seul avantage qu'aucun groupeur maritime ni aucun GP ne peut copier.
+
+**Piste que Mac Arthur apporte, à ne pas oublier :** les clients de l'agence déjà en Côte d'Ivoire sont des expéditeurs potentiels, en relation de confiance et sur les bons produits. Le réseau Petro Ivoire ouvert par le dossier Ayêla également.
+
+**L'indicateur à suivre chaque semaine :** le nombre de partenaires ayant expédié au moins une fois dans les trente derniers jours. Pas les contacts, pas les promesses. Les expéditeurs actifs.
+
+---
+
 ## Bloc 4. Ce qu'on lui annonce
 
 Des décisions déjà prises, qu'il doit connaître pour ne pas les découvrir plus tard.
@@ -118,3 +147,12 @@ Des décisions déjà prises, qu'il doit connaître pour ne pas les découvrir p
 - [ ] A-t-il un local, ou faut-il en prévoir un
 - [ ] Sa réaction sur le principe « chacun est payé pour ce qu'il apporte »
 - [ ] La question restée ouverte du 21/07 : ce qu'il perd en quittant Corsair, en cagnotte
+- [ ] Trois noms d'expéditeurs B2B potentiels à Abidjan, à rappeler dans la semaine
+- [ ] Son correspondant à Abidjan peut-il démarcher, ou seulement réceptionner
+
+---
+
+## À faire de notre côté après la séance
+
+- [ ] Demander à Air Côte d'Ivoire **la liste écrite des marchandises acceptées et refusées** en fret accompagné. Sans elle, chaque colis collecté est un pari. Question critique à y inclure : **le poisson fumé est-il accepté en soute**, ou refusé pour l'odeur ? C'est notre meilleure ligne alimentaire du retour et beaucoup de compagnies la refusent. Détail dans `PRODUITS-ACCEPTES.md`.
+- [ ] Lui transmettre `DOUANE-FLUX-RETOUR.md` et la liste de collecte, pour qu'il forme la personne qui réceptionne à Abidjan.

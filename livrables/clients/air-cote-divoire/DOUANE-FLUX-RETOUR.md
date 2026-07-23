@@ -120,7 +120,50 @@ Un droit de douane forfaitaire de 3 € et une taxe sur les petits colis ont ét
 
 ---
 
-## 8. Ce qu'il faut faire avant la première rotation retour
+## 8. Le retour est un objectif, pas un acquis
+
+> Cadrage posé par Mac Arthur le 23/07 : le sens Abidjan vers Paris **n'est pas encore assuré**,
+> le volume est moins certain d'une semaine à l'autre, et un travail de prospection reste à faire.
+> Les prévisions en tiennent compte. **Les chiffres du simulateur ne sont donc pas des
+> prévisions, ce sont des cibles**, et c'est ce qui définit les objectifs de terrain.
+
+Cette lecture doit accompagner tous les documents chiffrés du dossier. Un chiffre présenté comme acquis alors qu'il est à conquérir se retourne toujours contre celui qui l'a annoncé, en interne comme devant la compagnie.
+
+### Les paliers du retour, sur 90 jours
+
+Capacité retour disponible selon la rampe du business plan (4, puis 7, puis 10 convoyeurs par week-end) :
+
+| | Convoyeurs | Capacité retour | Objectif de remplissage | Kilos à vendre |
+|---|---|---|---|---|
+| **Mois 1** | 4 | 184 kg | 30 % | **55 kg** |
+| **Mois 2** | 7 | 322 kg | 55 % | **175 kg** |
+| **Mois 3** | 10 | 460 kg | 80 % | **370 kg** |
+
+Ces objectifs de remplissage sont volontairement bas au départ. **Un retour à moitié vide au mois 1 est normal ; un retour à moitié vide au mois 3 signifie que le modèle ne tient pas** et qu'il faut soit réduire le nombre de départs, soit revoir l'économie de l'aller pour qu'il porte seul la rotation.
+
+### Ce que coûte un retour vide
+
+Chaque kilo retour non vendu est une marge non faite, pas une perte sèche. Sur une rotation à pleine capacité, les 460 kg du retour représentent environ **690 € de marge en canal gros** et jusqu'à **2 530 € en canal direct**. C'est l'écart entre une rotation confortable et une rotation qui couvre à peine ses frais fixes.
+
+### Le plan de prospection Abidjan
+
+Le particulier qui envoie un colis à sa famille ne fera jamais le volume. **Un partenaire B2B régulier vaut vingt particuliers**, et c'est là que doit porter l'effort.
+
+**Cibles prioritaires, dans l'ordre de facilité :**
+
+1. **Les clients de l'agence déjà en Côte d'Ivoire.** C'est le vivier le plus rapide et le moins cher, il est déjà en relation de confiance. Les marques de cosmétique naturelle (huiles, beurres, savons) et l'agroalimentaire sec passent la douane sans difficulté et ont une clientèle diaspora en France. À contacter en premier.
+2. **Le réseau Petro Ivoire**, ouvert par le dossier Ayêla : stations, épiceries fines, marques référencées. Un réseau constitué vaut mieux que du démarchage à froid.
+3. **Les créateurs et stylistes** (pagne, wax, prêt-à-porter) qui vendent déjà à la diaspora par Instagram et WhatsApp, et qui expédient aujourd'hui par GP avec des délais de trois semaines.
+4. **Les producteurs de transformés secs** : attiéké déshydraté, épices, jus, café, cacao. Produit léger, valeur au kilo correcte, aucune contrainte sanitaire.
+5. **Les boutiques africaines en France**, prises par l'autre bout : ce sont elles qui commandent. Une boutique qui s'approvisionne toutes les semaines vaut un partenaire permanent à Abidjan.
+
+**L'argument de vente à Abidjan, en une phrase :** *« Votre commande part le dimanche et elle est livrée à Paris le lundi. Pas dans trois semaines. »* Le délai est le seul avantage qu'aucun groupeur maritime ni aucun GP ne peut copier, et il vaut plus cher que le prix au kilo.
+
+**L'indicateur à suivre chaque semaine :** le nombre de partenaires qui ont expédié au moins une fois dans les trente derniers jours. Pas le nombre de contacts, pas le nombre de promesses. Les expéditeurs actifs.
+
+---
+
+## 9. Ce qu'il faut faire avant la première rotation retour
 
 1. **Trancher le régime du retour** : fret commercial ou groupage d'envois personnels. Tout le reste en découle.
 2. **Faire valider la liste par un transitaire agréé** à Abidjan et par Infos Douane Service en France. Une heure de conseil évite un conteneur bloqué.

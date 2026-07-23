@@ -8,6 +8,17 @@
 > Une rotation = un week-end. Année utile = 39 rotations (9 mois, la haute saison de décembre
 > à février étant supposée fermée par la compagnie).
 
+> ### Statut des chiffres, à lire avant tout le reste
+>
+> **Ce ne sont pas des prévisions, ce sont des cibles.** Le sens Abidjan vers Paris n'est pas
+> encore assuré : le volume varie d'une semaine à l'autre et la prospection reste à faire. Les
+> montants de ce document décrivent donc **le modèle une fois les objectifs de terrain
+> atteints**, pas la situation de la première rotation.
+>
+> Conséquence pratique : ces chiffres servent à fixer des objectifs et à négocier une structure,
+> jamais à promettre un revenu, ni à Jean Yves, ni à la compagnie, ni à soi-même. Les paliers
+> réalistes du flux retour sont dans `DOUANE-FLUX-RETOUR.md`, section 8.
+
 ---
 
 ## 1. Le compte de la rotation, tel qu'il est aujourd'hui
