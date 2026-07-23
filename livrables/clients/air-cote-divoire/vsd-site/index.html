@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VSD by Attractor · 72h Paris Abidjan Paris</title>
+<meta name="description" content="72h Paris Abidjan Paris à un tarif imbattable. À partir de 380 €, billet aller-retour, 10 kg en cabine et une réduction exceptionnelle sur l'hébergement. Places limitées, sur liste d'attente.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* couleurs du drapeau ivoirien, reprises par la compagnie */
+  --orange: #F77F00;
+  --orange-d: #DC6A00;
+  --orange-l: #FFF1E0;
+  --vert: #009E60;
+  --vert-d: #007647;
+  --vert-l: #E6F6EF;
+  --creme: #FFFAF4;
+  --ink: #17202B;
+  --ink-2: #4A5768;
+  --muted: #6B7A8D;
+  --line: #EAE1D6;
+  --white: #FFFFFF;
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --display: 'Sora', system-ui, sans-serif;
+  --sh: 0 12px 32px rgba(23,32,43,.07);
+  --sh-o: 0 12px 28px rgba(247,127,0,.26);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+html, body { max-width:100%; overflow-x:hidden; }
+body {
+  font-family:var(--sans); font-size:16px; line-height:1.55;
+  color:var(--ink); background:var(--creme);
+  -webkit-font-smoothing:antialiased; overflow-wrap:break-word;
+}
+img { max-width:100%; display:block; }
+a { color:inherit; text-decoration:none; }
+svg { flex:none; }
+.wrap { width:100%; max-width:1120px; margin:0 auto; padding:0 16px; }
+@media (min-width:768px) { .wrap { padding:0 32px; } }
+
+/* bandeau interne, à supprimer avant diffusion */
+.internal { background:var(--ink); color:#fff; font-size:13px; font-weight:500; text-align:center; padding:8px 16px; line-height:1.4; }
+
+/* nav */
+.nav { position:sticky; top:0; z-index:100; background:rgba(255,250,244,.94); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+.nav .inner { display:flex; align-items:center; justify-content:space-between; gap:16px; height:64px; }
+.brand { display:flex; align-items:center; gap:8px; min-width:0; }
+.mark { width:38px; height:38px; border-radius:11px; flex:none; display:grid; place-items:center; background:linear-gradient(135deg,var(--orange),var(--vert)); color:#fff; font-family:var(--display); font-weight:800; font-size:13px; letter-spacing:.02em; }
+.brand .n { font-family:var(--display); font-weight:800; font-size:16px; line-height:1.1; white-space:nowrap; }
+.brand .n span { display:block; font-family:var(--sans); font-weight:500; font-size:10px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin-top:2px; }
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:8px 24px; border-radius:999px; font-family:var(--sans); font-weight:600; font-size:15px; border:1.5px solid transparent; cursor:pointer; text-align:center; transition:transform .15s ease, box-shadow .15s ease, background .15s ease; }
+.btn:active { transform:scale(.97); }
+.btn-o { background:var(--orange); color:#fff; box-shadow:var(--sh-o); }
+.btn-o:hover { background:var(--orange-d); }
+.btn-v { background:var(--vert); color:#fff; }
+.btn-v:hover { background:var(--vert-d); }
+.btn-g { background:#fff; border-color:var(--line); color:var(--ink); }
+.btn-g:hover { border-color:var(--orange); color:var(--orange-d); }
+.nav .btn { padding:8px 18px; font-size:14px; }
+@media (max-width:430px) { .nav .btn { padding:8px 14px; font-size:13.5px; } .brand .n { font-size:15px; } }
+
+/* hero */
+.hero { padding:40px 0 48px; background:radial-gradient(620px 300px at 92% -10%, rgba(0,158,96,.10), transparent 60%), radial-gradient(560px 280px at -5% 0%, rgba(247,127,0,.13), transparent 60%); }
+@media (min-width:900px) { .hero { padding:56px 0 64px; } }
+.hsplit { display:grid; gap:32px; align-items:center; }
+@media (min-width:900px) { .hsplit { grid-template-columns:1.05fr .95fr; gap:48px; } }
+.pill { display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap; max-width:100%; background:var(--vert-l); color:var(--vert-d); border-radius:999px; padding:8px 16px; font-size:13px; font-weight:600; margin-bottom:24px; }
+.pill .dot { width:8px; height:8px; border-radius:50%; background:var(--vert); flex:none; }
+h1 { font-family:var(--display); font-weight:800; font-size:clamp(32px,7.4vw,54px); line-height:1.05; letter-spacing:-.025em; margin-bottom:16px; }
+h1 .o { color:var(--orange); }
+.hlead { font-size:clamp(17px,2.2vw,19px); color:var(--ink-2); max-width:52ch; margin-bottom:24px; }
+.prix { display:flex; align-items:flex-end; gap:12px; flex-wrap:wrap; margin-bottom:24px; }
+.prix .n { font-family:var(--display); font-weight:800; font-size:clamp(40px,9vw,56px); line-height:.95; color:var(--ink); }
+.prix .n sup { font-size:.42em; font-weight:700; color:var(--orange); top:-.9em; }
+.prix .l { font-size:14.5px; color:var(--muted); padding-bottom:6px; }
+.hcta { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:24px; }
+.hcta .btn { flex:1 1 auto; min-width:190px; }
+@media (min-width:560px) { .hcta .btn { flex:0 0 auto; } }
+.hero-img { position:relative; border-radius:24px; overflow:hidden; box-shadow:var(--sh); background:var(--orange-l); }
+.hero-img img { width:100%; height:auto; aspect-ratio:1400/787; object-fit:cover; }
+.badge { position:absolute; left:16px; bottom:16px; background:rgba(255,255,255,.95); backdrop-filter:blur(6px); border-radius:14px; padding:8px 16px; font-size:13px; font-weight:600; color:var(--ink); box-shadow:var(--sh); }
+.badge b { color:var(--orange-d); }
+
+/* compte à rebours */
+.cd { background:var(--white); border:1px solid var(--line); border-radius:20px; padding:16px 24px; box-shadow:var(--sh); }
+.cd .k { font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+.cd .k b { color:var(--orange-d); }
+.cdrow { display:flex; gap:8px; flex-wrap:wrap; }
+.cdu { background:var(--creme); border-radius:12px; padding:8px 16px; text-align:center; min-width:64px; flex:1 1 auto; }
+.cdu .v { font-family:var(--display); font-weight:800; font-size:24px; line-height:1.1; color:var(--ink); font-variant-numeric:tabular-nums; }
+.cdu .u { font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-top:2px; }
+
+/* sections */
+section { padding:48px 0; }
+@media (min-width:768px) { section { padding:64px 0; } }
+.sec-head { max-width:62ch; margin-bottom:32px; }
+.tag { display:inline-block; font-size:12px; font-weight:700; letter-spacing:.11em; text-transform:uppercase; color:var(--orange-d); margin-bottom:8px; }
+h2 { font-family:var(--display); font-weight:700; font-size:clamp(25px,4.4vw,38px); line-height:1.14; letter-spacing:-.018em; }
+.sec-head p { color:var(--ink-2); margin-top:16px; font-size:17px; }
+.white { background:var(--white); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+
+/* cartes */
+.cards { display:grid; gap:16px; }
+@media (min-width:720px) { .cards.c3 { grid-template-columns:repeat(3,1fr); } }
+.card { background:var(--white); border:1px solid var(--line); border-radius:20px; padding:24px; max-width:100%; }
+.card.o { background:var(--orange-l); border-color:rgba(247,127,0,.24); }
+.card .ic { width:44px; height:44px; border-radius:13px; display:grid; place-items:center; background:var(--white); color:var(--orange); margin-bottom:16px; border:1px solid var(--line); }
+.card.o .ic { color:var(--orange-d); }
+.card h3 { font-family:var(--display); font-weight:700; font-size:18px; margin-bottom:8px; line-height:1.3; }
+.card p { color:var(--ink-2); font-size:15.5px; }
+.opt { margin-top:16px; background:var(--white); border:1px dashed var(--line); border-radius:16px; padding:16px 24px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+.opt .t { font-weight:600; font-size:15.5px; }
+.opt .x { font-size:14px; color:var(--muted); margin-top:2px; }
+.opt .p { margin-left:auto; font-family:var(--display); font-weight:800; font-size:20px; color:var(--orange-d); }
+@media (max-width:520px) { .opt .p { margin-left:0; } }
+
+/* pourquoi */
+.why { display:grid; gap:16px; align-items:center; }
+@media (min-width:860px) { .why { grid-template-columns:1fr 1fr; gap:48px; } }
+.why img { border-radius:24px; box-shadow:var(--sh); width:100%; height:auto; aspect-ratio:1600/900; object-fit:cover; }
+.wl { list-style:none; display:grid; gap:16px; margin-top:24px; }
+.wl li { display:flex; gap:12px; align-items:flex-start; font-size:16px; color:var(--ink-2); }
+.wl li svg { margin-top:3px; color:var(--vert); }
+.wl li b { color:var(--ink); }
+
+/* timeline */
+.tl { display:grid; gap:8px; }
+.tl .row { display:flex; gap:16px; align-items:flex-start; background:var(--white); border:1px solid var(--line); border-radius:16px; padding:16px; }
+.tl .h { font-family:var(--display); font-weight:800; font-size:14px; color:var(--orange-d); flex:none; width:112px; }
+@media (max-width:480px) { .tl .row { flex-direction:column; gap:8px; } .tl .h { width:auto; } }
+.tl .t { font-size:15.5px; font-weight:600; }
+.tl .x { font-size:14.5px; color:var(--muted); margin-top:2px; }
+
+/* calendrier */
+.cal { display:grid; gap:16px; }
+@media (min-width:640px) { .cal { grid-template-columns:repeat(2,1fr); } }
+@media (min-width:960px) { .cal { grid-template-columns:repeat(3,1fr); } }
+.dep { background:var(--white); border:1px solid var(--line); border-radius:20px; padding:24px; display:flex; flex-direction:column; gap:16px; }
+.dep.hot { border-color:rgba(247,127,0,.42); box-shadow:0 8px 24px rgba(247,127,0,.10); }
+.dep .d { font-family:var(--display); font-weight:800; font-size:20px; line-height:1.2; }
+.dep .r { font-size:14px; color:var(--muted); margin-top:2px; }
+.jauge { height:8px; border-radius:999px; background:var(--line); overflow:hidden; }
+.jauge span { display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,var(--orange),var(--orange-d)); }
+.dep .s { display:flex; align-items:center; gap:8px; font-size:14px; font-weight:600; color:var(--orange-d); }
+.dep.full { opacity:.62; }
+.dep.full .s { color:var(--muted); }
+.dep.full .jauge span { background:var(--muted); }
+.dep .btn { width:100%; margin-top:auto; }
+.calnote { margin-top:24px; font-size:14.5px; color:var(--muted); text-align:center; }
+
+/* formulaire */
+.form-card { background:var(--white); border:1px solid var(--line); border-radius:24px; padding:24px; max-width:560px; margin:0 auto; box-shadow:var(--sh); }
+@media (min-width:768px) { .form-card { padding:32px; } }
+.field { margin-bottom:16px; }
+.field label { display:block; font-size:14px; font-weight:600; margin-bottom:8px; }
+.field input, .field select { width:100%; max-width:100%; min-height:48px; padding:8px 16px; background:var(--creme); border:1.5px solid var(--line); border-radius:14px; color:var(--ink); font-family:var(--sans); font-size:16px; }
+.field input:focus, .field select:focus { outline:none; border-color:var(--orange); background:#fff; }
+.form-card .btn { width:100%; }
+.form-note { font-size:13.5px; color:var(--muted); margin-top:16px; text-align:center; }
+
+/* faq */
+.faq { display:grid; gap:8px; }
+.q { background:var(--white); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.q summary { list-style:none; cursor:pointer; padding:16px 48px 16px 16px; position:relative; font-weight:600; font-size:16px; min-height:44px; display:flex; align-items:center; }
+.q summary::-webkit-details-marker { display:none; }
+.q summary::after { content:''; position:absolute; right:24px; top:50%; width:9px; height:9px; border-right:2px solid var(--orange); border-bottom:2px solid var(--orange); transform:translateY(-70%) rotate(45deg); transition:transform .2s ease; }
+.q[open] summary::after { transform:translateY(-30%) rotate(-135deg); }
+.q .a { padding:0 24px 16px 16px; color:var(--ink-2); font-size:15.5px; }
+.q .a p + p { margin-top:8px; }
+
+/* footer */
+footer { background:var(--white); border-top:1px solid var(--line); padding:32px 0 48px; font-size:14px; color:var(--muted); }
+footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; align-items:center; }
+.legal { margin-top:16px; max-width:82ch; line-height:1.65; font-size:13px; }
+.legal b { color:var(--ink-2); }
+
+@media print {
+  body { background:#fff; }
+  .internal, .nav, .hcta, .btn, .form-card, .cd { display:none !important; }
+  section, .card, .dep, .row, .q, .why, .opt { break-inside:avoid; page-break-inside:avoid; }
+  * { overflow:visible !important; box-shadow:none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== BANDEAU INTERNE : supprimer cette ligne avant toute diffusion ===== -->
+<div class="internal">Document de travail. Ne pas diffuser tant que l'accord avec la compagnie n'est pas signé.</div>
+
+<nav class="nav">
+  <div class="wrap inner">
+    <div class="brand">
+      <div class="mark">VSD</div>
+      <div class="n">VSD<span>by Attractor</span></div>
+    </div>
+    <a class="btn btn-o" href="#liste">Liste d'attente</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hsplit">
+    <div>
+      <div class="pill"><span class="dot"></span> Départs le vendredi, retour le dimanche</div>
+      <h1>72h Paris, Abidjan, Paris. <span class="o">À un tarif imbattable.</span></h1>
+      <p class="hlead">Vous partez le vendredi matin, vous rentrez le dimanche soir. Un seul jour de congé à poser, deux nuits pleines au pays.</p>
+      <div class="prix">
+        <div class="n">380 €<sup>*</sup></div>
+        <div class="l">à partir de, aller-retour<br>billet, 10 kg en cabine et l'hébergement à prix réduit</div>
+      </div>
+      <div class="hcta">
+        <a class="btn btn-o" href="#liste">Rejoindre la liste d'attente</a>
+        <a class="btn btn-g" href="#departs">Voir les départs</a>
+      </div>
+      <div class="cd">
+        <div class="k">Clôture des inscriptions pour le départ du <b id="cd-date">prochain vendredi</b></div>
+        <div class="cdrow">
+          <div class="cdu"><div class="v" id="cd-j">00</div><div class="u">jours</div></div>
+          <div class="cdu"><div class="v" id="cd-h">00</div><div class="u">heures</div></div>
+          <div class="cdu"><div class="v" id="cd-m">00</div><div class="u">minutes</div></div>
+          <div class="cdu"><div class="v" id="cd-s">00</div><div class="u">secondes</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-img">
+      <img src="assets/hero.jpg" width="1400" height="787" alt="Voyageuse arrivant à l'aéroport avec un bagage cabine">
+      <div class="badge"><b>7 places</b> par départ, pas une de plus</div>
+    </div>
+  </div>
+</header>
+
+<section class="white">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Ce qui est compris</span>
+      <h2>Trois choses dans le prix, et rien à ajouter</h2>
+      <p>Pas de frais de dossier, pas de supplément au moment de payer.</p>
+    </div>
+    <div class="cards c3">
+      <div class="card o">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5a2.1 2.1 0 0 0-3-3L13 8 4.8 6.2a.5.5 0 0 0-.5.8l3.2 4-2.3 2.3-1.9-.4a.5.5 0 0 0-.5.8L5 16l1.3 2.2a.5.5 0 0 0 .8-.1l1.4-1.6 2.3-2.3 4 3.2a.5.5 0 0 0 .8-.5z"/></svg></div>
+        <h3>Le billet aller-retour</h3>
+        <p>Vol direct Paris Abidjan, à l'aller comme au retour. Départ le vendredi matin, retour le dimanche après-midi.</p>
+      </div>
+      <div class="card o">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="13" rx="2.4"/><path d="M9 7V5.2A2.2 2.2 0 0 1 11.2 3h1.6A2.2 2.2 0 0 1 15 5.2V7"/><path d="M9 12h6"/></svg></div>
+        <h3>10 kg en cabine</h3>
+        <p>Votre bagage à main part avec vous, sans supplément. De quoi voyager confortablement pour trois jours.</p>
+      </div>
+      <div class="card o">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9.4a1 1 0 0 1 .5-.9l8-4.4a1 1 0 0 1 1 0l8 4.4a1 1 0 0 1 .5.9V21"/><path d="M3 21h18"/><path d="M9.5 21v-5.5h5V21"/></svg></div>
+        <h3>L'hébergement à prix réduit</h3>
+        <p>Une réduction exceptionnelle, négociée pour les voyageurs VSD, sur vos deux nuits à Abidjan. Vous réservez, nous appliquons le tarif.</p>
+      </div>
+    </div>
+    <div class="opt">
+      <div>
+        <div class="t">Vous voulez emporter une valise en plus</div>
+        <div class="x">Une seule valise de 23 kg en soute, à titre exceptionnel, à réserver au moment de l'inscription.</div>
+      </div>
+      <div class="p">+ 49 €</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap why">
+    <div>
+      <span class="tag">Pourquoi ce prix existe</span>
+      <h2>Vous voyagez léger, vous payez moins</h2>
+      <p style="color:var(--ink-2);margin-top:16px;font-size:17px">Sur ce vol, la place en soute a de la valeur. Pour un week-end, vous n'en avez pas besoin. Nous si, toutes les semaines. Cette place que vous n'utilisez pas revient directement dans le prix de votre billet.</p>
+      <ul class="wl">
+        <li><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>Vous ne portez rien pour personne.</b> Aucun colis ne vous est confié, rien à remettre à quelqu'un à l'arrivée. La marchandise voyage déclarée, sous notre nom, emballée et scellée par nos équipes.</span></li>
+        <li><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>Vous êtes un passager ordinaire.</b> Votre siège, votre carte d'embarquement, vos miles qui se cumulent comme sur n'importe quel billet payant.</span></li>
+        <li><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>Vous partez accompagné.</b> Notre équipe est à l'aéroport le jour du départ. Vous n'êtes seul à aucun moment.</span></li>
+      </ul>
+    </div>
+    <img src="assets/bandeau.jpg" width="1600" height="900" alt="Terminal lumineux, voyageuse en route vers son vol">
+  </div>
+</section>
+
+<section class="white">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Votre week-end</span>
+      <h2>72 heures, du vendredi matin au dimanche soir</h2>
+      <p>Vous posez le vendredi. C'est le seul jour de congé que ce voyage vous coûte.</p>
+    </div>
+    <div class="tl">
+      <div class="row"><div class="h">Vendredi 6h</div><div><div class="t">Rendez-vous à l'aéroport</div><div class="x">Notre équipe vous accueille, vous enregistrez, et vous embarquez.</div></div></div>
+      <div class="row"><div class="h">Vendredi 8h</div><div><div class="t">Décollage</div><div class="x">Vol direct, sans escale.</div></div></div>
+      <div class="row"><div class="h">Vendredi 13h30</div><div><div class="t">Arrivée à Abidjan</div><div class="x">Votre après-midi commence, et votre hébergement vous attend au tarif VSD.</div></div></div>
+      <div class="row"><div class="h">Le week-end</div><div><div class="t">Deux nuits, deux journées pleines</div><div class="x">La famille, la cérémonie, le fournisseur, le chantier. Vous faites ce que vous êtes venu faire.</div></div></div>
+      <div class="row"><div class="h">Dimanche 15h30</div><div><div class="t">Décollage retour</div><div class="x">Même vol, même équipe, même organisation.</div></div></div>
+      <div class="row"><div class="h">Dimanche 23h</div><div><div class="t">Arrivée à Paris</div><div class="x">Vous dormez chez vous, et vous travaillez le lundi matin.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="departs">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Les départs</span>
+      <h2>Choisissez votre week-end</h2>
+      <p>Les inscriptions se font à l'avance uniquement, et se ferment dix jours avant le départ. Passé cette date, le vol est bouclé.</p>
+    </div>
+    <div class="cal" id="cal"></div>
+    <p class="calnote">Une place se libère parfois quand un dossier n'est pas complet. La liste d'attente est servie en premier.</p>
+  </div>
+</section>
+
+<section class="white" id="liste">
+  <div class="wrap">
+    <div class="sec-head" style="text-align:center;margin-left:auto;margin-right:auto">
+      <span class="tag">Liste d'attente</span>
+      <h2>Prenez votre place dans la file</h2>
+      <p>Laissez vos coordonnées, nous vous rappelons sous 24 heures pour vérifier votre dossier et bloquer votre place. Aucun paiement à cette étape.</p>
+    </div>
+    <div class="form-card">
+      <div class="field">
+        <label for="f-nom">Votre nom</label>
+        <input type="text" id="f-nom" placeholder="Prénom et nom" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="f-tel">Votre numéro WhatsApp</label>
+        <input type="tel" id="f-tel" placeholder="06 12 34 56 78" autocomplete="tel">
+      </div>
+      <div class="field">
+        <label for="f-date">Le départ qui vous intéresse</label>
+        <select id="f-date"></select>
+      </div>
+      <div class="field">
+        <label for="f-valise">La valise supplémentaire à 49 €</label>
+        <select id="f-valise">
+          <option>Non, je voyage en cabine uniquement</option>
+          <option>Oui, je veux la valise de 23 kg</option>
+          <option>Je déciderai plus tard</option>
+        </select>
+      </div>
+      <button class="btn btn-v" id="send" type="button">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2m0 1.8a8.2 8.2 0 1 1-4.2 15.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 0 1 12 3.8m-3.4 4c-.2 0-.5.1-.7.4s-.9.9-.9 2.1.9 2.4 1 2.6c.1.2 1.8 2.8 4.4 3.8 2.2.9 2.6.7 3.1.7s1.6-.7 1.9-1.3c.2-.7.2-1.2.2-1.3l-.6-.3-1.7-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1s-1.1-.4-2-1.2c-.7-.6-1.2-1.4-1.3-1.7s0-.4.1-.5l.4-.5.3-.5v-.5l-.7-1.7c-.2-.4-.4-.4-.6-.5z"/></svg>
+        M'inscrire sur la liste
+      </button>
+      <p class="form-note">Votre message part sur WhatsApp, déjà écrit. Vous n'avez qu'à appuyer sur envoyer.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Vos questions</span>
+      <h2>Ce qu'on nous demande le plus</h2>
+    </div>
+    <div class="faq">
+      <details class="q">
+        <summary>Est-ce que je transporte des colis pour quelqu'un ?</summary>
+        <div class="a"><p>Non, jamais. Rien ne vous est confié, rien ne vous est remis, vous n'avez personne à retrouver à l'arrivée. Notre marchandise voyage sous notre nom, déclarée en douane par nous, emballée et scellée par nos équipes.</p><p>Vous voyagez avec vos affaires et rien d'autre. C'est exactement ce que vous signez à l'inscription.</p></div>
+      </details>
+      <details class="q">
+        <summary>Pourquoi le billet est-il si peu cher ?</summary>
+        <div class="a"><p>Parce que vous laissez votre place en soute. Sur un vol, cette place a une valeur réelle. Vous n'en avez pas besoin pour trois jours, nous en avons besoin toutes les semaines, et cette valeur revient dans votre prix.</p><p>C'est le principe du billet sans bagage chez les compagnies à bas coût, en beaucoup plus avantageux.</p></div>
+      </details>
+      <details class="q">
+        <summary>Pourquoi seulement 7 places ?</summary>
+        <div class="a"><p>Parce que nous accompagnons chaque voyageur à l'aéroport et que nous ne voulons pas d'un départ que nous ne pouvons pas suivre correctement. Le nombre est volontairement petit, et les places partent vite.</p></div>
+      </details>
+      <details class="q">
+        <summary>Est-ce que je peux changer mes dates ?</summary>
+        <div class="a"><p>Non. Le départ du vendredi et le retour du dimanche sont fixes, et c'est cette contrainte qui rend le prix possible. Si vous avez besoin de rester plus longtemps, prenez un billet classique.</p></div>
+      </details>
+      <details class="q">
+        <summary>Comment fonctionne la réduction sur l'hébergement ?</summary>
+        <div class="a"><p>Nous avons négocié un tarif réservé aux voyageurs VSD pour vos deux nuits à Abidjan. Au moment de confirmer votre place, nous vous transmettons les adresses partenaires et le code qui vous donne la réduction.</p></div>
+      </details>
+      <details class="q">
+        <summary>Qui peut s'inscrire ?</summary>
+        <div class="a"><p>Les voyageurs qui peuvent partir et revenir sans démarche de visa pour ce départ : résidents en France à titre stable, ou binationaux avec un passeport ivoirien à jour. Attention, avoir la double nationalité ne suffit pas, c'est le passeport ivoirien en cours de validité qui compte.</p><p>Nous vérifions ce point avec vous au téléphone, avant tout paiement.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="r">
+      <div><b style="color:var(--ink)">VSD by Attractor</b>, le week-end Paris Abidjan</div>
+      <div><a href="#liste">Rejoindre la liste d'attente</a></div>
+    </div>
+    <p class="legal"><b>*</b> Tarif à partir de, par personne, aller-retour, selon la date de départ et les places disponibles. Comprend le billet, 10 kg de bagage en cabine et l'accès au tarif réduit sur l'hébergement partenaire à Abidjan. Valise supplémentaire de 23 kg en option à 49 €, une seule par voyageur. Le tarif suppose de renoncer à la franchise bagage en soute. Aucun voyageur ne transporte de marchandise pour le compte d'un tiers : le fret voyage déclaré, sous document de transport, au nom de l'opérateur. Places limitées par départ, inscriptions à l'avance uniquement, closes dix jours avant le vol. Tarif réservé aux inscrits et non revendable. Horaires donnés à titre indicatif et susceptibles d'être modifiés par la compagnie.</p>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   CONFIG — tout ce qui se règle sans toucher au reste
+   ------------------------------------------------------------
+   places : nombre AFFICHÉ par départ, du plus proche au plus
+   lointain. Interne : on embarque jusqu'à 10 voyageurs par vol,
+   choisis dans la liste d'attente. L'affichage à 7 crée la
+   tension et nous laisse de la marge.
+   ============================================================ */
+var CONFIG = {
+  whatsapp: '2250708682116',
+  offre: 'VSD by Attractor',
+  delaiMini: 21,      // premier départ proposé, en jours à partir d'aujourd'hui
+  cloture: 10,        // les inscriptions ferment X jours avant le départ
+  nbDeparts: 6,       // nombre de départs affichés
+  capacite: 7,        // places affichées par départ
+  places: [2, 4, 6, 7, 7, 7]  // restantes, du départ le plus proche au plus lointain
+};
+
+var MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+
+/* les prochains vendredis, à partir du délai minimum */
+function departs() {
+  var out = [], d = new Date();
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + CONFIG.delaiMini);
+  while (d.getDay() !== 5) { d.setDate(d.getDate() + 1); }   // 5 = vendredi
+  for (var i = 0; i < CONFIG.nbDeparts; i++) {
+    var dep = new Date(d.getTime());
+    dep.setDate(dep.getDate() + i * 7);
+    var ret = new Date(dep.getTime());
+    ret.setDate(ret.getDate() + 2);
+    var fin = new Date(dep.getTime());
+    fin.setDate(fin.getDate() - CONFIG.cloture);
+    fin.setHours(23, 59, 59, 999);
+    out.push({
+      dep: dep, ret: ret, cloture: fin,
+      libelle: 'Vendredi ' + dep.getDate() + ' ' + MOIS[dep.getMonth()],
+      retour: 'retour le dimanche ' + ret.getDate() + ' ' + MOIS[ret.getMonth()],
+      places: CONFIG.places[i] === undefined ? CONFIG.capacite : CONFIG.places[i]
+    });
+  }
+  return out;
+}
+
+var DEPARTS = departs();
+
+/* calendrier */
+(function () {
+  var html = '', sel = '';
+  DEPARTS.forEach(function (d, i) {
+    var full = d.places <= 0;
+    var pct = Math.round(((CONFIG.capacite - d.places) / CONFIG.capacite) * 100);
+    html += '<div class="dep' + (full ? ' full' : (d.places <= 3 ? ' hot' : '')) + '">'
+      + '<div><div class="d">' + d.libelle + '</div><div class="r">' + d.retour + '</div></div>'
+      + '<div><div class="jauge"><span style="width:' + pct + '%"></span></div>'
+      + '<div class="s" style="margin-top:8px">'
+      + (full
+          ? 'Complet, liste d\'attente ouverte'
+          : d.places + (d.places > 1 ? ' places restantes' : ' place restante') + ' sur ' + CONFIG.capacite)
+      + '</div></div>'
+      + '<a class="btn ' + (full ? 'btn-g' : 'btn-o') + '" href="#liste" data-d="' + d.libelle + '">'
+      + (full ? 'Être prévenu' : 'Réserver ce départ') + '</a>'
+      + '</div>';
+    sel += '<option>' + d.libelle + (full ? ' (complet, liste d\'attente)' : '') + '</option>';
+  });
+  document.getElementById('cal').innerHTML = html;
+  document.getElementById('f-date').innerHTML = sel + '<option>Je suis souple sur les dates</option>';
+
+  /* un clic sur un départ pré-remplit le formulaire */
+  Array.prototype.forEach.call(document.querySelectorAll('.dep .btn'), function (b) {
+    b.addEventListener('click', function () {
+      var s = document.getElementById('f-date');
+      for (var i = 0; i < s.options.length; i++) {
+        if (s.options[i].text.indexOf(b.getAttribute('data-d')) === 0) { s.selectedIndex = i; break; }
+      }
+    });
+  });
+})();
+
+/* compte à rebours sur la clôture du premier départ encore ouvert */
+(function () {
+  var cible = null;
+  for (var i = 0; i < DEPARTS.length; i++) {
+    if (DEPARTS[i].cloture.getTime() > Date.now()) { cible = DEPARTS[i]; break; }
+  }
+  if (!cible) { return; }
+  document.getElementById('cd-date').textContent = cible.libelle;
+  var p = function (n) { return (n < 10 ? '0' : '') + n; };
+  function tick() {
+    var r = cible.cloture.getTime() - Date.now();
+    if (r < 0) { r = 0; }
+    var s = Math.floor(r / 1000);
+    document.getElementById('cd-j').textContent = p(Math.floor(s / 86400));
+    document.getElementById('cd-h').textContent = p(Math.floor(s % 86400 / 3600));
+    document.getElementById('cd-m').textContent = p(Math.floor(s % 3600 / 60));
+    document.getElementById('cd-s').textContent = p(s % 60);
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+
+/* envoi de la demande */
+document.getElementById('send').addEventListener('click', function () {
+  var nom = document.getElementById('f-nom').value.trim();
+  var tel = document.getElementById('f-tel').value.trim();
+  var date = document.getElementById('f-date').value;
+  var valise = document.getElementById('f-valise').value;
+
+  if (!nom) { alert('Merci d\'indiquer votre nom.'); document.getElementById('f-nom').focus(); return; }
+  if (!tel) { alert('Merci d\'indiquer votre numéro WhatsApp.'); document.getElementById('f-tel').focus(); return; }
+
+  var txt = 'Bonjour, je veux m\'inscrire sur la liste d\'attente ' + CONFIG.offre + '.\n\n'
+          + 'Nom : ' + nom + '\n'
+          + 'Numéro : ' + tel + '\n'
+          + 'Départ souhaité : ' + date + '\n'
+          + 'Valise supplémentaire : ' + valise;
+
+  window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(txt), '_blank');
+});
+</script>
+
+</body>
+</html>

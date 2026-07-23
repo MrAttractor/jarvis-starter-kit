@@ -10,9 +10,13 @@
 
 ## 1. L'offre en une phrase
 
-**Un aller-retour Paris-Abidjan à 430 €, du vendredi au dimanche, pour ceux qui acceptent de voyager sans soute personnelle.**
+**72h Paris-Abidjan-Paris à partir de 380 €, du vendredi au dimanche, pour ceux qui acceptent de voyager sans soute personnelle.**
 
 C'est tout. Il n'y a rien d'autre à comprendre pour l'acheter.
+
+**La marque, arrêtée le 23/07 :** l'offre s'appelle **VSD by Attractor**. Elle est portée par Mr Attractor avec la compagnie, pas par J'Envoie Express, qui reste l'opérateur du fret en coulisse. Charte aux couleurs du drapeau ivoirien (orange, blanc, vert), les mêmes que celles de la compagnie.
+
+**Le prix comprend trois choses, et rien à ajouter :** le billet aller-retour, 10 kg de bagage en cabine, et une réduction exceptionnelle sur l'hébergement des deux nuits à Abidjan. Une seule valise de 23 kg en soute reste possible, à titre exceptionnel, à 49 €.
 
 ---
 
@@ -51,10 +55,11 @@ Quatre segments, dans l'ordre de facilité de conversion.
 C'est le cœur du contrat moral de l'offre. Il doit tenir en un écran.
 
 **Ce qu'il reçoit**
-- Un aller-retour Paris-Abidjan sur Air Côte d'Ivoire, vol direct, à **430 €**
+- Un aller-retour Paris-Abidjan sur vol direct, **à partir de 380 €**
+- **10 kg de bagage en cabine**, inclus
+- Une **réduction exceptionnelle sur l'hébergement** de ses deux nuits à Abidjan
 - Deux nuits pleines sur place, vendredi et samedi
-- Ses bagages cabine, à lui, comme n'importe quel passager
-- L'option **bagage en soute de 23 kg pour 49 €** s'il veut emporter ses affaires
+- L'option **une seule valise de 23 kg en soute pour 49 €**, à titre exceptionnel
 - Ses miles sMiles, sur un billet payant, comme n'importe quel passager
 - Un accompagnement à l'aéroport le jour du départ (on est là, il n'est pas seul)
 
@@ -73,9 +78,11 @@ Cette dernière ligne n'est pas une formalité administrative. **C'est la protec
 | | Montant |
 |---|---|
 | Aller-retour Paris-Abidjan au tarif public | de l'ordre de 650 à 900 € selon la période |
-| Offre VSD | **430 €** |
-| Avec le bagage de 23 kg | **479 €** |
-| Ce qu'il économise | **entre 200 et 450 €** |
+| Offre VSD | **à partir de 380 €** |
+| Avec la valise de 23 kg | **429 €** |
+| Ce qu'il économise | **entre 250 et 500 €**, hébergement non compris |
+
+> **Point de vigilance à traiter dans la négociation.** 380 € est le tarif que le simulateur suppose payé à la compagnie par siège. Vendu 380 € au public, le siège ne laisse aucune marge et l'hébergement réduit s'ajoute au coût. Deux conditions pour que ce prix d'appel tienne : obtenir un tarif bloc sensiblement sous 380 €, et réserver le 380 aux dates creuses, les autres départs se vendant plus haut. C'est le sens du « à partir de ».
 
 **Le convoyeur n'est jamais payé.** C'est une décision de conception, pas un oubli.
 
@@ -150,9 +157,13 @@ Un client qui part une fois nous coûte cher en acquisition. Un client qui part 
 ## 11. Ce qui reste à trancher
 
 **Chez nous, cette semaine**
-- Le nom commercial définitif. « VSD » est clair en interne, il reste à décider si c'est aussi le nom de vente.
-- Le bagage à 49 € : il rapporte 490 € par rotation en marge quasi pure, mais il coûte 230 kg de capacité. À arbitrer contre le taux d'acceptation de l'offre, le simulateur permet de le tester.
+- ~~Le nom commercial définitif.~~ **Tranché le 23/07 : VSD by Attractor.**
+- La valise à 49 € : elle rapporte 490 € par rotation en marge quasi pure, mais elle coûte 230 kg de capacité. Arbitrée le 23/07 en **option exceptionnelle, une seule par voyageur**, ce qui limite la perte de capacité tout en gardant la recette.
+- L'hébergement à prix réduit : il faut les partenaires à Abidjan et le montant de la remise. C'est une promesse tenue par des tiers, donc à sécuriser avant la première publicité.
 - Le budget d'acquisition par rotation, aujourd'hui posé à 400 €.
+
+**La règle de rareté, décidée le 23/07 (interne, ne figure nulle part sur le site)**
+On affiche **7 places par départ**, on en embarque **10**, choisis dans la liste d'attente. L'affichage crée la tension, la liste d'attente nous laisse le choix des dossiers, et le voyageur n'est jamais lésé puisqu'on prend plus de monde que le nombre annoncé. La vente se fait **uniquement sur liste d'attente et à l'avance**, les inscriptions closes 10 jours avant le départ.
 
 **Chez Air Côte d'Ivoire, dans l'accord**
 - Le tarif du bloc siège, et surtout **le tarif du fret accompagné**. La cible est 1 à 1,50 €/kg. Chaque euro par kilo arraché vaut environ 760 € par rotation, soit 30 000 € sur une année.
