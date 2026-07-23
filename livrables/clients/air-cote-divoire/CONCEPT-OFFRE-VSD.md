@@ -146,7 +146,77 @@ Le sens du flux d'argent décide de qui possède le client. Ce n'est pas un dét
 | **B. Nous encaissons tout** via XPaye et reversons le siège | Nous gardons la relation client et la marge à la source | Nous portons les remboursements, les litiges et la fraude, et la vente de transport au public est une activité réglementée |
 | **C. Chacun encaisse ce qu'il vend** : la compagnie le billet sur son lien, nous notre service et nos options via XPaye | Chacun reste dans son métier et dans son droit, notre marge est encaissée directement, la relation reste partagée | Le voyageur fait deux paiements, il faut soigner l'enchaînement pour ne pas le perdre entre les deux |
 
-**Recommandation : le montage C.** C'est le seul où nous encaissons nos 50 € sans dépendre d'un reversement, et où nous ne vendons jamais du transport aérien à la place de la compagnie. XPaye n'a alors rien à voir avec le billet : il encaisse notre part et les options, ce qui est exactement son rôle.
+**Retenu : le montage C.** C'est le seul où nous encaissons nos 50 € sans dépendre d'un reversement, et où nous ne vendons jamais du transport aérien à la place de la compagnie. XPaye n'a alors rien à voir avec le billet : il encaisse notre part, ce qui est exactement son rôle.
+
+### Le montage C en détail
+
+**Qui vend quoi, et qui encaisse**
+
+| Ce qui est vendu | Par qui | Encaissé par | Montant |
+|---|---|---|---|
+| Le siège aller-retour | La compagnie | Son lien de paiement | 380 € |
+| La valise de 23 kg, en option | La compagnie (c'est sa franchise) | Son lien de paiement | 49 € |
+| Le service d'organisation VSD | Nous | XPaye | 50 € |
+| **Total payé par le voyageur** | | | **430 €**, ou 479 € avec la valise |
+
+Le prix affiché ne bouge pas. Ce qui change, c'est qu'il se règle en deux fois, à deux destinataires différents.
+
+**L'ordre des paiements, et c'est là que tout se joue**
+
+**Nos 50 € sont encaissés en premier**, au moment où nous confirmons la place. Le lien de la compagnie n'est envoyé qu'ensuite. Trois raisons, dans l'ordre d'importance :
+
+1. **Nous sommes payés, toujours.** Notre marge ne dépend d'aucun reversement, d'aucun délai, d'aucune bonne volonté.
+2. **Le voyageur s'engage.** Une liste d'attente gratuite se vide au moment de payer. 50 € versés, c'est un désistement qui devient rare, et c'est ce qui nous permet de tenir la promesse des dix sièges remplis chaque semaine.
+3. **Le petit pas d'abord.** 50 € pour bloquer sa place se décide en une minute. 430 € d'un coup se réfléchit une semaine, et une semaine de réflexion sur un vol qui ferme dans dix jours, c'est une place perdue.
+
+**Les règles à écrire avant le premier euro encaissé**
+
+- Les 50 € ne sont encaissés qu'**après** vérification du dossier, jamais à l'inscription. Personne ne paie pour un voyage qu'il ne pourra pas faire.
+- Si nous ne pouvons finalement pas fournir la place, les 50 € sont **remboursés intégralement**. C'est notre engagement, et il doit être écrit.
+- Le voyageur a **48 heures** pour régler son billet sur le lien de la compagnie. Passé ce délai, la place repart à la personne suivante sur la liste, et les 50 € restent acquis : le travail de vérification a été fait. **Cette règle doit être lue et acceptée avant le paiement des 50 €**, jamais découverte après.
+
+### Comment le présenter au voyageur : la friction devient l'argument
+
+Deux paiements, c'est un inconvénient sur le papier. Sur ce marché précis, c'est notre meilleure preuve d'honnêteté.
+
+La diaspora s'est fait avoir des dizaines de fois par des intermédiaires qui encaissent le prix d'un billet et disparaissent. C'est la peur numéro un, avant même le prix. Le montage C y répond frontalement :
+
+> **« Votre billet, vous le payez à la compagnie. Directement, sur son propre système. Nous ne touchons jamais l'argent de votre voyage. »**
+
+Cette phrase est impossible à prononcer pour un GP, pour un revendeur de kilos, pour n'importe quel intermédiaire du marché. Elle nous distingue en une ligne, et elle est vraie.
+
+La séquence se raconte alors en trois temps simples, sans jamais parler de commission :
+1. **Vous vous inscrivez.** Gratuit, aucun paiement.
+2. **Nous validons votre dossier.** Passeport, éligibilité, date. C'est notre travail, et c'est ce que vous payez.
+3. **Vous réglez.** 50 € qui bloquent votre place, puis votre billet directement à la compagnie.
+
+Le mot à employer pour nos 50 € : **frais de réservation**. Pas « commission » (ce que gagne un intermédiaire), pas « frais de dossier » (ce qu'on paie pour rien). Des frais de réservation, tout le monde sait ce que c'est et personne ne les conteste.
+
+Et ce qu'ils couvrent doit être réel et énumérable : la vérification du dossier et de l'éligibilité, l'accès au tarif fermé, l'accompagnement à l'aéroport le vendredi, le contact sur place pendant le week-end, l'assistance en cas de problème. À 50 €, c'est peu cher payé, et ça se défend en une phrase.
+
+### Comment le présenter à la compagnie : leur rémunération n'est pas entamée
+
+C'est l'argument le plus fort du montage C, et il est contre-intuitif.
+
+Dans un modèle classique de commission, notre rémunération sort de leur recette : ils encaissent 430 € et nous en reversent 50. Visuellement, nous leur coûtons de l'argent, et chaque négociation devient une bataille sur le pourcentage.
+
+Dans le montage C, ils encaissent **380 € nets par siège**, sans rien nous reverser, sans facture à traiter, sans créance à porter. **Notre rémunération est payée par le voyageur, pour un service que nous lui rendons et qu'eux n'ont pas à rendre.**
+
+Ce qu'on leur dit :
+
+> « Vous encaissez la totalité du prix du siège, sur votre propre système, sans nous reverser un centime. Le passager est dans votre PNR, il compte dans votre remplissage, il cumule vos miles. Nous nous rémunérons à côté, auprès du voyageur, sur le travail que nous faisons pour vous l'amener : le recrutement, la vérification des dossiers, l'accompagnement au départ et la gestion du fret. »
+
+Trois bénéfices à souligner en séance :
+- **Aucun flux financier entre nos deux sociétés sur les billets.** Pas de compte à régulariser, pas de litige de reversement, un montage qui ne crée aucune charge administrative chez eux.
+- **Aucune dérogation à leur politique tarifaire au-delà du tarif bloc.** Ils vendent leur siège à leur prix négocié, point.
+- **Le passager reste le leur.** C'est exactement ce qu'ils veulent, et ça nous coûte peu : nous, nous gardons la relation de service, celle qui fait revenir le voyageur.
+
+### Ce qui reste à obtenir d'eux
+
+1. **Le format du lien de paiement** : lien nominatif généré à la demande, ou code de réservation à régler en ligne ? Ça décide de notre délai de bouclage.
+2. **Le délai de validité du lien**, qui doit être compatible avec nos 48 heures.
+3. **Qui facture la valise** : sur leur lien avec le billet, ce qui est le plus propre, ou par nous en achat de franchise.
+4. **Le point de bascule** : à partir de quand la place est réputée confirmée de leur côté, pour que nous ne bloquions jamais quelque chose qu'ils peuvent nous reprendre.
 
 > **Attention au raccourci.** « La compagnie encaisse et XPaye nous reverse » ne fonctionne pas tel quel : XPaye ne peut prélever que sur un flux qui passe par lui. Si le paiement se fait sur un lien de la compagnie, c'est leur système qui reverse, pas XPaye. Il faut choisir : ou le flux passe par nous, ou le reversement est une écriture comptable entre eux et nous.
 

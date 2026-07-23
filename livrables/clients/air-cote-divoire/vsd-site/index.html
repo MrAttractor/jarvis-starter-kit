@@ -161,6 +161,27 @@ h2 { font-family:var(--display); font-weight:700; font-size:clamp(25px,4.4vw,38p
 .tl .t { font-size:15.5px; font-weight:600; }
 .tl .x { font-size:14.5px; color:var(--muted); margin-top:2px; }
 
+/* paiement en 3 temps */
+.steps { display:grid; gap:16px; margin-bottom:24px; }
+@media (min-width:860px) { .steps { grid-template-columns:repeat(3,1fr); } }
+.st { display:flex; gap:16px; align-items:flex-start; background:var(--white); border:1px solid var(--line); border-radius:20px; padding:24px; }
+.st .no { width:36px; height:36px; flex:none; border-radius:50%; display:grid; place-items:center; background:var(--orange); color:#fff; font-family:var(--display); font-weight:800; font-size:15px; }
+.st .t { font-family:var(--display); font-weight:700; font-size:16.5px; margin-bottom:4px; }
+.st .x { font-size:15px; color:var(--ink-2); }
+.st .x b { color:var(--ink); }
+.couvre { display:grid; gap:16px; }
+@media (min-width:860px) { .couvre { grid-template-columns:1fr 1fr; gap:24px; } }
+.ct, .cg { border-radius:20px; padding:24px; }
+.ct { background:var(--vert-l); border:1px solid rgba(0,158,96,.24); }
+.cg { background:var(--white); border:1px solid var(--line); }
+.ct h3, .cg h3 { font-family:var(--display); font-weight:700; font-size:17px; margin-bottom:16px; }
+.ct ul { list-style:none; display:grid; gap:12px; font-size:15.5px; color:var(--ink-2); }
+.ct li { display:flex; gap:8px; align-items:flex-start; }
+.ct li svg { margin-top:4px; color:var(--vert-d); }
+.cg p { font-size:15px; color:var(--ink-2); }
+.cg p + p { margin-top:12px; }
+.cg b { color:var(--ink); }
+
 /* calendrier */
 .cal { display:grid; gap:16px; }
 @media (min-width:640px) { .cal { grid-template-columns:repeat(2,1fr); } }
@@ -345,7 +366,58 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
   </div>
 </section>
 
-<section id="departs">
+<section id="paiement">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Le paiement</span>
+      <h2>Votre billet, vous le payez à la compagnie</h2>
+      <p>Directement, sur son propre système de paiement. Nous ne touchons jamais l'argent de votre voyage. Sur un marché où beaucoup se sont fait avoir, c'est la première chose que nous tenons à vous dire.</p>
+    </div>
+
+    <div class="steps">
+      <div class="st">
+        <div class="no">1</div>
+        <div>
+          <div class="t">Vous vous inscrivez</div>
+          <div class="x">Sur la liste d'attente, en une minute. <b>Aucun paiement à cette étape.</b></div>
+        </div>
+      </div>
+      <div class="st">
+        <div class="no">2</div>
+        <div>
+          <div class="t">Nous validons votre dossier</div>
+          <div class="x">Nous vérifions avec vous votre passeport, votre éligibilité et votre date. Si votre dossier ne passe pas, vous n'aurez rien payé.</div>
+        </div>
+      </div>
+      <div class="st">
+        <div class="no">3</div>
+        <div>
+          <div class="t">Vous réglez, en deux fois</div>
+          <div class="x"><b>50 € de frais de réservation</b> qui bloquent votre place, puis <b>votre billet directement à la compagnie</b>, sur le lien sécurisé qu'elle vous envoie.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="couvre">
+      <div class="ct">
+        <h3>Ce que couvrent les 50 €</h3>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>La vérification de votre dossier et de votre éligibilité</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>L'accès au tarif fermé, que nous avons négocié pour vous</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Notre équipe avec vous à l'aéroport le vendredi matin</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Un contact joignable à Abidjan pendant tout votre week-end</span></li>
+        </ul>
+      </div>
+      <div class="cg">
+        <h3>Nos engagements</h3>
+        <p><b>Si nous ne pouvons pas vous fournir la place</b>, les 50 € vous sont remboursés en totalité. Sans discussion.</p>
+        <p><b>Vous avez 48 heures</b> pour régler votre billet une fois le lien reçu. Passé ce délai, la place revient à la personne suivante sur la liste et les frais de réservation restent acquis, le travail de vérification ayant été fait.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="departs" class="white">
   <div class="wrap">
     <div class="sec-head">
       <span class="tag">Les départs</span>
@@ -357,7 +429,7 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
   </div>
 </section>
 
-<section class="white" id="liste">
+<section id="liste">
   <div class="wrap">
     <div class="sec-head" style="text-align:center;margin-left:auto;margin-right:auto">
       <span class="tag">Liste d'attente</span>
@@ -407,7 +479,7 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
   </div>
 </section>
 
-<section>
+<section class="white">
   <div class="wrap">
     <div class="sec-head">
       <span class="tag">Vos questions</span>
@@ -424,7 +496,7 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
       </details>
       <details class="q">
         <summary>Comment se passe le paiement ?</summary>
-        <div class="a"><p>Rien n'est demandé au moment de l'inscription. Nous vous appelons d'abord pour vérifier votre dossier, et c'est seulement une fois votre place validée que vous recevez votre lien de paiement sécurisé.</p><p>De cette façon, personne ne paie pour un voyage qu'il ne pourrait pas faire.</p></div>
+        <div class="a"><p>Rien n'est demandé à l'inscription. Nous vérifions d'abord votre dossier avec vous. Une fois votre place validée, vous réglez <b>50 € de frais de réservation</b>, puis vous recevez le lien sécurisé de la compagnie pour payer votre billet.</p><p><b>Votre billet est payé à la compagnie, jamais à nous.</b> Nous ne touchons pas l'argent de votre voyage. Vous avez 48 heures pour régler une fois le lien reçu, au-delà la place revient à la personne suivante sur la liste.</p></div>
       </details>
       <details class="q">
         <summary>Pourquoi seulement 7 places ?</summary>
@@ -452,7 +524,7 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
       <div><b style="color:var(--ink)">VSD by Attractor</b>, le week-end Paris Abidjan</div>
       <div><a href="#liste">Rejoindre la liste d'attente</a></div>
     </div>
-    <p class="legal"><b>*</b> Tarif à partir de 430 €, par personne, aller-retour, variable selon la date de départ et les places disponibles. Comprend le billet aller-retour et 10 kg de bagage en cabine. La formule à 500 € ajoute les deux nuits du vendredi et du samedi chez l'hôtel partenaire à Abidjan, en chambre standard. Valise supplémentaire de 23 kg en option à 49 €, une seule par voyageur. Le tarif suppose de renoncer à la franchise bagage en soute. Aucun voyageur ne transporte de marchandise pour le compte d'un tiers : le fret voyage déclaré, sous document de transport, au nom de l'opérateur. Places limitées par départ, inscriptions à l'avance uniquement, closes dix jours avant le vol. Tarif réservé aux inscrits et non revendable. Horaires donnés à titre indicatif et susceptibles d'être modifiés par la compagnie.</p>
+    <p class="legal"><b>*</b> Tarif à partir de 430 €, par personne, aller-retour, variable selon la date de départ et les places disponibles. Comprend le billet aller-retour et 10 kg de bagage en cabine. La formule à 500 € ajoute les deux nuits du vendredi et du samedi chez l'hôtel partenaire à Abidjan, en chambre standard. Valise supplémentaire de 23 kg en option à 49 €, une seule par voyageur. Le tarif suppose de renoncer à la franchise bagage en soute. <b>Le prix se règle en deux fois</b> : 50 € de frais de réservation encaissés par Mr Attractor après validation du dossier, remboursés intégralement si la place ne peut pas être fournie, et le solde correspondant au titre de transport réglé directement à la compagnie sur son propre système de paiement, dans un délai de 48 heures après réception du lien. Passé ce délai la place est réattribuée et les frais de réservation restent acquis. Aucun voyageur ne transporte de marchandise pour le compte d'un tiers : le fret voyage déclaré, sous document de transport, au nom de l'opérateur. Places limitées par départ, inscriptions à l'avance uniquement, closes dix jours avant le vol. Tarif réservé aux inscrits et non revendable. Horaires donnés à titre indicatif et susceptibles d'être modifiés par la compagnie.</p>
   </div>
 </footer>
 
