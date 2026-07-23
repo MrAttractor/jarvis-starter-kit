@@ -28,3 +28,10 @@ verify_jwt = false
 
 [functions.sign-verify]
 verify_jwt = false
+
+# ── VSD by Attractor ──
+# Inscriptions a la liste d'attente depuis le site public : appelee par
+# un visiteur anonyme, elle doit rester ouverte au sens JWT. L'insertion
+# se fait en service role cote fonction, aucune ecriture directe possible.
+[functions.vsd-inscription]
+verify_jwt = false

@@ -63,11 +63,25 @@ svg { flex:none; }
 .nav .btn { padding:8px 18px; font-size:14px; }
 @media (max-width:430px) { .nav .btn { padding:8px 14px; font-size:13.5px; } .brand .n { font-size:15px; } }
 
-/* hero */
-.hero { padding:40px 0 48px; background:radial-gradient(620px 300px at 92% -10%, rgba(0,158,96,.10), transparent 60%), radial-gradient(560px 280px at -5% 0%, rgba(247,127,0,.13), transparent 60%); }
-@media (min-width:900px) { .hero { padding:56px 0 64px; } }
-.hsplit { display:grid; gap:32px; align-items:center; }
-@media (min-width:900px) { .hsplit { grid-template-columns:1.05fr .95fr; gap:48px; } }
+/* hero pleine largeur */
+.hero { position:relative; overflow:hidden; padding:40px 0 48px; background:var(--creme); }
+.hero::before {
+  content:''; position:absolute; inset:0; z-index:0;
+  background:url('assets/bandeau.jpg') center 28% / cover no-repeat;
+}
+.hero::after {
+  content:''; position:absolute; inset:0; z-index:1;
+  background:linear-gradient(180deg, rgba(255,250,244,.96) 0%, rgba(255,250,244,.93) 46%, rgba(255,250,244,.88) 100%);
+}
+.hero > .wrap { position:relative; z-index:2; }
+@media (min-width:900px) {
+  .hero { padding:80px 0 88px; min-height:600px; display:flex; align-items:center; }
+  .hero::after { background:linear-gradient(96deg, rgba(255,250,244,.98) 0%, rgba(255,250,244,.95) 36%, rgba(255,250,244,.72) 52%, rgba(255,250,244,.18) 76%, rgba(255,250,244,0) 100%); }
+}
+.hsplit { display:block; max-width:620px; }
+@media (min-width:1200px) { .hsplit { max-width:660px; } }
+.hnote { display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap; max-width:100%; background:var(--white); border:1px solid var(--line); border-radius:14px; padding:8px 16px; font-size:14px; font-weight:600; margin-bottom:24px; box-shadow:var(--sh); }
+.hnote b { color:var(--orange-d); }
 .pill { display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap; max-width:100%; background:var(--vert-l); color:var(--vert-d); border-radius:999px; padding:8px 16px; font-size:13px; font-weight:600; margin-bottom:24px; }
 .pill .dot { width:8px; height:8px; border-radius:50%; background:var(--vert); flex:none; }
 h1 { font-family:var(--display); font-weight:800; font-size:clamp(32px,7.4vw,54px); line-height:1.05; letter-spacing:-.025em; margin-bottom:16px; }
@@ -80,10 +94,6 @@ h1 .o { color:var(--orange); }
 .hcta { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:24px; }
 .hcta .btn { flex:1 1 auto; min-width:190px; }
 @media (min-width:560px) { .hcta .btn { flex:0 0 auto; } }
-.hero-img { position:relative; border-radius:24px; overflow:hidden; box-shadow:var(--sh); background:var(--orange-l); }
-.hero-img img { width:100%; height:auto; aspect-ratio:1400/787; object-fit:cover; }
-.badge { position:absolute; left:16px; bottom:16px; background:rgba(255,255,255,.95); backdrop-filter:blur(6px); border-radius:14px; padding:8px 16px; font-size:13px; font-weight:600; color:var(--ink); box-shadow:var(--sh); }
-.badge b { color:var(--orange-d); }
 
 /* compte à rebours */
 .cd { background:var(--white); border:1px solid var(--line); border-radius:20px; padding:16px 24px; box-shadow:var(--sh); }
@@ -137,7 +147,7 @@ h2 { font-family:var(--display); font-weight:700; font-size:clamp(25px,4.4vw,38p
 /* pourquoi */
 .why { display:grid; gap:16px; align-items:center; }
 @media (min-width:860px) { .why { grid-template-columns:1fr 1fr; gap:48px; } }
-.why img { border-radius:24px; box-shadow:var(--sh); width:100%; height:auto; aspect-ratio:1600/900; object-fit:cover; }
+.why img { border-radius:24px; box-shadow:var(--sh); width:100%; height:auto; aspect-ratio:1400/787; object-fit:cover; }
 .wl { list-style:none; display:grid; gap:16px; margin-top:24px; }
 .wl li { display:flex; gap:12px; align-items:flex-start; font-size:16px; color:var(--ink-2); }
 .wl li svg { margin-top:3px; color:var(--vert); }
@@ -176,7 +186,13 @@ h2 { font-family:var(--display); font-weight:700; font-size:clamp(25px,4.4vw,38p
 .field input, .field select { width:100%; max-width:100%; min-height:48px; padding:8px 16px; background:var(--creme); border:1.5px solid var(--line); border-radius:14px; color:var(--ink); font-family:var(--sans); font-size:16px; }
 .field input:focus, .field select:focus { outline:none; border-color:var(--orange); background:#fff; }
 .form-card .btn { width:100%; }
+.form-card .btn[disabled] { opacity:.6; cursor:default; }
+.opt-l { font-weight:500; color:var(--muted); font-size:13px; }
 .form-note { font-size:13.5px; color:var(--muted); margin-top:16px; text-align:center; }
+.msg { display:none; margin-top:16px; border-radius:14px; padding:16px; font-size:15px; line-height:1.5; }
+.msg.ok { display:block; background:var(--vert-l); border:1px solid rgba(0,158,96,.3); color:var(--vert-d); }
+.msg.ko { display:block; background:var(--orange-l); border:1px solid rgba(247,127,0,.32); color:var(--orange-d); }
+.msg b { display:block; margin-bottom:4px; }
 
 /* faq */
 .faq { display:grid; gap:8px; }
@@ -227,6 +243,10 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
         <div class="n">430 €<sup>*</sup></div>
         <div class="l">à partir de, aller-retour<br>billet et 10 kg en cabine compris</div>
       </div>
+      <div class="hnote">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="color:var(--orange)"><path d="M3 20v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1"/><circle cx="9" cy="8" r="3.4"/><path d="M16 14.2a4.6 4.6 0 0 1 5 4.6V20"/><path d="M15.6 5.2a3.2 3.2 0 0 1 0 5.9"/></svg>
+        <span><b>7 places</b> par départ, pas une de plus</span>
+      </div>
       <div class="hcta">
         <a class="btn btn-o" href="#liste">Rejoindre la liste d'attente</a>
         <a class="btn btn-g" href="#departs">Voir les départs</a>
@@ -240,10 +260,6 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
           <div class="cdu"><div class="v" id="cd-s">00</div><div class="u">secondes</div></div>
         </div>
       </div>
-    </div>
-    <div class="hero-img">
-      <img src="assets/hero.jpg" width="1400" height="787" alt="Voyageuse arrivant à l'aéroport avec un bagage cabine">
-      <div class="badge"><b>7 places</b> par départ, pas une de plus</div>
     </div>
   </div>
 </header>
@@ -307,7 +323,7 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
         <li><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>Vous partez accompagné.</b> Notre équipe est à l'aéroport le jour du départ. Vous n'êtes seul à aucun moment.</span></li>
       </ul>
     </div>
-    <img src="assets/bandeau.jpg" width="1600" height="900" alt="Terminal lumineux, voyageuse en route vers son vol">
+    <img src="assets/hero.jpg" width="1400" height="787" alt="Voyageuse arrivant à l'aéroport avec un simple bagage cabine">
   </div>
 </section>
 
@@ -346,7 +362,7 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
     <div class="sec-head" style="text-align:center;margin-left:auto;margin-right:auto">
       <span class="tag">Liste d'attente</span>
       <h2>Prenez votre place dans la file</h2>
-      <p>Laissez vos coordonnées, nous vous rappelons sous 24 heures pour vérifier votre dossier et bloquer votre place. Aucun paiement à cette étape.</p>
+      <p>Laissez vos coordonnées, nous revenons vers vous par email sous 24 heures pour vérifier votre dossier et bloquer votre place. Aucun paiement à cette étape.</p>
     </div>
     <div class="form-card">
       <div class="field">
@@ -354,7 +370,11 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
         <input type="text" id="f-nom" placeholder="Prénom et nom" autocomplete="name">
       </div>
       <div class="field">
-        <label for="f-tel">Votre numéro WhatsApp</label>
+        <label for="f-email">Votre email</label>
+        <input type="email" id="f-email" placeholder="vous@exemple.com" autocomplete="email" inputmode="email">
+      </div>
+      <div class="field">
+        <label for="f-tel">Votre numéro de téléphone <span class="opt-l">facultatif</span></label>
         <input type="tel" id="f-tel" placeholder="06 12 34 56 78" autocomplete="tel">
       </div>
       <div class="field">
@@ -378,10 +398,11 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
         </select>
       </div>
       <button class="btn btn-v" id="send" type="button">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2m0 1.8a8.2 8.2 0 1 1-4.2 15.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 0 1 12 3.8m-3.4 4c-.2 0-.5.1-.7.4s-.9.9-.9 2.1.9 2.4 1 2.6c.1.2 1.8 2.8 4.4 3.8 2.2.9 2.6.7 3.1.7s1.6-.7 1.9-1.3c.2-.7.2-1.2.2-1.3l-.6-.3-1.7-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1s-1.1-.4-2-1.2c-.7-.6-1.2-1.4-1.3-1.7s0-.4.1-.5l.4-.5.3-.5v-.5l-.7-1.7c-.2-.4-.4-.4-.6-.5z"/></svg>
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.4"/><path d="m3.6 6.6 8.4 6 8.4-6"/></svg>
         M'inscrire sur la liste
       </button>
-      <p class="form-note">Votre message part sur WhatsApp, déjà écrit. Vous n'avez qu'à appuyer sur envoyer.</p>
+      <div class="msg" id="msg" role="status" aria-live="polite"></div>
+      <p class="form-note">Vous recevez un email de confirmation dans la foulée. Nous ne partageons jamais vos coordonnées.</p>
     </div>
   </div>
 </section>
@@ -441,7 +462,9 @@ footer .r { display:flex; flex-wrap:wrap; gap:16px; justify-content:space-betwee
    tension et nous laisse de la marge.
    ============================================================ */
 var CONFIG = {
-  whatsapp: '2250708682116',
+  /* edge function Supabase : insertion en base + accusé au voyageur + notification agence */
+  endpoint: 'https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/vsd-inscription',
+  email: 'hello@agenceattractor.com',
   offre: 'VSD by Attractor',
   hebergement: true,  // false = la formule à 500 € disparaît partout (tant que l'hôtel partenaire n'est pas signé)
   delaiMini: 21,      // premier départ proposé, en jours à partir d'aujourd'hui
@@ -542,26 +565,69 @@ var DEPARTS = departs();
   setInterval(tick, 1000);
 })();
 
-/* envoi de la demande */
-document.getElementById('send').addEventListener('click', function () {
-  var nom = document.getElementById('f-nom').value.trim();
-  var tel = document.getElementById('f-tel').value.trim();
-  var date = document.getElementById('f-date').value;
-  var formule = document.getElementById('f-formule').value;
-  var valise = document.getElementById('f-valise').value;
+/* envoi de la demande — tout par email, le téléphone reste en base */
+(function () {
+  var btn = document.getElementById('send');
+  var msg = document.getElementById('msg');
+  var libelle = btn.innerHTML;
 
-  if (!nom) { alert('Merci d\'indiquer votre nom.'); document.getElementById('f-nom').focus(); return; }
-  if (!tel) { alert('Merci d\'indiquer votre numéro WhatsApp.'); document.getElementById('f-tel').focus(); return; }
+  function dire(type, titre, texte) {
+    msg.className = 'msg ' + type;
+    msg.innerHTML = '<b>' + titre + '</b>' + texte;
+  }
 
-  var txt = 'Bonjour, je veux m\'inscrire sur la liste d\'attente ' + CONFIG.offre + '.\n\n'
-          + 'Nom : ' + nom + '\n'
-          + 'Numéro : ' + tel + '\n'
-          + 'Départ souhaité : ' + date + '\n'
-          + 'Formule : ' + formule + '\n'
-          + 'Valise supplémentaire : ' + valise;
+  btn.addEventListener('click', function () {
+    var nom = document.getElementById('f-nom').value.trim();
+    var email = document.getElementById('f-email').value.trim();
+    var tel = document.getElementById('f-tel').value.trim();
+    var depart = document.getElementById('f-date').value;
+    var formule = document.getElementById('f-formule').value;
+    var valise = document.getElementById('f-valise').value;
 
-  window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(txt), '_blank');
-});
+    if (!nom) {
+      dire('ko', 'Il manque votre nom', 'Nous en avons besoin pour préparer votre dossier.');
+      document.getElementById('f-nom').focus(); return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      dire('ko', 'Vérifiez votre email', 'Tout le suivi de votre inscription se fait par email, il doit être exact.');
+      document.getElementById('f-email').focus(); return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours';
+    msg.className = 'msg';
+
+    fetch(CONFIG.endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nom: nom, email: email, whatsapp: tel,
+        depart: depart, formule: formule, valise: valise
+      })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (r) {
+      btn.disabled = false;
+      btn.innerHTML = libelle;
+      if (r && r.ok) {
+        dire('ok', 'Vous êtes sur la liste',
+          'Un email de confirmation part vers ' + email + '. Nous revenons vers vous sous 24 heures pour vérifier votre dossier.');
+        document.getElementById('f-nom').value = '';
+        document.getElementById('f-email').value = '';
+        document.getElementById('f-tel').value = '';
+      } else {
+        dire('ko', 'L\'envoi n\'a pas abouti',
+          'Réessayez dans un instant, ou écrivez-nous directement à ' + CONFIG.email + '.');
+      }
+    })
+    .catch(function () {
+      btn.disabled = false;
+      btn.innerHTML = libelle;
+      dire('ko', 'L\'envoi n\'a pas abouti',
+        'Vérifiez votre connexion, ou écrivez-nous directement à ' + CONFIG.email + '.');
+    });
+  });
+})();
 </script>
 
 </body>
