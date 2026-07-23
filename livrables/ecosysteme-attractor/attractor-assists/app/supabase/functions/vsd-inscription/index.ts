@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
       email,
       whatsapp: String(d.whatsapp ?? "").trim() || null,
       depart: d.depart ?? null,
-      formule: d.formule ?? null,
+      code_hotel: d.code_hotel ?? null,
       valise: d.valise ?? null,
       source: "site",
       statut: "nouveau",
@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
         <p style="margin:0 0 14px;line-height:1.6">Nous avons bien reçu votre inscription sur la liste d'attente du week-end Paris Abidjan. Voici ce que nous avons noté :</p>
         <table style="border-collapse:collapse;margin:0 0 18px">
           <tr><td style="padding:5px 14px 5px 0;color:#6B7A8D">Départ souhaité</td><td style="padding:5px 0"><b>${esc(d.depart)}</b></td></tr>
-          <tr><td style="padding:5px 14px 5px 0;color:#6B7A8D">Formule</td><td style="padding:5px 0"><b>${esc(d.formule)}</b></td></tr>
+          <tr><td style="padding:5px 14px 5px 0;color:#6B7A8D">Code hôtel partenaire</td><td style="padding:5px 0"><b>${esc(d.code_hotel)}</b></td></tr>
           <tr><td style="padding:5px 14px 5px 0;color:#6B7A8D">Valise supplémentaire</td><td style="padding:5px 0"><b>${esc(d.valise)}</b></td></tr>
         </table>
         <p style="margin:0 0 14px;line-height:1.6"><b>La suite.</b> Nous revenons vers vous par email sous 24 heures pour vérifier votre dossier. Une fois votre place validée, vous recevez votre lien de paiement sécurisé. Rien n'est à régler avant cette étape.</p>
@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
       ["Email", email],
       ["WhatsApp", row.whatsapp],
       ["Départ souhaité", d.depart],
-      ["Formule", d.formule],
+      ["Code hôtel partenaire", d.code_hotel],
       ["Valise supplémentaire", d.valise],
     ]
       .filter(([, v]) => v)

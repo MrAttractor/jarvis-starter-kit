@@ -10,7 +10,7 @@ create table if not exists public.vsd_inscriptions (
   email text,
   whatsapp text,           -- conservé en base, réutilisable plus tard
   depart text,             -- libellé du départ choisi
-  formule text,            -- "Le vol" ou "Le vol et l'hôtel"
+  code_hotel text,         -- le voyageur veut-il le code de réduction hôtel
   valise text,             -- option valise 23 kg
   source text default 'site',
   statut text not null default 'nouveau',   -- nouveau | rappele | eligible | lien_envoye | paye | embarque | annule

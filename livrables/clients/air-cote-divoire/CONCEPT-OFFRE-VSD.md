@@ -16,17 +16,17 @@ C'est tout. Il n'y a rien d'autre à comprendre pour l'acheter.
 
 **La marque, arrêtée le 23/07 :** l'offre s'appelle **VSD by Attractor**. Elle est portée par Mr Attractor avec la compagnie, pas par J'Envoie Express, qui reste l'opérateur du fret en coulisse. Charte aux couleurs du drapeau ivoirien (orange, blanc, vert), les mêmes que celles de la compagnie.
 
-**Deux formules, arrêtées le 23/07 :**
+**Ce que le voyageur achète :**
 
-| Formule | Prix | Ce qu'elle comprend |
+| Ce qui est vendu | Prix | Ce que ça comprend |
 |---|---|---|
-| **Le vol** | **à partir de 430 €** | Billet aller-retour, 10 kg en cabine, accueil à l'aéroport |
-| **Le vol et l'hôtel** | **500 €, prix rond** | Idem, plus les deux nuits chez l'hôtel partenaire à Abidjan |
+| **Le voyage** | **à partir de 430 €** | Billet aller-retour, 10 kg en cabine, accueil à l'aéroport |
 | Option | **+ 99 €** | Une seule valise de 23 kg en soute, contre 150 € au tarif public |
+| Avantage | **code de réduction** | Sur les nuits chez nos hôtels partenaires. Le voyageur réserve et paie l'hôtel lui-même. |
 
 **La construction du 430, à garder pour nous.** 380 € est le tarif du siège que nous facture la compagnie, 50 € est notre marge. Le prix public part donc de 430 € et jamais en dessous : descendre sous ce seuil, c'est vendre le voyage à perte avant même d'avoir compté le fret.
 
-**La formule à 500 € est conditionnée au partenariat hôtel.** Tant qu'aucun établissement n'est signé, elle ne doit pas être publiée : le site la fait disparaître partout en basculant `CONFIG.hebergement` sur `false`. À 500 €, il reste 120 € pour couvrir deux nuits et notre marge, ce qui impose de négocier la chambre nettement sous 50 € la nuit. C'est le chiffre à obtenir avant d'annoncer ce prix rond.
+**L'hébergement, tranché le 23/07 : code partenaire, jamais forfait.** Nous ne vendons pas de séjour et nous n'affichons aucun prix incluant l'hôtel. Nous négocions une réduction chez des établissements sélectionnés et nous remettons un code au voyageur, qui réserve et règle directement auprès de l'hôtel. Le bloc disparaît du site en basculant `CONFIG.hebergement` sur `false` tant qu'aucun établissement n'est signé.
 
 ---
 
@@ -67,7 +67,7 @@ C'est le cœur du contrat moral de l'offre. Il doit tenir en un écran.
 **Ce qu'il reçoit**
 - Un aller-retour Paris-Abidjan sur vol direct, **à partir de 430 €**
 - **10 kg de bagage en cabine**, inclus
-- **Ses deux nuits d'hôtel comprises** s'il prend la formule à 500 €
+- Un **code de réduction** chez nos hôtels partenaires, s'il en a besoin
 - Deux nuits pleines sur place, vendredi et samedi
 - L'option **une seule valise de 23 kg en soute pour 99 €**, contre 150 € au tarif public
 - Ses miles sMiles, sur un billet payant, comme n'importe quel passager
@@ -88,8 +88,7 @@ Cette dernière ligne n'est pas une formalité administrative. **C'est la protec
 | | Montant |
 |---|---|
 | Aller-retour Paris-Abidjan au tarif public | de l'ordre de 650 à 900 € selon la période |
-| Formule Le vol | **à partir de 430 €** |
-| Formule Le vol et l'hôtel | **500 €**, deux nuits comprises |
+| Le voyage | **à partir de 430 €** |
 | Avec la valise de 23 kg | **+ 99 €** (150 € au tarif public) |
 | Ce qu'il économise sur le seul billet | **entre 220 et 470 €** |
 
@@ -111,7 +110,28 @@ Trois règles pour que cette comparaison tienne, y compris devant quelqu'un qui 
 2. **Comparer ce qui est comparable** : un aller-retour direct sur la même ligne, pas un vol avec escale à 500 €. Notre argument est le prix, il ne doit pas se payer d'une malhonnêteté sur le produit comparé.
 3. **La valise est le meilleur argument de l'offre après le billet.** 99 € contre 150 €, sur un bagage que les compagnies vendent cher et souvent refusent au dernier moment, parle immédiatement à la diaspora qui ne voyage jamais les mains vides.
 
-**Ce que la valise nous rapporte vraiment.** Elle voyage sous la franchise personnelle du voyageur : elle ne nous coûte ni fret ni emballage. À 99 €, dix valises font **990 € par rotation de marge quasi pure**, soit deux fois notre marge sur les dix sièges. Elle mérite d'être poussée activement au moment de l'inscription, pas laissée en option discrète.
+### La valise n'est pas un bonus, c'est un arbitrage
+
+> Correction d'une erreur d'analyse du 23/07. La valise avait été présentée comme de la marge quasi pure à pousser activement. C'est faux tant qu'on ne regarde pas ce qu'elle coûte en capacité.
+
+Elle ne nous coûte ni fret ni emballage, mais **elle consomme 46 kg de soute par voyageur** (23 kg à l'aller, 23 au retour), qui sinon partaient en fret.
+
+| | Ce que nous encaissons | Ce que le voyageur libère en soute |
+|---|---|---|
+| Il prend la valise | 50 € de marge siège **+ 99 €** = 149 € | 92 kg |
+| Il ne la prend pas | 50 € de marge siège | **138 kg**, soit 46 kg de plus |
+
+Ces 46 kg valent **69 €** écoulés en gros (marge 1,50 €/kg), **253 €** écoulés en direct (marge 5,50 €/kg), et **0 €** s'ils partent invendus.
+
+**Le seuil : la valise rapporte 99 € contre 46 kg, donc elle est gagnante tant que le kilo dégage moins de 2,15 € de marge.** Au-delà, la capacité vaut mieux.
+
+**La règle d'exploitation qui en découle :** la valise est une **option à quota, sous réserve de disponibilité**, ouverte selon le remplissage du fret de la semaine et confirmée à la clôture, dix jours avant le départ. On la pousse quand la soute n'est pas vendue, on la ferme quand la demande directe est là. C'est exactement ce que font les compagnies avec l'excédent bagage, et ça ne surprend personne.
+
+### Le voyageur est un produit d'appel, et il faut l'assumer
+
+50 € de marge par siège, contre environ 40 € d'acquisition par voyageur (400 € de campagne pour dix places), laissent **10 € par siège**. Le voyageur ne se rentabilise pas sur son billet.
+
+**Il se rentabilise sur les 92 à 138 kg de soute qu'il ouvre.** C'est la seule lecture juste du modèle, et elle a deux conséquences directes : ne jamais brader le prix du billet en croyant y gagner du volume, et ne jamais faire décoller un siège vendu sans avoir vendu les kilos qui vont avec.
 
 **Le convoyeur n'est jamais payé.** C'est une décision de conception, pas un oubli.
 
@@ -238,16 +258,19 @@ Trois bénéfices à souligner en séance :
 
 > **Attention au raccourci.** « La compagnie encaisse et XPaye nous reverse » ne fonctionne pas tel quel : XPaye ne peut prélever que sur un flux qui passe par lui. Si le paiement se fait sur un lien de la compagnie, c'est leur système qui reverse, pas XPaye. Il faut choisir : ou le flux passe par nous, ou le reversement est une écriture comptable entre eux et nous.
 
-### Le point réglementaire à ne pas découvrir plus tard
+### Le point réglementaire, tranché le 23/07 : pas de forfait touristique
 
-**La formule à 500 € (vol + deux nuits d'hôtel) est un forfait touristique au sens du code du tourisme.** Vendre un forfait au public en France impose une immatriculation Atout France, une garantie financière et une responsabilité de plein droit sur le bon déroulement du séjour. Vendre le seul billet, ou vendre notre prestation d'organisation à côté d'un billet vendu par la compagnie, ne relève pas du même régime.
+Un vol et un hébergement vendus ensemble, à un prix global ou présentés comme un ensemble, forment un **forfait touristique** au sens du code du tourisme. Le vendre impose une immatriculation Atout France, une garantie financière et une responsabilité de plein droit sur le bon déroulement du séjour.
 
-Trois façons de traiter ça, à valider avec un professionnel :
-1. La compagnie vend le vol, **l'hôtel est réservé par le voyageur** avec notre code de réduction. Ce n'est plus un forfait, c'est un avantage négocié.
-2. Nous nous adossons à **une agence immatriculée** qui porte le forfait.
-3. Nous nous immatriculons, ce qui a un coût et un délai.
+**Décision : on n'y va pas.** L'hébergement devient un **code partenaire donnant droit à une réduction**. Le voyageur réserve et règle son hôtel directement auprès de l'établissement, nous ne vendons aucune nuit et n'affichons jamais de prix incluant l'hôtel.
 
-**Conséquence immédiate sur le site :** tant que ce point n'est pas réglé, la formule à 500 € reste masquée (`CONFIG.hebergement` sur `false`). La solution 1 est la plus rapide et ramène l'hébergement à ce qu'il était au départ, une réduction, pas un forfait.
+Les trois règles à ne jamais enfreindre pour que ça reste vrai :
+
+1. **Aucun prix global.** Ne jamais annoncer « votre week-end à 500 €, hôtel compris ». Le prix affiché ne couvre que le voyage, l'hôtel se paie ailleurs.
+2. **Aucune réservation faite par nous.** Nous donnons une liste d'adresses et un code, le voyageur appelle et réserve lui-même. Dès que nous réservons pour lui, nous entrons dans le champ de la prestation de voyage liée, qui a ses propres obligations.
+3. **Aucune commission perçue de l'hôtel.** L'avantage sert à rendre notre offre plus désirable, pas à nous rémunérer. Une commission ferait de nous un intermédiaire rémunéré sur l'hébergement, ce qui rouvre exactement la question qu'on vient de fermer.
+
+Si l'un de ces trois points devait sauter pour des raisons commerciales, il faudrait alors s'adosser à une agence immatriculée ou s'immatriculer. Ce serait une décision à part entière, pas un glissement.
 
 ### Le paiement en plusieurs fois, quand le modèle sera viable
 
