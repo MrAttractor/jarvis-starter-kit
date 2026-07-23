@@ -201,15 +201,15 @@ tbody tr:last-child td{border-bottom:none}
         <div class="cl"><span>Prix final payé par le convoyeur</span><b id="c-prix">430 €</b></div>
         <div class="cl" id="c-taux-line"><span>Taux d'acceptation de l'offre</span><b id="c-taux">100 %</b></div>
         <div class="cl" id="c-sieges-line"><span>Sièges effectivement remplis</span><b id="c-sieges">10 sur 10</b></div>
-        <div class="cl"><span>Fret embarqué en conséquence</span><b id="c-kg">760 kg</b></div>
+        <div class="cl"><span>Fret embarqué en conséquence</span><b id="c-kg">920 kg</b></div>
         <div class="warn" id="c-warn">Au-delà de ce niveau, l'offre perd son avantage face au tarif public et face à la concurrence sur l'axe. Les sièges ne se remplissent plus, et la soute part vide avec eux.</div>
       </div>
 
       <div class="sect">Le fret</div>
 
       <div class="ctrl">
-        <div class="top"><label>Emport par siège rempli<span class="hint">aller et retour cumulés</span></label><span class="val" id="v-kgsiege">76 kg</span></div>
-        <input type="range" id="kgsiege" min="0" max="140" step="2" value="76">
+        <div class="top"><label>Soute libérée par convoyeur<span class="hint">46 kg à l'aller, 46 kg au retour</span></label><span class="val" id="v-kgsiege">92 kg</span></div>
+        <input type="range" id="kgsiege" min="0" max="138" step="2" value="92">
       </div>
 
       <div class="ctrl">
@@ -259,35 +259,49 @@ tbody tr:last-child td{border-bottom:none}
       </div>
 
       <div class="panel">
+        <h2>En langage yield management</h2>
+        <div class="sub">Le programme ne dilue aucune recette existante, et voici pourquoi.</div>
+        <div class="carry">
+          <div class="ci">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            <span><b>Aucune cannibalisation.</b> Le convoyeur n'est pas un passager qui aurait payé le tarif public. Il accepte des contraintes qu'aucun voyageur normal n'accepte, et c'est précisément ce qui isole le segment.</span>
+          </div>
+          <div class="ci">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            <span><b>Quatre barrières tarifaires étanches.</b> Séjour imposé de 72 heures sur le VSD, renonciation à la soute personnelle au-delà d'un bagage forfaitaire, achat par un canal fermé sans vente publique, et volume plafonné au bloc convenu.</span>
+          </div>
+          <div class="ci">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            <span><b>Un arbitrage à une seule variable.</b> La comparaison n'est pas entre un siège convoyeur et un siège plein tarif. Elle est entre un siège vide qui rapporte zéro et un siège convoyeur qui apporte en plus ses kilos de fret.</span>
+          </div>
+          <div class="ci">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            <span><b>Une classe pilotable.</b> Le bloc reste sous votre contrôle : vous l'ouvrez sur les départs où votre remplissage le justifie, et vous le fermez quand la demande publique reprend la main.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
         <h2>Le compte de la rotation</h2>
         <div class="sub">Au tarif actuellement sélectionné.</div>
 
         <div class="hero-res" id="hero">
-          <div class="lbl">Recette nette additionnelle, par rotation</div>
-          <div class="big" id="marge-rot">+4 520 €</div>
+          <div class="lbl">Ce qui vous reste, par week-end</div>
+          <div class="big" id="marge-rot">+4 840 €</div>
           <div class="pct" id="marge-pct">sur des sièges et une soute qui, sans le programme, rapportent zéro</div>
         </div>
 
         <div class="split">
           <div class="scard a">
-            <div class="k">Recette sièges</div>
-            <div class="n" id="rec-sieges">3 800 €</div>
-            <div class="sub">sur des sièges autrement invendus</div>
+            <div class="k">Vous encaissez</div>
+            <div class="n" id="enc">6 560 €</div>
+            <div class="sub" id="enc-d">3 800 € de sièges, 2 760 € de fret</div>
           </div>
-          <div class="scard a">
-            <div class="k">Recette fret</div>
-            <div class="n" id="rec-fret">2 280 €</div>
-            <div class="sub">sur une soute déjà en vol</div>
+          <div class="scard">
+            <div class="k">Ça vous coûte</div>
+            <div class="n" id="cout">1 720 €</div>
+            <div class="sub" id="cout-d">vos seuls coûts marginaux, carburant et manutention</div>
           </div>
-        </div>
-
-        <div class="rows">
-          <div class="row"><span>Recette sièges <span class="d" id="d-si">10 × 380 €</span></span><span class="v" id="r-si">3 800 €</span></div>
-          <div class="row"><span>Recette fret accompagné <span class="d" id="d-fr">760 kg × 3,00 €</span></span><span class="v" id="r-fr">2 280 €</span></div>
-          <div class="row tot"><span>= Recette du programme</span><span class="v" id="r-rev">6 080 €</span></div>
-          <div class="row"><span>− Coût marginal sièges</span><span class="v" id="r-cs">800 €</span></div>
-          <div class="row"><span>− Coût marginal soute</span><span class="v" id="r-cf">760 €</span></div>
-          <div class="row tot"><span>= Recette nette</span><span class="v" id="r-marge">+4 520 €</span></div>
         </div>
       </div>
 
@@ -308,8 +322,8 @@ tbody tr:last-child td{border-bottom:none}
             <tr>
               <td>Sur les rotations paramétrées<span class="d" id="t-rot">12 rotations</span></td>
               <td id="t-pax">120</td>
-              <td id="t-t">9,1 t</td>
-              <td class="hl" id="t-marge">54 240 €</td>
+              <td id="t-t">11,0 t</td>
+              <td class="hl" id="t-marge">58 080 €</td>
             </tr>
           </tbody>
         </table>
@@ -345,7 +359,7 @@ tbody tr:last-child td{border-bottom:none}
           </div>
         </div>
         <div class="note" style="margin-top:18px">
-          <b>Ce que le tarif partenaire finance.</b> Chaque euro non prélevé sur le siège est réinvesti dans l'attractivité du séjour, notamment un hébergement 4 étoiles à tarif partenaire négocié pour les convoyeurs. C'est cette qualité de séjour qui fait accepter l'offre, remplit les sièges, et remplit la soute. Le tarif bas n'est pas une concession : c'est le mécanisme qui alimente votre recette.
+          <b>Ce que le tarif partenaire finance.</b> Chaque euro non prélevé sur le siège est réinvesti dans l'attractivité du séjour, notamment les deux nuits d'hôtel proposées en option aux convoyeurs. C'est cette qualité de séjour qui fait accepter l'offre, remplit les sièges, et remplit la soute. Le tarif partenaire n'est pas une concession : c'est le mécanisme qui alimente votre recette.
         </div>
       </div>
 
@@ -381,6 +395,33 @@ tbody tr:last-child td{border-bottom:none}
             <div class="x">Vos équipes forment et valident J'Envoie Express, qui prépare, pèse, scelle et manifeste l'ensemble du fret. La responsabilité de la préparation repose ainsi sur un opérateur identifié et formé par vos soins, dans l'esprit du régime chargeur connu, et non sur des voyageurs individuels. C'est votre garantie de conformité et la condition de solidité du partenariat.</div>
           </div>
         </div>
+        <div class="ask">
+          <div class="num">5</div>
+          <div>
+            <div class="t">Le calendrier des périodes ouvertes</div>
+            <div class="x">Les fenêtres sur lesquelles vous acceptez de déployer l'offre VSD, et celles que vous préférez réserver à la vente publique. Nous calons la campagne dessus plutôt que de vous solliciter au coup par coup.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel asks">
+        <h2>Ce que nous proposons de porter ensemble</h2>
+        <div class="sub">Deux volets où votre poids fait la différence, et où le bénéfice est partagé.</div>
+
+        <div class="ask">
+          <div class="num">A</div>
+          <div>
+            <div class="t">Le lancement public du programme</div>
+            <div class="x">Une cérémonie d'ouverture et un dispositif de relations publiques, financés par Air Côte d'Ivoire. Nous portons la campagne d'acquisition continue et la production des contenus ; le lancement, lui, sert d'abord votre visibilité sur l'axe et votre positionnement auprès de la diaspora. C'est le volet où votre marque travaille pour vous.</div>
+          </div>
+        </div>
+        <div class="ask">
+          <div class="num">B</div>
+          <div>
+            <div class="t">Votre appui pour l'hébergement des convoyeurs</div>
+            <div class="x">Le format 72 heures impose deux nuits sur place, vendredi et samedi. Nous souhaitons proposer aux convoyeurs un hébergement 4 étoiles en option, à tarif partenaire. Votre relation avec l'hôtellerie abidjanaise obtiendra en une conversation ce qui nous prendrait des mois. Cette qualité de séjour est un moteur direct du remplissage, donc de votre recette.</div>
+          </div>
+        </div>
       </div>
 
       <div class="note">
@@ -393,7 +434,7 @@ tbody tr:last-child td{border-bottom:none}
 
 <script>
 (function(){
-  var DEFAULTS = {bloc:380, kgsiege:76, fret:3, csiege:80, csoute:1, sieges:10, rot:12};
+  var DEFAULTS = {bloc:380, kgsiege:92, fret:3, csiege:80, csoute:1, sieges:10, rot:12};
   var ids = Object.keys(DEFAULTS);
   var el = function(id){return document.getElementById(id)};
 
@@ -475,23 +516,18 @@ tbody tr:last-child td{border-bottom:none}
       + 'Au-delà, le billet perd son avantage pour le convoyeur, les sièges restent invendus, et chaque siège vide emporte aussi ses '
       + v.kgsiege + ' kg de fret. C\'est le volume qui fait la recette de ce programme, pas le prix unitaire.';
 
-    // compte de la rotation
-    el('rec-sieges').textContent = eur(r.sieges * v.bloc);
-    el('rec-fret').textContent   = eur(r.kg * v.fret);
+    // compte de la rotation, en trois chiffres
+    var coutTotal = r.sieges * v.csiege + r.kg * v.csoute;
     el('hero').className = 'hero-res' + (r.net < 0 ? ' neg' : '');
     el('marge-rot').textContent = (r.net>=0?'+':'')+eur(r.net);
     el('marge-pct').textContent = r.net > 0
       ? 'sur des sièges et une soute qui, sans le programme, rapportent zéro'
       : 'à ce tarif, le programme ne se remplit plus';
 
-    el('d-si').textContent = num(r.sieges)+' × '+eur(v.bloc);
-    el('d-fr').textContent = num(r.kg)+' kg × '+dec2(v.fret)+' €';
-    el('r-si').textContent = eur(r.sieges * v.bloc);
-    el('r-fr').textContent = eur(r.kg * v.fret);
-    el('r-rev').textContent= eur(r.recette);
-    el('r-cs').textContent = eur(r.sieges * v.csiege);
-    el('r-cf').textContent = eur(r.kg * v.csoute);
-    el('r-marge').textContent = (r.net>=0?'+':'')+eur(r.net);
+    el('enc').textContent    = eur(r.recette);
+    el('enc-d').textContent  = eur(r.sieges * v.bloc)+' de sièges, '+eur(r.kg * v.fret)+' de fret';
+    el('cout').textContent   = eur(coutTotal);
+    el('cout-d').textContent = num(r.sieges)+' sièges et '+num(r.kg)+' kg embarqués';
 
     // pilote
     el('t-rot').textContent   = v.rot+' rotation'+(v.rot>1?'s':'');
