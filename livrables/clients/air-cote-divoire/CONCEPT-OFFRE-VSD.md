@@ -30,6 +30,16 @@ C'est tout. Il n'y a rien d'autre à comprendre pour l'acheter.
 
 ---
 
+## 1 bis. La date de lancement
+
+**Premier départ : vendredi 4 septembre 2026**, retour le dimanche 6. Clôture des inscriptions le mardi 25 août.
+
+Ce n'est pas la première rotation commerciale, c'est l'opération de lancement : dix sièges composés et non vendus, une équipe de captation à bord, des ambassadeurs sélectionnés par influence réelle, et **quatre voyageurs ayant payé le tarif normal**, dont le témoignage vaudra plus que tous les contenus produits.
+
+Plan complet, composition du vol, grille de tri des invités, plan de captation et rétroplanning à six semaines dans `LANCEMENT-4-SEPTEMBRE.md`.
+
+---
+
 ## 2. Le retournement à tenir, et il conditionne tout le reste
 
 Ce qu'on vend n'est pas du convoyage. **C'est un week-end à Abidjan à moitié prix.**
