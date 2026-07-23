@@ -199,19 +199,28 @@ Le sens du flux d'argent décide de qui possède le client. Ce n'est pas un dét
 
 Le prix affiché ne bouge pas. Ce qui change, c'est qu'il se règle en deux fois, à deux destinataires différents.
 
-**L'ordre des paiements, et c'est là que tout se joue**
+**Un seul paiement, réparti automatiquement (mise à jour du 23/07)**
 
-**Nos 50 € sont encaissés en premier**, au moment où nous confirmons la place. Le lien de la compagnie n'est envoyé qu'ensuite. Trois raisons, dans l'ordre d'importance :
+XPaye sait faire du **paiement fractionné** : un lien unique, un seul règlement pour le voyageur, et le dispatch automatique vers chaque bénéficiaire. Ça change deux choses, dans le bon sens.
 
-1. **Nous sommes payés, toujours.** Notre marge ne dépend d'aucun reversement, d'aucun délai, d'aucune bonne volonté.
-2. **Le voyageur s'engage.** Une liste d'attente gratuite se vide au moment de payer. 50 € versés, c'est un désistement qui devient rare, et c'est ce qui nous permet de tenir la promesse des dix sièges remplis chaque semaine.
-3. **Le petit pas d'abord.** 50 € pour bloquer sa place se décide en une minute. 430 € d'un coup se réfléchit une semaine, et une semaine de réflexion sur un vol qui ferme dans dix jours, c'est une place perdue.
+1. **La friction disparaît.** Le voyageur ne fait plus deux paiements à deux destinataires, il paie une fois. C'est le montage C sans son seul inconvénient.
+2. **L'argument devient plus fort, pas plus faible.** Nous ne détenons à aucun moment les fonds du transport : ils sont versés à la compagnie par l'établissement de paiement, pas par nous. Ce n'est plus une promesse, c'est une mécanique, et le reçu de paiement en fait la preuve.
+
+Ce qu'il faut donc vérifier auprès de XPaye avant d'annoncer quoi que ce soit :
+
+- Le **statut réglementaire** qui autorise l'encaissement pour compte de tiers et le reversement automatique. C'est une activité d'établissement de paiement ou d'agent, elle ne s'improvise pas.
+- La **zone couverte** : le voyageur paie depuis la France, en euros, et une part est reversée à une compagnie ivoirienne. Le montage doit tenir sur ce corridor précis.
+- Le **nombre de bénéficiaires** sur un même lien (compagnie, Mr Attractor, et J'Envoie Express si le partage du fret transite aussi par là).
+- Le **reçu remis au voyageur**, qui doit montrer la répartition. C'est notre preuve d'honnêteté, elle doit être écrite noir sur blanc.
+- Le **délai de reversement** effectif, et qui porte le risque d'impayé ou de rétrofacturation.
+
+> **Le bénéfice caché, et il est important.** Si XPaye peut répartir entre trois bénéficiaires, la clé de revenue sharing avec J'Envoie Express cesse d'être une écriture comptable à régulariser chaque mois : elle devient un paramètre du lien de paiement, appliqué à chaque transaction. Plus de créance, plus de retard, plus de discussion. C'est aussi ce qui rend crédible la structure en deux étages décrite dans `POCHES-REVENUS-ATTRACTOR.md`.
 
 **Les règles à écrire avant le premier euro encaissé**
 
-- Les 50 € ne sont encaissés qu'**après** vérification du dossier, jamais à l'inscription. Personne ne paie pour un voyage qu'il ne pourra pas faire.
-- Si nous ne pouvons finalement pas fournir la place, les 50 € sont **remboursés intégralement**. C'est notre engagement, et il doit être écrit.
-- Le voyageur a **48 heures** pour régler son billet sur le lien de la compagnie. Passé ce délai, la place repart à la personne suivante sur la liste, et les 50 € restent acquis : le travail de vérification a été fait. **Cette règle doit être lue et acceptée avant le paiement des 50 €**, jamais découverte après.
+- Le lien n'est envoyé qu'**après** vérification du dossier. Personne ne paie pour un voyage qu'il ne pourra pas faire.
+- Si nous ne pouvons finalement pas fournir la place, **remboursement intégral**.
+- Le lien est **valable 48 heures**. Passé ce délai, la place repart à la personne suivante sur la liste. Le voyageur est prévenu avant l'expiration.
 
 ### Comment le présenter au voyageur : la friction devient l'argument
 
@@ -231,6 +240,12 @@ La séquence se raconte alors en trois temps simples, sans jamais parler de comm
 Le mot à employer pour nos 50 € : **frais de réservation**. Pas « commission » (ce que gagne un intermédiaire), pas « frais de dossier » (ce qu'on paie pour rien). Des frais de réservation, tout le monde sait ce que c'est et personne ne les conteste.
 
 Et ce qu'ils couvrent doit être réel et énumérable : la vérification du dossier et de l'éligibilité, l'accès au tarif fermé, l'accompagnement à l'aéroport le vendredi, le contact sur place pendant le week-end, l'assistance en cas de problème. À 50 €, c'est peu cher payé, et ça se défend en une phrase.
+
+### La crédibilité vient du partenariat affiché, et elle s'assortit d'une règle
+
+**Décision du 23/07 : le partenariat officiel avec la compagnie figure sur le site.** C'est ce qui sépare VSD d'un revendeur de kilos : un programme officiel, adossé à une compagnie nommée, avec un opérateur formé à la sûreté.
+
+**La règle qui va avec, et elle n'est pas négociable.** Cette mention ne s'affiche qu'une fois l'accord signé et la formulation validée par leur communication. Annoncer un partenariat officiel avec une compagnie aérienne avant signature est une fausse déclaration, et c'est exactement le genre de chose qui tue un partenariat avant qu'il commence. Le site est déjà câblé pour ça : `CONFIG.partenariat` est sur `false`, un seul mot à changer le jour venu. Le logo, lui, ne s'utilise jamais sans autorisation écrite de leur service communication.
 
 ### Comment le présenter à la compagnie : leur rémunération n'est pas entamée
 
