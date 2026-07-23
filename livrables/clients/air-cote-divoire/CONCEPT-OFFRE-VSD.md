@@ -132,6 +132,45 @@ Aucune de ces étapes ne demande une technologie nouvelle. La plateforme de rés
 
 ---
 
+## 7 bis. Le paiement (cadrage du 23/07, rien n'est tranché)
+
+**L'intention posée par Mac Arthur :** au moment de payer, le voyageur reçoit **un lien généré par la compagnie** dans le cadre du partenariat. Nos frais sont prélevés sur le flux et reversés instantanément, via **XPaye**. Le **paiement en plusieurs fois** viendra plus tard, quand le modèle aura fait ses preuves.
+
+### La question à trancher avant toute chose : qui encaisse
+
+Le sens du flux d'argent décide de qui possède le client. Ce n'est pas un détail technique.
+
+| Montage | Ce qu'on y gagne | Ce qu'on y perd |
+|---|---|---|
+| **A. La compagnie encaisse tout** et nous reverse notre part | Zéro risque de trésorerie, zéro obligation réglementaire sur la vente du transport | Nous devenons apporteur d'affaires. Ils ont le client, la donnée de paiement, et le pouvoir de nous couper. Notre marge dépend de leur rythme de reversement. |
+| **B. Nous encaissons tout** via XPaye et reversons le siège | Nous gardons la relation client et la marge à la source | Nous portons les remboursements, les litiges et la fraude, et la vente de transport au public est une activité réglementée |
+| **C. Chacun encaisse ce qu'il vend** : la compagnie le billet sur son lien, nous notre service et nos options via XPaye | Chacun reste dans son métier et dans son droit, notre marge est encaissée directement, la relation reste partagée | Le voyageur fait deux paiements, il faut soigner l'enchaînement pour ne pas le perdre entre les deux |
+
+**Recommandation : le montage C.** C'est le seul où nous encaissons nos 50 € sans dépendre d'un reversement, et où nous ne vendons jamais du transport aérien à la place de la compagnie. XPaye n'a alors rien à voir avec le billet : il encaisse notre part et les options, ce qui est exactement son rôle.
+
+> **Attention au raccourci.** « La compagnie encaisse et XPaye nous reverse » ne fonctionne pas tel quel : XPaye ne peut prélever que sur un flux qui passe par lui. Si le paiement se fait sur un lien de la compagnie, c'est leur système qui reverse, pas XPaye. Il faut choisir : ou le flux passe par nous, ou le reversement est une écriture comptable entre eux et nous.
+
+### Le point réglementaire à ne pas découvrir plus tard
+
+**La formule à 500 € (vol + deux nuits d'hôtel) est un forfait touristique au sens du code du tourisme.** Vendre un forfait au public en France impose une immatriculation Atout France, une garantie financière et une responsabilité de plein droit sur le bon déroulement du séjour. Vendre le seul billet, ou vendre notre prestation d'organisation à côté d'un billet vendu par la compagnie, ne relève pas du même régime.
+
+Trois façons de traiter ça, à valider avec un professionnel :
+1. La compagnie vend le vol, **l'hôtel est réservé par le voyageur** avec notre code de réduction. Ce n'est plus un forfait, c'est un avantage négocié.
+2. Nous nous adossons à **une agence immatriculée** qui porte le forfait.
+3. Nous nous immatriculons, ce qui a un coût et un délai.
+
+**Conséquence immédiate sur le site :** tant que ce point n'est pas réglé, la formule à 500 € reste masquée (`CONFIG.hebergement` sur `false`). La solution 1 est la plus rapide et ramène l'hébergement à ce qu'il était au départ, une réduction, pas un forfait.
+
+### Le paiement en plusieurs fois, quand le modèle sera viable
+
+À garder pour plus tard, avec une règle simple dès le départ : **le solde doit être encaissé avant la clôture des inscriptions**, dix jours avant le départ. Sinon nous immobilisons une place que nous ne pouvons plus revendre, sur un vol où chaque siège vide emporte aussi ses kilos de fret.
+
+### Ce que ça change dans le parcours
+
+L'inscription reste gratuite et sans paiement. La séquence devient : liste d'attente, appel de vérification du dossier, **puis** envoi du lien de paiement. Le paiement n'intervient jamais avant que nous ayons validé l'éligibilité du voyageur, ce qui nous évite d'avoir à rembourser quelqu'un qui n'aurait jamais dû pouvoir réserver.
+
+---
+
 ## 8. Qui peut acheter
 
 Reprise du filtre administratif du dossier convoyeurs, appliqué au moment de l'inscription. Il est éliminatoire, pas indicatif.

@@ -13,7 +13,13 @@ create table if not exists public.vsd_inscriptions (
   formule text,            -- "Le vol" ou "Le vol et l'hôtel"
   valise text,             -- option valise 23 kg
   source text default 'site',
-  statut text not null default 'nouveau',   -- nouveau | rappele | confirme | embarque | annule
+  statut text not null default 'nouveau',   -- nouveau | rappele | eligible | lien_envoye | paye | embarque | annule
+  -- Suivi du paiement. Le lien est généré par la compagnie dans le cadre
+  -- du partenariat, il n'est envoyé qu'une fois le dossier vérifié.
+  lien_paiement text,
+  lien_envoye_le timestamptz,
+  paye_le timestamptz,
+  montant_paye numeric(10,2),
   notes text
 );
 

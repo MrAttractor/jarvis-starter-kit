@@ -77,7 +77,7 @@ Deno.serve(async (req) => {
           <tr><td style="padding:5px 14px 5px 0;color:#6B7A8D">Formule</td><td style="padding:5px 0"><b>${esc(d.formule)}</b></td></tr>
           <tr><td style="padding:5px 14px 5px 0;color:#6B7A8D">Valise supplémentaire</td><td style="padding:5px 0"><b>${esc(d.valise)}</b></td></tr>
         </table>
-        <p style="margin:0 0 14px;line-height:1.6"><b>La suite.</b> Nous revenons vers vous par email sous 24 heures pour vérifier votre dossier et vous confirmer votre place. Aucun paiement n'est demandé à cette étape.</p>
+        <p style="margin:0 0 14px;line-height:1.6"><b>La suite.</b> Nous revenons vers vous par email sous 24 heures pour vérifier votre dossier. Une fois votre place validée, vous recevez votre lien de paiement sécurisé. Rien n'est à régler avant cette étape.</p>
         <p style="margin:0 0 14px;line-height:1.6"><b>Un point à préparer.</b> Le tarif est réservé aux voyageurs qui partent et reviennent sans démarche de visa : résidents en France à titre stable, ou binationaux avec un passeport ivoirien à jour. Vérifiez la validité de vos documents, c'est ce qui bloque le plus souvent un dossier.</p>
         <p style="margin:0 0 6px;line-height:1.6">À très vite,</p>
         <p style="margin:0;line-height:1.6">L'équipe VSD</p>
