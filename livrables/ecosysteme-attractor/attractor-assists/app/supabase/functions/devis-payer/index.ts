@@ -22,7 +22,7 @@ const SERVICE_KEY  = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 // PaiementPro (XPaye) — même passerelle que init-payment.
 const PP_SANDBOX_URL = "https://sandbox.paiementpro.net/webservice/onlinepayment/init/curl-init.php";
 const PP_PROD_URL    = "https://www.paiementpro.net/webservice/onlinepayment/js/initialize/initialize.php";
-const RETURN_URL     = "https://demo.agenceattractor.com/commander/?paye=1";
+const RETURN_URL     = "https://agenceattractor.com/commander/?paye=1";
 const VALID_CHANNELS = ["WAVECI", "MOMOCI", "OMCIV2", "CARD"];
 
 Deno.serve(async (req) => {
