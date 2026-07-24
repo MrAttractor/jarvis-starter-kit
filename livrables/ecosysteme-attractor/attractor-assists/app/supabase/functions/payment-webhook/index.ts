@@ -41,6 +41,71 @@ Deno.serve(async (req) => {
   const success = isSuccess(body);
   const newStatus = success ? "success" : "failed";
 
+  // Vente de site — paiement rattaché à un devis (devis-payer). Préfixe DEVIS-.
+  if (reference.startsWith("DEVIS-")) {
+    const { data: pay } = await supabase
+      .from("devis_paiements")
+      .select("*")
+      .eq("reference", reference)
+      .single();
+    if (!pay) {
+      console.error("payment-webhook: paiement de devis introuvable", reference);
+      return new Response("Payment not found", { status: 404 });
+    }
+
+    await supabase.from("devis_paiements").update({
+      statut:  newStatus,
+      paye_at: success ? new Date().toISOString() : null,
+    }).eq("reference", reference);
+
+    if (success && pay.devis_id) {
+      // Synthèse sur le devis : total réglé, statut, solde restant dû.
+      const { data: devis } = await supabase
+        .from("devis_web").select("total, devise, montant_paye").eq("id", pay.devis_id).single();
+      const totalNum = Number(devis?.total ?? 0);
+      const estEuro  = String(devis?.devise || "").toUpperCase().match(/€|EUR/);
+      const totalXof = estEuro ? Math.round(totalNum * 656) : Math.round(totalNum);
+      const dejaPaye = Number(devis?.montant_paye ?? 0);
+      const montantPaye = dejaPaye + Number(pay.montant);
+      const soldeDu  = Math.max(0, totalXof - montantPaye);
+      const statutDevis = soldeDu <= 0 ? "paye_total" : "acompte_paye";
+
+      await supabase.from("devis_web").update({
+        montant_paye:    montantPaye,
+        solde_du:        soldeDu,
+        paiement_statut: statutDevis,
+      }).eq("id", pay.devis_id);
+
+      // Alerte agence : paiement reçu, démarrer les travaux.
+      const resendKey = Deno.env.get("RESEND_API_KEY");
+      const notifyTo  = Deno.env.get("NOTIFY_DEVIS_EMAIL") || "hello@agenceattractor.com";
+      if (resendKey) {
+        const fcfa = (n: number) => new Intl.NumberFormat("fr-FR").format(n) + " FCFA";
+        const reste = soldeDu > 0 ? `<p style="margin:6px 0 0;font-size:14px;color:#B45309">Solde restant dû : <b>${fcfa(soldeDu)}</b> (relance à programmer).</p>` : `<p style="margin:6px 0 0;font-size:14px;color:#1E9E52"><b>Payé en totalité.</b></p>`;
+        await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            from: "Mr Attractor <noreply@agenceattractor.com>",
+            to: [notifyTo],
+            subject: `Paiement reçu — ${pay.payer_nom || "Client"} · ${fcfa(Number(pay.montant))} (${pay.type})`,
+            html: `<div style="font-family:system-ui,sans-serif;max-width:560px;margin:0 auto;color:#1A1714">
+              <h2 style="color:#1E9E52">Paiement reçu, tu peux démarrer les travaux</h2>
+              <p style="font-size:15px"><b>${pay.payer_nom || "Client"}</b> · ${pay.payer_contact || "—"}</p>
+              <p style="font-size:15px;margin:2px 0">Montant réglé : <b>${fcfa(Number(pay.montant))}</b> — ${pay.type === "acompte" ? "acompte (50 %)" : "totalité"} via ${pay.channel}</p>
+              ${reste}
+              <p style="font-size:12px;color:#9C9189;margin-top:16px">Référence ${reference} — notification automatique du tunnel de vente</p>
+            </div>`,
+            text: `Paiement reçu de ${pay.payer_nom || "Client"} (${pay.payer_contact || "—"}) : ${fcfa(Number(pay.montant))} (${pay.type}, ${pay.channel}). ${soldeDu > 0 ? "Solde dû : " + fcfa(soldeDu) : "Payé en totalité."} Réf ${reference}.`,
+          }),
+        }).catch(() => {});
+      }
+    }
+
+    console.log(`payment-webhook: devis_paiements reference=${reference} statut=${newStatus}`);
+    return new Response("OK", { status: 200 });
+  }
+
   // Référence Pilotage (préfixe distinct) — pas de compte utilisateur à activer
   if (reference.startsWith("PILOTAGE-")) {
     const { data: pilotagePayment } = await supabase

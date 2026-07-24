@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Commander mon site — Mr Attractor</title>
+<!--
+  Page de vente autonome (brique isolée de la chaîne de vente).
+  HTML pur, zéro framework, zéro transpilation navigateur : fiable sur mobile CI.
+  Le prospect compose → valide (devis-accept) → paie acompte ou totalité (devis-payer, XPaye).
+  Porte de sortie « en parler » toujours visible. Aucun mur de paiement sec.
+-->
+<style>
+  :root{
+    --orange:#F25C05; --orange-d:#D94F02; --charbon:#1A1714; --sable:#FAF6F0;
+    --g700:#4A3F35; --g400:#9C9189; --g200:#E7DFD5; --vert:#1E9E52; --wa:#25D366;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--sable);color:var(--charbon);font-family:'Sora','Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5;padding-bottom:180px}
+  .wrap{max-width:640px;margin:0 auto;padding:0 18px}
+  header{background:var(--charbon);padding:22px 0}
+  .brand{font-size:20px;font-weight:800;color:#fff}
+  .brand em{color:var(--orange);font-style:normal}
+  .kick{font-size:12px;color:#C9BEB2;margin-top:3px}
+  h1{font-size:23px;font-weight:800;margin:26px 0 6px;line-height:1.2}
+  .sub{font-size:14px;color:var(--g700);margin-bottom:22px}
+  .step-t{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--orange-d);margin:26px 0 10px}
+  /* Cards formules */
+  .opt{display:block;background:#fff;border:1.5px solid var(--g200);border-radius:16px;padding:16px;margin-bottom:12px;cursor:pointer;transition:border-color .15s,box-shadow .15s;position:relative}
+  .opt.on{border-color:var(--orange);box-shadow:0 6px 22px rgba(242,92,5,.13)}
+  .opt input{position:absolute;opacity:0;pointer-events:none}
+  .opt .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+  .opt .nom{font-size:16px;font-weight:800}
+  .opt .prix{font-size:17px;font-weight:800;white-space:nowrap}
+  .opt .prix small{display:block;font-size:11px;font-weight:600;color:var(--g400);text-align:right}
+  .opt .desc{font-size:13px;color:var(--g700);margin-top:6px}
+  .opt .mrr{font-size:12px;color:var(--g400);margin-top:8px}
+  .opt.check{display:flex;justify-content:space-between;align-items:center}
+  .opt .mark{width:22px;height:22px;border:2px solid var(--g200);border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-left:12px}
+  .opt.on .mark{border-color:var(--orange);background:var(--orange)}
+  .opt .mark svg{width:13px;height:13px;display:none}
+  .opt.on .mark svg{display:block}
+  .hint{font-size:12.5px;color:var(--g400);margin:2px 0 8px}
+  /* Form */
+  .fld{margin-bottom:12px}
+  .fld label{display:block;font-size:12.5px;font-weight:700;color:var(--g700);margin-bottom:5px}
+  .fld input{width:100%;padding:13px 14px;border:1.5px solid var(--g200);border-radius:11px;font-size:15px;font-family:inherit;background:#fff}
+  .fld input:focus{outline:none;border-color:var(--orange)}
+  .accord{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:var(--g700);margin:6px 0 4px;cursor:pointer}
+  .accord input{margin-top:2px;width:17px;height:17px;flex-shrink:0}
+  /* Boutons */
+  .btn{display:block;width:100%;text-align:center;border:none;border-radius:12px;font-family:inherit;font-weight:800;font-size:15px;padding:15px;cursor:pointer;text-decoration:none}
+  .btn.p{background:var(--orange);color:#fff}
+  .btn.p:disabled{opacity:.45;cursor:not-allowed}
+  .btn.dark{background:var(--charbon);color:#fff}
+  .btn.wa{background:var(--wa);color:#fff}
+  .btn.ghost{background:transparent;color:var(--g700);border:1.5px solid var(--g200)}
+  .btn+.btn{margin-top:10px}
+  /* Sticky total */
+  .sticky{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--g200);box-shadow:0 -6px 24px rgba(26,23,20,.08);padding:14px 0;z-index:40}
+  .sticky .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .sticky .lab{font-size:12px;color:var(--g400)}
+  .sticky .amt{font-size:22px;font-weight:800}
+  .cap{font-size:11.5px;color:var(--g400);margin-top:8px;text-align:center}
+  /* Écrans */
+  .screen{display:none}
+  .screen.on{display:block}
+  .pay-choice{background:#fff;border:1.5px solid var(--g200);border-radius:16px;padding:16px;margin-bottom:12px;cursor:pointer;text-align:left;width:100%;font-family:inherit;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .pay-choice:hover{border-color:var(--orange)}
+  .pay-choice .t{font-size:15px;font-weight:800}
+  .pay-choice .s{font-size:12.5px;color:var(--g400);margin-top:2px}
+  .pay-choice .a{font-size:18px;font-weight:800;color:var(--orange-d);white-space:nowrap}
+  .methods{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:6px}
+  .method{background:#fff;border:1.5px solid var(--g200);border-radius:12px;padding:14px;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer}
+  .method:hover{border-color:var(--orange)}
+  .method.on{border-color:var(--orange);background:#FEF4EC}
+  .big-ok{width:60px;height:60px;border-radius:50%;background:var(--vert);margin:10px auto 16px;display:flex;align-items:center;justify-content:center}
+  .big-ok svg{width:30px;height:30px}
+  .err{font-size:13px;color:#C0392B;margin:8px 0;display:none}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="brand">Mr <em>Attractor</em></div><div class="kick">Ton site web métier, prêt à vendre</div></div></header>
+
+<div class="wrap">
+
+  <!-- ÉCRAN 1 : composition -->
+  <section class="screen on" id="s-compose">
+    <h1>Choisis ta formule</h1>
+    <p class="sub">Un site qui travaille pour toi : tes clients commandent, tu pilotes tout (stock, ventes, livreur) depuis ton tableau de bord.</p>
+
+    <div class="step-t">1 · Ta formule</div>
+    <div id="formules"></div>
+
+    <div class="step-t">2 · Options (facultatif)</div>
+    <p class="hint">Tu pourras aussi en parler avec nous avant de décider.</p>
+    <div id="options"></div>
+
+    <div class="step-t">3 · Tes coordonnées</div>
+    <div class="fld"><label>Ton nom</label><input id="f-nom" autocomplete="name" placeholder="Nom et prénom"></div>
+    <div class="fld"><label>Ton WhatsApp</label><input id="f-contact" autocomplete="tel" inputmode="tel" placeholder="+225 ..."></div>
+    <div class="fld"><label>Ton email (pour recevoir ton devis et ton reçu)</label><input id="f-email" autocomplete="email" inputmode="email" placeholder="ton@email.com"></div>
+    <label class="accord"><input type="checkbox" id="f-ok"><span>Je valide ma commande et je souhaite démarrer. Je pourrai payer l'acompte ou la totalité juste après.</span></label>
+    <p class="err" id="err1"></p>
+  </section>
+
+  <!-- ÉCRAN 2 : paiement -->
+  <section class="screen" id="s-pay">
+    <h1>Ta commande est validée</h1>
+    <p class="sub" id="pay-recap">—</p>
+
+    <div class="step-t">Comment veux-tu régler ?</div>
+    <button class="pay-choice" id="pc-acompte">
+      <span><span class="t">Payer l'acompte</span><span class="s">50 % pour démarrer, le solde à la livraison</span></span>
+      <span class="a" id="a-acompte">—</span>
+    </button>
+    <button class="pay-choice" id="pc-total">
+      <span><span class="t">Payer la totalité</span><span class="s">Tout régler maintenant</span></span>
+      <span class="a" id="a-total">—</span>
+    </button>
+
+    <div id="method-box" style="display:none">
+      <div class="step-t">Moyen de paiement</div>
+      <div class="methods">
+        <button class="method" data-ch="WAVECI">Wave</button>
+        <button class="method" data-ch="OMCIV2">Orange Money</button>
+        <button class="method" data-ch="MOMOCI">MTN Money</button>
+        <button class="method" data-ch="CARD">Carte bancaire</button>
+      </div>
+      <p class="err" id="err2"></p>
+      <button class="btn p" id="btn-pay" style="margin-top:14px" disabled>Continuer vers le paiement sécurisé</button>
+    </div>
+
+    <p class="cap">Paiement sécurisé via XPaye. Tu peux aussi <a href="#" id="link-parler" style="color:var(--orange-d);font-weight:700">en parler avec nous d'abord</a>.</p>
+  </section>
+
+  <!-- ÉCRAN 3 : merci (retour paiement) -->
+  <section class="screen" id="s-merci" style="text-align:center;padding-top:30px">
+    <div class="big-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+    <h1 style="text-align:center">Merci, c'est lancé</h1>
+    <p class="sub" style="text-align:center">Ton paiement est en cours de confirmation. On te recontacte très vite pour démarrer tes travaux. Un reçu t'arrive par email.</p>
+    <a class="btn wa" id="merci-wa" href="#">Nous écrire sur WhatsApp</a>
+  </section>
+
+</div>
+
+<!-- Total collant (écran compose) -->
+<div class="sticky" id="sticky">
+  <div class="wrap">
+    <div class="row"><span class="lab">Ta sélection</span><span class="amt" id="v-total">—</span></div>
+    <button class="btn p" id="btn-valider" disabled>Valider ma commande</button>
+    <div class="cap">Sans engagement de paiement à cette étape. <a href="#" id="link-parler2" style="color:var(--orange-d);font-weight:700">En parler avec nous</a></div>
+  </div>
+</div>
+
+<script>
+/* ===================== CONFIG ===================== */
+var CONFIG = {
+  submitUrl: "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/devis-accept",
+  payUrl:    "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/devis-payer",
+  wa:        "2250576877070",
+  waText:    "Bonjour Mr Attractor, je veux parler de mon projet de site web avant de commander.",
+  formules: [
+    { id:"essentielle", nom:"Essentielle", prix:165000, mrr:23000, desc:"Vitrine + prise de commandes + tableau de bord simple. Hébergement 1re année offert." },
+    { id:"active",      nom:"Active",      prix:320000, mrr:43000, desc:"Tout l'Essentielle + suivi livreur + stock visible.", pop:true },
+    { id:"premium",     nom:"Premium",     prix:790000, mrr:65000, desc:"Tout l'Active + plusieurs utilisateurs + base de données pro + assistance." }
+  ],
+  options: [
+    { id:"paiement_mobile", nom:"Paiement mobile intégré", prix:60000, desc:"Tes clients paient directement sur ton site (Wave / OM / MTN)." }
+  ]
+};
+
+var state = { formule:null, opts:{}, devisId:null, montantType:null, channel:null, total:0 };
+function $(id){ return document.getElementById(id); }
+function fcfa(n){ return new Intl.NumberFormat('fr-FR').format(n) + " FCFA"; }
+var CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>';
+
+/* ---- Rendu formules ---- */
+CONFIG.formules.forEach(function(f){
+  var el = document.createElement('label');
+  el.className = 'opt'; el.dataset.id = f.id;
+  el.innerHTML =
+    '<input type="radio" name="formule" value="'+f.id+'">' +
+    '<div class="top"><span class="nom">'+f.nom+(f.pop?' <span style="font-size:10px;background:#FEF4EC;color:#D94F02;padding:2px 7px;border-radius:20px;vertical-align:middle">Le plus choisi</span>':'')+'</span>' +
+    '<span class="prix">'+fcfa(f.prix)+'<small>puis '+fcfa(f.mrr)+'/mois</small></span></div>' +
+    '<div class="desc">'+f.desc+'</div>';
+  el.addEventListener('click', function(){ state.formule = f.id; syncFormules(); recompute(); });
+  $('formules').appendChild(el);
+});
+function syncFormules(){
+  document.querySelectorAll('#formules .opt').forEach(function(el){
+    var on = el.dataset.id === state.formule;
+    el.classList.toggle('on', on);
+    el.querySelector('input').checked = on;
+  });
+}
+/* ---- Rendu options ---- */
+CONFIG.options.forEach(function(o){
+  var el = document.createElement('div');
+  el.className = 'opt check'; el.dataset.id = o.id;
+  el.innerHTML =
+    '<div><div class="nom" style="font-size:15px">'+o.nom+'</div><div class="desc">'+o.desc+'</div>' +
+    '<div class="mrr" style="color:var(--orange-d);font-weight:700">+ '+fcfa(o.prix)+'</div></div>' +
+    '<div class="mark">'+CHECK_SVG+'</div>';
+  el.addEventListener('click', function(){ state.opts[o.id] = !state.opts[o.id]; el.classList.toggle('on', state.opts[o.id]); recompute(); });
+  $('options').appendChild(el);
+});
+
+/* ---- Total ---- */
+function recompute(){
+  var total = 0;
+  var f = CONFIG.formules.find(function(x){ return x.id === state.formule; });
+  if(f) total += f.prix;
+  CONFIG.options.forEach(function(o){ if(state.opts[o.id]) total += o.prix; });
+  state.total = total;
+  $('v-total').textContent = total > 0 ? fcfa(total) : "—";
+  checkForm();
+}
+function checkForm(){
+  var ok = state.formule && $('f-nom').value.trim() && $('f-contact').value.trim() && $('f-email').value.trim() && $('f-ok').checked;
+  $('btn-valider').disabled = !ok;
+}
+['f-nom','f-contact','f-email'].forEach(function(id){ $(id).addEventListener('input', checkForm); });
+$('f-ok').addEventListener('change', checkForm);
+
+/* ---- Sélection lisible pour le devis ---- */
+function buildSelection(){
+  var sel = [];
+  var f = CONFIG.formules.find(function(x){ return x.id === state.formule; });
+  if(f) sel.push("Formule "+f.nom+" ("+fcfa(f.prix)+") — puis "+fcfa(f.mrr)+"/mois");
+  CONFIG.options.forEach(function(o){ if(state.opts[o.id]) sel.push(o.nom+" ("+fcfa(o.prix)+")"); });
+  return sel;
+}
+
+/* ---- Étape 1 → validation ---- */
+$('btn-valider').addEventListener('click', async function(){
+  var btn = this; btn.disabled = true; btn.textContent = "Validation...";
+  var f = CONFIG.formules.find(function(x){ return x.id === state.formule; });
+  var payload = {
+    numero: "ATR-WEB-" + Date.now(),
+    projet: "Site web " + (f?f.nom:""),
+    nom: $('f-nom').value.trim(),
+    contact: $('f-contact').value.trim(),
+    email: $('f-email').value.trim(),
+    selection: buildSelection(),
+    total: state.total, devise: "FCFA", total_label: fcfa(state.total)
+  };
+  try {
+    var res = await fetch(CONFIG.submitUrl, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload) });
+    var data = await res.json();
+    if(!data || !data.db || !data.db.id) throw new Error("no id");
+    state.devisId = data.db.id;
+    showPay();
+  } catch(e){
+    $('err1').textContent = "Une erreur est survenue. Réessaie, ou écris-nous sur WhatsApp.";
+    $('err1').style.display = "block";
+    btn.disabled = false; btn.textContent = "Valider ma commande";
+  }
+});
+
+/* ---- Étape 2 : paiement ---- */
+function showPay(){
+  $('sticky').style.display = "none";
+  var acompte = Math.round(state.total/2);
+  $('a-acompte').textContent = fcfa(acompte);
+  $('a-total').textContent   = fcfa(state.total);
+  $('pay-recap').textContent = "Total : " + fcfa(state.total) + ". Choisis de régler l'acompte pour démarrer, ou la totalité.";
+  $('s-compose').classList.remove('on');
+  $('s-pay').classList.add('on');
+  window.scrollTo({top:0});
+}
+function selectMontant(type){
+  state.montantType = type;
+  $('pc-acompte').style.borderColor = type==='acompte' ? 'var(--orange)' : 'var(--g200)';
+  $('pc-total').style.borderColor   = type==='total'   ? 'var(--orange)' : 'var(--g200)';
+  $('method-box').style.display = "block";
+  $('method-box').scrollIntoView({behavior:'smooth', block:'center'});
+}
+$('pc-acompte').addEventListener('click', function(){ selectMontant('acompte'); });
+$('pc-total').addEventListener('click', function(){ selectMontant('total'); });
+document.querySelectorAll('.method').forEach(function(m){
+  m.addEventListener('click', function(){
+    state.channel = m.dataset.ch;
+    document.querySelectorAll('.method').forEach(function(x){ x.classList.remove('on'); });
+    m.classList.add('on');
+    $('btn-pay').disabled = false;
+  });
+});
+$('btn-pay').addEventListener('click', async function(){
+  if(!state.montantType || !state.channel) return;
+  var btn = this; btn.disabled = true; btn.textContent = "Redirection...";
+  try {
+    var res = await fetch(CONFIG.payUrl, { method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ devis_id: state.devisId, montant_type: state.montantType, channel: state.channel }) });
+    var data = await res.json();
+    if(!data || !data.url) throw new Error(data && data.error ? data.error : "no url");
+    window.location.href = data.url;
+  } catch(e){
+    $('err2').textContent = "Le paiement n'a pas pu démarrer. Réessaie ou choisis un autre moyen.";
+    $('err2').style.display = "block";
+    btn.disabled = false; btn.textContent = "Continuer vers le paiement sécurisé";
+  }
+});
+
+/* ---- Portes de sortie WhatsApp ---- */
+var waLink = "https://wa.me/"+CONFIG.wa+"?text="+encodeURIComponent(CONFIG.waText);
+['link-parler','link-parler2'].forEach(function(id){ if($(id)) $(id).href = waLink; });
+$('merci-wa').href = "https://wa.me/"+CONFIG.wa+"?text="+encodeURIComponent("Bonjour, je viens de commander mon site.");
+
+/* ---- Retour de paiement (?paye=1) ---- */
+(function(){
+  var p = new URLSearchParams(location.search);
+  if(p.get('paye')==='1'){
+    $('sticky').style.display = "none";
+    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('on'); });
+    $('s-merci').classList.add('on');
+  }
+})();
+</script>
+</body>
+</html>
