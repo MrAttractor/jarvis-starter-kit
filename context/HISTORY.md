@@ -7,6 +7,53 @@
 
 ---
 
+## 2026-07-23 (session 111 — VSD by Attractor : l'offre voyageur, le site, le modèle économique et le lancement du 4 septembre)
+
+> Le « chantier 4 » du dossier Air CI : élaborer le concept de l'offre elle-même. L'économie était cadrée côté compagnie et côté opérateur, mais **le produit vendu au voyageur n'existait nulle part**. C'était le trou du dossier.
+
+### Le concept, et le retournement qui le porte
+- **On ne vend pas du convoyage, on vend un week-end à Abidjan à moitié prix.** Le voyageur ne porte rien, ne remet rien à personne : il renonce simplement à sa soute, comme sur un vol low-cost. Le fret voyage déclaré sous le nom de l'opérateur. Ce retournement rend l'offre désirable, légale et défendable devant la compagnie d'un seul coup.
+- **Le convoyeur n'est jamais payé.** Décision de conception, pas un oubli : un voyageur payé devient prestataire de transport (déclaration, responsabilité, ressemblance avec un réseau de porteurs). Un voyageur remisé reste un passager. Même service rendu, sans aucune des fragilités qui ont tué Airmule et 59 % des plateformes de covalisage.
+- **Marque : VSD by Attractor.** Portée par l'agence avec la compagnie, J'Envoie Express opérateur du fret en coulisse. Accroche « 72h Paris, Abidjan, Paris à un tarif imbattable », signature **« Voyager léger »** en ancrage direct.
+- **Grille : à partir de 430 €** (380 € de tarif bloc + 50 € de marge, construction gardée en interne), 10 kg cabine inclus, valise 23 kg en option à **99 € contre 150 € au tarif public**. Comparatif affiché ligne par ligne plutôt qu'un « c'est pas cher ».
+- **7 places affichées, 10 embarquées** (rareté assumée, le voyageur n'est jamais lésé). Vente **sur liste d'attente uniquement**, à l'avance, clôture 10 jours avant le départ.
+
+### Deux décisions juridiques qui ferment des risques
+- **Pas de forfait touristique.** Un vol + un hébergement vendus ensemble imposent immatriculation Atout France, garantie financière et responsabilité de plein droit. La formule « vol + hôtel à 500 € » a été supprimée : **l'hébergement devient un code de réduction partenaire**, le voyageur réserve et paie l'hôtel lui-même. Trois règles pour que ça le reste : aucun prix global, aucune réservation faite par nous, aucune commission perçue de l'hôtel.
+- **Le montage de paiement.** Retenu : chacun encaisse ce qu'il vend. Puis **XPaye sait faire du split payment** : un lien unique, dispatch automatique. L'argument en sort renforcé, « votre billet est payé à la compagnie, nous ne détenons jamais l'argent de votre vol » devient une mécanique et non une promesse. Bénéfice caché : la clé de revenue sharing avec J'Envoie Express devient un paramètre du lien, plus une écriture comptable à régulariser.
+
+### Le site, le backend
+- Site `vsd-site/` aux **couleurs du drapeau ivoirien** (orange #F77F00, blanc, vert #009E60), les mêmes que la compagnie. Hero pleine largeur sur visuel généré, léger et coloré. Calendrier des départs généré en JS (prochains vendredis, retours dimanche, clôture, compte à rebours à la seconde), jauges de places, comparatif de prix, FAQ, section paiement en 3 temps.
+- **Traitement 100 % par email** : table `vsd_inscriptions` + edge function `vsd-inscription` (insertion service role, accusé au voyageur, notification agence). Le numéro de téléphone est collecté et conservé en base pour des réutilisations, il ne déclenche aucun envoi. **Non déployés à ce jour.**
+- Bandeau interne « ne pas diffuser » en tête de page, et `CONFIG.partenariat` sur `false` : la mention du partenariat officiel ne s'affichera qu'une fois l'accord signé et la formulation validée par leur communication.
+
+### Les analyses produites
+- **`POCHES-REVENUS-ATTRACTOR.md`** : aujourd'hui 100 % du revenu agence est une part de résultat, qui arrive en dernier et dépend d'une clé non écrite. Quatre poches classées par certitude (frais de réservation 19 500 €/an, valises 19 305 €, part du fret 15 210 €, revente du modèle à construire). Formule proposée en deux étages : chacun se fait payer ce qu'il apporte avant qu'on partage ce qui reste. Signalé sans détour que ça déplace de la valeur et exige une contrepartie pour Jean Yves.
+- **Erreur d'analyse corrigée en séance** : la valise avait été présentée comme de la marge pure. Faux, elle consomme 46 kg de soute par voyageur. **Seuil : elle est gagnante tant que le kilo dégage moins de 2,15 € de marge.** Elle devient une option à quota, sous réserve de capacité.
+- **`DOUANE-FLUX-RETOUR.md`** (règles vérifiées sur douane.gouv.fr) : **viande et produits laitiers totalement interdits** à l'entrée en France, saisis et détruits. **Poisson fumé, séché, salé : 20 kg.** Fruits et légumes frais : certificat phytosanitaire obligatoire **sauf banane, ananas, noix de coco, datte, durian**. Piège relevé : ces seuils valent pour les **envois personnels**, pas pour du fret commercial, qui exigerait un poste de contrôle frontalier agréé. Le régime du retour reste à trancher.
+- **`PRODUITS-ACCEPTES.md`** : trois filtres à ne pas confondre (sûreté aérienne IATA, douane, **politique de la compagnie encore inconnue**). Question critique à leur poser : le poisson fumé est-il accepté en soute, ou refusé pour l'odeur ?
+
+### Le lancement
+- **Premier vol vendredi 4 septembre 2026**, retour dimanche 6, clôture des inscriptions mardi 25 août. Six semaines.
+- Ce n'est pas la première rotation commerciale mais l'**opération de lancement** : 2 places captation, 4 ambassadeurs triés par influence réelle (audience utile diaspora, engagement, capacité à produire, prescription prouvée), et **4 voyageurs payants obligatoires** dont le témoignage vaudra plus que tous les contenus.
+- **Demande à la compagnie : les 6 places non payantes et les autorisations de tournage.** Précédent direct à rappeler, Mac Arthur a déjà été coopté créateur de contenu par Air CI pour le vol inaugural Abidjan-Libreville. Faisabilité chiffrée : 900 € net si la compagnie porte les places, 3 180 € sinon, ce qui ne passe pas sur la trésorerie actuelle.
+- **Cadrage acté : le sens Abidjan-Paris n'est pas assuré.** Volume variable, prospection B2B à faire. Les chiffres du modèle sont des **cibles**, pas des prévisions. Paliers du retour posés : 55 kg au mois 1, 175 au mois 2, 370 au mois 3.
+- `FICHE-SEANCE-JEAN-YVES.md` préparée pour le meeting du week-end : trois chiffres à rapporter (ce qu'il remonte réellement, son coût réel au kilo, ses partenaires actifs), questions formulées pour un opérateur de terrain et non pour un analyste.
+
+---
+
+## 2026-07-22 (session 110 — RDV Air Côte d'Ivoire tenu, Signature Attractor, simulateur pour le Directeur Régional)
+
+- **RDV Air Côte d'Ivoire tenu à Paris. Le principe du partenariat est VALIDÉ. Ils veulent le simulateur.** L'envoi du simulateur de rentabilité devient la prochaine action commerciale du dossier. Hermance Alloh confirmée Business Development Officer (le doute du 17/07 est levé).
+- **Simulateur de rentabilité destiné au Directeur Régional** construit puis refondu sur le modèle **bloc siège** issu du RDV, avec deux populations distinctes (les convoyeurs grand public voyagent et apportent la capacité, les partenaires réseau ne voyagent pas et apportent les kilos). Corrections successives : **92 kg de fret par convoyeur** (138 kg de franchise moins 23 kg de bagage personnel dans chaque sens ; le 76 kg précédent était un volume vendu mal étiqueté en capacité), compte de la rotation simplifié à 3 chiffres en langage courant, bloc « en langage yield management » (absence de cannibalisation, 4 barrières tarifaires étanches, arbitrage siège vide contre siège convoyeur). Règle posée : **le document destiné au DR ne doit pas aiguiser l'appétit tarifaire.** Optimum à 380 € le siège, 4 840 € net par rotation.
+- **Module Signature Attractor livré** : signature électronique maison, 0 € contre Yousign, maillon 5 de la chaîne de vente, construite pour débloquer le dossier Élévia. Edge functions `sign-create`, `sign-load`, `sign-otp`, `sign-verify` + migration `0061_signature_attractor.sql`.
+- **Business plan du programme convoyeurs pour Jean Yves** (J'Envoie Express), à sa charte, en langage simple : avant/après (60 kg par voyage quand il voyage, contre 920 kg par week-end sans voyager, facteur 15), le point qu'il n'avait pas compris mis en encart (il n'est plus le voyageur, il devient le chef des opérations), 4 chiffres à suivre par semaine, rampe sur 90 jours, distinction nette entre frais remboursés et bénéfice.
+- Autres correctifs de la journée : classement en famille du diagnostic passé de 37 % à 100 %, grille MRR arrêtée à 35/65/100 €, cadrage de périmètre obligatoire sur tous les devis, fonctions publiques déclarées dans `config.toml`.
+
+> Compte-rendu détaillé du RDV (échanges, engagements pris, prochaines étapes convenues avec Hervé Abou) à compléter par Mac Arthur.
+
+---
+
 ## 2026-07-19 → 21 (session 109 — Ayêla : de la V1 à un vrai logiciel de gestion de distribution multi-boutique)
 
 > Session marathon. La V1 d'Ayêla a été construite puis étendue en continu selon les retours de la cliente (Lorraine, via Mac Arthur), jusqu'à devenir un back-office de distribution complet, pas une simple vitrine + admin.
