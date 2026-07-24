@@ -6,7 +6,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
-const NOTIFY_TO = "macarthur.nguessankouassi@gmail.com";
+// Adresse pro par défaut, surchargeable via le secret NOTIFY_LEAD_EMAIL sans redéployer.
+const NOTIFY_TO = Deno.env.get("NOTIFY_LEAD_EMAIL") ?? "hello@agenceattractor.com";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
