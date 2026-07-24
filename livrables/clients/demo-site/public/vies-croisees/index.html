@@ -505,7 +505,7 @@ var editEpId = null, editArtId = null;
 var adminMode = false;
 // Compte admin d'Andréa. Le mot de passe n'est jamais stocké ici ni en base :
 // il est vérifié par Supabase Auth, côté serveur. L'email n'est pas un secret.
-var ADMIN_EMAIL = 'admin.vies-croisees@agenceattractor.com';
+var ADMIN_EMAIL = 'viescroiseesci@gmail.com';
 
 // ── NAVIGATION ────────────────────────────────────────────────────
 function go(id) {
@@ -538,13 +538,34 @@ function closeGate(){
   document.getElementById('gerr').style.display = 'none';
   document.getElementById('gpwd').value = '';
 }
+// Traduit le message technique de Supabase en langage clair pour Andréa,
+// tout en gardant le détail réel pour ne plus masquer la vraie cause.
+function messageErreurConnexion(error){
+  var m = (error && error.message ? error.message : '').toLowerCase();
+  if (m.indexOf('invalid login credentials') > -1) return 'Mot de passe incorrect. Réessaie, ou demande à Mac Arthur de le réinitialiser.';
+  if (m.indexOf('email not confirmed') > -1)       return 'Ce compte n\'est pas encore confirmé. Préviens Mac Arthur.';
+  if (m.indexOf('too many requests') > -1 || m.indexOf('rate limit') > -1) return 'Trop de tentatives. Attends une minute puis réessaie.';
+  if (m.indexOf('failed to fetch') > -1 || m.indexOf('network') > -1) return 'Connexion internet interrompue. Vérifie ta connexion et réessaie.';
+  return 'Connexion impossible : ' + (error && error.message ? error.message : 'erreur inconnue');
+}
 async function checkPwd(){
   var pwd = document.getElementById('gpwd').value;
   var btn = document.getElementById('gbtn');
+  var err = document.getElementById('gerr');
   if (btn) { btn.disabled = true; btn.textContent = 'Connexion...'; }
-  var { error } = await SB.auth.signInWithPassword({ email: ADMIN_EMAIL, password: pwd });
+  var res;
+  try {
+    res = await SB.auth.signInWithPassword({ email: ADMIN_EMAIL, password: pwd });
+  } catch (e) {
+    res = { error: e };
+  }
   if (btn) { btn.disabled = false; btn.textContent = 'Entrer'; }
-  if (error) { document.getElementById('gerr').style.display = 'block'; return; }
+  if (res.error) {
+    err.textContent = messageErreurConnexion(res.error);
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
   enterAdmin();
 }
 function enterAdmin(){
