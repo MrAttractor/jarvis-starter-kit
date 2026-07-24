@@ -1223,9 +1223,12 @@ async function submitAuditForm(e) {
   const zoneLabel = { 'CI': 'CI', 'EU': 'EU', 'LES2': 'CI' };
 
   try {
+    // return=minimal : l'anonyme peut écrire dans prospects mais pas relire.
+    // Demander la représentation (return=representation) déclenchait un SELECT
+    // interdit par la RLS → 401 et lead perdu. On n'a pas besoin de la ligne renvoyée.
     const res = await fetch(SUPA_URL + '/rest/v1/prospects', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPA_ANON, 'Authorization': 'Bearer ' + SUPA_ANON, 'Prefer': 'return=representation' },
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPA_ANON, 'Authorization': 'Bearer ' + SUPA_ANON, 'Prefer': 'return=minimal' },
       body: JSON.stringify({
         prenom, activite, besoin, whatsapp: wa,
         zone: zoneLabel[_auditZone] || 'CI',
@@ -1237,6 +1240,12 @@ async function submitAuditForm(e) {
       })
     });
     if (!res.ok) throw new Error('Erreur réseau');
+    // Notification immédiate à l'agence — fire-and-forget, ne bloque jamais le succès du formulaire.
+    fetch(SUPA_URL + '/functions/v1/notify-lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPA_ANON, 'Authorization': 'Bearer ' + SUPA_ANON },
+      body: JSON.stringify({ nom: prenom, activite, besoin, zone: zoneLabel[_auditZone] || 'CI', contact: wa, source: 'Formulaire audit site agenceattractor.com' }),
+    }).catch(() => {});
     if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'audit_app_metier' });
     document.getElementById('audit-form').style.display = 'none';
     document.getElementById('audit-success').style.display = 'block';
