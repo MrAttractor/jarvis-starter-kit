@@ -139,7 +139,8 @@
     <div class="big-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
     <h1 style="text-align:center">Merci, c'est lancé</h1>
     <p class="sub" style="text-align:center">Ton paiement est en cours de confirmation. On te recontacte très vite pour démarrer tes travaux. Un reçu t'arrive par email.</p>
-    <a class="btn wa" id="merci-wa" href="#">Nous écrire sur WhatsApp</a>
+    <div id="merci-recap" style="display:none;text-align:left;background:#fff;border:1.5px solid var(--g200);border-radius:14px;padding:16px;margin:0 0 16px"></div>
+    <a class="btn wa" id="merci-wa" href="#">Envoyer les détails sur WhatsApp</a>
   </section>
 
 </div>
@@ -158,6 +159,7 @@
 var CONFIG = {
   submitUrl: "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/devis-accept",
   payUrl:    "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/devis-payer",
+  recuUrl:   "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/devis-recu",
   wa:        "2250576877070",
   waText:    "Bonjour Mr Attractor, je veux parler de mon projet de site web avant de commander.",
   formules: [
@@ -305,15 +307,53 @@ $('btn-pay').addEventListener('click', async function(){
 /* ---- Portes de sortie WhatsApp ---- */
 var waLink = "https://wa.me/"+CONFIG.wa+"?text="+encodeURIComponent(CONFIG.waText);
 ['link-parler','link-parler2'].forEach(function(id){ if($(id)) $(id).href = waLink; });
-$('merci-wa').href = "https://wa.me/"+CONFIG.wa+"?text="+encodeURIComponent("Bonjour, je viens de commander mon site.");
+/* Message WhatsApp par défaut (avant chargement des détails) */
+$('merci-wa').href = "https://wa.me/"+CONFIG.wa+"?text="+encodeURIComponent("Bonjour Mr Attractor, je viens de régler ma commande sur votre site.");
 
-/* ---- Retour de paiement (?paye=1) ---- */
+/* Construit le message WhatsApp détaillé + le récap visible à partir de la commande. */
+function remplirRecu(d){
+  var lignes = [];
+  lignes.push("Bonjour Mr Attractor, je viens de régler ma commande sur votre site.");
+  lignes.push("");
+  if(d.nom) lignes.push("Nom : " + d.nom);
+  if(d.projet) lignes.push("Commande : " + d.projet);
+  if(d.selection && d.selection.length){
+    lignes.push("Détail :");
+    d.selection.forEach(function(s){ lignes.push("- " + s); });
+  }
+  var typeTxt = d.type === "acompte" ? "acompte (50%)" : "totalité";
+  lignes.push("Montant réglé : " + fcfa(d.montant) + " (" + typeTxt + ")");
+  if(d.total) lignes.push("Total de la commande : " + fcfa(d.total));
+  if(d.solde_du > 0) lignes.push("Solde restant : " + fcfa(d.solde_du));
+  if(d.numero) lignes.push("Référence : " + d.numero);
+  lignes.push("");
+  lignes.push("Je souhaite qu'on démarre.");
+  var msg = lignes.join("\n");
+  $('merci-wa').href = "https://wa.me/"+CONFIG.wa+"?text="+encodeURIComponent(msg);
+
+  /* Récap visible à l'écran */
+  var html = '<div style="font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--g400);margin-bottom:8px">Récapitulatif de ta commande</div>';
+  if(d.projet) html += '<div style="font-size:15px;font-weight:800;margin-bottom:6px">'+d.projet+'</div>';
+  (d.selection||[]).forEach(function(s){ html += '<div style="font-size:13px;color:var(--g700);padding:3px 0">• '+s+'</div>'; });
+  html += '<div style="border-top:1px solid var(--g200);margin-top:10px;padding-top:10px;font-size:14px">Réglé : <b>'+fcfa(d.montant)+'</b> ('+typeTxt+')</div>';
+  if(d.solde_du > 0) html += '<div style="font-size:13px;color:var(--orange-d);margin-top:3px">Solde restant : <b>'+fcfa(d.solde_du)+'</b> (à régler à la livraison)</div>';
+  $('merci-recap').innerHTML = html;
+  $('merci-recap').style.display = "block";
+}
+
+/* ---- Retour de paiement (?paye=1&ref=...) ---- */
 (function(){
   var p = new URLSearchParams(location.search);
-  if(p.get('paye')==='1'){
-    $('sticky').style.display = "none";
-    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('on'); });
-    $('s-merci').classList.add('on');
+  if(p.get('paye')!=='1') return;
+  $('sticky').style.display = "none";
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('on'); });
+  $('s-merci').classList.add('on');
+  var ref = p.get('ref');
+  if(ref){
+    fetch(CONFIG.recuUrl, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ reference: ref }) })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if(d && d.ok) remplirRecu(d); })
+      .catch(function(){});
   }
 })();
 </script>
