@@ -18,11 +18,14 @@ async function parseBody(req: Request): Promise<Record<string, string>> {
 }
 
 function isSuccess(body: Record<string, string>): boolean {
-  const s = (body.status ?? body.payment_status ?? "").toUpperCase();
+  const s = String(body.status ?? body.payment_status ?? "").toUpperCase();
   const ok = ["SUCCESS", "APPROVED", "PAID", "COMPLETED", "CONFIRMED"];
   if (ok.includes(s)) return true;
   // Certains gateways retournent success: true / 1
-  if (body.success === "true" || body.success === "1") return true;
+  if (body.success === "true" || body.success === "1" || String(body.success) === "true") return true;
+  // PaiementPro (XPaye) signale le succès par responsecode "0" (parfois "00").
+  const rc = String(body.responsecode ?? body.responseCode ?? body.response_code ?? "").trim();
+  if (rc === "0" || rc === "00") return true;
   return false;
 }
 
@@ -53,9 +56,12 @@ Deno.serve(async (req) => {
       return new Response("Payment not found", { status: 404 });
     }
 
+    console.log(`payment-webhook DEVIS raw: ${JSON.stringify(body).slice(0, 600)}`);
     await supabase.from("devis_paiements").update({
       statut:  newStatus,
       paye_at: success ? new Date().toISOString() : null,
+      gateway_response: body,
+      callback_at: new Date().toISOString(),
     }).eq("reference", reference);
 
     if (success && pay.devis_id) {
