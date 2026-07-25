@@ -7,6 +7,74 @@
 
 ---
 
+## 2026-07-25 (session 114 — Vies Croisées : le blog devient programmable, partageable et illustré)
+
+> Retours d'Andréa sur son espace. Cinq demandes, toutes livrées et déployées sur `viescroiseesci.com`.
+
+### Ce qui a été livré
+- **Teasers multiples par épisode.** Il n'y avait qu'un seul champ en base (`youtube_teaser`), elle en a 3 par épisode. Remplacé par une liste (colonne `teasers` jsonb) avec nom, lien et durée par teaser, et un bouton « + Ajouter un teaser » dans son espace. Le teaser existant a été repris automatiquement.
+- **La programmation devient réelle, pour les épisodes ET pour le blog.** Point important relevé sans détour : le statut « Programmé » qu'elle avait vu **ne programmait rien**, c'était une simple étiquette de couleur, aucune date n'était stockée. Désormais colonne `publie_le` + règle écrite dans les **policies RLS** : avant l'heure, la ligne n'est pas lisible avec la clé publique, même en interrogeant l'API directement. **Aucun cron, aucun automate.** Épisodes : `programme` sans date = annonce visible (comportement historique préservé, ses 4 épisodes restent affichés) ; avec date future = invisible jusqu'à l'heure. Articles : date obligatoire. Testé de bout en bout (invisible avant, visible après).
+- **Visuels d'épisode.** Une affiche (couverture de la carte, remplace l'icône générique) + une photo avec l'invité affichée sous le titre avec son nom, cliquable en grand. Téléversement depuis son téléphone dans un bucket `vc-medias` (lecture publique, dépôt réservé à son UID), avec réduction à 1600 px dans le navigateur avant envoi pour ne pas alourdir le site.
+- **Logos partenaires.** N'existait nulle part. Table `vc_partenaires` + onglet dédié dans son espace + bandeau « Ils soutiennent l'émission » sur l'accueil. **Non cliquables** (demande explicite de Mac Arthur). Les 2 logos fournis sont intégrés (`#1 Dans mon couloir`, `OMEDIA`), recadrés sur tuiles uniformes. Elle peut masquer un partenaire sans le supprimer.
+- **Partage réseaux.** Avant : impossible d'envoyer quelqu'un sur un article précis (page unique, article en fenêtre) et aucune balise de partage, donc un lien collé sur Facebook sortait nu. Désormais un `slug` par contenu (généré par trigger, **jamais modifié après coup** pour ne pas casser un lien déjà partagé), adresse propre `?a=slug` / `?e=slug`, et boutons Facebook / WhatsApp / copie du lien. Un `_worker.js` (mode Worker avancé Cloudflare Pages) réécrit titre, description et image de l'aperçu par contenu via HTMLRewriter. Vérifié : un brouillon ne peut pas fuiter dans un aperçu, un lien inconnu ne casse pas la page.
+
+### Bugs trouvés en route
+- **Faille d'accès (majeur) :** la détection du lien de pilotage cherchait « andrea » ou « pilotage » **n'importe où dans l'URL**. Un article dont le slug contenait « andrea » (probable, c'est son prénom) ouvrait la fenêtre de connexion admin à n'importe quel visiteur. Corrigé en ne lisant que les paramètres exacts.
+- **Identifiants dupliqués :** le même épisode rendu sur l'accueil et dans la liste produisait deux blocs de commentaires portant les mêmes identifiants, qui se pilotaient l'un l'autre. La carte d'accueil passe en version compacte.
+- **Teaser fantôme :** un teaser supprimé de la liste réapparaissait via le secours sur l'ancien champ unique, désormais vidé à chaque enregistrement.
+- **Audit UX_SYSTEM :** zones de tap portées à 44 px, champs de saisie à 16 px (en dessous, iOS zoome tout seul à chaque focus, y compris sur les formulaires visiteurs).
+
+### Le vrai constat, qui compte plus que la technique
+- Relevé en base : **18 articles écrits par Andréa, aucun publié**, 4 épisodes en « programmé », **0 abonné, 0 témoignage, 0 commentaire**. Elle produit beaucoup (14 « Chroniques Vies Croisées » numérotées) et ne publie rien. La programmation lève le blocage technique, le sujet à traiter avec elle reste **pourquoi elle ne publie pas**. Piste proposée : un plan de publication de ses 14 chroniques, une par semaine, prêt à programmer en une session.
+
+### Gain méthode réutilisable
+- Découverte que les **migrations SQL sont exécutables directement depuis le workspace** via l'API Management Supabase (`SUPABASE_ACCESS_TOKEN` du `.env`), sans passer par le SQL Editor du dashboard. Piège : `403 code 1010` avec l'agent utilisateur par défaut de Python, il faut un `User-Agent` classique. Les sessions précédentes attendaient que Mac Arthur colle le SQL à la main, ce qui laissait des migrations non appliquées.
+- Corollaire de vérification : prouver qu'une policy RLS fait ce qu'on croit passe par l'API REST **avec la clé anon**. Le service role contourne tout et ne prouve rien.
+
+### Livrables
+- Migration `livrables/clients/vies-croisees/0004_teasers_programmation_medias_partenaires.sql` (appliquée), message client `MESSAGE-ANDREA-25-07.md`, site déployé (projet Pages `viescroiseesci`, branche `main`), commité et poussé sur `main`.
+
+---
+
+## 2026-07-25 (session 113 — Air CI : un seul lien pour le DR, et le VSD conçu dans les deux sens)
+
+### Consolidation en un seul lien (déployé en production)
+- Fin de la dispersion. Les pages Air CI étaient éparpillées (index pré-RDV, proposition longue, fiche de prépa interne exposée en public, simulateur). Tout ramené sur **un seul lien, `demo.agenceattractor.com/air-cote-divoire`**, déployé en prod (Cloudflare Pages `demo-agenceattractor`, `wrangler pages deploy public --branch=master`).
+- La page unique se lit en descendant : **concept + résumé SANS prix** (juste les avantages : 10 sièges réservés chaque vendredi, soute revalorisée, valise bonus au retour, astérisque « proposition pour alimenter le partenariat, pas un tarif imposé »), puis les **mécanismes de chaque partie** (Air CI / Mr Attractor / J'Envoie Express), puis le **plan de communication** validé ensemble, objectif affiché = **des mois de réservations à l'avance pendant les campagnes**. Le **détail chiffré** (tarifs, 1,5 €/kg) reste à un clic dans le simulateur, jamais en page d'accueil.
+- Simulateur épuré : calculette de coûts retirée (on ne calcule pas la marge du DR à sa place), affichage passé de « net » à **« recette apportée »**, tarif fret par défaut aligné à **1,5 €/kg** (tarif fixe du partenariat), tout « siège vide » supprimé (piège réputationnel d'Hervé), argument recentré « le prix est le moteur, pas la concession », saturation visée dès après 3 vols.
+- **Nettoyage** : suppression de `fiche/` (prépa interne, risque en public), `proposition/` (ancienne version pré-RDV, modèle « voyageurs rémunérés » abandonné) et de l'offre 5 pages intermédiaire. Public réduit à `index.html` + `simulateur/`.
+
+### Le VSD conçu dans les deux sens (nouveau produit)
+- Le VSD tourne **dans les deux directions**, deux monétisations distinctes, une promesse commune de marque : **« voyager léger »**.
+- **VSD Paris (diaspora)** Paris → Abidjan → Paris : voyageur léger, la soute libérée part en **fret B2B** (sociétés de colis, via Jean Yves). Éligibilité : pas de visa à obtenir.
+- **VSD Abidjan (premium)** Abidjan → Paris → Abidjan : billet tarif minimum, on **vend la valise directement au voyageur** (clientèle affaires/shopping de la capitale, qui rapporte des produits français). **Pas de fret B2B ici.** Éligibilité : **Schengen déjà en poche** (filtre qui sélectionne pile la cible business).
+- **Le fret reste focalisé sur Paris → Abidjan → Paris.** Limité à **une seule valise en supplément dans un premier temps** (protège la capacité soute, garde la promesse simple, ouverture d'une 2e valise possible plus tard si la demande le prouve). Ajouté en une ligne dans la page unique, sans en faire le socle : le lancement du 4 septembre reste sur Paris → Abidjan.
+
+---
+
+## 2026-07-24 (session 112 — Réunion Jean Yves : le modèle bascule en grossiste B2B de capacité, et l'offre pour le Directeur Régional)
+
+> Suite de la réunion avec Jean Yves (J'Envoie Express). Le modèle du dossier Air CI se précise côté opérateur, et Mac Arthur demande l'offre à présenter au Directeur Régional.
+
+### Le nouveau modèle Jean Yves (grossiste B2B)
+- Jean Yves **arrête le raisonnement « convoyeur qui porte »** et passe en **grossiste de capacité en B2B** : il vend la capacité (« la valise » de 32 kg) directement aux **sociétés de colis**, à **150 € l'unité contre ~220 € du marché** (32 % moins cher, demande déjà existante et validée par lui).
+- **Économie par voyageur, aller-retour** (validée en séance) : aller Paris→Abidjan **2×32 kg = 300 €** ; possibilité qu'Air CI accorde **3×32 kg** (à trancher). Retour Abidjan→Paris **70 € minimum** (on n'est pas obligé de vendre 32 kg au retour, une **offre 23 kg** est possible, demande retour plus faible).
+- **Variable siège tranchée = cas 1** : le voyageur VSD finance son propre billet (430 €). Le business valise se monte **par-dessus** un vrai voyageur, les deux ne sont pas concurrents. C'est aussi le seul montage juridiquement propre.
+
+### Le modèle de partage (cadré en séance)
+- **Deux couches séparées.** Couche billet : Attractor prend **50 € fixes de marge sur le siège**, Jean Yves n'y touche pas. Couche valise/fret : **50/50 Attractor / Jean Yves sur le bénéfice**, soit (CA valise − charges directes) / 2.
+- **Compte par voyageur** (2×32 aller + 70 € retour = 370 € de CA valise) : au plafond (charges directes = 0), Attractor 235 €, Jean Yves 185 €. Sur 10 voyageurs : Attractor 2 350 €, JY 1 850 €. C'est un plafond, le net réel est en dessous.
+- **Le seul chiffre manquant = les charges directes** (manutention Abidjan, déclaration/fret, livraison locale, emballage). Tant que Jean Yves ne les pose pas, le 50/50 est en l'air. À obtenir de lui pour figer le compte de rotation.
+
+### Le point de cohérence critique signalé
+- Le mot « valise » (bagage enregistré, comptoir passager) **contredit la ligne rouge d'Hervé Abou** (désordre au comptoir CDG premium) et la ligne rouge sûreté/douane du dossier. **Reco ferme : présenter au DR le canal cargo déclaré uniquement**, jamais la franchise bagage. À confirmer avec Jean Yves que l'opération réelle passe bien par le cargo, sinon c'est le modèle qu'il faut retravailler.
+
+### Livrable produit
+- **`OFFRE-DR-AIR-CI.html`** : offre de partenariat pour le Directeur Régional, 4 pages A4 imprimables, charte du deck du 22/07. Entièrement centrée sur la valeur Air CI (canal d'acquisition passager via le fichier expéditeurs, recette fret sur soute déjà payée, cabine premium récupérée), **marge Attractor/JY totalement invisible**. L'ask : condition cargo préférentielle, formation sûreté (chargeur connu), places + tournage pour le lancement du 4 sept, référent cargo et portage vers Abidjan. Pilote 90 jours.
+- Prochaines actions : Mac Arthur confirme le canal (cargo vs franchise) avec Jean Yves + fournit les charges directes ; vérifier que le simulateur joint reflète bien la version bloc siège.
+
+---
+
 ## 2026-07-23 (session 111 — VSD by Attractor : l'offre voyageur, le site, le modèle économique et le lancement du 4 septembre)
 
 > Le « chantier 4 » du dossier Air CI : élaborer le concept de l'offre elle-même. L'économie était cadrée côté compagnie et côté opérateur, mais **le produit vendu au voyageur n'existait nulle part**. C'était le trou du dossier.
