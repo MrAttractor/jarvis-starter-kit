@@ -15,9 +15,33 @@
 <div id="boot">Chargement…</div>
 <div id="root"></div>
 
-<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" crossorigin="anonymous"></script>
+<!-- Filet de sécurité : affiche toute erreur de chargement À L'ÉCRAN (diagnostic mobile) -->
+<script>
+(function(){
+  function show(msg){
+    var b=document.getElementById('boot');
+    if(!b) return;
+    b.style.cssText='position:fixed;inset:0;padding:20px;background:#fff;color:#B00020;font:13px/1.5 system-ui,sans-serif;overflow:auto;white-space:pre-wrap;z-index:99999';
+    b.textContent='Pilotage — erreur au chargement :\n\n'+msg+'\n\nFais une capture d’écran et envoie-la.';
+  }
+  window.addEventListener('error', function(e){
+    show((e.message||'erreur inconnue')+(e.filename?('\n'+String(e.filename).split('/').pop()+' L'+e.lineno):''));
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    show('Promesse rejetée : '+((e.reason&&e.reason.message)?e.reason.message:String(e.reason)));
+  });
+  setTimeout(function(){
+    var b=document.getElementById('boot');
+    if(b && b.textContent.indexOf('Chargement')===0){
+      show('Resté bloqué sur le chargement, sans erreur JS.\nCause probable : React ou Supabase n’a pas pu se charger depuis le CDN sur ce réseau (unpkg / jsdelivr).\n\nReact chargé : '+(typeof window.React!=='undefined')+'\nSupabase chargé : '+(typeof window.supabase!=='undefined');
+    }
+  }, 8000);
+})();
+</script>
+
+<script src="/pilotage/vendor/react.production.min.js"></script>
+<script src="/pilotage/vendor/react-dom.production.min.js"></script>
+<script src="/pilotage/vendor/supabase.js"></script>
 
 <script>
 const {
@@ -31,7 +55,7 @@ const {
 } = supabase;
 const SB = createClient('https://lgdgbrivnhgeupqhkckd.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk');
 const T = `
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap');
+/* Police système (aucune dépendance externe) : chargement fiable sur mobile CI. */
 :root{
   --bg:#FFFFFF;--sur:#FFFFFF;--card:#FFFFFF;--card2:#F7F3EC;
   --bdr:#EBE1D2;--bdr2:#F2ECE1;
