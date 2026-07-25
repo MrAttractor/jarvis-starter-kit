@@ -5,6 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vies Croisées — par Andréa Koné</title>
 <meta name="description" content="L'émission qui donne la parole à ceux qui ont traversé quelque chose, pour que d'autres se sentent moins seuls sur leur chemin.">
+
+<!-- Aperçu de partage (Facebook, WhatsApp, LinkedIn).
+     Ces balises sont les valeurs par défaut du site. Quand un article ou un
+     épisode précis est partagé (adresse ?a= ou ?e=), _worker.js les remplace
+     à la volée par le titre et le visuel de ce contenu. -->
+<link rel="canonical" href="https://viescroiseesci.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vies Croisées">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:url" content="https://viescroiseesci.com/">
+<meta property="og:title" content="Vies Croisées — par Andréa Koné">
+<meta property="og:description" content="L'émission qui donne la parole à ceux qui ont traversé quelque chose, pour que d'autres se sentent moins seuls sur leur chemin.">
+<meta property="og:image" content="https://viescroiseesci.com/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Vies Croisées — par Andréa Koné">
+<meta name="twitter:description" content="L'émission qui donne la parole à ceux qui ont traversé quelque chose, pour que d'autres se sentent moins seuls sur leur chemin.">
+<meta name="twitter:image" content="https://viescroiseesci.com/og-default.jpg">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -76,6 +96,39 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
 .ep-btn.fill{background:var(--brand);color:#fff}
 .ep-btn:disabled{opacity:.38;cursor:default}
 
+/* VISUELS D'ÉPISODE */
+.ep-cover{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;background:var(--brand);margin-bottom:11px;display:block}
+.guest-lock{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:12px;padding:8px 11px;margin-bottom:11px}
+.ep-guest{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);flex:none;background:var(--brand);padding:0}
+.guest-lock p{font-size:11.5px;color:var(--muted);line-height:1.4;flex:1;min-width:0}
+.guest-lock p b{display:block;font-size:12px;color:var(--brand)}
+
+/* TEASERS (plusieurs par épisode) */
+.t-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.t-chip{display:flex;align-items:center;gap:9px;width:100%;min-height:44px;border:1.5px solid var(--line);background:var(--card);color:var(--brand);border-radius:11px;padding:8px 12px;font-size:12.5px;text-align:left}
+.t-chip:hover{border-color:var(--gold)}
+.t-chip svg{width:16px;height:16px;color:var(--gold);flex:none}
+.t-chip b{flex:1;min-width:0;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.t-chip span{font-size:11px;color:var(--muted);font-weight:600;flex:none}
+
+/* PARTAGE */
+.share-row{display:flex;align-items:center;gap:7px;margin-top:11px;padding-top:11px;border-top:1px solid var(--line);flex-wrap:wrap}
+.share-lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.sh-btn{width:44px;height:44px;border-radius:11px;border:1.5px solid var(--line);background:var(--card);color:var(--muted);display:flex;align-items:center;justify-content:center;flex:none}
+.sh-btn svg{width:18px;height:18px}
+.sh-btn.fb:hover{border-color:#1877F2;color:#1877F2}
+.sh-btn.wa:hover{border-color:#25D366;color:#128C4A}
+.sh-btn.lk:hover{border-color:var(--brand);color:var(--brand)}
+#toast{position:fixed;left:50%;transform:translateX(-50%) translateY(14px);bottom:calc(var(--bnav) + 16px);z-index:240;background:var(--brand);color:#fff;font-size:13px;font-weight:600;padding:11px 20px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100% - 32px);text-align:center}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(min-width:740px){#toast{bottom:24px}}
+
+/* PARTENAIRES */
+.pt-grid{display:flex;flex-wrap:wrap;gap:10px}
+.pt-tile{width:calc(50% - 5px);aspect-ratio:600/280;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--card)}
+.pt-tile img{width:100%;height:100%;object-fit:cover}
+@media(min-width:740px){.pt-tile{width:calc(25% - 8px)}}
+
 /* COMMENTS */
 .comment-toggle{display:flex;align-items:center;gap:5px;background:none;border:none;color:var(--muted);font-size:12px;font-weight:600;padding:10px 0 0;width:100%}
 .comment-toggle svg{width:13px;height:13px}
@@ -87,7 +140,7 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
 .c-msg{font-size:13px;line-height:1.45;margin-top:3px}
 .c-date{font-size:10.5px;color:var(--muted);margin-top:2px}
 .c-form{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
-.c-form input,.c-form textarea{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:10px 12px;font-size:14px;font-family:var(--ff);color:var(--ink);background:var(--bg);margin-bottom:7px}
+.c-form input,.c-form textarea{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:10px 12px;font-size:16px;font-family:var(--ff);color:var(--ink);background:var(--bg);margin-bottom:7px}
 .c-form input:focus,.c-form textarea:focus{outline:none;border-color:var(--gold)}
 .c-form textarea{resize:none;min-height:68px}
 .c-anon{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-bottom:9px;cursor:pointer}
@@ -97,6 +150,7 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
 .c-empty{font-size:13px;color:var(--muted);padding:6px 0}
 
 /* BLOG */
+.blog-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:11px;margin-bottom:9px;display:block}
 .blog-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);gap:12px}
 .blog-row:last-child{border:none;padding-bottom:0}
 .blog-row h4{font-family:var(--fd);font-size:14px;margin-bottom:3px;line-height:1.3}
@@ -108,7 +162,7 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
 .q-strip small{display:block;margin-top:5px;font-family:var(--ff);font-style:normal;font-size:11.5px;color:var(--muted)}
 
 /* TEMOIGNAGES PUBLIC */
-.temo-form input,.temo-form textarea{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;font-size:15px;font-family:var(--ff);color:var(--ink);background:var(--card);margin-bottom:10px}
+.temo-form input,.temo-form textarea{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;font-size:16px;font-family:var(--ff);color:var(--ink);background:var(--card);margin-bottom:10px}
 .temo-form input:focus,.temo-form textarea:focus{outline:none;border-color:var(--gold)}
 .temo-form textarea{resize:vertical;min-height:100px}
 
@@ -157,10 +211,30 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
 /* FORMS (sheets) */
 .fg{margin-bottom:13px}
 .fg label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
-.fg input,.fg textarea,.fg select{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-size:15px;font-family:var(--ff);color:var(--ink);background:var(--bg)}
+.fg input,.fg textarea,.fg select{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-size:16px;font-family:var(--ff);color:var(--ink);background:var(--bg)}
 .fg input:focus,.fg textarea:focus,.fg select:focus{outline:none;border-color:var(--gold)}
 .fg textarea{resize:vertical;min-height:90px}
 .fg select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+
+/* LISTE RÉPÉTABLE (teasers) */
+.rep{border:1.5px dashed var(--line);border-radius:12px;padding:11px;margin-bottom:8px;background:var(--bg)}
+.rep-hd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.rep-hd b{font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.rep-del{width:44px;height:44px;flex:none;border-radius:10px;border:1.5px solid rgba(220,38,38,.25);background:none;color:#dc2626;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center}
+/* 16 px minimum : en dessous, iOS zoome tout seul dès qu'on touche un champ. */
+.rep input{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:10px 12px;font-size:16px;font-family:var(--ff);color:var(--ink);background:var(--card);margin-bottom:7px}
+.rep input:last-of-type{margin-bottom:0}
+.rep input:focus{outline:none;border-color:var(--gold)}
+.add-line{width:100%;min-height:44px;border:1.5px dashed var(--gold);background:var(--gold-bg);color:#7D5F17;border-radius:11px;font-size:13px;font-weight:700;margin-bottom:13px}
+
+/* TÉLÉVERSEMENT D'IMAGE */
+.up{display:flex;align-items:center;gap:11px}
+.up-prev{width:74px;height:74px;flex:none;border-radius:11px;object-fit:cover;background:var(--bg);border:1.5px solid var(--line)}
+.up-act{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.up-btn{min-height:44px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--brand);font-size:13px;font-weight:600;padding:0 12px}
+.up-btn:hover{border-color:var(--gold)}
+.up-clear{background:none;border:none;color:#dc2626;font-size:12.5px;font-weight:600;text-align:left;padding:0;min-height:44px}
+.up-hint{font-size:11px;color:var(--muted);line-height:1.45;margin-top:6px}
 
 /* SHEET (bottom drawer) */
 .sheet{position:fixed;inset:0;z-index:160;background:rgba(12,16,28,.65);display:none;align-items:flex-end}
@@ -186,6 +260,9 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
 .amod-hd h2{color:#fff;font-size:15px;line-height:1.3;flex:1}
 .amod-body{max-width:640px;margin:0 auto;padding:24px 18px;width:100%}
 .amod-body p{font-size:15px;line-height:1.75;margin-bottom:14px;color:var(--ink)}
+.amod-img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:14px;margin-bottom:18px;display:block}
+.amod-meta{font-size:12px;color:var(--muted);margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.amod-share{margin-top:26px;padding-top:6px;border-top:1px solid var(--line)}
 
 /* DESKTOP GRIDS */
 @media(min-width:740px){
@@ -212,7 +289,7 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
 .gate-box{background:var(--card);border-radius:20px;padding:30px 26px;width:300px;text-align:center}
 .gate-box h2{font-size:20px;margin-bottom:7px}
 .gate-box p{font-size:13px;color:var(--muted);margin-bottom:18px}
-.gate-box input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-size:15px;font-family:var(--ff);color:var(--ink);background:var(--bg);margin-bottom:11px}
+.gate-box input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-size:16px;font-family:var(--ff);color:var(--ink);background:var(--bg);margin-bottom:11px}
 .gate-box input:focus{outline:none;border-color:var(--gold)}
 .gate-err{font-size:12px;color:#dc2626;margin-bottom:9px;display:none}
 .gate-cancel{margin-top:10px;background:none;border:none;color:var(--muted);font-size:13px;width:100%}
@@ -236,6 +313,12 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
   <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5.5 6L20 7"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
   <symbol id="i-dash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V12.5M9.3 20V6.2M14.6 20v-8M20 20H4"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13.8a3.6 3.6 0 0 0 5.1 0l2.6-2.6a3.6 3.6 0 0 0-5.1-5.1l-1 1"/><path d="M14 10.2a3.6 3.6 0 0 0-5.1 0l-2.6 2.6a3.6 3.6 0 0 0 5.1 5.1l1-1"/></symbol>
+  <symbol id="i-hand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 10.5 6 7l3.6 3.2 2.4-1.4 2.4 1.4L18 7l3.5 3.5"/><path d="M6 7v9.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7"/><path d="M12 12.4v5.1"/></symbol>
+  <symbol id="i-img" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="4.6" width="17.2" height="14.8" rx="2.8"/><circle cx="9" cy="9.8" r="1.6"/><path d="M3.6 16.6l4.3-3.9 4.2 3.6 2.9-2.6 5.4 4.5"/></symbol>
+  <!-- Marques Facebook et WhatsApp : glyphes officiels, seuls tracés pleins du jeu -->
+  <symbol id="i-fb" viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.6-1.5h1.5V4.4c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.1v2.1H7.5v3h2.9V21z"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3.4A8.5 8.5 0 0 0 4.6 16l-1.1 4.1 4.2-1.1A8.5 8.5 0 1 0 12 3.4m0 1.7a6.8 6.8 0 0 1 5.7 10.5 6.8 6.8 0 0 1-8.9 2.2l-.4-.2-2.3.6.6-2.2-.2-.4A6.8 6.8 0 0 1 12 5.1m-3 3.3c-.2 0-.5.1-.7.3-.3.3-.7.8-.7 1.6 0 .9.6 1.7.7 1.9.1.2 1.3 2.1 3.3 2.9 1.6.6 2 .5 2.4.5s1.2-.5 1.4-1c.2-.5.2-.9.1-1l-1.2-.6c-.2-.1-.4-.2-.5 0l-.6.7c-.1.2-.3.2-.5.1-.2-.1-.9-.4-1.5-1-.5-.5-.9-1.1-1-1.3-.1-.2 0-.3.1-.4l.4-.5c.1-.2.1-.3 0-.5l-.6-1.3c-.1-.3-.3-.3-.4-.3z"/></symbol>
 </defs></svg>
 
 <!-- HEADER -->
@@ -282,6 +365,7 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
     <a class="btn gold" href="#" onclick="go('temoignages');return false">Rejoindre la communauté</a>
     <a class="btn out" href="#" onclick="go('episodes');return false">Tous les épisodes</a>
   </div>
+  <div id="home-partners"></div>
 </section>
 
 <!-- ── ÉPISODES ─────────────────────────────────────────────── -->
@@ -323,8 +407,8 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
     <p style="font-size:13px;color:var(--muted);margin-bottom:13px;line-height:1.55">Laisse ton contact — email ou numéro WhatsApp. Andréa t'avertit dès qu'un nouveau chemin est partagé.</p>
     <div id="ab-form-wrap">
       <form onsubmit="submitAbonne(event)">
-        <input name="prenom" placeholder="Ton prénom" style="width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-size:15px;font-family:var(--ff);color:var(--ink);background:var(--bg);margin-bottom:8px;box-sizing:border-box">
-        <input name="contact" placeholder="Email ou numéro WhatsApp" required style="width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-size:15px;font-family:var(--ff);color:var(--ink);background:var(--bg);margin-bottom:10px;box-sizing:border-box">
+        <input name="prenom" placeholder="Ton prénom" style="width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-size:16px;font-family:var(--ff);color:var(--ink);background:var(--bg);margin-bottom:8px;box-sizing:border-box">
+        <input name="contact" placeholder="Email ou numéro WhatsApp" required style="width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-size:16px;font-family:var(--ff);color:var(--ink);background:var(--bg);margin-bottom:10px;box-sizing:border-box">
         <button type="submit" class="btn gold" id="ab-save">M'inscrire</button>
       </form>
     </div>
@@ -346,7 +430,10 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
     <button class="btn" onclick="go('admin-episodes')">Gérer les épisodes</button>
     <button class="btn" onclick="go('admin-articles')">Gérer les articles</button>
   </div>
-  <button class="btn" style="margin-top:9px" onclick="go('admin-inbox')">Boîte de réception</button>
+  <div class="btn-pair" style="margin-top:9px">
+    <button class="btn" onclick="go('admin-inbox')">Boîte de réception</button>
+    <button class="btn out" onclick="go('admin-partenaires')">Partenaires</button>
+  </div>
   <div class="sh" style="margin-top:24px"><h2>Mon mot de passe</h2></div>
   <div class="card">
     <p style="font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:13px">Tu peux changer ton mot de passe d'accès à cet espace quand tu veux. Note bien le nouveau, c'est le seul moyen d'entrer.</p>
@@ -376,6 +463,35 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
     <button onclick="openAddArt()" style="background:var(--gold);color:#2A1D00;border:none;padding:7px 14px;border-radius:9px;font-size:13px;font-weight:700">+ Ajouter</button>
   </div>
   <div class="card"><div id="admin-art-list"><div class="loading"><span class="spin"></span></div></div></div>
+</section>
+
+<!-- ── ADMIN PARTENAIRES ─────────────────────────────────────── -->
+<section id="admin-partenaires" class="sec">
+  <div class="sh"><h2>Partenaires</h2></div>
+  <div class="card" style="margin-bottom:14px">
+    <p style="font-size:13px;color:var(--muted);line-height:1.6">Les logos affichés en bas de la page d'accueil, sous « Ils soutiennent l'émission ». Ils ne sont pas cliquables. Décoche un partenaire pour le retirer du site sans le supprimer.</p>
+  </div>
+  <div class="card"><div id="admin-part-list"><div class="loading"><span class="spin"></span></div></div></div>
+  <div class="card">
+    <p style="font-size:13.5px;font-weight:700;color:var(--brand);margin-bottom:11px">Ajouter un partenaire</p>
+    <form onsubmit="ajouterPartenaire(event)">
+      <div class="fg"><label>Nom</label><input name="nom" placeholder="ex : OMEDIA" required></div>
+      <div class="fg">
+        <label>Logo</label>
+        <div class="up">
+          <img class="up-prev" id="pt-img-prev" alt="">
+          <div class="up-act">
+            <button type="button" class="up-btn" onclick="document.getElementById('pt-img-file').click()">Choisir le logo</button>
+            <button type="button" class="up-clear" id="pt-img-clear" style="display:none" onclick="viderImage('pt-img')">Retirer</button>
+          </div>
+        </div>
+        <input type="file" id="pt-img-file" accept="image/*" style="display:none" onchange="choisirImage(this,'pt-img','partenaires')">
+        <input type="hidden" name="logo_url">
+        <p class="up-hint">Un logo sur fond uni fonctionne mieux. Format paysage de préférence.</p>
+      </div>
+      <button type="submit" class="btn gold" id="pt-save">Ajouter</button>
+    </form>
+  </div>
 </section>
 
 <!-- ── ADMIN INBOX ───────────────────────────────────────────── -->
@@ -432,17 +548,53 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
       <div class="fg"><label>Titre</label><input name="titre" placeholder="Titre de l'épisode" required></div>
       <div class="fg"><label>Invité(e)s</label><input name="invites" placeholder="ex : Avec Aïcha M."></div>
       <div class="fg"><label>Tags (séparés par virgule)</label><input name="tags" placeholder="ex : Transformation,Authenticité"></div>
-      <div class="fg"><label>URL YouTube — Teaser</label><input name="youtube_teaser" placeholder="https://youtu.be/..."></div>
-      <div class="fg"><label>Durée teaser</label><input name="duree_teaser" placeholder="ex : 1 min 30"></div>
+
+      <div class="fg">
+        <label>Visuel de l'épisode</label>
+        <div class="up">
+          <img class="up-prev" id="ep-img-prev" alt="">
+          <div class="up-act">
+            <button type="button" class="up-btn" onclick="document.getElementById('ep-img-file').click()">Choisir une image</button>
+            <button type="button" class="up-clear" id="ep-img-clear" style="display:none" onclick="viderImage('ep-img')">Retirer l'image</button>
+          </div>
+        </div>
+        <input type="file" id="ep-img-file" accept="image/*" style="display:none" onchange="choisirImage(this,'ep-img','episodes')">
+        <input type="hidden" name="image_url">
+        <p class="up-hint">C'est l'affiche de l'épisode. Elle s'affiche en grand sur la carte et sert d'aperçu quand le lien est partagé.</p>
+      </div>
+
+      <div class="fg">
+        <label>Photo avec l'invité(e)</label>
+        <div class="up">
+          <img class="up-prev" id="ep-inv-prev" alt="">
+          <div class="up-act">
+            <button type="button" class="up-btn" onclick="document.getElementById('ep-inv-file').click()">Choisir une photo</button>
+            <button type="button" class="up-clear" id="ep-inv-clear" style="display:none" onclick="viderImage('ep-inv')">Retirer la photo</button>
+          </div>
+        </div>
+        <input type="file" id="ep-inv-file" accept="image/*" style="display:none" onchange="choisirImage(this,'ep-inv','invites')">
+        <input type="hidden" name="photo_invite_url">
+        <p class="up-hint">La photo prise avec ton invité(e) le jour du tournage.</p>
+      </div>
+
+      <div class="fg" style="margin-bottom:8px"><label>Teasers</label></div>
+      <div id="ep-teasers"></div>
+      <button type="button" class="add-line" onclick="ajouterTeaser()">+ Ajouter un teaser</button>
+
       <div class="fg"><label>URL YouTube — Épisode complet</label><input name="youtube_episode" placeholder="https://youtu.be/..."></div>
       <div class="fg"><label>Durée épisode</label><input name="duree_episode" placeholder="ex : 42 min"></div>
       <div class="fg"><label>Description</label><textarea name="description" placeholder="Description de l'épisode"></textarea></div>
       <div class="fg"><label>Statut</label>
-        <select name="statut">
+        <select name="statut" onchange="majChampDate('ep')">
           <option value="brouillon">Brouillon</option>
           <option value="programme">Programmé</option>
           <option value="publie">Publié</option>
         </select>
+      </div>
+      <div class="fg" id="ep-date-fg" style="display:none">
+        <label>Mise en ligne automatique</label>
+        <input type="datetime-local" name="publie_le">
+        <p class="up-hint">Laisse vide pour l'annoncer tout de suite : il apparaît avec le badge Programmé, et seul le teaser est visible. Mets une date et une heure pour qu'il sorte tout seul ce jour-là.</p>
       </div>
       <button type="submit" class="btn gold" id="ep-save">Enregistrer</button>
     </form>
@@ -461,11 +613,32 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
       <div class="fg"><label>Contenu</label><textarea name="contenu" style="min-height:160px" placeholder="Écris ton article ici..."></textarea></div>
       <div class="fg"><label>Lié à l'épisode (titre)</label><input name="lien_episode" placeholder="Entre Force et Vulnérabilité"></div>
       <div class="fg"><label>Durée de lecture</label><input name="duree_lecture" placeholder="ex : 4 min"></div>
+
+      <div class="fg">
+        <label>Visuel de l'article</label>
+        <div class="up">
+          <img class="up-prev" id="art-img-prev" alt="">
+          <div class="up-act">
+            <button type="button" class="up-btn" onclick="document.getElementById('art-img-file').click()">Choisir une image</button>
+            <button type="button" class="up-clear" id="art-img-clear" style="display:none" onclick="viderImage('art-img')">Retirer l'image</button>
+          </div>
+        </div>
+        <input type="file" id="art-img-file" accept="image/*" style="display:none" onchange="choisirImage(this,'art-img','articles')">
+        <input type="hidden" name="image_url">
+        <p class="up-hint">C'est cette image qui s'affiche dans la publication quand tu partages l'article sur Facebook ou WhatsApp.</p>
+      </div>
+
       <div class="fg"><label>Statut</label>
-        <select name="statut">
+        <select name="statut" onchange="majChampDate('art')">
           <option value="brouillon">Brouillon</option>
+          <option value="programme">Programmé</option>
           <option value="publie">Publié</option>
         </select>
+      </div>
+      <div class="fg" id="art-date-fg" style="display:none">
+        <label>Date et heure de publication</label>
+        <input type="datetime-local" name="publie_le">
+        <p class="up-hint">L'article se publie tout seul à cette date. Avant l'heure, personne ne peut le lire.</p>
       </div>
       <button type="submit" class="btn gold" id="art-save">Enregistrer</button>
     </form>
@@ -480,6 +653,15 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
   </div>
 </div>
 
+<!-- ── BANDEAU DE CONFIRMATION ────────────────────────────────── -->
+<div id="toast"></div>
+
+<!-- ── PHOTO EN GRAND ─────────────────────────────────────────── -->
+<div id="img-mod" class="vmod" onclick="closeImage()">
+  <button class="vmod-close" onclick="closeImage()">×</button>
+  <div class="vmod-wrap"><img id="img-mod-src" alt="" style="width:100%;border-radius:14px"></div>
+</div>
+
 <!-- ── ARTICLE MODAL ──────────────────────────────────────────── -->
 <div id="amod" class="amod">
   <div class="amod-hd">
@@ -487,7 +669,10 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
     <h2 id="amod-title"></h2>
   </div>
   <div class="amod-body">
+    <img id="amod-img" class="amod-img" alt="" style="display:none">
+    <div id="amod-meta" class="amod-meta" style="display:none"></div>
     <div id="amod-body"></div>
+    <div id="amod-share" class="amod-share"></div>
   </div>
 </div>
 
@@ -500,7 +685,7 @@ const SB = supabase.createClient(
 );
 
 // ── STATE ─────────────────────────────────────────────────────────
-var eps = [], arts = [], temos = [], coms = [], abonnes = [];
+var eps = [], arts = [], temos = [], coms = [], abonnes = [], partenaires = [];
 var editEpId = null, editArtId = null;
 var adminMode = false;
 // Compte admin d'Andréa. Le mot de passe n'est jamais stocké ici ni en base :
@@ -597,12 +782,28 @@ async function changePwd(e) {
     setTimeout(function(){ document.getElementById('pwd-ok').style.display = 'none'; }, 4000);
   } else { alert('Erreur : ' + error.message); }
 }
+// Un contenu est "en ligne" si son statut le dit, ou si sa date de
+// programmation est passée. La base applique déjà cette règle pour le public
+// (policies de la migration 0004) ; on la rejoue ici parce qu'en mode admin
+// Andréa charge TOUT et voit quand même ses pages publiques en aperçu.
+function enLigne(row) {
+  if (!row) return false;
+  if (row.statut === 'publie') return true;
+  if (row.statut !== 'programme') return false;
+  if (!row.publie_le) return row.type_contenu !== 'article';  // épisode annoncé sans date
+  return new Date(row.publie_le) <= new Date();
+}
+function visiblesPublic(liste) { return adminMode ? liste : liste.filter(enLigne); }
+
 async function loadPublicData() {
-  var r1 = await SB.from('vc_episodes').select('*').in('statut',['publie','programme']).order('created_at',{ascending:false});
-  var r2 = await SB.from('vc_articles').select('*').eq('statut','publie').order('created_at',{ascending:false});
+  var r1 = await SB.from('vc_episodes').select('*').order('created_at',{ascending:false});
+  var r2 = await SB.from('vc_articles').select('*').order('created_at',{ascending:false});
+  var r3 = await SB.from('vc_partenaires').select('*').order('ordre');
   eps  = r1.data || [];
-  arts = r2.data || [];
-  renderHome(); renderEpList(); renderBlogList();
+  arts = (r2.data || []).map(function(a){ a.type_contenu = 'article'; return a; });
+  partenaires = r3.data || [];
+  renderHome(); renderEpList(); renderBlogList(); renderPartners();
+  ouvrirDepuisLien();
 }
 async function loadAdminData() {
   var r1 = await SB.from('vc_episodes').select('*').order('created_at',{ascending:false});
@@ -610,73 +811,183 @@ async function loadAdminData() {
   var r3 = await SB.from('vc_temoignages').select('*').order('created_at',{ascending:false});
   var r4 = await SB.from('vc_commentaires').select('*').order('created_at',{ascending:false});
   var r5 = await SB.from('vc_abonnes').select('*').order('created_at',{ascending:false});
+  var r6 = await SB.from('vc_partenaires').select('*').order('ordre');
   eps      = r1.data || [];
-  arts     = r2.data || [];
+  arts     = (r2.data || []).map(function(a){ a.type_contenu = 'article'; return a; });
   temos    = r3.data || [];
   coms     = r4.data || [];
   abonnes  = r5.data || [];
-  renderHome(); renderEpList(); renderBlogList();
-  renderAdminDash(); renderAdminEps(); renderAdminArts(); renderInboxTemo(); renderInboxCom(); renderInboxAbonnes();
+  partenaires = r6.data || [];
+  renderHome(); renderEpList(); renderBlogList(); renderPartners();
+  renderAdminDash(); renderAdminEps(); renderAdminArts(); renderAdminPartners();
+  renderInboxTemo(); renderInboxCom(); renderInboxAbonnes();
 }
 
 // ── PUBLIC RENDER ─────────────────────────────────────────────────
 function renderHome(){
-  var latest = eps.find(function(e){ return e.statut === 'publie'; });
+  var visibles = visiblesPublic(eps);
+  var latest = visibles.find(function(e){ return e.statut === 'publie'; }) || visibles[0];
   var el = document.getElementById('home-ep');
-  el.innerHTML = latest ? '<div class="card">' + epHtml(latest) + '</div>'
+  // Version compacte : ni commentaires ni partage sur l'accueil. Le même
+  // épisode est déjà rendu dans l'onglet Épisodes, et deux blocs de
+  // commentaires portant le même identifiant se pilotaient l'un l'autre.
+  el.innerHTML = latest
+    ? '<div class="card">' + epHtml(latest, true) + '<a href="#" class="blog-link" onclick="go(\'episodes\');return false">Voir la fiche complète →</a></div>'
     : '<div class="card"><p style="color:var(--muted);font-size:13px">Le premier épisode arrive bientôt.</p></div>';
 
+  var artsVis = visiblesPublic(arts);
   var artEl = document.getElementById('home-arts');
-  if (arts.length) {
-    artEl.innerHTML = '<div class="card">' + arts.slice(0,2).map(function(a){
-      return '<div class="blog-row"><div><h4>' + x(a.titre) + '</h4>'
-        + '<p>' + (a.lien_episode ? 'Lié à l\'épisode · ' : '') + (a.duree_lecture || '') + '</p></div>'
-        + '<span class="badge ' + stClass(a.statut) + '" style="flex:none">' + stLabel(a.statut) + '</span></div>';
+  if (artsVis.length) {
+    artEl.innerHTML = '<div class="card">' + artsVis.slice(0,2).map(function(a){
+      return '<div class="blog-row" onclick="openArticle(\'' + a.id + '\')" style="cursor:pointer">'
+        + (a.image_url ? '<img src="' + x(a.image_url) + '" alt="" style="width:64px;height:64px;border-radius:10px;object-fit:cover;flex:none">' : '')
+        + '<div style="flex:1;min-width:0"><h4>' + x(a.titre) + '</h4>'
+        + '<p>' + metaArticle(a) + '</p></div>'
+        + (adminMode ? '<span class="badge ' + stClass(a.statut) + '" style="flex:none">' + stLabel(a.statut) + '</span>' : '')
+        + '</div>';
     }).join('') + '</div>';
   } else {
     artEl.innerHTML = '';
   }
 }
 
+function renderPartners(){
+  var actifs = partenaires.filter(function(p){ return p.actif; });
+  var el = document.getElementById('home-partners');
+  if (!el) return;
+  if (!actifs.length) { el.innerHTML = ''; return; }
+  el.innerHTML = '<div class="sh" style="margin-top:28px"><h2>Ils soutiennent l\'émission</h2></div>'
+    + '<div class="pt-grid">' + actifs.map(function(p){
+        return '<div class="pt-tile"><img src="' + x(p.logo_url) + '" alt="' + x(p.nom) + '" loading="lazy"></div>';
+      }).join('') + '</div>';
+}
+
 function renderEpList(){
+  var visibles = visiblesPublic(eps);
   var el = document.getElementById('ep-list');
-  if (!eps.length) { el.innerHTML = '<div class="card" style="grid-column:1/-1"><p style="color:var(--muted);font-size:13px">Les épisodes arrivent bientôt.</p></div>'; return; }
-  el.innerHTML = eps.map(function(e){ return '<div class="card">' + epHtml(e) + '</div>'; }).join('');
+  if (!visibles.length) { el.innerHTML = '<div class="card" style="grid-column:1/-1"><p style="color:var(--muted);font-size:13px">Les épisodes arrivent bientôt.</p></div>'; return; }
+  el.innerHTML = visibles.map(function(e){ return '<div class="card" id="ep-card-' + e.id + '">' + epHtml(e) + '</div>'; }).join('');
 }
 
 function renderBlogList(){
+  var visibles = visiblesPublic(arts);
   var el = document.getElementById('blog-list');
-  if (!arts.length) { el.innerHTML = '<div class="card" style="grid-column:1/-1"><p style="color:var(--muted);font-size:13px">Les articles arrivent bientôt.</p></div>'; return; }
-  el.innerHTML = arts.map(function(a){
+  if (!visibles.length) { el.innerHTML = '<div class="card" style="grid-column:1/-1"><p style="color:var(--muted);font-size:13px">Les articles arrivent bientôt.</p></div>'; return; }
+  el.innerHTML = visibles.map(function(a){
     var hasContent = a.contenu && a.contenu.trim() && a.contenu !== 'À écrire...';
-    return '<div class="card"><div class="blog-row" style="flex-direction:column;align-items:flex-start;border:none;padding:0;gap:7px">'
-      + '<span class="badge ' + stClass(a.statut) + '">' + stLabel(a.statut) + '</span>'
+    return '<div class="card">'
+      + (a.image_url ? '<img class="blog-thumb" src="' + x(a.image_url) + '" alt="" loading="lazy">' : '')
+      + '<div class="blog-row" style="flex-direction:column;align-items:flex-start;border:none;padding:0;gap:7px">'
+      + (adminMode ? '<span class="badge ' + stClass(a.statut) + '">' + stLabel(a.statut) + '</span>' : '')
       + '<h4>' + x(a.titre) + '</h4>'
-      + '<p>' + (a.lien_episode ? 'Lié à &ldquo;' + x(a.lien_episode) + '&rdquo; · ' : '') + (a.duree_lecture ? a.duree_lecture + ' de lecture' : '') + '</p>'
+      + '<p>' + metaArticle(a) + '</p>'
       + (hasContent
           ? '<a href="#" class="blog-link" onclick="openArticle(\'' + a.id + '\');return false">Lire l\'article →</a>'
           : '<span style="font-size:13px;color:var(--muted)">Bientôt disponible</span>')
-      + '</div></div>';
+      + '</div>'
+      + shareRow('a', a)
+      + '</div>';
   }).join('');
 }
 
-// Episode HTML (shared public + admin)
-function epHtml(ep) {
+function metaArticle(a){
+  var bouts = [];
+  if (a.lien_episode) bouts.push('Lié à &ldquo;' + x(a.lien_episode) + '&rdquo;');
+  if (a.duree_lecture) bouts.push(x(a.duree_lecture) + ' de lecture');
+  if (a.statut === 'publie' && a.created_at) bouts.push(fmt(a.created_at));
+  return bouts.join(' · ');
+}
+
+// Liste des teasers d'un épisode. La colonne `teasers` a remplacé le champ
+// unique `youtube_teaser`, qui reste lu en secours pour les épisodes d'avant.
+function teasersDe(ep){
+  var t = ep.teasers;
+  if (typeof t === 'string') { try { t = JSON.parse(t); } catch (e) { t = null; } }
+  if (Array.isArray(t) && t.length) return t.filter(function(x){ return x && x.url; });
+  if (ep.youtube_teaser) return [{ titre: 'Teaser', url: ep.youtube_teaser, duree: ep.duree_teaser || '' }];
+  return [];
+}
+
+// Episode HTML (shared public + admin). `compact` = carte d'accueil.
+function epHtml(ep, compact) {
   var tags = (ep.tags || '').split(',').filter(Boolean).map(function(t){ return '<span class="tag">' + x(t.trim()) + '</span>'; }).join('');
-  var statBadge = '<span class="badge ' + stClass(ep.statut) + '">' + stLabel(ep.statut) + '</span>';
-  var hasT = !!ep.youtube_teaser, hasE = !!ep.youtube_episode;
-  return '<div class="ep-head">'
-    + '<div class="ep-icon"><svg><use href="#i-film"/></svg></div>'
+  var statBadge = '<span class="badge ' + stClass(ep.statut) + '">' + stLabel(ep.statut) + (adminMode && ep.publie_le ? ' · ' + fmtDateHeure(ep.publie_le) : '') + '</span>';
+  var teasers = teasersDe(ep);
+  var hasE = !!ep.youtube_episode;
+
+  return (ep.image_url ? '<img class="ep-cover" src="' + x(ep.image_url) + '" alt="' + x(ep.titre) + '" loading="lazy">' : '')
+    + '<div class="ep-head">'
+    + (ep.image_url ? '' : '<div class="ep-icon"><svg><use href="#i-film"/></svg></div>')
     + '<div class="ep-info"><h3>' + x(ep.titre) + '</h3><p>' + x(ep.invites || '') + '</p></div>'
     + '</div>'
     + '<div class="meta-row">' + tags + statBadge + '</div>'
+    + (ep.photo_invite_url
+        ? '<div class="guest-lock"><img class="ep-guest" src="' + x(ep.photo_invite_url) + '" alt="" loading="lazy" onclick="openImage(\'' + x(ep.photo_invite_url) + '\')">'
+          + '<p><b>' + (ep.invites ? x(ep.invites) : 'Sur le plateau') + '</b>Photo prise le jour de l\'enregistrement.</p></div>'
+        : '')
+    + (teasers.length
+        ? '<div class="t-list">' + teasers.map(function(t, i){
+            return '<button class="t-chip" onclick="openVideo(\'' + x(t.url) + '\')">'
+              + '<svg><use href="#i-play"/></svg>'
+              + '<b>' + x(t.titre || ('Teaser ' + (i + 1))) + '</b>'
+              + (t.duree ? '<span>' + x(t.duree) + '</span>' : '')
+              + '</button>';
+          }).join('') + '</div>'
+        : '')
     + '<div class="ep-btns">'
-    + '<button class="ep-btn" ' + (!hasT ? 'disabled' : 'onclick="openVideo(\'' + x(ep.youtube_teaser) + '\')"') + '>'
-    + '<svg width="13" height="13"><use href="#i-play"/></svg>' + (ep.duree_teaser ? 'Teaser · ' + x(ep.duree_teaser) : 'Teaser') + '</button>'
     + '<button class="ep-btn fill" ' + (!hasE ? 'disabled' : 'onclick="openVideo(\'' + x(ep.youtube_episode) + '\')"') + '>'
-    + '<svg width="13" height="13"><use href="#i-film"/></svg>' + (ep.duree_episode ? ep.duree_episode : 'Épisode complet') + '</button>'
+    + '<svg width="13" height="13"><use href="#i-film"/></svg>' + (hasE ? (ep.duree_episode ? 'Épisode complet · ' + x(ep.duree_episode) : 'Épisode complet') : 'Épisode à venir') + '</button>'
     + '</div>'
-    + commentToggle(ep.id);
+    + (compact ? '' : shareRow('e', ep) + commentToggle(ep.id));
+}
+
+// ── PARTAGE ───────────────────────────────────────────────────────
+// Chaque article et chaque épisode a une adresse propre : ?a=slug / ?e=slug.
+// C'est ce qui permet d'envoyer quelqu'un directement sur un contenu précis
+// au lieu de le déposer sur la page d'accueil.
+function lienPartage(genre, row){
+  var base = location.origin + location.pathname.replace(/index\.html$/, '');
+  return base + '?' + genre + '=' + encodeURIComponent(row.slug || row.id);
+}
+function shareRow(genre, row){
+  return '<div class="share-row">'
+    + '<span class="share-lbl">Partager</span>'
+    + '<button class="sh-btn fb" title="Partager sur Facebook" onclick="partager(\'fb\',\'' + genre + '\',\'' + row.id + '\')"><svg><use href="#i-fb"/></svg></button>'
+    + '<button class="sh-btn wa" title="Partager sur WhatsApp" onclick="partager(\'wa\',\'' + genre + '\',\'' + row.id + '\')"><svg><use href="#i-wa"/></svg></button>'
+    + '<button class="sh-btn lk" title="Copier le lien" onclick="partager(\'copie\',\'' + genre + '\',\'' + row.id + '\')"><svg><use href="#i-link"/></svg></button>'
+    + '</div>';
+}
+function partager(reseau, genre, id){
+  var row = (genre === 'a' ? arts : eps).find(function(r){ return r.id === id; });
+  if (!row) return;
+  var url = lienPartage(genre, row);
+  if (reseau === 'fb') {
+    window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank', 'noopener,width=640,height=620');
+  } else if (reseau === 'wa') {
+    window.open('https://wa.me/?text=' + encodeURIComponent(row.titre + '\n\n' + url), '_blank', 'noopener');
+  } else {
+    copierLien(url);
+  }
+}
+function copierLien(url){
+  function ok(){ toast('Lien copié'); }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(ok, function(){ alert(url); });
+  } else {
+    var t = document.createElement('textarea');
+    t.value = url; t.style.position = 'fixed'; t.style.opacity = '0';
+    document.body.appendChild(t); t.select();
+    try { document.execCommand('copy'); ok(); } catch (e) { alert(url); }
+    document.body.removeChild(t);
+  }
+}
+var toastT;
+function toast(msg){
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('on');
+  clearTimeout(toastT);
+  toastT = setTimeout(function(){ el.classList.remove('on'); }, 2400);
 }
 
 // Comment toggle per episode
@@ -753,23 +1064,39 @@ async function supprimerCom(id, epId) {
 
 // ── ADMIN RENDER ──────────────────────────────────────────────────
 function renderAdminDash() {
-  var pubE = eps.filter(function(e){ return e.statut === 'publie'; }).length;
-  var pubA = arts.filter(function(a){ return a.statut === 'publie'; }).length;
+  var enligneE = eps.filter(enLigne).length;
+  var enligneA = arts.filter(enLigne).length;
+  var attenteA = arts.filter(function(a){ return a.statut === 'programme' && a.publie_le && new Date(a.publie_le) > new Date(); });
   var unreadT = temos.filter(function(t){ return !t.traite; }).length;
   var unreadC = coms.filter(function(c){ return !c.visible; }).length;
+  var prochain = attenteA.slice().sort(function(a, b){ return new Date(a.publie_le) - new Date(b.publie_le); })[0];
   document.getElementById('dash-stats').innerHTML =
-    '<div class="stat-r"><span>Épisodes publiés</span><b>' + pubE + ' / ' + eps.length + '</b></div>'
-    + '<div class="stat-r"><span>Articles publiés</span><b>' + pubA + ' / ' + arts.length + '</b></div>'
+    '<div class="stat-r"><span>Épisodes en ligne</span><b>' + enligneE + ' / ' + eps.length + '</b></div>'
+    + '<div class="stat-r"><span>Articles en ligne</span><b>' + enligneA + ' / ' + arts.length + '</b></div>'
+    + '<div class="stat-r"><span>Articles programmés</span><b>' + attenteA.length + '</b></div>'
+    + (prochain ? '<div class="stat-r"><span>Prochaine sortie</span><b style="font-size:13px;font-weight:700;text-align:right">' + fmtDateHeure(prochain.publie_le) + '</b></div>' : '')
     + '<div class="stat-r"><span>Abonnés notifications</span><b>' + abonnes.length + '</b></div>'
     + '<div class="stat-r"><span>Témoignages à traiter</span><b>' + unreadT + '</b></div>'
     + '<div class="stat-r"><span>Commentaires à approuver</span><b>' + unreadC + '</b></div>';
+}
+// Rappel en clair de l'état d'un contenu dans les listes d'Andréa :
+// « Programmé » seul ne veut rien dire, on affiche la date quand il y en a une.
+function ligneEtat(row, suffixe){
+  if (row.statut === 'programme' && row.publie_le) {
+    var futur = new Date(row.publie_le) > new Date();
+    return (futur ? 'Sort le ' : 'En ligne depuis le ') + fmtDateHeure(row.publie_le);
+  }
+  return suffixe || '';
 }
 function renderAdminEps() {
   var el = document.getElementById('admin-ep-list');
   if (!eps.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0">Aucun épisode. Cliquez sur + Ajouter.</p>'; return; }
   el.innerHTML = eps.map(function(ep){
-    return '<div class="a-row"><div class="a-info"><h4>' + x(ep.titre) + '</h4>'
-      + '<p>' + x(ep.invites || '') + '</p></div>'
+    var nbT = teasersDe(ep).length;
+    var infos = [ep.invites || '', nbT ? nbT + (nbT > 1 ? ' teasers' : ' teaser') : 'aucun teaser', ligneEtat(ep)].filter(Boolean).join(' · ');
+    return '<div class="a-row">'
+      + (ep.image_url ? '<img src="' + x(ep.image_url) + '" alt="" style="width:44px;height:44px;border-radius:9px;object-fit:cover;flex:none">' : '')
+      + '<div class="a-info"><h4>' + x(ep.titre) + '</h4><p>' + infos + '</p></div>'
       + '<div class="a-acts"><span class="badge ' + stClass(ep.statut) + '">' + stLabel(ep.statut) + '</span>'
       + '<button class="ib" onclick="editEp(\'' + ep.id + '\')"><svg width="15" height="15"><use href="#i-pen"/></svg></button>'
       + '<button class="ib red" onclick="deleteEp(\'' + ep.id + '\')"><svg width="15" height="15"><use href="#i-x"/></svg></button>'
@@ -780,13 +1107,53 @@ function renderAdminArts() {
   var el = document.getElementById('admin-art-list');
   if (!arts.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0">Aucun article. Cliquez sur + Ajouter.</p>'; return; }
   el.innerHTML = arts.map(function(a){
-    return '<div class="a-row"><div class="a-info"><h4>' + x(a.titre) + '</h4>'
-      + '<p>' + (a.duree_lecture || '') + '</p></div>'
+    return '<div class="a-row">'
+      + (a.image_url ? '<img src="' + x(a.image_url) + '" alt="" style="width:44px;height:44px;border-radius:9px;object-fit:cover;flex:none">' : '')
+      + '<div class="a-info"><h4>' + x(a.titre) + '</h4>'
+      + '<p>' + (ligneEtat(a, a.duree_lecture || '') || '&nbsp;') + '</p></div>'
       + '<div class="a-acts"><span class="badge ' + stClass(a.statut) + '">' + stLabel(a.statut) + '</span>'
       + '<button class="ib" onclick="editArt(\'' + a.id + '\')"><svg width="15" height="15"><use href="#i-pen"/></svg></button>'
       + '<button class="ib red" onclick="deleteArt(\'' + a.id + '\')"><svg width="15" height="15"><use href="#i-x"/></svg></button>'
       + '</div></div>';
   }).join('');
+}
+function renderAdminPartners() {
+  var el = document.getElementById('admin-part-list');
+  if (!el) return;
+  if (!partenaires.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0">Aucun partenaire pour l\'instant.</p>'; return; }
+  el.innerHTML = partenaires.map(function(p){
+    return '<div class="a-row">'
+      + '<img src="' + x(p.logo_url) + '" alt="" style="width:64px;height:34px;border-radius:7px;object-fit:cover;flex:none;border:1px solid var(--line)">'
+      + '<div class="a-info"><h4>' + x(p.nom) + '</h4><p>' + (p.actif ? 'Affiché sur le site' : 'Masqué') + '</p></div>'
+      + '<div class="a-acts">'
+      + '<button class="ib ' + (p.actif ? 'green' : '') + '" title="Afficher ou masquer" onclick="basculerPartenaire(\'' + p.id + '\',' + (p.actif ? 'false' : 'true') + ')">'
+      + '<svg width="15" height="15"><use href="#i-check"/></svg></button>'
+      + '<button class="ib red" onclick="supprimerPartenaire(\'' + p.id + '\')"><svg width="15" height="15"><use href="#i-x"/></svg></button>'
+      + '</div></div>';
+  }).join('');
+}
+async function basculerPartenaire(id, actif){
+  await SB.from('vc_partenaires').update({ actif: actif }).eq('id', id);
+  await loadAdminData();
+}
+async function supprimerPartenaire(id){
+  if (!confirm('Retirer ce partenaire ?')) return;
+  await SB.from('vc_partenaires').delete().eq('id', id);
+  await loadAdminData();
+}
+async function ajouterPartenaire(e){
+  e.preventDefault();
+  var f = e.target;
+  var nom = f.nom.value.trim(), logo = f.logo_url.value.trim();
+  if (!nom) return;
+  if (!logo) { alert('Choisis d\'abord le logo.'); return; }
+  var btn = document.getElementById('pt-save'); btn.disabled = true; btn.textContent = 'Ajout...';
+  var ordre = partenaires.length ? Math.max.apply(null, partenaires.map(function(p){ return p.ordre || 0; })) + 1 : 1;
+  var { error } = await SB.from('vc_partenaires').insert({ nom: nom, logo_url: logo, ordre: ordre });
+  btn.disabled = false; btn.textContent = 'Ajouter';
+  if (error) { alert('Erreur : ' + error.message); return; }
+  f.reset(); viderImage('pt-img');
+  await loadAdminData();
 }
 function renderInboxTemo() {
   var el = document.getElementById('inbox-temo');
@@ -856,15 +1223,29 @@ function renderInboxAbonnes() {
 }
 
 // ── EPISODE CRUD ──────────────────────────────────────────────────
-function openAddEp(){ editEpId = null; document.getElementById('ep-form').reset(); document.getElementById('ep-sheet-title').textContent = 'Nouvel épisode'; document.getElementById('ep-sheet').classList.add('open'); }
+function openAddEp(){
+  editEpId = null;
+  var f = document.getElementById('ep-form'); f.reset();
+  viderImage('ep-img'); viderImage('ep-inv');
+  document.getElementById('ep-teasers').innerHTML = '';
+  ajouterTeaser();
+  majChampDate('ep');
+  document.getElementById('ep-sheet-title').textContent = 'Nouvel épisode';
+  document.getElementById('ep-sheet').classList.add('open');
+}
 function editEp(id){
   editEpId = id;
   var ep = eps.find(function(e){ return e.id === id; }); if (!ep) return;
   var f = document.getElementById('ep-form');
   f.titre.value = ep.titre || ''; f.invites.value = ep.invites || ''; f.tags.value = ep.tags || '';
-  f.youtube_teaser.value = ep.youtube_teaser || ''; f.duree_teaser.value = ep.duree_teaser || '';
   f.youtube_episode.value = ep.youtube_episode || ''; f.duree_episode.value = ep.duree_episode || '';
   f.description.value = ep.description || ''; f.statut.value = ep.statut || 'brouillon';
+  f.publie_le.value = versChampDate(ep.publie_le);
+  poserImage('ep-img', ep.image_url); poserImage('ep-inv', ep.photo_invite_url);
+  var box = document.getElementById('ep-teasers'); box.innerHTML = '';
+  var liste = teasersDe(ep);
+  if (liste.length) { liste.forEach(function(t){ ajouterTeaser(t); }); } else { ajouterTeaser(); }
+  majChampDate('ep');
   document.getElementById('ep-sheet-title').textContent = 'Modifier l\'épisode';
   document.getElementById('ep-sheet').classList.add('open');
 }
@@ -872,38 +1253,119 @@ function closeEpSheet(){ document.getElementById('ep-sheet').classList.remove('o
 async function saveEp(e){
   e.preventDefault(); var f = e.target;
   var d = { titre: f.titre.value.trim(), invites: f.invites.value.trim(), tags: f.tags.value.trim(),
-    youtube_teaser: f.youtube_teaser.value.trim(), duree_teaser: f.duree_teaser.value.trim(),
     youtube_episode: f.youtube_episode.value.trim(), duree_episode: f.duree_episode.value.trim(),
-    description: f.description.value.trim(), statut: f.statut.value };
+    description: f.description.value.trim(), statut: f.statut.value,
+    teasers: lireTeasers(),
+    // L'ancien champ unique est vidé à chaque enregistrement : sans ça, un
+    // teaser supprimé de la liste réapparaissait par le secours de teasersDe().
+    youtube_teaser: '', duree_teaser: '',
+    image_url: f.image_url.value.trim(),
+    photo_invite_url: f.photo_invite_url.value.trim(),
+    publie_le: lireChampDate(f.publie_le.value) };
   if (!d.titre) return;
+  if (d.statut !== 'programme') d.publie_le = null;
   var btn = document.getElementById('ep-save'); btn.disabled = true; btn.textContent = 'Enregistrement...';
-  if (editEpId) { await SB.from('vc_episodes').update(d).eq('id', editEpId); }
-  else { await SB.from('vc_episodes').insert(d); }
+  var res = editEpId
+    ? await SB.from('vc_episodes').update(d).eq('id', editEpId)
+    : await SB.from('vc_episodes').insert(d);
   btn.disabled = false; btn.textContent = 'Enregistrer';
+  if (res.error) { alert('Erreur : ' + res.error.message); return; }
   closeEpSheet(); await loadAdminData();
+}
+
+// ── TEASERS (liste répétable) ─────────────────────────────────────
+function ajouterTeaser(data){
+  data = data || {};
+  var box = document.getElementById('ep-teasers');
+  var n = box.children.length + 1;
+  var d = document.createElement('div');
+  d.className = 'rep';
+  d.innerHTML = '<div class="rep-hd"><b>Teaser ' + n + '</b>'
+    + '<button type="button" class="rep-del" title="Retirer" onclick="retirerTeaser(this)">×</button></div>'
+    + '<input class="t-titre" placeholder="Nom du teaser (ex : Extrait 1)" value="' + x(data.titre || '') + '">'
+    + '<input class="t-url" placeholder="https://youtu.be/..." value="' + x(data.url || '') + '">'
+    + '<input class="t-duree" placeholder="Durée (ex : 1 min 30)" value="' + x(data.duree || '') + '">';
+  box.appendChild(d);
+}
+function retirerTeaser(btn){
+  var box = document.getElementById('ep-teasers');
+  btn.closest('.rep').remove();
+  Array.prototype.forEach.call(box.children, function(el, i){
+    el.querySelector('.rep-hd b').textContent = 'Teaser ' + (i + 1);
+  });
+  if (!box.children.length) ajouterTeaser();
+}
+function lireTeasers(){
+  var box = document.getElementById('ep-teasers');
+  return Array.prototype.map.call(box.children, function(el, i){
+    return {
+      titre: el.querySelector('.t-titre').value.trim() || ('Teaser ' + (i + 1)),
+      url:   el.querySelector('.t-url').value.trim(),
+      duree: el.querySelector('.t-duree').value.trim()
+    };
+  }).filter(function(t){ return t.url; });
+}
+
+// ── PROGRAMMATION (champ date affiché seulement si "Programmé") ───
+function majChampDate(prefixe){
+  var f = document.getElementById(prefixe + '-form');
+  var fg = document.getElementById(prefixe + '-date-fg');
+  if (!f || !fg) return;
+  fg.style.display = f.statut.value === 'programme' ? 'block' : 'none';
+}
+function versChampDate(iso){
+  if (!iso) return '';
+  var d = new Date(iso);
+  if (isNaN(d)) return '';
+  var p = function(n){ return String(n).padStart(2, '0'); };
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + 'T' + p(d.getHours()) + ':' + p(d.getMinutes());
+}
+function lireChampDate(v){
+  if (!v) return null;
+  var d = new Date(v);
+  return isNaN(d) ? null : d.toISOString();
 }
 async function deleteEp(id){ if (!confirm('Supprimer cet épisode ?')) return; await SB.from('vc_episodes').delete().eq('id', id); await loadAdminData(); }
 
 // ── ARTICLE CRUD ──────────────────────────────────────────────────
-function openAddArt(){ editArtId = null; document.getElementById('art-form').reset(); document.getElementById('art-sheet-title').textContent = 'Nouvel article'; document.getElementById('art-sheet').classList.add('open'); }
+function openAddArt(){
+  editArtId = null;
+  document.getElementById('art-form').reset();
+  viderImage('art-img'); majChampDate('art');
+  document.getElementById('art-sheet-title').textContent = 'Nouvel article';
+  document.getElementById('art-sheet').classList.add('open');
+}
 function editArt(id){
   editArtId = id;
   var a = arts.find(function(ar){ return ar.id === id; }); if (!a) return;
   var f = document.getElementById('art-form');
   f.titre.value = a.titre || ''; f.contenu.value = a.contenu || ''; f.lien_episode.value = a.lien_episode || '';
   f.duree_lecture.value = a.duree_lecture || ''; f.statut.value = a.statut || 'brouillon';
+  f.publie_le.value = versChampDate(a.publie_le);
+  poserImage('art-img', a.image_url);
+  majChampDate('art');
   document.getElementById('art-sheet-title').textContent = 'Modifier l\'article';
   document.getElementById('art-sheet').classList.add('open');
 }
 function closeArtSheet(){ document.getElementById('art-sheet').classList.remove('open'); }
 async function saveArt(e){
   e.preventDefault(); var f = e.target;
-  var d = { titre: f.titre.value.trim(), contenu: f.contenu.value.trim(), lien_episode: f.lien_episode.value.trim(), duree_lecture: f.duree_lecture.value.trim(), statut: f.statut.value };
+  var d = { titre: f.titre.value.trim(), contenu: f.contenu.value.trim(), lien_episode: f.lien_episode.value.trim(),
+    duree_lecture: f.duree_lecture.value.trim(), statut: f.statut.value,
+    image_url: f.image_url.value.trim(),
+    publie_le: lireChampDate(f.publie_le.value) };
   if (!d.titre) return;
+  if (d.statut === 'programme' && !d.publie_le) {
+    alert('Choisis la date et l\'heure de publication, sinon l\'article ne sortira jamais tout seul.');
+    return;
+  }
+  if (d.statut !== 'programme') d.publie_le = null;
   var btn = document.getElementById('art-save'); btn.disabled = true; btn.textContent = 'Enregistrement...';
-  if (editArtId) { await SB.from('vc_articles').update(d).eq('id', editArtId); }
-  else { await SB.from('vc_articles').insert(d); }
+  var res = editArtId
+    ? await SB.from('vc_articles').update(d).eq('id', editArtId)
+    : await SB.from('vc_articles').insert(d);
   btn.disabled = false; btn.textContent = 'Enregistrer';
+  if (res.error) { alert('Erreur : ' + res.error.message); return; }
   closeArtSheet(); await loadAdminData();
 }
 async function deleteArt(id){ if (!confirm('Supprimer cet article ?')) return; await SB.from('vc_articles').delete().eq('id', id); await loadAdminData(); }
@@ -926,6 +1388,77 @@ async function submitAbonne(e){
 }
 async function markTemo(id){ await SB.from('vc_temoignages').update({ traite: true }).eq('id', id); await loadAdminData(); }
 
+// ── IMAGES ────────────────────────────────────────────────────────
+// Les photos sortent d'un téléphone : 4 à 8 Mo par cliché. On les réduit dans
+// le navigateur avant l'envoi, sinon le site devient lourd à charger et le
+// stockage se remplit pour rien.
+function reduireImage(file, largeurMax, qualite){
+  return new Promise(function(res, rej){
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function(){
+      var w = img.width, h = img.height;
+      if (!w || !h) { URL.revokeObjectURL(url); rej(new Error('image vide')); return; }
+      if (w > largeurMax) { h = Math.round(h * largeurMax / w); w = largeurMax; }
+      var c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      c.toBlob(function(b){ b ? res(b) : rej(new Error('conversion impossible')); }, 'image/jpeg', qualite);
+    };
+    img.onerror = function(){ URL.revokeObjectURL(url); rej(new Error('format non lisible')); };
+    img.src = url;
+  });
+}
+async function choisirImage(input, cle, dossier){
+  var file = input.files && input.files[0];
+  if (!file) return;
+  input.disabled = true;
+  var ancienTexte = null, bouton = document.querySelector('[onclick*="' + cle + '-file"]');
+  if (bouton) { ancienTexte = bouton.textContent; bouton.textContent = 'Envoi...'; bouton.disabled = true; }
+  try {
+    var blob = await reduireImage(file, 1600, 0.85);
+    var nom = dossier + '/' + Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.jpg';
+    var up = await SB.storage.from('vc-medias').upload(nom, blob, { contentType: 'image/jpeg', upsert: false });
+    if (up.error) throw up.error;
+    var pub = SB.storage.from('vc-medias').getPublicUrl(nom);
+    poserImage(cle, pub.data.publicUrl);
+  } catch (err) {
+    alert('L\'image n\'a pas pu être envoyée : ' + (err.message || err)
+      + '\n\nEssaie une photo au format JPG ou PNG, prise depuis ta galerie.');
+  }
+  input.disabled = false; input.value = '';
+  if (bouton) { bouton.textContent = ancienTexte; bouton.disabled = false; }
+}
+// Affiche l'aperçu et mémorise l'adresse dans le champ caché du formulaire.
+function poserImage(cle, url){
+  var prev = document.getElementById(cle + '-prev');
+  var clear = document.getElementById(cle + '-clear');
+  var champ = champCache(cle);
+  if (champ) champ.value = url || '';
+  if (prev) {
+    if (url) { prev.src = url; prev.style.display = 'block'; }
+    else { prev.removeAttribute('src'); prev.style.display = 'none'; }
+  }
+  if (clear) clear.style.display = url ? 'block' : 'none';
+}
+function viderImage(cle){ poserImage(cle, ''); }
+function champCache(cle){
+  var map = {
+    'ep-img':  ['ep-form', 'image_url'],
+    'ep-inv':  ['ep-form', 'photo_invite_url'],
+    'art-img': ['art-form', 'image_url'],
+    'pt-img':  null
+  };
+  if (cle === 'pt-img') {
+    var sec = document.getElementById('admin-partenaires');
+    return sec ? sec.querySelector('input[name="logo_url"]') : null;
+  }
+  var ref = map[cle]; if (!ref) return null;
+  var f = document.getElementById(ref[0]);
+  return f ? f.elements[ref[1]] : null;
+}
+
 // ── VIDEO ─────────────────────────────────────────────────────────
 function ytId(url){ var m = (url||'').match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/); return m ? m[1] : null; }
 function openVideo(url){ var id = ytId(url); if (!id) return; document.getElementById('yt-frame').src = 'https://www.youtube.com/embed/' + id + '?autoplay=1'; document.getElementById('vmod').classList.add('open'); }
@@ -935,14 +1468,80 @@ function closeVideo(){ document.getElementById('vmod').classList.remove('open');
 function openArticle(id){
   var a = arts.find(function(ar){ return ar.id === id; }); if (!a) return;
   document.getElementById('amod-title').textContent = a.titre;
+
+  var img = document.getElementById('amod-img');
+  if (a.image_url) { img.src = a.image_url; img.style.display = 'block'; }
+  else { img.removeAttribute('src'); img.style.display = 'none'; }
+
+  var meta = document.getElementById('amod-meta');
+  var m = metaArticle(a);
+  if (m) { meta.innerHTML = m; meta.style.display = 'block'; } else { meta.style.display = 'none'; }
+
   document.getElementById('amod-body').innerHTML = (a.contenu || '').split('\n\n').map(function(p){ return '<p>' + x(p) + '</p>'; }).join('');
+  document.getElementById('amod-share').innerHTML = shareRow('a', a);
   document.getElementById('amod').classList.add('open');
+  document.getElementById('amod').scrollTop = 0;
+
+  // L'adresse de la barre du navigateur devient celle de l'article : elle peut
+  // être copiée telle quelle, et le bouton retour du téléphone referme la
+  // lecture au lieu de quitter le site.
+  try { history.pushState({ article: a.id }, '', lienPartage('a', a)); } catch (e) {}
 }
-function closeArticle(){ document.getElementById('amod').classList.remove('open'); }
+function closeArticle(){
+  document.getElementById('amod').classList.remove('open');
+  if (history.state && history.state.article) { history.back(); return; }
+  try { history.replaceState({}, '', location.pathname); } catch (e) {}
+}
+window.addEventListener('popstate', function(){
+  var mod = document.getElementById('amod');
+  if (mod.classList.contains('open')) mod.classList.remove('open');
+});
+
+// ── OUVERTURE D'UN LIEN PARTAGÉ ───────────────────────────────────
+// viescroiseesci.com/?a=slug ouvre l'article, ?e=slug amène à l'épisode.
+function ouvrirDepuisLien(){
+  var p = new URLSearchParams(location.search);
+  var refArt = p.get('a'), refEp = p.get('e');
+  if (refArt) {
+    var a = arts.find(function(r){ return r.slug === refArt || r.id === refArt; });
+    if (a && enLigne(a)) { go('blog'); openArticle(a.id); return; }
+  }
+  if (refEp) {
+    var ep = eps.find(function(r){ return r.slug === refEp || r.id === refEp; });
+    if (ep && enLigne(ep)) {
+      go('episodes');
+      setTimeout(function(){
+        var carte = document.getElementById('ep-card-' + ep.id);
+        if (!carte) return;
+        carte.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        carte.style.transition = 'box-shadow .4s';
+        carte.style.boxShadow = '0 0 0 2px var(--gold)';
+        setTimeout(function(){ carte.style.boxShadow = ''; }, 2600);
+      }, 220);
+    }
+  }
+}
+
+// ── PHOTO EN GRAND (photo avec l'invité) ──────────────────────────
+function openImage(url){
+  if (!url) return;
+  document.getElementById('img-mod-src').src = url;
+  document.getElementById('img-mod').classList.add('open');
+}
+function closeImage(){
+  document.getElementById('img-mod').classList.remove('open');
+  document.getElementById('img-mod-src').removeAttribute('src');
+}
 
 // ── HELPERS ───────────────────────────────────────────────────────
 function x(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function fmt(iso){ if (!iso) return ''; return new Date(iso).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}); }
+function fmtDateHeure(iso){
+  if (!iso) return '';
+  var d = new Date(iso);
+  if (isNaN(d)) return '';
+  return d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}) + ' à ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+}
 function stLabel(s){ return {publie:'Publié',programme:'Programmé',brouillon:'Brouillon'}[s]||s; }
 function stClass(s){ return {publie:'live',programme:'soon',brouillon:'wip'}[s]||'wip'; }
 
@@ -952,11 +1551,14 @@ loadPublicData();
 // Lien personnel de pilotage d'Andréa : ?pilotage (ou #pilotage) ouvre
 // directement sa fenêtre de connexion, sans passer par les 5 taps sur le logo.
 // Si sa session est encore valide, on la remet directement dans son espace.
+// Détection volontairement exacte : une recherche de "andrea" n'importe où dans
+// l'adresse ouvrait la fenêtre de connexion dès qu'un article partagé portait ce
+// mot dans son titre (?a=andrea-...). On ne regarde que les paramètres eux-mêmes.
 (function(){
-  var s = (location.search || '').toLowerCase();
-  var h = (location.hash || '').toLowerCase();
-  var veutPilotage = s.indexOf('pilotage') > -1 || s.indexOf('andrea') > -1 ||
-                     h.indexOf('pilotage') > -1 || h.indexOf('andrea') > -1;
+  var p = new URLSearchParams(location.search);
+  var h = (location.hash || '').toLowerCase().replace('#', '');
+  var veutPilotage = p.has('pilotage') || p.has('andrea') ||
+                     h === 'pilotage' || h === 'andrea';
   SB.auth.getSession().then(function(r){
     if (r.data.session) { enterAdmin(); }
     else if (veutPilotage) { openGate(); }
