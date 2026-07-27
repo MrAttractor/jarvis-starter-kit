@@ -159,6 +159,31 @@
   .composer .mic.rec{background:#DC2626;border-color:#DC2626;color:#fff;animation:pl2 1.4s infinite}
   @keyframes pl2{0%{box-shadow:0 0 0 0 rgba(220,38,38,.5)}70%{box-shadow:0 0 0 8px rgba(220,38,38,0)}100%{box-shadow:0 0 0 0 rgba(220,38,38,0)}}
 
+  /* ADD button + editable rows + MODAL */
+  .addbtn{width:100%;min-height:46px;border:1.5px dashed var(--line);background:none;border-radius:12px;color:var(--or-d);font-weight:700;font-size:13.5px;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:6px}
+  .addbtn svg{width:16px;height:16px;stroke:var(--or-d);fill:none;stroke-width:2.4}
+  .li.edit{cursor:pointer}
+  .li.edit:active{background:rgba(242,92,5,.04)}
+  .act .body-edit{cursor:pointer}
+  .mbd{position:fixed;inset:0;background:rgba(22,19,15,.55);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:.2s;z-index:100}
+  .mbd.on{opacity:1;pointer-events:auto}
+  .modal{position:fixed;left:0;right:0;bottom:0;z-index:110;background:var(--sable);border-radius:22px 22px 0 0;transform:translateY(100%);transition:.28s cubic-bezier(.2,.8,.2,1);max-height:90vh;overflow-y:auto;max-width:var(--maxw);margin:0 auto;box-shadow:0 -10px 40px rgba(0,0,0,.28)}
+  .modal.on{transform:translateY(0)}
+  .mh{padding:16px 18px 8px;display:flex;align-items:center;justify-content:space-between}
+  .mh b{font-size:17px;font-weight:800}
+  .mh .x{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .mform{padding:6px 18px 18px}
+  .fg{margin-bottom:13px}
+  .fg label{display:block;font-size:12.5px;font-weight:700;color:var(--ink2);margin-bottom:5px}
+  .fg input,.fg select{width:100%;height:48px;border:1.5px solid var(--line);border-radius:11px;padding:0 13px;font-size:16px;font-family:inherit;background:#fff}
+  .fg input:focus,.fg select:focus{outline:none;border-color:var(--or)}
+  .fg.chk{display:flex;align-items:center;gap:10px}
+  .fg.chk input{width:22px;height:22px}
+  .fg.chk label{margin:0}
+  .mactions{display:flex;gap:10px;margin-top:16px}
+  .mactions .btn{width:auto;flex:1}
+  .btn-del{background:#fff;color:#C0392B;border:1.5px solid #F3C4C0;flex:0 0 auto!important;min-width:52px;padding:0 16px}
+
   /* GATE */
   #gate{position:fixed;inset:0;z-index:200;background:var(--noir);display:flex;align-items:center;justify-content:center;padding:24px;color:#F6EFE7;overflow:hidden}
   #gate .gphoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.3;z-index:1}
@@ -290,6 +315,13 @@
   </div>
 </div>
 
+<!-- MODAL EDITION -->
+<div class="mbd" id="mbd" onclick="closeModal()"></div>
+<div class="modal" id="modal">
+  <div class="mh"><b id="m-title">Modifier</b><button class="x" onclick="closeModal()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A1714" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+  <div class="mform" id="m-form"></div>
+</div>
+
 <script>
 /* ===== MONEY FLOW ===== */
 (function(){
@@ -383,37 +415,97 @@ function renderPulse(cap){
   var h=new Date().getHours(); $('hero-hello').innerHTML=(h<12?"Bonjour.":h<18?"Bon après-midi.":"Bonsoir.")+' Où en es-tu <em>ce mois</em> ?';
 }
 function renderActions(focus,pipe){
-  allActions=[];
+  DATA.focus=focus; allActions=[];
   focus.forEach(function(f){ allActions.push({id:f.id,tbl:'pilotage_focus',t:f.description,done:!!f.done,kind:'focus'}); });
   pipe.filter(function(p){return p.urgent;}).forEach(function(p){ allActions.push({id:null,t:'Relancer '+(p.nom||'un dossier')+(p.prochaine?' — '+p.prochaine:''),done:false,kind:'vente',meta:p.contact||''}); });
   paintActions(false);
 }
 function paintActions(showAll){
   var host=$('actions-list'); host.innerHTML='';
-  if(!allActions.length){ host.innerHTML='<div class="empty"><b>Rien de calé aujourd\'hui.</b>Dis à Roland ce que tu veux faire avancer.</div>'; return; }
+  if(!allActions.length){ host.innerHTML='<div class="empty"><b>Rien de calé aujourd\'hui.</b>Ajoute une action ou dis-le à Roland.</div>'+addBtn('focus','Ajouter une action'); return; }
   (showAll?allActions:allActions.slice(0,3)).forEach(function(it){
     var el=document.createElement('div'); el.className='act'+(it.done?' done':'');
-    el.innerHTML='<div class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg></div><div style="flex:1;min-width:0"><div class="t">'+esc(it.t)+'</div>'+(it.meta?'<div class="meta">'+esc(it.meta)+'</div>':'')+'<span class="tag'+(it.kind==='focus'?' focus':'')+'">'+(it.kind==='vente'?'Vente ciblée':'Focus')+'</span></div>';
-    if(it.tbl){ el.querySelector('.chk').onclick=(function(it,el){return function(){ var nd=!it.done; it.done=nd; el.classList.toggle('done',nd); fetch(SB_URL+"/rest/v1/pilotage_focus?id=eq."+it.id,{method:"PATCH",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify({done:nd})}).catch(function(){}); };})(it,el); }
+    el.innerHTML='<div class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg></div><div class="body-edit" style="flex:1;min-width:0"><div class="t">'+esc(it.t)+'</div>'+(it.meta?'<div class="meta">'+esc(it.meta)+'</div>':'')+'<span class="tag'+(it.kind==='focus'?' focus':'')+'">'+(it.kind==='vente'?'Vente ciblée':'Focus')+'</span></div>';
+    if(it.tbl){
+      el.querySelector('.chk').onclick=(function(it,el){return function(){ var nd=!it.done; it.done=nd; el.classList.toggle('done',nd); fetch(SB_URL+"/rest/v1/pilotage_focus?id=eq."+it.id,{method:"PATCH",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify({done:nd})}).catch(function(){}); };})(it,el);
+      el.querySelector('.body-edit').onclick=(function(id){return function(){ openEditById('focus',id); };})(it.id);
+    }
     host.appendChild(el);
   });
   if(!showAll && allActions.length>3){ var b=document.createElement('button'); b.className='more'; b.textContent='Voir les '+allActions.length+' actions →'; b.onclick=function(){ paintActions(true); }; host.appendChild(b); }
+  host.insertAdjacentHTML('beforeend', addBtn('focus','Ajouter une action'));
 }
 function renderFin(fin){
+  DATA.finances=fin;
   var mois=fin.filter(function(f){return moisCourant(f.date);}), e=0,s=0;
   mois.forEach(function(f){ if(isEntree(f.type)) e+=+(f.montant||0); else s+=+(f.montant||0); });
   CTX.entrees=e; CTX.sorties=s; var net=e-s;
-  $('body-finances').innerHTML='<div class="kpi"><span class="k">Entrées</span><span class="v pos num">'+fcfa(e)+'</span></div><div class="kpi"><span class="k">Sorties</span><span class="v neg num">'+fcfa(s)+'</span></div><div class="kpi"><span class="k">Net du mois</span><span class="v num" style="color:'+(net>=0?'var(--vt-d)':'var(--or-d)')+'">'+fcfa(net)+'</span></div>'+(fin.length?'':'<div class="empty">Parle à Roland pour enregistrer un mouvement.</div>');
+  var kpis='<div class="kpi"><span class="k">Entrées</span><span class="v pos num">'+fcfa(e)+'</span></div><div class="kpi"><span class="k">Sorties</span><span class="v neg num">'+fcfa(s)+'</span></div><div class="kpi"><span class="k">Net du mois</span><span class="v num" style="color:'+(net>=0?'var(--vt-d)':'var(--or-d)')+'">'+fcfa(net)+'</span></div>';
+  var liste=fin.slice(0,8).map(function(f){ var ent=isEntree(f.type); return '<div class="li edit" onclick="openEditById(\'finances\',\''+f.id+'\')"><div class="l"><b>'+esc(f.description||f.categorie||(ent?'Entrée':'Sortie'))+'</b><small>'+esc((f.date||'').slice(0,10))+'</small></div><span class="pill'+(ent?' vt':' hot')+'">'+(ent?'+':'−')+fcfa(f.montant)+'</span></div>'; }).join('');
+  $('body-finances').innerHTML=kpis+(liste?'<div style="margin-top:8px">'+liste+'</div>':'<div class="empty">Aucun mouvement.</div>')+addBtn('finances','Ajouter un mouvement');
 }
 function renderEnv(env){
-  $('body-enveloppes').innerHTML=env.length?env.slice(0,6).map(function(v){ var c=+(v.cible||0),ep=+(v.epargne||0),pct=c?Math.min(100,ep/c*100):0; return '<div class="env"><div class="env-top"><b>'+esc(v.nom||'Enveloppe')+'</b><span class="num">'+fcfa(ep)+(c?' / '+fcfa(c):'')+'</span></div><div class="env-bar"><i style="width:'+pct+'%"></i></div></div>'; }).join(''):'<div class="empty">Roland t\'aide à créer tes enveloppes.</div>';
+  DATA.enveloppes=env;
+  var body=env.length?env.map(function(v){ var c=+(v.cible||0),ep=+(v.epargne||0),pct=c?Math.min(100,ep/c*100):0; return '<div class="env edit" onclick="openEditById(\'enveloppes\',\''+v.id+'\')"><div class="env-top"><b>'+esc(v.nom||'Enveloppe')+'</b><span class="num">'+fcfa(ep)+(c?' / '+fcfa(c):'')+'</span></div><div class="env-bar"><i style="width:'+pct+'%"></i></div></div>'; }).join(''):'<div class="empty">Aucune enveloppe.</div>';
+  $('body-enveloppes').innerHTML=body+addBtn('enveloppes','Ajouter une enveloppe');
 }
 function renderPipe(pipe){
-  CTX.dossiers=pipe;
-  $('body-pipeline').innerHTML=pipe.length?pipe.slice(0,10).map(function(p){ return '<div class="li"><div class="l"><b>'+esc(p.nom||'Dossier')+'</b><small>'+esc([p.type,p.prochaine].filter(Boolean).join(' · ')||'—')+'</small></div><span class="pill'+(p.urgent?' hot':'')+'">'+esc(p.statut||(p.urgent?'Urgent':'En cours'))+'</span></div>'; }).join(''):'<div class="empty"><b>Pipeline vide.</b>Chaque besoin d\'argent = un dossier à ouvrir.</div>';
+  CTX.dossiers=pipe; DATA.pipeline=pipe;
+  var body=pipe.length?pipe.map(function(p){ return '<div class="li edit" onclick="openEditById(\'pipeline\',\''+p.id+'\')"><div class="l"><b>'+esc(p.nom||'Dossier')+'</b><small>'+esc([p.type,p.prochaine].filter(Boolean).join(' · ')||'—')+'</small></div><span class="pill'+(p.urgent?' hot':'')+'">'+esc(p.statut||(p.urgent?'Urgent':'En cours'))+'</span></div>'; }).join(''):'<div class="empty"><b>Pipeline vide.</b>Chaque besoin d\'argent = un dossier à ouvrir.</div>';
+  $('body-pipeline').innerHTML=body+addBtn('pipeline','Ajouter un dossier');
 }
 function renderProj(proj){
-  $('body-projets').innerHTML=proj.length?proj.slice(0,10).map(function(p){ var av=+(p.avancement||0); return '<div class="li" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px"><div class="l"><b>'+esc(p.nom||'Projet')+'</b><small>'+esc(p.prochaine_action||p.statut||'—')+'</small></div><span class="pill vt">'+av+'%</span></div><div class="prog"><i style="width:'+Math.min(100,av)+'%"></i></div></div>'; }).join(''):'<div class="empty">Aucun projet suivi.</div>';
+  DATA.projets=proj;
+  var body=proj.length?proj.map(function(p){ var av=+(p.avancement||0); return '<div class="li edit" style="display:block" onclick="openEditById(\'projets\',\''+p.id+'\')"><div style="display:flex;justify-content:space-between;gap:10px"><div class="l"><b>'+esc(p.nom||'Projet')+'</b><small>'+esc(p.prochaine_action||p.statut||'—')+'</small></div><span class="pill vt">'+av+'%</span></div><div class="prog"><i style="width:'+Math.min(100,av)+'%"></i></div></div>'; }).join(''):'<div class="empty">Aucun projet suivi.</div>';
+  $('body-projets').innerHTML=body+addBtn('projets','Ajouter un projet');
+}
+
+/* ===== EDITION (CRUD) ===== */
+var DATA={finances:[],enveloppes:[],pipeline:[],projets:[],focus:[]};
+var ENT={
+  finances:{table:'pilotage_finances',title:'Mouvement',fields:[
+    {k:'type',l:'Type',t:'select',opt:['entrée','sortie']},{k:'montant',l:'Montant (F)',t:'number'},
+    {k:'categorie',l:'Catégorie',t:'text'},{k:'description',l:'Description',t:'text'},{k:'date',l:'Date',t:'date'}]},
+  enveloppes:{table:'pilotage_enveloppes',title:'Enveloppe',fields:[
+    {k:'nom',l:'Nom',t:'text'},{k:'cible',l:'Cible (F)',t:'number'},{k:'epargne',l:'Déjà épargné (F)',t:'number'}]},
+  pipeline:{table:'pilotage_pipeline',title:'Dossier',fields:[
+    {k:'nom',l:'Nom',t:'text'},{k:'type',l:'Type',t:'text'},{k:'statut',l:'Statut',t:'text'},
+    {k:'prochaine',l:'Prochaine action',t:'text'},{k:'contact',l:'Contact',t:'text'},{k:'urgent',l:'Dossier chaud',t:'check'}]},
+  projets:{table:'pilotage_projets',title:'Projet',fields:[
+    {k:'nom',l:'Nom',t:'text'},{k:'statut',l:'Statut',t:'text'},{k:'avancement',l:'Avancement (%)',t:'number'},
+    {k:'prochaine_action',l:'Prochaine action',t:'text'},{k:'horizon',l:'Horizon',t:'select',opt:['court','moyen','long']}]},
+  focus:{table:'pilotage_focus',title:'Action',fields:[{k:'description',l:'Action',t:'text'}]}
+};
+var curEnt=null, curId=null;
+function addBtn(ent,label){ return '<button class="addbtn" onclick="openEdit(\''+ent+'\',null)"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>'+label+'</button>'; }
+function openEditById(ent,id){ var it=(DATA[ent]||[]).filter(function(x){return String(x.id)===String(id);})[0]; openEdit(ent,it||null); }
+function openEdit(ent,item){
+  curEnt=ent; curId=item?item.id:null; var cfg=ENT[ent];
+  $('m-title').textContent=(item?'Modifier — ':'Ajouter — ')+cfg.title;
+  var html='';
+  cfg.fields.forEach(function(f){
+    var v=item?(item[f.k]==null?'':item[f.k]):'';
+    if(f.t==='select'){ html+='<div class="fg"><label>'+f.l+'</label><select id="fld-'+f.k+'">'+f.opt.map(function(o){return '<option'+(String(v)===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select></div>'; }
+    else if(f.t==='check'){ html+='<div class="fg chk"><input type="checkbox" id="fld-'+f.k+'"'+(v?' checked':'')+'><label>'+f.l+'</label></div>'; }
+    else { if(f.t==='date'&&!v){ v=new Date().toISOString().slice(0,10); } var typ=f.t==='date'?'date':(f.t==='number'?'number':'text'); html+='<div class="fg"><label>'+f.l+'</label><input id="fld-'+f.k+'" type="'+typ+'"'+(f.t==='number'?' inputmode="numeric"':'')+' value="'+esc(v)+'"></div>'; }
+  });
+  html+='<div class="mactions">'+(item?'<button class="btn btn-del" onclick="deleteEntry()">Supprimer</button>':'')+'<button class="btn btn-acc" onclick="saveEntry()">Enregistrer</button></div>';
+  $('m-form').innerHTML=html; $('mbd').classList.add('on'); $('modal').classList.add('on');
+}
+function closeModal(){ $('mbd').classList.remove('on'); $('modal').classList.remove('on'); }
+function saveEntry(){
+  var cfg=ENT[curEnt], payload={};
+  cfg.fields.forEach(function(f){ var el=$('fld-'+f.k); if(!el)return; if(f.t==='check') payload[f.k]=el.checked; else if(f.t==='number') payload[f.k]=el.value===''?null:Number(el.value); else payload[f.k]=el.value; });
+  var path=SB_URL+"/rest/v1/"+cfg.table+(curId?"?id=eq."+curId:"");
+  fetch(path,{method:curId?"PATCH":"POST",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify(payload)})
+    .then(function(r){ if(r.ok){ closeModal(); loadAll(); } else { r.text().then(function(t){ alert("Erreur : "+t.slice(0,140)); }); } })
+    .catch(function(){ alert("Connexion interrompue."); });
+}
+function deleteEntry(){
+  if(!curId||!confirm("Supprimer cette entrée ?")) return;
+  fetch(SB_URL+"/rest/v1/"+ENT[curEnt].table+"?id=eq."+curId,{method:"DELETE",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,Prefer:"return=minimal"}})
+    .then(function(r){ if(r.ok){ closeModal(); loadAll(); } else { alert("Suppression impossible."); } })
+    .catch(function(){ alert("Connexion interrompue."); });
 }
 
 /* ROLAND */
