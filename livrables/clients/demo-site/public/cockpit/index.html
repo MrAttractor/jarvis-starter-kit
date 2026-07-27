@@ -44,6 +44,15 @@
 <script src="/cockpit/vendor/supabase.js"></script>
 
 <script>
+"use strict";
+
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 const {
   useState,
   useEffect,
@@ -55,7 +64,7 @@ const {
 } = supabase;
 const SB = createClient('https://lgdgbrivnhgeupqhkckd.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk');
 const T = `
-/* Police système (aucune dépendance externe) : chargement fiable sur mobile CI. */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap');
 :root{
   --bg:#FFFFFF;--sur:#FFFFFF;--card:#FFFFFF;--card2:#F7F3EC;
   --bdr:#EBE1D2;--bdr2:#F2ECE1;
@@ -173,14 +182,20 @@ const TODAY = new Date().toLocaleDateString('fr-FR', {
   month: 'long'
 });
 const fmt = n => n == null ? '—' : n.toLocaleString('fr-FR') + ' €';
-async function saveField(table, id, patch) {
-  const {
-    error
-  } = await SB.from(table).update(patch).eq('id', id);
-  return {
-    ok: !error,
-    error
-  };
+function saveField(_x, _x2, _x3) {
+  return _saveField.apply(this, arguments);
+}
+function _saveField() {
+  _saveField = _asyncToGenerator(function* (table, id, patch) {
+    const {
+      error
+    } = yield SB.from(table).update(patch).eq('id', id);
+    return {
+      ok: !error,
+      error
+    };
+  });
+  return _saveField.apply(this, arguments);
 }
 function Toast({
   message
@@ -217,7 +232,8 @@ function EditField({
     }
   }, [value]);
   const save = () => {
-    const txt = (ref.current?.innerText || '').trim();
+    var _ref$current;
+    const txt = (((_ref$current = ref.current) === null || _ref$current === void 0 ? void 0 : _ref$current.innerText) || '').trim();
     if (txt !== (value || '')) onSave(txt);else if (ref.current) ref.current.innerText = value || '';
   };
   return React.createElement("span", {
@@ -228,16 +244,17 @@ function EditField({
     onBlur: save,
     onKeyDown: e => {
       if (e.key === 'Enter') {
+        var _ref$current2;
         e.preventDefault();
-        ref.current?.blur();
+        (_ref$current2 = ref.current) === null || _ref$current2 === void 0 || _ref$current2.blur();
       }
       if (e.key === 'Escape') {
+        var _ref$current3;
         if (ref.current) ref.current.innerText = value || '';
-        ref.current?.blur();
+        (_ref$current3 = ref.current) === null || _ref$current3 === void 0 || _ref$current3.blur();
       }
     },
-    style: {
-      ...style,
+    style: _objectSpread(_objectSpread({}, style), {}, {
       cursor: 'text',
       borderBottom: '1px dashed rgba(0,0,0,.15)',
       paddingBottom: 1,
@@ -247,7 +264,7 @@ function EditField({
       minWidth: 0,
       overflowWrap: 'break-word',
       wordBreak: 'break-word'
-    }
+    })
   });
 }
 function Ic({
@@ -404,11 +421,10 @@ function SectionHead({
 }) {
   return React.createElement("div", {
     className: "row g12",
-    style: {
+    style: _objectSpread({
       alignItems: 'center',
-      marginBottom: 14,
-      ...style
-    }
+      marginBottom: 14
+    }, style)
   }, React.createElement("div", {
     style: {
       width: 42,
@@ -543,8 +559,7 @@ function StatutBadge({
       done: []
     });
   };
-  const toggle = i => setValidating(v => ({
-    ...v,
+  const toggle = i => setValidating(v => _objectSpread(_objectSpread({}, v), {}, {
     done: v.done.includes(i) ? v.done.filter(x => x !== i) : [...v.done, i]
   }));
   const confirm = () => {
@@ -908,48 +923,54 @@ function CapCard({
   const pct_conf = Math.min(100, cap.confirme / cap.objectif * 100);
   const pct_pipe = Math.min(100 - pct_conf, cap.pipeline_val / cap.objectif * 100);
   const moisRestants = Math.ceil((new Date('2026-08-31') - new Date()) / (1000 * 60 * 60 * 24 * 30));
-  const saveConfirme = async raw => {
-    const n = parseInt((raw || '').replace(/[^\d]/g, ''), 10);
-    if (isNaN(n)) return;
-    const prev = cap.confirme;
-    onChange({
-      ...cap,
-      confirme: n
-    });
-    const {
-      ok
-    } = await saveField('pilotage_cap', cap.id, {
-      confirme: n
-    });
-    if (!ok) {
-      onChange({
-        ...cap,
-        confirme: prev
+  const saveConfirme = function () {
+    var _ref = _asyncToGenerator(function* (raw) {
+      const n = parseInt((raw || '').replace(/[^\d]/g, ''), 10);
+      if (isNaN(n)) return;
+      const prev = cap.confirme;
+      onChange(_objectSpread(_objectSpread({}, cap), {}, {
+        confirme: n
+      }));
+      const {
+        ok
+      } = yield saveField('pilotage_cap', cap.id, {
+        confirme: n
       });
-      onError?.('Non enregistré, réessaie');
-    }
-  };
-  const savePipeline = async raw => {
-    const n = parseInt((raw || '').replace(/[^\d]/g, ''), 10);
-    if (isNaN(n)) return;
-    const prev = cap.pipeline_val;
-    onChange({
-      ...cap,
-      pipeline_val: n
+      if (!ok) {
+        onChange(_objectSpread(_objectSpread({}, cap), {}, {
+          confirme: prev
+        }));
+        onError === null || onError === void 0 || onError('Non enregistré, réessaie');
+      }
     });
-    const {
-      ok
-    } = await saveField('pilotage_cap', cap.id, {
-      pipeline_val: n
-    });
-    if (!ok) {
-      onChange({
-        ...cap,
-        pipeline_val: prev
+    return function saveConfirme(_x4) {
+      return _ref.apply(this, arguments);
+    };
+  }();
+  const savePipeline = function () {
+    var _ref2 = _asyncToGenerator(function* (raw) {
+      const n = parseInt((raw || '').replace(/[^\d]/g, ''), 10);
+      if (isNaN(n)) return;
+      const prev = cap.pipeline_val;
+      onChange(_objectSpread(_objectSpread({}, cap), {}, {
+        pipeline_val: n
+      }));
+      const {
+        ok
+      } = yield saveField('pilotage_cap', cap.id, {
+        pipeline_val: n
       });
-      onError?.('Non enregistré, réessaie');
-    }
-  };
+      if (!ok) {
+        onChange(_objectSpread(_objectSpread({}, cap), {}, {
+          pipeline_val: prev
+        }));
+        onError === null || onError === void 0 || onError('Non enregistré, réessaie');
+      }
+    });
+    return function savePipeline(_x5) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
   return React.createElement("div", {
     className: "card",
     style: {
@@ -1471,7 +1492,10 @@ function TabAujourdHui({
     if (u) return u;
     return (a.date_action || '9999') < (b.date_action || '9999') ? -1 : 1;
   }).slice(0, 3);
-  const envs = [...(enveloppes || [])].sort((a, b) => (a.priorite ?? 99) - (b.priorite ?? 99)).slice(0, 3);
+  const envs = [...(enveloppes || [])].sort((a, b) => {
+    var _a$priorite, _b$priorite;
+    return ((_a$priorite = a.priorite) !== null && _a$priorite !== void 0 ? _a$priorite : 99) - ((_b$priorite = b.priorite) !== null && _b$priorite !== void 0 ? _b$priorite : 99);
+  }).slice(0, 3);
   const famColor = f => f === 'A' ? 'var(--acc)' : f === 'D' ? 'var(--gold)' : f === 'B' ? 'var(--blu)' : 'var(--grn)';
   return React.createElement(Fragment, null, React.createElement(RubriqueHeader, {
     eyebrow: "Ta journ\xE9e",
@@ -1732,29 +1756,34 @@ function NouveauProspectModal({
   const [zone, setZone] = useState('');
   const [saving, setSaving] = useState(false);
   const valid = nom.trim() && famille && zone;
-  const handleSave = async () => {
-    if (!valid || saving) return;
-    setSaving(true);
-    const {
-      data,
-      error
-    } = await SB.from('pilotage_pipeline').insert({
-      nom: nom.trim(),
-      contact: wa.trim() || null,
-      activite: activite.trim() || null,
-      famille,
-      zone,
-      type: famille === 'A' ? 'App Métier' : famille === 'B' ? 'Consulting' : 'SaaS / Assists',
-      statut: 'En contact',
-      statut_color: 'neu',
-      prochaine: famille === 'A' ? 'Préparer maquette → caler présentation directe' : 'Brief découverte 30 min',
-      date_action: new Date().toLocaleDateString('fr-FR'),
-      priorite: 99,
-      urgent: false
-    }).select().single();
-    setSaving(false);
-    if (!error && data) onConfirm(data);
-  };
+  const handleSave = function () {
+    var _ref3 = _asyncToGenerator(function* () {
+      if (!valid || saving) return;
+      setSaving(true);
+      const {
+        data,
+        error
+      } = yield SB.from('pilotage_pipeline').insert({
+        nom: nom.trim(),
+        contact: wa.trim() || null,
+        activite: activite.trim() || null,
+        famille,
+        zone,
+        type: famille === 'A' ? 'App Métier' : famille === 'B' ? 'Consulting' : 'SaaS / Assists',
+        statut: 'En contact',
+        statut_color: 'neu',
+        prochaine: famille === 'A' ? 'Préparer maquette → caler présentation directe' : 'Brief découverte 30 min',
+        date_action: new Date().toLocaleDateString('fr-FR'),
+        priorite: 99,
+        urgent: false
+      }).select().single();
+      setSaving(false);
+      if (!error && data) onConfirm(data);
+    });
+    return function handleSave() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
   const famOptions = [['A', 'App Métier'], ['B', 'Consulting'], ['C', 'SaaS / Assists']];
   const zoneOptions = ['CI', 'France', 'International'];
   return React.createElement("div", {
@@ -1990,15 +2019,13 @@ function DevisEditor({
   const fmtN = n => (Number(n) || 0).toLocaleString('fr-FR') + ' ' + devise;
   const sumTotal = lignes.reduce((s, l) => s + (l.offert ? 0 : Number(l.prix) || 0), 0);
   const total = forceTotal !== '' ? Number(forceTotal) || 0 : sumTotal;
-  const setLigne = (i, k, v) => setLignes(a => a.map((x, j) => j === i ? {
-    ...x,
+  const setLigne = (i, k, v) => setLignes(a => a.map((x, j) => j === i ? _objectSpread(_objectSpread({}, x), {}, {
     [k]: v
-  } : x));
+  }) : x));
   const setCond = (i, v) => setConditions(a => a.map((x, j) => j === i ? v : x));
-  const setPay = (i, k, v) => setPaiement(a => a.map((x, j) => j === i ? {
-    ...x,
+  const setPay = (i, k, v) => setPaiement(a => a.map((x, j) => j === i ? _objectSpread(_objectSpread({}, x), {}, {
     [k]: v
-  } : x));
+  }) : x));
   const inp = {
     width: '100%',
     padding: '8px 9px',
@@ -2020,84 +2047,89 @@ function DevisEditor({
     cursor: 'pointer',
     fontFamily: 'inherit'
   };
-  const save = async () => {
-    setSaving(true);
-    setSaved(null);
-    const clean = lignes.filter(l => (l.nom || '').trim());
-    const config = {
-      mode: 'fixe',
-      date: new Date().toLocaleDateString('fr-FR', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      }),
-      client: d.nom || '',
-      projet: d.activite || 'votre projet',
-      devise,
-      submitUrl: 'https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/devis-accept',
-      waHelp: '33753902323',
-      waHelpText: 'Bonjour Mac Arthur, je regarde mon devis et j\'ai une question : ',
-      tag: 'Conseil en business & applications métier',
-      titre: titre.trim() || 'Votre devis <em>Attractor</em>',
-      intro: intro.trim(),
-      lignes: clean.map(l => ({
-        nom: (l.nom || '').trim(),
-        prix: Number(l.prix) || 0,
-        offert: !!l.offert
-      })),
-      total,
-      total_label: fmtN(total),
-      conditions: conditions.map(c => (c || '').trim()).filter(Boolean),
-      paiement: paiement.filter(p => (p.label || '').trim()).map(p => ({
-        label: (p.label || '').trim(),
-        montant: Number(p.montant) || 0
-      })),
-      limite: limite.trim(),
-      doneMsg: 'Votre accord a bien été enregistré et transmis à Mac Arthur.'
-    };
-    try {
-      let res;
-      if (pid) res = await SB.functions.invoke('generate-proposition', {
-        body: {
-          update: true,
-          id: pid,
-          config,
-          total,
-          statut: 'brouillon'
-        }
-      });else res = await SB.functions.invoke('generate-proposition', {
-        body: {
-          dossier_id: d.id,
-          config
-        }
-      });
-      const data = res.data;
-      if (res.error || data?.error) {
-        setSaved({
-          __error: data?.error || 'Erreur enregistrement'
+  const save = function () {
+    var _ref4 = _asyncToGenerator(function* () {
+      setSaving(true);
+      setSaved(null);
+      const clean = lignes.filter(l => (l.nom || '').trim());
+      const config = {
+        mode: 'fixe',
+        date: new Date().toLocaleDateString('fr-FR', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        }),
+        client: d.nom || '',
+        projet: d.activite || 'votre projet',
+        devise,
+        submitUrl: 'https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/devis-accept',
+        waHelp: '33753902323',
+        waHelpText: 'Bonjour Mac Arthur, je regarde mon devis et j\'ai une question : ',
+        tag: 'Conseil en business & applications métier',
+        titre: titre.trim() || 'Votre devis <em>Attractor</em>',
+        intro: intro.trim(),
+        lignes: clean.map(l => ({
+          nom: (l.nom || '').trim(),
+          prix: Number(l.prix) || 0,
+          offert: !!l.offert
+        })),
+        total,
+        total_label: fmtN(total),
+        conditions: conditions.map(c => (c || '').trim()).filter(Boolean),
+        paiement: paiement.filter(p => (p.label || '').trim()).map(p => ({
+          label: (p.label || '').trim(),
+          montant: Number(p.montant) || 0
+        })),
+        limite: limite.trim(),
+        doneMsg: 'Votre accord a bien été enregistré et transmis à Mac Arthur.'
+      };
+      try {
+        let res;
+        if (pid) res = yield SB.functions.invoke('generate-proposition', {
+          body: {
+            update: true,
+            id: pid,
+            config,
+            total,
+            statut: 'brouillon'
+          }
+        });else res = yield SB.functions.invoke('generate-proposition', {
+          body: {
+            dossier_id: d.id,
+            config
+          }
         });
-      } else {
-        const newId = data.id || pid;
-        if (!pid && newId) {
-          try {
-            await SB.from('pilotage_pipeline').update({
-              proposition_id: newId
-            }).eq('id', d.id);
-          } catch {}
+        const data = res.data;
+        if (res.error || data !== null && data !== void 0 && data.error) {
+          setSaved({
+            __error: (data === null || data === void 0 ? void 0 : data.error) || 'Erreur enregistrement'
+          });
+        } else {
+          const newId = data.id || pid;
+          if (!pid && newId) {
+            try {
+              yield SB.from('pilotage_pipeline').update({
+                proposition_id: newId
+              }).eq('id', d.id);
+            } catch (_unused) {}
+          }
+          setSaved({
+            id: newId,
+            numero: data.numero
+          });
+          onSaved && onSaved(newId, data.numero);
         }
+      } catch (_unused2) {
         setSaved({
-          id: newId,
-          numero: data.numero
+          __error: 'Erreur réseau'
         });
-        onSaved && onSaved(newId, data.numero);
       }
-    } catch {
-      setSaved({
-        __error: 'Erreur réseau'
-      });
-    }
-    setSaving(false);
-  };
+      setSaving(false);
+    });
+    return function save() {
+      return _ref4.apply(this, arguments);
+    };
+  }();
   return React.createElement("div", {
     style: {
       marginTop: 8
@@ -2142,11 +2174,10 @@ function DevisEditor({
       marginTop: 4
     }
   }, "Intro (optionnel)"), React.createElement("textarea", {
-    style: {
-      ...inp,
+    style: _objectSpread(_objectSpread({}, inp), {}, {
       minHeight: 46,
       resize: 'vertical'
-    },
+    }),
     value: intro,
     onChange: e => setIntro(e.target.value),
     placeholder: "Le contexte n\xE9goci\xE9, en une phrase"
@@ -2161,18 +2192,16 @@ function DevisEditor({
       alignItems: 'center'
     }
   }, React.createElement("input", {
-    style: {
-      ...inp,
+    style: _objectSpread(_objectSpread({}, inp), {}, {
       flex: 2
-    },
+    }),
     value: l.nom,
     onChange: e => setLigne(i, 'nom', e.target.value),
     placeholder: "Prestation"
   }), React.createElement("input", {
-    style: {
-      ...inp,
+    style: _objectSpread(_objectSpread({}, inp), {}, {
       width: 74
-    },
+    }),
     type: "number",
     value: l.prix,
     onChange: e => setLigne(i, 'prix', e.target.value),
@@ -2192,10 +2221,9 @@ function DevisEditor({
     onChange: e => setLigne(i, 'offert', e.target.checked)
   }), "offert"), React.createElement("button", {
     onClick: () => setLignes(a => a.filter((_, j) => j !== i)),
-    style: {
-      ...miniBtn,
+    style: _objectSpread(_objectSpread({}, miniBtn), {}, {
       padding: '6px 8px'
-    }
+    })
   }, "\u2715"))), React.createElement("button", {
     onClick: () => setLignes(a => [...a, {
       nom: '',
@@ -2211,10 +2239,9 @@ function DevisEditor({
   }, React.createElement("span", {
     className: "t-xs mut b"
   }, "Total ", forceTotal !== '' ? '(forcé)' : '(auto : ' + fmtN(sumTotal) + ')'), React.createElement("input", {
-    style: {
-      ...inp,
+    style: _objectSpread(_objectSpread({}, inp), {}, {
       width: 120
-    },
+    }),
     type: "number",
     value: forceTotal,
     onChange: e => setForceTotal(e.target.value),
@@ -2227,19 +2254,17 @@ function DevisEditor({
     key: i,
     className: "row g6"
   }, React.createElement("input", {
-    style: {
-      ...inp,
+    style: _objectSpread(_objectSpread({}, inp), {}, {
       flex: 1
-    },
+    }),
     value: c,
     onChange: e => setCond(i, e.target.value),
     placeholder: "Ex : d\xE9lai, p\xE9rim\xE8tre, contrepartie\u2026"
   }), React.createElement("button", {
     onClick: () => setConditions(a => a.filter((_, j) => j !== i)),
-    style: {
-      ...miniBtn,
+    style: _objectSpread(_objectSpread({}, miniBtn), {}, {
       padding: '6px 8px'
-    }
+    })
   }, "\u2715"))), React.createElement("button", {
     onClick: () => setConditions(a => [...a, '']),
     style: miniBtn
@@ -2254,28 +2279,25 @@ function DevisEditor({
       alignItems: 'center'
     }
   }, React.createElement("input", {
-    style: {
-      ...inp,
+    style: _objectSpread(_objectSpread({}, inp), {}, {
       flex: 2
-    },
+    }),
     value: p.label,
     onChange: e => setPay(i, 'label', e.target.value),
     placeholder: "Ex : Tranche 1 au d\xE9marrage"
   }), React.createElement("input", {
-    style: {
-      ...inp,
+    style: _objectSpread(_objectSpread({}, inp), {}, {
       width: 84
-    },
+    }),
     type: "number",
     value: p.montant,
     onChange: e => setPay(i, 'montant', e.target.value),
     placeholder: "Montant"
   }), React.createElement("button", {
     onClick: () => setPaiement(a => a.filter((_, j) => j !== i)),
-    style: {
-      ...miniBtn,
+    style: _objectSpread(_objectSpread({}, miniBtn), {}, {
       padding: '6px 8px'
-    }
+    })
   }, "\u2715"))), React.createElement("button", {
     onClick: () => setPaiement(a => [...a, {
       label: '',
@@ -2306,7 +2328,7 @@ function DevisEditor({
       fontFamily: 'inherit',
       opacity: saving ? 0.6 : 1
     }
-  }, saving ? 'Enregistrement…' : pid ? 'Enregistrer et mettre à jour le lien' : 'Créer le devis et le lien'), saved?.__error && React.createElement("div", {
+  }, saving ? 'Enregistrement…' : pid ? 'Enregistrer et mettre à jour le lien' : 'Créer le devis et le lien'), (saved === null || saved === void 0 ? void 0 : saved.__error) && React.createElement("div", {
     style: {
       color: 'var(--red)',
       fontSize: 11.5,
@@ -2344,85 +2366,104 @@ function DossierCard({
   const [payResult, setPayResult] = useState(null);
   const [prop, setProp] = useState(null);
   const [propLoading, setPropLoading] = useState(false);
-  const genProposition = async () => {
-    setPropLoading(true);
-    setProp(null);
-    try {
-      const {
-        data,
-        error
-      } = await SB.functions.invoke('generate-proposition', {
-        body: {
-          dossier_id: d.id
-        }
-      });
-      if (error || data?.error) setProp({
-        __error: data?.error || 'Erreur génération proposition'
-      });else setProp(data);
-    } catch {
-      setProp({
-        __error: 'Erreur réseau'
-      });
-    }
-    setPropLoading(false);
-  };
-  const generatePayment = async () => {
-    if (!devis?.devis_id) return;
-    setPayLoading(true);
-    setPayResult(null);
-    try {
-      const {
-        data,
-        error
-      } = await SB.functions.invoke('init-pilotage-payment', {
-        body: {
-          devis_id: devis.devis_id,
-          percentage: Number(payPct),
-          channel: payChannel
-        }
-      });
-      if (error || data?.error) setPayResult({
-        __error: data?.error || 'Erreur génération du lien'
-      });else setPayResult(data);
-    } catch {
-      setPayResult({
-        __error: 'Erreur réseau'
-      });
-    }
-    setPayLoading(false);
-  };
-  const generateDevis = async () => {
-    setDevisLoading(true);
-    setDevis(null);
-    try {
-      const {
-        data,
-        error
-      } = await SB.functions.invoke('generate-devis', {
-        body: {
-          dossier_id: d.id
-        }
-      });
-      if (error || data?.error) setDevis({
-        __error: data?.error || 'Erreur génération devis'
-      });else setDevis(data);
-    } catch {
-      setDevis({
-        __error: 'Erreur réseau'
-      });
-    }
-    setDevisLoading(false);
-  };
-  const validerDevis = async () => {
-    if (!devis?.devis_id) return;
-    await SB.from('pilotage_devis').update({
-      statut: 'valide'
-    }).eq('id', devis.devis_id);
-    setDevis(prev => ({
-      ...prev,
-      statut: 'valide'
-    }));
-  };
+  const genProposition = function () {
+    var _ref5 = _asyncToGenerator(function* () {
+      setPropLoading(true);
+      setProp(null);
+      try {
+        const {
+          data,
+          error
+        } = yield SB.functions.invoke('generate-proposition', {
+          body: {
+            dossier_id: d.id
+          }
+        });
+        if (error || data !== null && data !== void 0 && data.error) setProp({
+          __error: (data === null || data === void 0 ? void 0 : data.error) || 'Erreur génération proposition'
+        });else setProp(data);
+      } catch (_unused3) {
+        setProp({
+          __error: 'Erreur réseau'
+        });
+      }
+      setPropLoading(false);
+    });
+    return function genProposition() {
+      return _ref5.apply(this, arguments);
+    };
+  }();
+  const generatePayment = function () {
+    var _ref6 = _asyncToGenerator(function* () {
+      if (!(devis !== null && devis !== void 0 && devis.devis_id)) return;
+      setPayLoading(true);
+      setPayResult(null);
+      try {
+        const {
+          data,
+          error
+        } = yield SB.functions.invoke('init-pilotage-payment', {
+          body: {
+            devis_id: devis.devis_id,
+            percentage: Number(payPct),
+            channel: payChannel
+          }
+        });
+        if (error || data !== null && data !== void 0 && data.error) setPayResult({
+          __error: (data === null || data === void 0 ? void 0 : data.error) || 'Erreur génération du lien'
+        });else setPayResult(data);
+      } catch (_unused4) {
+        setPayResult({
+          __error: 'Erreur réseau'
+        });
+      }
+      setPayLoading(false);
+    });
+    return function generatePayment() {
+      return _ref6.apply(this, arguments);
+    };
+  }();
+  const generateDevis = function () {
+    var _ref7 = _asyncToGenerator(function* () {
+      setDevisLoading(true);
+      setDevis(null);
+      try {
+        const {
+          data,
+          error
+        } = yield SB.functions.invoke('generate-devis', {
+          body: {
+            dossier_id: d.id
+          }
+        });
+        if (error || data !== null && data !== void 0 && data.error) setDevis({
+          __error: (data === null || data === void 0 ? void 0 : data.error) || 'Erreur génération devis'
+        });else setDevis(data);
+      } catch (_unused5) {
+        setDevis({
+          __error: 'Erreur réseau'
+        });
+      }
+      setDevisLoading(false);
+    });
+    return function generateDevis() {
+      return _ref7.apply(this, arguments);
+    };
+  }();
+  const validerDevis = function () {
+    var _ref8 = _asyncToGenerator(function* () {
+      if (!(devis !== null && devis !== void 0 && devis.devis_id)) return;
+      yield SB.from('pilotage_devis').update({
+        statut: 'valide'
+      }).eq('id', devis.devis_id);
+      setDevis(prev => _objectSpread(_objectSpread({}, prev), {}, {
+        statut: 'valide'
+      }));
+    });
+    return function validerDevis() {
+      return _ref8.apply(this, arguments);
+    };
+  }();
   const [expanded, setExpanded] = useState(false);
   const shortNext = (d.prochaine || '').length > 72 ? (d.prochaine || '').slice(0, 72) + '…' : d.prochaine || '';
   return React.createElement("div", {
@@ -2788,7 +2829,7 @@ function DossierCard({
       textAlign: 'center',
       padding: '8px 0'
     }
-  }, "G\xE9n\xE9ration de la proposition\u2026"), prop?.__error && React.createElement("div", {
+  }, "G\xE9n\xE9ration de la proposition\u2026"), (prop === null || prop === void 0 ? void 0 : prop.__error) && React.createElement("div", {
     style: {
       padding: '8px 10px',
       borderRadius: 8,
@@ -2797,8 +2838,8 @@ function DossierCard({
       fontSize: 11.5,
       fontWeight: 600
     }
-  }, prop.__error), (prop?.id || d.proposition_id) && !prop?.__error && (() => {
-    const pid = prop?.id || d.proposition_id;
+  }, prop.__error), ((prop === null || prop === void 0 ? void 0 : prop.id) || d.proposition_id) && !(prop !== null && prop !== void 0 && prop.__error) && (() => {
+    const pid = (prop === null || prop === void 0 ? void 0 : prop.id) || d.proposition_id;
     const url = `https://demo.agenceattractor.com/proposition?id=${pid}`;
     const waMsg = `Bonjour ${d.nom || ''}, voici votre proposition Mr Attractor. Vous composez ce que vous voulez, le total se calcule tout seul, et vous validez en un clic : ${url}`;
     const waNum = (d.contact || '').replace(/[\s+\-()]/g, '');
@@ -2815,7 +2856,7 @@ function DossierCard({
         fontSize: 12.5,
         marginBottom: 8
       }
-    }, "Lien proposition ", prop?.numero ? '· ' + prop.numero : ''), React.createElement("input", {
+    }, "Lien proposition ", prop !== null && prop !== void 0 && prop.numero ? '· ' + prop.numero : ''), React.createElement("input", {
       readOnly: true,
       value: url,
       onClick: e => e.target.select(),
@@ -2885,7 +2926,7 @@ function DossierCard({
     }, "Envoyer WA")));
   })(), React.createElement(DevisEditor, {
     d: d,
-    pid: prop?.id || d.proposition_id,
+    pid: (prop === null || prop === void 0 ? void 0 : prop.id) || d.proposition_id,
     onSaved: (id, numero) => setProp({
       id,
       numero
@@ -2915,7 +2956,7 @@ function DossierCard({
       textAlign: 'center',
       padding: '8px 0'
     }
-  }, "Calcul du devis\u2026"), devis?.__error && React.createElement("div", {
+  }, "Calcul du devis\u2026"), (devis === null || devis === void 0 ? void 0 : devis.__error) && React.createElement("div", {
     style: {
       padding: '8px 10px',
       borderRadius: 8,
@@ -3047,11 +3088,10 @@ function DossierCard({
     max: "100",
     value: payPct,
     onChange: e => setPayPct(e.target.value),
-    style: {
-      ...iStyle,
+    style: _objectSpread(_objectSpread({}, iStyle), {}, {
       padding: '8px 10px',
       fontSize: 13
-    }
+    })
   })), React.createElement("div", {
     className: "col g3",
     style: {
@@ -3062,11 +3102,10 @@ function DossierCard({
   }, "Canal"), React.createElement("select", {
     value: payChannel,
     onChange: e => setPayChannel(e.target.value),
-    style: {
-      ...iStyle,
+    style: _objectSpread(_objectSpread({}, iStyle), {}, {
       padding: '8px 10px',
       fontSize: 13
-    }
+    })
   }, React.createElement("option", {
     value: "WAVECI"
   }, "Wave"), React.createElement("option", {
@@ -3091,7 +3130,7 @@ function DossierCard({
       fontFamily: 'inherit',
       opacity: payLoading ? .6 : 1
     }
-  }, payLoading ? 'Génération…' : `Générer le lien (${payPct}% = ${Math.round(devis.setup_ht * Number(payPct || 0) / 100)} FCFA)`), payResult?.__error && React.createElement("div", {
+  }, payLoading ? 'Génération…' : `Générer le lien (${payPct}% = ${Math.round(devis.setup_ht * Number(payPct || 0) / 100)} FCFA)`), (payResult === null || payResult === void 0 ? void 0 : payResult.__error) && React.createElement("div", {
     style: {
       marginTop: 8,
       padding: '8px 10px',
@@ -3101,7 +3140,7 @@ function DossierCard({
       fontSize: 11.5,
       fontWeight: 600
     }
-  }, payResult.__error), payResult?.url && React.createElement("div", {
+  }, payResult.__error), (payResult === null || payResult === void 0 ? void 0 : payResult.url) && React.createElement("div", {
     style: {
       marginTop: 8
     }
@@ -3146,107 +3185,125 @@ function DechargeVocalePipeline({
   const [saving, setSaving] = useState(false);
   const recorderRef = useRef(null);
   const chunksRef = useRef([]);
-  const startRecording = async () => {
-    setErrMsg('');
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true
-      });
-      const recorder = new MediaRecorder(stream, {
-        mimeType: MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4'
-      });
-      chunksRef.current = [];
-      recorder.ondataavailable = e => {
-        if (e.data.size > 0) chunksRef.current.push(e.data);
-      };
-      recorder.onstop = () => {
-        stream.getTracks().forEach(t => t.stop());
-        processAudio(recorder.mimeType);
-      };
-      recorderRef.current = recorder;
-      recorder.start(250);
-      setPhase('recording');
-    } catch {
-      setErrMsg("Accès micro refusé — autorise le micro dans les paramètres du navigateur.");
-    }
-  };
+  const startRecording = function () {
+    var _ref9 = _asyncToGenerator(function* () {
+      setErrMsg('');
+      try {
+        const stream = yield navigator.mediaDevices.getUserMedia({
+          audio: true
+        });
+        const recorder = new MediaRecorder(stream, {
+          mimeType: MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4'
+        });
+        chunksRef.current = [];
+        recorder.ondataavailable = e => {
+          if (e.data.size > 0) chunksRef.current.push(e.data);
+        };
+        recorder.onstop = () => {
+          stream.getTracks().forEach(t => t.stop());
+          processAudio(recorder.mimeType);
+        };
+        recorderRef.current = recorder;
+        recorder.start(250);
+        setPhase('recording');
+      } catch (_unused6) {
+        setErrMsg("Accès micro refusé — autorise le micro dans les paramètres du navigateur.");
+      }
+    });
+    return function startRecording() {
+      return _ref9.apply(this, arguments);
+    };
+  }();
   const stopRecording = () => {
-    if (recorderRef.current?.state === 'recording') {
+    var _recorderRef$current;
+    if (((_recorderRef$current = recorderRef.current) === null || _recorderRef$current === void 0 ? void 0 : _recorderRef$current.state) === 'recording') {
       recorderRef.current.stop();
       setPhase('processing');
     }
   };
-  const processAudio = async mimeType => {
-    try {
-      const blob = new Blob(chunksRef.current, {
-        type: mimeType
-      });
-      if (blob.size < 1000) {
+  const processAudio = function () {
+    var _ref0 = _asyncToGenerator(function* (mimeType) {
+      try {
+        var _data$prospect, _data$prospect2, _data$prospect3, _data$prospect4, _data$prospect5;
+        const blob = new Blob(chunksRef.current, {
+          type: mimeType
+        });
+        if (blob.size < 1000) {
+          setPhase('idle');
+          setErrMsg('Enregistrement trop court — maintiens et parle.');
+          return;
+        }
+        const audio_b64 = yield new Promise((res, rej) => {
+          const r = new FileReader();
+          r.onloadend = () => res(r.result.split(',')[1]);
+          r.onerror = rej;
+          r.readAsDataURL(blob);
+        });
+        const {
+          data,
+          error
+        } = yield SB.functions.invoke('process-dump-pilotage', {
+          body: {
+            audio_b64,
+            audio_type: mimeType
+          }
+        });
+        if (error || data !== null && data !== void 0 && data.error) {
+          setPhase('idle');
+          setErrMsg((data === null || data === void 0 ? void 0 : data.error) || 'Erreur de traitement');
+          return;
+        }
+        setTranscript(data.transcript || '');
+        setDraft({
+          nom: ((_data$prospect = data.prospect) === null || _data$prospect === void 0 ? void 0 : _data$prospect.nom) || '',
+          activite: ((_data$prospect2 = data.prospect) === null || _data$prospect2 === void 0 ? void 0 : _data$prospect2.activite) || '',
+          besoin: ((_data$prospect3 = data.prospect) === null || _data$prospect3 === void 0 ? void 0 : _data$prospect3.besoin) || '',
+          zone: ((_data$prospect4 = data.prospect) === null || _data$prospect4 === void 0 ? void 0 : _data$prospect4.zone) || 'CI',
+          contact: ((_data$prospect5 = data.prospect) === null || _data$prospect5 === void 0 ? void 0 : _data$prospect5.contact) || ''
+        });
+        setPhase('review');
+      } catch (_unused7) {
         setPhase('idle');
-        setErrMsg('Enregistrement trop court — maintiens et parle.');
-        return;
+        setErrMsg('Erreur réseau');
       }
-      const audio_b64 = await new Promise((res, rej) => {
-        const r = new FileReader();
-        r.onloadend = () => res(r.result.split(',')[1]);
-        r.onerror = rej;
-        r.readAsDataURL(blob);
-      });
+    });
+    return function processAudio(_x6) {
+      return _ref0.apply(this, arguments);
+    };
+  }();
+  const confirmDraft = function () {
+    var _ref1 = _asyncToGenerator(function* () {
+      var _draft$nom;
+      if (!(draft !== null && draft !== void 0 && (_draft$nom = draft.nom) !== null && _draft$nom !== void 0 && _draft$nom.trim()) || saving) return;
+      setSaving(true);
       const {
         data,
         error
-      } = await SB.functions.invoke('process-dump-pilotage', {
-        body: {
-          audio_b64,
-          audio_type: mimeType
-        }
-      });
-      if (error || data?.error) {
-        setPhase('idle');
-        setErrMsg(data?.error || 'Erreur de traitement');
-        return;
+      } = yield SB.from('pilotage_pipeline').insert({
+        nom: draft.nom.trim(),
+        activite: draft.activite || null,
+        besoin: draft.besoin || null,
+        contact: draft.contact || null,
+        zone: draft.zone,
+        famille: 'A',
+        type: 'App Métier',
+        statut: 'Nouveau',
+        statut_color: 'neu',
+        prochaine: 'Qualifier le besoin',
+        date_action: new Date().toLocaleDateString('fr-FR'),
+        priorite: 99,
+        urgent: false
+      }).select().single();
+      setSaving(false);
+      if (!error && data) {
+        onAddProspect(data);
+        reset();
       }
-      setTranscript(data.transcript || '');
-      setDraft({
-        nom: data.prospect?.nom || '',
-        activite: data.prospect?.activite || '',
-        besoin: data.prospect?.besoin || '',
-        zone: data.prospect?.zone || 'CI',
-        contact: data.prospect?.contact || ''
-      });
-      setPhase('review');
-    } catch {
-      setPhase('idle');
-      setErrMsg('Erreur réseau');
-    }
-  };
-  const confirmDraft = async () => {
-    if (!draft?.nom?.trim() || saving) return;
-    setSaving(true);
-    const {
-      data,
-      error
-    } = await SB.from('pilotage_pipeline').insert({
-      nom: draft.nom.trim(),
-      activite: draft.activite || null,
-      besoin: draft.besoin || null,
-      contact: draft.contact || null,
-      zone: draft.zone,
-      famille: 'A',
-      type: 'App Métier',
-      statut: 'Nouveau',
-      statut_color: 'neu',
-      prochaine: 'Qualifier le besoin',
-      date_action: new Date().toLocaleDateString('fr-FR'),
-      priorite: 99,
-      urgent: false
-    }).select().single();
-    setSaving(false);
-    if (!error && data) {
-      onAddProspect(data);
-      reset();
-    }
-  };
+    });
+    return function confirmDraft() {
+      return _ref1.apply(this, arguments);
+    };
+  }();
   const reset = () => {
     setPhase('idle');
     setTranscript('');
@@ -3346,40 +3403,35 @@ function DechargeVocalePipeline({
     }
   }, "\"", transcript, "\""), React.createElement("input", {
     value: draft.nom,
-    onChange: e => setDraft({
-      ...draft,
+    onChange: e => setDraft(_objectSpread(_objectSpread({}, draft), {}, {
       nom: e.target.value
-    }),
+    })),
     placeholder: "Nom / pr\xE9nom *",
     style: iStyle
   }), React.createElement("input", {
     value: draft.activite,
-    onChange: e => setDraft({
-      ...draft,
+    onChange: e => setDraft(_objectSpread(_objectSpread({}, draft), {}, {
       activite: e.target.value
-    }),
+    })),
     placeholder: "Activit\xE9",
     style: iStyle
   }), React.createElement("input", {
     value: draft.besoin,
-    onChange: e => setDraft({
-      ...draft,
+    onChange: e => setDraft(_objectSpread(_objectSpread({}, draft), {}, {
       besoin: e.target.value
-    }),
+    })),
     placeholder: "Besoin",
     style: iStyle
   }), React.createElement("div", {
     className: "row g8"
   }, React.createElement("select", {
     value: draft.zone,
-    onChange: e => setDraft({
-      ...draft,
+    onChange: e => setDraft(_objectSpread(_objectSpread({}, draft), {}, {
       zone: e.target.value
-    }),
-    style: {
-      ...iStyle,
+    })),
+    style: _objectSpread(_objectSpread({}, iStyle), {}, {
       flex: 1
-    }
+    })
   }, React.createElement("option", {
     value: "CI"
   }, "C\xF4te d'Ivoire"), React.createElement("option", {
@@ -3388,15 +3440,13 @@ function DechargeVocalePipeline({
     value: "International"
   }, "International")), React.createElement("input", {
     value: draft.contact,
-    onChange: e => setDraft({
-      ...draft,
+    onChange: e => setDraft(_objectSpread(_objectSpread({}, draft), {}, {
       contact: e.target.value
-    }),
+    })),
     placeholder: "WhatsApp",
-    style: {
-      ...iStyle,
+    style: _objectSpread(_objectSpread({}, iStyle), {}, {
       flex: 1
-    }
+    })
   })), React.createElement("div", {
     className: "row g8"
   }, React.createElement("button", {
@@ -4282,21 +4332,25 @@ function AlimenterModal({
   const [montant, setMontant] = useState('');
   const [saving, setSaving] = useState(false);
   const val = montant && parseFloat(montant) > 0;
-  const save = async () => {
-    if (!val || saving) return;
-    setSaving(true);
-    const newEpargne = (env.epargne || 0) + parseFloat(montant);
-    const {
-      error
-    } = await SB.from('pilotage_enveloppes').update({
-      epargne: newEpargne
-    }).eq('id', env.id);
-    setSaving(false);
-    if (!error) onConfirm({
-      ...env,
-      epargne: newEpargne
+  const save = function () {
+    var _ref10 = _asyncToGenerator(function* () {
+      if (!val || saving) return;
+      setSaving(true);
+      const newEpargne = (env.epargne || 0) + parseFloat(montant);
+      const {
+        error
+      } = yield SB.from('pilotage_enveloppes').update({
+        epargne: newEpargne
+      }).eq('id', env.id);
+      setSaving(false);
+      if (!error) onConfirm(_objectSpread(_objectSpread({}, env), {}, {
+        epargne: newEpargne
+      }));
     });
-  };
+    return function save() {
+      return _ref10.apply(this, arguments);
+    };
+  }();
   return React.createElement("div", {
     style: {
       position: 'fixed',
@@ -4594,42 +4648,52 @@ function FinanceModal({
   onCancel
 }) {
   const isEdit = !!entry;
-  const [type, setType] = useState(entry?.type || 'entree');
-  const [cat, setCat] = useState(entry?.categorie || 'pro');
+  const [type, setType] = useState((entry === null || entry === void 0 ? void 0 : entry.type) || 'entree');
+  const [cat, setCat] = useState((entry === null || entry === void 0 ? void 0 : entry.categorie) || 'pro');
   const [montant, setMontant] = useState(entry ? String(entry.montant) : '');
-  const [desc, setDesc] = useState(entry?.description || '');
-  const [notes, setNotes] = useState(entry?.notes || '');
-  const [date, setDate] = useState(entry?.date || new Date().toISOString().split('T')[0]);
+  const [desc, setDesc] = useState((entry === null || entry === void 0 ? void 0 : entry.description) || '');
+  const [notes, setNotes] = useState((entry === null || entry === void 0 ? void 0 : entry.notes) || '');
+  const [date, setDate] = useState((entry === null || entry === void 0 ? void 0 : entry.date) || new Date().toISOString().split('T')[0]);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const valid = montant && parseFloat(montant) > 0 && desc.trim();
-  const save = async () => {
-    if (!valid || saving) return;
-    setSaving(true);
-    const payload = {
-      type,
-      categorie: cat,
-      montant: parseFloat(montant),
-      description: desc.trim(),
-      notes: notes.trim() || null,
-      date
+  const save = function () {
+    var _ref11 = _asyncToGenerator(function* () {
+      if (!valid || saving) return;
+      setSaving(true);
+      const payload = {
+        type,
+        categorie: cat,
+        montant: parseFloat(montant),
+        description: desc.trim(),
+        notes: notes.trim() || null,
+        date
+      };
+      const {
+        data,
+        error
+      } = yield isEdit ? SB.from('pilotage_finances').update(payload).eq('id', entry.id).select().single() : SB.from('pilotage_finances').insert(payload).select().single();
+      setSaving(false);
+      if (!error && data) onConfirm(data);
+    });
+    return function save() {
+      return _ref11.apply(this, arguments);
     };
-    const {
-      data,
-      error
-    } = await (isEdit ? SB.from('pilotage_finances').update(payload).eq('id', entry.id).select().single() : SB.from('pilotage_finances').insert(payload).select().single());
-    setSaving(false);
-    if (!error && data) onConfirm(data);
-  };
-  const remove = async () => {
-    if (deleting) return;
-    setDeleting(true);
-    const {
-      error
-    } = await SB.from('pilotage_finances').delete().eq('id', entry.id);
-    setDeleting(false);
-    if (!error) onDelete(entry.id);
-  };
+  }();
+  const remove = function () {
+    var _ref12 = _asyncToGenerator(function* () {
+      if (deleting) return;
+      setDeleting(true);
+      const {
+        error
+      } = yield SB.from('pilotage_finances').delete().eq('id', entry.id);
+      setDeleting(false);
+      if (!error) onDelete(entry.id);
+    });
+    return function remove() {
+      return _ref12.apply(this, arguments);
+    };
+  }();
   return React.createElement("div", {
     style: {
       position: 'fixed',
@@ -4807,11 +4871,10 @@ function FinanceModal({
     onChange: e => setNotes(e.target.value),
     rows: 2,
     placeholder: "D\xE9tail, r\xE9f\xE9rence, contexte\u2026",
-    style: {
-      ...iStyle,
+    style: _objectSpread(_objectSpread({}, iStyle), {}, {
       resize: 'vertical',
       fontFamily: 'inherit'
-    }
+    })
   })), React.createElement("div", {
     style: {
       display: 'flex',
@@ -4872,38 +4935,48 @@ function ChargeModal({
   onCancel
 }) {
   const isEdit = !!charge;
-  const [nom, setNom] = useState(charge?.nom || '');
+  const [nom, setNom] = useState((charge === null || charge === void 0 ? void 0 : charge.nom) || '');
   const [montant, setMontant] = useState(charge ? String(charge.montant) : '');
-  const [type, setType] = useState(charge?.type || 'fixe');
-  const [cat, setCat] = useState(charge?.categorie || 'perso');
+  const [type, setType] = useState((charge === null || charge === void 0 ? void 0 : charge.type) || 'fixe');
+  const [cat, setCat] = useState((charge === null || charge === void 0 ? void 0 : charge.categorie) || 'perso');
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const valid = nom.trim() && montant && parseFloat(montant) > 0;
-  const save = async () => {
-    if (!valid || saving) return;
-    setSaving(true);
-    const payload = {
-      nom: nom.trim(),
-      montant: parseFloat(montant),
-      type,
-      categorie: cat
+  const save = function () {
+    var _ref13 = _asyncToGenerator(function* () {
+      if (!valid || saving) return;
+      setSaving(true);
+      const payload = {
+        nom: nom.trim(),
+        montant: parseFloat(montant),
+        type,
+        categorie: cat
+      };
+      const {
+        data,
+        error
+      } = yield isEdit ? SB.from('pilotage_charges').update(payload).eq('id', charge.id).select().single() : SB.from('pilotage_charges').insert(payload).select().single();
+      setSaving(false);
+      if (!error && data) onConfirm(data);
+    });
+    return function save() {
+      return _ref13.apply(this, arguments);
     };
-    const {
-      data,
-      error
-    } = await (isEdit ? SB.from('pilotage_charges').update(payload).eq('id', charge.id).select().single() : SB.from('pilotage_charges').insert(payload).select().single());
-    setSaving(false);
-    if (!error && data) onConfirm(data);
-  };
-  const remove = async () => {
-    if (deleting) return;
-    setDeleting(true);
-    const {
-      error
-    } = await SB.from('pilotage_charges').delete().eq('id', charge.id);
-    setDeleting(false);
-    if (!error) onDelete(charge.id);
-  };
+  }();
+  const remove = function () {
+    var _ref14 = _asyncToGenerator(function* () {
+      if (deleting) return;
+      setDeleting(true);
+      const {
+        error
+      } = yield SB.from('pilotage_charges').delete().eq('id', charge.id);
+      setDeleting(false);
+      if (!error) onDelete(charge.id);
+    });
+    return function remove() {
+      return _ref14.apply(this, arguments);
+    };
+  }();
   return React.createElement("div", {
     style: {
       position: 'fixed',
@@ -5274,112 +5347,128 @@ function CoachFinancier({
   const [recErr, setRecErr] = useState('');
   const recorderRef = useRef(null);
   const chunksRef = useRef([]);
-  const startRec = async () => {
-    setRecErr('');
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true
-      });
-      const recorder = new MediaRecorder(stream, {
-        mimeType: MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4'
-      });
-      chunksRef.current = [];
-      recorder.ondataavailable = e => {
-        if (e.data.size > 0) chunksRef.current.push(e.data);
-      };
-      recorder.onstop = () => {
-        stream.getTracks().forEach(t => t.stop());
-        processRecAudio(recorder.mimeType);
-      };
-      recorderRef.current = recorder;
-      recorder.start(250);
-      setRecPhase('recording');
-    } catch {
-      setRecErr("Accès micro refusé — autorise le micro dans les paramètres du navigateur.");
-    }
-  };
+  const startRec = function () {
+    var _ref15 = _asyncToGenerator(function* () {
+      setRecErr('');
+      try {
+        const stream = yield navigator.mediaDevices.getUserMedia({
+          audio: true
+        });
+        const recorder = new MediaRecorder(stream, {
+          mimeType: MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4'
+        });
+        chunksRef.current = [];
+        recorder.ondataavailable = e => {
+          if (e.data.size > 0) chunksRef.current.push(e.data);
+        };
+        recorder.onstop = () => {
+          stream.getTracks().forEach(t => t.stop());
+          processRecAudio(recorder.mimeType);
+        };
+        recorderRef.current = recorder;
+        recorder.start(250);
+        setRecPhase('recording');
+      } catch (_unused8) {
+        setRecErr("Accès micro refusé — autorise le micro dans les paramètres du navigateur.");
+      }
+    });
+    return function startRec() {
+      return _ref15.apply(this, arguments);
+    };
+  }();
   const stopRec = () => {
-    if (recorderRef.current?.state === 'recording') {
+    var _recorderRef$current2;
+    if (((_recorderRef$current2 = recorderRef.current) === null || _recorderRef$current2 === void 0 ? void 0 : _recorderRef$current2.state) === 'recording') {
       recorderRef.current.stop();
       setRecPhase('processing');
     }
   };
-  const processRecAudio = async mimeType => {
-    try {
-      const blob = new Blob(chunksRef.current, {
-        type: mimeType
-      });
-      if (blob.size < 1000) {
-        setRecPhase('idle');
-        setRecErr('Enregistrement trop court — maintiens et parle.');
-        return;
-      }
-      const audio_b64 = await new Promise((res, rej) => {
-        const r = new FileReader();
-        r.onloadend = () => res(r.result.split(',')[1]);
-        r.onerror = rej;
-        r.readAsDataURL(blob);
-      });
-      const {
-        data,
-        error
-      } = await SB.functions.invoke('process-dump-pilotage', {
-        body: {
-          audio_b64,
-          audio_type: mimeType
+  const processRecAudio = function () {
+    var _ref16 = _asyncToGenerator(function* (mimeType) {
+      try {
+        const blob = new Blob(chunksRef.current, {
+          type: mimeType
+        });
+        if (blob.size < 1000) {
+          setRecPhase('idle');
+          setRecErr('Enregistrement trop court — maintiens et parle.');
+          return;
         }
-      });
-      if (error || data?.error) {
-        setRecPhase('idle');
-        setRecErr(data?.error || 'Erreur de traitement');
-        return;
-      }
-      const transcript = (data.transcript || '').trim();
-      if (transcript) setChatInput(prev => prev ? prev + ' ' + transcript : transcript);
-      setRecPhase('idle');
-    } catch {
-      setRecPhase('idle');
-      setRecErr('Erreur réseau');
-    }
-  };
-  const sendToRoland = async () => {
-    const txt = chatInput.trim();
-    if (!txt || chatLoading) return;
-    setChatInput('');
-    const isFirst = chatMsgs.length === 0;
-    const contexte = isFirst ? `Contexte chiffré du mois : ${fmt(entreesPro)} encaissé (pro), ${fmt(sortiesPro)} de sorties (pro).\n\n${txt}` : txt;
-    const newMsgs = [...chatMsgs, {
-      from: 'me',
-      text: txt
-    }];
-    setChatMsgs(newMsgs);
-    setChatLoading(true);
-    try {
-      const {
-        data,
-        error
-      } = await SB.functions.invoke('chat-assistant', {
-        body: {
-          assistant_id: 'roland',
-          messages: [...newMsgs.slice(0, -1), {
-            from: 'me',
-            text: contexte
-          }]
+        const audio_b64 = yield new Promise((res, rej) => {
+          const r = new FileReader();
+          r.onloadend = () => res(r.result.split(',')[1]);
+          r.onerror = rej;
+          r.readAsDataURL(blob);
+        });
+        const {
+          data,
+          error
+        } = yield SB.functions.invoke('process-dump-pilotage', {
+          body: {
+            audio_b64,
+            audio_type: mimeType
+          }
+        });
+        if (error || data !== null && data !== void 0 && data.error) {
+          setRecPhase('idle');
+          setRecErr((data === null || data === void 0 ? void 0 : data.error) || 'Erreur de traitement');
+          return;
         }
-      });
-      const reply = !error && data?.reply ? data.reply : "Petit souci de connexion, réessaie.";
-      setChatMsgs(prev => [...prev, {
-        from: 'roland',
-        text: reply
-      }]);
-    } catch {
-      setChatMsgs(prev => [...prev, {
-        from: 'roland',
-        text: "Petit souci de connexion, réessaie."
-      }]);
-    }
-    setChatLoading(false);
-  };
+        const transcript = (data.transcript || '').trim();
+        if (transcript) setChatInput(prev => prev ? prev + ' ' + transcript : transcript);
+        setRecPhase('idle');
+      } catch (_unused9) {
+        setRecPhase('idle');
+        setRecErr('Erreur réseau');
+      }
+    });
+    return function processRecAudio(_x7) {
+      return _ref16.apply(this, arguments);
+    };
+  }();
+  const sendToRoland = function () {
+    var _ref17 = _asyncToGenerator(function* () {
+      const txt = chatInput.trim();
+      if (!txt || chatLoading) return;
+      setChatInput('');
+      const isFirst = chatMsgs.length === 0;
+      const contexte = isFirst ? `Contexte chiffré du mois : ${fmt(entreesPro)} encaissé (pro), ${fmt(sortiesPro)} de sorties (pro).\n\n${txt}` : txt;
+      const newMsgs = [...chatMsgs, {
+        from: 'me',
+        text: txt
+      }];
+      setChatMsgs(newMsgs);
+      setChatLoading(true);
+      try {
+        const {
+          data,
+          error
+        } = yield SB.functions.invoke('chat-assistant', {
+          body: {
+            assistant_id: 'roland',
+            messages: [...newMsgs.slice(0, -1), {
+              from: 'me',
+              text: contexte
+            }]
+          }
+        });
+        const reply = !error && data !== null && data !== void 0 && data.reply ? data.reply : "Petit souci de connexion, réessaie.";
+        setChatMsgs(prev => [...prev, {
+          from: 'roland',
+          text: reply
+        }]);
+      } catch (_unused0) {
+        setChatMsgs(prev => [...prev, {
+          from: 'roland',
+          text: "Petit souci de connexion, réessaie."
+        }]);
+      }
+      setChatLoading(false);
+    });
+    return function sendToRoland() {
+      return _ref17.apply(this, arguments);
+    };
+  }();
   const diagnostics = [];
   if (entreesPro > 0) {
     const epargne = entreesPro * 0.20;
@@ -5619,12 +5708,11 @@ function CoachFinancier({
       if (e.key === 'Enter') sendToRoland();
     },
     placeholder: recPhase === 'processing' ? 'Transcription en cours…' : "Ex : j'ai eu une grosse dépense imprévue ce mois…",
-    style: {
-      ...iStyle,
+    style: _objectSpread(_objectSpread({}, iStyle), {}, {
       flex: 1,
       padding: '9px 12px',
       fontSize: 12.5
-    }
+    })
   }), React.createElement("button", {
     onClick: sendToRoland,
     disabled: chatLoading,
@@ -6006,6 +6094,7 @@ function App() {
     Promise.all([SB.from('pilotage_cap').select('*').single(), SB.from('pilotage_focus').select('*').order('ordre'), SB.from('pilotage_pipeline').select('*, source, wa_draft').order('priorite'), SB.from('pilotage_projets').select('*').order('priorite'), SB.from('pilotage_finances').select('*').order('date', {
       ascending: false
     }), SB.from('pilotage_enveloppes').select('*').order('priorite'), SB.from('pilotage_charges').select('*').order('ordre')]).then(([capR, focusR, pipeR, projR, finR, envR, chgR]) => {
+      var _document$getElementB;
       if (capR.data) setCap(capR.data);
       if (focusR.data) setFocus(focusR.data);
       if (pipeR.data) setPipeline(pipeR.data);
@@ -6014,178 +6103,205 @@ function App() {
       if (envR.data) setEnveloppes(envR.data);
       if (chgR.data) setCharges(chgR.data);
       setLoading(false);
-      document.getElementById('boot')?.remove();
+      (_document$getElementB = document.getElementById('boot')) === null || _document$getElementB === void 0 || _document$getElementB.remove();
     });
   }, []);
-  const handleFocusToggle = async item => {
-    const updated = !item.done;
-    setFocus(prev => prev.map(f => f.id === item.id ? {
-      ...f,
-      done: updated
-    } : f));
-    const {
-      ok
-    } = await saveField('pilotage_focus', item.id, {
-      done: updated
+  const handleFocusToggle = function () {
+    var _ref18 = _asyncToGenerator(function* (item) {
+      const updated = !item.done;
+      setFocus(prev => prev.map(f => f.id === item.id ? _objectSpread(_objectSpread({}, f), {}, {
+        done: updated
+      }) : f));
+      const {
+        ok
+      } = yield saveField('pilotage_focus', item.id, {
+        done: updated
+      });
+      if (!ok) {
+        setFocus(prev => prev.map(f => f.id === item.id ? _objectSpread(_objectSpread({}, f), {}, {
+          done: item.done
+        }) : f));
+        showError('Non enregistré, réessaie');
+      }
     });
-    if (!ok) {
-      setFocus(prev => prev.map(f => f.id === item.id ? {
-        ...f,
-        done: item.done
-      } : f));
-      showError('Non enregistré, réessaie');
-    }
-  };
-  const handleFocusEdit = async (item, val) => {
-    setFocus(prev => prev.map(f => f.id === item.id ? {
-      ...f,
-      description: val
-    } : f));
-    const {
-      ok
-    } = await saveField('pilotage_focus', item.id, {
-      description: val
+    return function handleFocusToggle(_x8) {
+      return _ref18.apply(this, arguments);
+    };
+  }();
+  const handleFocusEdit = function () {
+    var _ref19 = _asyncToGenerator(function* (item, val) {
+      setFocus(prev => prev.map(f => f.id === item.id ? _objectSpread(_objectSpread({}, f), {}, {
+        description: val
+      }) : f));
+      const {
+        ok
+      } = yield saveField('pilotage_focus', item.id, {
+        description: val
+      });
+      if (!ok) {
+        setFocus(prev => prev.map(f => f.id === item.id ? _objectSpread(_objectSpread({}, f), {}, {
+          description: item.description
+        }) : f));
+        showError('Non enregistré, réessaie');
+      }
     });
-    if (!ok) {
-      setFocus(prev => prev.map(f => f.id === item.id ? {
-        ...f,
-        description: item.description
-      } : f));
-      showError('Non enregistré, réessaie');
-    }
-  };
-  const handlePipeProchaine = async (d, val) => {
-    setPipeline(prev => prev.map(p => p.id === d.id ? {
-      ...p,
-      prochaine: val
-    } : p));
-    const {
-      ok
-    } = await saveField('pilotage_pipeline', d.id, {
-      prochaine: val
+    return function handleFocusEdit(_x9, _x0) {
+      return _ref19.apply(this, arguments);
+    };
+  }();
+  const handlePipeProchaine = function () {
+    var _ref20 = _asyncToGenerator(function* (d, val) {
+      setPipeline(prev => prev.map(p => p.id === d.id ? _objectSpread(_objectSpread({}, p), {}, {
+        prochaine: val
+      }) : p));
+      const {
+        ok
+      } = yield saveField('pilotage_pipeline', d.id, {
+        prochaine: val
+      });
+      if (!ok) {
+        setPipeline(prev => prev.map(p => p.id === d.id ? _objectSpread(_objectSpread({}, p), {}, {
+          prochaine: d.prochaine
+        }) : p));
+        showError('Non enregistré, réessaie');
+      }
     });
-    if (!ok) {
-      setPipeline(prev => prev.map(p => p.id === d.id ? {
-        ...p,
-        prochaine: d.prochaine
-      } : p));
-      showError('Non enregistré, réessaie');
-    }
-  };
-  const handlePipeStatut = async (d, statut, statut_color) => {
-    setPipeline(prev => prev.map(p => p.id === d.id ? {
-      ...p,
-      statut,
-      statut_color
-    } : p));
-    const {
-      ok
-    } = await saveField('pilotage_pipeline', d.id, {
-      statut,
-      statut_color
+    return function handlePipeProchaine(_x1, _x10) {
+      return _ref20.apply(this, arguments);
+    };
+  }();
+  const handlePipeStatut = function () {
+    var _ref21 = _asyncToGenerator(function* (d, statut, statut_color) {
+      setPipeline(prev => prev.map(p => p.id === d.id ? _objectSpread(_objectSpread({}, p), {}, {
+        statut,
+        statut_color
+      }) : p));
+      const {
+        ok
+      } = yield saveField('pilotage_pipeline', d.id, {
+        statut,
+        statut_color
+      });
+      if (!ok) {
+        setPipeline(prev => prev.map(p => p.id === d.id ? _objectSpread(_objectSpread({}, p), {}, {
+          statut: d.statut,
+          statut_color: d.statut_color
+        }) : p));
+        showError('Non enregistré, réessaie');
+      }
     });
-    if (!ok) {
-      setPipeline(prev => prev.map(p => p.id === d.id ? {
-        ...p,
-        statut: d.statut,
-        statut_color: d.statut_color
-      } : p));
-      showError('Non enregistré, réessaie');
-    }
-  };
-  const handlePipeContact = async (d, val) => {
-    setPipeline(prev => prev.map(p => p.id === d.id ? {
-      ...p,
-      contact: val
-    } : p));
-    const {
-      ok
-    } = await saveField('pilotage_pipeline', d.id, {
-      contact: val
+    return function handlePipeStatut(_x11, _x12, _x13) {
+      return _ref21.apply(this, arguments);
+    };
+  }();
+  const handlePipeContact = function () {
+    var _ref22 = _asyncToGenerator(function* (d, val) {
+      setPipeline(prev => prev.map(p => p.id === d.id ? _objectSpread(_objectSpread({}, p), {}, {
+        contact: val
+      }) : p));
+      const {
+        ok
+      } = yield saveField('pilotage_pipeline', d.id, {
+        contact: val
+      });
+      if (!ok) {
+        setPipeline(prev => prev.map(p => p.id === d.id ? _objectSpread(_objectSpread({}, p), {}, {
+          contact: d.contact
+        }) : p));
+        showError('Non enregistré, réessaie');
+      }
     });
-    if (!ok) {
-      setPipeline(prev => prev.map(p => p.id === d.id ? {
-        ...p,
-        contact: d.contact
-      } : p));
-      showError('Non enregistré, réessaie');
-    }
-  };
-  const handlePipeSetup = async (d, val) => {
-    setPipeline(prev => prev.map(p => p.id === d.id ? {
-      ...p,
-      setup: val
-    } : p));
-    const {
-      ok
-    } = await saveField('pilotage_pipeline', d.id, {
-      setup: val
+    return function handlePipeContact(_x14, _x15) {
+      return _ref22.apply(this, arguments);
+    };
+  }();
+  const handlePipeSetup = function () {
+    var _ref23 = _asyncToGenerator(function* (d, val) {
+      setPipeline(prev => prev.map(p => p.id === d.id ? _objectSpread(_objectSpread({}, p), {}, {
+        setup: val
+      }) : p));
+      const {
+        ok
+      } = yield saveField('pilotage_pipeline', d.id, {
+        setup: val
+      });
+      if (!ok) {
+        setPipeline(prev => prev.map(p => p.id === d.id ? _objectSpread(_objectSpread({}, p), {}, {
+          setup: d.setup
+        }) : p));
+        showError('Non enregistré, réessaie');
+      }
     });
-    if (!ok) {
-      setPipeline(prev => prev.map(p => p.id === d.id ? {
-        ...p,
-        setup: d.setup
-      } : p));
-      showError('Non enregistré, réessaie');
-    }
-  };
-  const handlePipeMensuel = async (d, val) => {
-    setPipeline(prev => prev.map(p => p.id === d.id ? {
-      ...p,
-      mensuel: val
-    } : p));
-    const {
-      ok
-    } = await saveField('pilotage_pipeline', d.id, {
-      mensuel: val
+    return function handlePipeSetup(_x16, _x17) {
+      return _ref23.apply(this, arguments);
+    };
+  }();
+  const handlePipeMensuel = function () {
+    var _ref24 = _asyncToGenerator(function* (d, val) {
+      setPipeline(prev => prev.map(p => p.id === d.id ? _objectSpread(_objectSpread({}, p), {}, {
+        mensuel: val
+      }) : p));
+      const {
+        ok
+      } = yield saveField('pilotage_pipeline', d.id, {
+        mensuel: val
+      });
+      if (!ok) {
+        setPipeline(prev => prev.map(p => p.id === d.id ? _objectSpread(_objectSpread({}, p), {}, {
+          mensuel: d.mensuel
+        }) : p));
+        showError('Non enregistré, réessaie');
+      }
     });
-    if (!ok) {
-      setPipeline(prev => prev.map(p => p.id === d.id ? {
-        ...p,
-        mensuel: d.mensuel
-      } : p));
-      showError('Non enregistré, réessaie');
-    }
-  };
+    return function handlePipeMensuel(_x18, _x19) {
+      return _ref24.apply(this, arguments);
+    };
+  }();
   const handlePipeAdd = newDossier => {
     setPipeline(prev => [newDossier, ...prev]);
   };
-  const handlePipeField = async (d, field, val) => {
-    setPipeline(prev => prev.map(p => p.id === d.id ? {
-      ...p,
-      [field]: val
-    } : p));
-    const {
-      ok
-    } = await saveField('pilotage_pipeline', d.id, {
-      [field]: val
+  const handlePipeField = function () {
+    var _ref25 = _asyncToGenerator(function* (d, field, val) {
+      setPipeline(prev => prev.map(p => p.id === d.id ? _objectSpread(_objectSpread({}, p), {}, {
+        [field]: val
+      }) : p));
+      const {
+        ok
+      } = yield saveField('pilotage_pipeline', d.id, {
+        [field]: val
+      });
+      if (!ok) {
+        setPipeline(prev => prev.map(p => p.id === d.id ? _objectSpread(_objectSpread({}, p), {}, {
+          [field]: d[field]
+        }) : p));
+        showError('Non enregistré, réessaie');
+      }
     });
-    if (!ok) {
-      setPipeline(prev => prev.map(p => p.id === d.id ? {
-        ...p,
-        [field]: d[field]
-      } : p));
-      showError('Non enregistré, réessaie');
-    }
-  };
-  const handleProjetProchaine = async (p, val) => {
-    setProjets(prev => prev.map(pr => pr.id === p.id ? {
-      ...pr,
-      prochaine_action: val
-    } : pr));
-    const {
-      ok
-    } = await saveField('pilotage_projets', p.id, {
-      prochaine_action: val
+    return function handlePipeField(_x20, _x21, _x22) {
+      return _ref25.apply(this, arguments);
+    };
+  }();
+  const handleProjetProchaine = function () {
+    var _ref26 = _asyncToGenerator(function* (p, val) {
+      setProjets(prev => prev.map(pr => pr.id === p.id ? _objectSpread(_objectSpread({}, pr), {}, {
+        prochaine_action: val
+      }) : pr));
+      const {
+        ok
+      } = yield saveField('pilotage_projets', p.id, {
+        prochaine_action: val
+      });
+      if (!ok) {
+        setProjets(prev => prev.map(pr => pr.id === p.id ? _objectSpread(_objectSpread({}, pr), {}, {
+          prochaine_action: p.prochaine_action
+        }) : pr));
+        showError('Non enregistré, réessaie');
+      }
     });
-    if (!ok) {
-      setProjets(prev => prev.map(pr => pr.id === p.id ? {
-        ...pr,
-        prochaine_action: p.prochaine_action
-      } : pr));
-      showError('Non enregistré, réessaie');
-    }
-  };
+    return function handleProjetProchaine(_x23, _x24) {
+      return _ref26.apply(this, arguments);
+    };
+  }();
   const handleFinanceAdd = entry => {
     setFinances(prev => [entry, ...prev]);
   };
@@ -6403,41 +6519,51 @@ function Gate() {
     } = SB.auth.onAuthStateChange((_e, session) => setAuthed(!!session));
     return () => sub.subscription.unsubscribe();
   }, []);
-  const sendCode = async () => {
-    setBusy(true);
-    setErr('');
-    const {
-      error
-    } = await SB.auth.signInWithOtp({
-      email: OWNER_EMAIL,
-      options: {
-        shouldCreateUser: true
+  const sendCode = function () {
+    var _ref27 = _asyncToGenerator(function* () {
+      setBusy(true);
+      setErr('');
+      const {
+        error
+      } = yield SB.auth.signInWithOtp({
+        email: OWNER_EMAIL,
+        options: {
+          shouldCreateUser: true
+        }
+      });
+      setBusy(false);
+      if (error) {
+        setErr(error.message);
+        return;
       }
+      setStep('code');
     });
-    setBusy(false);
-    if (error) {
-      setErr(error.message);
-      return;
-    }
-    setStep('code');
-  };
-  const verify = async () => {
-    setBusy(true);
-    setErr('');
-    const {
-      error
-    } = await SB.auth.verifyOtp({
-      email: OWNER_EMAIL,
-      token: code.trim(),
-      type: 'email'
+    return function sendCode() {
+      return _ref27.apply(this, arguments);
+    };
+  }();
+  const verify = function () {
+    var _ref28 = _asyncToGenerator(function* () {
+      setBusy(true);
+      setErr('');
+      const {
+        error
+      } = yield SB.auth.verifyOtp({
+        email: OWNER_EMAIL,
+        token: code.trim(),
+        type: 'email'
+      });
+      setBusy(false);
+      if (error) {
+        setErr('Code incorrect ou expiré.');
+        return;
+      }
+      setAuthed(true);
     });
-    setBusy(false);
-    if (error) {
-      setErr('Code incorrect ou expiré.');
-      return;
-    }
-    setAuthed(true);
-  };
+    return function verify() {
+      return _ref28.apply(this, arguments);
+    };
+  }();
   if (!ready) return null;
   if (authed) return React.createElement(App, null);
   return React.createElement("div", {
