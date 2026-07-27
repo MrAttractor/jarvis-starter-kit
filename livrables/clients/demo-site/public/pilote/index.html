@@ -251,6 +251,7 @@
             <span id="p-reste"></span>
           </div>
         </div>
+        <div style="margin-top:18px"><button class="btn btn-acc" onclick="startPoint()"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Faire le tour avec Roland</button></div>
       </div>
     </header>
     <div class="lightwrap">
@@ -512,6 +513,20 @@ function deleteEntry(){
 var chatMsgs=[];
 function openRoland(){ $('dbd').classList.add('on'); $('drawer').classList.add('on'); setTimeout(function(){$('chat-input').focus();},250); }
 function closeRoland(){ $('dbd').classList.remove('on'); $('drawer').classList.remove('on'); }
+/* Roland prend le lead : il t'interroge pour faire le tour de l'existant. */
+function startPoint(){
+  openRoland();
+  var intro=document.querySelector('.chat-intro'); if(intro) intro.remove();
+  if(chatMsgs.length>0){ addMsg('rol','On reprend le point. Où on en était ?'); return; }
+  var doss=(CTX.dossiers&&CTX.dossiers.length)?('\nDossiers en cours : '+CTX.dossiers.slice(0,8).map(function(d){return (d.nom||'?')+' ('+(d.statut||'—')+(d.urgent?', chaud':'')+')';}).join(' ; ')+'.'):'';
+  var trigger="Fais-moi faire le point global sur tout ce qui est en cours. Prends le lead, pose-moi les questions UNE PAR UNE, commence par l'argent du mois. Contexte : "+fcfa(CTX.confirme)+" encaissé sur objectif "+(CTX.objectif?fcfa(CTX.objectif):"non défini")+", "+fcfa(CTX.pipe)+" en pipeline."+doss;
+  chatMsgs.push({from:'me',text:trigger});
+  var typing=addMsg('rol','Roland prépare le tour…'); typing.className='msg rol typing';
+  fetch(SB_URL+"/functions/v1/chat-assistant",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json"},body:JSON.stringify({assistant_id:'roland_perso',messages:chatMsgs})})
+    .then(function(r){return r.json();})
+    .then(function(d){ typing.remove(); var rep=(d&&d.reply)?d.reply:"On commence : ce mois, qu'est-ce qui est rentré comme argent ?"; addMsg('rol',rep); chatMsgs.push({from:'roland',text:rep}); })
+    .catch(function(){ typing.remove(); addMsg('rol',"On commence : ce mois, qu'est-ce qui est rentré comme argent ?"); });
+}
 function addMsg(from,text){ var el=document.createElement('div'); el.className='msg '+(from==='me'?'me':'rol'); el.textContent=text; $('chat').appendChild(el); $('chat').scrollTop=$('chat').scrollHeight; return el; }
 function sendRoland(){
   var ta=$('chat-input'), txt=ta.value.trim(); if(!txt) return; ta.value='';
