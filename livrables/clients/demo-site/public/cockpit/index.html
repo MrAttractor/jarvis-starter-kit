@@ -15,27 +15,51 @@
 <div id="boot">Chargement…</div>
 <div id="root"></div>
 
-<!-- Filet de sécurité : affiche toute erreur de chargement À L'ÉCRAN (diagnostic mobile) -->
+<!-- Filet de sécurité : affiche l'erreur à l'écran ET l'envoie en télémétrie (diagnostic mobile) -->
 <script>
 (function(){
+  var LOG="https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/client-log";
+  function beacon(message, extra){
+    try{
+      fetch(LOG,{method:"POST",headers:{"Content-Type":"application/json"},keepalive:true,
+        body:JSON.stringify({source:"cockpit",message:String(message),ua:navigator.userAgent,url:location.href,extra:extra||null})});
+    }catch(e){}
+  }
   function show(msg){
     var b=document.getElementById('boot');
     if(!b) return;
     b.style.cssText='position:fixed;inset:0;padding:20px;background:#fff;color:#B00020;font:13px/1.5 system-ui,sans-serif;overflow:auto;white-space:pre-wrap;z-index:99999';
-    b.textContent='Pilotage — erreur au chargement :\n\n'+msg+'\n\nFais une capture d’écran et envoie-la.';
+    b.textContent='Pilotage — erreur au chargement :\n\n'+msg;
   }
+  /* Signal immédiat : je sais que la page a été ouverte + quel navigateur. */
+  beacon("ouverture cockpit");
+  /* Retire le voile dès que React a rendu quelque chose (écran de connexion OU cockpit).
+     Corrige le blocage sur "Chargement…" quand on n'est pas encore connecté. */
+  var rootWatch = setInterval(function(){
+    var root = document.getElementById('root');
+    if (root && root.children.length > 0) {
+      clearInterval(rootWatch);
+      var b = document.getElementById('boot');
+      if (b && b.textContent.indexOf('Chargement') === 0) b.parentNode.removeChild(b);
+    }
+  }, 150);
+  setTimeout(function(){ clearInterval(rootWatch); }, 15000);
   window.addEventListener('error', function(e){
-    show((e.message||'erreur inconnue')+(e.filename?('\n'+String(e.filename).split('/').pop()+' L'+e.lineno):''));
+    var m=(e.message||'erreur inconnue')+(e.filename?('\n'+String(e.filename).split('/').pop()+' L'+e.lineno):'');
+    beacon("window.error: "+m); show(m);
   });
   window.addEventListener('unhandledrejection', function(e){
-    show('Promesse rejetée : '+((e.reason&&e.reason.message)?e.reason.message:String(e.reason)));
+    var m='Promesse rejetée : '+((e.reason&&e.reason.message)?e.reason.message:String(e.reason));
+    beacon(m); show(m);
   });
   setTimeout(function(){
     var b=document.getElementById('boot');
     if(b && b.textContent.indexOf('Chargement')===0){
-      show('Resté bloqué sur le chargement, sans erreur JS.\nCause probable : React ou Supabase n’a pas pu se charger depuis le CDN sur ce réseau (unpkg / jsdelivr).\n\nReact chargé : '+(typeof window.React!=='undefined')+'\nSupabase chargé : '+(typeof window.supabase!=='undefined');
+      var etat='React='+(typeof window.React!=='undefined')+' ReactDOM='+(typeof window.ReactDOM!=='undefined')+' supabase='+(typeof window.supabase!=='undefined');
+      beacon("bloqué 6s sans erreur JS. "+etat);
+      show('Toujours en chargement.\n\n'+etat+'\n\nInfo envoyée à l’équipe, on regarde.');
     }
-  }, 8000);
+  }, 6000);
 })();
 </script>
 

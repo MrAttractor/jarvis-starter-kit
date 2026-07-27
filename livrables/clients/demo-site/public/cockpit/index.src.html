@@ -2659,6 +2659,9 @@ function Gate() {
     SB.auth.getSession().then(({ data }) => {
       setAuthed(!!data.session);
       setReady(true);
+      // Retire le voile "Chargement…" dès que la session est vérifiée,
+      // même non connecté (sinon l'écran de connexion reste caché dessous).
+      var _b = document.getElementById('boot'); if (_b) _b.remove();
     });
     const { data: sub } = SB.auth.onAuthStateChange((_e, session) => setAuthed(!!session));
     return () => sub.subscription.unsubscribe();
