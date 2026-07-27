@@ -5,12 +5,10 @@ import { LoginScreen } from './screens/LoginScreen';
 import { OnboardingScreen } from './screens/OnboardingScreen';
 import { DashboardScreen } from './screens/DashboardScreen';
 import { ProfilScreen } from './screens/ProfilScreen';
-import { ConversationScreen } from './screens/ConversationScreen';
 import { InstallGuide, detectPlatform } from './screens/InstallScreen';
 import { PaliersScreen } from './screens/PaliersScreen';
 import { NotificationsScreen } from './screens/NotificationsScreen';
 import { MacCockpitScreen } from './screens/MacCockpitScreen';
-import MonAppScreen from './screens/MonAppScreen';
 import { FidelysScreen } from './screens/FidelysScreen';
 import { CatalogueScreen } from './screens/CatalogueScreen';
 import { CommandesScreen } from './screens/CommandesScreen';
@@ -138,7 +136,6 @@ export default function App() {
     catalogue:   <CatalogueScreen go={go} notify={notify} profile={profile} />,
     commandes:   <CommandesScreen go={go} notify={notify} profile={profile} />,
     profil:      <ProfilScreen go={go} notify={notify} dark={dark} setDark={handleSetDark} profile={profile} reloadProfile={loadProfile} />,
-    conversation:<ConversationScreen key={`${params?.assistant||'coach'}-${params?.mode||'default'}`} go={go} notify={notify} params={params} profile={profile} />,
     paliers:     <PaliersScreen go={go} notify={notify} profile={profile} />,
     notifications: <NotificationsScreen go={go} />,
     cockpit:  <MacCockpitScreen go={go} notify={notify} section="cockpit"  profile={profile} />,
@@ -148,7 +145,6 @@ export default function App() {
     veille:   <MacCockpitScreen go={go} notify={notify} section="veille"   profile={profile} />,
     intel:    <MacCockpitScreen go={go} notify={notify} section="intel"    profile={profile} />,
     fidelys:       <FidelysScreen go={go} notify={notify} profile={profile} />,
-    'mon-app':     <MonAppScreen go={go} profile={profile} />,
     'galerie-templates': <TemplateGalerieScreen go={go} notify={notify} profile={profile} />,
     install:     <InstallGuide
                    platform={detectPlatform()}
@@ -160,14 +156,13 @@ export default function App() {
   };
   const isAdmin   = profile?.role === 'admin';
   const TABS = isAdmin ? TABS_ADMIN : TABS_V3;
-  const isConversation = screen === "conversation";
-  const isChat = screen === "dashboard" || screen === "conversation";
+  // Le chat prend toute la hauteur : c'est lui qui gère son propre défilement.
+  const isChat = screen === "dashboard";
   const COCKPIT_SECTIONS = ['carelle', 'pipeline', 'hub', 'veille', 'intel'];
   const SUBSCREEN_PARENT = {
     paliers: 'profil', notifications: 'profil', install: 'profil',
-    fidelys: 'profil', 'mon-app': 'profil',
+    fidelys: 'profil',
     'galerie-templates': 'catalogue',
-    conversation: 'dashboard',
   };
   const activeTab = TABS.find(t => t.id === screen)
     ? screen
@@ -212,13 +207,11 @@ export default function App() {
             </div>
 
             {/* bottom nav mobile — dans le flux flex, pas absolute */}
-            {!isConversation && (
-              <div className="lg:hidden flex-shrink-0 bg-white/92 backdrop-blur-xl border-t border-g200 flex items-center justify-around px-2 pt-2" style={{ paddingBottom: 'max(16px, env(safe-area-inset-bottom))' }}>
-                {TABS.map(t => (
-                  <NavBtn key={t.id} t={t} active={activeTab === t.id} onClick={() => go(t.id)} />
-                ))}
-              </div>
-            )}
+            <div className="lg:hidden flex-shrink-0 bg-white/92 backdrop-blur-xl border-t border-g200 flex items-center justify-around px-2 pt-2" style={{ paddingBottom: 'max(16px, env(safe-area-inset-bottom))' }}>
+              {TABS.map(t => (
+                <NavBtn key={t.id} t={t} active={activeTab === t.id} onClick={() => go(t.id)} />
+              ))}
+            </div>
           </div>
         </div>
       </div>

@@ -57,7 +57,7 @@ export function FidelysScreen({ go, notify, profile }) {
 
   if (!unlocked) return (
     <div className="flex flex-col h-full bg-sable px-5 pt-14 pb-10">
-      <button onClick={() => go('profil')} className="flex items-center gap-2 text-g500 text-[13px] mb-6">
+      <button onClick={() => go('profil')} className="flex items-center gap-2 h-11 pr-3 -ml-1 text-g500 text-[13px] mb-4 self-start">
         <Icon name="back" size={16} /> Retour
       </button>
       <div className="flex flex-col items-center justify-center flex-1 gap-5 text-center">
@@ -101,8 +101,12 @@ export function FidelysScreen({ go, notify, profile }) {
     <div className="flex flex-col h-full bg-sable">
 
       {/* Header gradient */}
-      <div className="px-5 pt-14 pb-5 flex-shrink-0"
+      <div className="px-5 pt-12 pb-5 flex-shrink-0"
         style={{ background: 'linear-gradient(150deg, #1E5631 0%, #2d7a47 60%, #F25C05 100%)' }}>
+        {/* Même retour que sur la version verrouillée : l'écran s'ouvre depuis le Profil. */}
+        <button onClick={() => go('profil')} aria-label="Retour" className="flex items-center gap-1.5 h-11 pr-3 -ml-1 mb-1 text-white/75 text-[13px] font-semibold active:text-white transition">
+          <Icon name="back" size={17} /> Retour
+        </button>
         <div className="flex items-start justify-between mb-5">
           <div>
             <p className="text-white/60 text-[11px] font-bold tracking-widest uppercase mb-1">Attractor</p>
@@ -175,7 +179,7 @@ export function FidelysScreen({ go, notify, profile }) {
                   min="2"
                   max="20"
                   onChange={e => setRewardAfter(Math.max(2, Math.min(20, parseInt(e.target.value) || 5)))}
-                  className="w-full px-4 py-3 rounded-xl border border-g200 bg-sable text-[14px] text-charbon outline-none focus:border-orange"
+                  className="w-full px-4 py-3 rounded-xl border border-g200 bg-sable text-[16px] text-charbon outline-none focus:border-orange"
                 />
               </div>
               <div>
@@ -187,7 +191,7 @@ export function FidelysScreen({ go, notify, profile }) {
                   value={rewardLabel}
                   onChange={e => setRewardLabel(e.target.value)}
                   placeholder="Ex : Transport offert"
-                  className="w-full px-4 py-3 rounded-xl border border-g200 bg-sable text-[14px] text-charbon outline-none focus:border-orange"
+                  className="w-full px-4 py-3 rounded-xl border border-g200 bg-sable text-[16px] text-charbon outline-none focus:border-orange"
                 />
               </div>
               <button

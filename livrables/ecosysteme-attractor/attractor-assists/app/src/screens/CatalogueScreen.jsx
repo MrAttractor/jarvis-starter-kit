@@ -218,20 +218,21 @@ export function CatalogueScreen({ go, notify, profile }) {
     <div className="flex flex-col h-full bg-sable">
 
       {/* AppBar */}
-      <div className="flex items-center justify-between px-4 pt-14 pb-3 bg-sable">
-        <div>
-          <div className="font-display font-bold text-[19px] text-charbon">Mon catalogue</div>
-          <div className="text-[12.5px] text-g500 mt-0.5">{activeCount} produit{activeCount !== 1 ? 's' : ''} actif{activeCount !== 1 ? 's' : ''}</div>
+      <div className="flex items-center justify-between gap-2 px-4 pt-14 pb-3 bg-sable">
+        <div className="min-w-0">
+          <div className="font-display font-bold text-[19px] text-charbon truncate">Mon catalogue</div>
+          <div className="text-[12.5px] text-g500 mt-0.5 truncate">{activeCount} produit{activeCount !== 1 ? 's' : ''} actif{activeCount !== 1 ? 's' : ''}</div>
         </div>
-        <div className="flex items-center gap-2">
-          {/* Choisir modèle boutique */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Choisir modèle boutique — icône seule : à 375 px, trois boutons
+              libellés poussaient le titre hors de la ligne. */}
           <button
             onClick={() => go('galerie-templates')}
-            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-g200 bg-white text-charbon text-[12.5px] font-bold active:bg-g100 transition"
+            className="w-11 h-11 rounded-xl border border-g200 bg-white text-charbon flex items-center justify-center active:bg-g100 transition"
             title="Choisir le modèle de ma boutique"
+            aria-label="Choisir le modèle de ma boutique"
           >
-            <Icon name="grid" size={15} className="text-orange" />
-            Modèle
+            <Icon name="grid" size={17} className="text-orange" />
           </button>
           {/* Bouton scan IA */}
           <input
@@ -245,7 +246,7 @@ export function CatalogueScreen({ go, notify, profile }) {
           <button
             onClick={() => scanFileRef.current?.click()}
             disabled={scanning}
-            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-g200 bg-white text-charbon text-[12.5px] font-bold active:bg-g100 transition disabled:opacity-60"
+            className="flex items-center gap-1.5 h-11 px-3 rounded-xl border border-g200 bg-white text-charbon text-[12.5px] font-bold active:bg-g100 transition disabled:opacity-60"
           >
             {scanning
               ? <Spinner className="w-4 h-4" />
@@ -256,9 +257,10 @@ export function CatalogueScreen({ go, notify, profile }) {
           {/* Bouton ajout manuel */}
           <button
             onClick={openNew}
-            className="w-10 h-10 rounded-full bg-orange text-white flex items-center justify-center shadow-[0_6px_16px_-4px_rgba(242,92,5,.55)] active:scale-95 transition"
+            aria-label="Ajouter un produit"
+            className="w-11 h-11 rounded-full bg-orange text-white flex items-center justify-center shadow-[0_6px_16px_-4px_rgba(242,92,5,.55)] active:scale-95 transition"
           >
-            <Icon name="plus" size={18} />
+            <Icon name="plus" size={19} />
           </button>
         </div>
       </div>
@@ -269,7 +271,7 @@ export function CatalogueScreen({ go, notify, profile }) {
           <button
             key={c}
             onClick={() => setFilterCat(c)}
-            className={`px-3.5 py-1.5 rounded-full text-[13px] font-bold whitespace-nowrap border transition ${
+            className={`h-11 px-4 rounded-full text-[13px] font-bold whitespace-nowrap border transition ${
               filterCat === c
                 ? 'bg-charbon text-white border-charbon'
                 : 'bg-white text-g700 border-g200'
@@ -303,11 +305,15 @@ export function CatalogueScreen({ go, notify, profile }) {
                     ? <img src={p.photo_url} alt={p.nom} className="w-full h-full object-cover" />
                     : <Icon name="camera" size={28} className="text-g400" />
                   }
+                  {/* Zone de tap de 44 px, pastille visible de 28 px */}
                   <button
                     onClick={() => openEdit(p)}
-                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm border border-g200 flex items-center justify-center shadow-sm active:bg-g100 transition"
+                    aria-label={`Modifier ${p.nom}`}
+                    className="absolute top-0 right-0 w-11 h-11 flex items-center justify-center"
                   >
-                    <Icon name="edit" size={13} className="text-charbon" />
+                    <span className="w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm border border-g200 flex items-center justify-center shadow-sm">
+                      <Icon name="edit" size={13} className="text-charbon" />
+                    </span>
                   </button>
                 </div>
                 <div className="p-2.5">
@@ -318,7 +324,7 @@ export function CatalogueScreen({ go, notify, profile }) {
                   </div>
                   <button
                     onClick={() => toggleActif(p)}
-                    className={`mt-2 w-full text-[11px] font-bold py-1.5 rounded-lg transition ${
+                    className={`mt-2 w-full min-h-[44px] text-[11px] font-bold rounded-lg transition ${
                       p.actif !== false ? 'bg-vert/10 text-vert' : 'bg-g100 text-g400'
                     }`}
                   >
@@ -354,19 +360,23 @@ export function CatalogueScreen({ go, notify, profile }) {
                   <div className="flex items-start gap-3">
                     <button
                       onClick={() => updateScanRow(i, 'selected', !p.selected)}
-                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition ${p.selected ? 'bg-orange border-orange' : 'border-g300 bg-white'}`}
+                      aria-pressed={p.selected}
+                      aria-label={p.selected ? 'Retirer de la sélection' : 'Ajouter à la sélection'}
+                      className="w-11 h-11 -m-3 flex items-center justify-center flex-shrink-0"
                     >
-                      {p.selected && (
-                        <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                          <path d="M1 4l3 3 5-6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      )}
+                      <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition ${p.selected ? 'bg-orange border-orange' : 'border-g300 bg-white'}`}>
+                        {p.selected && (
+                          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                            <path d="M1 4l3 3 5-6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        )}
+                      </span>
                     </button>
                     <div className="flex-1 flex flex-col gap-1.5">
                       <input
                         value={p.nom}
                         onChange={e => updateScanRow(i, 'nom', e.target.value)}
-                        className="w-full px-3 py-2 rounded-lg border border-g200 bg-white text-[13.5px] font-bold text-charbon outline-none focus:border-orange"
+                        className="w-full px-3 py-2.5 rounded-lg border border-g200 bg-white text-[16px] font-bold text-charbon outline-none focus:border-orange"
                         placeholder="Nom du produit"
                       />
                       <div className="flex gap-2">
@@ -374,13 +384,13 @@ export function CatalogueScreen({ go, notify, profile }) {
                           value={p.prix ?? ''}
                           onChange={e => updateScanRow(i, 'prix', e.target.value)}
                           type="number"
-                          className="flex-1 px-3 py-2 rounded-lg border border-g200 bg-white text-[13px] text-charbon outline-none focus:border-orange"
+                          className="flex-1 min-w-0 px-3 py-2.5 rounded-lg border border-g200 bg-white text-[16px] text-charbon outline-none focus:border-orange"
                           placeholder="Prix"
                         />
                         <input
                           value={p.categorie ?? ''}
                           onChange={e => updateScanRow(i, 'categorie', e.target.value)}
-                          className="flex-1 px-3 py-2 rounded-lg border border-g200 bg-white text-[13px] text-charbon outline-none focus:border-orange"
+                          className="flex-1 min-w-0 px-3 py-2.5 rounded-lg border border-g200 bg-white text-[16px] text-charbon outline-none focus:border-orange"
                           placeholder="Catégorie"
                         />
                       </div>
@@ -413,14 +423,16 @@ export function CatalogueScreen({ go, notify, profile }) {
       {/* ── Sheet ajout / modif manuel ───────────────────────────────────── */}
       {showSheet && (
         <div className="fixed inset-0 z-50 flex items-end" style={{ background: 'rgba(0,0,0,.45)' }} onClick={closeSheet}>
-          <div className="w-full bg-white rounded-t-[28px] p-6 pb-10 flex flex-col gap-4" onClick={e => e.stopPropagation()}>
-            <div className="w-10 h-1 rounded-full bg-g200 mx-auto mb-1" />
-            <div className="flex items-center justify-between">
+          {/* max-h + défilement : sur un iPhone SE, photo + 3 champs + unité
+              poussaient le bouton d'enregistrement sous le bord de l'écran. */}
+          <div className="w-full bg-white rounded-t-[28px] p-6 pb-10 flex flex-col gap-4 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="w-10 h-1 rounded-full bg-g200 mx-auto mb-1 flex-shrink-0" />
+            <div className="flex items-center justify-between gap-2">
               <div className="font-display font-bold text-[17px] text-charbon">
                 {editProduct ? 'Modifier le produit' : 'Nouveau produit'}
               </div>
               {editProduct && (
-                <button onClick={handleDelete} className="text-[12.5px] font-bold text-red-500 active:opacity-70 transition">
+                <button onClick={handleDelete} className="h-11 px-2 -mr-2 text-[12.5px] font-bold text-red-500 active:opacity-70 transition flex-shrink-0">
                   Supprimer
                 </button>
               )}
@@ -483,7 +495,7 @@ export function CatalogueScreen({ go, notify, profile }) {
                     placeholder={f.placeholder}
                     value={form[f.key]}
                     onChange={e => setForm(x => ({ ...x, [f.key]: e.target.value }))}
-                    className="flex-1 px-4 py-3 rounded-xl border border-g200 bg-sable text-[14px] text-charbon outline-none focus:border-orange"
+                    className="flex-1 min-w-0 px-4 py-3 rounded-xl border border-g200 bg-sable text-[16px] text-charbon outline-none focus:border-orange"
                   />
                   {f.voice && <VoiceMic onTranscript={t => setForm(x => ({ ...x, [f.key]: t }))} className="self-center" />}
                 </div>
@@ -495,7 +507,7 @@ export function CatalogueScreen({ go, notify, profile }) {
               <select
                 value={form.unite}
                 onChange={e => setForm(x => ({ ...x, unite: e.target.value }))}
-                className="w-full px-4 py-3 rounded-xl border border-g200 bg-sable text-[14px] text-charbon outline-none focus:border-orange"
+                className="w-full px-4 py-3 rounded-xl border border-g200 bg-sable text-[16px] text-charbon outline-none focus:border-orange"
               >
                 {['unité', 'pièce', 'kg', 'litre', 'heure', 'mois', 'service'].map(u => (
                   <option key={u} value={u}>{u}</option>

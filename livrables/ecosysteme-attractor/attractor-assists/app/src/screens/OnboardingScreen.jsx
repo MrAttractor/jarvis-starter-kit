@@ -6,13 +6,49 @@ import { Anamnese } from '../components/Anamnese';
 import { checkSlug } from '../lib/slug';
 import { boutiqueUrl } from '../lib/boutique';
 
-function ProgressBar({ step, total = 4 }) {
+// L'ordre réel du tunnel. La barre de progression le lit : avant, elle annonçait
+// « 4 étapes » alors qu'il y en a 8, et affichait 4/4 sur l'écran des produits
+// PUIS encore 4/4 sur les 7 questions. L'entrepreneur se croyait arrivé et
+// abandonnait à la dernière marche.
+const TUNNEL = ['bapteme', 'profil_type', 'anamnese', 'template', 'slug', 'whatsapp', 'upload', 'assistant'];
+
+// D'où l'on revient. Pas de retour depuis `bapteme` (début) ni depuis `assistant`
+// (le profil et les produits sont déjà écrits en base à ce stade).
+const PREV_PHASE = {
+  profil_type: 'bapteme',
+  anamnese:    'profil_type',
+  template:    'anamnese',
+  slug:        'template',
+  whatsapp:    'slug',
+  upload:      'whatsapp',
+};
+
+function ProgressBar({ phase }) {
+  const idx = TUNNEL.indexOf(phase) + 1;
+  if (idx < 1) return null;
   return (
-    <div className="flex gap-1.5 px-4">
-      {Array.from({ length: total }).map((_, i) => (
-        <div key={i} className={`h-1 flex-1 rounded-full transition-colors ${i < step ? 'bg-orange' : 'bg-g200'}`} />
-      ))}
+    <div className="px-4">
+      <div className="flex gap-1.5">
+        {TUNNEL.map((_, i) => (
+          <div key={i} className={`h-1 flex-1 rounded-full transition-colors ${i < idx ? 'bg-orange' : 'bg-g200'}`} />
+        ))}
+      </div>
+      <p className="text-[11px] font-bold text-g400 mt-1.5">Étape {idx} sur {TUNNEL.length}</p>
     </div>
+  );
+}
+
+/** Le retour d'une étape à l'autre. Absent, l'entrepreneur qui se trompe de
+    modèle ou de lien n'a que la fermeture de l'app comme issue. */
+function BackBtn({ onClick }) {
+  if (!onClick) return null;
+  return (
+    <button
+      onClick={onClick}
+      className="inline-flex items-center gap-1.5 h-11 pr-3 -ml-1 text-[13.5px] font-semibold text-g500 active:text-charbon transition"
+    >
+      <Icon name="back" size={17} /> Retour
+    </button>
   );
 }
 
@@ -143,7 +179,10 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   const [prenom, setPrenom]       = useState('');
   const [baptemeQ, setBaptemeQ]   = useState(0);
   const [inputVal, setInputVal]   = useState('');
+  // Deux fils de discussion distincts. Ils partageaient la même variable, donc
+  // revenir sur l'anamnèse effaçait le baptême et inversement.
   const [chatHistory, setChatHistory] = useState([]);
+  const [anamnHistory, setAnamnHistory] = useState([]);
   const [profilType, setProfilType]   = useState('');
   const [anamnQ, setAnamnQ]       = useState(0);
   const [anamnData, setAnamnData] = useState({});
@@ -212,7 +251,8 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
       if (s.anamnData)   setAnamnData(s.anamnData);
       if (s.anamnQ !== undefined) setAnamnQ(s.anamnQ);
       if (s.baptemeQ !== undefined) setBaptemeQ(s.baptemeQ);
-      if (s.chatHistory) setChatHistory(s.chatHistory);
+      if (s.chatHistory)  setChatHistory(s.chatHistory);
+      if (s.anamnHistory) setAnamnHistory(s.anamnHistory);
       if (s.templateId)  setTemplateId(s.templateId);
       if (s.brandColor)  setBrandColor(s.brandColor);
       if (s.slug)        setSlug(s.slug);
@@ -230,11 +270,17 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     }
     try {
       localStorage.setItem(LOCAL_KEY, JSON.stringify({
-        phase, prenom, nomAss, profilType, anamnData, anamnQ,
-        baptemeQ, chatHistory, templateId, brandColor, slug, whatsapp, produits,
+        phase, prenom, nomAss, profilType, anamnData, anamnQ, baptemeQ,
+        chatHistory, anamnHistory, templateId, brandColor, slug, whatsapp, produits,
       }));
     } catch {}
-  }, [phase, prenom, nomAss, profilType, anamnData, anamnQ, baptemeQ, chatHistory, templateId, brandColor, slug, whatsapp, produits]);
+  }, [phase, prenom, nomAss, profilType, anamnData, anamnQ, baptemeQ, chatHistory, anamnHistory, templateId, brandColor, slug, whatsapp, produits]);
+
+  /** Revenir à l'étape précédente du tunnel. */
+  const goBack = () => {
+    const prev = PREV_PHASE[phase];
+    if (prev) { setInputVal(''); setPhase(prev); }
+  };
 
   // ── Upload photo produit ──────────────────────────────────────────────────────
 
@@ -397,7 +443,13 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
             </div>
           ))}
         </div>
-        <PrimaryBtn onClick={() => setPhase('install')}>Commencer</PrimaryBtn>
+        {/* Le guide d'installation n'a de sens que sur un mobile non installé.
+            Le test est fait ici : avant, il l'était pendant le rendu de l'écran
+            suivant, qui déclenchait un changement d'état en plein rendu. */}
+        <PrimaryBtn onClick={() => {
+          const p = detectPlatform();
+          setPhase(p === 'installed' || p === 'desktop' ? 'bapteme' : 'install');
+        }}>Commencer</PrimaryBtn>
       </div>
     </div>
   );
@@ -406,10 +458,6 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
   if (phase === 'install') {
     const platform = detectPlatform();
-    if (platform === 'installed' || platform === 'desktop') {
-      setPhase('bapteme');
-      return null;
-    }
     return (
       <div className="h-full flex flex-col">
         <div className="flex-1">
@@ -432,12 +480,17 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
   // ── 3. Baptême ─────────────────────────────────────────────────────────────────
 
+  // La question d'ouverture n'était affichée que tant que le fil était vide :
+  // à la première réponse, elle disparaissait de la conversation.
+  const BAPTEME_OPENER = `C'est quoi ton prénom ?`;
+
   const handleBaptemeSubmit = () => {
     if (!inputVal.trim()) return;
     const val = inputVal.trim();
     if (baptemeQ === 0) {
       setPrenom(val);
-      setChatHistory(h => [...h,
+      setChatHistory(h => [
+        ...(h.length ? h : [{ role: 'assist', text: BAPTEME_OPENER }]),
         { role: 'user', text: val },
         { role: 'assist', text: `${val}, c'est noté. Et toi, tu veux m'appeler comment ? Donne-moi un nom — c'est toi le patron.` },
       ]);
@@ -448,7 +501,9 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
       setNomAss(val);
       setChatHistory(h => [...h,
         { role: 'user', text: val },
-        { role: 'assist', text: `${val}. On va bien s'entendre. Dis-moi maintenant ce que tu fais comme activité.` },
+        // Ne demande plus l'activité ici : le champ de saisie disparaît juste
+        // après, l'entrepreneur restait devant une question sans pouvoir répondre.
+        { role: 'assist', text: `${val}. On va bien s'entendre. Deux ou trois questions et je saurai comment t'aider.` },
       ]);
       setInputVal('');
       setBaptemeQ(2);
@@ -458,17 +513,20 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
   if (phase === 'bapteme') {
     const initHistory = chatHistory.length === 0
-      ? [{ role: 'assist', text: `C'est quoi ton prénom ?` }]
+      ? [{ role: 'assist', text: BAPTEME_OPENER }]
       : chatHistory;
 
     return (
       <div className="h-full flex flex-col" style={{ background: '#EAE4D9' }}>
-        <div className="flex items-center gap-3 px-4 pt-12 pb-3 bg-white border-b border-g200">
-          <img src="/uploads/agents/carelle.jpg" alt="Assists" className="w-9 h-9 rounded-full object-cover border border-g200 flex-shrink-0" />
-          <div>
-            <div className="font-display font-bold text-[15px] text-charbon">Assists</div>
-            <div className="text-[11.5px] text-vert font-semibold flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-vert inline-block" /> En ligne
+        <div className="px-4 pt-12 pb-3 bg-white border-b border-g200">
+          <ProgressBar phase={phase} />
+          <div className="flex items-center gap-3 mt-3">
+            <img src="/uploads/agents/carelle.jpg" alt="Assists" className="w-9 h-9 rounded-full object-cover border border-g200 flex-shrink-0" />
+            <div>
+              <div className="font-display font-bold text-[15px] text-charbon">Assists</div>
+              <div className="text-[11.5px] text-vert font-semibold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-vert inline-block" /> En ligne
+              </div>
             </div>
           </div>
         </div>
@@ -498,13 +556,13 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
               onChange={e => setInputVal(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleBaptemeSubmit()}
               placeholder="Tape ta réponse…"
-              className="flex-1 px-4 py-3 rounded-xl bg-sable border border-g200 text-[14px] text-charbon outline-none focus:border-orange"
+              className="flex-1 px-4 py-3 rounded-xl bg-sable border border-g200 text-[16px] text-charbon outline-none focus:border-orange"
               autoFocus
             />
             <button
               onClick={handleBaptemeSubmit}
               disabled={!inputVal.trim()}
-              className="w-11 h-11 rounded-xl bg-orange text-white flex items-center justify-center disabled:opacity-40 active:opacity-80 transition"
+              className="w-11 h-11 rounded-xl bg-orange text-white flex items-center justify-center flex-shrink-0 disabled:opacity-40 active:opacity-80 transition"
             >
               <Icon name="send" size={18} />
             </button>
@@ -518,7 +576,11 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
   if (phase === 'profil_type') return (
     <div className="h-full flex flex-col bg-sable">
-      <div className="flex-1 overflow-y-auto px-5 pt-12 flex flex-col" style={{ scrollbarWidth: 'none' }}>
+      <div className="pt-12 pb-3 bg-white border-b border-g200 flex-shrink-0">
+        <ProgressBar phase={phase} />
+        <div className="px-4 mt-1"><BackBtn onClick={goBack} /></div>
+      </div>
+      <div className="flex-1 overflow-y-auto px-5 pt-6 flex flex-col" style={{ scrollbarWidth: 'none' }}>
       <div className="mb-8">
         <p className="text-[11.5px] font-bold text-orange uppercase tracking-[.12em] mb-2">Une question rapide</p>
         <h2 className="font-display font-extrabold text-[22px] text-charbon leading-[1.25]">Tu es dans quelle situation ?</h2>
@@ -548,7 +610,9 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
         ))}
       </div>
       <div className="mt-auto pt-8 pb-10">
-        <PrimaryBtn onClick={() => { setAnamnQ(0); setChatHistory([]); setPhase('anamnese'); }} disabled={!profilType}>
+        {/* Ne réinitialise plus l'anamnèse : revenir ici puis repartir effaçait
+            les réponses déjà données. */}
+        <PrimaryBtn onClick={() => setPhase('anamnese')} disabled={!profilType}>
           Continuer
         </PrimaryBtn>
       </div>
@@ -565,39 +629,38 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
     const newData = { ...anamnData, [key]: val };
     setAnamnData(newData);
     const nextQ = anamnQ + 1;
-    if (nextQ < ANAMN_QUESTIONS.length) {
-      setChatHistory(h => [...h,
-        { role: 'user', text: val },
-        { role: 'assist', text: ANAMN_QUESTIONS[nextQ] },
-      ]);
-      setAnamnQ(nextQ);
-    } else {
-      setChatHistory(h => [...h,
-        { role: 'user', text: val },
-        { role: 'assist', text: `Bien reçu. Maintenant montre-moi ce que tu vends — je vais configurer ta boutique.` },
-      ]);
-      setAnamnQ(nextQ);
-    }
+    const suite = nextQ < ANAMN_QUESTIONS.length
+      ? ANAMN_QUESTIONS[nextQ]
+      : `Bien reçu. Maintenant montre-moi ce que tu vends — je vais configurer ta boutique.`;
+    setAnamnHistory(h => [
+      ...(h.length ? h : [{ role: 'assist', text: ANAMN_QUESTIONS[0] }]),
+      { role: 'user', text: val },
+      { role: 'assist', text: suite },
+    ]);
+    setAnamnQ(nextQ);
     setInputVal('');
     scrollChat();
   };
 
   if (phase === 'anamnese') {
-    const initHistory = chatHistory.length === 0
+    const initHistory = anamnHistory.length === 0
       ? [{ role: 'assist', text: ANAMN_QUESTIONS[0] }]
-      : chatHistory;
+      : anamnHistory;
     const done = anamnQ >= ANAMN_QUESTIONS.length;
 
     return (
       <div className="h-full flex flex-col" style={{ background: '#EAE4D9' }}>
         <div className="px-4 pt-12 pb-3 bg-white border-b border-g200">
-          <ProgressBar step={1} />
-          <div className="flex items-center gap-3 mt-3">
-            <img src="/uploads/agents/carelle.jpg" alt="" className="w-8 h-8 rounded-full object-cover border border-g200 flex-shrink-0" />
-            <div>
-              <div className="font-display font-bold text-[14px] text-charbon">{assistName}</div>
-              <div className="text-[11px] text-g400">Question {Math.min(anamnQ + 1, ANAMN_QUESTIONS.length)}/{ANAMN_QUESTIONS.length}</div>
+          <ProgressBar phase={phase} />
+          <div className="flex items-center justify-between gap-3 mt-2">
+            <div className="flex items-center gap-3 min-w-0">
+              <img src="/uploads/agents/carelle.jpg" alt="" className="w-8 h-8 rounded-full object-cover border border-g200 flex-shrink-0" />
+              <div className="min-w-0">
+                <div className="font-display font-bold text-[14px] text-charbon truncate">{assistName}</div>
+                <div className="text-[11px] text-g400">Question {Math.min(anamnQ + 1, ANAMN_QUESTIONS.length)}/{ANAMN_QUESTIONS.length}</div>
+              </div>
             </div>
+            <BackBtn onClick={goBack} />
           </div>
         </div>
         <div ref={chatRef} className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3" style={{ scrollbarWidth: 'none' }}>
@@ -624,13 +687,13 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
               onChange={e => setInputVal(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleAnamnSubmit()}
               placeholder="Réponds librement…"
-              className="flex-1 px-4 py-3 rounded-xl bg-sable border border-g200 text-[14px] text-charbon outline-none focus:border-orange"
+              className="flex-1 px-4 py-3 rounded-xl bg-sable border border-g200 text-[16px] text-charbon outline-none focus:border-orange"
               autoFocus
             />
             <button
               onClick={handleAnamnSubmit}
               disabled={!inputVal.trim()}
-              className="w-11 h-11 rounded-xl bg-orange text-white flex items-center justify-center disabled:opacity-40 active:opacity-80 transition"
+              className="w-11 h-11 rounded-xl bg-orange text-white flex items-center justify-center flex-shrink-0 disabled:opacity-40 active:opacity-80 transition"
             >
               <Icon name="send" size={18} />
             </button>
@@ -645,62 +708,83 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   if (phase === 'template') return (
     <div className="h-full flex flex-col bg-sable">
       <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white flex-shrink-0">
-        <ProgressBar step={2} />
-        <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Ton style de boutique</h2>
+        <ProgressBar phase={phase} />
+        <div className="mt-1"><BackBtn onClick={goBack} /></div>
+        <h2 className="font-display font-bold text-[19px] text-charbon mt-1">Ton style de boutique</h2>
         <p className="text-[12.5px] text-g500 mt-0.5">Choisis le modèle qui ressemble à ton activité.</p>
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3" style={{ scrollbarWidth: 'none' }}>
-        {TEMPLATES.map(t => (
-          <button
-            key={t.id}
-            onClick={() => { setTemplateId(t.id); setBrandColor(t.id === '1c' ? '#C9A84C' : '#FF6B35'); }}
-            className={`w-full text-left rounded-2xl border-2 overflow-hidden transition ${
-              templateId === t.id
-                ? 'border-orange shadow-[0_0_0_3px_rgba(242,92,5,.15)]'
-                : 'border-g200 bg-white'
-            }`}
-          >
-            <TemplatePreview id={t.id} color={templateId === t.id ? brandColor : (t.id === '1c' ? '#C9A84C' : '#FF6B35')} />
-            <div className="px-4 py-3">
-              <div className="flex items-center justify-between mb-1">
-                <span className="font-display font-bold text-[14.5px] text-charbon">{t.name}</span>
-                {templateId === t.id && (
-                  <span className="text-[11px] font-bold text-orange bg-orange/10 px-2 py-0.5 rounded-full">Sélectionné</span>
-                )}
-              </div>
-              <p className="text-[12.5px] text-g500 mb-3">{t.desc}</p>
-              {templateId === t.id && (
-                <div className="flex gap-2 flex-wrap">
-                  {COLOR_PALETTE.map(c => (
-                    <button
-                      key={c.hex}
-                      onClick={e => { e.stopPropagation(); setBrandColor(c.hex); }}
-                      title={c.label}
-                      className="transition active:scale-90"
-                      style={{
-                        width: 28, height: 28, borderRadius: '50%',
-                        background: c.hex,
-                        border: brandColor === c.hex ? '3px solid #1a1714' : '2px solid transparent',
-                        outline: brandColor === c.hex ? '2px solid #fff' : 'none',
-                        outlineOffset: brandColor === c.hex ? '-4px' : '0',
-                        boxShadow: '0 1px 4px rgba(0,0,0,0.18)',
-                      }}
-                    />
-                  ))}
+        {/* La palette est SŒUR de la carte, pas dedans : un bouton imbriqué dans un
+            bouton est invalide en HTML et les pastilles ne réagissaient pas de façon
+            fiable selon le navigateur. */}
+        {TEMPLATES.map(t => {
+          const selected = templateId === t.id;
+          return (
+            <div
+              key={t.id}
+              className={`w-full rounded-2xl border-2 overflow-hidden transition ${
+                selected ? 'border-orange shadow-[0_0_0_3px_rgba(242,92,5,.15)] bg-white' : 'border-g200 bg-white'
+              }`}
+            >
+              <button
+                type="button"
+                onClick={() => { setTemplateId(t.id); setBrandColor(t.id === '1c' ? '#C9A84C' : '#FF6B35'); }}
+                className="w-full text-left"
+              >
+                <TemplatePreview id={t.id} color={selected ? brandColor : (t.id === '1c' ? '#C9A84C' : '#FF6B35')} />
+                <div className="px-4 py-3">
+                  <div className="flex items-center justify-between mb-1 gap-2">
+                    <span className="font-display font-bold text-[14.5px] text-charbon">{t.name}</span>
+                    {selected && (
+                      <span className="text-[11px] font-bold text-orange bg-orange/10 px-2 py-0.5 rounded-full flex-shrink-0">Sélectionné</span>
+                    )}
+                  </div>
+                  <p className="text-[12.5px] text-g500">{t.desc}</p>
+                </div>
+              </button>
+              {selected && (
+                <div className="px-4 pb-3">
+                  <p className="text-[11px] font-bold text-g400 uppercase tracking-[.08em] mb-2">Ta couleur</p>
+                  <div className="flex gap-1.5 flex-wrap">
+                    {COLOR_PALETTE.map(c => (
+                      <button
+                        key={c.hex}
+                        type="button"
+                        onClick={() => setBrandColor(c.hex)}
+                        title={c.label}
+                        aria-label={c.label}
+                        aria-pressed={brandColor === c.hex}
+                        className="w-11 h-11 rounded-full flex items-center justify-center transition active:scale-90"
+                      >
+                        <span
+                          style={{
+                            width: 28, height: 28, borderRadius: '50%',
+                            background: c.hex,
+                            border: brandColor === c.hex ? '3px solid #1a1714' : '2px solid transparent',
+                            outline: brandColor === c.hex ? '2px solid #fff' : 'none',
+                            outlineOffset: brandColor === c.hex ? '-4px' : '0',
+                            boxShadow: '0 1px 4px rgba(0,0,0,0.18)',
+                            display: 'block',
+                          }}
+                        />
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
-          </button>
-        ))}
+          );
+        })}
       </div>
 
       <div className="px-4 pb-10 pt-3">
         <PrimaryBtn
           onClick={() => {
-            setSlug(slugify(prenom));
+            // Proposition de départ seulement : repasser par ici ne doit ni
+            // écraser un identifiant déjà choisi ni vider les produits saisis.
+            setSlug(s => s || slugify(prenom));
             setIsSlugAvailable(null);
-            setProduits([]);
             setPhase('slug');
           }}
           disabled={!templateId}
@@ -716,8 +800,9 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   if (phase === 'slug') return (
     <div className="h-full flex flex-col bg-sable">
       <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
-        <ProgressBar step={3} />
-        <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Ton lien boutique</h2>
+        <ProgressBar phase={phase} />
+        <div className="mt-1"><BackBtn onClick={goBack} /></div>
+        <h2 className="font-display font-bold text-[19px] text-charbon mt-1">Ton lien boutique</h2>
         <p className="text-[12.5px] text-g500 mt-0.5">C'est ce lien que tu partages à tes clients.</p>
       </div>
 
@@ -746,7 +831,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
                 setSlugError('');
               }}
               placeholder="ex: macarthur"
-              className="w-full px-4 py-3.5 rounded-xl border-2 bg-white text-[15px] font-mono text-charbon outline-none transition pr-10 focus:border-orange border-g200"
+              className="w-full px-4 py-3.5 rounded-xl border-2 bg-white text-[16px] font-mono text-charbon outline-none transition pr-10 focus:border-orange border-g200"
               autoFocus
             />
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -799,8 +884,9 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   if (phase === 'whatsapp') return (
     <div className="h-full flex flex-col bg-sable">
       <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
-        <ProgressBar step={3} />
-        <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Ton WhatsApp</h2>
+        <ProgressBar phase={phase} />
+        <div className="mt-1"><BackBtn onClick={goBack} /></div>
+        <h2 className="font-display font-bold text-[19px] text-charbon mt-1">Ton WhatsApp</h2>
         <p className="text-[12.5px] text-g500 mt-0.5">C'est là que tes commandes arrivent.</p>
       </div>
 
@@ -848,8 +934,9 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   if (phase === 'upload') return (
     <div className="h-full flex flex-col bg-sable">
       <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
-        <ProgressBar step={4} />
-        <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Tes produits</h2>
+        <ProgressBar phase={phase} />
+        <div className="mt-1"><BackBtn onClick={goBack} /></div>
+        <h2 className="font-display font-bold text-[19px] text-charbon mt-1">Tes produits</h2>
         <p className="text-[12.5px] text-g500 mt-0.5">Ajoute ce que tu vends. Tu pourras compléter après.</p>
       </div>
 
@@ -913,7 +1000,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
             onChange={e => setNewProd(p => ({ ...p, nom: e.target.value }))}
             onKeyDown={e => e.key === 'Enter' && addProduit()}
             placeholder="Nom du produit (ex : Attiéké poisson)"
-            className="w-full px-4 py-3 rounded-xl bg-sable border border-g200 text-[14px] text-charbon outline-none focus:border-orange"
+            className="w-full px-4 py-3 rounded-xl bg-sable border border-g200 text-[16px] text-charbon outline-none focus:border-orange"
           />
           <input
             type="text"
@@ -923,12 +1010,12 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
             onChange={e => setNewProd(p => ({ ...p, prix: e.target.value.replace(/\D/g, '') }))}
             onKeyDown={e => e.key === 'Enter' && addProduit()}
             placeholder="Prix en FCFA (ex : 2000)"
-            className="w-full px-4 py-3 rounded-xl bg-sable border border-g200 text-[14px] text-charbon outline-none focus:border-orange"
+            className="w-full px-4 py-3 rounded-xl bg-sable border border-g200 text-[16px] text-charbon outline-none focus:border-orange"
           />
           <button
             onClick={addProduit}
             disabled={!newProd.nom.trim()}
-            className="w-full py-2.5 rounded-xl border-2 border-dashed border-g200 text-[13px] font-bold text-g500 disabled:opacity-40 active:bg-g100 transition"
+            className="w-full min-h-[44px] py-2.5 rounded-xl border-2 border-dashed border-g200 text-[13px] font-bold text-g500 disabled:opacity-40 active:bg-g100 transition"
           >
             + Ajouter
           </button>
@@ -955,9 +1042,9 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   if (phase === 'assistant') return (
     <div className="h-full flex flex-col bg-sable">
       <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
-        <ProgressBar step={4} />
+        <ProgressBar phase={phase} />
         <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Apprends-lui ton métier</h2>
-        <p className="text-[12.5px] text-g500 mt-0.5">7 questions. C'est ce qui fait qu'il répondra comme toi.</p>
+        <p className="text-[12.5px] text-g500 mt-0.5">Dernière étape : 7 questions. C'est ce qui fait qu'il répondra comme toi.</p>
       </div>
 
       <div className="flex-1 overflow-y-auto px-5 pt-6 pb-10" style={{ scrollbarWidth: 'none' }}>

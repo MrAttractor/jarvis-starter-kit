@@ -68,6 +68,14 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
   const initials    = (profile?.prenom || 'AA').slice(0, 2).toUpperCase();
   const photoUrl    = profile?.photo_url || null;
 
+  // Même règle de lecture du plan que PaliersScreen, pour ne pas afficher
+  // « Gratuit » à quelqu'un qui paie sous un ancien code de plan.
+  const isGratuit = !(
+    (profile?.plan_tier && profile.plan_tier !== 'gratuit') ||
+    ['bras_droit','growth','growth_eu','team','manager','personnalise','pro'].includes(profile?.plan_code)
+  );
+  const planLabel = isGratuit ? 'Gratuit' : 'Bras Droit';
+
   const openSheet = (key, current = '') => {
     setFieldValue(current);
     setSheetOpen(key);
@@ -303,6 +311,27 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
           />
         </div>
 
+        {/* Mon offre — seule porte d'entrée vers les formules et Fidelys.
+            Avant, l'écran des formules n'était atteignable qu'après 16 commandes
+            dans le mois, et Fidelys que si un client dormait depuis 14 jours. */}
+        <div className="bg-white rounded-2xl border border-g200 overflow-hidden shadow-soft">
+          <div className="px-4 pt-3 pb-1">
+            <span className="text-[10px] font-bold text-g400 uppercase tracking-[.1em]">Mon offre</span>
+          </div>
+          <Row
+            label="Ma formule"
+            sub={planLabel}
+            right={isGratuit ? 'Découvrir' : 'Voir'}
+            onClick={() => go('paliers')}
+          />
+          <Divider />
+          <Row
+            label="Fidelys"
+            sub="Faire revenir mes clients"
+            onClick={() => go('fidelys')}
+          />
+        </div>
+
         {/* Application */}
         <div className="bg-white rounded-2xl border border-g200 overflow-hidden shadow-soft">
           <div className="px-4 pt-3 pb-1">
@@ -410,7 +439,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
                     setSlugErr('');
                   }}
                   placeholder="ex: macarthur"
-                  className="w-full px-4 py-3.5 rounded-xl border border-g200 bg-sable text-[15px] font-mono text-charbon outline-none focus:border-orange pr-10"
+                  className="w-full px-4 py-3.5 rounded-xl border border-g200 bg-sable text-[16px] font-mono text-charbon outline-none focus:border-orange pr-10"
                   autoFocus
                 />
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -467,7 +496,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
                 sheetOpen === 'activite' ? 'Ex : Restauration · Abidjan' :
                 'Ex : Aya, Max, Stella…'
               }
-              className="w-full px-4 py-3.5 rounded-xl border border-g200 bg-sable text-[15px] text-charbon outline-none focus:border-orange"
+              className="w-full px-4 py-3.5 rounded-xl border border-g200 bg-sable text-[16px] text-charbon outline-none focus:border-orange"
               autoFocus
               onKeyDown={e => e.key === 'Enter' && saveField({ [sheetOpen]: fieldValue.trim() })}
             />
@@ -500,7 +529,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
               value={feedbackText}
               onChange={e => setFeedbackText(e.target.value)}
               placeholder={feedbackType === 'bug' ? 'Décris ce qui ne fonctionne pas…' : 'Qu\'est-ce qui manque ou pourrait être mieux ?'}
-              className="w-full px-4 py-3 rounded-xl border border-g200 bg-sable text-[14px] text-charbon outline-none focus:border-orange resize-none"
+              className="w-full px-4 py-3 rounded-xl border border-g200 bg-sable text-[16px] text-charbon outline-none focus:border-orange resize-none"
             />
             <button
               onClick={sendFeedback}

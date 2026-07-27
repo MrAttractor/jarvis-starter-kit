@@ -136,16 +136,18 @@ export function Field({ label, hint, children }) {
   );
 }
 
+// 16 px minimum sur toute saisie : en dessous, iOS zoome de lui-même à chaque
+// focus et l'utilisateur doit repincer l'écran pour revoir la page (UX_SYSTEM §11).
 export function Input(props) {
   const { className = "", ...rest } = props;
   return <input {...rest}
-    className={`w-full bg-white border-[1.5px] border-g200 rounded-xl px-4 py-3.5 text-[15px] text-charbon placeholder:text-g400 outline-none focus:border-orange focus:ring-4 focus:ring-orange/12 transition ${className}`} />;
+    className={`w-full bg-white border-[1.5px] border-g200 rounded-xl px-4 py-3.5 text-[16px] text-charbon placeholder:text-g400 outline-none focus:border-orange focus:ring-4 focus:ring-orange/12 transition ${className}`} />;
 }
 
 export function Textarea(props) {
   const { className = "", ...rest } = props;
   return <textarea {...rest}
-    className={`w-full bg-white border-[1.5px] border-g200 rounded-xl px-4 py-3.5 text-[15px] text-charbon placeholder:text-g400 outline-none focus:border-orange focus:ring-4 focus:ring-orange/12 transition resize-none ${className}`} />;
+    className={`w-full bg-white border-[1.5px] border-g200 rounded-xl px-4 py-3.5 text-[16px] text-charbon placeholder:text-g400 outline-none focus:border-orange focus:ring-4 focus:ring-orange/12 transition resize-none ${className}`} />;
 }
 
 export function Spinner({ className = "" }) {
@@ -265,13 +267,13 @@ export function VoiceMic({ onTranscript, className = "" }) {
       type="button"
       onClick={toggle}
       title={listening ? 'Arrêter' : 'Dicter'}
-      className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition active:scale-95 ${
+      className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition active:scale-95 ${
         listening
           ? 'bg-orange text-white shadow-[0_4px_12px_-4px_rgba(242,92,5,.55)] animate-pulse'
           : 'bg-g100 text-g500 hover:bg-g200'
       } ${className}`}
     >
-      <Icon name={listening ? 'micoff' : 'mic'} size={16} stroke={2} />
+      <Icon name={listening ? 'micoff' : 'mic'} size={18} stroke={2} />
     </button>
   );
 }

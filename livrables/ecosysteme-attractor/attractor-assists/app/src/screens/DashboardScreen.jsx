@@ -213,7 +213,8 @@ export function DashboardScreen({ go, notify, profile }) {
       <div className="flex items-center gap-3 px-4 pt-12 pb-3 bg-white border-b border-g200 flex-shrink-0">
         <button
           onClick={() => go('profil')}
-          className="w-10 h-10 rounded-full bg-charbon text-white flex items-center justify-center font-display font-extrabold text-[14px] flex-shrink-0"
+          aria-label="Mon profil"
+          className="w-11 h-11 rounded-full bg-charbon text-white flex items-center justify-center font-display font-extrabold text-[14px] flex-shrink-0"
         >
           {initials}
         </button>
@@ -223,7 +224,8 @@ export function DashboardScreen({ go, notify, profile }) {
         </div>
         <button
           onClick={() => go('notifications')}
-          className="relative w-10 h-10 rounded-full border border-g200 flex items-center justify-center flex-shrink-0 active:bg-sable transition"
+          aria-label="Notifications"
+          className="relative w-11 h-11 rounded-full border border-g200 flex items-center justify-center flex-shrink-0 active:bg-sable transition"
         >
           <Icon name="bell" size={18} className="text-charbon" />
           {unreadNotifs > 0 && (
@@ -238,7 +240,7 @@ export function DashboardScreen({ go, notify, profile }) {
           {ordersCount > 0 && (
             <button
               onClick={() => go('commandes')}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange/10 border border-orange/20 active:bg-orange/15 transition"
+              className="flex items-center gap-1.5 h-11 px-3.5 rounded-fullbg-orange/10 border border-orange/20 active:bg-orange/15 transition"
             >
               <span className="w-2 h-2 rounded-full bg-orange flex-shrink-0" />
               <span className="text-[12px] font-bold text-orange">{ordersCount} commande{ordersCount > 1 ? 's' : ''}</span>
@@ -247,7 +249,7 @@ export function DashboardScreen({ go, notify, profile }) {
           {staleCount > 0 && (
             <button
               onClick={() => go('fidelys')}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber/10 border border-amber/20 active:bg-amber/15 transition"
+              className="flex items-center gap-1.5 h-11 px-3.5 rounded-fullbg-amber/10 border border-amber/20 active:bg-amber/15 transition"
             >
               <span className="w-2 h-2 rounded-full bg-amber flex-shrink-0" />
               <span className="text-[12px] font-bold text-[#92400e]">{staleCount} à relancer</span>
@@ -259,7 +261,7 @@ export function DashboardScreen({ go, notify, profile }) {
                 navigator.clipboard.writeText(boutiqueUrl(profile.public_slug));
                 notify('Lien boutique copié !');
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-vert/10 border border-vert/20 active:bg-vert/15 transition ml-auto"
+              className="flex items-center gap-1.5 h-11 px-3.5 rounded-fullbg-vert/10 border border-vert/20 active:bg-vert/15 transition ml-auto"
             >
               <Icon name="bolt" size={12} className="text-vert" />
               <span className="text-[12px] font-bold text-vert">Copier mon lien</span>
@@ -298,7 +300,7 @@ export function DashboardScreen({ go, notify, profile }) {
             <button
               key={s}
               onClick={() => send(s)}
-              className="flex-shrink-0 px-3.5 py-2 rounded-full bg-white border border-g200 text-[12.5px] font-semibold text-charbon active:border-orange/50 transition"
+              className="flex-shrink-0 h-11 px-4 rounded-full bg-white border border-g200 text-[12.5px] font-semibold text-charbon active:border-orange/50 transition"
             >
               {s}
             </button>
@@ -321,7 +323,7 @@ export function DashboardScreen({ go, notify, profile }) {
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && send(input)}
             placeholder="Dis-moi ce qui est dans ta tête…"
-            className="flex-1 bg-transparent py-3 text-[15px] outline-none text-charbon placeholder-g400"
+            className="flex-1 bg-transparent py-3 text-[16px] outline-none text-charbon placeholder-g400"
             style={{ fontWeight: 500, fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
           />
         </div>

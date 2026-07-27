@@ -191,12 +191,13 @@ export function TemplateGalerieScreen({ go, notify, profile }) {
 
       {/* ── AppBar ── */}
       <div className="flex items-center gap-3 px-4 pt-14 pb-4 bg-sable flex-shrink-0">
-        <button onClick={() => go('dashboard')} className="w-9 h-9 rounded-xl bg-white border border-g200 flex items-center justify-center active:bg-g100 transition">
-          <Icon name="back" size={18} className="text-charbon" />
+        {/* On revient au Catalogue, d'où l'on vient — pas au Dashboard. */}
+        <button onClick={() => go('catalogue')} aria-label="Retour au catalogue" className="w-11 h-11 rounded-xl bg-white border border-g200 flex items-center justify-center flex-shrink-0 active:bg-g100 transition">
+          <Icon name="back" size={19} className="text-charbon" />
         </button>
-        <div>
-          <div className="font-display font-bold text-[19px] text-charbon">Modèles de boutique</div>
-          <div className="text-[12px] text-g500 mt-0.5">Prévisualise et choisis ta mise en page</div>
+        <div className="min-w-0">
+          <div className="font-display font-bold text-[19px] text-charbon truncate">Modèles de boutique</div>
+          <div className="text-[12px] text-g500 mt-0.5 truncate">Prévisualise et choisis ta mise en page</div>
         </div>
       </div>
 
@@ -232,22 +233,22 @@ export function TemplateGalerieScreen({ go, notify, profile }) {
                 {/* Badge choisi */}
                 {isChosen && (
                   <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-orange text-white px-3 py-1.5 rounded-full font-bold text-[11px] shadow">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><polyline points="20 6 9 17 4 12"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" width="11" height="11"><polyline points="20 6 9 17 4 12"/></svg>
                     Sélectionné
                   </div>
                 )}
               </div>
 
               {/* Infos + actions */}
-              <div className="px-4 py-3 flex items-center justify-between">
-                <div>
-                  <div className="font-display font-bold text-[15px] text-charbon">{tpl.nom}</div>
-                  <div className="text-[12px] text-g500 mt-0.5">{tpl.accroche}</div>
+              <div className="px-4 py-3 flex items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="font-display font-bold text-[15px] text-charbon truncate">{tpl.nom}</div>
+                  <div className="text-[12px] text-g500 mt-0.5 truncate">{tpl.accroche}</div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-shrink-0">
                   <button
                     onClick={() => voir(tpl)}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-g200 bg-sable text-charbon text-[12.5px] font-bold active:bg-g100 transition"
+                    className="flex items-center gap-1.5 h-11 px-3 rounded-xl border border-g200 bg-sable text-charbon text-[12.5px] font-bold active:bg-g100 transition"
                   >
                     <Icon name="eye" size={13} />
                     Voir
@@ -256,7 +257,7 @@ export function TemplateGalerieScreen({ go, notify, profile }) {
                     <button
                       onClick={() => choisir(tpl)}
                       disabled={loading}
-                      className="px-3 py-2 rounded-xl bg-orange text-white text-[12.5px] font-bold active:opacity-80 transition disabled:opacity-50"
+                      className="h-11 px-3.5 rounded-xl bg-orange text-white text-[12.5px] font-bold active:opacity-80 transition disabled:opacity-50"
                     >
                       Choisir
                     </button>
@@ -280,7 +281,7 @@ export function TemplateGalerieScreen({ go, notify, profile }) {
           <div className="flex items-center gap-3 px-4 py-3 flex-shrink-0" style={{ background: 'rgba(15,10,26,0.95)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
             <button
               onClick={() => setPreview(null)}
-              className="flex items-center gap-1.5 text-white/70 font-bold text-[13px] active:text-white transition"
+              className="flex items-center gap-1.5 h-11 pr-2 text-white/70 font-bold text-[13px] active:text-white transition flex-shrink-0"
             >
               <Icon name="back" size={16} className="text-white/70" />
               Retour
@@ -291,7 +292,7 @@ export function TemplateGalerieScreen({ go, notify, profile }) {
             <button
               onClick={() => choisir(preview)}
               disabled={loading || chosen === preview.id}
-              className="flex items-center gap-1.5 bg-orange text-white px-3.5 py-2 rounded-xl font-display font-bold text-[13px] active:opacity-80 transition disabled:opacity-50"
+              className="flex items-center gap-1.5 bg-orange text-white h-11 px-4 rounded-xl font-display font-bold text-[13px] active:opacity-80 transition disabled:opacity-50 flex-shrink-0"
             >
               {loading
                 ? <Spinner className="w-4 h-4 border-white" />
