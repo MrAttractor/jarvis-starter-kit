@@ -110,6 +110,8 @@
   .env-top b{font-weight:700}.env-top .num{color:var(--mut);font-size:12.5px}
   .env-bar{height:8px;border-radius:20px;background:var(--line);overflow:hidden}
   .env-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#f0be5e);border-radius:20px}
+  .li-sec{font-size:10.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--mut);padding:12px 0 4px;border-top:1px solid var(--line);margin-top:4px}
+  .li-sec:first-child{border-top:none;margin-top:0;padding-top:2px}
   .li{padding:12px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;align-items:center}
   .li:last-child{border-bottom:none}
   .li .l b{font-size:14.5px;font-weight:700;display:block}.li .l small{font-size:12px;color:var(--mut)}
@@ -241,8 +243,8 @@
         <p class="lede">Ton argent, rangé. Ce qui coule, ce qui reste à aller chercher.</p>
         <div class="pulse">
           <div class="pulse-top">
-            <div class="pulse-big"><span id="p-confirme" class="num">—</span><small>encaissé ce mois</small></div>
-            <div class="pulse-obj">Objectif<b id="p-objectif" class="num">—</b></div>
+            <div class="pulse-big"><span id="p-confirme" class="num">—</span><small id="p-conf-sub">encaissé ce mois</small></div>
+            <div class="pulse-obj" onclick="editObjectif()" style="cursor:pointer">Objectif ✎<b id="p-objectif" class="num">—</b><span id="p-obj-eur" style="display:block;font-weight:400;color:#B9ADA1;font-size:10.5px"></span></div>
           </div>
           <div class="bar"><i class="done" id="p-bar-done" style="width:0"></i><i class="pipe" id="p-bar-pipe" style="width:0"></i></div>
           <div class="pulse-legend">
@@ -352,7 +354,12 @@ var ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6I
 var OWNER="myattractor1@gmail.com";
 var TOKEN=localStorage.getItem('pilote_token')||ANON;
 function $(id){return document.getElementById(id);}
-function fcfa(n){ n=Math.round(Number(n)||0); return new Intl.NumberFormat('fr-FR').format(n)+" F"; }
+var TAUX=656; // 1 € ≈ 656 FCFA
+function nf(n){ return new Intl.NumberFormat('fr-FR').format(Math.round(Number(n)||0)); }
+function fcfa(n){ return nf(n)+" F"; }
+function eurOf(f){ return Math.round((Number(f)||0)/TAUX); }
+/* Montant en double devise : FCFA · € */
+function dual(f){ f=Math.round(Number(f)||0); return nf(f)+" F · "+nf(f/TAUX)+" €"; }
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function api(p){ return fetch(SB_URL+p,{headers:{apikey:ANON,Authorization:"Bearer "+TOKEN}}).then(function(r){return r.json();}).catch(function(){return[];}); }
 
@@ -393,7 +400,7 @@ function enter(){ $('gate').style.display='none'; $('app').style.display='block'
 if(TOKEN!==ANON){ enter(); }
 
 /* DATA */
-var CTX={confirme:0,objectif:0,pipe:0,entrees:0,sorties:0}, allActions=[];
+var CTX={confirme:0,objectif:0,pipe:0,entrees:0,sorties:0}, allActions=[], SITE={};
 function loadAll(){
   Promise.all([
     api("/rest/v1/pilotage_cap?select=*&limit=1"),
@@ -401,24 +408,38 @@ function loadAll(){
     api("/rest/v1/pilotage_finances?select=*&order=date.desc"),
     api("/rest/v1/pilotage_enveloppes?select=*&order=priorite"),
     api("/rest/v1/pilotage_pipeline?select=*&order=priorite"),
-    api("/rest/v1/pilotage_projets?select=*&order=priorite")
-  ]).then(function(r){ renderPulse(r[0]&&r[0][0]); renderActions(r[1]||[],r[4]||[]); renderFin(r[2]||[]); renderEnv(r[3]||[]); renderPipe(r[4]||[]); renderProj(r[5]||[]); });
+    api("/rest/v1/pilotage_projets?select=*&order=priorite"),
+    fetch(SB_URL+"/functions/v1/cockpit-data",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json"},body:"{}"}).then(function(r){return r.json();}).catch(function(){return{};})
+  ]).then(function(r){
+    var cap=(r[0]&&r[0][0])||null; var site=r[6]||{};
+    DATA.cap=cap; SITE=site;
+    renderPulse(cap,site); renderActions(r[1]||[],(site.clients||[]).concat(site.leads||[])); renderFin(r[2]||[]); renderEnv(r[3]||[]); renderPipe(r[4]||[],site); renderProj(r[5]||[]);
+  });
 }
 function isEntree(t){ t=(t||'').toLowerCase(); return t.indexOf('entr')>-1||t.indexOf('reven')>-1||t.indexOf('encaiss')>-1||t==='pro'; }
 function moisCourant(d){ if(!d)return false; var x=new Date(d),n=new Date(); return x.getMonth()===n.getMonth()&&x.getFullYear()===n.getFullYear(); }
-function renderPulse(cap){
-  var obj=cap?+(cap.objectif||0):0, conf=cap?+(cap.confirme||0):0, pipe=cap?+(cap.pipeline_val||0):0;
+function editObjectif(){ openEdit('cap', DATA.cap||null); }
+function renderPulse(cap,site){
+  var obj=cap?+(cap.objectif||0):0;
+  var conf=(site&&site.encaisse_mois!=null)?+site.encaisse_mois:0;
+  var pipe=(site&&site.pipeline_fcfa!=null)?+site.pipeline_fcfa:0;
   CTX.confirme=conf; CTX.objectif=obj; CTX.pipe=pipe;
-  $('p-confirme').textContent=fcfa(conf); $('p-objectif').textContent=obj?fcfa(obj):"à définir"; $('p-pipe').textContent=fcfa(pipe);
+  $('p-confirme').textContent=fcfa(conf); $('p-conf-sub').textContent='≈ '+nf(eurOf(conf))+' € encaissé ce mois';
+  $('p-objectif').textContent=obj?fcfa(obj):"à définir"; $('p-obj-eur').textContent=obj?('≈ '+nf(eurOf(obj))+' €'):'';
+  $('p-pipe').textContent=fcfa(pipe);
   var base=Math.max(obj,conf+pipe,1);
   $('p-bar-done').style.width=Math.min(100,conf/base*100)+"%"; $('p-bar-pipe').style.width=Math.min(100-conf/base*100,pipe/base*100)+"%";
   var reste=Math.max(0,obj-conf); $('p-reste').innerHTML=obj?'À trouver : <b class="num" style="color:#fff;margin-left:3px">'+fcfa(reste)+'</b>':'';
   var h=new Date().getHours(); $('hero-hello').innerHTML=(h<12?"Bonjour.":h<18?"Bon après-midi.":"Bonsoir.")+' Où en es-tu <em>ce mois</em> ?';
 }
-function renderActions(focus,pipe){
+function renderActions(focus,siteItems){
   DATA.focus=focus; allActions=[];
   focus.forEach(function(f){ allActions.push({id:f.id,tbl:'pilotage_focus',t:f.description,done:!!f.done,kind:'focus'}); });
-  pipe.filter(function(p){return p.urgent;}).forEach(function(p){ allActions.push({id:null,t:'Relancer '+(p.nom||'un dossier')+(p.prochaine?' — '+p.prochaine:''),done:false,kind:'vente',meta:p.contact||''}); });
+  (siteItems||[]).filter(function(c){return c.chaud;}).slice(0,5).forEach(function(c){
+    var t='Relancer '+(c.nom||'un client')+' — '+(c.etat||'');
+    if(c.solde_du_fcfa) t+=' (solde '+dual(c.solde_du_fcfa)+')';
+    allActions.push({id:null,t:t,done:false,kind:'vente',meta:c.contact||''});
+  });
   paintActions(false);
 }
 function paintActions(showAll){
@@ -441,19 +462,25 @@ function renderFin(fin){
   var mois=fin.filter(function(f){return moisCourant(f.date);}), e=0,s=0;
   mois.forEach(function(f){ if(isEntree(f.type)) e+=+(f.montant||0); else s+=+(f.montant||0); });
   CTX.entrees=e; CTX.sorties=s; var net=e-s;
-  var kpis='<div class="kpi"><span class="k">Entrées</span><span class="v pos num">'+fcfa(e)+'</span></div><div class="kpi"><span class="k">Sorties</span><span class="v neg num">'+fcfa(s)+'</span></div><div class="kpi"><span class="k">Net du mois</span><span class="v num" style="color:'+(net>=0?'var(--vt-d)':'var(--or-d)')+'">'+fcfa(net)+'</span></div>';
+  var kpis='<div class="kpi"><span class="k">Entrées</span><span class="v pos num" style="font-size:14px">'+dual(e)+'</span></div><div class="kpi"><span class="k">Sorties</span><span class="v neg num" style="font-size:14px">'+dual(s)+'</span></div><div class="kpi"><span class="k">Net du mois</span><span class="v num" style="font-size:14px;color:'+(net>=0?'var(--vt-d)':'var(--or-d)')+'">'+dual(net)+'</span></div>';
   var liste=fin.slice(0,8).map(function(f){ var ent=isEntree(f.type); return '<div class="li edit" onclick="openEditById(\'finances\',\''+f.id+'\')"><div class="l"><b>'+esc(f.description||f.categorie||(ent?'Entrée':'Sortie'))+'</b><small>'+esc((f.date||'').slice(0,10))+'</small></div><span class="pill'+(ent?' vt':' hot')+'">'+(ent?'+':'−')+fcfa(f.montant)+'</span></div>'; }).join('');
   $('body-finances').innerHTML=kpis+(liste?'<div style="margin-top:8px">'+liste+'</div>':'<div class="empty">Aucun mouvement.</div>')+addBtn('finances','Ajouter un mouvement');
 }
 function renderEnv(env){
   DATA.enveloppes=env;
-  var body=env.length?env.map(function(v){ var c=+(v.cible||0),ep=+(v.epargne||0),pct=c?Math.min(100,ep/c*100):0; return '<div class="env edit" onclick="openEditById(\'enveloppes\',\''+v.id+'\')"><div class="env-top"><b>'+esc(v.nom||'Enveloppe')+'</b><span class="num">'+fcfa(ep)+(c?' / '+fcfa(c):'')+'</span></div><div class="env-bar"><i style="width:'+pct+'%"></i></div></div>'; }).join(''):'<div class="empty">Aucune enveloppe.</div>';
+  var body=env.length?env.map(function(v){ var c=+(v.cible||0),ep=+(v.epargne||0),pct=c?Math.min(100,ep/c*100):0; return '<div class="env edit" onclick="openEditById(\'enveloppes\',\''+v.id+'\')"><div class="env-top"><b>'+esc(v.nom||'Enveloppe')+'</b><span class="num">'+dual(ep)+(c?' / '+fcfa(c):'')+'</span></div><div class="env-bar"><i style="width:'+pct+'%"></i></div></div>'; }).join(''):'<div class="empty">Aucune enveloppe.</div>';
   $('body-enveloppes').innerHTML=body+addBtn('enveloppes','Ajouter une enveloppe');
 }
-function renderPipe(pipe){
-  CTX.dossiers=pipe; DATA.pipeline=pipe;
-  var body=pipe.length?pipe.map(function(p){ return '<div class="li edit" onclick="openEditById(\'pipeline\',\''+p.id+'\')"><div class="l"><b>'+esc(p.nom||'Dossier')+'</b><small>'+esc([p.type,p.prochaine].filter(Boolean).join(' · ')||'—')+'</small></div><span class="pill'+(p.urgent?' hot':'')+'">'+esc(p.statut||(p.urgent?'Urgent':'En cours'))+'</span></div>'; }).join(''):'<div class="empty"><b>Pipeline vide.</b>Chaque besoin d\'argent = un dossier à ouvrir.</div>';
-  $('body-pipeline').innerHTML=body+addBtn('pipeline','Ajouter un dossier');
+function renderPipe(manual,site){
+  DATA.pipeline=manual;
+  var clients=(site&&site.clients)||[], leads=(site&&site.leads)||[];
+  CTX.dossiers=clients.concat(leads);
+  var html='';
+  if(clients.length){ html+='<div class="li-sec">Clients (commandes du site)</div>'+clients.map(function(c){ var pc=c.etat==='Payé'?'vt':(c.chaud?'hot':''); return '<div class="li"><div class="l"><b>'+esc(c.nom)+'</b><small>'+esc((c.projet||'')+' · '+dual(c.montant_fcfa))+'</small></div><span class="pill '+pc+'">'+esc(c.etat)+'</span></div>'; }).join(''); }
+  if(leads.length){ html+='<div class="li-sec">Leads du formulaire</div>'+leads.map(function(l){ return '<div class="li"><div class="l"><b>'+esc(l.nom)+'</b><small>'+esc(l.projet||l.besoin||'—')+'</small></div><span class="pill">Lead</span></div>'; }).join(''); }
+  if(manual.length){ html+='<div class="li-sec">Autres dossiers (hors site)</div>'+manual.map(function(p){ return '<div class="li edit" onclick="openEditById(\'pipeline\',\''+p.id+'\')"><div class="l"><b>'+esc(p.nom||'Dossier')+'</b><small>'+esc([p.type,p.prochaine].filter(Boolean).join(' · ')||'—')+'</small></div><span class="pill'+(p.urgent?' hot':'')+'">'+esc(p.statut||'En cours')+'</span></div>'; }).join(''); }
+  if(!html) html='<div class="empty"><b>Pipeline vide.</b>Tes clients du site (leads, commandes, paiements) apparaîtront ici automatiquement.</div>';
+  $('body-pipeline').innerHTML=html+addBtn('pipeline','Ajouter un dossier hors site');
 }
 function renderProj(proj){
   DATA.projets=proj;
@@ -464,11 +491,13 @@ function renderProj(proj){
 /* ===== EDITION (CRUD) ===== */
 var DATA={finances:[],enveloppes:[],pipeline:[],projets:[],focus:[]};
 var ENT={
+  cap:{table:'pilotage_cap',title:'Objectif financier',fields:[
+    {k:'objectif',l:'Objectif du mois',t:'money'},{k:'date_objectif',l:'Échéance',t:'date'},{k:'note',l:'Note',t:'text'}]},
   finances:{table:'pilotage_finances',title:'Mouvement',fields:[
-    {k:'type',l:'Type',t:'select',opt:['entrée','sortie']},{k:'montant',l:'Montant (F)',t:'number'},
+    {k:'type',l:'Type',t:'select',opt:['entrée','sortie']},{k:'montant',l:'Montant',t:'money'},
     {k:'categorie',l:'Catégorie',t:'text'},{k:'description',l:'Description',t:'text'},{k:'date',l:'Date',t:'date'}]},
   enveloppes:{table:'pilotage_enveloppes',title:'Enveloppe',fields:[
-    {k:'nom',l:'Nom',t:'text'},{k:'cible',l:'Cible (F)',t:'number'},{k:'epargne',l:'Déjà épargné (F)',t:'number'}]},
+    {k:'nom',l:'Nom',t:'text'},{k:'cible',l:'Cible',t:'money'},{k:'epargne',l:'Déjà épargné',t:'money'}]},
   pipeline:{table:'pilotage_pipeline',title:'Dossier',fields:[
     {k:'nom',l:'Nom',t:'text'},{k:'type',l:'Type',t:'text'},{k:'statut',l:'Statut',t:'text'},
     {k:'prochaine',l:'Prochaine action',t:'text'},{k:'contact',l:'Contact',t:'text'},{k:'urgent',l:'Dossier chaud',t:'check'}]},
@@ -488,15 +517,21 @@ function openEdit(ent,item){
     var v=item?(item[f.k]==null?'':item[f.k]):'';
     if(f.t==='select'){ html+='<div class="fg"><label>'+f.l+'</label><select id="fld-'+f.k+'">'+f.opt.map(function(o){return '<option'+(String(v)===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select></div>'; }
     else if(f.t==='check'){ html+='<div class="fg chk"><input type="checkbox" id="fld-'+f.k+'"'+(v?' checked':'')+'><label>'+f.l+'</label></div>'; }
+    else if(f.t==='money'){ html+='<div class="fg"><label>'+f.l+'</label><div style="display:flex;gap:8px"><input id="fld-'+f.k+'" type="number" inputmode="numeric" value="'+esc(v)+'" oninput="moneyHint(\''+f.k+'\')" style="flex:1"><select id="dev-'+f.k+'" onchange="moneyHint(\''+f.k+'\')" style="width:96px"><option value="F">FCFA</option><option value="E">€</option></select></div><div id="hint-'+f.k+'" style="font-size:12px;color:var(--mut);margin-top:5px"></div></div>'; }
     else { if(f.t==='date'&&!v){ v=new Date().toISOString().slice(0,10); } var typ=f.t==='date'?'date':(f.t==='number'?'number':'text'); html+='<div class="fg"><label>'+f.l+'</label><input id="fld-'+f.k+'" type="'+typ+'"'+(f.t==='number'?' inputmode="numeric"':'')+' value="'+esc(v)+'"></div>'; }
   });
   html+='<div class="mactions">'+(item?'<button class="btn btn-del" onclick="deleteEntry()">Supprimer</button>':'')+'<button class="btn btn-acc" onclick="saveEntry()">Enregistrer</button></div>';
   $('m-form').innerHTML=html; $('mbd').classList.add('on'); $('modal').classList.add('on');
 }
 function closeModal(){ $('mbd').classList.remove('on'); $('modal').classList.remove('on'); }
+function moneyHint(k){ var el=$('fld-'+k),dev=$('dev-'+k),h=$('hint-'+k); if(!el||!h)return; var v=Number(el.value)||0; if(dev&&dev.value==='E') h.textContent='= '+nf(v*TAUX)+' FCFA'; else h.textContent='≈ '+nf(v/TAUX)+' €'; }
 function saveEntry(){
   var cfg=ENT[curEnt], payload={};
-  cfg.fields.forEach(function(f){ var el=$('fld-'+f.k); if(!el)return; if(f.t==='check') payload[f.k]=el.checked; else if(f.t==='number') payload[f.k]=el.value===''?null:Number(el.value); else payload[f.k]=el.value; });
+  cfg.fields.forEach(function(f){ var el=$('fld-'+f.k); if(!el)return;
+    if(f.t==='check') payload[f.k]=el.checked;
+    else if(f.t==='money'){ var val=el.value===''?null:Number(el.value); var dev=$('dev-'+f.k); if(val!=null&&dev&&dev.value==='E') val=Math.round(val*TAUX); payload[f.k]=val; }
+    else if(f.t==='number') payload[f.k]=el.value===''?null:Number(el.value);
+    else payload[f.k]=el.value; });
   var path=SB_URL+"/rest/v1/"+cfg.table+(curId?"?id=eq."+curId:"");
   fetch(path,{method:curId?"PATCH":"POST",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify(payload)})
     .then(function(r){ if(r.ok){ closeModal(); loadAll(); } else { r.text().then(function(t){ alert("Erreur : "+t.slice(0,140)); }); } })
