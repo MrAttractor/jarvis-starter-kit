@@ -409,6 +409,7 @@ function renderEnv(env){
   $('body-enveloppes').innerHTML=env.length?env.slice(0,6).map(function(v){ var c=+(v.cible||0),ep=+(v.epargne||0),pct=c?Math.min(100,ep/c*100):0; return '<div class="env"><div class="env-top"><b>'+esc(v.nom||'Enveloppe')+'</b><span class="num">'+fcfa(ep)+(c?' / '+fcfa(c):'')+'</span></div><div class="env-bar"><i style="width:'+pct+'%"></i></div></div>'; }).join(''):'<div class="empty">Roland t\'aide à créer tes enveloppes.</div>';
 }
 function renderPipe(pipe){
+  CTX.dossiers=pipe;
   $('body-pipeline').innerHTML=pipe.length?pipe.slice(0,10).map(function(p){ return '<div class="li"><div class="l"><b>'+esc(p.nom||'Dossier')+'</b><small>'+esc([p.type,p.prochaine].filter(Boolean).join(' · ')||'—')+'</small></div><span class="pill'+(p.urgent?' hot':'')+'">'+esc(p.statut||(p.urgent?'Urgent':'En cours'))+'</span></div>'; }).join(''):'<div class="empty"><b>Pipeline vide.</b>Chaque besoin d\'argent = un dossier à ouvrir.</div>';
 }
 function renderProj(proj){
@@ -424,7 +425,9 @@ function sendRoland(){
   var ta=$('chat-input'), txt=ta.value.trim(); if(!txt) return; ta.value='';
   var intro=document.querySelector('.chat-intro'); if(intro) intro.remove(); addMsg('me',txt);
   var first=chatMsgs.length===0;
-  var contexte=first?('Contexte du mois : '+fcfa(CTX.confirme)+' encaissé sur objectif '+(CTX.objectif?fcfa(CTX.objectif):'non défini')+', '+fcfa(CTX.pipe)+' en pipeline, entrées '+fcfa(CTX.entrees)+', sorties '+fcfa(CTX.sorties)+'.\n\n'+txt):txt;
+  var doss='';
+  if(CTX.dossiers&&CTX.dossiers.length){ doss='\nDossiers en cours : '+CTX.dossiers.slice(0,8).map(function(d){ return (d.nom||'?')+' ('+(d.statut||'—')+(d.urgent?', chaud':'')+')'; }).join(' ; ')+'.'; }
+  var contexte=first?('Contexte du mois : '+fcfa(CTX.confirme)+' encaissé sur objectif '+(CTX.objectif?fcfa(CTX.objectif):'non défini')+', '+fcfa(CTX.pipe)+' en pipeline, entrées '+fcfa(CTX.entrees)+', sorties '+fcfa(CTX.sorties)+'.'+doss+'\n\n'+txt):txt;
   chatMsgs.push({from:'me',text:txt});
   var typing=addMsg('rol','Roland réfléchit…'); typing.className='msg rol typing';
   fetch(SB_URL+"/functions/v1/chat-assistant",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json"},body:JSON.stringify({assistant_id:'roland_perso',messages:chatMsgs.slice(0,-1).concat([{from:'me',text:contexte}])})})
