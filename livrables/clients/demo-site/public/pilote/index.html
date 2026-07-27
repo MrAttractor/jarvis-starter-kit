@@ -155,6 +155,9 @@
   .composer textarea:focus{outline:none;border-color:var(--or)}
   .composer button{width:46px;height:46px;border-radius:12px;background:var(--or);border:none;color:#fff;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
   .composer button svg{width:19px;height:19px}
+  .composer .mic{background:#fff;border:1.5px solid var(--line);color:var(--ink2)}
+  .composer .mic.rec{background:#DC2626;border-color:#DC2626;color:#fff;animation:pl2 1.4s infinite}
+  @keyframes pl2{0%{box-shadow:0 0 0 0 rgba(220,38,38,.5)}70%{box-shadow:0 0 0 8px rgba(220,38,38,0)}100%{box-shadow:0 0 0 0 rgba(220,38,38,0)}}
 
   /* GATE */
   #gate{position:fixed;inset:0;z-index:200;background:var(--noir);display:flex;align-items:center;justify-content:center;padding:24px;color:#F6EFE7;overflow:hidden}
@@ -279,8 +282,10 @@
     <button class="x" onclick="closeRoland()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A1714" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
   </div>
   <div class="chat" id="chat"><div class="chat-intro">Parle-lui de ton argent : une rentrée, une dépense, un doute. Il connaît ton mois.</div></div>
+  <div id="rec-hint" style="display:none;font-size:12px;color:var(--or-d);text-align:center;padding:6px 14px 0">Parle… touche à nouveau le micro pour arrêter</div>
   <div class="composer">
-    <textarea id="chat-input" rows="1" placeholder="Ex : j'ai encaissé 150 000 de Fleur…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendRoland();}"></textarea>
+    <button id="mic-btn" class="mic" onclick="toggleRec()" title="Note vocale"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg></button>
+    <textarea id="chat-input" rows="1" placeholder="Écris ou parle à Roland…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendRoland();}"></textarea>
     <button onclick="sendRoland()"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
   </div>
 </div>
@@ -422,10 +427,39 @@ function sendRoland(){
   var contexte=first?('Contexte du mois : '+fcfa(CTX.confirme)+' encaissé sur objectif '+(CTX.objectif?fcfa(CTX.objectif):'non défini')+', '+fcfa(CTX.pipe)+' en pipeline, entrées '+fcfa(CTX.entrees)+', sorties '+fcfa(CTX.sorties)+'.\n\n'+txt):txt;
   chatMsgs.push({from:'me',text:txt});
   var typing=addMsg('rol','Roland réfléchit…'); typing.className='msg rol typing';
-  fetch(SB_URL+"/functions/v1/chat-assistant",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json"},body:JSON.stringify({assistant_id:'roland',messages:chatMsgs.slice(0,-1).concat([{from:'me',text:contexte}])})})
+  fetch(SB_URL+"/functions/v1/chat-assistant",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json"},body:JSON.stringify({assistant_id:'roland_perso',messages:chatMsgs.slice(0,-1).concat([{from:'me',text:contexte}])})})
     .then(function(r){return r.json();})
     .then(function(d){ typing.remove(); var rep=(d&&d.reply)?d.reply:"Petit souci de connexion, réessaie."; addMsg('rol',rep); chatMsgs.push({from:'roland',text:rep}); })
     .catch(function(){ typing.remove(); addMsg('rol',"Petit souci de connexion, réessaie."); });
+}
+
+/* ===== NOTE VOCALE ===== */
+var mediaRec=null, recChunks=[], recording=false;
+function toggleRec(){ if(recording) stopRec(); else startRec(); }
+function startRec(){
+  if(!navigator.mediaDevices||!window.MediaRecorder){ alert("Ton navigateur ne permet pas la note vocale."); return; }
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+    recChunks=[]; var mime=MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':(MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':'');
+    mediaRec=mime?new MediaRecorder(stream,{mimeType:mime}):new MediaRecorder(stream);
+    mediaRec.ondataavailable=function(e){ if(e.data.size>0) recChunks.push(e.data); };
+    mediaRec.onstop=function(){ stream.getTracks().forEach(function(t){t.stop();}); processRec(mediaRec.mimeType||'audio/webm'); };
+    mediaRec.start(); recording=true;
+    $('mic-btn').classList.add('rec'); $('rec-hint').style.display='block';
+  }).catch(function(){ alert("Accès micro refusé. Autorise le micro dans les réglages du navigateur."); });
+}
+function stopRec(){ if(mediaRec&&recording){ recording=false; $('mic-btn').classList.remove('rec'); $('rec-hint').style.display='none'; try{mediaRec.stop();}catch(e){} } }
+function processRec(mime){
+  var blob=new Blob(recChunks,{type:mime}); var ta=$('chat-input'); var old=ta.value;
+  ta.placeholder="Transcription…";
+  var reader=new FileReader();
+  reader.onloadend=function(){
+    var b64=String(reader.result).split(',')[1];
+    fetch(SB_URL+"/functions/v1/process-dump-pilotage",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json"},body:JSON.stringify({audio_b64:b64,audio_type:mime})})
+      .then(function(r){return r.json();})
+      .then(function(d){ ta.placeholder="Écris ou parle à Roland…"; var t=(d&&d.transcript)?d.transcript:''; ta.value=(old?old+' ':'')+t; ta.focus(); })
+      .catch(function(){ ta.placeholder="Écris ou parle à Roland…"; alert("Transcription impossible, réessaie."); });
+  };
+  reader.readAsDataURL(blob);
 }
 </script>
 </body>
