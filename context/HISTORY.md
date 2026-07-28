@@ -7,6 +7,129 @@
 
 ---
 
+## 2026-07-28 (session 117 — VSD : le backend passe en ligne, et la question du statut de vendeur est tranchée)
+
+> Session partie d'un lien de paiement Ayêla et finie sur le montage juridique du VSD.
+> Le fil conducteur : ce qui bloque le 4 septembre n'est pas technique.
+
+### Ayêla, le paiement Orange Money branché
+- Le panier n'avait qu'un bouton **Wave** cliquable, l'Orange Money n'était qu'un **numéro affiché en texte**. Les deux sont désormais symétriques, empilés pour ne pas déborder sur mobile, le numéro restant en secours dessous. Les deux liens répondent, vérifié. En ligne sur `lamaisonayela.com`, Lorraine prévenue.
+- **Piège de déploiement, une demi-heure perdue :** la branche de **production** du projet Pages `lamaisonayela` est **`master`**, pas `main`. Un deploy sur `main` part en **Preview** et le domaine ne bouge pas, alors que l'alias `pages.dev` semble à jour. Leçon : **toujours vérifier sur le domaine réel, jamais sur l'alias**.
+- Dit au client comme au dossier : ce sont des **liens de collecte, pas une passerelle**. Aucun rapprochement automatique, Lorraine vérifie encore à la main. Le vrai paiement en ligne reste une évolution à vendre.
+
+### VSD, le backend d'inscription est en ligne et vérifié
+- Constat de départ vérifié en base, pas cru sur parole : **ni la table, ni l'edge function** n'existaient (51 fonctions déployées sur le projet, aucune `vsd-*`).
+- Table `vsd_inscriptions` appliquée **depuis le workspace via l'API Management**, RLS active, 3 policies nominatives, **aucune policy INSERT publique**. UUID propriétaire vérifié avant application : c'est bien celui déjà utilisé par les 22 policies de pilotage.
+- Edge function `vsd-inscription` déployée. Testé de bout en bout : préflight CORS à 200, inscription enregistrée avec les deux emails Resend partis, email invalide rejeté, ligne de test supprimée derrière.
+- **La preuve de RLS a été faite à la clé anon, pas au service role** : lecture anonyme à `[]` alors que la ligne existait bien en base, écriture directe à 401. Le service role contourne tout et ne prouve rien.
+- **Le point 4 des « cinq choses qui font tomber la date » est levé**, et il ne dépendait d'aucune réponse d'Air CI.
+
+### Deux défauts trouvés sur le site VSD, avant publication
+- `CONFIG.hebergement` était sur **`true`** alors qu'aucun établissement d'Abidjan n'est signé : la page annonçait une réduction hôtel non délivrable, contre son propre commentaire et son README. Passé à `false`.
+- Plus vicieux : la **balise meta description annonçait le code hôtel, hors du drapeau**. La mention fuyait donc dans tous les aperçus de partage même drapeau fermé. **Leçon transférable : un drapeau de gating ne couvre jamais le `<head>`**, toujours vérifier meta description et balises de partage quand on gate une offre.
+- README remis à jour au passage : il décrivait encore une « formule à 500 € », abandonnée le 23/07.
+
+### La vraie question de la session : billetterie ou liste d'attente
+- Question de Mac Arthur, et elle était bonne. Réponse en trois étages : la **billetterie est impossible aujourd'hui**, pas indésirable, parce qu'il n'y a **pas de sièges** (rien n'est signé) ; une liste d'attente longue n'est **pas un problème mais l'actif** qui fera obtenir 20 puis 30 sièges, puisque le business plan dit déjà que la demande n'est pas le frein, la capacité l'est ; et le **vrai manque n'est ni l'un ni l'autre, c'est le back-office de dossiers**. Les statuts existent en base (`nouveau`, `rappele`, `eligible`, `lien_envoye`, `paye`, `embarque`, `annule`), **aucune interface ne les pilote**.
+- Bases de validation d'un dossier voyageur arrêtées, la première étant éliminatoire : documents valides sans démarche de visa, renonciation à la soute comprise et confirmée, présence sur les deux dates, capacité à payer avant J-10, et pour le vol de lancement l'acceptation d'être filmé avec cession de droits.
+
+### Le statut de vendeur, tranché
+- Objection de Mac Arthur : « en signant le partenariat je deviens partenaire, les billets sont autorisés par Air CI et je revends, ce n'est pas légal ? ». **Il a raison sur le fond**, revendre des sièges autorisés est un vrai métier. Le problème n'est pas la revente, c'est **qui encaisse le prix du billet**.
+- Point retenu : **« partenaire » n'est pas un statut juridique.** La signature d'Air CI règle le droit commercial de vendre leurs sièges, pas l'obligation réglementaire qui pèse en France sur celui qui vend du transport à des consommateurs. La bonne question est **« mandataire ou vendeur en mon nom »**, et la réponse ne vient pas de l'intention mais du contrat.
+- **Contradiction trouvée dans le dossier :** `POCHES-REVENUS-ATTRACTOR.md` emploie le bon vocabulaire (**frais de réservation** de 50 €, pas marge sur le billet) mais écrit aussi « encaissés par nous via XPaye, **avant la compagnie** », ce qui décrit exactement le montage à éviter. Montage propre retenu, même argent, statut différent : **deux paiements séparés**, le billet à la compagnie sur son canal, les frais de réservation à l'agence. Phrase à réécrire.
+- Raisonnement déjà appliqué correctement ailleurs par Mac Arthur : la commission hôtel avait été écartée le 23/07 pour la même raison. **Être aussi strict sur le billet que sur l'hôtel.** À faire confirmer par un juriste avant le premier euro encaissé.
+
+### La checklist de contrat, 35 clauses
+- Les 7 points de statut identifiés ne réglaient qu'une question. Document complet créé : `CLAUSES-CONTRAT-AIR-CI.md`.
+- **8 clauses absentes de tout le dossier et plus coûteuses que les 7 réunies :** date de restitution des sièges non vendus (sans elle les sièges vides restent à charge), **taxes incluses ou non dans les 380 €** (une surcharge peut effacer la marge de 50 € et faire tomber le prix de 430 €, c'est la question à poser en premier), révisabilité du tarif, **cessibilité du nom du passager** (c'est le mécanisme même de la liste d'attente), **propriété du concept VSD** (sans clause ils peuvent le refaire sans lui l'an prochain), propriété du fichier voyageurs, droit applicable et juridiction (Abidjan contre Paris), pouvoir du signataire.
+
+### Correction de personne, la deuxième sur ce dossier
+- **Hervé Abou est Directeur Régional**, pas « Directeur Pays France / Country Director » comme l'écrivait la presse. Correction de première main par Mac Arthur.
+- Aller-retour en cours de session : « je n'ai pas encore rencontré le DR » désignait la **réunion de signature**, pas la rencontre. **Hervé Abou et Hermance Alloh ont bien été rencontrés tous les deux le 22/07**, réunion de principe. Trois fichiers corrigés deux fois.
+- Deuxième fois que la veille web se trompe sur une personne de ce dossier après Hermance Alloh le 21/07. Même leçon, confirmée : **une preuve de première main prime sur une inférence de veille web, y compris sur un titre repris par la presse.**
+
+### Chemin critique et conseil de forme
+- Lien de présentation envoyé à Hermance Alloh le 27/07, **sans réponse**. Relance écrite (`RELANCE-HERMANCE-28-07.md`) : on ne demande pas son avis sur le simulateur, on **l'outille pour porter le dossier en interne** et on pose la question jamais résolue du **circuit et du délai de validation au siège d'Abidjan**. Les 6 places offertes ne sont **volontairement pas demandées** maintenant, c'est une faveur qui affaiblit la position avant l'accord commercial.
+- Mac Arthur prévoit de relancer et d'écrire aussi au DR. **Conseil donné : Hervé Abou en copie, jamais en message séparé**, sinon Hermance Alloh perd la main sur un dossier qu'elle est censée défendre en interne.
+- **Date-butoir posée : sans visibilité vers le 10-12 août, le 4 septembre tombe** et il faut repositionner sur octobre plutôt que remplir d'invités, ce que le plan de lancement interdit déjà.
+
+### Festival des Grillades de Paris, enfin tracé
+- Dossier ouvert le 25/07 mais absent de CONTEXT.md et HISTORY.md jusqu'ici. Qualifié par Mac Arthur : **accompagnement simple pour le moment**. Advantage Conseils (Abidjan) et Thim Production (Rennes), édition parisienne le **11 octobre 2026 à Bobigny**. NDA et contrat de mandat prêts, **sept champs vides dont les honoraires**.
+
+### Livrables
+- Ayêla : `app/index.html` (paiement OM) redéployé en production. VSD : table + edge function en ligne, `vsd-site/index.html` et son README corrigés. Air CI : `RELANCE-HERMANCE-28-07.md` et `CLAUSES-CONTRAT-AIR-CI.md` créés, `DOSSIER-VEILLE-AIR-CI.md` et `NOTE-ANTICIPATION-OBJECTIONS.md` corrigés. Tout commité et poussé sur `main`.
+- **Reste à faire, sans dépendance :** le back-office de gestion de la file d'attente VSD, et la réécriture de la phrase XPaye dans `POCHES-REVENUS-ATTRACTOR.md`.
+
+---
+
+## 2026-07-27 → 28 (session 116 — Certification préparation mentale : le cerveau des accompagnements)
+
+> Session longue et d'un seul tenant. Elle part d'une demande de programme de révision et finit par la construction d'une base de connaissance complète, qui sert à la fois l'examen et le futur service premium de l'agence.
+
+### Le vrai format de l'épreuve, découvert en cours de route
+- Ce n'est pas un contrôle de connaissances. C'est une **soutenance orale d'une heure, en trinôme, le jeudi 3 septembre 2026 de 14h à 15h**, chacun évalué individuellement, sur le **thème B** : Éric, 44 ans, entrepreneur qui lance du coaching marketing de groupe.
+- **Le conflit de date avec le VSD est tombé** : la certification est le jeudi 3, le vol de lancement Paris-Abidjan le vendredi 4. Une fausse alerte pendant quelques heures.
+- Budget de parole recalculé : **12 à 14 minutes d'exposé chacun**, plus 5 à 7 minutes de questions. La copie fait plusieurs milliers de mots, donc il faudra en dire moins d'un tiers.
+
+### La correction de l'évaluation intermédiaire, retrouvée et exploitée
+- **18/09/2024, 6,5/11, correctrice Emy GASPARIK.** Point fort déjà acquis : le décryptage de l'ennéagramme relié à la réalité du client. Trois axes d'amélioration, qui sont devenus la feuille de route de la copie : structurer selon la **progression des 3 piliers**, relier explicitement **séance, but, protocole et objectif du client**, et **retravailler les séances 5-6-7** (le pilier 2).
+- Constat utile : **le profil du cas de l'évaluation intermédiaire et celui d'Éric sont le même schéma** (profils 7-8-3-1 forts, 2-4-5-6 peu développés). Le corrigé oral de la formatrice s'applique donc presque directement.
+
+### La lecture du cas, et les trois retournements
+- **Les deux méthodes de lecture convergent.** Le rééquilibrage désigne 8↔2, 3↔6, 7↔5, qui sont exactement les trois directions d'intégration de ses profils dominants, et ses trois scores les plus bas. Vérifiable sur les chiffres. Dit honnêtement que le quatrième couple ne suit pas : le 1 ne s'intègre pas en 4, il s'y désintègre.
+- **Éric va exercer un métier de groupe avec son profil le plus bas** (le 2 à 14, la fonction relationnelle). Sa peur est légitime mais porte sur le mauvais objet : ce qui lui manque n'est pas de la matière, c'est la connexion au besoin de son groupe. Et sa réponse, en donner plus, aggrave l'épuisement sans traiter la cause.
+- **Il touche les deux zones critiques**, la haute (tension, rumination) et la basse (fatigue). Un homme qui rumine et qui est épuisé n'est pas dans un seul excès, il est dans les deux, en alternance.
+
+### L'ingestion du fascicule, 380 pages
+- **Dix fiches protocoles** produites dans `protocoles/` : mode explorateur, météo intérieure, connexion neuro-émotionnelle (Ch. 7), valeurs et deux chemins (Ch. 8), T.A.O. (Ch. 13), E.C.O. et E.C.O. + T.A.O. (Ch. 21), changement de zone (Ch. 29), D.P.M. (Ch. 31), T.C.O. et Répétition Mentale (Ch. 31-32), structure des séances (Ch. 23).
+- **Deux sigles décodés** : **EMCT = État Modifié de Conscience de Travail**. Et « Echo Tao », entendu dans une retranscription audio, était en réalité **E.C.O. + T.A.O.**, un protocole combiné officiel. De même « métamorphose intérieure » était la **météo intérieure**. Leçon transférable : ne jamais fonder un livrable sur une retranscription audio non vérifiée.
+- **Découverte structurelle : la méthode est une grammaire, pas une liste.** Amener en EMCT, contextualiser, travail spécifique, ressentir et diffuser, ancrer, futuriser, sortie standardisée mot pour mot. Le fascicule autorise d'ailleurs à composer : « soyez créatifs avec l'EMCT ».
+
+### Les trois corrections imposées par le module 7
+- **8 séances et non 10.** Les deux exemples officiels du fascicule en font 8.
+- **Une séance toutes les deux semaines**, pas de mode starter hebdomadaire : le fascicule écrit « 2 semaines ou 3 semaines maximum ». Et 8 fois 2 semaines font exactement 4 mois.
+- **Chaque séance suit Briefing → Cœur de séance → Débriefing**, avec un **objectif de séance** propre et une **progression pédagogique** entre les séances. Deux exigences écrites en gras dans le support, donc deux critères de notation.
+
+### La décision business
+- **L'offre de coaching devient un service premium de l'agence, vendu sur demande expresse uniquement.** Pas de tunnel, pas de landing : un filtre et une conversation de qualification.
+- **Lancement découplé de la certification.** Annonce visée au **15 octobre 2026**, jour de l'anniversaire de Mac Arthur, avec un **shooting dédié**. Recommandation retenue : deux annonces plutôt qu'une, la certification début septembre sobrement, l'offre le 15 octobre.
+- **Portée seul.** Les deux autres coachs du trinôme sont là uniquement pour l'examen, chacun repart ensuite. Aucune copropriété de méthode à cadrer, mais ce sont de futurs confrères sur la même niche.
+- **Point de propriété intellectuelle posé** : le fascicule est « Modèle déposé© ». La méthode Puissance Mentale et ses protocoles restent la propriété de l'Académie. Ce qui appartient à Mac Arthur, c'est **l'articulation avec ATTRACTOR**, pas un rebranding des 3 piliers ni des EMCT.
+
+### Le trou identifié, et il est important
+- **Aucun contenu théorique sur les 9 profils n'a été fourni.** Seulement le questionnaire de 135 items (source Paul Pyronnet Institut) et sa grille de dépouillement. Tout le décryptage écrit repose donc sur le corpus ennéagramme standard, pas sur l'enseignement de l'école. Or c'est deux compétences sur trois de la grille de notation, et c'est le point fort déjà acquis.
+- À chercher en priorité dans le module 5 (p. 186 à 234), ou dans un second support séparé comme l'est déjà le « Questionnaire potentiel ».
+
+### Livrables
+- Nouveau dossier `livrables/ecosysteme-attractor/certification-preparation-mentale/` : `CERVEAU.md` (l'index et les invariants de la méthode), `THEME-B-ERIC-copie.md`, `FICHE-SOUTENANCE-THEME-B.md` (trame minutée et questions du jury), `GABARIT-ACCOMPAGNEMENT.md`, `PROGRAMME-J-39.md`, `CARTE-DU-FASCICULE.md`, `QUESTIONNAIRE-135-ITEMS-PAR-TYPE.md`, `CONTRAT-COACHING-modele.md` avec audit des clauses manquantes, et dix fiches dans `protocoles/`.
+- Suite prévue : compléter les chapitres manquants pour constituer la bible de travail, d'entraînement et de suivi coaching.
+
+---
+
+## 2026-07-27 (session 115 — VSD : économie figée, vocabulaire « colis » et simulateur intégré à la proposition)
+
+> Suite directe de la revue de stratégie du 25/07. Le dossier passe du chiffrage provisoire à une économie propre, et les livrables ont été alignés et redéployés.
+
+### L'économie recalculée
+- **Fin du « bon de conversion » et du « 1,5 €/kg sur tous les kilos ».** Règle figée : **rétrocession de 1 €/kg à Air CI uniquement sur les valises exceptionnelles de 32 kg à l'aller** ; le retour (2×23 kg) utilise le **quota bagage normal, gratuit**.
+- Marge brute colis recalculée (scénario retenu 2×32 aller + 2×23 retour, 10 voyageurs) : **≈ 4 360 €/rotation, ≈ 14 170 €/mois, ≈ 170 k€/an** (contre 2 560 €/rotation et 100 k€/an à l'ancien taux). Idéal 3×32 = 5 540 €/rotation.
+- **Jean Yves n'achète rien** : il a déjà les outils (balance, scellés, matériel). Son seul apport = **sa présence de coordination** (vendredi matin + la semaine). L'assurance des marchandises reste en option. Section investissements du BP refaite en conséquence.
+
+### Le vocabulaire : « colis », plus jamais « fret »
+- Consigne de Mac Arthur en cours de session : **on ne parle plus de fret**. On dit **colis normaux acheminés par un prestataire externe (J'Envoie Express) avec son réseau de sociétés de colisage**. Balayage complet des 3 livrables (offre DR, simulateur, BP) : « fret déclaré » → « colis déclarés », « l'opérateur du fret » → « le prestataire des colis ». Zéro occurrence visible restante (seuls des noms de variables JS internes subsistent).
+
+### Le simulateur intégré à la proposition (plus de redirection)
+- Le « détail chiffré » renvoyait vers une autre page. Remplacé par un **menu déroulant** (`<details>`) sur la proposition elle-même.
+- D'abord une version 4 lignes ultra-simplifiée, puis, à la demande, le **simulateur complet chargé dans une iframe même origine** (`simulateur/?embed=1`) qui **masque son propre en-tête** et **s'auto-dimensionne** : le simulateur poste sa hauteur au parent via `postMessage` à chaque recalcul, pas de scroll imbriqué. Technique réutilisable pour tout futur simulateur embarqué.
+
+### Ce que Mr Attractor gagne, au clair
+- Question posée et chiffrée : au rythme de croisière, **≈ 2 180 €/rotation** (moitié de la marge colis, 50/50 avec Jean Yves) **+ ≈ 50 €/voyageur** sur le billet, soit **≈ 8 700 €/mois brut, ≈ 104 k€/an**. C'est du **brut avant coût d'acquisition marketing** (le vrai inconnu), et une **cible** (retour Abidjan non assuré, nombre de valises 32 kg à confirmer avec Air CI).
+
+### Livrables
+- BP `jenvoie-express-app/BUSINESS-PLAN-CONVOYAGE.html` recalculé. Offre + simulateur redéployés sur `demo.agenceattractor.com/air-cote-divoire`. Source de vérité `air-cote-divoire/MODELE-OPERATIONNEL.md` mise à jour (table recalculée + règle de vocabulaire « colis »). Mémoire `project_vsd_attractor.md` à jour.
+
+---
+
 ## 2026-07-25 (session 114 — Vies Croisées : le blog devient programmable, partageable et illustré)
 
 > Retours d'Andréa sur son espace. Cinq demandes, toutes livrées et déployées sur `viescroiseesci.com`.
@@ -33,6 +156,35 @@
 
 ### Livrables
 - Migration `livrables/clients/vies-croisees/0004_teasers_programmation_medias_partenaires.sql` (appliquée), message client `MESSAGE-ANDREA-25-07.md`, site déployé (projet Pages `viescroiseesci`, branche `main`), commité et poussé sur `main`.
+
+---
+
+## 2026-07-25 (session 114 — Revue de stratégie VSD : le modèle opérationnel enfin verrouillé, business plan Jean Yves refait, proposition mise hors ligne)
+
+> Longue session d'affinage du modèle économique du dossier Air CI / VSD, pièce par pièce, jusqu'à un modèle propre de bout en bout. Source de vérité figée dans `livrables/clients/air-cote-divoire/MODELE-OPERATIONNEL.md`.
+
+### Le business plan de Jean Yves entièrement refait (B2B grossiste de fret)
+- Découverte de `jenvoie-express-app/BUSINESS-PLAN-CONVOYAGE.html` (ancien modèle : Jean Yves collecte et porte, 8 €/kg, 12 partenaires). **Réécrit deux fois** au fil des précisions de Mac Arthur.
+- Modèle B2B : Jean Yves **vend la capacité soute aux sociétés de colisage** (150 € la valise de 32 kg, 100 € la 23 kg ; les sociétés revendent 220 € à leurs clients), coût = **bon de conversion Air CI à ~1,5 €/kg** (3,5 €/kg = perte). Marge **102 €/valise**.
+- **5 valises par société** → 4 sociétés suffisent à saturer le bloc de 10. Insight clé : **la demande n'est pas le problème, la capacité l'est** ; le vrai levier de croissance = plus de sièges Air CI.
+- **4 hypothèses de capacité** chiffrées (2×32 retenu = 2 560 €/rotation ; 3×32 idéal = 3 580 € ; les 23 kg en dessous). Argument douane décisif : **la douane facture par valise, pas au kilo**, donc tout le monde préfère le 32 kg.
+- Pilote 90 j (marge brute 1 024 → 1 792 → 2 560 €/rotation), ≈ 8 320 €/mois, ≈ 100 k€/an, partage 50/50.
+
+### Le modèle opérationnel verrouillé (la vraie avancée)
+- « **Il n'y a plus de convoyeurs** » : ce sont de **simples voyageurs** qu'on amène et **qui débloquent la soute** (leur allocation bagage). Ils ne portent rien, ne gèrent rien, ne voient pas les valises. Terminologie « convoyeur » supprimée partout (simulateur, BP).
+- Retour de Jean Yves : **le fret accompagné est la plus grosse friction**. Bascule actée vers le **fret cargo pur** : les **valises sont enregistrées séparément** (jamais dans le bagage passager), **au nom des sociétés de colisage**.
+- **Douane tranchée** : J'Envoie Express = **transport + préparation sûreté (chargeur connu) uniquement, ne touche PAS à la douane**. Les **sociétés de colisage ont leur propre transitaire agréé** qui dédouane à Abidjan ; elles paient droits + TVA. Résout d'un coup fret accompagné + désordre au comptoir (problème d'Hervé) + douane sur le dos de Jean Yves + ligne rouge.
+- **Option 1 retenue** : on garde les voyageurs (nécessaires, ils portent l'allocation) et le VSD comme produit passager + monnaie d'échange pour le tarif cargo bas.
+
+### Sur l'offre Air CI (avant mise hors ligne)
+- Ajouts : section « les deux sens » (VSD Abidjan → Paris en miroir), section « investissement, qui porte quoi » avec **chaque acteur nommé et coloré** (Air CI orange, Mr Attractor charbon, J'Envoie Express **bleu**), reformulation « risque commercial » (pas « à leur charge »), hébergement clarifié en **bon de réduction** (pas de forfait touristique).
+- **Bon de conversion à 1 € symbolique** posé comme levier de négociation + vision partenariat durable. **Positionnement corrigé : apporteur d'affaires, PAS OTA/agence de voyage** (éviter l'immatriculation Atout France).
+- « Vol pilote **proposé** » (pas « prévu »), tant que rien n'est signé.
+
+### Site VSD + décisions de fond
+- Site VSD aligné : valise **100 €** (au lieu de 99), et surtout **retrait de toute mention du deal fret** (« on ne dit rien sur le deal, évitons la discussion ») : le voyageur sait juste qu'il voyage léger. Nom « Les Week-End Légers » (« de Air Côte d'Ivoire » gaté jusqu'à signature) ; positionnement offre 72h exceptionnelle Abidjan **ou** Paris.
+- **Proposition mise hors ligne** (`demo.agenceattractor.com/air-cote-divoire` désactivé) le temps d'aligner les livrables sur le modèle verrouillé. Fichiers sauvés dans `demo-site/_hold-air-cote-divoire`.
+- Reste : aligner offre + simulateur + BP sur le modèle final, rouvrir le lien, obtenir d'Air CI le tarif du bon de conversion et le nombre de valises, valider la remise au terminal avec un transitaire CI, obtenir les charges directes de Jean Yves.
 
 ---
 
