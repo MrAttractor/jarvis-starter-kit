@@ -29,20 +29,29 @@ annonce des départs), il ne déclenche aucun envoi.
 
 ## Mise en service
 
+**FAIT le 28/07/2026. Le backend est en ligne et vérifié.**
+
+| Vérification | Résultat |
+|---|---|
+| Table `vsd_inscriptions` | créée, RLS active, 3 policies nominatives sur l'UUID de Mac Arthur |
+| Policy INSERT publique | aucune, c'est voulu |
+| Edge function `vsd-inscription` | déployée |
+| `RESEND_API_KEY` | présent dans les secrets du projet |
+| Préflight CORS (OPTIONS) | 200 |
+| Inscription de test | `{ok:true, mail:true}`, ligne bien présente en base, puis supprimée |
+| Email invalide | rejeté (`email_invalide`) |
+| Lecture par un anonyme (clé anon) | `[]` alors que la ligne existait, donc la RLS bloque réellement |
+| Écriture directe par un anonyme | 401 |
+
+La table a été appliquée via l'API Management Supabase depuis le workspace, pas
+par le SQL editor. Rejouer la migration est sans risque, elle est idempotente.
+
 ```bash
-# 1. la table (SQL editor Supabase, projet lgdgbrivnhgeupqhkckd)
-#    livrables/clients/air-cote-divoire/supabase/0001_vsd_inscriptions.sql
-
-# 2. l'edge function
+# si besoin de redéployer la fonction un jour
 cd livrables/ecosysteme-attractor/attractor-assists/app
-npx supabase functions deploy vsd-inscription --project-ref lgdgbrivnhgeupqhkckd
-
-# 3. vérifier que RESEND_API_KEY est bien dans les secrets du projet
-npx supabase secrets list --project-ref lgdgbrivnhgeupqhkckd
+export SUPABASE_ACCESS_TOKEN=...   # celui du .env
+npx supabase functions deploy vsd-inscription --project-ref lgdgbrivnhgeupqhkckd --no-verify-jwt
 ```
-
-À vérifier après déploiement : une inscription de test arrive bien dans la table,
-les deux emails partent, et un visiteur anonyme ne peut pas lire `vsd_inscriptions`.
 
 ## Les réglages
 
@@ -52,7 +61,7 @@ Tout est dans l'objet `CONFIG`, en bas de `index.html`.
 |---|---|
 | `endpoint` | URL de l'edge function |
 | `email` | Adresse affichée en secours si l'envoi échoue |
-| `hebergement` | `false` fait disparaître la formule à 500 € partout, carte et menu compris. À laisser sur `false` tant que l'hôtel partenaire n'est pas signé. |
+| `hebergement` | `false` fait disparaître le bloc du code hôtel partenaire partout. À laisser sur `false` tant qu'aucun établissement d'Abidjan n'a signé. Il n'y a plus de « formule à 500 € » : depuis la décision du 23/07, le voyageur réserve et paie son hôtel directement avec un code de réduction, nous ne vendons pas de séjour (sinon immatriculation Atout France). |
 | `delaiMini` | Délai avant le premier départ proposé, en jours |
 | `cloture` | Nombre de jours avant le départ où les inscriptions ferment |
 | `nbDeparts` | Nombre de départs affichés dans le calendrier |
