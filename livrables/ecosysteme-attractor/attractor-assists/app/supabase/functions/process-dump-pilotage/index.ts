@@ -25,9 +25,11 @@ serve(async (req) => {
     const { audio_b64, audio_type } = await req.json();
     if (!audio_b64) return json({ error: "audio_b64 requis" }, 400);
 
-    const mimeType = audio_type || "audio/webm";
-    const ext = mimeType.includes("mp4") || mimeType.includes("m4a") ? "m4a"
+    // iOS envoie "audio/mp4; codecs=mp4a.40.2" — on retire le suffixe codecs.
+    const mimeType = (audio_type || "audio/webm").split(";")[0].trim();
+    const ext = mimeType.includes("mp4") || mimeType.includes("m4a") ? "mp4"
               : mimeType.includes("ogg") ? "ogg"
+              : mimeType.includes("wav") ? "wav"
               : "webm";
 
     const audioBytes = Uint8Array.from(atob(audio_b64), (c) => c.charCodeAt(0));
@@ -35,7 +37,6 @@ serve(async (req) => {
     const form = new FormData();
     form.append("file", new Blob([audioBytes], { type: mimeType }), `dump.${ext}`);
     form.append("model", "whisper-1");
-    form.append("language", "fr");
 
     const whisperRes = await fetch("https://api.openai.com/v1/audio/transcriptions", {
       method: "POST",
@@ -48,9 +49,10 @@ serve(async (req) => {
       return json({ error: `Whisper: ${errText}` }, 500);
     }
 
-    const { text: transcript } = await whisperRes.json();
+    const whisperJson = await whisperRes.json();
+    const transcript = whisperJson.text;
     if (!transcript?.trim()) {
-      return json({ transcript: "", prospect: null });
+      return json({ transcript: "", prospect: null, _diag: { bytes: audioBytes.length, mime: mimeType, ext, whisper: JSON.stringify(whisperJson).slice(0, 200) } });
     }
 
     let prospect: any = null;

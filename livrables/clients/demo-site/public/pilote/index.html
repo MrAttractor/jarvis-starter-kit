@@ -151,6 +151,14 @@
   .msg.me{align-self:flex-end;background:var(--or);color:#fff;border-bottom-right-radius:5px}
   .msg.rol{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-left-radius:5px}
   .msg.typing{color:var(--mut);font-style:italic}
+  .do-card{align-self:stretch;background:#fff;border:1.5px solid var(--or);border-radius:14px;padding:12px 13px;box-shadow:0 4px 14px rgba(242,92,5,.12)}
+  .do-t{font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--or-d)}
+  .do-s{font-size:14.5px;font-weight:700;margin:5px 0 10px;color:var(--ink)}
+  .do-b{display:flex;gap:8px}
+  .do-b button{flex:1;min-height:40px;border-radius:10px;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;border:none}
+  .do-ok{background:var(--vt);color:#fff}
+  .do-no{background:#fff;color:var(--mut);border:1.5px solid var(--line)!important}
+  .do-done{font-size:14px;font-weight:800;color:var(--vt-d);text-align:center;padding:4px}
   .chat-intro{font-size:12.5px;color:var(--mut);font-style:italic;text-align:center;padding:8px 16px}
   .composer{padding:11px 14px;display:flex;gap:9px;border-top:1px solid var(--line);align-items:flex-end}
   .composer textarea{flex:1;min-height:46px;max-height:120px;resize:none;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font-size:16px;font-family:inherit;background:#fff}
@@ -559,10 +567,43 @@ function startPoint(){
   var typing=addMsg('rol','Roland prépare le tour…'); typing.className='msg rol typing';
   fetch(SB_URL+"/functions/v1/chat-assistant",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json"},body:JSON.stringify({assistant_id:'roland_perso',messages:chatMsgs})})
     .then(function(r){return r.json();})
-    .then(function(d){ typing.remove(); var rep=(d&&d.reply)?d.reply:"On commence : ce mois, qu'est-ce qui est rentré comme argent ?"; addMsg('rol',rep); chatMsgs.push({from:'roland',text:rep}); })
+    .then(function(d){ typing.remove(); var rep=(d&&d.reply)?d.reply:"On commence : ce mois, qu'est-ce qui est rentré comme argent ?"; handleReply(rep); })
     .catch(function(){ typing.remove(); addMsg('rol',"On commence : ce mois, qu'est-ce qui est rentré comme argent ?"); });
 }
 function addMsg(from,text){ var el=document.createElement('div'); el.className='msg '+(from==='me'?'me':'rol'); el.textContent=text; $('chat').appendChild(el); $('chat').scrollTop=$('chat').scrollHeight; return el; }
+/* Traite la réponse de Roland : affiche le texte + extrait les actions à valider. */
+function handleReply(rep){
+  rep=String(rep||'');
+  var actions=[], m=rep.match(/⟦DO⟧([\s\S]*?)⟦\/DO⟧/);
+  var visible=rep;
+  if(m){ visible=rep.replace(m[0],'').trim(); try{ actions=JSON.parse(m[1]); }catch(e){ actions=[]; } }
+  if(visible) { addMsg('rol',visible); chatMsgs.push({from:'roland',text:visible}); }
+  if(actions&&actions.length) actions.forEach(proposeAction);
+}
+function resumeAction(a){ var d=a.data||{};
+  if(a.table==='pilotage_finances') return (String(d.type).indexOf('entr')>-1?'+ ':'− ')+dual(d.montant)+(d.description?' ('+d.description+')':'');
+  if(a.table==='pilotage_cap') return 'Objectif du mois : '+dual(d.objectif);
+  if(a.table==='pilotage_enveloppes') return 'Enveloppe '+(d.nom||'')+' : '+dual(d.epargne||0)+(d.cible?' / '+dual(d.cible):'');
+  if(a.table==='pilotage_pipeline') return 'Dossier '+(d.nom||'')+(d.statut?' — '+d.statut:'');
+  if(a.table==='pilotage_projets') return 'Projet '+(d.nom||'')+' ('+(d.avancement||0)+'%)';
+  if(a.table==='pilotage_focus') return 'Action : '+(d.description||'');
+  return a.table; }
+var DO_TABLES=['pilotage_finances','pilotage_cap','pilotage_enveloppes','pilotage_pipeline','pilotage_projets','pilotage_focus'];
+function proposeAction(a){
+  if(!a||!a.table||!a.data||DO_TABLES.indexOf(a.table)<0) return;
+  var card=document.createElement('div'); card.className='do-card';
+  card.innerHTML='<div class="do-t">Roland veut enregistrer</div><div class="do-s">'+esc(resumeAction(a))+'</div><div class="do-b"><button class="do-ok">Valider</button><button class="do-no">Ignorer</button></div>';
+  $('chat').appendChild(card); $('chat').scrollTop=$('chat').scrollHeight;
+  card.querySelector('.do-no').onclick=function(){ card.remove(); };
+  card.querySelector('.do-ok').onclick=function(){ execAction(a,card); };
+}
+function execAction(a,card){
+  var path=SB_URL+"/rest/v1/"+a.table, method="POST";
+  if(a.table==='pilotage_cap'&&DATA.cap&&DATA.cap.id){ path+="?id=eq."+DATA.cap.id; method="PATCH"; }
+  fetch(path,{method:method,headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify(a.data)})
+    .then(function(r){ if(r.ok){ card.innerHTML='<div class="do-done">✓ Enregistré</div>'; loadAll(); } else { card.innerHTML='<div class="do-done" style="color:#C0392B">Échec, réessaie</div>'; } })
+    .catch(function(){ card.innerHTML='<div class="do-done" style="color:#C0392B">Connexion coupée</div>'; });
+}
 function sendRoland(){
   var ta=$('chat-input'), txt=ta.value.trim(); if(!txt) return; ta.value='';
   var intro=document.querySelector('.chat-intro'); if(intro) intro.remove(); addMsg('me',txt);
@@ -574,35 +615,61 @@ function sendRoland(){
   var typing=addMsg('rol','Roland réfléchit…'); typing.className='msg rol typing';
   fetch(SB_URL+"/functions/v1/chat-assistant",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json"},body:JSON.stringify({assistant_id:'roland_perso',messages:chatMsgs.slice(0,-1).concat([{from:'me',text:contexte}])})})
     .then(function(r){return r.json();})
-    .then(function(d){ typing.remove(); var rep=(d&&d.reply)?d.reply:"Petit souci de connexion, réessaie."; addMsg('rol',rep); chatMsgs.push({from:'roland',text:rep}); })
+    .then(function(d){ typing.remove(); var rep=(d&&d.reply)?d.reply:"Petit souci de connexion, réessaie."; handleReply(rep); })
     .catch(function(){ typing.remove(); addMsg('rol',"Petit souci de connexion, réessaie."); });
 }
 
-/* ===== NOTE VOCALE ===== */
-var mediaRec=null, recChunks=[], recording=false;
+/* ===== NOTE VOCALE (enregistrement WAV via Web Audio — fiable iOS) ===== */
+var recording=false, audioCtx=null, srcNode=null, procNode=null, gainNode=null, recStream=null, recBuf=[], recSR=44100;
+function vlog(m){ try{ fetch(SB_URL+"/functions/v1/client-log",{method:"POST",headers:{"Content-Type":"application/json"},keepalive:true,body:JSON.stringify({source:"pilote-voice",message:String(m),ua:navigator.userAgent,url:location.href})}); }catch(e){} }
+function recHint(m){ var h=$('rec-hint'); if(h){ h.style.display='block'; h.textContent=m; } }
 function toggleRec(){ if(recording) stopRec(); else startRec(); }
 function startRec(){
-  if(!navigator.mediaDevices||!window.MediaRecorder){ alert("Ton navigateur ne permet pas la note vocale."); return; }
+  recHint('Démarrage du micro…');
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ recHint('Micro indisponible sur ce navigateur.'); return; }
+  var AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC){ recHint('Audio non supporté sur ce navigateur.'); return; }
   navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
-    recChunks=[]; var mime=MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':(MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':'');
-    mediaRec=mime?new MediaRecorder(stream,{mimeType:mime}):new MediaRecorder(stream);
-    mediaRec.ondataavailable=function(e){ if(e.data.size>0) recChunks.push(e.data); };
-    mediaRec.onstop=function(){ stream.getTracks().forEach(function(t){t.stop();}); processRec(mediaRec.mimeType||'audio/webm'); };
-    mediaRec.start(); recording=true;
-    $('mic-btn').classList.add('rec'); $('rec-hint').style.display='block';
-  }).catch(function(){ alert("Accès micro refusé. Autorise le micro dans les réglages du navigateur."); });
+    recStream=stream; recBuf=[];
+    audioCtx=new AC(); if(audioCtx.state==='suspended'){ try{audioCtx.resume();}catch(e){} }
+    recSR=audioCtx.sampleRate;
+    srcNode=audioCtx.createMediaStreamSource(stream);
+    procNode=audioCtx.createScriptProcessor(4096,1,1);
+    procNode.onaudioprocess=function(e){ if(!recording) return; recBuf.push(new Float32Array(e.inputBuffer.getChannelData(0))); };
+    gainNode=audioCtx.createGain(); gainNode.gain.value=0; // évite le larsen
+    srcNode.connect(procNode); procNode.connect(gainNode); gainNode.connect(audioCtx.destination);
+    recording=true; $('mic-btn').classList.add('rec'); recHint('Parle… touche à nouveau le micro pour arrêter.'); vlog('wav rec started sr='+recSR);
+  }).catch(function(err){ vlog('gUM rejected '+(err&&err.name)); recHint('Micro refusé ('+(err&&err.name||'?')+'). Autorise-le dans Réglages > Safari > Microphone.'); });
 }
-function stopRec(){ if(mediaRec&&recording){ recording=false; $('mic-btn').classList.remove('rec'); $('rec-hint').style.display='none'; try{mediaRec.stop();}catch(e){} } }
-function processRec(mime){
-  var blob=new Blob(recChunks,{type:mime}); var ta=$('chat-input'); var old=ta.value;
-  ta.placeholder="Transcription…";
-  var reader=new FileReader();
+function stopRec(){
+  if(!recording) return; recording=false; $('mic-btn').classList.remove('rec'); recHint('Transcription en cours…');
+  try{ procNode.disconnect(); srcNode.disconnect(); gainNode.disconnect(); }catch(e){}
+  if(recStream) recStream.getTracks().forEach(function(t){t.stop();});
+  var len=0; recBuf.forEach(function(b){len+=b.length;});
+  vlog('wav stop samples='+len);
+  try{ audioCtx.close(); }catch(e){}
+  if(len<1600){ recHint('Trop court, réessaie en parlant un peu plus.'); return; }
+  var data=new Float32Array(len), off=0; recBuf.forEach(function(b){data.set(b,off);off+=b.length;});
+  sendWav(encodeWAV(data,recSR));
+}
+function encodeWAV(s,sr){
+  var buf=new ArrayBuffer(44+s.length*2), v=new DataView(buf);
+  function ws(o,str){ for(var i=0;i<str.length;i++) v.setUint8(o+i,str.charCodeAt(i)); }
+  ws(0,'RIFF'); v.setUint32(4,36+s.length*2,true); ws(8,'WAVE'); ws(12,'fmt ');
+  v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+  v.setUint32(24,sr,true); v.setUint32(28,sr*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true);
+  ws(36,'data'); v.setUint32(40,s.length*2,true);
+  var o=44; for(var i=0;i<s.length;i++){ var x=Math.max(-1,Math.min(1,s[i])); v.setInt16(o,x<0?x*0x8000:x*0x7FFF,true); o+=2; }
+  return buf;
+}
+function sendWav(buf){
+  var ta=$('chat-input'), old=ta.value; var blob=new Blob([buf],{type:'audio/wav'}); var reader=new FileReader();
   reader.onloadend=function(){
-    var b64=String(reader.result).split(',')[1];
-    fetch(SB_URL+"/functions/v1/process-dump-pilotage",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json"},body:JSON.stringify({audio_b64:b64,audio_type:mime})})
+    var b64=String(reader.result).split(',')[1]; vlog('sending wav bytes='+(b64?b64.length:0));
+    fetch(SB_URL+"/functions/v1/process-dump-pilotage",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json"},body:JSON.stringify({audio_b64:b64,audio_type:'audio/wav'})})
       .then(function(r){return r.json();})
-      .then(function(d){ ta.placeholder="Écris ou parle à Roland…"; var t=(d&&d.transcript)?d.transcript:''; ta.value=(old?old+' ':'')+t; ta.focus(); })
-      .catch(function(){ ta.placeholder="Écris ou parle à Roland…"; alert("Transcription impossible, réessaie."); });
+      .then(function(d){ var h=$('rec-hint'); if(h) h.style.display='none'; var t=(d&&d.transcript)?d.transcript:''; vlog('transcript len='+t.length); if(t){ ta.value=(old?old+' ':'')+t; ta.focus(); } else { recHint('Je n\'ai rien entendu, réessaie.'); } })
+      .catch(function(){ recHint('Transcription impossible, réessaie.'); });
   };
   reader.readAsDataURL(blob);
 }
