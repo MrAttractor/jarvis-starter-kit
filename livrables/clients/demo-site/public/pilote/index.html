@@ -574,11 +574,18 @@ function addMsg(from,text){ var el=document.createElement('div'); el.className='
 /* Traite la réponse de Roland : affiche le texte + extrait les actions à valider. */
 function handleReply(rep){
   rep=String(rep||'');
-  var actions=[], m=rep.match(/⟦DO⟧([\s\S]*?)⟦\/DO⟧/);
+  var actions=[], raw=null;
+  var m=rep.match(/⟦DO⟧([\s\S]*?)⟦\/DO⟧/);
+  if(!m){ var i=rep.indexOf('⟦DO⟧'); if(i>=0) m=[rep.slice(i), rep.slice(i+4).replace(/⟦\/DO⟧?[\s\S]*$/,'')]; }
   var visible=rep;
-  if(m){ visible=rep.replace(m[0],'').trim(); try{ actions=JSON.parse(m[1]); }catch(e){ actions=[]; } }
-  if(visible) { addMsg('rol',visible); chatMsgs.push({from:'roland',text:visible}); }
-  if(actions&&actions.length) actions.forEach(proposeAction);
+  if(m){
+    visible=rep.replace(m[0],'');
+    try{ raw=JSON.parse(m[1]); }catch(e){ raw=null; }
+    if(raw){ (Array.isArray(raw)?raw:[raw]).forEach(function(a){ if(a&&a.table){ if(Array.isArray(a.data)) a.data.forEach(function(it){ actions.push({table:a.table,data:it}); }); else actions.push(a); } }); }
+  }
+  visible=visible.replace(/⟦[\s\S]*$/,'').replace(/⟦\/?DO⟧?/g,'').trim();
+  if(visible){ addMsg('rol',visible); chatMsgs.push({from:'roland',text:visible}); }
+  actions.forEach(proposeAction);
 }
 function resumeAction(a){ var d=a.data||{};
   if(a.table==='pilotage_finances') return (String(d.type).indexOf('entr')>-1?'+ ':'− ')+dual(d.montant)+(d.description?' ('+d.description+')':'');
@@ -598,6 +605,9 @@ function proposeAction(a){
   card.querySelector('.do-ok').onclick=function(){ execAction(a,card); };
 }
 function execAction(a,card){
+  // Les mouvements enregistrés par Roland sont datés d'aujourd'hui si la date manque
+  // ou si l'année ne colle pas (le modèle devine mal les dates).
+  if(a.table==='pilotage_finances'){ var t=new Date().toISOString().slice(0,10); if(!a.data.date || String(a.data.date).slice(0,4)!==t.slice(0,4)) a.data.date=t; }
   var path=SB_URL+"/rest/v1/"+a.table, method="POST";
   if(a.table==='pilotage_cap'&&DATA.cap&&DATA.cap.id){ path+="?id=eq."+DATA.cap.id; method="PATCH"; }
   fetch(path,{method:method,headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify(a.data)})
