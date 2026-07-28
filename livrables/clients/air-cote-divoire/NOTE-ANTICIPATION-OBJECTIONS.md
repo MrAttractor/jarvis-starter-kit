@@ -78,7 +78,7 @@ C'est ton meilleur angle d'entrée. Air CI est **partenaire transport officiel d
 
 ## Qui est en face
 
-- **Hervé Abou, Directeur Régional** d'Air Côte d'Ivoire (titre corrigé le 28/07/2026 par Mac Arthur, la presse écrivait « Country Director »). Nommé sept. 2025, bureaux Paris 8e. Profil commercial de carrière (ENAC, ex-ventes Afrique australe), pas un administratif. C'est le décideur de zone, mais la validation d'un partenariat remonte au siège d'Abidjan. **Pas encore rencontré au 28/07/2026** : c'est la réunion de signature, celle que prépare `CLAUSES-CONTRAT-AIR-CI.md`.
+- **Hervé Abou, Directeur Régional** d'Air Côte d'Ivoire (titre corrigé le 28/07/2026 par Mac Arthur, la presse écrivait « Country Director »). Nommé sept. 2025, bureaux Paris 8e. Profil commercial de carrière (ENAC, ex-ventes Afrique australe), pas un administratif. C'est le décideur de zone, mais la validation d'un partenariat remonte au siège d'Abidjan. **Rencontré le 22/07/2026** avec Hermance Alloh, principe du partenariat validé. Reste à tenir la **réunion de négociation et de signature**, celle que prépare `CLAUSES-CONTRAT-AIR-CI.md`.
   - Ce qui le fait dire oui : ce qui **remplit la ligne Paris** et **renforce la proximité diaspora**, sans risque réputationnel, et qui est **validable par Abidjan**.
   - Sa phrase publique : « Nous ne sommes pas seulement une compagnie premium africaine, nous sommes une compagnie tournée vers le monde. »
 - **Hermance Alloh, Business Development Officer.** ✅ **CONFIRMÉ le 21/07/2026 par Mac Arthur : sa signature mail porte le titre de Business Development Officer d'Air Côte d'Ivoire.**

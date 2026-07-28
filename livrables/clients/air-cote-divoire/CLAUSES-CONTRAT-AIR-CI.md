@@ -123,20 +123,21 @@ Trois chiffres et une information, sans lesquels le modèle reste une hypothèse
 
 **Hervé Abou, Directeur Régional d'Air Côte d'Ivoire.** Titre confirmé par Mac Arthur
 le 28/07/2026 (la presse écrivait « Country Director », c'était inexact).
-**Pas encore rencontré.** C'est lui la réunion de signature que prépare ce document.
+**Rencontré le 22/07/2026.** C'est le décideur de zone.
 
-**Hermance Alloh, Business Development Officer.** Rencontrée, interlocutrice
-opérationnelle du dossier. C'est elle qui le porte en interne, donc c'est par elle
-que passe la préparation de la réunion avec le DR, pas par-dessus elle.
+**Hermance Alloh, Business Development Officer.** Rencontrée le même jour,
+interlocutrice opérationnelle du dossier. C'est elle qui le porte en interne, donc la
+préparation passe par elle, pas par-dessus elle.
 
-**Ce qui reste ouvert, et c'est la clause 8.** Savoir qu'Hervé Abou est le Directeur
-Régional ne dit pas s'il **signe**. Le dossier de veille pose depuis le 17/07 une
+**Ce qui a été acquis le 22/07 :** le principe du partenariat est validé, et ils ont
+demandé le simulateur. C'était une réunion de principe, pas de négociation.
+
+**Ce qui reste à tenir : la réunion de négociation et de signature.** C'est celle que
+prépare ce document. Elle ne se demande utilement qu'une fois les trois chiffres de la
+section 4 en main, sinon elle se tient sans matière et il faut en refaire une.
+
+**Ce qui reste ouvert, et c'est la clause 8.** Être Directeur Régional ne dit pas
+porter la **délégation de signature**. Le dossier de veille pose depuis le 17/07 une
 question jamais résolue : qui signe au siège d'Abidjan, quel comité valide, et en
-combien de temps. Un Directeur Régional peut être décideur de zone sans porter la
-délégation de signature sur un partenariat commercial. À établir avant de préparer un
-texte à signer, sinon on prépare une réunion qui ne peut rien conclure.
-
-**Conséquence sur la préparation :** deux réunions différentes, pas une. Celle avec
-Hermance Alloh sert à obtenir les chiffres et le circuit interne. Celle avec Hervé
-Abou est la réunion de décision, et elle ne se demande qu'une fois les chiffres en
-main, sinon elle se tient sans matière.
+combien de temps. À établir avant de préparer un texte à signer, sinon on négocie avec
+quelqu'un qui devra faire revalider l'ensemble ailleurs, et le calendrier double.
