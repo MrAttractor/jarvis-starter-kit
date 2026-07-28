@@ -2,12 +2,11 @@
 //
 // C'est l'étape qui donne sa valeur au produit : sans ces réponses, l'assistant est
 // généré à partir du seul prénom + activité, et répond comme un chatbot générique.
-// Elle vivait dans MonAppScreen, qu'aucun bouton n'atteignait.
 //
 // Utilisé à deux endroits : dans le tunnel d'inscription (pleine page, obligatoire)
-// et depuis le Profil (« Refaire mon assistant », en modale).
+// et depuis le Profil (« Réapprendre », en modale).
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, Input, Btn, Spinner } from './ui';
 
@@ -51,16 +50,47 @@ export async function saveAnamneseAndGenerate(answers) {
   return gen;
 }
 
+// Reprise en cours de route. C'est la DERNIÈRE étape du tunnel, celle où l'on
+// décroche le plus : quelqu'un qui fermait l'app à la question 5 repartait de la 1
+// et abandonnait. Sauvegardé uniquement dans le tunnel (pas depuis le Profil, où
+// « Réapprendre » doit repartir d'une page blanche).
+const STORE_KEY = 'aa_anamnese_v1';
+
+function lireBrouillon() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return null;
+    const s = JSON.parse(raw);
+    if (!s || typeof s !== 'object') return null;
+    const max = ANAMNESE_QUESTIONS.length - 1;
+    return {
+      qIdx:    Math.min(Math.max(0, Number(s.qIdx) || 0), max),
+      answers: s.answers && typeof s.answers === 'object' ? s.answers : {},
+      current: typeof s.current === 'string' ? s.current : '',
+    };
+  } catch { return null; }
+}
+
 /**
  * Les 7 questions, une par écran.
  * @param {(gen: {slug: string, url: string}) => void} onGenerated - assistant prêt
  * @param {() => void} [onClose] - si absent, pas de bouton fermer (tunnel : on ne saute pas l'étape)
  */
 export function Anamnese({ profile, onGenerated, onClose }) {
-  const [qIdx, setQIdx]       = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [current, setCurrent] = useState('');
+  const persist  = !onClose;                       // le tunnel, pas la modale du Profil
+  const reprise  = persist ? lireBrouillon() : null;
+
+  const [qIdx, setQIdx]       = useState(reprise?.qIdx ?? 0);
+  const [answers, setAnswers] = useState(reprise?.answers ?? {});
+  const [current, setCurrent] = useState(reprise?.current ?? '');
   const [step, setStep]       = useState('questions'); // questions | generating | error
+
+  // Enregistré à chaque frappe : fermer l'onglet ne joue aucun événement fiable
+  // sur mobile, on ne peut pas compter sur un cleanup au démontage.
+  useEffect(() => {
+    if (!persist) return;
+    try { localStorage.setItem(STORE_KEY, JSON.stringify({ qIdx, answers, current })); } catch {}
+  }, [persist, qIdx, answers, current]);
 
   const q = ANAMNESE_QUESTIONS[qIdx];
   const isLast = qIdx === ANAMNESE_QUESTIONS.length - 1;
@@ -69,7 +99,10 @@ export function Anamnese({ profile, onGenerated, onClose }) {
   const generate = async (data) => {
     setStep('generating');
     try {
-      onGenerated(await saveAnamneseAndGenerate(data));
+      const gen = await saveAnamneseAndGenerate(data);
+      // Le brouillon n'a plus lieu d'être : l'assistant existe.
+      try { localStorage.removeItem(STORE_KEY); } catch {}
+      onGenerated(gen);
     } catch {
       setStep('error');
     }

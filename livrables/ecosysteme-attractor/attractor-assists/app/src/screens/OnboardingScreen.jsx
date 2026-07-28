@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { Icon } from '../components/ui';
 import { InstallGuide, detectPlatform } from './InstallScreen';
 import { Anamnese } from '../components/Anamnese';
+import { PitchModal } from '../components/Pitch';
 import { checkSlug } from '../lib/slug';
 import { boutiqueUrl } from '../lib/boutique';
 
@@ -193,6 +194,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   const [templateId, setTemplateId] = useState('1a');
   const [brandColor, setBrandColor] = useState('#FF6B35');
   const [whatsapp, setWhatsapp]     = useState('');
+  const [showPitch, setShowPitch]   = useState(false);
 
   // Slug
   const [slug, setSlug]                   = useState('');
@@ -244,7 +246,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
       const saved = localStorage.getItem(LOCAL_KEY);
       if (!saved) return;
       const s = JSON.parse(saved);
-      if (!s?.phase || s.phase === 'welcome' || s.phase === 'pret') return;
+      if (!s?.phase || ['welcome', 'pret', 'install'].includes(s.phase)) return;
       if (s.prenom)      setPrenom(s.prenom);
       if (s.nomAss)      setNomAss(s.nomAss);
       if (s.profilType)  setProfilType(s.profilType);
@@ -264,7 +266,8 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
   // Sauvegarder la progression à chaque changement d'état significatif
   useEffect(() => {
-    if (phase === 'welcome' || phase === 'pret') {
+    // Après « pret », le compte est marqué terminé : plus rien à reprendre.
+    if (['welcome', 'pret', 'install'].includes(phase)) {
       localStorage.removeItem(LOCAL_KEY);
       return;
     }
@@ -443,35 +446,44 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
             </div>
           ))}
         </div>
-        {/* Le guide d'installation n'a de sens que sur un mobile non installé.
-            Le test est fait ici : avant, il l'était pendant le rendu de l'écran
-            suivant, qui déclenchait un changement d'état en plein rendu. */}
-        <PrimaryBtn onClick={() => {
-          const p = detectPlatform();
-          setPhase(p === 'installed' || p === 'desktop' ? 'bapteme' : 'install');
-        }}>Commencer</PrimaryBtn>
+        <PrimaryBtn onClick={() => setPhase('bapteme')}>Commencer</PrimaryBtn>
+        <button
+          onClick={() => setShowPitch(true)}
+          className="w-full min-h-[44px] text-[13.5px] font-semibold text-g500 active:text-charbon transition"
+        >
+          Ce que je fais pour toi, en 30 secondes
+        </button>
       </div>
+      {showPitch && (
+        <PitchModal
+          onClose={() => setShowPitch(false)}
+          onStart={() => { setShowPitch(false); setPhase('bapteme'); }}
+        />
+      )}
     </div>
   );
 
   // ── 2. Install ─────────────────────────────────────────────────────────────────
+  // Déplacée APRÈS « Ta boutique est en ligne ». Demander d'installer une app
+  // avant d'avoir livré la moindre valeur était un point de fuite : maintenant
+  // l'entrepreneur a son lien en main, et le guide connaît son prénom et le nom
+  // qu'il a donné à son assistant.
 
   if (phase === 'install') {
-    const platform = detectPlatform();
     return (
       <div className="h-full flex flex-col">
-        <div className="flex-1">
+        <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
           <InstallGuide
-            platform={platform}
+            platform={detectPlatform()}
             prenom={prenom}
             nomAssistant={assistName}
             installPromptRef={installPromptRef}
-            onDone={() => setPhase('bapteme')}
+            onDone={onDone}
           />
         </div>
-        <div className="px-5 pb-10">
-          <button onClick={() => setPhase('bapteme')} className="w-full py-3 text-[13px] font-semibold text-g500">
-            Passer cette étape
+        <div className="px-5 pb-10 flex-shrink-0">
+          <button onClick={onDone} className="w-full min-h-[44px] py-3 text-[13px] font-semibold text-g500">
+            Plus tard, entrer dans mon Assists
           </button>
         </div>
       </div>
@@ -1104,7 +1116,12 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
           </div>
         )}
       </div>
-      <PrimaryBtn onClick={onDone}>
+      {/* Le guide d'installation vient ici, une fois la boutique livrée. */}
+      <PrimaryBtn onClick={() => {
+        const p = detectPlatform();
+        if (p === 'installed' || p === 'desktop') onDone();
+        else setPhase('install');
+      }}>
         Entrer dans mon Assists
       </PrimaryBtn>
     </div>

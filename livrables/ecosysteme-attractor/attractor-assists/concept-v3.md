@@ -28,7 +28,7 @@ C'est exactement la mission fondatrice : "Un bras droit intelligent qui soulage 
 | 2 | Par quelles surfaces ? | **Entrepreneur** : PWA (config + vue d'ensemble) + WhatsApp (notifications). **Client** : mini-site web personnalisé (lien partagé par l'entrepreneur dans son message d'accueil WhatsApp, statut, flyer, devanture, etc.) |
 | 3 | Promesse côté entrepreneur | **"Je te vide la tête"** : dictée vocale ou écrite → tâches structurées, clients à relancer, plan du jour, décisions du moment |
 | 4 | Promesse côté client | **"Je prends ta commande de A à Z"** : catalogue → commande → paiement → confirmation → tracking |
-| 5 | Onboarding | **Vidéo Mac Arthur (5 min) + conversation guidée avec le Jarvis (10-15 min)**. La vidéo humanise l'expérience. La conversation collecte l'anamnèse business. |
+| 5 | Onboarding | **Modal « Ce que je fais pour toi » (3 volets, 30 s) + conversation guidée avec le Jarvis**. La conversation collecte l'anamnèse business. *Révisé le 28/07/2026 : la vidéo Mac Arthur de 5 min n'a jamais été tournée et bloquait la promesse d'entrée. Remplacée par un modal qui porte la même intention (d'où je viens, je te vide la tête, je prends tes commandes) sans dépendre d'un tournage. Accessible aussi depuis le Profil.* |
 | 6 | Catalogue | **Photo de la carte/catalogue → IA extrait → entrepreneur valide.** Bonus : Claude design extrait les couleurs dominantes et génère le thème visuel de la boutique. |
 | 7 | Réception des commandes | **Alerte WhatsApp (réactivité) + gestion dans la PWA (vue d'ensemble, stats, historique).** L'entrepreneur reste sur WhatsApp où il est déjà, mais a une vraie vue d'ensemble quand il en a besoin. |
 | 8 | Domaine | **Démarrage gratuit** avec `assists.agenceattractor.com/b/[slug]`. Achat d'un domaine court (type `attractor.ci`, 15 €/an) reporté quand on aura des résultats à scaler. QR code généré automatiquement en complément pour les supports physiques. |
@@ -68,12 +68,16 @@ C'est exactement la mission fondatrice : "Un bras droit intelligent qui soulage 
 
 ### Côté entrepreneur — jour 1
 
-1. Reçoit le lien d'inscription (pub, parrainage, WhatsApp).
-2. Ouvre la PWA → vidéo Mac Arthur 5 min (méthode + promesse).
-3. Conversation guidée avec son Jarvis : anamnèse business (10-15 min).
-4. Photographie sa carte/catalogue → Jarvis extrait → il valide.
-5. Choisit son slug (`/b/aicha`).
-6. Récupère son lien + son QR code → prêt à le partager.
+> Ordre réel du tunnel au 28/07/2026, 8 étapes, avec retour possible à chaque étape.
+
+1. Reçoit le lien d'inscription (pub, parrainage, WhatsApp), crée son compte (code email à 6 chiffres).
+2. Écran d'accueil, avec le modal « Ce que je fais pour toi » en option (30 s).
+3. **Baptême** : son prénom, le nom qu'il donne à son assistant.
+4. **Profil type** : activité qui tourne, projet à côté, ou démarrage.
+5. **Anamnèse courte** : ce qu'il fait, où il travaille.
+6. **Modèle de boutique + couleur**, puis **identifiant de lien**, puis **numéro WhatsApp** (la destination des commandes), puis **ses produits** (saisie ou scan photo).
+7. **Les 7 questions** qui construisent l'assistant client (reprise possible en cours de route).
+8. « Ta boutique est en ligne » : son lien, à copier ou partager sur WhatsApp. **L'installation de l'app est proposée ici, une fois la valeur livrée** (jamais avant).
 
 ### Côté entrepreneur — quotidien
 

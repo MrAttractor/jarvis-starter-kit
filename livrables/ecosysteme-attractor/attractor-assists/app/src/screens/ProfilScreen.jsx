@@ -5,6 +5,7 @@ import { detectPlatform } from './InstallScreen';
 import { checkSlug } from '../lib/slug';
 import { boutiqueUrl, BOUTIQUE_BASE } from '../lib/boutique';
 import { Anamnese } from '../components/Anamnese';
+import { PitchModal } from '../components/Pitch';
 
 // Le WhatsApp de l'agence, pour les demandes de nom de domaine.
 const WA_AGENCE = '2250576877070';
@@ -358,6 +359,8 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
 
           <Row label="Notifications" onClick={() => go('notifications')} />
           <Divider />
+          <Row label="Ce que je fais pour toi" sub="Les 3 choses, en 30 secondes" onClick={() => setSheetOpen('pitch')} />
+          <Divider />
           <Row label="Un bug ou une idée ?" onClick={() => openSheet('feedback')} />
         </div>
 
@@ -478,7 +481,10 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
         </div>
       )}
 
-      {sheetOpen && sheetOpen !== 'feedback' && sheetOpen !== 'slug' && (
+      {/* Liste explicite : la condition était « tout sauf feedback et slug », donc
+          la feuille d'édition s'empilait par-dessus l'anamnèse et proposait
+          d'enregistrer un champ `anamnese` qui n'existe pas en base. */}
+      {['prenom', 'activite', 'nom_assistant'].includes(sheetOpen) && (
         <div className="fixed inset-0 z-50 flex items-end" style={{ background: 'rgba(0,0,0,.45)' }} onClick={() => setSheetOpen(null)}>
           <div className="w-full bg-white rounded-t-[28px] p-6 pb-10 flex flex-col gap-4" onClick={e => e.stopPropagation()}>
             <div className="w-10 h-1 rounded-full bg-g200 mx-auto mb-1" />
@@ -541,6 +547,8 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
           </div>
         </div>
       )}
+
+      {sheetOpen === 'pitch' && <PitchModal onClose={() => setSheetOpen(null)} />}
 
       {/* Réapprendre : les 7 questions, puis régénération de l'assistant */}
       {sheetOpen === 'anamnese' && (
