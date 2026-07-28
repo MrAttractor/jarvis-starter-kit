@@ -361,6 +361,15 @@ var SB_URL="https://lgdgbrivnhgeupqhkckd.supabase.co";
 var ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
 var OWNER="myattractor1@gmail.com";
 var TOKEN=localStorage.getItem('pilote_token')||ANON;
+var REFRESH=localStorage.getItem('pilote_refresh')||'';
+/* Rafraîchit le jeton d'accès pour qu'il n'expire plus (sinon lecture/écriture échouent). */
+function refreshToken(cb){
+  if(!REFRESH){ cb(false); return; }
+  fetch(SB_URL+"/auth/v1/token?grant_type=refresh_token",{method:"POST",headers:{apikey:ANON,"Content-Type":"application/json"},body:JSON.stringify({refresh_token:REFRESH})})
+    .then(function(r){return r.json();})
+    .then(function(d){ if(d&&d.access_token){ TOKEN=d.access_token; localStorage.setItem('pilote_token',TOKEN); if(d.refresh_token){ REFRESH=d.refresh_token; localStorage.setItem('pilote_refresh',REFRESH); } cb(true); } else { cb(false); } })
+    .catch(function(){ cb(false); });
+}
 function $(id){return document.getElementById(id);}
 var TAUX=656; // 1 € ≈ 656 FCFA
 function nf(n){ return new Intl.NumberFormat('fr-FR').format(Math.round(Number(n)||0)); }
@@ -401,11 +410,13 @@ function verifyOtp(){
     .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d};});})
     .then(function(x){ b.disabled=false; b.textContent="Entrer";
       if(!x.ok||!x.d.access_token){ gateErr("Code incorrect ou expiré."); return; }
-      TOKEN=x.d.access_token; localStorage.setItem('pilote_token',TOKEN); enter();
+      TOKEN=x.d.access_token; localStorage.setItem('pilote_token',TOKEN); if(x.d.refresh_token){ REFRESH=x.d.refresh_token; localStorage.setItem('pilote_refresh',REFRESH); } enter();
     }).catch(function(){ b.disabled=false; b.textContent="Entrer"; gateErr("Connexion interrompue."); });
 }
-function enter(){ $('gate').style.display='none'; $('app').style.display='block'; loadAll(); }
-if(TOKEN!==ANON){ enter(); }
+function enter(){ $('gate').style.display='none'; $('app').style.display='block'; loadAll(); loadChat(); }
+/* Session déjà ouverte : on rafraîchit le jeton. Si le refresh échoue (pas de
+   refresh token ou expiré), on retourne à l'écran de connexion pour re-login. */
+if(TOKEN!==ANON){ refreshToken(function(ok){ if(ok){ enter(); } else { localStorage.removeItem('pilote_token'); TOKEN=ANON; /* le gate reste affiché */ } }); }
 
 /* DATA */
 var CTX={confirme:0,objectif:0,pipe:0,entrees:0,sorties:0}, allActions=[], SITE={};
@@ -553,7 +564,19 @@ function deleteEntry(){
 }
 
 /* ROLAND */
-var chatMsgs=[];
+var chatMsgs=[], chatRowId=null;
+function loadChat(){
+  fetch(SB_URL+"/rest/v1/roland_chat?select=id,messages&order=updated_at.desc&limit=1",{headers:{apikey:ANON,Authorization:"Bearer "+ANON}})
+    .then(function(r){return r.json();})
+    .then(function(rows){ if(rows&&rows[0]&&Array.isArray(rows[0].messages)&&rows[0].messages.length){ chatRowId=rows[0].id; chatMsgs=rows[0].messages; var intro=document.querySelector('.chat-intro'); if(intro) intro.remove(); chatMsgs.forEach(function(m){ addMsg(m.from==='me'?'me':'rol', m.text); }); } })
+    .catch(function(){});
+}
+function saveChat(){
+  var payload={messages:chatMsgs.slice(-40),updated_at:new Date().toISOString()};
+  var path=SB_URL+"/rest/v1/roland_chat"+(chatRowId?"?id=eq."+chatRowId:"");
+  fetch(path,{method:chatRowId?"PATCH":"POST",headers:{apikey:ANON,Authorization:"Bearer "+ANON,"Content-Type":"application/json",Prefer:"return=representation"},body:JSON.stringify(payload)})
+    .then(function(r){return r.json();}).then(function(d){ if(!chatRowId&&d&&d[0]&&d[0].id) chatRowId=d[0].id; }).catch(function(){});
+}
 function openRoland(){ $('dbd').classList.add('on'); $('drawer').classList.add('on'); setTimeout(function(){$('chat-input').focus();},250); }
 function closeRoland(){ $('dbd').classList.remove('on'); $('drawer').classList.remove('on'); }
 /* Roland prend le lead : il t'interroge pour faire le tour de l'existant. */
@@ -565,10 +588,10 @@ function startPoint(){
   var trigger="Fais-moi faire le point global sur tout ce qui est en cours. Prends le lead, pose-moi les questions UNE PAR UNE, commence par l'argent du mois. Contexte : "+fcfa(CTX.confirme)+" encaissé sur objectif "+(CTX.objectif?fcfa(CTX.objectif):"non défini")+", "+fcfa(CTX.pipe)+" en pipeline."+doss;
   chatMsgs.push({from:'me',text:trigger});
   var typing=addMsg('rol','Roland prépare le tour…'); typing.className='msg rol typing';
-  fetch(SB_URL+"/functions/v1/chat-assistant",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json"},body:JSON.stringify({assistant_id:'roland_perso',messages:chatMsgs})})
-    .then(function(r){return r.json();})
-    .then(function(d){ typing.remove(); var rep=(d&&d.reply)?d.reply:"On commence : ce mois, qu'est-ce qui est rentré comme argent ?"; handleReply(rep); })
-    .catch(function(){ typing.remove(); addMsg('rol',"On commence : ce mois, qu'est-ce qui est rentré comme argent ?"); });
+  fetch(SB_URL+"/functions/v1/chat-assistant",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+ANON,"Content-Type":"application/json"},body:JSON.stringify({assistant_id:'roland_perso',messages:chatMsgs.slice(-14)})})
+    .then(function(r){ if(!r.ok) vlog('point HTTP '+r.status); return r.json(); })
+    .then(function(d){ typing.remove(); if(d&&d.error) vlog('point err: '+String(d.error).slice(0,120)); var rep=(d&&d.reply)?d.reply:"On commence : ce mois, qu'est-ce qui est rentré comme argent ?"; handleReply(rep); })
+    .catch(function(){ typing.remove(); vlog('point threw'); addMsg('rol',"On commence : ce mois, qu'est-ce qui est rentré comme argent ?"); });
 }
 function addMsg(from,text){ var el=document.createElement('div'); el.className='msg '+(from==='me'?'me':'rol'); el.textContent=text; $('chat').appendChild(el); $('chat').scrollTop=$('chat').scrollHeight; return el; }
 /* Traite la réponse de Roland : affiche le texte + extrait les actions à valider. */
@@ -585,7 +608,9 @@ function handleReply(rep){
   }
   visible=visible.replace(/⟦[\s\S]*$/,'').replace(/⟦\/?DO⟧?/g,'').trim();
   if(visible){ addMsg('rol',visible); chatMsgs.push({from:'roland',text:visible}); }
+  vlog('reply doBlock='+(m?'yes':'no')+' actions='+actions.length+(raw===null&&m?' PARSE_FAIL':''));
   actions.forEach(proposeAction);
+  saveChat();
 }
 function resumeAction(a){ var d=a.data||{};
   if(a.table==='pilotage_finances') return (String(d.type).indexOf('entr')>-1?'+ ':'− ')+dual(d.montant)+(d.description?' ('+d.description+')':'');
@@ -611,8 +636,8 @@ function execAction(a,card){
   var path=SB_URL+"/rest/v1/"+a.table, method="POST";
   if(a.table==='pilotage_cap'&&DATA.cap&&DATA.cap.id){ path+="?id=eq."+DATA.cap.id; method="PATCH"; }
   fetch(path,{method:method,headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify(a.data)})
-    .then(function(r){ if(r.ok){ card.innerHTML='<div class="do-done">✓ Enregistré</div>'; loadAll(); } else { card.innerHTML='<div class="do-done" style="color:#C0392B">Échec, réessaie</div>'; } })
-    .catch(function(){ card.innerHTML='<div class="do-done" style="color:#C0392B">Connexion coupée</div>'; });
+    .then(function(r){ vlog('exec '+a.table+' -> '+r.status); if(r.ok){ card.innerHTML='<div class="do-done">✓ Enregistré</div>'; loadAll(); } else { r.text().then(function(t){ vlog('exec fail '+t.slice(0,100)); }); card.innerHTML='<div class="do-done" style="color:#C0392B">Échec, réessaie</div>'; } })
+    .catch(function(){ vlog('exec threw'); card.innerHTML='<div class="do-done" style="color:#C0392B">Connexion coupée</div>'; });
 }
 function sendRoland(){
   var ta=$('chat-input'), txt=ta.value.trim(); if(!txt) return; ta.value='';
@@ -623,10 +648,11 @@ function sendRoland(){
   var contexte=first?('Contexte du mois : '+fcfa(CTX.confirme)+' encaissé sur objectif '+(CTX.objectif?fcfa(CTX.objectif):'non défini')+', '+fcfa(CTX.pipe)+' en pipeline, entrées '+fcfa(CTX.entrees)+', sorties '+fcfa(CTX.sorties)+'.'+doss+'\n\n'+txt):txt;
   chatMsgs.push({from:'me',text:txt});
   var typing=addMsg('rol','Roland réfléchit…'); typing.className='msg rol typing';
-  fetch(SB_URL+"/functions/v1/chat-assistant",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json"},body:JSON.stringify({assistant_id:'roland_perso',messages:chatMsgs.slice(0,-1).concat([{from:'me',text:contexte}])})})
-    .then(function(r){return r.json();})
-    .then(function(d){ typing.remove(); var rep=(d&&d.reply)?d.reply:"Petit souci de connexion, réessaie."; handleReply(rep); })
-    .catch(function(){ typing.remove(); addMsg('rol',"Petit souci de connexion, réessaie."); });
+  var msgs=chatMsgs.slice(0,-1).concat([{from:'me',text:contexte}]).slice(-14);
+  fetch(SB_URL+"/functions/v1/chat-assistant",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+ANON,"Content-Type":"application/json"},body:JSON.stringify({assistant_id:'roland_perso',messages:msgs})})
+    .then(function(r){ if(!r.ok) vlog('chat HTTP '+r.status); return r.json(); })
+    .then(function(d){ typing.remove(); if(d&&d.error) vlog('chat err: '+String(d.error).slice(0,120)); var rep=(d&&d.reply)?d.reply:"Petit souci de connexion, réessaie."; handleReply(rep); })
+    .catch(function(e){ typing.remove(); vlog('chat threw'); addMsg('rol',"Petit souci de connexion, réessaie."); });
 }
 
 /* ===== NOTE VOCALE (enregistrement WAV via Web Audio — fiable iOS) ===== */
@@ -676,7 +702,7 @@ function sendWav(buf){
   var ta=$('chat-input'), old=ta.value; var blob=new Blob([buf],{type:'audio/wav'}); var reader=new FileReader();
   reader.onloadend=function(){
     var b64=String(reader.result).split(',')[1]; vlog('sending wav bytes='+(b64?b64.length:0));
-    fetch(SB_URL+"/functions/v1/process-dump-pilotage",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json"},body:JSON.stringify({audio_b64:b64,audio_type:'audio/wav'})})
+    fetch(SB_URL+"/functions/v1/process-dump-pilotage",{method:"POST",headers:{apikey:ANON,Authorization:"Bearer "+ANON,"Content-Type":"application/json"},body:JSON.stringify({audio_b64:b64,audio_type:'audio/wav'})})
       .then(function(r){return r.json();})
       .then(function(d){ var h=$('rec-hint'); if(h) h.style.display='none'; var t=(d&&d.transcript)?d.transcript:''; vlog('transcript len='+t.length); if(t){ ta.value=(old?old+' ':'')+t; ta.focus(); } else { recHint('Je n\'ai rien entendu, réessaie.'); } })
       .catch(function(){ recHint('Transcription impossible, réessaie.'); });
