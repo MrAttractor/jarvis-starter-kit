@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, Spinner } from '../components/ui';
 import { previewUrl as previewBoutiqueUrl } from '../lib/boutique';
@@ -190,7 +190,7 @@ export function TemplateGalerieScreen({ go, notify, profile }) {
     <div className="flex flex-col h-full bg-sable">
 
       {/* ── AppBar ── */}
-      <div className="flex items-center gap-3 px-4 pt-14 pb-4 bg-sable flex-shrink-0">
+      <div className="flex items-center gap-3 px-4 pt-safe pb-4 bg-sable flex-shrink-0">
         {/* On revient au Catalogue, d'où l'on vient — pas au Dashboard. */}
         <button onClick={() => go('catalogue')} aria-label="Retour au catalogue" className="w-11 h-11 rounded-xl bg-white border border-g200 flex items-center justify-center flex-shrink-0 active:bg-g100 transition">
           <Icon name="back" size={19} className="text-charbon" />

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, Spinner, VoiceMic } from '../components/ui';
 
@@ -218,7 +218,7 @@ export function CatalogueScreen({ go, notify, profile }) {
     <div className="flex flex-col h-full bg-sable">
 
       {/* AppBar */}
-      <div className="flex items-center justify-between gap-2 px-4 pt-14 pb-3 bg-sable">
+      <div className="flex items-center justify-between gap-2 px-4 pt-safe pb-3 bg-sable">
         <div className="min-w-0">
           <div className="font-display font-bold text-[19px] text-charbon truncate">Mon catalogue</div>
           <div className="text-[12.5px] text-g500 mt-0.5 truncate">{activeCount} produit{activeCount !== 1 ? 's' : ''} actif{activeCount !== 1 ? 's' : ''}</div>

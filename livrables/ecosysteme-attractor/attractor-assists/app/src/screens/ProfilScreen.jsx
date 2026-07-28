@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, Spinner } from '../components/ui';
 import { detectPlatform } from './InstallScreen';
@@ -162,7 +162,7 @@ export function ProfilScreen({ go, notify, dark, setDark, profile, reloadProfile
     <div className="flex flex-col min-h-full bg-sable pb-10">
 
       {/* Hero — photo + infos */}
-      <div className="px-4 pt-14 pb-5 flex flex-col items-center gap-3">
+      <div className="px-4 pt-safe pb-5 flex flex-col items-center gap-3">
 
         {/* Avatar cliquable */}
         <div className="relative">

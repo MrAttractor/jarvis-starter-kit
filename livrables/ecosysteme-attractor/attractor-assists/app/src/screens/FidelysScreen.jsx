@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, Spinner } from '../components/ui';
 
@@ -56,7 +56,7 @@ export function FidelysScreen({ go, notify, profile }) {
   // ── Gate : plan gratuit ──────────────────────────────────────────────────────
 
   if (!unlocked) return (
-    <div className="flex flex-col h-full bg-sable px-5 pt-14 pb-10">
+    <div className="flex flex-col h-full bg-sable px-5 pt-safe pb-10">
       <button onClick={() => go('profil')} className="flex items-center gap-2 h-11 pr-3 -ml-1 text-g500 text-[13px] mb-4 self-start">
         <Icon name="back" size={16} /> Retour
       </button>
@@ -101,7 +101,7 @@ export function FidelysScreen({ go, notify, profile }) {
     <div className="flex flex-col h-full bg-sable">
 
       {/* Header gradient */}
-      <div className="px-5 pt-12 pb-5 flex-shrink-0"
+      <div className="px-5 pt-safe pb-5 flex-shrink-0"
         style={{ background: 'linear-gradient(150deg, #1E5631 0%, #2d7a47 60%, #F25C05 100%)' }}>
         {/* Même retour que sur la version verrouillée : l'écran s'ouvre depuis le Profil. */}
         <button onClick={() => go('profil')} aria-label="Retour" className="flex items-center gap-1.5 h-11 pr-3 -ml-1 mb-1 text-white/75 text-[13px] font-semibold active:text-white transition">

@@ -36,9 +36,20 @@ a{color:inherit}
   padding-left:max(20px, env(safe-area-inset-left));
   padding-right:max(20px, env(safe-area-inset-right))}
 
+/* PIÈGE À NE PAS REFAIRE — trois blocs portaient a la fois .wrap et une classe
+   de mise en page ecrite PLUS BAS avec la notation raccourcie `padding: X 0 Y`.
+   A specificite egale, la derniere regle gagne, et le raccourci remet
+   padding-left et padding-right a ZERO : la barre du haut, le hero et le pied
+   de page se collaient aux bords de l ecran. Sur ces blocs, ne jamais utiliser
+   le raccourci `padding` : ecrire padding-top et padding-bottom separement. */
+
 /* En-tête */
-.nav{position:sticky;top:0;z-index:30;background:rgba(250,246,240,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--g200)}
-.nav-in{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0}
+/* La page est en viewport-fit=cover : sans ce retrait, la barre du haut se
+   glisse SOUS l heure et la batterie de l iPhone et le logo devient illisible.
+   Vaut 0 partout ou il n y a pas d encoche. */
+.nav{position:sticky;top:0;z-index:30;background:rgba(250,246,240,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--g200);
+  padding-top:env(safe-area-inset-top,0px)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:14px;padding-bottom:14px}
 /* nowrap : sans lui, "Attractor Assists" se casse en deux lignes des 375px et
    s'ecrase contre le bouton. Le duo logo + bouton doit tenir sur une ligne jusqu'a 320px. */
 .logo{display:flex;align-items:center;gap:9px;font-family:Sora;font-weight:800;font-size:17px;text-decoration:none;white-space:nowrap}
@@ -61,7 +72,7 @@ a{color:inherit}
 .btn-sm{padding:9px 16px;font-size:13.5px}
 
 /* Hero */
-.hero{padding:52px 0 44px}
+.hero{padding-top:52px;padding-bottom:44px}
 .tag{display:inline-flex;align-items:center;gap:7px;background:rgba(30,86,49,.09);color:var(--vert);font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:999px;margin-bottom:20px}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--vert)}
 h1{font-size:clamp(28px,7vw,54px);font-weight:800;margin-bottom:18px}
@@ -71,7 +82,7 @@ h1 em{font-style:normal;color:var(--orange)}
 .rassure{font-size:13px;color:var(--g500);margin-top:14px}
 
 /* Sections */
-section{padding:52px 0}
+section{padding-top:52px;padding-bottom:52px}
 
 /* ── Mobile ────────────────────────────────────────────────────────────────
    Sur telephone, deux boutons cote a cote passent a la ligne et se retrouvent
@@ -80,8 +91,8 @@ section{padding:52px 0}
    Le <br> du titre est retire : a cette largeur il produisait une ligne courte
    suivie d'un retour a la ligne naturel, donc un pave desequilibre. */
 @media(max-width:560px){
-  .hero{padding:36px 0 32px}
-  section{padding:38px 0}
+  .hero{padding-top:36px;padding-bottom:32px}
+  section{padding-top:38px;padding-bottom:38px}
   h1{letter-spacing:-.02em}
   h1 br{display:none}
   .lead{margin-bottom:24px}
@@ -137,7 +148,7 @@ h2{font-size:clamp(24px,4vw,36px);font-weight:800;margin-bottom:12px}
 .final{background:var(--charbon);color:#fff;border-radius:26px;padding:44px 28px;text-align:center;margin:12px 0 46px}
 .final h2{color:#fff;margin-bottom:12px}
 .final p{color:rgba(255,255,255,.62);font-size:15.5px;max-width:480px;margin:0 auto 26px}
-.foot{border-top:1px solid var(--g200);padding:26px 0 34px;font-size:13px;color:var(--g500);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
+.foot{border-top:1px solid var(--g200);padding-top:26px;padding-bottom:34px;font-size:13px;color:var(--g500);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
 .foot a{text-decoration:none}
 .foot a:hover{color:var(--charbon)}
 </style>

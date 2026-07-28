@@ -60,10 +60,12 @@ input, textarea { font: inherit; color: inherit; width: 100%; }
 .hidden { display: none !important; }
 
 /* ── En-tête ─────────────────────────────────────────────────────────────── */
+/* padding-top avec la zone sûre : la page est en viewport-fit=cover, sans ça
+   le nom de la boutique passe sous l'heure et la batterie de l'iPhone. */
 .top {
   background: var(--surface);
   border-bottom: 1px solid var(--line);
-  padding: 18px 0 14px;
+  padding: calc(18px + env(safe-area-inset-top, 0px)) 0 14px;
   position: sticky; top: 0; z-index: 20;
 }
 .top-in { display: flex; align-items: center; gap: 12px; }

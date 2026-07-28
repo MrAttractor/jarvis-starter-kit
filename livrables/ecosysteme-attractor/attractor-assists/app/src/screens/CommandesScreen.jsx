@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, Spinner } from '../components/ui';
 import { boutiqueUrl } from '../lib/boutique';
@@ -152,7 +152,7 @@ export function CommandesScreen({ go, notify, profile }) {
     <div className="flex flex-col h-full bg-sable">
 
       {/* Header */}
-      <div className="px-4 pt-14 pb-3 flex-shrink-0">
+      <div className="px-4 pt-safe pb-3 flex-shrink-0">
         <div className="flex items-center justify-between mb-3">
           <div className="font-display font-bold text-[20px] text-charbon">Tableau de bord</div>
           {enAttente > 0 && (

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, Card, SectionLabel, Btn, Pill, Textarea, Sheet } from '../components/ui';
 
@@ -686,7 +686,7 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
 
     return (
       <div className="min-h-screen bg-sable pb-6">
-        <div className="px-[18px] pt-14 pb-4">
+        <div className="px-[18px] pt-safe pb-4">
           <p className="font-display font-extrabold text-[22px] text-charbon">Cockpit</p>
           <p className="text-[12.5px] text-g400 mt-0.5">Tableau de bord admin · Mac Arthur</p>
         </div>
@@ -782,7 +782,7 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
           />
 
           {/* Contenu */}
-          <div className="relative z-10 px-5 pt-14 pb-6 flex flex-col">
+          <div className="relative z-10 px-5 pt-safe pb-6 flex flex-col">
 
             {/* Stop TTS */}
             {ttsActive && (
@@ -974,7 +974,7 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
 
     return (
       <div className="min-h-screen bg-sable pb-6">
-        <div className="px-[18px] pt-14 pb-3">
+        <div className="px-[18px] pt-safe pb-3">
           <button onClick={() => go('cockpit')} className="flex items-center gap-1.5 text-g400 text-[12px] font-bold mb-3 active:text-orange transition">
             <Icon name="back" size={14} /> Cockpit
           </button>
@@ -1157,7 +1157,7 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
 
     return (
       <div className="min-h-screen bg-sable pb-6">
-        <div className="px-[18px] pt-14 pb-3">
+        <div className="px-[18px] pt-safe pb-3">
           <button onClick={() => go('cockpit')} className="flex items-center gap-1.5 text-g400 text-[12px] font-bold mb-3 active:text-orange transition">
             <Icon name="back" size={14} /> Cockpit
           </button>
@@ -1545,7 +1545,7 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
 
     return (
       <div className="min-h-screen bg-sable pb-6">
-        <div className="px-[18px] pt-14 pb-4">
+        <div className="px-[18px] pt-safe pb-4">
           <button onClick={() => go('cockpit')} className="flex items-center gap-1.5 text-g400 text-[12px] font-bold mb-3 active:text-orange transition">
             <Icon name="back" size={14} /> Cockpit
           </button>
@@ -1741,7 +1741,7 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
     };
     return (
       <div className="min-h-screen bg-sable pb-6">
-        <div className="px-[18px] pt-14 pb-4">
+        <div className="px-[18px] pt-safe pb-4">
           <button onClick={() => go('cockpit')} className="flex items-center gap-1.5 text-g400 text-[12px] font-bold mb-3 active:text-orange transition">
             <Icon name="back" size={14} /> Cockpit
           </button>
@@ -1851,7 +1851,7 @@ export function MacCockpitScreen({ go, notify, section, profile }) {
 
   return (
     <div className="min-h-screen bg-sable pb-6">
-      <div className="px-[18px] pt-14 pb-3">
+      <div className="px-[18px] pt-safe pb-3">
         <button onClick={() => go('cockpit')} className="flex items-center gap-1.5 text-g400 text-[12px] font-bold mb-3 active:text-orange transition">
           <Icon name="back" size={14} /> Cockpit
         </button>

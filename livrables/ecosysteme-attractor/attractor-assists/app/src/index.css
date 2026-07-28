@@ -50,6 +50,12 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* Retrait haut des en-têtes d'écran.
+   Les écrans posaient un pt-12 (48 px) en dur. Un iPhone à île dynamique
+   réserve 59 px : le titre passait dessous. Ici on prend le plus grand des
+   deux, donc rien ne change sur les appareils sans encoche. */
+.pt-safe { padding-top: max(48px, calc(env(safe-area-inset-top, 0px) + 6px)); }
+
 html, body { margin: 0; height: 100%; overflow: hidden; background: #FAF6F0; }
 * { -webkit-font-smoothing: antialiased; }
 ::-webkit-scrollbar { display: none; }

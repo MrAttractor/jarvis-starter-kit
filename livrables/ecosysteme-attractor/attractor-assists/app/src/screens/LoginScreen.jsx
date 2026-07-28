@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+﻿import { useState, useRef, useEffect } from 'react';
 
 const HERO_IMAGES = [
   '/uploads/hero-1.jpg',
@@ -231,7 +231,7 @@ export function LoginScreen({ onAuthed }) {
       <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(20,12,7,.30) 0%, rgba(20,12,7,.10) 30%, rgba(217,71,3,.55) 72%, rgba(160,46,0,.95) 100%)" }} />
       <div className="absolute inset-0" style={{ background: "radial-gradient(120% 60% at 50% 0%, rgba(255,122,46,.25), transparent 60%)" }} />
 
-      <div className="relative z-10 flex flex-col min-h-screen px-7 pt-12 pb-9">
+      <div className="relative z-10 flex flex-col min-h-screen px-7 pt-safe pb-9">
         <Logo light size="md" />
 
         {/* Bulle Maryline flottante — visible uniquement sur l'intro */}

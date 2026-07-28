@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon } from '../components/ui';
 import { InstallGuide, detectPlatform } from './InstallScreen';
@@ -27,8 +27,10 @@ const PREV_PHASE = {
 function ProgressBar({ phase }) {
   const idx = TUNNEL.indexOf(phase) + 1;
   if (idx < 1) return null;
+  // Pas de padding horizontal ici : les en-têtes qui l'appellent portent déjà
+  // le leur, la barre se retrouvait en retrait de 32 px sous des titres à 16 px.
   return (
-    <div className="px-4">
+    <div>
       <div className="flex gap-1.5">
         {TUNNEL.map((_, i) => (
           <div key={i} className={`h-1 flex-1 rounded-full transition-colors ${i < idx ? 'bg-orange' : 'bg-g200'}`} />
@@ -530,7 +532,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
     return (
       <div className="h-full flex flex-col" style={{ background: '#EAE4D9' }}>
-        <div className="px-4 pt-12 pb-3 bg-white border-b border-g200">
+        <div className="px-4 pt-safe pb-3 bg-white border-b border-g200">
           <ProgressBar phase={phase} />
           <div className="flex items-center gap-3 mt-3">
             <img src="/uploads/agents/carelle.jpg" alt="Assists" className="w-9 h-9 rounded-full object-cover border border-g200 flex-shrink-0" />
@@ -588,7 +590,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
   if (phase === 'profil_type') return (
     <div className="h-full flex flex-col bg-sable">
-      <div className="pt-12 pb-3 bg-white border-b border-g200 flex-shrink-0">
+      <div className="pt-safe pb-3 bg-white border-b border-g200 flex-shrink-0">
         <ProgressBar phase={phase} />
         <div className="px-4 mt-1"><BackBtn onClick={goBack} /></div>
       </div>
@@ -662,7 +664,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
     return (
       <div className="h-full flex flex-col" style={{ background: '#EAE4D9' }}>
-        <div className="px-4 pt-12 pb-3 bg-white border-b border-g200">
+        <div className="px-4 pt-safe pb-3 bg-white border-b border-g200">
           <ProgressBar phase={phase} />
           <div className="flex items-center justify-between gap-3 mt-2">
             <div className="flex items-center gap-3 min-w-0">
@@ -719,7 +721,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
   if (phase === 'template') return (
     <div className="h-full flex flex-col bg-sable">
-      <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white flex-shrink-0">
+      <div className="px-4 pt-safe pb-3 border-b border-g200 bg-white flex-shrink-0">
         <ProgressBar phase={phase} />
         <div className="mt-1"><BackBtn onClick={goBack} /></div>
         <h2 className="font-display font-bold text-[19px] text-charbon mt-1">Ton style de boutique</h2>
@@ -811,7 +813,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
   if (phase === 'slug') return (
     <div className="h-full flex flex-col bg-sable">
-      <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
+      <div className="px-4 pt-safe pb-3 border-b border-g200 bg-white">
         <ProgressBar phase={phase} />
         <div className="mt-1"><BackBtn onClick={goBack} /></div>
         <h2 className="font-display font-bold text-[19px] text-charbon mt-1">Ton lien boutique</h2>
@@ -895,7 +897,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
   if (phase === 'whatsapp') return (
     <div className="h-full flex flex-col bg-sable">
-      <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
+      <div className="px-4 pt-safe pb-3 border-b border-g200 bg-white">
         <ProgressBar phase={phase} />
         <div className="mt-1"><BackBtn onClick={goBack} /></div>
         <h2 className="font-display font-bold text-[19px] text-charbon mt-1">Ton WhatsApp</h2>
@@ -945,7 +947,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
   if (phase === 'upload') return (
     <div className="h-full flex flex-col bg-sable">
-      <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
+      <div className="px-4 pt-safe pb-3 border-b border-g200 bg-white">
         <ProgressBar phase={phase} />
         <div className="mt-1"><BackBtn onClick={goBack} /></div>
         <h2 className="font-display font-bold text-[19px] text-charbon mt-1">Tes produits</h2>
@@ -1053,7 +1055,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
 
   if (phase === 'assistant') return (
     <div className="h-full flex flex-col bg-sable">
-      <div className="px-4 pt-12 pb-3 border-b border-g200 bg-white">
+      <div className="px-4 pt-safe pb-3 border-b border-g200 bg-white">
         <ProgressBar phase={phase} />
         <h2 className="font-display font-bold text-[19px] text-charbon mt-3">Apprends-lui ton métier</h2>
         <p className="text-[12.5px] text-g500 mt-0.5">Dernière étape : 7 questions. C'est ce qui fait qu'il répondra comme toi.</p>
@@ -1074,7 +1076,7 @@ export function OnboardingScreen({ onDone, installPromptRef }) {
   const lien = boutiqueUrl(slug);
 
   if (phase === 'pret') return (
-    <div className="h-full flex flex-col bg-sable px-5 pt-14 pb-10">
+    <div className="h-full flex flex-col bg-sable px-5 pt-safe pb-10">
       <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center gap-5 text-center" style={{ scrollbarWidth: 'none' }}>
         <img
           src="/uploads/agents/carelle.jpg"

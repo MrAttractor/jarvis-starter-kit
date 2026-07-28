@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, TypingDots } from '../components/ui';
 import { boutiqueUrl } from '../lib/boutique';
@@ -210,7 +210,7 @@ export function DashboardScreen({ go, notify, profile }) {
     <div className="flex flex-col bg-sable overflow-hidden" style={{ height: '100%' }}>
 
       {/* AppBar */}
-      <div className="flex items-center gap-3 px-4 pt-12 pb-3 bg-white border-b border-g200 flex-shrink-0">
+      <div className="flex items-center gap-3 px-4 pt-safe pb-3 bg-white border-b border-g200 flex-shrink-0">
         <button
           onClick={() => go('profil')}
           aria-label="Mon profil"

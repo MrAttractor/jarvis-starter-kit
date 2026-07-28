@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icon, Sheet, Spinner } from '../components/ui';
 
@@ -278,7 +278,7 @@ export function PaliersScreen({ go, notify, profile, onPlanChange }) {
   return (
     <div className="flex flex-col bg-sable" style={{ minHeight: '100dvh' }}>
       {/* AppBar */}
-      <div className="flex items-center gap-3 px-4 pt-12 pb-3 bg-sable">
+      <div className="flex items-center gap-3 px-4 pt-safe pb-3 bg-sable">
         <button onClick={() => go('profil')} className="w-8 h-8 flex items-center justify-center">
           <Icon name="back" size={20} className="text-charbon" />
         </button>
