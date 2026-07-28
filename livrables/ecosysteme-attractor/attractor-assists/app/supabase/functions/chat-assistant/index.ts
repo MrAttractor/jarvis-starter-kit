@@ -332,7 +332,7 @@ Règles du bloc :
 - Ne l'ajoute QUE s'il y a un fait concret à enregistrer. Sinon, pas de bloc du tout.
 - Montants toujours en FCFA (nombre sans espaces). Si Mac Arthur parle en euros, convertis (× 656).
 - Tables et champs autorisés UNIQUEMENT :
-  - "pilotage_finances" : {"type":"entrée"|"sortie","montant":NOMBRE,"description":"...","date":"AAAA-MM-JJ"}
+  - "pilotage_finances" : {"type":"entree"|"sortie" (exactement, sans accent),"montant":NOMBRE,"description":"..."}
   - "pilotage_cap" : {"objectif":NOMBRE}
   - "pilotage_enveloppes" : {"nom":"...","cible":NOMBRE,"epargne":NOMBRE}
   - "pilotage_pipeline" : {"nom":"...","type":"...","statut":"...","prochaine":"...","urgent":true|false}

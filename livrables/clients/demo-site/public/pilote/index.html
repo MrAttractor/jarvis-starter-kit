@@ -513,7 +513,7 @@ var ENT={
   cap:{table:'pilotage_cap',title:'Objectif financier',fields:[
     {k:'objectif',l:'Objectif du mois',t:'money'},{k:'date_objectif',l:'Échéance',t:'date'},{k:'note',l:'Note',t:'text'}]},
   finances:{table:'pilotage_finances',title:'Mouvement',fields:[
-    {k:'type',l:'Type',t:'select',opt:['entrée','sortie']},{k:'montant',l:'Montant',t:'money'},
+    {k:'type',l:'Type',t:'select',opt:['entree','sortie']},{k:'montant',l:'Montant',t:'money'},
     {k:'categorie',l:'Catégorie',t:'text'},{k:'description',l:'Description',t:'text'},{k:'date',l:'Date',t:'date'}]},
   enveloppes:{table:'pilotage_enveloppes',title:'Enveloppe',fields:[
     {k:'nom',l:'Nom',t:'text'},{k:'cible',l:'Cible',t:'money'},{k:'epargne',l:'Déjà épargné',t:'money'}]},
@@ -632,7 +632,11 @@ function proposeAction(a){
 function execAction(a,card){
   // Les mouvements enregistrés par Roland sont datés d'aujourd'hui si la date manque
   // ou si l'année ne colle pas (le modèle devine mal les dates).
-  if(a.table==='pilotage_finances'){ var t=new Date().toISOString().slice(0,10); if(!a.data.date || String(a.data.date).slice(0,4)!==t.slice(0,4)) a.data.date=t; }
+  if(a.table==='pilotage_finances'){
+    var t=new Date().toISOString().slice(0,10); if(!a.data.date || String(a.data.date).slice(0,4)!==t.slice(0,4)) a.data.date=t;
+    a.data.type=(String(a.data.type||'').toLowerCase().indexOf('entr')>-1)?'entree':'sortie';
+    if(a.data.categorie!=='pro'&&a.data.categorie!=='perso') delete a.data.categorie;
+  }
   var path=SB_URL+"/rest/v1/"+a.table, method="POST";
   if(a.table==='pilotage_cap'&&DATA.cap&&DATA.cap.id){ path+="?id=eq."+DATA.cap.id; method="PATCH"; }
   fetch(path,{method:method,headers:{apikey:ANON,Authorization:"Bearer "+TOKEN,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify(a.data)})
