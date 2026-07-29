@@ -118,7 +118,7 @@
   <div class="lightbox-inner" id="lightboxInner"></div>
 </div>
 
-<script src="assets/works.js"></script>
+<script src="assets/works.js?v=2"></script>
 <script>
 /* NAV */
 const burger = document.getElementById('burger');
@@ -128,17 +128,16 @@ mm.querySelectorAll('a').forEach(a=> a.addEventListener('click', ()=> mm.classLi
 
 /* PORTFOLIO */
 const gallery = document.getElementById('gallery');
+let ALLWORKS = WORKS, curFilter = 'all';
 function renderWorks(filter){
+  curFilter = filter;
   gallery.innerHTML = '';
-  WORKS.filter(w=> filter==='all' || w.type===filter).forEach(w=>{
+  ALLWORKS.filter(w=> filter==='all' || w.type===filter).forEach(w=>{
     const el = document.createElement('div');
     el.className = 'card-work ' + w.type;
-    const media = w.type==='video'
-      ? `<video src="${w.file}" poster="${w.poster}" muted loop playsinline preload="none"></video>`
-      : `<img src="${w.file}" alt="${w.title}" loading="lazy" />`;
     const zoom = `<span class="zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>`;
-    el.innerHTML = media + zoom + `<div class="meta"><span>${w.title}</span><span class="tag">${w.type==='video'?'Vidéo':'Image'}</span></div>`;
-    if(w.type==='video'){
+    el.innerHTML = worksGridMedia(w) + zoom + `<div class="meta"><span>${worksEsc(w.title)}</span><span class="tag">${w.type==='video'?'Vidéo':'Image'}</span></div>`;
+    if(worksGridIsPlayable(w)){
       const v = el.querySelector('video');
       el.addEventListener('mouseenter', ()=> v.play().catch(()=>{}));
       el.addEventListener('mouseleave', ()=> v.pause());
@@ -148,6 +147,7 @@ function renderWorks(filter){
   });
 }
 renderWorks('all');
+loadWorks().then(d=>{ ALLWORKS = d; renderWorks(curFilter); });
 document.querySelectorAll('.filters button').forEach(b=>{
   b.addEventListener('click', ()=>{
     document.querySelectorAll('.filters button').forEach(x=>x.classList.remove('active'));
@@ -160,9 +160,7 @@ document.querySelectorAll('.filters button').forEach(b=>{
 const lightbox = document.getElementById('lightbox');
 const lightboxInner = document.getElementById('lightboxInner');
 function openLightbox(w){
-  lightboxInner.innerHTML = w.type==='video'
-    ? `<video src="${w.file}" poster="${w.poster}" controls autoplay loop playsinline></video><div class="lightbox-cap">${w.title}</div>`
-    : `<img src="${w.file}" alt="${w.title}" /><div class="lightbox-cap">${w.title}</div>`;
+  lightboxInner.innerHTML = worksLightboxMedia(w);
   lightbox.classList.add('open');
   document.body.style.overflow='hidden';
 }

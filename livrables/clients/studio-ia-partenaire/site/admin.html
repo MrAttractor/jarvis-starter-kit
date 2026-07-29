@@ -27,11 +27,15 @@ body{padding:0}
 .msg{font-size:.85rem;margin-top:12px;min-height:18px}
 .msg.err{color:#ff8080}.msg.ok{color:var(--amber)}
 /* DASHBOARD */
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);margin-bottom:28px;flex-wrap:wrap}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);margin-bottom:22px;flex-wrap:wrap}
 .topbar .brand{display:flex;align-items:center;gap:12px;font-family:'Space Grotesk';font-weight:600}
 .topbar .logo{width:40px;height:40px;border-radius:11px;overflow:hidden}
 .topbar .logo img{width:100%;height:100%;object-fit:cover}
 .topbar small{display:block;font-family:'Inter';font-weight:400;font-size:.7rem;color:var(--muted)}
+/* switch de vue principal */
+.viewswitch{display:flex;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px;margin-bottom:24px;width:fit-content}
+.viewswitch button{padding:9px 22px;border-radius:999px;background:none;border:0;color:var(--ink-soft);font-size:.9rem;cursor:pointer;min-height:40px;font-family:inherit}
+.viewswitch button.active{background:var(--grad);color:#1a1206;font-weight:600}
 .stat-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:24px}
 .stat{flex:1;min-width:130px;padding:18px 20px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line)}
 .stat .n{font-family:'Space Grotesk';font-size:1.9rem;font-weight:700}
@@ -47,6 +51,8 @@ body{padding:0}
 .badge2{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;padding:4px 11px;border-radius:999px;font-weight:600}
 .badge2.devis{background:rgba(246,166,42,.16);color:var(--amber);border:1px solid rgba(246,166,42,.3)}
 .badge2.coaching{background:rgba(120,90,220,.18);color:#b8a6f5;border:1px solid rgba(120,90,220,.35)}
+.badge2.video{background:rgba(246,166,42,.16);color:var(--amber);border:1px solid rgba(246,166,42,.3)}
+.badge2.image{background:rgba(120,90,220,.18);color:#b8a6f5;border:1px solid rgba(120,90,220,.35)}
 .dcard .rows{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.9rem;margin-bottom:14px}
 .dcard .rows .k{color:var(--muted)}
 .dcard .rows .v{color:var(--ink)}
@@ -57,7 +63,40 @@ body{padding:0}
 .empty{text-align:center;color:var(--muted);padding:50px 20px}
 .logout{background:var(--surface);border:1px solid var(--line);color:var(--ink-soft);padding:9px 16px;border-radius:10px;cursor:pointer;font-size:.85rem;min-height:40px}
 .hidden{display:none}
-@media(max-width:520px){ .dcard .rows{grid-template-columns:1fr} .dcard .rows .k{margin-top:6px} }
+/* PORTFOLIO */
+.pf-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.pf-head h2{font-size:1.15rem}
+.pf-head .sub{color:var(--muted);font-size:.85rem;margin-top:3px}
+.btn-add{background:var(--grad);color:#1a1206;border:0;font-weight:600;padding:11px 20px;border-radius:11px;cursor:pointer;min-height:44px;font-family:inherit;font-size:.9rem}
+.pf-form{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-bottom:22px}
+.pf-form .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pf-form label{display:block;font-size:.82rem;color:var(--ink-soft);margin-bottom:7px;margin-top:14px}
+.pf-form label:first-child{margin-top:0}
+.pf-form input[type=text],.pf-form input[type=url],.pf-form select{width:100%;padding:12px 14px;border-radius:11px;background:rgba(0,0,0,.25);border:1px solid var(--line);color:var(--ink);font-family:inherit;font-size:.92rem}
+.pf-form input:focus,.pf-form select:focus{outline:none;border-color:var(--amber)}
+.pf-form .file{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pf-form .filebtn{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:11px;border:1px dashed var(--line-2);background:var(--surface-2);color:var(--ink-soft);cursor:pointer;font-size:.88rem;min-height:44px}
+.pf-form .thumbprev{width:64px;height:64px;border-radius:10px;object-fit:cover;border:1px solid var(--line);display:none}
+.pf-form .check{display:flex;align-items:center;gap:10px;margin-top:16px;color:var(--ink-soft);font-size:.9rem;cursor:pointer}
+.pf-form .check input{width:18px;height:18px;accent-color:var(--amber)}
+.pf-form .form-actions{display:flex;gap:10px;margin-top:22px}
+.pf-form .form-actions .btn-add{flex:0 0 auto}
+.pf-form .cancel{background:var(--surface-2);border:1px solid var(--line-2);color:var(--ink-soft);padding:11px 18px;border-radius:11px;cursor:pointer;min-height:44px;font-family:inherit}
+.pf-hint{color:var(--muted);font-size:.78rem;margin-top:6px}
+.pf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.pf-item{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.pf-item.off{opacity:.5}
+.pf-thumb{position:relative;aspect-ratio:16/10;background:#000;overflow:hidden}
+.pf-thumb img,.pf-thumb video{width:100%;height:100%;object-fit:cover;display:block}
+.pf-thumb .type{position:absolute;top:8px;left:8px}
+.pf-thumb .star{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:9px;border:0;cursor:pointer;background:rgba(0,0,0,.55);color:#fff;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.pf-thumb .star.on{background:var(--amber);color:#1a1206}
+.pf-body{padding:13px 15px;display:flex;flex-direction:column;gap:10px;flex:1}
+.pf-body .t{font-family:'Space Grotesk';font-weight:600;font-size:.98rem;line-height:1.25}
+.pf-body .ctrls{display:flex;gap:8px;margin-top:auto}
+.pf-body .ctrls button{flex:1;padding:9px;border-radius:9px;border:1px solid var(--line-2);background:var(--surface-2);color:var(--ink-soft);cursor:pointer;font-size:.8rem;min-height:40px}
+.pf-body .ctrls button.del{color:#ff8f8f;border-color:rgba(255,120,120,.3)}
+@media(max-width:520px){ .dcard .rows{grid-template-columns:1fr} .dcard .rows .k{margin-top:6px} .pf-form .grid2{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
@@ -90,21 +129,81 @@ body{padding:0}
     <button class="logout" id="logout">Se déconnecter</button>
   </div>
 
-  <div class="stat-row">
-    <div class="stat"><div class="n" id="statNew">0</div><div class="l">Nouvelles demandes</div></div>
-    <div class="stat"><div class="n" id="statTotal">0</div><div class="l">Total demandes</div></div>
-    <div class="stat"><div class="n" id="statDevis">0</div><div class="l">Devis</div></div>
-    <div class="stat"><div class="n" id="statCoach">0</div><div class="l">Coaching</div></div>
+  <div class="viewswitch">
+    <button class="active" data-v="demandes">Demandes</button>
+    <button data-v="portfolio">Portfolio</button>
   </div>
 
-  <div class="tabs">
-    <button class="active" data-f="all">Toutes</button>
-    <button data-f="nouveau">Nouvelles</button>
-    <button data-f="devis">Devis</button>
-    <button data-f="coaching">Coaching</button>
-  </div>
+  <!-- VUE DEMANDES -->
+  <section id="viewDemandes">
+    <div class="stat-row">
+      <div class="stat"><div class="n" id="statNew">0</div><div class="l">Nouvelles demandes</div></div>
+      <div class="stat"><div class="n" id="statTotal">0</div><div class="l">Total demandes</div></div>
+      <div class="stat"><div class="n" id="statDevis">0</div><div class="l">Devis</div></div>
+      <div class="stat"><div class="n" id="statCoach">0</div><div class="l">Coaching</div></div>
+    </div>
+    <div class="tabs">
+      <button class="active" data-f="all">Toutes</button>
+      <button data-f="nouveau">Nouvelles</button>
+      <button data-f="devis">Devis</button>
+      <button data-f="coaching">Coaching</button>
+    </div>
+    <div id="list"><div class="empty">Chargement…</div></div>
+  </section>
 
-  <div id="list"><div class="empty">Chargement…</div></div>
+  <!-- VUE PORTFOLIO -->
+  <section id="viewPortfolio" class="hidden">
+    <div class="pf-head">
+      <div>
+        <h2>Mes réalisations</h2>
+        <div class="sub">Ajoute, mets en vedette ou masque tes réalisations. Elles apparaissent aussitôt sur ton site.</div>
+      </div>
+      <button class="btn-add" id="openForm">+ Ajouter une réalisation</button>
+    </div>
+
+    <form class="pf-form hidden" id="pfForm">
+      <div class="grid2">
+        <div>
+          <label>Type</label>
+          <select id="pfType">
+            <option value="video">Vidéo</option>
+            <option value="image">Image</option>
+          </select>
+        </div>
+        <div>
+          <label>Titre</label>
+          <input type="text" id="pfTitle" placeholder="Ex : Coca-Cola · Spot IA" required />
+        </div>
+      </div>
+
+      <div id="pfVideoUrlWrap">
+        <label>Lien de la vidéo</label>
+        <input type="url" id="pfVideoUrl" placeholder="Lien YouTube, Vimeo ou fichier .mp4" />
+        <div class="pf-hint">Colle le lien YouTube/Vimeo de la vidéo, ou un lien direct .mp4.</div>
+      </div>
+
+      <div id="pfImageWrap">
+        <label id="pfFileLabel">Image d'aperçu (recommandée)</label>
+        <div class="file">
+          <label class="filebtn"><span id="pfFileTxt">Choisir une image</span>
+            <input type="file" id="pfFile" accept="image/*" hidden />
+          </label>
+          <img class="thumbprev" id="pfPrev" alt="" />
+        </div>
+        <div class="pf-hint" id="pfFileHint">Sert de vignette. Pour une vidéo YouTube, laisse vide : l'aperçu YouTube est repris automatiquement.</div>
+      </div>
+
+      <label class="check"><input type="checkbox" id="pfFeatured" /> Mettre en vedette sur la page d'accueil</label>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-add" id="pfSubmit">Publier</button>
+        <button type="button" class="cancel" id="pfCancel">Annuler</button>
+      </div>
+      <div class="msg" id="pfMsg"></div>
+    </form>
+
+    <div class="pf-grid" id="pfGrid"><div class="empty">Chargement…</div></div>
+  </section>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -116,10 +215,12 @@ const sb = supabase.createClient(SUPA_URL, SUPA_ANON);
 const loginView = document.getElementById('loginView');
 const dashView = document.getElementById('dashView');
 const loginMsg = document.getElementById('loginMsg');
-let DEMANDES = [], filter = 'all';
+let DEMANDES = [], filter = 'all', WORKS_ROWS = [];
 
 function setMsg(t, ok){ loginMsg.textContent = t; loginMsg.className = 'msg ' + (ok?'ok':'err'); }
+function esc(s){ const p=document.createElement('div'); p.textContent = s==null?'':String(s); return p.innerHTML; }
 
+/* ====== AUTH ====== */
 document.getElementById('loginForm').addEventListener('submit', async e=>{
   e.preventDefault();
   setMsg('Connexion…', true);
@@ -130,14 +231,12 @@ document.getElementById('loginForm').addEventListener('submit', async e=>{
   if(error){ setMsg('Email ou mot de passe incorrect.', false); return; }
   showDash();
 });
-
 document.getElementById('forgot').addEventListener('click', async ()=>{
   const email = document.getElementById('email').value.trim();
   if(!email){ setMsg('Entrez votre email d\'abord.', false); return; }
   const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/admin' });
   setMsg(error ? 'Erreur, réessayez.' : 'Email de réinitialisation envoyé. Vérifiez votre boîte.', !error);
 });
-
 document.getElementById('logout').addEventListener('click', async ()=>{
   await sb.auth.signOut();
   dashView.classList.add('hidden'); loginView.classList.remove('hidden');
@@ -148,9 +247,19 @@ async function showDash(){
   if(!user) return;
   document.getElementById('whoami').textContent = user.email;
   loginView.classList.add('hidden'); dashView.classList.remove('hidden');
-  await loadDemandes();
+  await Promise.all([loadDemandes(), loadWorksAdmin()]);
 }
 
+/* ====== SWITCH DE VUE ====== */
+document.querySelectorAll('.viewswitch button').forEach(b=> b.addEventListener('click', ()=>{
+  document.querySelectorAll('.viewswitch button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  const v = b.dataset.v;
+  document.getElementById('viewDemandes').classList.toggle('hidden', v!=='demandes');
+  document.getElementById('viewPortfolio').classList.toggle('hidden', v!=='portfolio');
+}));
+
+/* ====== DEMANDES ====== */
 async function loadDemandes(){
   const { data, error } = await sb.from('aic_demandes').select('*').order('created_at', { ascending:false });
   if(error){ document.getElementById('list').innerHTML = '<div class="empty">Erreur de chargement.</div>'; return; }
@@ -159,23 +268,19 @@ async function loadDemandes(){
   document.getElementById('statNew').textContent = DEMANDES.filter(d=>d.statut==='nouveau').length;
   document.getElementById('statDevis').textContent = DEMANDES.filter(d=>d.type==='devis').length;
   document.getElementById('statCoach').textContent = DEMANDES.filter(d=>d.type==='coaching').length;
-  render();
+  renderDemandes();
 }
-
 function fmtDate(s){
   const d = new Date(s);
   return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short'}) + ' ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
 }
-function esc(s){ const p=document.createElement('div'); p.textContent = s==null?'':String(s); return p.innerHTML; }
-
-function render(){
+function renderDemandes(){
   const list = document.getElementById('list');
   let items = DEMANDES;
   if(filter==='nouveau') items = items.filter(d=>d.statut==='nouveau');
   else if(filter==='devis') items = items.filter(d=>d.type==='devis');
   else if(filter==='coaching') items = items.filter(d=>d.type==='coaching');
   if(!items.length){ list.innerHTML = '<div class="empty">Aucune demande ici pour le moment.</div>'; return; }
-
   list.innerHTML = items.map(d=>{
     const wa = String(d.contact||'').replace(/[\s+\-()]/g,'');
     const rows = [
@@ -187,7 +292,7 @@ function render(){
       <div class="head">
         <div><span class="who">${esc(d.nom||'Prospect')}</span></div>
         <div style="display:flex;align-items:center;gap:10px">
-          <span class="badge2 ${d.type}">${d.type}</span>
+          <span class="badge2 ${d.type}">${esc(d.type)}</span>
           <span class="when">${fmtDate(d.created_at)}</span>
         </div>
       </div>
@@ -198,17 +303,151 @@ function render(){
       </div>
     </div>`;
   }).join('');
-
   list.querySelectorAll('.toggle').forEach(b=> b.addEventListener('click', async ()=>{
     await sb.from('aic_demandes').update({ statut:b.dataset.to }).eq('id', b.dataset.id);
     await loadDemandes();
   }));
 }
-
 document.querySelectorAll('.tabs button').forEach(b=> b.addEventListener('click', ()=>{
   document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active'); filter = b.dataset.f; render();
+  b.classList.add('active'); filter = b.dataset.f; renderDemandes();
 }));
+
+/* ====== PORTFOLIO ====== */
+function ytId(u){ const m=String(u||'').match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/); return m?m[1]:null; }
+function isFileVid(u){ return /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(u||''); }
+function thumbUrl(w){
+  if(w.type==='image') return w.media_url;
+  if(w.poster_url) return w.poster_url;
+  const y=ytId(w.media_url); if(y) return 'https://img.youtube.com/vi/'+y+'/hqdefault.jpg';
+  return null;
+}
+
+async function loadWorksAdmin(){
+  const { data, error } = await sb.from('aic_works').select('*').order('featured',{ascending:false}).order('sort',{ascending:true}).order('created_at',{ascending:false});
+  const grid = document.getElementById('pfGrid');
+  if(error){ grid.innerHTML = '<div class="empty">Erreur de chargement du portfolio.</div>'; return; }
+  WORKS_ROWS = data || [];
+  renderWorksAdmin();
+}
+function renderWorksAdmin(){
+  const grid = document.getElementById('pfGrid');
+  if(!WORKS_ROWS.length){ grid.innerHTML = '<div class="empty">Aucune réalisation. Clique sur « Ajouter une réalisation ».</div>'; return; }
+  grid.innerHTML = WORKS_ROWS.map(w=>{
+    const th = thumbUrl(w);
+    const thumb = th
+      ? `<img src="${esc(th)}" alt="" loading="lazy" />`
+      : (isFileVid(w.media_url) ? `<video src="${esc(w.media_url)}" muted playsinline preload="metadata"></video>` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.8rem">Aperçu indisponible</div>`);
+    return `<div class="pf-item ${w.active?'':'off'}">
+      <div class="pf-thumb">
+        ${thumb}
+        <span class="badge2 ${w.type} type">${w.type==='video'?'Vidéo':'Image'}</span>
+        <button class="star ${w.featured?'on':''}" data-id="${w.id}" data-feat="${w.featured?0:1}" title="Mettre en vedette">★</button>
+      </div>
+      <div class="pf-body">
+        <div class="t">${esc(w.title)}</div>
+        <div class="ctrls">
+          <button data-id="${w.id}" data-act="${w.active?0:1}" class="vis">${w.active?'Masquer':'Afficher'}</button>
+          <button data-id="${w.id}" data-url="${esc(w.media_url)}" data-poster="${esc(w.poster_url||'')}" class="del">Supprimer</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  grid.querySelectorAll('.star').forEach(b=> b.addEventListener('click', async ()=>{
+    await sb.from('aic_works').update({ featured: b.dataset.feat==='1' }).eq('id', b.dataset.id);
+    await loadWorksAdmin();
+  }));
+  grid.querySelectorAll('.vis').forEach(b=> b.addEventListener('click', async ()=>{
+    await sb.from('aic_works').update({ active: b.dataset.act==='1' }).eq('id', b.dataset.id);
+    await loadWorksAdmin();
+  }));
+  grid.querySelectorAll('.del').forEach(b=> b.addEventListener('click', async ()=>{
+    if(!confirm('Supprimer définitivement cette réalisation ?')) return;
+    await sb.from('aic_works').delete().eq('id', b.dataset.id);
+    removeStoredFile(b.dataset.url); removeStoredFile(b.dataset.poster);
+    await loadWorksAdmin();
+  }));
+}
+/* nettoyage best-effort du fichier uploadé quand on supprime */
+function removeStoredFile(url){
+  const marker = '/aic-media/';
+  if(!url || url.indexOf(marker)===-1) return;
+  const path = url.split(marker)[1];
+  if(path) sb.storage.from('aic-media').remove([decodeURIComponent(path)]).catch(()=>{});
+}
+
+/* formulaire d'ajout */
+const pfForm = document.getElementById('pfForm');
+const pfType = document.getElementById('pfType');
+const pfFile = document.getElementById('pfFile');
+const pfPrev = document.getElementById('pfPrev');
+function pfSetMsg(t, ok){ const m=document.getElementById('pfMsg'); m.textContent=t; m.className='msg '+(ok?'ok':'err'); }
+
+document.getElementById('openForm').addEventListener('click', ()=>{ pfForm.classList.remove('hidden'); pfForm.scrollIntoView({behavior:'smooth'}); });
+document.getElementById('pfCancel').addEventListener('click', ()=> resetForm());
+pfType.addEventListener('change', syncType);
+function syncType(){
+  const isVid = pfType.value==='video';
+  document.getElementById('pfVideoUrlWrap').classList.toggle('hidden', !isVid);
+  document.getElementById('pfFileLabel').textContent = isVid ? 'Image d\'aperçu (recommandée)' : 'Image de la réalisation';
+  document.getElementById('pfFileHint').textContent = isVid
+    ? 'Sert de vignette. Pour une vidéo YouTube, tu peux laisser vide : l\'aperçu YouTube est repris automatiquement.'
+    : 'Charge l\'image à afficher dans le portfolio.';
+  document.getElementById('pfVideoUrl').required = isVid;
+}
+pfFile.addEventListener('change', ()=>{
+  const f = pfFile.files[0];
+  document.getElementById('pfFileTxt').textContent = f ? f.name : 'Choisir une image';
+  if(f){ pfPrev.src = URL.createObjectURL(f); pfPrev.style.display='block'; }
+  else { pfPrev.style.display='none'; }
+});
+function resetForm(){
+  pfForm.reset(); pfForm.classList.add('hidden');
+  pfPrev.style.display='none'; document.getElementById('pfFileTxt').textContent='Choisir une image';
+  pfSetMsg('', true); syncType();
+}
+async function uploadImage(file){
+  const safe = file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+  const path = 'works/' + Date.now() + '-' + safe;
+  const { error } = await sb.storage.from('aic-media').upload(path, file, { cacheControl:'3600', upsert:false });
+  if(error) throw error;
+  return sb.storage.from('aic-media').getPublicUrl(path).data.publicUrl;
+}
+
+pfForm.addEventListener('submit', async e=>{
+  e.preventDefault();
+  const type = pfType.value;
+  const title = document.getElementById('pfTitle').value.trim();
+  const videoUrl = document.getElementById('pfVideoUrl').value.trim();
+  const file = pfFile.files[0];
+  if(!title){ pfSetMsg('Ajoute un titre.', false); return; }
+  if(type==='video' && !videoUrl){ pfSetMsg('Colle le lien de la vidéo.', false); return; }
+  if(type==='image' && !file){ pfSetMsg('Charge l\'image de la réalisation.', false); return; }
+
+  document.getElementById('pfSubmit').disabled = true;
+  pfSetMsg('Publication en cours…', true);
+  try{
+    let media_url, poster_url = null;
+    let imgUrl = file ? await uploadImage(file) : null;
+    if(type==='video'){ media_url = videoUrl; poster_url = imgUrl; }
+    else { media_url = imgUrl; }
+    const nextSort = (WORKS_ROWS.reduce((m,w)=> Math.max(m, w.sort||0), 0)) + 1;
+    const { error } = await sb.from('aic_works').insert({
+      type, title, media_url, poster_url,
+      featured: document.getElementById('pfFeatured').checked,
+      sort: nextSort, active: true
+    });
+    if(error) throw error;
+    resetForm();
+    await loadWorksAdmin();
+  }catch(err){
+    pfSetMsg('Erreur : ' + (err.message||'réessaie.'), false);
+  }finally{
+    document.getElementById('pfSubmit').disabled = false;
+  }
+});
+syncType();
 
 /* session persistante */
 (async ()=>{ const { data:{ session } } = await sb.auth.getSession(); if(session) showDash(); })();
