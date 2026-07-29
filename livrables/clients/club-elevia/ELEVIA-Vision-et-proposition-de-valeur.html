@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Élévia — Vision et proposition de valeur</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF9F5;
+  --sand:#F0EAE0;
+  --border:#EAE4D8;
+  --or:#B99A63;
+  --or-deep:#96794A;
+  --or-bright:#D4BC8E;
+  --or-bg:rgba(185,154,99,.08);
+  --or-line:rgba(185,154,99,.28);
+  --encre:#181614;
+  --muted:#6B6459;
+  --gris:#8F887C;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);color:var(--encre);background:#E8E4DC;padding:24px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.page{width:210mm;margin:0 auto 24px auto;background:var(--cream);padding:20mm 20mm;box-shadow:0 8px 40px rgba(24,22,20,.14)}
+
+/* EN-TÊTE */
+.cover{border-bottom:1px solid var(--or-line);padding-bottom:30px;margin-bottom:34px}
+.wordmark{font-family:var(--serif);font-size:34px;font-weight:500;letter-spacing:.16em;color:var(--encre);text-transform:uppercase}
+.wordmark .dot{color:var(--or)}
+.sub{font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:var(--gris);margin-top:8px}
+.doctitle{font-family:var(--serif);font-size:26px;font-weight:400;font-style:italic;color:var(--or-deep);margin-top:26px;line-height:1.35}
+.docmeta{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gris);margin-top:12px}
+
+/* PROMESSE */
+.promesse{background:var(--sand);border-left:2px solid var(--or);padding:26px 30px;margin:30px 0}
+.promesse .lbl{font-size:9.5px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--or-deep);margin-bottom:12px}
+.promesse p{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--encre)}
+
+h2{font-family:var(--serif);font-size:20px;font-weight:500;color:var(--encre);margin:34px 0 4px}
+h2 + .kicker{font-size:9.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:14px}
+.kicker-top{font-size:9.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin:34px 0 6px}
+.kicker-top + h2{margin-top:0;margin-bottom:12px}
+
+p.txt{font-size:13px;color:#33302C;margin-bottom:12px;line-height:1.8}
+p.txt strong{color:var(--encre);font-weight:600}
+.lead{font-size:14.5px;color:#2A2724;line-height:1.8}
+
+/* PILIERS */
+.piliers{margin:18px 0}
+.pilier{display:flex;gap:22px;padding:20px 0;border-bottom:1px solid var(--border)}
+.pilier:last-child{border-bottom:none}
+.pilier .num{font-family:var(--serif);font-size:26px;font-weight:400;color:var(--or-bright);line-height:1;min-width:44px;padding-top:2px}
+.pilier .body .t{font-family:var(--serif);font-size:16px;font-weight:500;color:var(--encre);margin-bottom:5px}
+.pilier .body .d{font-size:12.5px;color:var(--muted);line-height:1.75}
+
+/* VALEURS */
+.valeurs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin:18px 0}
+.valeur{background:var(--cream);padding:16px 18px}
+.valeur .vt{font-family:var(--serif);font-size:14px;font-weight:500;color:var(--or-deep);margin-bottom:4px}
+.valeur .vd{font-size:11.5px;color:var(--muted);line-height:1.65}
+.valeur.wide{grid-column:1 / -1}
+
+/* PARCOURS MEMBRE */
+.parcours{border:1px solid var(--or-line);background:var(--or-bg);padding:24px 28px;margin:20px 0}
+.etape{display:flex;gap:18px;padding:13px 0;border-bottom:1px solid var(--or-line)}
+.etape:last-child{border-bottom:none;padding-bottom:0}
+.etape .e-num{font-size:10px;font-weight:600;letter-spacing:.14em;color:var(--or-deep);min-width:64px;padding-top:4px;text-transform:uppercase}
+.etape .e-txt{font-size:12.5px;color:#33302C;line-height:1.75}
+.etape .e-txt b{color:var(--encre);font-weight:600}
+
+/* CITATION */
+.pull{font-family:var(--serif);font-size:18px;font-style:italic;line-height:1.6;color:var(--or-deep);text-align:center;padding:28px 40px;border-top:1px solid var(--or-line);border-bottom:1px solid var(--or-line);margin:32px 0}
+
+/* CLÔTURE */
+.cloture{background:var(--encre);color:var(--cream);padding:30px 32px;margin-top:34px}
+.cloture .ct{font-family:var(--serif);font-size:19px;font-weight:400;color:var(--or-bright);margin-bottom:12px}
+.cloture p{font-size:12.5px;color:rgba(251,249,245,.78);line-height:1.8}
+
+.foot{margin-top:30px;padding-top:14px;border-top:1px solid var(--border);font-size:9.5px;color:var(--gris);text-align:center;letter-spacing:.08em;line-height:1.9}
+
+@media print{
+  body{background:#fff;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .page{box-shadow:none;margin:0;width:100%;padding:14mm 16mm}
+  .promesse,.pilier,.valeur,.valeurs,.parcours,.etape,.pull,.cloture,.cover{
+    page-break-inside:avoid;break-inside:avoid;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  h2{page-break-after:avoid;break-after:avoid}
+  .piliers,.valeurs,.parcours{overflow:visible}
+  @page{size:A4;margin:14mm 16mm}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="cover">
+    <div class="wordmark">Élévia<span class="dot">.</span></div>
+    <div class="sub">Club privé</div>
+    <div class="doctitle">Notre vision<br>et notre proposition de valeur</div>
+    <div class="docmeta">Document de présentation — Juillet 2026</div>
+  </div>
+
+  <div class="promesse">
+    <div class="lbl">Notre promesse</div>
+    <p>La première communauté privée dédiée aux membres ambitieux de la diaspora internationale qui souhaitent construire des relations sincères, dans un environnement sélectif et sécurisé, avec le sentiment d'appartenir à une communauté d'exception.</p>
+  </div>
+
+  <div class="kicker-top">Le constat</div>
+  <h2>Là où les valeurs précèdent les profils</h2>
+  <p class="txt lead">À travers le monde, des entrepreneurs, des professionnels et des membres de la diaspora aspirent à des relations sincères et durables. Ils ont réussi, ils ont voyagé, ils savent ce qu'ils cherchent. Et pourtant, quand il s'agit de rencontrer quelqu'un qui leur ressemble, ils n'ont à leur disposition que des applications pensées pour le volume.</p>
+  <p class="txt">Ces plateformes répondent par la quantité : des milliers de profils, aucune sélection, aucune garantie sur qui se trouve en face. On y passe du temps, rarement de bons moments. La rencontre y est un jeu de hasard répété jusqu'à l'épuisement.</p>
+  <p class="txt"><strong>Élévia prend le problème dans l'autre sens.</strong> Nous ne cherchons pas à réunir le plus grand nombre, mais les bonnes personnes. Un cercle privé, où l'élégance, la bienveillance, l'ambition et le respect sont au cœur de chaque échange. Là où les valeurs précèdent les profils.</p>
+
+  <div class="kicker-top">Notre raison d'être</div>
+  <h2>Notre mission</h2>
+  <p class="txt lead">Réunir les membres de la diaspora internationale en quête de relations sincères, durables et alignées avec leurs aspirations, dans un environnement sécurisé, sélectif et élégant.</p>
+  <p class="txt"><strong>Notre ambition :</strong> devenir la référence mondiale des rencontres premium pour la diaspora internationale.</p>
+
+  <div class="pull">« Élévia n'est pas une application de plus.<br>C'est un cercle où l'on entre, et auquel on appartient. »</div>
+
+  <div class="kicker-top">Ce qui nous distingue</div>
+  <h2>Les cinq fondements de notre proposition</h2>
+
+  <div class="piliers">
+    <div class="pilier">
+      <div class="num">01</div>
+      <div class="body">
+        <div class="t">La sélection</div>
+        <div class="d">L'adhésion se mérite. Chaque candidature est examinée, chaque profil vérifié avant l'entrée dans le cercle. C'est ce filtre qui fait la valeur de l'appartenance : une sélection qui n'écarte personne ne vaut rien. Nos membres savent qu'ils sont entourés de gens qui ont, eux aussi, franchi la porte.</div>
+      </div>
+    </div>
+    <div class="pilier">
+      <div class="num">02</div>
+      <div class="body">
+        <div class="t">La confiance</div>
+        <div class="d">Vérification d'identité par vidéo, confidentialité des données, conversation ouverte uniquement lorsque les deux personnes le souhaitent. Chez Élévia, on sait à qui l'on parle. Cette certitude change tout : elle libère la parole et rend les échanges plus vrais.</div>
+      </div>
+    </div>
+    <div class="pilier">
+      <div class="num">03</div>
+      <div class="body">
+        <div class="t">La compatibilité</div>
+        <div class="d">La mise en relation ne repose pas sur une succession d'images, mais sur ce qui fait durer une relation : les valeurs, les aspirations, le parcours de vie. Nous présentons moins de profils, et de meilleurs.</div>
+      </div>
+    </div>
+    <div class="pilier">
+      <div class="num">04</div>
+      <div class="body">
+        <div class="t">L'appartenance</div>
+        <div class="d">Élévia ne s'arrête pas à la rencontre. C'est un cercle où chacun trouve sa place, se reconnaît dans les autres membres, et crée des liens qui vivent au-delà de l'écran. On ne quitte pas Élévia parce qu'on a rencontré quelqu'un : on y reste parce qu'on y a trouvé les siens.</div>
+      </div>
+    </div>
+    <div class="pilier">
+      <div class="num">05</div>
+      <div class="body">
+        <div class="t">L'ouverture sur le monde</div>
+        <div class="d">Élévia est ouverte à toutes nationalités. La richesse des parcours et des cultures de la diaspora internationale n'est pas une contrainte à gérer, c'est notre plus grand atout. Nos membres viennent de partout et se comprennent.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kicker-top">Notre exigence</div>
+  <h2>Les valeurs qui nous engagent</h2>
+  <div class="valeurs">
+    <div class="valeur"><div class="vt">Authenticité</div><div class="vd">Des relations vraies, fondées sur la sincérité et la transparence.</div></div>
+    <div class="valeur"><div class="vt">Excellence</div><div class="vd">Chaque détail compte, pensé avec exigence et élégance.</div></div>
+    <div class="valeur"><div class="vt">Confiance</div><div class="vd">Sécurité, confidentialité et vérification des profils.</div></div>
+    <div class="valeur"><div class="vt">Ouverture sur le monde</div><div class="vd">La richesse des parcours et des cultures de la diaspora internationale.</div></div>
+    <div class="valeur"><div class="vt">Bienveillance</div><div class="vd">Des échanges respectueux, construits sur l'écoute de l'autre.</div></div>
+    <div class="valeur"><div class="vt">Ambition</div><div class="vd">Des membres qui veulent construire et évoluer ensemble.</div></div>
+    <div class="valeur wide"><div class="vt">Appartenance</div><div class="vd">Élévia n'est pas qu'une application. C'est un cercle privé où chacun trouve sa place et crée des liens durables.</div></div>
+  </div>
+
+  <div class="kicker-top">Concrètement</div>
+  <h2>Ce que vit un membre d'Élévia</h2>
+  <div class="parcours">
+    <div class="etape">
+      <div class="e-num">D'abord</div>
+      <div class="e-txt"><b>Il se présente.</b> L'entrée dans le cercle passe par une candidature, pas par un simple formulaire. On dit qui l'on est, ce que l'on cherche, ce à quoi l'on tient.</div>
+    </div>
+    <div class="etape">
+      <div class="e-num">Ensuite</div>
+      <div class="e-txt"><b>Il est reconnu.</b> Une vérification par vidéo confirme son identité. Ce qu'il donne, il le reçoit aussi : tous les membres qu'il croisera auront franchi la même étape.</div>
+    </div>
+    <div class="etape">
+      <div class="e-num">Puis</div>
+      <div class="e-txt"><b>Il rencontre.</b> Des profils lui sont présentés selon ce qui compte vraiment. Peu à la fois, choisis. La conversation ne s'ouvre que si l'intérêt est réciproque.</div>
+    </div>
+    <div class="etape">
+      <div class="e-num">Enfin</div>
+      <div class="e-txt"><b>Il appartient.</b> Au-delà des rencontres, le cercle vit : des membres qui se ressemblent, des moments partagés, des occasions de se retrouver. C'est ce qui fait la différence entre une application et une communauté.</div>
+    </div>
+  </div>
+
+  <div class="cloture">
+    <div class="ct">Une communauté ne se décrète pas. Elle se choisit.</div>
+    <p>Élévia se construit avec ses premiers membres. Ce sont eux qui donneront le ton, fixeront le niveau d'exigence et feront de ce cercle ce qu'il deviendra. Rejoindre Élévia aujourd'hui, ce n'est pas s'inscrire sur une plateforme de plus. C'est participer à la naissance de quelque chose qui n'existe pas encore, et dont on pourra dire, plus tard, qu'on en était.</p>
+  </div>
+
+  <div class="foot">
+    Élévia — Club privé<br>
+    Document de présentation, juillet 2026
+  </div>
+
+</div>
+</body>
+</html>

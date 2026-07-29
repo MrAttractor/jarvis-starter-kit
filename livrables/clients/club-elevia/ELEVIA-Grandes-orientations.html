@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Élévia — Ce que vivront nos membres</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF9F5;
+  --sand:#F0EAE0;
+  --border:#EAE4D8;
+  --or:#B99A63;
+  --or-deep:#96794A;
+  --or-bright:#D4BC8E;
+  --or-bg:rgba(185,154,99,.08);
+  --or-line:rgba(185,154,99,.28);
+  --encre:#181614;
+  --muted:#6B6459;
+  --gris:#8F887C;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);color:var(--encre);background:#E8E4DC;padding:24px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.page{width:210mm;margin:0 auto 24px auto;background:var(--cream);padding:20mm 20mm;box-shadow:0 8px 40px rgba(24,22,20,.14)}
+
+.cover{border-bottom:1px solid var(--or-line);padding-bottom:30px;margin-bottom:34px}
+.wordmark{font-family:var(--serif);font-size:34px;font-weight:500;letter-spacing:.16em;color:var(--encre);text-transform:uppercase}
+.wordmark .dot{color:var(--or)}
+.sub{font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:var(--gris);margin-top:8px}
+.doctitle{font-family:var(--serif);font-size:26px;font-weight:400;font-style:italic;color:var(--or-deep);margin-top:26px;line-height:1.35}
+.docmeta{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gris);margin-top:12px}
+
+.intro{background:var(--sand);border-left:2px solid var(--or);padding:24px 28px;margin:28px 0}
+.intro p{font-size:13.5px;line-height:1.8;color:#2A2724}
+.intro p + p{margin-top:10px}
+.intro strong{color:var(--encre);font-weight:600}
+
+.kicker-top{font-size:9.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin:34px 0 6px}
+h2{font-family:var(--serif);font-size:20px;font-weight:500;color:var(--encre);margin:0 0 12px}
+p.txt{font-size:13px;color:#33302C;margin-bottom:12px;line-height:1.8}
+p.txt strong{color:var(--encre);font-weight:600}
+
+/* ORIENTATIONS */
+.orient{border:1px solid var(--border);background:#fff;margin:16px 0}
+.orient-head{display:flex;align-items:baseline;gap:16px;background:var(--encre);padding:16px 24px}
+.orient-head .o-num{font-family:var(--serif);font-size:15px;color:var(--or-bright);letter-spacing:.06em}
+.orient-head .o-title{font-family:var(--serif);font-size:19px;font-weight:500;color:var(--cream)}
+.orient-body{padding:20px 24px}
+.orient-body .o-lead{font-size:13.5px;color:#2A2724;line-height:1.8;margin-bottom:12px}
+.orient-body .o-lead strong{color:var(--encre);font-weight:600}
+.o-exemples{background:var(--or-bg);border-left:2px solid var(--or-line);padding:12px 16px;margin-top:12px}
+.o-exemples .oe-lbl{font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--or-deep);margin-bottom:6px}
+.o-exemples .oe-txt{font-size:12px;color:var(--muted);line-height:1.7}
+
+.pull{font-family:var(--serif);font-size:18px;font-style:italic;line-height:1.6;color:var(--or-deep);text-align:center;padding:28px 40px;border-top:1px solid var(--or-line);border-bottom:1px solid var(--or-line);margin:32px 0}
+
+/* HORIZON */
+.horizon{border:1px solid var(--or-line);margin:18px 0}
+.h-row{display:flex;border-bottom:1px solid var(--border)}
+.h-row:last-child{border-bottom:none}
+.h-when{width:130px;background:var(--sand);padding:16px 18px;font-family:var(--serif);font-size:15px;color:var(--or-deep);flex-shrink:0}
+.h-what{flex:1;padding:16px 20px;font-size:12.5px;color:#33302C;line-height:1.75}
+.h-what b{color:var(--encre);font-weight:600}
+
+.cloture{background:var(--encre);color:var(--cream);padding:30px 32px;margin-top:34px}
+.cloture .ct{font-family:var(--serif);font-size:19px;font-weight:400;color:var(--or-bright);margin-bottom:12px}
+.cloture p{font-size:12.5px;color:rgba(251,249,245,.78);line-height:1.8}
+
+.foot{margin-top:30px;padding-top:14px;border-top:1px solid var(--border);font-size:9.5px;color:var(--gris);text-align:center;letter-spacing:.08em;line-height:1.9}
+
+@media print{
+  body{background:#fff;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .page{box-shadow:none;margin:0;width:100%;padding:14mm 16mm}
+  .intro,.orient,.orient-head,.orient-body,.o-exemples,.pull,.horizon,.h-row,.cloture,.cover{
+    page-break-inside:avoid;break-inside:avoid;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  h2{page-break-after:avoid;break-after:avoid}
+  .horizon{overflow:visible}
+  @page{size:A4;margin:14mm 16mm}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="cover">
+    <div class="wordmark">Élévia<span class="dot">.</span></div>
+    <div class="sub">Club privé</div>
+    <div class="doctitle">Ce que vivront<br>nos membres</div>
+    <div class="docmeta">Les grandes orientations d'Élévia — Juillet 2026</div>
+  </div>
+
+  <div class="intro">
+    <p>Une application de rencontre classique s'arrête à la mise en relation. Deux personnes se trouvent, échangent, et l'application n'a plus d'utilité. <strong>Élévia est construite sur l'idée inverse.</strong></p>
+    <p>La rencontre est notre point d'entrée, pas notre finalité. Ce qui fait vivre un cercle, ce qui donne envie d'y rester et d'y inviter ses proches, c'est tout ce qui se passe autour : se retrouver, vivre des choses ensemble, appartenir. Les cinq orientations qui suivent décrivent cet univers.</p>
+  </div>
+
+  <div class="kicker-top">Nos cinq directions</div>
+  <h2>Ce qui fera d'Élévia autre chose qu'une application</h2>
+
+  <div class="orient">
+    <div class="orient-head"><div class="o-num">01</div><div class="o-title">Les événements privés</div></div>
+    <div class="orient-body">
+      <p class="o-lead">Le moment où l'appartenance cesse d'être une promesse à l'écran pour devenir une expérience vécue. Des rendez-vous réservés aux membres, sur invitation, pensés comme des soirées entre gens qui se ressemblent et non comme des événements de masse.</p>
+      <p class="o-lead"><strong>Ce que cela change :</strong> on ne rencontre plus quelqu'un à travers un téléphone, on le rencontre autour d'une table, entouré de personnes qui partagent le même niveau d'exigence.</p>
+      <div class="o-exemples">
+        <div class="oe-lbl">Par exemple</div>
+        <div class="oe-txt">Dîners privés, soirées thématiques, rencontres organisées dans les villes où la communauté est présente.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="orient">
+    <div class="orient-head"><div class="o-num">02</div><div class="o-title">Les expériences exclusives</div></div>
+    <div class="orient-body">
+      <p class="o-lead">Le niveau au-dessus de l'événement. Des expériences d'art de vivre proposées au cercle, pensées pour créer des souvenirs communs plutôt que des rencontres ponctuelles.</p>
+      <p class="o-lead"><strong>Ce que cela change :</strong> une raison d'appartenir à Élévia qui va au-delà de la rencontre amoureuse. On reste membre parce que le cercle donne accès à une vie qu'on n'aurait pas eue seul.</p>
+      <div class="o-exemples">
+        <div class="oe-lbl">Par exemple</div>
+        <div class="oe-txt">Voyages premium entre membres, séjours, week-ends d'exception, expériences gastronomiques et culturelles.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="orient">
+    <div class="orient-head"><div class="o-num">03</div><div class="o-title">Le réseau de partenaires</div></div>
+    <div class="orient-body">
+      <p class="o-lead">Des maisons choisies qui reconnaissent nos membres et leur réservent leurs conditions. C'est ce qui rend l'appartenance tangible au quotidien, en dehors même de la plateforme.</p>
+      <p class="o-lead"><strong>Ce que cela change :</strong> être membre d'Élévia devient un statut qui se vit dans la vraie vie, et non un compte de plus sur un téléphone.</p>
+      <div class="o-exemples">
+        <div class="oe-lbl">Par exemple</div>
+        <div class="oe-txt">Hôtels, restaurants, agences de voyage et maisons partenaires en France, en Europe et sur le continent africain.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="orient">
+    <div class="orient-head"><div class="o-num">04</div><div class="o-title">La conciergerie</div></div>
+    <div class="orient-body">
+      <p class="o-lead">Un accompagnement personnalisé pour réserver, organiser, faciliter. C'est le marqueur le plus fort du positionnement club privé, et celui qu'aucune application de masse ne pourra imiter, parce qu'il repose sur de l'humain et non sur du logiciel.</p>
+      <p class="o-lead"><strong>Ce que cela change :</strong> le membre n'est plus un utilisateur laissé seul devant une interface. Quelqu'un s'occupe de lui.</p>
+      <div class="o-exemples">
+        <div class="oe-lbl">Par exemple</div>
+        <div class="oe-txt">Organisation d'une première rencontre, réservation d'une table ou d'un séjour, aide à la préparation d'un moment important.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="orient">
+    <div class="orient-head"><div class="o-num">05</div><div class="o-title">L'accompagnement relationnel</div></div>
+    <div class="orient-body">
+      <p class="o-lead">Un accompagnement pour ceux qui le souhaitent, dans leur vie relationnelle. Parce que réussir professionnellement et savoir construire une relation ne sont pas la même compétence, et que personne ne l'apprend nulle part.</p>
+      <p class="o-lead"><strong>Ce que cela change :</strong> Élévia ne se contente pas de mettre ses membres en contact, elle prend soin d'eux. C'est la différence entre une plateforme et une communauté.</p>
+      <div class="o-exemples">
+        <div class="oe-lbl">Par exemple</div>
+        <div class="oe-txt">Coaching individuel, ateliers thématiques, accompagnement par des intervenants qualifiés et choisis.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pull">« On ne quitte pas Élévia parce qu'on a rencontré quelqu'un.<br>On y reste parce qu'on y a trouvé les siens. »</div>
+
+  <div class="kicker-top">Notre horizon</div>
+  <h2>Comment nous construisons, étape par étape</h2>
+  <p class="txt">Tout ne se construit pas en même temps, et c'est délibéré. Un cercle se remplit avant de s'animer : proposer des événements à une communauté qui n'existe pas encore reviendrait à ouvrir une maison vide. Voici l'ordre que nous avons choisi.</p>
+
+  <div class="horizon">
+    <div class="h-row">
+      <div class="h-when">Aujourd'hui</div>
+      <div class="h-what"><b>Le cercle et la rencontre.</b> La plateforme accessible depuis n'importe quel navigateur : la candidature, la vérification d'identité, le profil, la mise en relation par compatibilité et la conversation protégée. C'est le socle, et il est en cours de construction.</div>
+    </div>
+    <div class="h-row">
+      <div class="h-when">Ensuite</div>
+      <div class="h-what"><b>Élévia dans la poche.</b> Les applications mobiles iOS et Android, la fluidité au quotidien, les notifications, la recherche avancée. C'est aussi le moment où le réseau de partenaires peut commencer à s'ouvrir.</div>
+    </div>
+    <div class="h-row">
+      <div class="h-when">Puis</div>
+      <div class="h-what"><b>La vie du cercle.</b> Les événements privés, la conciergerie, les expériences exclusives, l'accompagnement relationnel, et une expérience réellement internationale. C'est là qu'Élévia devient pleinement ce qu'elle promet d'être.</div>
+    </div>
+  </div>
+
+  <div class="cloture">
+    <div class="ct">Nous cherchons nos premiers membres, pas nos premiers utilisateurs.</div>
+    <p>Les personnes qui rejoindront Élévia les premières ne seront pas de simples inscrits. Elles donneront le ton, fixeront le niveau d'exigence et décideront, par leur seule présence, de ce que ce cercle deviendra. C'est pour cette raison que nous les choisissons une par une, et que nous prenons le temps de leur expliquer où nous allons avant de leur demander de nous suivre.</p>
+  </div>
+
+  <div class="foot">
+    Élévia — Club privé<br>
+    Les grandes orientations, juillet 2026<br>
+    Document de présentation. Les orientations décrites reflètent la direction du projet et pourront évoluer avec la communauté.
+  </div>
+
+</div>
+</body>
+</html>

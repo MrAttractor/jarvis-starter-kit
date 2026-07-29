@@ -2,7 +2,10 @@
 
 > À relire et retoucher par Mac Arthur avant envoi.
 > Répond au mail du 20 juillet 2026 (23h32) et à la question restée ouverte du 16 juillet.
-> Pièces jointes : REÇ-2026-004 (400 €).
+> **Pièces jointes à ajouter avant envoi (3 fichiers) :**
+> - `RECU-ATR-2026-004-ClubElevia.pdf`
+> - `ELEVIA-Vision-et-proposition-de-valeur.pdf`
+> - `ELEVIA-Grandes-orientations.pdf`
 > À envoyer depuis hello@agenceattractor.com.
 
 ---
@@ -39,15 +42,19 @@ Sur la conciergerie : tu as raison, elle n'est pas dans la V1, et c'est volontai
 
 ## Ce que je t'ajoute sans facturer
 
-J'ai écrit les documents que tu demandais. Ils ne sont pas dans un fichier à part : ils sont **directement intégrés au cahier des charges** que tu vas signer, pour qu'ils fassent partie de notre base commune et pas d'un dossier qu'on oublie.
+Tu trouveras en pièces jointes **deux documents autonomes, à la charte d'Élévia**, écrits pour être montrés. Ce ne sont pas des annexes techniques : tu peux les envoyer tels quels aux personnes que tu veux convaincre de rejoindre le cercle, ou à un partenaire.
 
-- **Annexe A, Vision et proposition de valeur d'Élévia.** Pourquoi Élévia existe, la mission, les cinq piliers de la proposition de valeur, tes sept valeurs, et surtout comment tout cela se traduit concrètement dans ce qui est développé en V1.
-- **Annexe B, Grandes orientations fonctionnelles.** Les cinq directions qui distingueront Élévia des applications classiques : les événements privés, les expériences exclusives, le réseau de partenaires, la conciergerie et l'accompagnement relationnel. Pour chacune, ce qu'elle apporte et ce qu'elle suppose de mettre en place.
-- **Feuille de route indicative V1 / V2 / V3**, dans une section dédiée du cahier des charges, reprise de ta propre structure.
+**1. Notre vision et notre proposition de valeur.** Ce qui manque aujourd'hui aux gens comme tes futurs membres, ce qu'Élévia leur apporte, la mission, les cinq fondements qui nous distinguent, tes sept valeurs, et ce que vit concrètement un membre du premier jour à son entrée dans le cercle. Il se termine sur une idée qui te servira : rejoindre Élévia aujourd'hui, ce n'est pas s'inscrire, c'est participer à une naissance.
 
-Ces documents sont compris dans le projet, je ne te les facture pas. La matière vient de toi : de ton texte de vision, de tes valeurs, et de la liste que tu m'as envoyée le 20 juillet. Mon travail a été de la mettre en forme et d'en tirer les conséquences.
+**2. Ce que vivront nos membres.** Les cinq directions qui feront d'Élévia autre chose qu'une application : les événements privés, les expériences exclusives, le réseau de partenaires, la conciergerie et l'accompagnement relationnel. Pour chacune, ce qu'elle change pour un membre, avec des exemples concrets. Il se termine sur ton horizon en trois temps, pour que personne ne confonde ce qui existe aujourd'hui et ce qui vient ensuite.
 
-Une précision utile : les annexes A et B sont fournies comme base de réflexion commune. Elles n'ajoutent rien à ce qui est engagé et facturé dans la V1, qui reste ce qui est décrit en section 6. C'est écrit dans le document, pour qu'aucun de nous deux ne se trompe plus tard.
+Ces deux documents sont écrits pour convaincre, pas pour décrire. Ils parlent à tes futurs membres, pas à un développeur.
+
+**En parallèle, la même matière est intégrée au cahier des charges** que tu vas signer, en Annexe A et Annexe B, avec en plus une feuille de route V1 / V2 / V3 dans une section dédiée. Ainsi la vision ne vit pas dans un fichier séparé qu'on oublie : elle fait partie de notre base de travail commune, et je m'y réfère pendant le développement.
+
+Tout cela est compris dans le projet, je ne te le facture pas. La matière vient de toi : de ton texte de vision, de tes valeurs, et de la liste que tu m'as envoyée le 20 juillet. Mon travail a été de la mettre en forme, de lui donner une voix et d'en tirer les conséquences.
+
+Une précision honnête : dans le cahier des charges, les annexes A et B sont une base de réflexion commune, elles n'ajoutent rien à ce qui est engagé et facturé dans la V1, qui reste ce qui est décrit en section 6. C'est écrit dans le document, pour qu'aucun de nous deux ne se trompe plus tard.
 
 ## Ce qui relève d'un travail à part
 
