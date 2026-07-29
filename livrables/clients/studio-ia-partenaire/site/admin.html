@@ -75,7 +75,7 @@ body{padding:0}
 .pf-form input[type=text],.pf-form input[type=url],.pf-form select{width:100%;padding:12px 14px;border-radius:11px;background:rgba(0,0,0,.25);border:1px solid var(--line);color:var(--ink);font-family:inherit;font-size:.92rem}
 .pf-form input:focus,.pf-form select:focus{outline:none;border-color:var(--amber)}
 .pf-form .file{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.pf-form .filebtn{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:11px;border:1px dashed var(--line-2);background:var(--surface-2);color:var(--ink-soft);cursor:pointer;font-size:.88rem;min-height:44px}
+.filebtn{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:11px;border:1px dashed var(--line-2);background:var(--surface-2);color:var(--ink-soft);cursor:pointer;font-size:.88rem;min-height:44px}
 .pf-form .thumbprev{width:64px;height:64px;border-radius:10px;object-fit:cover;border:1px solid var(--line);display:none}
 .pf-form .check{display:flex;align-items:center;gap:10px;margin-top:16px;color:var(--ink-soft);font-size:.9rem;cursor:pointer}
 .pf-form .check input{width:18px;height:18px;accent-color:var(--amber)}
@@ -96,7 +96,35 @@ body{padding:0}
 .pf-body .ctrls{display:flex;gap:8px;margin-top:auto}
 .pf-body .ctrls button{flex:1;padding:9px;border-radius:9px;border:1px solid var(--line-2);background:var(--surface-2);color:var(--ink-soft);cursor:pointer;font-size:.8rem;min-height:40px}
 .pf-body .ctrls button.del{color:#ff8f8f;border-color:rgba(255,120,120,.3)}
-@media(max-width:520px){ .dcard .rows{grid-template-columns:1fr} .dcard .rows .k{margin-top:6px} .pf-form .grid2{grid-template-columns:1fr} }
+/* CONTENU DU SITE */
+.ct-bar{min-height:24px;margin-bottom:16px;font-size:.85rem;color:var(--muted)}
+.ct-bar .pending{color:var(--amber);font-weight:600}
+.ct-group{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);margin-bottom:16px;overflow:hidden}
+.ct-group > summary{padding:18px 20px;cursor:pointer;display:flex;align-items:center;gap:12px;min-height:44px;list-style:none}
+.ct-group > summary::-webkit-details-marker{display:none}
+.ct-group > summary .gt{font-family:'Space Grotesk';font-weight:600;font-size:1rem}
+.ct-group > summary .gd{color:var(--muted);font-size:.8rem;margin-top:3px}
+.ct-group > summary .chev{margin-left:auto;transition:transform .2s;flex:0 0 auto;color:var(--muted)}
+.ct-group[open] > summary .chev{transform:rotate(180deg)}
+.ct-group > summary .cnt{font-size:.7rem;background:rgba(246,166,42,.16);color:var(--amber);border:1px solid rgba(246,166,42,.3);border-radius:999px;padding:3px 9px;font-weight:600}
+.ct-body{padding:0 20px 20px;border-top:1px solid var(--line)}
+.ct-f{padding-top:16px}
+.ct-f label{display:block;font-size:.82rem;color:var(--ink-soft);margin-bottom:7px}
+.ct-f input[type=text],.ct-f input[type=url],.ct-f textarea{width:100%;max-width:100%;padding:12px 14px;border-radius:11px;background:rgba(0,0,0,.25);border:1px solid var(--line);color:var(--ink);font-family:inherit;font-size:.92rem;box-sizing:border-box}
+.ct-f textarea{min-height:84px;resize:vertical;line-height:1.5}
+.ct-f input:focus,.ct-f textarea:focus{outline:none;border-color:var(--amber)}
+.ct-f.changed input,.ct-f.changed textarea{border-color:var(--amber)}
+.ct-f .aide{color:var(--muted);font-size:.78rem;margin-top:6px}
+.ct-f .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
+.ct-f .reset{background:none;border:0;color:var(--muted);font-size:.78rem;cursor:pointer;text-decoration:underline;padding:8px 0;min-height:36px;font-family:inherit}
+.ct-f .reset:hover{color:var(--amber)}
+.ct-media{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.ct-media .prev{width:96px;height:60px;border-radius:10px;object-fit:cover;border:1px solid var(--line);background:#000;flex:0 0 auto}
+.ct-media video.prev{width:96px;height:60px}
+.ct-warn{color:#ffcf8f;font-size:.8rem;margin-top:8px}
+@media(max-width:520px){ .dcard .rows{grid-template-columns:1fr} .dcard .rows .k{margin-top:6px} .pf-form .grid2{grid-template-columns:1fr}
+  .viewswitch{width:100%;flex-wrap:wrap} .viewswitch button{flex:1;min-width:110px;padding:9px 12px;font-size:.85rem}
+  .ct-group > summary{padding:16px} .ct-body{padding:0 16px 16px} }
 </style>
 </head>
 <body>
@@ -132,6 +160,7 @@ body{padding:0}
   <div class="viewswitch">
     <button class="active" data-v="demandes">Demandes</button>
     <button data-v="portfolio">Portfolio</button>
+    <button data-v="contenu">Contenu du site</button>
   </div>
 
   <!-- VUE DEMANDES -->
@@ -204,9 +233,25 @@ body{padding:0}
 
     <div class="pf-grid" id="pfGrid"><div class="empty">Chargement…</div></div>
   </section>
+
+  <!-- VUE CONTENU DU SITE -->
+  <section id="viewContenu" class="hidden">
+    <div class="pf-head">
+      <div>
+        <h2>Contenu du site</h2>
+        <div class="sub">Modifie tes textes, tes chiffres, tes prix et ta vidéo d'accueil. Tu vois le résultat sur ton site dès que tu enregistres.</div>
+      </div>
+      <button class="btn-add" id="ctSave" disabled>Enregistrer</button>
+    </div>
+    <div class="ct-bar" id="ctBar"></div>
+    <div id="ctGroups"><div class="empty">Chargement…</div></div>
+  </section>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- CONTENU_CHAMPS et CONTENU_TYPES : la liste des contenus modifiables,
+     partagée avec le site pour qu'admin et site parlent des mêmes clés -->
+<script src="assets/contenu.js?v=2"></script>
 <script>
 const SUPA_URL = 'https://lgdgbrivnhgeupqhkckd.supabase.co';
 const SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
@@ -247,7 +292,7 @@ async function showDash(){
   if(!user) return;
   document.getElementById('whoami').textContent = user.email;
   loginView.classList.add('hidden'); dashView.classList.remove('hidden');
-  await Promise.all([loadDemandes(), loadWorksAdmin()]);
+  await Promise.all([loadDemandes(), loadWorksAdmin(), loadContenuAdmin()]);
 }
 
 /* ====== SWITCH DE VUE ====== */
@@ -257,6 +302,7 @@ document.querySelectorAll('.viewswitch button').forEach(b=> b.addEventListener('
   const v = b.dataset.v;
   document.getElementById('viewDemandes').classList.toggle('hidden', v!=='demandes');
   document.getElementById('viewPortfolio').classList.toggle('hidden', v!=='portfolio');
+  document.getElementById('viewContenu').classList.toggle('hidden', v!=='contenu');
 }));
 
 /* ====== DEMANDES ====== */
@@ -448,6 +494,169 @@ pfForm.addEventListener('submit', async e=>{
   }
 });
 syncType();
+
+/* ====== CONTENU DU SITE ======
+   Les valeurs d'origine ne sont pas recopiées ici : on les lit dans le vrai
+   index.html du site (repères data-c). Impossible de désynchroniser l'admin
+   du site, et « remettre d'origine » = supprimer la ligne en base. */
+let CT_DEFAUT = {};      // ce que le site affiche sans modification
+let CT_BASE   = {};      // ce qui est enregistré en base
+let CT_EDITS  = {};      // ce qui est modifié et pas encore enregistré
+let CT_UPLOADS= {};      // fichiers choisis, pas encore envoyés
+
+const AVERTIR_AU_DELA = 6 * 1024 * 1024;    // 6 Mo : le site devient lent sur mobile
+const REFUSER_AU_DELA = 25 * 1024 * 1024;   // 25 Mo : limite du bucket côté serveur
+
+/* lit les textes d'origine dans le HTML réel du site */
+async function loadDefauts(){
+  try{
+    const r = await fetch('index.html?admin=' + Date.now());
+    if(!r.ok) throw 0;
+    const doc = new DOMParser().parseFromString(await r.text(), 'text/html');
+    const out = {};
+    doc.querySelectorAll('[data-c]').forEach(el=>{
+      const cle = el.getAttribute('data-c');
+      const t = (CONTENU_TYPES[cle] || 'texte');
+      if(t === 'lien')      out[cle] = el.getAttribute('href') === '#' ? '' : (el.getAttribute('href') || '');
+      else if(t === 'image')out[cle] = el.getAttribute('src') || '';
+      else if(t === 'video'){ const s = el.querySelector('source'); out[cle] = (s ? s.getAttribute('src') : el.getAttribute('src')) || ''; }
+      else if(t === 'compteur') out[cle] = el.getAttribute('data-to') || '';
+      else out[cle] = (el.textContent || '').trim();
+    });
+    doc.querySelectorAll('[data-c-poster]').forEach(el=>{
+      out[el.getAttribute('data-c-poster')] = el.getAttribute('poster') || '';
+    });
+    return out;
+  }catch(_){ return {}; }
+}
+
+async function loadContenuAdmin(){
+  const [def, rows] = await Promise.all([
+    loadDefauts(),
+    sb.from('aic_contenu').select('cle,valeur')
+  ]);
+  CT_DEFAUT = def;
+  CT_BASE = {};
+  if(!rows.error && Array.isArray(rows.data)) rows.data.forEach(r=>{ CT_BASE[r.cle] = r.valeur; });
+  CT_EDITS = {}; CT_UPLOADS = {};
+  renderContenu();
+}
+
+/* valeur affichée dans le champ : modification en cours > base > origine du site */
+function ctVal(cle){
+  if(Object.prototype.hasOwnProperty.call(CT_EDITS, cle)) return CT_EDITS[cle];
+  if(CT_BASE[cle] != null && CT_BASE[cle] !== '') return CT_BASE[cle];
+  return CT_DEFAUT[cle] != null ? CT_DEFAUT[cle] : '';
+}
+function ctModifie(cle){ return (CT_BASE[cle] != null && CT_BASE[cle] !== '') || Object.prototype.hasOwnProperty.call(CT_EDITS, cle) || CT_UPLOADS[cle]; }
+
+function renderContenu(){
+  const wrap = document.getElementById('ctGroups');
+  wrap.innerHTML = CONTENU_CHAMPS.map((g, gi)=>{
+    const nbMod = g.champs.filter(c=> ctModifie(c.cle)).length;
+    const corps = g.champs.map(c=>{
+      const v = ctVal(c.cle);
+      const chg = ctModifie(c.cle) ? ' changed' : '';
+      const aide = c.aide ? '<div class="aide">'+esc(c.aide)+'</div>' : '';
+      const reset = ctModifie(c.cle) ? '<button type="button" class="reset" data-reset="'+c.cle+'">Remettre le texte d\'origine</button>' : '';
+
+      if(c.t === 'video' || c.t === 'image'){
+        const isVid = c.t === 'video';
+        const prev = isVid
+          ? '<video class="prev" id="prev-'+c.cle+'" src="'+esc(v)+'" muted playsinline preload="metadata"></video>'
+          : '<img class="prev" id="prev-'+c.cle+'" src="'+esc(v)+'" alt="" />';
+        return '<div class="ct-f'+chg+'" id="f-'+c.cle+'"><label>'+esc(c.lib)+'</label>'
+          + '<div class="ct-media">'+prev
+          + '<label class="filebtn"><span id="txt-'+c.cle+'">Changer le fichier</span>'
+          + '<input type="file" data-file="'+c.cle+'" accept="'+(isVid?'video/*':'image/*')+'" hidden /></label>'
+          + '</div>'+aide+'<div class="ct-warn" id="warn-'+c.cle+'"></div><div class="row">'+reset+'</div></div>';
+      }
+      const input = c.t === 'zone'
+        ? '<textarea data-cle="'+c.cle+'">'+esc(v)+'</textarea>'
+        : '<input type="'+(c.t==='lien'?'url':'text')+'" data-cle="'+c.cle+'" value="'+esc(v)+'"'+(c.t==='lien'?' placeholder="https://…"':'')+' />';
+      return '<div class="ct-f'+chg+'" id="f-'+c.cle+'"><label>'+esc(c.lib)+'</label>'+input+aide+'<div class="row">'+reset+'</div></div>';
+    }).join('');
+
+    return '<details class="ct-group"'+(gi===0?' open':'')+'>'
+      + '<summary><div><div class="gt">'+esc(g.section)+'</div><div class="gd">'+esc(g.desc)+'</div></div>'
+      + (nbMod?'<span class="cnt">'+nbMod+' modifié'+(nbMod>1?'s':'')+'</span>':'')
+      + '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></summary>'
+      + '<div class="ct-body">'+corps+'</div></details>';
+  }).join('');
+
+  wrap.querySelectorAll('[data-cle]').forEach(inp=> inp.addEventListener('input', ()=>{
+    const cle = inp.dataset.cle;
+    const val = inp.value;
+    /* revenir à la valeur d'origine en la retapant = ne rien enregistrer */
+    if(val === (CT_DEFAUT[cle]||'') && !(CT_BASE[cle]!=null && CT_BASE[cle]!=='')) delete CT_EDITS[cle];
+    else CT_EDITS[cle] = val;
+    ctRefreshBar();
+  }));
+  wrap.querySelectorAll('[data-file]').forEach(inp=> inp.addEventListener('change', ()=>{
+    const cle = inp.dataset.file, f = inp.files[0];
+    const warn = document.getElementById('warn-'+cle);
+    warn.className = 'ct-warn'; warn.textContent = '';
+    if(!f){ delete CT_UPLOADS[cle]; ctRefreshBar(); return; }
+    if(f.size > REFUSER_AU_DELA){
+      warn.textContent = 'Ce fichier fait ' + Math.round(f.size/1048576) + ' Mo, c\'est trop lourd (25 Mo maximum). Compresse-le avant de le charger.';
+      inp.value = ''; delete CT_UPLOADS[cle]; ctRefreshBar(); return;
+    }
+    if(f.size > AVERTIR_AU_DELA){
+      warn.textContent = 'Attention : ' + Math.round(f.size/1048576) + ' Mo, ton site s\'ouvrira lentement sur mobile. En dessous de 6 Mo c\'est mieux.';
+    }
+    CT_UPLOADS[cle] = f;
+    document.getElementById('txt-'+cle).textContent = f.name;
+    const p = document.getElementById('prev-'+cle);
+    if(p) p.src = URL.createObjectURL(f);
+    document.getElementById('f-'+cle).classList.add('changed');
+    ctRefreshBar();
+  }));
+  wrap.querySelectorAll('[data-reset]').forEach(b=> b.addEventListener('click', async ()=>{
+    const cle = b.dataset.reset;
+    delete CT_EDITS[cle]; delete CT_UPLOADS[cle];
+    if(CT_BASE[cle] != null){
+      await sb.from('aic_contenu').delete().eq('cle', cle);
+    }
+    await loadContenuAdmin();
+  }));
+  ctRefreshBar();
+}
+
+function ctRefreshBar(){
+  const n = Object.keys(CT_EDITS).length + Object.keys(CT_UPLOADS).length;
+  const bar = document.getElementById('ctBar');
+  const btn = document.getElementById('ctSave');
+  if(n){ bar.innerHTML = '<span class="pending">'+n+' modification'+(n>1?'s':'')+' pas encore enregistrée'+(n>1?'s':'')+'.</span>'; btn.disabled = false; }
+  else { bar.textContent = 'Tout est enregistré.'; btn.disabled = true; }
+}
+
+document.getElementById('ctSave').addEventListener('click', async ()=>{
+  const btn = document.getElementById('ctSave');
+  btn.disabled = true;
+  const bar = document.getElementById('ctBar');
+  bar.textContent = 'Enregistrement…';
+  try{
+    /* les fichiers d'abord : leur adresse devient la valeur du champ */
+    for(const cle of Object.keys(CT_UPLOADS)){
+      const f = CT_UPLOADS[cle];
+      const safe = f.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+      const path = 'site/' + cle.replace(/[^a-z0-9]/gi,'-') + '-' + Date.now() + '-' + safe;
+      const up = await sb.storage.from('aic-media').upload(path, f, { cacheControl:'3600', upsert:false });
+      if(up.error) throw up.error;
+      CT_EDITS[cle] = sb.storage.from('aic-media').getPublicUrl(path).data.publicUrl;
+    }
+    const rows = Object.keys(CT_EDITS).map(cle=> ({ cle, valeur: CT_EDITS[cle] }));
+    if(rows.length){
+      const { error } = await sb.from('aic_contenu').upsert(rows, { onConflict:'cle' });
+      if(error) throw error;
+    }
+    await loadContenuAdmin();
+    bar.innerHTML = '<span class="pending">Enregistré. Ton site est à jour.</span>';
+  }catch(err){
+    bar.innerHTML = '<span style="color:#ff8080">Erreur : '+esc(err.message||'réessaie.')+'</span>';
+    btn.disabled = false;
+  }
+});
 
 /* session persistante */
 (async ()=>{ const { data:{ session } } = await sb.auth.getSession(); if(session) showDash(); })();

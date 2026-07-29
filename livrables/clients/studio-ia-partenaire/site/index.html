@@ -13,18 +13,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="assets/styles.css" />
+<!-- contenus pilotés depuis /admin : chargé ici pour que la requête parte avant le rendu,
+     ce qui évite de voir les textes changer sous les yeux du visiteur -->
+<script src="assets/contenu.js?v=2"></script>
 </head>
 <body>
 
 <!-- INTRO -->
 <div class="intro" id="intro">
-  <video class="intro-bg" autoplay muted loop playsinline preload="auto" poster="assets/video/accueil-poster.jpg"><source src="assets/video/accueil.mp4" type="video/mp4" /></video>
+  <video class="intro-bg" autoplay muted loop playsinline preload="auto" poster="assets/video/accueil-poster.jpg" data-c="accueil.video" data-c-poster="accueil.poster"><source src="assets/video/accueil.mp4" type="video/mp4" /></video>
   <div class="intro-overlay"></div>
   <div class="mark"><img src="assets/img/logo-v2.png" alt="Agence Innovation Créative" /></div>
-  <h1 class="grad-txt">Créer autrement.</h1>
-  <p>Studio de création par intelligence artificielle. Images et vidéos ultra-réalistes.</p>
+  <h1 class="grad-txt" data-c="accueil.titre">Créer autrement.</h1>
+  <p data-c="accueil.soustitre">Studio de création par intelligence artificielle. Images et vidéos ultra-réalistes.</p>
   <button class="btn btn-primary enter" id="enterBtn">
-    Accéder au studio
+    <span data-c="accueil.bouton">Accéder au studio</span>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
   </button>
 </div>
@@ -69,9 +72,9 @@
 
 <!-- HERO -->
 <section class="hero wrap" id="top">
-  <span class="eyebrow"><span class="dot"></span> Studio de création par IA · Côte d'Ivoire</span>
-  <h1>Des images et vidéos<br><span class="grad-txt">ultra-réalistes</span>, créées par IA.</h1>
-  <p>Nous concevons des visuels et des films publicitaires qui captivent, avec les intelligences artificielles les plus avancées. Et nous vous apprenons à faire pareil.</p>
+  <span class="eyebrow"><span class="dot"></span> <span data-c="hero.eyebrow">Studio de création par IA · Côte d'Ivoire</span></span>
+  <h1><span data-c="hero.titre_a">Des images et vidéos</span><br><span class="grad-txt" data-c="hero.titre_b">ultra-réalistes</span><span data-c="hero.titre_c">, créées par IA.</span></h1>
+  <p data-c="hero.texte">Nous concevons des visuels et des films publicitaires qui captivent, avec les intelligences artificielles les plus avancées. Et nous vous apprenons à faire pareil.</p>
   <div class="hero-cta">
     <a href="#portfolio" class="btn btn-primary">Voir nos réalisations
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -90,21 +93,21 @@
   <div class="studio reveal">
     <div class="txt">
       <span class="kicker" style="color:var(--amber);font-weight:600;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase">Le studio</span>
-      <h2 style="margin-top:12px">L'IA au service de vos idées, sans limite de réalisme.</h2>
-      <p>Agence Innovation Créative est un studio de création dirigé par Emmanuel Yao. Nous produisons des images et des vidéos générées par intelligence artificielle pour les marques, les artistes et les entreprises qui veulent sortir du lot.</p>
-      <p>Publicités, avatars, mises en scène impossibles à tourner, visuels de campagne : nous transformons un brief en contenu spectaculaire, réaliste, prêt à diffuser.</p>
+      <h2 style="margin-top:12px" data-c="studio.titre">L'IA au service de vos idées, sans limite de réalisme.</h2>
+      <p data-c="studio.para1">Agence Innovation Créative est un studio de création dirigé par Emmanuel Yao. Nous produisons des images et des vidéos générées par intelligence artificielle pour les marques, les artistes et les entreprises qui veulent sortir du lot.</p>
+      <p data-c="studio.para2">Publicités, avatars, mises en scène impossibles à tourner, visuels de campagne : nous transformons un brief en contenu spectaculaire, réaliste, prêt à diffuser.</p>
       <a href="#contact" class="btn btn-primary" style="margin-top:14px">Travailler avec nous</a>
     </div>
     <div class="visual">
-      <img src="assets/img/studio-emmanuel.jpg" alt="Emmanuel Yao — Agence Innovation Créative" loading="lazy" />
+      <img src="assets/img/studio-emmanuel.jpg" alt="Emmanuel Yao — Agence Innovation Créative" loading="lazy" data-c="studio.photo" />
     </div>
   </div>
 
   <div class="counters">
-    <div class="counter reveal"><div class="num" data-to="500">0</div><div class="lbl">Créations livrées</div></div>
-    <div class="counter reveal"><div class="num" data-to="40">0</div><div class="lbl">Clients & marques</div></div>
-    <div class="counter reveal"><div class="num" data-to="8">0</div><div class="lbl">Années d'expertise</div></div>
-    <div class="counter reveal"><div class="num" data-to="200">0</div><div class="lbl">Apprenants formés</div></div>
+    <div class="counter reveal"><div class="num" data-to="500" data-c="chiffre1.valeur">0</div><div class="lbl" data-c="chiffre1.libelle">Créations livrées</div></div>
+    <div class="counter reveal"><div class="num" data-to="40" data-c="chiffre2.valeur">0</div><div class="lbl" data-c="chiffre2.libelle">Clients &amp; marques</div></div>
+    <div class="counter reveal"><div class="num" data-to="8" data-c="chiffre3.valeur">0</div><div class="lbl" data-c="chiffre3.libelle">Années d'expertise</div></div>
+    <div class="counter reveal"><div class="num" data-to="200" data-c="chiffre4.valeur">0</div><div class="lbl" data-c="chiffre4.libelle">Apprenants formés</div></div>
   </div>
 </section>
 
@@ -171,7 +174,7 @@
       <div class="fnum">IMAG'IN 1</div>
       <h3>Création d'images IA</h3>
       <p class="sub">Maîtrisez l'art des images ultra-réalistes avec les meilleures IA du moment.</p>
-      <div class="price">30 000 <small>F CFA · paiement unique</small></div>
+      <div class="price"><span data-c="formation1.prix">30 000</span> <small>F CFA · paiement unique</small></div>
       <div class="save">&nbsp;</div>
       <ul>
         <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Les moteurs d'IA les plus performants et populaires</li>
@@ -180,7 +183,7 @@
         <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Créer des prompts précis, avec une méthode éprouvée</li>
       </ul>
       <p class="bonus">Bonus : communauté Telegram privée · rencontres Meet · conseils & nouveautés réservés aux membres.</p>
-      <a class="btn btn-ghost" data-formation="imagin1" href="#">Je m'inscris</a>
+      <a class="btn btn-ghost" data-formation="imagin1" href="#" data-c="formation1.lien">Je m'inscris</a>
     </div>
 
     <div class="fcard feat reveal">
@@ -188,7 +191,7 @@
       <div class="fnum">IMAG'IN 3</div>
       <h3>L'offre complète</h3>
       <p class="sub">Images + Vidéos réunies. Maîtrisez toute la création IA et économisez.</p>
-      <div class="price">50 000 <small>F CFA · paiement unique</small></div>
+      <div class="price"><span data-c="formation3.prix">50 000</span> <small>F CFA · paiement unique</small></div>
       <div class="save">Économisez 10 000 F CFA vs les deux formations séparées</div>
       <ul>
         <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Formation IMAG'IN 1 (images IA) complète</li>
@@ -197,14 +200,14 @@
         <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Communauté privée, Meet et accompagnement</li>
       </ul>
       <p class="bonus">La formule idéale pour tout maîtriser, images comme vidéos.</p>
-      <a class="btn btn-primary" data-formation="imagin3" href="#">Je m'inscris</a>
+      <a class="btn btn-primary" data-formation="imagin3" href="#" data-c="formation3.lien">Je m'inscris</a>
     </div>
 
     <div class="fcard reveal">
       <div class="fnum">IMAG'IN 2</div>
       <h3>Création de vidéos IA</h3>
       <p class="sub">Produisez des vidéos IA ultra-réalistes qui captivent votre audience.</p>
-      <div class="price">30 000 <small>F CFA · paiement unique</small></div>
+      <div class="price"><span data-c="formation2.prix">30 000</span> <small>F CFA · paiement unique</small></div>
       <div class="save">&nbsp;</div>
       <ul>
         <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Les meilleurs générateurs de vidéos par IA</li>
@@ -213,7 +216,7 @@
         <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Des vidéos fluides et réalistes, comme un expert</li>
       </ul>
       <p class="bonus">Bonus : communauté Telegram privée · sessions Meet · partage de nouvelles techniques.</p>
-      <a class="btn btn-ghost" data-formation="imagin2" href="#">Je m'inscris</a>
+      <a class="btn btn-ghost" data-formation="imagin2" href="#" data-c="formation2.lien">Je m'inscris</a>
     </div>
 
   </div>
@@ -233,7 +236,7 @@
       <div class="fnum">Coaching privé</div>
       <h3>1 séance de 3 heures</h3>
       <p class="sub">Une session intensive en tête-à-tête pour débloquer vos compétences IA.</p>
-      <div class="price">150 000 <small>F CFA</small></div>
+      <div class="price"><span data-c="coaching1.prix">150 000</span> <small>F CFA</small></div>
       <div class="save">&nbsp;</div>
       <ul>
         <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> 3 heures en privé avec Emmanuel</li>
@@ -248,7 +251,7 @@
       <div class="fnum">Coaching privé Premium</div>
       <h3>2 séances de 3 heures</h3>
       <p class="sub">Un accompagnement en profondeur, en deux temps, pour aller plus loin.</p>
-      <div class="price">200 000 <small>F CFA</small></div>
+      <div class="price"><span data-c="coaching2.prix">200 000</span> <small>F CFA</small></div>
       <div class="save">Deux sessions pour ancrer durablement vos acquis</div>
       <ul>
         <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> 2 × 3 heures en privé avec Emmanuel</li>
@@ -284,9 +287,9 @@
       <h2 style="margin-top:12px">Parlons de votre projet.</h2>
       <p>Une image, une vidéo, une campagne ? Décrivez votre besoin, nous revenons vers vous rapidement.</p>
       <div class="cinfo">
-        <a href="https://wa.me/2250759249841" target="_blank" rel="noopener"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.38 8.38 0 0 1-4-1L3 21l2-5.5A8.38 8.38 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg></span> WhatsApp Business · +225 07 59 24 98 41</a>
-        <a href="mailto:emmanueldebeing.ed@gmail.com"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg></span> emmanueldebeing.ed@gmail.com</a>
-        <a href="#contact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span> Abidjan, Côte d'Ivoire</a>
+        <a href="https://wa.me/2250759249841" target="_blank" rel="noopener"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.38 8.38 0 0 1-4-1L3 21l2-5.5A8.38 8.38 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg></span> <span data-c="contact.whatsapp">WhatsApp Business · +225 07 59 24 98 41</span></a>
+        <a href="mailto:emmanueldebeing.ed@gmail.com"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg></span> <span data-c="contact.email">emmanueldebeing.ed@gmail.com</span></a>
+        <a href="#contact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span> <span data-c="contact.ville">Abidjan, Côte d'Ivoire</span></a>
       </div>
     </div>
     <form id="devisForm">
@@ -504,6 +507,11 @@ function captureDemande(payload){
 
 /* WORKS est chargé depuis assets/works.js (source partagée avec realisations.html) */
 
+/* ====== CONTENUS PILOTÉS DEPUIS /admin ======
+   La requête est déjà partie (contenu.js chargé dans le head). On applique
+   seulement ce qu'Emmanuel a modifié : le reste garde le texte d'origine. */
+CONTENU_READY.then(applyContenu);
+
 /* ====== INTRO ====== */
 const intro = document.getElementById('intro');
 document.getElementById('enterBtn').addEventListener('click', ()=>{ intro.classList.add('hide'); document.body.style.overflow='auto'; });
@@ -561,7 +569,9 @@ addEventListener('keydown', e=>{ if(e.key==='Escape' && lightbox.classList.conta
 /* ====== FORMATIONS LINKS ====== */
 document.querySelectorAll('[data-formation]').forEach(a=>{
   a.addEventListener('click', e=>{
-    const link = CONFIG.formationLinks[a.dataset.formation];
+    /* un lien saisi depuis /admin est déjà posé sur le href : il gagne sur CONFIG */
+    const own = a.getAttribute('href');
+    const link = (own && own !== '#') ? own : CONFIG.formationLinks[a.dataset.formation];
     if(link){ a.href = link; a.target='_blank'; }
     else { e.preventDefault(); document.getElementById('contact').scrollIntoView({behavior:'smooth'}); }
   });
