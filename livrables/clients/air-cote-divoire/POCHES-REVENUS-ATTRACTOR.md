@@ -21,21 +21,31 @@
 
 ---
 
-## 1. Le compte de la rotation, tel qu'il est aujourd'hui
+## 1. Le compte de la rotation *(recalculé le 30/07/2026)*
+
+> **Ce qui a changé le 30/07 :** la valise n'est plus vendue 99 €, elle est **offerte au voyageur au retour** ; la demande bagage passe à **2 × 32 kg par siège dans les deux sens** ; le recrutement devient **organique**, donc la campagne d'acquisition sort du compte ; et le lancement se fait **par paliers de 4, 7 puis 10 voyageurs**. Détail dans `MODELE-OPERATIONNEL.md`.
+
+**Ce que rapporte un voyageur, aller et retour réunis :**
 
 | | Montant |
 |---|---|
-| Fret vendu en gros (600 kg à 8 €) | 4 800 € |
-| Fret vendu en direct (160 kg à 12 €) | 1 920 € |
-| Marge sur les sièges (10 × 50 €) | 500 € |
-| Valises (10 × 99 €) | 990 € |
-| **Total encaissé** | **8 210 €** |
-| Fret payé à la compagnie (760 kg à 3 €) | − 2 280 € |
-| Opérations J'Envoie Express (760 kg à 3,50 €) | − 2 660 € |
-| Frais fixes | − 600 € |
-| Campagne d'acquisition | − 400 € |
-| **Résultat de la rotation** | **2 270 €** |
-| Part Mr Attractor à 50/50 | **1 135 €**, soit **44 265 € par an** |
+| Aller : 2 valises de 32 kg vendues | + 236 € |
+| Retour : 2 valises de 32 kg, dont 1 offerte → 1 vendue | + 118 € |
+| Rétrocession Air CI sur la valise offerte (32 kg × 1 €) | − 32 € |
+| **Marge brute colis par voyageur** | **322 €** |
+| Frais de réservation, encaissés hors pot commun | + 50 € |
+
+**Par palier :**
+
+| Palier | Marge brute colis | Part Mr Attractor à 50/50 | + frais de réservation | **Total Mr Attractor / rotation** |
+|---|---|---|---|---|
+| **4 voyageurs** | 1 288 € | 644 € | 200 € | **844 €** |
+| **7 voyageurs** | 2 254 € | 1 127 € | 350 € | **1 477 €** |
+| **10 voyageurs** | 3 220 € | 1 610 € | 500 € | **2 110 €** |
+
+À la cible de 10 voyageurs sur 39 rotations : **≈ 82 300 € par an**, soit **≈ 6 860 €/mois**.
+
+> **Deux honnêtetés à garder.** D'abord, ce chiffre est **inférieur aux 8 700 €/mois annoncés le 27/07** : la valise offerte au retour coûte 150 € par voyageur. Ensuite, ce compte **ne déduit ni les opérations de J'Envoie Express ni les frais fixes**, qui se soustraient avant le partage : c'est une marge brute, pas un résultat. Le chiffre net dépend du coût réel au kilo de Jean Yves, toujours pas fourni.
 
 **Le problème que pose ce compte :** l'intégralité du revenu de Mr Attractor est une **part de résultat**. Elle arrive en dernier, après tous les coûts, et elle dépend d'une clé de partage qui n'est pas écrite. Si la négociation avec J'Envoie Express se règle à 40/60, il perd 8 800 € par an sans avoir rien changé à son travail.
 
@@ -45,31 +55,31 @@
 
 ### Poche A, certaine : les frais de réservation
 
-**50 € par voyageur, encaissés par nous via XPaye, avant la compagnie.**
+**50 € par voyageur, facturés par nous et réglés séparément du billet.**
 
-- 500 € par rotation, **19 500 € par an**
-- L'argent arrive sur notre compte, pas sur le sien, pas sur celui de la compagnie
+> **Phrase corrigée le 30/07.** Ce document écrivait « encaissés par nous via XPaye, **avant la compagnie** ». C'était la description exacte du montage à éviter, relevé en session 117 : encaisser le prix du transport avant de le reverser fait de nous un **vendeur de transport**, avec immatriculation et garantie financière à la clé. Le montage retenu est **deux paiements séparés** : le voyageur règle son billet à la compagnie sur son canal, et nos frais de réservation à nous, à part. Même argent, statut différent. À faire confirmer par un juriste avant le premier euro encaissé.
+
+- 200 € par rotation à 4 voyageurs, 350 € à 7, **500 € à 10**, soit **19 500 € par an** à la cible
+- L'argent arrive sur notre compte, sans transiter par personne
 - Ne dépend d'aucun reversement, d'aucun délai, d'aucune clé de partage
 - Contrepartie réelle et énumérable : vérification du dossier, accès au tarif fermé, accompagnement à l'aéroport, contact sur place
 
-C'est **la seule poche totalement sous notre contrôle**, et c'est celle qu'il faut sanctuariser dans la négociation.
+C'est **la seule poche totalement sous notre contrôle**, et c'est celle qu'il faut sanctuariser dans la négociation. Ne jamais la rogner pour absorber un tarif partenaire trop élevé (voir `GRILLE-PRIX-PLANCHER-AIR-CI.md`).
 
-### Poche B, certaine mais arbitrable : la valise
+### ~~Poche B : la valise~~ — SUPPRIMÉE le 30/07
 
-**99 € par voyageur qui la prend, encaissés par nous via XPaye.**
+**La valise n'est plus une poche de revenu, elle est devenue le bonus de l'offre.**
 
-- À 100 % de prise : 990 € par rotation, 38 610 € par an
-- À 50 % de prise : 495 € par rotation, **19 305 € par an**
-- Mais elle consomme 46 kg de soute par voyageur : elle n'est gagnante que si le kilo dégage moins de 2,15 € de marge (voir le concept, section 5)
+Elle est **offerte au voyageur au retour d'Abidjan**, en contrepartie de sa soute abandonnée à l'aller. Elle ne rapporte plus 99 €, elle **coûte** 118 € de vente perdue et 32 € de rétrocession, soit 150 € par voyageur.
 
-Poche réelle, mais **elle se prend sur la même capacité que le fret**. Ce n'est pas un revenu additionnel, c'est un arbitrage entre deux façons de vendre les mêmes kilos.
+Ce n'est pas une perte sèche : sans ce bonus, le voyageur n'accepte pas de partir sans soute, et sans voyageur il n'y a aucune capacité à vendre. C'est le prix du remplissage des sièges, qui est le vrai goulot du modèle.
 
-### Poche C, incertaine : la part du résultat fret
+### Poche C, incertaine : la part du résultat colis
 
 **Le solde après tous les coûts, partagé avec J'Envoie Express.**
 
-- 780 € par rotation une fois les sièges et valises sortis du calcul (6 720 € de fret − 5 940 € de coûts)
-- À 50/50 : 390 € par rotation, **15 210 € par an**
+- Marge brute de **1 288 € à 4 voyageurs, 2 254 € à 7, 3 220 € à 10**, avant opérations et frais fixes
+- À 50/50 et à la cible de 10 voyageurs : **1 610 € par rotation**, soit **62 790 € par an** en marge brute, à diminuer des coûts d'exploitation de Jean Yves
 
 C'est la poche **la plus grosse en apparence et la plus fragile en réalité** : elle absorbe tous les aléas. Un incident, une rotation sous-remplie, un tarif fret mal négocié, et elle disparaît la première. C'est aussi la seule qui dépende entièrement d'une formule non écrite.
 
@@ -104,21 +114,20 @@ Mr Attractor apporte un **actif** : la plateforme, la marque VSD, la relation et
 | Étage | Qui | Quoi | Montant |
 |---|---|---|---|
 | 1. Rémunération de l'apport | J'Envoie Express | Opérations au kilo | 3,50 €/kg |
-| 1. Rémunération de l'apport | **Mr Attractor** | **Frais de réservation et valises, encaissés directement** | **50 € et 99 € par voyageur** |
+| 1. Rémunération de l'apport | **Mr Attractor** | **Frais de réservation, facturés directement au voyageur** | **50 € par voyageur** |
 | 2. Partage du résultat | Les deux | Ce qui reste après tous les coûts | à négocier |
 
 C'est la structure classique d'une place de marché : une commission de plateforme prélevée à la source, plus un partage du profit d'exploitation.
 
-**Ce que ça donne pour Mr Attractor, à 50 % de prise de valise :**
+**Ce que ça donne pour Mr Attractor** *(recalculé le 30/07, la poche valise ayant disparu)* :
 
-| Poche | Par rotation | Par an |
-|---|---|---|
-| Frais de réservation | 500 € | 19 500 € |
-| Valises | 495 € | 19 305 € |
-| Part du résultat fret à 50 % | 390 € | 15 210 € |
-| **Total** | **1 385 €** | **54 015 €** |
+| Poche | À 4 voyageurs | À 7 voyageurs | À 10 voyageurs | Par an à la cible |
+|---|---|---|---|---|
+| Frais de réservation | 200 € | 350 € | 500 € | 19 500 € |
+| Part du résultat colis à 50 % | 644 € | 1 127 € | 1 610 € | 62 790 € |
+| **Total par rotation** | **844 €** | **1 477 €** | **2 110 €** | **82 290 €** |
 
-Contre 44 265 € dans le modèle du simulateur, où tout tombe dans le pot commun.
+> **Un déséquilibre à corriger dans la discussion avec Jean Yves.** Depuis le 30/07, il porte **une part du recrutement des voyageurs** en plus de ses opérations, alors que la poche valise qui compensait côté Mr Attractor a disparu. La structure en deux étages reste défendable, mais l'argument « Mr Attractor apporte l'actif, J'Envoie Express apporte le travail » est **moins vrai qu'avant** : il apporte maintenant les deux. À anticiper, sinon il le soulèvera lui-même à la troisième rotation.
 
 > **À dire franchement à Jean Yves, sinon ça se retournera contre nous.** Cette structure **déplace de la valeur** vers Mr Attractor. Elle est défendable, parce qu'un actif se rémunère comme un travail, mais elle doit s'accompagner d'une contrepartie visible : une clé de partage du résultat fret plus favorable à J'Envoie Express (par exemple 40/60), ou un plancher garanti sur ses rotations creuses. Poser la structure sans la contrepartie, c'est préparer un conflit à la troisième rotation.
 >
@@ -126,11 +135,11 @@ Contre 44 265 € dans le modèle du simulateur, où tout tombe dans le pot comm
 
 ---
 
-## 4. Les trois chiffres qui commandent tout le reste
+## 4. Les trois chiffres qui commandent tout le reste *(revus le 30/07)*
 
-1. **Le tarif fret de la compagnie.** Posé à 3 €/kg dans les hypothèses, cible de négociation 1 à 1,50 €. Chaque euro arraché vaut environ 760 € par rotation, soit près de 30 000 € par an, partagés. **C'est le chiffre le plus rentable du dossier, très loin devant tout le reste.**
-2. **Le taux de remplissage du fret.** 760 kg vendus sur 920 disponibles. Les 160 kg invendus ne coûtent rien mais ne rapportent rien : les vendre en direct à 12 € ajouterait 880 € de marge par rotation, presque autant que la part de résultat actuelle.
-3. **Le coût réel au kilo de J'Envoie Express.** Posé à 3,50 €, jamais vérifié. S'il est en réalité à 4,50 €, le résultat de la rotation fond de 760 € et la part de chacun avec. Ce chiffre doit venir de Jean Yves, écrit, avant de signer quoi que ce soit.
+1. **Le tarif partenaire du siège.** C'est devenu le chiffre numéro un, devant tout le reste. Nous n'avons aucun levier financier dessus : le montage mandataire nous interdit de subventionner le billet, donc chaque euro ajouté par la compagnie part dans le prix public et coûte des voyageurs. Sans voyageurs, pas de sièges, pas de capacité, pas de modèle. Grille de seuils dans `GRILLE-PRIX-PLANCHER-AIR-CI.md`. **Question à poser en premier : les taxes sont-elles comprises ?**
+2. **Le nombre de valises de 32 kg accordées par siège.** 2 dans les deux sens est la demande permanente, 3 à l'aller l'idéal. Passer de 2 à 3 à l'aller ajoute **118 € par voyageur**, soit 1 180 € par rotation à la cible et environ 46 000 € par an.
+3. **Le coût réel au kilo de J'Envoie Express.** Posé à 3,50 €, jamais vérifié, et c'est toujours le trou du modèle. Tant qu'il n'est pas écrit, la « part du résultat » est un chiffre en l'air. Ce chiffre doit venir de Jean Yves avant de signer quoi que ce soit.
 
 ---
 

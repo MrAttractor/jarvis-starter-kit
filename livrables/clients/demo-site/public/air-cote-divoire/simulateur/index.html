@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Programme Bloc Siège Convoyeurs · Pilote Paris-Abidjan</title>
+<title>Programme Voyageurs & Colis · Pilote Paris-Abidjan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{max-width:100%;overflow-x:hidden}
 body{font-family:var(--sans);color:var(--ink);background:var(--sable);line-height:1.5;-webkit-font-smoothing:antialiased;padding:0 0 64px}
-.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.wrap{max-width:820px;margin:0 auto;padding:0 20px}
 
 header{color:var(--sable);padding:34px 0 30px;margin-bottom:24px;
   background-image:radial-gradient(700px 320px at 90% -30%,rgba(242,92,5,.18),transparent 60%),radial-gradient(620px 340px at -5% 0%,rgba(30,86,49,.24),transparent 58%),linear-gradient(160deg,#15120f,#1f1a15 62%,#191410)}
@@ -43,8 +43,7 @@ header p + p{margin-top:8px}
 .intro p:last-child{margin-bottom:0}
 .intro b{color:var(--ink)}
 
-.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:22px;align-items:start}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.grid{display:block}
 
 .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(26,23,20,.05);margin-bottom:22px}
 .panel h2{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--charbon);margin-bottom:4px}
@@ -154,7 +153,13 @@ tbody tr:last-child td{border-bottom:none}
   .cb .cbar{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   *{overflow:visible !important}
 }
+/* mode embarqué dans le menu déroulant de la proposition */
+html.embed{background:transparent}
+html.embed body{padding:0 0 24px}
+html.embed header{display:none}
+html.embed .intro{margin-top:20px}
 </style>
+<script>if(location.search.indexOf('embed')>-1){document.documentElement.classList.add('embed');}</script>
 </head>
 <body>
 
@@ -164,7 +169,7 @@ tbody tr:last-child td{border-bottom:none}
       <div class="logo">A</div>
       <div class="name">Mr Attractor<span>× J'Envoie Express</span></div>
     </div>
-    <h1>Programme Bloc Siège Convoyeurs, dossier de pilote</h1>
+    <h1>Programme Voyageurs & Colis, dossier de pilote</h1>
     <p>Paris — Abidjan — Paris, format week-end 72h. Document préparé à la suite de l'entretien du 22 juillet 2026 à la Direction Pays France.</p>
     <p>Les curseurs sont les vôtres. L'objet de ce document est de situer ensemble le tarif qui remplit les sièges, pas de projeter des volumes théoriques.</p>
     <div class="pill">
@@ -177,10 +182,10 @@ tbody tr:last-child td{border-bottom:none}
 <div class="wrap">
 
   <div class="intro">
-    <h2>Le principe en trois lignes</h2>
-    <p>Air Côte d'Ivoire met à disposition <b>un bloc de 10 sièges par week-end</b> sur la rotation VSD, à tarif partenaire. J'Envoie Express les commercialise auprès de voyageurs convoyeurs qui partent avec leur bagage cabine.</p>
-    <p>La soute libérée transporte <b>du fret déclaré</b>, préparé, pesé, scellé et manifesté au sol par J'Envoie Express, puis facturé par Air Côte d'Ivoire au titre du fret accompagné.</p>
-    <p><b>Les deux recettes sont marginales pour la compagnie</b> : des sièges qui seraient partis vides, une capacité soute déjà en vol. La comparaison pertinente n'est pas avec un siège vendu au tarif public, c'est avec un siège vide qui rapporte zéro.</p>
+    <h2>Le principe, dans les deux sens</h2>
+    <p>Air Côte d'Ivoire met à disposition <b>un bloc de sièges par week-end dans les deux sens</b> de la rotation VSD Paris ⇄ Abidjan, à tarif partenaire.</p>
+    <p><b>Sens Paris → Abidjan :</b> les voyageurs partent légers, et leur allocation bagage porte des <b>valises déclarées</b>. <b>Sens Abidjan → Paris :</b> une clientèle affaires voyage léger et libère la même capacité. Pour les valises de 32 kg, nous vous <b>rétrocédons 1 € par kilo</b> : un bonus que le partenariat vous rapporte, en plus des sièges.</p>
+    <p><b>Cette estimation réunit les deux sens.</b> Elle n'affiche que la recette que nous générons pour vous, jamais votre marge : votre prix plancher et vos coûts de composition vous appartiennent, et vous seuls savez les calculer.</p>
   </div>
 
   <div class="grid">
@@ -188,7 +193,7 @@ tbody tr:last-child td{border-bottom:none}
     <div>
     <div class="panel">
       <h2>Vos paramètres</h2>
-      <div class="sub">Entrez vos coûts marginaux réels, tout se recalcule.</div>
+      <div class="sub">Ajustez les volumes et les tarifs, tout se recalcule dans les deux sens.</div>
 
       <div class="sect first">Le tarif du bloc</div>
 
@@ -198,42 +203,42 @@ tbody tr:last-child td{border-bottom:none}
       </div>
 
       <div class="conseq" id="conseq">
-        <div class="cl"><span>Prix final payé par le convoyeur</span><b id="c-prix">430 €</b></div>
+        <div class="cl"><span>Prix final payé par le voyageur</span><b id="c-prix">430 €</b></div>
         <div class="cl" id="c-taux-line"><span>Taux d'acceptation de l'offre</span><b id="c-taux">100 %</b></div>
         <div class="cl" id="c-sieges-line"><span>Sièges effectivement remplis</span><b id="c-sieges">10 sur 10</b></div>
-        <div class="cl"><span>Fret embarqué en conséquence</span><b id="c-kg">920 kg</b></div>
+        <div class="cl"><span>Colis chargés en soute, sens Paris</span><b id="c-kg">960 kg</b></div>
         <div class="warn" id="c-warn">Au-delà de ce niveau, l'offre perd son avantage face au tarif public et face à la concurrence sur l'axe. Les sièges ne se remplissent plus, et la soute part vide avec eux.</div>
       </div>
 
-      <div class="sect">Le fret</div>
+      <div class="sect">Le sens Paris → Abidjan</div>
 
       <div class="ctrl">
-        <div class="top"><label>Soute libérée par convoyeur<span class="hint">46 kg à l'aller, 46 kg au retour</span></label><span class="val" id="v-kgsiege">92 kg</span></div>
-        <input type="range" id="kgsiege" min="0" max="138" step="2" value="92">
+        <div class="top"><label>Sièges bloc, sens Paris</label><span class="val" id="v-sieges">10</span></div>
+        <input type="range" id="sieges" min="0" max="20" step="1" value="10">
       </div>
 
       <div class="ctrl">
-        <div class="top"><label>Tarif du fret accompagné<span class="hint">tarif partenaire de volume</span></label><span class="val" id="v-fret">3,0 €/kg</span></div>
-        <input type="range" id="fret" min="0" max="8" step="0.25" value="3">
+        <div class="top"><label>Valises de 32 kg par voyageur<span class="hint">ce que nous sollicitons : 3 dans l'idéal, 2 à défaut</span></label><span class="val" id="v-valisesP">3</span></div>
+        <input type="range" id="valisesP" min="2" max="3" step="1" value="3">
       </div>
 
-      <div class="sect">Vos coûts marginaux</div>
-
-      <div class="ctrl cost">
-        <div class="top"><label>Coût marginal par siège<span class="hint">restauration, carburant lié au poids, enregistrement, distribution</span></label><span class="val" id="v-csiege">80 €</span></div>
-        <input type="range" id="csiege" min="0" max="300" step="5" value="80">
-      </div>
-
-      <div class="ctrl cost">
-        <div class="top"><label>Coût marginal soute<span class="hint">carburant, manutention, documentation</span></label><span class="val" id="v-csoute">1,00 €/kg</span></div>
-        <input type="range" id="csoute" min="0" max="5" step="0.1" value="1">
-      </div>
-
-      <div class="sect">Le pilote</div>
+      <div class="sect">Le sens Abidjan → Paris</div>
 
       <div class="ctrl">
-        <div class="top"><label>Sièges ouverts par rotation</label><span class="val" id="v-sieges">10</span></div>
-        <input type="range" id="sieges" min="5" max="20" step="1" value="10">
+        <div class="top"><label>Sièges bloc, sens Abidjan</label><span class="val" id="v-siegesAbj">10</span></div>
+        <input type="range" id="siegesAbj" min="0" max="20" step="1" value="10">
+      </div>
+
+      <div class="ctrl">
+        <div class="top"><label>Bagage de 32 kg par siège, au retour<span class="hint">2 valises de 32 kg, dont une remise au voyageur</span></label><span class="val" id="v-valisekg">64 kg</span></div>
+        <input type="range" id="valisekg" min="0" max="96" step="32" value="64">
+      </div>
+
+      <div class="sect">Les tarifs & le pilote</div>
+
+      <div class="ctrl">
+        <div class="top"><label>Rétrocession sur les valises 32 kg<span class="hint">1 €/kg que le partenariat vous reverse</span></label><span class="val" id="v-fret">1 €/kg</span></div>
+        <input type="range" id="fret" min="0" max="8" step="0.25" value="1">
       </div>
 
       <div class="ctrl">
@@ -249,12 +254,12 @@ tbody tr:last-child td{border-bottom:none}
 
       <div class="panel">
         <h2>Où se situe le tarif optimal</h2>
-        <div class="sub">Recette nette par rotation selon le tarif du bloc, à demande constante par ailleurs.</div>
+        <div class="sub">Recette apportée par rotation selon le tarif du bloc, à demande constante par ailleurs.</div>
 
         <div class="curve" id="curve"></div>
 
         <div class="curve-note" id="curve-note">
-          <b>Le tarif le plus élevé n'est pas le plus rentable.</b> Au-delà d'un certain prix, le billet perd son avantage pour le convoyeur, les sièges restent invendus et la soute part vide avec eux. Chaque siège non rempli emporte aussi ses kilos de fret.
+          <b>Le tarif le plus élevé n'est pas le plus rentable.</b> Au-delà d'un certain prix, l'offre perd son attrait pour le voyageur et les places ne se vendent plus. C'est le volume qui fait la recette de ce programme, pas le prix unitaire.
         </div>
       </div>
 
@@ -264,7 +269,7 @@ tbody tr:last-child td{border-bottom:none}
         <div class="carry">
           <div class="ci">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><b>Aucune cannibalisation.</b> Le convoyeur n'est pas un passager qui aurait payé le tarif public. Il accepte des contraintes qu'aucun voyageur normal n'accepte, et c'est précisément ce qui isole le segment.</span>
+            <span><b>Aucune cannibalisation.</b> Le voyageur VSD n'aurait pas payé le tarif public. Il accepte des contraintes qu'un voyageur classique refuse (dates fixes, renonciation à sa soute personnelle), et c'est ce qui isole le segment. Il ne porte rien : sa soute libérée part en colis.</span>
           </div>
           <div class="ci">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
@@ -272,7 +277,7 @@ tbody tr:last-child td{border-bottom:none}
           </div>
           <div class="ci">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><b>Un arbitrage à une seule variable.</b> La comparaison n'est pas entre un siège convoyeur et un siège plein tarif. Elle est entre un siège vide qui rapporte zéro et un siège convoyeur qui apporte en plus ses kilos de fret.</span>
+            <span><b>Le prix est le moteur, pas la concession.</b> Un tarif partenaire agressif rend l'offre irrésistible, sécurise les places du bloc à chaque départ, dans les deux sens, et devrait nous conduire à la saturation dès après les trois premiers vols. C'est un investissement dans le volume et la récurrence, pas une remise.</span>
           </div>
           <div class="ci">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
@@ -282,25 +287,43 @@ tbody tr:last-child td{border-bottom:none}
       </div>
 
       <div class="panel">
+        <h2>Les deux scénarios de capacité</h2>
+        <div class="sub">Ce que nous sollicitons : <b>3 valises de 32 kg par voyageur</b> dans l'idéal, <b>2 à défaut</b>, pour harmoniser la logistique au sol. Votre recette totale, les deux sens réunis, dans chaque cas.</div>
+        <div class="split">
+          <div class="scard a">
+            <div class="k">Idéal · 3 valises de 32 kg</div>
+            <div class="n" id="sc3">9 520 €</div>
+            <div class="sub" id="sc3-d">par week-end · 960 kg de colis sens Paris</div>
+          </div>
+          <div class="scard">
+            <div class="k">Harmonisé · 2 valises de 32 kg</div>
+            <div class="n" id="sc2">9 040 €</div>
+            <div class="sub" id="sc2-d">par week-end · 640 kg de colis sens Paris</div>
+          </div>
+        </div>
+        <div class="curve-note" style="margin-top:14px" id="sc-note">L'écart entre les deux scénarios est de <b>480 € par rotation</b>. Chaque valise supplémentaire accordée, c'est de la capacité en plus dans votre soute, sur un vol qui part de toute façon.</div>
+      </div>
+
+      <div class="panel">
         <h2>Le compte de la rotation</h2>
-        <div class="sub">Au tarif actuellement sélectionné.</div>
+        <div class="sub">Au scénario actuellement sélectionné.</div>
 
         <div class="hero-res" id="hero">
-          <div class="lbl">Ce qui vous reste, par week-end</div>
-          <div class="big" id="marge-rot">+4 840 €</div>
-          <div class="pct" id="marge-pct">sur des sièges et une soute qui, sans le programme, rapportent zéro</div>
+          <div class="lbl">Ce que vous encaissez, par week-end · les deux sens</div>
+          <div class="big" id="marge-rot">8 880 €</div>
+          <div class="pct" id="marge-pct">de recette apportée, sièges plus bonus de rétrocession, les deux sens</div>
         </div>
 
         <div class="split">
           <div class="scard a">
-            <div class="k">Vous encaissez</div>
-            <div class="n" id="enc">6 560 €</div>
-            <div class="sub" id="enc-d">3 800 € de sièges, 2 760 € de fret</div>
+            <div class="k">Sens Paris → Abidjan</div>
+            <div class="n" id="enc">4 760 €</div>
+            <div class="sub" id="enc-d">3 800 € sièges + 960 € bonus</div>
           </div>
-          <div class="scard">
-            <div class="k">Ça vous coûte</div>
-            <div class="n" id="cout">1 720 €</div>
-            <div class="sub" id="cout-d">vos seuls coûts marginaux, carburant et manutention</div>
+          <div class="scard a">
+            <div class="k">Sens Abidjan → Paris</div>
+            <div class="n" id="cout">4 120 €</div>
+            <div class="sub" id="cout-d">3 800 € sièges + 320 € bonus</div>
           </div>
         </div>
       </div>
@@ -314,16 +337,16 @@ tbody tr:last-child td{border-bottom:none}
             <tr>
               <th>Pilote</th>
               <th>Passagers</th>
-              <th>Fret</th>
-              <th>Recette nette</th>
+              <th>Volume soute</th>
+              <th>Recette</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>Sur les rotations paramétrées<span class="d" id="t-rot">12 rotations</span></td>
-              <td id="t-pax">120</td>
-              <td id="t-t">11,0 t</td>
-              <td class="hl" id="t-marge">58 080 €</td>
+              <td id="t-pax">240</td>
+              <td id="t-t">15,4 t</td>
+              <td class="hl" id="t-marge">106 560 €</td>
             </tr>
           </tbody>
         </table>
@@ -334,32 +357,40 @@ tbody tr:last-child td{border-bottom:none}
       </div>
 
       <div class="panel">
-        <h2>Ce que le programme vous coûte</h2>
-        <div class="sub">L'investissement de lancement est intégralement porté par Mr Attractor et J'Envoie Express.</div>
+        <h2>L'investissement de lancement, et qui porte quoi</h2>
+        <div class="sub">Un seul investissement financier de votre côté, le marketing, parce que c'est lui qui fait la réussite du concept. Tout le reste est porté par Mr Attractor et J'Envoie Express.</div>
         <div class="carry">
           <div class="ci">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><b>La plateforme de réservation et de suivi</b>, développée et maintenue à nos frais : inscription des convoyeurs, vérification d'identité, manifeste, suivi des colis, portail de gestion.</span>
+            <span><b style="color:var(--orange)">Air Côte d'Ivoire</b> — le <b>co-financement du marketing</b>, avec Mr Attractor. Votre seul investissement financier, et c'est lui qui remplit les sièges et la soute, dans les deux sens.</span>
           </div>
           <div class="ci">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><b>La campagne d'acquisition</b> auprès de la diaspora, à notre charge sur toute la durée du pilote, y compris la production des contenus.</span>
+            <span><b style="color:var(--orange)">Air Côte d'Ivoire</b> — le <b>lobbying et les relations publiques</b>, que vous seuls pouvez activer sur cet axe et auprès des institutions.</span>
           </div>
           <div class="ci">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><b>Les opérations au sol</b> : local de collecte et d'emballage en région parisienne, pesée, scellement, manifeste, dépôt aéroport chaque vendredi, réception et distribution à Abidjan.</span>
+            <span><b style="color:var(--charbon)">Mr Attractor</b> — la <b>plateforme de réservation et de suivi</b> (inscription, vérification d'identité, suivi, portail de gestion), développée et maintenue à ses frais.</span>
           </div>
           <div class="ci">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><b>L'assurance du flux</b>, le recrutement et la vérification des convoyeurs, et le temps de formation de nos équipes auprès de vos services sûreté.</span>
+            <span><b style="color:var(--charbon)">Mr Attractor</b> — l'<b>exécution de la campagne et les contenus</b>, ainsi que le recrutement et la vérification des voyageurs.</span>
           </div>
           <div class="ci">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><b>Le risque de remplissage.</b> Une rotation qui ne se remplit pas est à notre charge, jamais à la vôtre.</span>
+            <span><b style="color:#0057CC">J'Envoie Express</b> — les <b>opérations au sol des deux côtés</b> : consolidation, pesée, scellement, manifeste, dépôt à l'aéroport chaque vendredi, réception et distribution à Abidjan.</span>
+          </div>
+          <div class="ci">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            <span><b style="color:#0057CC">J'Envoie Express</b> — l'<b>assurance du flux</b> et la formation sûreté de ses équipes auprès de vos services.</span>
+          </div>
+          <div class="ci">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            <span><b style="color:var(--charbon)">Mr Attractor et J'Envoie Express</b> — le <b>risque commercial</b> : si une rotation se remplit mal, c'est notre acquisition et nos opérations qui sont perdues, jamais votre recette.</span>
           </div>
         </div>
         <div class="note" style="margin-top:18px">
-          <b>Ce que le tarif partenaire finance.</b> Chaque euro non prélevé sur le siège est réinvesti dans l'attractivité du séjour, notamment les deux nuits d'hôtel proposées en option aux convoyeurs. C'est cette qualité de séjour qui fait accepter l'offre, remplit les sièges, et remplit la soute. Le tarif partenaire n'est pas une concession : c'est le mécanisme qui alimente votre recette.
+          <b>Pourquoi le marketing est le bon endroit pour votre investissement.</b> C'est le seul levier qui décide de la réussite : une campagne forte remplit les sièges et la soute dans les deux sens, et installe le nom du programme dans la diaspora. Votre engagement financier ici, ajouté à votre lobbying et à vos relations publiques, transforme un pilote en canal durable.
         </div>
       </div>
 
@@ -377,8 +408,8 @@ tbody tr:last-child td{border-bottom:none}
         <div class="ask">
           <div class="num">2</div>
           <div>
-            <div class="t">Un tarif de fret accompagné de partenaire de volume</div>
-            <div class="x">Engagé sur la durée du pilote. C'est ce tarif qui décide de la viabilité de l'opération au sol, donc de votre volume de fret.</div>
+            <div class="t">Trois valises de 32 kg par voyageur, deux à défaut, au tarif de volume</div>
+            <div class="x">C'est la capacité colis que nous sollicitons sur le sens Paris. Trois valises de 32 kg maximisent le volume, deux harmonisent la logistique au sol. Le tarif partenaire de volume, engagé sur la durée du pilote, s'applique à ces kilos.</div>
           </div>
         </div>
         <div class="ask">
@@ -392,7 +423,7 @@ tbody tr:last-child td{border-bottom:none}
           <div class="num">4</div>
           <div>
             <div class="t">Une formation sûreté de l'opérateur au sol</div>
-            <div class="x">Vos équipes forment et valident J'Envoie Express, qui prépare, pèse, scelle et manifeste l'ensemble du fret. La responsabilité de la préparation repose ainsi sur un opérateur identifié et formé par vos soins, dans l'esprit du régime chargeur connu, et non sur des voyageurs individuels. C'est votre garantie de conformité et la condition de solidité du partenariat.</div>
+            <div class="x">Vos équipes forment et valident J'Envoie Express, qui prépare, pèse, scelle et manifeste l'ensemble des colis avec son réseau de sociétés de colisage. La responsabilité de la préparation repose ainsi sur un opérateur identifié et formé par vos soins, dans l'esprit du régime chargeur connu, et non sur des voyageurs individuels. C'est votre garantie de conformité et la condition de solidité du partenariat.</div>
           </div>
         </div>
         <div class="ask">
@@ -418,14 +449,14 @@ tbody tr:last-child td{border-bottom:none}
         <div class="ask">
           <div class="num">B</div>
           <div>
-            <div class="t">Votre appui pour l'hébergement des convoyeurs</div>
-            <div class="x">Le format 72 heures impose deux nuits sur place, vendredi et samedi. Nous souhaitons proposer aux convoyeurs un hébergement 4 étoiles en option, à tarif partenaire. Votre relation avec l'hôtellerie abidjanaise obtiendra en une conversation ce qui nous prendrait des mois. Cette qualité de séjour est un moteur direct du remplissage, donc de votre recette.</div>
+            <div class="t">Votre appui pour un bon de réduction hôtelier</div>
+            <div class="x">Le format 72 heures laisse deux nuits sur place. Nous voulons offrir aux voyageurs un simple <b>bon de réduction</b> chez un hôtel partenaire, qu'ils réservent et règlent eux-mêmes. <b>Nous n'organisons aucun voyage touristique et ne vendons aucune nuit</b> : c'est un avantage qui enrichit l'offre, pas un forfait. Votre relation avec l'hôtellerie abidjanaise obtiendrait en une conversation le tarif partenaire qui nous prendrait des mois, et cette qualité de séjour nourrit directement le remplissage, donc votre recette.</div>
           </div>
         </div>
       </div>
 
       <div class="note">
-        <b>Méthode.</b> Les valeurs de départ sont des hypothèses de travail, établies sans accès à vos données internes. Les coûts marginaux affichés, 80 € par siège et 1,00 €/kg en soute, sont des ordres de grandeur destinés à être remplacés par les vôtres. Le seuil d'acceptation retenu pour la courbe s'appuie sur le tarif public constaté sur l'axe Paris-Abidjan, où l'aller-retour se situe couramment entre 600 et 900 € : au-delà d'environ 450 € payés par le voyageur, l'offre convoyeur perd progressivement son avantage, et elle n'a plus aucun sens au-delà de 750 €.
+        <b>Méthode.</b> Ce document n'affiche que la recette que nous générons pour vous, jamais votre marge : votre prix plancher et vos coûts de composition vous appartiennent, et nous ne les présumons pas. Les volumes de départ sont des hypothèses de travail. Le seuil d'acceptation retenu pour la courbe s'appuie sur le tarif public constaté sur l'axe Paris-Abidjan, où l'aller-retour se situe couramment entre 600 et 900 € : au-delà d'environ 450 € payés par le voyageur, l'offre perd progressivement son attrait, et n'a plus de sens au-delà de 750 €.
       </div>
     </div>
 
@@ -434,7 +465,7 @@ tbody tr:last-child td{border-bottom:none}
 
 <script>
 (function(){
-  var DEFAULTS = {bloc:380, kgsiege:92, fret:3, csiege:80, csoute:1, sieges:10, rot:12};
+  var DEFAULTS = {bloc:380, sieges:10, valisesP:3, siegesAbj:10, valisekg:64, fret:1, rot:12};
   var ids = Object.keys(DEFAULTS);
   var el = function(id){return document.getElementById(id)};
 
@@ -460,35 +491,59 @@ tbody tr:last-child td{border-bottom:none}
     return (SEUIL_NUL - prix) / (SEUIL_NUL - SEUIL_PLEIN);
   }
 
-  function rotation(tarifBloc, v){
-    var t   = taux(tarifBloc);
-    var sv  = v.sieges * t;
-    var kg  = sv * v.kgsiege;
-    var rec = sv * tarifBloc + kg * v.fret;
-    var net = rec - sv * v.csiege - kg * v.csoute;
-    return {taux:t, sieges:sv, kg:kg, recette:rec, net:net};
+  function rotationFor(tarifBloc, v, valisesP){
+    var t = taux(tarifBloc);
+    // sens Paris → Abidjan : sièges + fret en soute (valises de 32 kg)
+    var svP = v.sieges * t;
+    var kgP = svP * valisesP * 32;
+    var recPSieges = svP * tarifBloc;
+    var recPFret   = kgP * v.fret;
+    // sens Abidjan → Paris : sièges + 2 valises de 32 kg par siège, dont une remise au voyageur
+    var svA = v.siegesAbj * t;
+    var kgA = svA * v.valisekg;
+    var recASieges = svA * tarifBloc;
+    var recAValise = kgA * v.fret;
+    return {
+      taux:t,
+      sieges: svP + svA, kg: kgP + kgA,
+      recette: recPSieges + recPFret + recASieges + recAValise,
+      recParis: recPSieges + recPFret, recAbj: recASieges + recAValise,
+      recPSieges:recPSieges, recPFret:recPFret, recASieges:recASieges, recAValise:recAValise,
+      svP:svP, kgP:kgP, svA:svA, kgA:kgA
+    };
   }
+  function rotation(tarifBloc, v){ return rotationFor(tarifBloc, v, v.valisesP); }
 
   function compute(){
     var v = {};
     ids.forEach(function(id){ v[id] = +el(id).value; });
 
-    el('v-bloc').textContent    = eur(v.bloc);
-    el('v-kgsiege').textContent = v.kgsiege+' kg';
-    el('v-fret').textContent    = dec(v.fret)+' €/kg';
-    el('v-csiege').textContent  = eur(v.csiege);
-    el('v-csoute').textContent  = dec2(v.csoute)+' €/kg';
-    el('v-sieges').textContent  = v.sieges;
-    el('v-rot').textContent     = v.rot;
+    el('v-bloc').textContent     = eur(v.bloc);
+    el('v-sieges').textContent   = v.sieges;
+    el('v-valisesP').textContent = v.valisesP;
+    el('v-siegesAbj').textContent= v.siegesAbj;
+    el('v-valisekg').textContent = v.valisekg+' kg';
+    el('v-fret').textContent     = dec(v.fret)+' €/kg';
+    el('v-rot').textContent      = v.rot;
 
     var r = rotation(v.bloc, v);
+
+    // les deux scénarios de capacité (3 vs 2 valises)
+    var r3 = rotationFor(v.bloc, v, 3);
+    var r2 = rotationFor(v.bloc, v, 2);
+    el('sc3').textContent   = eur(r3.recette);
+    el('sc3-d').textContent = 'par week-end · '+num(r3.kgP)+' kg de colis sens Paris';
+    el('sc2').textContent   = eur(r2.recette);
+    el('sc2-d').textContent = 'par week-end · '+num(r2.kgP)+' kg de colis sens Paris';
+    el('sc-note').innerHTML = 'L\'écart entre les deux scénarios est de <b>'+eur(r3.recette - r2.recette)+' par rotation</b>. '
+      + 'Chaque valise supplémentaire accordée, c\'est de la capacité en plus dans votre soute, sur un vol qui part de toute façon.';
 
     // conséquence live du tarif
     var prixFinal = v.bloc + MARGE_COMMERCIALISATION;
     el('c-prix').textContent   = eur(prixFinal);
     el('c-taux').textContent   = Math.round(r.taux*100)+' %';
-    el('c-sieges').textContent = num(r.sieges)+' sur '+v.sieges;
-    el('c-kg').textContent     = num(r.kg)+' kg';
+    el('c-sieges').textContent = num(r.svP)+' sur '+v.sieges;
+    el('c-kg').textContent     = num(r.kgP)+' kg';
     var degrade = r.taux < 1;
     el('conseq').className = 'conseq' + (degrade ? ' alert' : '');
     el('c-taux-line').className   = 'cl' + (degrade ? ' bad' : '');
@@ -497,8 +552,8 @@ tbody tr:last-child td{border-bottom:none}
     // courbe tarifaire
     var points = [280, 380, 480, 580, 680];
     var results = points.map(function(p){ return {tarif:p, r:rotation(p, v)}; });
-    var maxNet = Math.max.apply(null, results.map(function(x){return x.r.net}));
-    var best = results.reduce(function(a,b){ return b.r.net > a.r.net ? b : a; });
+    var maxNet = Math.max.apply(null, results.map(function(x){return x.r.recette}));
+    var best = results.reduce(function(a,b){ return b.r.recette > a.r.recette ? b : a; });
     var curve = el('curve');
     curve.innerHTML = '';
     results.forEach(function(x){
@@ -506,36 +561,37 @@ tbody tr:last-child td{border-bottom:none}
       var isBest = (x.tarif === best.tarif);
       var isCur  = Math.abs(x.tarif - v.bloc) < 50;
       d.className = 'cb' + (isBest ? ' best' : '') + (isCur ? ' cur' : '');
-      var h = maxNet > 0 ? Math.max(3, x.r.net / maxNet * 100) : 3;
-      d.innerHTML = '<div class="cv">'+eur(x.r.net)+'</div>'
+      var h = maxNet > 0 ? Math.max(3, x.r.recette / maxNet * 100) : 3;
+      d.innerHTML = '<div class="cv">'+eur(x.r.recette)+'</div>'
                   + '<div class="cbar" style="height:'+h+'%"></div>'
                   + '<div class="ct">'+eur(x.tarif)+'</div>';
       curve.appendChild(d);
     });
     el('curve-note').innerHTML = '<b>Votre recette est maximale à '+eur(best.tarif)+' le siège.</b> '
-      + 'Au-delà, le billet perd son avantage pour le convoyeur, les sièges restent invendus, et chaque siège vide emporte aussi ses '
-      + v.kgsiege + ' kg de fret. C\'est le volume qui fait la recette de ce programme, pas le prix unitaire.';
+      + 'Au-delà, l\'offre perd son attrait pour le voyageur et les places ne se vendent plus. '
+      + 'C\'est le volume qui fait la recette de ce programme, pas le prix unitaire.';
 
-    // compte de la rotation, en trois chiffres
-    var coutTotal = r.sieges * v.csiege + r.kg * v.csoute;
-    el('hero').className = 'hero-res' + (r.net < 0 ? ' neg' : '');
-    el('marge-rot').textContent = (r.net>=0?'+':'')+eur(r.net);
-    el('marge-pct').textContent = r.net > 0
-      ? 'sur des sièges et une soute qui, sans le programme, rapportent zéro'
-      : 'à ce tarif, le programme ne se remplit plus';
+    // compte de la rotation, les deux sens réunis
+    el('hero').className = 'hero-res';
+    el('marge-rot').textContent = eur(r.recette);
+    el('marge-pct').textContent = 'de recette apportée sur la rotation, les deux sens réunis';
 
-    el('enc').textContent    = eur(r.recette);
-    el('enc-d').textContent  = eur(r.sieges * v.bloc)+' de sièges, '+eur(r.kg * v.fret)+' de fret';
-    el('cout').textContent   = eur(coutTotal);
-    el('cout-d').textContent = num(r.sieges)+' sièges et '+num(r.kg)+' kg embarqués';
+    el('enc').textContent    = eur(r.recParis);
+    el('enc-d').textContent  = eur(r.recPSieges)+' sièges + '+eur(r.recPFret)+' bonus';
+    el('cout').textContent   = eur(r.recAbj);
+    el('cout-d').textContent = eur(r.recASieges)+' sièges + '+eur(r.recAValise)+' bonus';
 
     // pilote
     el('t-rot').textContent   = v.rot+' rotation'+(v.rot>1?'s':'');
     el('t-pax').textContent   = num(r.sieges * v.rot);
     el('t-t').textContent     = dec(r.kg * v.rot / 1000)+' t';
-    el('t-marge').textContent = eur(r.net * v.rot);
+    el('t-marge').textContent = eur(r.recette * v.rot);
 
     ids.forEach(function(id){fillTrack(el(id))});
+
+    if(window.parent !== window){
+      try{ window.parent.postMessage({simHeight: document.documentElement.scrollHeight}, '*'); }catch(e){}
+    }
   }
 
   ids.forEach(function(id){ el(id).addEventListener('input',compute); });

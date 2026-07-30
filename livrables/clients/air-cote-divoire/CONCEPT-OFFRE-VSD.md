@@ -16,13 +16,23 @@ C'est tout. Il n'y a rien d'autre à comprendre pour l'acheter.
 
 **La marque, arrêtée le 23/07 :** l'offre s'appelle **VSD by Attractor**. Elle est portée par Mr Attractor avec la compagnie, pas par J'Envoie Express, qui reste l'opérateur du fret en coulisse. Charte aux couleurs du drapeau ivoirien (orange, blanc, vert), les mêmes que celles de la compagnie.
 
+> ## Rectification du 30/07/2026 — l'offre voyageur change, elle prime sur ce document
+>
+> **Le voyageur cède toute sa soute au départ de Paris. En échange il obtient le tarif réduit ET une valise de 32 kg offerte au retour d'Abidjan.**
+>
+> La valise n'est plus une option à 99 €, c'est **le bonus de l'offre**, inclus. Elle ne se vend plus, elle se donne, et c'est elle qui rend le renoncement à la soute acceptable.
+>
+> Deux autres corrections : le recrutement est **organique et porté à deux** avec J'Envoie Express (plus de budget de campagne), et le lancement se fait **par paliers de 4, 7 puis 10 voyageurs** sur trois rotations.
+>
+> Toutes les mentions de « valise à 99 € », de « 23 kg » et de « 10 places » plus bas dans ce document sont **périmées**. Elles sont conservées pour l'historique du raisonnement, pas pour l'exécution.
+
 **Ce que le voyageur achète :**
 
 | Ce qui est vendu | Prix | Ce que ça comprend |
 |---|---|---|
 | **Le voyage** | **à partir de 430 €** | Billet aller-retour, 10 kg en cabine, accueil à l'aéroport |
-| Option | **+ 99 €** | Une seule valise de 23 kg en soute, contre 150 € au tarif public |
-| Avantage | **code de réduction** | Sur les nuits chez nos hôtels partenaires. Le voyageur réserve et paie l'hôtel lui-même. |
+| **Inclus, le bonus** | **offert** | **Une valise de 32 kg au retour d'Abidjan**, alors qu'il voyage sans soute à l'aller |
+| Avantage | **code de réduction** | Sur les nuits chez nos hôtels partenaires. Le voyageur réserve et paie l'hôtel lui-même. *(masqué tant qu'aucun établissement n'est signé)* |
 
 **La construction du 430, à garder pour nous.** 380 € est le tarif du siège que nous facture la compagnie, 50 € est notre marge. Le prix public part donc de 430 € et jamais en dessous : descendre sous ce seuil, c'est vendre le voyage à perte avant même d'avoir compté le fret.
 
@@ -66,7 +76,7 @@ Quatre segments, dans l'ordre de facilité de conversion.
 | **Petits commerçants et acheteurs** | Aller voir un fournisseur, un chantier, un local | Deux journées ouvrées pleines sur place |
 | **Retraités et bi-résidents** | Ils y vont déjà plusieurs fois par an | Le prix leur fait multiplier les allers-retours |
 
-**Le chiffre qui rend l'objectif crédible :** il faut convertir **10 personnes par semaine**, soit environ 500 par an. Sur une diaspora ivoirienne en France qui se compte en centaines de milliers, et sur une ligne qui existe déjà, c'est un taux de conversion minuscule. On ne cherche pas un marché de masse, on cherche dix personnes le vendredi.
+**Le chiffre qui rend l'objectif crédible, revu le 30/07 :** on ne cherche pas dix personnes tout de suite. On en cherche **4 pour la première rotation, 7 pour la deuxième, 10 à la troisième**. Quatre personnes, sur une diaspora ivoirienne en France qui se compte en centaines de milliers, ne se trouvent pas avec une campagne : elles se trouvent dans un carnet d'adresses. C'est précisément pourquoi le recrutement est organique et porté à deux avec J'Envoie Express.
 
 ---
 
@@ -74,18 +84,18 @@ Quatre segments, dans l'ordre de facilité de conversion.
 
 C'est le cœur du contrat moral de l'offre. Il doit tenir en un écran.
 
-**Ce qu'il reçoit**
+**Ce qu'il reçoit** *(mis à jour le 30/07)*
 - Un aller-retour Paris-Abidjan sur vol direct, **à partir de 430 €**
 - **10 kg de bagage en cabine**, inclus
+- **Une valise de 32 kg offerte au retour d'Abidjan**, sans supplément
 - Un **code de réduction** chez nos hôtels partenaires, s'il en a besoin
 - Deux nuits pleines sur place, vendredi et samedi
-- L'option **une seule valise de 23 kg en soute pour 99 €**, contre 150 € au tarif public
 - Ses miles sMiles, sur un billet payant, comme n'importe quel passager
 - Un accompagnement à l'aéroport le jour du départ (on est là, il n'est pas seul)
 
-**Ce qu'il accepte**
+**Ce qu'il accepte** *(mis à jour le 30/07)*
 - Des dates fixes : départ le vendredi, retour le dimanche, pas de modification
-- De renoncer à sa franchise soute au-delà des 23 kg optionnels
+- **De partir de Paris sans aucune soute personnelle**, cabine uniquement
 - Un canal d'achat fermé, sur invitation ou inscription, sans vente publique
 - De signer une attestation : il ne transporte aucun bien pour le compte d'un tiers
 
@@ -120,7 +130,13 @@ Trois règles pour que cette comparaison tienne, y compris devant quelqu'un qui 
 2. **Comparer ce qui est comparable** : un aller-retour direct sur la même ligne, pas un vol avec escale à 500 €. Notre argument est le prix, il ne doit pas se payer d'une malhonnêteté sur le produit comparé.
 3. **La valise est le meilleur argument de l'offre après le billet.** 99 € contre 150 €, sur un bagage que les compagnies vendent cher et souvent refusent au dernier moment, parle immédiatement à la diaspora qui ne voyage jamais les mains vides.
 
-### La valise n'est pas un bonus, c'est un arbitrage
+### ~~La valise n'est pas un bonus, c'est un arbitrage~~ — SECTION PÉRIMÉE le 30/07
+
+> **La décision est inverse depuis le 30/07 : la valise EST un bonus, offert, et c'est délibéré.**
+>
+> Le raisonnement ci-dessous reste juste sur un point, et il faut le garder en tête : **la valise consomme de la capacité qu'on aurait pu vendre**. Ce qui change, c'est l'arbitrage. On accepte de perdre 118 € de vente et 32 € de rétrocession sur le retour, soit 150 € par voyageur, parce que sans ce bonus le voyageur n'accepte pas de partir sans soute, et sans voyageur il n'y a aucune capacité du tout.
+>
+> Chiffrage à jour dans `MODELE-OPERATIONNEL.md`. Le texte qui suit décrit l'ancienne option payante à 99 €, abandonnée.
 
 > Correction d'une erreur d'analyse du 23/07. La valise avait été présentée comme de la marge quasi pure à pousser activement. C'est faux tant qu'on ne regarde pas ce qu'elle coûte en capacité.
 
@@ -137,11 +153,11 @@ Ces 46 kg valent **69 €** écoulés en gros (marge 1,50 €/kg), **253 €** �
 
 **La règle d'exploitation qui en découle :** la valise est une **option à quota, sous réserve de disponibilité**, ouverte selon le remplissage du fret de la semaine et confirmée à la clôture, dix jours avant le départ. On la pousse quand la soute n'est pas vendue, on la ferme quand la demande directe est là. C'est exactement ce que font les compagnies avec l'excédent bagage, et ça ne surprend personne.
 
-### Le voyageur est un produit d'appel, et il faut l'assumer
+### Le voyageur n'est plus un produit d'appel *(révisé le 30/07)*
 
-50 € de marge par siège, contre environ 40 € d'acquisition par voyageur (400 € de campagne pour dix places), laissent **10 € par siège**. Le voyageur ne se rentabilise pas sur son billet.
+L'ancien calcul posait 50 € de marge siège contre 40 € d'acquisition payante, soit 10 € nets. **Le recrutement étant devenu organique et porté à deux avec J'Envoie Express, le coût d'acquisition sort du compte** : les 50 € de frais de réservation sont nets.
 
-**Il se rentabilise sur les 92 à 138 kg de soute qu'il ouvre.** C'est la seule lecture juste du modèle, et elle a deux conséquences directes : ne jamais brader le prix du billet en croyant y gagner du volume, et ne jamais faire décoller un siège vendu sans avoir vendu les kilos qui vont avec.
+**Mais l'essentiel reste vrai : il se rentabilise sur la capacité qu'il ouvre**, aujourd'hui **322 € par voyageur** (2 × 32 kg vendus à l'aller, 1 × 32 kg vendu au retour, moins la valise offerte). Deux conséquences inchangées : ne jamais brader le prix du billet en croyant y gagner du volume, et ne jamais faire décoller un siège vendu sans avoir vendu les kilos qui vont avec.
 
 **Le convoyeur n'est jamais payé.** C'est une décision de conception, pas un oubli.
 
@@ -202,10 +218,13 @@ Le sens du flux d'argent décide de qui possède le client. Ce n'est pas un dét
 
 | Ce qui est vendu | Par qui | Encaissé par | Montant |
 |---|---|---|---|
-| Le siège aller-retour | La compagnie | Son lien de paiement | 380 € |
-| La valise de 23 kg, en option | Nous (levée d'une restriction de notre offre) | XPaye | 99 € |
-| Le service d'organisation VSD | Nous | XPaye | 50 € |
-| **Total payé par le voyageur** | | | **430 €**, ou 529 € avec la valise |
+| Le siège aller-retour | La compagnie | Son propre canal de paiement | 380 € |
+| Le service d'organisation VSD (**frais de réservation**) | Nous | XPaye | 50 € |
+| **Total payé par le voyageur** | | | **430 €** |
+
+> **Deux corrections importantes sur ce tableau.**
+> **(1)** La ligne « valise de 23 kg à 99 € » a disparu le 30/07 : la valise est désormais **offerte au retour**, elle n'est plus vendue.
+> **(2)** Le montage retenu depuis le 28/07 est **deux paiements séparés**, pas un lien unique fractionné : le billet est réglé à la compagnie sur son canal, les frais de réservation nous sont réglés à part. La suite de cette section décrit le paiement fractionné XPaye, qui reste séduisant mais **fait de nous l'encaisseur du transport** et nous ferait sortir du statut de mandataire. À ne pas mettre en œuvre sans avis juridique écrit.
 
 Le prix affiché ne bouge pas. Ce qui change, c'est qu'il se règle en deux fois, à deux destinataires différents.
 
@@ -348,8 +367,12 @@ Un client qui part une fois nous coûte cher en acquisition. Un client qui part 
 - **L'hôtel partenaire à Abidjan.** C'est la condition de la formule à 500 €, et elle est tenue par un tiers. Objectif de négociation : la chambre nettement sous 50 € la nuit, sur les deux nuits du vendredi et du samedi, avec un contingent bloqué chaque semaine. Tant que ce n'est pas signé, la formule reste masquée sur le site.
 - Le budget d'acquisition par rotation, aujourd'hui posé à 400 €.
 
-**La règle de rareté, décidée le 23/07 (interne, ne figure nulle part sur le site)**
-On affiche **7 places par départ**, on en embarque **10**, choisis dans la liste d'attente. L'affichage crée la tension, la liste d'attente nous laisse le choix des dossiers, et le voyageur n'est jamais lésé puisqu'on prend plus de monde que le nombre annoncé. La vente se fait **uniquement sur liste d'attente et à l'avance**, les inscriptions closes 10 jours avant le départ.
+**La règle de rareté, révisée le 30/07 (interne, ne figure nulle part sur le site)**
+Le principe reste : afficher moins de places qu'on en embarque, vendre **uniquement sur liste d'attente et à l'avance**, clore les inscriptions 10 jours avant le départ.
+
+Mais **il est suspendu sur les deux premières rotations**. Aux paliers de 4 et 7 voyageurs, on a besoin de chaque payeur : jouer la rareté sur 4 places nous ferait refuser du monde qu'on n'a pas les moyens de refuser. On affiche le palier, on embarque le palier, et la liste d'attente sert à choisir les dossiers, pas à créer la tension.
+
+**La règle reprend au palier de 10** : on affiche 7, on embarque 10.
 
 **Chez Air Côte d'Ivoire, dans l'accord**
 - Le tarif du bloc siège, et surtout **le tarif du fret accompagné**. La cible est 1 à 1,50 €/kg. Chaque euro par kilo arraché vaut environ 760 € par rotation, soit 30 000 € sur une année.
