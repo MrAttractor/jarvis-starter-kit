@@ -1,0 +1,999 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All Eyes on yoo — votre boutique de montures en ligne</title>
+<meta name="description" content="Démonstration de l'application All Eyes on yoo : la boutique de montures, l'espace de pilotage et la tournée du livreur. Réalisée par l'agence Mr Attractor.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#1B2C5C">
+<style>
+:root{
+  --navy:#1B2C5C;
+  --navy-2:#2A4383;
+  --yellow:#FFC907;
+  --sky:#2AABE4;
+  --ink:#141A2E;
+  --muted:#68748C;
+  --line:#E6EBF3;
+  --bg:#F4F7FB;
+  --card:#FFFFFF;
+  --ok:#12855F;
+  --warn:#C4761A;
+  --r:16px;
+  --font:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{max-width:100%;overflow-x:hidden}
+body{font-family:var(--font);color:var(--ink);background:var(--navy);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+button{font-family:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- ICONES SVG ---------- */
+.ic{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ic-lg{width:26px;height:26px}
+
+/* ---------- SPLASH VENDEUR ---------- */
+#splash{min-height:100vh;background:
+   radial-gradient(1100px 520px at 80% -10%,rgba(42,171,228,.35),transparent 60%),
+   radial-gradient(760px 420px at 0% 100%,rgba(255,201,7,.18),transparent 60%),
+   linear-gradient(165deg,#16234A,#1B2C5C 55%,#122043);
+   color:#fff;padding:32px 20px 48px;display:flex;flex-direction:column;align-items:center}
+.agency{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#A9BEE0;border:1px solid rgba(255,255,255,.18);padding:8px 14px;border-radius:999px;margin-bottom:32px}
+.agency b{color:var(--yellow);font-weight:700;letter-spacing:.14em}
+.splash-in{width:100%;max-width:960px;text-align:center}
+.mark{background:#fff;border-radius:20px;padding:16px 20px;max-width:340px;margin:0 auto 32px;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.mark img{width:100%;height:auto}
+.shot{max-width:620px;margin:0 auto 32px;border-radius:20px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.45)}
+.shot img{width:100%;height:auto}
+.shot figcaption{background:rgba(255,255,255,.07);border-top:1px solid rgba(255,255,255,.12);padding:12px 16px;font-size:12.5px;color:#B6C6DF;line-height:1.5}
+#splash h1{font-size:clamp(26px,6.4vw,44px);line-height:1.14;letter-spacing:-.01em;margin-bottom:16px}
+#splash h1 em{font-style:normal;color:var(--yellow)}
+#splash .lede{color:#C4D3EA;font-size:clamp(15px,3.6vw,18px);line-height:1.6;max-width:620px;margin:0 auto 32px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:40px}
+.pill{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);color:#DCE7F7;font-size:13px;padding:9px 14px;border-radius:999px}
+.pill .ic{width:16px;height:16px;color:var(--sky)}
+.cards3{display:grid;gap:16px;grid-template-columns:1fr;text-align:left;margin-bottom:40px}
+.c3{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:20px}
+.c3 .num{width:34px;height:34px;border-radius:10px;background:var(--yellow);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;margin-bottom:14px}
+.c3 h3{font-size:16px;margin-bottom:8px}
+.c3 p{font-size:14px;line-height:1.55;color:#B6C6DF}
+.cta{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:14px 26px;border-radius:14px;font-size:16px;font-weight:700;text-decoration:none;border:none;cursor:pointer}
+.cta-main{background:var(--yellow);color:var(--navy);box-shadow:0 14px 34px rgba(255,201,7,.28)}
+.cta-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.32)}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.hint{margin-top:20px;font-size:13px;color:#8FA4C6}
+
+/* ---------- SCENE APP ---------- */
+#app{display:none;min-height:100vh;padding:0}
+#app.on{display:block}
+.stage{display:flex;gap:56px;align-items:center;justify-content:center;padding:40px 24px 56px;min-height:100vh}
+.pitch{display:none;max-width:320px;color:#D7E3F5}
+.pitch .kick{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);font-weight:700;margin-bottom:12px}
+.pitch h2{font-size:26px;line-height:1.2;color:#fff;margin-bottom:16px}
+.pitch p{font-size:14px;line-height:1.65;color:#A9BCD9;margin-bottom:16px}
+.pitch .back{display:inline-flex;align-items:center;gap:8px;min-height:44px;color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:10px 16px;font-size:14px;cursor:pointer}
+
+.phone{width:100%;max-width:380px}
+.frame{background:#fff;border-radius:0;overflow:hidden;display:flex;flex-direction:column;height:100vh;max-height:100vh}
+.screen{display:flex;flex-direction:column;height:100%;background:var(--bg);overflow:hidden}
+
+/* selecteur de role */
+.roles{display:flex;gap:6px;padding:10px;background:var(--navy);flex:none}
+.role{flex:1;min-height:44px;border:none;border-radius:10px;background:rgba(255,255,255,.1);color:#C3D4EC;font-size:12px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 4px;line-height:1.2}
+.role .ic{width:17px;height:17px}
+.role[aria-selected="true"]{background:var(--yellow);color:var(--navy)}
+
+/* topbar */
+.topbar{background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px;flex:none}
+.tb-logo{width:40px;height:40px;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:center;flex:none;overflow:hidden;padding:3px}
+.tb-logo img{width:100%;height:auto}
+.tb-txt{min-width:0;flex:1}
+.tb-txt h2{font-size:15px;font-weight:700;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-txt small{display:block;font-size:11px;color:#AFC4E4;font-weight:400}
+.tb-act{width:40px;height:40px;border-radius:11px;border:none;background:rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;padding-bottom:24px}
+.view{display:none}
+.view.on{display:block;animation:fade .22s ease}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* tabbar */
+.tabbar{display:flex;background:#fff;border-top:1px solid var(--line);flex:none;padding-bottom:env(safe-area-inset-bottom)}
+.tab{flex:1;min-height:56px;border:none;background:none;color:var(--muted);font-size:10.5px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 2px;line-height:1.15}
+.tab[aria-selected="true"]{color:var(--navy)}
+.tab[aria-selected="true"] .ic{color:var(--sky)}
+
+/* ---------- BRIQUES UI ---------- */
+.hero{background:linear-gradient(135deg,var(--navy),var(--navy-2));border-radius:var(--r);padding:20px;color:#fff;margin-bottom:16px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:rgba(42,171,228,.28)}
+.hero h3{font-size:18px;line-height:1.25;margin-bottom:8px;position:relative}
+.hero p{font-size:13.5px;line-height:1.55;color:#C3D4EC;position:relative}
+.hero .yl{color:var(--yellow)}
+
+.sec{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:24px 0 12px}
+.sec:first-child{margin-top:0}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.card h3{font-size:15px;margin-bottom:6px}
+.card p{font-size:13.5px;color:var(--muted);line-height:1.5}
+
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px;-webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{height:0}
+.chip{flex:none;min-height:44px;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+
+/* grille montures */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.prod{background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;text-align:left;padding:0;display:flex;flex-direction:column}
+.prod .ph{aspect-ratio:4/3;background:#EDF1F7;overflow:hidden;position:relative}
+.prod .ph img{width:100%;height:100%;object-fit:cover}
+.prod .ph svg{width:100%;height:100%;padding:14px}
+.prod .bd{padding:10px 12px 12px}
+.prod .nm{font-size:13.5px;font-weight:700;line-height:1.25;margin-bottom:3px}
+.prod .sub{font-size:11.5px;color:var(--muted);margin-bottom:7px;line-height:1.3}
+.prod .pr{font-size:14px;font-weight:800;color:var(--navy)}
+.prod .pr span{font-size:10.5px;font-weight:600;color:var(--muted);display:block}
+.badge{position:absolute;top:8px;left:8px;background:var(--yellow);color:var(--navy);font-size:10px;font-weight:800;padding:4px 8px;border-radius:6px;letter-spacing:.03em}
+.badge.sky{background:var(--sky);color:#fff}
+
+/* fiche produit */
+.fiche-ph{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:#fff;margin-bottom:16px}
+.fiche-ph img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.priceline{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.priceline:last-of-type{border-bottom:none}
+.priceline b{font-weight:700;white-space:nowrap}
+.total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;background:#F2F6FC;border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+.total span{font-size:13px;color:var(--muted);font-weight:600}
+.total b{font-size:19px;color:var(--navy)}
+.total b small{display:block;font-size:11px;color:var(--muted);font-weight:600;text-align:right}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:52px;border:none;border-radius:13px;background:var(--navy);color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px;text-decoration:none;padding:12px 16px;line-height:1.25;text-align:center}
+.btn-y{background:var(--yellow);color:var(--navy)}
+.btn-o{background:#fff;color:var(--navy);border:1.5px solid var(--navy)}
+.btn-s{min-height:44px;font-size:13.5px;border-radius:11px}
+
+.note{display:flex;gap:10px;background:#FFF9E6;border:1px solid #F5E3A6;border-radius:12px;padding:13px;margin:12px 0}
+.note .ic{color:var(--warn);margin-top:1px}
+.note p{font-size:12.5px;line-height:1.5;color:#6B5518}
+.note.sky{background:#EAF6FD;border-color:#BFE4F7}
+.note.sky .ic{color:var(--sky)}
+.note.sky p{color:#1B4A63}
+
+/* chat */
+.chat{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.msg{max-width:86%;padding:12px 14px;border-radius:16px;font-size:13.5px;line-height:1.5}
+.msg.them{background:#fff;border:1px solid var(--line);border-bottom-left-radius:5px;align-self:flex-start}
+.msg.me{background:var(--navy);color:#fff;border-bottom-right-radius:5px;align-self:flex-end}
+.msg .who{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--sky);margin-bottom:6px}
+.msg .who .ic{width:14px;height:14px}
+.quick{display:flex;flex-wrap:wrap;gap:8px}
+.quick button{min-height:44px;padding:9px 13px;border-radius:999px;border:1px solid var(--sky);background:#fff;color:var(--navy);font-size:12.5px;font-weight:600;cursor:pointer;text-align:left}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+.kpi .lb{font-size:11px;color:var(--muted);font-weight:600;line-height:1.3;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.kpi .lb .ic{width:14px;height:14px;color:var(--sky)}
+.kpi .vl{font-size:20px;font-weight:800;color:var(--navy);line-height:1.1}
+.kpi .vl small{display:block;font-size:11px;color:var(--muted);font-weight:600;margin-top:3px}
+.kpi.warn{background:#FFF9E6;border-color:#F5E3A6}
+.kpi.warn .vl{color:var(--warn)}
+.kpi.warn .lb .ic{color:var(--warn)}
+
+/* lignes de liste */
+.item{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px}
+.item .av{width:42px;height:42px;border-radius:11px;background:#EDF1F7;flex:none;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--navy);font-weight:800;font-size:14px}
+.item .av img{width:100%;height:100%;object-fit:cover}
+.item .bd{flex:1;min-width:0}
+.item .t1{font-size:14px;font-weight:700;line-height:1.3;margin-bottom:3px}
+.item .t2{font-size:12.5px;color:var(--muted);line-height:1.45}
+.item .t2 b{color:var(--ink);font-weight:700}
+.st{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:6px;letter-spacing:.03em;margin-top:7px}
+.st .ic{width:12px;height:12px}
+.st-new{background:#FFF3D1;color:#8A6608}
+.st-fab{background:#E7F1FD;color:#1B4C8A}
+.st-ok{background:#E3F5EC;color:var(--ok)}
+.st-way{background:#EAF6FD;color:#17607F}
+
+.actions{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap}
+.actions .btn{margin-top:0;flex:1;min-width:calc(50% - 4px)}
+
+/* stock */
+.stockrow{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.stockrow:last-child{border-bottom:none}
+.stockrow .nm{flex:1;min-width:0;font-size:13.5px;font-weight:600}
+.stockrow .nm small{display:block;font-size:11.5px;color:var(--muted);font-weight:400;margin-top:2px}
+.qt{font-size:13px;font-weight:800;padding:6px 11px;border-radius:8px;background:#E3F5EC;color:var(--ok);flex:none}
+.qt.low{background:#FFE9E4;color:#B23A16}
+.bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--sky)}
+
+/* formulaire */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12.5px;font-weight:700;margin-bottom:7px;color:var(--ink)}
+.field input,.field select,.field textarea{width:100%;min-height:48px;border:1px solid var(--line);border-radius:12px;padding:13px 14px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink)}
+.field textarea{min-height:84px;resize:vertical}
+.field .help{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+.drop{border:1.5px dashed var(--sky);border-radius:14px;background:#F5FBFE;padding:22px 16px;text-align:center;color:var(--navy);cursor:pointer}
+.drop .ic{color:var(--sky);margin:0 auto 10px;width:28px;height:28px}
+.drop b{display:block;font-size:14px;margin-bottom:5px}
+.drop small{font-size:12px;color:var(--muted);line-height:1.45;display:block}
+
+/* timeline */
+.tl{position:relative;padding-left:30px}
+.tl:before{content:"";position:absolute;left:9px;top:6px;bottom:12px;width:2px;background:var(--line)}
+.tl li{list-style:none;position:relative;padding-bottom:22px}
+.tl li:last-child{padding-bottom:0}
+.tl li:before{content:"";position:absolute;left:-27px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--line)}
+.tl li.done:before{background:var(--ok);border-color:var(--ok)}
+.tl li.now:before{background:var(--yellow);border-color:var(--yellow);box-shadow:0 0 0 4px rgba(255,201,7,.25)}
+.tl .t1{font-size:14px;font-weight:700;margin-bottom:3px}
+.tl .t2{font-size:12.5px;color:var(--muted);line-height:1.45}
+
+/* creneaux */
+.slots{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.slot{min-height:52px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;text-align:center;line-height:1.3}
+.slot small{display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:2px}
+.slot.on{border-color:var(--navy);background:var(--navy);color:#fff}
+.slot.on small{color:#B9CBE8}
+
+/* paiement */
+.pays{display:grid;gap:9px}
+.pay{display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:13px;cursor:pointer;min-height:56px;text-align:left;width:100%}
+.pay .lg{width:38px;height:38px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;letter-spacing:.02em}
+.pay .bd{flex:1;min-width:0}
+.pay .t1{font-size:13.5px;font-weight:700}
+.pay .t2{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.4}
+.pay.on{border-color:var(--navy);box-shadow:0 0 0 2px rgba(27,44,92,.12)}
+
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.divider:before,.divider:after{content:"";flex:1;height:1px;background:var(--line)}
+
+.foot{text-align:center;padding:20px 16px 8px;color:var(--muted);font-size:11.5px;line-height:1.6}
+.foot a{color:var(--navy);font-weight:700}
+
+/* bandeau demo */
+.demobar{background:var(--yellow);color:var(--navy);font-size:11.5px;font-weight:700;text-align:center;padding:8px 14px;line-height:1.4;flex:none}
+
+/* ---------- DESKTOP : cadre telephone ---------- */
+@media(min-width:900px){
+  .pitch{display:block}
+  .phone{max-width:390px;flex:none}
+  .frame{border-radius:44px;padding:12px;background:#0B0F1A;box-shadow:0 40px 90px rgba(0,0,0,.5);height:820px;max-height:none}
+  .screen{border-radius:33px;overflow:hidden}
+  .cards3{grid-template-columns:repeat(3,1fr)}
+}
+@media(min-width:640px) and (max-width:899px){
+  .cards3{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SPRITE SVG ============ -->
+<svg class="sr" aria-hidden="true"><defs>
+<symbol id="i-glasses" viewBox="0 0 24 24"><circle cx="6.2" cy="14" r="3.6"/><circle cx="17.8" cy="14" r="3.6"/><path d="M9.8 13.6c.9-.7 2.3-.7 3.2 0"/><path d="M2.6 12.4 4.4 6.6a1.6 1.6 0 0 1 1.5-1.1h1"/><path d="M21.4 12.4 19.6 6.6a1.6 1.6 0 0 0-1.5-1.1h-1"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 0 1-12.4 7.5L3.5 21l1.5-4.4A8.5 8.5 0 1 1 20.5 12Z"/><path d="M8.5 11h7M8.5 14.5h4"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3.5v3M16 3.5v3"/><path d="M8 13.5h3v3H8z"/></symbol>
+<symbol id="i-box" viewBox="0 0 24 24"><path d="M20.5 8.2v7.6a1.6 1.6 0 0 1-.85 1.42l-6.9 3.6a1.6 1.6 0 0 1-1.5 0l-6.9-3.6a1.6 1.6 0 0 1-.85-1.42V8.2"/><path d="M3.9 7.1 12 3l8.1 4.1L12 11.3 3.9 7.1Z"/><path d="M12 11.3V21"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.3 12 4l8 6.3V19a1.6 1.6 0 0 1-1.6 1.6H5.6A1.6 1.6 0 0 1 4 19v-8.7Z"/><path d="M9.4 20.6v-6h5.2v6"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.6" cy="6.5" r="1.3"/><circle cx="4.6" cy="12" r="1.3"/><circle cx="4.6" cy="17.5" r="1.3"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3.2 3.5 7.6 12 12l8.5-4.4L12 3.2Z"/><path d="m3.5 12.4 8.5 4.4 8.5-4.4"/><path d="m3.5 16.9 8.5 4.4 8.5-4.4"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.5v13M5.5 12h13"/></symbol>
+<symbol id="i-truck" viewBox="0 0 24 24"><path d="M2.8 6.5h10.4v9.8H2.8z"/><path d="M13.2 10h3.6l2.9 3v3.3h-6.5"/><circle cx="6.4" cy="18.4" r="2.1"/><circle cx="16.9" cy="18.4" r="2.1"/><path d="M8.5 18.4h6.3"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24"><path d="M20.4 16.9v2.6a1.7 1.7 0 0 1-1.9 1.7 16.6 16.6 0 0 1-7.2-2.6 16.3 16.3 0 0 1-5-5 16.6 16.6 0 0 1-2.6-7.3 1.7 1.7 0 0 1 1.7-1.9h2.6a1.7 1.7 0 0 1 1.7 1.5c.1.8.3 1.7.6 2.5a1.7 1.7 0 0 1-.4 1.8l-1.1 1.1a13.4 13.4 0 0 0 5 5l1.1-1.1a1.7 1.7 0 0 1 1.8-.4c.8.3 1.6.5 2.5.6a1.7 1.7 0 0 1 1.5 1.7Z"/></symbol>
+<symbol id="i-wa" viewBox="0 0 24 24"><path d="M20.5 11.7a8.4 8.4 0 0 1-12.3 7.5L3.6 20.7l1.5-4.5A8.4 8.4 0 1 1 20.5 11.7Z"/><path d="M9.1 9.2c.2-.5.5-.5.8-.5h.5c.2 0 .4 0 .5.4l.7 1.7c.1.2 0 .4-.1.5l-.4.5c-.1.2-.2.3 0 .6a6 6 0 0 0 2.5 2.2c.3.1.4 0 .5-.1l.5-.5c.2-.2.3-.2.5-.1l1.6.8c.3.1.3.3.3.5a1.7 1.7 0 0 1-1.2 1.4 2 2 0 0 1-1 0 9.6 9.6 0 0 1-5.4-4.6 2.6 2.6 0 0 1-.3-2.4Z"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m4.8 12.6 4.6 4.6L19.2 7.4"/></symbol>
+<symbol id="i-checkc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="m8.4 12.2 2.5 2.5 4.7-4.9"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M14.5 6 8.5 12l6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24"><path d="M12 16.5V5.5"/><path d="m7.8 9.7 4.2-4.2 4.2 4.2"/><path d="M4.5 18.5h15"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M19 10.3c0 5-7 11-7 11s-7-6-7-11a7 7 0 0 1 14 0Z"/><circle cx="12" cy="10.2" r="2.6"/></symbol>
+<symbol id="i-store" viewBox="0 0 24 24"><path d="M4 9.6V19a1.6 1.6 0 0 0 1.6 1.6h12.8A1.6 1.6 0 0 0 20 19V9.6"/><path d="M3 9.6 5 4.4h14l2 5.2a2.6 2.6 0 0 1-4.5 1.7 2.6 2.6 0 0 1-4.5 0 2.6 2.6 0 0 1-4.5 0A2.6 2.6 0 0 1 3 9.6Z"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20.2h16"/><path d="M7 20.2v-6M12 20.2V7.4M17 20.2v-9"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><path d="M13.6 3.5H6.8a1.6 1.6 0 0 0-1.6 1.6v13.8a1.6 1.6 0 0 0 1.6 1.6h10.4a1.6 1.6 0 0 0 1.6-1.6V8.4Z"/><path d="M13.6 3.5v4.9h5.2"/><path d="M8.6 13h6.8M8.6 16.4h4.4"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 4.6 21 19.4H3L12 4.6Z"/><path d="M12 10v4"/><circle cx="12" cy="16.7" r=".9" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="M12 11v5.4"/><circle cx="12" cy="8.2" r=".9" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12S6 5.8 12 5.8 21.4 12 21.4 12 18 18.2 12 18.2 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3.1"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.4V12l3.2 2"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.7"/><path d="M5 20.4a7 7 0 0 1 14 0"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 10.6a6 6 0 1 0-12 0c0 4.4-2 5.7-2 5.7h16s-2-1.3-2-5.7Z"/><path d="M13.7 19.4a2 2 0 0 1-3.4 0"/></symbol>
+</defs></svg>
+
+<!-- ============ SPLASH VENDEUR ============ -->
+<section id="splash">
+  <div class="agency">Réalisé par <b>Mr Attractor</b></div>
+
+  <div class="splash-in">
+    <div class="mark"><img src="assets/logo.jpg" alt="Logo All Eyes on yoo, boutique de montures en ligne"></div>
+
+    <h1>Vos montures méritent<br>mieux qu'un <em>fil WhatsApp</em>.</h1>
+    <p class="lede">Aujourd'hui, chaque cliente vous écrit, envoie son ordonnance en photo, demande combien ça fait avec sa correction, veut essayer avant de payer, puis disparaît. Vous répétez la même conversation dix fois par jour. Voici à quoi ressemblerait votre boutique si elle le faisait pour vous.</p>
+
+    <figure class="shot">
+      <img src="assets/coffret.jpg" alt="Étui All Eyes on yoo gravé, chiffonnette et carte de remerciement, avec une monture en acétate écaille">
+      <figcaption>Votre coffret, votre étui gravé, votre carte. Le soin que vous mettez dans la livraison, la boutique le met dans le parcours d'achat.</figcaption>
+    </figure>
+
+    <div class="pills">
+      <span class="pill"><svg class="ic"><use href="#i-glasses"/></svg>Montures de vue</span>
+      <span class="pill"><svg class="ic"><use href="#i-doc"/></svg>Ordonnance rattachée</span>
+      <span class="pill"><svg class="ic"><use href="#i-cal"/></svg>Essayage sur créneau</span>
+      <span class="pill"><svg class="ic"><use href="#i-truck"/></svg>Tournée du livreur</span>
+    </div>
+
+    <div class="cards3">
+      <div class="c3">
+        <div class="num">1</div>
+        <h3>Ce que vit votre cliente</h3>
+        <p>Elle choisit sa monture, l'app calcule le prix avec sa correction, elle dépose son ordonnance et réserve son essayage. Sans vous écrire une seule fois.</p>
+      </div>
+      <div class="c3">
+        <div class="num">2</div>
+        <h3>Ce que vous pilotez</h3>
+        <p>Les commandes, les ordonnances reçues, le stock de chaque monture, le chiffre d'affaires du mois. Vous mettez une nouvelle monture en ligne toute seule, en deux minutes.</p>
+      </div>
+      <div class="c3">
+        <div class="num">3</div>
+        <h3>Ce que voit votre livreur</h3>
+        <p>Sa tournée du jour par commune, le contact de chaque cliente, le montant à encaisser, et un bouton pour confirmer la livraison. Vous n'envoyez plus d'adresses à la main.</p>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <button class="cta cta-main" id="open" type="button">
+        <svg class="ic ic-lg"><use href="#i-eye"/></svg>Ouvrir la démonstration
+      </button>
+      <a class="cta cta-ghost" href="closing">Voir l'offre et les tarifs</a>
+    </div>
+    <p class="hint">Démonstration cliquable, à ouvrir de préférence sur téléphone. Les 3 montures présentées sont les vôtres.</p>
+  </div>
+</section>
+
+<!-- ============ APP ============ -->
+<section id="app">
+<div class="stage">
+
+  <aside class="pitch">
+    <div class="kick">Démonstration</div>
+    <h2>Trois personnes,<br>une seule application.</h2>
+    <p>Changez de rôle avec les trois onglets en haut de l'écran. Vous verrez successivement ce que vit votre cliente, ce que vous pilotez depuis votre espace, et ce que reçoit votre livreur.</p>
+    <p>Tout ce qui est montré ici est réalisable. Rien n'a été mis en démonstration sans pouvoir être livré.</p>
+    <button class="back" type="button" id="back"><svg class="ic"><use href="#i-arrow"/></svg>Revenir à la présentation</button>
+  </aside>
+
+  <div class="phone">
+   <div class="frame">
+    <div class="screen">
+
+      <div class="demobar">Démonstration — les chiffres et les prénoms sont fictifs</div>
+
+      <!-- selecteur de role -->
+      <div class="roles" role="tablist" aria-label="Choisir le point de vue">
+        <button class="role" role="tab" aria-selected="true" data-role="cliente" type="button"><svg class="ic"><use href="#i-user"/></svg>Ma cliente</button>
+        <button class="role" role="tab" aria-selected="false" data-role="boutique" type="button"><svg class="ic"><use href="#i-store"/></svg>Ma boutique</button>
+        <button class="role" role="tab" aria-selected="false" data-role="livreur" type="button"><svg class="ic"><use href="#i-truck"/></svg>Mon livreur</button>
+      </div>
+
+      <div class="topbar">
+        <div class="tb-logo"><img src="assets/logo.jpg" alt=""></div>
+        <div class="tb-txt">
+          <h2 id="tbTitle">All Eyes on yoo</h2>
+          <small id="tbSub">Boutique de montures en ligne</small>
+        </div>
+        <button class="tb-act" type="button" aria-label="Notifications"><svg class="ic"><use href="#i-bell"/></svg></button>
+      </div>
+
+      <div class="content" id="content">
+
+      <!-- ==================== VUE CLIENTE ==================== -->
+      <section class="view on" id="c1" data-role="cliente">
+        <div class="hero">
+          <h3>Vos lunettes ne sont pas un outil.<br>C'est une <span class="yl">extension de votre personnalité</span>.</h3>
+          <p>Choisissez votre monture, on s'occupe de vos verres. Des montures tendance, à des prix justes.</p>
+        </div>
+
+        <div class="chips" role="group" aria-label="Filtrer les montures">
+          <button class="chip on" type="button">Toutes · 7</button>
+          <button class="chip" type="button">Femme</button>
+          <button class="chip" type="button">Homme</button>
+          <button class="chip" type="button">Visage rond</button>
+          <button class="chip" type="button">Visage carré</button>
+          <button class="chip" type="button">Moins de 35 000 F</button>
+        </div>
+
+        <div class="grid2">
+          <button class="prod" type="button" data-go="c2">
+            <div class="ph"><span class="badge">Coup de cœur</span><img src="assets/m-emeraude.jpg" alt="Monture aviateur en acétate vert translucide avec branches écaille"></div>
+            <div class="bd">
+              <div class="nm">Yoo Émeraude</div>
+              <div class="sub">Aviateur acétate · unisexe</div>
+              <div class="pr">35 000 F<span>monture seule</span></div>
+            </div>
+          </button>
+
+          <button class="prod" type="button" data-go="c2">
+            <div class="ph"><img src="assets/m-terracotta.jpg" alt="Monture octogonale en acétate écaille rosé"></div>
+            <div class="bd">
+              <div class="nm">Yoo Terracotta</div>
+              <div class="sub">Octogonale acétate · femme</div>
+              <div class="pr">30 000 F<span>monture seule</span></div>
+            </div>
+          </button>
+
+          <button class="prod" type="button" data-go="c2">
+            <div class="ph"><span class="badge sky">Nouveau</span><img src="assets/m-kaleido.jpg" alt="Monture cat-eye en acétate multicolore jaune, rose et vert"></div>
+            <div class="bd">
+              <div class="nm">Yoo Kaléido</div>
+              <div class="sub">Cat-eye acétate · femme</div>
+              <div class="pr">38 000 F<span>monture seule</span></div>
+            </div>
+          </button>
+
+          <button class="prod" type="button" data-go="c2">
+            <div class="ph"><img src="assets/m-graphite.jpg" alt="Monture carrée en acétate gris fumé translucide avec rivets dorés"></div>
+            <div class="bd">
+              <div class="nm">Yoo Graphite</div>
+              <div class="sub">Carrée acétate, rivets dorés · homme</div>
+              <div class="pr">40 000 F<span>monture seule</span></div>
+            </div>
+          </button>
+
+          <button class="prod" type="button" data-go="c2">
+            <div class="ph"><img src="assets/m-sahel.jpg" alt="Monture ronde en acétate écaille blond avec branches cristal"></div>
+            <div class="bd">
+              <div class="nm">Yoo Sahel</div>
+              <div class="sub">Ronde acétate, branches cristal · unisexe</div>
+              <div class="pr">32 000 F<span>monture seule</span></div>
+            </div>
+          </button>
+
+          <button class="prod" type="button" data-go="c2">
+            <div class="ph"><img src="assets/m-kaki.jpg" alt="Monture carrée oversize en acétate kaki mat"></div>
+            <div class="bd">
+              <div class="nm">Yoo Kaki</div>
+              <div class="sub">Carrée oversize acétate · homme</div>
+              <div class="pr">36 000 F<span>monture seule</span></div>
+            </div>
+          </button>
+
+          <button class="prod" type="button" data-go="c2">
+            <div class="ph"><span class="badge sky">Nouveau</span><img src="assets/m-cobalt.jpg" alt="Monture ovale en acétate multicolore bleu, rouge et blanc"></div>
+            <div class="bd">
+              <div class="nm">Yoo Cobalt</div>
+              <div class="sub">Ovale acétate · femme</div>
+              <div class="pr">38 000 F<span>monture seule</span></div>
+            </div>
+          </button>
+        </div>
+
+        <div class="note sky">
+          <svg class="ic"><use href="#i-info"/></svg>
+          <p><b>Le prix affiché est celui de la monture.</b> Vos verres s'ajoutent selon votre ordonnance, et le total s'affiche avant que vous ne payiez quoi que ce soit.</p>
+        </div>
+      </section>
+
+      <section class="view" id="c2" data-role="cliente">
+        <div class="fiche-ph"><img src="assets/m-emeraude.jpg" alt="Monture Yoo Émeraude, aviateur en acétate vert translucide"></div>
+        <h3 style="font-size:19px;margin-bottom:6px">Yoo Émeraude</h3>
+        <p style="font-size:13.5px;color:var(--muted);line-height:1.55;margin-bottom:16px">Aviateur en acétate vert translucide, branches écaille et cœur métal. Convient aux visages ronds et ovales.</p>
+
+        <div class="sec">Votre prix, tout compris</div>
+        <div class="card" style="padding:16px 16px 6px">
+          <div class="priceline"><span>Monture Yoo Émeraude</span><b>35 000 F</b></div>
+          <div class="priceline"><span>Verres unifocaux anti-reflet<br><small style="color:var(--muted);font-size:11.5px">d'après l'ordonnance déposée</small></span><b>18 000 F</b></div>
+          <div class="priceline"><span>Livraison Cocody</span><b>Offerte</b></div>
+        </div>
+        <div class="total"><span>Total à payer</span><b>53 000 F<small>≈ 81 €</small></b></div>
+
+        <button class="btn btn-y" type="button" data-go="c5"><svg class="ic"><use href="#i-check"/></svg>Je commande cette monture</button>
+        <button class="btn btn-o" type="button" data-go="c4"><svg class="ic"><use href="#i-cal"/></svg>Je veux l'essayer d'abord</button>
+
+        <div class="divider">Votre ordonnance</div>
+        <div class="drop">
+          <svg class="ic"><use href="#i-up"/></svg>
+          <b>Déposer une photo de votre ordonnance</b>
+          <small>Une photo prise au téléphone suffit. Elle reste rattachée à votre commande, elle ne se perd pas dans une conversation.</small>
+        </div>
+        <div class="note">
+          <svg class="ic"><use href="#i-warn"/></svg>
+          <p><b>Vous n'avez pas d'ordonnance ?</b> Réservez un essayage, on vous orientera vers un opticien pour la mesure de votre vue avant de lancer vos verres.</p>
+        </div>
+      </section>
+
+      <section class="view" id="c3" data-role="cliente">
+        <div class="chat">
+          <div class="msg them">
+            <div class="who"><svg class="ic"><use href="#i-glasses"/></svg>All Eyes on yoo</div>
+            Bonjour, je suis là pour vos montures. Dites-moi ce qui vous bloque, je réponds tout de suite.
+          </div>
+          <div class="msg me">Ça fait combien avec ma correction ?</div>
+          <div class="msg them">
+            La monture Yoo Émeraude est à 35 000 F. Avec des verres unifocaux anti-reflet, comptez 18 000 F de plus, soit <b>53 000 F au total</b>. Déposez votre ordonnance et je vous confirme le montant exact, sans surprise.
+          </div>
+          <div class="msg me">Vous faites les verres progressifs ?</div>
+          <div class="msg them">
+            Oui. Sur cette monture, les progressifs sont à 65 000 F au lieu de 18 000 F, ce qui met le total à <b>100 000 F</b>. Le délai de fabrication passe de 3 à 6 jours ouvrés.
+          </div>
+          <div class="msg me">Et si la monture ne me va pas au visage ?</div>
+          <div class="msg them">
+            C'est exactement pour ça que l'essayage existe. Vous réservez un créneau, vous essayez, et vous ne payez vos verres qu'après avoir validé la monture. Vous voulez que je vous propose des créneaux ?
+          </div>
+        </div>
+
+        <div class="sec">Ce que vos clientes demandent le plus</div>
+        <div class="quick">
+          <button type="button">Vous livrez à Yopougon ?</button>
+          <button type="button">Je peux payer par Wave ?</button>
+          <button type="button">C'est de la vraie acétate ?</button>
+          <button type="button">Combien de temps pour mes verres ?</button>
+        </div>
+
+        <div class="note sky">
+          <svg class="ic"><use href="#i-info"/></svg>
+          <p>Ces quatre questions, vous y répondez déjà dix fois par jour dans WhatsApp. Là, elles sont traitées sans vous, et vous n'intervenez que pour le conseil sur le style.</p>
+        </div>
+      </section>
+
+      <section class="view" id="c4" data-role="cliente">
+        <div class="hero">
+          <h3>Essayez avant de payer vos verres</h3>
+          <p>Vous validez la monture sur votre visage. Les verres ne sont lancés qu'après.</p>
+        </div>
+
+        <div class="sec">Où souhaitez-vous essayer ?</div>
+        <div class="slots" style="margin-bottom:16px">
+          <button class="slot on" type="button"><svg class="ic" style="margin:0 auto 4px;color:currentColor"><use href="#i-store"/></svg>À la boutique<small>Cocody</small></button>
+          <button class="slot" type="button"><svg class="ic" style="margin:0 auto 4px;color:currentColor"><use href="#i-pin"/></svg>Chez moi<small>+ 2 000 F</small></button>
+        </div>
+
+        <div class="sec">Choisissez votre créneau</div>
+        <div class="slots">
+          <button class="slot" type="button">Jeudi<small>10h — 12h</small></button>
+          <button class="slot on" type="button">Jeudi<small>15h — 17h</small></button>
+          <button class="slot" type="button">Vendredi<small>10h — 12h</small></button>
+          <button class="slot" type="button">Samedi<small>09h — 11h</small></button>
+        </div>
+
+        <div class="field" style="margin-top:20px">
+          <label for="cm">Votre commune</label>
+          <select id="cm">
+            <option>Cocody</option><option>Yopougon</option><option>Marcory</option>
+            <option>Plateau</option><option>Treichville</option><option>Abobo</option><option>Koumassi</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="wa">Votre numéro WhatsApp</label>
+          <input id="wa" type="tel" inputmode="tel" value="+225 07 ** ** ** **">
+          <p class="help">Vous recevez un rappel la veille de votre essayage. Vous n'avez rien à noter.</p>
+        </div>
+
+        <button class="btn btn-y" type="button" data-go="c5"><svg class="ic"><use href="#i-check"/></svg>Réserver mon essayage</button>
+      </section>
+
+      <section class="view" id="c5" data-role="cliente">
+        <div class="sec">Votre commande</div>
+        <div class="item">
+          <div class="av"><img src="assets/m-emeraude.jpg" alt=""></div>
+          <div class="bd">
+            <div class="t1">Yoo Émeraude</div>
+            <div class="t2">Verres unifocaux anti-reflet · <b>53 000 F</b></div>
+            <span class="st st-fab"><svg class="ic"><use href="#i-clock"/></svg>VERRES EN FABRICATION</span>
+          </div>
+        </div>
+
+        <div class="sec">Où en est votre commande</div>
+        <ul class="tl">
+          <li class="done"><div class="t1">Commande validée</div><div class="t2">Lundi 14h20</div></li>
+          <li class="done"><div class="t1">Ordonnance reçue et vérifiée</div><div class="t2">Lundi 14h22 · rattachée à votre commande</div></li>
+          <li class="now"><div class="t1">Verres en fabrication</div><div class="t2">3 jours ouvrés · prêts jeudi</div></li>
+          <li><div class="t1">Prête pour la livraison</div><div class="t2">Vous recevez un message dès que c'est prêt</div></li>
+          <li><div class="t1">Livrée à Cocody</div><div class="t2">Vous réglez à la réception si vous préférez</div></li>
+        </ul>
+
+        <div class="divider">Régler maintenant</div>
+        <div class="pays">
+          <button class="pay on" type="button">
+            <span class="lg" style="background:#1DC8E9">WAVE</span>
+            <span class="bd"><span class="t1">Wave</span><span class="t2">Paiement mobile, confirmation immédiate</span></span>
+            <svg class="ic" style="color:var(--ok)"><use href="#i-checkc"/></svg>
+          </button>
+          <button class="pay" type="button">
+            <span class="lg" style="background:#FF7900">OM</span>
+            <span class="bd"><span class="t1">Orange Money</span><span class="t2">Paiement mobile</span></span>
+          </button>
+          <button class="pay" type="button">
+            <span class="lg" style="background:#FFCB05;color:#1B2C5C">MTN</span>
+            <span class="bd"><span class="t1">MTN Money</span><span class="t2">Paiement mobile</span></span>
+          </button>
+          <button class="pay" type="button">
+            <span class="lg" style="background:#1B2C5C"><svg class="ic" style="width:18px;height:18px"><use href="#i-truck"/></svg></span>
+            <span class="bd"><span class="t1">À la livraison</span><span class="t2">Vous réglez au livreur, en main propre</span></span>
+          </button>
+        </div>
+
+        <div class="foot">Une question sur votre commande ?<br><b style="color:var(--navy)">Écrire à All Eyes on yoo</b></div>
+      </section>
+
+      <!-- ==================== VUE BOUTIQUE ==================== -->
+      <section class="view" id="b1" data-role="boutique">
+        <div class="kpis">
+          <div class="kpi"><div class="lb"><svg class="ic"><use href="#i-chart"/></svg>Chiffre d'affaires du mois</div><div class="vl">1 240 000 F<small>≈ 1 890 €</small></div></div>
+          <div class="kpi"><div class="lb"><svg class="ic"><use href="#i-list"/></svg>Commandes à traiter</div><div class="vl">4<small>dont 2 depuis hier</small></div></div>
+          <div class="kpi"><div class="lb"><svg class="ic"><use href="#i-cal"/></svg>Essayages aujourd'hui</div><div class="vl">3<small>15h, 16h, 17h30</small></div></div>
+          <div class="kpi warn"><div class="lb"><svg class="ic"><use href="#i-warn"/></svg>Stock faible</div><div class="vl">2<small>montures à recommander</small></div></div>
+        </div>
+
+        <div class="sec">À traiter maintenant</div>
+
+        <div class="item">
+          <div class="av">A</div>
+          <div class="bd">
+            <div class="t1">Aïcha K. — Yoo Émeraude</div>
+            <div class="t2">Cocody · unifocaux · <b>53 000 F</b> · ordonnance reçue</div>
+            <span class="st st-new"><svg class="ic"><use href="#i-bell"/></svg>NOUVELLE COMMANDE</span>
+            <div class="actions">
+              <button class="btn btn-s" type="button"><svg class="ic"><use href="#i-doc"/></svg>Voir l'ordonnance</button>
+              <button class="btn btn-s btn-y" type="button"><svg class="ic"><use href="#i-check"/></svg>Lancer les verres</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="av">M</div>
+          <div class="bd">
+            <div class="t1">Mariam T. — Yoo Kaléido</div>
+            <div class="t2">Yopougon · essayage jeudi 15h · monture non encore payée</div>
+            <span class="st st-way"><svg class="ic"><use href="#i-cal"/></svg>ESSAYAGE RÉSERVÉ</span>
+            <div class="actions">
+              <button class="btn btn-s btn-o" type="button"><svg class="ic"><use href="#i-wa"/></svg>Confirmer par WhatsApp</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="av">F</div>
+          <div class="bd">
+            <div class="t1">Fatou D. — Yoo Terracotta</div>
+            <div class="t2">Marcory · progressifs · <b>95 000 F</b> · payée par Wave</div>
+            <span class="st st-ok"><svg class="ic"><use href="#i-checkc"/></svg>PRÊTE À LIVRER</span>
+            <div class="actions">
+              <button class="btn btn-s" type="button" data-role-go="livreur"><svg class="ic"><use href="#i-truck"/></svg>Ajouter à la tournée</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="note sky">
+          <svg class="ic"><use href="#i-info"/></svg>
+          <p>Chaque ordonnance arrive rattachée à sa commande. Plus besoin de fouiller la galerie photo de votre téléphone pour retrouver celle d'Aïcha.</p>
+        </div>
+      </section>
+
+      <section class="view" id="b2" data-role="boutique">
+        <div class="chips" role="group" aria-label="Filtrer les commandes">
+          <button class="chip on" type="button">Toutes · 9</button>
+          <button class="chip" type="button">Nouvelles · 4</button>
+          <button class="chip" type="button">En fabrication · 3</button>
+          <button class="chip" type="button">À livrer · 2</button>
+        </div>
+
+        <div class="item"><div class="av">A</div><div class="bd"><div class="t1">Aïcha K.</div><div class="t2">Yoo Émeraude · unifocaux · <b>53 000 F</b> · Cocody</div><span class="st st-new"><svg class="ic"><use href="#i-bell"/></svg>NOUVELLE</span></div></div>
+        <div class="item"><div class="av">S</div><div class="bd"><div class="t1">Serge A.</div><div class="t2">Yoo Sahel · unifocaux · <b>50 000 F</b> · Plateau</div><span class="st st-fab"><svg class="ic"><use href="#i-clock"/></svg>VERRES EN FABRICATION · J+2</span></div></div>
+        <div class="item"><div class="av">F</div><div class="bd"><div class="t1">Fatou D.</div><div class="t2">Yoo Terracotta · progressifs · <b>95 000 F</b> · Marcory</div><span class="st st-ok"><svg class="ic"><use href="#i-checkc"/></svg>PRÊTE À LIVRER</span></div></div>
+        <div class="item"><div class="av">M</div><div class="bd"><div class="t1">Mariam T.</div><div class="t2">Yoo Kaléido · essayage jeudi 15h · Yopougon</div><span class="st st-way"><svg class="ic"><use href="#i-cal"/></svg>ESSAYAGE</span></div></div>
+        <div class="item"><div class="av">A</div><div class="bd"><div class="t1">Ange B.</div><div class="t2">Yoo Émeraude · unifocaux · <b>53 000 F</b> · Treichville</div><span class="st st-ok"><svg class="ic"><use href="#i-checkc"/></svg>PRÊTE À LIVRER</span></div></div>
+
+        <button class="btn" type="button" data-role-go="livreur"><svg class="ic"><use href="#i-truck"/></svg>Envoyer la tournée au livreur</button>
+        <p class="foot" style="padding-top:12px">Le livreur reçoit un simple lien WhatsApp. Il n'a pas de compte à créer, pas de mot de passe à retenir.</p>
+      </section>
+
+      <section class="view" id="b3" data-role="boutique">
+        <div class="sec">Stock de vos montures</div>
+        <div class="card">
+          <div class="stockrow">
+            <div class="nm">Yoo Émeraude<small>35 000 F · 4 vendues ce mois</small><div class="bar"><i style="width:70%"></i></div></div>
+            <span class="qt">7</span>
+          </div>
+          <div class="stockrow">
+            <div class="nm">Yoo Terracotta<small>30 000 F · 3 vendues ce mois</small><div class="bar"><i style="width:20%;background:#E0642F"></i></div></div>
+            <span class="qt low">2</span>
+          </div>
+          <div class="stockrow">
+            <div class="nm">Yoo Kaléido<small>38 000 F · 5 vendues ce mois</small><div class="bar"><i style="width:40%"></i></div></div>
+            <span class="qt">4</span>
+          </div>
+          <div class="stockrow">
+            <div class="nm">Yoo Sahel<small>32 000 F · 2 vendues ce mois</small><div class="bar"><i style="width:10%;background:#E0642F"></i></div></div>
+            <span class="qt low">1</span>
+          </div>
+          <div class="stockrow">
+            <div class="nm">Yoo Graphite<small>40 000 F · 1 vendue ce mois</small><div class="bar"><i style="width:60%"></i></div></div>
+            <span class="qt">6</span>
+          </div>
+          <div class="stockrow">
+            <div class="nm">Yoo Kaki<small>36 000 F · 2 vendues ce mois</small><div class="bar"><i style="width:50%"></i></div></div>
+            <span class="qt">5</span>
+          </div>
+          <div class="stockrow">
+            <div class="nm">Yoo Cobalt<small>38 000 F · 3 vendues ce mois</small><div class="bar"><i style="width:30%"></i></div></div>
+            <span class="qt">3</span>
+          </div>
+        </div>
+
+        <div class="note">
+          <svg class="ic"><use href="#i-warn"/></svg>
+          <p><b>Deux montures passent sous le seuil.</b> Yoo Terracotta et Yoo Sahel sont à recommander. L'alerte apparaît ici avant qu'une cliente ne commande une monture que vous n'avez plus.</p>
+        </div>
+
+        <div class="sec">Ce mois-ci</div>
+        <div class="kpis">
+          <div class="kpi"><div class="lb"><svg class="ic"><use href="#i-glasses"/></svg>Montures vendues</div><div class="vl">20</div></div>
+          <div class="kpi"><div class="lb"><svg class="ic"><use href="#i-eye"/></svg>Modèle le plus vu</div><div class="vl" style="font-size:15px">Yoo Kaléido<small>132 vues, 5 ventes</small></div></div>
+        </div>
+      </section>
+
+      <section class="view" id="b4" data-role="boutique">
+        <div class="hero">
+          <h3>Mettez une monture en ligne<br>en <span class="yl">deux minutes</span></h3>
+          <p>Vous ne dépendez de personne pour publier. Vous photographiez, vous renseignez, c'est en ligne.</p>
+        </div>
+
+        <div class="drop">
+          <svg class="ic"><use href="#i-up"/></svg>
+          <b>Ajouter les photos de la monture</b>
+          <small>Jusqu'à 4 photos. Prises au téléphone, c'est suffisant.</small>
+        </div>
+
+        <div class="field" style="margin-top:16px">
+          <label for="nm">Nom du modèle</label>
+          <input id="nm" type="text" placeholder="Yoo Émeraude">
+        </div>
+        <div class="field">
+          <label for="fr">Forme</label>
+          <select id="fr"><option>Aviateur</option><option>Ronde</option><option>Octogonale</option><option>Cat-eye</option><option>Rectangulaire</option></select>
+        </div>
+        <div class="field">
+          <label for="pxx">Prix de la monture (FCFA)</label>
+          <input id="pxx" type="text" inputmode="numeric" placeholder="35 000">
+          <p class="help">Les verres se calculent automatiquement d'après l'ordonnance de la cliente. Vous ne saisissez que la monture.</p>
+        </div>
+        <div class="field">
+          <label for="qty">Quantité en stock</label>
+          <input id="qty" type="text" inputmode="numeric" placeholder="8">
+        </div>
+        <div class="field">
+          <label for="ds">Description</label>
+          <textarea id="ds" placeholder="Aviateur en acétate vert translucide, branches écaille. Convient aux visages ronds et ovales."></textarea>
+        </div>
+
+        <button class="btn btn-y" type="button"><svg class="ic"><use href="#i-check"/></svg>Publier sur ma boutique</button>
+      </section>
+
+      <!-- ==================== VUE LIVREUR ==================== -->
+      <section class="view on" id="l1" data-role="livreur">
+        <div class="hero">
+          <h3>Tournée du jeudi</h3>
+          <p><span class="yl">3 livraisons</span> et <span class="yl">1 essayage</span> · 78 000 F à encaisser</p>
+        </div>
+
+        <div class="note sky">
+          <svg class="ic"><use href="#i-info"/></svg>
+          <p>Le livreur ouvre ce lien depuis WhatsApp. Pas de compte, pas de mot de passe. Il voit uniquement sa tournée du jour.</p>
+        </div>
+
+        <div class="sec">Cocody</div>
+        <div class="item">
+          <div class="av"><svg class="ic"><use href="#i-box"/></svg></div>
+          <div class="bd">
+            <div class="t1">Aïcha K. — Yoo Émeraude</div>
+            <div class="t2">Riviera Palmeraie, rue des Jardins · <b>53 000 F à encaisser</b></div>
+            <div class="actions">
+              <button class="btn btn-s btn-o" type="button"><svg class="ic"><use href="#i-phone"/></svg>Appeler</button>
+              <button class="btn btn-s btn-o" type="button"><svg class="ic"><use href="#i-wa"/></svg>WhatsApp</button>
+              <button class="btn btn-s btn-y" type="button"><svg class="ic"><use href="#i-check"/></svg>Marquer comme livrée</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec">Marcory</div>
+        <div class="item">
+          <div class="av"><svg class="ic"><use href="#i-box"/></svg></div>
+          <div class="bd">
+            <div class="t1">Fatou D. — Yoo Terracotta</div>
+            <div class="t2">Zone 4, immeuble Éburnéa · <b>déjà payée par Wave</b></div>
+            <div class="actions">
+              <button class="btn btn-s btn-o" type="button"><svg class="ic"><use href="#i-phone"/></svg>Appeler</button>
+              <button class="btn btn-s btn-o" type="button"><svg class="ic"><use href="#i-wa"/></svg>WhatsApp</button>
+              <button class="btn btn-s btn-y" type="button"><svg class="ic"><use href="#i-check"/></svg>Marquer comme livrée</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec">Yopougon</div>
+        <div class="item">
+          <div class="av"><svg class="ic"><use href="#i-cal"/></svg></div>
+          <div class="bd">
+            <div class="t1">Mariam T. — essayage à domicile</div>
+            <div class="t2">Niangon Sud · 3 montures à présenter · créneau 15h — 17h</div>
+            <div class="actions">
+              <button class="btn btn-s btn-o" type="button"><svg class="ic"><use href="#i-phone"/></svg>Appeler</button>
+              <button class="btn btn-s btn-y" type="button"><svg class="ic"><use href="#i-check"/></svg>Essayage effectué</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec">Treichville</div>
+        <div class="item">
+          <div class="av"><svg class="ic"><use href="#i-box"/></svg></div>
+          <div class="bd">
+            <div class="t1">Ange B. — Yoo Émeraude</div>
+            <div class="t2">Avenue 16, rue 21 · <b>25 000 F à encaisser</b> (solde)</div>
+            <div class="actions">
+              <button class="btn btn-s btn-o" type="button"><svg class="ic"><use href="#i-phone"/></svg>Appeler</button>
+              <button class="btn btn-s btn-o" type="button"><svg class="ic"><use href="#i-wa"/></svg>WhatsApp</button>
+              <button class="btn btn-s btn-y" type="button"><svg class="ic"><use href="#i-check"/></svg>Marquer comme livrée</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="l2" data-role="livreur">
+        <div class="sec">Déjà fait aujourd'hui</div>
+        <div class="item">
+          <div class="av" style="background:#E3F5EC;color:var(--ok)"><svg class="ic"><use href="#i-checkc"/></svg></div>
+          <div class="bd">
+            <div class="t1">Rachelle O. — Yoo Kaléido</div>
+            <div class="t2">Plateau · 38 000 F encaissés en espèces</div>
+            <span class="st st-ok"><svg class="ic"><use href="#i-checkc"/></svg>LIVRÉE À 11H40</span>
+          </div>
+        </div>
+        <div class="item">
+          <div class="av" style="background:#E3F5EC;color:var(--ok)"><svg class="ic"><use href="#i-checkc"/></svg></div>
+          <div class="bd">
+            <div class="t1">Kader S. — Yoo Sahel</div>
+            <div class="t2">Koumassi · déjà payée par Orange Money</div>
+            <span class="st st-ok"><svg class="ic"><use href="#i-checkc"/></svg>LIVRÉE À 10H15</span>
+          </div>
+        </div>
+
+        <div class="sec">Récapitulatif de la journée</div>
+        <div class="kpis">
+          <div class="kpi"><div class="lb"><svg class="ic"><use href="#i-box"/></svg>Livrées</div><div class="vl">2 / 5</div></div>
+          <div class="kpi"><div class="lb"><svg class="ic"><use href="#i-chart"/></svg>Encaissé</div><div class="vl">38 000 F<small>en espèces</small></div></div>
+        </div>
+
+        <div class="note sky">
+          <svg class="ic"><use href="#i-info"/></svg>
+          <p>Chaque case cochée par le livreur remonte en direct dans votre espace boutique. Vous savez ce qui est livré sans avoir à l'appeler.</p>
+        </div>
+      </section>
+
+      </div><!-- /content -->
+
+      <nav class="tabbar" id="tabbar" role="tablist" aria-label="Navigation"></nav>
+
+    </div><!-- /screen -->
+   </div><!-- /frame -->
+  </div><!-- /phone -->
+
+</div><!-- /stage -->
+</section>
+
+<script>
+(function(){
+  var TABS = {
+    cliente:[
+      {v:'c1',ic:'i-glasses',l:'Montures'},
+      {v:'c3',ic:'i-chat',l:'Assistante'},
+      {v:'c4',ic:'i-cal',l:'Essayage'},
+      {v:'c5',ic:'i-box',l:'Ma commande'}
+    ],
+    boutique:[
+      {v:'b1',ic:'i-home',l:'Accueil'},
+      {v:'b2',ic:'i-list',l:'Commandes'},
+      {v:'b3',ic:'i-layers',l:'Stock'},
+      {v:'b4',ic:'i-plus',l:'Ajouter'}
+    ],
+    livreur:[
+      {v:'l1',ic:'i-truck',l:'Ma tournée'},
+      {v:'l2',ic:'i-checkc',l:'Terminées'}
+    ]
+  };
+  var SUB = {
+    cliente:'Boutique de montures en ligne',
+    boutique:'Espace boutique — pilotage',
+    livreur:'Tournée du livreur'
+  };
+
+  var tabbar  = document.getElementById('tabbar');
+  var content = document.getElementById('content');
+  var tbSub   = document.getElementById('tbSub');
+  var role    = 'cliente';
+
+  function show(id){
+    var views = content.querySelectorAll('.view');
+    for(var i=0;i<views.length;i++){ views[i].classList.remove('on'); }
+    var t = document.getElementById(id);
+    if(t){ t.classList.add('on'); }
+    var tb = tabbar.querySelectorAll('.tab');
+    for(var j=0;j<tb.length;j++){
+      tb[j].setAttribute('aria-selected', tb[j].dataset.v === id ? 'true' : 'false');
+    }
+    content.scrollTop = 0;
+  }
+
+  function buildTabs(){
+    tabbar.innerHTML = '';
+    TABS[role].forEach(function(t){
+      var b = document.createElement('button');
+      b.className = 'tab';
+      b.type = 'button';
+      b.setAttribute('role','tab');
+      b.dataset.v = t.v;
+      b.innerHTML = '<svg class="ic"><use href="#'+t.ic+'"/></svg>'+t.l;
+      b.addEventListener('click', function(){ show(t.v); });
+      tabbar.appendChild(b);
+    });
+  }
+
+  function setRole(r){
+    role = r;
+    var rb = document.querySelectorAll('.role');
+    for(var i=0;i<rb.length;i++){
+      rb[i].setAttribute('aria-selected', rb[i].dataset.role === r ? 'true' : 'false');
+    }
+    tbSub.textContent = SUB[r];
+    buildTabs();
+    show(TABS[r][0].v);
+  }
+
+  var rb = document.querySelectorAll('.role');
+  for(var i=0;i<rb.length;i++){
+    rb[i].addEventListener('click', function(){ setRole(this.dataset.role); });
+  }
+
+  /* navigation interne : boutons data-go et data-role-go */
+  document.addEventListener('click', function(e){
+    var g = e.target.closest ? e.target.closest('[data-go]') : null;
+    if(g){ show(g.dataset.go); return; }
+    var rg = e.target.closest ? e.target.closest('[data-role-go]') : null;
+    if(rg){ setRole(rg.dataset.roleGo); return; }
+    /* chips, creneaux, moyens de paiement : selection visuelle */
+    var c = e.target.closest ? e.target.closest('.chip') : null;
+    if(c){
+      var sib = c.parentNode.querySelectorAll('.chip');
+      for(var k=0;k<sib.length;k++){ sib[k].classList.remove('on'); }
+      c.classList.add('on'); return;
+    }
+    var s = e.target.closest ? e.target.closest('.slot') : null;
+    if(s){
+      var ss = s.parentNode.querySelectorAll('.slot');
+      for(var m=0;m<ss.length;m++){ ss[m].classList.remove('on'); }
+      s.classList.add('on'); return;
+    }
+    var p = e.target.closest ? e.target.closest('.pay') : null;
+    if(p){
+      var pp = p.parentNode.querySelectorAll('.pay');
+      for(var n=0;n<pp.length;n++){ pp[n].classList.remove('on'); }
+      p.classList.add('on'); return;
+    }
+  });
+
+  /* splash -> app */
+  document.getElementById('open').addEventListener('click', function(){
+    document.getElementById('splash').style.display = 'none';
+    document.getElementById('app').classList.add('on');
+    window.scrollTo(0,0);
+  });
+  document.getElementById('back').addEventListener('click', function(){
+    document.getElementById('app').classList.remove('on');
+    document.getElementById('splash').style.display = 'flex';
+    window.scrollTo(0,0);
+  });
+
+  setRole('cliente');
+})();
+</script>
+</body>
+</html>
