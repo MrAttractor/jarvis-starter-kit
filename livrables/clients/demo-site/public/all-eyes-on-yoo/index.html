@@ -161,6 +161,15 @@ button{font-family:inherit}
 .note.sky .ic{color:var(--sky)}
 .note.sky p{color:#1B4A63}
 
+.dimf{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+
+/* dimensions monture */
+.dims{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.dim{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
+.dim .dv{display:block;font-size:24px;font-weight:800;color:var(--navy);line-height:1.1}
+.dim .dl{display:block;font-size:11.5px;color:var(--muted);font-weight:600;margin-top:5px;line-height:1.3}
+.dim .dl small{display:block;font-size:10.5px;font-weight:400;margin-top:1px}
+
 /* chat */
 .chat{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
 .msg{max-width:86%;padding:12px 14px;border-radius:16px;font-size:13.5px;line-height:1.5}
@@ -298,6 +307,7 @@ button{font-family:inherit}
 <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12S6 5.8 12 5.8 21.4 12 21.4 12 18 18.2 12 18.2 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3.1"/></symbol>
 <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.4V12l3.2 2"/></symbol>
 <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.7"/><path d="M5 20.4a7 7 0 0 1 14 0"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M3.5 8.9a1.8 1.8 0 0 1 1.8-1.8h1.9l1.2-2h6.8l1.2 2h1.9a1.8 1.8 0 0 1 1.8 1.8v8.3a1.8 1.8 0 0 1-1.8 1.8H5.3a1.8 1.8 0 0 1-1.8-1.8Z"/><circle cx="12" cy="13" r="3.4"/></symbol>
 <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 10.6a6 6 0 1 0-12 0c0 4.4-2 5.7-2 5.7h16s-2-1.3-2-5.7Z"/><path d="M13.7 19.4a2 2 0 0 1-3.4 0"/></symbol>
 </defs></svg>
 
@@ -309,7 +319,7 @@ button{font-family:inherit}
     <div class="mark"><img src="assets/logo.jpg" alt="Logo All Eyes on yoo, boutique de montures en ligne"></div>
 
     <h1>Vos montures méritent<br>mieux qu'un <em>fil WhatsApp</em>.</h1>
-    <p class="lede">Aujourd'hui, chaque cliente vous écrit, envoie son ordonnance en photo, demande combien ça fait avec sa correction, veut essayer avant de payer, puis disparaît. Vous répétez la même conversation dix fois par jour. Voici à quoi ressemblerait votre boutique si elle le faisait pour vous.</p>
+    <p class="lede">Aujourd'hui, chaque cliente vous écrit pour la même chose : c'est quelle taille, est-ce que ça ira à mon visage, vous livrez chez moi, je peux payer par Wave. Puis elle disparaît, revient trois jours plus tard, et vous ne savez plus qui a commandé quoi. Voici à quoi ressemblerait votre boutique si elle répondait à votre place.</p>
 
     <figure class="shot">
       <img src="assets/coffret.jpg" alt="Étui All Eyes on yoo gravé, chiffonnette et carte de remerciement, avec une monture en acétate écaille">
@@ -317,8 +327,8 @@ button{font-family:inherit}
     </figure>
 
     <div class="pills">
-      <span class="pill"><svg class="ic"><use href="#i-glasses"/></svg>Montures de vue</span>
-      <span class="pill"><svg class="ic"><use href="#i-doc"/></svg>Ordonnance rattachée</span>
+      <span class="pill"><svg class="ic"><use href="#i-glasses"/></svg>Montures seules</span>
+      <span class="pill"><svg class="ic"><use href="#i-doc"/></svg>Dimensions de chaque monture</span>
       <span class="pill"><svg class="ic"><use href="#i-cal"/></svg>Essayage sur créneau</span>
       <span class="pill"><svg class="ic"><use href="#i-truck"/></svg>Tournée du livreur</span>
     </div>
@@ -327,12 +337,12 @@ button{font-family:inherit}
       <div class="c3">
         <div class="num">1</div>
         <h3>Ce que vit votre cliente</h3>
-        <p>Elle choisit sa monture, l'app calcule le prix avec sa correction, elle dépose son ordonnance et réserve son essayage. Sans vous écrire une seule fois.</p>
+        <p>Elle choisit sa monture, voit ses dimensions exactes, sait si elle va à la forme de son visage, réserve un essayage ou commande directement. Sans vous écrire une seule fois.</p>
       </div>
       <div class="c3">
         <div class="num">2</div>
         <h3>Ce que vous pilotez</h3>
-        <p>Les commandes, les ordonnances reçues, le stock de chaque monture, le chiffre d'affaires du mois. Vous mettez une nouvelle monture en ligne toute seule, en deux minutes.</p>
+        <p>Les commandes, les demandes de conseil en photo, le stock de chaque monture, le chiffre d'affaires du mois. Vous mettez une nouvelle monture en ligne toute seule, en deux minutes.</p>
       </div>
       <div class="c3">
         <div class="num">3</div>
@@ -391,7 +401,7 @@ button{font-family:inherit}
       <section class="view on" id="c1" data-role="cliente">
         <div class="hero">
           <h3>Vos lunettes ne sont pas un outil.<br>C'est une <span class="yl">extension de votre personnalité</span>.</h3>
-          <p>Choisissez votre monture, on s'occupe de vos verres. Des montures tendance, à des prix justes.</p>
+          <p>Des montures tendance, à des prix justes. Le prix affiché est le prix final, et vous posez vos verres chez l'opticien de votre choix.</p>
         </div>
 
         <div class="chips" role="group" aria-label="Filtrer les montures">
@@ -409,7 +419,7 @@ button{font-family:inherit}
             <div class="bd">
               <div class="nm">Yoo Émeraude</div>
               <div class="sub">Aviateur acétate · unisexe</div>
-              <div class="pr">35 000 F<span>monture seule</span></div>
+              <div class="pr">35 000 F<span>prix final</span></div>
             </div>
           </button>
 
@@ -418,7 +428,7 @@ button{font-family:inherit}
             <div class="bd">
               <div class="nm">Yoo Terracotta</div>
               <div class="sub">Octogonale acétate · femme</div>
-              <div class="pr">30 000 F<span>monture seule</span></div>
+              <div class="pr">30 000 F<span>prix final</span></div>
             </div>
           </button>
 
@@ -427,7 +437,7 @@ button{font-family:inherit}
             <div class="bd">
               <div class="nm">Yoo Kaléido</div>
               <div class="sub">Cat-eye acétate · femme</div>
-              <div class="pr">38 000 F<span>monture seule</span></div>
+              <div class="pr">38 000 F<span>prix final</span></div>
             </div>
           </button>
 
@@ -436,7 +446,7 @@ button{font-family:inherit}
             <div class="bd">
               <div class="nm">Yoo Graphite</div>
               <div class="sub">Carrée acétate, rivets dorés · homme</div>
-              <div class="pr">40 000 F<span>monture seule</span></div>
+              <div class="pr">40 000 F<span>prix final</span></div>
             </div>
           </button>
 
@@ -445,7 +455,7 @@ button{font-family:inherit}
             <div class="bd">
               <div class="nm">Yoo Sahel</div>
               <div class="sub">Ronde acétate, branches cristal · unisexe</div>
-              <div class="pr">32 000 F<span>monture seule</span></div>
+              <div class="pr">32 000 F<span>prix final</span></div>
             </div>
           </button>
 
@@ -454,7 +464,7 @@ button{font-family:inherit}
             <div class="bd">
               <div class="nm">Yoo Kaki</div>
               <div class="sub">Carrée oversize acétate · homme</div>
-              <div class="pr">36 000 F<span>monture seule</span></div>
+              <div class="pr">36 000 F<span>prix final</span></div>
             </div>
           </button>
 
@@ -463,14 +473,14 @@ button{font-family:inherit}
             <div class="bd">
               <div class="nm">Yoo Cobalt</div>
               <div class="sub">Ovale acétate · femme</div>
-              <div class="pr">38 000 F<span>monture seule</span></div>
+              <div class="pr">38 000 F<span>prix final</span></div>
             </div>
           </button>
         </div>
 
         <div class="note sky">
           <svg class="ic"><use href="#i-info"/></svg>
-          <p><b>Le prix affiché est celui de la monture.</b> Vos verres s'ajoutent selon votre ordonnance, et le total s'affiche avant que vous ne payiez quoi que ce soit.</p>
+          <p><b>Le prix affiché est le prix final.</b> Pas de supplément, pas de devis à attendre. Vous emportez votre monture chez votre opticien pour vos verres, comme vous le faites déjà.</p>
         </div>
       </section>
 
@@ -479,26 +489,33 @@ button{font-family:inherit}
         <h3 style="font-size:19px;margin-bottom:6px">Yoo Émeraude</h3>
         <p style="font-size:13.5px;color:var(--muted);line-height:1.55;margin-bottom:16px">Aviateur en acétate vert translucide, branches écaille et cœur métal. Convient aux visages ronds et ovales.</p>
 
-        <div class="sec">Votre prix, tout compris</div>
+        <div class="sec">Les dimensions, pour savoir si elle vous va</div>
+        <div class="dims">
+          <div class="dim"><span class="dv">52</span><span class="dl">Largeur de verre<small>mm</small></span></div>
+          <div class="dim"><span class="dv">20</span><span class="dl">Pont<small>mm</small></span></div>
+          <div class="dim"><span class="dv">145</span><span class="dl">Largeur totale<small>mm</small></span></div>
+          <div class="dim"><span class="dv">148</span><span class="dl">Branches<small>mm</small></span></div>
+        </div>
+        <div class="note sky">
+          <svg class="ic"><use href="#i-info"/></svg>
+          <p><b>Comment lire ces chiffres.</b> Prenez une monture que vous portez déjà, les dimensions sont écrites à l'intérieur de la branche. Si elles sont proches, celle-ci vous ira. Cette monture est <b>taille moyenne</b>.</p>
+        </div>
+
+        <div class="sec">Votre prix</div>
         <div class="card" style="padding:16px 16px 6px">
           <div class="priceline"><span>Monture Yoo Émeraude</span><b>35 000 F</b></div>
-          <div class="priceline"><span>Verres unifocaux anti-reflet<br><small style="color:var(--muted);font-size:11.5px">d'après l'ordonnance déposée</small></span><b>18 000 F</b></div>
+          <div class="priceline"><span>Étui, chiffonnette et carte</span><b>Inclus</b></div>
           <div class="priceline"><span>Livraison Cocody</span><b>Offerte</b></div>
         </div>
-        <div class="total"><span>Total à payer</span><b>53 000 F<small>≈ 81 €</small></b></div>
+        <div class="total"><span>Total à payer</span><b>35 000 F<small>≈ 53 €</small></b></div>
 
         <button class="btn btn-y" type="button" data-go="c5"><svg class="ic"><use href="#i-check"/></svg>Je commande cette monture</button>
         <button class="btn btn-o" type="button" data-go="c4"><svg class="ic"><use href="#i-cal"/></svg>Je veux l'essayer d'abord</button>
 
-        <div class="divider">Votre ordonnance</div>
-        <div class="drop">
-          <svg class="ic"><use href="#i-up"/></svg>
-          <b>Déposer une photo de votre ordonnance</b>
-          <small>Une photo prise au téléphone suffit. Elle reste rattachée à votre commande, elle ne se perd pas dans une conversation.</small>
-        </div>
+        <div class="divider">Et pour vos verres</div>
         <div class="note">
           <svg class="ic"><use href="#i-warn"/></svg>
-          <p><b>Vous n'avez pas d'ordonnance ?</b> Réservez un essayage, on vous orientera vers un opticien pour la mesure de votre vue avant de lancer vos verres.</p>
+          <p><b>Nous vendons la monture, pas les verres.</b> Vous emportez votre monture chez l'opticien de votre choix, qui y pose vos verres correcteurs. C'est ce qui nous permet de garder des prix justes, sans vous facturer un montage.</p>
         </div>
       </section>
 
@@ -508,18 +525,28 @@ button{font-family:inherit}
             <div class="who"><svg class="ic"><use href="#i-glasses"/></svg>All Eyes on yoo</div>
             Bonjour, je suis là pour vos montures. Dites-moi ce qui vous bloque, je réponds tout de suite.
           </div>
-          <div class="msg me">Ça fait combien avec ma correction ?</div>
+          <div class="msg me">Le prix c'est bien juste la monture ?</div>
           <div class="msg them">
-            La monture Yoo Émeraude est à 35 000 F. Avec des verres unifocaux anti-reflet, comptez 18 000 F de plus, soit <b>53 000 F au total</b>. Déposez votre ordonnance et je vous confirme le montant exact, sans surprise.
+            Oui. La Yoo Émeraude est à <b>35 000 F, et c'est le prix final</b>. Étui, chiffonnette et livraison à Abidjan compris. Vous emportez ensuite votre monture chez votre opticien pour vos verres.
           </div>
-          <div class="msg me">Vous faites les verres progressifs ?</div>
+          <div class="msg me">C'est quelle taille ?</div>
           <div class="msg them">
-            Oui. Sur cette monture, les progressifs sont à 65 000 F au lieu de 18 000 F, ce qui met le total à <b>100 000 F</b>. Le délai de fabrication passe de 3 à 6 jours ouvrés.
+            Verre 52 mm, pont 20 mm, branches 148 mm, largeur totale 145 mm. Regardez à l'intérieur de la branche d'une monture que vous portez déjà : si les chiffres sont proches, celle-ci vous ira.
           </div>
-          <div class="msg me">Et si la monture ne me va pas au visage ?</div>
+          <div class="msg me">Est-ce que ça va aller à mon visage ?</div>
           <div class="msg them">
-            C'est exactement pour ça que l'essayage existe. Vous réservez un créneau, vous essayez, et vous ne payez vos verres qu'après avoir validé la monture. Vous voulez que je vous propose des créneaux ?
+            Envoyez-moi une photo de vous, de face, sans lunettes. Je regarde la forme de votre visage et je vous dis lesquelles de nos montures vous mettent en valeur. C'est gratuit et sans engagement.
           </div>
+        </div>
+
+        <div class="drop">
+          <svg class="ic"><use href="#i-camera"/></svg>
+          <b>Envoyer une photo pour un conseil</b>
+          <small>De face, sans lunettes, à la lumière du jour. Vous recevez une réponse avec 2 ou 3 montures qui vont à votre visage.</small>
+        </div>
+        <div class="note">
+          <svg class="ic"><use href="#i-warn"/></svg>
+          <p><b>Votre photo reste privée.</b> Elle sert uniquement au conseil, n'apparaît jamais sur la boutique, et vous pouvez demander sa suppression à tout moment.</p>
         </div>
 
         <div class="sec">Ce que vos clientes demandent le plus</div>
@@ -527,19 +554,19 @@ button{font-family:inherit}
           <button type="button">Vous livrez à Yopougon ?</button>
           <button type="button">Je peux payer par Wave ?</button>
           <button type="button">C'est de la vraie acétate ?</button>
-          <button type="button">Combien de temps pour mes verres ?</button>
+          <button type="button">Je peux échanger si ça ne me va pas ?</button>
         </div>
 
         <div class="note sky">
           <svg class="ic"><use href="#i-info"/></svg>
-          <p>Ces quatre questions, vous y répondez déjà dix fois par jour dans WhatsApp. Là, elles sont traitées sans vous, et vous n'intervenez que pour le conseil sur le style.</p>
+          <p>Ces questions, vous y répondez déjà dix fois par jour dans WhatsApp. Là, elles sont traitées sans vous. Vous n'intervenez que sur ce qui vaut vraiment votre temps : le conseil sur la photo.</p>
         </div>
       </section>
 
       <section class="view" id="c4" data-role="cliente">
         <div class="hero">
-          <h3>Essayez avant de payer vos verres</h3>
-          <p>Vous validez la monture sur votre visage. Les verres ne sont lancés qu'après.</p>
+          <h3>Essayez avant d'acheter</h3>
+          <p>Vous la mettez, vous vous regardez, vous décidez. <span class="yl">Aucun engagement</span> si elle ne vous va pas.</p>
         </div>
 
         <div class="sec">Où souhaitez-vous essayer ?</div>
@@ -578,19 +605,23 @@ button{font-family:inherit}
           <div class="av"><img src="assets/m-emeraude.jpg" alt=""></div>
           <div class="bd">
             <div class="t1">Yoo Émeraude</div>
-            <div class="t2">Verres unifocaux anti-reflet · <b>53 000 F</b></div>
-            <span class="st st-fab"><svg class="ic"><use href="#i-clock"/></svg>VERRES EN FABRICATION</span>
+            <div class="t2">Aviateur acétate · verre 52 mm · <b>35 000 F</b></div>
+            <span class="st st-fab"><svg class="ic"><use href="#i-clock"/></svg>EN PRÉPARATION</span>
           </div>
         </div>
 
         <div class="sec">Où en est votre commande</div>
         <ul class="tl">
           <li class="done"><div class="t1">Commande validée</div><div class="t2">Lundi 14h20</div></li>
-          <li class="done"><div class="t1">Ordonnance reçue et vérifiée</div><div class="t2">Lundi 14h22 · rattachée à votre commande</div></li>
-          <li class="now"><div class="t1">Verres en fabrication</div><div class="t2">3 jours ouvrés · prêts jeudi</div></li>
-          <li><div class="t1">Prête pour la livraison</div><div class="t2">Vous recevez un message dès que c'est prêt</div></li>
+          <li class="now"><div class="t1">Monture préparée</div><div class="t2">Étui gravé, chiffonnette et carte · prête aujourd'hui</div></li>
+          <li><div class="t1">Confiée au livreur</div><div class="t2">Vous recevez son numéro par message</div></li>
           <li><div class="t1">Livrée à Cocody</div><div class="t2">Vous réglez à la réception si vous préférez</div></li>
         </ul>
+
+        <div class="note sky">
+          <svg class="ic"><use href="#i-info"/></svg>
+          <p><b>Livrée sous 48 h à Abidjan.</b> Comme nous ne montons pas les verres, il n'y a aucun délai de fabrication à attendre.</p>
+        </div>
 
         <div class="divider">Régler maintenant</div>
         <div class="pays">
@@ -619,23 +650,36 @@ button{font-family:inherit}
       <!-- ==================== VUE BOUTIQUE ==================== -->
       <section class="view" id="b1" data-role="boutique">
         <div class="kpis">
-          <div class="kpi"><div class="lb"><svg class="ic"><use href="#i-chart"/></svg>Chiffre d'affaires du mois</div><div class="vl">1 240 000 F<small>≈ 1 890 €</small></div></div>
+          <div class="kpi"><div class="lb"><svg class="ic"><use href="#i-chart"/></svg>Chiffre d'affaires du mois</div><div class="vl">700 000 F<small>≈ 1 067 €</small></div></div>
           <div class="kpi"><div class="lb"><svg class="ic"><use href="#i-list"/></svg>Commandes à traiter</div><div class="vl">4<small>dont 2 depuis hier</small></div></div>
-          <div class="kpi"><div class="lb"><svg class="ic"><use href="#i-cal"/></svg>Essayages aujourd'hui</div><div class="vl">3<small>15h, 16h, 17h30</small></div></div>
+          <div class="kpi"><div class="lb"><svg class="ic"><use href="#i-camera"/></svg>Conseils photo en attente</div><div class="vl">2<small>reçus ce matin</small></div></div>
           <div class="kpi warn"><div class="lb"><svg class="ic"><use href="#i-warn"/></svg>Stock faible</div><div class="vl">2<small>montures à recommander</small></div></div>
         </div>
 
         <div class="sec">À traiter maintenant</div>
 
         <div class="item">
+          <div class="av" style="background:#EAF6FD;color:var(--sky)"><svg class="ic"><use href="#i-camera"/></svg></div>
+          <div class="bd">
+            <div class="t1">Rachelle O. — demande de conseil</div>
+            <div class="t2">Photo reçue à 8h12 · visage rond · n'a pas encore choisi de monture</div>
+            <span class="st st-way"><svg class="ic"><use href="#i-camera"/></svg>CONSEIL À DONNER</span>
+            <div class="actions">
+              <button class="btn btn-s btn-o" type="button"><svg class="ic"><use href="#i-eye"/></svg>Voir la photo</button>
+              <button class="btn btn-s btn-y" type="button"><svg class="ic"><use href="#i-glasses"/></svg>Proposer 3 montures</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
           <div class="av">A</div>
           <div class="bd">
             <div class="t1">Aïcha K. — Yoo Émeraude</div>
-            <div class="t2">Cocody · unifocaux · <b>53 000 F</b> · ordonnance reçue</div>
+            <div class="t2">Cocody · <b>35 000 F</b> · à régler à la livraison</div>
             <span class="st st-new"><svg class="ic"><use href="#i-bell"/></svg>NOUVELLE COMMANDE</span>
             <div class="actions">
-              <button class="btn btn-s" type="button"><svg class="ic"><use href="#i-doc"/></svg>Voir l'ordonnance</button>
-              <button class="btn btn-s btn-y" type="button"><svg class="ic"><use href="#i-check"/></svg>Lancer les verres</button>
+              <button class="btn btn-s btn-o" type="button"><svg class="ic"><use href="#i-wa"/></svg>Confirmer par WhatsApp</button>
+              <button class="btn btn-s btn-y" type="button"><svg class="ic"><use href="#i-check"/></svg>Marquer préparée</button>
             </div>
           </div>
         </div>
@@ -656,7 +700,7 @@ button{font-family:inherit}
           <div class="av">F</div>
           <div class="bd">
             <div class="t1">Fatou D. — Yoo Terracotta</div>
-            <div class="t2">Marcory · progressifs · <b>95 000 F</b> · payée par Wave</div>
+            <div class="t2">Marcory · <b>30 000 F</b> · payée par Wave</div>
             <span class="st st-ok"><svg class="ic"><use href="#i-checkc"/></svg>PRÊTE À LIVRER</span>
             <div class="actions">
               <button class="btn btn-s" type="button" data-role-go="livreur"><svg class="ic"><use href="#i-truck"/></svg>Ajouter à la tournée</button>
@@ -666,7 +710,7 @@ button{font-family:inherit}
 
         <div class="note sky">
           <svg class="ic"><use href="#i-info"/></svg>
-          <p>Chaque ordonnance arrive rattachée à sa commande. Plus besoin de fouiller la galerie photo de votre téléphone pour retrouver celle d'Aïcha.</p>
+          <p>Une demande de conseil en photo est arrivée ce matin. Vous répondez quand vous voulez, la cliente n'attend pas dans un fil WhatsApp au milieu de vingt autres.</p>
         </div>
       </section>
 
@@ -674,15 +718,15 @@ button{font-family:inherit}
         <div class="chips" role="group" aria-label="Filtrer les commandes">
           <button class="chip on" type="button">Toutes · 9</button>
           <button class="chip" type="button">Nouvelles · 4</button>
-          <button class="chip" type="button">En fabrication · 3</button>
+          <button class="chip" type="button">En préparation · 3</button>
           <button class="chip" type="button">À livrer · 2</button>
         </div>
 
-        <div class="item"><div class="av">A</div><div class="bd"><div class="t1">Aïcha K.</div><div class="t2">Yoo Émeraude · unifocaux · <b>53 000 F</b> · Cocody</div><span class="st st-new"><svg class="ic"><use href="#i-bell"/></svg>NOUVELLE</span></div></div>
-        <div class="item"><div class="av">S</div><div class="bd"><div class="t1">Serge A.</div><div class="t2">Yoo Sahel · unifocaux · <b>50 000 F</b> · Plateau</div><span class="st st-fab"><svg class="ic"><use href="#i-clock"/></svg>VERRES EN FABRICATION · J+2</span></div></div>
-        <div class="item"><div class="av">F</div><div class="bd"><div class="t1">Fatou D.</div><div class="t2">Yoo Terracotta · progressifs · <b>95 000 F</b> · Marcory</div><span class="st st-ok"><svg class="ic"><use href="#i-checkc"/></svg>PRÊTE À LIVRER</span></div></div>
+        <div class="item"><div class="av">A</div><div class="bd"><div class="t1">Aïcha K.</div><div class="t2">Yoo Émeraude · verre 52 mm · <b>35 000 F</b> · Cocody</div><span class="st st-new"><svg class="ic"><use href="#i-bell"/></svg>NOUVELLE</span></div></div>
+        <div class="item"><div class="av">S</div><div class="bd"><div class="t1">Serge A.</div><div class="t2">Yoo Sahel · verre 47 mm · <b>32 000 F</b> · Plateau</div><span class="st st-fab"><svg class="ic"><use href="#i-clock"/></svg>EN PRÉPARATION</span></div></div>
+        <div class="item"><div class="av">F</div><div class="bd"><div class="t1">Fatou D.</div><div class="t2">Yoo Terracotta · verre 48 mm · <b>30 000 F</b> · Marcory</div><span class="st st-ok"><svg class="ic"><use href="#i-checkc"/></svg>PRÊTE À LIVRER</span></div></div>
         <div class="item"><div class="av">M</div><div class="bd"><div class="t1">Mariam T.</div><div class="t2">Yoo Kaléido · essayage jeudi 15h · Yopougon</div><span class="st st-way"><svg class="ic"><use href="#i-cal"/></svg>ESSAYAGE</span></div></div>
-        <div class="item"><div class="av">A</div><div class="bd"><div class="t1">Ange B.</div><div class="t2">Yoo Émeraude · unifocaux · <b>53 000 F</b> · Treichville</div><span class="st st-ok"><svg class="ic"><use href="#i-checkc"/></svg>PRÊTE À LIVRER</span></div></div>
+        <div class="item"><div class="av">A</div><div class="bd"><div class="t1">Ange B.</div><div class="t2">Yoo Émeraude · verre 52 mm · <b>35 000 F</b> · Treichville</div><span class="st st-ok"><svg class="ic"><use href="#i-checkc"/></svg>PRÊTE À LIVRER</span></div></div>
 
         <button class="btn" type="button" data-role-go="livreur"><svg class="ic"><use href="#i-truck"/></svg>Envoyer la tournée au livreur</button>
         <p class="foot" style="padding-top:12px">Le livreur reçoit un simple lien WhatsApp. Il n'a pas de compte à créer, pas de mot de passe à retenir.</p>
@@ -756,12 +800,25 @@ button{font-family:inherit}
         <div class="field">
           <label for="pxx">Prix de la monture (FCFA)</label>
           <input id="pxx" type="text" inputmode="numeric" placeholder="35 000">
-          <p class="help">Les verres se calculent automatiquement d'après l'ordonnance de la cliente. Vous ne saisissez que la monture.</p>
+          <p class="help">C'est le prix final payé par la cliente. Pas de supplément, pas de montage de verres à ajouter.</p>
         </div>
         <div class="field">
           <label for="qty">Quantité en stock</label>
           <input id="qty" type="text" inputmode="numeric" placeholder="8">
         </div>
+
+        <div class="sec">Dimensions (en mm)</div>
+        <div class="dimf">
+          <div class="field"><label for="d1">Largeur de verre</label><input id="d1" type="text" inputmode="numeric" placeholder="52"></div>
+          <div class="field"><label for="d2">Pont</label><input id="d2" type="text" inputmode="numeric" placeholder="20"></div>
+          <div class="field"><label for="d3">Largeur totale</label><input id="d3" type="text" inputmode="numeric" placeholder="145"></div>
+          <div class="field"><label for="d4">Branches</label><input id="d4" type="text" inputmode="numeric" placeholder="148"></div>
+        </div>
+        <div class="note sky">
+          <svg class="ic"><use href="#i-info"/></svg>
+          <p><b>Ces quatre chiffres évitent la moitié de vos échanges.</b> Ils sont gravés à l'intérieur de la branche. Comme vos clientes posent leurs verres ailleurs, c'est la seule façon pour elles de savoir si la monture leur ira.</p>
+        </div>
+
         <div class="field">
           <label for="ds">Description</label>
           <textarea id="ds" placeholder="Aviateur en acétate vert translucide, branches écaille. Convient aux visages ronds et ovales."></textarea>
@@ -774,7 +831,7 @@ button{font-family:inherit}
       <section class="view on" id="l1" data-role="livreur">
         <div class="hero">
           <h3>Tournée du jeudi</h3>
-          <p><span class="yl">3 livraisons</span> et <span class="yl">1 essayage</span> · 78 000 F à encaisser</p>
+          <p><span class="yl">3 livraisons</span> et <span class="yl">1 essayage</span> · 70 000 F à encaisser</p>
         </div>
 
         <div class="note sky">
@@ -787,7 +844,7 @@ button{font-family:inherit}
           <div class="av"><svg class="ic"><use href="#i-box"/></svg></div>
           <div class="bd">
             <div class="t1">Aïcha K. — Yoo Émeraude</div>
-            <div class="t2">Riviera Palmeraie, rue des Jardins · <b>53 000 F à encaisser</b></div>
+            <div class="t2">Riviera Palmeraie, rue des Jardins · <b>35 000 F à encaisser</b></div>
             <div class="actions">
               <button class="btn btn-s btn-o" type="button"><svg class="ic"><use href="#i-phone"/></svg>Appeler</button>
               <button class="btn btn-s btn-o" type="button"><svg class="ic"><use href="#i-wa"/></svg>WhatsApp</button>
