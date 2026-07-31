@@ -1,6 +1,6 @@
 # Design System — Attractor Assists (proposition v0)
 
-> Direction issue de l'analyse des références (`context/import/design-system-references/`).
+> Direction issue de l'analyse des références (`context/import/marque/design-system-references/`).
 > **v0 à valider** : les couleurs sont estimées depuis des captures. À ajuster pendant la refonte.
 
 **Esprit :** pop africaine chaude + premium accessible. Énergie de la marque, mais épurée pour un produit SaaS (clarté avant tout, on ne reproduit pas la densité des affiches event).
@@ -9,7 +9,7 @@
 
 **Principes d'expérience (non négociables) :** chaleureuse · intuitive · fun. Chaque écran doit être facile pour un novice, encourageant, et donner envie d'y revenir.
 
-**Références créa :** IVOIRE "Comme nous" (levier fierté, gros plans de visages locaux) ; Agence UGO (énergie/fun ivoirien, inspire surtout les campagnes). Détail dans `context/import/design-system-references/`.
+**Références créa :** IVOIRE "Comme nous" (levier fierté, gros plans de visages locaux) ; Agence UGO (énergie/fun ivoirien, inspire surtout les campagnes). Détail dans `context/import/marque/design-system-references/`.
 
 **Place dans l'écosystème (frise narrative) :** chaque app a un design complémentaire ; mises côte à côte, les interfaces composent une frise qui raconte une histoire (le parcours de croissance de l'entrepreneur). Attractor Assists en est le premier panneau : son design doit pouvoir se décliner en cohérence sur les autres apps (tokens partagés, variations complémentaires).
 

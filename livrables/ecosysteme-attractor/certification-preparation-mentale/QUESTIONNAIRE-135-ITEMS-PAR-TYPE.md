@@ -2,7 +2,7 @@
 
 > **Source des items : Paul Pyronnet Institut.** Support « Potentiel » de l'Académie Puissance Mentale, grille de dépouillement page 20.
 > Nomenclature des types issue de la feuille de dépouillement de l'Académie.
-> Fichier source : `context/import/Enneagramme Preparation Mentale.xlsx`.
+> Fichier source : `context/import/formation/Enneagramme Preparation Mentale.xlsx`.
 
 ## Le mode d'emploi
 

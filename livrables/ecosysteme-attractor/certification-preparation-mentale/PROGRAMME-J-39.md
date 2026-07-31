@@ -38,7 +38,7 @@ Ce que tu dois savoir des 9 types se limite à ce qui sert la construction : ce 
 - Départ de zéro sur le corpus ennéagramme.
 - La méthodologie de l'école s'appuie sur l'ennéagramme, donc le typage est le socle, pas un module annexe.
 
-### Ce que le support a apporté (fichier `context/import/Enneagramme Preparation Mentale.xlsx`)
+### Ce que le support a apporté (fichier `context/import/formation/Enneagramme Preparation Mentale.xlsx`)
 
 Le support est un **instrument de typage**, pas un cours. 135 affirmations notées de 0 à 3 (jamais / parfois / souvent / toujours vrai), 15 items par type, score maximum 45 par type, dépouillement automatique en pourcentages. Il ne contient **aucun contenu théorique** : ni peurs fondamentales, ni passions, ni ailes, ni flèches, ni niveaux. Le corpus reste donc entièrement à apprendre ailleurs, et ce programme garde toute sa raison d'être.
 

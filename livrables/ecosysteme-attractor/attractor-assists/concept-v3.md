@@ -248,7 +248,7 @@ Chaque échange suivant enrichit sa mémoire. Le Jarvis apprend progressivement 
 En plus du profil de l'entrepreneur, chaque Jarvis est chargé de la **base de connaissance Attractor** :
 la méthode, les frameworks, le mindset, les repères de croissance, le ton.
 
-Source de vérité : `context/import/methode-md/BASE_CONNAISSANCE_ASSISTS.md`
+Source de vérité : `context/import/methode/methode-md/BASE_CONNAISSANCE_ASSISTS.md`
 
 Cette base est commune à tous les entrepreneurs. Elle ne change pas selon l'utilisateur. Elle est le "Mac Arthur dupliqué" dans chaque Jarvis — ce qui fait qu'Assists n'est pas un outil générique mais un bras droit formé à une méthode précise.
 

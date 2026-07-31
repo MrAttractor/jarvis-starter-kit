@@ -1,6 +1,6 @@
 # Cabinet DAB — Projet DFMM "De la Ferme aux Marchés Mondiaux"
 
-> Dossier créé le 18/06/2026. Source : `context/import/DMV Cabinet DAB x Agence Attractor x Beracca.txt` + session Mac Arthur.
+> Dossier créé le 18/06/2026. Source : `context/import/clients/beracca-dab/DMV Cabinet DAB x Agence Attractor x Beracca.txt` + session Mac Arthur.
 
 ---
 

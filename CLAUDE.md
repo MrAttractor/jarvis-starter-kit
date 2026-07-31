@@ -71,6 +71,13 @@ Une fois que je confirme, Claude met à jour le fichier en question et ajoute un
 │   ├── CONTEXT.md               # Qui je suis, ce que je fais, mes objectifs
 │   ├── HISTORY.md               # Journal évolutif de mes sessions
 │   └── import/                  # Documents externes à analyser (INPUTS)
+│       ├── clients/             # un dossier par client (logos, photos, notes brutes)
+│       ├── ecosysteme/          # apps maison (assists, cockpit-miroir, paiement…)
+│       ├── marque/              # identité Attractor (personnages, campagne, design system)
+│       ├── methode/             # méthode ATTRACTOR, ebooks, base de connaissance
+│       ├── formation/           # supports de formation et de certification
+│       ├── devis/               # sortie de la skill devis-express
+│       └── _archive/            # ce qui a servi et ne sert plus
 ├── livrables/                   # Tout ce que Claude produit pour moi (OUTPUTS)
 │   ├── clients/                 # Web apps métiers sur mesure (1 dossier par client)
 │   ├── ecosysteme-attractor/    # Apps maison (Attractor Assists, Livraison Pro, Fidelys, pilotage)
@@ -91,7 +98,7 @@ Une fois que je confirme, Claude met à jour le fichier en question et ajoute un
 | Dossier | Utilité |
 |---------|---------|
 | `context/` | Tout ce qui me concerne et que Claude doit savoir |
-| `context/import/` | Documents externes (PDFs, exports, notes) à analyser. **INPUTS** |
+| `context/import/` | Documents externes (PDFs, exports, notes) à analyser. **INPUTS**. Rangé par usage, règle de dépôt dans son `README.md` : rien ne reste à la racine |
 | `livrables/` | Tout ce que Claude produit pour moi. **OUTPUTS** |
 | `.claude/commands/` | Commandes personnalisées de mon Assists |
 | `.claude/skills/` | Skills (super-pouvoirs) de mon Assists |

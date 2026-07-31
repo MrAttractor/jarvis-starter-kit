@@ -1,7 +1,7 @@
 # LS EXPERTISE — Brief source (prompt de conception DMV)
 
 > Reçu de Mac Arthur le 06/07/2026. Conserve le texte tel que transmis, sert de référence unique pour toute évolution du projet.
-> Statut projet avant ce brief : mentionné dans l'inventaire initial des Projects Claude.ai (`context/import/etat-des-lieux.md`) comme "Plateforme suivi perfs agence" (dashboard perfs équipes + analyse réseaux), stade maquette/projet, pas de repo identifié. Aucune suite n'avait été donnée depuis.
+> Statut projet avant ce brief : mentionné dans l'inventaire initial des Projects Claude.ai (`context/import/_archive/organisation-2026-05/etat-des-lieux.md`) comme "Plateforme suivi perfs agence" (dashboard perfs équipes + analyse réseaux), stade maquette/projet, pas de repo identifié. Aucune suite n'avait été donnée depuis.
 
 ---
 

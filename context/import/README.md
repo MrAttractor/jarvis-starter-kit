@@ -1,28 +1,45 @@
-# Dossier d'import
+# context/import — les entrées
 
-> Déposez ici tous les documents que vous voulez que votre Jarvis analyse.
+Tout ce qui **arrive** dans le workspace : logos et photos envoyés par les clients,
+captures, exports, notes brutes, specs. Ce qui **sort** (ce que Claude produit) va
+dans `livrables/`, jamais ici.
 
-## À quoi sert ce dossier
+Rangé le 31/07/2026. Avant, 172 fichiers vivaient en vrac à la racine.
 
-Ce dossier sert à déposer des documents externes que Claude Code peut lire et analyser pour vous. Par exemple :
+## Où déposer un nouveau fichier
 
-- Des exports Notion ou Google Docs
-- Des PDF de rapports, livres ou articles
-- Des captures d'écran de tableaux ou interfaces
-- Des transcriptions de réunions ou de podcasts
-- Des fichiers CSV ou Excel
-- N'importe quel document texte ou image
+| Dossier | Ce qu'il contient |
+|---|---|
+| `clients/<client>/` | tout ce qui vient d'un client : logo, photos produits, notes, brief brut |
+| `ecosysteme/` | les apps maison : `assists/`, `cockpit-miroir/`, `paiement/`, `livraison-pro/` |
+| `marque/` | l'identité Attractor : `personnages/`, `campagne/`, `site-et-contenu/`, `design-system-references/` |
+| `methode/` | la méthode ATTRACTOR, les ebooks, la base de connaissance Assists |
+| `formation/` | les supports de formation et de certification |
+| `devis/` | les devis générés par la skill `devis-express` (ne pas déplacer, elle écrit ici) |
+| `_archive/` | ce qui a servi et ne sert plus, daté |
 
-## Comment l'utiliser
+**La règle, en une phrase :** un fichier client va dans son dossier client, le reste
+va dans le dossier qui décrit son usage. En cas d'hésitation entre les deux, le
+client l'emporte.
 
-1. Glissez-déposez vos fichiers dans ce dossier
-2. Demandez à Claude Code d'analyser le document
-3. Exemple : "Analyse le document `mon-rapport-q1.pdf` et fais-moi une synthèse"
+## Deux conventions
 
-Claude Code lira le document et l'utilisera comme contexte pour vous répondre.
+1. **Nommer le fichier pour le retrouver**, pas pour décrire son contenu. Les visuels
+   générés par IA arrivent avec le prompt entier comme nom, sur 200 caractères : les
+   renommer court et garder le prompt dans le README du dossier (voir
+   `marque/campagne/README.md`).
+2. **Ne rien laisser à la racine.** Si un fichier n'a pas de dossier, c'est qu'il en
+   manque un : le créer.
 
-## Bonnes pratiques
+## Chemins cités ailleurs, à ne pas déplacer sans mettre à jour
 
-- Donnez des noms clairs à vos fichiers (ex : `rapport-ventes-mars-2026.pdf`)
-- Supprimez régulièrement les vieux documents pour garder ce dossier propre
-- Pour des documents très volumineux ou récurrents, demandez à Claude de les résumer dans un fichier dédié dans `context/`
+- `methode/methode-md/BASE_CONNAISSANCE_ASSISTS.md` — cité dans `CONTEXT.md` et `concept-v3.md`
+- `marque/design-system-references/` — cité dans `CONTEXT.md` et `design-system.md`
+- `devis/` — la skill `devis-express` écrit dedans
+- `formation/Enneagramme Preparation Mentale.xlsx` — cité par la bible de certification
+
+## Comment s'en servir
+
+Déposez le fichier dans le bon dossier, puis demandez l'analyse en donnant son
+chemin. Exemple : « analyse `clients/ayela/CEO Ayela.heif` et prépare le visuel de
+la page fondatrice ».
