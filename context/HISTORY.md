@@ -7,6 +7,74 @@
 
 ---
 
+## 2026-07-31 (session 120 — le modèle VSD change de nature, et Lorraine prend la main sur ses prix)
+
+> Journée en deux temps : le matin un virage stratégique subi sur Air CI, l'après-midi une brique d'autonomie livrée chez Ayêla.
+
+### Air Côte d'Ivoire, l'objection qui fait tomber le modèle
+- **Hermance Alloh a répondu**, et son objection est juste : **une franchise bagage est un droit personnel, non cessible**. Aucune compagnie ne laissera un tiers présenter des valises au comptoir contre l'allocation d'un passager. Toute la revente de capacité aux sociétés de colisage s'effondre avec elle.
+- **Le fret est écarté par Mac Arthur**, pour deux raisons qui tiennent seules : il impose le régime d'import commercial (droits, TVA, transitaire, terminal cargo, délais), or le colis diaspora existe précisément pour éviter ça ; et pour expédier en fret personne n'a besoin de nous, Air Côte d'Ivoire Cargo vend en direct. On serait un intermédiaire sans fonction.
+- **VSD devient un voyage d'achat** : un aller-retour de 72 h à prix réduit avec une grosse franchise au retour, vendu à quelqu'un qui **achète pour son propre compte** et rapporte ses propres marchandises. Deux blocs indépendants, le siège d'un côté, la marchandise du voyageur de l'autre. Plus aucune fiction à faire tenir, plus aucune tolérance à obtenir.
+- **Ce que ça coûte, dit franchement** : environ 125 600 € par an de marge colis disparaissent. Le modèle qui reste pèse 23 400 à 58 500 € par an selon le remplissage, mais il ne dépend d'aucune dérogation. **Plus petit et beaucoup plus sûr.**
+- La demande faite à Air CI devient simple, et c'est ce qu'ils savent dire oui : un tarif de bloc, des sièges **par paliers 4 puis 7 puis 10**, une franchise de 2 × 32 kg au retour (**32 kg est déjà leur propre standard**, celui du palier Diamant de sMiles), et le calendrier des périodes ouvertes.
+- **Le dossier est fusionné en une note unique** (`VSD.md`), tout le reste part en `_archive/` avec une règle de tenue : un chiffre n'existe qu'à un seul endroit, ailleurs c'est une copie périmée. La section la plus utile est le tableau de ce qui est fermé et pourquoi, pour ne pas refaire cinq jours de travail sur une piste déjà morte.
+- **La date-butoir tient** : sans visibilité vers le 10-12 août, le vol du 4 septembre tombe et on repositionne sur octobre.
+
+### Signature Attractor, les invitations tombaient en indésirable
+- L'expéditeur passe de `noreply@` à `hello@agenceattractor.com`. Un `noreply@` sans boîte réelle est un signal de spam classique, et le symptôme était le bon : les invitations à signer n'arrivaient pas. Correctif appliqué dans `_shared/signature.ts`, donc valable pour tous les dossiers, dont Élévia qui attend justement une signature.
+
+### Nabycook, les retours de Nabintou
+- Vocabulaire et ton éditorial repris sur l'ensemble du site : c'est une **association loi 1901 ESS**, pas une consultante. Le dossier est en attente de ses liens, de ses textes et de sa **charte éditoriale**, qu'elle cite dans son retour mais ne nous a pas envoyée. Sans elle, on cale les textes au jugé.
+
+### ETHSUN, s'accorder avant de produire
+- État des lieux écrit avant toute ligne de contenu, **document à envoyer au partenaire**. **8 points ne sont pas établis**, dont le pourcentage du revenue-share, le seuil de déclenchement d'une session, la propriété du contenu produit et le droit de contact commercial avec les participants.
+- Le calcul qui décide : première session à 15 inscrits et 35 % ≈ 285 € par jour travaillé, deuxième session ≈ 854 €. **Toute la valeur est dans la répétition**, donc l'engagement de volume pèse plus lourd que le pourcentage dans la négociation.
+
+### Ayêla, les promotions passent côté cliente
+- Lorraine crée ses offres seule depuis son tableau de bord : toute la boutique ou une seule création, pourcentage ou prix spécial, dates de début et de fin, pause. **Aperçu des nouveaux prix avant publication.** La vitrine applique seule bandeau, pastille, prix barré, panier et message WhatsApp.
+- Trois décisions de fond. **Le filtrage des dates est côté serveur** : une promo programmée n'est pas lisible à la clé anon avant son jour, preuve faite à la clé anon et pas au service role. **Le panier est resynchronisé au chargement**, pour ne jamais vendre à un prix périmé à quelqu'un qui revient une semaine plus tard. **Pas de cumul** : si deux offres se croisent, c'est la plus avantageuse pour le client qui gagne.
+- 19 cas de calcul testés sur le vrai code avant déploiement. En ligne sur lamaisonayela.com, guide client mis à jour.
+
+### Livrables
+- `air-cote-divoire/VSD.md` (source de vérité unique) + `_archive/`. `ethsun/ETAT-DES-LIEUX-OPPORTUNITE.md` et `NOTE-VEILLE-ET-DEMARCHE.md`. Site Nabycook corrigé. `ayela/app/schema-09.sql` + vitrine, tableau de bord et guide déployés en production.
+- **Reste à faire sans dépendre d'Air CI** : le back-office de file d'attente VSD (les statuts existent en base, aucune interface ne les pilote), la refonte de la page de proposition et du site voyageur qui parlent encore de colis, et la clé de partage avec Jean Yves à rouvrir avant la première rotation.
+
+---
+
+## 2026-07-30 (session 119 — All Eyes on yoo entre en closing, VSD se rectifie)
+
+### All Eyes on yoo, maquette de closing produite
+- Fiche prospect construite à partir des visuels de marque et du Drive client, puis maquette cliquable + parcours cliente + document d'offre, en ligne sur `demo.agenceattractor.com/all-eyes-on-yoo`. Couleurs tirées directement du logo (bleu nuit, jaune solaire, bleu ciel), faute de charte écrite.
+- **Correction de périmètre le jour même, et elle change le produit : elle ne vend que des montures nues.** Aucun traitement de verre, aucune mesure de vue, aucun montage. La baseline de son propre logo le disait déjà. Conséquences : le prix affiché est le prix final (argument commercial réel), aucun délai de fabrication, et **les dimensions de la monture deviennent l'information critique** puisque personne n'ajuste sur le visage.
+- Deux leviers retenus dans la maquette : l'essayage sur créneau et le **conseil en photo**, le seul moment où son savoir-faire est irremplaçable. Donc à faciliter, pas à automatiser. Point vie privée annoncé dès la maquette, à reprendre dans les mentions légales.
+- Offre : **App pro 320 000 FCFA (≈ 490 €)**, encadrée par 165 000 F et 790 000 F, acompte 50 %. Limiteur honnête assumé : le paiement Wave/OM reste un lien de collecte, pas une passerelle.
+- Tous les chiffres et prénoms fictifs sont marqués comme tels dans la fiche, pour ne jamais les présenter comme ses données. **Statut : en attente de son retour.**
+
+### VSD, dernière version avant le virage
+- Modèle rectifié dans la journée (valise 32 kg offerte au retour, paliers 4/7/10, grille de prix plancher). Cette version a été dépassée dès le lendemain par l'objection d'Hermance Alloh, mais la grille de prix plancher reste utile en séance.
+
+---
+
+## 2026-07-29 (session 118 — Élévia prêt à signer, Nabycook livré, Emmanuel devient autonome)
+
+### Club Élévia, le package part
+- **400 € encaissés le 20/07**, reçu émis. Le versement solde la Tranche 1 et laisse 50 € d'avance sur la Tranche 2 : **950 € réglés sur 3 000 €, reste 2 050 €**. Conséquence commerciale forte, dite telle quelle dans le mail : **sa signature suffit à lancer le développement**, elle n'a rien à verser pour démarrer.
+- **Ses trois demandes du 16/07 sont intégrées** aux documents plutôt que discutées : plus de validation acquise par simple silence (relance écrite obligatoire), remise du code source en fin de projet, critères de recette détaillés fonctionnalité par fonctionnalité.
+- **Deux documents de vision offerts**, autonomes et à sa charte, écrits pour être montrés à ses futurs membres, et repris en annexes du CDC avec la feuille de route V1/V2/V3. Précision écrite pour plus tard : les annexes n'ajoutent rien au périmètre engagé.
+- **Le dossier startup est vendu à part, et nommé comme tel** : roadmap produit 3 ans à **440 €** (80 €/h remisés depuis 120 €/h), acompte 220 €, indépendant des 3 000 €. Les 5 autres pièces ne sont volontairement pas chiffrées tant que la roadmap n'existe pas : vendre le bloc entier à une cliente qui négocie serait une erreur.
+- **Leçon commerciale actée** : afficher le tarif plein et montrer la remise, plutôt qu'annoncer directement le prix bas. Même argent encaissé, mais le tarif de référence reste intact pour la prestation suivante. Et une remise n'est jamais laissée sans motif écrit.
+- **Statut : en attente de sa signature électronique.**
+
+### Nabycook, maquette Phase 1
+- Cinq pages livrées (accueil, l'association, l'univers, les adhésions, contact) avec la liste de ce qu'il manque côté cliente.
+
+### aicreatioon, Emmanuel prend la main sur son site
+- **Phase 2** : son portfolio devient autonome, il ajoute, supprime et met en vedette ses réalisations depuis son admin, le site public lit la base au lieu d'un fichier.
+- Puis **ses textes, ses chiffres et sa vidéo d'accueil** deviennent éditables au même endroit. Une batterie de tests est versionnée dans le dossier pour vérifier cohérence, contenu et défauts avant chaque redéploiement.
+- La contrepartie du partenariat reste la campagne Awa, à cadrer par écrit.
+
+---
+
 ## 2026-07-28 (session 117 — VSD : le backend passe en ligne, et la question du statut de vendeur est tranchée)
 
 > Session partie d'un lien de paiement Ayêla et finie sur le montage juridique du VSD.
