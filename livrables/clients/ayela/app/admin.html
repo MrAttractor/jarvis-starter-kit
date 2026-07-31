@@ -190,6 +190,21 @@ img{max-width:100%;display:block}
 .pfbox .lb{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .pfbox .n{font-family:var(--serif);font-size:22px;font-weight:600;margin-top:2px}
 .pfbox .n.d{color:var(--danger)}
+/* promotions */
+.segs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.seg{flex:1;min-width:132px;min-height:44px;padding:11px 12px;border:1px solid var(--line2);border-radius:11px;background:#fff;color:var(--ink2);font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;text-align:center}
+.seg.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.prev{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:12px 13px;margin-bottom:14px;font-size:12.5px;color:var(--ink2);line-height:1.7}
+.prev .l{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.prev .l b{color:var(--brand);font-weight:600;white-space:nowrap}
+.prev s{color:var(--muted)}
+.prev .hint{color:var(--muted);font-size:11.5px}
+.promoc{border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:13px;padding:12px 13px;margin-bottom:10px;background:#fff}
+.promoc.off{border-left-color:var(--line2);opacity:.72}
+.promoc .ph2{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap}
+.promoc .ph2 .nm{font-size:14px;font-weight:600}
+.promoc .cut{font-family:var(--serif);font-size:21px;font-weight:600;color:var(--brand);line-height:1.2}
+.promoc .det{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.6}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:30px;font-size:12.5px;z-index:400;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
 .loading{text-align:center;color:var(--muted);padding:30px;font-size:13px}
@@ -296,7 +311,13 @@ img{max-width:100%;display:block}
 
     <!-- CATALOGUE -->
     <div class="panel" id="p-catalogue">
-      <div class="sectlead">Catalogue</div>
+      <div class="sectlead">Catalogue &amp; promotions</div>
+
+      <div class="subh">🏷️ Mes promotions <span class="meta" id="promo-meta"></span></div>
+      <button class="add" onclick="openPromo()">＋ Créer une promotion</button>
+      <div id="promo-list"><div class="loading">Chargement…</div></div>
+
+      <div class="subh">🍾 Mes créations</div>
       <button class="add" onclick="openProd()">＋ Ajouter une création</button>
       <div id="prod-list"><div class="loading">Chargement…</div></div>
     </div>
@@ -526,6 +547,50 @@ img{max-width:100%;display:block}
   </div>
 </div>
 
+<!-- MODAL PROMOTION -->
+<div class="ov" id="promo-ov">
+  <div class="ms">
+    <h3 id="promo-mtitle">Créer une promotion</h3>
+    <p style="font-size:12.5px;color:var(--muted);margin:-6px 0 16px">Le prix barré et le nouveau prix apparaissent tout seuls sur la boutique, dans le panier et dans le message WhatsApp du client.</p>
+
+    <div class="field"><label>Nom de l'offre</label><input id="rf-titre" placeholder="Ex. Fête des mères"></div>
+
+    <label style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;margin-bottom:6px">La remise porte sur</label>
+    <div class="segs">
+      <button class="seg" id="sg-p-boutique" onclick="setPortee('boutique')">Toute la boutique</button>
+      <button class="seg" id="sg-p-produit" onclick="setPortee('produit')">Une seule création</button>
+    </div>
+
+    <div id="rf-prodzone" style="display:none">
+      <div class="field"><label>Création</label><select id="rf-prod" onchange="fillPromoFormats();promoPreview()"></select></div>
+      <div class="field"><label>Format</label><select id="rf-fmt" onchange="promoPreview()"></select></div>
+    </div>
+
+    <label style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;margin-bottom:6px">Type de remise</label>
+    <div class="segs">
+      <button class="seg" id="sg-t-pourcentage" onclick="setTypeRemise('pourcentage')">Pourcentage</button>
+      <button class="seg" id="sg-t-prix_fixe" onclick="setTypeRemise('prix_fixe')">Prix spécial</button>
+    </div>
+
+    <div class="field"><label id="rf-vlabel">Remise (%)</label><input id="rf-val" type="number" inputmode="numeric" min="1" placeholder="20" oninput="promoPreview()"></div>
+
+    <div class="prev" id="rf-preview"></div>
+
+    <div class="two">
+      <div class="field"><label>Du</label><input id="rf-debut" type="date"></div>
+      <div class="field"><label>Au</label><input id="rf-fin" type="date"></div>
+    </div>
+    <div class="field"><label>Message sur la boutique (optionnel)</label><input id="rf-msg" placeholder="Ex. Profites-en jusqu'à dimanche"></div>
+
+    <div class="ustatus" id="promo-status"></div>
+    <div class="mactions">
+      <button class="btn sec" id="promo-del" onclick="delPromo()" style="display:none;color:var(--danger)">Supprimer</button>
+      <button class="btn sec" onclick="closeOv('promo-ov')" style="flex:1">Annuler</button>
+      <button class="btn pri" onclick="savePromo()" style="flex:1">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -535,7 +600,7 @@ const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const {createClient}=supabase;
 const sb=createClient(SUPABASE_URL,SUPABASE_ANON,{auth:{storageKey:'ay-admin-auth',persistSession:true,autoRefreshToken:true}});
 
-let CACHE={cmd:[],stk:[],lots:[],pos:[],prods:[],club:[],poslignes:[],emb:[],ventes:[]};
+let CACHE={cmd:[],stk:[],lots:[],pos:[],prods:[],club:[],poslignes:[],emb:[],ventes:[],promos:[]};
 let pendingPhoto=null, editProd=null, editStock=null, editLot=null, editPos=null;
 let editPosLigne=null, plCtxPos=null, editEmb=null, apCtxPos=null, psLot=null;
 
@@ -593,8 +658,8 @@ function switchTab(name,el){
 
 // ── LOAD ALL ──
 async function loadAll(){
-  await Promise.all([loadCmd(),loadStock(),loadLots(),loadPos(),loadPosLignes(),loadProds(),loadClub(),loadEmb(),loadVentes()]);
-  renderPos(); renderProdFinis(); renderStats(); renderAccueil();
+  await Promise.all([loadCmd(),loadStock(),loadLots(),loadPos(),loadPosLignes(),loadProds(),loadClub(),loadEmb(),loadVentes(),loadPromos()]);
+  renderPos(); renderProdFinis(); renderStats(); renderPromos(); renderAccueil();
 }
 
 // ── COMMANDES ──
@@ -611,7 +676,7 @@ function renderCmd(){
   const el=document.getElementById('cmd-list');
   if(!CACHE.cmd.length){ el.innerHTML='<div class="empty">Aucune commande pour l\'instant.</div>'; return; }
   el.innerHTML=CACHE.cmd.map(c=>{
-    const lignes=(c.produits||[]).map(p=>`${esc(p.nom)} × ${p.quantite}${p.format?` <span style="color:var(--muted)">(${esc(p.format)})</span>`:''}`).join('<br>');
+    const lignes=(c.produits||[]).map(p=>`${esc(p.nom)} × ${p.quantite}${p.format?` <span style="color:var(--muted)">(${esc(p.format)})</span>`:''}${p.promo?` <span style="color:var(--brand);font-weight:600">🏷️ ${esc(p.promo)}${p.prix_normal?' au lieu de '+esc(p.prix_normal):''}</span>`:''}`).join('<br>');
     const wa=nWa(c.client_wa);
     return `<div class="orow ${c.traitee?'':'new'}">
       <div class="t"><div class="who">${esc(c.client_nom||'Client boutique')}</div><div class="dt">${new Date(c.created_at).toLocaleString('fr',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div></div>
@@ -1033,6 +1098,159 @@ async function saveProd(){
   finally{ st.classList.remove('show'); btn.disabled=false; }
 }
 
+// ── PROMOTIONS ──
+let editPromo=null, promoPortee='boutique', promoType='pourcentage';
+function todayISO(){const n=new Date();return new Date(n.getTime()-n.getTimezoneOffset()*60000).toISOString().slice(0,10);}
+function promoEnCours(p){const t=todayISO();return p.actif!==false&&(!p.debut||p.debut<=t)&&(!p.fin||p.fin>=t);}
+function promoEtat(p){
+  if(p.actif===false) return ['En pause','wait'];
+  const t=todayISO();
+  if(p.debut&&p.debut>t) return ['Programmée','prog'];
+  if(p.fin&&p.fin<t)    return ['Terminée','lab'];
+  return ['En cours','done'];
+}
+// une promo s'applique-t-elle à ce produit / ce format ?
+function promoCible(p,prodId,fmtLabel){
+  if(p.portee==='boutique') return true;
+  if(p.produit_id!==prodId) return false;
+  if(!p.format_label) return true;
+  return (p.format_label||'')===(fmtLabel||'');
+}
+function promoPrix(p,base){
+  const v=Number(p.valeur)||0;
+  if(!base) return base;
+  if(p.type_remise==='prix_fixe') return Math.max(0,Math.round(v));
+  return Math.max(0,Math.round(base*(1-v/100)));
+}
+function promoRemiseLabel(p){ return p.type_remise==='prix_fixe' ? ('Prix spécial '+fmtF(p.valeur)) : ('−'+(Number(p.valeur)||0)+' %'); }
+function promoPorteeLabel(p){
+  if(p.portee==='boutique') return 'Toute la boutique';
+  const pr=CACHE.prods.find(x=>x.id===p.produit_id);
+  return (pr?pr.nom:'Création supprimée')+(p.format_label?' · '+p.format_label:' · tous les formats');
+}
+function promoPeriodeLabel(p){
+  if(!p.debut&&!p.fin) return 'Sans date de fin';
+  if(p.debut&&p.fin)   return 'Du '+frDate(p.debut)+' au '+frDate(p.fin);
+  if(p.fin)            return "Jusqu'au "+frDate(p.fin);
+  return 'À partir du '+frDate(p.debut);
+}
+async function loadPromos(){
+  const {data,error}=await sb.from('ay_promos').select('*').order('created_at',{ascending:false});
+  if(error) return; CACHE.promos=data||[];
+  const enc=CACHE.promos.filter(promoEnCours).length;
+  const m=document.getElementById('promo-meta'); if(m) m.textContent=CACHE.promos.length+' au total · '+enc+' en cours';
+  renderPromos();
+}
+function renderPromos(){
+  const el=document.getElementById('promo-list'); if(!el) return;
+  if(!CACHE.promos.length){ el.innerHTML='<div class="empty">Aucune promotion pour l\'instant. Crée ta première offre : les nouveaux prix s\'affichent tout seuls sur la boutique.</div>'; return; }
+  el.innerHTML=CACHE.promos.map(p=>{
+    const et=promoEtat(p), off=!promoEnCours(p);
+    return `<div class="promoc ${off?'off':''}">
+      <div class="ph2"><span class="nm">${esc(p.titre)}</span><span class="st ${et[1]}" style="margin-left:auto">${et[0]}</span></div>
+      <div class="cut">${esc(promoRemiseLabel(p))}</div>
+      <div class="det">${esc(promoPorteeLabel(p))}<br>${esc(promoPeriodeLabel(p))}${p.message?'<br>💬 '+esc(p.message):''}</div>
+      <div class="rowbtns">
+        <button class="mini edit" onclick="openPromo('${p.id}')">Éditer</button>
+        <button class="mini" onclick="togglePromoActif('${p.id}',${p.actif===false})">${p.actif===false?'▶ Réactiver':'⏸ Mettre en pause'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function setPortee(v){
+  promoPortee=v;
+  document.getElementById('sg-p-boutique').classList.toggle('on',v==='boutique');
+  document.getElementById('sg-p-produit').classList.toggle('on',v==='produit');
+  document.getElementById('rf-prodzone').style.display=v==='produit'?'block':'none';
+  // « prix spécial » n'a de sens que sur une création précise
+  document.getElementById('sg-t-prix_fixe').style.display=v==='boutique'?'none':'block';
+  if(v==='boutique'&&promoType==='prix_fixe') setTypeRemise('pourcentage'); else promoPreview();
+}
+function setTypeRemise(v){
+  promoType=v;
+  document.getElementById('sg-t-pourcentage').classList.toggle('on',v==='pourcentage');
+  document.getElementById('sg-t-prix_fixe').classList.toggle('on',v==='prix_fixe');
+  document.getElementById('rf-vlabel').textContent=v==='prix_fixe'?'Nouveau prix (F)':'Remise (%)';
+  document.getElementById('rf-val').placeholder=v==='prix_fixe'?'8000':'20';
+  promoPreview();
+}
+function fillPromoFormats(){
+  const p=CACHE.prods.find(x=>x.id===document.getElementById('rf-prod').value);
+  const fmts=(p&&p.formats)||[];
+  document.getElementById('rf-fmt').innerHTML='<option value="">Tous les formats</option>'+
+    fmts.map(f=>`<option value="${esc(f.label||'')}">${esc(f.label||'')} — ${esc(f.prix||'')}</option>`).join('');
+}
+function promoPreview(){
+  const el=document.getElementById('rf-preview'); if(!el) return;
+  const val=parseFloat(document.getElementById('rf-val').value||'0');
+  const draft={portee:promoPortee,type_remise:promoType,valeur:val,
+    produit_id:promoPortee==='produit'?document.getElementById('rf-prod').value:null,
+    format_label:promoPortee==='produit'?(document.getElementById('rf-fmt').value||null):null};
+  if(!val||val<=0){ el.innerHTML='<div class="hint">Indique la remise pour voir les nouveaux prix.</div>'; return; }
+  if(promoType==='pourcentage'&&val>=100){ el.innerHTML='<div class="hint" style="color:var(--danger)">Une remise doit rester sous 100 %.</div>'; return; }
+  const lignes=[];
+  CACHE.prods.forEach(pr=>(pr.formats||[]).forEach(f=>{
+    if(!promoCible(draft,pr.id,f.label||'')) return;
+    const base=parseF(f.prix); if(!base) return;
+    lignes.push(`<div class="l"><span>${esc(pr.nom)} · ${esc(f.label||'')}</span><span><s>${fmtF(base)}</s> <b>${fmtF(promoPrix(draft,base))}</b></span></div>`);
+  }));
+  if(!lignes.length){ el.innerHTML='<div class="hint">Aucun prix concerné pour l\'instant.</div>'; return; }
+  el.innerHTML='<div class="hint" style="margin-bottom:6px">Ce que verront tes clients :</div>'+lignes.slice(0,6).join('')+
+    (lignes.length>6?`<div class="hint">et ${lignes.length-6} autre(s) prix…</div>`:'');
+}
+function openPromo(id){
+  editPromo=id||null;
+  const p=id?CACHE.promos.find(x=>x.id===id):null;
+  document.getElementById('promo-mtitle').textContent=id?'Éditer la promotion':'Créer une promotion';
+  document.getElementById('rf-titre').value=p?p.titre:'';
+  document.getElementById('rf-msg').value=p?(p.message||''):'';
+  const sel=document.getElementById('rf-prod');
+  sel.innerHTML=CACHE.prods.map(x=>`<option value="${x.id}">${esc(x.nom)}</option>`).join('');
+  if(p&&p.produit_id) sel.value=p.produit_id;
+  fillPromoFormats();
+  if(p&&p.format_label) document.getElementById('rf-fmt').value=p.format_label;
+  document.getElementById('rf-val').value=p?(p.valeur||''):'';
+  document.getElementById('rf-debut').value=p?(p.debut||''):todayISO();
+  document.getElementById('rf-fin').value=p?(p.fin||''):'';
+  promoType=p?p.type_remise:'pourcentage';
+  setPortee(p?p.portee:'boutique');
+  setTypeRemise(promoType);
+  document.getElementById('promo-del').style.display=id?'block':'none';
+  openOv('promo-ov');
+}
+async function savePromo(){
+  const titre=document.getElementById('rf-titre').value.trim();
+  const val=parseFloat(document.getElementById('rf-val').value||'0');
+  const debut=document.getElementById('rf-debut').value||null;
+  const fin=document.getElementById('rf-fin').value||null;
+  if(!titre){toast('Donne un nom à ton offre');return;}
+  if(!val||val<=0){toast('Indique la remise');return;}
+  if(promoType==='pourcentage'&&val>=100){toast('La remise doit rester sous 100 %');return;}
+  if(debut&&fin&&fin<debut){toast('La date de fin est avant la date de début');return;}
+  const produit_id=promoPortee==='produit'?(document.getElementById('rf-prod').value||null):null;
+  if(promoPortee==='produit'&&!produit_id){toast('Choisis la création concernée');return;}
+  const payload={titre,message:document.getElementById('rf-msg').value.trim()||null,portee:promoPortee,produit_id,
+    format_label:promoPortee==='produit'?(document.getElementById('rf-fmt').value||null):null,
+    type_remise:promoType,valeur:val,debut,fin};
+  const st=document.getElementById('promo-status'); st.classList.add('show'); st.textContent='Enregistrement…';
+  const {error}=editPromo?await sb.from('ay_promos').update(payload).eq('id',editPromo):await sb.from('ay_promos').insert({...payload,actif:true});
+  st.classList.remove('show');
+  if(error){toast('Erreur : '+error.message);return;}
+  closeOv('promo-ov'); await loadPromos(); renderAccueil(); toast(editPromo?'Promotion mise à jour':'Promotion en ligne ✅');
+}
+async function togglePromoActif(id,v){
+  const {error}=await sb.from('ay_promos').update({actif:v}).eq('id',id);
+  if(error){toast('Erreur');return;}
+  await loadPromos(); renderAccueil(); toast(v?'Promotion réactivée':'Promotion en pause');
+}
+async function delPromo(){
+  if(!editPromo) return;
+  if(!confirm('Supprimer cette promotion ? Les prix normaux reviennent tout de suite sur la boutique.')) return;
+  const {error}=await sb.from('ay_promos').delete().eq('id',editPromo);
+  if(error){toast('Erreur');return;}
+  closeOv('promo-ov'); await loadPromos(); renderAccueil(); toast('Promotion supprimée');
+}
+
 // ── CLUB ──
 async function loadClub(){
   const {data,error}=await sb.from('ay_inscriptions').select('*').order('created_at',{ascending:false});
@@ -1184,6 +1402,14 @@ function renderAccueil(){
   CACHE.emb.filter(e=>e.quantite<(e.seuil||100) && !(e.en_commande>0)).slice(0,3).forEach(e=>items.push(['📦',esc(e.nom)+' — vides bas','Commander ('+esc(e.fournisseur||'appro')+' '+embMonths(e.delai_jours)+')','new','à commander']));
   CACHE.emb.filter(e=>e.reception_prevue && e.en_commande>0).sort((a,b)=>new Date(a.reception_prevue)-new Date(b.reception_prevue)).slice(0,2).forEach(e=>items.push(['🚢','Réception '+esc(e.nom),'Prévue '+frDate(e.reception_prevue),'prog','en route']));
   CACHE.pos.filter(p=>p.demande_reappro).slice(0,3).forEach(p=>items.push(['🏬',esc(p.nom)+' — réappro',p.reappro_message?esc(p.reappro_message.replace(/\n/g,' ').slice(0,70))+'…':'demande de réapprovisionnement','new','à traiter']));
+  CACHE.promos.filter(promoEnCours).slice(0,3).forEach(p=>{
+    let etat='en cours', cls='done';
+    if(p.fin){ const j=Math.round((new Date(p.fin)-new Date(todayISO()))/86400000);
+      if(j<=0){ etat='dernier jour'; cls='new'; } else if(j<=2){ etat='fin dans '+j+' j'; cls='wait'; } }
+    items.push(['🏷️',esc(p.titre),esc(promoPorteeLabel(p))+' · '+esc(promoRemiseLabel(p)),cls,etat]);
+  });
+  CACHE.promos.filter(p=>p.actif!==false&&p.debut&&p.debut>todayISO()).slice(0,2)
+    .forEach(p=>items.push(['🏷️',esc(p.titre),'Démarre le '+frDate(p.debut),'prog','programmée']));
   renderProdFinis();
   document.getElementById('pdj-count').textContent=items.length+' action'+(items.length>1?'s':'');
   const el=document.getElementById('pdj');
@@ -1197,8 +1423,8 @@ function closeOv(id){ document.getElementById(id).classList.remove('open'); docu
 // Rafraîchissement auto : quand tu reviens sur l'onglet, et toutes les 60s
 async function refreshLive(){
   if(!document.getElementById('dash').classList.contains('on')) return;
-  await Promise.all([loadCmd(),loadPos(),loadPosLignes(),loadStock(),loadEmb(),loadVentes()]);
-  renderPos(); renderProdFinis(); renderStats(); renderAccueil();
+  await Promise.all([loadCmd(),loadPos(),loadPosLignes(),loadStock(),loadEmb(),loadVentes(),loadPromos()]);
+  renderPos(); renderProdFinis(); renderStats(); renderPromos(); renderAccueil();
 }
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden) refreshLive(); });
 setInterval(()=>{ if(!document.hidden) refreshLive(); }, 60000);

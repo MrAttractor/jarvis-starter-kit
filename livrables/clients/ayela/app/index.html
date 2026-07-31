@@ -107,6 +107,20 @@ a{color:inherit}
 .pcard .pr{font-weight:600;color:var(--brand-2);font-size:16px}
 .pcard .pr small{color:var(--muted);font-weight:400;font-size:11px}
 .pcard .pocket{margin-top:6px;font-size:11px;color:#e9dcc9;background:rgba(194,148,51,.14);border:1px solid rgba(194,148,51,.3);border-radius:20px;padding:3px 9px;display:inline-block}
+/* ---------- PROMOTIONS ---------- */
+.pbanner{background:linear-gradient(120deg,rgba(218,106,30,.24),rgba(194,148,51,.14));border:1px solid rgba(218,106,30,.42);border-radius:18px;padding:16px 18px;margin-bottom:16px;max-width:100%}
+.pbanner .t{font-family:var(--serif);font-size:21px;color:#fff;font-weight:600;line-height:1.2;overflow-wrap:break-word}
+.pbanner .d{font-size:14px;color:#e9dcc9;margin-top:5px;line-height:1.5;overflow-wrap:break-word}
+.pbanner .u{font-size:12.5px;color:var(--brand-2);margin-top:8px;font-weight:600}
+.promobadge{position:absolute;top:10px;right:10px;font-size:10.5px;font-weight:700;letter-spacing:.04em;color:#fff;background:var(--brand-3);padding:4px 9px;border-radius:20px}
+.pcard .pr{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 5px}
+.pcard .pr s,.fmt .p s{color:var(--muted);font-weight:400;font-size:12.5px;white-space:nowrap}
+.pcard .pr .now,.fmt .p .now{color:var(--brand)}
+.fmt .l{flex:1;min-width:0}
+.fmt .p{flex:none}
+.citem .old{color:var(--muted);text-decoration:line-through;font-size:11px;margin-right:4px}
+.saving{background:rgba(218,106,30,.14);border:1px solid rgba(218,106,30,.4);color:#f3e9dc;border-radius:12px;padding:10px 12px;font-size:12.5px;line-height:1.5;margin-bottom:10px}
+.saving b{color:var(--brand-2)}
 .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px;font-size:14px}
 .skel{grid-column:1/-1;text-align:center;color:var(--muted);padding:30px;font-size:13px}
 
@@ -282,6 +296,7 @@ a{color:inherit}
     <h2>Nos créations</h2>
     <p>Choisis ta bouteille ou ta canette, ajoute-la à ta commande, et confirme en un geste sur WhatsApp.</p>
   </section>
+  <div id="promo-banner"></div>
   <div class="filters" id="filters"></div>
   <div class="catalog" id="catalog">
     <div class="skel">Chargement du catalogue…</div>
@@ -430,6 +445,7 @@ const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
 let PRODUCTS = [];
+let PROMOS = [];
 let currentFilter = 'Tout';
 let pm = { product:null, fmtIndex:0, qty:1 };
 
@@ -440,14 +456,69 @@ function parsePrice(s){const n=parseInt(String(s).replace(/[^0-9]/g,''),10);retu
 function fmtPrice(n){return n.toLocaleString('fr-FR').replace(/ /g,' ')+' F';}
 function normalizeWa(w){return (w||'').replace(/[^0-9]/g,'');}
 
+// ── PROMOTIONS ───────────────────────────────────────────
+// Les offres sont créées par Ayêla depuis son tableau de bord.
+// Le serveur ne renvoie que celles qui sont en cours (policy RLS).
+function todayISO(){ const n=new Date(); return new Date(n.getTime()-n.getTimezoneOffset()*60000).toISOString().slice(0,10); }
+function promoEnCours(p){ const t=todayISO(); return p.actif!==false && (!p.debut||p.debut<=t) && (!p.fin||p.fin>=t); }
+function promoCible(p,prodId,fmtLabel){
+  if(p.portee==='boutique') return true;
+  if(p.produit_id!==prodId) return false;
+  if(!p.format_label) return true;
+  return (p.format_label||'')===(fmtLabel||'');
+}
+function promoPrixCalc(p,base){
+  const v=Number(p.valeur)||0;
+  if(!base) return base;
+  if(p.type_remise==='prix_fixe') return Math.max(0,Math.round(v));
+  return Math.max(0,Math.round(base*(1-v/100)));
+}
+// prix affiché pour un format : le plus avantageux si plusieurs offres se croisent
+function priceInfo(prod,fmt){
+  const base=parsePrice((fmt||{}).prix);
+  let promo=null, prix=base;
+  PROMOS.filter(promoEnCours).forEach(p=>{
+    if(!promoCible(p,prod.id,(fmt||{}).label||'')) return;
+    const np=promoPrixCalc(p,base);
+    if(np<prix){ prix=np; promo=p; }
+  });
+  return { base, prix, promo, pct: base&&promo?Math.round((1-prix/base)*100):0 };
+}
+function promoOf(prod){ return (prod.formats||[]).map(f=>priceInfo(prod,f)).filter(i=>i.promo).sort((a,b)=>b.pct-a.pct)[0]||null; }
+async function loadPromos(){
+  const { data } = await sb.from('ay_promos').select('*');
+  PROMOS = data||[];
+}
+function renderPromoBanner(){
+  const el=document.getElementById('promo-banner'); if(!el) return;
+  const live=PROMOS.filter(promoEnCours);
+  if(!live.length){ el.innerHTML=''; return; }
+  el.innerHTML=live.slice(0,2).map(p=>{
+    const remise = p.type_remise==='prix_fixe' ? 'Prix spécial '+fmtPrice(Number(p.valeur)||0) : '−'+(Number(p.valeur)||0)+' %';
+    const prod = PRODUCTS.find(x=>x.id===p.produit_id);
+    const quoi = p.portee==='boutique' ? 'sur toute la boutique' : (prod?'sur '+prod.nom+(p.format_label?' ('+p.format_label+')':''):'');
+    const fin = p.fin ? "Jusqu'au "+new Date(p.fin).toLocaleDateString('fr',{day:'numeric',month:'long'}) : '';
+    return `<div class="pbanner">
+      <div class="t">${esc(p.titre)}</div>
+      <div class="d">${esc(remise)} ${esc(quoi)}${p.message?' · '+esc(p.message):''}</div>
+      ${fin?`<div class="u">${esc(fin)}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
 // ── CATALOGUE ────────────────────────────────────────────
 async function loadProducts(){
-  const { data, error } = await sb.from('ay_produits').select('*').eq('est_actif',true).order('ordre',{ascending:true}).order('created_at',{ascending:true});
   const el = document.getElementById('catalog');
+  const [{ data, error }] = await Promise.all([
+    sb.from('ay_produits').select('*').eq('est_actif',true).order('ordre',{ascending:true}).order('created_at',{ascending:true}),
+    loadPromos()
+  ]);
   if(error){ el.innerHTML='<div class="empty">Le catalogue n\'a pas pu se charger. Réessaie dans un instant.</div>'; return; }
   PRODUCTS = (data||[]).map(p=>({...p, formats: Array.isArray(p.formats)?p.formats:(p.formats?JSON.parse(p.formats):[])}));
+  renderPromoBanner();
   renderFilters();
   renderCatalog();
+  syncCartPrices();
 }
 function renderFilters(){
   const cats = ['Tout', ...[...new Set(PRODUCTS.map(p=>p.categorie).filter(Boolean))]];
@@ -463,12 +534,18 @@ function renderCatalog(){
     const f0 = p.formats[0]||{};
     const badge = p.badge?`<span class="badge ${p.categorie&&p.categorie.toLowerCase().includes('cocktail')?'rtd':''}">${esc(p.badge)}</span>`:'';
     const priceExtra = p.formats.length>1?` <small>/ ${esc((f0.label||'').replace(/^Bouteille\s*/i,''))}</small>`:'';
+    const pi = priceInfo(p,f0);
+    const meilleure = promoOf(p);
+    const promoBadge = meilleure?`<span class="promobadge">${meilleure.pct>0?'−'+meilleure.pct+' %':'Promo'}</span>`:'';
+    const prix = pi.promo
+      ? `<s>${fmtPrice(pi.base)}</s><span class="now">${fmtPrice(pi.prix)}</span>`
+      : esc(f0.prix||'');
     return `<div class="pcard" onclick="openProduct('${p.id}')">
-      <div class="im">${badge}<img src="${esc(p.photo_url)}" alt="${esc(p.nom)}" loading="lazy"></div>
+      <div class="im">${badge}${promoBadge}<img src="${esc(p.photo_url)}" alt="${esc(p.nom)}" loading="lazy"></div>
       <div class="b">
         <div class="nm">${esc(p.nom)}</div>
         <div class="mt">${esc(p.degre||'')}</div>
-        <div class="pr">${esc(f0.prix||'')}${priceExtra}</div>
+        <div class="pr">${prix}${priceExtra}</div>
       </div>
     </div>`;
   }).join('');
@@ -489,12 +566,18 @@ function openProduct(id){
 }
 function renderFmts(){
   const p = pm.product;
-  document.getElementById('pm-fmts').innerHTML = p.formats.map((f,i)=>
-    `<div class="fmt ${i===pm.fmtIndex?'sel':''}" onclick="selFmt(${i})">
+  document.getElementById('pm-fmts').innerHTML = p.formats.map((f,i)=>{
+    const pi = priceInfo(p,f);
+    const prix = pi.promo
+      ? `<s>${fmtPrice(pi.base)}</s><span class="now">${fmtPrice(pi.prix)}</span>`
+      : esc(f.prix||'');
+    const sub = pi.promo ? [f.sub||'', pi.promo.titre].filter(Boolean).join(' · ') : (f.sub||'');
+    return `<div class="fmt ${i===pm.fmtIndex?'sel':''}" onclick="selFmt(${i})">
        <div class="radio"></div>
-       <div class="l">${esc(f.label||'')}<small>${esc(f.sub||'')}</small></div>
-       <div class="p">${esc(f.prix||'')}</div>
-     </div>`).join('');
+       <div class="l">${esc(f.label||'')}<small>${esc(sub)}</small></div>
+       <div class="p">${prix}</div>
+     </div>`;
+  }).join('');
 }
 function selFmt(i){ pm.fmtIndex=i; renderFmts(); }
 function pmQty(d){ pm.qty=Math.max(1,pm.qty+d); document.getElementById('pm-qty').textContent=pm.qty; }
@@ -506,17 +589,40 @@ function getCart(){ try{return JSON.parse(localStorage.getItem('ay_cart')||'[]')
 function saveCart(c){ localStorage.setItem('ay_cart', JSON.stringify(c)); updateCartUI(); }
 function addCurrentToCart(){
   const p = pm.product, f = p.formats[pm.fmtIndex]||{};
+  const pi = priceInfo(p,f);
   const key = p.id+'|'+pm.fmtIndex;
   const cart = getCart();
   const ex = cart.find(it=>it.key===key);
   if(ex){ ex.qty += pm.qty; }
-  else{ cart.push({ key, id:p.id, nom:p.nom, format:f.label||'', prix:f.prix||'', prixNum:parsePrice(f.prix), photo:p.photo_url, qty:pm.qty }); }
+  else{ cart.push({ key, id:p.id, nom:p.nom, format:f.label||'', prix:fmtPrice(pi.prix), prixNum:pi.prix,
+                    baseNum:pi.base, promo:pi.promo?pi.promo.titre:null, photo:p.photo_url, qty:pm.qty }); }
   saveCart(cart);
   closeProd();
   toast(pm.qty+' × '+p.nom+' ajouté');
   openCart();
 }
+// Le panier vit dans le navigateur : on recale ses prix sur le catalogue
+// et les promos du jour, pour ne jamais vendre à un prix périmé.
+function syncCartPrices(){
+  const cart = getCart(); if(!cart.length) return;
+  const next = cart.filter(it=>{
+    const p = PRODUCTS.find(x=>x.id===it.id); if(!p) return false;
+    const idx = parseInt(String(it.key).split('|')[1]||'0',10);
+    const f = p.formats[idx]||p.formats[0]||{};
+    const pi = priceInfo(p,f);
+    it.format = f.label||it.format; it.photo = p.photo_url;
+    it.prixNum = pi.prix; it.baseNum = pi.base; it.prix = fmtPrice(pi.prix);
+    it.promo = pi.promo?pi.promo.titre:null;
+    return true;
+  });
+  const retirees = cart.length - next.length;
+  saveCart(next);
+  if(retirees>0) toast(retirees>1
+    ? retirees+' créations de ta commande ne sont plus disponibles'
+    : 'Une création de ta commande n\'est plus disponible');
+}
 function cartTotal(c){ return c.reduce((s,it)=>s+it.prixNum*it.qty,0); }
+function cartSavings(c){ return c.reduce((s,it)=>s+Math.max(0,(it.baseNum||it.prixNum)-it.prixNum)*it.qty,0); }
 function updateCartUI(){
   const cart = getCart();
   const n = cart.reduce((s,it)=>s+it.qty,0);
@@ -533,12 +639,14 @@ function renderCart(){
   const foot = document.getElementById('cart-foot');
   if(!cart.length){ body.innerHTML='<div class="cempties">Ta commande est vide.<br>Ajoute une création depuis le catalogue.</div>'; foot.style.display='none'; return; }
   foot.style.display='block';
-  body.innerHTML = cart.map(it=>`
+  const eco = cartSavings(cart);
+  const bandeau = eco>0?`<div class="saving">🏷️ Tu économises <b>${fmtPrice(eco)}</b> grâce aux offres du moment.</div>`:'';
+  body.innerHTML = bandeau + cart.map(it=>`
     <div class="citem">
       <div class="im"><img src="${esc(it.photo)}" alt=""></div>
       <div style="flex:1;min-width:0">
         <div class="nm">${esc(it.nom)}</div>
-        <div class="mt">${esc(it.format)} · ${esc(it.prix)}</div>
+        <div class="mt">${esc(it.format)} · ${(it.baseNum&&it.baseNum>it.prixNum)?`<span class="old">${fmtPrice(it.baseNum)}</span>`:''}${esc(it.prix)}</div>
         <div class="cmini">
           <button onclick="changeQty('${it.key}',-1)">−</button>
           <span>${it.qty}</span>
@@ -561,8 +669,13 @@ function closeCart(){ document.getElementById('cart-drawer').classList.remove('o
 // ── COMMANDE ─────────────────────────────────────────────
 function buildOrderMessage(cart){
   let m = 'Bonjour Ayêla, je souhaite commander :\n';
-  cart.forEach(it=>{ m += `\n• ${it.qty} × ${it.nom} (${it.format}) — ${fmtPrice(it.prixNum*it.qty)}`; });
+  cart.forEach(it=>{
+    const promo = it.promo?` [${it.promo}]`:'';
+    m += `\n• ${it.qty} × ${it.nom} (${it.format})${promo} — ${fmtPrice(it.prixNum*it.qty)}`;
+  });
+  const eco = cartSavings(cart);
   m += `\n\nTotal : ${fmtPrice(cartTotal(cart))}`;
+  if(eco>0) m += ` (offre appliquée, ${fmtPrice(eco)} économisés)`;
   m += `\n\nJe règle avant la livraison (Wave ou Orange Money).`;
   return m;
 }
@@ -573,7 +686,8 @@ async function sendCommande(){
     await sb.from('ay_commandes').insert({
       client_nom: 'Client boutique',
       client_wa: '',
-      produits: cart.map(it=>({ nom:it.nom, format:it.format, quantite:it.qty, prix:it.prix })),
+      produits: cart.map(it=>({ nom:it.nom, format:it.format, quantite:it.qty, prix:it.prix,
+                                promo: it.promo||null, prix_normal: (it.baseNum&&it.baseNum>it.prixNum)?fmtPrice(it.baseNum):null })),
       total: fmtPrice(cartTotal(cart))
     });
   }catch(e){ /* silencieux : la commande WhatsApp reste prioritaire */ }
