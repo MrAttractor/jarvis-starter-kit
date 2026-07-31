@@ -98,7 +98,12 @@ export async function envoyerEmail(o: {
       method: "POST",
       headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        from: "Mr Attractor <noreply@agenceattractor.com>",
+        // Expéditeur : une boîte réelle et relevée, jamais "noreply@".
+        // Cas Élévia du 29/07/2026 : l'invitation partie de noreply@ a été classée
+        // en indésirable par Outlook, alors qu'un mail envoyé depuis hello@ une
+        // minute plus tôt, même domaine, est bien arrivé en boîte de réception.
+        // Un acte contractuel doit venir de quelqu'un à qui l'on peut répondre.
+        from: "Mac Arthur KOUASSI <hello@agenceattractor.com>",
         reply_to: AGENCE_EMAIL,
         ...o,
       }),
