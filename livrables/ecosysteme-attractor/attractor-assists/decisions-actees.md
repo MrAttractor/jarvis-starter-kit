@@ -6,6 +6,95 @@
 
 ---
 
+[2026-07-27] — DÉCISION 020
+Pôle concerné : Stratégy / Commercial (dossier Air CI / VSD)
+Décision : Économie VSD figée. Rétrocession de 1 €/kg à Air CI UNIQUEMENT sur les valises exceptionnelles de 32 kg à l'aller ; le retour (2×23 kg) utilise le quota bagage normal, gratuit. Fin du « bon de conversion » et du « 1,5 €/kg sur tous les kilos ». Jean Yves n'investit rien (outils déjà en main), son apport = sa présence de coordination. Règle de vocabulaire : on ne dit plus jamais « fret », on dit « colis normaux acheminés par un prestataire externe (J'Envoie Express) ».
+Validé par : Mac Arthur
+Impacte : Commercial (offre DR), R&D (simulateur, BP), Contenu (tout discours public sur le dossier)
+Actions déclenchées :
+  → Commercial : offre DR + simulateur + BP recalculés et redéployés (FAIT)
+  → Contenu / tous : bannir « fret » de tout livrable et de tout message ; le mot est une ligne rouge de vocabulaire, pas une préférence
+  → Stratégy : marge cible ≈ 4 360 €/rotation, ≈ 170 k€/an — à traiter comme une CIBLE, le retour Abidjan n'est pas assuré
+Statut : ACTÉE (tarif du 32 kg et nombre de valises à confirmer par Air CI)
+
+---
+
+[2026-07-25] — DÉCISION 019
+Pôle concerné : R&D / Produit
+Décision : La publication programmée se fait par policy RLS (la ligne n'est pas lisible avec la clé publique avant l'heure), jamais par un cron ou un automate. Corollaire de vérification : une policy RLS ne se prouve qu'en interrogeant l'API REST avec la clé anon, jamais avec le service role. Deuxième corollaire acté : les migrations SQL s'exécutent depuis le workspace via l'API Management Supabase, on n'attend plus que Mac Arthur colle le SQL à la main.
+Validé par : Mac Arthur
+Impacte : R&D (tous les projets clients avec du contenu daté)
+Actions déclenchées :
+  → R&D : appliquer ce standard à tout futur module de publication programmée (Beynaumania, Assists, Nabycook Phase 3)
+  → R&D : plus aucune migration laissée « en attente que Mac Arthur l'applique »
+Statut : ACTÉE
+
+---
+
+[2026-07-25] — DÉCISION 018
+Pôle concerné : Stratégy / R&D (dossier Air CI / VSD)
+Décision : Modèle opérationnel VSD verrouillé. Il n'y a plus de convoyeurs : ce sont de simples voyageurs qui débloquent la soute par leur allocation bagage, ils ne portent rien. Les valises sont enregistrées séparément au nom des sociétés de colisage (canal cargo déclaré, jamais la franchise bagage passager). J'Envoie Express fait transport + préparation sûreté uniquement, ne touche PAS à la douane : chaque société de colisage a son transitaire agréé. Positionnement Mr Attractor = apporteur d'affaires, PAS OTA ni agence de voyage (évite l'immatriculation Atout France).
+Validé par : Mac Arthur
+Impacte : Stratégy, Commercial, R&D, Juridique
+Actions déclenchées :
+  → Tous : la terminologie « convoyeur » est morte dans tous les livrables (FAIT)
+  → Commercial : ne jamais présenter la franchise bagage au DR, ligne rouge d'Hervé Abou
+  → Stratégy : obtenir les charges directes de Jean Yves — sans elles le partage 50/50 reste en l'air
+Statut : ACTÉE (charges directes Jean Yves toujours manquantes)
+
+---
+
+[2026-07-23] — DÉCISION 017
+Pôle concerné : Produit / Stratégy (VSD by Attractor)
+Décision : Le voyageur VSD n'est JAMAIS payé (un voyageur payé devient prestataire de transport). Pas de forfait touristique : l'hébergement est un code de réduction partenaire, le voyageur réserve et paie lui-même (aucun prix global, aucune réservation faite par nous, aucune commission perçue de l'hôtel). Marque « VSD by Attractor », signature « Voyager léger », à partir de 430 €, vente sur liste d'attente uniquement. Lancement : vendredi 4 septembre 2026.
+Validé par : Mac Arthur
+Impacte : Produit, Commercial, Contenu, Juridique
+Actions déclenchées :
+  → Contenu : plan de communication à armer, clôture des inscriptions le 25 août — 4 semaines
+  → Commercial : demander à Air CI les 6 places non payantes + autorisations de tournage (sinon 3 180 € à sortir, hors trésorerie)
+  → R&D : table vsd_inscriptions + edge function vsd-inscription écrites mais NON DÉPLOYÉES — bloquant pour ouvrir les inscriptions
+Statut : EN COURS (backend d'inscription non déployé)
+
+---
+
+[2026-07-19] — DÉCISION 016
+Pôle concerné : Transverse / R&D
+Décision : GitHub est la source de vérité des fichiers de tous les sites. Commit + push au fil de l'eau, plus rien ne vit qu'en local. Modèle trunk-based : `main` = source de vérité et prod (`master` renommée).
+Validé par : Mac Arthur
+Impacte : Tous les pôles produisant des fichiers
+Actions déclenchées :
+  → Mac Arthur (1 clic) : GitHub → Settings → Branches → basculer la branche par défaut de `master` à `main`, puis supprimer `origin/master`
+  → Mac Arthur : régénérer le GITHUB_TOKEN du .env (périmé, « Bad credentials »)
+  → R&D : connecter les projets Cloudflare Pages au repo (déploiement au push) — nécessite l'OAuth Cloudflare↔GitHub côté dashboard
+  → R&D : sortir les gros médias du repo (vidéo 17 Mo, HEIF, PDF)
+Statut : EN COURS (règle non tenue : 45 fichiers non commités au 28/07 — cf. bulletin)
+
+---
+
+[2026-07-18] — DÉCISION 015
+Pôle concerné : R&D / Commercial (Nabycook)
+Décision : Abandon de la stack WordPress/Elementor recommandée dans le cahier des charges client, on part sur la stack maison (HTML sur mesure + Cloudflare Pages + back-office Supabase gaté OTP). Site découpé en 3 phases : Phase 1 socle institutionnel comprise dans le partenariat DMV, Phases 2 et 3 facturées en complément.
+Validé par : Mac Arthur
+Impacte : R&D, Commercial
+Actions déclenchées :
+  → Commercial : validation du périmètre par Nabintou toujours en attente (CDC v2 envoyé le 18/07)
+  → R&D : Phase 1 attendue pour le forum des assos du 5 septembre — échéance ferme
+Statut : EN COURS (validation cliente en attente)
+
+---
+
+[2026-07-17] — DÉCISION 014
+Pôle concerné : Transverse / gouvernance
+Décision : L'objectif 10 000 €/mois est recalé sur mi-2027 (juillet 2027), au lieu de fin août 2026 jugé hors d'atteinte. Base : moyenne réelle des ventes agence ≈ 275 €/mois. Progression par paliers.
+Validé par : Mac Arthur
+Impacte : Tous les pôles (cadre de référence de toutes les projections)
+Actions déclenchées :
+  → FAIT : CLAUDE.md, CONTEXT.md et pilotage_cap.date_objectif = 2027-07-31 mis à jour
+  → DAF / Analyste : toute projection financière se réfère désormais à cet horizon, plus jamais à août 2026
+Statut : ACTÉE
+
+---
+
 [2026-07-12] — DÉCISION 013
 Pôle concerné : Transverse / tous
 Décision : Réunion générale d'audit de performance et d'efficacité des 15 agents (référence : blueprint fondateur). Constat : 4 agents portent réellement l'agence (BÂTISSEUR, VENDEUR, MIROIR, PINCEAU), 8 sont dormants ou jamais activés, 3 par intermittence. Priorité de remise en route validée : les GARDE-FOUS d'abord (GARDIEN + PONT). Sort des 8 dormants : à trancher plus tard.
@@ -145,7 +234,7 @@ Statut : ACTÉE
 
 [2026-06-11] — DÉCISION 002
 Pôle concerné : Produit / R&D
-Décision : Focus acquisition 3 semaines sur testeurs gratuits Attractor Assists — campagne Facebook groupes, LinkedIn, TikTok. Contenu rédigé (livrables/contenu/campagne-testeurs-juin2026.md). Aucune feature nouvelle pendant cette période.
+Décision : Focus acquisition 3 semaines sur testeurs gratuits Attractor Assists — campagne Facebook groupes, LinkedIn, TikTok. Contenu rédigé (livrables/contenu/_archive/campagne-testeurs-juin2026.md). Aucune feature nouvelle pendant cette période.
 Validé par : Mac Arthur
 Impacte : Contenu, R&D (gel features pendant la campagne)
 Actions déclenchées :

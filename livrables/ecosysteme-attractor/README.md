@@ -1,10 +1,30 @@
 # Écosystème Attractor
 
-Les apps maison de l'écosystème (modèle freemium : gratuit + MRR). **Un sous-dossier par app.**
+Les apps maison de l'écosystème (freemium : gratuit + abonnement) et les documents de
+référence de l'agence. **Comme pour les clients, chaque app commence par un `DOSSIER.md`**
+qui dit où elle en est, ce qu'elle a coûté, et quelle est la prochaine action.
 
-- `attractor-assists/` — programme intelligent qui décharge mentalement l'entrepreneur, structure son process et prépare son bras droit. App pilier (refonte envisagée).
-- `livraison-pro/` — marketplace livreurs moto certifiés / e-commerçants.
-- `fidelys/` — gestion conversationnelle des interactions client, collecte et structuration de la donnée.
-- `pilotage/` — module de reporting et d'aide à la décision.
+## Les apps
 
-> Tout ce qui est validé dans le workspace Jarvis a vocation à être réinjecté dans Attractor Assists.
+| Dossier | Ce que c'est | État au 31/07/2026 |
+|---|---|---|
+| `attractor-assists/` | L'app pilier : la duplication numérique de Mac Arthur | Réparée, **pas encore adoptée** (2 onboardings terminés) |
+| `livraisonpro/` | Marketplace livreurs moto certifiés / e-commerçants | En ligne, **aucun utilisateur réel** |
+| `signature-attractor/` | Signature électronique maison, maillon 5 de la chaîne de vente | En service, attend sa première signature client |
+| `certification-preparation-mentale/` | La bible de la certification et du futur service de coaching | Soutenance le 3 septembre 2026 (index : `CERVEAU.md`) |
+
+## Les documents de référence, à la racine
+
+| Fichier | Ce qu'il est |
+|---|---|
+| `BIBLE_ATTRACTOR.md` | La source unique de l'agence : vision, méthode, commercial, design, architecture, agents, qualité, décisions |
+| `UX_SYSTEM.md` | **Source de vérité UX/UI de tout l'écosystème.** À vérifier avant toute mise en production d'un écran |
+| `PROJETS-EFFECTIFS.md` | La vue transverse de tous les dossiers, dérivée des `DOSSIER.md`. C'est ce qui alimente Roland |
+
+## Les autres dossiers
+
+- `notes/` — documents datés et cadrages : états des lieux, notes comptables, préparations de chantier. Ils valent pour leur date, pas comme référence permanente.
+- `reunions/` — comptes rendus
+- `_archive/` — ce qui n'est plus en service, avec la raison écrite dans son README
+
+> Tout ce qui est validé dans ce workspace a vocation à être réinjecté dans Attractor Assists.

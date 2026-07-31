@@ -35,7 +35,11 @@ Que chaque projet client se déroule dans les temps, dans le scope, et sans mauv
 
 ## Pipeline clients — source de vérité
 
-Le statut, les montants et la prochaine action de chaque client/prospect sont dans `livrables/commercial/suivi-clients.md` — c'est le tableau de référence unique, mis à jour à chaque session où un projet avance. Le consulter avant tout point de situation ou compte-rendu, et le mettre à jour après toute évolution (signature, paiement, livraison, blocage).
+Le statut, les montants et la prochaine action de chaque client sont dans le **`DOSSIER.md` de son dossier** (`livrables/clients/<client>/DOSSIER.md`) — c'est la source unique par dossier, et le seul endroit où un montant est écrit. Le consulter avant tout point de situation ou compte-rendu, et le mettre à jour après toute évolution (signature, paiement, livraison, blocage). Pour Air Côte d'Ivoire, la note unique s'appelle `VSD.md`.
+
+Pour une vue transverse rapide de tous les dossiers à la fois, `livrables/ecosysteme-attractor/PROJETS-EFFECTIFS.md` en donne la synthèse (c'est aussi ce qui alimente Roland) : c'est une vue **dérivée** des `DOSSIER.md`, jamais l'inverse. En cas de désaccord entre les deux, le `DOSSIER.md` gagne.
+
+L'ancien tableau `livrables/commercial/suivi-clients.md` est archivé depuis le 31/07/2026, ne plus s'y référer.
 
 ---
 
