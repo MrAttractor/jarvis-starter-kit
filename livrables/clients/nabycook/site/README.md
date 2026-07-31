@@ -14,7 +14,7 @@ Construite le 29/07/2026 par l'agence Mr Attractor.
 |---|---|---|
 | Accueil | `index.html` | Hero, 3 accès rapides, distinctions, 3 activités, chiffres d'impact, partenaires, Instagram, newsletter |
 | L'Univers NabyCook | `univers.html` | Histoire de Nabintou, les deux gestes, l'héritage, la mission anti-gaspi |
-| L'Association & l'Impact | `association.html` | Statut loi 1901 / ESS / ESUS, infos légales, chiffres, 3 leviers, gouvernance, partenaires, presse |
+| L'Association & l'Impact | `association.html` | Statut loi 1901 / ESS / ESUS, infos légales, chiffres, ce qu'on fait, gouvernance, partenaires, presse |
 | Adhésions | `adhesions.html` | Nabycook'r 50 €/an et La Brigade du cœur dès 20 €/an, ce que ça finance, témoignages, FAQ |
 | Contact & Partenariats | `contact.html` | Coordonnées, formulaire (email ou WhatsApp), parcours partenaire, Jotform magasin |
 

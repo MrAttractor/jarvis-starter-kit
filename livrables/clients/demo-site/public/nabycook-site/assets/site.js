@@ -77,7 +77,7 @@
     if (!NABY.maquette) return;
     var d = document.createElement('div');
     d.className = 'bandeau-maquette';
-    d.innerHTML = '<b>Maquette de travail</b> — les zones soulignees en orange attendent les elements de NabyCook. Document interne, ne pas diffuser.';
+    d.innerHTML = '<b>Maquette de travail</b> — les zones soulignees en orange attendent tes elements. Merci de ne pas partager ce lien en dehors de l\'association.';
     document.body.insertBefore(d, document.body.firstChild);
   }
 

@@ -58,7 +58,7 @@ Nous avons écrit la trame, il manque les faits. En quelques phrases :
 - Le moment précis qui vous a décidée à créer NabyCook
 - La date de création de l'association
 - Votre parcours avant NabyCook, si vous souhaitez le mentionner
-- Les pays ou régions dont viennent les cuisines de vos ateliers
+- Les influences et les cuisines que vous voulez citer dans vos ateliers
 
 ---
 
@@ -84,6 +84,11 @@ cotisation. À afficher seulement avec l'accord des personnes concernées.
 
 **14. Le dossier de presse**
 S'il existe, pour la page contact.
+
+**15. La charte éditoriale**
+Vous la citez dans votre retour (« jamais abstrait, toujours gourmand, ludique, incarné »).
+Nous ne l'avons pas. Envoyez-la, nous calerons tous les textes dessus au lieu de
+travailler au jugé.
 
 ---
 

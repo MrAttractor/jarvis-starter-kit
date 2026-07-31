@@ -30,7 +30,9 @@ const NABY = {
 
   /* --- Identite ------------------------------------------- */
   nom: 'NabyCook',
-  tagline: 'La magie africaine dans votre quotidien parisien.',
+  // Proposition a valider. Deux autres pistes soumises a Nabintou :
+  // « Bien manger, bien vivre, sans rien gacher » et « La cuisine fusion qui ne jette rien ».
+  tagline: 'La magie du bien vivre dans votre quotidien parisien.',
   taglineAValider: true, // affiche un marqueur tant que Nabintou n'a pas tranche
   statut: 'Association loi 1901 · Economie Sociale et Solidaire',
   esus: 'Agrement ESUS en cours',
