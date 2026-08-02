@@ -48,17 +48,30 @@ vers `mynugo-store.pages.dev`.
 Aucun montant n'est tracé dans ce dossier. **À clarifier** : ce qui a été facturé, ce qui
 reste dû, et si un abonnement mensuel est actif.
 
-## Le dernier événement traité
+## Les événements éphémères, désormais pilotés par un interrupteur
 
-Expo-Vente Défilé de **Lyon le 11/07/2026** (150 Cours Gambetta, partenaire Carrefour des
-Cultures Africaines) : encart, compte à rebours, message WhatsApp pré-rempli et trailer
-vidéo de 58 s compressé de 80 à 14 Mo.
+L'Expo-Vente de **Lyon du 11/07/2026** est restée affichée trois semaines après la date,
+avec un compte à rebours qui annonçait « En cours » en permanence.
 
-**L'événement est passé.** L'encart doit être retiré ou remplacé par le suivant, sinon la
-boutique affiche une date morte.
+**Corrigé le 02/08/2026.** Le bloc événement est maintenant piloté par un seul objet
+`EVENEMENT` en tête du script de `index.html` :
+
+```js
+var EVENEMENT = {
+  actif: false,          // true = l'encart s'affiche, false = il disparaît entièrement
+  titre: '...', dateTexte: '...', dateISO: '...',  // cible du compte à rebours
+  horaires, lieu, partenaire, affiche, teaser, poster, waTexte
+};
+```
+
+Pour annoncer le prochain événement : remplir les champs, passer `actif` à `true`, déposer
+l'affiche et le teaser dans `images/`, redéployer. Pour l'arrêter : repasser à `false`.
+Plus rien n'est écrit en dur, ni dans le compte à rebours, ni dans le message WhatsApp.
+
+Le bloc est **masqué en dur dans le HTML** (`style="display:none"`) et n'est affiché que
+par le script : si le JavaScript échoue, l'événement ne réapparaît pas tout seul.
 
 ## Prochaine action
 
-1. **Retirer ou remplacer l'encart de l'événement de Lyon**, qui est passé
-2. Décider si on finit la bascule en base pour la rendre autonome, et le chiffrer
-3. Clarifier ce qui a été facturé sur ce dossier
+1. Décider si on finit la bascule en base pour la rendre autonome, et le chiffrer
+2. Clarifier ce qui a été facturé sur ce dossier
