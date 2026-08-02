@@ -23,7 +23,7 @@
 | **Club Élévia** | App métier | Package V5 envoyé, **en attente de signature électronique** | 950 € / 3 000 €, reste 2 050 € | Vérifier que l'invitation à signer arrive (expéditeur corrigé le 31/07) | 🔥 |
 | **Yiriba Nature** | Accompagnement + app | Deal closé puis **renégocié par la cliente** | 0 € encaissé sur 800 € | **Devis expiré le 31/07.** Obtenir son montant, ne pas baisser le prix | 🔥 |
 | **All Eyes on yoo** | App métier | Maquette de closing livrée le 30/07 | à vendre : 490 € | Relancer pour son retour + obtenir prénom, tarifs, dimensions | 🔥 |
-| **Air Côte d'Ivoire / VSD** | Partenariat | Principe validé, **modèle refondu le 31/07** (voir `VSD.md`) | frais de réservation 100 €/voyageur | Répondre à Hermance Alloh, Hervé Abou en copie. **Butoir 10-12 août** | 🔥 |
+| **Air Côte d'Ivoire / VSD** | Partenariat | Principe validé, **modèle refondu le 31/07** (voir `VSD.md`) | frais de réservation 100 €/voyageur | Deux fronts en parallèle : répondre à Hermance Alloh (Hervé Abou en copie, **butoir 10-12 août**) et **lancer le recrutement du vivier avec Jean Yves**, qui ne dépend pas d'eux | 🔥 |
 | **Nabycook** | Site association | Maquette Phase 1 livrée, retours intégrés | 175 € d'acompte à encaisser | Obtenir ses textes, ses liens et sa charte éditoriale | |
 | **Studio IA Partenaire** | Partenariat | **Livré** (site + admin + portfolio autonome) | échange, non formalisé | **Envoyer le document d'échange**, jamais parti | |
 | **Fleur Ndoua** | Consulting + site | Devis brouillon, **jamais envoyé** | 150 à 800 € (consulting) | Décider : relancer sur le consulting seul, ou fermer | |
