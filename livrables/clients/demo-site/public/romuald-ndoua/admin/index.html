@@ -77,7 +77,29 @@ input,select,textarea{font-family:inherit}
 .note{width:100%;margin-top:12px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;resize:vertical;min-height:38px;outline:none}
 .note:focus{border-color:var(--meta)}
 .empty{text-align:center;color:var(--slate);padding:40px 0}
-.refresh{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 14px;font-size:13px;font-weight:600;margin-left:auto}
+
+/* trafic */
+.sec-h{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:32px 0 12px}
+.sec-h h2{font-size:17px;font-weight:800}
+.sec-h .sub{font-size:13px;color:var(--slate)}
+.funnel{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:600px){.funnel{grid-template-columns:repeat(2,1fr)}}
+.step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.step b{display:block;font-size:24px;font-weight:800}
+.step span{font-size:12px;color:var(--slate);font-weight:600}
+.step em{display:block;font-style:normal;font-size:12px;color:var(--meta);font-weight:700;margin-top:4px}
+.srcs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.src{background:var(--card);border:1px solid var(--line);border-radius:100px;padding:8px 15px;font-size:13px;font-weight:600;color:var(--slate)}
+.src b{color:var(--ink)}
+.conv{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.conv-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--slate)}
+.conv-q{margin-top:8px;font-size:14px;color:var(--ink);overflow-wrap:anywhere}
+.conv-q i{font-style:normal;color:var(--slate)}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;background:#EEF3FF;color:var(--meta-d)}
+.pill.ads{background:#EAF7EE;color:#15803D}
+.pill.lead{background:#FEECEC;color:#B91C1C}
+.more{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;min-height:44px;display:block;margin:0 auto 8px}
+.refresh{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 16px;font-size:13px;font-weight:600;margin-left:auto;min-height:44px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -117,6 +139,18 @@ input,select,textarea{font-family:inherit}
       </div>
       <div class="comm-grid" id="commGrid"></div>
     </div>
+    <div class="sec-h">
+      <div>
+        <h2>Trafic et conversations</h2>
+        <div class="sub">Qui arrive sur la page, d'où, et jusqu'où la personne va.</div>
+      </div>
+      <button class="refresh" onclick="loadTrafic()">Actualiser</button>
+    </div>
+    <div class="funnel" id="funnel"></div>
+    <div class="srcs" id="srcs"></div>
+    <div id="convs"></div>
+
+    <div class="sec-h"><h2>Leads captés</h2></div>
     <div class="filters" id="filters">
       <button class="chip active" data-f="all" onclick="setFilter('all')">Tous</button>
       <button class="chip" data-f="a_traiter" onclick="setFilter('a_traiter')">À traiter</button>
@@ -161,6 +195,7 @@ async function showApp(){
   document.getElementById('login').style.display='none';
   document.getElementById('app').style.display='block';
   loadLeads();
+  loadTrafic();
 }
 function setFilter(f){ FILTER=f; document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.f===f)); render(); }
 
@@ -231,6 +266,63 @@ function render(){
     </div>`;
   }).join('');
 }
+// ── Trafic et conversations ──
+let CONVS=[], CONV_SHOWN=15;
+const SRC_LABEL={'meta-ads':'Publicité Meta','utm':'Lien de campagne','referent':'Site référent','direct':'Direct'};
+
+async function loadTrafic(){
+  const {data,error}=await sb.from('rom_conversations').select('*').order('created_at',{ascending:false}).limit(300);
+  if(error){ document.getElementById('convs').innerHTML='<div class="empty">Lecture du trafic impossible.</div>'; return; }
+  CONVS=data||[]; CONV_SHOWN=15; renderFunnel(); renderSrcs(); renderConvs();
+}
+function renderFunnel(){
+  const visites=CONVS.length;
+  const ouverts=CONVS.filter(c=>c.chat_ouvert).length;
+  const ecrit=CONVS.filter(c=>(c.nb_messages||0)>0).length;
+  const leads=CONVS.filter(c=>c.lead_capte).length;
+  const pct=(n,t)=>t?Math.round(n*100/t)+' % des visites':'';
+  const steps=[
+    ['Visites',visites,''],
+    ['Ont ouvert le chat',ouverts,pct(ouverts,visites)],
+    ['Ont écrit à Naïma',ecrit,pct(ecrit,visites)],
+    ['Ont laissé leur numéro',leads,pct(leads,visites)]
+  ];
+  document.getElementById('funnel').innerHTML=steps.map(([lab,n,sub])=>
+    `<div class="step"><b>${n}</b><span>${lab}</span>${sub?`<em>${sub}</em>`:''}</div>`).join('');
+}
+function renderSrcs(){
+  const map={};
+  CONVS.forEach(c=>{ const k=c.source||'direct'; map[k]=(map[k]||0)+1; });
+  const keys=Object.keys(map).sort((a,b)=>map[b]-map[a]);
+  document.getElementById('srcs').innerHTML=keys.length
+    ? keys.map(k=>`<span class="src">${esc(SRC_LABEL[k]||k)} · <b>${map[k]}</b></span>`).join('')
+    : '';
+}
+function renderConvs(){
+  const el=document.getElementById('convs');
+  if(!CONVS.length){ el.innerHTML='<div class="empty">Aucune visite enregistrée pour l\'instant. La mesure a démarré le 2 août 2026.</div>'; return; }
+  const rows=CONVS.slice(0,CONV_SHOWN);
+  el.innerHTML=rows.map(c=>{
+    const src=SRC_LABEL[c.source]||c.source||'Direct';
+    const ads=c.source==='meta-ads'||c.source==='utm';
+    const det=c.source_detail?' · '+esc(c.source_detail):'';
+    const n=c.nb_messages||0;
+    const etat=n===0?(c.chat_ouvert?'a ouvert le chat sans écrire':'n\'a pas ouvert le chat')
+                    :n+(n>1?' messages écrits':' message écrit');
+    return `<div class="conv">
+      <div class="conv-h">
+        <span class="pill ${ads?'ads':''}">${esc(src)}</span>${det}
+        ${c.lead_capte?'<span class="pill lead">Numéro laissé</span>':''}
+        <span style="margin-left:auto">${fmtDate(c.created_at)}</span>
+      </div>
+      <div class="conv-q"><i>${esc(etat)}</i>${c.premier_message?'<br>Question d\'entrée : '+esc(c.premier_message):''}${(c.dernier_message&&c.dernier_message!==c.premier_message)?'<br>Dernier message : '+esc(c.dernier_message):''}</div>
+    </div>`;
+  }).join('');
+  if(CONVS.length>CONV_SHOWN){
+    el.innerHTML+=`<button class="more" onclick="CONV_SHOWN+=25;renderConvs()">Voir plus (${CONVS.length-CONV_SHOWN} restantes)</button>`;
+  }
+}
+
 async function setStatut(id,statut){ await sb.from('rom_leads').update({statut,updated_at:new Date().toISOString()}).eq('id',id); const l=LEADS.find(x=>x.id===id); if(l)l.statut=statut; renderKpis(); render(); }
 async function toggleDone(id,val){ const v=(val===true||val==='true'); await sb.from('rom_leads').update({traite:v,updated_at:new Date().toISOString()}).eq('id',id); const l=LEADS.find(x=>x.id===id); if(l)l.traite=v; renderKpis(); render(); }
 async function saveNote(id,note){ await sb.from('rom_leads').update({note,updated_at:new Date().toISOString()}).eq('id',id); const l=LEADS.find(x=>x.id===id); if(l)l.note=note; }

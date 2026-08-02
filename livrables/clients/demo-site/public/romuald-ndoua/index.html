@@ -499,6 +499,64 @@ const CHAT_ENDPOINT = "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/rom
 const CHAT_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
 const GREETING = "Bonjour, moi c'est Naïma de ML Ads, votre chargée clientèle. Dites-moi, qu'est-ce qui vous amène, en quoi je peux vous aider ?";
 
+// ── MESURE DU TRAFIC ────────────────────────────────────────
+// Un identifiant aléatoire gardé sur l'appareil, aucune donnée personnelle,
+// aucun cookie tiers, aucun recoupement. Sert à savoir combien de personnes
+// arrivent, d'où elles viennent, et où elles s'arrêtent.
+// La source est celle du PREMIER passage : une pub reste attribuée à la pub
+// même si la personne revient en direct trois jours plus tard.
+const TRACK = (function(){
+  var sid = null, memo = null;
+  try{
+    sid = localStorage.getItem('mlads_sid');
+    if(!sid){
+      sid = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+           : String(Date.now()) + Math.random().toString(36).slice(2);
+      localStorage.setItem('mlads_sid', sid);
+    }
+    memo = localStorage.getItem('mlads_src');
+  }catch(e){}
+
+  var p = new URLSearchParams(location.search);
+  var utm = p.get('utm_source') || p.get('src') || '';
+  var camp = p.get('utm_campaign') || p.get('utm_medium') || '';
+  var source = '', detail = '';
+  if(p.get('fbclid') || /facebook|instagram|meta|\bfb\b/i.test(utm)){
+    source = 'meta-ads'; detail = (utm || 'fbclid') + (camp ? ' · ' + camp : '');
+  } else if(utm){
+    source = 'utm'; detail = utm + (camp ? ' · ' + camp : '');
+  } else if(document.referrer && document.referrer.indexOf(location.host) === -1){
+    source = 'referent';
+    try{ detail = new URL(document.referrer).hostname; }catch(e){ detail = document.referrer.slice(0,120); }
+  }
+  if(source && !memo){
+    memo = source + '|' + detail;
+    try{ localStorage.setItem('mlads_src', memo); }catch(e){}
+  }
+  if(!memo) memo = 'direct|';
+  var cut = memo.indexOf('|');
+  var SRC = memo.slice(0, cut), DET = memo.slice(cut + 1);
+
+  return {
+    sid: sid, source: SRC, detail: DET,
+    ping: function(event){
+      if(!sid) return;
+      try{
+        fetch(CHAT_ENDPOINT, {
+          method:'POST', keepalive:true,
+          headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+CHAT_ANON, 'apikey':CHAT_ANON },
+          body: JSON.stringify({ event:event, session:sid, source:SRC, source_detail:DET,
+                                 page: location.pathname + location.search })
+        }).catch(function(){});
+      }catch(e){}
+    }
+  };
+})();
+// Une visite comptée par onglet, pas à chaque rechargement.
+try{
+  if(!sessionStorage.getItem('mlads_vu')){ sessionStorage.setItem('mlads_vu','1'); TRACK.ping('visite'); }
+}catch(e){ TRACK.ping('visite'); }
+
 let history = [];
 let started = false;
 let connecting = false;
@@ -524,6 +582,7 @@ function heroSend(){
 // Simule la recherche d'un conseiller disponible, puis met en contact avec Naïma
 function startConnect(pendingMsg){
   connecting = true;
+  TRACK.ping('ouverture');
   var s = document.createElement('div');
   s.className = 'cp-sys'; s.id = 'sysConnect';
   s.innerHTML = '<span class="cp-spin"></span> Recherche d\'un conseiller disponible…';
@@ -571,7 +630,8 @@ async function sendChat(){
     const res = await fetch(CHAT_ENDPOINT, {
       method:'POST',
       headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+CHAT_ANON, 'apikey':CHAT_ANON },
-      body: JSON.stringify({ messages: history })
+      body: JSON.stringify({ messages: history, session: TRACK.sid, source: TRACK.source,
+                             source_detail: TRACK.detail, page: location.pathname + location.search })
     });
     const data = await res.json();
     const reply = (data && data.reply) ? data.reply : "Je te réponds dans un instant.";

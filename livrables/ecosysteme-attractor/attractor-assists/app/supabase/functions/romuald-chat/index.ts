@@ -98,12 +98,91 @@ Ne commente jamais cette balise, ne l'explique pas, ne la répète pas. Mets ce 
 
 const FALLBACK = "Je reviens vers toi dans un instant, un petit souci technique de mon côté.";
 
+// ─────────────────────────────────────────────────────────────
+// MESURE DU TRAFIC (rom_conversations)
+// Une ligne par visiteur. Le navigateur n'écrit jamais en direct :
+// tout passe par ici, en service_role. Jamais bloquant, jamais visible
+// pour la personne, et aucune donnée personnelle en dehors de ce qu'elle
+// écrit elle-même dans le chat.
+// ─────────────────────────────────────────────────────────────
+const cut = (s: string, n = 400) =>
+  typeof s === "string" ? s.trim().slice(0, n) : null;
+
+async function trace(
+  supabase: any,
+  opts: {
+    session?: string;
+    source?: string;
+    sourceDetail?: string;
+    page?: string;
+    chatOuvert?: boolean;
+    messages?: Array<{ role: string; content: string }>;
+    leadCapte?: boolean;
+  },
+) {
+  const session = cut(opts.session ?? "", 80);
+  if (!session) return;
+  try {
+    const { data: rows } = await supabase
+      .from("rom_conversations")
+      .select("id, premier_message")
+      .eq("session_id", session)
+      .limit(1);
+    const existing = rows?.[0];
+
+    const userMsgs = (opts.messages ?? []).filter((m) => m.role === "user");
+    const patch: Record<string, unknown> = { updated_at: new Date().toISOString() };
+    if (opts.chatOuvert) patch.chat_ouvert = true;
+    if (opts.leadCapte) patch.lead_capte = true;
+    if (userMsgs.length > 0) {
+      patch.chat_ouvert = true;
+      patch.nb_messages = userMsgs.length;
+      patch.dernier_message = cut(userMsgs[userMsgs.length - 1].content);
+    }
+
+    if (existing) {
+      // Le premier message n'est écrit qu'une fois : c'est ce qu'elle demandait en arrivant.
+      if (!existing.premier_message && userMsgs.length > 0) {
+        patch.premier_message = cut(userMsgs[0].content);
+      }
+      await supabase.from("rom_conversations").update(patch).eq("id", existing.id);
+    } else {
+      await supabase.from("rom_conversations").insert({
+        session_id: session,
+        source: cut(opts.source ?? "direct", 40),
+        source_detail: cut(opts.sourceDetail ?? "", 200),
+        page: cut(opts.page ?? "", 200),
+        premier_message: userMsgs.length > 0 ? cut(userMsgs[0].content) : null,
+        ...patch,
+      });
+    }
+  } catch { /* non-bloquant : la mesure ne casse jamais le chat */ }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
 
   try {
-    const { messages } = await req.json();
+    const body = await req.json();
+    const { messages, event, session, source, source_detail, page } = body;
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Signal de mesure pur (arrivée sur la page, ouverture du chat) :
+    // on enregistre et on s'arrête là, aucun appel au modèle, aucun coût.
+    if (event && !Array.isArray(messages)) {
+      await trace(supabase, {
+        session,
+        source,
+        sourceDetail: source_detail,
+        page,
+        chatOuvert: event === "ouverture",
+      });
+      return new Response(JSON.stringify({ ok: true }), {
+        headers: { "Content-Type": "application/json", ...CORS },
+      });
+    }
+
+    await trace(supabase, { session, source, sourceDetail: source_detail, page, messages });
 
     // Enrichissement continu : réponses validées par Romuald (ses mots) + PPSD affiné.
     let savoirBlock = "";
@@ -154,8 +233,11 @@ serve(async (req) => {
             activite: g("activite") || null,
             situation: g("situation") || null,
             statut,
+            session_id: session ?? null,
           });
         } catch { /* non-bloquant */ }
+        // Le lead remonte sur sa conversation : on saura de quelle source il vient.
+        await trace(supabase, { session, messages, leadCapte: true });
         // Notification instantanée à Romuald et son équipe (email Resend)
         if (RESEND_API_KEY) {
           const wa = whatsapp.replace(/[^0-9]/g, "");
