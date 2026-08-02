@@ -68,6 +68,41 @@ Deux blocs, indépendants, et c'est cette indépendance qui le rend solide.
 
 ---
 
+## 4 bis. Le recrutement : J'Envoie Express coopte le vivier (02/08/2026)
+
+**Décision de Mac Arthur.** J'Envoie Express recrute et coopte les voyageurs dans son
+propre fichier client, et les fidélise pour qu'ils repartent d'une rotation à l'autre.
+C'est un **vivier de voyageurs cooptés**, pas un flux de clients anonymes à convaincre un
+par un.
+
+**Ce que ça change, et c'est considérable :**
+
+- **Le coût d'acquisition tombe à zéro.** C'était le seul vrai inconnu de l'économie du modèle, celui qui pouvait manger toute la marge. Il disparaît.
+- **La qualité du voyageur change de nature.** Un coopté par quelqu'un qu'il connaît respecte les règles, se présente à l'heure et ne disparaît pas à J-3. Sur une opération où quatre défections font tomber le vol, c'est ce qui compte le plus.
+- **Le vivier se fidélise.** Un acheteur-revendeur qui fait le voyage une fois le refait 3 à 4 fois par an. On ne recrute pas 10 voyageurs par rotation, on recrute un vivier qui tourne.
+- **Ça ne dépend pas d'Air Côte d'Ivoire.** Le recrutement peut commencer maintenant, avant tout accord, et il **renforce la négociation** : arriver devant eux avec une liste de voyageurs qualifiés vaut mieux que n'importe quel argumentaire.
+
+**Ce que ça ne change pas, et il faut être ferme là-dessus :**
+
+Le voyageur reste **propriétaire de ce qu'il rapporte** et **n'est jamais rémunéré**. Sa
+seule contrepartie est le billet à tarif réduit et la franchise bagage. C'est ce qui le
+garde passager au lieu d'en faire un prestataire de transport, et c'est ce qui fait tenir
+tout l'édifice.
+
+**Point de vocabulaire, non négociable dans les documents :** on ne parle jamais
+d'« intérim », de « mission » ni de « recrutement de convoyeurs ». Ces mots décrivent une
+relation de travail, donc un voyageur mandaté et payé, c'est-à-dire exactement le montage
+écarté le 23/07. On dit **voyageur coopté**, **vivier**, **communauté de voyageurs**.
+
+**La contrepartie de Jean Yves** : une **commission d'apport sur les voyageurs qu'il
+amène**, cohérente avec la clé au poste décrite au §5. À chiffrer avec lui avant la
+première rotation, jamais après.
+
+Le dispositif opérationnel (message de recrutement, critères de sélection, parcours du
+voyageur) est dans `RECRUTEMENT-VOYAGEURS.md`.
+
+---
+
 ## 5. L'argent
 
 > **Avertissement à lire avant les chiffres.** L'abandon du fret supprime la principale source de revenu du modèle précédent (environ 125 600 € par an de marge brute colis, estimation du 30/07). Ce qui suit est **plus petit et beaucoup plus sûr** : ça ne dépend d'aucune dérogation, d'aucun régime particulier, d'aucune tolérance. Les montants ci-dessous sont des **hypothèses à valider par Mac Arthur**, pas des chiffres arrêtés.
