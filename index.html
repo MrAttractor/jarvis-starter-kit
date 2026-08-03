@@ -459,6 +459,24 @@ section { position:relative; z-index:1; padding:100px 2.5rem; }
 .apps-note strong { color:var(--charbon); }
 .apps-note a { color:var(--orange); font-weight:700; text-decoration:none; }
 
+/* Encart d'essai libre de la démonstration */
+.apps-demo {
+  margin-top:2.5rem; padding:2rem;
+  background:var(--white); border:1.5px solid var(--orange); border-radius:16px;
+  box-shadow:0 8px 32px rgba(242,92,5,.12);
+  display:flex; gap:2rem; align-items:center; flex-wrap:wrap;
+}
+.apps-demo__txt { flex:1 1 320px; min-width:0; }
+.apps-demo__h3 { font-size:22px; font-weight:800; color:var(--charbon); margin:0 0 .5rem; line-height:1.25; }
+.apps-demo p { font-size:14px; color:var(--g700); line-height:1.7; margin:0; }
+.apps-demo strong { color:var(--charbon); }
+.apps-demo__actions { flex:0 0 auto; display:flex; flex-direction:column; gap:10px; }
+.apps-demo__actions a { justify-content:center; white-space:nowrap; }
+@media(max-width:700px) {
+  .apps-demo { padding:1.5rem; }
+  .apps-demo__actions { width:100%; }
+}
+
 @media(max-width:900px) {
   #expertise-grid{grid-template-columns:1fr!important;}
 }
@@ -812,6 +830,7 @@ footer {
   </a>
   <div class="nav-links">
     <a href="#apps" data-track="nav_apps" style="color:var(--orange);font-weight:700;">Nos réalisations</a>
+    <a href="https://demo.agenceattractor.com/demo" data-track="nav_demo">Essayer l'app</a>
   </div>
   <a href="/commander" class="nav-cta" data-track="nav_cta_commander" style="text-decoration:none;">
     Commander
@@ -1083,6 +1102,30 @@ footer {
         </div>
       </div>
 
+    </div>
+
+    <!-- Essai libre : les cartes ci-dessus montrent des sites de vrais clients,
+         donc jamais leur tableau de bord. La démonstration comble exactement ça. -->
+    <div class="apps-demo">
+      <div class="apps-demo__txt">
+        <span class="s-tag" style="margin-bottom:.75rem;">Essai libre, sans inscription</span>
+        <h3 class="apps-demo__h3">Essaie l'app toi-même, tout de suite</h3>
+        <p>Les apps ci-dessus sont réelles, mais tu ne peux voir que la partie visible :
+        le tableau de bord contient les vraies données de nos clients.<br>
+        On a donc ouvert une boutique de démonstration où <strong>tu peux tout cliquer</strong>,
+        y compris le tableau de bord. Modifie un prix, passe une commande, regarde-la arriver.
+        Tu ne peux rien casser, tout se remet à zéro tout seul.</p>
+      </div>
+      <div class="apps-demo__actions">
+        <a href="https://demo.agenceattractor.com/demo" class="btn-primary" data-track="apps_cta_demo"
+          style="padding:16px 32px;font-size:16px;color:#fff;">
+          Ouvrir la démonstration
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="https://demo.agenceattractor.com/demo/avant/" class="btn-ghost" data-track="apps_cta_avant_apres">
+          Voir le avant / après
+        </a>
+      </div>
     </div>
 
     <div class="apps-note">
