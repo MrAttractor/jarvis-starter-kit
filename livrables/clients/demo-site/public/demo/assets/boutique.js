@@ -196,8 +196,11 @@ async function envoyer() {
       client_nom: nom, client_wa: wa, client_zone: zone,
       produits: PANIER, total: totalPanier(), statut: 'nouvelle'
     });
-    // Sur le palier pro et au-dessus, la vente décompte le stock.
+    // Sur le palier pro et au-dessus, la vente décompte le stock
+    // et alimente le fichier clientes. Le tableau de bord promet les deux :
+    // si la démonstration ne le fait pas, le prospect le voit tout de suite.
     if (P.stock) await decompterStock();
+    if (P.clients) await inscrireCliente(nom, wa, zone);
     PANIER = [];
     sauverPanier();
     document.getElementById('modaleCommande').classList.remove('ouverte');
@@ -208,6 +211,26 @@ async function envoyer() {
   } finally {
     btn.disabled = false;
     btn.textContent = 'Envoyer la commande';
+  }
+}
+
+async function inscrireCliente(nom, wa, zone) {
+  const total = totalPanier();
+  const auj = new Date().toISOString().slice(0, 10);
+  const existantes = await api.get('demo_clients',
+    `select=id,nb_commandes,total_achete&nom=eq.${encodeURIComponent(nom)}`);
+  if (existantes.length) {
+    const c = existantes[0];
+    await api.patch('demo_clients', 'id=eq.' + c.id, {
+      nb_commandes: c.nb_commandes + 1,
+      total_achete: c.total_achete + total,
+      derniere_le: auj
+    });
+  } else {
+    await api.post('demo_clients', {
+      nom, whatsapp: wa, zone,
+      nb_commandes: 1, total_achete: total, derniere_le: auj
+    });
   }
 }
 
