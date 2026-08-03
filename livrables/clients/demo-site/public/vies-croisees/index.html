@@ -917,7 +917,13 @@ function teasersDe(ep){
 // Episode HTML (shared public + admin). `compact` = carte d'accueil.
 function epHtml(ep, compact) {
   var tags = (ep.tags || '').split(',').filter(Boolean).map(function(t){ return '<span class="tag">' + x(t.trim()) + '</span>'; }).join('');
-  var statBadge = '<span class="badge ' + stClass(ep.statut) + '">' + stLabel(ep.statut) + (adminMode && ep.publie_le ? ' · ' + fmtDateHeure(ep.publie_le) : '') + '</span>';
+  // Le statut editorial ne regarde qu'Andrea. Cote public un episode est la ou
+  // il n'y est pas : afficher "Programme" sur un episode deja sorti (statut
+  // laisse tel quel apres le passage de la date) disait au visiteur de ne pas
+  // cliquer. Les articles gataient deja leur badge, l'episode avait ete oublie.
+  var statBadge = adminMode
+    ? '<span class="badge ' + stClass(ep.statut) + '">' + stLabel(ep.statut) + (ep.publie_le ? ' · ' + fmtDateHeure(ep.publie_le) : '') + '</span>'
+    : '';
   var teasers = teasersDe(ep);
   var hasE = !!ep.youtube_episode;
 
@@ -926,7 +932,7 @@ function epHtml(ep, compact) {
     + (ep.image_url ? '' : '<div class="ep-icon"><svg><use href="#i-film"/></svg></div>')
     + '<div class="ep-info"><h3>' + x(ep.titre) + '</h3><p>' + x(ep.invites || '') + '</p></div>'
     + '</div>'
-    + '<div class="meta-row">' + tags + statBadge + '</div>'
+    + (tags || statBadge ? '<div class="meta-row">' + tags + statBadge + '</div>' : '')
     + (ep.photo_invite_url
         ? '<div class="guest-lock"><img class="ep-guest" src="' + x(ep.photo_invite_url) + '" alt="" loading="lazy" onclick="openImage(\'' + x(ep.photo_invite_url) + '\')">'
           + '<p><b>' + (ep.invites ? x(ep.invites) : 'Sur le plateau') + '</b></p></div>'
