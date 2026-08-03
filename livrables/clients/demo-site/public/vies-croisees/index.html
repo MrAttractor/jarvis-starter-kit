@@ -98,10 +98,12 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
 
 /* VISUELS D'ÉPISODE */
 .ep-cover{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;background:var(--brand);margin-bottom:11px;display:block}
-.guest-lock{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:12px;padding:8px 11px;margin-bottom:11px}
+/* Ne contient plus que la photo : le conteneur s'ajuste a elle (width:fit-content)
+   au lieu de rester une bande pleine largeur presque vide. Le clic est porte par
+   le conteneur, ce qui donne une zone de tap de 60x60 plutot que les 44x44 de
+   l'image seule. */
+.guest-lock{display:flex;align-items:center;width:fit-content;background:var(--bg);border-radius:12px;padding:8px;margin-bottom:11px;cursor:pointer}
 .ep-guest{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);flex:none;background:var(--brand);padding:0}
-.guest-lock p{font-size:11.5px;color:var(--muted);line-height:1.4;flex:1;min-width:0}
-.guest-lock p b{display:block;font-size:12px;color:var(--brand)}
 
 /* TEASERS (plusieurs par épisode) */
 .t-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
@@ -933,9 +935,13 @@ function epHtml(ep, compact) {
     + '<div class="ep-info"><h3>' + x(ep.titre) + '</h3><p>' + x(ep.invites || '') + '</p></div>'
     + '</div>'
     + (tags || statBadge ? '<div class="meta-row">' + tags + statBadge + '</div>' : '')
+    // Le nom de l'invite est deja sous le titre : le repeter ici n'apprenait
+    // rien. Il passe dans l'attribut alt, sinon la photo devient muette pour
+    // un lecteur d'ecran une fois le texte visible retire.
     + (ep.photo_invite_url
-        ? '<div class="guest-lock"><img class="ep-guest" src="' + x(ep.photo_invite_url) + '" alt="" loading="lazy" onclick="openImage(\'' + x(ep.photo_invite_url) + '\')">'
-          + '<p><b>' + (ep.invites ? x(ep.invites) : 'Sur le plateau') + '</b></p></div>'
+        ? '<div class="guest-lock" title="Agrandir la photo" onclick="openImage(\'' + x(ep.photo_invite_url) + '\')">'
+          + '<img class="ep-guest" src="' + x(ep.photo_invite_url) + '" alt="' + x(ep.invites ? 'Photo avec ' + ep.invites : 'Photo prise sur le plateau') + '" loading="lazy">'
+          + '</div>'
         : '')
     + (teasers.length
         ? '<div class="t-list">' + teasers.map(function(t, i){
