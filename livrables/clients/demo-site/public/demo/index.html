@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voir une app métier en vrai · les 3 formules</title>
+<meta name="description" content="Trois démonstrations librement cliquables : la vitrine ET le tableau de bord de chaque formule. Boutique fictive, aucune commande n'est traitée.">
+<meta property="og:title" content="Voir une app métier en vrai · les 3 formules">
+<meta property="og:description" content="Trois démonstrations librement cliquables : la vitrine ET le tableau de bord de chaque formule. Boutique fictive, aucune commande n'est traitée.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/demo/assets/styles.css">
+</head>
+<body>
+
+<div class="bandeau-demo">
+  <span class="bandeau-demo__point"></span>
+  <span><strong>Démonstration</strong> · By Macoco est une boutique fictive, aucune commande n'est traitée</span>
+</div>
+
+<header class="entete contenu">
+  <h1>Voyez l'outil avant de le commander</h1>
+  <p class="entete__intro">
+    Trois formules, trois démonstrations complètes. Pour chacune, vous ouvrez la boutique
+    que verraient vos clientes <strong>et</strong> le tableau de bord que vous auriez, vous.
+    Tout est cliquable, rien n'est une image.
+  </p>
+</header>
+
+<main class="contenu">
+
+  <div class="bloc" style="border-left:3px solid var(--terre)">
+    <h2>Commencez par ici</h2>
+    <p style="color:var(--gris)">
+      Avant de regarder l'outil, regardez le problème. Une journée de commerce gérée
+      dans vos discussions et un cahier, à côté de la même journée avec l'application.
+      Si vous ne vous reconnaissez pas dans la colonne de gauche, vous n'avez pas besoin de nous.
+    </p>
+    <a class="btn btn--plein" href="/demo/avant/">Voir le avant / après</a>
+  </div>
+
+  <div class="note">
+    <strong>Le test qui vaut le coup, en 30 secondes</strong>
+    Ouvrez la vitrine sur votre téléphone et le tableau de bord sur votre ordinateur.
+    Passez une commande sur le téléphone. Elle apparaît sur l'ordinateur.
+    C'est exactement ce qui se passerait avec vos vraies clientes.
+  </div>
+
+  <div class="paliers" id="paliers"></div>
+
+  <div class="bloc">
+    <h2>Ce qui est pareil dans les trois</h2>
+    <ul class="liste liste--oui">
+      <li>La boutique s'ouvre dans un navigateur, rien à installer pour vos clientes</li>
+      <li>La commande arrive sur votre WhatsApp, celui que vous utilisez déjà</li>
+      <li>Vous modifiez vos produits et vos prix vous-même, sans nous appeler</li>
+      <li>Mise en ligne et branchement de votre nom de domaine compris</li>
+      <li>Ça marche sur un téléphone d'entrée de gamme, en connexion moyenne</li>
+    </ul>
+    <h2 style="margin-top:24px">Ce qui n'est jamais compris</h2>
+    <ul class="liste liste--non">
+      <li>L'achat du nom de domaine, environ 12 000 F par an, payé à votre nom</li>
+      <li>Le paiement en ligne automatique : c'est une option chiffrée à part</li>
+      <li>La photo et la rédaction de vos produits, sauf si vous prenez la prestation</li>
+      <li>Une application à télécharger sur les stores : ce n'est pas le même métier ni le même prix</li>
+    </ul>
+  </div>
+
+  <div class="bloc">
+    <h2>Questions qu'on nous pose toujours</h2>
+    <h3>Je peux vraiment tout modifier moi-même ?</h3>
+    <p>Oui, et c'est le but de la démonstration. Ouvrez un tableau de bord, changez un prix,
+       retirez un produit, puis regardez la vitrine. Vous n'avez pas besoin de nous pour ça.</p>
+    <h3>Et si je casse quelque chose dans la démonstration ?</h3>
+    <p>Impossible. Tout est remis dans son état de départ automatiquement chaque heure,
+       et un bouton le fait à la demande.</p>
+    <h3>Combien de temps pour avoir la mienne ?</h3>
+    <p>Comptez de deux à quatre semaines selon la formule, à partir du moment où
+       vous nous avez donné vos produits et vos photos. C'est souvent ça qui prend le temps, pas nous.</p>
+    <h3>Je commence par quelle formule ?</h3>
+    <p>Par la plus petite qui répond à votre problème d'aujourd'hui. On passe d'une formule
+       à la suivante sans tout refaire, puisque c'est le même outil.</p>
+  </div>
+
+</main>
+
+<section class="encart">
+  <div class="contenu">
+    <h2>Vous avez vu. On en parle ?</h2>
+    <p>Dites-nous ce que vous vendez et comment vous gérez vos commandes aujourd'hui.
+       On vous dit quelle formule suffit, franchement, même si c'est la moins chère.</p>
+    <div class="encart__actions">
+      <a class="btn btn--plein" id="ctaWa" target="_blank" rel="noopener">Écrire sur WhatsApp</a>
+      <a class="btn btn--ligne" style="color:#F5EFE6;border-color:#6E645A" href="https://agenceattractor.com">Voir l'agence</a>
+    </div>
+  </div>
+</section>
+
+<div class="pied">
+  Agence Mr Attractor · <a href="https://agenceattractor.com">agenceattractor.com</a><br>
+  By Macoco est une boutique de démonstration. Les produits, les prix et les clientes sont fictifs.
+</div>
+
+<script src="/demo/assets/config.js"></script>
+<script>
+  const ORDRE = ['simple', 'pro', 'pro-plus'];
+
+  document.getElementById('paliers').innerHTML = ORDRE.map(cle => {
+    const p = PALIERS[cle];
+    const phare = cle === 'pro';   // la formule la plus vendue, mise en avant
+    return `
+      <article class="palier ${phare ? 'palier--phare' : ''}">
+        ${phare ? '<span class="palier__etiquette">La plus demandée</span>' : ''}
+        <div class="palier__nom">${p.nom}</div>
+        <div class="palier__prix">${p.prix}<span>${p.prixEur}</span></div>
+        <div class="palier__mrr">puis ${p.mrr}</div>
+        <p class="palier__pour">${p.pour}</p>
+        <ul class="liste liste--oui">${p.inclus.map(i => `<li>${i}</li>`).join('')}</ul>
+        <ul class="liste liste--non">${p.absent.map(i => `<li>${i}</li>`).join('')}</ul>
+        <div class="palier__actions">
+          <a class="btn btn--plein btn--large" href="/demo/${cle}/">Ouvrir la boutique</a>
+          <a class="btn btn--sombre btn--large" href="/demo/${cle}/admin/">Ouvrir le tableau de bord</a>
+        </div>
+      </article>`;
+  }).join('');
+
+  document.getElementById('ctaWa').href =
+    `https://wa.me/${MARQUE.whatsapp}?text=` +
+    encodeURIComponent("Bonjour, j'ai regardé vos démonstrations. Je voudrais savoir quelle formule correspond à mon activité.");
+</script>
+
+</body>
+</html>

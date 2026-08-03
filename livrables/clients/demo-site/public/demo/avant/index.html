@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Avant / après · à quoi ressemble votre journée aujourd'hui</title>
+<meta name="description" content="Démonstration : la même journée de commerce, gérée dans WhatsApp et un cahier, puis gérée avec l'app. Situation reconstituée à titre d'illustration.">
+<meta property="og:title" content="Avant / après · à quoi ressemble votre journée aujourd'hui">
+<meta property="og:description" content="Démonstration : la même journée de commerce, gérée dans WhatsApp et un cahier, puis gérée avec l'app. Situation reconstituée à titre d'illustration.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/demo/assets/styles.css">
+<style>
+  .duo { display: grid; grid-template-columns: 1fr; gap: 16px; padding-bottom: 32px; }
+  @media (min-width: 900px) { .duo { grid-template-columns: 1fr 1fr; align-items: start; } }
+
+  .colonne { background: var(--creme); border-radius: var(--rayon); box-shadow: var(--ombre); overflow: hidden; }
+  .colonne__tete { padding: 16px; border-bottom: 1px solid var(--sable-2); }
+  .colonne__tete h2 { margin: 0; font-size: 19px; }
+  .colonne__tete p { margin: 4px 0 0; font-size: 14px; color: var(--gris); }
+  .colonne--avant .colonne__tete { background: #F7E6E4; }
+  .colonne--apres .colonne__tete { background: #E6EFE8; }
+
+  /* Fil de discussion reconstitué. Volontairement générique : c'est une
+     illustration du désordre, pas l'imitation d'une messagerie existante. */
+  .fil { padding: 16px; background: var(--sable); max-height: 460px; overflow-y: auto; }
+  .msg { max-width: 82%; padding: 8px 12px; border-radius: 12px; font-size: 14px; margin-bottom: 8px; box-shadow: var(--ombre); }
+  .msg--eux { background: #fff; border-top-left-radius: 4px; }
+  .msg--moi { background: #DCF2DA; margin-left: auto; border-top-right-radius: 4px; }
+  .msg__qui { display: block; font-size: 12px; font-weight: 700; color: var(--terre); margin-bottom: 2px; }
+  .msg__h { display: block; text-align: right; font-size: 11px; color: var(--gris); margin-top: 2px; }
+  .msg--perdu { border: 1px dashed var(--alerte); }
+  .sep { text-align: center; font-size: 12px; color: var(--gris); margin: 16px 0 8px; }
+
+  .constat { padding: 16px; border-top: 1px solid var(--sable-2); }
+  .constat li { padding: 4px 0 4px 24px; }
+
+  .cahier {
+    background: repeating-linear-gradient(#FFFDF6, #FFFDF6 27px, #E3D9C6 28px);
+    border: 1px solid var(--gris-clair); border-radius: 8px;
+    padding: 8px 12px; margin: 16px; font-size: 15px; line-height: 28px;
+    font-family: 'Segoe Script', 'Bradley Hand', cursive;
+    color: #3A4A7A;
+  }
+  .cahier s { color: var(--alerte); }
+
+  .apres-bloc { padding: 16px; }
+  .apres-ligne {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 0; border-bottom: 1px solid var(--sable-2);
+  }
+  .apres-ligne:last-child { border-bottom: 0; }
+  .apres-ligne__ico {
+    flex: 0 0 auto; width: 32px; height: 32px; border-radius: 8px;
+    background: #E6EFE8; display: flex; align-items: center; justify-content: center;
+  }
+  .apres-ligne__txt { font-size: 14px; }
+  .apres-ligne__txt strong { display: block; }
+  .apres-ligne__txt span { color: var(--gris); }
+
+  .bascule-av { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px; }
+</style>
+</head>
+<body>
+
+<div class="bandeau-demo">
+  <span class="bandeau-demo__point"></span>
+  <span><strong>Démonstration</strong> · situation reconstituée à titre d'illustration</span>
+  <a href="/demo/" class="bandeau-demo__lien">Voir les 3 formules</a>
+</div>
+
+<header class="entete contenu">
+  <h1>La même journée, deux fois</h1>
+  <p class="entete__intro">
+    À gauche, comment se passe une journée de commerce aujourd'hui, sans outil.
+    À droite, la même journée avec l'application. Rien n'est inventé pour faire peur :
+    ce sont les situations que nous décrivent les commerçantes que nous accompagnons.
+  </p>
+</header>
+
+<main class="contenu">
+
+  <div class="duo">
+
+    <!-- ── AVANT ────────────────────────────────────────── -->
+    <section class="colonne colonne--avant">
+      <div class="colonne__tete">
+        <h2>Aujourd'hui, sans outil</h2>
+        <p>Tout passe par vos discussions et votre mémoire</p>
+      </div>
+
+      <div class="fil">
+        <div class="sep">Mardi, 8 h 12</div>
+        <div class="msg msg--eux"><span class="msg__qui">Awa</span>Bonjour, c'est combien le karité 200 g ?<span class="msg__h">8:12</span></div>
+        <div class="msg msg--eux"><span class="msg__qui">Numéro inconnu</span>Bonjour<span class="msg__h">8:19</span></div>
+        <div class="msg msg--eux"><span class="msg__qui">Nadège</span>Le savon noir est encore disponible ?<span class="msg__h">8:31</span></div>
+        <div class="msg msg--moi">4 500 F le pot de 200 g<span class="msg__h">9:47</span></div>
+        <div class="msg msg--eux"><span class="msg__qui">Awa</span>Ok je prends 2. Plus un savon noir<span class="msg__h">9:52</span></div>
+
+        <div class="sep">Mardi, 12 h 40 · 23 autres discussions entre-temps</div>
+        <div class="msg msg--eux"><span class="msg__qui">Sarah</span>C'est combien le karité 200 g ?<span class="msg__h">12:40</span></div>
+        <div class="msg msg--eux msg--perdu"><span class="msg__qui">Kadi</span>Je confirme ma commande, vous livrez quand à Riviera ?<span class="msg__h">12:44</span></div>
+        <div class="msg msg--eux"><span class="msg__qui">Nadège</span>Allô ?<span class="msg__h">14:02</span></div>
+
+        <div class="sep">Mardi, 19 h 30</div>
+        <div class="msg msg--eux"><span class="msg__qui">Awa</span>Bonsoir, vous avez livré ?<span class="msg__h">19:30</span></div>
+        <div class="msg msg--moi">Pardon, quel était votre quartier déjà ?<span class="msg__h">21:15</span></div>
+        <div class="msg msg--eux msg--perdu"><span class="msg__qui">Kadi</span>Laissez tomber, j'ai trouvé ailleurs<span class="msg__h">21:22</span></div>
+      </div>
+
+      <div class="cahier">
+        Mardi<br>
+        Awa 2 karité + savon = <s>11 000</s> 11 500 ?<br>
+        Nadège coffret &mdash; payé ? &mdash;<br>
+        Sarah ... rappeler<br>
+        Reste karité : 12 ? 15 ?
+      </div>
+
+      <div class="constat">
+        <ul class="liste liste--non">
+          <li>Le même prix redonné à la main, dix fois par jour</li>
+          <li>Une commande confirmée à 12 h 44, vue à 21 h, perdue</li>
+          <li>Le stock existe seulement dans votre tête</li>
+          <li>Impossible de dire, ce soir, combien vous avez vendu aujourd'hui</li>
+          <li>Vous ne pouvez pas vous absenter : personne d'autre ne sait</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── APRÈS ────────────────────────────────────────── -->
+    <section class="colonne colonne--apres">
+      <div class="colonne__tete">
+        <h2>Avec l'application</h2>
+        <p>La cliente se sert, vous validez</p>
+      </div>
+
+      <div class="apres-bloc">
+        <div class="apres-ligne">
+          <span class="apres-ligne__ico">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#4A7C59" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.5l4 4 8-9"/></svg>
+          </span>
+          <span class="apres-ligne__txt"><strong>Le prix est écrit, une fois pour toutes</strong>
+            <span>Awa et Sarah le lisent elles-mêmes. Vous ne répondez plus à cette question.</span></span>
+        </div>
+        <div class="apres-ligne">
+          <span class="apres-ligne__ico">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#4A7C59" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.5l4 4 8-9"/></svg>
+          </span>
+          <span class="apres-ligne__txt"><strong>La commande de Kadi ne se perd pas</strong>
+            <span>Elle arrive dans une liste, avec son quartier et son numéro. Elle reste en tête tant qu'elle n'est pas traitée.</span></span>
+        </div>
+        <div class="apres-ligne">
+          <span class="apres-ligne__ico">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#4A7C59" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.5l4 4 8-9"/></svg>
+          </span>
+          <span class="apres-ligne__txt"><strong>Le stock se décompte tout seul</strong>
+            <span>Chaque vente retire la quantité. Sous le seuil, l'écran vous le dit avant que la cliente le découvre.</span></span>
+        </div>
+        <div class="apres-ligne">
+          <span class="apres-ligne__ico">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#4A7C59" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.5l4 4 8-9"/></svg>
+          </span>
+          <span class="apres-ligne__txt"><strong>Le soir, le chiffre du jour est affiché</strong>
+            <span>Sans calcul, sans cahier. Et le classement de ce qui se vend le mieux.</span></span>
+        </div>
+        <div class="apres-ligne">
+          <span class="apres-ligne__ico">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#4A7C59" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.5l4 4 8-9"/></svg>
+          </span>
+          <span class="apres-ligne__txt"><strong>Quelqu'un d'autre peut prendre la main</strong>
+            <span>Votre vendeuse voit les commandes, pas vos chiffres. Votre livreur voit sa tournée, rien d'autre.</span></span>
+        </div>
+      </div>
+
+      <div class="constat">
+        <p style="font-size:14px;color:var(--gris);margin:0 0 16px">
+          Ce n'est pas une promesse, c'est l'écran que vous pouvez ouvrir tout de suite.
+        </p>
+        <a class="btn btn--vert btn--large" href="/demo/pro/admin/">Ouvrir ce tableau de bord</a>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="note">
+    <strong>Ce que nous ne promettons pas</strong>
+    L'application ne vous amène pas de nouvelles clientes. Elle vous fait gagner celles que vous
+    perdez déjà, et le temps que vous passez à répéter les mêmes réponses. Pour aller chercher
+    de nouvelles clientes, c'est un autre métier, et nous le disons quand on nous le demande.
+  </div>
+
+  <div class="bloc">
+    <h2>Vous vous reconnaissez ?</h2>
+    <p style="color:var(--gris)">
+      Alors regardez maintenant l'outil, formule par formule. Chaque démonstration est complète :
+      la boutique que verraient vos clientes, et le tableau de bord que vous auriez.
+    </p>
+    <div class="bascule-av">
+      <a class="btn btn--plein" href="/demo/">Comparer les 3 formules</a>
+      <a class="btn btn--ligne" href="/demo/pro/">Voir une boutique</a>
+    </div>
+  </div>
+
+</main>
+
+<section class="encart">
+  <div class="contenu">
+    <h2>Dites-nous votre journée à vous</h2>
+    <p>Racontez comment vous gérez vos commandes aujourd'hui. On vous dit quelle formule suffit,
+       et si vous n'en avez pas besoin, on vous le dit aussi.</p>
+    <div class="encart__actions">
+      <a class="btn btn--plein" id="ctaWa" target="_blank" rel="noopener">Écrire sur WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<div class="pied">
+  Agence Mr Attractor · <a href="https://agenceattractor.com">agenceattractor.com</a><br>
+  Situation reconstituée. Les prénoms, les messages et les montants sont des exemples.
+</div>
+
+<script src="/demo/assets/config.js"></script>
+<script>
+  document.getElementById('ctaWa').href =
+    `https://wa.me/${MARQUE.whatsapp}?text=` +
+    encodeURIComponent("Bonjour, j'ai vu la page avant/après. Je me reconnais, je voudrais en parler.");
+</script>
+
+</body>
+</html>
