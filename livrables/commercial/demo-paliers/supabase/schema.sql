@@ -220,8 +220,12 @@ BEGIN
     p.formats->0->>'label',
     1 + (i % 3),
     (1 + (i % 3)) * (regexp_replace(p.formats->0->>'prix', '[^0-9]', '', 'g'))::int,
-    CASE WHEN i % 3 = 0 THEN 'point_de_vente' ELSE 'boutique' END,
-    CASE WHEN i % 3 = 0 THEN (ARRAY['Boutique Cocody Angré','Corner Marcory Zone 4','Dépôt Yopougon Niangon'])[1 + (i % 3)] END,
+    -- Trois canaux, pas deux : la répartition du palier pro+ est un graphique
+    -- à trois parts, il lui faut trois parts qui existent.
+    CASE WHEN i % 4 = 0 THEN 'point_de_vente'
+         WHEN i % 7 = 0 THEN 'whatsapp'
+         ELSE 'boutique' END,
+    CASE WHEN i % 4 = 0 THEN (ARRAY['Boutique Cocody Angré','Corner Marcory Zone 4','Dépôt Yopougon Niangon'])[1 + (i % 3)] END,
     current_date - (i % 90)
   FROM generate_series(1, 260) AS i
   CROSS JOIN LATERAL (

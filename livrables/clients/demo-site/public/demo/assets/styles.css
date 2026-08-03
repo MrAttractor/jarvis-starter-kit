@@ -298,6 +298,51 @@ th { font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: va
 
 .vide { text-align: center; color: var(--gris); padding: 32px 16px; font-size: 14px; }
 
+/* ── Graphiques ───────────────────────────────────────────── */
+
+.viz { position: relative; margin: 0 0 16px; }
+.viz svg { display: block; overflow: visible; }
+.viz__note { font-size: 13px; color: var(--gris); margin-top: 8px; }
+.viz__cible { cursor: default; }
+
+.viz__bulle {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  background: var(--charbon); color: #fff;
+  font-size: 13px; font-weight: 600; white-space: nowrap;
+  padding: 6px 10px; border-radius: 6px;
+  pointer-events: none; opacity: 0;
+  transition: opacity .12s ease;
+  z-index: 10;
+}
+.viz__bulle.visible { opacity: 1; }
+
+/* Ruban de répartition : les segments sont séparés par un écart de la
+   couleur du fond, jamais par un contour dessiné autour des marques. */
+.viz__ruban { display: flex; gap: 2px; height: 28px; border-radius: 6px; overflow: hidden; }
+.viz__segment { display: block; height: 100%; }
+.viz__legende { list-style: none; padding: 0; margin: 16px 0 0; font-size: 14px; }
+.viz__legende li { display: flex; align-items: center; gap: 8px; padding: 4px 0; }
+.viz__legende strong { margin-left: auto; font-variant-numeric: tabular-nums; }
+.viz__val { color: var(--gris); font-variant-numeric: tabular-nums; min-width: 88px; text-align: right; }
+.viz__puce { width: 12px; height: 12px; border-radius: 3px; flex: 0 0 auto; }
+
+/* Aperçu de ce qu'apporte la formule supérieure */
+.verrou { position: relative; overflow: hidden; }
+.verrou__apercu { filter: grayscale(1) opacity(.35); pointer-events: none; user-select: none; }
+.verrou__voile {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.75) 55%);
+  z-index: 5;
+}
+.verrou__etiquette {
+  background: var(--charbon); color: #fff;
+  font-size: 14px; font-weight: 700;
+  padding: 10px 20px; border-radius: 999px;
+  box-shadow: var(--ombre-forte);
+}
+
 /* ── Contraste avant / après ──────────────────────────────── */
 
 .av-ap { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 16px; }

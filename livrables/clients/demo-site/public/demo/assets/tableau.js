@@ -279,14 +279,74 @@ async function vueStats() {
   });
   const classement = Object.entries(parProduit).sort((a, b) => b[1].ca - a[1].ca);
 
-  const complet = P.stats === 'complet';
+  const niveau = P.stats;                       // minimal | standard | complet
+  const standard = niveau !== 'minimal';
+  const complet = niveau === 'complet';
+
+  // Série journalière : le tableau de bord d'un commerçant se lit par jour,
+  // pas par semaine. 30 jours en standard, 90 en complet.
+  const jours = complet ? 90 : 30;
+  const parJour = new Map();
+  for (let i = jours - 1; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const cle = d.toISOString().slice(0, 10);
+    parJour.set(cle, { label: d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }), y: 0 });
+  }
+  ventes.forEach(v => {
+    const j = parJour.get(v.vendu_le);
+    if (j) j.y += v.montant || 0;
+  });
+  const serie = [...parJour.values()];
+
   const parCanal = {};
   ventes.forEach(v => { parCanal[v.canal] = (parCanal[v.canal] || 0) + (v.montant || 0); });
+  const parts = CANAUX.filter(c => parCanal[c.cle])
+                      .map(c => ({ nom: c.nom, valeur: parCanal[c.cle], couleur: c.couleur }));
+
+  const meilleur = serie.reduce((a, b) => (b.y > a.y ? b : a), serie[0] || { y: 0, label: '—' });
+
+  const blocCourbe = `
+    <div class="bloc">
+      <div class="bloc__titre"><h3>Vos ventes, jour par jour</h3></div>
+      ${courbe(serie, {
+        alt: `Chiffre d’affaires quotidien sur ${jours} jours`,
+        legende: `Sur ${jours} jours. Meilleure journée : ${meilleur.label}, ${fcfa(meilleur.y)}. Survolez pour lire chaque jour.`
+      })}
+    </div>`;
+
+  const blocClassement = `
+    <div class="bloc">
+      <div class="bloc__titre"><h3>Ce qui se vend le mieux</h3></div>
+      ${barres(classement.slice(0, complet ? 8 : 5).map(([nom, d]) => ({
+        label: nom, valeur: d.ca, sous: d.qte + ' vendus'
+      })), { alt: 'Classement des produits par chiffre d’affaires' })}
+      <details>
+        <summary style="cursor:pointer;font-size:14px;color:var(--gris);padding:8px 0">
+          Voir le tableau des chiffres
+        </summary>
+        <div class="tableau-scroll"><table>
+          <thead><tr><th>Produit</th><th>Quantité</th><th>Chiffre</th></tr></thead>
+          <tbody>${classement.map(([nom, d]) => `<tr>
+            <td><strong>${echappe(nom)}</strong></td>
+            <td style="font-variant-numeric:tabular-nums">${d.qte}</td>
+            <td style="font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums">${fcfa(d.ca)}</td>
+          </tr>`).join('')}</tbody>
+        </table></div>
+      </details>
+    </div>`;
+
+  const blocCanaux = `
+    <div class="bloc">
+      <div class="bloc__titre"><h3>D’où vient l’argent</h3></div>
+      ${repartition(parts, { legende: 'Ce que vous ne pouvez pas savoir aujourd’hui : quelle part vient de la boutique et quelle part du terrain.' })}
+    </div>`;
 
   return `
     ${avantApres(
       'En fin de mois, vous additionnez de tête ou vous ne le faites pas du tout.',
       'Le chiffre du jour, celui du mois, et ce qui se vend le mieux. Sans calcul.')}
+
     <div class="stats">
       <div class="stat"><div class="stat__label">Aujourd'hui</div><div class="stat__valeur">${fcfa(somme(duJour))}</div>
         <div class="stat__note">${duJour.length} vente${duJour.length > 1 ? 's' : ''}</div></div>
@@ -298,34 +358,40 @@ async function vueStats() {
       <div class="stat"><div class="stat__label">Panier moyen</div><div class="stat__valeur">${fcfa(Math.round(somme(ventes) / Math.max(1, ventes.length)))}</div></div>` : ''}
     </div>
 
-    <div class="bloc">
-      <div class="bloc__titre"><h3>Ce qui se vend le mieux</h3></div>
-      <div class="tableau-scroll"><table>
-        <thead><tr><th>Produit</th><th>Quantité</th><th>Chiffre</th></tr></thead>
-        <tbody>${classement.slice(0, complet ? 20 : 3).map(([nom, d]) => `<tr>
-          <td><strong>${echappe(nom)}</strong></td><td>${d.qte}</td>
-          <td style="font-weight:700;white-space:nowrap">${fcfa(d.ca)}</td>
-        </tr>`).join('')}</tbody>
-      </table></div>
-      ${!complet ? `<p style="font-size:13px;color:var(--gris);margin:16px 0 0">
-        Formule ${P.nom} : les 3 premiers. Le classement complet, la répartition par canal
-        et le suivi par point de vente arrivent avec App pro+.</p>` : ''}
-    </div>
+    ${standard ? blocCourbe : verrouille('Vos ventes, jour par jour',
+        courbe(serie, { alt: 'Aperçu' }), 'App pro')}
+
+    ${standard ? blocClassement : verrouille('Ce qui se vend le mieux',
+        barres(classement.slice(0, 5).map(([nom, d]) => ({ label: nom, valeur: d.ca })), { alt: 'Aperçu' }), 'App pro')}
+
+    ${complet ? blocCanaux : verrouille('D’où vient l’argent',
+        repartition(parts.length ? parts : [{ nom: '—', valeur: 1, couleur: VIZ.s1 }], {}), 'App pro+')}
 
     ${complet ? `<div class="bloc">
-      <div class="bloc__titre"><h3>D'où vient l'argent</h3></div>
-      <div class="tableau-scroll"><table>
-        <thead><tr><th>Canal</th><th>Chiffre</th><th>Part</th></tr></thead>
-        <tbody>${Object.entries(parCanal).sort((a, b) => b[1] - a[1]).map(([canal, ca]) => {
-          const libelle = { boutique: 'Boutique en ligne', point_de_vente: 'Points de vente', whatsapp: 'WhatsApp' }[canal] || canal;
-          const part = Math.round((ca / Math.max(1, somme(ventes))) * 100);
-          return `<tr><td><strong>${libelle}</strong></td>
-            <td style="font-weight:700;white-space:nowrap">${fcfa(ca)}</td>
-            <td style="min-width:120px"><div class="barre-jauge"><div class="barre-jauge__remplie" style="width:${part}%"></div></div>
-              <span style="font-size:12px;color:var(--gris)">${part} %</span></td></tr>`;
-        }).join('')}</tbody>
-      </table></div>
-    </div>` : ''}`;
+      <div class="bloc__titre"><h3>Vos points de vente</h3></div>
+      <div id="vizPos"><div class="vide">Chargement…</div></div>
+    </div>` : ''}
+
+    ${!complet ? `<p style="font-size:14px;color:var(--gris)">
+      Les blocs grisés existent, ils ne sont simplement pas dans la formule ${P.nom}.
+      <a href="/demo/">Comparer les formules</a>.
+    </p>` : ''}`;
+}
+
+/* Le comparatif des points de vente vit dans une autre table : on le charge
+   après le rendu plutôt que de retarder tout l'onglet. */
+async function vueStatsPos() {
+  const cible = document.getElementById('vizPos');
+  if (!cible) return;
+  try {
+    const pos = await api.get('demo_pos', 'select=nom,vendu,stock_depose&order=vendu.desc');
+    cible.innerHTML = barres(pos.map(p => ({
+      label: p.nom, valeur: p.vendu, sous: (p.stock_depose - p.vendu) + ' en rayon'
+    })), { alt: 'Ventes par point de vente', largeurLabel: 220,
+           legende: 'Pièces vendues par point de vente. Survolez pour voir ce qu’il reste en rayon.' });
+  } catch (e) {
+    cible.innerHTML = '<div class="vide">Comparatif indisponible.</div>';
+  }
 }
 
 /* ── Actions ───────────────────────────────────────────────── */
@@ -340,6 +406,7 @@ async function rendre(cle) {
   if (!cible) return;
   try {
     cible.innerHTML = await RENDUS[cle]();
+    if (cle === 'stats') vueStatsPos();
   } catch (e) {
     cible.innerHTML = '<div class="vide">Ces données n\'ont pas pu être chargées.</div>';
   }

@@ -34,7 +34,7 @@ const PALIERS = {
     clients: false,
     pointsDeVente: false,
     equipe: false,
-    stats: 'basique',              // basique | complet
+    stats: 'minimal',              // minimal | standard | complet
     inclus: [
       'Vitrine avec votre catalogue',
       'Panier et commande envoyée sur votre WhatsApp',
@@ -47,6 +47,7 @@ const PALIERS = {
       'Suivi du stock',
       'Lien de tournée pour le livreur',
       'Fichier clients',
+      'Courbe de vos ventes et classement des produits',
       'Plusieurs points de vente',
       'Plusieurs comptes'
     ]
@@ -64,19 +65,20 @@ const PALIERS = {
     clients: true,
     pointsDeVente: false,
     equipe: false,
-    stats: 'basique',
+    stats: 'standard',
     inclus: [
       'Tout ce que contient App simple',
       'Stock décompté à chaque vente, alerte sous le seuil',
       'Quantité restante visible par la cliente sur la vitrine',
       'Lien de tournée envoyé au livreur, sans compte à créer',
       'Suivi de la commande en temps réel',
-      'Fichier clients : qui achète, combien, quand'
+      'Fichier clients : qui achète, combien, quand',
+      'Courbe de vos ventes sur 30 jours et classement de vos produits'
     ],
     absent: [
       'Plusieurs points de vente',
       'Plusieurs comptes avec des droits différents',
-      'Rapports détaillés'
+      'Courbe sur 90 jours, répartition par canal, comparatif des points de vente'
     ]
   },
   'pro-plus': {
@@ -98,7 +100,7 @@ const PALIERS = {
       'Plusieurs comptes, chacun ne voit que ce qui le concerne',
       'Points de vente : stock déposé, vendu, à réapprovisionner',
       'Chaque gérante saisit ses ventes depuis son téléphone',
-      'Statistiques : chiffre du jour, du mois, classement des produits',
+      'Courbe sur 90 jours, d’où vient l’argent, comparatif de vos points de vente',
       'Rapports et assistance prioritaire'
     ],
     absent: [
