@@ -7,6 +7,68 @@
 
 ---
 
+## 2026-08-03 (session 122 — les apps métier deviennent montrables, et le avant/après change la démonstration)
+
+> Journée en deux temps : quelques correctifs sur le site d'Andréa le matin, puis la construction d'un support de vente permanent pour les apps métier.
+
+### Vies Croisées, trois correctifs
+- Le **statut éditorial ne s'affiche plus aux visiteurs** : l'information de pilotage d'Andréa fuitait sur la page publique.
+- La légende sous la photo de l'invité est retirée, et le **bandeau partenaires ne s'arrête plus au milieu de la page**.
+
+### Démonstrations par palier, le chantier du jour
+- Constat de départ : l'agence a des preuves réelles en production, mais **aucun tableau de bord montrable**, puisque ce sont les vraies données des clientes. Le fictif sert exactement à ça.
+- **By Macoco**, boutique fictive de cosmétiques naturels, sert de support unique aux trois formules Famille A. Le nom relie la démo à la série Facebook : Macoco incarne le business, il a maintenant une boutique.
+- **Décision de fond : un seul code, trois configurations.** On ne construit pas trois apps, on construit le palier pro+ et on éteint des fonctions par un bloc CONFIG. Bénéfice commercial autant que technique : App pro **est** App simple avec des interrupteurs en plus, et ça se voit en passant d'une démo à l'autre.
+- **Le tableau de bord est ouvert sans mot de passe et pleinement cliquable.** Un admin protégé par login ne se partage pas dans un post, et c'est le geste du prospect qui vend, pas la capture d'écran. Contreparties assumées et écrites : aucune donnée réelle, tables isolées sans lien avec `auth.users`, remise à zéro horaire par pg_cron plus un bouton. Un visiteur qui salit la démo est effacé en moins d'une heure.
+- **Le avant/après, ajouté sur demande de Mac Arthur, est ce qui change tout.** La démo montrait le résultat sans montrer le problème, or personne n'achète une solution à un problème qu'il n'a pas nommé. Trois niveaux : une page dédiée qui met en vis-à-vis une journée gérée dans les discussions et un cahier contre la même journée avec l'outil, le contraste rappelé dans chaque onglet du tableau de bord, et la page d'entrée qui ouvre sur le problème avant les prix.
+- **Limite écrite noir sur blanc dans la démo** : l'app ne ramène pas de nouvelles clientes, elle récupère celles que le prospect perd déjà. Un client qui achète en croyant l'inverse revient mécontent.
+
+### Le live change les contraintes
+- Mac Arthur projettera la démo par partage d'écran. **Le mobile first est conservé** (le lien sera ouvert au téléphone après le live) et un **mode présentation activé par `?live`** se superpose sans dégrader la version normale.
+- Règle de dimensionnement à retenir : **un écran projeté devient une vidéo compressée regardée sur un petit téléphone**. Ce qui compte n'est ni le format bureau ni le format mobile, c'est la taille apparente. Donc moins d'éléments à l'écran, chacun plus gros. La grille produits passe de cinq colonnes à trois cartes larges.
+- **Visite guidée en neuf étapes**, du problème au prix. L'étape vit dans l'URL donc elle survit au changement de page, le bon onglet s'ouvre seul, l'élément concerné est entouré, et les flèches du clavier font avancer (viser un bouton à la souris devant un public se voit). La barre sert le spectateur autant que l'orateur. Aide-mémoire dans `CONDUITE-DU-LIVE.md`.
+
+### Graphiques, et l'écart entre formules rendu visible
+- Trois niveaux de statistiques au lieu de deux. App simple : deux chiffres. App pro : courbe 30 jours et classement. App pro+ : 90 jours, répartition par canal, comparatif des points de vente.
+- **Levier commercial retenu : l'aperçu grisé.** Sur les formules basses, les blocs supérieurs sont affichés en grisé avec la mention de la formule qui les contient. Le prospect ne lit pas une liste de fonctions absentes, il voit le graphique qu'il n'a pas. Honnête, car les données sont réelles et c'est la fonction qui n'est pas dans l'offre.
+- **LEÇON TRANSFÉRABLE À TOUS LES PROJETS : l'orange et le vert de la charte se confondent en protanopie.** Mesuré à ΔE 5,3 quand le minimum est 8. Cela ne se voit pas à l'œil. Toute palette de graphique passe désormais par le validateur, sur les surfaces réelles et sur toutes les paires. Palette retenue : terre `#B85C2A`, bleu `#2E6FB7`, prune `#8E4585`. Enjeu doublé en live, où la compression rapproche encore les couleurs.
+- Graphiques en SVG écrit à la main, **aucune librairie ni CDN**, cohérent avec la stack maison.
+
+### Deux défauts attrapés avant livraison
+- **Le tableau de bord annonçait que le fichier clientes se remplit seul à chaque commande, mais la vitrine ne l'écrivait pas.** Un prospect qui commande puis ouvre l'onglet ne s'y serait pas trouvé, au moment précis où la démo doit convaincre. Règle générale : une interface ne promet pas une donnée qu'elle n'écrit pas.
+- Le jeu de données ne produisait **aucune vente WhatsApp**, donc le graphique à trois parts n'en aurait montré que deux. Corrigé à la source, réparti 67 / 22 / 11.
+
+### Piège d'exploitation, deuxième fois
+- Après un déploiement Cloudflare Pages, des fichiers pourtant présents **semblent absents pendant une minute** et le domaine sert la page d'accueil à leur place. Diagnostiquer trop vite fait conclure à tort qu'ils ne sont pas déployés. Vérifier sur l'alias du déploiement départage le cache de l'absence réelle.
+
+### Livrables
+- `livrables/clients/demo-site/public/demo/` : page d'entrée, avant/après, trois vitrines, trois tableaux de bord, deux tournées livreur, plus les modules partagés (`config.js`, `boutique.js`, `tableau.js`, `livreur.js`, `charts.js`, `visite.js`, `styles.css`, `live.css`).
+- `livrables/commercial/demo-paliers/` : `supabase/schema.sql` (tables `demo_`, fonction de remise à zéro, planification horaire) et `CONDUITE-DU-LIVE.md`.
+- **En ligne :** `demo.agenceattractor.com/demo` · avant/après sur `/demo/avant/` · visite guidée sur `/demo/avant/?live=1`.
+- **Reste à faire :** brancher le lien depuis `agenceattractor.com` (il n'existe aujourd'hui que si Mac Arthur l'envoie à la main), et faire une répétition à blanc des neuf étapes avant le direct. Le rendu visuel n'a pas été vu dans un navigateur.
+
+---
+
+## 2026-08-02 (session 121 — journée de relances, et VSD ouvre un front qui ne dépend pas d'Air CI)
+
+> Entrée **reconstituée d'après les commits** et non tracée en direct : elle rapporte ce que le dépôt prouve, pas les décisions ni les échanges qui les ont motivées.
+
+### Sept dossiers relancés le même jour
+- Notes de relance écrites pour **Ayêla, Beynaud / Star Factory, GetWinWorld, J'Envoie Express, Studio IA, Yiriba Nature** et **My Nugo**, chacune dans son dossier client (`RELANCE-02-08.md`).
+
+### VSD, le recrutement des voyageurs
+- `RECRUTEMENT-VOYAGEURS.md` créé et `VSD.md` complété : **J'Envoie Express coopte son vivier de voyageurs**. C'est le front qui avance sans attendre Air CI, conformément à la date-butoir du 10-12 août.
+- Note de pilotage mise à jour dans le même sens : deux fronts en parallèle.
+
+### ML Ads / Romuald Ndoua
+- Le suivi ne compte plus seulement les leads : **les visites et les conversations sont tracées** (migration `0002_rom_trafic.sql`, page publique, admin et fonction de chat modifiés).
+
+### Corrections de contenu
+- **My Nugo** : l'événement de Lyon ne s'affiche plus, et le bloc événement devient réutilisable au lieu d'être à réécrire à chaque fois.
+- **Vies Croisées** : les derniers prénoms fictifs et résidus de maquette quittent l'espace d'Andréa.
+
+---
+
 ## 2026-07-31 (session 120 — le modèle VSD change de nature, et Lorraine prend la main sur ses prix)
 
 > Journée en deux temps : le matin un virage stratégique subi sur Air CI, l'après-midi une brique d'autonomie livrée chez Ayêla.
