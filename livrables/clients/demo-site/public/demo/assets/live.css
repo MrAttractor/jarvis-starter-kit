@@ -1,0 +1,143 @@
+/* ============================================================
+   DEMO PALIERS — mode présentation
+   Activé par ?live dans l'URL. Ne touche jamais la version normale :
+   un prospect qui ouvre le lien seul, depuis son téléphone, doit
+   continuer à voir l'app telle qu'elle est.
+
+   Principe de dimensionnement : l'écran projeté devient une vidéo
+   compressée, regardée sur un téléphone. Ce qui compte n'est donc ni
+   le format bureau ni le format mobile, c'est la taille apparente.
+   D'où la règle : moins d'éléments à l'écran, chacun plus gros.
+   ============================================================ */
+
+html.live body { font-size: 18px; }
+
+html.live .contenu { max-width: 1400px; padding: 0 32px; }
+
+html.live h1 { font-size: 44px; }
+html.live h2 { font-size: 32px; }
+html.live h3 { font-size: 24px; }
+html.live p  { font-size: 19px; }
+
+/* Le bandeau de démonstration reste, mais cède la vedette au scénario */
+html.live .bandeau-demo { font-size: 15px; padding: 6px 16px; }
+html.live .bascule { padding: 12px 32px; }
+html.live .bascule__palier { font-size: 17px; }
+html.live .bascule__lien { font-size: 17px; min-height: 48px; padding: 8px 24px; }
+
+html.live .entete { padding: 40px 0 32px; }
+html.live .entete__marque { font-size: 48px; }
+html.live .entete__baseline { font-size: 20px; }
+html.live .entete__intro { font-size: 21px; max-width: 780px; }
+
+/* Moins de colonnes, des cartes plus grandes : sur un écran large,
+   la grille automatique produisait cinq vignettes illisibles une fois
+   le flux compressé. */
+html.live .grille {
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  max-width: 1240px; margin: 0 auto; gap: 32px;
+}
+html.live .carte__nom { font-size: 24px; }
+html.live .carte__cat { font-size: 15px; }
+html.live .carte__desc { font-size: 17px; }
+html.live .carte__badge { font-size: 14px; padding: 6px 12px; }
+html.live .carte__stock { font-size: 16px; padding: 6px 12px; }
+html.live .format__label strong { font-size: 18px; }
+html.live .format__label span { font-size: 15px; }
+html.live .format__prix { font-size: 19px; }
+
+html.live .btn { font-size: 18px; min-height: 52px; padding: 12px 24px; }
+html.live .btn--petit { font-size: 16px; min-height: 44px; }
+
+html.live .onglets { padding: 24px 32px 12px; gap: 12px; }
+html.live .onglet { font-size: 18px; min-height: 52px; padding: 12px 24px; }
+
+html.live .stat__label { font-size: 15px; }
+html.live .stat__valeur { font-size: 40px; }
+html.live .stat__note { font-size: 15px; }
+html.live .stats { gap: 16px; }
+
+html.live table { font-size: 18px; }
+html.live th { font-size: 15px; }
+html.live td, html.live th { padding: 14px 12px; }
+html.live .pastille { font-size: 15px; padding: 6px 12px; }
+
+html.live .av-ap__ligne { font-size: 18px; padding: 16px; }
+html.live .av-ap__ligne span { font-size: 13px; }
+
+html.live .bloc { padding: 24px; }
+html.live .note { font-size: 18px; padding: 24px; }
+html.live .liste { font-size: 18px; }
+html.live .liste li { padding: 6px 0 6px 32px; }
+html.live .liste li::before { width: 16px; height: 16px; top: 14px; }
+
+html.live .palier__nom { font-size: 26px; }
+html.live .palier__prix { font-size: 34px; }
+html.live .palier__pour { font-size: 17px; }
+
+html.live .msg { font-size: 17px; max-width: 88%; }
+html.live .fil { max-height: none; }
+
+/* La barre de scénario est fixée en haut : le public doit toujours
+   savoir à quelle étape il se trouve, même si l'orateur digresse. */
+html.live body { padding-top: 108px; }
+
+.scenario {
+  position: fixed; top: 0; left: 0; right: 0;
+  background: var(--charbon); color: #fff;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0,0,0,.25);
+}
+.scenario__haut {
+  display: flex; align-items: center; gap: 24px;
+  padding: 12px 32px;
+  max-width: 1400px; margin: 0 auto;
+}
+.scenario__num {
+  flex: 0 0 auto;
+  background: var(--terre); color: #fff;
+  font-size: 15px; font-weight: 800; letter-spacing: .5px;
+  padding: 8px 16px; border-radius: 999px;
+  white-space: nowrap;
+}
+.scenario__txt { flex: 1; min-width: 0; }
+.scenario__titre { font-size: 22px; font-weight: 800; line-height: 1.2; }
+.scenario__dit { font-size: 16px; color: #C9BFB2; margin-top: 2px; }
+.scenario__nav { flex: 0 0 auto; display: flex; gap: 12px; }
+.scenario__btn {
+  min-height: 48px; padding: 10px 20px;
+  border: 1px solid #6E645A; border-radius: 8px;
+  background: transparent; color: #fff;
+  font-family: inherit; font-size: 17px; font-weight: 700;
+  cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center;
+}
+.scenario__btn--fort { background: var(--terre); border-color: var(--terre); }
+.scenario__btn[aria-disabled="true"] { opacity: .35; pointer-events: none; }
+
+.scenario__jauge { height: 5px; background: #4A423A; }
+.scenario__jauge span { display: block; height: 100%; background: var(--terre); transition: width .3s ease; }
+
+/* Écrans étroits : le scénario reste utilisable en répétition */
+@media (max-width: 860px) {
+  html.live body { padding-top: 150px; }
+  .scenario__haut { flex-wrap: wrap; gap: 12px; padding: 12px 16px; }
+  .scenario__nav { width: 100%; }
+  .scenario__btn { flex: 1; justify-content: center; }
+  html.live .contenu { padding: 0 16px; }
+}
+
+/* Mise en évidence de l'élément dont on parle */
+.projecteur {
+  position: relative;
+  z-index: 30;
+  outline: 3px solid var(--terre);
+  outline-offset: 6px;
+  border-radius: var(--rayon);
+  animation: halo 1.6s ease-out 3;
+}
+@keyframes halo {
+  0%   { box-shadow: 0 0 0 0 rgba(196, 98, 45, .55); }
+  70%  { box-shadow: 0 0 0 22px rgba(196, 98, 45, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(196, 98, 45, 0); }
+}
