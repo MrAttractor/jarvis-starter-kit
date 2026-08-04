@@ -7,6 +7,39 @@
 
 ---
 
+## 2026-08-04 (session 123 — Élévia part en signature, et le module de signature passe son test réel)
+
+> Session courte et opérationnelle : débloquer une signature qui attendait, puis vérifier
+> que la plomberie qui la porte tient vraiment.
+
+### Club Élévia, tout est parti
+- Mac Arthur a envoyé le courrier de réponse aux **6 conditions posées par Élise le 02/08**, puis l'**invitation à signer** les trois documents (Avenant V2, Devis V5, CDC V4).
+- **Vérification avant envoi, et elle valait le coup** : les trois empreintes SHA-256 scellées en base ont été recontrôlées contre les PDF du dossier. Elles correspondent, donc elle signe bien la dernière version et pas un document intermédiaire. Le dossier du 29/07 est bien expiré et non signable.
+- Elle n'avait **pas encore ouvert le lien** au moment de l'envoi (statut `en_attente`, jamais `ouvert`). C'est ce statut, et non l'accusé de livraison, qui dira qu'elle a vu le message.
+- **Sa signature seule lance les 40 jours ouvrés** : 950 € sont réglés sur 3 000, elle n'a rien à verser pour démarrer. Relance prévue sans nouvelle sous 5 jours ouvrés, parce que le package du 29/07 était resté 4 jours dans ses indésirables.
+- Le dossier a été commité et poussé, il ne vivait qu'en local depuis la veille.
+
+### Signature Attractor, le test réel a eu lieu
+- **Le correctif d'expéditeur du 31/07 est validé sur une vraie boîte Outlook** : envoi depuis `hello@agenceattractor.com`, Resend renvoie *delivered*, là où le `noreply@` du 29/07 avait fini en indésirable. C'est la première signature client réelle du module.
+- **Réserve écrite dans le dossier** : *delivered* prouve l'acceptation par le serveur, pas l'arrivée en boîte de réception. Ne jamais conclure d'un envoi réussi qu'un email est lu.
+- **Deux manques constatés à l'usage**, l'invitation ayant dû partir par un script hors module : `sign-create` ne sait pas créer un dossier sans envoyer, et rien ne permet de **renvoyer une invitation** sur un dossier existant. Tant que ce n'est pas corrigé, chaque relance de signature repasse par un contournement à la main.
+
+### Google Workspace, un chiffre mal lu et une dépendance découverte
+- Le prélèvement de **15,35 € du 1er août n'est pas le coût courant** : c'est la facture de juillet, avec 2 licences pendant environ 18 jours. La ligne « utilisation de 1 seats » de la facture en cours dit l'inverse de ce qu'on croyait, **la seconde licence était déjà supprimée**. Coût réel : **≈ 9,72 € TTC/mois**, soit 117 €/an économisés sans le savoir.
+- **Leçon de lecture de facture** : un montant prélevé décrit le mois écoulé, jamais le mois à venir. Le seul chiffre fiable est la ligne d'utilisation en cours.
+- **Dépendance découverte au passage** : `hello@` n'est plus une licence mais un **alias**, et c'est l'expéditeur contractuel de l'agence, celui sur lequel Élise répondra. Supprimer cet alias enverrait ses réponses dans le vide. Testé en réel le jour même : le mail arrive en boîte de réception, pas en indésirables.
+- Arbitrage tranché : **rester en mensuel**, l'engagement annuel ne gagnerait qu'environ 1,60 €/mois sur une licence contre 12 mois de blocage.
+
+### Abonnements tracés
+- CapCut **11,99 €/mois** et Magnific **10,82 €/mois** entrent dans le suivi. Avec Workspace, le burn passe à **≈ 143 €/mois** pour une moyenne de ventes agence autour de **275 €/mois**. **Plus de la moitié de ce qui est encaissé repart en outils**, c'est le vrai sujet, pas les 8 € d'une licence.
+
+### Livrables
+- Commits `4255f2d` (dossier Élévia complet, avenant V1 archivé) et `135d43a` (fiche Signature Attractor), poussés sur `main`.
+- Fiches de dossier `club-elevia/DOSSIER.md` et `signature-attractor/DOSSIER.md` à jour, mémoires Workspace et finances corrigées.
+- **Reste à faire :** ajouter `envoyer: false` et le renvoi d'invitation à `sign-create` ; faire refuser par `sign-load` et `sign-verify` tout statut autre que `en_attente` ; et côté VSD, le back-office de file d'attente, seul chantier qui n'attend pas Air CI avant la date-butoir du 10-12 août.
+
+---
+
 ## 2026-08-03 (session 122 — les apps métier deviennent montrables, et le avant/après change la démonstration)
 
 > Journée en deux temps : quelques correctifs sur le site d'Andréa le matin, puis la construction d'un support de vente permanent pour les apps métier.
