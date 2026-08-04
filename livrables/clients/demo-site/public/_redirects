@@ -38,8 +38,21 @@
 /commander          /commander/index.html          200
 
 # Démonstrations par palier (App simple / pro / pro+) — boutique fictive By Macoco
-# La règle /demo doit rester AVANT l'attrape-tout, sinon elle part sur Assists.
 /demo               /demo/index.html               200
+/all-eyes-on-yoo    /all-eyes-on-yoo/index.html    200
 
-# Nouveaux utilisateurs Assists — redirigés vers la boutique dynamique
-/:slug  https://assists.agenceattractor.com/b/:slug  302
+# ============================================================================
+# Anciens liens de boutique Assists partagés avant la refonte du 15/07/2026.
+# Le lien canonique est désormais assists.agenceattractor.com/<slug>.
+# Liste EXPLICITE, tenue à la main, jamais un motif générique.
+#
+# NE JAMAIS REMETTRE D'ATTRAPE-TOUT « /:slug » ICI.
+# Il est évalué AVANT le routage naturel de Cloudflare Pages, donc il capture
+# tout nouveau dossier client non déclaré au-dessus et l'envoie sur Assists,
+# qui répond « Boutique introuvable ». Les lignes 200 de ce fichier ne sont que
+# la liste des oublis déjà rattrapés, un par client.
+# Dégât mesuré le 04/08/2026 : le lien de closing d'All Eyes on yoo, envoyé le
+# 30/07 et resté sans réponse, tombait sur « Boutique introuvable ».
+# ============================================================================
+/first          https://assists.agenceattractor.com/b/first          302
+/mrattractor    https://assists.agenceattractor.com/b/mrattractor    302
