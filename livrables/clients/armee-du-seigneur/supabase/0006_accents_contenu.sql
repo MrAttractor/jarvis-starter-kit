@@ -1,17 +1,18 @@
 -- =====================================================================
--- NON APPLIQUEE - en attente de la validation de Mac Arthur.
+-- APPLIQUEE le 05/08/2026.
 --
--- Tout le contenu seede en juillet a ete ecrit sans accents (convention
--- des migrations de ce dossier). Or ce texte n'est pas technique : il
--- s'affiche tel quel au visiteur. Le site public montre aujourd'hui
+-- Tout le contenu seede en juillet avait ete ecrit sans accents
+-- (convention des migrations de ce dossier). Or ce texte n'est pas
+-- technique : il s'affiche tel quel au visiteur. Le site public montrait
 -- "Reverend", "Cote d'Ivoire", "Evangelisation", "Medias",
 -- "Maison de la Destinee", "Femmes Elites".
 --
--- Sur un site francais d'une mission chretienne, ca se voit. Cette
--- migration ne change aucun contenu : elle ne remet que les accents et
--- les ligatures.
+-- Appliquee en meme temps que la refonte de la section Departements :
+-- mettre ces libelles en avant dans des cartes et une fiche detaillee
+-- tout en gardant l'orthographe fautive aurait ete livrer a moitie.
 --
--- Pour l'appliquer : dire "applique les accents".
+-- Cette migration ne change aucun contenu : elle ne remet que les
+-- accents et les ligatures.
 -- =====================================================================
 
 -- ---------- DIRIGEANTS ----------

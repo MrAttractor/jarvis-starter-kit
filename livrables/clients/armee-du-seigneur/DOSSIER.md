@@ -88,14 +88,36 @@ Tout vient de la Mission, rien ne dépend de l'agence :
 5. Le **nom des deux rencontres du 28 juillet**, et si des personnes doivent être
    nommées dans les légendes
 
-## Un défaut relevé le 05/08, pas encore corrigé
+## Galerie et départements refondus le 05/08
 
-**Tout le contenu seedé en juillet est sans accents**, alors qu'il s'affiche tel quel
-au visiteur : « Reverend », « Cote d'Ivoire », « Evangelisation », « Medias »,
-« Maison de la Destinee », « Femmes Elites ». Sur un site français d'une mission
-chrétienne, ça se voit. La migration `0006_accents_contenu.sql` est écrite et prête,
-**volontairement non appliquée** : elle ne change aucun contenu, elle ne remet que les
-accents et les ligatures. En attente d'un feu vert.
+Deux remarques de Mac Arthur, toutes deux justes, et une troisième chose corrigée
+au passage.
+
+**La galerie était trop petite sur ordinateur.** Deux causes. La grille des albums
+était en `auto-fill` sur quatre colonnes : avec deux albums, ils se tassaient dans un
+quart de la largeur. Passée en `auto-fit`, les colonnes vides se replient. Surtout,
+**la lightbox n'avait aucune vue photo** : cliquer un album ouvrait une planche de
+vignettes carrées de 120 px, recadrées, et il était impossible de voir une photo
+entière ou sa légende. Elle a maintenant deux vues : la planche (vignettes 4/3 de
+190 px) puis **la photo en grand**, jamais recadrée, avec sa légende, un compteur,
+les flèches précédent / suivant, les touches ← → et Échap.
+
+**Les départements passent de la liste en cartes cliquables**, chacune ouvrant une
+fiche en modale : mission complète, responsable quand il sera renseigné, photo quand
+elle existera, et un bouton « Rejoindre ce département » qui amène au formulaire de
+contact avec le message déjà écrit.
+
+**Les accents ont été remis sur tout le contenu seedé** (migration `0006`). Mettre en
+avant les départements dans des cartes et une fiche tout en affichant
+« Evangelisation », « Femmes Elites » et « Reverend » aurait été livrer à moitié.
+
+**Bug corrigé au passage :** la règle globale `img{display:block}` écrasait le
+`display:none` de l'attribut `hidden`, donc un département sans photo affichait un
+grand cadre vide dans sa fiche. Réglé par `[hidden]{display:none!important}`.
+
+**Validation :** 15 écrans capturés au navigateur (galerie, planche, photo,
+départements, fiche) en 375, 768 et 1440 px. Aucun débordement horizontal
+(`scrollWidth == clientWidth` partout).
 
 ## Prochaine action
 

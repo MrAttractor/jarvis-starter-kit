@@ -31,6 +31,9 @@
 html{scroll-behavior:smooth}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--nuit);color:var(--txt-d);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 img{max-width:100%;display:block}
+/* img{display:block} ecrase le display:none implicite de [hidden] :
+   sans cette ligne, une photo absente laisse un grand cadre vide. */
+[hidden]{display:none!important}
 a{color:inherit;text-decoration:none}
 h1,h2,h3,.cinzel{font-family:'Cinzel',serif;font-weight:700;letter-spacing:.012em}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
@@ -91,7 +94,7 @@ header{position:sticky;top:0;z-index:60;background:rgba(9,18,40,.82);backdrop-fi
 .verbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
 .verb{font-size:12px;font-weight:600;color:var(--txt-d);background:rgba(255,255,255,.05);border:1px solid var(--bd-d);padding:7px 13px;border-radius:100px}
 .hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
-.btn{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:14.5px;padding:14px 24px;border-radius:12px;cursor:pointer;border:none;transition:.18s;min-height:48px}
+.btn{display:inline-flex;align-items:center;gap:9px;font-family:inherit;font-weight:700;font-size:14.5px;padding:14px 24px;border-radius:12px;cursor:pointer;border:none;transition:.18s;min-height:48px}
 .btn-or{background:var(--or);color:#25190a}.btn-or:hover{background:var(--or-clair);transform:translateY(-1px)}
 .btn-ghost{background:transparent;color:#fff;border:1px solid var(--bd-or)}.btn-ghost:hover{background:rgba(255,255,255,.06)}
 .hero-photo{position:relative}
@@ -152,14 +155,40 @@ header{position:sticky;top:0;z-index:60;background:rgba(9,18,40,.82);backdrop-fi
 .leader .miss p{font-size:15px;color:var(--encre);font-family:'Cinzel',serif;line-height:1.5}
 @media(max-width:800px){.leader,.leader:nth-child(even){grid-template-columns:1fr;direction:ltr;gap:24px}.leader .ph{max-width:360px}}
 
-/* ---------- DEPARTEMENTS (liste sobre) ---------- */
-.deps{display:grid;grid-template-columns:1fr 1fr;gap:0 56px}
-.dep{display:grid;grid-template-columns:auto 1fr;gap:16px;padding:20px 0;border-bottom:1px solid var(--bd-l)}
-.dep .n{font-family:'Cinzel',serif;font-size:14px;color:var(--or-ink);font-weight:700;padding-top:2px;min-width:24px}
-.dep h3{font-size:15.5px;margin-bottom:4px;color:var(--encre)}
-.dep p{font-size:13.5px;color:var(--encre2)}
-.dep .resp{font-size:12px;color:var(--or-ink);font-weight:600;margin-top:5px}
-@media(max-width:720px){.deps{grid-template-columns:1fr;gap:0}}
+/* ---------- DEPARTEMENTS (cartes cliquables + fiche en modale) ---------- */
+.deps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:18px}
+.dep{position:relative;text-align:left;font-family:inherit;background:var(--carte-l);border:1px solid var(--bd-l);border-radius:16px;padding:24px 22px 20px;cursor:pointer;display:flex;flex-direction:column;gap:8px;min-height:100%;transition:.18s;box-shadow:0 2px 10px rgba(12,27,54,.04)}
+.dep:hover{transform:translateY(-3px);border-color:var(--bd-orl);box-shadow:0 14px 34px rgba(12,27,54,.10)}
+.dep:focus-visible{outline:2px solid var(--or-ink);outline-offset:3px}
+.dep .n{font-family:'Cinzel',serif;font-size:13px;color:var(--or-ink);font-weight:700;letter-spacing:.08em}
+.dep h3{font-size:17px;color:var(--encre);line-height:1.35}
+.dep p{font-size:13.5px;color:var(--encre2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.dep .resp{font-size:12px;color:var(--or-ink);font-weight:600}
+.dep .plus{margin-top:auto;padding-top:12px;font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--or-ink);display:flex;align-items:center;gap:7px}
+.dep .plus svg{width:15px;height:15px;stroke:var(--or-ink);transition:.18s}
+.dep:hover .plus svg{transform:translateX(3px)}
+
+/* fiche departement */
+.dmod{position:fixed;inset:0;z-index:110;background:rgba(6,14,32,.82);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
+.dmod.open{display:flex}
+.dmod .dbox{background:var(--blanc);border-radius:22px;max-width:600px;width:100%;max-height:88vh;overflow:auto;padding:36px 34px;position:relative;box-shadow:0 30px 80px rgba(6,14,32,.34)}
+.dmod .dx{position:absolute;top:16px;right:16px;width:44px;height:44px;border-radius:12px;border:1px solid var(--bd-l);background:var(--carte-l);color:var(--encre2);font-size:20px;cursor:pointer;transition:.15s}
+.dmod .dx:hover{background:var(--ivoire);color:var(--encre)}
+.dmod .dnum{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.2em;color:var(--or-ink);font-weight:700}
+.dmod h3{font-size:26px;color:var(--encre);margin-top:8px;padding-right:48px;line-height:1.25}
+.dmod .drule{width:56px;height:2px;background:var(--or-ink);margin:16px 0 20px}
+.dmod .dphoto{width:100%;border-radius:14px;margin-bottom:20px;aspect-ratio:16/9;object-fit:cover}
+.dmod .dmission{font-size:16px;color:var(--encre);line-height:1.7}
+.dmod .ddesc{font-size:14.5px;color:var(--encre2);margin-top:14px;white-space:pre-line}
+.dmod .dresp{margin-top:20px;padding:14px 16px;background:var(--ivoire);border-radius:12px;font-size:13.5px;color:var(--encre2)}
+.dmod .dresp b{color:var(--encre);font-weight:700}
+.dmod .dcta{margin-top:24px;display:flex;flex-wrap:wrap;gap:12px}
+@media(max-width:620px){
+  .dmod{padding:14px}
+  .dmod .dbox{padding:28px 20px;border-radius:18px}
+  .dmod h3{font-size:22px}
+  .dmod .dcta .btn{width:100%;justify-content:center}
+}
 
 /* ---------- VIE (bande sombre) ---------- */
 .progs{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:24px}
@@ -196,14 +225,18 @@ header{position:sticky;top:0;z-index:60;background:rgba(9,18,40,.82);backdrop-fi
 @media(max-width:620px){.ev{grid-template-columns:72px 1fr;gap:16px}.ev .etype{grid-column:2;justify-self:start;margin-top:2px}.ev .date{border-right:none;padding-right:0}}
 
 /* ---------- GALERIE (sombre) ---------- */
-.albums{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:18px}
+/* auto-fit et non auto-fill : avec 2 albums, les colonnes vides se replient
+   et les cartes occupent la largeur au lieu de se tasser en haut a gauche. */
+.albums{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px}
 .album{border-radius:16px;overflow:hidden;position:relative;aspect-ratio:4/3;background:var(--nuit-2);border:1px solid var(--bd-d);cursor:pointer;transition:.2s}
 .album:hover{transform:translateY(-3px);border-color:var(--bd-or)}
 .album img{width:100%;height:100%;object-fit:cover;transition:.4s}
 .album:hover img{transform:scale(1.05)}
-.album .ov{position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(6,12,26,.92));display:flex;flex-direction:column;justify-content:flex-end;padding:18px}
-.album .ov h3{font-size:16px;color:#fff}
-.album .ov .m{font-size:12px;color:var(--txt-d2);margin-top:4px}
+.album .ov{position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(6,12,26,.92));display:flex;flex-direction:column;justify-content:flex-end;padding:20px}
+.album .ov h3{font-size:19px;color:#fff}
+.album .ov .m{font-size:13px;color:var(--txt-d2);margin-top:5px}
+.album .ov .voir{margin-top:10px;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--or-clair);display:flex;align-items:center;gap:7px}
+.album .ov .voir svg{width:15px;height:15px;stroke:var(--or-clair)}
 .album .count{position:absolute;top:12px;right:12px;background:rgba(9,18,40,.82);border:1px solid var(--bd-d);font-size:12px;padding:5px 11px;border-radius:100px;display:flex;align-items:center;gap:6px}
 .album .count svg{width:14px;height:14px;stroke:var(--or-clair)}
 
@@ -253,16 +286,51 @@ footer{background:#07122a;border-top:1px solid var(--bd-d);padding:52px 0 30px}
 .light .empty{color:var(--encre3);border-color:var(--bd-l)}
 .dark .empty{color:var(--txt-d3);border-color:var(--bd-d)}
 
-/* LIGHTBOX */
-.lb{position:fixed;inset:0;z-index:100;background:rgba(4,9,22,.95);display:none;align-items:center;justify-content:center;padding:20px}
+/* LIGHTBOX : deux vues, la planche de l'album puis la photo en grand */
+.lb{position:fixed;inset:0;z-index:100;background:rgba(4,9,22,.975);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:20px}
 .lb.open{display:flex}
-.lb .box{max-width:960px;width:100%}
-.lb .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.lb .head h3{font-size:18px;color:#fff}
-.lb .x{background:rgba(255,255,255,.08);border:1px solid var(--bd-d);color:#fff;width:42px;height:42px;border-radius:11px;cursor:pointer;font-size:20px}
-.lb .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;max-height:74vh;overflow:auto}
-.lb .thumbs img,.lb .thumbs .vid{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;background:#000}
+.lb .box{max-width:1160px;width:100%;max-height:100%;display:flex;flex-direction:column}
+.lb .head{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:16px;flex-shrink:0}
+.lb .head h3{font-size:19px;color:#fff;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb .x{background:rgba(255,255,255,.08);border:1px solid var(--bd-d);color:#fff;width:44px;height:44px;border-radius:11px;cursor:pointer;font-size:20px;flex-shrink:0;transition:.15s}
+.lb .x:hover{background:rgba(255,255,255,.16);border-color:var(--bd-or)}
+.lb .back{display:none;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid var(--bd-d);color:#fff;min-height:44px;padding:0 16px;border-radius:11px;cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:600;flex-shrink:0;transition:.15s}
+.lb .back:hover{background:rgba(255,255,255,.16);border-color:var(--bd-or)}
+.lb .back svg{width:16px;height:16px;stroke:var(--or-clair)}
+.lb.photo .back{display:inline-flex}
+.lb.photo .thumbs{display:none}
+.lb:not(.photo) .viewer{display:none}
+
+/* Vue planche : vignettes assez grandes pour reconnaitre la scene */
+.lb .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));gap:12px;max-height:76vh;overflow:auto;padding-right:4px}
+.lb .thumbs button{padding:0;border:1px solid var(--bd-d);background:#000;border-radius:12px;overflow:hidden;cursor:pointer;display:block;width:100%;transition:.18s}
+.lb .thumbs button:hover{border-color:var(--bd-or);transform:translateY(-2px)}
+.lb .thumbs img,.lb .thumbs .vid{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#000}
 .lb .thumbs iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:10px}
+
+/* Vue photo : l'image entiere, jamais recadree */
+.lb .viewer{display:grid;grid-template-columns:52px minmax(0,1fr) 52px;align-items:center;gap:12px}
+.lb .stage{height:min(74vh,760px);display:flex;align-items:center;justify-content:center}
+.lb .stage img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:12px}
+.lb .stage iframe,.lb .stage video{width:100%;max-height:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#000}
+.lb .nav{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid var(--bd-d);color:#fff;font-size:26px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.lb .nav:hover{background:rgba(255,255,255,.18);border-color:var(--bd-or)}
+.lb .nav:disabled{opacity:.28;cursor:default}
+.lb .cap{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-top:14px;min-height:22px}
+.lb .cap .txt{font-size:15px;color:#eef2fb}
+.lb .cap .num{font-size:13px;color:var(--or-clair);font-weight:700;letter-spacing:.06em;flex-shrink:0}
+
+@media(max-width:620px){
+  .lb{padding:14px}
+  .lb .head h3{font-size:16px}
+  .lb .back span{display:none}
+  .lb .back{padding:0 14px;width:44px;justify-content:center}
+  .lb .thumbs{grid-template-columns:repeat(auto-fill,minmax(min(100%,140px),1fr));gap:10px}
+  .lb .viewer{grid-template-columns:44px minmax(0,1fr) 44px;gap:8px}
+  .lb .stage{height:66vh}
+  .lb .nav{width:44px;height:44px;font-size:22px}
+  .lb .cap{flex-direction:column;gap:4px}
+}
 
 .reveal{opacity:0;transform:translateY(20px);transition:.6s ease}
 .reveal.in{opacity:1;transform:none}
@@ -468,7 +536,38 @@ footer{background:#07122a;border-top:1px solid var(--bd-d);padding:52px 0 30px}
   </div>
 </footer>
 
-<div class="lb" id="lb"><div class="box"><div class="head"><h3 id="lb-title"></h3><button class="x" id="lb-close" aria-label="Fermer">×</button></div><div class="thumbs" id="lb-thumbs"></div></div></div>
+<div class="dmod" id="dmod" role="dialog" aria-modal="true" aria-labelledby="dmod-nom">
+  <div class="dbox">
+    <button class="dx" id="dmod-close" aria-label="Fermer">×</button>
+    <div class="dnum" id="dmod-num"></div>
+    <h3 id="dmod-nom"></h3>
+    <div class="drule"></div>
+    <img class="dphoto" id="dmod-photo" alt="" hidden>
+    <p class="dmission" id="dmod-mission"></p>
+    <p class="ddesc" id="dmod-desc" hidden></p>
+    <div class="dresp" id="dmod-resp" hidden></div>
+    <div class="dcta">
+      <button class="btn btn-or" id="dmod-cta" type="button">Rejoindre ce département</button>
+    </div>
+  </div>
+</div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-labelledby="lb-title">
+  <div class="box">
+    <div class="head">
+      <button class="back" id="lb-back" aria-label="Revenir à l'album"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Revenir à l'album</span></button>
+      <h3 id="lb-title"></h3>
+      <button class="x" id="lb-close" aria-label="Fermer">×</button>
+    </div>
+    <div class="thumbs" id="lb-thumbs"></div>
+    <div class="viewer" id="lb-viewer">
+      <button class="nav" id="lb-prev" aria-label="Photo précédente">‹</button>
+      <div class="stage" id="lb-stage"></div>
+      <button class="nav" id="lb-next" aria-label="Photo suivante">›</button>
+      <div class="cap"><span class="txt" id="lb-cap"></span><span class="num" id="lb-num"></span></div>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -516,17 +615,55 @@ async function loadLeaders(){
     </article>`).join("");
   obs();
 }
+/* Departements : une carte par departement, la fiche complete en modale.
+   La carte donne le nom et l'essentiel, la modale la mission entiere, le
+   responsable, et le bouton qui prepare le message de contact. */
+let DEPS=[];
 async function loadDeps(){
   const {data}=await sb.from("als_departements").select("*").eq("actif",true).order("ordre");
   const el=$("#deps");
   if(!data||!data.length){el.innerHTML=`<div class="empty">Départements à venir.</div>`;return;}
-  el.innerHTML=data.map((d,i)=>`
-    <article class="dep reveal">
+  DEPS=data;
+  el.innerHTML=DEPS.map((d,i)=>`
+    <button type="button" class="dep reveal" data-i="${i}" aria-label="Voir le département ${esc(d.nom)}">
       <div class="n">${String(i+1).padStart(2,"0")}</div>
-      <div><h3>${esc(d.nom)}</h3><p>${esc(d.mission||d.description||"")}</p>${d.responsable?`<div class="resp">Responsable · ${esc(d.responsable)}</div>`:""}</div>
-    </article>`).join("");
+      <h3>${esc(d.nom)}</h3>
+      <p>${esc(d.mission||d.description||"")}</p>
+      ${d.responsable?`<div class="resp">Responsable · ${esc(d.responsable)}</div>`:""}
+      <span class="plus">En savoir plus<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+    </button>`).join("");
+  el.querySelectorAll(".dep").forEach(b=>b.addEventListener("click",()=>openDep(+b.dataset.i)));
   obs();
 }
+function openDep(i){
+  const d=DEPS[i];if(!d)return;
+  $("#dmod-num").textContent=`Département ${String(i+1).padStart(2,"0")}`;
+  $("#dmod-nom").textContent=d.nom;
+  $("#dmod-mission").textContent=d.mission||d.description||"";
+  const desc=$("#dmod-desc");
+  const aDesc=d.description&&d.description!==d.mission;
+  desc.textContent=aDesc?d.description:"";desc.hidden=!aDesc;
+  const ph=$("#dmod-photo");
+  if(d.photo_url){ph.src=d.photo_url;ph.alt=d.nom;ph.hidden=false;}else{ph.removeAttribute("src");ph.hidden=true;}
+  const rp=$("#dmod-resp");
+  if(d.responsable){rp.innerHTML=`Responsable du département · <b>${esc(d.responsable)}</b>`;rp.hidden=false;}
+  else{rp.hidden=true;}
+  $("#dmod-cta").onclick=()=>{
+    closeDep();
+    const f=$("#cform");
+    const msg=f.querySelector("[name=message]");
+    msg.value=`Bonjour, je souhaite en savoir plus sur le département ${d.nom} et comment y servir.`;
+    document.getElementById("contact").scrollIntoView({behavior:"smooth",block:"start"});
+    setTimeout(()=>msg.focus({preventScroll:true}),600);
+  };
+  $("#dmod").classList.add("open");
+  document.body.style.overflow="hidden";
+  $("#dmod-close").focus({preventScroll:true});
+}
+function closeDep(){$("#dmod").classList.remove("open");document.body.style.overflow="";}
+$("#dmod-close").addEventListener("click",closeDep);
+$("#dmod").addEventListener("click",e=>{if(e.target===$("#dmod"))closeDep()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#dmod").classList.contains("open"))closeDep()});
 async function loadActus(){
   const {data}=await sb.from("als_actualites").select("*").eq("publie",true).order("date_pub",{ascending:false}).limit(9);
   const el=$("#actus");
@@ -565,18 +702,63 @@ async function loadGalerie(){
   el.innerHTML=ALBUMS.map((a,i)=>{const cov=a.couverture_url||(a.medias.find(m=>m.type==='photo')||{}).url||"";return `
     <div class="album reveal" data-i="${i}">${cov?`<img src="${esc(cov)}" alt="${esc(a.titre)}" loading="lazy">`:""}
       <div class="count"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>${a.medias.length}</div>
-      <div class="ov"><h3>${esc(a.titre)}</h3><div class="m">${[a.annee,a.evenement,a.departement].filter(Boolean).map(esc).join(" · ")}</div></div>
+      <div class="ov"><h3>${esc(a.titre)}</h3><div class="m">${[a.annee,a.evenement,a.departement].filter(Boolean).map(esc).join(" · ")}</div>
+        <div class="voir"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>Voir l'album</div>
+      </div>
     </div>`;}).join("");
   el.querySelectorAll(".album").forEach(x=>x.addEventListener("click",()=>openAlbum(+x.dataset.i)));
   obs();
 }
 function ytEmbed(u){const m=(u||"").match(/(?:youtu\.be\/|v=|embed\/)([\w-]{11})/);return m?`https://www.youtube.com/embed/${m[1]}`:null;}
-function openAlbum(i){const a=ALBUMS[i];$("#lb-title").textContent=a.titre;
-  $("#lb-thumbs").innerHTML=a.medias.map(m=>{if(m.type==="video"){const y=ytEmbed(m.url);return y?`<iframe src="${y}" allowfullscreen loading="lazy"></iframe>`:`<video class="vid" src="${esc(m.url)}" controls></video>`;}return `<img src="${esc(m.url)}" alt="${esc(m.legende||'')}" loading="lazy">`;}).join("")||`<div class="empty" style="color:#889">Album vide pour l'instant.</div>`;
-  $("#lb").classList.add("open");}
-$("#lb-close").addEventListener("click",()=>$("#lb").classList.remove("open"));
-$("#lb").addEventListener("click",e=>{if(e.target===$("#lb"))$("#lb").classList.remove("open")});
-document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#lb").classList.remove("open")});
+
+/* La lightbox a deux vues : la planche de l'album, puis la photo en grand.
+   Sans la seconde, on cliquait un album pour tomber sur des vignettes
+   recadrees, sans jamais voir une photo entiere ni sa legende. */
+let CUR=[],CURI=0;
+function mediaBig(m){
+  if(m.type==="video"){const y=ytEmbed(m.url);
+    return y?`<iframe src="${y}" allowfullscreen></iframe>`:`<video src="${esc(m.url)}" controls autoplay></video>`;}
+  return `<img src="${esc(m.url)}" alt="${esc(m.legende||'')}">`;
+}
+function openAlbum(i){
+  const a=ALBUMS[i];CUR=a.medias;CURI=0;
+  $("#lb-title").textContent=a.titre;
+  $("#lb-thumbs").innerHTML=CUR.map((m,k)=>{
+    const inner=m.type==="video"
+      ? (ytEmbed(m.url)?`<iframe src="${ytEmbed(m.url)}" allowfullscreen loading="lazy"></iframe>`:`<video class="vid" src="${esc(m.url)}"></video>`)
+      : `<img src="${esc(m.url)}" alt="${esc(m.legende||'')}" loading="lazy">`;
+    return `<button type="button" data-k="${k}" aria-label="${esc(m.legende||'Ouvrir la photo')}">${inner}</button>`;
+  }).join("")||`<div class="empty" style="color:#889">Album vide pour l'instant.</div>`;
+  $("#lb-thumbs").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>showPhoto(+b.dataset.k)));
+  showGrid();
+  $("#lb").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function showGrid(){$("#lb").classList.remove("photo");$("#lb-stage").innerHTML="";}
+function showPhoto(k){
+  if(!CUR.length)return;
+  CURI=Math.max(0,Math.min(k,CUR.length-1));
+  const m=CUR[CURI];
+  $("#lb-stage").innerHTML=mediaBig(m);
+  $("#lb-cap").textContent=m.legende||"";
+  $("#lb-num").textContent=`${CURI+1} / ${CUR.length}`;
+  $("#lb-prev").disabled=CURI===0;
+  $("#lb-next").disabled=CURI===CUR.length-1;
+  $("#lb").classList.add("photo");
+}
+function closeLb(){$("#lb").classList.remove("open","photo");$("#lb-stage").innerHTML="";document.body.style.overflow="";}
+$("#lb-close").addEventListener("click",closeLb);
+$("#lb-back").addEventListener("click",showGrid);
+$("#lb-prev").addEventListener("click",()=>showPhoto(CURI-1));
+$("#lb-next").addEventListener("click",()=>showPhoto(CURI+1));
+$("#lb").addEventListener("click",e=>{if(e.target===$("#lb"))closeLb()});
+document.addEventListener("keydown",e=>{
+  const lb=$("#lb");if(!lb.classList.contains("open"))return;
+  const enPhoto=lb.classList.contains("photo");
+  if(e.key==="Escape"){enPhoto?showGrid():closeLb();}
+  else if(enPhoto&&e.key==="ArrowLeft"){e.preventDefault();showPhoto(CURI-1);}
+  else if(enPhoto&&e.key==="ArrowRight"){e.preventDefault();showPhoto(CURI+1);}
+});
 async function loadTemos(){
   const {data}=await sb.from("als_temoignages").select("*").eq("publie",true).order("cree_le",{ascending:false});
   const el=$("#temos");
