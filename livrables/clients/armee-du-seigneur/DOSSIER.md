@@ -1,6 +1,6 @@
 # Mission L'Armée du Seigneur — l'état du dossier
 
-> Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
+> Révision du 05/08/2026. **Cette fiche est la première chose à lire du dossier.**
 
 ## En une phrase
 
@@ -49,16 +49,56 @@ vie de la Mission, actualités, événements, galerie, témoignages, contact Fra
 d'Ivoire avec formulaire et WhatsApp. L'admin permet de tout modifier et de lire les
 messages reçus.
 
+## La galerie est vivante depuis le 05/08/2026
+
+Premier contenu réel reçu de la Mission : **20 photos du 28 juillet 2026**, déposées
+dans le dossier Drive `Clients / Mission Armée du Seigneur`. Deux albums en ligne,
+découpés par nature du moment et non par lieu (les photos viennent de plusieurs
+salles, mais le visiteur lit un culte d'un côté et un temps de communion de l'autre) :
+
+| Album | Photos | Ce qu'on y voit |
+|---|---|---|
+| Culte et adoration, juillet 2026 | 15 | louange, prédication, prière et imposition des mains, prosternation, sainte cène |
+| Moments de communion, juillet 2026 | 5 | danse, célébration, portraits après le culte |
+
+Fichiers dans le bucket sous `galerie/2026-07-28/`, migration `0005`. **Rien n'a été
+redéployé** : le site lit la base, les albums sont apparus seuls.
+
+**Deux choix assumés, à corriger depuis l'admin quand la Mission répondra :**
+
+- **Aucun nom de personne dans les légendes.** Les visages n'ont pas été identifiés
+  avec certitude, et nommer quelqu'un à tort sur une page publique ne se rattrape pas.
+- **Le champ « événement » est vide** : le nom exact de la rencontre n'a pas été
+  communiqué, et les titres sont donc datés plutôt que nommés.
+
+Le département **« Compassion » est devenu « Social »** (migration `0004`, demande de
+la Mission). Le mot « compassion » reste ailleurs sur le site, au pilier 04 de la
+vision et dans le texte d'accueil : là c'est une valeur spirituelle, pas un nom
+d'organe.
+
 ## Ce qu'il manque, et qui bloque
 
 Tout vient de la Mission, rien ne dépend de l'agence :
 
 1. Le bloc de configuration : **WhatsApp, adresses France et Côte d'Ivoire, lien Maps**
 2. Les **responsables et les photos** des 11 départements
-3. Les **premiers contenus** : actualités, événements, galeries, témoignages
+3. Les **contenus restants** : actualités, événements, témoignages
+   (la galerie, elle, est amorcée)
 4. La validation des **biographies des dirigeants** (ce sont des brouillons éditables)
+5. Le **nom des deux rencontres du 28 juillet**, et si des personnes doivent être
+   nommées dans les légendes
+
+## Un défaut relevé le 05/08, pas encore corrigé
+
+**Tout le contenu seedé en juillet est sans accents**, alors qu'il s'affiche tel quel
+au visiteur : « Reverend », « Cote d'Ivoire », « Evangelisation », « Medias »,
+« Maison de la Destinee », « Femmes Elites ». Sur un site français d'une mission
+chrétienne, ça se voit. La migration `0006_accents_contenu.sql` est écrite et prête,
+**volontairement non appliquée** : elle ne change aucun contenu, elle ne remet que les
+accents et les ligatures. En attente d'un feu vert.
 
 ## Prochaine action
 
-Une seule relance, groupée, avec la liste ci-dessus. Tant que ces éléments ne sont pas
-là, le site reste un beau squelette.
+Une seule relance, groupée, avec la liste ci-dessus. Les photos donnent enfin un
+prétexte concret pour relancer : le site montre quelque chose, la Mission peut voir
+le résultat et compléter le reste.

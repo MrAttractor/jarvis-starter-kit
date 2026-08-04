@@ -35,7 +35,7 @@ select * from (values
   ('Golden Youth of Christ','Une generation de jeunes consacres, formes et engages pour Christ.', 2),
   ('Femmes Elites',         'Des femmes de foi et d''impact qui atteignent leurs objectifs en Christ.', 3),
   ('Intercession',          'Porter dans la priere les sujets de la Mission et veiller sur l''oeuvre.', 4),
-  ('Compassion',            'Soutenir les demunis, les veufs, les veuves et les orphelins.', 5),
+  ('Social',                'Soutenir les demunis, les veufs, les veuves et les orphelins.', 5),
   ('Maison de la Destinee', 'Accueillir, accompagner et relever les vies fragilisees.', 6),
   ('Evangelisation',        'Annoncer le veritable Evangile et gagner les ames.', 7),
   ('Formation',             'Former et affermir les disciples par l''enseignement de la Parole.', 8),
