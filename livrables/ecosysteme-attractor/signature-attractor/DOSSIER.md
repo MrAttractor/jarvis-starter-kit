@@ -48,13 +48,47 @@ ouvrir et sur lequel il doit agir.** Et symptôme trompeur à retenir : l'envoi 
 succès, les logs sont propres, et pourtant le client n'a rien reçu. Un envoi réussi n'est
 pas un email lu.
 
+## Un défaut trouvé le 03/08, à corriger
+
+**Mettre `sig_dossiers.statut` à `expire` ne bloque rien.** `sign-load` ne regarde que
+`expire_at`, jamais le statut : le lien reste chargeable et signable. Découvert en
+remplaçant le package d'Élise, qui avait déjà ouvert l'ancien lien et aurait pu signer
+une version périmée de l'avenant.
+
+**Contournement appliqué :** dater `expire_at` dans le passé. **Correctif à faire :**
+`sign-load` et `sign-verify` doivent refuser un dossier dont le statut n'est pas
+`en_attente`. Tant que ce n'est pas fait, révoquer un dossier passe par `expire_at`,
+jamais par le statut seul.
+
+**Manque aussi un moyen de créer un dossier sans envoyer l'invitation.** `sign-create`
+envoie systématiquement, ce qui empêche de préparer un lien pour l'envoyer soi-même
+dans un courrier d'accompagnement. Contourné le 03/08 par insertion directe en base
+(script dans le scratchpad de session). Ajouter un `envoyer: false` à `sign-create`.
+
 ## Un piège de conception, voulu
 
 **Un document modifié après scellement bloque la signature.** C'est volontaire : ça
 garantit que le signataire signe bien ce qu'on lui a montré. Il faut alors créer un
 nouveau dossier de signature, pas contourner.
 
+## Le test réel a eu lieu le 04/08
+
+Invitation d'Élise envoyée depuis `hello@agenceattractor.com` : Resend renvoie
+**delivered**, le serveur d'Outlook a accepté le message, là où l'envoi du 29/07 depuis
+`noreply@` avait fini en indésirable. **Le correctif d'expéditeur est validé en réel.**
+
+Réserve à garder en tête : `delivered` prouve l'acceptation par le serveur, **pas
+l'arrivée en boîte de réception**. Le seul signal fiable reste le passage du signataire
+de `en_attente` à `ouvert`.
+
+L'invitation a été envoyée par un script hors module (Resend + insertion de l'événement
+`envoye`), puisque `sign-create` ne sait ni créer sans envoyer, ni renvoyer une
+invitation sur un dossier existant. Les deux manques sont ci-dessus.
+
 ## Prochaine action
 
-1. **Vérifier que l'invitation d'Élise arrive bien** maintenant que l'expéditeur est corrigé. C'est le test réel du module.
-2. Brancher `sign-verify` sur le pipeline de pilotage pour qu'un dossier signé déclenche le reçu automatiquement, comme le fait déjà l'acceptation de devis.
+1. Ajouter `envoyer: false` à `sign-create`, et une fonction de **renvoi d'invitation**
+   sur un dossier existant. Sans elle, chaque relance passe par un script à la main.
+2. Corriger `sign-load` et `sign-verify` pour qu'ils refusent un statut autre que
+   `en_attente` (aujourd'hui, révoquer passe seulement par `expire_at`).
+3. Brancher `sign-verify` sur le pipeline de pilotage pour qu'un dossier signé déclenche le reçu automatiquement, comme le fait déjà l'acceptation de devis.
