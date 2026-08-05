@@ -15,20 +15,24 @@ audience préexistante**.
 
 Compte de pilotage : `viescroiseesci@gmail.com`. Elle change son mot de passe elle-même.
 
-## L'état éditorial réel, relevé le 25/07
+## L'état éditorial réel, relevé le 05/08
 
-| | |
-|---|---|
-| Articles écrits | **18** |
-| Articles publiés | **0** |
-| Épisodes en « programmé » | 4 |
-| Abonnés | 0 |
-| Témoignages | 0 |
-| Commentaires | 0 |
+| | | au 25/07 |
+|---|---|---|
+| Articles écrits | **18** | 18 |
+| Articles **lisibles en ligne** | **2** | 0 |
+| Articles programmés (dont 2 dont la date est passée) | 3 | 4 |
+| Épisodes | 4 | 4 |
+| Abonnés | 1 | 0 |
+| Témoignages | 0 | 0 |
+| Commentaires | 0 | 0 |
 
-**C'est le seul chiffre qui compte dans ce dossier.** L'outil fonctionne, il est vide.
-Piste proposée et non encore tranchée avec elle : programmer ses 14 chroniques à raison
-d'une par semaine, pour amorcer sans qu'elle ait à décider chaque semaine.
+Elle a commencé à sortir : deux chroniques sont lisibles depuis le 25/07, et un premier
+abonné est arrivé. **Mais 16 textes sur 18 dorment toujours**, et personne n'a encore
+réagi. C'est le seul chiffre qui compte dans ce dossier.
+
+Piste proposée et non encore tranchée avec elle : programmer ses chroniques restantes à
+raison d'une par semaine, pour amorcer sans qu'elle ait à décider chaque semaine.
 
 ## L'argent
 
