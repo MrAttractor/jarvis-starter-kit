@@ -92,13 +92,15 @@ input:focus,textarea:focus{outline:none;border-color:var(--orange)}
     </div>
     <p style="color:var(--muted-2);font-size:14px;margin-top:8px">Mac Arthur a reçu votre diagnostic et revient vers vous très vite avec une proposition claire. Envoyez-lui votre sélection ou posez-lui une question tout de suite :</p>
     <a class="wa" id="d-wa" target="_blank"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Z"/></svg>Écrire à Mac Arthur</a>
-    <div class="foot">Agence Mr Attractor — agenceattractor.com</div>
+    <div class="foot">Agence Mr Attractor · agenceattractor.com</div>
   </div>
 </div>
 
 <script>
 const API="https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/diagnostic";
+const API_SEL="https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/diagnostic-selection";
 const WA_HELP="2250576877070";
+let dossierId=null;
 const STEPS=[
   {key:"activite", q:"Votre activité, en une phrase ?", hint:"Le plus précis possible (ex. « farine infantile », pas « alimentaire »).", type:"text", ph:"Ex. Je vends des farines infantiles à Abidjan"},
   {key:"offre", q:"Qu'est-ce que vous proposez concrètement ?", hint:"Vos produits ou services principaux.", type:"textarea", ph:"Décrivez ce que vous vendez"},
@@ -145,6 +147,7 @@ async function submit(){
     const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({answers,nom:answers.nom,contact:answers.contact})});
     d=await r.json();
   }catch(e){ d={}; }
+  dossierId = d.dossier_id || null;
   $("loading").style.display='none'; $("done").style.display='';
   $("d-synth").textContent = d.synthese || "Merci ! On a bien reçu votre situation, Mac Arthur revient vers vous très vite.";
   fill("d-prob", d.problemes, "d-prob-w"); fill("d-opp", d.opportunites, "d-opp-w");
@@ -153,8 +156,10 @@ async function submit(){
 }
 function fill(id, arr, wrapId){ if(Array.isArray(arr)&&arr.length){ $(id).innerHTML=arr.map(x=>`<li>${String(x).replace(/</g,'&lt;')}</li>`).join(""); } else { $(wrapId).style.display='none'; } }
 
-// Briefing services : le prospect découvre l'éventail (il ne connaît pas les "familles"), en choisit un ou plusieurs,
-// et sa sélection part dans le message WhatsApp qu'il envoie à Mac Arthur (dont l'appel reste le déclencheur).
+// Briefing services : le prospect découvre l'éventail (il ne connaît pas les "familles"), en choisit un ou plusieurs.
+// Sa sélection part dans le message WhatsApp, ET est enregistrée en base depuis le 05/08/2026 : avant, elle ne
+// vivait que dans le texte du lien wa.me, donc elle disparaissait s'il ne cliquait pas ou n'envoyait pas le message.
+// C'est pourtant le signal le plus fiable du tunnel, c'est le prospect qui dit lui-même ce qu'il vient chercher.
 const SERVICES=[
   {id:"app",     t:"Une application pour votre métier", d:"Votre vitrine, votre catalogue, vos commandes et votre stock au même endroit. Vos clients commandent, vous pilotez."},
   {id:"conseil", t:"Un accompagnement pour structurer", d:"On clarifie ensemble votre modèle, votre offre et votre plan d'action, pour arrêter de tout porter dans votre tête."},
@@ -168,13 +173,25 @@ const svcSel=new Set();
 function renderSvc(){
   $("d-svc-w").style.display='';
   $("d-svc").innerHTML=SERVICES.map(s=>`<button type="button" class="svc${svcSel.has(s.id)?' on':''}" data-id="${s.id}"><span class="mk">${CHECK}</span><span class="st">${s.t}</span><span class="sd">${s.d}</span></button>`).join("");
-  $("d-svc").querySelectorAll('.svc').forEach(b=>b.onclick=()=>{ const id=b.dataset.id; if(svcSel.has(id))svcSel.delete(id); else svcSel.add(id); renderSvc(); updateWa(); });
+  $("d-svc").querySelectorAll('.svc').forEach(b=>b.onclick=()=>{ const id=b.dataset.id; if(svcSel.has(id))svcSel.delete(id); else svcSel.add(id); renderSvc(); updateWa(); envoyerSelection(false); });
+}
+// Envoi silencieux : ne bloque jamais le parcours du prospect, et n'affiche jamais d'erreur.
+// keepalive pour que l'envoi survive à la navigation vers WhatsApp au moment du clic.
+function envoyerSelection(waClique){
+  if(!dossierId) return;
+  try{
+    fetch(API_SEL,{method:"POST",headers:{"Content-Type":"application/json"},keepalive:true,
+      body:JSON.stringify({dossier_id:dossierId,services:[...svcSel],wa_clique:!!waClique})}).catch(()=>{});
+  }catch(e){}
 }
 function updateWa(){
   const picks=[...svcSel].map(id=>SVC_LABEL[id]);
   let msg="Bonjour Mac Arthur, je viens de faire le diagnostic en ligne. ";
   if(picks.length){ msg += "Je suis intéressé(e) par : "+picks.join(", ")+". "; }
   $("d-wa").href="https://wa.me/"+WA_HELP+"?text="+encodeURIComponent(msg);
+  // Le clic est tracé : sans lui, impossible de savoir combien de prospects arrivent jusqu'à cet
+  // écran sans jamais écrire. Ce chiffre n'existait pas.
+  $("d-wa").onclick=()=>{ envoyerSelection(true); };
   $("d-wa").innerHTML='<svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Z"/></svg>'+(picks.length?"Envoyer ma sélection à Mac Arthur":"Écrire à Mac Arthur");
 }
 </script>
