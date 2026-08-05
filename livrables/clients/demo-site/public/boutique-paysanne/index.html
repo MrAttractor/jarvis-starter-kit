@@ -34,6 +34,7 @@ img{max-width:100%}
 
 /* intro */
 .hero{margin-top:22px}
+.hero .dest{font-size:12px;font-weight:700;color:var(--orange-d);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
 .hero h1{font-size:26px;line-height:1.2;letter-spacing:-.01em}
 .hero h1 em{color:var(--orange);font-style:normal}
 .hero p{margin-top:10px;color:var(--muted-2);font-size:14.5px}
@@ -174,6 +175,7 @@ img{max-width:100%}
   </div>
 
   <section class="hero">
+    <p class="dest" id="c-dest"></p>
     <h1 id="c-titre"></h1>
     <p id="c-intro"></p>
   </section>
@@ -269,14 +271,15 @@ const DEVIS = {
   numero: "ATR-2026-0013",
   date: "4 août 2026",
   client: "La Boutique Paysanne CI",
+  destinataire: "À l'attention de Lorraine Yapi — Responsable Communication",
   projet: "Plateforme des produits agro-transformés ivoiriens",
   devise: "FCFA",
   submitUrl: "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/devis-accept",
   waHelp: "33753902323",
-  waHelpText: "Bonjour Mac Arthur, je regarde le devis La Boutique Paysanne (ATR-2026-0013) et j'ai une question : ",
+  waHelpText: "Bonjour Mac Arthur, je suis Lorraine Yapi de La Boutique Paysanne, je regarde le devis ATR-2026-0013 et j'ai une question : ",
   tag: "Applications métier & plateformes de vente",
   titre: 'La Boutique Paysanne, <em>construite par étapes</em>',
-  intro: "Votre projet a deux visages : une vitrine qui donne enfin de la visibilité au savoir-faire ivoirien, et une place de marché où ces produits se vendent vraiment. Les deux ne se construisent pas en même temps, et c'est une bonne nouvelle : on met la vitrine en ligne d'abord, elle travaille pour vous pendant qu'on construit la suite. Voici trois façons d'y aller. Dépliez le détail de chacune, vous verrez exactement ce que vous obtenez et ce que vous n'obtenez pas encore.",
+  intro: "Bonjour Lorraine, merci pour votre message, il est clair et il pose les bonnes questions. Votre projet a deux visages : une vitrine qui donne enfin de la visibilité au savoir-faire ivoirien, et une place de marché où ces produits se vendent vraiment. Les deux ne se construisent pas en même temps, et c'est une bonne nouvelle : on met la vitrine en ligne d'abord, elle travaille pour vous pendant qu'on construit la suite. Voici trois façons d'y aller. Dépliez le détail de chacune, vous verrez exactement ce que vous obtenez et ce que vous n'obtenez pas encore.",
   marcheLabel: "La même plateforme confiée à une agence classique",
   marche: "3 300 000 – 7 900 000 FCFA",
   conseil: [
@@ -344,6 +347,7 @@ function fmt(n){ return n.toLocaleString('fr-FR') + " " + DEVIS.devise; }
 $("c-tag").textContent = DEVIS.tag;
 $("c-num").textContent = "N° " + DEVIS.numero;
 $("c-date").textContent = DEVIS.date;
+$("c-dest").textContent = DEVIS.destinataire || "";
 $("c-titre").innerHTML = DEVIS.titre;
 $("c-intro").textContent = DEVIS.intro;
 $("v-market-lab").textContent = DEVIS.marcheLabel;
