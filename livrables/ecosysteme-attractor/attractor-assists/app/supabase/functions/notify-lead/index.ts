@@ -1,9 +1,16 @@
 // ============================================================
-// notify-lead — Alerte email immédiate quand un lead arrive
-// dans pilotage_pipeline (site agenceattractor.com, ou toute
-// autre source future). Fire-and-forget, jamais bloquant.
+// notify-lead — Crée le dossier de pilotage d'un lead entrant, puis alerte par email.
+// Sources : chatbot du site agenceattractor.com, et toute source future.
+//
+// CHANGEMENT DU 05/08/2026 : cette fonction ne faisait qu'envoyer un email, la création du
+// dossier était faite côté navigateur par un POST REST direct sur pilotage_pipeline avec la clé
+// anon. Or cette table est en gating nominatif : le POST répondait 401, et comme la notification
+// était conditionnée à `if (res.ok)`, elle ne partait jamais non plus. Tout lead capté par le
+// chatbot du site était donc perdu deux fois, en silence.
+// L'écriture est désormais faite ici, en service role, comme pour le reste du tunnel.
 // ============================================================
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 // Adresse pro par défaut, surchargeable via le secret NOTIFY_LEAD_EMAIL sans redéployer.
@@ -19,7 +26,40 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
 
   try {
-    const { nom, activite, besoin, zone, contact, source } = await req.json();
+    const { nom, activite, besoin, zone, contact, source, contexte, famille, type, nb_users } = await req.json();
+
+    // 1) Le dossier, en service role. Si l'écriture échoue on notifie quand même : mieux vaut un
+    // email sans dossier qu'un lead totalement perdu.
+    let dossierOk = false, dossierErr: string | null = null;
+    try {
+      const supabase = createClient(
+        Deno.env.get("SUPABASE_URL") ?? "",
+        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      );
+      const { error } = await supabase.from("pilotage_pipeline").insert({
+        nom: nom || "Visiteur",
+        activite: activite || null,
+        besoin: besoin || null,
+        contexte: contexte || null,
+        contact: contact || null,
+        famille: famille || null,
+        zone: zone || null,
+        type: type || null,
+        nb_users: nb_users || null,
+        statut: "Nouveau",
+        statut_color: "neu",
+        prochaine: "Premier contact, répondre sous 24h",
+        date_action: new Date().toISOString().slice(0, 10),
+        priorite: 1,
+        urgent: true,
+        source: source || "inbound",
+      });
+      if (error) { dossierErr = error.message; console.error("[notify-lead] dossier:", error.message); }
+      else dossierOk = true;
+    } catch (e) {
+      dossierErr = String(e);
+      console.error("[notify-lead] dossier (exception):", dossierErr);
+    }
 
     const waNumber = (contact || "").replace(/[\s+\-()]/g, "");
     const waLink = waNumber ? `https://wa.me/${waNumber}` : null;
@@ -45,7 +85,8 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Pilotage <noreply@agenceattractor.com>",
+          // hello@ et non noreply@ : un noreply sans boîte réelle est un signal de spam classique.
+          from: "Pilotage <hello@agenceattractor.com>",
           to: NOTIFY_TO,
           subject: `Nouveau lead — ${nom || "Visiteur"} (${activite || "activité inconnue"})`,
           html,
@@ -53,7 +94,7 @@ serve(async (req) => {
       });
     }
 
-    return new Response(JSON.stringify({ ok: true }), {
+    return new Response(JSON.stringify({ ok: true, dossier: dossierOk, erreur_dossier: dossierErr }), {
       headers: { "Content-Type": "application/json", ...CORS },
     });
   } catch (e) {
