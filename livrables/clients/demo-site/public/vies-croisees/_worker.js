@@ -79,7 +79,7 @@ function resume(c, estArticle) {
     ? (c.contenu || '')
     : [c.invites, c.description].filter(Boolean).join(' — ');
   const texte = brut.replace(/\s+/g, ' ').trim();
-  if (!texte) return "L'émission qui donne la parole à ceux qui ont traversé quelque chose.";
+  if (!texte) return "Vies Croisées, l'émission qui fait dialoguer les parcours de vie pour éveiller les consciences, qui met en lumière ce qui transforme une vie.";
   return texte.length > 195 ? texte.slice(0, 195).replace(/\s\S*$/, '') + '…' : texte;
 }
 

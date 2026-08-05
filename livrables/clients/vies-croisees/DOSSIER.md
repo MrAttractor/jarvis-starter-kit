@@ -1,6 +1,6 @@
 # Vies Croisées — l'état du dossier
 
-> Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
+> Révision du 05/08/2026. **Cette fiche est la première chose à lire du dossier.**
 
 ## En une phrase
 
@@ -53,11 +53,25 @@ la proposition de vente qui vit dans le même dossier**.
 
 ## Ce que le site sait faire
 
+- **J'aime** et **commentaires** sur les épisodes ET sur les articles. Les commentaires d'article s'affichent dépliés au bout de la lecture, dans le lecteur. Le j'aime ne demande aucun compte : le lecteur est reconnu par un identifiant tiré au hasard, gardé par son navigateur (migration 0005)
 - Épisodes et articles avec **programmation réelle** : avant l'heure, la ligne n'est pas lisible avec la clé publique. Ce n'est plus une étiquette sans effet comme dans la première version.
 - **Teasers multiples** par épisode, **visuels** (affiche + photo avec l'invité), réduits côté navigateur
 - **Partage réseaux** : un `slug` figé par contenu, adresses `?a=` et `?e=`, et un Worker qui réécrit les balises de partage pour que l'aperçu soit correct
 - Bandeau **partenaires** non cliquables
-- Espace admin : publication, partenaires, modération des commentaires, boîte témoignages et abonnés
+- Espace admin : publication, partenaires, modération des commentaires (la boîte dit si le message vient d'un article ou d'un épisode), total des j'aime au tableau de bord, boîte témoignages et abonnés
+
+## La phrase de partage
+
+Le message qui s'affiche quand on envoie le lien du site est celui d'Andréa, mot pour mot :
+« Vies Croisées, l'émission qui fait dialoguer les parcours de vie pour éveiller les
+consciences, qui met en lumière ce qui transforme une vie. » Il vit à trois endroits du
+`index.html` (`description`, `og:description`, `twitter:description`) et une quatrième fois
+dans `_worker.js` comme filet. **Quand on partage un article précis, c'est le début de
+l'article qui s'affiche à la place**, et c'est voulu : le titre et l'extrait du texte
+donnent plus envie de cliquer qu'une phrase de présentation répétée.
+
+Facebook garde en mémoire l'ancien aperçu d'un lien déjà partagé. Pour le forcer à relire :
+`developers.facebook.com/tools/debug`, coller l'adresse, « Scrape Again ».
 
 ## Deux corrections de sécurité déjà passées
 

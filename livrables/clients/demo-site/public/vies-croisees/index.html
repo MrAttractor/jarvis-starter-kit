@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vies Croisées — par Andréa Koné</title>
-<meta name="description" content="L'émission qui donne la parole à ceux qui ont traversé quelque chose, pour que d'autres se sentent moins seuls sur leur chemin.">
+<meta name="description" content="Vies Croisées, l'émission qui fait dialoguer les parcours de vie pour éveiller les consciences, qui met en lumière ce qui transforme une vie.">
 
 <!-- Aperçu de partage (Facebook, WhatsApp, LinkedIn).
      Ces balises sont les valeurs par défaut du site. Quand un article ou un
@@ -16,13 +16,13 @@
 <meta property="og:locale" content="fr_FR">
 <meta property="og:url" content="https://viescroiseesci.com/">
 <meta property="og:title" content="Vies Croisées — par Andréa Koné">
-<meta property="og:description" content="L'émission qui donne la parole à ceux qui ont traversé quelque chose, pour que d'autres se sentent moins seuls sur leur chemin.">
+<meta property="og:description" content="Vies Croisées, l'émission qui fait dialoguer les parcours de vie pour éveiller les consciences, qui met en lumière ce qui transforme une vie.">
 <meta property="og:image" content="https://viescroiseesci.com/og-default.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Vies Croisées — par Andréa Koné">
-<meta name="twitter:description" content="L'émission qui donne la parole à ceux qui ont traversé quelque chose, pour que d'autres se sentent moins seuls sur leur chemin.">
+<meta name="twitter:description" content="Vies Croisées, l'émission qui fait dialoguer les parcours de vie pour éveiller les consciences, qui met en lumière ce qui transforme une vie.">
 <meta name="twitter:image" content="https://viescroiseesci.com/og-default.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -121,6 +121,22 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
 .sh-btn.fb:hover{border-color:#1877F2;color:#1877F2}
 .sh-btn.wa:hover{border-color:#25D366;color:#128C4A}
 .sh-btn.lk:hover{border-color:var(--brand);color:var(--brand)}
+/* Le groupe de partage est poussé à droite : le « j'aime » ouvre la rangée,
+   c'est le geste le plus courant et le plus rapide à faire. */
+.share-grp{display:flex;align-items:center;gap:7px;margin-left:auto}
+/* Sous 420 px (Tecno, Infinix, iPhone SE) le mot « Partager » et le bouton
+   j'aime ne tiennent plus sur la même ligne : le groupe entier passait à la
+   ligne suivante. Les trois icônes se lisent seules, chacune garde son
+   intitulé pour les lecteurs d'écran. */
+@media(max-width:419px){.share-lbl{display:none}}
+
+/* J'AIME */
+.like-btn{display:flex;align-items:center;gap:7px;height:44px;padding:0 15px;border-radius:11px;border:1.5px solid var(--line);background:var(--card);color:var(--muted);font-family:var(--ff);font-size:13px;font-weight:700;flex:none}
+.like-btn svg{width:18px;height:18px;flex:none;transition:transform .18s}
+.like-btn b{font-weight:700;font-variant-numeric:tabular-nums}
+.like-btn:hover{border-color:var(--gold);color:#8F7028}
+.like-btn.on{border-color:var(--gold);background:var(--gold-bg);color:#8F7028}
+.like-btn.bat svg{transform:scale(1.28)}
 #toast{position:fixed;left:50%;transform:translateX(-50%) translateY(14px);bottom:calc(var(--bnav) + 16px);z-index:240;background:var(--brand);color:#fff;font-size:13px;font-weight:600;padding:11px 20px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100% - 32px);text-align:center}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(min-width:740px){#toast{bottom:24px}}
@@ -275,6 +291,12 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
 .amod-img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:14px;margin-bottom:18px;display:block}
 .amod-meta{font-size:12px;color:var(--muted);margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
 .amod-share{margin-top:26px;padding-top:6px;border-top:1px solid var(--line)}
+/* Dans le lecteur, les commentaires sont déjà dépliés : la personne vient de
+   finir l'article, c'est le moment où elle a quelque chose à dire. Ailleurs
+   (cartes d'épisodes) le bloc reste replié pour ne pas allonger la liste. */
+.amod-com{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.amod-com h3{font-family:var(--fd);font-size:18px;color:var(--brand);margin-bottom:10px}
+.amod-com .comments-wrap{border-top:none;margin-top:0;padding-top:0}
 
 /* DESKTOP GRIDS */
 @media(min-width:740px){
@@ -329,6 +351,10 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
   <symbol id="i-hand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 10.5 6 7l3.6 3.2 2.4-1.4 2.4 1.4L18 7l3.5 3.5"/><path d="M6 7v9.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7"/><path d="M12 12.4v5.1"/></symbol>
   <symbol id="i-img" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="4.6" width="17.2" height="14.8" rx="2.8"/><circle cx="9" cy="9.8" r="1.6"/><path d="M3.6 16.6l4.3-3.9 4.2 3.6 2.9-2.6 5.4 4.5"/></symbol>
   <!-- Marques Facebook et WhatsApp : glyphes officiels, seuls tracés pleins du jeu -->
+  <!-- Deux cœurs plutôt qu'un seul recoloré en CSS : l'attribut fill du symbole
+       l'emporte sur la règle posée à l'extérieur, le cœur ne se remplissait pas. -->
+  <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19.6 4.9 12.7a4.3 4.3 0 0 1 6.1-6L12 7.8l1-1.1a4.3 4.3 0 0 1 6.1 6z"/></symbol>
+  <symbol id="i-heart-plein" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19.6 4.9 12.7a4.3 4.3 0 0 1 6.1-6L12 7.8l1-1.1a4.3 4.3 0 0 1 6.1 6z"/></symbol>
   <symbol id="i-fb" viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.6-1.5h1.5V4.4c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.1v2.1H7.5v3h2.9V21z"/></symbol>
   <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3.4A8.5 8.5 0 0 0 4.6 16l-1.1 4.1 4.2-1.1A8.5 8.5 0 1 0 12 3.4m0 1.7a6.8 6.8 0 0 1 5.7 10.5 6.8 6.8 0 0 1-8.9 2.2l-.4-.2-2.3.6.6-2.2-.2-.4A6.8 6.8 0 0 1 12 5.1m-3 3.3c-.2 0-.5.1-.7.3-.3.3-.7.8-.7 1.6 0 .9.6 1.7.7 1.9.1.2 1.3 2.1 3.3 2.9 1.6.6 2 .5 2.4.5s1.2-.5 1.4-1c.2-.5.2-.9.1-1l-1.2-.6c-.2-.1-.4-.2-.5 0l-.6.7c-.1.2-.3.2-.5.1-.2-.1-.9-.4-1.5-1-.5-.5-.9-1.1-1-1.3-.1-.2 0-.3.1-.4l.4-.5c.1-.2.1-.3 0-.5l-.6-1.3c-.1-.3-.3-.3-.4-.3z"/></symbol>
 </defs></svg>
@@ -681,6 +707,7 @@ main{max-width:680px;margin:0 auto;padding:0 16px calc(var(--bnav) + 24px)}
     <div id="amod-meta" class="amod-meta" style="display:none"></div>
     <div id="amod-body"></div>
     <div id="amod-share" class="amod-share"></div>
+    <div id="amod-com" class="amod-com"></div>
   </div>
 </div>
 
@@ -694,6 +721,7 @@ const SB = supabase.createClient(
 
 // ── STATE ─────────────────────────────────────────────────────────
 var eps = [], arts = [], temos = [], coms = [], abonnes = [], partenaires = [];
+var jaime = {};   // 'article:uuid' -> nombre de j'aime
 var editEpId = null, editArtId = null;
 var adminMode = false;
 // Compte admin d'Andréa. Le mot de passe n'est jamais stocké ici ni en base :
@@ -810,6 +838,7 @@ async function loadPublicData() {
   eps  = r1.data || [];
   arts = (r2.data || []).map(function(a){ a.type_contenu = 'article'; return a; });
   partenaires = r3.data || [];
+  await chargerJaime();   // avant l'affichage : les compteurs partent justes
   renderHome(); renderEpList(); renderBlogList(); renderPartners();
   ouvrirDepuisLien();
 }
@@ -826,6 +855,7 @@ async function loadAdminData() {
   coms     = r4.data || [];
   abonnes  = r5.data || [];
   partenaires = r6.data || [];
+  await chargerJaime();
   renderHome(); renderEpList(); renderBlogList(); renderPartners();
   renderAdminDash(); renderAdminEps(); renderAdminArts(); renderAdminPartners();
   renderInboxTemo(); renderInboxCom(); renderInboxAbonnes();
@@ -956,7 +986,7 @@ function epHtml(ep, compact) {
     + '<button class="ep-btn fill" ' + (!hasE ? 'disabled' : 'onclick="openVideo(\'' + x(ep.youtube_episode) + '\')"') + '>'
     + '<svg width="13" height="13"><use href="#i-film"/></svg>' + (hasE ? (ep.duree_episode ? 'Épisode complet · ' + x(ep.duree_episode) : 'Épisode complet') : 'Épisode à venir') + '</button>'
     + '</div>'
-    + (compact ? '' : shareRow('e', ep) + commentToggle(ep.id));
+    + (compact ? '' : shareRow('e', ep) + commentToggle('e', ep.id));
 }
 
 // ── PARTAGE ───────────────────────────────────────────────────────
@@ -969,11 +999,13 @@ function lienPartage(genre, row){
 }
 function shareRow(genre, row){
   return '<div class="share-row">'
+    + boutonJaime(genre, row.id)
+    + '<div class="share-grp">'
     + '<span class="share-lbl">Partager</span>'
-    + '<button class="sh-btn fb" title="Partager sur Facebook" onclick="partager(\'fb\',\'' + genre + '\',\'' + row.id + '\')"><svg><use href="#i-fb"/></svg></button>'
-    + '<button class="sh-btn wa" title="Partager sur WhatsApp" onclick="partager(\'wa\',\'' + genre + '\',\'' + row.id + '\')"><svg><use href="#i-wa"/></svg></button>'
-    + '<button class="sh-btn lk" title="Copier le lien" onclick="partager(\'copie\',\'' + genre + '\',\'' + row.id + '\')"><svg><use href="#i-link"/></svg></button>'
-    + '</div>';
+    + '<button class="sh-btn fb" title="Partager sur Facebook" aria-label="Partager sur Facebook" onclick="partager(\'fb\',\'' + genre + '\',\'' + row.id + '\')"><svg><use href="#i-fb"/></svg></button>'
+    + '<button class="sh-btn wa" title="Partager sur WhatsApp" aria-label="Partager sur WhatsApp" onclick="partager(\'wa\',\'' + genre + '\',\'' + row.id + '\')"><svg><use href="#i-wa"/></svg></button>'
+    + '<button class="sh-btn lk" title="Copier le lien" aria-label="Copier le lien" onclick="partager(\'copie\',\'' + genre + '\',\'' + row.id + '\')"><svg><use href="#i-link"/></svg></button>'
+    + '</div></div>';
 }
 function partager(reseau, genre, id){
   var row = (genre === 'a' ? arts : eps).find(function(r){ return r.id === id; });
@@ -1008,40 +1040,164 @@ function toast(msg){
   toastT = setTimeout(function(){ el.classList.remove('on'); }, 2400);
 }
 
-// Comment toggle per episode
-function commentToggle(epId) {
-  return '<button class="comment-toggle" onclick="toggleComments(\'' + epId + '\')">'
-    + '<svg><use href="#i-chat"/></svg><span id="ctxt-' + epId + '">Commentaires</span></button>'
-    + '<div class="comments-wrap" id="cw-' + epId + '">'
-    + '<div id="clist-' + epId + '" class="c-empty">Chargement...</div>'
+// ── J'AIME ────────────────────────────────────────────────────────
+// Personne ne crée de compte sur ce site : un lecteur est reconnu par un
+// identifiant tiré au hasard et gardé par son navigateur. Il ne dit rien de
+// lui, il sert seulement à ne pas le compter dix fois et à lui laisser retirer
+// son geste. La base n'accepte aucune écriture directe sur la table : tout
+// passe par la fonction vc_basculer_jaime, qui n'agit que sur sa propre ligne.
+function cleJaime(genre, id){ return (genre === 'a' ? 'article' : 'episode') + ':' + id; }
+
+function visiteurId(){
+  var v = null;
+  try { v = localStorage.getItem('vc_visiteur'); } catch (e) { return null; }
+  if (!v) {
+    v = (crypto && crypto.randomUUID) ? crypto.randomUUID()
+      : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
+          var r = Math.random() * 16 | 0;
+          return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+    try { localStorage.setItem('vc_visiteur', v); } catch (e) { return null; }
+  }
+  return v;
+}
+
+// Ce que CE navigateur a déjà aimé. Le serveur le sait aussi, mais il ne le
+// dira jamais : la colonne `visiteur` n'est pas lisible publiquement.
+function mesJaime(){
+  try { return JSON.parse(localStorage.getItem('vc_jaime') || '[]'); } catch (e) { return []; }
+}
+function noterJaime(cle, aime){
+  var l = mesJaime().filter(function(c){ return c !== cle; });
+  if (aime) l.push(cle);
+  try { localStorage.setItem('vc_jaime', JSON.stringify(l)); } catch (e) {}
+}
+function aimeDeja(cle){ return mesJaime().indexOf(cle) !== -1; }
+function totalJaime(){
+  return Object.keys(jaime).reduce(function(s, k){ return s + jaime[k]; }, 0);
+}
+
+async function chargerJaime(){
+  var { data } = await SB.from('vc_likes').select('cible_type,cible_id');
+  jaime = {};
+  (data || []).forEach(function(l){
+    var cle = l.cible_type + ':' + l.cible_id;
+    jaime[cle] = (jaime[cle] || 0) + 1;
+  });
+}
+
+// Le même contenu peut être affiché à deux endroits en même temps (la carte de
+// la liste et le lecteur ouvert par-dessus). On repère les boutons par un
+// attribut plutôt que par un identifiant, sinon le second écrase le premier.
+function boutonJaime(genre, id){
+  var cle = cleJaime(genre, id);
+  var n = jaime[cle] || 0;
+  var on = aimeDeja(cle);
+  return '<button class="like-btn' + (on ? ' on' : '') + '" data-jaime="' + cle + '"'
+    + ' aria-pressed="' + (on ? 'true' : 'false') + '"'
+    + ' title="' + (on ? 'Retirer mon j\'aime' : 'J\'aime') + '"'
+    + ' aria-label="' + libelleJaime(n, on) + '"'
+    + ' onclick="basculerJaime(\'' + genre + '\',\'' + id + '\')">'
+    + '<svg><use href="#i-heart' + (on ? '-plein' : '') + '"/></svg>'
+    + '<b>' + n + '</b></button>';
+}
+
+// Un bouton dont le seul contenu visible est un chiffre se lit « 12 » dans un
+// lecteur d'écran. On dit ce que le chiffre compte.
+function libelleJaime(n, on){
+  var socle = n === 0 ? "aucun j'aime" : (n === 1 ? "1 j'aime" : n + " j'aime");
+  return (on ? "Retirer mon j'aime, " : "J'aime, ") + socle;
+}
+
+function rafraichirJaime(cle){
+  var n = jaime[cle] || 0, on = aimeDeja(cle);
+  var boutons = document.querySelectorAll('[data-jaime="' + cle + '"]');
+  Array.prototype.forEach.call(boutons, function(b){
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.setAttribute('aria-label', libelleJaime(n, on));
+    b.title = on ? "Retirer mon j'aime" : "J'aime";
+    b.querySelector('b').textContent = n;
+    b.querySelector('use').setAttribute('href', '#i-heart' + (on ? '-plein' : ''));
+  });
+}
+
+async function basculerJaime(genre, id){
+  var cle = cleJaime(genre, id);
+  var visiteur = visiteurId();
+  if (!visiteur) { toast("Ton navigateur bloque la mémoire du site, le j'aime ne peut pas être gardé."); return; }
+
+  // On bascule l'affichage tout de suite : sur une connexion lente, un cœur
+  // qui met deux secondes à réagir donne l'impression que le bouton est mort.
+  var attendu = !aimeDeja(cle);
+  noterJaime(cle, attendu);
+  jaime[cle] = Math.max(0, (jaime[cle] || 0) + (attendu ? 1 : -1));
+  rafraichirJaime(cle);
+  var b = document.querySelector('[data-jaime="' + cle + '"]');
+  if (b && attendu) { b.classList.add('bat'); setTimeout(function(){ b.classList.remove('bat'); }, 180); }
+
+  var { data, error } = await SB.rpc('vc_basculer_jaime', {
+    p_type: genre === 'a' ? 'article' : 'episode',
+    p_cible: id,
+    p_visiteur: visiteur
+  });
+  if (error) {                       // on remet l'affichage dans son état réel
+    noterJaime(cle, !attendu);
+    jaime[cle] = Math.max(0, (jaime[cle] || 0) + (attendu ? -1 : 1));
+    rafraichirJaime(cle);
+    toast("Le j'aime n'a pas pu être enregistré.");
+    return;
+  }
+  var r = Array.isArray(data) ? data[0] : data;
+  if (r) { jaime[cle] = r.total; noterJaime(cle, r.aime); rafraichirJaime(cle); }
+}
+
+// ── COMMENTAIRES ──────────────────────────────────────────────────
+// Un commentaire vise soit un épisode, soit un article ('e' / 'a'). Les
+// identifiants du bloc portent le genre : le même contenu peut être ouvert
+// deux fois à l'écran, et deux blocs de même nom se pilotaient l'un l'autre.
+function cleCom(genre, id){ return genre + '-' + id; }
+
+function commentToggle(genre, id, ouvert) {
+  var k = cleCom(genre, id);
+  return (ouvert ? '' :
+      '<button class="comment-toggle" onclick="toggleComments(\'' + genre + '\',\'' + id + '\')">'
+      + '<svg><use href="#i-chat"/></svg><span id="ctxt-' + k + '">Commentaires</span></button>')
+    + '<div class="comments-wrap' + (ouvert ? ' open' : '') + '" id="cw-' + k + '">'
+    + '<div id="clist-' + k + '" class="c-empty">Chargement...</div>'
     + '<div class="c-form">'
-    + '<form onsubmit="submitComment(event,\'' + epId + '\')">'
+    + '<form onsubmit="submitComment(event,\'' + genre + '\',\'' + id + '\')">'
     + '<input name="prenom" placeholder="Ton prénom (optionnel)">'
     + '<textarea name="message" placeholder="Ton commentaire..." rows="3" required></textarea>'
     + '<label class="c-anon"><input type="checkbox" name="anon"> Rester anonyme</label>'
     + '<button type="submit" class="c-submit">Publier</button>'
     + '</form>'
-    + '<div id="cok-' + epId + '" style="display:none" class="c-ok">Commentaire envoyé. Il sera visible après validation.</div>'
+    + '<div id="cok-' + k + '" style="display:none" class="c-ok">Commentaire envoyé. Il sera visible après validation.</div>'
     + '</div></div>';
 }
 
-function toggleComments(epId) {
-  var wrap = document.getElementById('cw-' + epId);
-  var open = wrap.classList.contains('open');
-  if (!open) {
+function toggleComments(genre, id) {
+  var wrap = document.getElementById('cw-' + cleCom(genre, id));
+  if (!wrap.classList.contains('open')) {
     wrap.classList.add('open');
-    loadComments(epId);
+    loadComments(genre, id);
   } else {
     wrap.classList.remove('open');
   }
 }
-async function loadComments(epId) {
-  var el = document.getElementById('clist-' + epId);
-  var query = SB.from('vc_commentaires').select('*').eq('episode_id', epId).order('created_at');
+async function loadComments(genre, id) {
+  var k = cleCom(genre, id);
+  var el = document.getElementById('clist-' + k);
+  if (!el) return;
+  var query = SB.from('vc_commentaires').select('*')
+    .eq(genre === 'a' ? 'article_id' : 'episode_id', id).order('created_at');
   if (!adminMode) query = query.eq('visible', true);
   var { data } = await query;
   var items = data || [];
-  document.getElementById('ctxt-' + epId).textContent = 'Commentaires (' + items.length + ')';
+  var titre = document.getElementById('ctxt-' + k);
+  if (titre) titre.textContent = 'Commentaires (' + items.length + ')';
+  var compte = document.getElementById('ccount-' + k);
+  if (compte) compte.textContent = items.length ? ' (' + items.length + ')' : '';
   if (!items.length) { el.innerHTML = '<span class="c-empty">Sois le premier à commenter.</span>'; return; }
   el.innerHTML = items.map(function(c){
     return '<div class="c-item">'
@@ -1050,34 +1206,39 @@ async function loadComments(epId) {
       + '<div class="c-msg">' + x(c.message) + '</div>'
       + '<div class="c-date">' + fmt(c.created_at) + '</div>'
       + (adminMode ? '<div style="display:flex;gap:6px;margin-top:6px">'
-        + (!c.visible ? '<button class="ib green" style="width:auto;padding:0 8px;font-size:11px;font-weight:700" onclick="approuverCom(\'' + c.id + '\',\'' + epId + '\')"><svg width="13" height="13"><use href="#i-check"/></svg> Approuver</button>' : '<span style="font-size:11px;color:#059669;font-weight:600">Approuvé</span>')
-        + '<button class="ib red" onclick="supprimerCom(\'' + c.id + '\',\'' + epId + '\')"><svg width="13" height="13"><use href="#i-x"/></svg></button>'
+        + (!c.visible ? '<button class="ib green" style="width:auto;padding:0 8px;font-size:11px;font-weight:700" onclick="approuverCom(\'' + c.id + '\',\'' + genre + '\',\'' + id + '\')"><svg width="13" height="13"><use href="#i-check"/></svg> Approuver</button>' : '<span style="font-size:11px;color:#059669;font-weight:600">Approuvé</span>')
+        + '<button class="ib red" onclick="supprimerCom(\'' + c.id + '\',\'' + genre + '\',\'' + id + '\')"><svg width="13" height="13"><use href="#i-x"/></svg></button>'
         + '</div>' : '')
       + '</div>';
   }).join('');
 }
-async function submitComment(e, epId) {
+async function submitComment(e, genre, id) {
   e.preventDefault();
   var f = e.target;
   var prenom = f.anon.checked ? '' : (f.prenom.value.trim() || '');
   var msg = f.message.value.trim();
   if (!msg) return;
+  var k = cleCom(genre, id);
   var btn = f.querySelector('button[type=submit]');
   btn.disabled = true; btn.textContent = 'Envoi...';
-  await SB.from('vc_commentaires').insert({ episode_id: epId, prenom: prenom, message: msg, visible: false });
+  var ligne = { prenom: prenom, message: msg, visible: false };
+  ligne[genre === 'a' ? 'article_id' : 'episode_id'] = id;
+  var { error } = await SB.from('vc_commentaires').insert(ligne);
   btn.disabled = false; btn.textContent = 'Publier';
+  if (error) { toast("Le commentaire n'a pas pu être envoyé."); return; }
   f.reset();
-  document.getElementById('cok-' + epId).style.display = 'block';
-  setTimeout(function(){ document.getElementById('cok-' + epId).style.display = 'none'; }, 4000);
+  document.getElementById('cok-' + k).style.display = 'block';
+  setTimeout(function(){ document.getElementById('cok-' + k).style.display = 'none'; }, 4000);
+  if (adminMode) loadComments(genre, id);
 }
-async function approuverCom(id, epId) {
+async function approuverCom(id, genre, cibleId) {
   await SB.from('vc_commentaires').update({ visible: true }).eq('id', id);
-  await loadComments(epId); renderInboxCom();
+  await loadComments(genre, cibleId); renderInboxCom();
 }
-async function supprimerCom(id, epId) {
+async function supprimerCom(id, genre, cibleId) {
   if (!confirm('Supprimer ce commentaire ?')) return;
   await SB.from('vc_commentaires').delete().eq('id', id);
-  await loadComments(epId); renderInboxCom();
+  await loadComments(genre, cibleId); renderInboxCom();
 }
 
 // ── ADMIN RENDER ──────────────────────────────────────────────────
@@ -1095,7 +1256,8 @@ function renderAdminDash() {
     + (prochain ? '<div class="stat-r"><span>Prochaine sortie</span><b style="font-size:13px;font-weight:700;text-align:right">' + fmtDateHeure(prochain.publie_le) + '</b></div>' : '')
     + '<div class="stat-r"><span>Abonnés notifications</span><b>' + abonnes.length + '</b></div>'
     + '<div class="stat-r"><span>Témoignages à traiter</span><b>' + unreadT + '</b></div>'
-    + '<div class="stat-r"><span>Commentaires à approuver</span><b>' + unreadC + '</b></div>';
+    + '<div class="stat-r"><span>Commentaires à approuver</span><b>' + unreadC + '</b></div>'
+    + '<div class="stat-r"><span>J\'aime reçus</span><b>' + totalJaime() + '</b></div>';
 }
 // Rappel en clair de l'état d'un contenu dans les listes d'Andréa :
 // « Programmé » seul ne veut rien dire, on affiche la date quand il y en a une.
@@ -1195,9 +1357,13 @@ function renderInboxCom() {
   if (!coms.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucun commentaire reçu.</p>'; return; }
 
   function comHtml(c) {
-    var epTitle = (eps.find(function(e){ return e.id === c.episode_id; }) || {}).titre || 'Episode';
+    // D'où vient ce commentaire : un épisode ou un article. Sans cette mention,
+    // Andréa lit un message sorti de son contexte et ne sait pas quoi en faire.
+    var cible = c.article_id
+      ? 'Article : ' + ((arts.find(function(a){ return a.id === c.article_id; }) || {}).titre || 'article supprimé')
+      : 'Épisode : ' + ((eps.find(function(e){ return e.id === c.episode_id; }) || {}).titre || 'épisode supprimé');
     return '<div class="in-temo ' + (c.visible ? 'done' : '') + '">'
-      + '<div class="in-head"><span class="in-who">' + x(c.prenom || 'Anonyme') + ' — <em style="font-style:normal;color:var(--muted)">' + x(epTitle) + '</em></span><span class="in-date">' + fmt(c.created_at) + '</span></div>'
+      + '<div class="in-head"><span class="in-who">' + x(c.prenom || 'Anonyme') + ' — <em style="font-style:normal;color:var(--muted)">' + x(cible) + '</em></span><span class="in-date">' + fmt(c.created_at) + '</span></div>'
       + '<div class="in-msg">' + x(c.message) + '</div>'
       + '<div style="display:flex;gap:6px;margin-top:7px">'
       + (!c.visible ? '<button class="ib green" style="width:auto;padding:0 10px;font-size:11px;font-weight:700;gap:4px" onclick="approuverComInbox(\'' + c.id + '\')">'
@@ -1497,6 +1663,17 @@ function openArticle(id){
 
   document.getElementById('amod-body').innerHTML = (a.contenu || '').split('\n\n').map(function(p){ return '<p>' + x(p) + '</p>'; }).join('');
   document.getElementById('amod-share').innerHTML = shareRow('a', a);
+
+  // Les commentaires sont déjà dépliés sous l'article : c'est là, au bout de la
+  // lecture, que quelqu'un a envie de réagir. Lui demander d'abord de cliquer
+  // sur « Commentaires » lui faisait rater qu'il pouvait dire quelque chose.
+  document.getElementById('amod-com').innerHTML =
+    '<h3>Réactions<span id="ccount-a-' + a.id + '"></span></h3>'
+    + '<p style="font-size:12.5px;color:var(--muted);margin-bottom:12px">'
+    + 'Ton commentaire est lu par Andréa avant d\'apparaître ici.</p>'
+    + commentToggle('a', a.id, true);
+  loadComments('a', a.id);
+
   document.getElementById('amod').classList.add('open');
   document.getElementById('amod').scrollTop = 0;
 
