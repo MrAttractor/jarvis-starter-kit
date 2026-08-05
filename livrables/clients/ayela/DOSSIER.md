@@ -62,6 +62,28 @@ l'UUID de Lorraine.
 - Corriger le guide client, qui affiche encore son mot de passe initial alors qu'elle l'a changé
 - À construire quand elle le voudra : le concept d'attraction du Club (bienvenue, parrainage, tirage)
 
+## Usage réel, relevé en base le 05/08/2026
+
+**Elle utilise vraiment l'outil.** 37 ventes saisies du 21/07 au 03/08, **243 900 FCFA**
+de chiffre d'affaires, 32 400 FCFA de commission points de vente, sur 8 jours d'activité.
+
+Trois observations, à ne pas perdre :
+
+- **Elle a créé 11 promotions le 31/07 en 24 minutes, une par produit.** Ce ne sont pas des
+  doublons : 11 produits différents, chacun avec son prix spécial. Elle a fait exactement ce
+  qu'elle voulait, mais **onze fois**, parce que la portée « toute la boutique » n'accepte
+  qu'un seul prix ou un seul pourcentage, inutilisable quand les produits vont de 600 à
+  8 500 FCFA. **Manque produit à combler : une promotion sur plusieurs produits d'un coup,
+  avec un prix par produit.** Découvert en regardant l'usage, pas en le demandant.
+- **Le canal physique tourne, le canal en ligne non** : 37 ventes en points de vente contre
+  **une seule commande** sur la boutique. La plateforme lui sert d'outil de gestion, pas de
+  canal de vente. C'est le vrai sujet à traiter avec elle, quand le moment sera venu.
+- **Elle saisit par lots, pas au fil de l'eau** (trois ventes du 03/08 enregistrées à la même
+  seconde). Ne rien lui promettre en « temps réel » sur cette base.
+
+Sa promotion « Spéciale fête de l'indépendance » courait jusqu'au **08/08/2026**. Demander ce
+qu'elle a donné est la relance la plus naturelle, le jour où on rouvre le dossier.
+
 ## Évolutions payantes identifiées, hors périmètre livré
 
 Agenda du Salon d'Ayêla, vrai paiement en ligne (XPaye), application installable,
