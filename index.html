@@ -1140,170 +1140,14 @@ footer {
   </div>
 </section>
 
-<!-- ══════════ MODALE AUDIT APP MÉTIER ══════════ -->
-<div id="audit-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem;">
-  <div style="background:var(--white);border-radius:20px;width:100%;max-width:480px;padding:2rem;position:relative;max-height:90vh;overflow-y:auto;">
-    <button onclick="closeAuditModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;cursor:pointer;color:var(--g400);font-size:20px;line-height:1;">&#x2715;</button>
-    <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--orange);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem;">Audit gratuit</div>
-    <h3 style="font-size:1.4rem;font-weight:800;color:var(--charbon);margin:0 0 .4rem;">Décris ton besoin</h3>
-    <p style="font-size:13px;color:var(--g500);margin:0 0 1.5rem;">Quelques questions. On revient avec une maquette cliquable sous 48h.</p>
-
-    <form id="audit-form" onsubmit="submitAuditForm(event)" style="display:flex;flex-direction:column;gap:1rem;">
-      <div>
-        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Ton prénom *</label>
-        <input id="aud-prenom" type="text" required placeholder="Ex : Bérénice"
-          style="width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--charbon);background:var(--sable);box-sizing:border-box;outline:none;font-family:inherit;">
-      </div>
-      <div>
-        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Ton secteur d'activité *</label>
-        <input id="aud-activite" type="text" required placeholder="Ex : Farines infantiles, transport de colis, dressing sur mesure..."
-          style="width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--charbon);background:var(--sable);box-sizing:border-box;outline:none;font-family:inherit;">
-      </div>
-      <div>
-        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Comment tu gères ça aujourd'hui ? *</label>
-        <input id="aud-organisation" type="text" required placeholder="Ex : Tout sur WhatsApp, un cahier, un tableur Excel..."
-          style="width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--charbon);background:var(--sable);box-sizing:border-box;outline:none;font-family:inherit;">
-      </div>
-      <div>
-        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Qu'est-ce que tu veux que ton app te permette de faire plus facilement ? *</label>
-        <textarea id="aud-besoin" required placeholder="Sois précis : ce qui te prend du temps aujourd'hui, ce que tu voudrais ne plus avoir à faire à la main, ce que tes clients devraient pouvoir faire seuls..."
-          style="width:100%;min-height:90px;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--charbon);background:var(--sable);box-sizing:border-box;outline:none;font-family:inherit;resize:vertical;line-height:1.5;"></textarea>
-      </div>
-      <div>
-        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Ta zone *</label>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;" id="aud-zone-btns">
-          <button type="button" onclick="selectZone('CI')" class="zone-btn" data-zone="CI"
-            style="flex:1;min-width:100px;padding:10px;border:1.5px solid var(--g200);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:var(--sable);color:var(--charbon);transition:all .2s;">
-            Côte d'Ivoire
-          </button>
-          <button type="button" onclick="selectZone('EU')" class="zone-btn" data-zone="EU"
-            style="flex:1;min-width:100px;padding:10px;border:1.5px solid var(--g200);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:var(--sable);color:var(--charbon);transition:all .2s;">
-            France / Europe
-          </button>
-          <button type="button" onclick="selectZone('CI')" class="zone-btn" data-zone="LES2"
-            style="flex:1;min-width:100px;padding:10px;border:1.5px solid var(--g200);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:var(--sable);color:var(--charbon);transition:all .2s;">
-            Les deux
-          </button>
-        </div>
-        <input type="hidden" id="aud-zone" value="">
-      </div>
-      <div>
-        <label style="font-size:12px;font-weight:700;color:var(--charbon);display:block;margin-bottom:6px;">Ton WhatsApp *</label>
-        <input id="aud-wa" type="tel" required placeholder="Ex : +225 07 12 34 56 78"
-          style="width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--charbon);background:var(--sable);box-sizing:border-box;outline:none;font-family:inherit;">
-      </div>
-      <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
-        <input type="checkbox" id="aud-collab" required style="margin-top:3px;width:16px;height:16px;flex-shrink:0;accent-color:var(--orange);">
-        <span style="font-size:13px;color:var(--charbon);line-height:1.4;">Je veux qu'on construise mon app métier ensemble.</span>
-      </label>
-      <div id="audit-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:10px 14px;font-size:13px;color:#DC2626;"></div>
-      <button type="submit" id="audit-submit"
-        style="background:var(--orange);color:#fff;border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s;">
-        Demander ma maquette gratuite
-      </button>
-    </form>
-
-    <div id="audit-success" style="display:none;text-align:center;padding:1rem 0;">
-      <div style="font-size:2.5rem;margin-bottom:1rem;">&#x2713;</div>
-      <h3 style="font-size:1.2rem;font-weight:800;color:var(--charbon);margin:0 0 .5rem;">Reçu !</h3>
-      <p style="font-size:14px;color:var(--g500);">On revient vers toi sur WhatsApp sous 48h avec ta maquette cliquable.</p>
-    </div>
-  </div>
-</div>
-
-<style>
-.zone-btn.active { background: var(--orange) !important; color: #fff !important; border-color: var(--orange) !important; }
-#audit-modal.open { display: flex !important; }
-</style>
-
-<script>
-let _auditZone = '';
-
-function openAuditModal() {
-  document.getElementById('audit-modal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', { content_name: 'audit_app_metier' });
-}
-
-function closeAuditModal() {
-  document.getElementById('audit-modal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function selectZone(val) {
-  _auditZone = val;
-  document.getElementById('aud-zone').value = val;
-  document.querySelectorAll('.zone-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.zone === (val === 'CI' && b.dataset.zone === 'LES2' ? '' : val) || (val === 'CI' && b.dataset.zone === 'CI'));
-  });
-  // Mark exactly the clicked button
-  event.currentTarget.classList.add('active');
-  event.currentTarget.closest('#aud-zone-btns').querySelectorAll('.zone-btn').forEach(b => {
-    if (b !== event.currentTarget) b.classList.remove('active');
-  });
-  _auditZone = event.currentTarget.dataset.zone;
-}
-
-async function submitAuditForm(e) {
-  e.preventDefault();
-  const prenom       = document.getElementById('aud-prenom').value.trim();
-  const activite     = document.getElementById('aud-activite').value.trim();
-  const organisation = document.getElementById('aud-organisation').value.trim();
-  const besoin       = document.getElementById('aud-besoin').value.trim();
-  const wa           = document.getElementById('aud-wa').value.trim();
-  const zone         = _auditZone || document.getElementById('aud-zone').value;
-  const collab       = document.getElementById('aud-collab').checked;
-  const errEl        = document.getElementById('audit-error');
-  const btnEl        = document.getElementById('audit-submit');
-
-  if (!zone) { errEl.textContent = 'Sélectionne ta zone.'; errEl.style.display = 'block'; return; }
-  if (!collab) { errEl.textContent = 'Coche la case pour confirmer que tu veux qu\'on avance ensemble.'; errEl.style.display = 'block'; return; }
-  errEl.style.display = 'none';
-  btnEl.disabled = true; btnEl.style.opacity = '.6';
-
-  const SUPA_URL  = 'https://lgdgbrivnhgeupqhkckd.supabase.co';
-  const SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
-  const zoneLabel = { 'CI': 'CI', 'EU': 'EU', 'LES2': 'CI' };
-
-  try {
-    // return=minimal : l'anonyme peut écrire dans prospects mais pas relire.
-    // Demander la représentation (return=representation) déclenchait un SELECT
-    // interdit par la RLS → 401 et lead perdu. On n'a pas besoin de la ligne renvoyée.
-    const res = await fetch(SUPA_URL + '/rest/v1/prospects', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPA_ANON, 'Authorization': 'Bearer ' + SUPA_ANON, 'Prefer': 'return=minimal' },
-      body: JSON.stringify({
-        prenom, activite, besoin, whatsapp: wa,
-        zone: zoneLabel[_auditZone] || 'CI',
-        canal: 'Site web - App métier',
-        contexte: 'Organisation actuelle : ' + organisation + '. Veut construire ensemble : oui.',
-        type_projet: 'A',
-        nb_users: '1',
-        statut: 'nouveau'
-      })
-    });
-    if (!res.ok) throw new Error('Erreur réseau');
-    // Notification immédiate à l'agence — fire-and-forget, ne bloque jamais le succès du formulaire.
-    fetch(SUPA_URL + '/functions/v1/notify-lead', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPA_ANON, 'Authorization': 'Bearer ' + SUPA_ANON },
-      body: JSON.stringify({ nom: prenom, activite, besoin, zone: zoneLabel[_auditZone] || 'CI', contact: wa, source: 'Formulaire audit site agenceattractor.com' }),
-    }).catch(() => {});
-    if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'audit_app_metier' });
-    document.getElementById('audit-form').style.display = 'none';
-    document.getElementById('audit-success').style.display = 'block';
-    setTimeout(closeAuditModal, 3000);
-  } catch(err) {
-    errEl.textContent = 'Une erreur est survenue. Réessaie ou écris-nous directement sur WhatsApp.';
-    errEl.style.display = 'block';
-    btnEl.disabled = false; btnEl.style.opacity = '1';
-  }
-}
-
-document.getElementById('audit-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeAuditModal();
-});
-</script>
+<!-- La modale « audit app metier » a ete retiree le 05/08/2026.
+     C etait un second formulaire de captation, sans qualification, sans dossier de pilotage et
+     sans message pre-redige : un lead qui passait par la demandait un retraitement a la main.
+     Elle etait de surcroit devenue du code mort, plus aucun bouton n appelait openAuditModal().
+     Porte unique desormais : demo.agenceattractor.com/diagnostic, vers laquelle pointent deja
+     le CTA du hero, celui de la section applications et les trois cartes expertise.
+     Le canal direct reste le bouton WhatsApp flottant, qui n est pas un tunnel a maintenir. -->
+<style>.zone-btn.active { background: var(--orange) !important; color: #fff !important; border-color: var(--orange) !important; }</style>
 
 <!-- ══════════ 3 DOULEURS CLÉS ══════════ -->
 <section style="background:var(--white);padding:80px 2.5rem;">
@@ -1748,23 +1592,16 @@ async function sendProspect(p) {
       urgent:             false,
       source:             'inbound_site',
     };
-    const headers = {
-      'Content-Type':  'application/json',
-      'apikey':        SUPA_ANON,
-      'Authorization': 'Bearer ' + SUPA_ANON,
-      'Prefer':        'return=representation',
-    };
-    const res = await fetch(SUPA_URL + '/rest/v1/pilotage_pipeline', {
-      method: 'POST', headers, body: JSON.stringify(payload),
-    });
-    if (res.ok) {
-      // Notification immédiate — fire-and-forget, ne bloque jamais la conversation
-      fetch(SUPA_URL + '/functions/v1/notify-lead', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPA_ANON, 'Authorization': 'Bearer ' + SUPA_ANON },
-        body: JSON.stringify({ nom: payload.nom, activite: payload.activite, besoin: payload.besoin, zone: payload.zone, contact: payload.contact, source: 'Chatbot site agenceattractor.com' }),
-      }).catch(() => {});
-    }
+    // Le dossier est créé par l'edge function, en service role, et c'est elle qui notifie.
+    // Avant le 05/08/2026 le navigateur écrivait directement dans pilotage_pipeline avec la clé
+    // anon : la table est en gating nominatif, donc la requête répondait 401, et la notification
+    // qui suivait était conditionnée à `res.ok`. Chaque lead du chatbot était perdu deux fois,
+    // sans le moindre signal. Ne jamais réintroduire d'écriture REST directe sur cette table.
+    await fetch(SUPA_URL + '/functions/v1/notify-lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPA_ANON, 'Authorization': 'Bearer ' + SUPA_ANON },
+      body: JSON.stringify({ ...payload, source: 'Chatbot site agenceattractor.com' }),
+    }).catch(() => {});
   } catch(e) { /* silencieux */ }
 }
 
