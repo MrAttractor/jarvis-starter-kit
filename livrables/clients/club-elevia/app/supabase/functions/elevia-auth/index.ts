@@ -100,7 +100,7 @@ Deno.serve(async (req) => {
     if (action === "inscription") {
       const pseudo = String(p.pseudo ?? "").trim();
       const email = norm(p.email);
-      const { genre, pays, date_naissance, cgu, optin } = p;
+      const { genre, pays, pays_code, date_naissance, cgu, optin } = p;
 
       if (pseudo.length < 3 || pseudo.length > 24) return json({ ok: false, error: "Le pseudo doit contenir entre 3 et 24 caractères." }, 400);
       if (!/^[\p{L}\p{N} _.-]+$/u.test(pseudo)) return json({ ok: false, error: "Le pseudo contient un caractère non autorisé." }, 400);
@@ -113,9 +113,14 @@ Deno.serve(async (req) => {
         return json({ ok: false, error: "L'adhésion au Club est réservée aux personnes majeures." }, 400);
       }
 
+      // Le code ISO est la donnée durable (filtre par zone du Module 3) ;
+      // le nom est conservé tel que le membre l'a vu au moment de choisir.
+      const codePays = String(pays_code ?? "").toUpperCase();
+      if (codePays && !/^[A-Z]{2}$/.test(codePays)) return json({ ok: false, error: "Pays invalide." }, 400);
+
       const { data: membre, error } = await db.from("el_membres").insert({
         pseudo, pseudo_norm: norm(pseudo), email, email_norm: email,
-        genre, pays, date_naissance,
+        genre, pays, pays_code: codePays || null, date_naissance,
         cgu_acceptees: true, optin_email: !!optin,
       }).select("id, pseudo").single();
 
