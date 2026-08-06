@@ -468,8 +468,181 @@ function ecranConnexion(msg) {
   $("#b-retour").onclick = ecranAccueil;
 }
 
+/* ═══════════ Vérification (Module 2) ═══════════
+   Aucune reconnaissance faciale : un geste tiré au sort, jugé par une
+   personne de l'équipe. C'est ce que promet l'avenant, et c'est ce qui
+   évite de manipuler une donnée biométrique.                          */
+const VERIF = "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/elevia-verif";
+let fluxCamera = null;
+
+async function appelVerif(action, corps = {}) {
+  try {
+    const r = await fetch(VERIF, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: CLE, Authorization: "Bearer " + CLE },
+      body: JSON.stringify({ action, jeton: etat.jeton, ...corps }),
+    });
+    return await r.json();
+  } catch (_) {
+    return { ok: false, error: "La connexion a échoué. Réessayez." };
+  }
+}
+
+function couperCamera() {
+  if (fluxCamera) { fluxCamera.getTracks().forEach((p) => p.stop()); fluxCamera = null; }
+}
+
+function ecranVerifIntro(msg) {
+  rendre(`
+    <div class="carte">
+      <span class="etiquette">VÉRIFICATION</span>
+      <h2>Confirmons que vous êtes bien une personne réelle</h2>
+      <p class="chapo">C'est ce qui fait la valeur du Club : chaque membre a été vu par notre équipe. Cela prend moins d'une minute.</p>
+      ${erreur(msg)}
+      <div class="message info" style="margin-bottom:22px">
+        Vous allez enregistrer une courte vidéo en faisant deux gestes simples, tirés au sort.
+        Une personne de notre équipe la regarde, jamais un automate.
+        <b>La vidéo est supprimée définitivement dans les 24 heures qui suivent la décision</b>,
+        et aucune analyse de votre visage n'est effectuée.
+      </div>
+      <button class="bouton or" id="b-camera">Activer ma caméra</button>
+      <button class="lien" id="b-plus-tard">Plus tard</button>
+    </div>`);
+  $("#b-camera").onclick = ecranVerifCamera;
+  $("#b-plus-tard").onclick = () => ecranMembre(false);
+}
+
+async function ecranVerifCamera() {
+  rendre(`
+    <div class="carte">
+      <span class="etiquette">VÉRIFICATION</span>
+      <h2>Un instant…</h2>
+      <p class="chapo">Votre navigateur va vous demander l'autorisation d'utiliser la caméra.</p>
+    </div>`);
+
+  let flux;
+  try {
+    flux = await navigator.mediaDevices.getUserMedia({
+      video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" },
+      audio: false,
+    });
+  } catch (e) {
+    // Le CDC demande un message d'aide, pas un simple échec.
+    const refus = e && (e.name === "NotAllowedError" || e.name === "SecurityError");
+    return rendre(`
+      <div class="carte">
+        <span class="etiquette">VÉRIFICATION</span>
+        <h2>${refus ? "L'accès à la caméra a été refusé" : "Aucune caméra n'a été trouvée"}</h2>
+        <p class="chapo">${refus
+          ? "Pour autoriser l'accès : touchez l'icône de cadenas (ou de caméra) à gauche de l'adresse du site, en haut de votre navigateur, puis activez la caméra et rechargez la page."
+          : "Vérifiez qu'une caméra est bien connectée et qu'aucune autre application ne l'utilise en ce moment."}</p>
+        <button class="bouton" id="b-reessayer">Réessayer</button>
+        <button class="lien" id="b-retour">Revenir à mon profil</button>
+      </div>`) || ($("#b-reessayer").onclick = ecranVerifCamera, $("#b-retour").onclick = () => ecranMembre(false));
+  }
+
+  fluxCamera = flux;
+  const dem = await appelVerif("demarrer");
+  if (!dem.ok) { couperCamera(); return ecranVerifIntro(dem.error); }
+
+  rendre(`
+    <div class="carte">
+      <span class="etiquette">VÉRIFICATION</span>
+      <h2>Votre geste à faire</h2>
+      <p class="chapo" style="color:var(--encre);font-size:15.5px"><strong>${ech(dem.defi)}</strong></p>
+      <div style="position:relative;border-radius:14px;overflow:hidden;background:#000;margin-bottom:18px">
+        <video id="apercu" autoplay muted playsinline style="width:100%;display:block;transform:scaleX(-1)"></video>
+        <div id="pastille" style="position:absolute;top:12px;left:12px;background:rgba(24,22,20,.72);color:#fff;
+          font-size:12px;padding:5px 11px;border-radius:20px;display:none">● Enregistrement <span id="reste">8</span> s</div>
+      </div>
+      <button class="bouton or" id="b-lancer">Lancer l'enregistrement</button>
+      <button class="lien" id="b-annuler">Annuler</button>
+    </div>`);
+
+  const video = $("#apercu");
+  video.srcObject = flux;
+
+  $("#b-annuler").onclick = () => { couperCamera(); ecranMembre(false); };
+
+  $("#b-lancer").onclick = () => {
+    const type = ["video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm", "video/mp4"]
+      .find((t) => window.MediaRecorder && MediaRecorder.isTypeSupported(t)) || "";
+    let enregistreur;
+    try {
+      enregistreur = new MediaRecorder(flux, type ? { mimeType: type } : undefined);
+    } catch (_) {
+      couperCamera();
+      return ecranVerifIntro("Votre navigateur ne permet pas d'enregistrer une vidéo. Essayez depuis un autre navigateur.");
+    }
+
+    const morceaux = [];
+    enregistreur.ondataavailable = (e) => { if (e.data.size) morceaux.push(e.data); };
+    enregistreur.onstop = () => {
+      const blob = new Blob(morceaux, { type: enregistreur.mimeType || "video/webm" });
+      couperCamera();
+      ecranVerifEnvoi(dem, blob);
+    };
+
+    $("#b-lancer").disabled = true;
+    $("#b-lancer").textContent = "Enregistrement en cours…";
+    $("#pastille").style.display = "block";
+    enregistreur.start();
+
+    let reste = 8;
+    const tic = setInterval(() => {
+      reste -= 1;
+      const el = $("#reste");
+      if (el) el.textContent = reste;
+      if (reste <= 0) {
+        clearInterval(tic);
+        if (enregistreur.state !== "inactive") enregistreur.stop();
+      }
+    }, 1000);
+  };
+}
+
+function ecranVerifEnvoi(dem, blob) {
+  const url = URL.createObjectURL(blob);
+  rendre(`
+    <div class="carte">
+      <span class="etiquette">VÉRIFICATION</span>
+      <h2>Cette vidéo vous convient-elle ?</h2>
+      <p class="chapo">Vérifiez qu'on vous voit bien, et que le geste demandé apparaît clairement.</p>
+      <div style="border-radius:14px;overflow:hidden;background:#000;margin-bottom:18px">
+        <video src="${url}" controls playsinline style="width:100%;display:block"></video>
+      </div>
+      <div id="zone-msg"></div>
+      <button class="bouton or" id="b-envoyer">Envoyer pour vérification</button>
+      <button class="lien" id="b-refaire">Recommencer</button>
+    </div>`);
+
+  $("#b-refaire").onclick = () => { URL.revokeObjectURL(url); ecranVerifCamera(); };
+
+  $("#b-envoyer").onclick = async () => {
+    const b = $("#b-envoyer");
+    b.disabled = true; b.textContent = "Envoi en cours…";
+    try {
+      // La vidéo va directement au stockage privé, sans transiter par nos fonctions.
+      const dep = await fetch(dem.url_depot, {
+        method: "PUT",
+        headers: { "Content-Type": blob.type || "video/webm" },
+        body: blob,
+      });
+      if (!dep.ok) throw new Error("dépôt refusé");
+      const r = await appelVerif("soumettre", { id: dem.id });
+      if (!r.ok) throw new Error(r.error);
+      URL.revokeObjectURL(url);
+      etat.membre.statut_verif = "en_attente";
+      ecranMembre(false, "Votre vidéo est bien arrivée. Notre équipe l'examine.");
+    } catch (e) {
+      b.disabled = false; b.textContent = "Envoyer pour vérification";
+      $("#zone-msg").innerHTML = erreur("L'envoi n'a pas abouti. Vérifiez votre connexion et réessayez.");
+    }
+  };
+}
+
 /* ═══════════ Espace membre ═══════════ */
-function ecranMembre(bienvenue) {
+function ecranMembre(bienvenue, info) {
   const m = etat.membre;
   const verif = {
     non_soumis: ['attente', "Vérification à faire"],
@@ -478,8 +651,33 @@ function ecranMembre(bienvenue) {
     refuse:     ['attente', "À recommencer"],
   }[m.statut_verif] || ['attente', "Vérification à faire"];
 
+  // Le bloc « prochaine étape » dépend de là où en est le membre : un profil déjà
+  // vérifié n'a rien à refaire, et une vidéo en attente ne doit pas être renvoyée.
+  const bloc = {
+    valide: {
+      titre: "Votre profil est vérifié",
+      texte: "Notre équipe a confirmé votre identité. Le badge est visible par les autres membres.",
+      bouton: null,
+    },
+    en_attente: {
+      titre: "Votre vidéo est entre nos mains",
+      texte: "Notre équipe l'examine. Vous recevrez la réponse par e-mail. Tant que la décision n'est pas prise, votre demande reste visible ici, sans blocage silencieux.",
+      bouton: null,
+    },
+    refuse: {
+      titre: "La vérification n'a pas abouti",
+      texte: "Vous pouvez recommencer autant de fois que nécessaire, il n'y a aucune limite.",
+      bouton: "Refaire ma vidéo",
+    },
+  }[m.statut_verif] || {
+    titre: "Faire vérifier votre profil",
+    texte: "La vérification par vidéo garantit que chaque membre du Club est une personne réelle. Elle est examinée par notre équipe, jamais par un automate, et la vidéo est supprimée dans les 24 heures suivant la décision.",
+    bouton: "Commencer la vérification",
+  };
+
   rendre(`
     ${bienvenue ? '<div class="message succes">Bienvenue au Club. Votre compte est créé.</div>' : ""}
+    ${info ? `<div class="message succes">${ech(info)}</div>` : ""}
     <div class="carte">
       <div class="profil-tete">
         <div class="medaille">${ech(m.pseudo.slice(0, 1).toUpperCase())}</div>
@@ -498,16 +696,29 @@ function ecranMembre(bienvenue) {
     </div>
 
     <div class="carte">
-      <span class="etiquette">PROCHAINE ÉTAPE</span>
-      <h2>Faire vérifier votre profil</h2>
-      <p class="chapo" style="margin-bottom:20px">La vérification par vidéo garantit que chaque membre du Club est une personne réelle. Elle est examinée par notre équipe, jamais par un automate, et la vidéo est supprimée dans les 24 heures suivant la décision.</p>
-      <button class="bouton" disabled>Bientôt disponible</button>
-      <p class="aide" style="text-align:center;margin-top:10px">Ce module arrive à l'étape suivante du prototype.</p>
+      <span class="etiquette">${m.statut_verif === "valide" ? "CONFIANCE" : "PROCHAINE ÉTAPE"}</span>
+      <h2>${bloc.titre}</h2>
+      <p class="chapo" style="margin-bottom:${bloc.bouton ? "20px" : "0"}">${bloc.texte}</p>
+      ${m.motif_refus ? `<div class="message info" style="margin-bottom:18px">Motif indiqué par notre équipe : ${ech(m.motif_refus)}</div>` : ""}
+      ${bloc.bouton ? `<button class="bouton or" id="b-verif">${bloc.bouton}</button>` : ""}
     </div>
 
     <div class="carte">
       <button class="lien" id="b-sortir" style="margin:0">Me déconnecter</button>
     </div>`);
+
+  if ($("#b-verif")) $("#b-verif").onclick = ecranVerifIntro;
+
+  // Un refus sans explication est inutilisable : on va chercher le motif écrit
+  // par l'agent, puis on réaffiche. La condition ne se redéclenche pas ensuite.
+  if (m.statut_verif === "refuse" && !m.motif_refus) {
+    appelVerif("etat").then((r) => {
+      if (r.ok && r.derniere && r.derniere.motif) {
+        etat.membre.motif_refus = r.derniere.motif;
+        ecranMembre(false, info);
+      }
+    });
+  }
 
   $("#b-sortir").onclick = async () => {
     await appel("deconnexion", { jeton: etat.jeton });
