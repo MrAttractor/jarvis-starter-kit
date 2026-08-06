@@ -709,13 +709,19 @@ function ecranMembre(bienvenue, info) {
 
   if ($("#b-verif")) $("#b-verif").onclick = ecranVerifIntro;
 
-  // Un refus sans explication est inutilisable : on va chercher le motif écrit
-  // par l'agent, puis on réaffiche. La condition ne se redéclenche pas ensuite.
-  if (m.statut_verif === "refuse" && !m.motif_refus) {
+  // Deux cas où l'écran seul ne suffit pas à comprendre, et où l'on va chercher
+  // le détail de la dernière demande : un refus sans son motif, et une demande
+  // expirée faute d'avoir été traitée en 30 jours. Le drapeau évite de boucler.
+  if (!etat.verifLue && (m.statut_verif === "refuse" || m.statut_verif === "non_soumis")) {
+    etat.verifLue = true;
     appelVerif("etat").then((r) => {
-      if (r.ok && r.derniere && r.derniere.motif) {
+      if (!r.ok || !r.derniere) return;
+      if (r.derniere.motif && m.statut_verif === "refuse") {
         etat.membre.motif_refus = r.derniere.motif;
-        ecranMembre(false, info);
+        return ecranMembre(false, info);
+      }
+      if (r.derniere.statut === "expire") {
+        ecranMembre(false, "Votre précédente demande a expiré sans avoir été examinée, et la vidéo a été supprimée. Vous pouvez en soumettre une nouvelle.");
       }
     });
   }

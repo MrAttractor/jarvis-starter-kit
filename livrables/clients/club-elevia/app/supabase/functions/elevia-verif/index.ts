@@ -47,8 +47,14 @@ Deno.serve(async (req) => {
 
   const db = createClient(SUPABASE_URL, SERVICE_KEY);
 
-  /** Purge opportuniste : appelée à chaque action, pour ne dépendre d'aucun automate. */
+  /** Purge opportuniste : appelée à chaque action, pour ne dépendre d'aucun automate.
+   *  Deux motifs d'effacement : la décision date de plus de 24 h (engagement de
+   *  l'avenant), ou la demande a expiré faute d'avoir été traitée en 30 jours
+   *  (borne absolue de conservation, sans laquelle une vidéo oubliée dans la
+   *  file resterait indéfiniment). L'expiration passe d'abord, sinon les
+   *  demandes concernées ne seraient pas encore éligibles à la purge. */
   async function purger(): Promise<number> {
+    await db.rpc("el_expirer_demandes");
     const { data: aPurger } = await db.rpc("el_videos_a_purger");
     if (!aPurger || aPurger.length === 0) return 0;
     const chemins = aPurger.map((v: { chemin: string }) => v.chemin).filter(Boolean);
