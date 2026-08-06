@@ -185,7 +185,7 @@ le découvrir après.
 
 ---
 
-## 7. La référence Immocratie, ce qu'on prend et ce qu'on laisse
+## 8. La référence Immocratie, ce qu'on prend et ce qu'on laisse
 
 Serge cite **immocratie.com** comme inspiration. Lecture faite le 06/08/2026.
 
@@ -237,7 +237,7 @@ comprennent.
 
 ---
 
-## 8. Statut du dossier
+## 9. Statut du dossier
 
 | Point | État |
 |---|---|
@@ -245,9 +245,17 @@ comprennent.
 | Contact établi | Oui, WhatsApp, besoin recueilli |
 | Brief client reçu | Oui, transformé en brief dev par Mac Arthur |
 | Montage juridique clarifié | Oui, mandat, sans encaissement |
-| Cinq questions ouvertes | **Non posées à ce jour** |
+| Cinq questions | **Répondues le 06/08**, voir section 5 |
+| Périmètre du pilote | Cerné : 1 projet, 50 tranches, 4 briques (section 6) |
+| Deux points encore ouverts | Le pool de lots de CARI, et la gestion des écarts prévision/réel |
+| Validation juridique | **Non faite.** Montage et vocabulaire à faire valider par un juriste ivoirien avant mise en ligne |
 | Nature du deal | **Non arrêtée.** Serge parle de partenariat, le contenu reste à définir |
-| Chiffrage | Aucun, et prématuré tant que les questions 1 à 5 sont ouvertes |
+| Chiffrage | Aucun. Possible dès que les deux points ouverts sont tranchés |
+
+### Prochaine action
+
+Poser les deux dernières questions, puis proposer la phase de modélisation. Le périmètre est
+désormais assez net pour la chiffrer.
 
 **Vigilance sur le deal** : un partenariat indexé sur les commissions de CARI peut être excellent
 ou ne rien rapporter pendant deux ans, selon que des collectes aboutissent ou non. Si cette voie
