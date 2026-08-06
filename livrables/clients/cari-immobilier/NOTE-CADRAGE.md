@@ -122,7 +122,59 @@ Le développement est chiffré **après**, sur un périmètre arrêté, pas sur 
 
 ---
 
-## 7. Statut du dossier
+## 7. La référence Immocratie, ce qu'on prend et ce qu'on laisse
+
+Serge cite **immocratie.com** comme inspiration. Lecture faite le 06/08/2026.
+
+**Ce qu'Immocratie est réellement** : une plateforme française régulée qui émet des **obligations
+à taux fixe, non convertibles, in fine**, des titres non cotés, avec un rendement annoncé en
+pourcentage et une fiscalité de placement (prélèvement forfaitaire unique de 30 %). C'est un
+instrument financier. CARI, elle, organise un prêt remboursé en foncier. Même apparence, deux
+métiers différents.
+
+### Ce qui se transpose
+
+- **La structure de la fiche projet** : photos, plans, études, documents, business plan.
+- **L'historique de l'opérateur.** C'est le levier de confiance le plus fort du secteur, et chez
+  CARI il l'est encore plus : un porteur qui a déjà livré un lotissement borné vaut tous les
+  dossiers. Serge l'avait placé en Phase 3, **il doit remonter en Phase 1**.
+- **L'onglet risques sur chaque projet**, au même endroit à chaque fois. Immocratie écrit sans
+  détour « risque de perte de la totalité du capital investi » et recommande de diversifier. Cette
+  franchise fait sa crédibilité. Chez CARI : retard de bornage, litige foncier, porteur qui ne
+  rétrocède pas.
+- **La prudence des formulations** : « rendement attendu, non garanti » devient « lot prévu, sous
+  réserve du bornage ».
+
+### Ce qui ne se transpose pas
+
+**Le vocabulaire financier.** Employer « investir », « rendement », « capital », « plus-value »,
+« titres » ferait basculer l'offre de CARI dans le registre du placement financier, celui qui
+suppose un agrément. La qualification d'une offre se fait sur sa réalité **et sur la manière dont
+elle est présentée** : le site serait la première pièce versée au dossier. De même, CARI ne peut
+pas afficher qu'elle est régulée par une autorité, ni annoncer un pourcentage de rendement.
+
+### Table de traduction, à tenir dans toute l'interface
+
+| Ne jamais écrire | Écrire à la place |
+|---|---|
+| Investir, investissement | Participer au financement du lotissement |
+| Investisseur | Participant, ou le terme qu'emploie le contrat de mandat |
+| Rendement, taux, % | Contrepartie en lots |
+| Capital investi | Montant avancé |
+| Plus-value | Valeur du lot |
+| Titre, obligation, souscription | Contrat signé avec le porteur de projet |
+| Collecte, montant collecté | Montant engagé, adossé aux contrats |
+| Plateforme régulée | CARI IMMOBILIER SARL, mandataire du porteur de projet |
+
+Le vocabulaire de référence est celui du foncier ivoirien, celui que Serge emploie déjà :
+décapage, bornage, lotissement, attribution, attestation. C'est aussi celui que ses clients
+comprennent.
+
+**À faire valider par un juriste ivoirien avant mise en ligne**, au même titre que le montage.
+
+---
+
+## 8. Statut du dossier
 
 | Point | État |
 |---|---|
