@@ -4,9 +4,9 @@
 
 | Radar | |
 |---|---|
-| Statut | en cours |
-| Dernier contact | 2026-07-15 |
-| Prochaine action | Recruter 3 utilisateurs en test accompagné et regarder précisément où ils décrochent |
+| Statut | en pause |
+| Dernier contact | 2026-08-06 |
+| Prochaine action | Aucune. La reprise est conditionnée, voir « La mise en pause » plus bas |
 | Échéance | — |
 | Argent en attente | — |
 
@@ -78,6 +78,36 @@ mai ne reviendront pas d'eux-mêmes.
 
 C'est un travail de terrain, pas de code. Tant qu'il n'est pas fait, ajouter des
 fonctionnalités ne sert à rien.
+
+## La mise en pause, décidée le 06/08/2026
+
+**Décision de Mac Arthur.** Le produit n'est pas abandonné, il cesse de consommer des
+heures qui manquent ailleurs.
+
+**Ce qui l'a déclenchée, ce sont les chiffres de ce dossier, pas une lassitude :**
+37 inscrits, **2 onboardings terminés dont Mac Arthur lui-même**, 5 conversations,
+**0 abonnement**. Et le critère d'acceptation écrit plus haut, produire une boutique au
+moins équivalente à `boutiquecreal.com`, n'est pas atteint.
+
+**Ce que la pause veut dire concrètement :**
+
+- Plus aucune heure de développement sur ce produit
+- L'application reste **en ligne et fonctionnelle**, on ne débranche rien
+- Les inscrits existants ne sont pas prévenus : rien ne change pour eux
+- La veille quotidienne des 9 piliers est **désactivée** (elle ne servait qu'à ce produit)
+
+**Les deux conditions de reprise, et il en faut une seule :**
+
+1. **Un entrepreneur va au bout du tunnel et vend avec**, sans que Mac Arthur tienne la
+   main. Ce serait la preuve que le produit tient debout seul.
+2. **La ligne des apps métier finance son développement**, c'est-à-dire un récurrent
+   vérifié qui couvre le temps passé.
+
+Tant qu'aucune des deux n'est vraie, ce dossier ne remonte pas dans le brief du matin.
+
+**Ce qui reste valide et ne se perd pas :** la mission fondatrice, le concept V3, le
+principe du CLAUDE.md dynamique, et tout ce qui est écrit dans `concept-v3.md`. La pause
+porte sur le temps investi, pas sur la vision.
 
 ## Chantiers ouverts
 

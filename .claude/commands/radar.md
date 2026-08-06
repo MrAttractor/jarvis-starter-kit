@@ -50,11 +50,17 @@ Pour chaque dossier, à partir de la date du jour :
 - **Jours restants** = `Échéance` moins aujourd'hui (ignorer si `—`)
 
 Les statuts possibles sont : `en cours`, `attente client`, `à relancer`, `à trancher`,
-`en production`, `bloqué`, `infrastructure`.
+`en production`, `bloqué`, `en pause`, `infrastructure`.
 
-**Exclure de toutes les alertes** les statuts `infrastructure` et `bloqué` : le premier
-n'est pas un dossier, le second est gelé volontairement. Les compter à part, sans les
+**Exclure de toutes les alertes** les statuts `infrastructure`, `bloqué` et `en pause` :
+le premier n'est pas un dossier, le deuxième est gelé en attendant une condition
+extérieure, le troisième a été mis de côté par décision. Les compter à part, sans les
 détailler.
+
+**`en pause` n'est pas `bloqué`.** Un dossier bloqué attend quelque chose qui viendra
+peut-être. Un dossier en pause a été écarté volontairement, et sa fiche porte les
+conditions écrites de sa reprise. Ne jamais le faire remonter tant qu'aucune n'est
+remplie : c'est tout l'intérêt de la décision.
 
 ## Étape 3 : Sortir la vue
 
