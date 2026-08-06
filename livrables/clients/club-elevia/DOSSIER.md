@@ -3,6 +3,14 @@
 > Révision du 03/08/2026. **Cette fiche est la première chose à lire du dossier.**
 > Un chiffre ou un statut n'existe qu'ici. S'il apparaît ailleurs, c'est une copie à vérifier.
 
+| Radar | |
+|---|---|
+| Statut | attente client |
+| Dernier contact | 2026-08-04 |
+| Prochaine action | Relancer si sa signature n'arrive pas (son statut est encore `en_attente`) |
+| Échéance | 2026-08-11 |
+| Argent en attente | 2 050 € |
+
 ## En une phrase
 
 Elle a lu le package le 02/08 (il était tombé dans ses spams), elle valide le fond,

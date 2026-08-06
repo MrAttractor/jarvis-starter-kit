@@ -567,9 +567,15 @@ async function ecranVerifCamera() {
   $("#b-lancer").onclick = () => {
     const type = ["video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm", "video/mp4"]
       .find((t) => window.MediaRecorder && MediaRecorder.isTypeSupported(t)) || "";
+    // Débit plafonné à 800 kb/s. Sans cela, un iPhone produit ~8 Mo pour 8
+    // secondes : un envoi très long, et souvent perdu, sur les connexions
+    // mobiles depuis lesquelles la diaspora se connectera. À ce débit, la vidéo
+    // pèse moins d'un mégaoctet et reste largement assez nette pour qu'un agent
+    // reconnaisse un visage et un geste, seul usage qu'on en fait.
     let enregistreur;
+    const reglages = { videoBitsPerSecond: 800000 };
     try {
-      enregistreur = new MediaRecorder(flux, type ? { mimeType: type } : undefined);
+      enregistreur = new MediaRecorder(flux, type ? { mimeType: type, ...reglages } : reglages);
     } catch (_) {
       couperCamera();
       return ecranVerifIntro("Votre navigateur ne permet pas d'enregistrer une vidéo. Essayez depuis un autre navigateur.");
@@ -622,13 +628,19 @@ function ecranVerifEnvoi(dem, blob) {
     const b = $("#b-envoyer");
     b.disabled = true; b.textContent = "Envoi en cours…";
     try {
+      // Safari annonce « video/mp4;codecs=avc1.4d002a ». Le stockage compare le
+      // type à l'identique et refuse tout ce qui porte un suffixe de codec :
+      // on ne garde donc que le type de base. Sans cela, l'envoi échoue sur
+      // iPhone alors que l'enregistrement s'est parfaitement déroulé.
+      const type = (blob.type || "video/webm").split(";")[0].trim();
+
       // La vidéo va directement au stockage privé, sans transiter par nos fonctions.
       const dep = await fetch(dem.url_depot, {
         method: "PUT",
-        headers: { "Content-Type": blob.type || "video/webm" },
+        headers: { "Content-Type": type },
         body: blob,
       });
-      if (!dep.ok) throw new Error("dépôt refusé");
+      if (!dep.ok) throw new Error("dépôt " + dep.status + " · " + type);
       const r = await appelVerif("soumettre", { id: dem.id });
       if (!r.ok) throw new Error(r.error);
       URL.revokeObjectURL(url);
@@ -636,7 +648,10 @@ function ecranVerifEnvoi(dem, blob) {
       ecranMembre(false, "Votre vidéo est bien arrivée. Notre équipe l'examine.");
     } catch (e) {
       b.disabled = false; b.textContent = "Envoyer pour vérification";
-      $("#zone-msg").innerHTML = erreur("L'envoi n'a pas abouti. Vérifiez votre connexion et réessayez.");
+      // Le détail sert au diagnostic pendant la phase de prototype : sans lui,
+      // un échec d'envoi est indiscernable d'une coupure de réseau.
+      $("#zone-msg").innerHTML = erreur("L'envoi n'a pas abouti. Vérifiez votre connexion et réessayez.")
+        + `<p class="aide" style="margin:-12px 0 18px">Détail technique : ${ech(String(e && e.message || e))}</p>`;
     }
   };
 }
@@ -707,7 +722,11 @@ function ecranMembre(bienvenue, info) {
       <button class="lien" id="b-sortir" style="margin:0">Me déconnecter</button>
     </div>`);
 
-  if ($("#b-verif")) $("#b-verif").onclick = ecranVerifIntro;
+  // Surtout pas « onclick = ecranVerifIntro » : le navigateur passerait l'événement
+  // du clic en premier argument, qui finirait affiché en bandeau rouge sous la
+  // forme « [object PointerEvent] ». Toute fonction d'écran qui accepte un message
+  // doit être appelée à travers une lambda.
+  if ($("#b-verif")) $("#b-verif").onclick = () => ecranVerifIntro();
 
   // Deux cas où l'écran seul ne suffit pas à comprendre, et où l'on va chercher
   // le détail de la dernière demande : un refus sans son motif, et une demande
