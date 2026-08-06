@@ -527,6 +527,39 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ── INVITATION À DEMANDER CONSEIL ──────────────────────────────────────────
+   Glissée dans le catalogue plutôt qu'en tête de page : le doute sur « laquelle
+   choisir » naît en comparant les farines, pas avant de les avoir vues. */
+.invite {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; gap: 14px;
+  width: 100%; text-align: left;
+  background: linear-gradient(135deg, #FFF8EE 0%, #FDF1DC 100%);
+  border: 1.5px solid rgba(242,163,61,0.35);
+  border-radius: var(--r);
+  padding: 16px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  color: var(--brand);
+  transition: transform .12s, box-shadow .12s;
+}
+.invite:active { transform: scale(0.99); box-shadow: 0 2px 8px rgba(242,163,61,0.25); }
+.invite-rond {
+  width: 48px; height: 48px; flex-shrink: 0;
+  background: var(--orange); color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Sora', sans-serif; font-weight: 800; font-size: 20px;
+}
+/* Des span et non des div : le bouton ne peut pas contenir de bloc en HTML valide.
+   Il faut donc leur donner display:block pour qu'ils s'empilent. */
+.invite-corps { display: block; min-width: 0; }
+.invite-titre { display: block; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 16px; margin-bottom: 3px; }
+.invite-texte { display: block; font-size: 14px; color: #7A5200; line-height: 1.45; }
+.invite-signe { display: block; font-size: 13px; color: var(--muted); margin-top: 5px; }
+.invite-fleche { margin-left: auto; flex-shrink: 0; color: var(--orange); }
+.invite-fleche svg { width: 22px; height: 22px; display: block; }
 </style>
 </head>
 <body>
@@ -565,7 +598,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
   <div class="tab-content" id="tab-chat">
     <div class="chat-wrap">
       <div class="chat-msgs" id="chat-msgs">
-        <div class="msg bot">Bonjour ! Je suis Zoé, l'assistante C'Real. Je vous aide à choisir la bonne farine pour votre enfant et à préparer votre commande. Quel est l'âge de votre enfant ?</div>
+        <div class="msg bot">Bonjour ! Je suis Zoé, votre conseillère C'Real, disponible à toute heure. Je vous aide à choisir la bonne farine pour votre enfant et à préparer votre commande. Quel est l'âge de votre enfant ?</div>
       </div>
       <div class="typing" id="typing"><div class="dots"><span></span><span></span><span></span></div></div>
       <div class="chat-bar">
@@ -589,9 +622,12 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
     Catalogue
   </button>
+  <!-- L'onglet nomme la fonction et non la personne : « Zoé » seul ne dit rien
+       à qui découvre la boutique, et on ne clique pas sur ce qu'on ne comprend pas.
+       Zoé se présente dans la conversation. -->
   <button class="nav-btn" onclick="goTab('chat',this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-    Zoé
+    Conseil
   </button>
   <button class="nav-btn" onclick="goTab('panier',this)">
     <div class="badge" id="badge"></div>
@@ -763,8 +799,26 @@ const PRODUCTS = [
 
 const cart = {};
 
+/* Renvoie vers l'onglet Conseil en activant le bon bouton de navigation. */
+function ouvrirConseil() {
+  goTab('chat', document.querySelectorAll('.nav-btn')[1]);
+}
+
+function inviteHTML() {
+  return `
+    <button class="invite" onclick="ouvrirConseil()" aria-label="Demander conseil à Zoé">
+      <span class="invite-rond">Z</span>
+      <span class="invite-corps">
+        <span class="invite-titre">Vous ne savez pas laquelle choisir ?</span>
+        <span class="invite-texte">Dites-moi l'âge de votre bébé, je vous oriente vers la farine qu'il lui faut.</span>
+        <span class="invite-signe">Zoé, votre conseillère, disponible à toute heure</span>
+      </span>
+      <span class="invite-fleche"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></span>
+    </button>`;
+}
+
 function renderProducts() {
-  document.getElementById('products-grid').innerHTML = PRODUCTS.map((p, i) => {
+  const cartes = PRODUCTS.map((p, i) => {
     const qty = cart[p.id] || 0;
     const clickable = p.detail ? `onclick="openModal(${p.id})" style="cursor:pointer"` : '';
     return `
@@ -781,7 +835,9 @@ function renderProducts() {
         ${p.detail ? `<div style="font-size:13px;color:var(--muted);margin-top:4px;text-align:center;">Appuyer pour les détails</div>` : ''}
       </div>
     </div>`;
-  }).join('');
+  });
+  cartes.splice(4, 0, inviteHTML());
+  document.getElementById('products-grid').innerHTML = cartes.join('');
 }
 
 let currentModalId = null;
