@@ -290,7 +290,7 @@ Marge gauche constante : 80px. Tout aligné sur cette marge.
 
 ## 12. Points en suspens / à traiter
 
-1. **Charte graphique — ARRÊTÉE (12/07/2026).** L'ancienne charte (noir #0D0D0D / or #C9A84C-#D4A843 / bordeaux #8B2020) est abandonnée. Charte de référence, source de vérité `BIBLE_ATTRACTOR.md` + `design-system.md` :
+1. **Charte graphique — ARRÊTÉE (12/07/2026).** L'ancienne charte (noir #0D0D0D / or #C9A84C-#D4A843 / bordeaux #8B2020) est abandonnée. Charte de référence, source de vérité `cerveau/01-DOCTRINE.md` + `design-system.md` :
    - **Orange `#F25C05`** = signature, couleur primaire.
    - **Charbon `#1A1714`** = fond sombre.
    - **Sable `#FAF6F0`** = fond clair.

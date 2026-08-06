@@ -1,18 +1,24 @@
-# BIBLE ATTRACTOR — Single Source of Truth
+# 01 · DOCTRINE ATTRACTOR
 
-> Version 1.0 — Cadré le 24/06/2026
-> Document vivant. Toute décision validée par Mac Arthur qui contredit ce document prime sur ce document, et déclenche une mise à jour ici.
-> Maintenu par : PONT (structure) + MIROIR (méthode) + Chief of Staff (opérations)
+> Anciennement BIBLE_ATTRACTOR.md. Version 1.0 cadrée le 24/06/2026, intégrée au Cerveau Master le 06/08/2026.
+> Pièce 1 sur 3 du cerveau. Voir `CERVEAU.md` pour le protocole, `02-EXPERIENCES.md` pour le vécu, `03-REGLES.md` pour l'application.
+> Maintenu par : PONT (structure), MIROIR (méthode), Chief of Staff (opérations).
 
 ---
 
 ## COMMENT UTILISER CE DOCUMENT
 
-Ce fichier est la référence absolue de l'agence Mr Attractor.
+Ce fichier porte la doctrine de l'agence Mr Attractor : ce en quoi on croit et comment on fait.
 
-Avant tout arbitrage, toute décision, toute production : **consulte ce fichier en premier.**
+**Ordre de priorité en cas de contradiction :**
 
-Si tu trouves une contradiction entre ce fichier et un autre document, ce fichier a raison — sauf si Mac Arthur a pris une décision plus récente. Dans ce cas, signale la contradiction et mets ce fichier à jour.
+```
+Décision récente de Mac Arthur  >  03-REGLES  >  ce fichier  >  02-EXPERIENCES  >  tout le reste
+```
+
+Une contradiction trouvée ne se contourne pas en silence : elle se signale à Mac Arthur et déclenche une mise à jour ici.
+
+> **Attention, contenu daté.** Les chapitres 4 (pipeline actif), 9 (décisions actées) et 10 (chantiers ouverts) sont arrêtés au 24/06/2026 et n'ont pas été révisés depuis. Ils sont conservés comme trace, pas comme état courant. Pour l'état réel des dossiers, voir les `DOSSIER.md` clients et `/radar`.
 
 ---
 

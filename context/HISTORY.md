@@ -7,6 +7,87 @@
 
 ---
 
+## 2026-08-06 (session 125 — Élévia passe du contrat au code, et un vrai iPhone corrige ce qu'aucune relecture n'avait vu)
+
+> Journée entière sur un seul dossier. Le contrat le matin, le code l'après-midi,
+> et le test sur un vrai téléphone qui a tout changé.
+
+### Son mail ne demandait pas ce qu'on croyait
+- Élise a écrit le 04/08 à 20h16, **après avoir lu les trois documents** (le journal de signature le prouve : ouverture à 19h41, relecture à 5h03 le lendemain). Ses remarques sont donc faites en connaissance de cause.
+- **Lecture initiale erronée, corrigée en lisant ses mots exacts** : elle ne demandait pas de changer le calendrier de règlement, elle demandait de **conserver** le principe déjà écrit, règlement après présentation et validation de chaque livrable. Conséquence directe : **pas de devis V6, pas de troisième lien**, le scellement en cours reste valable.
+- **Leçon** : avant de refaire un document contractuel, relire la demande dans le texte du client. La reformulation d'un tiers, même de bonne foi, avait transformé une confirmation en demande de changement.
+
+### Avenant V3, deux articles ajoutés
+- Sur ses quatre points opérationnels, **deux étaient déjà écrits** dans le CDC (critères d'acceptation module par module, recette conjointe). Vérifié dans le document avant de répondre, pas supposé.
+- **Article 17, réception et anomalies.** Trois niveaux, et un seul bloque : bloquante empêche la réception et se corrige sous 5 jours ouvrés, majeure ne bloque pas si corrigée sous 10 jours, **mineure ne bloque ni la réception ni le règlement de la tranche**. Écrit noir sur blanc qu'**une demande nouvelle n'est pas une anomalie**.
+- **Article 18, mise en production** : domaine, hébergement, SSL vérifié, base et sauvegardes, services tiers, jusqu'à une plateforme opérationnelle. Avec la limite honnête : l'engagement porte sur la configuration, pas sur les délais d'un fournisseur.
+- Dossier de signature remplacé, ancien révoqué **et vérifié mort** avant d'annoncer quoi que ce soit.
+
+### Le développement commence réellement
+- Point de départ inconfortable, dit ici pour ce qu'il apprend : **le mail du 04/08 annonçait un développement déjà commencé alors que rien n'existait**. La cliente l'a repris dans sa réponse. La phrase a été rendue vraie dans la journée, c'est la seule sortie propre. **Une promesse écrite se rattrape en produisant, jamais en écrivant une seconde phrase.**
+- **Module 1 livré et testé** : inscription en trois étapes, pseudo vérifié pendant la frappe, contrôle de majorité **imposé en base et pas seulement à l'écran**, connexion par code à 6 chiffres, profil.
+- **Décision d'architecture assumée** : les membres d'Élévia ne passent pas par les comptes partagés avec les huit autres dossiers. Motif contractuel, l'Art. 10 et l'Art. 16 engagent une base **au nom de la Cliente** : isoler maintenant rend la migration possible par simple export.
+- **Ouverture à tous les pays du monde**, à sa demande, pour n'écarter aucune diaspora. Liste générée depuis les codes ISO plutôt que 195 noms figés, avec un code stable conservé pour le futur filtre par zone.
+- **Module 2 livré et testé** : vidéo de vérification, file de modération, décision nominative, purge.
+
+### Ce que la vidéo engage, et comment c'est tenu
+- **Aucune biométrie.** Le CDC parlait de « détection du visage », l'avenant a précisé qu'il n'y a ni reconnaissance ni empreinte. Donc aucun algorithme : deux gestes tirés au sort, un humain qui juge. Plus simple à construire, et hors de l'article 9 du RGPD.
+- **La décision porte toujours un nom** : une contrainte de base refuse toute ligne décidée sans auteur ni horodatage.
+- **La suppression est prouvable** : l'horodatage de purge n'est écrit **qu'après** l'effacement réel du fichier. Un fichier simplement absent ne prouve rien.
+- **Trou trouvé et bouché le jour même**, soulevé par Mac Arthur : la purge à 24 h est adossée à la décision, donc **une vidéo que personne ne traite n'était jamais supprimée**. Borne absolue ajoutée à 30 jours, sans quoi la durée de conservation dépendait de la diligence de l'équipe cliente.
+
+### Le test sur un vrai iPhone, et ce qu'il a rapporté
+- **Trois défauts qu'aucune relecture n'aurait vus**, tous corrigés :
+  1. **L'envoi échouait.** Safari annonce `video/mp4;codecs=avc1...` et le stockage compare le type à l'identique.
+  2. **`[object PointerEvent]` s'affichait en bandeau rouge.** Une fonction d'écran branchée directement sur un clic reçoit l'événement en guise de message.
+  3. **8,3 Mo pour 8 secondes.** Mesuré sur le fichier réellement déposé. Pour une clientèle diaspora souvent en 4G, c'est un envoi perdu. Débit plafonné, moins d'un mégaoctet.
+- **LEÇON TRANSFÉRABLE : un livrable mobile n'est pas testé tant qu'il n'a pas tourné sur un vrai téléphone.** Toute la plomberie était vérifiée par scripts, les quinze contrôles passaient, et les trois défauts étaient devant l'utilisateur.
+- Cycle complet validé en réel ensuite : vidéo déposée, file, validation nominative, badge affiché.
+
+### Deux angles morts découverts en fin de journée
+- **Le compte d'équipe n'existe pas.** Administrer imposerait aujourd'hui à Élise de créer un profil de rencontre complet, qui apparaîtrait ensuite dans la découverte de ses propres membres. À trancher **avant** le Module 3.
+- **Un agent peut valider sa propre demande.** Chez un club dont la valeur est la vérification, le badge y perdrait son sens.
+- **Décision de Mac Arthur** : ne présenter que le lien membre. Elle valide l'expérience d'abord, l'accès équipe suit une fois ces deux points réglés.
+
+### Bilingue : ce qui est écrit prime sur ce qui semble évident
+- Le français-anglais est **hors périmètre**, écrit deux fois dans le CDC (section 7 et section 9, avec devis complémentaire). Le livrer gratuitement affaiblirait tout le paragraphe qui exclut aussi les applications mobiles et la billetterie.
+- Recommandation retenue : **poser la structure sans facturer** (elle relève de l'engagement d'évolutivité de l'Art. 16), **vendre la traduction**. Sur deux modules c'est une heure, sur quatre modules finis c'est une journée.
+
+### Livrables
+- `club-elevia/AVENANT-01-V3` (HTML + PDF), V2 archivée · `app/supabase/` : 4 migrations et 2 edge functions · front sur `demo.agenceattractor.com/elevia/app` et `/elevia/admin`.
+- Réponse prête **dans le fil Gmail d'Élise**, sans le lien du back-office.
+- **Reste à faire** : compte d'équipe et interdiction de l'auto-validation, ses questions de questionnaire (bloquant CDC pour le Module 3), et le rendu du PDF de l'avenant jamais ouvert dans un lecteur.
+
+---
+
+## 2026-08-05 (session 124 — un prospect marketplace, un attrape-tout qui cassait les liens clients, et l'usage réel d'Ayêla)
+
+### La Boutique Paysanne CI entre au pipeline
+- Demande entrante pour une **marketplace hybride** de produits agro-transformés ivoiriens, adressée par **Lorraine Yapi**, responsable communication (homonyme de la CEO d'Ayêla, à ne jamais confondre).
+- Devis interactif **ATR-2026-0013** en ligne sur `demo.agenceattractor.com/boutique-paysanne`, trois formules : Vitrine 320 000 F, Boutique 920 000 F, Marketplace 1 175 000 F.
+- **Le point qui décide de l'architecture est juridique** : une marketplace fait circuler l'argent d'autrui. L'encaissement pour compte de tiers est **écarté** (activité réglementée en zone UEMOA), au profit du paiement réparti chez l'opérateur. C'est écrit **en tête** du cadre de périmètre, pas en note de bas de page.
+- **Ils demandent de « réfléchir ensemble à l'architecture »**, c'est-à-dire la partie la plus difficile, gratuitement. D'où une séance de cadrage à 52 000 F, **déduite s'ils engagent le projet**.
+- **Défaut du barème mesuré** : la remise volume de 20 % au-dessus de 1 200 € crée un effet de seuil absurde, un devis à 1 450 € tomberait à 1 160 €, moins cher que le socle seul. Appliquée sur la seule fraction excédentaire, à trancher.
+
+### L'attrape-tout du demo-site cassait les liens clients
+- Symptôme rapporté par Mac Arthur : « ça redirige vers boutique introuvable, **presque chaque fois** ».
+- **Cause racine** : la dernière règle du `_redirects` renvoyait toute adresse de premier niveau non déclarée vers Assists. Elle est évaluée **avant** le routage naturel de Pages, donc chaque nouveau dossier client devait être déclaré à la main. Les trente lignes du fichier n'étaient que la liste des oublis déjà rattrapés.
+- **Dégât réel** : le lien de closing d'**All Eyes on yoo**, envoyé le 30/07 et resté sans réponse, tombait sur « Boutique introuvable ». Son silence n'en était peut-être pas un.
+- L'attrape-tout ne protégeait **presque rien** : trois slugs existaient, dont un déjà redirigé ailleurs, les deux autres étant des comptes de test. Supprimé, remplacé par deux lignes explicites et un avertissement écrit pour qu'il ne revienne pas. Vraie page 404 ajoutée.
+- **RÈGLE : toujours tester l'URL sans barre oblique finale.** C'est la forme qu'on écrit à la main dans un message, et c'est précisément celle qui cassait.
+
+### Ayêla, ce que l'usage réel raconte
+- Relevé en base : **37 ventes du 21/07 au 03/08, 243 900 FCFA**, 8 jours d'activité. Elle utilise vraiment l'outil.
+- **11 promotions créées en 24 minutes, une par produit.** Pas des doublons : 11 produits différents avec chacun son prix. Elle a fait ce qu'elle voulait, mais onze fois, parce que la portée « toute la boutique » n'accepte qu'un prix unique. **Manque produit découvert en regardant l'usage, pas en le demandant.**
+- **37 ventes en points de vente contre une seule commande en ligne.** La plateforme lui sert d'outil de gestion, pas de canal de vente. C'est le vrai sujet, et une leçon pour la démonstration par palier : ce qui se vend d'abord, c'est le tableau de bord.
+
+### Google Workspace, un montant mal lu
+- Le prélèvement de **15,35 € couvrait juillet à 2 licences**, pas le coût courant. La facture en cours dit « 1 seat » : la seconde licence était déjà supprimée. Coût réel **9,72 €/mois**, 117 €/an économisés sans le savoir.
+- **Leçon de lecture de facture** : un montant prélevé décrit le mois écoulé, jamais le mois à venir.
+- Dépendance découverte : `hello@` n'est plus une licence mais un **alias**, et c'est l'expéditeur contractuel de l'agence. Le supprimer enverrait les réponses clientes dans le vide. Réception testée en réel.
+
+---
+
 ## 2026-08-04 (session 123 — Élévia part en signature, et le module de signature passe son test réel)
 
 > Session courte et opérationnelle : débloquer une signature qui attendait, puis vérifier
