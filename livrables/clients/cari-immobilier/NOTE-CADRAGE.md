@@ -68,9 +68,21 @@ Cycle de vie à modéliser, du plus incertain au plus solide :
 | Attribué | L'attribution est actée | L'attribution et sa date |
 | Titré | Les documents définitifs sont remis | Le document remis |
 
-**Le piège à éviter absolument** : afficher un plan de lotissement avec des numéros de lots avant
-le bornage. C'est la meilleure façon de promettre deux fois le même lot. Le système doit rendre
-cette erreur impossible, pas seulement la déconseiller.
+**Correction du 06/08/2026.** J'avais écrit qu'il fallait rendre impossible l'affichage d'un lot
+avant bornage. C'est faux, et ça ne colle pas au métier : chez CARI **les lots sont identifiés
+avant le bornage**, sur plan, et c'est justement ce qui permet de proposer une contrepartie au
+moment de la signature. On ne l'interdit donc pas.
+
+Ce qu'il faut à la place, et qui est plus utile :
+
+- **Tout lot affiché porte son état**, sur plan ou borné, jamais de façon ambiguë.
+- **Les surfaces d'un lot sur plan sont annoncées comme provisoires** jusqu'au bornage.
+- **La réconciliation après bornage est prévue dès le départ.** Le bornage fait bouger les
+  surfaces réelles, et « mon lot fait 480 m² au lieu de 500 » est le litige le plus prévisible
+  de tout le dispositif. Le système doit savoir afficher l'écart et ce qui a été décidé, plutôt
+  que de le masquer.
+- **Un lot ne peut être engagé qu'une fois.** Ça, c'est la contrainte à rendre techniquement
+  impossible à violer.
 
 ---
 
@@ -91,34 +103,85 @@ et non une fintech.
 
 ---
 
-## 5. Questions ouvertes, à poser à Serge
+## 5. Réponses de Serge, obtenues le 06/08/2026
 
-Elles conditionnent le modèle de données, donc le chiffrage. Aucune n'est cosmétique.
+1. **Rémunération de CARI.** Prévue au contrat de mandat, dès la signature : **5 % du montant
+   qui sera collecté**, plus **des lots définis au contrat**. CARI est donc payée en argent et
+   en foncier. Elle n'encaisse toujours pas : les 5 % lui sont dus par le porteur.
+2. **Les lots sont identifiés AVANT le bornage.** C'est ce qui permet d'annoncer une contrepartie
+   au moment de la signature. Voir la correction en section 3.
+3. **CARI rédige le contrat**, fait office de facilitateur, et **en conserve une copie**.
+4. **On commence par un pilote**, pour valider le modèle. Besoin du pilote : **25 000 000 FCFA**,
+   en **tranches de 500 000 F**. Une personne peut prendre une tranche, trois, ou davantage
+   selon ses moyens.
+5. **La transparence est le cœur du dispositif.** Chaque participant dispose d'**un lien où il
+   voit l'évolution réelle comparée à la prévision faite au moment de la signature**. Les
+   informations sont communiquées très régulièrement.
 
-1. **Comment CARI est-elle payée ?** Commission versée par le porteur de projet, en argent ou
-   en lots ? À quel moment, et sur quelle base de calcul, puisque rien ne transite ?
-2. **Les lots sont-ils identifiés avant ou après le bornage ?** Autrement dit, au moment où on
-   cherche l'argent, sait-on déjà quel lot ira à qui, ou seulement combien de mètres carrés ?
-3. **Qui rédige le contrat entre l'investisseur et le porteur ?** CARI, un notaire, le porteur ?
-   Et CARI en garde-t-elle une copie ?
-4. **Combien de projets actifs aujourd'hui, et combien d'investisseurs par projet ?** Cela
-   dimensionne tout le reste, et détermine si un back-office simple suffit.
-5. **Que se passe-t-il quand un projet échoue ou prend du retard ?** Le brief ne décrit que le
-   chemin heureux. C'est là que se jouent la réputation de CARI et l'utilité du journal.
+### Le chiffre qui redéfinit le produit
+
+**25 000 000 / 500 000 = 50 tranches, donc 50 participants au maximum sur le pilote.**
+
+Le brief décrivait une marketplace : catalogue, découverte, matching, scoring, IA d'analyse
+documentaire. La réalité du pilote est un projet, cinquante personnes, et un besoin qui n'est pas
+de recruter mais de **tenir informés ceux qui ont déjà signé**.
+
+> **Ce n'est pas une marketplace, c'est un outil de tenue de promesse.**
+
+Conséquence directe : la découverte de projets est secondaire, le suivi est primordial. C'est
+aussi une bonne nouvelle pour le chiffrage, le périmètre réel est très inférieur au brief.
+
+### Ce qui reste à clarifier
+
+- **« CARI met cela dans la contrepartie pour les financiers »** : la formulation est ambiguë.
+  Les lots revenant à CARI font-ils partie du pool proposé aux participants, ou sont-ils
+  prélevés en plus ? Cela change le nombre de lots disponibles, donc le plan.
+- **Que se passe-t-il quand le réel s'écarte de la prévision ?** Serge n'a pas répondu, et c'est
+  devenu la question la plus importante du dossier. Un outil qui affiche l'avancement documente
+  aussi le retard. C'est ce qui construit la confiance, mais il faut pouvoir **expliquer** un
+  écart, pas seulement l'afficher. Sans ce mécanisme, l'outil se retourne contre CARI au premier
+  contretemps.
 
 ---
 
-## 6. Ce qu'on vend d'abord
+## 6. Le MVP réel, tel qu'il ressort des réponses
 
-Serge a demandé « quelqu'un capable de modéliser la plateforme ». C'est exactement le bon point
-d'entrée, et c'est vendable seul.
+Quatre briques, dans cet ordre. Rien d'autre pour le pilote.
+
+1. **La page du projet pilote.** Présentation, documents vérifiés, plan des lots avec leur état,
+   avancement prévu et réel, et l'onglet risques. Publique.
+2. **Le registre des tranches.** 50 tranches de 500 000 F, qui a pris quoi, quel lot est associé,
+   avec renvoi au contrat signé. Un lot ne peut être engagé qu'une fois.
+3. **Le lien de suivi personnel du participant.** La brique la plus importante : il voit ses
+   tranches, ses lots prévus, et **la prévision figée à la signature face à l'avancement réel**.
+4. **Le back-office CARI.** Saisir les participants depuis les contrats signés, publier les étapes
+   d'avancement, téléverser les preuves (photos du décapage, attestation de bornage).
+
+Le modèle de données central est celui d'un planning de chantier : une **prévision figée** au
+moment de la signature, et un **journal réel** qui vient s'y comparer. C'est cette comparaison
+qui est le produit.
+
+Sont **hors du pilote** : le paiement en ligne, le catalogue multi-projets, le scoring, l'IA
+documentaire, la signature électronique. Ils reviendront si le modèle est validé.
+
+---
+
+## 7. Ce qu'on vend d'abord
+
+Serge a demandé « quelqu'un capable de modéliser la plateforme ». C'est le bon point d'entrée,
+et c'est vendable seul.
 
 **Phase de modélisation**, livrée en documents : modèle de données, parcours des trois rôles,
-cycle de vie du lot et transitions autorisées, matrice de ce que CARI vérifie et n'engage pas,
-et les réponses écrites aux cinq questions ci-dessus. À l'issue, CARI possède un dossier qui lui
-sert même si elle change de prestataire, et le développement se chiffre sur du solide.
+cycle de vie du lot et transitions autorisées, mécanisme de réconciliation après bornage, gestion
+des écarts entre prévision et réel, et la table de vocabulaire de la section 8. À l'issue, CARI
+possède un dossier qui lui sert même si elle change de prestataire, et le développement se chiffre
+sur un périmètre arrêté.
 
-Le développement est chiffré **après**, sur un périmètre arrêté, pas sur un brief.
+**Note sur l'économie du deal.** La commission de CARI sur le pilote est de **5 % de 25 000 000,
+soit 1 250 000 FCFA**, environ 1 900 €. Une rémunération indexée sur cette commission ne
+représenterait donc qu'une fraction de ce montant pour un premier projet. Le partenariat n'a
+d'intérêt que s'il porte sur la suite, pas sur le pilote. À dire franchement à Serge plutôt qu'à
+le découvrir après.
 
 ---
 
