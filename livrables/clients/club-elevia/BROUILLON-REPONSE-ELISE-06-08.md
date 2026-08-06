@@ -3,7 +3,8 @@
 > À relire et retoucher par Mac Arthur avant envoi.
 > Répond à son mail du **4 août 2026 (20h16)**, celui qui pose 4 points opérationnels
 > et confirme le principe des règlements.
-> **À envoyer depuis `hello@agenceattractor.com`.**
+> **À envoyer depuis `hello@agenceattractor.com`.** Brouillon déjà créé dans le fil Gmail (id `r4383001891525518037`).
+> **Le lien du back-office est volontairement retiré** : elle valide d'abord l'expérience membre, l'accès équipe suit.
 > Volontairement court : c'est un résumé, le détail est dans les documents.
 
 ---
@@ -38,12 +39,12 @@ Tu peux créer un compte pour de vrai. Le pseudonyme est vérifié pendant que t
 Trois choses à savoir sur cette vérification, parce qu'elles engagent ta responsabilité autant que la mienne :
 
 - **Aucune analyse du visage n'est faite.** On demande un geste, une personne de ton équipe regarde. C'est exactement ce que dit l'avenant, et cela nous évite la réglementation très lourde qui s'applique à la reconnaissance faciale.
-- **La vidéo est supprimée dans les 24 heures suivant ta décision**, automatiquement, et cette suppression est horodatée. Si on te la demande un jour, tu peux la prouver.
+- **La vidéo est supprimée dans les 24 heures suivant la décision**, automatiquement, et cette suppression est horodatée. Si on te la demande un jour, tu peux la prouver. Et si une demande restait sans réponse, la vidéo est de toute façon effacée au bout de 30 jours : rien ne se conserve indéfiniment.
 - **Aucune décision n'est automatique.** Chaque validation ou refus porte le nom de la personne qui l'a prise.
 
-L'écran où ton équipe traite les demandes est ici : https://demo.agenceattractor.com/elevia/admin
+L'écran depuis lequel ton équipe traitera ces demandes est construit, je te le présenterai juste après, avec les accès pour les personnes que tu auras désignées. Je préfère qu'on valide d'abord ensemble l'expérience côté membre.
 
-Il faut d'abord être connecté avec un compte autorisé, et je te le donnerai quand tu me diras quelles personnes de ton côté auront ce rôle.
+Dis-moi ce que tu en penses, et n'hésite pas à être sévère : c'est le moment où tout se corrige facilement.
 
 **Ce dont j'ai besoin de toi pour la suite : tes questions.**
 
