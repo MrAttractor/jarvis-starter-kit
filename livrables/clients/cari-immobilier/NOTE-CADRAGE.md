@@ -4,6 +4,14 @@
 > Contact : **Serge Boka**, responsable de **CARI IMMOBILIER SARL**. WhatsApp +225 05 01 60 96 90.
 > Ce document est la source de vérité du dossier. Un chiffre ou une décision n'existe qu'ici.
 
+| Radar | |
+|---|---|
+| Statut | en cours |
+| Dernier contact | 2026-08-06 |
+| Prochaine action | Poser les 2 dernières questions à Serge (pool de lots, gestion des écarts), puis chiffrer la phase de modélisation |
+| Échéance | — |
+| Argent en attente | phase de modélisation, à chiffrer |
+
 ---
 
 ## 1. Ce que fait CARI, réellement
