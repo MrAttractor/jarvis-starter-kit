@@ -23,6 +23,15 @@ const RESERVES = new Set([
   'icon-192.png', 'icon-512.png', 'apple-touch-icon.png',
 ]);
 
+// Entrepreneurs passés sur leur domaine propre. Leur boutique Assists existe
+// toujours en base, mais elle ferait doublon : le catalogue y est à jour alors
+// que le WhatsApp, le paiement et la livraison sont restés vides, donc une
+// cliente qui atterrit là ne peut ni commander ni payer. On l'envoie sur la
+// vraie boutique au lieu de lui montrer une page à moitié morte.
+const DOMAINES_PROPRES = {
+  creal: 'https://boutiquecreal.com/',
+};
+
 /** Sert /boutique/ avec le slug en query, sans changer l'URL vue par le client. */
 function servirBoutique(url, request, env, slug) {
   const cible = new URL(url);
@@ -38,12 +47,18 @@ export default {
 
     // /b/[slug] — ancien format, encore dans des liens partagés à des clients
     if (seg.length === 2 && seg[0] === 'b') {
-      return servirBoutique(url, request, env, decodeURIComponent(seg[1]));
+      const slug = decodeURIComponent(seg[1]);
+      const propre = DOMAINES_PROPRES[slug];
+      if (propre) return Response.redirect(propre, 301);
+      return servirBoutique(url, request, env, slug);
     }
 
     // /[slug] — le lien de boutique. Un seul segment, pas un fichier, pas une route.
     if (seg.length === 1 && !RESERVES.has(seg[0]) && !seg[0].includes('.')) {
-      return servirBoutique(url, request, env, decodeURIComponent(seg[0]));
+      const slug = decodeURIComponent(seg[0]);
+      const propre = DOMAINES_PROPRES[slug];
+      if (propre) return Response.redirect(propre, 301);
+      return servirBoutique(url, request, env, slug);
     }
 
     // Tout le reste : la landing (/), l'app (/app), les pages légales, les assets.
