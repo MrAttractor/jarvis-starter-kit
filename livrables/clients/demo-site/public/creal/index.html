@@ -2,8 +2,33 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!-- Le zoom reste autorisé : une cliente qui veut agrandir une étiquette
+     ou un prix doit pouvoir le faire. maximum-scale/user-scalable=no bloquait ça. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>C'Real — Farines infantiles 100% naturelles</title>
+<meta name="description" content="Farines infantiles 100% naturelles fabriquées en Côte d'Ivoire. Dès 4 mois, sans sucre ajouté, sans colorant ni conservateur. Commandez et faites-vous livrer.">
+
+<!-- Aperçu au partage (WhatsApp, Facebook, Instagram).
+     Les URL doivent rester absolues : un chemin relatif n'est pas résolu par les robots d'aperçu. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="C'Real">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:url" content="https://boutiquecreal.com/">
+<meta property="og:title" content="C'Real — Farines infantiles 100% naturelles">
+<meta property="og:description" content="Dès 4 mois, sans sucre ajouté, sans colorant ni conservateur. Fabriqué en Côte d'Ivoire, livré chez vous.">
+<meta property="og:image" content="https://boutiquecreal.com/imgs/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="C'Real, farines infantiles 100% naturelles">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="C'Real — Farines infantiles 100% naturelles">
+<meta name="twitter:description" content="Dès 4 mois, sans sucre ajouté, sans colorant ni conservateur. Fabriqué en Côte d'Ivoire, livré chez vous.">
+<meta name="twitter:image" content="https://boutiquecreal.com/imgs/og.jpg">
+
+<link rel="canonical" href="https://boutiquecreal.com/">
+<link rel="icon" type="image/png" sizes="32x32" href="imgs/favicon-32.png">
+<link rel="apple-touch-icon" href="imgs/icone-180.png">
+<meta name="theme-color" content="#1A1714">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -56,7 +81,7 @@ h1,h2,h3 { font-family: 'Sora', system-ui, sans-serif; }
   flex-shrink: 0;
 }
 .header-text h1 { font-size: 17px; font-weight: 700; }
-.header-text p { font-size: 11px; opacity: 0.7; margin-top: 1px; }
+.header-text p { font-size: 14px; opacity: 0.7; margin-top: 1px; }
 
 /* Main */
 main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
@@ -77,7 +102,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
   flex: 1; padding: 10px 4px 8px;
   border: none; background: none; cursor: pointer;
   display: flex; flex-direction: column; align-items: center; gap: 3px;
-  color: var(--muted); font-size: 10px; font-weight: 600;
+  color: var(--muted); font-size: 12px; font-weight: 600;
   position: relative;
   transition: color 0.15s;
 }
@@ -86,8 +111,8 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
 .badge {
   position: absolute; top: 6px; right: calc(50% - 20px);
   background: var(--orange); color: #fff;
-  border-radius: 10px; font-size: 9px; font-weight: 700;
-  min-width: 16px; height: 16px;
+  border-radius: 10px; font-size: 12px; font-weight: 700;
+  min-width: 20px; height: 20px;
   display: none; align-items: center; justify-content: center;
   padding: 0 4px;
 }
@@ -108,12 +133,12 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
   border-radius: 50%;
 }
 .hero h2 { font-size: 22px; margin-bottom: 6px; position: relative; }
-.hero p { font-size: 12px; opacity: 0.75; line-height: 1.55; position: relative; }
+.hero p { font-size: 16px; opacity: 0.75; line-height: 1.55; position: relative; }
 .pills { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
 .pill {
   background: rgba(255,255,255,0.1);
   border: 1px solid rgba(255,255,255,0.2);
-  color: #fff; font-size: 10px; font-weight: 600;
+  color: #fff; font-size: 13px; font-weight: 600;
   padding: 4px 10px; border-radius: 20px;
 }
 .pill.gold { background: rgba(242,163,61,0.2); border-color: rgba(242,163,61,0.4); color: var(--orange); }
@@ -124,14 +149,20 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
   border-radius: var(--r);
   overflow: hidden;
   box-shadow: 0 2px 10px rgba(26,23,20,0.07);
+  /* Colonne souple : le pied de carte est poussé en bas, donc les prix et
+     les boutons d'ajout restent alignés même si une description est plus longue. */
+  display: flex;
+  flex-direction: column;
 }
 .card.wide { grid-column: 1 / -1; }
 .card.featured { border: 1.5px solid rgba(242,163,61,0.4); }
 
 .card-img {
-  width: 100%; aspect-ratio: 2/3;
+  width: 100%; height: auto; aspect-ratio: 2/3;
   object-fit: cover; object-position: center top;
 }
+/* height:auto est obligatoire dès qu'on pose width/height en attributs sur l'image :
+   sans lui, l'attribut height s'applique tel quel et la vignette part à 1350 px. */
 /* Logo image */
 .logo-wrap {
   width: 90px; height: 36px;
@@ -161,7 +192,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
 .modal-img-wrap img { width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: center top; }
 .modal-close {
   position: absolute; top: 12px; right: 12px;
-  width: 32px; height: 32px;
+  width: 44px; height: 44px;
   background: rgba(0,0,0,0.4); border: none; border-radius: 50%;
   color: #fff; font-size: 20px; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
@@ -174,11 +205,11 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
   padding: 10px 6px; text-align: center;
 }
 .modal-stat-val { font-size: 16px; font-weight: 800; font-family: 'Sora', sans-serif; color: var(--brand); }
-.modal-stat-lbl { font-size: 9px; color: var(--muted); margin-top: 2px; }
+.modal-stat-lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
 .modal-prep-box {
   background: #FFF8EE; border-left: 3px solid var(--orange);
   border-radius: 0 8px 8px 0; padding: 10px 14px;
-  margin-bottom: 16px; font-size: 11.5px; color: #7A5200; line-height: 1.6;
+  margin-bottom: 16px; font-size: 15px; color: #7A5200; line-height: 1.6;
 }
 .modal-add-btn {
   width: 100%; background: var(--brand); color: #fff;
@@ -187,21 +218,24 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
   cursor: pointer; transition: background .15s;
 }
 .modal-add-btn:active { background: var(--orange); }
-.card-body { padding: 10px 12px 12px; }
+.card-body { padding: 10px 12px 12px; flex: 1; display: flex; flex-direction: column; }
 .card-tag {
   display: inline-block;
+  /* Le corps de carte est un conteneur flex : sans ça, la pastille s'étire
+     sur toute la largeur au lieu de se limiter à son texte. */
+  align-self: flex-start;
   background: rgba(242,163,61,0.14); color: #9c5e15;
-  font-size: 10px; font-weight: 700;
+  font-size: 13px; font-weight: 700;
   padding: 2px 8px; border-radius: 20px;
   margin-bottom: 5px;
 }
-.card-name { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; margin-bottom: 3px; line-height: 1.3; }
-.card-desc { font-size: 11px; color: var(--muted); line-height: 1.4; margin-bottom: 8px; }
-.card-footer { display: flex; align-items: center; justify-content: space-between; }
-.price { font-size: 14px; font-weight: 700; }
-.price small { font-size: 10px; font-weight: 500; color: var(--muted); }
+.card-name { font-family: 'Sora', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 3px; line-height: 1.3; }
+.card-desc { font-size: 15px; color: var(--muted); line-height: 1.4; margin-bottom: 8px; }
+.card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 8px; }
+.price { font-size: 18px; font-weight: 700; }
+.price small { font-size: 13px; font-weight: 500; color: var(--muted); }
 .add-btn {
-  width: 32px; height: 32px;
+  width: 44px; height: 44px;
   background: var(--orange); color: #fff;
   border: none; border-radius: 50%;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -212,7 +246,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
 .add-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 .qty-controls { display: flex; align-items: center; gap: 6px; }
 .qbtn-sm {
-  width: 28px; height: 28px;
+  width: 44px; height: 44px;
   border: 1.5px solid var(--border); background: var(--white);
   border-radius: 50%; cursor: pointer; color: var(--brand);
   display: flex; align-items: center; justify-content: center;
@@ -220,10 +254,10 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
 }
 .qbtn-sm:active { opacity: 0.7; }
 .qbtn-sm svg { width: 12px; height: 12px; }
-.qval-sm { font-size: 15px; font-weight: 800; min-width: 22px; text-align: center; font-family: 'Sora', sans-serif; color: var(--brand); }
+.qval-sm { font-size: 17px; font-weight: 800; min-width: 22px; text-align: center; font-family: 'Sora', sans-serif; color: var(--brand); }
 .qty-tag {
   background: rgba(26,23,20,0.08);
-  color: var(--brand); font-size: 10px; font-weight: 700;
+  color: var(--brand); font-size: 13px; font-weight: 700;
   padding: 3px 8px; border-radius: 6px;
   display: none;
 }
@@ -242,7 +276,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
   max-width: 82%;
   padding: 10px 14px;
   border-radius: 16px;
-  font-size: 13.5px; line-height: 1.55;
+  font-size: 16px; line-height: 1.55;
   white-space: pre-wrap;
 }
 .msg.bot {
@@ -282,11 +316,11 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
 .chat-input {
   flex: 1; border: none; background: var(--white);
   padding: 10px 14px; border-radius: 22px;
-  font-size: 14px; font-family: 'Inter', sans-serif;
+  font-size: 16px; font-family: 'Inter', sans-serif;
   outline: none; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
 .send-btn {
-  width: 40px; height: 40px;
+  width: 44px; height: 44px;
   background: var(--orange); color: #fff;
   border: none; border-radius: 50%;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -299,13 +333,13 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
   text-align: center; padding: 60px 20px; color: var(--muted);
 }
 .empty svg { width: 48px; height: 48px; opacity: 0.25; margin-bottom: 14px; display: block; margin-inline: auto; }
-.empty p { font-size: 14px; line-height: 1.55; }
+.empty p { font-size: 16px; line-height: 1.55; }
 .empty button {
   margin-top: 16px;
   padding: 10px 20px;
   background: var(--brand); color: #fff;
   border: none; border-radius: 10px;
-  font-size: 13px; font-weight: 600; cursor: pointer;
+  font-size: 15px; font-weight: 600; cursor: pointer;
 }
 .cart-item {
   background: var(--white); border-radius: var(--r);
@@ -314,23 +348,23 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
   margin-bottom: 8px;
   box-shadow: 0 1px 6px rgba(26,23,20,0.06);
 }
-.ci-name { font-size: 13px; font-weight: 600; }
-.ci-price { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.ci-name { font-size: 16px; font-weight: 600; }
+.ci-price { font-size: 14px; color: var(--muted); margin-top: 2px; }
 .qty-ctrl { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .qbtn {
-  width: 26px; height: 26px;
+  width: 44px; height: 44px;
   border: 1.5px solid var(--border);
   background: none; border-radius: 6px;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
 }
 .qbtn svg { width: 12px; height: 12px; }
-.qval { font-size: 14px; font-weight: 700; min-width: 20px; text-align: center; }
+.qval { font-size: 16px; font-weight: 700; min-width: 20px; text-align: center; }
 .total-block {
   background: var(--brand); border-radius: var(--r);
   padding: 18px; margin-top: 16px; color: #fff;
 }
 .total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-.total-label { font-size: 13px; opacity: 0.75; }
+.total-label { font-size: 15px; opacity: 0.75; }
 .total-amount { font-size: 24px; font-weight: 800; font-family: 'Sora', sans-serif; }
 .wa-btn {
   display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -344,7 +378,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
 .wa-btn:active { opacity: 0.85; }
 .wa-btn svg { width: 20px; height: 20px; }
 .notice {
-  text-align: center; font-size: 11px;
+  text-align: center; font-size: 13px;
   color: rgba(255,255,255,0.6); margin-top: 10px;
 }
 /* ── PAIEMENT ── */
@@ -357,7 +391,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
   transition: opacity .15s;
 }
 .pay-btn:active { opacity: 0.82; }
-.pay-btn small { font-size: 9.5px; font-weight: 500; opacity: 0.9; }
+.pay-btn small { font-size: 12px; font-weight: 500; opacity: 0.9; }
 .pay-btn.wave { background: #00B9F1; }
 .pay-btn.om   { background: #FF6600; }
 .pay-modal {
@@ -376,7 +410,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
 }
 .pay-sheet-title { font-size: 17px; font-weight: 800; font-family: 'Sora', sans-serif; }
 .pay-close-btn {
-  width: 32px; height: 32px; border: none;
+  width: 44px; height: 44px; border: none;
   background: rgba(0,0,0,0.08); border-radius: 50%;
   font-size: 20px; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
@@ -386,7 +420,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
   padding: 14px; text-align: center; margin-bottom: 16px;
 }
 .pay-amount-val { font-size: 28px; font-weight: 800; font-family: 'Sora', sans-serif; }
-.pay-amount-lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.pay-amount-lbl { font-size: 14px; color: var(--muted); margin-top: 2px; }
 .pay-num-row {
   display: flex; align-items: center; gap: 10px;
   background: #f5f5f5; border-radius: 10px; padding: 12px 14px;
@@ -396,13 +430,13 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
 .copy-btn {
   background: var(--brand); color: #fff;
   border: none; border-radius: 8px;
-  padding: 7px 13px; font-size: 12px; font-weight: 700; cursor: pointer;
+  padding: 7px 13px; font-size: 15px; font-weight: 700; cursor: pointer;
 }
 .pay-steps {
   background: #FFF8EE; border-left: 3px solid var(--orange);
   border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 16px;
 }
-.pay-steps p { font-size: 12px; color: #7A5200; line-height: 1.9; }
+.pay-steps p { font-size: 15px; color: #7A5200; line-height: 1.9; }
 .wave-link-btn {
   display: flex; align-items: center; justify-content: center; gap: 10px;
   width: 100%; background: #00B9F1; color: #fff;
@@ -421,11 +455,11 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
   padding-bottom: 14px; margin-bottom: 14px;
   border-bottom: 1px solid var(--border);
 }
-.receipt-label { font-size: 13px; color: var(--muted); }
+.receipt-label { font-size: 15px; color: var(--muted); }
 .receipt-amount { font-size: 24px; font-weight: 800; font-family: 'Sora', sans-serif; }
 .receipt-note {
   display: flex; align-items: flex-start; gap: 7px;
-  font-size: 11.5px; color: var(--muted); margin-bottom: 7px; line-height: 1.4;
+  font-size: 14px; color: var(--muted); margin-bottom: 7px; line-height: 1.4;
 }
 .om-paid-btn {
   width: 100%; background: none; border: 1.5px solid #FF6600; color: #FF6600;
@@ -435,21 +469,21 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
 .next-steps-box {
   background: var(--cream); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px;
 }
-.next-steps-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; font-family: 'Sora', sans-serif; }
+.next-steps-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; font-family: 'Sora', sans-serif; }
 .next-step {
   display: flex; align-items: flex-start; gap: 10px;
-  font-size: 12px; line-height: 1.5; margin-bottom: 8px; color: var(--brand);
+  font-size: 15px; line-height: 1.5; margin-bottom: 8px; color: var(--brand);
 }
 .step-num {
-  width: 20px; height: 20px; background: var(--orange); color: #fff;
-  border-radius: 50%; font-size: 11px; font-weight: 700;
+  width: 24px; height: 24px; background: var(--orange); color: #fff;
+  border-radius: 50%; font-size: 13px; font-weight: 700;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .form-group { margin-bottom: 14px; }
-.form-label { display: block; font-size: 12px; font-weight: 600; color: var(--brand); margin-bottom: 6px; }
+.form-label { display: block; font-size: 14px; font-weight: 600; color: var(--brand); margin-bottom: 6px; }
 .form-input {
   width: 100%; border: 1.5px solid var(--border); border-radius: 10px;
-  padding: 12px 14px; font-size: 14px; font-family: 'Inter', sans-serif;
+  padding: 12px 14px; font-size: 16px; font-family: 'Inter', sans-serif;
   outline: none; transition: border-color .15s; color: var(--brand); background: #fff;
 }
 .form-input:focus { border-color: var(--orange); }
@@ -460,12 +494,38 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
 #memory-banner.visible {
   display: flex; align-items: center; justify-content: space-between;
   background: #FFF8EE; border-bottom: 1px solid rgba(242,163,61,0.2);
-  padding: 8px 20px; font-size: 12px; color: #7A5200;
+  padding: 8px 20px; font-size: 14px; color: #7A5200;
 }
 #memory-banner button {
   background: none; border: none; color: #9c5e15;
-  font-size: 11px; font-weight: 600; cursor: pointer; text-decoration: underline;
+  font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: underline;
   flex-shrink: 0; margin-left: 12px;
+}
+
+/* ── ÉCRANS LARGES ──────────────────────────────────────────────────────────
+   La boutique est pensée pour le téléphone. Sur un ordinateur, plutôt que de
+   laisser une colonne étroite flotter sur du vide, on l'assume : fond sombre
+   de la charte, colonne posée dessus avec une ombre. Le format devient un
+   parti pris au lieu d'un accident. */
+@media (min-width: 700px) {
+  html {
+    background: radial-gradient(120% 90% at 50% 0%, #2a231d 0%, #141210 60%);
+    min-height: 100%;
+  }
+  body {
+    height: min(calc(100dvh - 48px), 900px);
+    margin-block: 24px;
+    margin-inline: auto;
+    border-radius: 24px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+  }
+  .header { border-radius: 24px 24px 0 0; }
+  .bottom-nav { border-radius: 0 0 24px 24px; }
+}
+
+/* Respect du réglage système « animations réduites ». */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 </style>
 </head>
@@ -550,7 +610,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
     <div class="modal-body">
       <span class="card-tag" id="modal-tag"></span>
       <h2 style="font-size:20px;font-weight:800;margin:8px 0 6px;font-family:'Sora',sans-serif;" id="modal-name"></h2>
-      <p style="font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:14px;" id="modal-detail"></p>
+      <p style="font-size:16px;color:var(--muted);line-height:1.65;margin-bottom:14px;" id="modal-detail"></p>
       <div class="modal-stats">
         <div class="modal-stat"><div class="modal-stat-val" id="modal-kcal"></div><div class="modal-stat-lbl">Kcal/100g</div></div>
         <div class="modal-stat"><div class="modal-stat-val" id="modal-weight"></div><div class="modal-stat-lbl">Poids net</div></div>
@@ -562,7 +622,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
       </div>
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
         <span style="font-size:20px;font-weight:800;font-family:'Sora',sans-serif;" id="modal-price"></span>
-        <span style="font-size:11px;color:var(--muted);">/ paquet 200g</span>
+        <span style="font-size:14px;color:var(--muted);">/ paquet 200g</span>
       </div>
       <button class="modal-add-btn" id="modal-add-btn" onclick="addFromModal()">Ajouter au panier</button>
     </div>
@@ -579,7 +639,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
 
     <!-- ÉTAPE 1 : Contact -->
     <div id="pay-step-contact">
-      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5;">Pour que Kezey puisse confirmer et livrer votre commande :</p>
+      <p style="font-size:15px;color:var(--muted);margin-bottom:16px;line-height:1.5;">Pour que Kezey puisse confirmer et livrer votre commande :</p>
       <div class="form-group">
         <label class="form-label">Prénom</label>
         <input type="text" id="client-name" class="form-input" placeholder="Votre prénom" autocomplete="given-name">
@@ -612,7 +672,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
       </div>
       <!-- Section Orange Money -->
       <div id="pay-om-section" style="display:none;">
-        <p style="font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:600;">Numéro du bénéficiaire</p>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:8px;font-weight:600;">Numéro du bénéficiaire</p>
         <div class="pay-num-row">
           <span class="pay-num">+225 07 58 68 02 79</span>
           <button class="copy-btn" id="copy-btn" onclick="copyNumber()">Copier</button>
@@ -632,7 +692,7 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Envoyer ma capture à Kezey
         </button>
-        <p style="text-align:center;font-size:10px;color:var(--muted);margin-top:8px;">Joignez votre capture d'écran + adresse dans le message WhatsApp</p>
+        <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:8px;">Joignez votre capture d'écran + adresse dans le message WhatsApp</p>
       </div>
     </div>
 
@@ -666,25 +726,31 @@ function forgetMe() {
 
 const SUPABASE = 'https://lgdgbrivnhgeupqhkckd.supabase.co';
 const ANON    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
-const KEZEY   = '2250758680279';
+// WhatsApp de Kezey, celui sur lequel elle reçoit les commandes.
+// Ne pas confondre avec le +225 07 58 68 02 79, qui est son Orange Money
+// et qui n'apparaît que comme numéro bénéficiaire à l'étape du paiement.
+const KEZEY   = '2250749563976';
+// Version lisible du MÊME numéro, dérivée et jamais recopiée à la main :
+// c'est la recopie qui avait fait diverger le bouton de commande et ce message.
+const KEZEY_LISIBLE = '+' + KEZEY.slice(0, 3) + ' ' + KEZEY.slice(3).replace(/(\d{2})(?=\d)/g, '$1 ');
 
 const PRODUCTS = [
-  { id:1, name:"Mix C'real",    tag:"Bestseller",  price:1500, img:"imgs/mix.png",    kcal:365, weight:"200g", prep:"5-10 min",
+  { id:1, name:"Mix C'real",    tag:"Bestseller",  price:1500, img:"imgs/mix.jpg",    kcal:365, weight:"200g", prep:"5-10 min",
     desc:"Riz · Maïs · Sorgho — Énergie & immunité",
     detail:"Source d'énergie naturelle composée de riz, maïs et sorgho. Riche en fer, calcium, magnésium et vitamines, il soutient l'immunité et la croissance de bébé dès 4 mois." },
-  { id:2, name:"Multi C'real",  tag:"Complet",     price:1500, img:"imgs/multi.png",  kcal:365, weight:"200g", prep:"5-10 min",
+  { id:2, name:"Multi C'real",  tag:"Complet",     price:1500, img:"imgs/multi.jpg",  kcal:365, weight:"200g", prep:"5-10 min",
     desc:"Riz · Maïs · Sorgho · Soja — Mélange complet",
     detail:"Mélange de riz, maïs, sorgho et soja, enrichi en nutriments essentiels. Riche en calories, protéines et micronutriments pour une croissance complète et équilibrée." },
-  { id:3, name:"C'real Sorgho", tag:"Sans gluten", price:1500, img:"imgs/sorgho.png", kcal:339, weight:"200g", prep:"5-10 min",
+  { id:3, name:"C'real Sorgho", tag:"Sans gluten", price:1500, img:"imgs/sorgho.jpg", kcal:339, weight:"200g", prep:"5-10 min",
     desc:"Sans gluten · Protéines · Anti-diarrhée",
     detail:"Farine de sorgho sans gluten, riche en protéines, fibres, vitamines et minéraux. Favorise une bonne digestion, solidifie les os et renforce le système immunitaire. Recommandée en cas de diarrhée." },
-  { id:4, name:"C'real Maïs",   tag:"Sans gluten", price:1000, img:"imgs/mais.png",   kcal:365, weight:"200g", prep:"5-10 min",
+  { id:4, name:"C'real Maïs",   tag:"Sans gluten", price:1000, img:"imgs/mais.jpg",   kcal:365, weight:"200g", prep:"5-10 min",
     desc:"Sans gluten · Antioxydant · Vitamines B3",
     detail:"Farine de maïs à fort pouvoir antioxydant, source de fibres et protéines. Sans gluten, excellente source de glucides complexes et de vitamines B3 pour l'énergie de bébé." },
-  { id:5, name:"C'real Riz",    tag:"Digeste",     price:1500, img:"imgs/riz.png",    kcal:336, weight:"200g", prep:"5-10 min",
+  { id:5, name:"C'real Riz",    tag:"Digeste",     price:1500, img:"imgs/riz.jpg",    kcal:336, weight:"200g", prep:"5-10 min",
     desc:"Sans gluten · Digeste · Anti-constipation",
     detail:"Farine de riz sans gluten, digeste et au goût neutre. Excellente source d'énergie grâce aux glucides, vitamines B et minéraux (potassium, phosphore). Idéale contre la constipation." },
-  { id:6, name:"C'real Mil",    tag:"Minéraux",    price:1000, img:"imgs/mil.png",    kcal:377, weight:"200g", prep:"5-10 min",
+  { id:6, name:"C'real Mil",    tag:"Minéraux",    price:1000, img:"imgs/mil.jpg",    kcal:377, weight:"200g", prep:"5-10 min",
     desc:"Sans gluten · Magnésium · Fer · Zinc",
     detail:"Farine de mil sans gluten, source de protéines, glucides, magnésium (140mg), fer (4,5mg), zinc et vitamines B. Le silicium favorise une belle peau, des cheveux sains et des ongles solides." },
   { id:7, name:"Kit prise de poids", tag:"Bundle", price:5000, img:"imgs/kit.jpeg?v=2", kcal:365, weight:"4×200g", prep:"5-10 min",
@@ -698,12 +764,12 @@ const PRODUCTS = [
 const cart = {};
 
 function renderProducts() {
-  document.getElementById('products-grid').innerHTML = PRODUCTS.map(p => {
+  document.getElementById('products-grid').innerHTML = PRODUCTS.map((p, i) => {
     const qty = cart[p.id] || 0;
     const clickable = p.detail ? `onclick="openModal(${p.id})" style="cursor:pointer"` : '';
     return `
     <div class="card${p.wide ? ' wide' : ''}" ${clickable}>
-      <img class="card-img" src="${p.img}" alt="${p.name}">
+      <img class="card-img" src="${p.img}" alt="${p.name}" width="900" height="1350" decoding="async" loading="${i < 2 ? 'eager' : 'lazy'}">
       <div class="card-body">
         ${p.tag ? `<span class="card-tag">${p.tag}</span>` : ''}
         <div class="card-name">${p.name}</div>
@@ -712,7 +778,7 @@ function renderProducts() {
           <div class="price">${p.price.toLocaleString('fr-FR')} <small>FCFA</small></div>
           <div class="qty-controls" id="qc-${p.id}">${qcHTML(p.id)}</div>
         </div>
-        ${p.detail ? `<div style="font-size:10px;color:var(--muted);margin-top:4px;text-align:center;">Appuyer pour les détails</div>` : ''}
+        ${p.detail ? `<div style="font-size:13px;color:var(--muted);margin-top:4px;text-align:center;">Appuyer pour les détails</div>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -840,7 +906,7 @@ function renderCart() {
           Orange Money
         </button>
       </div>
-      <p style="text-align:center;font-size:10.5px;color:var(--muted);margin-top:10px;">Commande confirmée après réception du paiement</p>
+      <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:10px;">Commande confirmée après réception du paiement</p>
     </div>`;
 }
 
@@ -1021,7 +1087,7 @@ async function send() {
     typing.style.display = 'none';
     const eBubble = document.createElement('div');
     eBubble.className = 'msg bot';
-    eBubble.textContent = "Désolé, je rencontre un problème. Écrivez directement à Kezey sur WhatsApp au +225 07 49 56 39 76.";
+    eBubble.textContent = "Désolé, je rencontre un problème. Écrivez directement à Kezey sur WhatsApp au " + KEZEY_LISIBLE + ".";
     area.appendChild(eBubble);
     area.scrollTop = area.scrollHeight;
   }
