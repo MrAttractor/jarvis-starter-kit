@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | attente client |
+| Dernier contact | 2026-07-30 |
+| Prochaine action | Relancer pour son retour, et obtenir prénom, WhatsApp, vrais tarifs et dimensions |
+| Échéance | — |
+| Argent en attente | 490 € à vendre |
+
 ## En une phrase
 
 Maquette de closing livrée le 30/07, **en attente de son retour**. Elle n'a pas encore

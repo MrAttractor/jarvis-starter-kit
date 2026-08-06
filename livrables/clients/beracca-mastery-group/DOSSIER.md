@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | à relancer |
+| Dernier contact | 2026-06-17 |
+| Prochaine action | Relancer, ou fermer explicitement le dossier |
+| Échéance | — |
+| Argent en attente | 100 000 FCFA de lancement, rien encaissé |
+
 ## En une phrase
 
 Documents envoyés le 17/06. **En attente de la cliente et du versement de lancement.

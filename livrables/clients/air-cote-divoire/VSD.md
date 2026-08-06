@@ -8,6 +8,16 @@
 
 ---
 
+| Radar | |
+|---|---|
+| Statut | à relancer |
+| Dernier contact | 2026-07-22 |
+| Prochaine action | Répondre à Hermance Alloh (Hervé Abou en copie) et lancer le recrutement du vivier avec Jean Yves |
+| Échéance | 2026-08-12 |
+| Argent en attente | 100 € par voyageur, rien encaissé |
+
+---
+
 ## 1. Ce qu'on vend, en une phrase
 
 **Un aller-retour Paris-Abidjan de 72 heures, à prix réduit, avec une grosse franchise bagage, pour des gens qui vont chercher de la marchandise et la rapportent eux-mêmes.**

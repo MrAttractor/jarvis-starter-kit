@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | en production |
+| Dernier contact | 2026-06-03 |
+| Prochaine action | Confirmer le solde de 100 € et l'encaissement réel du mensuel |
+| Échéance | — |
+| Argent en attente | 100 € de solde, plus 50 €/mois à vérifier |
+
 ## En une phrase
 
 Livré et en production sur `jenvoiexpress.com` depuis juin. Jean Yves est autonome sur

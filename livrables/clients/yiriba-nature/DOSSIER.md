@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | à relancer |
+| Dernier contact | 2026-07-16 |
+| Prochaine action | Obtenir son montant sans rien proposer avant, et décider du sort du devis expiré |
+| Échéance | — |
+| Argent en attente | 800 €, rien encaissé |
+
 ## En une phrase
 
 Deal closé le 16/07, puis **rouvert par la cliente le jour même** : elle dit ne pas avoir

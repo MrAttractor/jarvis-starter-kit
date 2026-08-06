@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | à relancer |
+| Dernier contact | 2026-07-11 |
+| Prochaine action | Obtenir d'Emmanuel le cadrage du coaching Awa, puis envoyer le document d'échange |
+| Échéance | — |
+| Argent en attente | forfait technique 80 €, et la contrepartie coaching non formalisée |
+
 ## En une phrase
 
 Site livré et en production sur `aicreatioon.com`, Emmanuel est devenu autonome sur son

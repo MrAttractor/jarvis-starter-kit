@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | infrastructure |
+| Dernier contact | — |
+| Prochaine action | Rien d'urgent, c'est de l'hébergement mutualisé |
+| Échéance | — |
+| Argent en attente | — |
+
 ## Ce que c'est
 
 **Ce n'est pas un client.** C'est l'hébergement mutualisé de tous les mini-sites de

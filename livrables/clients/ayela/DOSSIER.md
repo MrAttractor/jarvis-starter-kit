@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | en production |
+| Dernier contact | 2026-08-05 |
+| Prochaine action | Vérifier le solde de 15 000 F et récupérer la vidéo témoignage |
+| Échéance | 2026-08-08 |
+| Argent en attente | 15 000 FCFA, plus la vidéo témoignage jamais encaissée |
+
 ## En une phrase
 
 Livré et en production sur `lamaisonayela.com`. Lorraine est autonome sur son

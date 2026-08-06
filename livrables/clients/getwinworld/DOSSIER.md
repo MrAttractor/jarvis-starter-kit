@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | en production |
+| Dernier contact | 2026-07-11 |
+| Prochaine action | Récupérer les 11,86 € et vérifier que l'abonnement à 35 €/mois tourne |
+| Échéance | — |
+| Argent en attente | 11,86 €, plus 35 €/mois à vérifier |
+
 ## En une phrase
 
 Client actif, livré et en production sur `getwinworld.net`. Facture réglée,

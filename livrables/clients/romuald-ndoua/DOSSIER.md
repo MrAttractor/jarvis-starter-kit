@@ -2,6 +2,14 @@
 
 > Révision du 02/08/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | à trancher |
+| Dernier contact | 2026-08-02 |
+| Prochaine action | Clarifier le deal avant d'y remettre du temps, et demander le lien exact mis dans sa publicité |
+| Échéance | — |
+| Argent en attente | rien de tracé |
+
 ## En une phrase
 
 Landing et assistante IA en ligne depuis le 14/07, **trafic mesuré depuis le 02/08**.

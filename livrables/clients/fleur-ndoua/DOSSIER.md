@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | à trancher |
+| Dernier contact | 2026-07-11 |
+| Prochaine action | Décider : relancer sur le consulting seul, ou fermer le dossier |
+| Échéance | — |
+| Argent en attente | 150 à 800 € (consulting) |
+
 ## En une phrase
 
 Prospect entré le 11/07. **Le devis est resté à l'état de brouillon et n'a jamais été

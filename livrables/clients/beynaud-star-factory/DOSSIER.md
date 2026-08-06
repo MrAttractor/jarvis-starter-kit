@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | à relancer |
+| Dernier contact | 2026-07-01 |
+| Prochaine action | Relancer Latiss sur le protocole d'accord, rien ne se monétise avant |
+| Échéance | — |
+| Argent en attente | non chiffré, plateforme livrée sans contrepartie signée |
+
 ## En une phrase
 
 La plateforme **La Beynaumania** est construite et en production, gratuite, à remplir de

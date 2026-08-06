@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | à relancer |
+| Dernier contact | 2026-06-18 |
+| Prochaine action | Relancer avec les 3 éléments manquants et une échéance ferme |
+| Échéance | 2026-09-01 |
+| Argent en attente | rien de convenu |
+
 ## En une phrase
 
 Note stratégique envoyée le 18/06. **En attente de retour depuis six semaines.**

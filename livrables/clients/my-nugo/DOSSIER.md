@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | à trancher |
+| Dernier contact | 2026-08-02 |
+| Prochaine action | Clarifier ce qui a été facturé, puis décider si on finit la bascule en base |
+| Échéance | — |
+| Argent en attente | rien de tracé |
+
 ## En une phrase
 
 Boutique en production sur `mynugo.store`. **Elle tourne sur un catalogue écrit en dur

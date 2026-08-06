@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | à relancer |
+| Dernier contact | 2026-06-23 |
+| Prochaine action | Envoyer l'état des lieux à Jean-Calvin Ethien et obtenir les 8 réponses écrites |
+| Échéance | — |
+| Argent en attente | rien de chiffré, rien de signé |
+
 ## En une phrase
 
 Partenariat en revenue-sharing où Mac Arthur anime des Sprints IA.

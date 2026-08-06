@@ -2,6 +2,14 @@
 
 > Révision du 05/08/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | en production |
+| Dernier contact | 2026-08-05 |
+| Prochaine action | Traiter le sujet éditorial avec Andréa, et clarifier ce qui a été facturé |
+| Échéance | — |
+| Argent en attente | rien de tracé |
+
 ## En une phrase
 
 Site en production sur `viescroiseesci.com`, Andréa est autonome. **Le vrai sujet n'est

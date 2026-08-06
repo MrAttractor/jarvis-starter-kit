@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | en cours |
+| Dernier contact | 2026-07-15 |
+| Prochaine action | Recruter 3 utilisateurs en test accompagné et regarder précisément où ils décrochent |
+| Échéance | — |
+| Argent en attente | — |
+
 ## En une phrase
 
 **Le produit est réparé, il n'est pas rempli.** Le tunnel s'enchaîne enfin de bout en
@@ -70,6 +78,17 @@ mai ne reviendront pas d'eux-mêmes.
 
 C'est un travail de terrain, pas de code. Tant qu'il n'est pas fait, ajouter des
 fonctionnalités ne sert à rien.
+
+## Chantiers ouverts
+
+Ils vivent sous ce produit et n'ont pas de dossier propre. **Sans cette liste, ils
+n'apparaissent nulle part.**
+
+| Chantier | État | Prochaine action |
+|---|---|---|
+| **Cockpit Pilotage** | en place et peuplé | Brancher la signature sur le pipeline, pour qu'un document signé déclenche le reçu |
+| **Roland V2** (coach + discipline) | cadré dans `../notes/CADRAGE-ROLAND-V2.md` | Construire les actions et les rendez-vous d'agenda |
+| **Correctifs V3** | liste à préciser | Simplifier `agentGating.js` |
 
 ## Les documents du dossier
 

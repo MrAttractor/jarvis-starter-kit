@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | bloqué |
+| Dernier contact | 2026-07-06 |
+| Prochaine action | Qualifier le contact et faire signer le protocole avant toute ligne de code |
+| Échéance | — |
+| Argent en attente | non chiffré, partenariat en nature |
+
 ## En une phrase
 
 Partenariat en nature relancé le 06/07, conception posée. **Bloqué volontairement : le

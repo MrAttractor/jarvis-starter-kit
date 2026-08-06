@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | en production |
+| Dernier contact | 2026-08-04 |
+| Prochaine action | Corriger les deux manques révélés par la première signature réelle (`envoyer: false` et renvoi d'invitation) |
+| Échéance | — |
+| Argent en attente | — |
+
 ## En une phrase
 
 Signature électronique maison, en service depuis le 22/07. **0 € contre 9 à 25 €/mois

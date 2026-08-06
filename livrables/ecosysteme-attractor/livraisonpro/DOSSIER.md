@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | à trancher |
+| Dernier contact | 2026-07-13 |
+| Prochaine action | Retirer l'ancien Vercel, puis trancher : coup de commercial ou dormant assumé |
+| Échéance | — |
+| Argent en attente | — |
+
 ## En une phrase
 
 En ligne sur `livraisonpro.agenceattractor.com` depuis le 13/07, en **phase de

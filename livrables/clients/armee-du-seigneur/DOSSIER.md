@@ -2,6 +2,14 @@
 
 > Révision du 05/08/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | attente client |
+| Dernier contact | 2026-08-05 |
+| Prochaine action | Une seule relance groupée pour obtenir leurs contenus |
+| Échéance | — |
+| Argent en attente | aucun, c'est un don assumé |
+
 ## En une phrase
 
 **C'est un don de Mac Arthur à sa communauté**, pas une prestation facturée. Phase 1a

@@ -3,6 +3,14 @@
 > Créé le 04/08/2026. **Cette fiche est la première chose à lire du dossier.**
 > Un chiffre ou un statut n'existe qu'ici. S'il apparaît ailleurs, c'est une copie à vérifier.
 
+| Radar | |
+|---|---|
+| Statut | en cours |
+| Dernier contact | 2026-08-04 |
+| Prochaine action | Obtenir l'email ou le WhatsApp de Lorraine Yapi, puis envoyer le devis après validation |
+| Échéance | — |
+| Argent en attente | 490 à 1 790 € à vendre |
+
 ## En une phrase
 
 Demande entrante pour une **marketplace hybride** de produits agro-transformés ivoiriens :

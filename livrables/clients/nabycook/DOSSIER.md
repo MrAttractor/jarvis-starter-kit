@@ -2,6 +2,14 @@
 
 > Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
 
+| Radar | |
+|---|---|
+| Statut | attente client |
+| Dernier contact | 2026-07-31 |
+| Prochaine action | Obtenir ses textes, ses liens et sa charte éditoriale, et encaisser les 175 € avant de tourner |
+| Échéance | — |
+| Argent en attente | 175 € d'acompte |
+
 ## En une phrase
 
 Maquette de la Phase 1 livrée (5 pages) et retours intégrés. **En attente des textes,
