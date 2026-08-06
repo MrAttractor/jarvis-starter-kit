@@ -762,40 +762,67 @@ function forgetMe() {
 
 const SUPABASE = 'https://lgdgbrivnhgeupqhkckd.supabase.co';
 const ANON    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
+// La seule porte publique de la boutique. Elle a remplacé, le 06/08/2026, les
+// trois appels à Attractor Assists (get_catalogue, chat-assistant, save_order)
+// le jour où ce produit est passé en pause.
+const API = `${SUPABASE}/functions/v1/creal-public`;
+
+async function api(action, payload = {}) {
+  const res = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'apikey': ANON, 'Authorization': `Bearer ${ANON}` },
+    body: JSON.stringify({ action, ...payload }),
+  });
+  return res.json();
+}
+
 // WhatsApp de Kezey, celui sur lequel elle reçoit les commandes.
 // Ne pas confondre avec le +225 07 58 68 02 79, qui est son Orange Money
 // et qui n'apparaît que comme numéro bénéficiaire à l'étape du paiement.
-const KEZEY   = '2250749563976';
+// Valeur de repli : la vraie vient de cr_config au chargement. Si le réseau
+// tombe pendant que la page s'ouvre, le bouton de commande doit marcher quand
+// même, c'est le seul chemin qui fait vivre l'activité.
+let KEZEY = '2250749563976';
 // Version lisible du MÊME numéro, dérivée et jamais recopiée à la main :
 // c'est la recopie qui avait fait diverger le bouton de commande et ce message.
-const KEZEY_LISIBLE = '+' + KEZEY.slice(0, 3) + ' ' + KEZEY.slice(3).replace(/(\d{2})(?=\d)/g, '$1 ');
+// Une fonction et non une constante : le numéro arrive de la base après le
+// chargement, une constante calculée au démarrage afficherait l'ancien.
+function kezeyLisible() {
+  return '+' + KEZEY.slice(0, 3) + ' ' + KEZEY.slice(3).replace(/(\d{2})(?=\d)/g, '$1 ');
+}
 
-const PRODUCTS = [
-  { id:1, name:"Mix C'real",    tag:"Bestseller",  price:1500, img:"imgs/mix.jpg",    kcal:365, weight:"200g", prep:"5-10 min",
-    desc:"Riz · Maïs · Sorgho — Énergie & immunité",
-    detail:"Source d'énergie naturelle composée de riz, maïs et sorgho. Riche en fer, calcium, magnésium et vitamines, il soutient l'immunité et la croissance de bébé dès 4 mois." },
-  { id:2, name:"Multi C'real",  tag:"Complet",     price:1500, img:"imgs/multi.jpg",  kcal:365, weight:"200g", prep:"5-10 min",
-    desc:"Riz · Maïs · Sorgho · Soja — Mélange complet",
-    detail:"Mélange de riz, maïs, sorgho et soja, enrichi en nutriments essentiels. Riche en calories, protéines et micronutriments pour une croissance complète et équilibrée." },
-  { id:3, name:"C'real Sorgho", tag:"Sans gluten", price:1500, img:"imgs/sorgho.jpg", kcal:339, weight:"200g", prep:"5-10 min",
-    desc:"Sans gluten · Protéines · Anti-diarrhée",
-    detail:"Farine de sorgho sans gluten, riche en protéines, fibres, vitamines et minéraux. Favorise une bonne digestion, solidifie les os et renforce le système immunitaire. Recommandée en cas de diarrhée." },
-  { id:4, name:"C'real Maïs",   tag:"Sans gluten", price:1000, img:"imgs/mais.jpg",   kcal:365, weight:"200g", prep:"5-10 min",
-    desc:"Sans gluten · Antioxydant · Vitamines B3",
-    detail:"Farine de maïs à fort pouvoir antioxydant, source de fibres et protéines. Sans gluten, excellente source de glucides complexes et de vitamines B3 pour l'énergie de bébé." },
-  { id:5, name:"C'real Riz",    tag:"Digeste",     price:1500, img:"imgs/riz.jpg",    kcal:336, weight:"200g", prep:"5-10 min",
-    desc:"Sans gluten · Digeste · Anti-constipation",
-    detail:"Farine de riz sans gluten, digeste et au goût neutre. Excellente source d'énergie grâce aux glucides, vitamines B et minéraux (potassium, phosphore). Idéale contre la constipation." },
-  { id:6, name:"C'real Mil",    tag:"Minéraux",    price:1000, img:"imgs/mil.jpg",    kcal:377, weight:"200g", prep:"5-10 min",
-    desc:"Sans gluten · Magnésium · Fer · Zinc",
-    detail:"Farine de mil sans gluten, source de protéines, glucides, magnésium (140mg), fer (4,5mg), zinc et vitamines B. Le silicium favorise une belle peau, des cheveux sains et des ongles solides." },
-  { id:7, name:"Kit prise de poids", tag:"Bundle", price:5000, img:"imgs/kit.jpeg?v=2", kcal:365, weight:"4×200g", prep:"5-10 min",
-    desc:"Riz · Maïs · Mix C'real · Multicreal — Prise de poids",
-    detail:"Le kit comprend 4 farines locales sélectionnées pour booster rapidement la prise de poids de bébé : Riz, Maïs, Mix C'real et Multicreal. Idéal pour les bébés ayant besoin d'un apport calorique renforcé." },
-  { id:8, name:"Mes premières C'real", tag:"4-6 mois", price:1500, img:"imgs/premieres.jpg", kcal:339, weight:"300g", prep:"5-10 min",
-    desc:"Riz · Sorgho — Duo digeste pour bébé",
-    detail:"Un duo Riz et Sorgho, facile à digérer. Idéale pour les premières cuillères de bébé. Uniquement pour les débuts de diversification, 4 à 6 mois." },
-];
+// Liens de paiement, également remplacés par ceux de cr_config au chargement.
+let LIEN_WAVE = 'https://pay.wave.com/m/M_ci_1BZymigN-SjL/c/ci/';
+let NUMERO_OM = '+225 07 58 68 02 79';
+
+// Le catalogue vient de la base, plus du code.
+//
+// Avant le 06/08/2026, les fiches complètes vivaient en dur ici et Assists ne
+// synchronisait que le prix, par rapprochement approximatif sur le nom. Kezey
+// pouvait donc changer un prix, et rien d'autre : désactiver un produit ne le
+// retirait pas de la page. Depuis, cr_produits fait seule autorité, et ce
+// qu'elle modifie dans son tableau de bord se voit chez ses clientes.
+let PRODUCTS = [];
+
+/* Les noms de champs de la base sont traduits vers ceux qu'utilise déjà tout
+   l'affichage. Traduire à l'entrée plutôt que renommer partout : moins de
+   surface de casse sur une boutique qui tourne. */
+function versFiche(r) {
+  return {
+    id: r.id, name: r.nom, tag: r.etiquette, price: Number(r.prix),
+    img: r.photo_url || 'imgs/logo.jpeg', kcal: r.kcal, weight: r.poids,
+    prep: r.preparation, desc: r.description || '', detail: r.detail || '',
+  };
+}
+
+/* Échappement avant insertion en HTML. Le catalogue n'est modifiable que par
+   Kezey connectée, mais un nom de produit reste une donnée : on ne la
+   concatène pas brute dans du balisage. */
+function esc(v) {
+  return String(v ?? '').replace(/[&<>"']/g, c => (
+    { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
+  ));
+}
 
 const cart = {};
 
@@ -818,16 +845,20 @@ function inviteHTML() {
 }
 
 function renderProducts() {
+  const grid = document.getElementById('products-grid');
+  if (PRODUCTS.length === 0) {
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1;"><p>Chargement du catalogue…</p></div>`;
+    return;
+  }
   const cartes = PRODUCTS.map((p, i) => {
-    const qty = cart[p.id] || 0;
-    const clickable = p.detail ? `onclick="openModal(${p.id})" style="cursor:pointer"` : '';
+    const clickable = p.detail ? `onclick="openModal('${p.id}')" style="cursor:pointer"` : '';
     return `
-    <div class="card${p.wide ? ' wide' : ''}" ${clickable}>
-      <img class="card-img" src="${p.img}" alt="${p.name}" width="900" height="1350" decoding="async" loading="${i < 2 ? 'eager' : 'lazy'}">
+    <div class="card" ${clickable}>
+      <img class="card-img" src="${esc(p.img)}" alt="${esc(p.name)}" width="900" height="1350" decoding="async" loading="${i < 2 ? 'eager' : 'lazy'}">
       <div class="card-body">
-        ${p.tag ? `<span class="card-tag">${p.tag}</span>` : ''}
-        <div class="card-name">${p.name}</div>
-        <div class="card-desc">${p.desc}</div>
+        ${p.tag ? `<span class="card-tag">${esc(p.tag)}</span>` : ''}
+        <div class="card-name">${esc(p.name)}</div>
+        <div class="card-desc">${esc(p.desc)}</div>
         <div class="card-footer">
           <div class="price">${p.price.toLocaleString('fr-FR')} <small>FCFA</small></div>
           <div class="qty-controls" id="qc-${p.id}">${qcHTML(p.id)}</div>
@@ -836,8 +867,10 @@ function renderProducts() {
       </div>
     </div>`;
   });
-  cartes.splice(4, 0, inviteHTML());
-  document.getElementById('products-grid').innerHTML = cartes.join('');
+  // L'invitation à demander conseil se glisse après la quatrième farine, et
+  // seulement s'il y en a assez pour que le doute soit né en comparant.
+  cartes.splice(Math.min(4, cartes.length), 0, inviteHTML());
+  grid.innerHTML = cartes.join('');
 }
 
 let currentModalId = null;
@@ -871,9 +904,9 @@ function qcHTML(id) {
   const svgPlus = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
   const svgMinus = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
   if (qty === 0) {
-    return `<button class="add-btn" onclick="event.stopPropagation();add(${id})">${svgPlus}</button>`;
+    return `<button class="add-btn" onclick="event.stopPropagation();add('${id}')">${svgPlus}</button>`;
   }
-  return `<button class="qbtn-sm" onclick="event.stopPropagation();dec(${id})">${svgMinus}</button><span class="qval-sm">${qty}</span><button class="qbtn-sm" style="background:var(--orange);border-color:var(--orange);color:#fff;" onclick="event.stopPropagation();add(${id})">${svgPlus}</button>`;
+  return `<button class="qbtn-sm" onclick="event.stopPropagation();dec('${id}')">${svgMinus}</button><span class="qval-sm">${qty}</span><button class="qbtn-sm" style="background:var(--orange);border-color:var(--orange);color:#fff;" onclick="event.stopPropagation();add('${id}')">${svgPlus}</button>`;
 }
 
 function updateCardControls(id) {
@@ -921,25 +954,33 @@ function renderCart() {
       </div>`;
     return;
   }
-  const total = items.reduce((s,[id,q])=>s+PRODUCTS.find(p=>p.id==+id).price*q, 0);
-  const count = items.reduce((s,[,q])=>s+q, 0);
+  // Un produit retiré du catalogue par Kezey pendant qu'une cliente avait déjà
+  // son panier ouvert : on l'écarte au lieu de planter sur un `undefined`.
+  const connus = items.filter(([id]) => PRODUCTS.some(p => p.id === id));
+  if (connus.length !== items.length) {
+    items.filter(([id]) => !PRODUCTS.some(p => p.id === id)).forEach(([id]) => delete cart[id]);
+    updateBadge();
+    if (connus.length === 0) { renderCart(); return; }
+  }
+  const total = connus.reduce((s,[id,q])=>s+PRODUCTS.find(p=>p.id===id).price*q, 0);
+  const count = connus.reduce((s,[,q])=>s+q, 0);
   const svgClock = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
   const svgInfo  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
-  wrap.innerHTML = items.map(([id,qty])=>{
-    const p = PRODUCTS.find(p=>p.id==+id);
+  wrap.innerHTML = connus.map(([id,qty])=>{
+    const p = PRODUCTS.find(p=>p.id===id);
     return `
     <div class="cart-item">
-      <img src="${p.img}" alt="${p.name}" style="width:52px;height:52px;object-fit:cover;object-position:top;border-radius:10px;flex-shrink:0;">
+      <img src="${esc(p.img)}" alt="${esc(p.name)}" style="width:52px;height:52px;object-fit:cover;object-position:top;border-radius:10px;flex-shrink:0;">
       <div style="flex:1;min-width:0;">
-        <div class="ci-name">${p.name}</div>
+        <div class="ci-name">${esc(p.name)}</div>
         <div class="ci-price">${(p.price*qty).toLocaleString('fr-FR')} FCFA</div>
       </div>
       <div class="qty-ctrl">
-        <button class="qbtn" onclick="remove(${id})">
+        <button class="qbtn" onclick="remove('${id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
         <span class="qval">${qty}</span>
-        <button class="qbtn" onclick="addFromCart(${id})">
+        <button class="qbtn" onclick="addFromCart('${id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
       </div>
@@ -1034,7 +1075,7 @@ function closePay() {
 }
 
 function copyNumber() {
-  navigator.clipboard.writeText('+2250758680279').then(() => {
+  navigator.clipboard.writeText(NUMERO_OM.replace(/\s/g, '')).then(() => {
     const btn = document.getElementById('copy-btn');
     btn.textContent = 'Copié !';
     setTimeout(() => btn.textContent = 'Copier', 2000);
@@ -1044,28 +1085,25 @@ function copyNumber() {
 async function confirmPayWA() {
   const items = Object.entries(cart).filter(([,q])=>q>0);
   const lines = items.map(([id,qty])=>{
-    const p = PRODUCTS.find(p=>p.id==+id);
+    const p = PRODUCTS.find(p=>p.id===id);
     return `• ${p.name} x${qty} = ${(p.price*qty).toLocaleString('fr-FR')} FCFA`;
   }).join('\n');
   const methodLabel = _payMethod === 'wave' ? 'Wave Business' : 'Orange Money';
 
-  // Enregistrer la commande dans Assists (silencieux, n'empêche pas l'ouverture WA)
+  // Enregistrement dans le tableau de bord de Kezey. Silencieux et non
+  // bloquant : quoi qu'il arrive, WhatsApp doit s'ouvrir. Une commande perdue
+  // en base se rattrape, une cliente bloquée devant un bouton mort, non.
+  //
+  // On n'envoie que les identifiants et les quantités. Les prix sont recalculés
+  // côté serveur : un panier qui arrive du navigateur est un panier que le
+  // navigateur pourrait avoir réécrit.
   try {
-    const orderItems = items.map(([id,qty]) => {
-      const p = PRODUCTS.find(p=>p.id==+id);
-      return { nom: p.name, qty, prix_unit: p.price, total: p.price * qty };
-    });
-    await fetch(`${SUPABASE}/rest/v1/rpc/save_order`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': ANON, 'Authorization': `Bearer ${ANON}` },
-      body: JSON.stringify({
-        p_slug: 'creal',
-        p_client_name: _clientName,
-        p_client_wa: _clientPhone,
-        p_items: orderItems,
-        p_total_fcfa: _payTotal,
-        p_delivery_address: _clientAddress
-      })
+    await api('commande', {
+      client_nom: _clientName,
+      client_wa:  _clientPhone,
+      adresse:    _clientAddress,
+      moyen:      _payMethod,
+      lignes:     items.map(([id, qty]) => ({ produit_id: id, qty })),
     });
   } catch {}
 
@@ -1076,8 +1114,8 @@ async function confirmPayWA() {
     derniere_commande: Object.entries(cart)
       .filter(([,q]) => q > 0)
       .map(([id, qty]) => {
-        const p = PRODUCTS.find(p => p.id == +id);
-        return { id: +id, name: p.name, qty, price: p.price };
+        const p = PRODUCTS.find(p => p.id === id);
+        return { id, name: p.name, qty, price: p.price };
       })
   });
   localStorage.removeItem(CONV_KEY);
@@ -1119,16 +1157,7 @@ async function send() {
   area.scrollTop = area.scrollHeight;
 
   try {
-    const res = await fetch(`${SUPABASE}/functions/v1/chat-assistant`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${ANON}`,
-        'apikey': ANON,
-      },
-      body: JSON.stringify({ mode:'public', slug:'creal', messages:history, conversation_id:convId }),
-    });
-    const data = await res.json();
+    const data = await api('chat', { messages: history, conversation_id: convId });
     convId = data.conversation_id;
     if (convId) localStorage.setItem(CONV_KEY, convId);
     const reply = data.reply || "Je reviens vers vous dans un instant.";
@@ -1143,7 +1172,7 @@ async function send() {
     typing.style.display = 'none';
     const eBubble = document.createElement('div');
     eBubble.className = 'msg bot';
-    eBubble.textContent = "Désolé, je rencontre un problème. Écrivez directement à Kezey sur WhatsApp au " + KEZEY_LISIBLE + ".";
+    eBubble.textContent = "Désolé, je rencontre un problème. Écrivez directement à Kezey sur WhatsApp au " + kezeyLisible() + ".";
     area.appendChild(eBubble);
     area.scrollTop = area.scrollHeight;
   }
@@ -1155,10 +1184,7 @@ async function restoreConversation() {
   const storedConvId = localStorage.getItem(CONV_KEY);
   if (!storedConvId) return;
   try {
-    const res = await fetch(`${SUPABASE}/functions/v1/public-assistant?slug=creal&conversation_id=${encodeURIComponent(storedConvId)}`, {
-      headers: { 'Authorization': `Bearer ${ANON}`, 'apikey': ANON },
-    });
-    const data = await res.json();
+    const data = await api('historique', { conversation_id: storedConvId });
     if (!data.history || data.history.length === 0) { localStorage.removeItem(CONV_KEY); return; }
     convId = storedConvId;
     history = data.history.slice();
@@ -1174,33 +1200,44 @@ async function restoreConversation() {
   } catch {}
 }
 
-renderProducts();
-initMemory();
-restoreConversation();
-
-// Mise à jour live des prix depuis Assists (Kezey modifie ses produits dans Assists → site synchronisé)
-async function fetchLivePrices() {
+/* Chargement du catalogue et de la configuration.
+   L'ancienne fonction fetchLivePrices est morte avec Assists : elle ne
+   rapatriait que les prix, et par rapprochement approximatif sur le nom.
+   Ici, la base fournit la fiche entière. */
+async function chargerCatalogue() {
   try {
-    const res = await fetch(`${SUPABASE}/rest/v1/rpc/get_catalogue`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': ANON, 'Authorization': `Bearer ${ANON}` },
-      body: JSON.stringify({ p_slug: 'creal' })
-    });
-    if (!res.ok) return;
-    const live = await res.json();
-    if (!live || live.length === 0) return;
-    let changed = false;
-    PRODUCTS.forEach(p => {
-      // Matching souple : le nom Supabase contient le nom hardcodé (insensible à la casse)
-      const nameKey = p.name.toLowerCase().replace(/['\s]/g, '');
-      const row = live.find(r => r.nom.toLowerCase().replace(/['\s]/g, '').includes(nameKey) ||
-                                  nameKey.includes(r.nom.toLowerCase().replace(/['\s]/g, '')));
-      if (row && row.prix != null) { p.price = Number(row.prix); changed = true; }
-    });
-    if (changed) { renderProducts(); renderCart(); }
-  } catch {}
+    const data = await api('catalogue');
+    if (!data.produits || data.produits.length === 0) throw new Error('catalogue vide');
+
+    PRODUCTS = data.produits.map(versFiche);
+
+    if (data.config) {
+      if (data.config.whatsapp)  KEZEY     = data.config.whatsapp;
+      if (data.config.lien_wave) LIEN_WAVE = data.config.lien_wave;
+      if (data.config.numero_om) NUMERO_OM = data.config.numero_om;
+      const lienWave = document.querySelector('.wave-link-btn');
+      if (lienWave) lienWave.href = LIEN_WAVE;
+      const numOm = document.querySelector('.pay-num');
+      if (numOm) numOm.textContent = NUMERO_OM;
+    }
+
+    renderProducts();
+    renderCart();
+  } catch {
+    // Une boutique qui n'affiche rien est une boutique fermée. On le dit avec
+    // le numéro de Kezey plutôt qu'avec une page blanche.
+    document.getElementById('products-grid').innerHTML =
+      `<div class="empty" style="grid-column:1/-1;">
+         <p>Le catalogue ne s'affiche pas pour le moment.<br>
+            Écrivez à Kezey sur WhatsApp au ${kezeyLisible()}, elle prend votre commande directement.</p>
+       </div>`;
+  }
 }
-fetchLivePrices();
+
+renderProducts();      // affiche « Chargement du catalogue… » sans attendre le réseau
+initMemory();
+chargerCatalogue();
+restoreConversation();
 </script>
 </body>
 </html>
