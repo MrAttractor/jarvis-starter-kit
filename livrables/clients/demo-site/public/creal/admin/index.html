@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mon tableau de bord — C'Real</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!--
+  Le tableau de bord de Marie Kezey.
+
+  Il est à la charte de SA boutique, pas à celle d'Ayêla dont il reprend
+  pourtant l'architecture : elle passe de l'un à l'autre en une seconde, les
+  deux doivent se ressembler.
+
+  Tout passe par la RLS : cette page se connecte avec le compte de Kezey et lit
+  ses propres lignes en REST direct. Aucune edge function n'est nécessaire ici,
+  contrairement à la boutique publique qui, elle, écrit sans être authentifiée.
+-->
+<style>
+:root {
+  --brand:#4A2E12; --orange:#F2A33D; --orange-s:rgba(242,163,61,.12);
+  --muted:#8A7A66; --bg:#FFFBF4; --card:#fff; --bdr:rgba(74,46,18,.12);
+  --ok:#1E7A52; --ok-s:rgba(30,122,82,.12);
+  --alerte:#B3261E; --alerte-s:rgba(179,38,30,.10);
+  --r:14px;
+}
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { max-width:100%; overflow-x:hidden; }
+body {
+  font-family:'Inter',sans-serif; background:var(--bg); color:var(--brand);
+  font-size:16px; line-height:1.5; min-height:100vh;
+}
+h1,h2,h3 { font-family:'Sora',sans-serif; }
+img { max-width:100%; height:auto; }
+
+/* ── Connexion ─────────────────────────────────────────────────────────── */
+#login { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+.login-box { width:100%; max-width:400px; text-align:center; }
+.login-box img { width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom:24px; }
+.login-box h1 { font-size:22px; font-weight:800; margin-bottom:8px; }
+.login-box p { color:var(--muted); font-size:15px; margin-bottom:24px; }
+
+.champ { text-align:left; margin-bottom:16px; }
+.champ label { display:block; font-size:14px; font-weight:600; margin-bottom:8px; }
+input, select, textarea {
+  width:100%; min-height:48px; padding:12px 16px; font-size:16px; /* 16px : en dessous, iOS zoome */
+  font-family:inherit; color:var(--brand); background:var(--card);
+  border:1.5px solid var(--bdr); border-radius:12px;
+}
+textarea { min-height:96px; resize:vertical; line-height:1.5; }
+input:focus, select:focus, textarea:focus { outline:none; border-color:var(--orange); }
+input.erreur { border-color:var(--alerte); }
+
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  min-height:48px; padding:0 20px; border:none; border-radius:12px;
+  background:var(--orange); color:#fff; font-family:inherit; font-size:16px;
+  font-weight:700; cursor:pointer; width:100%;
+}
+.btn:active { opacity:.85; }
+.btn.fantome { background:transparent; color:var(--brand); border:1.5px solid var(--bdr); }
+.btn.petit { min-height:44px; font-size:14px; padding:0 14px; width:auto; }
+.btn.danger { background:var(--alerte); }
+.btn:disabled { opacity:.5; }
+.lien-texte {
+  background:none; border:none; color:var(--muted); font-family:inherit; font-size:14px;
+  text-decoration:underline; cursor:pointer; padding:12px; min-height:44px;
+}
+
+/* ── Structure ─────────────────────────────────────────────────────────── */
+#app { display:none; padding-bottom:88px; }
+header {
+  position:sticky; top:0; z-index:20; background:var(--bg);
+  border-bottom:1px solid var(--bdr); padding:12px 16px;
+  display:flex; align-items:center; gap:12px;
+}
+header img { width:36px; height:36px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+header .titre { flex:1; min-width:0; }
+header .titre b { display:block; font-family:'Sora',sans-serif; font-size:15px; font-weight:700; }
+header .titre span { display:block; font-size:12px; color:var(--muted); }
+
+main { padding:16px; max-width:720px; margin:0 auto; }
+section { display:none; }
+section.actif { display:block; }
+.section-titre { font-size:18px; font-weight:700; margin-bottom:16px; }
+
+/* ── Navigation basse, comme la boutique ───────────────────────────────── */
+nav {
+  position:fixed; bottom:0; left:0; right:0; z-index:30;
+  background:var(--card); border-top:1px solid var(--bdr);
+  display:flex; padding-bottom:env(safe-area-inset-bottom);
+}
+nav button {
+  flex:1; min-height:56px; padding:8px 4px; border:none; background:none;
+  font-family:inherit; font-size:11px; font-weight:600; color:var(--muted);
+  cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;
+}
+nav button.actif { color:var(--orange); }
+nav svg { width:22px; height:22px; }
+.pastille {
+  position:absolute; top:6px; margin-left:22px; min-width:18px; height:18px;
+  border-radius:9px; background:var(--alerte); color:#fff;
+  font-size:10px; font-weight:700; display:none;
+  align-items:center; justify-content:center; padding:0 5px;
+}
+
+/* ── Cartes ────────────────────────────────────────────────────────────── */
+.carte {
+  background:var(--card); border:1px solid var(--bdr); border-radius:var(--r);
+  padding:16px; margin-bottom:16px;
+}
+.chiffres { display:grid; grid-template-columns:repeat(auto-fit,minmax(96px,1fr)); gap:8px; margin-bottom:16px; }
+.chiffre { background:var(--card); border:1px solid var(--bdr); border-radius:var(--r); padding:16px 8px; text-align:center; }
+.chiffre b { display:block; font-family:'Sora',sans-serif; font-size:22px; font-weight:800; line-height:1.2; }
+.chiffre span { display:block; font-size:12px; color:var(--muted); margin-top:4px; }
+
+.etiquette {
+  display:inline-flex; align-items:center; gap:5px; padding:3px 10px;
+  border-radius:99px; font-size:12px; font-weight:700;
+}
+.etiquette.neuve { background:var(--orange-s); color:#8A5A12; }
+.etiquette.faite { background:var(--ok-s); color:var(--ok); }
+.etiquette.annulee { background:rgba(0,0,0,.06); color:var(--muted); }
+.etiquette.rupture { background:var(--alerte-s); color:var(--alerte); }
+
+.vide { text-align:center; padding:40px 16px; color:var(--muted); }
+.vide svg { width:44px; height:44px; opacity:.35; margin-bottom:12px; }
+
+.ligne { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--bdr); }
+.ligne:last-child { border-bottom:none; }
+.ligne img { width:48px; height:48px; border-radius:10px; object-fit:cover; object-position:top; flex-shrink:0; }
+.ligne .corps { flex:1; min-width:0; }
+.ligne .corps b { display:block; font-size:15px; font-weight:600; }
+.ligne .corps span { display:block; font-size:13px; color:var(--muted); }
+
+.actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+
+/* ── Fenêtre modale ────────────────────────────────────────────────────── */
+.modale {
+  display:none; position:fixed; inset:0; z-index:50; background:rgba(0,0,0,.45);
+  align-items:flex-end; justify-content:center; padding:0;
+}
+.modale.ouverte { display:flex; }
+.modale-corps {
+  background:var(--card); width:100%; max-width:520px; max-height:92vh; overflow-y:auto;
+  border-radius:20px 20px 0 0; padding:24px 16px calc(24px + env(safe-area-inset-bottom));
+}
+@media (min-width:560px) {
+  .modale { align-items:center; padding:24px; }
+  .modale-corps { border-radius:20px; }
+}
+.modale-titre { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.modale-titre h3 { font-size:18px; font-weight:700; }
+.fermer { background:none; border:none; font-size:28px; line-height:1; color:var(--muted); cursor:pointer; min-width:44px; min-height:44px; }
+
+.toast {
+  position:fixed; left:50%; bottom:96px; transform:translateX(-50%);
+  background:var(--brand); color:#fff; padding:12px 20px; border-radius:99px;
+  font-size:14px; font-weight:600; z-index:60; opacity:0; pointer-events:none;
+  transition:opacity .2s; max-width:calc(100% - 32px); text-align:center;
+}
+.toast.vu { opacity:1; }
+
+@media (prefers-reduced-motion: reduce) { * { transition-duration:.01ms !important; } }
+</style>
+</head>
+<body>
+
+<!-- ── Connexion ───────────────────────────────────────────────────────── -->
+<div id="login">
+  <div class="login-box">
+    <img src="/imgs/logo.jpeg" alt="C'Real">
+    <h1>Mon tableau de bord</h1>
+    <p>Vos commandes, vos farines et votre stock.</p>
+    <div class="champ">
+      <label for="email">Votre email</label>
+      <input type="email" id="email" autocomplete="username" inputmode="email" placeholder="creal.creal21@gmail.com">
+    </div>
+    <div class="champ">
+      <label for="mdp">Votre mot de passe</label>
+      <input type="password" id="mdp" autocomplete="current-password" placeholder="••••••••">
+    </div>
+    <button class="btn" id="btn-login" onclick="connexion()">Entrer</button>
+    <p id="login-erreur" style="color:var(--alerte);font-size:14px;margin:12px 0 0;display:none;"></p>
+    <button class="lien-texte" onclick="motDePasseOublie()">J'ai oublié mon mot de passe</button>
+  </div>
+</div>
+
+<!-- ── Application ─────────────────────────────────────────────────────── -->
+<div id="app">
+  <header>
+    <img src="/imgs/logo.jpeg" alt="C'Real">
+    <div class="titre">
+      <b>Bonjour Kezey</b>
+      <span id="header-sous">Farines infantiles C'Real</span>
+    </div>
+    <button class="lien-texte" style="padding:8px" onclick="deconnexion()">Sortir</button>
+  </header>
+
+  <main>
+    <!-- Accueil -->
+    <section id="s-accueil" class="actif">
+      <div class="chiffres" id="chiffres-jour"></div>
+      <div class="carte">
+        <div class="section-titre">À traiter maintenant</div>
+        <div id="accueil-atraiter"></div>
+      </div>
+      <div class="carte" id="carte-alertes" style="display:none;">
+        <div class="section-titre">Farines bientôt épuisées</div>
+        <div id="accueil-alertes"></div>
+      </div>
+    </section>
+
+    <!-- Commandes -->
+    <section id="s-commandes">
+      <div class="section-titre">Mes commandes</div>
+      <div id="liste-commandes"></div>
+    </section>
+
+    <!-- Catalogue -->
+    <section id="s-catalogue">
+      <div class="section-titre">Mes farines</div>
+      <button class="btn" style="margin-bottom:16px;" onclick="ouvrirProduit()">Ajouter une farine</button>
+      <div id="liste-catalogue"></div>
+    </section>
+
+    <!-- Stock -->
+    <section id="s-stock">
+      <div class="section-titre">Mon stock</div>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:16px;">
+        Le stock baisse tout seul quand vous marquez une commande comme préparée.
+      </p>
+      <div id="liste-stock"></div>
+    </section>
+
+    <!-- Ventes -->
+    <section id="s-ventes">
+      <div class="section-titre">Mes ventes</div>
+      <div class="chiffres" id="chiffres-ventes"></div>
+      <div class="carte">
+        <div class="section-titre">Ce qui se vend le mieux</div>
+        <div id="classement"></div>
+      </div>
+    </section>
+  </main>
+
+  <nav>
+    <button class="actif" onclick="onglet('accueil',this)" aria-label="Accueil">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Accueil
+    </button>
+    <button onclick="onglet('commandes',this)" aria-label="Commandes">
+      <span class="pastille" id="pastille-cmd"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      Commandes
+    </button>
+    <button onclick="onglet('catalogue',this)" aria-label="Farines">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Farines
+    </button>
+    <button onclick="onglet('stock',this)" aria-label="Stock">
+      <span class="pastille" id="pastille-stock"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/></svg>
+      Stock
+    </button>
+    <button onclick="onglet('ventes',this)" aria-label="Ventes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Ventes
+    </button>
+  </nav>
+</div>
+
+<!-- Fiche produit -->
+<div class="modale" id="modale-produit">
+  <div class="modale-corps">
+    <div class="modale-titre">
+      <h3 id="produit-titre">Modifier la farine</h3>
+      <button class="fermer" onclick="fermer('modale-produit')" aria-label="Fermer">×</button>
+    </div>
+    <div class="champ"><label for="p-nom">Nom</label><input id="p-nom" placeholder="Mix C'real"></div>
+    <div class="champ"><label for="p-prix">Prix en FCFA</label><input id="p-prix" type="number" inputmode="numeric" min="0" placeholder="1500"></div>
+    <div class="champ"><label for="p-cat">Famille</label><input id="p-cat" placeholder="Farines simples"></div>
+    <div class="champ"><label for="p-etiq">Petite étiquette</label><input id="p-etiq" placeholder="Bestseller"></div>
+    <div class="champ"><label for="p-poids">Poids</label><input id="p-poids" placeholder="200g"></div>
+    <div class="champ"><label for="p-kcal">Calories</label><input id="p-kcal" type="number" inputmode="numeric" min="0" placeholder="365"></div>
+    <div class="champ"><label for="p-desc">Phrase courte, visible sur la vignette</label><input id="p-desc" placeholder="Riz · Maïs · Sorgho"></div>
+    <div class="champ"><label for="p-detail">Texte long, visible quand la cliente appuie</label><textarea id="p-detail"></textarea></div>
+    <div class="champ"><label for="p-photo">Photo</label><input id="p-photo" placeholder="imgs/mix.jpg"></div>
+    <div class="champ">
+      <label for="p-actif">Visible dans la boutique</label>
+      <select id="p-actif"><option value="1">Oui, mes clientes la voient</option><option value="0">Non, je la retire</option></select>
+    </div>
+    <button class="btn" onclick="enregistrerProduit()">Enregistrer</button>
+  </div>
+</div>
+
+<!-- Entrée de stock -->
+<div class="modale" id="modale-stock">
+  <div class="modale-corps">
+    <div class="modale-titre">
+      <h3 id="stock-titre">Stock</h3>
+      <button class="fermer" onclick="fermer('modale-stock')" aria-label="Fermer">×</button>
+    </div>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:16px;" id="stock-actuel"></p>
+    <div class="champ">
+      <label for="st-ajout">J'ai produit combien de sachets ?</label>
+      <input id="st-ajout" type="number" inputmode="numeric" placeholder="20">
+    </div>
+    <button class="btn" onclick="ajouterStock()">Ajouter au stock</button>
+    <div class="champ" style="margin-top:24px;">
+      <label for="st-seuil">M'alerter en dessous de</label>
+      <input id="st-seuil" type="number" inputmode="numeric" min="0">
+    </div>
+    <button class="btn fantome" onclick="enregistrerSeuil()">Enregistrer l'alerte</button>
+    <button class="lien-texte" style="width:100%;margin-top:8px;" onclick="corrigerStock()">Corriger la quantité à la main</button>
+  </div>
+</div>
+
+<!-- Détail commande -->
+<div class="modale" id="modale-commande">
+  <div class="modale-corps">
+    <div class="modale-titre">
+      <h3>Commande</h3>
+      <button class="fermer" onclick="fermer('modale-commande')" aria-label="Fermer">×</button>
+    </div>
+    <div id="commande-detail"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+const SUPABASE_URL  = 'https://lgdgbrivnhgeupqhkckd.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
+
+/* storageKey dédié : la boutique tourne sur la MÊME origine et écrit déjà dans
+   localStorage. Sans clé distincte, une session d'administration et un panier
+   de cliente se marcheraient dessus. */
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
+  auth: { storageKey: 'creal-admin-auth', persistSession: true, autoRefreshToken: true },
+});
+
+let PRODUITS = [], COMMANDES = [], STOCK = [], produitEdite = null, stockEdite = null;
+
+/* ── Connexion ─────────────────────────────────────────────────────────── */
+async function connexion() {
+  const email = document.getElementById('email').value.trim();
+  const mdp   = document.getElementById('mdp').value;
+  const err   = document.getElementById('login-erreur');
+  const btn   = document.getElementById('btn-login');
+  err.style.display = 'none';
+  if (!email || !mdp) { montrerErreur('Entrez votre email et votre mot de passe.'); return; }
+  btn.disabled = true; btn.textContent = 'Connexion…';
+  const { error } = await sb.auth.signInWithPassword({ email, password: mdp });
+  btn.disabled = false; btn.textContent = 'Entrer';
+  if (error) { montrerErreur("Email ou mot de passe incorrect."); return; }
+  entrer();
+}
+
+function montrerErreur(msg) {
+  const err = document.getElementById('login-erreur');
+  err.textContent = msg; err.style.display = 'block';
+}
+
+async function motDePasseOublie() {
+  const email = document.getElementById('email').value.trim();
+  if (!email) { montrerErreur('Entrez d\'abord votre email, puis réessayez.'); return; }
+  await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/admin/' });
+  toast('Un lien vient de partir vers votre email.');
+}
+
+async function deconnexion() {
+  await sb.auth.signOut();
+  location.reload();
+}
+
+async function entrer() {
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('app').style.display   = 'block';
+  await tout();
+}
+
+async function tout() {
+  await Promise.all([chargerProduits(), chargerCommandes(), chargerStock()]);
+  rendreAccueil(); rendreCommandes(); rendreCatalogue(); rendreStock(); rendreVentes();
+}
+
+/* ── Chargement ────────────────────────────────────────────────────────── */
+async function chargerProduits() {
+  const { data } = await sb.from('cr_produits').select('*').order('ordre');
+  PRODUITS = data ?? [];
+}
+async function chargerCommandes() {
+  const { data } = await sb.from('cr_commandes').select('*').order('created_at', { ascending: false }).limit(300);
+  COMMANDES = data ?? [];
+}
+async function chargerStock() {
+  const { data } = await sb.from('cr_stock').select('*');
+  STOCK = data ?? [];
+}
+
+/* ── Navigation ────────────────────────────────────────────────────────── */
+function onglet(nom, btn) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('actif'));
+  document.getElementById('s-' + nom).classList.add('actif');
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('actif'));
+  btn.classList.add('actif');
+  window.scrollTo(0, 0);
+}
+
+/* ── Accueil ───────────────────────────────────────────────────────────── */
+/* R-13 : trois chiffres, en langage courant. Pas de compte de résultat. */
+function rendreAccueil() {
+  const auj = COMMANDES.filter(c => estAujourdhui(c.created_at) && c.statut !== 'annulee');
+  const ca  = auj.reduce((s, c) => s + c.total, 0);
+  const aTraiter = COMMANDES.filter(c => c.statut === 'nouvelle');
+
+  document.getElementById('chiffres-jour').innerHTML = `
+    <div class="chiffre"><b>${auj.length}</b><span>commande${auj.length > 1 ? 's' : ''} aujourd'hui</span></div>
+    <div class="chiffre"><b>${fmt(ca)}</b><span>FCFA aujourd'hui</span></div>
+    <div class="chiffre"><b>${aTraiter.length}</b><span>à préparer</span></div>`;
+
+  const zone = document.getElementById('accueil-atraiter');
+  if (aTraiter.length === 0) {
+    zone.innerHTML = `<div class="vide"><p>Rien à préparer. Tout est à jour.</p></div>`;
+  } else {
+    zone.innerHTML = aTraiter.slice(0, 5).map(ligneCommande).join('');
+  }
+
+  const pastille = document.getElementById('pastille-cmd');
+  pastille.textContent = aTraiter.length;
+  pastille.style.display = aTraiter.length ? 'flex' : 'none';
+
+  const bas = STOCK.filter(s => s.quantite <= s.seuil_alerte);
+  const carte = document.getElementById('carte-alertes');
+  carte.style.display = bas.length ? 'block' : 'none';
+  document.getElementById('accueil-alertes').innerHTML = bas.map(s => {
+    const p = PRODUITS.find(x => x.id === s.produit_id);
+    return `<div class="ligne"><div class="corps"><b>${esc(p ? p.nom : '?')}</b>
+      <span>Il vous reste ${s.quantite} sachet${s.quantite > 1 ? 's' : ''}</span></div>
+      <span class="etiquette rupture">À produire</span></div>`;
+  }).join('');
+
+  const pStock = document.getElementById('pastille-stock');
+  pStock.textContent = bas.length;
+  pStock.style.display = bas.length ? 'flex' : 'none';
+}
+
+/* ── Commandes ─────────────────────────────────────────────────────────── */
+function ligneCommande(c) {
+  const quand = new Date(c.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'short' });
+  const et = c.statut === 'nouvelle' ? 'neuve' : c.statut === 'traitee' ? 'faite' : 'annulee';
+  const mot = c.statut === 'nouvelle' ? 'À préparer' : c.statut === 'traitee' ? 'Préparée' : 'Annulée';
+  return `
+    <div class="ligne" onclick="voirCommande('${c.id}')" style="cursor:pointer">
+      <div class="corps">
+        <b>${esc(c.client_nom || 'Cliente')}</b>
+        <span>${quand} · ${fmt(c.total)} FCFA · ${c.lignes.length} article${c.lignes.length > 1 ? 's' : ''}</span>
+      </div>
+      <span class="etiquette ${et}">${mot}</span>
+    </div>`;
+}
+
+function rendreCommandes() {
+  const zone = document.getElementById('liste-commandes');
+  if (COMMANDES.length === 0) {
+    zone.innerHTML = `<div class="vide">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <p>Aucune commande pour le moment.<br>Elles arriveront ici dès qu'une cliente commandera depuis la boutique.</p></div>`;
+    return;
+  }
+  zone.innerHTML = `<div class="carte">${COMMANDES.map(ligneCommande).join('')}</div>`;
+}
+
+function voirCommande(id) {
+  const c = COMMANDES.find(x => x.id === id);
+  if (!c) return;
+  const wa = (c.client_wa || '').replace(/[^0-9]/g, '');
+  document.getElementById('commande-detail').innerHTML = `
+    <div class="ligne"><div class="corps"><b>${esc(c.client_nom || 'Cliente')}</b>
+      <span>${esc(c.client_wa || 'Pas de numéro')}</span></div></div>
+    ${c.adresse ? `<div class="ligne"><div class="corps"><b>Livraison</b><span>${esc(c.adresse)}</span></div></div>` : ''}
+    ${c.lignes.map(l => `<div class="ligne"><div class="corps"><b>${esc(l.nom)}</b>
+      <span>${l.qty} × ${fmt(l.prix_unit)} FCFA</span></div><b>${fmt(l.total)} F</b></div>`).join('')}
+    <div class="ligne"><div class="corps"><b>Total</b>
+      <span>${c.moyen === 'om' ? 'Orange Money' : 'Wave'}</span></div><b>${fmt(c.total)} FCFA</b></div>
+    <div class="actions">
+      ${wa ? `<a class="btn petit" href="https://wa.me/${wa}" target="_blank" rel="noopener">Écrire à la cliente</a>` : ''}
+      ${c.statut === 'nouvelle'
+        ? `<button class="btn petit" onclick="marquer('${c.id}','traitee')">C'est préparé</button>
+           <button class="btn petit fantome" onclick="marquer('${c.id}','annulee')">Annuler</button>`
+        : `<button class="btn petit fantome" onclick="marquer('${c.id}','nouvelle')">Remettre à préparer</button>`}
+    </div>`;
+  ouvrir('modale-commande');
+}
+
+/* Le stock ne bouge QU'ICI, au passage en préparée, et jamais à la création de
+   la commande : ses clientes commandent sur WhatsApp et toutes ne confirment
+   pas. Décrémenter trop tôt donnerait un stock faux tous les jours. */
+async function marquer(id, statut) {
+  const c = COMMANDES.find(x => x.id === id);
+  if (!c) return;
+  const avant = c.statut;
+  const { error } = await sb.from('cr_commandes')
+    .update({ statut, traitee_le: statut === 'traitee' ? new Date().toISOString() : null })
+    .eq('id', id);
+  if (error) { toast("Pas enregistré, réessayez."); return; }
+  c.statut = statut;
+  c.traitee_le = statut === 'traitee' ? new Date().toISOString() : null;
+
+  if (avant !== 'traitee' && statut === 'traitee') await bougerStock(c, -1);
+  if (avant === 'traitee' && statut !== 'traitee') await bougerStock(c, +1);
+
+  fermer('modale-commande');
+  await chargerStock();
+  rendreAccueil(); rendreCommandes(); rendreStock(); rendreVentes();
+  toast(statut === 'traitee' ? 'Commande préparée, stock à jour.' : 'Commande mise à jour.');
+}
+
+async function bougerStock(commande, sens) {
+  for (const l of commande.lignes) {
+    if (!l.produit_id) continue;
+    const s = STOCK.find(x => x.produit_id === l.produit_id);
+    if (!s) continue;
+    const delta = sens * l.qty;
+    // Jamais de stock négatif affiché : elle a peut-être vendu hors boutique.
+    const nouvelle = Math.max(0, s.quantite + delta);
+    await sb.from('cr_stock').update({ quantite: nouvelle }).eq('produit_id', l.produit_id);
+    await sb.from('cr_stock_mouvements').insert({
+      produit_id: l.produit_id, delta, motif: 'commande', commande_id: commande.id,
+    });
+  }
+}
+
+/* ── Catalogue ─────────────────────────────────────────────────────────── */
+function rendreCatalogue() {
+  document.getElementById('liste-catalogue').innerHTML = `<div class="carte">${
+    PRODUITS.map(p => `
+      <div class="ligne">
+        <img src="/${esc(p.photo_url || 'imgs/logo.jpeg')}" alt="">
+        <div class="corps">
+          <b>${esc(p.nom)}</b>
+          <span>${fmt(p.prix)} FCFA · ${esc(p.categorie || 'sans famille')}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+          ${p.actif ? '' : '<span class="etiquette annulee">Retirée</span>'}
+          <button class="btn petit fantome" onclick="ouvrirProduit('${p.id}')">Modifier</button>
+        </div>
+      </div>`).join('')
+  }</div>`;
+}
+
+function ouvrirProduit(id) {
+  produitEdite = id ? PRODUITS.find(p => p.id === id) : null;
+  const p = produitEdite ?? {};
+  document.getElementById('produit-titre').textContent = id ? 'Modifier la farine' : 'Nouvelle farine';
+  document.getElementById('p-nom').value    = p.nom ?? '';
+  document.getElementById('p-prix').value   = p.prix ?? '';
+  document.getElementById('p-cat').value    = p.categorie ?? '';
+  document.getElementById('p-etiq').value   = p.etiquette ?? '';
+  document.getElementById('p-poids').value  = p.poids ?? '';
+  document.getElementById('p-kcal').value   = p.kcal ?? '';
+  document.getElementById('p-desc').value   = p.description ?? '';
+  document.getElementById('p-detail').value = p.detail ?? '';
+  document.getElementById('p-photo').value  = p.photo_url ?? '';
+  document.getElementById('p-actif').value  = (p.actif === false) ? '0' : '1';
+  ouvrir('modale-produit');
+}
+
+async function enregistrerProduit() {
+  const nom  = document.getElementById('p-nom').value.trim();
+  const prix = parseInt(document.getElementById('p-prix').value, 10);
+  if (!nom)              { toast('Donnez un nom à la farine.'); return; }
+  if (!(prix >= 0))      { toast('Donnez un prix.'); return; }
+
+  const champs = {
+    nom, prix,
+    categorie:   document.getElementById('p-cat').value.trim()   || null,
+    etiquette:   document.getElementById('p-etiq').value.trim()  || null,
+    poids:       document.getElementById('p-poids').value.trim() || null,
+    kcal:        parseInt(document.getElementById('p-kcal').value, 10) || null,
+    description: document.getElementById('p-desc').value.trim()  || null,
+    detail:      document.getElementById('p-detail').value.trim()|| null,
+    photo_url:   document.getElementById('p-photo').value.trim() || null,
+    actif:       document.getElementById('p-actif').value === '1',
+  };
+
+  let erreur;
+  if (produitEdite) {
+    ({ error: erreur } = await sb.from('cr_produits').update(champs).eq('id', produitEdite.id));
+  } else {
+    champs.ordre = (PRODUITS.reduce((m, p) => Math.max(m, p.ordre), 0)) + 1;
+    const { data, error } = await sb.from('cr_produits').insert(champs).select('id').single();
+    erreur = error;
+    // Une farine sans ligne de stock ne remonterait jamais dans les alertes.
+    if (data) await sb.from('cr_stock').insert({ produit_id: data.id, quantite: 0, seuil_alerte: 5 });
+  }
+  if (erreur) { toast("Pas enregistré, réessayez."); return; }
+
+  fermer('modale-produit');
+  await Promise.all([chargerProduits(), chargerStock()]);
+  rendreCatalogue(); rendreStock(); rendreAccueil();
+  toast('Enregistré. Vos clientes le voient déjà.');
+}
+
+/* ── Stock ─────────────────────────────────────────────────────────────── */
+function rendreStock() {
+  document.getElementById('liste-stock').innerHTML = `<div class="carte">${
+    PRODUITS.map(p => {
+      const s = STOCK.find(x => x.produit_id === p.id) ?? { quantite: 0, seuil_alerte: 5 };
+      const bas = s.quantite <= s.seuil_alerte;
+      return `
+        <div class="ligne">
+          <div class="corps">
+            <b>${esc(p.nom)}</b>
+            <span>${s.quantite} sachet${s.quantite > 1 ? 's' : ''} en stock</span>
+          </div>
+          ${bas ? '<span class="etiquette rupture">À produire</span>' : ''}
+          <button class="btn petit fantome" onclick="ouvrirStock('${p.id}')">Modifier</button>
+        </div>`;
+    }).join('')
+  }</div>`;
+}
+
+function ouvrirStock(id) {
+  stockEdite = id;
+  const p = PRODUITS.find(x => x.id === id);
+  const s = STOCK.find(x => x.produit_id === id) ?? { quantite: 0, seuil_alerte: 5 };
+  document.getElementById('stock-titre').textContent = p ? p.nom : 'Stock';
+  document.getElementById('stock-actuel').textContent = `Vous avez ${s.quantite} sachet${s.quantite > 1 ? 's' : ''} en stock.`;
+  document.getElementById('st-ajout').value = '';
+  document.getElementById('st-seuil').value = s.seuil_alerte;
+  ouvrir('modale-stock');
+}
+
+async function ajouterStock() {
+  const n = parseInt(document.getElementById('st-ajout').value, 10);
+  if (!(n > 0)) { toast('Indiquez un nombre de sachets.'); return; }
+  const s = STOCK.find(x => x.produit_id === stockEdite) ?? { quantite: 0 };
+  await sb.from('cr_stock').update({ quantite: s.quantite + n }).eq('produit_id', stockEdite);
+  await sb.from('cr_stock_mouvements').insert({ produit_id: stockEdite, delta: n, motif: 'production' });
+  await apresStock(`${n} sachet${n > 1 ? 's' : ''} ajouté${n > 1 ? 's' : ''}.`);
+}
+
+async function corrigerStock() {
+  const n = parseInt(document.getElementById('st-ajout').value, 10);
+  if (!(n >= 0)) { toast('Indiquez la quantité réelle dans le champ du dessus.'); return; }
+  const s = STOCK.find(x => x.produit_id === stockEdite) ?? { quantite: 0 };
+  await sb.from('cr_stock').update({ quantite: n }).eq('produit_id', stockEdite);
+  await sb.from('cr_stock_mouvements').insert({ produit_id: stockEdite, delta: n - s.quantite, motif: 'correction' });
+  await apresStock('Quantité corrigée.');
+}
+
+async function enregistrerSeuil() {
+  const n = parseInt(document.getElementById('st-seuil').value, 10);
+  if (!(n >= 0)) { toast('Indiquez un nombre.'); return; }
+  await sb.from('cr_stock').update({ seuil_alerte: n }).eq('produit_id', stockEdite);
+  await apresStock('Alerte enregistrée.');
+}
+
+async function apresStock(msg) {
+  fermer('modale-stock');
+  await chargerStock();
+  rendreStock(); rendreAccueil();
+  toast(msg);
+}
+
+/* ── Ventes ────────────────────────────────────────────────────────────── */
+function rendreVentes() {
+  const valides = COMMANDES.filter(c => c.statut !== 'annulee');
+  const mois = valides.filter(c => estCeMois(c.created_at));
+  const caMois = mois.reduce((s, c) => s + c.total, 0);
+  const caTout = valides.reduce((s, c) => s + c.total, 0);
+
+  document.getElementById('chiffres-ventes').innerHTML = `
+    <div class="chiffre"><b>${fmt(caMois)}</b><span>FCFA ce mois-ci</span></div>
+    <div class="chiffre"><b>${mois.length}</b><span>commande${mois.length > 1 ? 's' : ''} ce mois-ci</span></div>
+    <div class="chiffre"><b>${fmt(caTout)}</b><span>FCFA depuis le début</span></div>`;
+
+  const parProduit = new Map();
+  valides.forEach(c => c.lignes.forEach(l => {
+    const cle = l.nom;
+    const e = parProduit.get(cle) ?? { qty: 0, ca: 0 };
+    e.qty += l.qty; e.ca += l.total;
+    parProduit.set(cle, e);
+  }));
+  const classe = [...parProduit.entries()].sort((a, b) => b[1].qty - a[1].qty);
+
+  document.getElementById('classement').innerHTML = classe.length === 0
+    ? `<div class="vide"><p>Le classement apparaîtra dès vos premières ventes.</p></div>`
+    : classe.map(([nom, e], i) => `
+        <div class="ligne">
+          <div class="corps"><b>${i + 1}. ${esc(nom)}</b>
+            <span>${e.qty} sachet${e.qty > 1 ? 's' : ''} vendu${e.qty > 1 ? 's' : ''}</span></div>
+          <b>${fmt(e.ca)} F</b>
+        </div>`).join('');
+}
+
+/* ── Utilitaires ───────────────────────────────────────────────────────── */
+function fmt(n) { return Number(n || 0).toLocaleString('fr-FR'); }
+function esc(v) {
+  return String(v ?? '').replace(/[&<>"']/g, c => (
+    { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
+  ));
+}
+function estAujourdhui(d) { return new Date(d).toDateString() === new Date().toDateString(); }
+function estCeMois(d) {
+  const a = new Date(d), b = new Date();
+  return a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear();
+}
+function ouvrir(id)  { document.getElementById(id).classList.add('ouverte'); }
+function fermer(id)  { document.getElementById(id).classList.remove('ouverte'); }
+
+let minuteurToast;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('vu');
+  clearTimeout(minuteurToast);
+  minuteurToast = setTimeout(() => t.classList.remove('vu'), 2600);
+}
+
+document.querySelectorAll('.modale').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('ouverte'); });
+});
+document.getElementById('mdp').addEventListener('keydown', e => { if (e.key === 'Enter') connexion(); });
+
+/* Session déjà ouverte : on n'oblige pas Kezey à retaper son mot de passe
+   chaque fois qu'elle rouvre son téléphone. */
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) entrer();
+})();
+</script>
+</body>
+</html>

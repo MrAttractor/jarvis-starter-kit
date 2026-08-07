@@ -1,52 +1,112 @@
 # C'Real — l'état du dossier
 
-> Fiche créée le 06/08/2026. **Cette fiche est la première chose à lire du dossier.**
+> Fiche créée le 06/08/2026, mise à jour le 07/08/2026.
+> **Cette fiche est la première chose à lire du dossier.**
 > Un chiffre ou un statut n'existe qu'ici. S'il apparaît ailleurs, c'est une copie à vérifier.
 
 | Radar | |
 |---|---|
-| Statut | à trancher |
+| Statut | livré, en attente de validation sur téléphone |
 | Dernier contact | 2026-07-07 |
-| Prochaine action | Reconstituer l'état réel du dossier : ce qui a été facturé, ce qui reste dû, et où en est le coaching |
-| Échéance | — |
-| Argent en attente | rien de tracé |
+| Prochaine action | Ouvrir la boutique et le tableau de bord sur un vrai téléphone, puis basculer en production et livrer à Kezey |
+| Échéance | avant que sa communication monte en charge |
+| Argent en attente | **rien de tracé, et c'est le vrai trou du dossier** |
 
 ## En une phrase
 
-Boutique en production sur `boutiquecreal.com`, **et pourtant ce dossier n'existait pas
-dans `livrables/clients/` jusqu'au 06/08/2026.** Le site vivait uniquement dans
-`demo-site/public/creal/`, sans fiche, sans montant tracé, sans prochaine action.
+Marie Kezey a désormais sa boutique **et** son tableau de bord chez elle, sur
+`boutiquecreal.com`, sans plus aucune dépendance à Attractor Assists, passé en
+pause le 06/08/2026.
 
-## Pourquoi cette fiche existe
+## Les liens
 
-Le dossier a été retrouvé le 06/08 en comparant les sites hébergés sur le demo-site avec
-la liste des dossiers clients. **C'est le cas d'école du projet oublié** : livré, en
-ligne, avec un vrai client derrière, et invisible de toute vue de pilotage.
+| Quoi | Où | Pour qui |
+|---|---|---|
+| La boutique | `boutiquecreal.com` | ses clientes |
+| Son tableau de bord | `boutiquecreal.com/admin` | **elle** |
+| Son guide | `boutiquecreal.com/guide` | elle |
+| Préversion à valider | `bascule-hors-assists.boutiquecreal.pages.dev` | interne |
 
-## Ce qu'on sait de source sûre
+Connexion : `creal.creal21@gmail.com`. **Le mot de passe temporaire ne s'écrit
+pas ici** : il se transmet dans le message, et elle le change à sa première
+visite. Le guide d'Ayêla affichait encore son mot de passe initial des mois
+après qu'elle l'ait changé, on ne refait pas ça.
 
-| | |
+## Ce qui a été fait le 07/08/2026
+
+**Sortie d'Assists.** Sept tables `cr_`, une edge function `creal-public`, et la
+boutique ne parle plus qu'à elle. Les trois appels à Assists (`get_catalogue`,
+`chat-assistant`, `save_order`) ont disparu.
+
+**Le catalogue devient réel.** Avant, les fiches produits vivaient en dur dans le
+JavaScript et Assists ne synchronisait que le prix, par rapprochement
+approximatif sur le nom. Kezey pouvait changer un prix et rien d'autre :
+désactiver un produit ne le retirait pas de la page. Les deux moitiés sont
+réunies dans `cr_produits`, qui fait seule autorité.
+
+**Le plafond de 20 commandes par mois a disparu.** Il venait du plan gratuit
+d'Assists, et `save_order` refusait d'enregistrer au-delà, en silence. La 21e
+commande du mois serait arrivée sur son téléphone sans jamais apparaître nulle
+part. En sortant d'Assists, le problème n'existe plus.
+
+**Tableau de bord en cinq onglets** : accueil, commandes, farines, stock, ventes.
+Le stock baisse au passage d'une commande en « préparée », jamais à sa création :
+ses clientes commandent sur WhatsApp et toutes ne confirment pas.
+
+**Une page 404.** Le domaine servait la boutique sur **n'importe quel chemin**,
+en code 200. `/admin` et `/nimportequoi` renvoyaient la même page, octet pour
+octet.
+
+## Ce qui a été prouvé, et comment
+
+| Ce qui est prouvé | Comment |
 |---|---|
-| Produit | Farines infantiles 100 % naturelles (mil, maïs, riz, sorgho, mix, multi) |
-| Site | `boutiquecreal.com`, source dans `../demo-site/public/creal/` |
-| Redirection | `demo.agenceattractor.com/creal` redirige en 301 vers le domaine propre |
-| Dernière intervention | 07/07/2026, ajout du 8e produit « Mes premières C'real » et corrections du catalogue |
-| Maquette Assists | `../demo-site/public/creal-assists/` (maquette + `proposition-creal.html`) |
+| Un anonyme ne lit aucune commande | ligne réelle insérée en service role, invisible à la clé anon |
+| Un anonyme ne peut pas insérer de commande | HTTP 401 |
+| Le prompt de Zoé ne sort jamais du serveur | absent de la réponse `catalogue` |
+| Un autre compte connecté ne voit rien | compte jetable créé, 0 ligne partout, puis supprimé |
+| Un tiers ne peut pas modifier un prix | **0 ligne modifiée** (le code 204 seul aurait menti) |
+| Un panier truqué ne passe pas | total forcé à 1 F, enregistré à 1 500 F |
+| Le parcours complet fonctionne | vrai code de la page joué contre la base : commande → tableau de bord → préparée → stock 20 → 17 → 20 |
 
-Un coaching a eu lieu le **20/06/2026** avec **Kezey** (ventes de janvier à mai, budget de
-310 000 F, analyse de stock confiée à Zoé). Les données de ce coaching ne sont pas dans ce
-dossier.
+## Ce qui reste à faire
 
-## Ce qui n'est pas établi, et qu'il faut trancher
+1. **Ouvrir la boutique ET le tableau de bord sur un vrai téléphone** (R-51).
+   Trois défauts sont sortis de ce test sur Élévia le 06/08 alors que quinze
+   contrôles automatisés passaient. **Tant que ce n'est pas fait, on ne bascule
+   pas la production.**
+2. **Basculer en production** : déployer sur la branche `main` du projet
+   `boutiquecreal`.
+3. **Livrer à Kezey** : le lien, son mot de passe, et lui demander de le changer.
+4. **Lui faire saisir ses vraies quantités de stock.** Tout est à zéro,
+   volontairement : un stock inventé est pire que pas de stock.
 
-1. **Ce qui a été facturé et ce qui reste dû.** Aucun devis, aucune facture, aucun montant
-   dans le workspace.
-2. **Si un abonnement mensuel doit être actif**, comme sur GetWinWorld et J'Envoie Express.
-3. **Le sort de la proposition Assists** (`creal-assists/proposition-creal.html`) : envoyée
-   ou jamais partie.
-4. **Le nom et le contact du décideur**, à confirmer.
+## Ce qui n'est toujours pas établi
 
-## Prochaine action
+1. **Ce qui a été facturé et ce qui reste dû. Aucun devis, aucune facture, aucun
+   montant dans le workspace.** On vient de lui construire l'équivalent de ce
+   qui vaut entre 1,8 et 3 millions de FCFA chez Ayêla. C'est une question à
+   poser, et le moment de la poser, c'est la livraison.
+2. **Si un abonnement mensuel doit être actif**, comme sur GetWinWorld (35 €) et
+   J'Envoie Express (50 €).
+3. **Le sort de la proposition Assists** (`creal-assists/proposition-creal.html`),
+   envoyée ou jamais partie. Elle n'a plus d'objet maintenant qu'Assists est en
+   pause : à archiver.
 
-Rouvrir le dossier avec le client, reconstituer l'historique commercial, puis compléter
-cette fiche. **Tant que les montants ne sont pas tracés, ce dossier est un angle mort.**
+## Ce que l'usage a appris
+
+Zéro commande n'est jamais passée par le tunnel de paiement de la boutique. Ses
+clientes regardent le catalogue puis écrivent sur WhatsApp. Le tableau de bord
+ne se remplira donc que si elle marque elle-même ses commandes, ou si le
+parcours d'achat lui amène de vraies commandes. **À regarder dans un mois : si
+`cr_commandes` est encore vide, c'est le parcours qu'il faut revoir, pas
+l'outil.**
+
+## Où sont les choses
+
+| Quoi | Chemin |
+|---|---|
+| Boutique, tableau de bord, guide, 404 | `../demo-site/public/creal/` |
+| Migrations et edge function | `supabase/` |
+| Maquette Assists (à archiver) | `../demo-site/public/creal-assists/` |
+| Visuels sources | `sources-visuels/` |

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Comment utiliser mon tableau de bord — C'Real</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!--
+  Guide de Marie Kezey.
+
+  R-12 : français simple, zéro jargon. Pas de « back-office », pas de « RLS »,
+  pas de « catalogue synchronisé ». Elle vend des farines, pas des logiciels.
+
+  Le mot de passe n'est VOLONTAIREMENT écrit nulle part ici. Leçon du dossier
+  Ayêla : son guide affichait encore son mot de passe initial des mois après
+  qu'elle l'ait changé elle-même. Un document permanent ne porte pas un secret
+  temporaire. Le mot de passe se transmet dans le message, pas dans le guide.
+-->
+<style>
+:root { --brand:#4A2E12; --orange:#F2A33D; --muted:#8A7A66; --bg:#FFFBF4; --card:#fff; --bdr:rgba(74,46,18,.12); }
+* { box-sizing:border-box; margin:0; padding:0; }
+html, body { max-width:100%; overflow-x:hidden; }
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--brand); font-size:16px; line-height:1.6; }
+main { max-width:640px; margin:0 auto; padding:24px 16px 64px; }
+h1 { font-family:'Sora',sans-serif; font-size:26px; font-weight:800; margin-bottom:8px; }
+h2 { font-family:'Sora',sans-serif; font-size:19px; font-weight:700; margin:32px 0 12px; }
+p { margin-bottom:16px; }
+.chapeau { color:var(--muted); margin-bottom:32px; }
+.entete { text-align:center; margin-bottom:32px; }
+.entete img { width:72px; height:72px; border-radius:50%; object-fit:cover; margin-bottom:16px; }
+.carte { background:var(--card); border:1px solid var(--bdr); border-radius:14px; padding:16px; margin-bottom:16px; }
+.carte b { display:block; font-family:'Sora',sans-serif; margin-bottom:4px; }
+ol, ul { margin:0 0 16px 20px; }
+li { margin-bottom:8px; }
+a { color:#8A5A12; }
+.btn {
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:48px; padding:0 24px; border-radius:12px; background:var(--orange);
+  color:#fff; text-decoration:none; font-weight:700; width:100%; margin-bottom:8px;
+}
+.important { border-left:4px solid var(--orange); background:rgba(242,163,61,.08); }
+@media print {
+  body { background:#fff; }
+  .carte, .important { break-inside:avoid; overflow:visible; }
+  .btn { display:none; }
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="entete">
+    <img src="/imgs/logo.jpeg" alt="C'Real">
+    <h1>Votre tableau de bord</h1>
+    <p class="chapeau">Tout ce que vous pouvez faire, en cinq minutes de lecture.</p>
+  </div>
+
+  <a class="btn" href="/admin/">Ouvrir mon tableau de bord</a>
+
+  <h2>Pour entrer</h2>
+  <p>
+    Ouvrez <b>boutiquecreal.com/admin</b>, entrez votre email et le mot de passe
+    que Mac Arthur vous a envoyé.
+  </p>
+  <div class="carte important">
+    <b>Changez ce mot de passe dès votre première visite</b>
+    Sortez, puis appuyez sur « J'ai oublié mon mot de passe ». Vous recevrez un
+    lien par email pour en choisir un que vous seule connaissez.
+  </div>
+  <p>
+    Ajoutez la page à l'écran d'accueil de votre téléphone : vous n'aurez plus
+    à retaper l'adresse.
+  </p>
+
+  <h2>Accueil</h2>
+  <p>
+    La première page vous donne trois chiffres : le nombre de commandes du jour,
+    ce que vous avez vendu aujourd'hui, et ce qu'il reste à préparer. En dessous,
+    les commandes qui attendent, et les farines qui commencent à manquer.
+  </p>
+
+  <h2>Commandes</h2>
+  <p>
+    Chaque fois qu'une cliente commande depuis la boutique, elle apparaît ici.
+    Appuyez dessus pour voir le détail : ce qu'elle a pris, son adresse, son numéro.
+  </p>
+  <div class="carte">
+    <b>Écrire à la cliente</b>
+    Un bouton ouvre WhatsApp directement sur son numéro. Vous n'avez rien à recopier.
+  </div>
+  <div class="carte">
+    <b>C'est préparé</b>
+    Quand vous avez préparé la commande, appuyez sur ce bouton. Votre stock baisse
+    tout seul de ce qu'elle a commandé.
+  </div>
+  <p>
+    Si vous vous trompez, vous pouvez toujours remettre une commande à préparer :
+    le stock remonte de la même quantité.
+  </p>
+
+  <h2>Farines</h2>
+  <p>
+    C'est ici que vous décidez de ce que vos clientes voient. Vous pouvez changer
+    un prix, corriger un texte, ajouter une nouvelle farine.
+  </p>
+  <div class="carte important">
+    <b>Ce que vous changez ici, vos clientes le voient tout de suite</b>
+    Il n'y a rien à valider, rien à attendre. Un prix modifié est un prix modifié.
+  </div>
+  <p>
+    Pour retirer une farine sans la supprimer, mettez « Non, je la retire » sur la
+    ligne « Visible dans la boutique ». Elle disparaît de la boutique et vous
+    pouvez la remettre quand vous voulez.
+  </p>
+
+  <h2>Stock</h2>
+  <p>
+    Indiquez combien de sachets vous avez de chaque farine. Le stock baisse tout
+    seul quand vous marquez une commande comme préparée.
+  </p>
+  <div class="carte">
+    <b>J'ai produit</b>
+    Après une production, entrez le nombre de sachets et appuyez sur « Ajouter au
+    stock ». Ils s'ajoutent à ce que vous aviez déjà.
+  </div>
+  <div class="carte">
+    <b>M'alerter en dessous de</b>
+    Choisissez à partir de quelle quantité vous voulez être prévenue. La farine
+    apparaîtra alors en rouge sur la page d'accueil.
+  </div>
+  <p>
+    Si vous vendez en dehors de la boutique, en direct ou au marché, corrigez la
+    quantité à la main avec « Corriger la quantité ».
+  </p>
+
+  <h2>Ventes</h2>
+  <p>
+    Ce que vous avez vendu ce mois-ci, depuis le début, et surtout quelle farine
+    part le plus. C'est cette page qui vous dit quoi produire en priorité.
+  </p>
+
+  <h2>Zoé</h2>
+  <p>
+    Zoé continue de répondre à vos clientes sur la boutique, jour et nuit. Elle
+    connaît vos farines et vos prix : quand vous changez quelque chose dans
+    « Farines », elle le sait immédiatement.
+  </p>
+  <p>
+    Zoé n'invente jamais un produit ni un prix. Si une cliente demande quelque
+    chose qu'elle ne connaît pas, elle répond qu'elle vérifie et que vous
+    revenez vers elle.
+  </p>
+
+  <h2>Une question</h2>
+  <p>
+    Écrivez à Mac Arthur. Si quelque chose ne marche pas, dites-lui ce que vous
+    faisiez au moment où ça a bloqué, c'est ce qui aide le plus.
+  </p>
+</main>
+</body>
+</html>

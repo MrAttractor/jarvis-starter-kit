@@ -1,0 +1,15 @@
+# Routage de boutiquecreal.com
+#
+# Liste EXPLICITE, tenue à la main. NE JAMAIS mettre d'attrape-tout ici
+# (« /* » ou « /:slug »). Il serait évalué AVANT le routage naturel de
+# Cloudflare Pages et capturerait tout ce qu'on oublie de déclarer, y compris
+# la page 404. C'est ce défaut qui avait tué le lien de closing d'All Eyes on
+# yoo, envoyé le 30/07/2026 et resté sans réponse.
+#
+# Cette ligne existe parce que le test l'a exigée : depuis l'ajout de
+# 404.html, Cloudflare Pages ne redirige plus /admin vers /admin/ tout seul,
+# il sert la page 404. Or /admin sans barre oblique finale est précisément la
+# forme qu'on écrit à la main dans un message WhatsApp. R-53.
+
+/admin    /admin/    301
+/guide    /guide/    301
