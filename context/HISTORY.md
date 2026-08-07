@@ -7,6 +7,52 @@
 
 ---
 
+## 2026-08-07 (session 126 — C'Real quitte Attractor Assists et devient autonome chez elle)
+
+> Un produit passe en pause, une cliente réelle en dépendait encore.
+> La journée a servi à la détacher proprement, et l'extraction a révélé
+> trois défauts qui dormaient depuis des mois.
+
+### Le point de départ
+- Assists est passé en pause la veille. Toute la boutique de Marie Kezey en dépendait : catalogue, assistante Zoé, conversations, commandes. `boutiquecreal.com` n'était qu'une carrosserie faite main posée sur ce moteur, et **elle lançait sa communication**.
+- Décision de Mac Arthur : migrer l'existant sur son propre domaine, avec un vrai tableau de bord. Une pause suspend le temps qu'on investit, pas les engagements pris envers ceux qui s'en servent.
+
+### Trois défauts que l'extraction a révélés, et qu'on ne cherchait pas
+- **Un plafond invisible.** Le plan gratuit d'Assists refusait d'enregistrer au-delà de **20 commandes par mois**, en silence, dans un `catch` vide. La 21e serait arrivée sur son WhatsApp sans jamais apparaître nulle part. En sortant du produit, le problème disparaît par construction.
+- **Un catalogue à moitié faux.** Les fiches produits vivaient **en dur dans le JavaScript**, et Assists ne synchronisait que le prix, par rapprochement approximatif sur le nom. Kezey pouvait changer un prix et rien d'autre : désactiver un article ne le retirait pas de la boutique. Les deux moitiés sont réunies, `cr_produits` fait seule autorité. **Sans ça, un tableau de bord ne sert à rien : elle modifierait et la boutique ne bougerait pas.**
+- **Aucune page 404.** Le domaine servait la boutique sur **n'importe quel chemin**, en code 200. Même famille que l'attrape-tout du demo-site trouvé l'avant-veille.
+
+### Ce qui a été construit
+- Sept tables `cr_`, une edge function `creal-public` remplaçant `get_catalogue`, `chat-assistant` et `save_order`. **Aucune policy INSERT publique** : c'est la faille fermée dans Assists le 15/07, et **Ayêla la porte encore** sous le nom `ay_commandes_public_insert`, à auditer.
+- **Tableau de bord en cinq onglets**, à la charte de sa boutique. Le stock baisse au passage d'une commande en « préparée », **jamais à sa création** : ses clientes commandent sur WhatsApp et toutes ne confirment pas.
+- Guide en français simple. **Le mot de passe n'y figure pas**, il part dans le message : un document permanent ne porte pas un secret temporaire.
+- Zoé nettoyée de son markdown **dans le code et pas dans le prompt** : elle répondait `**Mes premières C'real**` à des mamans sur WhatsApp.
+
+### Le téléphone de Mac Arthur, deuxième jour de suite
+- Deux défauts trouvés en ouvrant l'écran, qu'aucun contrôle automatisé n'avait vus.
+- **L'alerte de stock était un cul-de-sac** : « À produire » était une étiquette, pas un bouton. Quatre gestes pour une information déjà sous les yeux.
+- **Le message était faux** : ses huit farines n'étaient pas épuisées, elle n'avait jamais saisi son stock. Huit alertes rouges et une pastille à 8 dès la première ouverture. **« Jamais renseigné » et « en rupture » se ressemblent en base et se disent très différemment à l'écran.**
+
+### La recette, et ce qu'elle a encore attrapé
+- 12 adresses testées avec et sans barre oblique, sécurité à la clé anon, parcours complet joué avec le vrai code téléchargé depuis la production, Zoé sur une vraie question de maman.
+- **Trois noms de clientes retirés du code public.** Mes commentaires citaient d'autres dossiers de l'agence : n'importe qui ouvrant la source du site de Kezey les lisait.
+- **Un 204 qui ment.** Une tentative de modification de prix par un tiers renvoie 204, comme un succès, parce que zéro ligne correspond au filtre RLS. Seul le comptage des lignes prouve.
+- **Un cache qui ment.** Juste après le déploiement, `/nimportequoi` répondait 200 sur le domaine et 404 sur le déploiement direct. Un test lancé trop tôt innocente à tort.
+
+### Une correction de Mac Arthur qui change la lecture de plusieurs dossiers
+- **Aucun abonnement récurrent n'est activé à ce jour**, l'agence est encore en phase de mise en place du système. Les 35 €/mois de GetWinWorld et les 50 €/mois de J'Envoie Express sont **contractuels, pas encaissés**.
+- J'avais présenté C'Real comme une anomalie en la comparant à ces dossiers. **Trois fiches portaient une question ouverte devenue fausse** (« vérifier que l'abonnement tourne ») qui aurait fini par faire relancer des clients pour un encaissement que personne n'a mis en place. Corrigées.
+- **Conséquence à retenir** : la moyenne de ventes agence est du **one-shot pur**, sans aucune part récurrente. Les 140 €/mois d'outils ne reposent sur aucun socle.
+
+### Livrables
+- `boutiquecreal.com` (boutique refaite), `/admin` (tableau de bord), `/guide`, page 404. Projet Pages `boutiquecreal`, branche prod **`main`**, vérifiée.
+- Commits `d21004d`, `5973221`, `1d77cf6`, `de955e1`, `a054b15`, poussés sur `main`.
+- Cerveau : fiche **EXP-038**, règles **R-56 à R-61**.
+- **WhatsApp envoyé à Kezey avec ses identifiants.** Repère de surveillance dans son `DOSSIER.md` : toute connexion postérieure au 07/08 10h22 UTC est la sienne, les horodatages antérieurs sont ceux de la recette.
+- **Reste ouvert** : rien n'est facturé sur ce dossier, ni devis ni facture.
+
+---
+
 ## 2026-08-06 (session 125 — Élévia passe du contrat au code, et un vrai iPhone corrige ce qu'aucune relecture n'avait vu)
 
 > Journée entière sur un seul dossier. Le contrat le matin, le code l'après-midi,

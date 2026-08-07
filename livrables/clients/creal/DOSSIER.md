@@ -6,11 +6,41 @@
 
 | Radar | |
 |---|---|
-| Statut | **en production**, message de livraison prêt à envoyer |
-| Dernier contact | 2026-07-07 |
-| Prochaine action | Envoyer le message à Kezey, puis vérifier sous une semaine qu'elle a saisi son stock et changé son mot de passe |
-| Échéance | — |
+| Statut | **livré**, WhatsApp envoyé avec ses identifiants le 07/08/2026 |
+| Dernier contact | 2026-08-07 |
+| Prochaine action | Vérifier qu'elle s'est connectée. Sans signe sous 5 jours, relancer |
+| Échéance | 2026-08-12 |
 | Argent en attente | **rien de tracé, et c'est le vrai trou du dossier** |
+
+## Surveiller sa première connexion
+
+Point de référence relevé juste après l'envoi :
+
+| | |
+|---|---|
+| Dernière connexion | **2026-08-07 10:22 UTC** |
+| Mot de passe modifié | **2026-08-07 10:22 UTC** |
+
+**Attention, ces deux horodatages sont les nôtres, pas les siens** : 10h22 est le
+test de connexion de la recette, et la pose du mot de passe temporaire. Toute
+valeur **postérieure à 10h22 le 07/08** est donc elle, et elle seule.
+
+Deux signaux, dans cet ordre de valeur :
+
+1. `updated_at` bouge à nouveau → **elle a changé son mot de passe**, c'est le
+   signal le plus fort, il prouve qu'elle est entrée et qu'elle a suivi la
+   consigne.
+2. `last_sign_in_at` bouge → elle s'est connectée, sans forcément aller au bout.
+
+```sql
+select last_sign_in_at, updated_at
+from auth.users
+where id = '71752345-6c2f-4a33-a93f-63dcdafb8e51';
+```
+
+Un troisième signal dit qu'elle **utilise** vraiment l'outil, et pas seulement
+qu'elle l'a ouvert : une ligne dans `cr_stock_mouvements`, ou une quantité de
+stock non nulle. C'est celui-là qui compte pour de bon.
 
 ## En une phrase
 

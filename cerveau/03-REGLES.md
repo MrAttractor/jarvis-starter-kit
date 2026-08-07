@@ -257,6 +257,33 @@
 
 ---
 
+### R-56 · Un produit mis en pause libère l'agence, pas ses clients
+**Origine** : EXP-038, C'Real sortie d'Attractor Assists.
+**Application** : avant d'écarter un produit interne, lister **qui en dépend encore réellement**. Un client actif est extrait vers ses propres tables et son propre domaine, dans la foulée. Une pause suspend le temps qu'on investit, jamais les engagements pris envers ceux qui s'en servent.
+
+### R-57 · Un commentaire de code est un document public
+**Origine** : recette du 07/08/2026, trois clientes nommées dans le code du site d'une quatrième.
+**Application** : jamais de nom d'un autre client, d'un autre dossier ou d'un montant dans un fichier livré. Les commentaires partent en production et se lisent d'un clic droit. Expliquer le pourquoi sans citer chez qui.
+
+### R-58 · Un état vide ne se dit pas comme une alerte
+**Origine** : tableau de bord C'Real, huit farines « à produire » le premier jour.
+**Application** : « jamais renseigné » et « en rupture » se ressemblent en base et se disent très différemment à l'écran. Un compteur à zéro parce que rien n'a été saisi appelle une invitation à démarrer, pas un signal rouge. Un outil qui crie dès la première ouverture apprend à l'utilisateur à ignorer ses alertes.
+**Assists** : tout écran de démarrage distingue « pas encore fait » de « problème ».
+
+### R-59 · Une alerte porte son action, sinon c'est un cul-de-sac
+**Origine** : même écran, « À produire » était une étiquette et non un bouton.
+**Application** : toute alerte se répare **depuis l'endroit où elle s'affiche**. Faire changer d'onglet et retrouver l'élément concerné, c'est quatre gestes pour une information déjà sous les yeux.
+
+### R-60 · Un code de retour ne prouve rien, ce sont les lignes affectées
+**Origine** : recette de sécurité du 07/08/2026.
+**Application** : un `PATCH` bloqué par une policy RLS renvoie **204**, exactement comme une modification réussie, parce que zéro ligne correspond au filtre. Toute preuve d'isolation se fait avec `Prefer: return=representation` et un **comptage des lignes**, jamais sur le seul statut HTTP. Corollaire de la leçon de session 101 : un test qui innocente n'est pas une preuve d'innocence.
+
+### R-61 · Un test lancé juste après un déploiement peut mentir
+**Origine** : recette du 07/08/2026, page 404 servie en code 200.
+**Application** : le cache d'un domaine sert encore l'ancienne réponse sur les adresses déjà visitées, alors que le déploiement direct répond correctement. Vérifier sur l'URL du déploiement, ou avec un paramètre anti-cache, avant de conclure à un défaut **comme avant de conclure à un succès**.
+
+---
+
 ## Comment ajouter une règle
 
 ```

@@ -438,6 +438,18 @@
 
 ---
 
+### EXP-038 · Sortir une cliente réelle d'un produit qu'on vient de mettre en pause
+**DÉBLOCAGE** · 07/08/2026 · C'Real / Attractor Assists
+
+**Situation.** Attractor Assists est passé en pause le 06/08. Or toute la boutique de Marie Kezey en dépendait : son catalogue, son assistante, ses conversations et ses commandes vivaient dans les tables partagées du produit. Elle lançait sa communication au même moment. Un produit en pause ne se débranche pas, mais il ne s'entretient plus non plus.
+**Ce qu'on a fait.** Tables `cr_` dédiées, une edge function, migration des données, et bascule des trois appels de sa page en un seul déploiement. Puis le tableau de bord qu'elle n'avait jamais eu.
+**Résultat.** Trois trouvailles que la sortie a révélées, et qu'on ne cherchait pas. **Un plafond invisible** : son plan gratuit refusait d'enregistrer au-delà de 20 commandes par mois, en silence, la 21e serait arrivée sur son téléphone sans jamais apparaître nulle part. **Un catalogue à moitié faux** : les fiches vivaient en dur dans le JavaScript, le produit ne synchronisait que le prix, donc désactiver un article ne le retirait pas de la boutique. **Une page 404 absente** : le domaine servait la boutique sur n'importe quel chemin, en code 200.
+**Pourquoi.** Mettre un produit en pause ne suspend pas les engagements pris envers ceux qui s'en servent. La dette ne disparaît pas, elle change de propriétaire. Et l'extraction est le moment où l'on voit enfin ce que la dépendance cachait : trois défauts dormaient depuis des mois derrière un système qui « marchait ».
+**Règle.** → R-56
+**Réutilisable pour.** Tout produit interne mis en pause, arrêté ou remplacé, dont un client réel dépend encore.
+
+---
+
 ## Comment ajouter une fiche
 
 Copier ce gabarit, numéroter à la suite, classer dans la bonne section :
