@@ -208,6 +208,15 @@ nav svg { width:22px; height:22px; }
         <div class="section-titre">À traiter maintenant</div>
         <div id="accueil-atraiter"></div>
       </div>
+      <div class="carte" id="carte-demarrage" style="display:none;">
+        <div class="section-titre">Mettez votre stock en route</div>
+        <p style="color:var(--muted);font-size:15px;margin-bottom:16px;">
+          Indiquez combien de sachets vous avez de chaque farine. Ensuite, le stock
+          baissera tout seul à chaque commande préparée, et vous serez prévenue
+          quand une farine commencera à manquer.
+        </p>
+        <button class="btn" onclick="allerStock()">Indiquer mes quantités</button>
+      </div>
       <div class="carte" id="carte-alertes" style="display:none;">
         <div class="section-titre">Farines bientôt épuisées</div>
         <div id="accueil-alertes"></div>
@@ -230,9 +239,7 @@ nav svg { width:22px; height:22px; }
     <!-- Stock -->
     <section id="s-stock">
       <div class="section-titre">Mon stock</div>
-      <p style="color:var(--muted);font-size:14px;margin-bottom:16px;">
-        Le stock baisse tout seul quand vous marquez une commande comme préparée.
-      </p>
+      <p id="stock-intro" style="color:var(--muted);font-size:14px;margin-bottom:16px;"></p>
       <div id="liste-stock"></div>
     </section>
 
@@ -306,10 +313,10 @@ nav svg { width:22px; height:22px; }
     </div>
     <p style="color:var(--muted);font-size:14px;margin-bottom:16px;" id="stock-actuel"></p>
     <div class="champ">
-      <label for="st-ajout">J'ai produit combien de sachets ?</label>
+      <label for="st-ajout" id="st-libelle">J'ai produit combien de sachets ?</label>
       <input id="st-ajout" type="number" inputmode="numeric" placeholder="20">
     </div>
-    <button class="btn" onclick="ajouterStock()">Ajouter au stock</button>
+    <button class="btn" id="btn-ajout-stock" onclick="ajouterStock()">Ajouter au stock</button>
     <div class="champ" style="margin-top:24px;">
       <label for="st-seuil">M'alerter en dessous de</label>
       <input id="st-seuil" type="number" inputmode="numeric" min="0">
@@ -344,7 +351,16 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
   auth: { storageKey: 'creal-admin-auth', persistSession: true, autoRefreshToken: true },
 });
 
-let PRODUITS = [], COMMANDES = [], STOCK = [], produitEdite = null, stockEdite = null;
+let PRODUITS = [], COMMANDES = [], STOCK = [], MOUVEMENTS = 0;
+let produitEdite = null, stockEdite = null;
+
+/* Le stock est « en route » dès qu'un mouvement a eu lieu ou qu'une quantité
+   est saisie. Avant, tout est à zéro parce que rien n'a été renseigné, ce qui
+   n'est pas une rupture. Les deux cas se ressemblent en base et se disent très
+   différemment à l'écran. */
+function stockEnRoute() {
+  return MOUVEMENTS > 0 || STOCK.some(s => s.quantite > 0);
+}
 
 /* ── Connexion ─────────────────────────────────────────────────────────── */
 async function connexion() {
@@ -401,6 +417,10 @@ async function chargerCommandes() {
 async function chargerStock() {
   const { data } = await sb.from('cr_stock').select('*');
   STOCK = data ?? [];
+  // On ne compte que l'existence, pas les lignes : head + count évite de
+  // rapatrier tout le journal à chaque ouverture.
+  const { count } = await sb.from('cr_stock_mouvements').select('id', { count: 'exact', head: true });
+  MOUVEMENTS = count ?? 0;
 }
 
 /* ── Navigation ────────────────────────────────────────────────────────── */
@@ -435,19 +455,41 @@ function rendreAccueil() {
   pastille.textContent = aTraiter.length;
   pastille.style.display = aTraiter.length ? 'flex' : 'none';
 
-  const bas = STOCK.filter(s => s.quantite <= s.seuil_alerte);
+  /* « Jamais renseigné » n'est pas « en rupture ».
+     Tant qu'aucun mouvement n'a jamais eu lieu, tous les stocks sont à zéro
+     parce que personne ne les a saisis, pas parce que les farines manquent.
+     Afficher huit alertes rouges à la première ouverture ferait crier l'outil
+     sans rien dire, et lui apprendrait à ignorer ses alertes. */
+  const enRoute = stockEnRoute();
+  document.getElementById('carte-demarrage').style.display = enRoute ? 'none' : 'block';
+
+  const bas = enRoute ? STOCK.filter(s => s.quantite <= s.seuil_alerte) : [];
   const carte = document.getElementById('carte-alertes');
   carte.style.display = bas.length ? 'block' : 'none';
+
+  /* Chaque ligne ouvre directement la saisie de CETTE farine.
+     Une alerte sur laquelle on ne peut pas agir est un cul-de-sac : elle
+     obligeait à changer d'onglet, retrouver la farine et appuyer sur Modifier,
+     soit quatre gestes pour une information déjà sous les yeux. */
   document.getElementById('accueil-alertes').innerHTML = bas.map(s => {
     const p = PRODUITS.find(x => x.id === s.produit_id);
-    return `<div class="ligne"><div class="corps"><b>${esc(p ? p.nom : '?')}</b>
-      <span>Il vous reste ${s.quantite} sachet${s.quantite > 1 ? 's' : ''}</span></div>
-      <span class="etiquette rupture">À produire</span></div>`;
+    return `<div class="ligne" onclick="ouvrirStock('${s.produit_id}')" style="cursor:pointer">
+      <div class="corps"><b>${esc(p ? p.nom : '?')}</b>
+        <span>Il vous reste ${s.quantite} sachet${s.quantite > 1 ? 's' : ''}</span></div>
+      <span class="etiquette rupture">J'en produis</span>
+      <span style="color:var(--orange);flex-shrink:0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;display:block;"><path d="M9 18l6-6-6-6"/></svg>
+      </span></div>`;
   }).join('');
 
   const pStock = document.getElementById('pastille-stock');
   pStock.textContent = bas.length;
   pStock.style.display = bas.length ? 'flex' : 'none';
+}
+
+/* Bascule sur l'onglet Stock depuis l'accueil, en activant le bon bouton. */
+function allerStock() {
+  onglet('stock', document.querySelectorAll('nav button')[3]);
 }
 
 /* ── Commandes ─────────────────────────────────────────────────────────── */
@@ -609,18 +651,25 @@ async function enregistrerProduit() {
 
 /* ── Stock ─────────────────────────────────────────────────────────────── */
 function rendreStock() {
+  const enRoute = stockEnRoute();
+  document.getElementById('stock-intro').textContent = enRoute
+    ? 'Le stock baisse tout seul quand vous marquez une commande comme préparée.'
+    : "Appuyez sur une farine pour indiquer combien de sachets vous en avez. Vous pourrez toujours corriger ensuite.";
+
   document.getElementById('liste-stock').innerHTML = `<div class="carte">${
     PRODUITS.map(p => {
       const s = STOCK.find(x => x.produit_id === p.id) ?? { quantite: 0, seuil_alerte: 5 };
-      const bas = s.quantite <= s.seuil_alerte;
+      const bas = enRoute && s.quantite <= s.seuil_alerte;
       return `
-        <div class="ligne">
+        <div class="ligne" onclick="ouvrirStock('${p.id}')" style="cursor:pointer">
           <div class="corps">
             <b>${esc(p.nom)}</b>
-            <span>${s.quantite} sachet${s.quantite > 1 ? 's' : ''} en stock</span>
+            <span>${enRoute
+              ? `${s.quantite} sachet${s.quantite > 1 ? 's' : ''} en stock`
+              : 'Quantité pas encore indiquée'}</span>
           </div>
-          ${bas ? '<span class="etiquette rupture">À produire</span>' : ''}
-          <button class="btn petit fantome" onclick="ouvrirStock('${p.id}')">Modifier</button>
+          ${bas ? '<span class="etiquette rupture">J\'en produis</span>' : ''}
+          <button class="btn petit fantome" onclick="event.stopPropagation();ouvrirStock('${p.id}')">${enRoute ? 'Modifier' : 'Indiquer'}</button>
         </div>`;
     }).join('')
   }</div>`;
@@ -630,8 +679,19 @@ function ouvrirStock(id) {
   stockEdite = id;
   const p = PRODUITS.find(x => x.id === id);
   const s = STOCK.find(x => x.produit_id === id) ?? { quantite: 0, seuil_alerte: 5 };
+  // La question se pose farine par farine, pas selon l'état global : à zéro on
+  // demande ce qu'elle A, sinon ce qu'elle vient de produire. Ajouter 20 à 0
+  // donne le même résultat, mais une question mal posée se répond mal.
+  const vide = s.quantite === 0;
+
   document.getElementById('stock-titre').textContent = p ? p.nom : 'Stock';
-  document.getElementById('stock-actuel').textContent = `Vous avez ${s.quantite} sachet${s.quantite > 1 ? 's' : ''} en stock.`;
+  document.getElementById('stock-actuel').textContent = vide
+    ? "Aucune quantité indiquée pour cette farine."
+    : `Vous avez ${s.quantite} sachet${s.quantite > 1 ? 's' : ''} en stock.`;
+  document.getElementById('st-libelle').textContent = vide
+    ? 'Combien de sachets avez-vous ?'
+    : "J'ai produit combien de sachets ?";
+  document.getElementById('btn-ajout-stock').textContent = vide ? 'Enregistrer' : 'Ajouter au stock';
   document.getElementById('st-ajout').value = '';
   document.getElementById('st-seuil').value = s.seuil_alerte;
   ouvrir('modale-stock');
