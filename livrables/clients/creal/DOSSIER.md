@@ -6,10 +6,10 @@
 
 | Radar | |
 |---|---|
-| Statut | livré, en attente de validation sur téléphone |
+| Statut | **en production**, message de livraison prêt à envoyer |
 | Dernier contact | 2026-07-07 |
-| Prochaine action | Ouvrir la boutique et le tableau de bord sur un vrai téléphone, puis basculer en production et livrer à Kezey |
-| Échéance | avant que sa communication monte en charge |
+| Prochaine action | Envoyer le message à Kezey, puis vérifier sous une semaine qu'elle a saisi son stock et changé son mot de passe |
+| Échéance | — |
 | Argent en attente | **rien de tracé, et c'est le vrai trou du dossier** |
 
 ## En une phrase
@@ -25,7 +25,9 @@ pause le 06/08/2026.
 | La boutique | `boutiquecreal.com` | ses clientes |
 | Son tableau de bord | `boutiquecreal.com/admin` | **elle** |
 | Son guide | `boutiquecreal.com/guide` | elle |
-| Préversion à valider | `bascule-hors-assists.boutiquecreal.pages.dev` | interne |
+
+Projet Cloudflare Pages `boutiquecreal`, branche de production **`main`**
+(vérifiée, pas devinée, R-17).
 
 Connexion : `creal.creal21@gmail.com`. **Le mot de passe temporaire ne s'écrit
 pas ici** : il se transmet dans le message, et elle le change à sa première
@@ -69,17 +71,28 @@ octet.
 | Un panier truqué ne passe pas | total forcé à 1 F, enregistré à 1 500 F |
 | Le parcours complet fonctionne | vrai code de la page joué contre la base : commande → tableau de bord → préparée → stock 20 → 17 → 20 |
 
+## Ce que le téléphone a corrigé, avant la bascule
+
+Mac Arthur a ouvert le tableau de bord sur son iPhone le 07/08. Deux défauts
+qu'aucun des contrôles automatisés n'avait vus :
+
+1. **L'alerte de stock était un cul-de-sac.** « À produire » était une étiquette,
+   pas un bouton : il fallait changer d'onglet et retrouver la farine. Chaque
+   ligne ouvre maintenant directement la saisie.
+2. **Le message était faux.** Ses huit farines n'étaient pas épuisées, elle
+   n'avait jamais saisi son stock. L'écran affichait huit alertes rouges et une
+   pastille à 8 dès la première ouverture. « Jamais renseigné » se dit maintenant
+   autrement que « en rupture ».
+
+C'est la deuxième fois en deux jours que l'appareil réel trouve ce que les tests
+laissent passer. R-51.
+
 ## Ce qui reste à faire
 
-1. **Ouvrir la boutique ET le tableau de bord sur un vrai téléphone** (R-51).
-   Trois défauts sont sortis de ce test sur Élévia le 06/08 alors que quinze
-   contrôles automatisés passaient. **Tant que ce n'est pas fait, on ne bascule
-   pas la production.**
-2. **Basculer en production** : déployer sur la branche `main` du projet
-   `boutiquecreal`.
-3. **Livrer à Kezey** : le lien, son mot de passe, et lui demander de le changer.
-4. **Lui faire saisir ses vraies quantités de stock.** Tout est à zéro,
-   volontairement : un stock inventé est pire que pas de stock.
+1. **Envoyer le message de livraison** (rédigé, prêt).
+2. **Vérifier sous une semaine** qu'elle a saisi son stock et changé son mot de
+   passe. Tout est à zéro, volontairement : un stock inventé est pire que pas de
+   stock.
 
 ## Ce qui n'est toujours pas établi
 
