@@ -6,9 +6,9 @@
 |---|---|
 | Statut | en production |
 | Dernier contact | 2026-06-03 |
-| Prochaine action | Confirmer le solde de 100 € et l'encaissement réel du mensuel |
+| Prochaine action | Confirmer le solde de 100 €. Le mensuel attend l'activation des récurrents, chantier collectif |
 | Échéance | — |
-| Argent en attente | 100 € de solde, plus 50 €/mois à vérifier |
+| Argent en attente | 100 € de solde. Le mensuel de 50 € est contractuel, pas encaissé |
 
 ## En une phrase
 
@@ -34,8 +34,14 @@ tourner indépendamment de VSD.
 | Solde | **100 €** |
 | Abonnement | **50 €/mois** |
 
-**Deux choses à vérifier** : le solde de 100 € est-il rentré, et l'abonnement mensuel
-est-il réellement encaissé chaque mois ? C'est le MRR du dossier.
+**Le solde de 100 € est-il rentré ?** C'est la seule question ouverte côté argent
+sur ce dossier.
+
+**L'abonnement de 50 €/mois n'est pas encaissé, et ce n'est pas un oubli.**
+Précision de Mac Arthur le 07/08/2026 : **aucun récurrent ne tourne nulle part**,
+l'agence est encore en phase de mise en place du système. Le montant est
+contractuel. Son activation est un chantier collectif, pas une relance à faire
+sur ce dossier.
 
 ## Ce qui est en ligne
 

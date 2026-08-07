@@ -100,8 +100,12 @@ laissent passer. R-51.
    montant dans le workspace.** On vient de lui construire l'équivalent de ce
    qui vaut entre 1,8 et 3 millions de FCFA chez Ayêla. C'est une question à
    poser, et le moment de la poser, c'est la livraison.
-2. **Si un abonnement mensuel doit être actif**, comme sur GetWinWorld (35 €) et
-   J'Envoie Express (50 €).
+2. **Si un abonnement mensuel doit exister sur ce dossier.** Précision de Mac
+   Arthur le 07/08/2026 : **aucun récurrent n'est activé nulle part à ce jour**,
+   l'agence est encore en phase de mise en place du système. Les 35 €/mois de
+   GetWinWorld et les 50 €/mois de J'Envoie Express sont contractuels, pas
+   encaissés. C'Real n'est donc pas une exception, et la vraie question est
+   collective : quand active-t-on les récurrents, et sur quels dossiers d'abord.
 3. **Le sort de la proposition Assists** (`creal-assists/proposition-creal.html`),
    envoyée ou jamais partie. Elle n'a plus d'objet maintenant qu'Assists est en
    pause : à archiver.

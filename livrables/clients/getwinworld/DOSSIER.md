@@ -6,9 +6,9 @@
 |---|---|
 | Statut | en production |
 | Dernier contact | 2026-07-11 |
-| Prochaine action | Récupérer les 11,86 € et vérifier que l'abonnement à 35 €/mois tourne |
+| Prochaine action | Récupérer les 11,86 €. Le mensuel attend l'activation des récurrents, chantier collectif |
 | Échéance | — |
-| Argent en attente | 11,86 €, plus 35 €/mois à vérifier |
+| Argent en attente | 11,86 €. Le mensuel de 35 € est contractuel, pas encaissé |
 
 ## En une phrase
 
@@ -76,4 +76,8 @@ espace privilèges.
 ## Prochaine action
 
 - Récupérer les **11,86 €** restants, ou les passer en perte et le dire
-- Vérifier que l'**abonnement à 35 €/mois** est bien activé depuis la fin du mois offert. C'est le MRR du dossier, et c'est ce qui compte le plus ici.
+- L'**abonnement à 35 €/mois** n'est **pas activé**, et ce n'est pas un oubli sur
+  ce dossier : précision de Mac Arthur le 07/08/2026, **aucun récurrent ne tourne
+  nulle part**, l'agence est encore en phase de mise en place du système. Le
+  montant est contractuel. Son activation est un chantier collectif, pas une
+  relance client à faire ici.
