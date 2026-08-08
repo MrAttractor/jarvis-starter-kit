@@ -1,108 +1,90 @@
-# NabyCook — Ce dont nous avons besoin pour finir le site
+# NabyCook — point d'étape sur les éléments du site
 
-> Liste à transmettre à Nabintou. Écrite pour être lue par elle, sans terme technique.
-> Chaque point correspond à un emplacement déjà prêt sur la maquette, souligné en orange.
-> Maquette à voir : https://demo.agenceattractor.com/nabycook-site
-
----
-
-## Priorité 1 — sans ça, le site ne peut pas être mis en ligne
-
-**1. Le logo en haute définition**
-Le fichier que nous avons est une image de qualité moyenne, sur fond blanc. Il nous faut
-la version d'origine, celle du graphiste : un fichier `.ai`, `.eps`, `.svg` ou à défaut un
-`.png` à fond transparent. C'est ce qui permet d'afficher le logo net sur tous les écrans.
-
-**2. Les informations légales de l'association**
-- Le numéro RNA (il commence par un W) et le SIRET s'il existe
-- La date de déclaration en préfecture
-- L'adresse du siège de l'association
-
-**3. L'accès au nom de domaine nabycook.com**
-Nous avons besoin de pouvoir le pointer vers le site. Soit les identifiants du site où il
-a été acheté, soit une invitation en tant qu'administrateur.
-
-**4. Les liens HelloAsso**
-Deux liens : celui de l'adhésion Nabycook'r (50 €) et celui du soutien libre (La Brigade
-du cœur). Si le QR code existe déjà, l'envoyer aussi en image.
+> Mise à jour du 08/08/2026, après réception de votre dossier Drive « SITE NABYCOOK ».
+> Écrite pour être lue par Nabintou, sans terme technique.
+> Site à voir : https://demo.agenceattractor.com/nabycook-site
 
 ---
 
-## Priorité 2 — ce qui rend le site crédible au forum du 5 septembre
+## Ce qui est reçu et déjà en ligne
 
-**5. Les chiffres d'impact**
-Quatre chiffres, même approximatifs, mais vrais. Nous n'en inventerons aucun.
-- Combien de personnes accueillies en atelier depuis le début
-- Combien de kilos d'invendus sauvés
-- Combien d'entreprises accompagnées
-- Combien d'adhérents et de soutiens
-Et la date à laquelle ces chiffres sont arrêtés.
+Tout ce qui suit est intégré au site, vous pouvez le vérifier tout de suite.
 
-**6. La liste des partenaires**
-Le nom de chaque structure à afficher, et son logo si vous l'avez. Institutions,
-incubateurs, magasins qui vous confient leurs invendus, entreprises clientes.
-Important : n'afficher que ceux qui sont d'accord pour apparaître.
-
-**7. Les photos**
-Ce sont elles qui feront la différence. Il nous faut au minimum :
-- Une photo d'ambiance d'un atelier, en format paysage, la plus grande possible
-- Un portrait de vous, en format vertical, en cuisine ou en atelier
-- Une photo de plats, d'épices ou de produits bruts
-Les photos prises au téléphone conviennent, à condition qu'elles ne soient pas
-réduites avant l'envoi.
-
-**8. Votre histoire**
-Nous avons écrit la trame, il manque les faits. En quelques phrases :
-- Où vous avez grandi, et ce que la cuisine représentait dans votre famille
-- Quand vous êtes arrivée à Paris, et pourquoi
-- Le moment précis qui vous a décidée à créer NabyCook
-- La date de création de l'association
-- Votre parcours avant NabyCook, si vous souhaitez le mentionner
-- Les influences et les cuisines que vous voulez citer dans vos ateliers
+- **Les informations légales.** Numéro RNA, SIRET, date de déclaration en préfecture et
+  adresse du siège sont affichés sur la page « L'Association & l'Impact ».
+- **Les liens d'adhésion.** Les deux boutons HelloAsso sont actifs : Nabycook'r à 50 €
+  et La Brigade du cœur en soutien libre.
+- **Les chiffres d'impact**, arrêtés au 30 juin 2026 : plus de 265 participants, 460 kg
+  d'invendus sauvés, 5 entreprises accompagnées, 11 adhérents et soutiens.
+- **Votre histoire.** La page « L'Univers NabyCook » est désormais écrite à votre voix,
+  reprise de votre texte : votre grand-mère alicamenteuse, l'épreuve de santé, la
+  transmission depuis 2023, puis la naissance de l'association.
+- **Vos partenaires**, ceux dont vous avez confirmé l'accord.
+- **Vos réseaux.** Instagram et YouTube sont dans le pied de page et sur l'accueil.
+- **Votre phrase.** « La magie dans ton quotidien parisien » devient la signature du
+  site. Elle vient de la fin de votre biographie, donc elle est de vous.
 
 ---
 
-## Priorité 3 — ce qui peut arriver juste après
+## Ce qu'il nous manque encore
 
-**9. Trois témoignages**
-Le texte, le prénom, et en quelle qualité la personne parle : participante d'atelier,
-entreprise cliente, magasin partenaire. Trois suffisent.
+### Les photos, c'est le point le plus important
 
-**10. La revue de presse**
-Pour chaque parution : le nom du média, la date, le lien, et la phrase que vous voulez
-mettre en avant.
+Vous les avez déposées dans le Drive, mais nous ne pouvons pas les récupérer depuis
+notre côté. Les emplacements sont prêts et attendent quatre images :
 
-**11. Le compte Instagram**
-Le nom exact du compte, pour afficher vos dernières publications sur la page d'accueil.
+1. Une **ambiance d'atelier**, format paysage, pour le haut de la page d'accueil
+2. Un **portrait de vous**, format vertical, en cuisine ou en atelier
+3. Une photo de **plats, d'épices ou de produits bruts**, format paysage
+4. Un **atelier en entreprise**, format paysage
 
-**12. Le formulaire de newsletter Brevo**
-L'adresse du formulaire d'inscription, pour l'intégrer aux couleurs du site.
+Et le **logo en haute définition** : le fichier d'origine du graphiste, en `.ai`,
+`.eps`, `.svg`, ou à défaut un `.png` à fond transparent.
 
-**13. La composition du bureau**
-Prénom, nom et fonction des membres du bureau, et le nombre d'adhérents à jour de
-cotisation. À afficher seulement avec l'accord des personnes concernées.
+### Deux accords de partenaires à confirmer
 
-**14. Le dossier de presse**
-S'il existe, pour la page contact.
+Deux structures de votre liste ne sont **pas affichées**, faute d'accord confirmé :
+**GAB Île-de-France** (case laissée vide) et **EE** (vous notiez « demander au
+président »). Dites-nous quand c'est confirmé, elles apparaîtront.
 
-**15. La charte éditoriale**
-Vous la citez dans votre retour (« jamais abstrait, toujours gourmand, ludique, incarné »).
-Nous ne l'avons pas. Envoyez-la, nous calerons tous les textes dessus au lieu de
-travailler au jugé.
+Un point de vocabulaire : **LMPVPK** s'affiche tel quel. Faut-il écrire le nom en
+entier pour qu'un visiteur comprenne de qui il s'agit ?
+
+### Ce qui peut arriver plus tard
+
+- **Trois témoignages** : le texte, le prénom, et en quelle qualité la personne parle.
+  Le document du Drive est encore vide.
+- **La revue de presse** : nom du média, date, lien, et la phrase à mettre en avant.
+- **Le formulaire de newsletter Brevo** : l'adresse du formulaire d'inscription.
+- **La composition du bureau** : prénom, nom et fonction, avec l'accord des personnes.
+- **Le dossier de presse**, s'il existe.
+- **Votre charte éditoriale** (« jamais abstrait, toujours gourmand, ludique, incarné »).
+  Vous la citez, nous ne l'avons toujours pas.
 
 ---
 
 ## Deux points à trancher, pas à fournir
 
-**La phrase d'accroche du site.**
-Nous avons repris « La magie africaine dans votre quotidien parisien ». Elle est
-affichée en haut de la page d'accueil. À valider, à corriger ou à remplacer.
+**Le tutoiement.** Votre phrase de signature dit « ton quotidien parisien », alors que
+le reste du site vouvoie le visiteur. Les deux se défendent, mais il faut choisir :
+soit le site passe au tutoiement partout, soit la signature passe au vouvoiement.
 
-**La réduction d'impôt.**
-Le site n'affiche aucune mention de réduction d'impôt ni de reçu fiscal, volontairement.
-Nous ne l'ajouterons que si l'association confirme par écrit qu'elle est bien en droit
-d'émettre des reçus fiscaux. Annoncer un avantage fiscal qui ne s'applique pas
-engagerait l'association vis-à-vis de ses donateurs.
+**La réduction d'impôt.** Le site n'affiche toujours aucune mention de réduction
+d'impôt ni de reçu fiscal, volontairement. Nous ne l'ajouterons que si l'association
+confirme par écrit qu'elle est en droit d'émettre des reçus fiscaux. Annoncer un
+avantage fiscal qui ne s'applique pas engagerait l'association vis-à-vis de ses
+donateurs.
+
+---
+
+## Avant la mise en ligne publique
+
+Le site est encore en mode maquette, avec le bandeau en haut et sans référencement.
+Pour passer en ligne sur nabycook.com, il faut encore :
+
+- l'**accès au nom de domaine**, à votre charge et à votre nom
+- les **mentions légales** et la **politique de confidentialité**, obligatoires dès
+  l'ouverture au public
 
 ---
 

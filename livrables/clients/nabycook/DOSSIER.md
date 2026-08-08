@@ -1,19 +1,20 @@
 # Nabycook — l'état du dossier
 
-> Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
+> Révision du 08/08/2026. **Cette fiche est la première chose à lire du dossier.**
 
 | Radar | |
 |---|---|
-| Statut | attente client |
-| Dernier contact | 2026-07-31 |
-| Prochaine action | Obtenir ses textes, ses liens et sa charte éditoriale, et encaisser les 175 € avant de tourner |
-| Échéance | — |
+| Statut | en production |
+| Dernier contact | 2026-08-06 (dépôt de ses éléments dans le Drive partagé) |
+| Prochaine action | Récupérer les photos et le logo HD du Drive, puis trancher domaine et mise en ligne |
+| Échéance | forum du 5 septembre 2026 cité dans sa liste d'éléments |
 | Argent en attente | 175 € d'acompte |
 
 ## En une phrase
 
-Maquette de la Phase 1 livrée (5 pages) et retours intégrés. **En attente des textes,
-des liens et de la charte éditoriale de Nabintou** pour passer à la construction.
+Nabintou a livré ses éléments, **le site n'est plus une maquette à trous** : infos
+légales, chiffres d'impact, partenaires, liens HelloAsso et biographie complète sont
+intégrés et en ligne. **Restent les photos, le logo HD, les témoignages et la presse.**
 
 ## Le client
 
@@ -54,12 +55,21 @@ aussi pour le réseau personnel. À vérifier avant toute production.
 
 ## Prochaine action
 
-**La balle est dans son camp.** Trois choses à obtenir avant de reprendre :
+**La balle est revenue dans notre camp** pour l'essentiel. Ce qui reste, dans l'ordre :
 
-1. Ses **textes** et ses **liens**
-2. Sa **charte éditoriale** (« jamais abstrait, toujours gourmand, ludique, incarné »).
-   Elle la cite dans ses retours mais ne l'a pas envoyée. Sans elle, les textes se
-   calent au jugé et on refait deux fois le travail.
-3. Le **nom de domaine**, à sa charge et à son nom
+1. **Les photos et le logo HD.** Ils sont dans son Drive (dossier « SITE NABYCOOK »),
+   pas encore dans le dépôt. Le site les affiche dès qu'ils sont posés dans
+   `site/assets/photos/`, sans autre intervention.
+2. **Les trois liens HelloAsso à ouvrir une fois**, depuis un téléphone. Ils viennent
+   de son document et sont branchés sur les boutons d'adhésion, mais HelloAsso bloque
+   les vérifications automatiques : personne ne les a encore vus s'ouvrir.
+3. **Deux accords de partenaires à confirmer** avant de les afficher : GAB Île-de-France
+   (case laissée vide) et EE (« demander au président »). Ils sont volontairement
+   absents du site tant que ce n'est pas confirmé.
+4. Le **nom de domaine** nabycook.com, à sa charge et à son nom, puis la décision de
+   sortir du mode maquette.
+
+Encore attendus d'elle, sans bloquer : témoignages, revue de presse, formulaire Brevo,
+composition du bureau, charte éditoriale.
 
 Et côté agence : encaisser les 175 € avant de tourner les vidéos.

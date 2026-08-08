@@ -26,10 +26,33 @@ Journal de bord, back-office Supabase, RGPD, formation. Ce sont les Phases 2 et 
 ## Le seul fichier à remplir : `assets/config.js`
 
 Tout ce qui est variable y est regroupé : contacts, liens externes, chiffres d'impact,
-partenaires, presse, témoignages, formules d'adhésion, drapeaux d'affichage.
+partenaires, photos, presse, témoignages, formules d'adhésion, drapeaux d'affichage.
 
 Une valeur laissée à `A_FOURNIR` s'affiche sur le site avec un marqueur orange
 « à fournir ». C'est volontaire : un emplacement vide est honnête, un chiffre inventé ne l'est pas.
+
+**Rempli le 08/08/2026** avec les éléments du Drive « SITE NABYCOOK » de Nabintou :
+infos légales, liens HelloAsso, Instagram, YouTube, chiffres d'impact au 30/06/2026,
+partenaires confirmés, biographie.
+
+### Déposer les photos
+
+Aucun code à toucher. Il suffit de poser les fichiers sous ces noms exacts :
+
+| Fichier attendu | Emplacement sur le site |
+|---|---|
+| `assets/photos/atelier-ambiance.jpg` | haut de la page d'accueil, paysage |
+| `assets/photos/portrait-nabintou.jpg` | page Univers, vertical |
+| `assets/photos/plats-et-epices.jpg` | page Univers, paysage |
+| `assets/photos/atelier-entreprise.jpg` | page Association, paysage 16/9 |
+| `assets/partenaires/linkee.png` | mur des partenaires |
+
+Tant qu'un fichier est absent, l'emplacement en pointillés reste affiché : **une photo
+manquante ne produit jamais d'image cassée**, le `onerror` retombe sur l'emplacement.
+Même mécanisme pour les logos partenaires, qui retombent sur le nom de la structure.
+
+Compresser avant de déposer, la cible est **moins d'un mégaoctet par image** : la
+clientèle se connecte souvent en 4G.
 
 ---
 
@@ -37,9 +60,12 @@ Une valeur laissée à `A_FOURNIR` s'affiche sur le site avec un marqueur orange
 
 À faire dans l'ordre, rien ne doit être sauté.
 
-- [ ] Remplir `assets/config.js` avec les éléments réels de Nabintou
+- [x] Remplir `assets/config.js` avec les éléments réels de Nabintou
 - [ ] Remplacer `assets/logo-nabycook.jpg` par le logo HD ou vectoriel détouré (PNG à fond transparent de préférence)
-- [ ] Déposer les photos et remplacer les blocs `data-photo` par de vraies balises `<img>` avec `width` et `height`
+- [ ] Déposer les photos dans `assets/photos/` (voir le tableau ci-dessus)
+- [ ] Ouvrir une fois les 3 liens HelloAsso depuis un téléphone : HelloAsso bloque les vérifications automatiques, ils n'ont pas pu être testés d'ici
+- [ ] Ouvrir le site sur un vrai téléphone : Chrome sans interface ne descend pas sous 504 px de large, le 375 px réel n'a pas pu être mesuré
+- [ ] Confirmer les accords d'affichage de GAB Île-de-France et EE avant de les ajouter
 - [ ] Passer `NABY.maquette` à `false` dans `assets/config.js`
 - [ ] **Retirer la balise `<meta name="robots" content="noindex">` dans les 5 pages HTML**
       (elle n'est PAS pilotée par le fichier de configuration, c'est volontaire : un

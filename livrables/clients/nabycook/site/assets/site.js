@@ -13,10 +13,10 @@
     });
   };
 
-  // Rend une valeur, ou un marqueur "a fournir" si elle est absente.
+  // Rend une valeur, ou un marqueur "à fournir" si elle est absente.
   var val = function (v, attente) {
     if (v === null || v === undefined || v === '') {
-      return '<span class="afournir">' + esc(attente || 'a fournir') + '</span>';
+      return '<span class="afournir">' + esc(attente || 'à fournir') + '</span>';
     }
     return esc(v);
   };
@@ -58,6 +58,7 @@
     instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>',
     facebook: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 8.5H17V5h-2.5A3.5 3.5 0 0 0 11 8.5V11H8.5v3.5H11V21h3.5v-6.5H17L17.5 11h-3V9a.5.5 0 0 1 .5-.5Z"/></svg>',
     linkedin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7.5 10.5V17"/><circle cx="7.5" cy="7.4" r="1"/><path d="M11.5 17v-3.6a2.4 2.4 0 0 1 4.8 0V17"/><path d="M11.5 10.5V17"/></svg>',
+    youtube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="m10.5 9.5 5 2.5-5 2.5Z"/></svg>',
     fleche: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>',
   };
 
@@ -66,7 +67,7 @@
     { cle: 'accueil', url: 'index.html', libelle: 'Accueil' },
     { cle: 'univers', url: 'univers.html', libelle: 'L\'Univers NabyCook' },
     { cle: 'association', url: 'association.html', libelle: 'L\'Association & l\'Impact' },
-    { cle: 'adhesions', url: 'adhesions.html', libelle: 'Adherer' },
+    { cle: 'adhesions', url: 'adhesions.html', libelle: 'Adhérer' },
     { cle: 'contact', url: 'contact.html', libelle: 'Contact' },
   ];
 
@@ -77,7 +78,7 @@
     if (!NABY.maquette) return;
     var d = document.createElement('div');
     d.className = 'bandeau-maquette';
-    d.innerHTML = '<b>Maquette de travail</b> — les zones soulignees en orange attendent tes elements. Merci de ne pas partager ce lien en dehors de l\'association.';
+    d.innerHTML = '<b>Maquette de travail</b> — les zones soulignées en orange attendent tes éléments. Merci de ne pas partager ce lien en dehors de l\'association.';
     document.body.insertBefore(d, document.body.firstChild);
   }
 
@@ -101,7 +102,7 @@
           '<button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu"><span></span></button>' +
           '<nav class="nav" id="menu" aria-label="Navigation principale">' +
             '<ul>' + liens + '</ul>' +
-            '<a class="bouton bouton-1" href="adhesions.html">Adherer a l\'association</a>' +
+            '<a class="bouton bouton-1" href="adhesions.html">Adhérer à l\'association</a>' +
           '</nav>' +
         '</div>' +
       '</header>';
@@ -128,6 +129,7 @@
 
     var reseaux = [
       { cle: 'instagram', url: NABY.liens.instagram, nom: 'Instagram' },
+      { cle: 'youtube', url: NABY.liens.youtube, nom: 'YouTube' },
       { cle: 'facebook', url: NABY.liens.facebook, nom: 'Facebook' },
       { cle: 'linkedin', url: NABY.liens.linkedin, nom: 'LinkedIn' },
     ].filter(function (r) { return !vide(r.url); });
@@ -136,7 +138,7 @@
       ? '<div class="sociaux">' + reseaux.map(function (r) {
           return '<a href="' + esc(r.url) + '" target="_blank" rel="noopener" aria-label="' + esc(r.nom) + '">' + ICONES[r.cle] + '</a>';
         }).join('') + '</div>'
-      : '<p class="aide" style="color:rgba(247,242,231,.62)">Liens reseaux sociaux <span class="afournir">a fournir</span></p>';
+      : '<p class="aide" style="color:rgba(247,242,231,.62)">Liens réseaux sociaux <span class="afournir">à fournir</span></p>';
 
     var liensPages = PAGES.map(function (p) {
       return '<li><a href="' + p.url + '">' + esc(p.libelle) + '</a></li>';
@@ -160,13 +162,13 @@
               '<ul>' +
                 '<li><a href="mailto:' + esc(NABY.email) + '">' + esc(NABY.email) + '</a></li>' +
                 '<li><a href="tel:' + esc(NABY.telephoneLien) + '">' + esc(NABY.telephone) + '</a></li>' +
-                '<li>' + val(NABY.adresse, 'adresse a fournir') + '</li>' +
+                '<li>' + val(NABY.adresse, 'adresse à fournir') + '</li>' +
               '</ul>' +
             '</div>' +
           '</div>' +
           '<div class="bas">' +
             '<span>&copy; ' + new Date().getFullYear() + ' Association NabyCook · ' + esc(NABY.ville) + '</span>' +
-            '<span>Site concu et realise par l\'agence Mr Attractor</span>' +
+            '<span>Site conçu et réalisé par l\'agence Mr Attractor</span>' +
           '</div>' +
         '</div>' +
       '</footer>';
@@ -204,18 +206,43 @@
       cible.innerHTML =
         '<div class="logos">' +
           [1, 2, 3, 4, 5].map(function () {
-            return '<div class="logo-slot">Logo partenaire<br><span class="afournir">a fournir</span></div>';
+            return '<div class="logo-slot">Logo partenaire<br><span class="afournir">à fournir</span></div>';
           }).join('') +
         '</div>';
       return;
     }
-    cible.innerHTML =
-      '<div class="logos">' +
-        NABY.partenaires.map(function (p) {
-          if (vide(p.logo)) return '<div class="logo-slot">' + esc(p.nom) + '</div>';
-          return '<div class="logo-slot" style="border-style:solid"><img src="' + esc(p.logo) + '" alt="' + esc(p.nom) + '" style="max-height:56px;width:auto"></div>';
-        }).join('') +
-      '</div>';
+    // Construit a la main : un logo declare mais pas encore depose doit
+    // retomber sur le nom du partenaire, jamais sur une image cassee.
+    var boite = document.createElement('div');
+    boite.className = 'logos';
+
+    NABY.partenaires.forEach(function (p) {
+      var slotP = document.createElement('div');
+      slotP.className = 'logo-slot';
+
+      var nom = function () {
+        slotP.style.borderStyle = 'dashed';
+        slotP.textContent = p.nom;
+      };
+
+      if (vide(p.logo)) { nom(); boite.appendChild(slotP); return; }
+
+      var img = document.createElement('img');
+      img.setAttribute('alt', p.nom);
+      img.setAttribute('loading', 'lazy');
+      img.style.maxHeight = '56px';
+      img.style.maxWidth = '100%';
+      img.style.width = 'auto';
+      img.addEventListener('error', nom);
+      img.setAttribute('src', p.logo);
+
+      slotP.style.borderStyle = 'solid';
+      slotP.appendChild(img);
+      boite.appendChild(slotP);
+    });
+
+    cible.innerHTML = '';
+    cible.appendChild(boite);
   }
 
   /* ---------- Revue de presse ---------- */
@@ -225,9 +252,9 @@
     if (vide(NABY.presse)) {
       cible.innerHTML =
         '<div class="bloc-afournir">' +
-          '<span class="etiq-afournir">A fournir</span>' +
+          '<span class="etiq-afournir">À fournir</span>' +
           '<h3>Revue de presse</h3>' +
-          '<p class="lead" style="margin-bottom:0">Articles, passages radio ou television, publications des incubateurs : envoyez la source, la date et le lien. Chaque parution sera affichee ici avec sa citation.</p>' +
+          '<p class="lead" style="margin-bottom:0">Articles, passages radio ou télévision, publications des incubateurs : envoyez la source, la date et le lien. Chaque parution sera affichée ici avec sa citation.</p>' +
         '</div>';
       return;
     }
@@ -248,9 +275,9 @@
     if (vide(NABY.temoignages)) {
       cible.innerHTML =
         '<div class="bloc-afournir">' +
-          '<span class="etiq-afournir">A fournir</span>' +
+          '<span class="etiq-afournir">À fournir</span>' +
           '<h3>Ce qu\'en disent les participants</h3>' +
-          '<p class="lead" style="margin-bottom:0">Trois temoignages suffisent : le texte, le prenom, et en quelle qualite la personne parle (participante, entreprise, partenaire). Rien n\'est invente ici.</p>' +
+          '<p class="lead" style="margin-bottom:0">Trois témoignages suffisent : le texte, le prénom, et en quelle qualité la personne parle (participante, entreprise, partenaire). Rien n\'est inventé ici.</p>' +
         '</div>';
       return;
     }
@@ -276,10 +303,12 @@
           var url = i === 0 ? NABY.liens.helloassoAdhesion : NABY.liens.helloassoDon;
           var actif = NABY.adhesions && !vide(url);
           var bouton = actif
-            ? '<a class="bouton bouton-1" href="' + esc(url) + '" target="_blank" rel="noopener">Adherer &mdash; ' + esc(f.nom) + '</a>'
-            : '<span class="bouton bouton-1" style="opacity:.55;cursor:not-allowed" aria-disabled="true">Lien HelloAsso <span class="afournir">a fournir</span></span>';
-          var qr = actif
-            ? '<div class="qr"><span class="afournir">QR HelloAsso a deposer</span></div>'
+            ? '<a class="bouton bouton-1" href="' + esc(url) + '" target="_blank" rel="noopener">Adhérer &mdash; ' + esc(f.nom) + '</a>'
+            : '<span class="bouton bouton-1" style="opacity:.55;cursor:not-allowed" aria-disabled="true">Lien HelloAsso <span class="afournir">à fournir</span></span>';
+          // Le QR code n'est affiche que si Nabintou en fournit un. Une case
+          // en pointilles a cote d'un bouton qui marche deja n'est que du bruit.
+          var qr = actif && !vide(NABY.qrHelloAsso)
+            ? '<div class="qr" style="border-style:solid"><img src="' + esc(NABY.qrHelloAsso) + '" alt="QR code d\'adhésion HelloAsso" style="max-width:100%;height:auto"></div>'
             : '';
           return '<div class="formule' + (f.vedette ? ' vedette' : '') + '">' +
             '<span class="etiquette">' + esc(f.etiquette) + '</span>' +
@@ -300,8 +329,8 @@
     cible.innerHTML =
       '<ul class="coord">' +
         '<li><span class="icone">' + ICONES.mail + '</span><span><span class="k">Email</span><br><a class="v" href="mailto:' + esc(NABY.email) + '">' + esc(NABY.email) + '</a></span></li>' +
-        '<li><span class="icone">' + ICONES.tel + '</span><span><span class="k">Telephone</span><br><a class="v" href="tel:' + esc(NABY.telephoneLien) + '">' + esc(NABY.telephone) + '</a></span></li>' +
-        '<li><span class="icone">' + ICONES.lieu + '</span><span><span class="k">Adresse</span><br><span class="v">' + val(NABY.adresse, 'adresse a fournir') + '</span></span></li>' +
+        '<li><span class="icone">' + ICONES.tel + '</span><span><span class="k">Téléphone</span><br><a class="v" href="tel:' + esc(NABY.telephoneLien) + '">' + esc(NABY.telephone) + '</a></span></li>' +
+        '<li><span class="icone">' + ICONES.lieu + '</span><span><span class="k">Adresse</span><br><span class="v">' + val(NABY.adresse, 'adresse à fournir') + '</span></span></li>' +
       '</ul>';
   }
 
@@ -363,15 +392,21 @@
       ig.innerHTML =
         '<div class="embed-slot">' +
           '<h4>Le flux Instagram s\'affichera ici</h4>' +
-          '<p>Il suffit du nom du compte Instagram et de l\'autorisation d\'integration. Les dernieres publications remonteront automatiquement, sans intervention.</p>' +
-          '<span class="etiq-afournir">Compte Instagram a fournir</span>' +
+          '<p>Il suffit du nom du compte Instagram et de l\'autorisation d\'intégration. Les dernières publications remonteront automatiquement, sans intervention.</p>' +
+          '<span class="etiq-afournir">Compte Instagram à fournir</span>' +
         '</div>';
     } else if (ig) {
+      var lienYt = vide(NABY.liens.youtube)
+        ? ''
+        : '<a class="bouton bouton-2" href="' + esc(NABY.liens.youtube) + '" target="_blank" rel="noopener">Voir la chaîne YouTube</a>';
       ig.innerHTML =
         '<div class="embed-slot" style="border-style:solid">' +
-          '<h4>Suivez NabyCook sur Instagram</h4>' +
-          '<p>Les ateliers, les coulisses et les editions limitees de l\'epicerie, publies au fil des jours.</p>' +
-          '<a class="bouton bouton-1" href="' + esc(NABY.liens.instagram) + '" target="_blank" rel="noopener">Voir le compte Instagram</a>' +
+          '<h4>Suivez NabyCook au jour le jour</h4>' +
+          '<p>Les ateliers, les coulisses et les éditions limitées de l\'épicerie, publiés au fil des jours.</p>' +
+          '<div class="boutons" style="justify-content:center">' +
+            '<a class="bouton bouton-1" href="' + esc(NABY.liens.instagram) + '" target="_blank" rel="noopener">Voir le compte Instagram</a>' +
+            lienYt +
+          '</div>' +
         '</div>';
     }
     var nl = slot('newsletter');
@@ -379,11 +414,11 @@
       nl.innerHTML =
         '<div class="embed-slot">' +
           '<h4>Le formulaire de newsletter s\'affichera ici</h4>' +
-          '<p>Le compte Brevo est deja en place. Il manque l\'adresse du formulaire d\'inscription pour le brancher aux couleurs du site.</p>' +
-          '<span class="etiq-afournir">Formulaire Brevo a fournir</span>' +
+          '<p>Le compte Brevo est déjà en place. Il manque l\'adresse du formulaire d\'inscription pour le brancher aux couleurs du site.</p>' +
+          '<span class="etiq-afournir">Formulaire Brevo à fournir</span>' +
         '</div>';
     } else if (nl) {
-      nl.innerHTML = '<iframe src="' + esc(NABY.liens.brevoFormulaire) + '" title="Inscription a la lettre NabyCook" style="width:100%;height:420px;border:0;border-radius:18px"></iframe>';
+      nl.innerHTML = '<iframe src="' + esc(NABY.liens.brevoFormulaire) + '" title="Inscription à la lettre NabyCook" style="width:100%;height:420px;border:0;border-radius:18px"></iframe>';
     }
     var jp = slot('jotform-partenaire');
     if (jp) {
@@ -391,11 +426,36 @@
     }
   }
 
-  /* ---------- Emplacements photo ---------- */
+  /* ---------- Emplacements photo ----------
+     Un emplacement affiche la vraie photo des que le fichier declare
+     dans NABY.photos existe. S'il n'est pas encore depose, on retombe
+     sur l'emplacement en pointilles : jamais d'image cassee a l'ecran.
+  ---------------------------------------- */
   function photos() {
     qa('[data-photo]').forEach(function (el) {
       var libelle = el.getAttribute('data-photo');
-      el.innerHTML = ICONES.photo + '<b>' + esc(libelle) + '</b><span>Emplacement photo a fournir</span>';
+      var cle = el.getAttribute('data-photo-cle');
+      var p = (cle && NABY.photos) ? NABY.photos[cle] : null;
+
+      var attente = function () {
+        el.classList.remove('photo-remplie');
+        el.innerHTML = ICONES.photo + '<b>' + esc(libelle) + '</b><span>Emplacement photo à fournir</span>';
+      };
+
+      if (!p || vide(p.src)) { attente(); return; }
+
+      var img = document.createElement('img');
+      img.setAttribute('alt', p.alt || '');
+      img.setAttribute('decoding', 'async');
+      // La premiere image de la page d'accueil est visible d'emblee :
+      // la charger paresseusement la ferait apparaitre en retard.
+      if (cle !== 'heroAccueil') img.setAttribute('loading', 'lazy');
+      img.addEventListener('error', attente);
+      img.setAttribute('src', p.src);
+
+      el.innerHTML = '';
+      el.classList.add('photo-remplie');
+      el.appendChild(img);
     });
   }
 
