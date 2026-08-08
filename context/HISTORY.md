@@ -7,6 +7,58 @@
 
 ---
 
+## 2026-08-08 (session 127 — Nabycook livre ses éléments, et le site cesse d'être une maquette à trous)
+
+> Nabintou a déposé son dossier dans un Drive partagé. La journée a servi à tout
+> intégrer, et l'intégration a révélé qu'une partie de ce qu'on affichait d'elle
+> était de nous.
+
+### Ce qu'elle a livré, et ce que ça a corrigé
+
+- Infos légales complètes (RNA W751284723, SIRET, déclaration du 27/05/2026, siège MVAC rue Ramus), liens HelloAsso des deux formules, Instagram et YouTube, chiffres d'impact arrêtés au 30/06/2026, sept partenaires sur neuf, et sa **biographie écrite par elle**.
+- **La page Univers racontait une histoire d'origine que nous avions inventée** : une maison où l'on ne jetait rien, un déménagement, un agacement devant les poubelles. Son texte dit tout autre chose, sa grand-mère « alicamenteuse » en Côte d'Ivoire puis une épreuve de santé. La page est passée à sa voix, en reprenant ses mots.
+- **Leçon** : un emplacement laissé vide se voit et se remplit. Une phrase inventée pour « habiller » se lit comme vraie, et on finit par la présenter au client comme sa propre histoire.
+
+### Un défaut de fond dans le code livré le 29/07
+
+- **Tous les textes générés en JavaScript étaient écrits sans accents** et s'affichaient tels quels : « Adherer a l'association » dans la barre de navigation de chaque page, « Telephone », « Site concu et realise par l'agence Mr Attractor ». Le HTML, lui, était accentué. Personne ne l'avait vu parce qu'on relit le HTML et pas les chaînes du moteur.
+
+### Les photos, et deux questions qui ne sont pas techniques
+
+- Le Drive n'était pas public au départ, ni `curl` ni le connecteur ne rendaient les images. Mac Arthur l'a ouvert en lecture par lien, et tout est descendu d'un coup.
+- **La femme en toque blanche revient sur trois photos, et c'est elle que la page Univers présente comme la fondatrice par la seule place de l'image.** Rien ne le confirme. Textes alternatifs laissés neutres, question posée plutôt que supposée.
+- **Une photo du Drive portait des autocollants collés sur trois visages**, donc tout le monde n'avait pas donné son accord. Les photos publiées montrent des personnes reconnaissables : c'est l'association qui est engagée. À vérifier avant l'ouverture au public, pas après.
+- Le logo HD fourni est en RGBA mais **son fond blanc est opaque** : il n'est effacé que par un `mix-blend-mode`, qui ne tient que sur le beige de l'en-tête. Un vrai détourage reste à demander.
+
+### Trois défauts d'affichage trouvés en regardant les pages rendues
+
+Tous antérieurs à la session, aucun n'avait été vu à la livraison.
+
+- **Le second bouton du hero ne s'affichait pas du tout**, vert profond sur vert profond : la règle qui éclaircit le bouton contour ne visait que `.fond-vert`, pas `.hero`. Un appel à l'action invisible sur la page d'accueil.
+- **Le bouton d'adhésion de l'en-tête** passait sous les liens et s'étirait sur toute la largeur, sur les cinq pages : `.nav` restait en `display:block` au-dessus de 900 px.
+- **Leçon d'outillage** : ces trois défauts sortent d'une capture d'écran de la page rendue, pas d'une relecture du code. Chrome sans interface sait le faire en une commande, et il refuse de descendre sous 504 px de large, donc le mobile réel reste à voir sur un téléphone.
+
+### Le cache a menti deux fois dans la même journée
+
+- Trois fichiers images ont répondu **404 sur le domaine et 200 sur le déploiement direct**, quelques secondes après la mise en ligne. Rien ne manquait.
+- Puis l'inverse : après le retrait du bandeau, le domaine **servait encore l'ancien fichier de configuration** alors que le déploiement direct était à jour. Une vérification lancée trop tôt condamne à tort, et absout à tort.
+- **Parade posée** : les fichiers du site portent désormais un numéro de version (`?v=2026-08-08b`). Tout le contenu vit dans un seul fichier de configuration, donc un navigateur qui garde son ancienne copie affiche un site entier périmé, sans qu'on puisse le détecter depuis la production. C'est exactement ce qui est arrivé à Mac Arthur.
+
+### Une distinction posée : le bandeau et le référencement ne sont pas le même sujet
+
+- Le bandeau « maquette de travail » est retiré, à sa demande.
+- **Le `noindex` reste.** Il ne dépend pas de l'état d'avancement mais de l'adresse : tant que le site vit sur le domaine de démonstration, le laisser indexer ferait remonter le mauvais domaine dans les moteurs, avec un doublon à nettoyer ensuite. Le garde-fou compare maintenant le nom d'hôte au domaine de production, au lieu du drapeau maquette.
+
+### Livrables
+
+- Site à jour sur `demo.agenceattractor.com/nabycook-site`, cinq pages, quatre photos, logo HD et favicon, deux logos de partenaires.
+- `nabycook/DOSSIER.md` passé en « en production », `ELEMENTS-A-FOURNIR.md` réécrit en point d'étape, `site/README.md` avec la procédure de dépôt des photos et les contrôles non faits.
+- Commits `60310a6` et `aca9fc3`.
+- **Non vérifié, et écrit comme tel** : les trois liens HelloAsso (filtre anti-robot côté HelloAsso, ni `curl` ni un vrai navigateur ne passent) et le rendu à 375 px réel.
+- **Reste ouvert** : identité de la fondatrice sur les photos, droit à l'image, accords de GAB Île-de-France et EE, nom entier de LMPVPK, tutoiement ou vouvoiement, mentions légales, domaine nabycook.com. Et les 175 € d'acompte, toujours pas encaissés.
+
+---
+
 ## 2026-08-07 (session 126 — C'Real quitte Attractor Assists et devient autonome chez elle)
 
 > Un produit passe en pause, une cliente réelle en dépendait encore.
