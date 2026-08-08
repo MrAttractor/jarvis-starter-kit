@@ -110,7 +110,11 @@ section.serre { padding: 48px 0; }
 .marque { display: flex; align-items: center; gap: 12px; text-decoration: none; }
 .marque img {
   width: 56px; height: 56px; object-fit: contain;
-  mix-blend-mode: multiply; /* efface le fond blanc du JPG sur le creme */
+  /* Le logo HD fourni par Nabintou est un PNG en RGBA, mais son fond
+     blanc est opaque : sans ce melange, un rectangle blanc apparait
+     sur le creme de l'en-tete. A retirer le jour ou on recoit un
+     vrai detourage (.ai, .eps, .svg ou PNG a fond transparent). */
+  mix-blend-mode: multiply;
 }
 .marque .nom { font-family: var(--serif); font-size: 22px; color: var(--vert-profond); line-height: 1; }
 .marque .sous { display: block; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
@@ -151,8 +155,10 @@ section.serre { padding: 48px 0; }
 
 @media (min-width: 900px) {
   .burger { display: none; }
+  /* Rangee unique : sans le flex ici, le bouton d'adhesion passait
+     sous les liens et s'etirait sur toute la largeur de l'en-tete. */
   .nav, .entete.ouvert .nav {
-    display: block; position: static; background: none;
+    display: flex; align-items: center; position: static; background: none;
     border: none; box-shadow: none; padding: 0;
   }
   .nav ul { display: flex; align-items: center; gap: 8px; }
@@ -180,8 +186,10 @@ section.serre { padding: 48px 0; }
 .bouton-2:hover { background: rgba(14, 61, 20, .07); }
 .bouton-3 { background: var(--vert-anis); color: var(--vert-profond); }
 .bouton-3:hover { background: #D3E76A; }
-.fond-vert .bouton-2 { color: var(--creme); border-color: rgba(247, 242, 231, .55); }
-.fond-vert .bouton-2:hover { background: rgba(247, 242, 231, .12); }
+/* Sur les fonds sombres, le bouton contour vert profond etait invisible.
+   Le hero est concerne au meme titre que les sections .fond-vert. */
+.fond-vert .bouton-2, .hero .bouton-2 { color: var(--creme); border-color: rgba(247, 242, 231, .55); }
+.fond-vert .bouton-2:hover, .hero .bouton-2:hover { background: rgba(247, 242, 231, .12); }
 .boutons { display: flex; flex-wrap: wrap; gap: 16px; }
 .centre .boutons { justify-content: center; }
 

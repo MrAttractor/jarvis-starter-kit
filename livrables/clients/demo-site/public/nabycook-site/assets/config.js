@@ -26,7 +26,7 @@ const NABY = {
      instagram  : true  => le renvoi vers le compte Instagram est actif
      newsletter : true  => le formulaire Brevo est intégré
   --------------------------------------------------------- */
-  maquette: true,
+  maquette: false,
   adhesions: true,
   instagram: true,
   newsletter: false,
@@ -109,7 +109,7 @@ const NABY = {
        - EE (« demander au président »)
   --------------------------------------------------------- */
   partenaires: [
-    { nom: 'Mairie du 20e', logo: A_FOURNIR },
+    { nom: 'Mairie du 20e', logo: 'assets/partenaires/mairie-20e.jpg' },
     { nom: 'Linkee', logo: 'assets/partenaires/linkee.png' },
     { nom: 'Mairie de Villejuif · Ferme Urbaine', logo: A_FOURNIR },
     { nom: 'Incubateur Baluchon', logo: A_FOURNIR },
@@ -127,21 +127,25 @@ const NABY = {
      alt : décrit l'image pour les lecteurs d'écran. Obligatoire.
   --------------------------------------------------------- */
   photos: {
+    // ATTENTION : la femme en toque blanche revient sur trois photos et
+    // c'est elle qu'on presente comme la fondatrice. A faire confirmer par
+    // Nabintou avant la mise en ligne publique, les textes alternatifs
+    // restent neutres tant que ce n'est pas fait.
     heroAccueil: {
       src: 'assets/photos/atelier-ambiance.jpg',
-      alt: 'Un atelier de cuisine NabyCook en cours, autour du plan de travail',
+      alt: 'Trois participantes en tablier, souriantes, lors d\'un atelier NabyCook',
     },
     portraitNabintou: {
       src: 'assets/photos/portrait-nabintou.jpg',
-      alt: 'Nabintou Dosso, fondatrice de NabyCook, en cuisine',
+      alt: 'En cuisine lors d\'un atelier NabyCook, aux côtés d\'une participante',
     },
     cuisine: {
       src: 'assets/photos/plats-et-epices.jpg',
-      alt: 'Plats, épices et produits bruts préparés par NabyCook',
+      alt: 'Herbes fraîches, bocaux et légumes taillés sur le plan de travail d\'un atelier',
     },
     atelierEntreprise: {
       src: 'assets/photos/atelier-entreprise.jpg',
-      alt: 'Un atelier NabyCook animé en entreprise',
+      alt: 'Épluchage de carottes récupérées, lors d\'une préparation anti-gaspillage',
     },
   },
 

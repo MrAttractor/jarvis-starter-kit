@@ -96,7 +96,7 @@
       '<header class="entete" id="entete">' +
         '<div class="wrap entete-inner">' +
           '<a class="marque" href="index.html">' +
-            '<img src="assets/logo-nabycook.jpg" alt="Logo NabyCook" width="56" height="56">' +
+            '<img src="assets/logo-nabycook.png" alt="Logo NabyCook" width="56" height="56">' +
             '<span><span class="nom">NabyCook</span><span class="sous">Association loi 1901</span></span>' +
           '</a>' +
           '<button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu"><span></span></button>' +
@@ -467,15 +467,25 @@
     });
   }
 
-  /* ---------- Garde-fou : coherence maquette / noindex ---------- */
+  /* ---------- Garde-fou : coherence du referencement ----------
+     Le noindex ne depend pas du bandeau maquette mais de l'adresse.
+     Tant que le site vit sur le domaine de demonstration, il ne doit
+     pas etre reference : ce serait le mauvais domaine qui remonterait
+     dans les moteurs, et un doublon a nettoyer plus tard.
+  ------------------------------------------------------------ */
+  var DOMAINE_PROD = 'nabycook.com';
+
   function gardeFou() {
     var meta = q('meta[name="robots"]');
     var noindex = meta && /noindex/i.test(meta.getAttribute('content') || '');
-    if (!NABY.maquette && noindex) {
-      console.warn('[NabyCook] NABY.maquette est a false mais la balise <meta name="robots" content="noindex"> est encore presente : le site ne sera pas reference. La retirer dans les 5 pages.');
+    var enProd = new RegExp('(^|\\.)' + DOMAINE_PROD.replace('.', '\\.') + '$')
+      .test(location.hostname);
+
+    if (enProd && noindex) {
+      console.warn('[NabyCook] Le site est sur ' + DOMAINE_PROD + ' mais la balise <meta name="robots" content="noindex"> est encore presente : il ne sera pas reference. La retirer dans les 5 pages.');
     }
-    if (NABY.maquette && !noindex) {
-      console.warn('[NabyCook] Mode maquette actif mais la page est indexable. Ajouter <meta name="robots" content="noindex">.');
+    if (!enProd && !noindex) {
+      console.warn('[NabyCook] Page indexable hors du domaine de production. Ajouter <meta name="robots" content="noindex">.');
     }
   }
 

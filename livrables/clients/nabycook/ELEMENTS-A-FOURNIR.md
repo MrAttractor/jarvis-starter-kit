@@ -26,20 +26,29 @@ Tout ce qui suit est intégré au site, vous pouvez le vérifier tout de suite.
 
 ---
 
+- **Vos photos et votre logo.** Quatre photos sont en place : l'ambiance d'atelier en
+  haut de l'accueil, la photo en cuisine sur la page Univers, les herbes et bocaux, et
+  la préparation anti-gaspillage sur la page Association. Le logo en haute définition
+  a remplacé l'ancienne image.
+- **Deux logos de partenaires**, Linkee et la Mairie du 20e.
+
+---
+
 ## Ce qu'il nous manque encore
 
-### Les photos, c'est le point le plus important
+### Trois vérifications, avant toute ouverture au public
 
-Vous les avez déposées dans le Drive, mais nous ne pouvons pas les récupérer depuis
-notre côté. Les emplacements sont prêts et attendent quatre images :
-
-1. Une **ambiance d'atelier**, format paysage, pour le haut de la page d'accueil
-2. Un **portrait de vous**, format vertical, en cuisine ou en atelier
-3. Une photo de **plats, d'épices ou de produits bruts**, format paysage
-4. Un **atelier en entreprise**, format paysage
-
-Et le **logo en haute définition** : le fichier d'origine du graphiste, en `.ai`,
-`.eps`, `.svg`, ou à défaut un `.png` à fond transparent.
+1. **Est-ce bien vous** sur les photos, la personne en toque blanche ? C'est ce que la
+   page Univers laisse entendre par l'emplacement de la photo. Nous préférons vous le
+   demander plutôt que de le supposer.
+2. **Les personnes reconnaissables sur les photos ont-elles donné leur accord** pour
+   apparaître sur un site public ? Une des photos de votre Drive portait des
+   autocollants sur des visages, donc la question se pose vraiment. C'est
+   l'association qui est engagée si quelqu'un se découvre en ligne sans l'avoir voulu.
+3. **Le logo.** Le fichier que vous avez envoyé est net, mais son fond blanc n'est pas
+   transparent : nous l'effaçons par un artifice qui ne tient que sur le beige de
+   l'en-tête. Si le graphiste a le fichier d'origine (`.ai`, `.eps`, `.svg`, ou un
+   `.png` à fond réellement transparent), c'est le moment.
 
 ### Deux accords de partenaires à confirmer
 

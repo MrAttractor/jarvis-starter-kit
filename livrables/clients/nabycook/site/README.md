@@ -61,8 +61,16 @@ clientèle se connecte souvent en 4G.
 À faire dans l'ordre, rien ne doit être sauté.
 
 - [x] Remplir `assets/config.js` avec les éléments réels de Nabintou
-- [ ] Remplacer `assets/logo-nabycook.jpg` par le logo HD ou vectoriel détouré (PNG à fond transparent de préférence)
-- [ ] Déposer les photos dans `assets/photos/` (voir le tableau ci-dessus)
+- [x] Déposer les photos dans `assets/photos/` (voir le tableau ci-dessus)
+- [x] Logo HD en place (`assets/logo-nabycook.png`, 1042 px)
+- [ ] Obtenir un **vrai détourage** du logo. Le PNG fourni est en RGBA mais son
+      fond blanc est opaque, il n'est effacé que par un `mix-blend-mode: multiply`
+      dans la feuille de style. Ça tient sur le crème de l'en-tête, pas ailleurs.
+- [ ] Faire **confirmer par Nabintou** que la femme en toque blanche des trois photos
+      est bien elle : c'est ce que la page Univers affirme par son emplacement
+- [ ] Vérifier les **autorisations de droit à l'image** des personnes reconnaissables
+      sur les photos publiées (une photo du Drive portait des autocollants sur des
+      visages, donc tout le monde n'avait pas donné son accord)
 - [ ] Ouvrir une fois les 3 liens HelloAsso depuis un téléphone : HelloAsso bloque les vérifications automatiques, ils n'ont pas pu être testés d'ici
 - [ ] Ouvrir le site sur un vrai téléphone : Chrome sans interface ne descend pas sous 504 px de large, le 375 px réel n'a pas pu être mesuré
 - [ ] Confirmer les accords d'affichage de GAB Île-de-France et EE avant de les ajouter
