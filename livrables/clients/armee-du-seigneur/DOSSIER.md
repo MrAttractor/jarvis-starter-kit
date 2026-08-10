@@ -1,19 +1,20 @@
 # Mission L'Armée du Seigneur — l'état du dossier
 
-> Révision du 05/08/2026. **Cette fiche est la première chose à lire du dossier.**
+> Révision du 10/08/2026. **Cette fiche est la première chose à lire du dossier.**
 
 | Radar | |
 |---|---|
 | Statut | attente client |
 | Dernier contact | 2026-08-05 |
-| Prochaine action | Une seule relance groupée pour obtenir leurs contenus |
+| Prochaine action | Annoncer le domaine propre à la Mission, avec la relance groupée des contenus |
 | Échéance | — |
 | Argent en attente | aucun, c'est un don assumé |
 
 ## En une phrase
 
 **C'est un don de Mac Arthur à sa communauté**, pas une prestation facturée. Phase 1a
-livrée le 13/07 et en ligne. En attente des contenus de la Mission.
+livrée le 13/07, **et depuis le 10/08 la Mission a son propre domaine**. En attente des
+contenus de la Mission.
 
 ## Le bénéficiaire
 
@@ -38,11 +39,39 @@ qu'on ne laisserait pas passer chez un client payant.
 
 | Quoi | Où |
 |---|---|
-| Site vitrine | `demo.agenceattractor.com/armee-du-seigneur` |
-| Back-office | `/armee-du-seigneur/admin` |
+| Site vitrine | **`missionarmeeduseigneur.com`** |
+| Back-office | **`missionarmeeduseigneur.com/admin`** |
 
 Compte : `admin.armee-du-seigneur@agenceattractor.com`, mot de passe temporaire
 `ArmeeDuSeigneur2026!`, rebasculable sur leur vraie adresse.
+
+## Le domaine propre, depuis le 10/08/2026
+
+La Mission a **son propre nom**, `missionarmeeduseigneur.com`, acheté par Mac Arthur.
+La zone est dans le compte Cloudflare de l'agence (nameservers `noor` et `tate`), avec
+un **projet Cloudflare Pages dédié `missionarmeeduseigneur`, branche de production
+`main`** (à ne pas confondre avec le demo-site, qui est en `master`, cf. R-17).
+
+L'ancienne adresse `demo.agenceattractor.com/armee-du-seigneur` **redirige en 301**
+vers le nouveau domaine, elle. Les liens déjà partagés continuent donc de marcher, y
+compris ceux qui pointaient sur l'admin.
+
+**Le code source reste dans `../demo-site/public/armee-du-seigneur/`**, comme avant.
+C'est ce dossier qui se déploie, mais désormais vers le projet Pages de la Mission :
+
+```
+wrangler pages deploy . --project-name=missionarmeeduseigneur --branch=main
+```
+
+Trois choses ajoutées à l'occasion du passage sur un vrai domaine :
+
+- **Aperçu de partage** (`og:url`, `og:image`, `canonical`) : sans ça, un lien collé
+  dans WhatsApp arrive nu, or c'est le canal de la Mission. L'image d'aperçu est le
+  logo, à remplacer par un vrai visuel 1200×630 quand ils en auront un.
+- **Une vraie page 404.** Sans elle, Cloudflare Pages servait la page d'accueil en
+  code 200 sur n'importe quelle adresse fausse : une faute de frappe ressemblait à une
+  page valide et les moteurs indexaient des doublons (R-53).
+- **`robots.txt` et `sitemap.xml`**, avec l'admin exclu de l'indexation.
 
 Backend Supabase partagé, tables `als_`, RLS nominative, bucket public `als-medias`.
 Migrations versionnées dans `supabase/`. **Le code du site vit dans
@@ -83,6 +112,37 @@ Le département **« Compassion » est devenu « Social »** (migration `0004`, 
 la Mission). Le mot « compassion » reste ailleurs sur le site, au pilier 04 de la
 vision et dans le texte d'accueil : là c'est une valeur spirituelle, pas un nom
 d'organe.
+
+## Les retours du 10/08, appliqués
+
+Passés en direct pendant la mise en ligne du domaine, et versionnés dans
+`supabase/0007_departements_et_dirigeants.sql` pour être rejouables.
+
+| Retour | Ce qui a été fait |
+|---|---|
+| En-tête | « L'Armée du Seigneur » devient **« Mission L'Armée du Seigneur »**, en-tête et pied de page |
+| Vision | **« Préparer le retour de Christ » passe en pilier 01**, les quatre autres décalent |
+| Départements | **Médias, Évangélisation, Formation et Technique supprimés** · **Louange devient « Chantre d'Or »**. Il en reste sept |
+| Fiche Rév. Veroly | La phrase qui répétait mot pour mot son bloc « Sa mission » est retirée |
+| Photo d'accueil | Retour à la **photo de prédication**, retouchée |
+| Aperçu de partage | La photo de prédication remplace le logo, et le texte reprend la formule complète, « Jésus-Christ » et « envers les plus faibles » |
+
+**Les lignes supprimées sont sauvegardées** en JSON à côté des migrations. Un
+département se remet en une requête si la Mission le redemande.
+
+**La retouche de la photo, et pourquoi elle n'est pas faite par l'IA seule.**
+Il fallait retirer la personne assise derrière le Révérend. Les deux passes
+génératives ont chacune **réinventé des silhouettes de personnes** dans le fond,
+ce qui est précisément ce qu'on voulait supprimer. Le remplissage final est
+**déterministe** : le mur et la colonne sont prolongés verticalement depuis la
+zone juste au-dessus, puis floutés au niveau du reste de l'arrière-plan. Rien
+n'est inventé, et le Révérend n'est pas touché d'un pixel : le masque a été
+découpé sur sa silhouette et contrôlé au comptage de pixels, pas à l'œil.
+Leçon transférable : **sur une photo de personne réelle, une retouche générative
+peut ajouter ce qu'on lui demande de retirer.** Vérifier le résultat, toujours.
+
+La photo de prédication devient l'accueil, et **le portrait en costume passe sur
+la fiche du fondateur** : sans ça, la même image apparaissait deux fois sur la page.
 
 ## Ce qu'il manque, et qui bloque
 
