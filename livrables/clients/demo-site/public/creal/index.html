@@ -1159,9 +1159,11 @@ function copyNumber() {
 
 async function confirmPayWA() {
   const items = Object.entries(cart).filter(([,q])=>q>0);
+  // Puces avec une étoile : c'est la forme que WhatsApp transforme en liste,
+  // et c'est celle que Kezey a réécrite à la main quand elle a testé.
   const lines = items.map(([id,qty])=>{
     const p = PRODUCTS.find(p=>p.id===id);
-    return `• ${p.name} x${qty} = ${(p.price*qty).toLocaleString('fr-FR')} FCFA`;
+    return `* ${p.name} x${qty} = ${(p.price*qty).toLocaleString('fr-FR')} FCFA`;
   }).join('\n');
   const livraison = _payMethod === 'livraison';
   const methodLabel = _payMethod === 'wave' ? 'Wave Business' : 'Orange Money';
@@ -1196,17 +1198,32 @@ async function confirmPayWA() {
   });
   localStorage.removeItem(CONV_KEY);
 
-  // Deux messages, parce que ce ne sont pas deux situations. Annoncer « je
-  // viens de payer » pour une commande à régler à la réception ferait préparer
-  // et livrer Kezey en croyant l'argent arrivé.
-  const entete = livraison
-    ? `Bonjour Kezey ! Je commande, et je paierai ${_payTotal.toLocaleString('fr-FR')} FCFA à la livraison, en main propre.`
-    : `Bonjour Kezey ! Je viens de payer ${_payTotal.toLocaleString('fr-FR')} FCFA via ${methodLabel}.`;
-  const pied = livraison
-    ? `À régler à la réception : ${_payTotal.toLocaleString('fr-FR')} FCFA (livraison non incluse)`
-    : `Sous-total : ${_payTotal.toLocaleString('fr-FR')} FCFA (livraison non incluse)`;
+  /* Format réécrit par Kezey elle-même le 10/08/2026, repris tel quel.
+     Deux choses valent mieux que ce qu'on avait : « Tarif livraison : à fixer
+     avec la boutique » appelle une action, là où « livraison non incluse »
+     n'était qu'une réserve ; et l'ouverture neutre ne présume pas du paiement.
 
-  const msg = `${entete}\n\nClient : ${_clientName}\nWhatsApp : ${_clientPhone}\nAdresse : ${_clientAddress}\n\nMa commande C'Real :\n${lines}\n\n${pied}`;
+     Une seule ligne ajoutée à son format, la ligne Paiement : sans elle, Kezey
+     lirait la commande sur son téléphone sans savoir si elle doit encore
+     réclamer l'argent. C'est toute la distinction payé / à encaisser, et elle
+     doit se voir là où elle lit, pas seulement dans le tableau de bord. */
+  const paiement = livraison
+    ? 'Paiement : à la livraison, en main propre'
+    : `Paiement : réglé par ${methodLabel}`;
+
+  const msg = `Bonjour Kezey ! Je voudrais passer une commande C'Real :
+
+Client : ${_clientName}
+WhatsApp : ${_clientPhone}
+Adresse : ${_clientAddress}
+
+Ma commande C'Real :
+${lines}
+
+C'Real : ${_payTotal.toLocaleString('fr-FR')} FCFA
+${paiement}
+Tarif livraison : à fixer avec la boutique`;
+
   window.open(`https://wa.me/${KEZEY}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
