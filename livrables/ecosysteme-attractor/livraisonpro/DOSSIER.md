@@ -4,9 +4,9 @@
 
 | Radar | |
 |---|---|
-| Statut | à trancher |
-| Dernier contact | 2026-07-13 |
-| Prochaine action | Retirer l'ancien Vercel, puis trancher : coup de commercial ou dormant assumé |
+| Statut | en cours |
+| Dernier contact | 2026-08-10 |
+| Prochaine action | Décidé le 10/08 : coup de commercial via Job Dadié. Rédiger et envoyer le PDF de présentation pour qu'il prospecte des utilisateurs. Retirer aussi l'ancien Vercel |
 | Échéance | — |
 | Argent en attente | — |
 
@@ -53,6 +53,6 @@ il ne sert plus.
 
 ## Prochaine action
 
-1. **Retirer l'ancien déploiement Vercel**
-2. Suivre la phase de recrutement de testeurs : combien de livreurs et de marchands ont réellement été approchés, et ce que disent les avis captés dans `lp_feedback`
-3. Décider ce qu'on fait de ce produit : soit on lui donne un vrai coup de commercial terrain, soit on l'assume comme dormant. Il occupe aujourd'hui une place dans l'écosystème sans utilisateur.
+1. **Décidé le 10/08/2026 : coup de commercial terrain, via Job Dadié.** Rédiger et lui envoyer un PDF de présentation, dont il a besoin pour prospecter des utilisateurs (livreurs et marchands).
+2. **Retirer l'ancien déploiement Vercel**
+3. Suivre la phase de recrutement de testeurs : combien de livreurs et de marchands ont réellement été approchés, et ce que disent les avis captés dans `lp_feedback`

@@ -5,10 +5,10 @@
 | Radar | |
 |---|---|
 | Statut | en production |
-| Dernier contact | 2026-06-03 |
-| Prochaine action | Confirmer le solde de 100 €. Le mensuel attend l'activation des récurrents, chantier collectif |
+| Dernier contact | 2026-08-10 |
+| Prochaine action | Décider du sort du business plan convoyage, qui décrit un modèle abandonné. Le mensuel attend l'activation des récurrents, chantier collectif |
 | Échéance | — |
-| Argent en attente | 100 € de solde. Le mensuel de 50 € est contractuel, pas encaissé |
+| Argent en attente | — (solde de 100 € encaissé, confirmé le 10/08/2026). Le mensuel de 50 € reste contractuel, pas encaissé |
 
 ## En une phrase
 
@@ -34,8 +34,7 @@ tourner indépendamment de VSD.
 | Solde | **100 €** |
 | Abonnement | **50 €/mois** |
 
-**Le solde de 100 € est-il rentré ?** C'est la seule question ouverte côté argent
-sur ce dossier.
+**Le solde de 100 € est rentré**, confirmé par Mac Arthur le 10/08/2026.
 
 **L'abonnement de 50 €/mois n'est pas encaissé, et ce n'est pas un oubli.**
 Précision de Mac Arthur le 07/08/2026 : **aucun récurrent ne tourne nulle part**,
@@ -81,5 +80,5 @@ modèle économique a changé le 31/07 : ne pas s'y fier sans relire `../air-cot
 
 ## Prochaine action
 
-- Confirmer le solde de 100 € et l'encaissement du mensuel
 - Décider du sort du business plan convoyage, qui décrit un modèle abandonné
+- Le mensuel de 50 € reste à activer, chantier collectif des récurrents

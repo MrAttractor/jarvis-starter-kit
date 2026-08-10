@@ -5,8 +5,8 @@
 | Radar | |
 |---|---|
 | Statut | à relancer |
-| Dernier contact | 2026-06-23 |
-| Prochaine action | Envoyer l'état des lieux à Jean-Calvin Ethien et obtenir les 8 réponses écrites |
+| Dernier contact | 2026-08-10 |
+| Prochaine action | État des lieux traité le 10/08. Obtenir les 8 réponses écrites de Jean-Calvin Ethien, en priorité le seuil de déclenchement et le droit de contact |
 | Échéance | — |
 | Argent en attente | rien de chiffré, rien de signé |
 
@@ -81,6 +81,6 @@ académique ou conseil.
 
 ## Prochaine action
 
-**Envoyer l'état des lieux à Jean-Calvin Ethien** et obtenir des réponses écrites sur les
-8 points, en priorité le seuil de déclenchement et le droit de contact avec les
-participants. Récupérer aussi les 14 brochures du catalogue, absentes du workspace.
+**État des lieux traité le 10/08/2026.** Obtenir des réponses écrites de Jean-Calvin
+Ethien sur les 8 points, en priorité le seuil de déclenchement et le droit de contact avec
+les participants. Récupérer aussi les 14 brochures du catalogue, absentes du workspace.

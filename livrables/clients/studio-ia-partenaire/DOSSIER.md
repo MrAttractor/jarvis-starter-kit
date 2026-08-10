@@ -5,8 +5,8 @@
 | Radar | |
 |---|---|
 | Statut | à relancer |
-| Dernier contact | 2026-07-11 |
-| Prochaine action | Obtenir d'Emmanuel le cadrage du coaching Awa, puis envoyer le document d'échange |
+| Dernier contact | 2026-08-10 |
+| Prochaine action | Retour d'expérience demandé à Emmanuel le 10/08. Obtenir aussi le cadrage du coaching Awa, puis envoyer le document d'échange |
 | Échéance | — |
 | Argent en attente | forfait technique 80 €, et la contrepartie coaching non formalisée |
 
@@ -72,5 +72,6 @@ Backend Supabase partagé, tables `aic_`, 3 migrations dans `supabase/`.
 
 ## Prochaine action
 
-**Obtenir d'Emmanuel le cadrage du coaching Awa, puis envoyer le document d'échange.**
-C'est la seule chose qui empêche ce partenariat d'être équilibré sur le papier.
+**Retour d'expérience demandé à Emmanuel le 10/08/2026.** Obtenir aussi le cadrage du
+coaching Awa, puis envoyer le document d'échange : c'est la seule chose qui empêche ce
+partenariat d'être équilibré sur le papier.

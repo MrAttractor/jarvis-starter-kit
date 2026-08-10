@@ -6,8 +6,8 @@
 | Radar | |
 |---|---|
 | Statut | en cours |
-| Dernier contact | 2026-08-04 |
-| Prochaine action | Obtenir l'email ou le WhatsApp de Lorraine Yapi, puis envoyer le devis après validation |
+| Dernier contact | 2026-08-10 |
+| Prochaine action | Devis envoyé et reçu par Lorraine Yapi. Faire une relance amicale |
 | Échéance | — |
 | Argent en attente | 490 à 1 790 € à vendre |
 
@@ -91,8 +91,9 @@ de cet actif.
 
 ## Prochaine action
 
-1. Obtenir l'email ou le WhatsApp de Lorraine Yapi, puis envoyer le message préparé dans
-   `MESSAGE-ENVOI.md` (**à valider par Mac Arthur avant tout envoi**).
+1. **Devis envoyé, et reçu par Lorraine Yapi (confirmé le 10/08/2026).** Le canal utilisé
+   n'est pas précisé dans cet échange, à compléter dans cette fiche. Faire une relance
+   amicale.
 2. Trancher les trois hypothèses de chiffrage ci-dessus.
 3. Si le volume de ventes est mesurable et qu'ils prennent une commission, **étudier la
    Famille D Partenariat Performance** (modèle Beracca) plutôt qu'un forfait sec.

@@ -5,8 +5,8 @@
 | Radar | |
 |---|---|
 | Statut | en production |
-| Dernier contact | 2026-07-11 |
-| Prochaine action | Récupérer les 11,86 €. Le mensuel attend l'activation des récurrents, chantier collectif |
+| Dernier contact | 2026-08-10 |
+| Prochaine action | Caler le rendez-vous physique proposé par Charles (pas encore trouvé le temps). Récupérer aussi les 11,86 €. Le mensuel attend l'activation des récurrents, chantier collectif |
 | Échéance | — |
 | Argent en attente | 11,86 €. Le mensuel de 35 € est contractuel, pas encaissé |
 
@@ -75,6 +75,7 @@ espace privilèges.
 
 ## Prochaine action
 
+- **Charles propose un rendez-vous physique**, pas encore casé au 10/08/2026 faute de temps
 - Récupérer les **11,86 €** restants, ou les passer en perte et le dire
 - L'**abonnement à 35 €/mois** n'est **pas activé**, et ce n'est pas un oubli sur
   ce dossier : précision de Mac Arthur le 07/08/2026, **aucun récurrent ne tourne

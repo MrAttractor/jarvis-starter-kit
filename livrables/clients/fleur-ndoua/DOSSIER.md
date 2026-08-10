@@ -4,9 +4,9 @@
 
 | Radar | |
 |---|---|
-| Statut | à trancher |
-| Dernier contact | 2026-07-11 |
-| Prochaine action | Décider : relancer sur le consulting seul, ou fermer le dossier |
+| Statut | attente client |
+| Dernier contact | 2026-08-10 |
+| Prochaine action | Elle revient quand elle est prête (échange du 10/08). Ne pas relancer avant |
 | Échéance | — |
 | Argent en attente | 150 à 800 € (consulting) |
 
@@ -56,9 +56,11 @@ Parcours recommandé complet : **environ 2 250 €**, plus la maintenance mensue
 
 ## Prochaine action
 
-**Décider : on relance ou on ferme.** Le devis attend une validation depuis le 11/07.
-Deux chiffres restent à confirmer (les 250 € de la V1 et le seuil de 1 200 € de la V2),
-et le PDF n'a jamais été généré ni envoyé.
+**Le 10/08/2026, elle a dit qu'elle revient quand elle est prête.** Ne pas la relancer
+avant : on attend son retour. Deux chiffres restent à confirmer pour le jour où elle
+revient (les 250 € de la V1 et le seuil de 1 200 € de la V2), et le PDF du devis n'a
+toujours pas été généré ni envoyé.
 
-Si on relance, l'angle est le consulting seul (150 à 800 €), pas la plateforme : c'est ce
-qu'elle a demandé, c'est le plus petit engagement, et c'est ce qui définit la suite.
+Quand elle revient, l'angle reste le consulting seul (150 à 800 €), pas la plateforme :
+c'est ce qu'elle a demandé, c'est le plus petit engagement, et c'est ce qui définit la
+suite.

@@ -4,9 +4,9 @@
 
 | Radar | |
 |---|---|
-| Statut | à relancer |
-| Dernier contact | 2026-07-01 |
-| Prochaine action | Relancer Latiss sur le protocole d'accord, rien ne se monétise avant |
+| Statut | attente client |
+| Dernier contact | 2026-08-10 |
+| Prochaine action | Latiss relancé le 10/08 sur le protocole d'accord, en attente de réponse. Rien ne se monétise avant |
 | Échéance | — |
 | Argent en attente | non chiffré, plateforme livrée sans contrepartie signée |
 
@@ -73,6 +73,6 @@ séries et live YouTube verrouillés, sondages, application installable.
 
 ## Prochaine action
 
-1. **Relancer Latiss sur le protocole d'accord.** Rien ne peut se monétiser avant.
+1. **Latiss relancé le 10/08/2026, sans réponse pour l'instant.** Rien ne peut se monétiser avant. Relancer à nouveau si le silence se prolonge.
 2. Proposer l'offre premium « Concerts » (live professionnel + replays payants + billetterie), chiffrée dans `COUTS-LIVE-PRO.md` : environ 0,06 $ par fan et par heure, soit ~600 $ pour 10 000 fans, couvert par la billetterie.
 3. Obtenir les **vrais titres des séries** (elles sont encore en « Série exclusive 1 / 2 »).

@@ -5,10 +5,10 @@
 | Radar | |
 |---|---|
 | Statut | en production |
-| Dernier contact | 2026-08-05 |
-| Prochaine action | Vérifier le solde de 15 000 F et récupérer la vidéo témoignage |
-| Échéance | 2026-08-08 |
-| Argent en attente | 15 000 FCFA, plus la vidéo témoignage jamais encaissée |
+| Dernier contact | 2026-08-10 |
+| Prochaine action | Récupérer la vidéo témoignage et un cas d'usage chiffré (contrepartie du partenariat, pas encore encaissée). Corriger le guide client |
+| Échéance | — |
+| Argent en attente | — (solde de 15 000 FCFA encaissé, confirmé le 10/08/2026). Reste la vidéo témoignage, jamais encaissée |
 
 ## En une phrase
 
@@ -33,7 +33,7 @@ témoignage et de la visibilité.
 |---|---|
 | Forfait technique (domaine + hébergement, à son nom) | **55 000 FCFA / 80 €** |
 | Encaissé au 19/07 | 40 000 FCFA |
-| **À vérifier** | le solde de 15 000 FCFA est-il rentré ? La fiche de contexte et la mémoire divergent sur ce point. |
+| **Solde** | 15 000 FCFA encaissés, confirmé par Mac Arthur le 10/08/2026 |
 | Valeur réelle du build | estimée 1,8 à 3 millions FCFA |
 
 Le vrai gain attendu n'est pas l'argent, c'est **l'ouverture du réseau Petro Ivoire**
@@ -65,7 +65,6 @@ l'UUID de Lorraine.
 
 ## Prochaine action
 
-- Vérifier le solde de 15 000 FCFA du forfait technique
 - Récupérer la **vidéo témoignage** et un cas d'usage chiffré : c'est la contrepartie du partenariat, et elle n'est pas encore encaissée
 - Corriger le guide client, qui affiche encore son mot de passe initial alors qu'elle l'a changé
 - À construire quand elle le voudra : le concept d'attraction du Club (bienvenue, parrainage, tirage)
