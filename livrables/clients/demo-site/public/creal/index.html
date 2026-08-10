@@ -1175,14 +1175,16 @@ async function confirmPayWA() {
   // On n'envoie que les identifiants et les quantités. Les prix sont recalculés
   // côté serveur : un panier qui arrive du navigateur est un panier que le
   // navigateur pourrait avoir réécrit.
+  let reference = '';
   try {
-    await api('commande', {
+    const enregistree = await api('commande', {
       client_nom: _clientName,
       client_wa:  _clientPhone,
       adresse:    _clientAddress,
       moyen:      _payMethod,
       lignes:     items.map(([id, qty]) => ({ produit_id: id, qty })),
     });
+    reference = enregistree?.reference || '';
   } catch {}
 
   saveMemory({
@@ -1222,7 +1224,8 @@ ${lines}
 
 C'Real : ${_payTotal.toLocaleString('fr-FR')} FCFA
 ${paiement}
-Tarif livraison : à fixer avec la boutique`;
+Tarif livraison : à fixer avec la boutique${reference ? `
+Facture : ${reference}` : ''}`;
 
   window.open(`https://wa.me/${KEZEY}?text=${encodeURIComponent(msg)}`, '_blank');
 }

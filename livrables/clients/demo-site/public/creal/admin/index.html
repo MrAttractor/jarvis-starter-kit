@@ -625,6 +625,12 @@ function aEncaisser(c) {
   return c.encaisse === false && c.statut !== 'annulee';
 }
 
+/* La référence citée dans le message WhatsApp de la cliente. Même forme des
+   deux côtés, sinon le numéro ne relie plus rien. */
+function reference(c) {
+  return c.numero ? 'CR-' + String(c.numero).padStart(4, '0') : '';
+}
+
 function ligneCommande(c) {
   const quand = new Date(c.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'short' });
   const et = c.statut === 'nouvelle' ? 'neuve' : c.statut === 'traitee' ? 'faite' : 'annulee';
@@ -633,7 +639,7 @@ function ligneCommande(c) {
     <div class="ligne" onclick="voirCommande('${c.id}')" style="cursor:pointer">
       <div class="corps">
         <b>${esc(c.client_nom || 'Cliente')}</b>
-        <span>${quand} · ${fmt(c.total)} FCFA · ${c.lignes.length} article${c.lignes.length > 1 ? 's' : ''}</span>
+        <span>${reference(c) ? reference(c) + ' · ' : ''}${quand} · ${fmt(c.total)} FCFA · ${c.lignes.length} article${c.lignes.length > 1 ? 's' : ''}</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0;">
         <span class="etiquette ${et}">${mot}</span>
@@ -658,6 +664,8 @@ function voirCommande(id) {
   if (!c) return;
   const wa = (c.client_wa || '').replace(/[^0-9]/g, '');
   document.getElementById('commande-detail').innerHTML = `
+    ${reference(c) ? `<div class="ligne"><div class="corps"><b>Facture ${reference(c)}</b>
+      <span>La cliente cite ce numéro dans son message</span></div></div>` : ''}
     <div class="ligne"><div class="corps"><b>${esc(c.client_nom || 'Cliente')}</b>
       <span>${esc(c.client_wa || 'Pas de numéro')}</span></div></div>
     ${c.adresse ? `<div class="ligne"><div class="corps"><b>Livraison</b><span>${esc(c.adresse)}</span></div></div>` : ''}

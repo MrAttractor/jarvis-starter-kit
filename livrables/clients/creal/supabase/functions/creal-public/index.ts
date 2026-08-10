@@ -256,7 +256,7 @@ async function commande(body: Record<string, unknown>) {
   const { data, error } = await db
     .from("cr_commandes")
     .insert({ client_nom: nom, client_wa: wa, adresse, lignes, total, moyen: moyenRetenu, encaisse })
-    .select("id, total")
+    .select("id, total, numero")
     .single();
 
   if (error) {
@@ -266,7 +266,10 @@ async function commande(body: Record<string, unknown>) {
 
   // Le total recalculé est renvoyé : si le panier du navigateur avait dérivé,
   // c'est ce chiffre-là qui fait foi.
-  return json({ id: data.id, total: data.total });
+  // Le numéro part avec, pour que le message WhatsApp cite la même référence
+  // que le tableau de bord. C'est ce qui permet à Kezey de retrouver en une
+  // seconde la commande dont une cliente lui parle.
+  return json({ id: data.id, total: data.total, numero: data.numero, reference: reference(data.numero) });
 }
 
 // ── Anti AI-slop, R-50 ──────────────────────────────────────────────────────
@@ -287,6 +290,13 @@ function nettoyer(t: string): string {
     .replace(/—/g, ", ")              // tirets longs, préférence maison
     .replace(/\n{3,}/g, "\n\n")
     .trim();
+}
+
+/* La forme lisible du numéro. Écrite ici, une seule fois : si le format devait
+   changer un jour, il ne doit pas exister deux endroits qui produisent deux
+   références différentes pour la même commande. */
+function reference(numero: number): string {
+  return "CR-" + String(numero).padStart(4, "0");
 }
 
 // ── Utilitaires ─────────────────────────────────────────────────────────────
