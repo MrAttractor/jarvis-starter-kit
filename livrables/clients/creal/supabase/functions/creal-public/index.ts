@@ -67,7 +67,7 @@ async function catalogue() {
 
   const { data: cfg } = await db
     .from("cr_config")
-    .select("whatsapp, lien_wave, numero_om")
+    .select("whatsapp, lien_wave, numero_om, paiement_livraison")
     .single();
 
   // Le prompt n'est volontairement pas dans cette réponse.
@@ -104,10 +104,19 @@ async function chat(body: Record<string, unknown>) {
 
   const { data: cfg } = await db
     .from("cr_config")
-    .select("prompt_zoe")
+    .select("prompt_zoe, paiement_livraison")
     .single();
 
   if (!cfg?.prompt_zoe) return json({ error: "Assistante indisponible" }, 503);
+
+  // Les moyens de paiement sont injectés à chaque tour, comme le catalogue,
+  // plutôt qu'écrits dans le prompt : le jour où Kezey coupe le paiement à la
+  // livraison depuis son tableau de bord, Zoé cesse de le proposer aussitôt.
+  // Une assistante qui promet une option retirée de l'écran est pire qu'une
+  // assistante qui n'en parle pas.
+  const paiementBlock = cfg.paiement_livraison
+    ? "\n\nMOYENS DE PAIEMENT : Wave, Orange Money, ou paiement à la livraison (la cliente règle en main propre quand elle reçoit sa commande). Les trois sont proposés sur la boutique."
+    : "\n\nMOYENS DE PAIEMENT : Wave ou Orange Money, réglés avant la préparation. Le paiement à la livraison n'est pas proposé en ce moment, ne le promets jamais.";
 
   // Catalogue injecté à chaque tour, pour que Zoé ne cite jamais un prix périmé
   // ni un produit retiré.
@@ -140,7 +149,7 @@ async function chat(body: Record<string, unknown>) {
     body: JSON.stringify({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 500,
-      system: cfg.prompt_zoe + catalogueBlock,
+      system: cfg.prompt_zoe + catalogueBlock + paiementBlock,
       messages: recent.map((m) => ({
         role: m.from === "me" ? "user" : "assistant",
         content: m.text,
@@ -194,7 +203,7 @@ async function commande(body: Record<string, unknown>) {
   const nom     = texte(body.client_nom, 80);
   const wa      = texte(body.client_wa, 30);
   const adresse = texte(body.adresse, 200);
-  const moyen   = body.moyen === "om" ? "om" : "wave";
+  const moyen   = ["om", "livraison"].includes(String(body.moyen)) ? String(body.moyen) : "wave";
   const paniers = Array.isArray(body.lignes) ? body.lignes : [];
 
   if (!nom || !wa)          return json({ error: "Nom et WhatsApp requis" }, 400);
@@ -228,9 +237,25 @@ async function commande(body: Record<string, unknown>) {
 
   if (lignes.length === 0) return json({ error: "Panier invalide" }, 400);
 
+  // Le choix « payer à la livraison » se vérifie côté serveur : si Kezey a coupé
+  // l'option depuis son tableau de bord, une page restée ouverte dans un
+  // navigateur ne doit pas pouvoir la passer quand même.
+  let moyenRetenu = moyen;
+  if (moyen === "livraison") {
+    const { data: cfg } = await db.from("cr_config").select("paiement_livraison").single();
+    if (!cfg?.paiement_livraison) {
+      return json({ error: "Le paiement à la livraison n'est plus proposé", ferme: true }, 409);
+    }
+  }
+
+  // L'argent de Wave et d'Orange Money arrive avant la préparation, celui de la
+  // livraison non. La commande porte cette différence, pour que le tableau de
+  // bord n'ait jamais à la deviner.
+  const encaisse = moyenRetenu !== "livraison";
+
   const { data, error } = await db
     .from("cr_commandes")
-    .insert({ client_nom: nom, client_wa: wa, adresse, lignes, total, moyen })
+    .insert({ client_nom: nom, client_wa: wa, adresse, lignes, total, moyen: moyenRetenu, encaisse })
     .select("id, total")
     .single();
 

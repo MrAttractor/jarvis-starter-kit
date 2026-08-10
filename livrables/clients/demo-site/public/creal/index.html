@@ -528,6 +528,31 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
+/* ── PAIEMENT À LA LIVRAISON ────────────────────────────────────────────────
+   Volontairement plus sobre que Wave et Orange Money : c'est le choix de
+   celle qui hésite encore, pas celui qu'on pousse. */
+.pay-btn.liv {
+  background: #fff;
+  border: 1.5px solid rgba(74,46,18,0.22);
+  color: var(--brand);
+}
+.liv-box {
+  display: flex; gap: 14px; align-items: flex-start;
+  background: #F6F3EC;
+  border: 1px solid rgba(74,46,18,0.10);
+  border-radius: var(--r);
+  padding: 16px; margin-bottom: 16px;
+}
+.liv-rond {
+  width: 42px; height: 42px; flex-shrink: 0;
+  background: var(--brand); color: #fff; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.liv-rond svg { width: 22px; height: 22px; }
+.liv-corps { display: block; min-width: 0; }
+.liv-titre { display: block; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+.liv-texte { display: block; font-size: 14px; color: var(--muted); line-height: 1.5; }
+
 /* ── INVITATION À DEMANDER CONSEIL ──────────────────────────────────────────
    Glissée dans le catalogue plutôt qu'en tête de page : le doute sur « laquelle
    choisir » naît en comparant les farines, pas avant de les avoir vues. */
@@ -715,20 +740,42 @@ main { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 0; }
         </div>
         <button class="om-paid-btn" onclick="onOmPaid()">J'ai effectué le virement OM</button>
       </div>
+      <!-- Section paiement à la livraison : rien à payer maintenant, donc pas
+           de capture d'écran à faire, et l'étape se franchit d'un seul geste. -->
+      <div id="pay-liv-section" style="display:none;">
+        <div class="liv-box">
+          <span class="liv-rond">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </span>
+          <span class="liv-corps">
+            <span class="liv-titre">Vous payez en main propre</span>
+            <span class="liv-texte">Rien à régler maintenant. Vous donnerez le montant à la personne qui vous livre, une fois votre commande entre vos mains.</span>
+          </span>
+        </div>
+        <button class="modal-add-btn" onclick="onLivraisonChoisie()">Je confirme ma commande</button>
+      </div>
       <!-- Prochaines étapes -->
       <div id="next-steps" style="display:none;">
         <div class="next-steps-box">
           <p class="next-steps-title">Que se passe-t-il maintenant ?</p>
-          <div class="next-step"><span class="step-num">1</span><span>Faites une <strong>capture d'écran</strong> de votre confirmation de paiement</span></div>
-          <div class="next-step"><span class="step-num">2</span><span>Envoyez-la à Kezey via WhatsApp avec votre adresse de livraison</span></div>
-          <div class="next-step"><span class="step-num">3</span><span>Kezey <strong>valide votre commande</strong> et prépare votre colis</span></div>
-          <div class="next-step"><span class="step-num">4</span><span>Livraison sous <strong>24h</strong> en semaine · jusqu'à <strong>72h</strong> le week-end</span></div>
+          <div id="etapes-payees">
+            <div class="next-step"><span class="step-num">1</span><span>Faites une <strong>capture d'écran</strong> de votre confirmation de paiement</span></div>
+            <div class="next-step"><span class="step-num">2</span><span>Envoyez-la à Kezey via WhatsApp avec votre adresse de livraison</span></div>
+            <div class="next-step"><span class="step-num">3</span><span>Kezey <strong>valide votre commande</strong> et prépare votre colis</span></div>
+            <div class="next-step"><span class="step-num">4</span><span>Livraison sous <strong>24h</strong> en semaine · jusqu'à <strong>72h</strong> le week-end</span></div>
+          </div>
+          <div id="etapes-livraison" style="display:none;">
+            <div class="next-step"><span class="step-num">1</span><span>Envoyez votre commande à Kezey via <strong>WhatsApp</strong></span></div>
+            <div class="next-step"><span class="step-num">2</span><span>Kezey <strong>confirme</strong> avec vous les frais de livraison</span></div>
+            <div class="next-step"><span class="step-num">3</span><span>Elle prépare votre colis</span></div>
+            <div class="next-step"><span class="step-num">4</span><span>Vous payez <strong>à la réception</strong>, en main propre</span></div>
+          </div>
         </div>
         <button class="wa-btn" onclick="confirmPayWA()">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          Envoyer ma capture à Kezey
+          <span id="wa-btn-texte">Envoyer ma capture à Kezey</span>
         </button>
-        <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:8px;">Joignez votre capture d'écran + adresse dans le message WhatsApp</p>
+        <p id="wa-btn-note" style="text-align:center;font-size:13px;color:var(--muted);margin-top:8px;">Joignez votre capture d'écran + adresse dans le message WhatsApp</p>
       </div>
     </div>
 
@@ -794,6 +841,11 @@ function kezeyLisible() {
 // Liens de paiement, également remplacés par ceux de cr_config au chargement.
 let LIEN_WAVE = 'https://pay.wave.com/m/M_ci_1BZymigN-SjL/c/ci/';
 let NUMERO_OM = '+225 07 58 68 02 79';
+
+// Le paiement à la livraison s'affiche seulement si Kezey le propose. Valeur de
+// repli à faux : si la configuration n'arrive pas, mieux vaut ne pas montrer une
+// option qu'elle a peut-être coupée que de promettre ce qu'elle ne fait plus.
+let PAIEMENT_LIVRAISON = false;
 
 // Le catalogue vient de la base, plus du code.
 //
@@ -1002,8 +1054,15 @@ function renderCart() {
           <img src="imgs/om.jpg" alt="Orange Money" style="height:22px;width:22px;object-fit:cover;border-radius:50%;">
           Orange Money
         </button>
+        ${PAIEMENT_LIVRAISON ? `
+        <button class="pay-btn liv" style="width:100%;flex-direction:row;justify-content:center;gap:10px;" onclick="openPay('livraison',${total})">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;flex-shrink:0;"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Payer à la livraison
+        </button>` : ''}
       </div>
-      <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:10px;">Commande confirmée après réception du paiement</p>
+      <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:10px;">${PAIEMENT_LIVRAISON
+        ? 'Payez maintenant, ou en main propre à la réception'
+        : 'Commande confirmée après réception du paiement'}</p>
     </div>`;
 }
 
@@ -1044,11 +1103,17 @@ function goToPayment() {
   _clientName    = name;
   _clientPhone   = phone;
   _clientAddress = address;
-  const label = _payMethod === 'wave' ? 'Wave Business' : 'Orange Money';
-  document.getElementById('pay-title').textContent = 'Payer par ' + label;
+  const livraison = _payMethod === 'livraison';
+  const label = livraison ? '' : (_payMethod === 'wave' ? 'Wave Business' : 'Orange Money');
+  document.getElementById('pay-title').textContent = livraison ? 'Paiement à la livraison' : 'Payer par ' + label;
   document.getElementById('pay-amount-val').textContent = _payTotal.toLocaleString('fr-FR') + ' FCFA';
+  // À la livraison, le montant n'est pas « à payer » maintenant.
+  document.querySelector('.pay-amount-lbl').textContent = livraison
+    ? 'Montant de votre commande (livraison non incluse)'
+    : 'À payer (livraison non incluse)';
   document.getElementById('pay-wave-section').style.display = _payMethod === 'wave' ? 'block' : 'none';
   document.getElementById('pay-om-section').style.display   = _payMethod === 'om'   ? 'block' : 'none';
+  document.getElementById('pay-liv-section').style.display  = livraison ? 'block' : 'none';
   document.getElementById('next-steps').style.display = 'none';
   if (_payMethod === 'om') document.getElementById('copy-btn').textContent = 'Copier';
   document.getElementById('pay-step-contact').style.display = 'none';
@@ -1062,6 +1127,16 @@ function onWaveLinkClick() {
 }
 
 function onOmPaid() {
+  document.getElementById('next-steps').style.display = 'block';
+}
+
+/* Paiement à la livraison : pas de capture d'écran à faire, donc les étapes et
+   le bouton final ne disent pas la même chose. */
+function onLivraisonChoisie() {
+  document.getElementById('etapes-payees').style.display   = 'none';
+  document.getElementById('etapes-livraison').style.display = 'block';
+  document.getElementById('wa-btn-texte').textContent = 'Envoyer ma commande à Kezey';
+  document.getElementById('wa-btn-note').textContent  = 'Kezey vous confirmera les frais de livraison';
   document.getElementById('next-steps').style.display = 'block';
 }
 
@@ -1088,6 +1163,7 @@ async function confirmPayWA() {
     const p = PRODUCTS.find(p=>p.id===id);
     return `• ${p.name} x${qty} = ${(p.price*qty).toLocaleString('fr-FR')} FCFA`;
   }).join('\n');
+  const livraison = _payMethod === 'livraison';
   const methodLabel = _payMethod === 'wave' ? 'Wave Business' : 'Orange Money';
 
   // Enregistrement dans le tableau de bord de Kezey. Silencieux et non
@@ -1120,7 +1196,17 @@ async function confirmPayWA() {
   });
   localStorage.removeItem(CONV_KEY);
 
-  const msg = `Bonjour Kezey ! Je viens de payer ${_payTotal.toLocaleString('fr-FR')} FCFA via ${methodLabel}.\n\nClient : ${_clientName}\nWhatsApp : ${_clientPhone}\nAdresse : ${_clientAddress}\n\nMa commande C'Real :\n${lines}\n\nSous-total : ${_payTotal.toLocaleString('fr-FR')} FCFA (livraison non incluse)`;
+  // Deux messages, parce que ce ne sont pas deux situations. Annoncer « je
+  // viens de payer » pour une commande à régler à la réception ferait préparer
+  // et livrer Kezey en croyant l'argent arrivé.
+  const entete = livraison
+    ? `Bonjour Kezey ! Je commande, et je paierai ${_payTotal.toLocaleString('fr-FR')} FCFA à la livraison, en main propre.`
+    : `Bonjour Kezey ! Je viens de payer ${_payTotal.toLocaleString('fr-FR')} FCFA via ${methodLabel}.`;
+  const pied = livraison
+    ? `À régler à la réception : ${_payTotal.toLocaleString('fr-FR')} FCFA (livraison non incluse)`
+    : `Sous-total : ${_payTotal.toLocaleString('fr-FR')} FCFA (livraison non incluse)`;
+
+  const msg = `${entete}\n\nClient : ${_clientName}\nWhatsApp : ${_clientPhone}\nAdresse : ${_clientAddress}\n\nMa commande C'Real :\n${lines}\n\n${pied}`;
   window.open(`https://wa.me/${KEZEY}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
@@ -1215,6 +1301,7 @@ async function chargerCatalogue() {
       if (data.config.whatsapp)  KEZEY     = data.config.whatsapp;
       if (data.config.lien_wave) LIEN_WAVE = data.config.lien_wave;
       if (data.config.numero_om) NUMERO_OM = data.config.numero_om;
+      PAIEMENT_LIVRAISON = data.config.paiement_livraison === true;
       const lienWave = document.querySelector('.wave-link-btn');
       if (lienWave) lienWave.href = LIEN_WAVE;
       const numOm = document.querySelector('.pay-num');

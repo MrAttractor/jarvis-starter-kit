@@ -207,6 +207,11 @@ nav svg { width:22px; height:22px; }
         <div class="section-titre">À traiter maintenant</div>
         <div id="accueil-atraiter"></div>
       </div>
+      <div class="carte" id="carte-encaisser" style="display:none;">
+        <div class="section-titre">Argent à récupérer</div>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:12px;" id="total-encaisser"></p>
+        <div id="accueil-encaisser"></div>
+      </div>
       <div class="carte" id="carte-demarrage" style="display:none;">
         <div class="section-titre">Mettez votre stock en route</div>
         <p style="color:var(--muted);font-size:15px;margin-bottom:16px;">
@@ -244,6 +249,21 @@ nav svg { width:22px; height:22px; }
 
     <!-- Ventes -->
     <section id="s-ventes">
+      <div class="carte">
+        <div class="section-titre">Le paiement à la livraison</div>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:12px;">
+          Vos clientes peuvent choisir de payer en main propre à la réception.
+          Si vous avez trop de commandes non réglées, coupez cette option : elle
+          disparaît aussitôt de la boutique, et Zoé cesse de la proposer.
+        </p>
+        <div class="champ" style="margin-bottom:12px;">
+          <select id="opt-livraison" onchange="basculerPaiementLivraison()">
+            <option value="1">Oui, je propose le paiement à la livraison</option>
+            <option value="0">Non, mes clientes paient avant</option>
+          </select>
+        </div>
+      </div>
+
       <div class="section-titre">Mes ventes</div>
       <div class="chiffres" id="chiffres-ventes"></div>
       <div class="carte">
@@ -351,6 +371,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
 });
 
 let PRODUITS = [], COMMANDES = [], STOCK = [], MOUVEMENTS = 0;
+let CONFIG = { paiement_livraison: true };
 let produitEdite = null, stockEdite = null;
 
 /* Le stock est « en route » dès qu'un mouvement a eu lieu ou qu'une quantité
@@ -400,7 +421,7 @@ async function entrer() {
 }
 
 async function tout() {
-  await Promise.all([chargerProduits(), chargerCommandes(), chargerStock()]);
+  await Promise.all([chargerProduits(), chargerCommandes(), chargerStock(), chargerConfig()]);
   rendreAccueil(); rendreCommandes(); rendreCatalogue(); rendreStock(); rendreVentes();
 }
 
@@ -413,6 +434,24 @@ async function chargerCommandes() {
   const { data } = await sb.from('cr_commandes').select('*').order('created_at', { ascending: false }).limit(300);
   COMMANDES = data ?? [];
 }
+async function chargerConfig() {
+  const { data } = await sb.from('cr_config').select('paiement_livraison').single();
+  CONFIG = data ?? { paiement_livraison: true };
+  document.getElementById('opt-livraison').value = CONFIG.paiement_livraison ? '1' : '0';
+}
+
+async function basculerPaiementLivraison() {
+  const actif = document.getElementById('opt-livraison').value === '1';
+  const { error } = await sb.from('cr_config').update({ paiement_livraison: actif }).eq('id', true);
+  if (error) {
+    toast("Pas enregistré, réessayez.");
+    document.getElementById('opt-livraison').value = CONFIG.paiement_livraison ? '1' : '0';
+    return;
+  }
+  CONFIG.paiement_livraison = actif;
+  toast(actif ? 'Vos clientes peuvent payer à la livraison.' : 'Option retirée de la boutique.');
+}
+
 async function chargerStock() {
   const { data } = await sb.from('cr_stock').select('*');
   STOCK = data ?? [];
@@ -449,6 +488,16 @@ function rendreAccueil() {
   } else {
     zone.innerHTML = aTraiter.slice(0, 5).map(ligneCommande).join('');
   }
+
+  /* L'argent pas encore encaissé se voit dès l'accueil : c'est de l'argent qui
+     lui appartient et qu'elle n'a pas. Rien ne le lui rappellerait sinon. */
+  const impayees = COMMANDES.filter(aEncaisser);
+  const du = impayees.reduce((s, c) => s + c.total, 0);
+  const carteDu = document.getElementById('carte-encaisser');
+  carteDu.style.display = impayees.length ? 'block' : 'none';
+  document.getElementById('accueil-encaisser').innerHTML = impayees.map(ligneCommande).join('');
+  document.getElementById('total-encaisser').textContent =
+    `${fmt(du)} FCFA sur ${impayees.length} commande${impayees.length > 1 ? 's' : ''}`;
 
   const pastille = document.getElementById('pastille-cmd');
   pastille.textContent = aTraiter.length;
@@ -492,6 +541,19 @@ function allerStock() {
 }
 
 /* ── Commandes ─────────────────────────────────────────────────────────── */
+/* Nom lisible du moyen de paiement. Il y en a trois depuis le 10/08/2026, et
+   surtout deux natures : deux moyens sont encaissés avant la préparation, le
+   troisième est une créance. Une valeur inconnue se dit « moyen inconnu »,
+   jamais « Wave » par défaut : c'est ainsi qu'on fait livrer sans être payé. */
+function moyenLisible(m) {
+  return { wave: 'Wave', om: 'Orange Money', livraison: 'À la livraison' }[m] || 'Moyen inconnu';
+}
+
+/* Une commande est à encaisser si elle n'est pas payée et pas annulée. */
+function aEncaisser(c) {
+  return c.encaisse === false && c.statut !== 'annulee';
+}
+
 function ligneCommande(c) {
   const quand = new Date(c.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'short' });
   const et = c.statut === 'nouvelle' ? 'neuve' : c.statut === 'traitee' ? 'faite' : 'annulee';
@@ -502,7 +564,10 @@ function ligneCommande(c) {
         <b>${esc(c.client_nom || 'Cliente')}</b>
         <span>${quand} · ${fmt(c.total)} FCFA · ${c.lignes.length} article${c.lignes.length > 1 ? 's' : ''}</span>
       </div>
-      <span class="etiquette ${et}">${mot}</span>
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0;">
+        <span class="etiquette ${et}">${mot}</span>
+        ${aEncaisser(c) ? '<span class="etiquette rupture">Argent à prendre</span>' : ''}
+      </div>
     </div>`;
 }
 
@@ -528,15 +593,35 @@ function voirCommande(id) {
     ${c.lignes.map(l => `<div class="ligne"><div class="corps"><b>${esc(l.nom)}</b>
       <span>${l.qty} × ${fmt(l.prix_unit)} FCFA</span></div><b>${fmt(l.total)} F</b></div>`).join('')}
     <div class="ligne"><div class="corps"><b>Total</b>
-      <span>${c.moyen === 'om' ? 'Orange Money' : 'Wave'}</span></div><b>${fmt(c.total)} FCFA</b></div>
+      <span>${moyenLisible(c.moyen)}</span></div><b>${fmt(c.total)} FCFA</b></div>
+    ${aEncaisser(c) ? `
+      <div class="carte" style="background:var(--alerte-s);border-color:rgba(179,38,30,.25);margin:12px 0 0;">
+        <b style="display:block;font-family:'Sora',sans-serif;margin-bottom:4px;">Cette commande n'est pas payée</b>
+        <span style="font-size:14px;color:var(--muted);">Prenez les ${fmt(c.total)} FCFA à la remise du colis, puis appuyez sur le bouton ci-dessous.</span>
+      </div>` : ''}
     <div class="actions">
       ${wa ? `<a class="btn petit" href="https://wa.me/${wa}" target="_blank" rel="noopener">Écrire à la cliente</a>` : ''}
+      ${aEncaisser(c) ? `<button class="btn petit" onclick="marquerPaye('${c.id}')">J'ai reçu l'argent</button>` : ''}
       ${c.statut === 'nouvelle'
-        ? `<button class="btn petit" onclick="marquer('${c.id}','traitee')">C'est préparé</button>
+        ? `<button class="btn petit${aEncaisser(c) ? ' fantome' : ''}" onclick="marquer('${c.id}','traitee')">C'est préparé</button>
            <button class="btn petit fantome" onclick="marquer('${c.id}','annulee')">Annuler</button>`
         : `<button class="btn petit fantome" onclick="marquer('${c.id}','nouvelle')">Remettre à préparer</button>`}
     </div>`;
   ouvrir('modale-commande');
+}
+
+/* L'encaissement se déclare à part de la préparation : Kezey peut très bien
+   préparer un colis le matin et recevoir l'argent le soir, ou l'inverse. Lier
+   les deux gestes obligerait à mentir sur l'un pour enregistrer l'autre. */
+async function marquerPaye(id) {
+  const c = COMMANDES.find(x => x.id === id);
+  if (!c) return;
+  const { error } = await sb.from('cr_commandes').update({ encaisse: true }).eq('id', id);
+  if (error) { toast("Pas enregistré, réessayez."); return; }
+  c.encaisse = true;
+  fermer('modale-commande');
+  rendreAccueil(); rendreCommandes(); rendreVentes();
+  toast(`${fmt(c.total)} FCFA encaissés.`);
 }
 
 /* Le stock ne bouge QU'ICI, au passage en préparée, et jamais à la création de
@@ -734,11 +819,16 @@ function rendreVentes() {
   const mois = valides.filter(c => estCeMois(c.created_at));
   const caMois = mois.reduce((s, c) => s + c.total, 0);
   const caTout = valides.reduce((s, c) => s + c.total, 0);
+  // Vendu n'est pas encaissé. Afficher les deux comme un seul chiffre ferait
+  // croire à Kezey qu'elle a en caisse de l'argent qui est encore chez ses
+  // clientes.
+  const attendu = valides.filter(c => c.encaisse === false).reduce((s, c) => s + c.total, 0);
 
   document.getElementById('chiffres-ventes').innerHTML = `
-    <div class="chiffre"><b>${fmt(caMois)}</b><span>FCFA ce mois-ci</span></div>
+    <div class="chiffre"><b>${fmt(caMois)}</b><span>FCFA vendus ce mois-ci</span></div>
     <div class="chiffre"><b>${mois.length}</b><span>commande${mois.length > 1 ? 's' : ''} ce mois-ci</span></div>
-    <div class="chiffre"><b>${fmt(caTout)}</b><span>FCFA depuis le début</span></div>`;
+    <div class="chiffre"><b>${fmt(caTout)}</b><span>FCFA vendus depuis le début</span></div>
+    ${attendu > 0 ? `<div class="chiffre" style="border-color:rgba(179,38,30,.3);"><b style="color:var(--alerte);">${fmt(attendu)}</b><span>FCFA pas encore reçus</span></div>` : ''}`;
 
   const parProduit = new Map();
   valides.forEach(c => c.lignes.forEach(l => {
