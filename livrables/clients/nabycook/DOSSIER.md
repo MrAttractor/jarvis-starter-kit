@@ -5,8 +5,8 @@
 | Radar | |
 |---|---|
 | Statut | en production |
-| Dernier contact | 2026-08-06 (dépôt de ses éléments dans le Drive partagé) |
-| Prochaine action | Récupérer les photos et le logo HD du Drive, puis trancher domaine et mise en ligne |
+| Dernier contact | 2026-08-10 (son debrief détaillé par mail) |
+| Prochaine action | Envoyer la réponse au debrief, puis lui donner la main sur son site |
 | Échéance | forum du 5 septembre 2026 cité dans sa liste d'éléments |
 | Argent en attente | 175 € d'acompte |
 

@@ -2,7 +2,7 @@
 
 > Mise à jour du 08/08/2026, après réception de votre dossier Drive « SITE NABYCOOK ».
 > Écrite pour être lue par Nabintou, sans terme technique.
-> Site à voir : https://demo.agenceattractor.com/nabycook-site
+> Site à voir : https://nabycook.pages.dev
 
 ---
 

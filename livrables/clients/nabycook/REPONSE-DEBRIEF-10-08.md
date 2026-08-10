@@ -12,7 +12,9 @@ Bonjour Nabintou,
 
 Merci pour ce retour, il est précis et facile à appliquer. C'est le genre de document qui fait gagner une semaine.
 
-**Tout est intégré et en ligne :** https://demo.agenceattractor.com/nabycook-site
+**Tout est intégré, et votre site a désormais sa propre adresse :** https://nabycook.pages.dev
+
+C'est une adresse d'attente, elle n'a plus rien à voir avec nos outils internes. Le jour où vous nous donnez la main sur nabycook.com, c'est ce même site qui bascule dessus, sans rien refaire. L'ancien lien que je vous avais envoyé continue de fonctionner et renvoie ici.
 
 Vos textes ont été repris mot pour mot, sur les cinq pages. Les blocs que vous vouliez retirer ont disparu : la réduction d'impôt, la répartition du budget, la composition du bureau, la date de déclaration. Les distinctions ADIE, Baluchon, Empow'Her et HEC Stand Up ont quitté la page de l'association pour rejoindre votre parcours, sur la page Univers, avec une phrase qui dit clairement qu'elles vous récompensent vous.
 
@@ -59,7 +61,7 @@ Dites-moi laquelle vous préférez, je pars sur la première si vous n'avez pas 
 
 ## Deux derniers points avant l'ouverture au public
 
-**Le site n'est pas encore visible dans les moteurs de recherche**, volontairement : il vit toujours sur notre adresse de démonstration. Le jour où il passe sur nabycook.com, on ouvre. Il me faut donc les accès au nom de domaine.
+**Le site n'est pas encore visible dans les moteurs de recherche**, volontairement. Le jour où il passe sur nabycook.com, on ouvre. Il me faut donc les accès au nom de domaine.
 
 **Il manque les mentions légales et la politique de confidentialité**, qui sont obligatoires dès l'ouverture au public.
 

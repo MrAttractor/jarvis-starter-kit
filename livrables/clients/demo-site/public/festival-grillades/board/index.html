@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Board de pilotage — Festival des Grillades de Paris 2026</title>
+<meta name="description" content="Suivi du projet : jalons, avancement du périmètre, informations attendues." />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#2F4858" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --pap:#FBFAF9; --blanc:#FFFFFF;
+  --encre:#1A1A18; --encre2:#4A4A46; --encre3:#84837C;
+  --bd:#E5E3DE; --bd2:#D2CFC8;
+  --ard:#2F4858; --ard-cl:#EAF0F3; --ard-fonce:#22353F;
+  --sable:#6B5B45; --sable-cl:#F2EEE7;
+  --ambre:#8A6D2F; --ambre-cl:#F7F0DF;
+  --vert:#3D5A40; --vert-cl:#EAF0EA;
+  --rouge:#8C3A32; --rouge-cl:#F7EAE8;
+  --maxw:1080px; --r:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--pap);color:var(--encre);
+     line-height:1.6;font-size:15px;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+[hidden]{display:none!important}
+a{color:var(--ard)}
+button,input,select{font:inherit;color:inherit}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 16px;width:100%}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- BANDEAU ---------- */
+.bandeau{background:var(--blanc);border-bottom:1px solid var(--bd)}
+.bandeau .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:72px;padding:12px 16px}
+.org{display:flex;align-items:center;gap:11px;min-width:0}
+.org img{width:auto;object-fit:contain}
+#lg-adv{height:42px} #lg-thim{height:36px}
+.org .nom{font-size:10.5px;font-weight:600;color:var(--encre3);line-height:1.3;
+  letter-spacing:.09em;text-transform:uppercase}
+.org.droite{flex-direction:row-reverse;text-align:right}
+.sep-org{flex:1;height:1px;background:var(--bd);min-width:8px}
+@media(max-width:640px){
+  .bandeau .wrap{gap:10px;min-height:64px}
+  .org .nom{display:none}
+  #lg-adv{height:36px} #lg-thim{height:30px}
+}
+
+/* ---------- ENTETE ---------- */
+.entete{background:var(--ard);color:#fff;padding:22px 0 20px}
+.entete .kick{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:#B7CBD6;margin-bottom:6px}
+.entete h1{font-size:20px;font-weight:700;line-height:1.28;letter-spacing:-.01em}
+.compte{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+.cbloc{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);border-radius:var(--r);
+  padding:10px 14px;min-width:104px}
+.cbloc .n{font-size:24px;font-weight:700;line-height:1.1}
+.cbloc .l{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:#B7CBD6;font-weight:600;margin-top:2px}
+.cbloc.alerte{background:#fff;border-color:#fff;color:var(--rouge)}
+.cbloc.alerte .l{color:var(--rouge)}
+@media(min-width:720px){.entete h1{font-size:24px}.cbloc .n{font-size:28px}}
+
+/* ---------- SECTIONS ---------- */
+main{padding:20px 0 56px}
+section{margin-bottom:28px}
+h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--encre3);
+   margin-bottom:10px;display:flex;align-items:center;gap:8px}
+h2 svg{width:15px;height:15px;flex:0 0 15px;stroke:currentColor;fill:none;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round}
+.carte{background:var(--blanc);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.vide{padding:18px;color:var(--encre3);font-size:14px}
+
+/* ---------- URGENCES ---------- */
+.urg{border-left:3px solid var(--rouge);background:var(--rouge-cl);border-radius:var(--r);
+  padding:14px 16px;margin-bottom:10px}
+.urg h3{font-size:15px;font-weight:700;color:var(--rouge);margin-bottom:4px;line-height:1.35}
+.urg p{font-size:13.5px;color:var(--encre2)}
+.urg.tiede{border-left-color:var(--ambre);background:var(--ambre-cl)}
+.urg.tiede h3{color:var(--ambre)}
+
+/* ---------- JALONS ---------- */
+.jal{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid var(--bd);align-items:flex-start}
+.jal:last-child{border-bottom:0}
+.jal .date{flex:0 0 60px;text-align:center;padding-top:2px}
+.jal .date .j{font-size:17px;font-weight:700;line-height:1}
+.jal .date .m{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--encre3);font-weight:600;margin-top:2px}
+.jal .date .nd{font-size:11px;color:var(--encre3);font-weight:600}
+.jal .corps{flex:1;min-width:0}
+.jal .titre{font-size:15px;font-weight:600;line-height:1.35}
+.jal .det{font-size:13px;color:var(--encre2);margin-top:3px}
+.jal .bas{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.jal.fait .titre{color:var(--encre3);text-decoration:line-through;text-decoration-thickness:1px}
+.tag{font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;border:1px solid var(--bd2);color:var(--encre2);background:var(--pap)}
+.tag.rouge{background:var(--rouge-cl);color:var(--rouge);border-color:#E6C9C5}
+.tag.ambre{background:var(--ambre-cl);color:var(--ambre);border-color:#E3D6B4}
+.tag.vert{background:var(--vert-cl);color:var(--vert);border-color:#C7D6C7}
+.tag.ard{background:var(--ard-cl);color:var(--ard);border-color:#C9DBE4}
+.seg{display:inline-flex;border:1px solid var(--bd2);border-radius:8px;overflow:hidden;background:var(--blanc)}
+.seg button{min-height:34px;padding:0 10px;font-size:12px;font-weight:600;background:none;border:0;
+  border-right:1px solid var(--bd);color:var(--encre2);cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--ard);color:#fff}
+.seg button:disabled{opacity:.5;cursor:not-allowed}
+
+/* ---------- LOTS ---------- */
+.lot{padding:12px 16px;border-bottom:1px solid var(--bd)}
+.lot:last-child{border-bottom:0}
+.lot .haut{display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:7px}
+.lot .nom{font-size:14.5px;font-weight:600}
+.lot .cnt{font-size:12px;color:var(--encre3);font-weight:600;white-space:nowrap}
+.barre{display:flex;height:9px;border-radius:999px;overflow:hidden;background:var(--bd)}
+.barre i{display:block;height:100%}
+.b-thim{background:var(--ard)} .b-adv{background:var(--sable)}
+.b-prec{background:var(--ambre)} .b-att{background:var(--bd2)}
+.leg{display:flex;flex-wrap:wrap;gap:12px;padding:12px 16px;background:var(--pap);border-top:1px solid var(--bd)}
+.leg span{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--encre2);font-weight:500}
+.leg i{width:11px;height:11px;border-radius:3px;display:block;flex:0 0 11px}
+
+/* ---------- LISTES ---------- */
+.li{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid var(--bd);align-items:flex-start}
+.li:last-child{border-bottom:0}
+.li .t{flex:1;min-width:0;font-size:14px;line-height:1.45}
+.li .t small{display:block;color:var(--encre3);font-size:12px;margin-top:2px}
+.cat{padding:10px 16px;background:var(--pap);border-bottom:1px solid var(--bd);
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--encre3)}
+
+/* ---------- INFORMATIONS ÉDITABLES ---------- */
+.info{padding:12px 16px;border-bottom:1px solid var(--bd)}
+.info:last-child{border-bottom:0}
+.info.ok{background:var(--vert-cl)}
+.info-lib{font-size:14px;line-height:1.45;margin-bottom:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.info-lib small{display:block;width:100%;color:var(--encre3);font-size:11.5px;font-weight:500}
+.info-champs{display:flex;flex-wrap:wrap;gap:8px}
+.info-champs input,.info-champs select{margin:0;min-height:44px;flex:1 1 100%;min-width:0}
+.info-champs .rep{flex:1 1 100%}
+@media(min-width:640px){
+  .info-champs .rep{flex:1 1 100%}
+  .info-champs select{flex:1 1 200px}
+  .info-champs input[type=date]{flex:0 1 170px}
+}
+.info-champs input:disabled,.info-champs select:disabled{background:var(--pap);color:var(--encre3)}
+details.recues{border-top:1px solid var(--bd)}
+details.recues summary{padding:12px 16px;font-size:13px;font-weight:600;color:var(--ard);
+  cursor:pointer;min-height:44px;display:flex;align-items:center}
+details.recues[open] summary{border-bottom:1px solid var(--bd)}
+
+/* ---------- IDENTIFICATION ---------- */
+.voile{position:fixed;inset:0;background:rgba(26,26,24,.55);display:flex;align-items:center;
+  justify-content:center;padding:20px;z-index:90}
+.modal{background:var(--blanc);border-radius:14px;max-width:400px;width:100%;padding:22px}
+.modal h3{font-size:17px;font-weight:700;margin-bottom:6px}
+.modal p{font-size:13.5px;color:var(--encre2);margin-bottom:14px}
+label{display:block;font-size:12px;font-weight:600;color:var(--encre2);margin-bottom:5px}
+input,select{width:100%;min-height:44px;padding:0 12px;border:1px solid var(--bd2);border-radius:8px;
+  background:var(--blanc);margin-bottom:12px}
+.btn{min-height:46px;width:100%;border:0;border-radius:8px;background:var(--ard);color:#fff;
+  font-weight:600;font-size:15px;cursor:pointer}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+
+/* ---------- PIED ---------- */
+.pied{border-top:1px solid var(--bd);padding:18px 0 0;color:var(--encre3);font-size:12px;line-height:1.6}
+.pied a{font-weight:600}
+
+/* ---------- TOAST ---------- */
+#toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,140%);background:var(--encre);
+  color:#fff;padding:11px 16px;border-radius:9px;font-size:13.5px;font-weight:500;z-index:120;
+  transition:transform .22s ease;max-width:calc(100vw - 32px);text-align:center}
+#toast.on{transform:translate(-50%,0)}
+#toast.err{background:var(--rouge)}
+
+/* ---------- IMPRESSION ---------- */
+@media print{
+  body{background:#fff;font-size:12px}
+  .voile,#toast,.seg,.tabs{display:none!important}
+  .entete{background:#fff;color:#000;border-bottom:2px solid #000}
+  .entete .kick,.cbloc .l{color:#444}
+  .cbloc{border:1px solid #999;color:#000}
+  section,.carte,.jal,.lot,.li,.urg{break-inside:avoid;page-break-inside:avoid;overflow:visible}
+  .carte{border:1px solid #999}
+}
+</style>
+</head>
+<body>
+
+<div class="bandeau">
+  <div class="wrap">
+    <div class="org">
+      <img id="lg-adv" src="../logos/advantage.png" alt="Advantage Conseils" />
+      <span class="nom">Advantage<br />Conseils</span>
+    </div>
+    <span class="sep-org"></span>
+    <div class="org droite">
+      <img id="lg-thim" src="../logos/thim.png" alt="Thim Production" />
+      <span class="nom">Thim<br />Production</span>
+    </div>
+  </div>
+</div>
+
+<header class="entete">
+  <div class="wrap">
+    <div class="kick">Board de pilotage</div>
+    <h1>Festival des Grillades de Paris, 2<sup>e</sup> édition</h1>
+    <div class="compte" id="compte"></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="s-urg" hidden>
+    <h2>
+      <svg viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+      Ce qui brûle
+    </h2>
+    <div id="urg"></div>
+  </section>
+
+  <section>
+    <h2>
+      <svg viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+      Jalons du projet
+    </h2>
+    <div class="carte" id="jalons"><div class="vide">Chargement…</div></div>
+  </section>
+
+  <section>
+    <h2>
+      <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg>
+      Répartition du périmètre
+    </h2>
+    <div class="carte">
+      <div id="lots"><div class="vide">Chargement…</div></div>
+      <div class="leg">
+        <span><i class="b-thim"></i>Thim Production</span>
+        <span><i class="b-adv"></i>Advantage Conseils</span>
+        <span><i class="b-prec"></i>À préciser</span>
+        <span><i class="b-att"></i>À statuer</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01"/><path d="M11 12h1v4h1"/></svg>
+      Informations attendues d'Advantage
+    </h2>
+    <p style="font-size:13px;color:var(--encre2);margin:-4px 0 10px">
+      Elles se renseignent ici à tout moment, sans rouvrir la séance. Chaque saisie est
+      enregistrée à votre nom et tracée au journal. <strong>Le relevé de la séance du
+      7 août n'en est pas modifié</strong> : il constate ce qui manquait ce jour-là.
+    </p>
+    <div class="carte" id="infos"><div class="vide">Chargement…</div></div>
+  </section>
+
+  <section>
+    <h2>
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>
+      Actions ouvertes
+    </h2>
+    <div class="carte" id="actions"><div class="vide">Chargement…</div></div>
+  </section>
+
+  <section>
+    <h2>
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/></svg>
+      Séances
+    </h2>
+    <div class="carte" id="seances"><div class="vide">Chargement…</div></div>
+  </section>
+
+  <div class="pied">
+    Espace réservé aux trois structures. Les modifications sont enregistrées au nom de
+    la personne connectée et tracées dans le journal de la séance.
+    <span id="pied-moi"></span>
+  </div>
+
+</main>
+
+<div class="voile" id="voile" hidden>
+  <div class="modal">
+    <h3>Qui êtes-vous&nbsp;?</h3>
+    <p>Votre nom et votre structure sont enregistrés avec chaque modification.</p>
+    <label for="i-nom">Nom</label>
+    <input id="i-nom" type="text" autocomplete="name" placeholder="Prénom et nom" />
+    <label for="i-str">Structure</label>
+    <select id="i-str">
+      <option value="">Choisir…</option>
+      <option>Advantage Conseils</option>
+      <option>Thim Production</option>
+      <option>Mr Attractor</option>
+    </select>
+    <label for="i-fon">Fonction (facultatif)</label>
+    <input id="i-fon" type="text" placeholder="Directeur, chef de projet…" />
+    <button class="btn" id="b-entrer">Entrer</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ============ CONFIG ============ */
+const SB_URL="https://lgdgbrivnhgeupqhkckd.supabase.co";
+const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
+const sb=supabase.createClient(SB_URL,SB_KEY);
+const JETON=new URLSearchParams(location.search).get("s")||"";
+
+const $=s=>document.querySelector(s);
+const esc=s=>(s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const MOIS=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
+const ETAT_LIB={a_faire:"À faire",en_cours:"En cours",fait:"Fait",sans_objet:"Sans objet"};
+
+let DATA=null, MOI=null, enCours=false;
+
+function toast(m,err){const t=$("#toast");t.textContent=m;t.classList.toggle("err",!!err);
+  t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),err?4200:2400);}
+
+/* ============ IDENTIFICATION ============ */
+function chargerMoi(){try{const j=localStorage.getItem("fgp_moi");if(j)MOI=JSON.parse(j);}catch(e){}}
+function demanderMoi(){
+  $("#voile").hidden=false;
+  $("#b-entrer").onclick=()=>{
+    const nom=$("#i-nom").value.trim(), str=$("#i-str").value;
+    if(!nom||!str){toast("Nom et structure sont nécessaires.",true);return;}
+    MOI={nom,structure:str,fonction:$("#i-fon").value.trim()};
+    try{localStorage.setItem("fgp_moi",JSON.stringify(MOI));}catch(e){}
+    $("#voile").hidden=true; charger();
+  };
+}
+
+/* ============ DONNÉES ============ */
+async function appel(fn,args){
+  if(enCours)return null;
+  enCours=true;
+  try{
+    const {data,error}=await sb.rpc(fn,Object.assign({p_jeton:JETON},args||{}));
+    if(error)throw error;
+    DATA=data; rendre(); return data;
+  }catch(e){
+    const m=(e&&e.message)||"erreur";
+    toast(m==="acces refuse"?"Accès refusé : ce lien n'est pas valide.":m,true);
+    return null;
+  }finally{enCours=false;}
+}
+const charger=()=>appel("fgp_board",{});
+
+/* ============ RENDU ============ */
+function rendre(){
+  if(!DATA)return;
+  rendreCompte(); rendreUrgences(); rendreJalons();
+  rendreLots(); rendreInfos(); rendreActions(); rendreSeances();
+  $("#pied-moi").textContent=MOI?" Connecté : "+MOI.nom+", "+MOI.structure+".":"";
+}
+
+function rendreCompte(){
+  const j=DATA.jalons||[], depasses=j.filter(x=>x.alerte==="depasse").length,
+        imminents=j.filter(x=>x.alerte==="imminent").length,
+        infos=(DATA.infos_compte||{});
+  const dues=(infos.total||0)-(infos.renseignees||0);
+  const c=[];
+  c.push(`<div class="cbloc"><div class="n">J-${DATA.jours_restants}</div><div class="l">avant l'événement</div></div>`);
+  if(depasses)c.push(`<div class="cbloc alerte"><div class="n">${depasses}</div><div class="l">jalon${depasses>1?"s":""} dépassé${depasses>1?"s":""}</div></div>`);
+  if(imminents)c.push(`<div class="cbloc"><div class="n">${imminents}</div><div class="l">sous 7 jours</div></div>`);
+  c.push(`<div class="cbloc${dues?" alerte":""}"><div class="n">${dues}</div><div class="l">infos manquantes</div></div>`);
+  $("#compte").innerHTML=c.join("");
+}
+
+function rendreUrgences(){
+  const u=[], infosDues=(DATA.infos||[]).filter(x=>x.due);
+  (DATA.jalons||[]).forEach(j=>{
+    if(j.alerte==="depasse")
+      u.push({f:1,t:j.libelle,d:`Échéance dépassée depuis ${Math.abs(j.jours)} jour${Math.abs(j.jours)>1?"s":""}. Porteur : ${j.porteur||"non désigné"}.`});
+    else if(j.alerte==="imminent")
+      u.push({f:0,t:j.libelle,d:`Dans ${j.jours} jour${j.jours>1?"s":""}. Porteur : ${j.porteur||"non désigné"}.`});
+  });
+  const ic=DATA.infos_compte||{};
+  if(ic.sans_porteur>0)
+    u.push({f:1,t:`${ic.sans_porteur} information${ic.sans_porteur>1?"s":""} sans porteur ni date`,
+            d:"Sans elles, ni la billetterie, ni le dossier de sécurité, ni les visas ne peuvent avancer. Elles se renseignent plus bas, à tout moment."});
+  else if(infosDues.length)
+    u.push({f:0,t:`${infosDues.length} information${infosDues.length>1?"s":""} encore attendue${infosDues.length>1?"s":""}`,
+            d:"Elles se renseignent plus bas, à tout moment."});
+  (DATA.actions||[]).forEach(a=>{ if(a.retard)
+    u.push({f:1,t:a.libelle,d:`Action en retard. Porteur : ${a.porteur||"non désigné"}.`}); });
+
+  const s=$("#s-urg");
+  if(!u.length){s.hidden=true;return;}
+  s.hidden=false;
+  u.sort((a,b)=>b.f-a.f);
+  $("#urg").innerHTML=u.map(x=>
+    `<div class="urg${x.f?"":" tiede"}"><h3>${esc(x.t)}</h3><p>${esc(x.d)}</p></div>`).join("");
+}
+
+function rendreJalons(){
+  const j=DATA.jalons||[];
+  if(!j.length){$("#jalons").innerHTML='<div class="vide">Aucun jalon.</div>';return;}
+  $("#jalons").innerHTML=j.map(x=>{
+    let d='<div class="nd">sans<br />date</div>';
+    if(x.echeance){const dt=new Date(x.echeance+"T12:00:00");
+      d=`<div class="j">${dt.getDate()}</div><div class="m">${MOIS[dt.getMonth()]}</div>`;}
+    const tags=[];
+    if(x.alerte==="depasse")tags.push('<span class="tag rouge">En retard</span>');
+    else if(x.alerte==="imminent")tags.push('<span class="tag ambre">Imminent</span>');
+    else if(x.statut==="fait")tags.push('<span class="tag vert">Fait</span>');
+    if(x.criticite==="critique"&&x.statut!=="fait")tags.push('<span class="tag ard">Critique</span>');
+    if(x.porteur)tags.push(`<span class="tag">${esc(x.porteur)}</span>`);
+    const seg=["a_faire","en_cours","fait"].map(st=>
+      `<button data-j="${x.id}" data-st="${st}"${x.statut===st?' class="on"':""}>${ETAT_LIB[st]}</button>`).join("");
+    return `<div class="jal${x.statut==="fait"?" fait":""}">
+      <div class="date">${d}</div>
+      <div class="corps">
+        <div class="titre">${esc(x.libelle)}</div>
+        ${x.detail?`<div class="det">${esc(x.detail)}</div>`:""}
+        <div class="bas">${tags.join("")}<span class="seg">${seg}</span></div>
+      </div></div>`;
+  }).join("");
+  $("#jalons").querySelectorAll("button[data-j]").forEach(b=>{
+    b.onclick=()=>appel("fgp_jalon_maj",{p_id:Number(b.dataset.j),p_statut:b.dataset.st,
+                                         p_echeance:null,p_auteur:MOI?MOI.nom:null});
+  });
+}
+
+function rendreLots(){
+  const l=(DATA.lots||[]).filter(x=>x.section!=="Cadre réglementaire");
+  if(!l.length){$("#lots").innerHTML='<div class="vide">Aucun périmètre enregistré.</div>';return;}
+  $("#lots").innerHTML=l.map(x=>{
+    const t=x.total||1, p=n=>(n/t*100).toFixed(2)+"%";
+    return `<div class="lot">
+      <div class="haut"><span class="nom">${esc(x.section)}</span>
+        <span class="cnt">${x.thim} Thim · ${x.advantage} Advantage${x.a_preciser?" · "+x.a_preciser+" à préciser":""}</span></div>
+      <div class="barre" role="img" aria-label="${x.thim} sur ${t} confiés à Thim">
+        <i class="b-thim" style="width:${p(x.thim)}"></i>
+        <i class="b-adv" style="width:${p(x.advantage)}"></i>
+        <i class="b-prec" style="width:${p(x.a_preciser)}"></i>
+        <i class="b-att" style="width:${p(x.a_statuer)}"></i>
+      </div></div>`;
+  }).join("");
+}
+
+function ligneInfo(x){
+  const opts=["","Advantage Conseils","Thim Production","Mr Attractor"].map(o=>
+    `<option value="${esc(o)}"${(x.porteur||"")===o?" selected":""}>${o||"Porteur…"}</option>`).join("");
+  const maj=x.maj_le?`<small>Renseigné le ${new Date(x.maj_le).toLocaleDateString("fr-FR",
+      {day:"2-digit",month:"long"})} par ${esc(x.maj_par||"?")}</small>`:"";
+  return `<div class="info${x.due?"":" ok"}">
+    <div class="info-lib">${esc(x.libelle)}
+      ${x.retard?'<span class="tag rouge">En retard</span>':""}${maj}</div>
+    <div class="info-champs">
+      <input class="rep" data-i="${x.id}" data-c="reponse" type="text"
+             value="${esc(x.reponse||"")}" placeholder="Réponse" aria-label="Réponse pour ${esc(x.libelle)}" />
+      <select data-i="${x.id}" data-c="porteur" aria-label="Porteur">${opts}</select>
+      <input data-i="${x.id}" data-c="echeance" type="date"
+             value="${x.echeance||""}" aria-label="Échéance" />
+    </div></div>`;
+}
+
+function rendreInfos(){
+  const tout=DATA.infos||[];
+  if(!tout.length){$("#infos").innerHTML='<div class="vide">Aucune information recensée.</div>';return;}
+  const dues=tout.filter(x=>x.due), recues=tout.filter(x=>!x.due);
+
+  let html="";
+  if(!MOI)html+='<div class="vide">Identifiez-vous pour renseigner une information.</div>';
+
+  let cat=null;
+  dues.forEach(x=>{
+    if(x.categorie!==cat){cat=x.categorie;html+=`<div class="cat">${esc(cat)}</div>`;}
+    html+=ligneInfo(x);
+  });
+  if(!dues.length)html+='<div class="vide">Toutes les informations ont été renseignées.</div>';
+
+  if(recues.length){
+    html+=`<details class="recues"><summary>${recues.length} information${recues.length>1?"s":""} déjà reçue${recues.length>1?"s":""}</summary>`;
+    cat=null;
+    recues.forEach(x=>{
+      if(x.categorie!==cat){cat=x.categorie;html+=`<div class="cat">${esc(cat)}</div>`;}
+      html+=ligneInfo(x);
+    });
+    html+="</details>";
+  }
+  $("#infos").innerHTML=html;
+
+  $("#infos").querySelectorAll("[data-i]").forEach(el=>{
+    el.disabled=!MOI;
+    el.onchange=()=>{
+      const a={p_id:el.dataset.i,p_reponse:null,p_porteur:null,p_echeance:null,
+               p_auteur:MOI?MOI.nom:null};
+      const v=el.value;
+      if(el.dataset.c==="reponse")a.p_reponse=v;
+      if(el.dataset.c==="porteur")a.p_porteur=v;
+      if(el.dataset.c==="echeance")a.p_echeance=v||null;
+      appel("fgp_info_suivi",a).then(r=>{if(r)toast("Enregistré.");});
+    };
+  });
+}
+
+function rendreActions(){
+  const a=(DATA.actions||[]).filter(x=>x.statut!=="soldee");
+  if(!a.length){$("#actions").innerHTML='<div class="vide">Aucune action ouverte.</div>';return;}
+  $("#actions").innerHTML=a.map(x=>{
+    const d=x.echeance?new Date(x.echeance+"T12:00:00").toLocaleDateString("fr-FR",
+              {day:"2-digit",month:"long"}):"sans date";
+    return `<div class="li"><div class="t">${esc(x.libelle)}
+      <small>${esc(x.porteur||"Porteur non désigné")} · ${d}</small></div>
+      ${x.retard?'<span class="tag rouge">En retard</span>':""}</div>`;
+  }).join("");
+}
+
+function rendreSeances(){
+  const s=DATA.seances||[];
+  if(!s.length){$("#seances").innerHTML='<div class="vide">Aucune séance.</div>';return;}
+  $("#seances").innerHTML=s.map(x=>{
+    const d=x.date_seance?new Date(x.date_seance+"T12:00:00").toLocaleDateString("fr-FR",
+              {day:"2-digit",month:"long",year:"numeric"}):"";
+    const t=x.statut==="close"
+      ?`<span class="tag ${x.signatures>=3?"vert":"ambre"}">${x.signatures}/3 validations</span>`
+      :'<span class="tag ard">Ouverte</span>';
+    return `<div class="li"><div class="t">${esc(x.titre)}<small>${d}</small></div>${t}</div>`;
+  }).join("");
+}
+
+/* ============ DÉMARRAGE ============ */
+(function(){
+  if(!JETON){
+    document.querySelector("main").innerHTML=
+      '<div class="carte"><div class="vide">Ce board s\'ouvre avec le lien remis aux trois structures.</div></div>';
+    return;
+  }
+  chargerMoi();
+  if(!MOI){demanderMoi();return;}
+  charger();
+  setInterval(()=>{if(!document.hidden)charger();},90000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)charger();});
+})();
+</script>
+</body>
+</html>

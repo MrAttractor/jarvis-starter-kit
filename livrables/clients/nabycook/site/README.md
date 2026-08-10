@@ -3,8 +3,8 @@
 Maquette fonctionnelle des 5 pages de la Phase 1, à la charte Adinkra v2.0.
 Construite le 29/07/2026 par l'agence Mr Attractor.
 
-**En ligne (maquette) :** https://demo.agenceattractor.com/nabycook-site
-**Cible finale :** nabycook.com (projet Cloudflare Pages dédié, à créer)
+**En ligne :** https://nabycook.pages.dev (projet Pages dédié `nabycook`, branche `main`)
+**Cible finale :** nabycook.com, à brancher sur ce même projet
 
 ---
 
@@ -90,22 +90,26 @@ clientèle se connecte souvent en 4G.
 
 ## Déploiement
 
-**Maquette (demo-site)** — depuis `livrables/clients/demo-site/` :
+**Le site a son propre projet Cloudflare Pages depuis le 10/08/2026.**
+Il ne vit plus sur le demo-site. Depuis ce dossier `site/` :
 
 ```
-npx wrangler pages deploy public --project-name=demo-agenceattractor --branch=master --commit-dirty=true
+npx wrangler pages deploy . --project-name=nabycook --branch=main --commit-dirty=true
 ```
 
-La branche de production de ce projet Pages est `master`, pas `main`.
-Un déploiement sur `main` part en Preview et le domaine ne bouge pas.
-Le dossier `public/nabycook-site/` est une copie de ce dossier `site/`, qui reste la source.
+La branche de production de ce projet est **`main`** (fixée à la création).
+Ne pas déployer le `README.md` : le copier ailleurs et retirer le fichier avant
+d'envoyer, comme pour les autres dossiers clients.
 
-Une règle explicite `/nabycook-site  /nabycook-site/index.html  200` a été ajoutée dans
-`public/_redirects` : sans elle, la règle catch-all `/:slug` du fichier renverrait l'URL
-vers la boutique Assists.
+**L'ancienne adresse redirige.** `demo.agenceattractor.com/nabycook-site` et ses
+sous-pages renvoient en 301 vers `nabycook.pages.dev`, règles explicites dans
+`demo-site/public/_redirects`. Les liens déjà envoyés à Nabintou restent valides.
+Attention à ne pas confondre avec `demo.agenceattractor.com/nabycook`, **qui reste
+la page de son devis** et ne doit pas bouger.
 
-**Production (à venir)** : créer un projet Cloudflare Pages dédié `nabycook`, brancher
-le domaine nabycook.com, déployer ce dossier `site/` directement.
+**Bascule sur nabycook.com** (quand elle donne les accès) : déclarer le domaine en
+Custom Domain dans le projet Pages `nabycook`, attendre le statut Actif, **puis
+seulement** poser le CNAME en Proxied. L'ordre inverse donne une Error 522.
 
 ---
 

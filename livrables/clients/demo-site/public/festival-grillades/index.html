@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Espace de pilotage — Festival des Grillades de Paris 2026</title>
+<meta name="description" content="Espace de pilotage et de traçabilité des décisions. Festival des Grillades de Paris, 2e édition, 11 octobre 2026." />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#2F4858" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --pap:#FBFAF9; --blanc:#FFFFFF; --carte:#FFFFFF;
+  --encre:#1A1A18; --encre2:#4A4A46; --encre3:#84837C;
+  --bd:#E5E3DE; --bd2:#D2CFC8;
+  --ard:#2F4858; --ard-cl:#EAF0F3; --ard-fonce:#22353F;
+  --sable:#6B5B45; --sable-cl:#F2EEE7;
+  --ambre:#8A6D2F; --ambre-cl:#F7F0DF;
+  --vert:#3D5A40; --vert-cl:#EAF0EA;
+  --rouge:#8C3A32;
+  --maxw:1080px;
+  --r:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--pap);color:var(--encre);
+     line-height:1.6;font-size:15px;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+[hidden]{display:none!important}
+a{color:var(--ard);text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 16px;width:100%}
+
+/* ---------- BANDEAU LOGOS ---------- */
+.bandeau{background:var(--blanc);border-bottom:1px solid var(--bd)}
+.bandeau .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:72px;padding-top:12px;padding-bottom:12px}
+.org{display:flex;align-items:center;gap:11px;min-width:0}
+.org img{width:auto;object-fit:contain}
+/* hauteurs ajustées au poids optique : le disque Advantage a besoin d'un peu plus
+   de hauteur que le logotype Thim pour peser pareil à l'œil */
+#lg-adv{height:42px}
+#lg-thim{height:36px}
+.org .mono{width:40px;height:40px;flex:0 0 40px;border-radius:8px;background:var(--ard-cl);color:var(--ard);
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;letter-spacing:.04em}
+.org .nom{font-size:10.5px;font-weight:600;color:var(--encre3);line-height:1.3;min-width:0;
+  letter-spacing:.09em;text-transform:uppercase}
+.org.droite{flex-direction:row-reverse;text-align:right}
+.sep-org{flex:1;height:1px;background:var(--bd);min-width:8px}
+@media(max-width:640px){
+  .bandeau .wrap{gap:10px;min-height:64px}
+  .org .nom{display:none}
+  #lg-adv{height:36px} #lg-thim{height:30px}
+  .sep-org{min-width:0}
+}
+
+/* ---------- ENTETE ---------- */
+.entete{background:var(--ard);color:#fff;padding:22px 0 18px}
+.entete .kick{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:#B7CBD6;margin-bottom:6px}
+.entete h1{font-size:20px;font-weight:700;line-height:1.28;letter-spacing:-.01em}
+.entete .meta{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:5px 10px;
+  border-radius:999px;background:rgba(255,255,255,.13);color:#DCE7ED;border:1px solid rgba(255,255,255,.16)}
+.pill.on{background:#fff;color:var(--ard);border-color:#fff}
+@media(min-width:720px){.entete h1{font-size:24px}}
+
+/* ---------- ONGLETS ---------- */
+.tabs{background:var(--blanc);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:40}
+.tabs .wrap{display:flex;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs .wrap::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;background:none;border:none;border-bottom:2px solid transparent;padding:14px 12px;
+  min-height:48px;font-size:13.5px;font-weight:600;color:var(--encre3);cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ard);border-bottom-color:var(--ard)}
+.tab .cpt{display:inline-block;margin-left:6px;font-size:11px;font-weight:700;background:var(--pap);
+  border:1px solid var(--bd);border-radius:999px;padding:1px 6px;color:var(--encre2)}
+
+/* ---------- CONTENU ---------- */
+main{padding:24px 0 96px}
+.pane{display:none}
+.pane.on{display:block}
+.intro{background:var(--blanc);border:1px solid var(--bd);border-radius:var(--r);padding:16px;margin-bottom:24px}
+.intro h2{font-size:15px;font-weight:700;margin-bottom:6px}
+.intro p{font-size:13.5px;color:var(--encre2)}
+.sec-t{font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:var(--encre3);
+  margin:32px 0 12px;display:flex;align-items:center;gap:10px}
+.sec-t:first-child{margin-top:0}
+.sec-t::after{content:"";flex:1;height:1px;background:var(--bd)}
+
+/* ---------- CARTE POINT ---------- */
+.carte{background:var(--carte);border:1px solid var(--bd);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.carte.statue{border-color:var(--bd2)}
+.carte .code{font-size:11px;font-weight:700;color:var(--encre3);letter-spacing:.06em}
+.carte .lib{font-size:14.5px;font-weight:600;line-height:1.42;margin-top:2px}
+.carte .det{font-size:13px;color:var(--encre2);margin-top:8px;padding:10px 12px;background:var(--pap);
+  border-left:2px solid var(--bd2);border-radius:0 6px 6px 0}
+.choix{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.ch{flex:1 1 auto;min-width:96px;min-height:44px;padding:8px 12px;border-radius:8px;border:1px solid var(--bd2);
+  background:var(--blanc);color:var(--encre2);font-size:13px;font-weight:600;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;transition:.12s}
+.ch:hover{border-color:var(--encre3)}
+.ch .marq{width:14px;height:14px;flex:0 0 14px;border:1.5px solid currentColor;border-radius:4px;opacity:.4}
+.ch[aria-pressed="true"] .marq{opacity:1;background:currentColor;
+  box-shadow:inset 0 0 0 2px var(--blanc),inset 0 0 0 3px currentColor}
+.ch[aria-pressed="true"].thim{background:var(--ard-cl);border-color:var(--ard);color:var(--ard)}
+.ch[aria-pressed="true"].adv{background:var(--sable-cl);border-color:var(--sable);color:var(--sable)}
+.ch[aria-pressed="true"].prec{background:var(--ambre-cl);border-color:var(--ambre);color:var(--ambre)}
+.ch[aria-pressed="true"].val{background:var(--vert-cl);border-color:var(--vert);color:var(--vert)}
+.ch[aria-pressed="true"].res{background:var(--ambre-cl);border-color:var(--ambre);color:var(--ambre)}
+.com{margin-top:10px}
+.com summary{font-size:12.5px;font-weight:600;color:var(--encre3);cursor:pointer;padding:6px 0;list-style:none;
+  display:flex;align-items:center;gap:6px;min-height:32px}
+.com summary::-webkit-details-marker{display:none}
+.com summary::before{content:"+";font-weight:700;font-size:14px;width:16px;text-align:center}
+.com[open] summary::before{content:"−"}
+.com.rempli summary{color:var(--ard)}
+textarea,input[type=text],input[type=date],select{width:100%;max-width:100%;padding:10px 12px;border:1px solid var(--bd2);
+  border-radius:8px;background:var(--blanc);font-size:14px;min-height:44px}
+textarea{min-height:76px;resize:vertical;line-height:1.5}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--ard);outline-offset:-1px;border-color:var(--ard)}
+.maj{font-size:11.5px;color:var(--encre3);margin-top:8px}
+
+/* ---------- INFOS ---------- */
+.info-l{background:var(--carte);border:1px solid var(--bd);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.info-l .lib{font-size:14px;font-weight:600;line-height:1.4;margin-bottom:10px}
+.duo{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px}
+@media(min-width:600px){.duo{grid-template-columns:1fr 160px}}
+
+/* ---------- ACTIONS ---------- */
+.act{background:var(--carte);border:1px solid var(--bd);border-radius:var(--r);padding:14px;margin-bottom:10px;
+  display:flex;gap:12px;align-items:flex-start}
+.act.soldee{opacity:.62}
+.act .coche{flex:0 0 auto;width:44px;height:44px;margin:-6px 0 0 -6px;border:none;background:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center}
+.act .coche span{width:20px;height:20px;border:1.5px solid var(--bd2);border-radius:6px;display:block;position:relative}
+.act.soldee .coche span{background:var(--vert);border-color:var(--vert)}
+.act.soldee .coche span::after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(42deg)}
+.act .corps{flex:1;min-width:0}
+.act .lib{font-size:14px;font-weight:600;line-height:1.4}
+.act.soldee .lib{text-decoration:line-through;color:var(--encre3)}
+.act .sous{font-size:12px;color:var(--encre3);margin-top:5px;display:flex;flex-wrap:wrap;gap:4px 12px}
+.act .ech.tard{color:var(--rouge);font-weight:700}
+.sup{background:none;border:none;color:var(--encre3);cursor:pointer;font-size:12px;padding:8px;min-height:40px;min-width:40px}
+.sup:hover{color:var(--rouge)}
+
+/* ---------- JOURNAL ---------- */
+.jr{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd);font-size:13px}
+.jr:last-child{border-bottom:none}
+.jr .h{flex:0 0 92px;font-size:11.5px;color:var(--encre3);font-variant-numeric:tabular-nums}
+.jr .c{flex:1;min-width:0}
+.jr b{font-weight:600}
+.jr .fl{color:var(--encre2);font-size:12.5px;margin-top:2px;word-break:break-word}
+.jr .au{color:var(--encre3);font-size:11.5px}
+
+/* ---------- BOUTONS ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:11px 18px;
+  border-radius:9px;border:1px solid var(--ard);background:var(--ard);color:#fff;font-size:14px;font-weight:600;
+  cursor:pointer;transition:.12s;text-align:center}
+.btn:hover{background:var(--ard-fonce);border-color:var(--ard-fonce)}
+.btn.ghost{background:var(--blanc);color:var(--ard)}
+.btn.ghost:hover{background:var(--ard-cl)}
+.btn.neutre{background:var(--blanc);color:var(--encre2);border-color:var(--bd2)}
+.btn.neutre:hover{background:var(--pap)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.plein{width:100%}
+.barre{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.barre .btn{flex:1 1 200px}
+
+/* ---------- ENCARTS ---------- */
+.encart{border-radius:var(--r);padding:14px 16px;font-size:13.5px;margin-bottom:16px;border:1px solid}
+.encart.info{background:var(--ard-cl);border-color:#C6D8E1;color:#1F3743}
+.encart.alerte{background:var(--ambre-cl);border-color:#E0CFA0;color:#5E4A1E}
+.encart b{font-weight:700}
+.encart p+p{margin-top:6px}
+
+/* ---------- IDENTIFICATION ---------- */
+.gate{position:fixed;inset:0;z-index:200;background:var(--pap);display:flex;align-items:center;justify-content:center;padding:20px}
+.gate .boite{background:var(--blanc);border:1px solid var(--bd);border-radius:14px;padding:24px;max-width:420px;width:100%}
+.gate h2{font-size:18px;font-weight:700;margin-bottom:6px}
+.gate p{font-size:13.5px;color:var(--encre2);margin-bottom:18px}
+.gate label{display:block;font-size:12.5px;font-weight:600;color:var(--encre2);margin:14px 0 6px}
+
+/* ---------- COMPTE RENDU ---------- */
+.cr{background:var(--blanc);border:1px solid var(--bd);border-radius:var(--r);padding:22px}
+.cr .cr-tete{border-bottom:2px solid var(--encre);padding-bottom:14px;margin-bottom:18px}
+.cr .cr-tete .t{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:var(--encre3)}
+.cr .cr-tete h2{font-size:19px;font-weight:700;margin:4px 0 8px;line-height:1.3}
+.cr .cr-tete .m{font-size:12.5px;color:var(--encre2)}
+.cr h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--encre3);
+  margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--bd)}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.tbl th{text-align:left;font-weight:700;color:var(--encre3);font-size:11px;letter-spacing:.06em;
+  text-transform:uppercase;padding:7px 8px;border-bottom:1px solid var(--bd2)}
+.tbl td{padding:8px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.45}
+.tbl tr{break-inside:avoid;page-break-inside:avoid}
+.tbl .c-code{width:44px;color:var(--encre3);font-weight:600}
+.tbl .c-st{width:112px;font-weight:600;white-space:nowrap}
+.st-thim{color:var(--ard)} .st-adv{color:var(--sable)} .st-prec{color:var(--ambre)}
+.st-val{color:var(--vert)} .st-res{color:var(--ambre)} .st-att{color:var(--encre3)}
+.tbl-wrap{overflow-x:auto;max-width:100%}
+.sig-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+@media(min-width:640px){.sig-grid{grid-template-columns:repeat(3,1fr)}}
+.sig-c{border:1px solid var(--bd2);border-radius:8px;padding:12px;break-inside:avoid;page-break-inside:avoid}
+.sig-c .s-org{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--encre3)}
+.sig-c .s-nom{font-size:14px;font-weight:700;margin-top:6px}
+.sig-c .s-f{font-size:12px;color:var(--encre2)}
+.sig-c .s-d{font-size:11.5px;color:var(--encre3);margin-top:6px}
+.sig-c .s-e{font-size:9.5px;color:var(--encre3);margin-top:4px;word-break:break-all;font-family:ui-monospace,monospace}
+.sig-c.vide{border-style:dashed;color:var(--encre3)}
+.sig-c.vide .s-nom{color:var(--encre3);font-weight:500;font-size:12.5px;margin-top:10px}
+.pied-cr{margin-top:24px;padding-top:12px;border-top:1px solid var(--bd);font-size:11px;color:var(--encre3);line-height:1.55}
+
+/* ---------- DIVERS ---------- */
+.vide-msg{text-align:center;padding:36px 16px;color:var(--encre3);font-size:14px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(120%);z-index:300;
+  background:var(--encre);color:#fff;padding:12px 18px;border-radius:10px;font-size:13.5px;font-weight:500;
+  transition:transform .25s;max-width:calc(100vw - 32px);text-align:center}
+.toast.on{transform:translateX(-50%) translateY(0)}
+.toast.err{background:var(--rouge)}
+footer{border-top:1px solid var(--bd);padding:22px 0 40px;font-size:11.5px;color:var(--encre3);text-align:center}
+.charge{text-align:center;padding:60px 16px;color:var(--encre3)}
+
+/* ---------- IMPRESSION ---------- */
+@media print{
+  @page{size:A4;margin:14mm 13mm}
+  html,body{background:#fff!important;color:#000!important;font-size:10.5pt;overflow:visible!important;height:auto!important;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .bandeau,.entete,.tabs,.noprint,footer,.toast,.gate{display:none!important}
+  main{padding:0!important}
+  .wrap{max-width:none!important;padding:0!important}
+  .pane{display:none!important}
+  #pane-cr{display:block!important}
+  .cr{border:none!important;border-radius:0!important;padding:0!important;overflow:visible!important}
+  .cr h3{page-break-after:avoid;break-after:avoid;margin-top:16pt}
+  .tbl-wrap{overflow:visible!important}
+  .tbl{font-size:9.5pt}
+  .tbl td,.tbl th{padding:5pt 6pt}
+  .tbl tr,.sig-c,.encart,.carte{break-inside:avoid;page-break-inside:avoid;overflow:visible!important}
+  .sig-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important}
+  a{color:#000!important;text-decoration:none}
+  .cr-logos{display:flex!important}
+}
+/* En-tête du document imprimé : les deux logos de part et d'autre du titre.
+   Masqué à l'écran, l'espace ayant déjà son bandeau. */
+.cr-logos{display:none;align-items:center;justify-content:space-between;gap:18px;
+  margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #D2CFC8}
+.cr-logos img{width:auto;flex:0 0 auto}
+.cr-logos .l-adv{height:40px}
+.cr-logos .l-thim{height:32px}
+.cr-logos .l-txt{flex:1;text-align:center;font-size:9pt;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:#4A4A46;line-height:1.5}
+.cr-logos .l-txt small{display:block;font-size:7.5pt;font-weight:500;letter-spacing:.06em;color:#84837C}
+</style>
+</head>
+<body>
+
+<!-- ============ IDENTIFICATION ============ -->
+<div class="gate" id="gate" hidden>
+  <div class="boite">
+    <h2>Espace de pilotage</h2>
+    <p>Festival des Grillades de Paris, 2e édition. Indiquez qui vous êtes : chaque décision est tracée au nom de son auteur.</p>
+    <label for="g-nom">Nom et prénom</label>
+    <input type="text" id="g-nom" autocomplete="name" placeholder="Votre nom" />
+    <label for="g-str">Structure</label>
+    <select id="g-str">
+      <option value="">Choisir</option>
+      <option>Advantage Conseils</option>
+      <option>Thim Production</option>
+      <option>Mr Attractor</option>
+    </select>
+    <label for="g-fct">Fonction (facultatif)</label>
+    <input type="text" id="g-fct" placeholder="Votre fonction" />
+    <div style="margin-top:20px"><button class="btn plein" id="g-ok">Entrer dans la séance</button></div>
+  </div>
+</div>
+
+<!-- ============ BANDEAU LOGOS ============ -->
+<div class="bandeau noprint">
+  <div class="wrap">
+    <div class="org">
+      <img id="lg-adv" src="logos/advantage.png" alt="Advantage Conseils" hidden />
+      <span class="mono" id="mn-adv">AC</span>
+      <span class="nom">Advantage Conseils<br />Abidjan</span>
+    </div>
+    <div class="sep-org"></div>
+    <div class="org droite">
+      <img id="lg-thim" src="logos/thim.png" alt="Thim Production" hidden />
+      <span class="mono" id="mn-thim">TP</span>
+      <span class="nom">Thim Production<br />Rennes</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ENTETE ============ -->
+<div class="entete noprint">
+  <div class="wrap">
+    <div class="kick">Espace de pilotage et de traçabilité</div>
+    <h1 id="e-titre">Festival des Grillades de Paris, 2e édition</h1>
+    <div class="meta">
+      <span class="pill" id="p-seance">Séance</span>
+      <span class="pill" id="p-date">Date</span>
+      <span class="pill" id="p-statut">Statut</span>
+      <span class="pill" id="p-qui">Vous</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ONGLETS ============ -->
+<div class="tabs noprint">
+  <div class="wrap" role="tablist">
+    <button class="tab" role="tab" data-p="seance"  aria-selected="true">Périmètre <span class="cpt" id="c-seance">0</span></button>
+    <button class="tab" role="tab" data-p="infos"   aria-selected="false">Informations <span class="cpt" id="c-infos">0</span></button>
+    <button class="tab" role="tab" data-p="actions" aria-selected="false">Actions <span class="cpt" id="c-actions">0</span></button>
+    <button class="tab" role="tab" data-p="cr"      aria-selected="false">Compte rendu</button>
+    <button class="tab" role="tab" data-p="journal" aria-selected="false">Journal</button>
+  </div>
+</div>
+
+<main>
+  <div class="wrap">
+    <div class="charge" id="charge">Chargement de la séance…</div>
+
+    <!-- ---------- PERIMETRE ---------- -->
+    <section class="pane" id="pane-seance">
+      <div class="intro noprint">
+        <h2>Ce que la séance doit produire</h2>
+        <p>Pour chaque ligne, une seule réponse : confiée à Thim Production, conservée par Advantage Conseils,
+        ou à préciser. Une ligne statuée entre dans le périmètre à chiffrer. Elle n'est acquise qu'à la
+        signature du contrat et de son devis.</p>
+      </div>
+      <div id="pts"></div>
+      <div class="barre noprint">
+        <button class="btn ghost" id="b-ajout-pt">Ajouter un point en séance</button>
+        <button class="btn" id="b-cloturer">Clôturer et générer le compte rendu</button>
+      </div>
+    </section>
+
+    <!-- ---------- INFOS ---------- -->
+    <section class="pane" id="pane-infos">
+      <div class="intro noprint">
+        <h2>Informations à obtenir</h2>
+        <p>Sans ces éléments, la proposition ne peut pas être établie. Notez la réponse si elle est donnée
+        en séance, sinon le porteur et la date à laquelle elle sera transmise.</p>
+      </div>
+      <div id="ifs"></div>
+    </section>
+
+    <!-- ---------- ACTIONS ---------- -->
+    <section class="pane" id="pane-actions">
+      <div class="intro noprint">
+        <h2>Suivi des actions</h2>
+        <p>Chaque action a un porteur et une échéance. Les actions non soldées sont reportées à la séance
+        suivante. C'est ce tableau qu'un audit qualité vient consulter.</p>
+      </div>
+      <div class="encart alerte noprint">
+        <p><b>Deux échéances courent déjà,</b> indépendamment de la date de signature.</p>
+        <p>L'assurance annulation doit être décidée avant le 15 août : au-delà, les assureurs refusent
+        ou surtarifent. Les visas des artistes venant de Côte d'Ivoire supposent un dépôt au plus tard
+        le 25 août, donc une programmation arrêtée avant cette date.</p>
+      </div>
+      <div id="acs"></div>
+      <div class="carte noprint" style="margin-top:16px">
+        <div class="lib" style="margin-bottom:10px">Ajouter une action</div>
+        <input type="text" id="a-lib" placeholder="Ce qu'il faut faire" />
+        <div class="duo">
+          <input type="text" id="a-por" placeholder="Porteur" />
+          <input type="date" id="a-ech" />
+        </div>
+        <div style="margin-top:10px"><button class="btn ghost plein" id="b-ajout-ac">Ajouter</button></div>
+      </div>
+    </section>
+
+    <!-- ---------- COMPTE RENDU ---------- -->
+    <section class="pane" id="pane-cr">
+      <div class="encart info noprint" id="cr-note"></div>
+      <div class="cr" id="cr"></div>
+      <div class="barre noprint">
+        <button class="btn" id="b-print">Enregistrer en PDF ou imprimer</button>
+        <button class="btn ghost" id="b-signer">Valider et signer</button>
+        <button class="btn neutre" id="b-rouvrir">Rouvrir la séance</button>
+      </div>
+    </section>
+
+    <!-- ---------- JOURNAL ---------- -->
+    <section class="pane" id="pane-journal">
+      <div class="intro noprint">
+        <h2>Journal des modifications</h2>
+        <p>Toute modification est enregistrée avec son auteur et son horodatage. Le journal ne peut être
+        ni modifié ni effacé.</p>
+      </div>
+      <div id="jrs"></div>
+    </section>
+  </div>
+</main>
+
+<footer class="noprint">
+  <div class="wrap">
+    Espace de pilotage privé. Accès réservé aux parties.<br />
+    Les informations échangées sont couvertes par l'accord de confidentialité signé entre Advantage Conseils et Thim Production.<br />
+    Les connexions à cet espace, identité déclarée, horodatage et durée de consultation, sont
+    enregistrées au même titre que les décisions, aux seules fins de traçabilité du projet.
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ============ CONFIG ============ */
+const SB_URL="https://lgdgbrivnhgeupqhkckd.supabase.co";
+const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
+const sb=supabase.createClient(SB_URL,SB_KEY);
+const JETON=new URLSearchParams(location.search).get("s")||"";
+const STRUCTURES=["Advantage Conseils","Thim Production","Mr Attractor"];
+
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>(s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+const LIB={a_statuer:"À statuer",thim:"Thim Production",advantage:"Advantage Conseils",
+           a_preciser:"À préciser",valide:"Acté sans réserve",reserve:"Réserve exprimée"};
+const CLS={a_statuer:"st-att",thim:"st-thim",advantage:"st-adv",a_preciser:"st-prec",
+           valide:"st-val",reserve:"st-res"};
+
+let ETAT=null, MOI=null, TAB="seance", enCours=false;
+
+/* ============ OUTILS ============ */
+function toast(msg,err){const t=$("#toast");t.textContent=msg;t.classList.toggle("err",!!err);
+  t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),err?4200:2400);}
+
+function dateFR(d){if(!d)return"";const x=new Date(d);if(isNaN(x))return"";
+  return x.toLocaleDateString("fr-FR",{day:"2-digit",month:"long",year:"numeric"});}
+function dateCourte(d){if(!d)return"";const x=new Date(d);if(isNaN(x))return"";
+  return x.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"2-digit"});}
+function heureFR(d){if(!d)return"";const x=new Date(d);if(isNaN(x))return"";
+  return x.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit"})+" "+
+         x.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});}
+function enRetard(d){if(!d)return false;const x=new Date(d+"T23:59:59");
+  return x<new Date()&&!isNaN(x);}
+
+async function rpc(fn,args){
+  if(enCours)return null;
+  enCours=true;
+  try{
+    const {data,error}=await sb.rpc(fn,Object.assign({p_jeton:JETON},args||{}));
+    if(error)throw error;
+    ETAT=data; rendre(); return data;
+  }catch(e){
+    const m=(e&&e.message)||"erreur";
+    toast(m==="acces refuse"?"Accès refusé : le lien n'est pas valide."
+        : m==="seance close"?"La séance est close. Rouvrez-la pour modifier."
+        : m, true);
+    return null;
+  }finally{enCours=false;}
+}
+
+/* ============ IDENTIFICATION ============ */
+function chargerMoi(){
+  try{const j=localStorage.getItem("fgp_moi");if(j)MOI=JSON.parse(j);}catch(e){}
+  if(!MOI||!MOI.nom||!MOI.structure){$("#gate").hidden=false;return false;}
+  return true;
+}
+$("#g-ok").addEventListener("click",()=>{
+  const nom=$("#g-nom").value.trim(), str=$("#g-str").value, fct=$("#g-fct").value.trim();
+  if(nom.length<2){toast("Indiquez votre nom.",true);$("#g-nom").focus();return;}
+  if(!str){toast("Choisissez votre structure.",true);$("#g-str").focus();return;}
+  MOI={nom:nom,structure:str,fonction:fct};
+  try{localStorage.setItem("fgp_moi",JSON.stringify(MOI));}catch(e){}
+  $("#gate").hidden=true; demarrer();
+});
+
+/* ============ ONGLETS ============ */
+$$(".tab").forEach(b=>b.addEventListener("click",()=>{
+  TAB=b.dataset.p;
+  $$(".tab").forEach(x=>x.setAttribute("aria-selected",String(x===b)));
+  $$(".pane").forEach(p=>p.classList.toggle("on",p.id==="pane-"+TAB));
+  window.scrollTo({top:0,behavior:"smooth"});
+}));
+
+/* ============ RENDU ============ */
+/* Le rendu réécrit le DOM. Si quelqu'un est en train de saisir un commentaire ou une
+   réponse au moment où la synchronisation arrive, sa frappe serait effacée. On mémorise
+   le champ actif, sa valeur et la position du curseur, et on les restaure après. */
+function saisieEnCours(){
+  const a=document.activeElement;
+  if(!a||!a.dataset)return null;
+  const cle=["com","rep","por","ech"].find(k=>a.dataset[k]);
+  if(!cle)return null;
+  return {sel:"[data-"+cle+'="'+a.dataset[cle]+'"]', val:a.value,
+          d:a.selectionStart, f:a.selectionEnd};
+}
+function restaurerSaisie(s){
+  if(!s)return;
+  const el=document.querySelector(s.sel);
+  if(!el)return;
+  el.value=s.val;
+  const det=el.closest("details");
+  if(det)det.open=true;
+  el.focus();
+  if(s.d!=null&&el.setSelectionRange){try{el.setSelectionRange(s.d,s.f);}catch(e){}}
+}
+
+function rendre(){
+  if(!ETAT)return;
+  const saisie=saisieEnCours();
+  $("#charge").hidden=true;
+  $$(".pane").forEach(p=>p.classList.toggle("on",p.id==="pane-"+TAB));
+
+  const s=ETAT.seance, ouverte=s.statut==="ouverte";
+  $("#p-seance").textContent="Séance n°"+s.numero+(s.version>1?" · version "+s.version:"");
+  $("#p-date").textContent=dateFR(s.date_seance);
+  $("#p-statut").textContent=s.statut==="ouverte"?"En cours":s.statut==="close"?"Close, en attente de signature":"Signée";
+  $("#p-statut").classList.toggle("on",s.statut!=="ouverte");
+  $("#p-qui").textContent=MOI.nom+" · "+MOI.structure;
+
+  const aStatuer=ETAT.points.filter(p=>p.statut==="a_statuer").length;
+  $("#c-seance").textContent=(ETAT.points.length-aStatuer)+"/"+ETAT.points.length;
+  const iRep=ETAT.infos.filter(i=>(i.reponse&&i.reponse.trim())||(i.porteur&&i.porteur.trim())).length;
+  $("#c-infos").textContent=iRep+"/"+ETAT.infos.length;
+  $("#c-actions").textContent=ETAT.actions.filter(a=>a.statut==="ouverte").length;
+
+  rendrePoints(ouverte); rendreInfos(ouverte); rendreActions(ouverte);
+  rendreJournal(); rendreCR();
+
+  $("#b-cloturer").disabled=!ouverte;
+  $("#b-cloturer").textContent=ouverte
+    ? (aStatuer>0? "Clôturer ("+aStatuer+" point"+(aStatuer>1?"s":"")+" à statuer)" : "Clôturer et générer le compte rendu")
+    : "Séance clôturée";
+  $("#b-ajout-pt").disabled=!ouverte;
+  $("#b-rouvrir").disabled=s.statut!=="close";
+  $("#b-signer").disabled=s.statut==="ouverte"||dejaSigne();
+
+  restaurerSaisie(saisie);
+}
+
+function rendrePoints(ouverte){
+  const box=$("#pts"); let h="", sec=null;
+  ETAT.points.forEach(p=>{
+    if(p.section!==sec){sec=p.section;h+='<div class="sec-t">'+esc(sec)+"</div>";}
+    const opts = p.type==="validation"
+      ? [["valide","val","Acté sans réserve"],["reserve","res","Réserve à examiner"]]
+      : [["thim","thim","Thim Production"],["advantage","adv","Advantage Conseils"],["a_preciser","prec","À préciser"]];
+    h+='<div class="carte'+(p.statut!=="a_statuer"?" statue":"")+'" data-id="'+p.id+'">';
+    if(p.code)h+='<div class="code">'+esc(p.code)+(p.ajoute_en_seance?" · ajouté en séance":"")+"</div>";
+    else if(p.ajoute_en_seance)h+='<div class="code">Ajouté en séance</div>';
+    h+='<div class="lib">'+esc(p.libelle)+"</div>";
+    if(p.detail)h+='<div class="det">'+esc(p.detail)+"</div>";
+    h+='<div class="choix">';
+    opts.forEach(o=>{
+      h+='<button class="ch '+o[1]+'" data-st="'+o[0]+'" aria-pressed="'+(p.statut===o[0])+'"'+(ouverte?"":" disabled")+'>'+
+         '<span class="marq"></span>'+o[2]+"</button>";
+    });
+    h+="</div>";
+    h+='<details class="com'+(p.commentaire?" rempli":"")+'"'+(p.commentaire?" open":"")+'><summary>'+
+       (p.commentaire?"Commentaire":"Ajouter un commentaire")+"</summary>"+
+       '<textarea data-com="'+p.id+'" placeholder="Précision, réserve, condition…"'+(ouverte?"":" disabled")+'>'+
+       esc(p.commentaire||"")+"</textarea></details>";
+    if(p.maj_le)h+='<div class="maj">Dernière modification le '+heureFR(p.maj_le)+(p.maj_par?" par "+esc(p.maj_par):"")+"</div>";
+    h+="</div>";
+  });
+  box.innerHTML=h;
+
+  box.querySelectorAll(".ch").forEach(b=>b.addEventListener("click",()=>{
+    const id=b.closest(".carte").dataset.id;
+    rpc("fgp_point_maj",{p_id:id,p_statut:b.dataset.st,p_commentaire:null,p_auteur:MOI.nom});
+  }));
+  box.querySelectorAll("[data-com]").forEach(t=>{
+    t.addEventListener("blur",()=>{
+      const p=ETAT.points.find(x=>x.id===t.dataset.com);
+      if(!p||t.value===(p.commentaire||""))return;
+      rpc("fgp_point_maj",{p_id:t.dataset.com,p_statut:null,p_commentaire:t.value,p_auteur:MOI.nom});
+    });
+  });
+}
+
+function rendreInfos(ouverte){
+  const box=$("#ifs"); let h="", cat=null;
+  ETAT.infos.forEach(i=>{
+    if(i.categorie!==cat){cat=i.categorie;h+='<div class="sec-t">'+esc(cat)+"</div>";}
+    h+='<div class="info-l" data-id="'+i.id+'">';
+    h+='<div class="lib">'+esc(i.libelle)+"</div>";
+    h+='<textarea data-rep="'+i.id+'" placeholder="Réponse donnée en séance"'+(ouverte?"":" disabled")+'>'+esc(i.reponse||"")+"</textarea>";
+    h+='<div class="duo">'+
+       '<input type="text" data-por="'+i.id+'" placeholder="Porteur" value="'+esc(i.porteur||"")+'"'+(ouverte?"":" disabled")+" />"+
+       '<input type="date" data-ech="'+i.id+'" value="'+esc(i.echeance||"")+'"'+(ouverte?"":" disabled")+" /></div>";
+    if(i.maj_le)h+='<div class="maj">Modifié le '+heureFR(i.maj_le)+(i.maj_par?" par "+esc(i.maj_par):"")+"</div>";
+    h+="</div>";
+  });
+  box.innerHTML=h;
+
+  const envoyer=el=>{
+    const l=el.closest(".info-l"), id=l.dataset.id;
+    const i=ETAT.infos.find(x=>x.id===id); if(!i)return;
+    const rep=l.querySelector("[data-rep]").value, por=l.querySelector("[data-por]").value,
+          ech=l.querySelector("[data-ech]").value;
+    if(rep===(i.reponse||"")&&por===(i.porteur||"")&&ech===(i.echeance||""))return;
+    rpc("fgp_info_maj",{p_id:id,p_reponse:rep,p_porteur:por,p_echeance:ech||null,p_auteur:MOI.nom});
+  };
+  box.querySelectorAll("[data-rep],[data-por]").forEach(e=>e.addEventListener("blur",()=>envoyer(e)));
+  box.querySelectorAll("[data-ech]").forEach(e=>e.addEventListener("change",()=>envoyer(e)));
+}
+
+function rendreActions(ouverte){
+  const box=$("#acs");
+  if(!ETAT.actions.length){box.innerHTML='<div class="vide-msg">Aucune action enregistrée.</div>';return;}
+  let h="";
+  ETAT.actions.forEach(a=>{
+    const sold=a.statut==="soldee";
+    h+='<div class="act'+(sold?" soldee":"")+'" data-id="'+a.id+'">';
+    h+='<button class="coche" data-bas="'+a.id+'" aria-label="'+(sold?"Rouvrir":"Solder")+' l\'action"'+
+       (ouverte?"":" disabled")+'><span></span></button>';
+    h+='<div class="corps"><div class="lib">'+esc(a.libelle)+"</div><div class=\"sous\">";
+    h+="<span>"+(a.porteur?esc(a.porteur):"Porteur à désigner")+"</span>";
+    if(a.echeance)h+='<span class="ech'+(!sold&&enRetard(a.echeance)?" tard":"")+'">Échéance '+dateCourte(a.echeance)+"</span>";
+    h+="</div></div>";
+    if(ouverte)h+='<button class="sup" data-sup="'+a.id+'" aria-label="Supprimer">Retirer</button>';
+    h+="</div>";
+  });
+  box.innerHTML=h;
+  box.querySelectorAll("[data-bas]").forEach(b=>b.addEventListener("click",()=>{
+    const a=ETAT.actions.find(x=>x.id===b.dataset.bas);
+    rpc("fgp_action_maj",{p_id:b.dataset.bas,p_statut:a.statut==="soldee"?"ouverte":"soldee",
+                          p_porteur:null,p_echeance:null,p_auteur:MOI.nom});
+  }));
+  box.querySelectorAll("[data-sup]").forEach(b=>b.addEventListener("click",()=>{
+    if(!confirm("Retirer cette action du suivi ? Le retrait est tracé au journal."))return;
+    rpc("fgp_action_suppr",{p_id:b.dataset.sup,p_auteur:MOI.nom});
+  }));
+}
+
+function rendreJournal(){
+  const box=$("#jrs");
+  if(!ETAT.journal.length){box.innerHTML='<div class="vide-msg">Aucune modification enregistrée.</div>';return;}
+  box.innerHTML=ETAT.journal.map(j=>{
+    const av=j.avant&&j.avant.length?esc(LIB[j.avant]||j.avant):"vide";
+    const ap=j.apres&&j.apres.length?esc(LIB[j.apres]||j.apres):"vide";
+    return '<div class="jr"><div class="h">'+heureFR(j.horodatage)+"</div><div class=\"c\">"+
+      "<b>"+esc(j.objet_libelle||j.objet_type)+"</b>"+
+      '<div class="fl">'+esc(j.champ||"")+" : "+av+" → "+ap+"</div>"+
+      '<div class="au">'+esc(j.auteur||"auteur non renseigné")+"</div></div></div>";
+  }).join("");
+}
+
+/* ============ COMPTE RENDU ============ */
+function rendreCR(){
+  const s=ETAT.seance;
+  const note=$("#cr-note");
+  if(s.statut==="ouverte"){
+    note.innerHTML="<p><b>La séance est encore ouverte.</b> Le compte rendu ci-dessous est un aperçu. "+
+      "Clôturez la séance depuis l'onglet Périmètre pour le figer, puis faites-le signer.</p>";
+  }else if(s.statut==="close"){
+    note.innerHTML="<p><b>Séance clôturée le "+heureFR(s.close_le)+".</b> Le relevé est figé. "+
+      "Il devient définitif lorsque les trois parties l'ont validé.</p>";
+  }else{
+    note.innerHTML="<p><b>Relevé validé par les trois parties.</b> Il ne peut plus être modifié.</p>";
+  }
+
+  let h="";
+  h+='<div class="cr-logos">'+
+     '<img class="l-adv" src="logos/advantage.png" alt="Advantage Conseils" />'+
+     '<div class="l-txt">Festival des Grillades de Paris'+
+     "<small>2e édition · 11 octobre 2026 · Bobigny</small></div>"+
+     '<img class="l-thim" src="logos/thim.png" alt="Thim Production" /></div>';
+  h+='<div class="cr-tete"><div class="t">Relevé de décisions</div>'+
+     "<h2>Festival des Grillades de Paris, 2e édition<br />Séance technique n°"+s.numero+"</h2>"+
+     '<div class="m">'+esc(s.objet||"")+"<br />"+
+     "Séance du "+dateFR(s.date_seance)+(s.lieu?" · "+esc(s.lieu):"")+
+     " · Version "+s.version+" · Manifestation du 11 octobre 2026 à Bobigny</div></div>";
+
+  /* périmètre par section */
+  let sec=null, ouvert=false;
+  ETAT.points.forEach(p=>{
+    if(p.section!==sec){
+      if(ouvert)h+="</tbody></table></div>";
+      sec=p.section;
+      h+="<h3>"+esc(sec)+'</h3><div class="tbl-wrap"><table class="tbl"><thead><tr>'+
+         '<th class="c-code">Réf.</th><th>Prestation</th><th class="c-st">Décision</th>'+
+         "</tr></thead><tbody>";
+      ouvert=true;
+    }
+    h+='<tr><td class="c-code">'+esc(p.code||"")+"</td><td>"+esc(p.libelle)+
+       (p.ajoute_en_seance?' <em style="color:#84837C">(ajouté en séance)</em>':"")+
+       (p.commentaire?'<br /><span style="color:#4A4A46">'+esc(p.commentaire)+"</span>":"")+
+       '</td><td class="c-st '+CLS[p.statut]+'">'+LIB[p.statut]+"</td></tr>";
+  });
+  if(ouvert)h+="</tbody></table></div>";
+
+  /* informations */
+  /* Le relevé constate l'état AU MOMENT de la clôture. Les informations renseignées
+     ensuite depuis le board de suivi ne doivent pas modifier un relevé figé et déjà
+     soumis à validation : on les écarte sur la date de dernière mise à jour. */
+  const clot=s.close_le?new Date(s.close_le):null;
+  const iu=ETAT.infos.filter(i=>{
+    if(clot&&i.maj_le&&new Date(i.maj_le)>clot)return false;
+    return (i.reponse&&i.reponse.trim())||(i.porteur&&i.porteur.trim())||i.echeance;
+  });
+  h+="<h3>Informations recueillies et attendues</h3>";
+  if(!iu.length){
+    h+='<p style="font-size:12.5px;color:#84837C">Aucune information renseignée à ce stade.</p>';
+  }else{
+    h+='<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Information</th><th>Réponse</th>'+
+       '<th style="width:120px">Porteur</th><th style="width:74px">Échéance</th></tr></thead><tbody>';
+    iu.forEach(i=>{h+="<tr><td>"+esc(i.libelle)+"</td><td>"+esc(i.reponse||"À transmettre")+
+      "</td><td>"+esc(i.porteur||"")+"</td><td>"+dateCourte(i.echeance)+"</td></tr>";});
+    h+="</tbody></table></div>";
+  }
+
+  /* actions */
+  h+="<h3>Actions et échéances</h3>";
+  if(!ETAT.actions.length){
+    h+='<p style="font-size:12.5px;color:#84837C">Aucune action enregistrée.</p>';
+  }else{
+    h+='<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Action</th>'+
+       '<th style="width:150px">Porteur</th><th style="width:80px">Échéance</th>'+
+       '<th style="width:70px">État</th></tr></thead><tbody>';
+    ETAT.actions.forEach(a=>{h+="<tr><td>"+esc(a.libelle)+"</td><td>"+esc(a.porteur||"À désigner")+
+      "</td><td>"+dateCourte(a.echeance)+"</td><td>"+(a.statut==="soldee"?"Soldée":"Ouverte")+"</td></tr>";});
+    h+="</tbody></table></div>";
+  }
+
+  /* signatures */
+  h+="<h3>Validation des parties</h3>";
+  h+='<div class="sig-grid">';
+  STRUCTURES.forEach(st=>{
+    const sg=ETAT.signatures.find(x=>x.structure===st);
+    if(sg){
+      h+='<div class="sig-c"><div class="s-org">'+esc(st)+'</div><div class="s-nom">'+esc(sg.nom)+"</div>"+
+         (sg.fonction?'<div class="s-f">'+esc(sg.fonction)+"</div>":"")+
+         '<div class="s-d">Validé le '+heureFR(sg.signe_le)+'</div><div class="s-e">'+
+         esc((sg.empreinte||"").slice(0,32))+"</div></div>";
+    }else{
+      h+='<div class="sig-c vide"><div class="s-org">'+esc(st)+'</div>'+
+         '<div class="s-nom">En attente de validation</div></div>';
+    }
+  });
+  h+="</div>";
+
+  h+='<div class="pied-cr">Ce relevé est produit par l\'espace de pilotage du projet. '+
+     "Chaque décision qu'il contient est horodatée et enregistrée au nom de son auteur, et le journal "+
+     "des modifications ne peut être ni altéré ni effacé. La validation vaut approbation du relevé par "+
+     "la structure signataire ; elle ne vaut pas engagement contractuel, le périmètre n'étant "+
+     "définitivement arrêté qu'à la signature du contrat de prestation et de son devis.<br />"+
+     "Document confidentiel, couvert par l'accord de confidentialité signé entre les parties. "+
+     "Édité le "+heureFR(new Date().toISOString())+".</div>";
+
+  $("#cr").innerHTML=h;
+}
+
+function dejaSigne(){
+  return !!(ETAT&&ETAT.signatures.find(x=>x.structure===MOI.structure));
+}
+
+/* ============ ACTIONS DE L'UTILISATEUR ============ */
+$("#b-ajout-pt").addEventListener("click",()=>{
+  const sections=[...new Set(ETAT.points.map(p=>p.section))];
+  const q=prompt("Dans quelle section ?\n\n"+sections.map((s,i)=>(i+1)+". "+s).join("\n")+
+                 "\n\nIndiquez le numéro :");
+  if(!q)return;
+  const sec=sections[parseInt(q,10)-1];
+  if(!sec){toast("Section inconnue.",true);return;}
+  const lib=prompt("Libellé de la prestation à ajouter :");
+  if(!lib||!lib.trim())return;
+  rpc("fgp_point_ajout",{p_section:sec,p_libelle:lib.trim(),p_auteur:MOI.nom})
+    .then(r=>{if(r)toast("Point ajouté et tracé au journal.");});
+});
+
+$("#b-ajout-ac").addEventListener("click",()=>{
+  const lib=$("#a-lib").value.trim();
+  if(!lib){toast("Indiquez l'action.",true);$("#a-lib").focus();return;}
+  rpc("fgp_action_ajout",{p_libelle:lib,p_porteur:$("#a-por").value.trim(),
+                          p_echeance:$("#a-ech").value||null,p_auteur:MOI.nom})
+    .then(r=>{if(r){$("#a-lib").value="";$("#a-por").value="";$("#a-ech").value="";toast("Action ajoutée.");}});
+});
+
+$("#b-cloturer").addEventListener("click",()=>{
+  const reste=ETAT.points.filter(p=>p.statut==="a_statuer");
+  if(reste.length){
+    toast(reste.length+" point"+(reste.length>1?"s":"")+" encore à statuer : "+
+          (reste[0].code||"")+" "+reste[0].libelle,true);
+    return;
+  }
+  if(!confirm("Clôturer la séance ?\n\nLe relevé sera figé et proposé à la signature des trois parties. "+
+              "Vous pourrez le rouvrir tant qu'il n'est pas entièrement signé."))return;
+  rpc("fgp_cloturer",{p_auteur:MOI.nom}).then(r=>{
+    if(r){TAB="cr";$$(".tab").forEach(x=>x.setAttribute("aria-selected",String(x.dataset.p==="cr")));
+          rendre();window.scrollTo({top:0});toast("Séance clôturée. Le relevé est prêt.");}
+  });
+});
+
+$("#b-rouvrir").addEventListener("click",()=>{
+  if(!confirm("Rouvrir la séance ?\n\nUne nouvelle version du relevé sera créée et l'opération est tracée."))return;
+  rpc("fgp_rouvrir",{p_auteur:MOI.nom}).then(r=>{if(r)toast("Séance rouverte, version "+ETAT.seance.version+".");});
+});
+
+$("#b-signer").addEventListener("click",()=>{
+  if(ETAT.seance.statut==="ouverte"){toast("Clôturez la séance avant de signer.",true);return;}
+  if(dejaSigne()){toast(MOI.structure+" a déjà validé ce relevé.",true);return;}
+  if(!confirm("Vous validez ce relevé de décisions au nom de "+MOI.structure+".\n\n"+
+              "Votre nom, votre structure et l'horodatage seront enregistrés. Confirmer ?"))return;
+  rpc("fgp_signer",{p_nom:MOI.nom,p_fonction:MOI.fonction||"",p_structure:MOI.structure})
+    .then(r=>{if(r)toast("Validation enregistrée pour "+MOI.structure+".");});
+});
+
+$("#b-print").addEventListener("click",()=>{
+  TAB="cr";
+  $$(".tab").forEach(x=>x.setAttribute("aria-selected",String(x.dataset.p==="cr")));
+  $$(".pane").forEach(p=>p.classList.toggle("on",p.id==="pane-cr"));
+  setTimeout(()=>window.print(),120);
+});
+
+/* ============ LOGOS ============ */
+function testerLogo(imgId,monoId){
+  const img=$("#"+imgId);
+  const probe=new Image();
+  probe.onload=()=>{if(probe.naturalWidth>0){img.hidden=false;$("#"+monoId).hidden=true;}};
+  probe.onerror=()=>{};
+  probe.src=img.getAttribute("src");
+}
+
+/* ============ PRÉSENCE ============
+   Déclarée aux participants en pied de page. On ne compte que le temps où
+   l'onglet est réellement visible : un onglet ouvert et oublié ne gonfle pas
+   la durée. Le compteur est cumulé ici et envoyé toutes les 30 secondes ;
+   la base retient le maximum, donc un signal en retard ne fait rien reculer. */
+const PRES={session:null,secondes:0,depuis:null};
+
+function idSession(){
+  try{
+    let s=sessionStorage.getItem("fgp_session");
+    if(!s){s=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2));
+           sessionStorage.setItem("fgp_session",s);}
+    return s;
+  }catch(e){return String(Date.now())+Math.random().toString(16).slice(2);}
+}
+function appareil(){
+  const u=navigator.userAgent;
+  const t=/Mobi|Android|iPhone/i.test(u)?"Mobile":/iPad|Tablet/i.test(u)?"Tablette":"Ordinateur";
+  const n=/Edg\//.test(u)?"Edge":/OPR\//.test(u)?"Opera":/Chrome\//.test(u)?"Chrome":
+          /Safari\//.test(u)?"Safari":/Firefox\//.test(u)?"Firefox":"Autre";
+  return t+" · "+n;
+}
+function cumuler(){
+  if(PRES.depuis!=null){PRES.secondes+=Math.round((Date.now()-PRES.depuis)/1000);PRES.depuis=null;}
+}
+function reprendre(){ if(PRES.depuis==null&&!document.hidden)PRES.depuis=Date.now(); }
+
+async function signalerPresence(){
+  if(!PRES.session||!MOI)return;
+  const enCoursMaintenant=PRES.depuis!=null?Math.round((Date.now()-PRES.depuis)/1000):0;
+  try{
+    await sb.rpc("fgp_presence_ping",{p_jeton:JETON,p_session:PRES.session,
+      p_nom:MOI.nom,p_structure:MOI.structure,p_fonction:MOI.fonction||"",
+      p_appareil:appareil(),p_secondes:PRES.secondes+enCoursMaintenant});
+  }catch(e){/* la présence ne doit jamais gêner la séance */}
+}
+function demarrerPresence(){
+  PRES.session=idSession();
+  reprendre();
+  signalerPresence();
+  setInterval(signalerPresence,30000);
+  document.addEventListener("visibilitychange",()=>{
+    if(document.hidden){cumuler();signalerPresence();}else{reprendre();}
+  });
+  window.addEventListener("pagehide",()=>{cumuler();signalerPresence();});
+}
+
+/* ============ DEMARRAGE ============ */
+async function demarrer(){
+  testerLogo("lg-adv","mn-adv");
+  testerLogo("lg-thim","mn-thim");
+  if(!JETON){
+    $("#charge").innerHTML="Lien incomplet.<br />Utilisez le lien d'accès qui vous a été transmis.";
+    return;
+  }
+  const r=await rpc("fgp_etat",{});
+  if(!r){$("#charge").innerHTML="Accès refusé.<br />Ce lien n'est pas valide ou a expiré.";return;}
+  demarrerPresence();
+  /* Synchronisation entre les participants. On ne rafraîchit pas pendant une saisie
+     de plus de deux caractères non enregistrée : la restauration existe, mais autant
+     ne pas la solliciter inutilement. */
+  setInterval(()=>{
+    if(enCours||document.hidden)return;
+    const a=document.activeElement;
+    if(a&&/^(TEXTAREA|INPUT)$/.test(a.tagName)&&a.value&&a.value.length>2)return;
+    rpc("fgp_etat",{});
+  },8000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)rpc("fgp_etat",{});});
+}
+
+if(chargerMoi())demarrer();
+</script>
+</body>
+</html>
