@@ -59,16 +59,23 @@
     facebook: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 8.5H17V5h-2.5A3.5 3.5 0 0 0 11 8.5V11H8.5v3.5H11V21h3.5v-6.5H17L17.5 11h-3V9a.5.5 0 0 1 .5-.5Z"/></svg>',
     linkedin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7.5 10.5V17"/><circle cx="7.5" cy="7.4" r="1"/><path d="M11.5 17v-3.6a2.4 2.4 0 0 1 4.8 0V17"/><path d="M11.5 10.5V17"/></svg>',
     youtube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="m10.5 9.5 5 2.5-5 2.5Z"/></svg>',
+    whatsapp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 20.5l1.3-4a8 8 0 1 1 3 3l-4.3 1Z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5"/></svg>',
+    // calendrier — les rendez-vous a venir
+    agenda: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18"/><path d="M8 3v4"/><path d="M16 3v4"/></svg>',
     fleche: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>',
   };
 
   /* ---------- Navigation ---------- */
   var PAGES = [
-    { cle: 'accueil', url: 'index.html', libelle: 'Accueil' },
-    { cle: 'univers', url: 'univers.html', libelle: 'L\'Univers NabyCook' },
-    { cle: 'association', url: 'association.html', libelle: 'L\'Association & l\'Impact' },
-    { cle: 'adhesions', url: 'adhesions.html', libelle: 'Adhérer' },
-    { cle: 'contact', url: 'contact.html', libelle: 'Contact' },
+    // `court` = libelle de la barre de navigation. Depuis l'ajout du 6e onglet,
+    // les intitules complets passaient sur deux lignes des 1280 px.
+    // `libelle` reste le nom complet, utilise dans le pied de page.
+    { cle: 'accueil', url: 'index.html', libelle: 'Accueil', court: 'Accueil' },
+    { cle: 'univers', url: 'univers.html', libelle: 'L\'Univers NabyCook', court: 'L\'Univers' },
+    { cle: 'association', url: 'association.html', libelle: 'L\'Association & l\'Impact', court: 'L\'Association' },
+    { cle: 'agenda', url: 'agenda.html', libelle: 'En ce moment', court: 'En ce moment' },
+    { cle: 'adhesions', url: 'adhesions.html', libelle: 'Adhérer', court: 'Adhérer' },
+    { cle: 'contact', url: 'contact.html', libelle: 'Contact', court: 'Contact' },
   ];
 
   var pageCourante = document.body.getAttribute('data-page') || '';
@@ -89,7 +96,7 @@
     var liens = PAGES.map(function (p) {
       if (p.cle === 'adhesions') return '';
       var courant = p.cle === pageCourante ? ' aria-current="page"' : '';
-      return '<li><a href="' + p.url + '"' + courant + '>' + esc(p.libelle) + '</a></li>';
+      return '<li><a href="' + p.url + '"' + courant + '>' + esc(p.court || p.libelle) + '</a></li>';
     }).join('');
 
     cible.outerHTML =
@@ -130,6 +137,7 @@
     var reseaux = [
       { cle: 'instagram', url: NABY.liens.instagram, nom: 'Instagram' },
       { cle: 'youtube', url: NABY.liens.youtube, nom: 'YouTube' },
+      { cle: 'whatsapp', url: NABY.liens.whatsappCanal, nom: 'Canal WhatsApp' },
       { cle: 'facebook', url: NABY.liens.facebook, nom: 'Facebook' },
       { cle: 'linkedin', url: NABY.liens.linkedin, nom: 'LinkedIn' },
     ].filter(function (r) { return !vide(r.url); });
@@ -243,6 +251,101 @@
 
     cible.innerHTML = '';
     cible.appendChild(boite);
+  }
+
+  /* ---------- Agenda ----------
+     Liste tenue a la main, volontairement : Nabintou a demande
+     3 a 5 rendez-vous, pas un calendrier interactif.
+  ---------------------------- */
+  function agenda() {
+    var cible = slot('agenda');
+    if (!cible) return;
+
+    if (vide(NABY.agenda)) {
+      cible.innerHTML =
+        '<div class="bloc-afournir">' +
+          '<span class="etiq-afournir">À fournir</span>' +
+          '<h3>Les prochains rendez-vous</h3>' +
+          '<p class="lead" style="margin-bottom:0">Trois à cinq dates suffisent, et pour chacune : le jour, le lieu, le type de rendez-vous (atelier, forum, marché, événement partenaire) et, si vous le voulez, une phrase de présentation. La liste se tient à la main, donc une date passée reste affichée tant qu\'on ne la retire pas.</p>' +
+        '</div>';
+      return;
+    }
+
+    var boite = document.createElement('div');
+    boite.className = 'grille grille-3';
+
+    NABY.agenda.forEach(function (e) {
+      var carte = document.createElement('article');
+      carte.className = 'carte rdv';
+
+      var d = document.createElement('span');
+      d.className = 'rdv-date';
+      d.textContent = e.date || '';
+      carte.appendChild(d);
+
+      var t = document.createElement('h3');
+      t.textContent = e.type || 'Rendez-vous';
+      carte.appendChild(t);
+
+      if (!vide(e.lieu)) {
+        var l = document.createElement('p');
+        l.className = 'rdv-lieu';
+        l.textContent = e.lieu;
+        carte.appendChild(l);
+      }
+
+      if (!vide(e.desc)) {
+        var p = document.createElement('p');
+        p.textContent = e.desc;
+        carte.appendChild(p);
+      }
+
+      var pied = document.createElement('div');
+      pied.className = 'lien-carte';
+      var a = document.createElement('a');
+      a.className = 'carte-lien';
+      a.setAttribute('href', vide(e.lien) ? 'contact.html' : e.lien);
+      if (/^https?:/i.test(a.getAttribute('href'))) {
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener');
+      }
+      a.textContent = 'Participer';
+      pied.appendChild(a);
+      carte.appendChild(pied);
+
+      boite.appendChild(carte);
+    });
+
+    cible.innerHTML = '';
+    cible.appendChild(boite);
+  }
+
+  /* ---------- Le chemin de l'association ---------- */
+  function historique() {
+    var cible = slot('historique');
+    if (!cible) return;
+
+    if (vide(NABY.historique)) {
+      cible.innerHTML =
+        '<div class="bloc-afournir">' +
+          '<span class="etiq-afournir">À fournir</span>' +
+          '<h3>Les étapes de l\'association</h3>' +
+          '<p class="lead" style="margin-bottom:0">Les dates qui comptent depuis 2023 : les premiers ateliers, les premiers partenariats, la déclaration en préfecture, les accompagnements obtenus. Une ligne par étape suffit. Rien n\'est reconstitué ici sans vous.</p>' +
+        '</div>';
+      return;
+    }
+
+    cible.innerHTML =
+      '<ol class="chemin">' +
+        NABY.historique.map(function (e) {
+          return '<li>' +
+            '<span class="an">' + esc(e.annee) + '</span>' +
+            '<div><h3>' + esc(e.titre) + '</h3>' +
+            (vide(e.desc) ? '' : '<p>' + esc(e.desc) + '</p>') +
+            '</div>' +
+          '</li>';
+        }).join('') +
+      '</ol>';
   }
 
   /* ---------- Revue de presse ---------- */
@@ -497,6 +600,8 @@
     textes();
     distinctions();
     impact();
+    agenda();
+    historique();
     partenaires();
     presse();
     temoignages();

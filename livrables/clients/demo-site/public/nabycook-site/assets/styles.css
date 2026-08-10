@@ -153,7 +153,9 @@ section.serre { padding: 48px 0; }
 .nav a[aria-current="page"] { color: var(--vert-feuille); font-weight: 600; }
 .nav .bouton { justify-content: center; margin-top: 16px; border-bottom: none; }
 
-@media (min-width: 900px) {
+/* Seuil monte de 900 a 1140 px avec l'arrivee du 6e onglet : en dessous,
+   les intitules se cassaient sur deux lignes. Le menu deroulant tient mieux. */
+@media (min-width: 1140px) {
   .burger { display: none; }
   /* Rangee unique : sans le flex ici, le bouton d'adhesion passait
      sous les liens et s'etirait sur toute la largeur de l'en-tete. */
@@ -321,6 +323,32 @@ section.serre { padding: 48px 0; }
 }
 .presse .src { display: block; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--or-d); margin-bottom: 4px; }
 .presse .cit { font-size: 16px; color: var(--texte); }
+
+/* ---------- 12 bis. Agenda et chemin de l'association ---------- */
+.rdv-date {
+  display: inline-block; align-self: flex-start;
+  background: var(--vert-anis); color: var(--vert-profond);
+  font-size: 13px; font-weight: 700; letter-spacing: .04em;
+  padding: 6px 14px; border-radius: 999px; margin-bottom: 16px;
+}
+.rdv-lieu { font-size: 15px; font-weight: 600; color: var(--vert-feuille); margin-bottom: 8px; }
+
+.chemin { list-style: none; counter-reset: none; }
+.chemin li {
+  display: flex; gap: 24px; align-items: flex-start;
+  padding-bottom: 32px; position: relative;
+}
+.chemin li:not(:last-child)::before {
+  content: ""; position: absolute; left: 27px; top: 40px; bottom: 0;
+  width: 2px; background: var(--sable);
+}
+.chemin .an {
+  flex: none; width: 56px; height: 56px; border-radius: 50%;
+  background: var(--vert-profond); color: var(--vert-anis);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 17px; position: relative; z-index: 1;
+}
+.chemin h3 { margin-bottom: 4px; }
 
 /* ---------- 13. Temoignages ---------- */
 .temoin { background: var(--carte); border: 1px solid var(--sable); border-radius: var(--r-m); padding: 32px 24px; }

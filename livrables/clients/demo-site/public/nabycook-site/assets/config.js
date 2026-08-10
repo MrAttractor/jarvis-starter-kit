@@ -56,6 +56,7 @@ const NABY = {
   liens: {
     instagram: 'https://www.instagram.com/nabycook/',
     youtube: 'https://www.youtube.com/@nabycook',
+    whatsappCanal: 'http://urlr.me/yhWGJv', // canal WhatsApp, repris de sa signature du 10/08
     facebook: A_FOURNIR,
     linkedin: A_FOURNIR,
     sumup: 'https://nabycook.sumupstore.com',
@@ -72,7 +73,11 @@ const NABY = {
     devisTraiteur: '261936674164062', // phase 2
   },
 
-  /* --- Distinctions (confirmées par le CDC et la bio) ----- */
+  /* --- Distinctions ---------------------------------------
+     Precision de Nabintou du 10/08/2026 : ce sont ses distinctions
+     personnelles, pas celles de l'association. Elles ne s'affichent
+     donc plus que sur la page Univers, au fil de sa biographie.
+  --------------------------------------------------------- */
   distinctions: [
     'Lauréate ADIE Paris 2025',
     'Certifiée HEC Stand Up 2025',
@@ -149,6 +154,27 @@ const NABY = {
     },
   },
 
+  /* --- Agenda ---------------------------------------------
+     Demande de Nabintou du 10/08/2026 : 3 à 5 prochains rendez-vous,
+     liste simple tenue à la main, pas de calendrier interactif.
+
+     { date: '5 septembre 2026', lieu: 'Paris 20e',
+       type: 'Forum des associations',
+       desc: 'Une phrase, facultative.',
+       lien: 'contact.html' }
+
+     Les rendez-vous passés ne se retirent pas tout seuls : c'est une
+     liste manuelle, il faut la tenir. Vide, la page invite à écrire.
+  --------------------------------------------------------- */
+  agenda: A_FOURNIR,
+
+  /* --- Le chemin de l'association -------------------------
+     Demande du 10/08/2026 : la page Univers ne doit pas se limiter
+     à la biographie, elle doit montrer les étapes de l'association.
+     { annee: '2023', titre: '...', desc: '...' }
+  --------------------------------------------------------- */
+  historique: A_FOURNIR,
+
   /* --- Revue de presse ------------------------------------
      { source: 'Le Parisien', citation: '...', url: '...' }
   --------------------------------------------------------- */
@@ -169,11 +195,12 @@ const NABY = {
       unite: '/ an',
       etiquette: 'La formule complète',
       vedette: true,
+      // Bloc réécrit par Nabintou, message du 10/08/2026.
       desc: 'Pour celles et ceux qui veulent faire partie de l\'aventure toute l\'année.',
       avantages: [
-        'Membre à part entière de l\'association',
-        'Invitation à l\'assemblée générale et voix au chapitre',
-        'Accès prioritaire aux ateliers et aux éditions limitées',
+        'Participation régulière aux formations',
+        'Invitations aux activités et événements',
+        'Accès prioritaire aux ateliers et aux éditions limitées de l\'épicerie',
         'La lettre des coulisses, réservée aux adhérents',
       ],
     },
