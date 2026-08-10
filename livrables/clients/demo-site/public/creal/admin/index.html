@@ -500,6 +500,33 @@ async function chargerCommandes() {
   const { data } = await sb.from('cr_commandes').select('*').order('created_at', { ascending: false }).limit(300);
   COMMANDES = data ?? [];
 }
+
+/* Le lien du reçu porte le numéro ET le jeton : sans le second, il suffirait
+   d'essayer les numéros à la suite pour lire les coordonnées de chaque
+   cliente. */
+function lienRecu(c) {
+  return `${location.origin}/recu/?n=${c.numero}&c=${c.jeton}`;
+}
+
+/* Envoi du reçu à la cliente, en un geste, depuis le fil WhatsApp existant.
+   Le reçu n'a de sens que pour une commande encaissée : le bouton n'apparaît
+   pas avant. */
+function envoyerRecu(id) {
+  const c = COMMANDES.find(x => x.id === id);
+  if (!c) return;
+  const wa = (c.client_wa || '').replace(/\D/g, '');
+  const msg =
+    `Bonjour ${c.client_nom || ''} ! Merci pour votre commande.\n\n` +
+    `Voici votre reçu C'Real ${reference(c)} pour ${fmt(c.total)} FCFA :\n${lienRecu(c)}`;
+  window.open(wa ? `https://wa.me/${wa}?text=${encodeURIComponent(msg)}`
+                 : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function copierRecu(id) {
+  const c = COMMANDES.find(x => x.id === id);
+  if (!c) return;
+  navigator.clipboard.writeText(lienRecu(c)).then(() => toast('Lien du reçu copié.'));
+}
 async function chargerConfig() {
   const { data } = await sb.from('cr_config').select('paiement_livraison').single();
   CONFIG = data ?? { paiement_livraison: true };
@@ -681,6 +708,9 @@ function voirCommande(id) {
     <div class="actions">
       ${wa ? `<a class="btn petit" href="https://wa.me/${wa}" target="_blank" rel="noopener">Écrire à la cliente</a>` : ''}
       ${aEncaisser(c) ? `<button class="btn petit" onclick="marquerPaye('${c.id}')">J'ai reçu l'argent</button>` : ''}
+      ${c.encaisse && c.statut !== 'annulee' ? `
+        <button class="btn petit" onclick="envoyerRecu('${c.id}')">Envoyer le reçu</button>
+        <button class="btn petit fantome" onclick="copierRecu('${c.id}')">Copier le lien du reçu</button>` : ''}
       ${c.statut === 'nouvelle'
         ? `<button class="btn petit${aEncaisser(c) ? ' fantome' : ''}" onclick="marquer('${c.id}','traitee')">C'est préparé</button>
            <button class="btn petit fantome" onclick="marquer('${c.id}','annulee')">Annuler</button>`

@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reçu — C'Real</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!--
+  Reçu de paiement, sur le modèle éprouvé de J'Envoie Express, mais à la charte
+  de C'Real et avec une correction : le lien porte un jeton.
+
+  Sans jeton, il aurait suffi d'essayer CR-0001, CR-0002, CR-0003 pour lire le
+  nom, le téléphone et l'adresse de chaque cliente de Kezey. Un numéro qui
+  s'incrémente est une invitation à énumérer.
+
+  Le reçu n'existe QUE pour une commande encaissée. Un reçu atteste d'un
+  paiement reçu : en délivrer un pour une commande non réglée reviendrait à
+  signer une quittance pour de l'argent qu'on n'a pas.
+-->
+<style>
+:root {
+  --brand:#4A2E12; --orange:#F2A33D; --muted:#8A7A66; --bg:#FFFBF4;
+  --card:#fff; --bdr:rgba(74,46,18,.12); --ok:#1E7A52; --ok-s:rgba(30,122,82,.12);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+html, body { max-width:100%; overflow-x:hidden; }
+body {
+  font-family:'Inter',sans-serif; background:var(--bg); color:var(--brand);
+  min-height:100vh; display:flex; flex-direction:column; align-items:center;
+  padding:24px 16px 48px;
+}
+.recu {
+  background:var(--card); width:100%; max-width:460px;
+  border:1px solid var(--bdr); border-radius:18px; overflow:hidden;
+}
+.recu-tete { background:var(--brand); color:#fff; padding:24px 24px 20px; }
+.recu-tete img { width:52px; height:52px; border-radius:50%; object-fit:cover; margin-bottom:14px; }
+.marque { font-family:'Sora',sans-serif; font-weight:800; font-size:19px; }
+.marque-sous { font-size:12px; color:rgba(255,255,255,.6); margin-top:2px; }
+.recu-quoi {
+  font-family:'Sora',sans-serif; font-weight:700; font-size:11px;
+  letter-spacing:1.6px; text-transform:uppercase; color:var(--orange); margin-top:18px;
+}
+.recu-ref { font-family:'Sora',sans-serif; font-weight:800; font-size:24px; margin-top:2px; }
+.paye {
+  display:inline-flex; align-items:center; gap:6px; margin-top:12px;
+  background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28);
+  color:#fff; font-size:13px; font-weight:600; padding:5px 12px; border-radius:99px;
+}
+.paye svg { width:13px; height:13px; }
+.recu-corps { padding:22px 24px; }
+.l {
+  display:flex; justify-content:space-between; gap:14px;
+  padding:11px 0; border-bottom:1px solid var(--bdr); font-size:15px;
+}
+.l:last-of-type { border-bottom:none; }
+.l-nom { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.4px; font-weight:600; flex-shrink:0; padding-top:2px; }
+.l-val { text-align:right; font-weight:500; line-height:1.45; }
+.articles { margin:4px 0 8px; }
+.article { display:flex; justify-content:space-between; gap:12px; padding:8px 0; font-size:15px; }
+.article span:first-child { min-width:0; }
+.article b { flex-shrink:0; font-weight:600; }
+.total {
+  display:flex; justify-content:space-between; align-items:center;
+  background:#FFF8EE; border:1px solid rgba(242,163,61,.3); border-radius:12px;
+  padding:16px 18px; margin-top:14px;
+}
+.total-nom { font-family:'Sora',sans-serif; font-weight:700; font-size:14px; }
+.total-val { font-family:'Sora',sans-serif; font-weight:800; font-size:24px; }
+.recu-pied { background:#F6F3EC; padding:18px 24px; border-top:1px solid var(--bdr); }
+.pied-txt { font-size:12px; color:var(--muted); text-align:center; line-height:1.7; }
+.actions { display:flex; gap:10px; margin-top:18px; width:100%; max-width:460px; }
+.btn {
+  flex:1; min-height:48px; border-radius:12px; border:1.5px solid var(--brand);
+  font-family:'Sora',sans-serif; font-weight:700; font-size:15px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.btn.plein { background:var(--brand); color:#fff; }
+.btn.vide { background:transparent; color:var(--brand); }
+.btn svg { width:17px; height:17px; }
+.etat { text-align:center; padding:36px 24px; }
+.etat svg { width:40px; height:40px; opacity:.35; margin-bottom:14px; }
+.etat h2 { font-family:'Sora',sans-serif; font-size:18px; font-weight:700; margin-bottom:8px; }
+.etat p { color:var(--muted); font-size:15px; line-height:1.6; }
+
+/* R-26 : le CSS d'impression est écrit à la création, pas après la remarque. */
+@media print {
+  body { background:#fff; padding:0; }
+  .recu { border:none; border-radius:0; max-width:100%; break-inside:avoid; overflow:visible; }
+  .actions { display:none; }
+  .recu-tete, .paye, .total { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
+</style>
+</head>
+<body>
+<div id="racine"></div>
+
+<script>
+const API  = 'https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/creal-public';
+const ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk';
+
+const racine = document.getElementById('racine');
+
+function esc(v) {
+  return String(v ?? '').replace(/[&<>"']/g, c => (
+    { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
+  ));
+}
+function fmt(n) { return Number(n || 0).toLocaleString('fr-FR'); }
+function jour(iso) {
+  return new Date(iso).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
+}
+const MOYENS = { wave:'Wave', om:'Orange Money', livraison:'En main propre à la livraison' };
+
+function tete(sousTitre) {
+  return `
+    <div class="recu-tete">
+      <img src="/imgs/logo.jpeg" alt="C'Real">
+      <div class="marque">C'Real</div>
+      <div class="marque-sous">Farines infantiles 100% naturelles</div>
+      ${sousTitre}
+    </div>`;
+}
+
+function message(titre, texte) {
+  racine.innerHTML = `<div class="recu">${tete('')}
+    <div class="etat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <h2>${esc(titre)}</h2><p>${texte}</p>
+    </div></div>`;
+}
+
+async function charger() {
+  const p = new URLSearchParams(location.search);
+  const numero = p.get('n');
+  const jeton  = p.get('c');
+
+  if (!numero || !jeton) {
+    message('Lien incomplet', "Ce lien ne permet pas d'afficher un reçu. Demandez-le à nouveau à Kezey.");
+    return;
+  }
+
+  racine.innerHTML = `<div class="recu">${tete('')}<div class="etat"><p>Chargement…</p></div></div>`;
+
+  let d;
+  try {
+    const r = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', apikey: ANON, Authorization:`Bearer ${ANON}` },
+      body: JSON.stringify({ action:'recu', numero, jeton }),
+    });
+    d = await r.json();
+  } catch {
+    message('Connexion impossible', 'Vérifiez votre connexion, puis rechargez la page.');
+    return;
+  }
+
+  if (d.error || !d.etat) {
+    message('Reçu introuvable', "Ce reçu n'existe pas, ou le lien a été mal recopié.");
+    return;
+  }
+  if (d.etat === 'annulee') {
+    message('Commande annulée', `La commande ${esc(d.reference)} a été annulée. Aucun reçu n'est délivré.`);
+    return;
+  }
+  if (d.etat === 'impaye') {
+    message('Paiement en attente',
+      `Le règlement de la commande ${esc(d.reference)} n'a pas encore été confirmé par Kezey.<br><br>Ce reçu apparaîtra ici dès qu'elle aura enregistré votre paiement.`);
+    return;
+  }
+
+  const articles = (d.lignes || []).map(l => `
+    <div class="article">
+      <span>${esc(l.nom)} <span style="color:var(--muted)">× ${l.qty}</span></span>
+      <b>${fmt(l.total)} F</b>
+    </div>`).join('');
+
+  const wa = (d.whatsapp || '').replace(/\D/g, '');
+  const waLisible = wa ? '+' + wa.slice(0,3) + ' ' + wa.slice(3).replace(/(\d{2})(?=\d)/g,'$1 ') : '';
+
+  racine.innerHTML = `
+    <div class="recu">
+      ${tete(`
+        <div class="recu-quoi">Reçu de paiement</div>
+        <div class="recu-ref">${esc(d.reference)}</div>
+        <div class="paye">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/></svg>
+          Payé le ${jour(d.date)}
+        </div>`)}
+      <div class="recu-corps">
+        ${d.client_nom ? `<div class="l"><span class="l-nom">Cliente</span><span class="l-val">${esc(d.client_nom)}</span></div>` : ''}
+        ${d.adresse ? `<div class="l"><span class="l-nom">Livraison</span><span class="l-val">${esc(d.adresse)}</span></div>` : ''}
+        <div class="l"><span class="l-nom">Paiement</span><span class="l-val">${esc(MOYENS[d.moyen] || 'Non précisé')}</span></div>
+        <div class="articles">${articles}</div>
+        <div class="total">
+          <span class="total-nom">Montant réglé</span>
+          <span class="total-val">${fmt(d.total)} FCFA</span>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-top:12px;text-align:center;">
+          Les frais de livraison sont réglés séparément.
+        </p>
+      </div>
+      <div class="recu-pied">
+        <div class="pied-txt">
+          C'Real · Farines infantiles · Bingerville, Côte d'Ivoire${waLisible ? `<br>WhatsApp : ${esc(waLisible)}` : ''}
+          <br><br>Ce document atteste du règlement de la commande ci-dessus.
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn plein" onclick="window.print()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H7c-1.1 0-2 .9-2 2v4H3c-1.1 0-2 .9-2 2v6h4v2h14v-2h4v-6c0-1.1-.9-2-2-2h-2V5c0-1.1-.9-2-2-2zm0 4H7V5h10v2zm2 10v-2H5v2H3v-4h18v4h-2z"/></svg>
+        Imprimer
+      </button>
+      <button class="btn vide" id="btn-lien" onclick="copierLien()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+        Copier le lien
+      </button>
+    </div>`;
+}
+
+function copierLien() {
+  navigator.clipboard.writeText(location.href).then(() => {
+    const b = document.getElementById('btn-lien');
+    const avant = b.innerHTML;
+    b.textContent = 'Lien copié';
+    setTimeout(() => { b.innerHTML = avant; }, 2200);
+  });
+}
+
+charger();
+</script>
+</body>
+</html>

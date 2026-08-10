@@ -45,6 +45,7 @@ serve(async (req) => {
     if (action === "historique") return await historique(body);
     if (action === "chat")      return await chat(body);
     if (action === "commande")  return await commande(body);
+    if (action === "recu")      return await recu(body);
 
     return json({ error: "Action inconnue" }, 400);
   } catch (e) {
@@ -290,6 +291,53 @@ function nettoyer(t: string): string {
     .replace(/—/g, ", ")              // tirets longs, préférence maison
     .replace(/\n{3,}/g, "\n\n")
     .trim();
+}
+
+// ── Reçu ────────────────────────────────────────────────────────────────────
+// Deux conditions, et les deux sont nécessaires.
+//
+// 1. Le jeton doit correspondre. Sans lui, les numéros séquentiels laisseraient
+//    lire le nom, le téléphone et l'adresse de chaque cliente, une par une.
+// 2. La commande doit être encaissée. Un reçu atteste d'un paiement reçu : en
+//    délivrer un pour une commande non réglée, c'est signer une quittance pour
+//    de l'argent qu'on n'a pas.
+async function recu(body: Record<string, unknown>) {
+  const num   = parseInt(String(body.numero ?? "").replace(/\D/g, ""), 10);
+  const jeton = String(body.jeton ?? "");
+
+  if (!num || jeton.length < 16) return json({ error: "Reçu introuvable" }, 404);
+
+  const { data } = await db
+    .from("cr_commandes")
+    .select("numero, client_nom, adresse, lignes, total, moyen, encaisse, statut, created_at, traitee_le")
+    .eq("numero", num)
+    .eq("jeton", jeton)
+    .maybeSingle();
+
+  // Même réponse pour « n'existe pas » et « mauvais jeton » : distinguer les
+  // deux dirait à un curieux quels numéros existent.
+  if (!data) return json({ error: "Reçu introuvable" }, 404);
+
+  if (data.statut === "annulee") {
+    return json({ etat: "annulee", reference: reference(data.numero) });
+  }
+  if (!data.encaisse) {
+    return json({ etat: "impaye", reference: reference(data.numero), total: data.total });
+  }
+
+  const { data: cfg } = await db.from("cr_config").select("whatsapp").single();
+
+  return json({
+    etat: "paye",
+    reference: reference(data.numero),
+    client_nom: data.client_nom,
+    adresse: data.adresse,
+    lignes: data.lignes,
+    total: data.total,
+    moyen: data.moyen,
+    date: data.traitee_le ?? data.created_at,
+    whatsapp: cfg?.whatsapp ?? null,
+  });
 }
 
 /* La forme lisible du numéro. Écrite ici, une seule fois : si le format devait
