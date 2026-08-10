@@ -155,6 +155,43 @@ nav svg { width:22px; height:22px; }
 .modale-titre h3 { font-size:18px; font-weight:700; }
 .fermer { background:none; border:none; font-size:28px; line-height:1; color:var(--muted); cursor:pointer; min-width:44px; min-height:44px; }
 
+/* ── Aide ──────────────────────────────────────────────────────────────── */
+.btn-aide {
+  width:44px; height:44px; flex-shrink:0; border:none; border-radius:50%;
+  background:var(--orange-s); color:#8A5A12; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
+.btn-aide svg { width:22px; height:22px; }
+.aide-onglets {
+  display:flex; gap:8px; overflow-x:auto; padding-bottom:12px; margin-bottom:16px;
+  border-bottom:1px solid var(--bdr); scrollbar-width:none;
+}
+.aide-onglets::-webkit-scrollbar { display:none; }
+.aide-onglet {
+  flex-shrink:0; min-height:40px; padding:0 14px; border-radius:99px;
+  border:1.5px solid var(--bdr); background:transparent; color:var(--muted);
+  font-family:inherit; font-size:14px; font-weight:600; cursor:pointer; white-space:nowrap;
+}
+.aide-onglet.actif { background:var(--orange); border-color:var(--orange); color:#fff; }
+.aide-corps h4 {
+  font-family:'Sora',sans-serif; font-size:16px; font-weight:700; margin:20px 0 8px;
+}
+.aide-corps h4:first-child { margin-top:0; }
+.aide-corps p { font-size:15px; color:var(--ink2, #5A4632); line-height:1.6; margin-bottom:12px; }
+.aide-corps .pas {
+  display:flex; gap:12px; align-items:flex-start; margin-bottom:12px;
+}
+.aide-corps .pas-num {
+  width:26px; height:26px; flex-shrink:0; border-radius:50%;
+  background:var(--orange); color:#fff; font-size:13px; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+}
+.aide-corps .pas span { font-size:15px; line-height:1.5; }
+.aide-note {
+  background:var(--orange-s); border-left:3px solid var(--orange);
+  border-radius:8px; padding:12px 14px; margin-bottom:12px; font-size:14px; line-height:1.55;
+}
+
 .toast {
   position:fixed; left:50%; bottom:96px; transform:translateX(-50%);
   background:var(--brand); color:#fff; padding:12px 20px; border-radius:99px;
@@ -196,12 +233,29 @@ nav svg { width:22px; height:22px; }
       <b>Bonjour Kezey</b>
       <span id="header-sous">Farines infantiles C'Real</span>
     </div>
+    <!-- L'aide est à portée de pouce, sur chaque écran. Un mode d'emploi rangé
+         dans un autre onglet du navigateur n'est jamais lu au moment où la
+         question se pose. -->
+    <button class="btn-aide" onclick="ouvrirAide()" aria-label="Comment ça marche">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </button>
     <button class="lien-texte" style="padding:8px" onclick="deconnexion()">Sortir</button>
   </header>
 
   <main>
     <!-- Accueil -->
     <section id="s-accueil" class="actif">
+      <!-- Visible tant qu'elle n'a pas ouvert l'aide une fois. Ensuite le
+           bouton du haut suffit, et l'écran se libère. -->
+      <div class="carte" id="carte-bienvenue" style="display:none;border-left:4px solid var(--orange);">
+        <div class="section-titre">Tirez le meilleur de votre boutique</div>
+        <p style="color:var(--muted);font-size:15px;margin-bottom:16px;">
+          Quelques minutes pour comprendre ce que cet outil peut faire pour vos
+          ventes, et les trois gestes qui changent tout.
+        </p>
+        <button class="btn" onclick="ouvrirAide('profit')">Voir comment faire</button>
+      </div>
+
       <div class="chiffres" id="chiffres-jour"></div>
       <div class="carte">
         <div class="section-titre">À traiter maintenant</div>
@@ -356,6 +410,18 @@ nav svg { width:22px; height:22px; }
   </div>
 </div>
 
+<!-- Aide -->
+<div class="modale" id="modale-aide">
+  <div class="modale-corps">
+    <div class="modale-titre">
+      <h3>Comment ça marche</h3>
+      <button class="fermer" onclick="fermer('modale-aide')" aria-label="Fermer">×</button>
+    </div>
+    <div class="aide-onglets" id="aide-onglets"></div>
+    <div class="aide-corps" id="aide-corps"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -467,6 +533,8 @@ function onglet(nom, btn) {
   document.getElementById('s-' + nom).classList.add('actif');
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('actif'));
   btn.classList.add('actif');
+  // Retenu pour que le bouton d'aide ouvre le chapitre de l'écran courant.
+  ongletActuel = nom;
   window.scrollTo(0, 0);
 }
 
@@ -508,6 +576,9 @@ function rendreAccueil() {
      parce que personne ne les a saisis, pas parce que les farines manquent.
      Afficher huit alertes rouges à la première ouverture ferait crier l'outil
      sans rien dire, et lui apprendrait à ignorer ses alertes. */
+  document.getElementById('carte-bienvenue').style.display =
+    localStorage.getItem('creal-aide-vue') ? 'none' : 'block';
+
   const enRoute = stockEnRoute();
   document.getElementById('carte-demarrage').style.display = enRoute ? 'none' : 'block';
 
@@ -847,6 +918,102 @@ function rendreVentes() {
             <span>${e.qty} sachet${e.qty > 1 ? 's' : ''} vendu${e.qty > 1 ? 's' : ''}</span></div>
           <b>${fmt(e.ca)} F</b>
         </div>`).join('');
+}
+
+/* ── Aide intégrée ─────────────────────────────────────────────────────────
+   Le mode d'emploi vit DANS l'outil, et s'ouvre sur le chapitre correspondant
+   à l'écran où se trouve Kezey. Un guide rangé sur une autre page n'est jamais
+   lu au moment où la question se pose.
+
+   Un chapitre répond à « comment je fais », le dernier répond à « qu'est-ce que
+   j'en tire ». C'est celui-là qui compte : savoir appuyer sur les boutons ne
+   fait vendre personne. */
+const AIDE = {
+  accueil: { titre: 'Accueil', html: `
+    <h4>Ce que vous voyez en arrivant</h4>
+    <p>Trois chiffres du jour : combien de commandes, combien d'argent, et combien il reste à préparer. C'est votre point du matin, en dix secondes.</p>
+    <p>En dessous, les commandes qui attendent, l'argent qu'on vous doit encore, et les farines qui commencent à manquer. Tout ce qui appelle une action de votre part est sur cet écran.</p>
+    <div class="aide-note">Vous pouvez appuyer sur n'importe quelle ligne : elle vous emmène directement là où l'on agit.</div>` },
+
+  commandes: { titre: 'Commandes', html: `
+    <h4>Quand une cliente commande</h4>
+    <p>Sa commande arrive ici toute seule, avec ce qu'elle a pris, son adresse et son numéro. Vous n'avez rien à recopier.</p>
+    <div class="pas"><span class="pas-num">1</span><span>Ouvrez la commande pour voir le détail</span></div>
+    <div class="pas"><span class="pas-num">2</span><span>Appuyez sur <strong>Écrire à la cliente</strong> pour confirmer avec elle les frais de livraison</span></div>
+    <div class="pas"><span class="pas-num">3</span><span>Une fois le colis prêt, appuyez sur <strong>C'est préparé</strong></span></div>
+    <h4>Les commandes pas encore payées</h4>
+    <p>Une cliente qui a choisi de payer à la réception vous doit encore de l'argent. Sa commande porte l'étiquette <strong>Argent à prendre</strong>, et le total vous attend sur la page d'accueil.</p>
+    <p>Quand elle vous a réglée, ouvrez sa commande et appuyez sur <strong>J'ai reçu l'argent</strong>.</p>
+    <div class="aide-note">Préparer et encaisser sont deux gestes séparés, exprès : vous pouvez préparer le matin et être payée le soir.</div>` },
+
+  catalogue: { titre: 'Farines', html: `
+    <h4>Vous décidez de ce que vos clientes voient</h4>
+    <p>Changez un prix, corrigez un texte, ajoutez une farine. <strong>Ce que vous modifiez ici apparaît tout de suite dans la boutique</strong>, il n'y a rien à valider ni personne à prévenir.</p>
+    <h4>Retirer une farine sans la perdre</h4>
+    <p>Sur la ligne « Visible dans la boutique », choisissez « Non, je la retire ». Elle disparaît de la boutique et vous la remettez quand vous voulez, avec tout son texte intact.</p>
+    <div class="aide-note">La phrase courte s'affiche sur la vignette, le texte long apparaît quand la cliente appuie sur la farine. C'est là qu'on donne envie.</div>` },
+
+  stock: { titre: 'Stock', html: `
+    <h4>La première fois</h4>
+    <p>Appuyez sur chaque farine et dites combien de sachets vous en avez. C'est à faire une seule fois.</p>
+    <h4>Ensuite, ça se met à jour tout seul</h4>
+    <p>Chaque fois que vous marquez une commande comme préparée, le stock baisse de ce qui a été vendu. Vous n'avez rien à retirer à la main.</p>
+    <div class="pas"><span class="pas-num">+</span><span>Après une production, appuyez sur la farine et ajoutez les sachets</span></div>
+    <div class="pas"><span class="pas-num">!</span><span>Réglez « M'alerter en dessous de » pour être prévenue avant la rupture</span></div>
+    <div class="aide-note">Si vous vendez au marché ou en direct, corrigez la quantité à la main : le stock ne connaît que les commandes passées par la boutique.</div>` },
+
+  ventes: { titre: 'Ventes', html: `
+    <h4>Vendu n'est pas encaissé</h4>
+    <p>Le premier chiffre dit ce que vous avez vendu. Si un quatrième chiffre apparaît en rouge, c'est de l'argent qui vous appartient et que vous n'avez pas encore reçu.</p>
+    <h4>Ce qui se vend le mieux</h4>
+    <p>Le classement vous dit quelle farine part le plus. <strong>C'est cette page qui décide de votre prochaine production</strong>, pas votre impression.</p>
+    <h4>Le paiement à la livraison</h4>
+    <p>Vous pouvez le proposer ou le retirer quand vous voulez, en haut de cette page. Si trop de clientes tardent à payer, coupez-le : il disparaît aussitôt de la boutique.</p>` },
+
+  profit: { titre: 'Vendre plus', html: `
+    <h4>Partagez le lien, pas des photos</h4>
+    <p>Envoyez <strong>boutiquecreal.com</strong> dans vos groupes WhatsApp, en légende de vos publications, dans votre statut. Une cliente qui ouvre le lien voit tout votre catalogue, à jour, avec les prix, à toute heure. Vous n'envoyez plus vos photos une par une.</p>
+
+    <h4>Zoé travaille pendant que vous dormez</h4>
+    <p>Une maman qui hésite à 23 h reçoit une réponse à 23 h. Zoé connaît vos farines, vos prix et les âges recommandés, et elle n'invente jamais rien : si elle ne sait pas, elle dit qu'elle vérifie avec vous.</p>
+    <p>Regardez de temps en temps ce qu'on lui demande, ce sont les vraies questions de vos clientes.</p>
+
+    <h4>Trois gestes qui font la différence</h4>
+    <div class="pas"><span class="pas-num">1</span><span><strong>Répondez vite aux commandes.</strong> Une cliente qui attend une réponse va voir ailleurs. La pastille rouge est là pour ça.</span></div>
+    <div class="pas"><span class="pas-num">2</span><span><strong>Ne laissez jamais une farine à zéro sans la retirer.</strong> Une cliente qui commande un produit indisponible ne revient pas deux fois.</span></div>
+    <div class="pas"><span class="pas-num">3</span><span><strong>Soignez le texte long de vos farines.</strong> C'est lui qui rassure une maman qui ne vous connaît pas encore.</span></div>
+
+    <h4>Regardez vos chiffres une fois par semaine</h4>
+    <p>Cinq minutes le dimanche suffisent : quelle farine part le plus, combien vous avez vendu, ce qu'on vous doit encore. Vous produisez alors ce qui se vend, au lieu de deviner.</p>
+
+    <div class="aide-note">Une question, un doute, quelque chose qui ne marche pas : écrivez à Mac Arthur en disant ce que vous étiez en train de faire. C'est ce qui aide le plus à corriger vite.</div>` },
+};
+
+let aideChapitre = 'accueil';
+let ongletActuel = 'accueil';
+
+/* L'aide s'ouvre sur le chapitre de l'écran où l'on se trouve. */
+function ouvrirAide(chapitre) {
+  aideChapitre = chapitre || ongletActuel || 'accueil';
+  rendreAide();
+  ouvrir('modale-aide');
+  // L'invitation de l'accueil disparaît une fois l'aide ouverte : elle a servi.
+  localStorage.setItem('creal-aide-vue', '1');
+  const c = document.getElementById('carte-bienvenue');
+  if (c) c.style.display = 'none';
+}
+
+function rendreAide() {
+  document.getElementById('aide-onglets').innerHTML = Object.entries(AIDE)
+    .map(([cle, c]) => `<button class="aide-onglet${cle === aideChapitre ? ' actif' : ''}" onclick="allerAide('${cle}')">${c.titre}</button>`)
+    .join('');
+  document.getElementById('aide-corps').innerHTML = AIDE[aideChapitre].html;
+  document.getElementById('aide-corps').scrollIntoView?.({ block: 'nearest' });
+}
+
+function allerAide(cle) {
+  aideChapitre = cle;
+  rendreAide();
 }
 
 /* ── Utilitaires ───────────────────────────────────────────────────────── */
