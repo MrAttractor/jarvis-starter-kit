@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=2026-08-10">
+<link rel="stylesheet" href="assets/styles.css?v=2026-08-11c">
 </head>
 <body data-page="contact">
 
@@ -90,7 +90,7 @@
 
           <div class="encart" style="margin-top:24px">
             <h3>Vous êtes journaliste ?</h3>
-            <p>Le dossier de presse et les visuels haute définition sont disponibles sur demande. <span class="afournir">Dossier de presse à fournir.</span></p>
+            <p>Le dossier de presse et les visuels haute définition sont disponibles sur demande. Écrivez-nous en choisissant « Presse » dans le formulaire ci-contre.</p>
           </div>
         </div>
 
@@ -125,7 +125,83 @@
         </article>
       </div>
 
-      <div data-slot="jotform-partenaire"></div>
+      <form id="form-partenaire" class="form-partenaire" novalidate>
+
+        <fieldset>
+          <legend>Votre magasin</legend>
+          <div class="fiche-grille deux">
+            <div class="champ">
+              <label for="p-enseigne">Nom du magasin ou de l'enseigne <span class="oblig">*</span></label>
+              <input type="text" id="p-enseigne" name="enseigne" required>
+            </div>
+            <div class="champ" data-choix="typesCommerce" data-nom="type_commerce" data-autre="1">
+              <label for="p-type">Type de commerce</label>
+            </div>
+            <div class="champ" style="grid-column:1 / -1">
+              <label for="p-adresse">Adresse du magasin <span class="oblig">*</span></label>
+              <input type="text" id="p-adresse" name="adresse" autocomplete="street-address" required>
+            </div>
+            <div class="champ" data-choix="frequentations" data-nom="frequentation">
+              <label for="p-freq">Fréquentation moyenne du magasin</label>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Vous joindre</legend>
+          <div class="fiche-grille deux">
+            <div class="champ">
+              <label for="p-nom">Vos nom et prénom <span class="oblig">*</span></label>
+              <input type="text" id="p-nom" name="contact_nom" autocomplete="name" required>
+            </div>
+            <div class="champ">
+              <label for="p-email">Votre email <span class="oblig">*</span></label>
+              <input type="email" id="p-email" name="contact_email" autocomplete="email" required>
+            </div>
+            <div class="champ">
+              <label for="p-tel">Votre téléphone</label>
+              <input type="tel" id="p-tel" name="contact_tel" autocomplete="tel">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Le projet</legend>
+          <div class="champ" data-cases="formats" data-nom="formats">
+            <span class="faux-label">Format d'atelier envisagé</span>
+          </div>
+          <div class="fiche-grille deux">
+            <div class="champ" data-choix="frequences" data-nom="frequence">
+              <label for="p-frequence">Fréquence souhaitée</label>
+            </div>
+            <div class="champ">
+              <label for="p-dates">Date ou période souhaitée</label>
+              <input type="text" id="p-dates" name="dates" placeholder="Courant octobre, un samedi de préférence">
+            </div>
+          </div>
+          <div class="champ">
+            <label for="p-themes">Des thèmes qui feraient sens avec vos produits</label>
+            <textarea id="p-themes" name="themes" placeholder="Ce que vous vendez, ce qui se perd le plus, ce que vos clients demandent…"></textarea>
+          </div>
+          <div class="champ" data-cases="apports" data-nom="apports" data-autre="1">
+            <span class="faux-label">Ce que vous pouvez apporter au partenariat</span>
+          </div>
+          <div class="fiche-grille deux">
+            <div class="champ">
+              <label for="p-budget">Budget ou modèle envisagé</label>
+              <input type="text" id="p-budget" name="budget">
+            </div>
+            <div class="champ">
+              <label for="p-origine">Comment avez-vous connu NabyCook ?</label>
+              <input type="text" id="p-origine" name="origine">
+            </div>
+          </div>
+        </fieldset>
+
+        <button class="bouton bouton-1" type="submit" id="p-envoyer">Envoyer ma demande</button>
+        <p class="aide" id="p-etat" hidden></p>
+        <p class="aide">Les champs marqués d'une étoile sont nécessaires pour vous répondre. Vos coordonnées servent uniquement à traiter votre demande, elles ne sont ni revendues ni transmises.</p>
+      </form>
     </div>
   </section>
 
@@ -145,7 +221,7 @@
 
 <div data-slot="pied"></div>
 
-<script src="assets/config.js?v=2026-08-10"></script>
-<script src="assets/site.js?v=2026-08-10"></script>
+<script src="assets/config.js?v=2026-08-11c"></script>
+<script src="assets/site.js?v=2026-08-11c"></script>
 </body>
 </html>

@@ -24,12 +24,27 @@ const NABY = {
                            dans les 5 pages, il n'est PAS piloté ici)
      adhesions  : true  => les boutons HelloAsso sont actifs
      instagram  : true  => le renvoi vers le compte Instagram est actif
-     newsletter : true  => le formulaire Brevo est intégré
+     newsletter : sans effet depuis le 11/08/2026, le formulaire de la
+                  lettre est maison et toujours affiché
   --------------------------------------------------------- */
   maquette: false,
   adhesions: true,
   instagram: true,
-  newsletter: false,
+  newsletter: true,
+
+  /* --- Espace de pilotage de Nabintou ----------------------
+     Le site lit ces tables pour AFFICHER, jamais pour ecrire.
+     La cle ci-dessous est la cle publique du projet : elle est
+     faite pour vivre dans une page, elle ne donne aucun droit
+     d'ecriture. Toute modification passe par sa connexion.
+
+     Si la base est injoignable, le site garde les valeurs de ce
+     fichier. Une panne de base ne vide jamais le site.
+  --------------------------------------------------------- */
+  base: {
+    url: 'https://lgdgbrivnhgeupqhkckd.supabase.co',
+    cle: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk',
+  },
 
   /* --- Identité ------------------------------------------- */
   nom: 'NabyCook',
@@ -63,14 +78,61 @@ const NABY = {
     helloassoAssociation: 'https://www.helloasso.com/associations/nabycook',
     helloassoAdhesion: 'https://www.helloasso.com/associations/nabycook/adhesions/nabycook-r-1',
     helloassoDon: 'https://www.helloasso.com/associations/nabycook/adhesions/brigade-du-coeur',
-    brevoFormulaire: A_FOURNIR,   // URL du formulaire d'inscription Brevo
   },
 
-  /* --- Formulaires Jotform (IDs déjà fournis) ------------- */
+  /* --- Formulaire partenaire magasin ----------------------
+     Les 14 questions viennent du Jotform « Devenir partenaire
+     Nabycook », repris tel quel puis reconstruit dans le site
+     le 11/08/2026 : le formulaire est désormais à la charte,
+     et les réponses arrivent dans son espace, plus chez un tiers.
+
+     ATTENTION : ces libellés sont AUSSI écrits dans la fonction
+     `nb-demande`, qui refuse tout ce qui n'est pas dans la liste.
+     Modifier un libellé ici sans le modifier là-bas ferait
+     disparaître la réponse en silence. Les deux vont ensemble.
+  --------------------------------------------------------- */
+  formulairePartenaire: {
+    fonction: 'nb-demande',
+    typesCommerce: [
+      'Épicerie fine',
+      'Magasin bio',
+      'Primeur / marché',
+      'Concept store',
+      'Ferme urbaine / point de vente producteur',
+    ],
+    frequentations: [
+      '< 50 clients/jour',
+      '50-150 clients/jour',
+      '150-300 clients/jour',
+      '> 300 clients/jour',
+    ],
+    formats: [
+      'Atelier démo courte durée (30-45min)',
+      'Atelier participatif (1h-1h30)',
+      'Dégustation commentée',
+      'Animation récurrente (hebdo/mensuel)',
+      'Événement ponctuel ou lancement produit',
+    ],
+    frequences: [
+      'Ponctuel (test)',
+      'Mensuel',
+      'Hebdomadaire',
+      'À définir ensemble',
+    ],
+    apports: [
+      'Mise à disposition d\'un espace',
+      'Visibilité (réseaux sociaux, newsletter, vitrine)',
+      'Produits offerts pour les ateliers',
+      'Rémunération / commission',
+    ],
+  },
+
+  /* --- Formulaires Jotform restants -----------------------
+     Phase 2, pas encore utilisés sur le site.
+  --------------------------------------------------------- */
   jotform: {
-    partenaire: '261936933539066', // devenir partenaire magasin
-    atelierRse: '261937095223056', // phase 2
-    devisTraiteur: '261936674164062', // phase 2
+    atelierRse: '261937095223056',
+    devisTraiteur: '261936674164062',
   },
 
   /* --- Distinctions ---------------------------------------

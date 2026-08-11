@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mon espace — NabyCook</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/logo-nabycook.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css?v=2026-08-11c">
+<link rel="stylesheet" href="assets/admin.css?v=2026-08-11c">
+</head>
+<body class="admin">
+
+<!-- ============ CONNEXION ============ -->
+<div id="ecran-connexion" class="connexion">
+  <form id="form-connexion" class="carte-connexion">
+    <img src="assets/logo-nabycook.png" alt="NabyCook" width="72" height="72">
+    <h1>Mon espace</h1>
+    <p class="aide">Connectez-vous pour mettre votre site à jour.</p>
+    <div class="champ">
+      <label for="email">Votre email</label>
+      <input type="email" id="email" autocomplete="username" required>
+    </div>
+    <div class="champ">
+      <label for="mdp">Votre mot de passe</label>
+      <input type="password" id="mdp" autocomplete="current-password" required>
+    </div>
+    <button class="bouton bouton-1" type="submit">Entrer</button>
+    <p class="erreur" id="erreur-connexion" hidden></p>
+    <p class="aide"><a href="index.html">Retour au site</a></p>
+  </form>
+</div>
+
+<!-- ============ ESPACE ============ -->
+<div id="ecran-espace" hidden>
+
+  <header class="admin-tete">
+    <div class="wrap admin-tete-inner">
+      <a class="marque" href="index.html">
+        <img src="assets/logo-nabycook.png" alt="NabyCook" width="44" height="44">
+        <span><span class="nom">Mon espace</span><span class="sous" id="qui"></span></span>
+      </a>
+      <div class="admin-actions">
+        <a class="bouton bouton-2" href="index.html" target="_blank" rel="noopener">Voir mon site</a>
+        <button class="bouton bouton-2" type="button" id="deconnexion">Me déconnecter</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="onglets" aria-label="Sections">
+    <div class="wrap onglets-inner">
+      <button type="button" data-onglet="demandes" class="actif">Mes demandes <span class="pastille" id="pastille-demandes" hidden></span></button>
+      <button type="button" data-onglet="agenda">En ce moment</button>
+      <button type="button" data-onglet="impact">Mes chiffres</button>
+      <button type="button" data-onglet="historique">Mon parcours</button>
+      <button type="button" data-onglet="partenaires">Partenaires</button>
+      <button type="button" data-onglet="temoignages">Témoignages</button>
+      <button type="button" data-onglet="presse">Presse</button>
+      <button type="button" data-onglet="lettre">Ma lettre</button>
+    </div>
+  </nav>
+
+  <main class="wrap admin-corps">
+
+    <p class="bandeau-info">
+      Tout ce que vous modifiez ici apparaît sur le site en quelques secondes.
+      Rien d'autre n'est modifiable depuis cet écran : les textes de présentation
+      restent fixes, pour qu'une page ne puisse pas se casser par accident.
+    </p>
+
+    <!-- ---------- DEMANDES DE PARTENARIAT ---------- -->
+    <section data-vue="demandes">
+      <h2>Les magasins qui vous écrivent</h2>
+      <p class="aide">Chaque demande envoyée depuis la page Contact arrive ici. Rien n'est perdu, et personne d'autre que vous ne les voit.</p>
+      <div id="liste-demandes" class="liste"></div>
+    </section>
+
+    <!-- ---------- AGENDA ---------- -->
+    <section data-vue="agenda" hidden>
+      <h2>Vos prochains rendez-vous</h2>
+      <p class="aide">Ils s'affichent sur la page « En ce moment ». Un rendez-vous passé ne disparaît pas tout seul, pensez à le retirer ou à le dépublier.</p>
+      <div id="liste-agenda" class="liste"></div>
+      <button class="bouton bouton-1" type="button" data-ajout="agenda">Ajouter un rendez-vous</button>
+    </section>
+
+    <!-- ---------- IMPACT ---------- -->
+    <section data-vue="impact" hidden>
+      <h2>Vos chiffres</h2>
+      <p class="aide">Ils s'affichent sur l'accueil et sur la page de l'association. N'écrivez jamais un chiffre que vous ne pouvez pas justifier.</p>
+      <div class="champ" style="max-width:320px">
+        <label for="impact-date">Ces chiffres sont arrêtés au</label>
+        <input type="text" id="impact-date" placeholder="30 juin 2026">
+      </div>
+      <div id="liste-impact" class="liste"></div>
+      <button class="bouton bouton-1" type="button" id="enregistrer-impact">Enregistrer mes chiffres</button>
+    </section>
+
+    <!-- ---------- HISTORIQUE ---------- -->
+    <section data-vue="historique" hidden>
+      <h2>Les étapes de l'association</h2>
+      <p class="aide">Elles s'affichent sur la page « L'Univers NabyCook », sous forme de chemin. Une ligne par étape suffit.</p>
+      <div id="liste-historique" class="liste"></div>
+      <button class="bouton bouton-1" type="button" data-ajout="historique">Ajouter une étape</button>
+    </section>
+
+    <!-- ---------- PARTENAIRES ---------- -->
+    <section data-vue="partenaires" hidden>
+      <h2>Vos partenaires</h2>
+      <p class="aide">N'affichez que les structures qui vous ont donné leur accord. Sans logo, c'est le nom qui s'affiche, et c'est très bien.</p>
+      <div id="liste-partenaires" class="liste"></div>
+      <button class="bouton bouton-1" type="button" data-ajout="partenaires">Ajouter un partenaire</button>
+    </section>
+
+    <!-- ---------- TEMOIGNAGES ---------- -->
+    <section data-vue="temoignages" hidden>
+      <h2>Les témoignages</h2>
+      <p class="aide">Ils s'affichent sur la page Adhérer. Demandez toujours l'accord de la personne avant de publier ses mots.</p>
+      <div id="liste-temoignages" class="liste"></div>
+      <button class="bouton bouton-1" type="button" data-ajout="temoignages">Ajouter un témoignage</button>
+    </section>
+
+    <!-- ---------- PRESSE ---------- -->
+    <section data-vue="presse" hidden>
+      <h2>La revue de presse</h2>
+      <p class="aide">Elle s'affiche sur la page de l'association. Mettez la phrase que vous voulez voir citée, pas l'article entier.</p>
+      <div id="liste-presse" class="liste"></div>
+      <button class="bouton bouton-1" type="button" data-ajout="presse">Ajouter une parution</button>
+    </section>
+
+    <!-- ---------- ABONNES A LA LETTRE ---------- -->
+    <section data-vue="lettre" hidden>
+      <h2>Les personnes inscrites à votre lettre</h2>
+      <p class="aide">Elles se sont inscrites depuis votre site. Le bouton ci-dessous prépare un fichier que vous pouvez ouvrir dans un tableur, ou importer dans l'outil d'envoi de votre choix.</p>
+      <div class="fiche-pied" style="border:0;padding:0;margin-bottom:24px">
+        <button class="bouton bouton-1" type="button" id="exporter-lettre">Télécharger la liste</button>
+      </div>
+      <div id="liste-lettre" class="liste"></div>
+    </section>
+
+  </main>
+
+  <p class="etat" id="etat" hidden></p>
+</div>
+
+<script src="assets/config.js?v=2026-08-11c"></script>
+<script src="assets/admin.js?v=2026-08-11c"></script>
+</body>
+</html>

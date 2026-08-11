@@ -350,6 +350,47 @@ section.serre { padding: 48px 0; }
 }
 .chemin h3 { margin-bottom: 4px; }
 
+/* ---------- 12 ter. Formulaire partenaire ---------- */
+.form-partenaire {
+  background: var(--carte); border: 1px solid var(--sable);
+  border-radius: var(--r-l); padding: 32px 24px;
+}
+.form-partenaire fieldset { border: 0; margin-bottom: 32px; }
+.form-partenaire legend {
+  font-family: var(--serif); font-size: 22px; color: var(--vert-profond);
+  margin-bottom: 20px; padding: 0;
+}
+.form-partenaire .fiche-grille { display: grid; gap: 0 24px; grid-template-columns: 1fr; }
+@media (min-width: 720px) {
+  .form-partenaire .fiche-grille.deux { grid-template-columns: 1fr 1fr; }
+}
+.oblig { color: var(--terracotta); }
+.faux-label {
+  display: block; font-size: 15px; font-weight: 600;
+  color: var(--vert-profond); margin-bottom: 8px;
+}
+.cases { display: grid; gap: 8px; }
+.case {
+  display: flex; align-items: flex-start; gap: 12px;
+  min-height: 44px; padding: 10px 14px; cursor: pointer;
+  border: 1px solid var(--sable); border-radius: var(--r-s);
+  background: var(--creme); font-size: 16px; font-weight: 400;
+}
+.case:hover { border-color: var(--vert-feuille); }
+.case input { width: 20px; height: 20px; margin-top: 2px; flex: none; accent-color: var(--vert-feuille); }
+.form-partenaire button[type="submit"] { width: 100%; justify-content: center; }
+.form-partenaire button[disabled] { opacity: .6; cursor: not-allowed; }
+
+/* ---------- 12 quater. Lettre d'information ---------- */
+.form-lettre {
+  background: var(--carte); border: 1px solid var(--sable);
+  border-radius: var(--r-l); padding: 32px 24px;
+}
+.lettre-grille { display: grid; gap: 0 16px; grid-template-columns: 1fr; }
+@media (min-width: 620px) { .lettre-grille { grid-template-columns: 1fr 1fr; } }
+.form-lettre button { width: 100%; justify-content: center; }
+.form-lettre button[disabled] { opacity: .6; cursor: not-allowed; }
+
 /* ---------- 13. Temoignages ---------- */
 .temoin { background: var(--carte); border: 1px solid var(--sable); border-radius: var(--r-m); padding: 32px 24px; }
 .temoin .q { font-family: var(--serif); font-size: 20px; color: var(--vert-feuille); line-height: 1.45; margin-bottom: 16px; }

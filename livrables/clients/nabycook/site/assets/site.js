@@ -25,6 +25,22 @@
     return v === null || v === undefined || v === '' || (Array.isArray(v) && v.length === 0);
   };
 
+  /* Masque la section entiere qui porte cet emplacement.
+     Sert des que le site est public : un visiteur ne doit pas voir
+     nos encadres « a fournir », qui sont des notes de chantier.
+     Rien n'est supprime, la section reapparait des que Nabintou
+     remplit la rubrique depuis son espace. */
+  var masquerSection = function (cible) {
+    var s = cible.closest ? cible.closest('section') : null;
+    if (s) { s.hidden = true; return; }
+    cible.hidden = true;
+  };
+  var montrerSection = function (cible) {
+    var s = cible.closest ? cible.closest('section') : null;
+    if (s) s.hidden = false;
+    cible.hidden = false;
+  };
+
   var q = function (sel, racine) { return (racine || document).querySelector(sel); };
   var qa = function (sel, racine) { return Array.prototype.slice.call((racine || document).querySelectorAll(sel)); };
   var slot = function (nom) { return q('[data-slot="' + nom + '"]'); };
@@ -210,15 +226,8 @@
   function partenaires() {
     var cible = slot('partenaires');
     if (!cible) return;
-    if (vide(NABY.partenaires)) {
-      cible.innerHTML =
-        '<div class="logos">' +
-          [1, 2, 3, 4, 5].map(function () {
-            return '<div class="logo-slot">Logo partenaire<br><span class="afournir">à fournir</span></div>';
-          }).join('') +
-        '</div>';
-      return;
-    }
+    if (vide(NABY.partenaires)) { masquerSection(cible); return; }
+    montrerSection(cible);
     // Construit a la main : un logo declare mais pas encore depose doit
     // retomber sur le nom du partenaire, jamais sur une image cassee.
     var boite = document.createElement('div');
@@ -228,8 +237,12 @@
       var slotP = document.createElement('div');
       slotP.className = 'logo-slot';
 
+      // Sans logo, on affiche le nom dans un cadre plein : c'est un
+      // parti pris assume, pas un emplacement en attente. Le pointille
+      // disait au visiteur qu'il manquait quelque chose.
       var nom = function () {
-        slotP.style.borderStyle = 'dashed';
+        slotP.style.borderStyle = 'solid';
+        slotP.style.fontWeight = '600';
         slotP.textContent = p.nom;
       };
 
@@ -261,12 +274,19 @@
     var cible = slot('agenda');
     if (!cible) return;
 
+    // Sans date au programme, on le dit simplement au visiteur et on
+    // l'invite a ecrire, plutot que d'afficher une page vide. C'est la
+    // seule rubrique qui garde un message quand elle n'a rien : la page
+    // existe dans le menu, elle ne peut pas etre blanche.
     if (vide(NABY.agenda)) {
       cible.innerHTML =
-        '<div class="bloc-afournir">' +
-          '<span class="etiq-afournir">À fournir</span>' +
-          '<h3>Les prochains rendez-vous</h3>' +
-          '<p class="lead" style="margin-bottom:0">Trois à cinq dates suffisent, et pour chacune : le jour, le lieu, le type de rendez-vous (atelier, forum, marché, événement partenaire) et, si vous le voulez, une phrase de présentation. La liste se tient à la main, donc une date passée reste affichée tant qu\'on ne la retire pas.</p>' +
+        '<div class="centre">' +
+          '<p class="lead">Les prochaines dates sont en cours de calage. Elles seront annoncées ici, et sur nos réseaux.</p>' +
+          '<div class="boutons" style="justify-content:center;margin-top:24px">' +
+            '<a class="bouton bouton-1" href="contact.html">Nous proposer une date</a>' +
+            (vide(NABY.liens.instagram) ? '' :
+              '<a class="bouton bouton-2" href="' + esc(NABY.liens.instagram) + '" target="_blank" rel="noopener">Suivre sur Instagram</a>') +
+          '</div>' +
         '</div>';
       return;
     }
@@ -325,15 +345,8 @@
     var cible = slot('historique');
     if (!cible) return;
 
-    if (vide(NABY.historique)) {
-      cible.innerHTML =
-        '<div class="bloc-afournir">' +
-          '<span class="etiq-afournir">À fournir</span>' +
-          '<h3>Les étapes de l\'association</h3>' +
-          '<p class="lead" style="margin-bottom:0">Les dates qui comptent depuis 2023 : les premiers ateliers, les premiers partenariats, la déclaration en préfecture, les accompagnements obtenus. Une ligne par étape suffit. Rien n\'est reconstitué ici sans vous.</p>' +
-        '</div>';
-      return;
-    }
+    if (vide(NABY.historique)) { masquerSection(cible); return; }
+    montrerSection(cible);
 
     cible.innerHTML =
       '<ol class="chemin">' +
@@ -352,15 +365,8 @@
   function presse() {
     var cible = slot('presse');
     if (!cible) return;
-    if (vide(NABY.presse)) {
-      cible.innerHTML =
-        '<div class="bloc-afournir">' +
-          '<span class="etiq-afournir">À fournir</span>' +
-          '<h3>Revue de presse</h3>' +
-          '<p class="lead" style="margin-bottom:0">Articles, passages radio ou télévision, publications des incubateurs : envoyez la source, la date et le lien. Chaque parution sera affichée ici avec sa citation.</p>' +
-        '</div>';
-      return;
-    }
+    if (vide(NABY.presse)) { masquerSection(cible); return; }
+    montrerSection(cible);
     cible.innerHTML =
       '<ul class="presse">' +
         NABY.presse.map(function (a) {
@@ -375,15 +381,8 @@
   function temoignages() {
     var cible = slot('temoignages');
     if (!cible) return;
-    if (vide(NABY.temoignages)) {
-      cible.innerHTML =
-        '<div class="bloc-afournir">' +
-          '<span class="etiq-afournir">À fournir</span>' +
-          '<h3>Ce qu\'en disent les participants</h3>' +
-          '<p class="lead" style="margin-bottom:0">Trois témoignages suffisent : le texte, le prénom, et en quelle qualité la personne parle (participante, entreprise, partenaire). Rien n\'est inventé ici.</p>' +
-        '</div>';
-      return;
-    }
+    if (vide(NABY.temoignages)) { masquerSection(cible); return; }
+    montrerSection(cible);
     cible.innerHTML =
       '<div class="grille grille-3">' +
         NABY.temoignages.map(function (t) {
@@ -512,21 +511,282 @@
           '</div>' +
         '</div>';
     }
+    // Lettre d'information : formulaire maison, les adresses arrivent dans
+    // l'espace de Nabintou. Brevo a ete ecarte le 11/08/2026, sa cle d'API
+    // aurait ete lisible dans la page par n'importe quel visiteur.
     var nl = slot('newsletter');
-    if (nl && !(NABY.newsletter && !vide(NABY.liens.brevoFormulaire))) {
-      nl.innerHTML =
-        '<div class="embed-slot">' +
-          '<h4>Le formulaire de newsletter s\'affichera ici</h4>' +
-          '<p>Le compte Brevo est déjà en place. Il manque l\'adresse du formulaire d\'inscription pour le brancher aux couleurs du site.</p>' +
-          '<span class="etiq-afournir">Formulaire Brevo à fournir</span>' +
-        '</div>';
-    } else if (nl) {
-      nl.innerHTML = '<iframe src="' + esc(NABY.liens.brevoFormulaire) + '" title="Inscription à la lettre NabyCook" style="width:100%;height:420px;border:0;border-radius:18px"></iframe>';
+    if (nl) {
+      var f = document.createElement('form');
+      f.className = 'form-lettre';
+
+      var g = document.createElement('div');
+      g.className = 'lettre-grille';
+
+      var cp = document.createElement('div');
+      cp.className = 'champ';
+      var lp = document.createElement('label');
+      lp.setAttribute('for', 'l-prenom');
+      lp.textContent = 'Votre prénom';
+      var ip = document.createElement('input');
+      ip.type = 'text';
+      ip.id = 'l-prenom';
+      ip.autocomplete = 'given-name';
+      cp.appendChild(lp); cp.appendChild(ip);
+
+      var ce = document.createElement('div');
+      ce.className = 'champ';
+      var le = document.createElement('label');
+      le.setAttribute('for', 'l-email');
+      le.textContent = 'Votre email';
+      var ie = document.createElement('input');
+      ie.type = 'email';
+      ie.id = 'l-email';
+      ie.autocomplete = 'email';
+      ie.required = true;
+      ce.appendChild(le); ce.appendChild(ie);
+
+      g.appendChild(cp); g.appendChild(ce);
+      f.appendChild(g);
+
+      var b = document.createElement('button');
+      b.type = 'submit';
+      b.className = 'bouton bouton-1';
+      b.textContent = 'Je m\'inscris';
+      f.appendChild(b);
+
+      var msg = document.createElement('p');
+      msg.className = 'aide';
+      msg.hidden = true;
+      f.appendChild(msg);
+
+      var mentions = document.createElement('p');
+      mentions.className = 'aide';
+      mentions.textContent = 'Votre adresse sert uniquement à recevoir la lettre de NabyCook. '
+        + 'Elle n\'est ni revendue ni transmise, et vous pouvez demander à être retiré à tout moment.';
+      f.appendChild(mentions);
+
+      f.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var email = ie.value.trim();
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+          msg.textContent = 'Cette adresse email ne semble pas valide.';
+          msg.style.color = 'var(--terracotta)';
+          msg.hidden = false;
+          return;
+        }
+        b.disabled = true;
+        b.textContent = 'Inscription…';
+        fetch(NABY.base.url + '/functions/v1/nb-lettre', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email,
+            prenom: ip.value.trim() || null,
+            source: document.body.getAttribute('data-page'),
+          }),
+        }).then(function (r) { return r.json(); })
+          .then(function (j) {
+            if (j.ok) {
+              f.reset();
+              msg.textContent = 'C\'est noté, merci. Vous recevrez la prochaine lettre.';
+              msg.style.color = 'var(--vert-feuille)';
+              b.textContent = 'Inscription enregistrée';
+            } else {
+              msg.textContent = j.erreur || 'L\'inscription n\'a pas abouti.';
+              msg.style.color = 'var(--terracotta)';
+              b.disabled = false;
+              b.textContent = 'Je m\'inscris';
+            }
+            msg.hidden = false;
+          })
+          .catch(function () {
+            msg.textContent = 'L\'inscription a échoué. Vérifiez votre connexion.';
+            msg.style.color = 'var(--terracotta)';
+            msg.hidden = false;
+            b.disabled = false;
+            b.textContent = 'Je m\'inscris';
+          });
+      });
+
+      nl.innerHTML = '';
+      nl.appendChild(f);
     }
-    var jp = slot('jotform-partenaire');
-    if (jp) {
-      jp.innerHTML = '<iframe src="https://form.jotform.com/' + esc(NABY.jotform.partenaire) + '" title="Formulaire partenaire magasin" style="width:100%;min-height:760px;border:0;border-radius:18px;background:#FFFDF7" loading="lazy"></iframe>';
+  }
+
+  /* ---------- Formulaire partenaire magasin ----------
+     Reprend les 14 questions du Jotform d'origine, mais dans le
+     site : a la charte, sans iframe, et les reponses arrivent chez
+     Nabintou au lieu d'un prestataire tiers.
+  -------------------------------------------------- */
+  function formulairePartenaire() {
+    var f = q('#form-partenaire');
+    if (!f) return;
+    var CFG = NABY.formulairePartenaire;
+
+    // Listes deroulantes
+    qa('[data-choix]', f).forEach(function (bloc) {
+      var liste = CFG[bloc.getAttribute('data-choix')] || [];
+      var nom = bloc.getAttribute('data-nom');
+      var sel = document.createElement('select');
+      sel.name = nom;
+      sel.id = 'p-' + nom;
+      var lab = q('label', bloc);
+      if (lab) lab.setAttribute('for', sel.id);
+
+      var vide0 = document.createElement('option');
+      vide0.value = '';
+      vide0.textContent = 'Choisir…';
+      sel.appendChild(vide0);
+
+      liste.forEach(function (v) {
+        var o = document.createElement('option');
+        o.value = v;
+        o.textContent = v;
+        sel.appendChild(o);
+      });
+
+      if (bloc.getAttribute('data-autre')) {
+        var oa = document.createElement('option');
+        oa.value = '__autre__';
+        oa.textContent = 'Autre…';
+        sel.appendChild(oa);
+
+        var libre = document.createElement('input');
+        libre.type = 'text';
+        libre.placeholder = 'Précisez';
+        libre.hidden = true;
+        libre.style.marginTop = '8px';
+        libre.setAttribute('data-libre', nom);
+        sel.addEventListener('change', function () {
+          libre.hidden = sel.value !== '__autre__';
+          if (!libre.hidden) libre.focus();
+        });
+        bloc.appendChild(sel);
+        bloc.appendChild(libre);
+        return;
+      }
+      bloc.appendChild(sel);
+    });
+
+    // Cases a cocher
+    qa('[data-cases]', f).forEach(function (bloc) {
+      var liste = CFG[bloc.getAttribute('data-cases')] || [];
+      var nom = bloc.getAttribute('data-nom');
+      var g = document.createElement('div');
+      g.className = 'cases';
+
+      liste.forEach(function (v, i) {
+        var id = 'c-' + nom + '-' + i;
+        var l = document.createElement('label');
+        l.className = 'case';
+        l.setAttribute('for', id);
+
+        var c = document.createElement('input');
+        c.type = 'checkbox';
+        c.id = id;
+        c.value = v;
+        c.setAttribute('data-groupe', nom);
+
+        var s = document.createElement('span');
+        s.textContent = v;
+
+        l.appendChild(c);
+        l.appendChild(s);
+        g.appendChild(l);
+      });
+
+      bloc.appendChild(g);
+
+      if (bloc.getAttribute('data-autre')) {
+        var libre = document.createElement('input');
+        libre.type = 'text';
+        libre.placeholder = 'Autre chose ? Précisez ici.';
+        libre.style.marginTop = '12px';
+        libre.setAttribute('data-libre-groupe', nom);
+        bloc.appendChild(libre);
+      }
+    });
+
+    var etat = q('#p-etat');
+    var bouton = q('#p-envoyer');
+
+    function dire(msg, rate) {
+      etat.textContent = msg;
+      etat.style.color = rate ? 'var(--terracotta)' : 'var(--vert-feuille)';
+      etat.style.fontWeight = '600';
+      etat.hidden = false;
     }
+
+    f.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var val1 = function (n) {
+        var el = q('[name="' + n + '"]', f);
+        if (!el) return null;
+        if (el.value === '__autre__') {
+          var lib = q('[data-libre="' + n + '"]', f);
+          return lib && lib.value.trim() ? lib.value.trim() : null;
+        }
+        return el.value.trim() || null;
+      };
+
+      var cases = function (n) {
+        var out = qa('[data-groupe="' + n + '"]', f)
+          .filter(function (c) { return c.checked; })
+          .map(function (c) { return c.value; });
+        var lib = q('[data-libre-groupe="' + n + '"]', f);
+        if (lib && lib.value.trim()) out.push(lib.value.trim());
+        return out.length ? out : null;
+      };
+
+      var d = {
+        enseigne: val1('enseigne'),
+        type_commerce: val1('type_commerce'),
+        adresse: val1('adresse'),
+        frequentation: val1('frequentation'),
+        contact_nom: val1('contact_nom'),
+        contact_email: val1('contact_email'),
+        contact_tel: val1('contact_tel'),
+        formats: cases('formats'),
+        frequence: val1('frequence'),
+        dates: val1('dates'),
+        themes: val1('themes'),
+        apports: cases('apports'),
+        budget: val1('budget'),
+        origine: val1('origine'),
+      };
+
+      if (!d.enseigne || !d.adresse || !d.contact_nom || !d.contact_email) {
+        dire('Merci de remplir le nom du magasin, l\'adresse, votre nom et votre email.', true);
+        return;
+      }
+
+      bouton.disabled = true;
+      bouton.textContent = 'Envoi en cours…';
+
+      fetch(NABY.base.url + '/functions/v1/' + CFG.fonction, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(d),
+      }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (r) {
+          if (!r.ok) {
+            dire(r.j.erreur || 'L\'envoi n\'a pas abouti. Réessayez dans un instant.', true);
+            bouton.disabled = false;
+            bouton.textContent = 'Envoyer ma demande';
+            return;
+          }
+          f.reset();
+          qa('[data-libre], [data-libre-groupe]', f).forEach(function (i) { i.value = ''; });
+          dire('Votre demande est bien arrivée. NabyCook vous répond très vite.');
+          bouton.textContent = 'Demande envoyée';
+        })
+        .catch(function () {
+          dire('L\'envoi a échoué. Vérifiez votre connexion, ou écrivez-nous directement à ' + NABY.email + '.', true);
+          bouton.disabled = false;
+          bouton.textContent = 'Envoyer ma demande';
+        });
+    });
   }
 
   /* ---------- Emplacements photo ----------
@@ -592,6 +852,76 @@
     }
   }
 
+  /* ---------- Contenus tenus par Nabintou ----------
+     Le site s'affiche D'ABORD avec les valeurs du fichier de
+     configuration, puis se rafraichit si la base repond. Dans cet
+     ordre et pas l'inverse : une base lente ou en panne ne doit
+     jamais produire une page vide, ni un clignotement.
+  ------------------------------------------------- */
+  function lire(table, tri) {
+    var u = NABY.base.url + '/rest/v1/' + table + '?select=*';
+    if (tri) u += '&order=' + tri;
+    return fetch(u, { headers: { apikey: NABY.base.cle } })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .catch(function () { return []; });
+  }
+
+  function contenus() {
+    if (!NABY.base || vide(NABY.base.url)) return;
+
+    Promise.all([
+      lire('nb_agenda', 'date_tri.asc.nullslast'),
+      lire('nb_impact', 'rang.asc'),
+      lire('nb_reglages'),
+      lire('nb_partenaires', 'rang.asc'),
+      lire('nb_temoignages', 'rang.asc'),
+      lire('nb_presse', 'rang.asc'),
+      lire('nb_historique', 'rang.asc'),
+    ]).then(function (r) {
+      var ag = r[0], im = r[1], rg = r[2], pa = r[3], te = r[4], pr = r[5], hi = r[6];
+
+      // Chaque bloc ne remplace ce qui est en place QUE s'il a du contenu.
+      if (ag.length) {
+        NABY.agenda = ag.map(function (e) {
+          return { date: e.date_texte, type: e.type, lieu: e.lieu, desc: e.description, lien: e.lien };
+        });
+        agenda();
+      }
+      if (im.length) {
+        NABY.impact = im.map(function (e) { return { valeur: e.valeur, libelle: e.libelle }; });
+        impact();
+      }
+      if (rg.length) {
+        rg.forEach(function (e) {
+          if (e.cle === 'impact_date' && !vide(e.valeur)) NABY.impactDate = e.valeur;
+        });
+        textes();
+      }
+      if (pa.length) {
+        NABY.partenaires = pa.map(function (e) { return { nom: e.nom, logo: e.logo }; });
+        partenaires();
+      }
+      if (te.length) {
+        NABY.temoignages = te.map(function (e) {
+          return { texte: e.texte, auteur: e.auteur, role: e.role };
+        });
+        temoignages();
+      }
+      if (pr.length) {
+        NABY.presse = pr.map(function (e) {
+          return { source: e.source, citation: e.citation, url: e.url };
+        });
+        presse();
+      }
+      if (hi.length) {
+        NABY.historique = hi.map(function (e) {
+          return { annee: e.annee, titre: e.titre, desc: e.description };
+        });
+        historique();
+      }
+    });
+  }
+
   /* ---------- Demarrage ---------- */
   function init() {
     bandeau();
@@ -610,8 +940,10 @@
     photos();
     integrations();
     formulaireContact();
+    formulairePartenaire();
     pied();
     gardeFou();
+    contenus();
   }
 
   if (document.readyState === 'loading') {

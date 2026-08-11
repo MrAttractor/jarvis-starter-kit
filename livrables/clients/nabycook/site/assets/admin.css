@@ -1,0 +1,126 @@
+/* ============================================================
+   NABYCOOK — Espace de pilotage de Nabintou
+   Reprend la charte du site. Aucune dependance.
+   ============================================================ */
+
+body.admin { background: var(--creme); }
+
+/* ---------- Connexion ---------- */
+.connexion {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 24px; background: var(--vert-profond);
+}
+.carte-connexion {
+  width: 100%; max-width: 420px; background: var(--carte);
+  border-radius: var(--r-l); padding: 40px 32px; text-align: center;
+  box-shadow: var(--ombre-2);
+}
+/* Meme raison que dans l'en-tete du site : le PNG du logo a un fond
+   blanc opaque, qui ferait un rectangle sur le creme de la carte. */
+.carte-connexion img { margin: 0 auto 16px; display: block; mix-blend-mode: multiply; }
+.admin-tete .marque img { mix-blend-mode: multiply; }
+.carte-connexion h1 { font-size: 28px; margin-bottom: 8px; }
+.carte-connexion .champ { text-align: left; margin-top: 16px; }
+.carte-connexion .bouton { width: 100%; justify-content: center; margin-top: 24px; }
+.erreur {
+  margin-top: 16px; padding: 12px 16px; border-radius: var(--r-s);
+  background: rgba(200, 112, 61, .12); color: var(--terracotta);
+  font-size: 15px; font-weight: 500;
+}
+
+/* ---------- En-tete ---------- */
+.admin-tete {
+  background: var(--carte); border-bottom: 1px solid var(--sable);
+  position: sticky; top: 0; z-index: 40;
+}
+.admin-tete-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; min-height: 72px; flex-wrap: wrap;
+}
+.admin-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.admin-actions .bouton { padding: 10px 16px; font-size: 15px; }
+
+/* ---------- Onglets ---------- */
+.onglets { background: var(--carte); border-bottom: 1px solid var(--sable); }
+.onglets-inner {
+  display: flex; gap: 4px; overflow-x: auto; padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+.onglets button {
+  flex: none; min-height: 48px; padding: 0 18px;
+  background: none; border: none; border-bottom: 3px solid transparent;
+  font-family: inherit; font-size: 16px; font-weight: 500;
+  color: var(--muted); cursor: pointer; white-space: nowrap;
+}
+.onglets button:hover { color: var(--vert-profond); }
+.onglets button.actif { color: var(--vert-profond); border-bottom-color: var(--vert-feuille); font-weight: 600; }
+
+/* ---------- Corps ---------- */
+.admin-corps { padding: 32px 0 96px; }
+.admin-corps h2 { font-size: 26px; margin-bottom: 8px; }
+.admin-corps section > .aide { margin-bottom: 24px; }
+
+.bandeau-info {
+  background: rgba(195, 217, 79, .18); border-left: 4px solid var(--vert-feuille);
+  border-radius: 0 var(--r-s) var(--r-s) 0; padding: 16px 20px;
+  font-size: 15px; color: var(--vert-profond); margin-bottom: 32px;
+}
+
+/* ---------- Fiches ---------- */
+.liste { display: grid; gap: 16px; margin-bottom: 24px; }
+.fiche {
+  background: var(--carte); border: 1px solid var(--sable);
+  border-radius: var(--r-m); padding: 24px;
+}
+.fiche.depubliee { opacity: .6; border-style: dashed; }
+.fiche-grille { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 720px) {
+  .fiche-grille.deux { grid-template-columns: 1fr 1fr; }
+  .fiche-grille.trois { grid-template-columns: 1fr 1fr 1fr; }
+}
+.fiche-pied {
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--sable);
+}
+.fiche-pied .bouton { padding: 10px 16px; font-size: 15px; }
+.bouton-danger {
+  background: none; border: 1px solid var(--terracotta); color: var(--terracotta);
+}
+.bouton-danger:hover { background: rgba(200, 112, 61, .1); }
+.rang { display: flex; gap: 4px; margin-left: auto; }
+.rang button {
+  width: 44px; height: 44px; border-radius: var(--r-s);
+  border: 1px solid var(--sable); background: var(--creme);
+  cursor: pointer; font-size: 18px; color: var(--vert-profond);
+}
+.rang button:hover { background: var(--sable); }
+
+/* ---------- Demandes de partenariat ---------- */
+.pastille {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 22px; height: 22px; padding: 0 6px; margin-left: 6px;
+  border-radius: 999px; background: var(--terracotta); color: #FFFFFF;
+  font-size: 13px; font-weight: 700;
+}
+.fiche.neuve { border-left: 4px solid var(--vert-feuille); }
+.demande-corps { margin: 16px 0; display: grid; gap: 6px; }
+.demande-corps p { font-size: 15px; margin: 0; }
+.demande-corps strong { color: var(--vert-profond); }
+.joindre { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.joindre .bouton { padding: 10px 16px; font-size: 15px; }
+
+/* ---------- Etat ---------- */
+.etat {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+  background: var(--vert-profond); color: var(--creme);
+  padding: 14px 24px; border-radius: 999px; font-weight: 500;
+  box-shadow: var(--ombre-2); z-index: 60; max-width: calc(100vw - 32px);
+  text-align: center;
+}
+.etat.rate { background: var(--terracotta); }
+
+/* ---------- Impression ---------- */
+@media print {
+  .admin-tete, .onglets, .fiche-pied, .bandeau-info { display: none !important; }
+  .fiche { break-inside: avoid; overflow: visible; }
+}
