@@ -1,0 +1,1139 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JG Consulting — le cabinet d'expertise culinaire, en démonstration</title>
+<meta name="description" content="Démonstration du dispositif JG Consulting : le site du cabinet d'expertise culinaire africaine, le parcours d'un industriel et le tableau de bord des demandes. Réalisée par l'agence Mr Attractor.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#123A2E">
+<style>
+:root{
+  --deep:#123A2E;
+  --deep-2:#1B5A46;
+  --amber:#E0A22B;
+  --amber-2:#F6C765;
+  --ink:#12211C;
+  --muted:#5E6F68;
+  --line:#E2EAE6;
+  --bg:#F4F8F6;
+  --card:#FFFFFF;
+  --ok:#12855F;
+  --warn:#B87514;
+  --terre:#B85C2A;
+  --bleu:#2E6FB7;
+  --prune:#8E4585;
+  --r:16px;
+  --font:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{max-width:100%;overflow-x:hidden}
+body{font-family:var(--font);color:var(--ink);background:var(--deep);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+button{font-family:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- ICONES SVG ---------- */
+.ic{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ic-lg{width:26px;height:26px}
+
+/* ---------- SPLASH VENDEUR ---------- */
+#splash{min-height:100vh;background:
+   radial-gradient(1100px 520px at 82% -12%,rgba(224,162,43,.24),transparent 60%),
+   radial-gradient(760px 420px at 0% 100%,rgba(27,90,70,.55),transparent 62%),
+   linear-gradient(165deg,#0D2C22,#123A2E 55%,#0A231B);
+   color:#fff;padding:32px 20px 48px;display:flex;flex-direction:column;align-items:center}
+.agency{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9FBBB0;border:1px solid rgba(255,255,255,.18);padding:8px 14px;border-radius:999px;margin-bottom:32px}
+.agency b{color:var(--amber-2);font-weight:700;letter-spacing:.14em}
+.splash-in{width:100%;max-width:980px;text-align:center}
+.mark{display:inline-flex;flex-direction:column;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:22px 30px;margin:0 auto 30px}
+.mark .lg{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.mark .lg span{color:var(--amber-2)}
+.mark small{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#9FBBB0}
+#splash h1{font-size:clamp(26px,6.4vw,44px);line-height:1.14;letter-spacing:-.01em;margin-bottom:16px}
+#splash h1 em{font-style:normal;color:var(--amber-2)}
+#splash .lede{color:#BCD2C9;font-size:clamp(15px,3.6vw,18px);line-height:1.6;max-width:650px;margin:0 auto 30px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:38px}
+.pill{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);color:#D3E4DC;font-size:13px;padding:9px 14px;border-radius:999px}
+.pill .ic{width:16px;height:16px;color:var(--amber-2)}
+.cards3{display:grid;gap:16px;grid-template-columns:1fr;text-align:left;margin-bottom:38px}
+.c3{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:20px}
+.c3 .num{width:34px;height:34px;border-radius:10px;background:var(--amber);color:#26190A;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;margin-bottom:14px}
+.c3 h3{font-size:16px;margin-bottom:8px}
+.c3 p{font-size:14px;line-height:1.55;color:#AFC7BD}
+.cta{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:14px 26px;border-radius:14px;font-size:16px;font-weight:700;text-decoration:none;border:none;cursor:pointer}
+.cta-main{background:var(--amber);color:#26190A;box-shadow:0 14px 34px rgba(224,162,43,.26)}
+.cta-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.32)}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.hint{margin-top:20px;font-size:13px;color:#88A79B;line-height:1.6}
+
+/* ---------- SCENE APP ---------- */
+#app{display:none;min-height:100vh}
+#app.on{display:block}
+.stage{display:flex;gap:56px;align-items:center;justify-content:center;padding:40px 24px 56px;min-height:100vh}
+.pitch{display:none;max-width:330px;color:#CFE0D8}
+.pitch .kick{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-2);font-weight:700;margin-bottom:12px}
+.pitch h2{font-size:26px;line-height:1.2;color:#fff;margin-bottom:16px}
+.pitch p{font-size:14px;line-height:1.65;color:#A2BAB0;margin-bottom:16px}
+.pitch .back{display:inline-flex;align-items:center;gap:8px;min-height:44px;color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:10px 16px;font-size:14px;cursor:pointer}
+
+.phone{width:100%;max-width:380px}
+.frame{background:#fff;overflow:hidden;display:flex;flex-direction:column;height:100vh;max-height:100vh}
+.screen{display:flex;flex-direction:column;height:100%;background:var(--bg);overflow:hidden}
+
+/* selecteur de vue */
+.roles{display:flex;gap:6px;padding:10px;background:var(--deep);flex:none}
+.role{flex:1;min-height:44px;border:none;border-radius:10px;background:rgba(255,255,255,.1);color:#B7CEC5;font-size:11.5px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 4px;line-height:1.2}
+.role .ic{width:17px;height:17px}
+.role[aria-selected="true"]{background:var(--amber);color:#26190A}
+
+/* topbar */
+.topbar{background:linear-gradient(135deg,var(--deep),var(--deep-2));color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px;flex:none}
+.tb-logo{width:42px;height:42px;border-radius:11px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;flex:none;font-weight:800;font-size:13px;letter-spacing:-.02em}
+.tb-logo span{color:var(--amber-2)}
+.tb-txt{min-width:0;flex:1}
+.tb-txt h2{font-size:15px;font-weight:700;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-txt small{display:block;font-size:11px;color:#A6C2B7;font-weight:400}
+.tb-act{width:40px;height:40px;border-radius:11px;border:none;background:rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 24px}
+.view{display:none}
+.view.on{display:block;animation:fade .22s ease}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* tabbar */
+.tabbar{display:flex;background:#fff;border-top:1px solid var(--line);flex:none;padding-bottom:env(safe-area-inset-bottom)}
+.tab{flex:1;min-height:56px;border:none;background:none;color:var(--muted);font-size:10.5px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 2px;line-height:1.15}
+.tab[aria-selected="true"]{color:var(--deep)}
+.tab[aria-selected="true"] .ic{color:var(--amber)}
+
+/* ---------- BRIQUES UI ---------- */
+.hero{background:linear-gradient(135deg,var(--deep),var(--deep-2));border-radius:var(--r);padding:20px;color:#fff;margin-bottom:16px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;right:-34px;top:-34px;width:140px;height:140px;border-radius:50%;background:rgba(224,162,43,.22)}
+.hero h3{font-size:18px;line-height:1.28;margin-bottom:9px;position:relative}
+.hero p{font-size:13.5px;line-height:1.58;color:#B7CEC5;position:relative}
+.hero .am{color:var(--amber-2)}
+
+.sec{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:24px 0 12px}
+.sec:first-child{margin-top:0}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.card h3{font-size:15px;margin-bottom:6px;line-height:1.35}
+.card p{font-size:13.5px;color:var(--muted);line-height:1.5}
+
+/* barre de preuve */
+.proof{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.pf{background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px 8px;text-align:center}
+.pf b{display:block;font-size:20px;font-weight:800;color:var(--deep);line-height:1.1}
+.pf small{display:block;font-size:10.5px;color:var(--muted);font-weight:600;margin-top:5px;line-height:1.3}
+
+/* entrees produit */
+.prods{display:grid;gap:10px;margin-bottom:8px}
+.pr{display:flex;align-items:center;gap:13px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;text-align:left;width:100%;min-height:64px}
+.pr .ico{width:44px;height:44px;border-radius:12px;flex:none;display:flex;align-items:center;justify-content:center;background:#EAF3EF;color:var(--deep-2)}
+.pr .bd{flex:1;min-width:0}
+.pr .t1{font-size:14.5px;font-weight:700;line-height:1.3}
+.pr .t2{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
+.pr .go{color:var(--muted);flex:none}
+
+/* bandeau independance */
+.indep{display:flex;gap:12px;background:linear-gradient(135deg,#173F33,#1B5A46);border-radius:var(--r);padding:18px;color:#fff;margin:16px 0}
+.indep .ic{color:var(--amber-2);margin-top:2px;flex:none}
+.indep b{display:block;font-size:14px;margin-bottom:6px}
+.indep p{font-size:12.5px;line-height:1.6;color:#B7CEC5}
+
+/* fiches expert */
+.exp{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.exp .top{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px}
+.exp .av{width:56px;height:56px;border-radius:14px;flex:none;background:linear-gradient(135deg,var(--deep),var(--deep-2));color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;letter-spacing:.02em}
+.exp .av.todo{background:#EDF2EF;color:#9CB0A7;border:1.5px dashed #C3D3CB}
+.exp .nm{font-size:15.5px;font-weight:700;line-height:1.25}
+.exp .sp{font-size:12.5px;color:var(--amber);font-weight:700;margin-top:4px;line-height:1.35}
+.exp .bio{font-size:13px;color:var(--muted);line-height:1.55}
+.exp .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:5px 10px;border-radius:7px;background:#EAF3EF;color:var(--deep-2);letter-spacing:.02em}
+.tag.todo{background:#FDF3E0;color:var(--warn)}
+
+.tofill{display:flex;gap:10px;background:#FDF6E8;border:1px solid #F0DDB4;border-radius:12px;padding:13px;margin-top:12px}
+.tofill .ic{color:var(--warn);margin-top:1px;flex:none;width:18px;height:18px}
+.tofill p{font-size:12px;line-height:1.55;color:#6E5314}
+
+/* formulaire */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12.5px;font-weight:700;margin-bottom:7px;color:var(--ink)}
+.field input,.field select,.field textarea{width:100%;min-height:48px;border:1px solid var(--line);border-radius:12px;padding:13px 14px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink)}
+.field textarea{min-height:84px;resize:vertical}
+.field .help{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:52px;border:none;border-radius:13px;background:var(--deep);color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px;text-decoration:none;padding:12px 16px;line-height:1.25;text-align:center}
+.btn-a{background:var(--amber);color:#26190A}
+.btn-o{background:#fff;color:var(--deep);border:1.5px solid var(--deep)}
+.btn-s{min-height:44px;font-size:13.5px;border-radius:11px}
+
+.note{display:flex;gap:10px;background:#EAF3EF;border:1px solid #CFE2D9;border-radius:12px;padding:13px;margin:12px 0}
+.note .ic{color:var(--deep-2);margin-top:1px;width:18px;height:18px}
+.note p{font-size:12.5px;line-height:1.55;color:#22503F}
+.note.am{background:#FDF6E8;border-color:#F0DDB4}
+.note.am .ic{color:var(--warn)}
+.note.am p{color:#6E5314}
+
+/* publicite simulee */
+.ad{background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+.ad .adhd{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.ad .adhd .av{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--deep),var(--deep-2));color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:none}
+.ad .adhd .av span{color:var(--amber-2)}
+.ad .adhd .t1{font-size:13px;font-weight:700}
+.ad .adhd .t2{font-size:11px;color:var(--muted);margin-top:1px}
+.ad .adbody{padding:14px}
+.ad .adbody p{font-size:13.5px;line-height:1.55;color:var(--ink)}
+.ad .advis{background:linear-gradient(135deg,#173F33,#1B5A46);color:#fff;padding:26px 18px;text-align:center}
+.ad .advis b{display:block;font-size:17px;line-height:1.3;margin-bottom:8px}
+.ad .advis b em{font-style:normal;color:var(--amber-2)}
+.ad .advis small{font-size:12px;color:#AFC7BD;line-height:1.5;display:block}
+.ad .adcta{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;background:#F5F8F7;border-top:1px solid var(--line)}
+.ad .adcta .t1{font-size:12.5px;font-weight:700;line-height:1.35}
+.ad .adcta .t2{font-size:11px;color:var(--muted);margin-top:2px}
+.ad .adcta .b{background:var(--deep);color:#fff;border:none;border-radius:10px;min-height:44px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;flex:none}
+
+/* fil de progression */
+.steps{display:flex;gap:5px;margin-bottom:16px}
+.steps i{flex:1;height:4px;border-radius:99px;background:var(--line)}
+.steps i.on{background:var(--amber)}
+
+/* timeline */
+.tl{position:relative;padding-left:30px;margin-top:4px}
+.tl:before{content:"";position:absolute;left:9px;top:6px;bottom:12px;width:2px;background:var(--line)}
+.tl li{list-style:none;position:relative;padding-bottom:20px}
+.tl li:last-child{padding-bottom:0}
+.tl li:before{content:"";position:absolute;left:-27px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--line)}
+.tl li.done:before{background:var(--ok);border-color:var(--ok)}
+.tl li.now:before{background:var(--amber);border-color:var(--amber);box-shadow:0 0 0 4px rgba(224,162,43,.24)}
+.tl .t1{font-size:14px;font-weight:700;margin-bottom:3px}
+.tl .t2{font-size:12.5px;color:var(--muted);line-height:1.45}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+.kpi .lb{font-size:11px;color:var(--muted);font-weight:600;line-height:1.3;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.kpi .lb .ic{width:14px;height:14px;color:var(--deep-2)}
+.kpi .vl{font-size:21px;font-weight:800;color:var(--deep);line-height:1.1}
+.kpi .vl small{display:block;font-size:11px;color:var(--muted);font-weight:600;margin-top:3px}
+
+/* demandes */
+.item{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px}
+.item .av{width:42px;height:42px;border-radius:11px;background:#EAF3EF;flex:none;display:flex;align-items:center;justify-content:center;color:var(--deep);font-weight:800;font-size:13px}
+.item .bd{flex:1;min-width:0}
+.item .t1{font-size:14px;font-weight:700;line-height:1.3;margin-bottom:3px}
+.item .t2{font-size:12.5px;color:var(--muted);line-height:1.45}
+.item .t2 b{color:var(--ink);font-weight:700}
+.st{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:6px;letter-spacing:.03em;margin-top:7px}
+.st .ic{width:12px;height:12px}
+.st-new{background:#FDF3E0;color:#8A6608}
+.st-go{background:#E7EFFB;color:#1B4C8A}
+.st-ok{background:#E3F5EC;color:var(--ok)}
+.st-no{background:#F1F0F3;color:#6B6873}
+
+/* barres origine */
+.brow{margin-bottom:14px}
+.brow .hd{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+.brow .nm{font-size:13px;font-weight:700}
+.brow .vl{font-size:12.5px;color:var(--muted);font-weight:700;white-space:nowrap}
+.bar{height:9px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px}
+.bar i.t{background:var(--terre)}
+.bar i.b{background:var(--bleu)}
+.bar i.p{background:var(--prune)}
+.brow .sub{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.4}
+
+/* entonnoir */
+.fun{display:grid;gap:8px;margin-bottom:14px}
+.fn{background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.fn .l{font-size:13px;font-weight:700;line-height:1.35}
+.fn .l small{display:block;font-size:11.5px;color:var(--muted);font-weight:400;margin-top:2px}
+.fn .v{font-size:19px;font-weight:800;color:var(--deep);white-space:nowrap}
+.fn.hi{background:linear-gradient(135deg,var(--deep),var(--deep-2));border-color:var(--deep)}
+.fn.hi .l{color:#fff}
+.fn.hi .l small{color:#A6C2B7}
+.fn.hi .v{color:var(--amber-2)}
+
+.tabledata{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tabledata th{background:#EAF3EF;color:var(--deep);text-align:left;font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:10px 12px}
+.tabledata td{padding:10px 12px;border-top:1px solid var(--line);color:var(--muted)}
+.tabledata td b{color:var(--ink)}
+
+.simu{display:flex;gap:9px;align-items:flex-start;background:#F1F0F3;border:1px solid #DDDAE2;border-radius:11px;padding:11px 13px;margin-bottom:14px}
+.simu .ic{width:17px;height:17px;color:#6B6873;margin-top:1px;flex:none}
+.simu p{font-size:11.5px;line-height:1.55;color:#4F4C58}
+
+.foot{margin-top:22px;padding-top:16px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted);line-height:1.6;text-align:center}
+.foot a{color:var(--deep);font-weight:700}
+
+@media(min-width:900px){
+  .cards3{grid-template-columns:repeat(3,1fr)}
+  .pitch{display:block}
+  .frame{border-radius:34px;height:760px;max-height:82vh;border:10px solid #0A231B;box-shadow:0 40px 90px rgba(0,0,0,.5)}
+}
+@media(max-width:899px){
+  .stage{padding:0;display:block}
+  .phone{max-width:none}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><path d="M10 3h4M10 3v6.5L4.6 18A2 2 0 0 0 6.3 21h11.4a2 2 0 0 0 1.7-3L14 9.5V3"/><path d="M7.5 15h9"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="3.2"/><path d="M22 20v-2a4 4 0 0 0-3-3.9"/><path d="M16.5 3.6a4 4 0 0 1 0 7"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 15l3.5-4 3 2.5L20 7"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.4-2.9 8.2-7 9.5-4.1-1.3-7-5.1-7-9.5V6z"/><path d="M9.2 12l1.9 2 3.7-4"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H6M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V19a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M9.5 21v-6h5v6"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.4l3.3 2"/></symbol>
+  <symbol id="i-money" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 10v4M18 10v4"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.6"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3 5 13.5h6L11 21l8-10.5h-6z"/></symbol>
+  <symbol id="i-factory" viewBox="0 0 24 24"><path d="M3 21V10l5.5 3.5V10L14 13.5V7l7 4.5V21z"/><path d="M7 17h1.5M12 17h1.5M17 17h1.5"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.5 3h11a1.5 1.5 0 0 1 1.5 1.5v15A1.5 1.5 0 0 1 17.5 21h-11A1.5 1.5 0 0 1 5 19.5v-15A1.5 1.5 0 0 1 6.5 3z"/><path d="M10.5 18h3"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7"/></symbol>
+</svg>
+
+<!-- ====================== SPLASH VENDEUR ====================== -->
+<section id="splash">
+  <span class="agency">Réalisé par <b>Mr Attractor</b></span>
+
+  <div class="splash-in">
+    <div class="mark">
+      <span class="lg">JG<span>.</span></span>
+      <small>Consulting</small>
+    </div>
+
+    <h1>Neuf ans d'expertise culinaire africaine, <em>et personne ne le sait.</em></h1>
+    <p class="lede">
+      JG Consulting existe depuis 2017. Recettes déshydratées, boissons, tests consommateurs,
+      connaissance réelle du goût africain. Et aucun moyen, aujourd'hui, pour un industriel
+      d'Abidjan, de Bamako ou de Dakar de trouver le cabinet, de vérifier qui il est, et de l'appeler.
+    </p>
+
+    <div class="pills">
+      <span class="pill"><svg class="ic"><use href="#i-shield"/></svg>SARL immatriculée depuis 2017</span>
+      <span class="pill"><svg class="ic"><use href="#i-users"/></svg>4 experts</span>
+      <span class="pill"><svg class="ic"><use href="#i-globe"/></svg>Abidjan, Sahel, Afrique francophone</span>
+    </div>
+
+    <div class="cards3">
+      <div class="c3">
+        <div class="num">1</div>
+        <h3>Le site du cabinet</h3>
+        <p>Les experts nommés, les six familles de produits, l'identité légale vérifiable et un seul bouton : demander un diagnostic.</p>
+      </div>
+      <div class="c3">
+        <div class="num">2</div>
+        <h3>Le parcours d'un industriel</h3>
+        <p>De la publicité vue sur son téléphone à sa demande de diagnostic. Le chemin complet, écran par écran.</p>
+      </div>
+      <div class="c3">
+        <div class="num">3</div>
+        <h3>Le tableau de bord du cabinet</h3>
+        <p>Les demandes qui tombent, d'où elles viennent, ce qu'elles coûtent et ce qu'elles rapportent.</p>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <button class="cta cta-main" id="open">
+        Ouvrir la démonstration
+        <svg class="ic"><use href="#i-arrow"/></svg>
+      </button>
+      <a class="cta cta-ghost" href="closing">Voir la proposition</a>
+    </div>
+
+    <p class="hint">
+      C'est une maquette de travail, pas le site final.<br>
+      Tout est cliquable. À ouvrir sur un téléphone.
+    </p>
+  </div>
+</section>
+
+<!-- ====================== SCENE APP ====================== -->
+<section id="app">
+  <div class="stage">
+
+    <aside class="pitch">
+      <div class="kick">Démonstration</div>
+      <h2>Trois vues, une seule machine</h2>
+      <p>
+        La première vue est le site que verront les industriels. La deuxième suit un
+        directeur de production, de la publicité à sa demande. La troisième est le poste
+        de pilotage du cabinet.
+      </p>
+      <p>
+        Les chiffres du tableau de bord sont des hypothèses de travail, signalées comme
+        telles. Ce qui est montré est ce qui peut être construit.
+      </p>
+      <button class="back" id="back">
+        <svg class="ic"><use href="#i-back"/></svg>
+        Revenir à la présentation
+      </button>
+    </aside>
+
+    <div class="phone">
+      <div class="frame">
+        <div class="screen">
+
+          <!-- selecteur de vue -->
+          <div class="roles" role="tablist" aria-label="Choisir la vue">
+            <button class="role" data-role="site" role="tab" aria-selected="true">
+              <svg class="ic"><use href="#i-globe"/></svg>Le site
+            </button>
+            <button class="role" data-role="indus" role="tab" aria-selected="false">
+              <svg class="ic"><use href="#i-factory"/></svg>L'industriel
+            </button>
+            <button class="role" data-role="cabinet" role="tab" aria-selected="false">
+              <svg class="ic"><use href="#i-chart"/></svg>Le cabinet
+            </button>
+          </div>
+
+          <div class="topbar">
+            <div class="tb-logo">JG<span>.</span></div>
+            <div class="tb-txt">
+              <h2>JG Consulting</h2>
+              <small id="tbsub">Réseau d'experts agroalimentaires</small>
+            </div>
+            <button class="tb-act" aria-label="Menu">
+              <svg class="ic"><use href="#i-phone"/></svg>
+            </button>
+          </div>
+
+          <div class="content" id="content">
+
+            <!-- ============ VUE 1 : LE SITE ============ -->
+
+            <div class="view" id="v-accueil">
+              <div class="hero">
+                <h3>Votre produit est bon en laboratoire. <span class="am">Mais le consommateur africain, lui, n'a pas encore dit oui.</span></h3>
+                <p>Développement de recettes culinaires déshydratées et de boissons, tests consommateurs, et une connaissance réelle de la cuisine africaine. Depuis 2017, à Abidjan.</p>
+              </div>
+
+              <div class="proof">
+                <div class="pf"><b>2017</b><small>année de création</small></div>
+                <div class="pf"><b>SARL</b><small>capital 1 000 000 F</small></div>
+                <div class="pf"><b>RCCM</b><small>immatriculée à Abidjan</small></div>
+              </div>
+              <div class="note">
+                <svg class="ic"><use href="#i-shield"/></svg>
+                <p><b>RCCM CI-ABJ-2017-B-9606</b>, Tribunal de commerce d'Abidjan. Gérant : M. GNOU Yao Jean. Vérifiable par n'importe qui, en une minute. C'est la première réponse à donner à un industriel qui a peur des faux experts.</p>
+              </div>
+
+              <div class="sec">Sur quel produit avez-vous besoin d'aide</div>
+              <div class="prods">
+                <button class="pr" data-go="v-produit">
+                  <span class="ico"><svg class="ic ic-lg"><use href="#i-flask"/></svg></span>
+                  <span class="bd">
+                    <span class="t1">Bouillons et assaisonnements</span>
+                    <span class="t2">Cubes, poudres, mélanges culinaires</span>
+                  </span>
+                  <svg class="ic go"><use href="#i-arrow"/></svg>
+                </button>
+                <button class="pr" data-go="v-produit">
+                  <span class="ico"><svg class="ic ic-lg"><use href="#i-flask"/></svg></span>
+                  <span class="bd">
+                    <span class="t1">Mayonnaise</span>
+                    <span class="t2">Émulsion, stabilité, conservation</span>
+                  </span>
+                  <svg class="ic go"><use href="#i-arrow"/></svg>
+                </button>
+                <button class="pr" data-go="v-produit">
+                  <span class="ico"><svg class="ic ic-lg"><use href="#i-flask"/></svg></span>
+                  <span class="bd">
+                    <span class="t1">Pâtes alimentaires</span>
+                    <span class="t2">Spaghetti, macaroni, vermicelles</span>
+                  </span>
+                  <svg class="ic go"><use href="#i-arrow"/></svg>
+                </button>
+                <button class="pr" data-go="v-produit">
+                  <span class="ico"><svg class="ic ic-lg"><use href="#i-flask"/></svg></span>
+                  <span class="bd">
+                    <span class="t1">Margarine</span>
+                    <span class="t2">Matière grasse, texture, point de fusion</span>
+                  </span>
+                  <svg class="ic go"><use href="#i-arrow"/></svg>
+                </button>
+                <button class="pr" data-go="v-produit">
+                  <span class="ico"><svg class="ic ic-lg"><use href="#i-flask"/></svg></span>
+                  <span class="bd">
+                    <span class="t1">Pâte à tartiner au chocolat</span>
+                    <span class="t2">Onctuosité, coût matière, tenue en climat chaud</span>
+                  </span>
+                  <svg class="ic go"><use href="#i-arrow"/></svg>
+                </button>
+                <button class="pr" data-go="v-produit">
+                  <span class="ico"><svg class="ic ic-lg"><use href="#i-flask"/></svg></span>
+                  <span class="bd">
+                    <span class="t1">Boissons</span>
+                    <span class="t2">Recettes, arômes, stabilité, profil sucré</span>
+                  </span>
+                  <svg class="ic go"><use href="#i-arrow"/></svg>
+                </button>
+              </div>
+
+              <div class="indep">
+                <svg class="ic ic-lg"><use href="#i-shield"/></svg>
+                <div>
+                  <b>Nous ne vendons ni ingrédients, ni machines.</b>
+                  <p>Aucun de nos experts n'est lié à un fournisseur. Quand nous recommandons un prémix ou une ligne d'équipement, nous n'avons rien à y gagner. C'est ce qui distingue un conseil d'un argumentaire de vente.</p>
+                </div>
+              </div>
+
+              <div class="sec">Ce que personne ne peut faire à notre place</div>
+              <div class="card">
+                <h3>Nous connaissons le consommateur africain</h3>
+                <p>Un laboratoire européen sait formuler. Il ne sait pas qu'un bouillon jugé parfait à Paris sera trouvé fade à Bouaké, ni qu'une sauce trop lisse passe pour industrielle à Bamako. Cette connaissance ne se lit pas dans un rapport, elle se construit sur le terrain.</p>
+              </div>
+              <div class="card">
+                <h3>Nous faisons goûter avant que vous produisiez</h3>
+                <p>Organisation de tests consommateurs sur votre cible réelle, dans son pays, avec son vocabulaire. Vous savez ce qui plaît avant d'engager un lot industriel, pas après.</p>
+              </div>
+              <div class="card">
+                <h3>Nous rendons le produit désirable en image</h3>
+                <p>Food styling et mise en scène du produit pour vos emballages, vos catalogues et vos publicités. Un plat mal photographié fait douter d'une recette réussie.</p>
+              </div>
+
+              <div class="sec">Deux façons de travailler avec nous</div>
+              <div class="card">
+                <h3>Je veux me lancer</h3>
+                <p>Choix des équipements, formule de base reproductible, accompagnement jusqu'au premier lot industriel conforme.</p>
+              </div>
+              <div class="card">
+                <h3>Je produis déjà et je veux optimiser</h3>
+                <p>Audit de la formule et du procédé, réduction du coût unitaire, extension de gamme sur la ligne existante.</p>
+              </div>
+
+              <button class="btn btn-a" data-go="v-diag">
+                Demander un diagnostic
+                <svg class="ic"><use href="#i-arrow"/></svg>
+              </button>
+            </div>
+
+            <div class="view" id="v-produit">
+              <button class="btn btn-o btn-s" data-go="v-accueil" style="margin-bottom:14px">
+                <svg class="ic"><use href="#i-back"/></svg>
+                Toutes les familles
+              </button>
+
+              <div class="hero">
+                <h3>Mayonnaise</h3>
+                <p>Une émulsion qui se casse au bout de trois semaines, c'est un problème de procédé, pas de recette.</p>
+              </div>
+
+              <div class="sec">Ce qu'on entend le plus souvent</div>
+              <div class="card">
+                <h3>« Elle se sépare en rayon »</h3>
+                <p>L'émulsion tient en sortie de ligne puis se déphase au bout de quelques semaines, surtout en saison chaude.</p>
+              </div>
+              <div class="card">
+                <h3>« Mon coût à la tonne est trop élevé »</h3>
+                <p>La part d'huile et d'œuf n'est pas optimisée, et le rendement de la ligne n'est pas mesuré.</p>
+              </div>
+              <div class="card">
+                <h3>« Je voudrais un format sachet »</h3>
+                <p>Passer du pot au sachet change la formule, pas seulement l'emballage.</p>
+              </div>
+
+              <div class="sec">Ce que l'expert fait concrètement</div>
+              <ul class="tl">
+                <li class="done">
+                  <div class="t1">Il lit votre formule et votre procédé</div>
+                  <div class="t2">Ordre d'incorporation, vitesse, température, temps de cisaillement.</div>
+                </li>
+                <li class="done">
+                  <div class="t1">Il identifie ce qui casse l'émulsion</div>
+                  <div class="t2">Dans la grande majorité des cas, c'est le procédé et non l'ingrédient.</div>
+                </li>
+                <li class="done">
+                  <div class="t1">Il corrige et vous fait produire un essai</div>
+                  <div class="t2">Sur votre ligne, avec vos ingrédients, pas en laboratoire.</div>
+                </li>
+                <li class="now">
+                  <div class="t1">Il vous laisse une formule écrite et reproductible</div>
+                  <div class="t2">Utilisable par votre équipe sans lui, c'est le but.</div>
+                </li>
+              </ul>
+
+              <div class="tofill">
+                <svg class="ic"><use href="#i-info"/></svg>
+                <p><b>Il manque le cas chiffré.</b> Un exemple réel du type « coût à la tonne réduit de tant, durée de vie passée de tant à tant » vaut plus que toute la page ci-dessus. À obtenir auprès de l'expert concerné.</p>
+              </div>
+
+              <button class="btn btn-a" data-go="v-diag">
+                Parler de ma mayonnaise
+                <svg class="ic"><use href="#i-arrow"/></svg>
+              </button>
+            </div>
+
+            <div class="view" id="v-experts">
+              <div class="hero">
+                <h3>Le réseau, à visage découvert</h3>
+                <p>Nos clients ont peur des faux experts. La seule réponse honnête, c'est de dire qui nous sommes et où nous avons travaillé.</p>
+              </div>
+
+              <div class="exp">
+                <div class="top">
+                  <div class="av">JG</div>
+                  <div>
+                    <div class="nm">M. GNOU Yao Jean</div>
+                    <div class="sp">Gérant, JG Consulting SARL</div>
+                  </div>
+                </div>
+                <p class="bio">Il dirige le cabinet depuis sa création en 2017. Il qualifie les demandes des industriels et affecte l'expert dont le dossier a besoin. Interlocuteur unique du client, du premier appel à la fin de la mission.</p>
+                <div class="meta">
+                  <span class="tag">Expertise culinaire</span>
+                  <span class="tag">Abidjan</span>
+                  <span class="tag todo">Parcours à compléter</span>
+                </div>
+              </div>
+
+              <div class="exp">
+                <div class="top">
+                  <div class="av todo">2</div>
+                  <div>
+                    <div class="nm">Expert recettes déshydratées</div>
+                    <div class="sp">Bouillons, assaisonnements, pâte à tartiner</div>
+                  </div>
+                </div>
+                <p class="bio">Formulation de cubes, poudres et mélanges culinaires. Réglage du profil de goût, du dosage salin et du coût matière.</p>
+                <div class="meta"><span class="tag todo">Nom, photo et parcours à fournir</span></div>
+              </div>
+
+              <div class="exp">
+                <div class="top">
+                  <div class="av todo">3</div>
+                  <div>
+                    <div class="nm">Expert pâtes alimentaires</div>
+                    <div class="sp">Spaghetti, macaroni, vermicelles</div>
+                  </div>
+                </div>
+                <p class="bio">Choix des semoules, extrusion, séchage. Tenue à la cuisson et régularité du produit d'un lot à l'autre.</p>
+                <div class="meta"><span class="tag todo">Nom, photo et parcours à fournir</span></div>
+              </div>
+
+              <div class="exp">
+                <div class="top">
+                  <div class="av todo">4</div>
+                  <div>
+                    <div class="nm">Expert corps gras et boissons</div>
+                    <div class="sp">Margarine, mayonnaise, boissons</div>
+                  </div>
+                </div>
+                <p class="bio">Émulsions, point de fusion, stabilité en climat chaud. Passage du format pot au format sachet.</p>
+                <div class="meta"><span class="tag todo">Nom, photo et parcours à fournir</span></div>
+              </div>
+
+              <div class="note am">
+                <svg class="ic"><use href="#i-info"/></svg>
+                <p><b>Ces trois fiches sont volontairement laissées ouvertes.</b> Elles sont le cœur du site : c'est ce qui répond à la peur du faux expert. Tant que les noms, les photos et les parcours ne sont pas fournis, le site ne peut pas être mis en ligne.</p>
+              </div>
+
+              <div class="sec">L'identité du cabinet</div>
+              <table class="tabledata">
+                <tr><th>Dénomination</th><td><b>JG CONSULTING</b></td></tr>
+                <tr><th>Forme</th><td>SARL, capital 1 000 000 F CFA</td></tr>
+                <tr><th>RCCM</th><td><b>CI-ABJ-2017-B-9606</b></td></tr>
+                <tr><th>Greffe</th><td>Tribunal de commerce d'Abidjan, 13/04/2017</td></tr>
+                <tr><th>Siège</th><td>Abidjan Yopougon SOPIM, 09 BP 2772 Abidjan 09</td></tr>
+                <tr><th>Gérant</th><td>M. GNOU Yao Jean</td></tr>
+              </table>
+              <div class="note">
+                <svg class="ic"><use href="#i-shield"/></svg>
+                <p>Ce tableau vaut mieux qu'une page « à propos ». Un industriel qui craint l'escroquerie peut vérifier chaque ligne au greffe d'Abidjan.</p>
+              </div>
+
+              <button class="btn btn-a" data-go="v-diag">
+                Demander un diagnostic
+                <svg class="ic"><use href="#i-arrow"/></svg>
+              </button>
+            </div>
+
+            <div class="view" id="v-diag">
+              <div class="hero">
+                <h3>Un diagnostic de 45 minutes</h3>
+                <p>Pas un devis. Un échange avec l'expert de votre produit, pour savoir si votre problème se règle, comment, et en combien de temps.</p>
+              </div>
+
+              <div class="field">
+                <label for="f-nom">Votre nom et votre fonction</label>
+                <input id="f-nom" type="text" placeholder="Amadou Sangaré, directeur de production">
+              </div>
+              <div class="field">
+                <label for="f-ent">Votre entreprise</label>
+                <input id="f-ent" type="text" placeholder="SOMAPRO Industries">
+              </div>
+              <div class="field">
+                <label for="f-pays">Votre pays</label>
+                <select id="f-pays">
+                  <option>Mali</option><option>Burkina Faso</option><option>Niger</option>
+                  <option>Côte d'Ivoire</option><option>Sénégal</option><option>Guinée</option>
+                  <option>Tchad</option><option>Autre</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="f-prod">Le produit concerné</label>
+                <select id="f-prod">
+                  <option>Bouillons et assaisonnements</option><option>Mayonnaise</option>
+                  <option>Pâtes alimentaires</option><option>Margarine</option>
+                  <option>Pâte à tartiner au chocolat</option><option>Boissons</option>
+                  <option>Test consommateurs</option><option>Food styling</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="f-stade">Où en êtes-vous</label>
+                <select id="f-stade">
+                  <option>Je produis déjà et je veux optimiser</option>
+                  <option>Je me lance, rien n'est installé</option>
+                  <option>Mes équipements sont là, je ne produis pas encore</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="f-wa">Votre WhatsApp</label>
+                <input id="f-wa" type="tel" placeholder="+223 ...">
+                <p class="help">C'est par là que l'expert vous rappellera. Nous ne diffusons jamais ce numéro.</p>
+              </div>
+
+              <button class="btn btn-a" data-go="v-recu">
+                Envoyer ma demande
+                <svg class="ic"><use href="#i-arrow"/></svg>
+              </button>
+
+              <div class="note">
+                <svg class="ic"><use href="#i-lock"/></svg>
+                <p>Six champs, pas douze. Chaque champ en plus fait perdre des demandes, et ces six suffisent à savoir quel expert affecter.</p>
+              </div>
+            </div>
+
+            <div class="view" id="v-recu">
+              <div class="hero">
+                <h3>C'est parti.</h3>
+                <p>La demande est enregistrée et l'expert du produit concerné est prévenu.</p>
+              </div>
+              <div class="card">
+                <h3>Ce qui se passe maintenant</h3>
+                <p>Un créneau de 45 minutes vous est proposé sous 48 heures ouvrées. Si votre sujet ne relève pas de nos compétences, on vous le dit tout de suite plutôt que de vous vendre une mission.</p>
+              </div>
+              <button class="btn btn-o" data-go="v-accueil">
+                <svg class="ic"><use href="#i-back"/></svg>
+                Revenir à l'accueil
+              </button>
+              <div class="foot">
+                Vue suivante : <b>l'industriel</b>, pour voir comment il est arrivé jusqu'ici.
+              </div>
+            </div>
+
+            <!-- ============ VUE 2 : L'INDUSTRIEL ============ -->
+
+            <div class="view" id="i-pub">
+              <div class="steps"><i class="on"></i><i></i><i></i><i></i></div>
+              <div class="sec">Étape 1 · Il ne vous cherche pas encore</div>
+
+              <div class="card">
+                <h3>Amadou Sangaré, Bamako</h3>
+                <p>Directeur de production d'une unité de condiments. Sa mayonnaise se déphase en rayon depuis la saison chaude. Il n'a jamais entendu parler de JG Consulting.</p>
+              </div>
+
+              <div class="ad">
+                <div class="adhd">
+                  <div class="av">JG<span>.</span></div>
+                  <div>
+                    <div class="t1">JG Consulting</div>
+                    <div class="t2">Sponsorisé</div>
+                  </div>
+                </div>
+                <div class="adbody">
+                  <p>Votre mayonnaise se sépare en rayon ? Dans neuf cas sur dix, ce n'est pas la recette. C'est le procédé.</p>
+                </div>
+                <div class="advis">
+                  <b>Une émulsion qui tient <em>trois mois</em>, ça se règle sur votre ligne.</b>
+                  <small>Diagnostic de 45 minutes avec un formulateur</small>
+                </div>
+                <div class="adcta">
+                  <div>
+                    <div class="t1">jgconsulting.com</div>
+                    <div class="t2">Réseau d'experts agroalimentaires</div>
+                  </div>
+                  <button class="b" data-go="i-page">En savoir plus</button>
+                </div>
+              </div>
+
+              <div class="note">
+                <svg class="ic"><use href="#i-target"/></svg>
+                <p>La publicité ne parle pas du cabinet. Elle parle de son problème, avec ses mots. C'est la seule façon d'arrêter le pouce d'un directeur d'usine.</p>
+              </div>
+            </div>
+
+            <div class="view" id="i-page">
+              <div class="steps"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+              <div class="sec">Étape 2 · Il arrive sur la page de son produit</div>
+
+              <div class="hero">
+                <h3>Mayonnaise</h3>
+                <p>Il ne tombe pas sur la page d'accueil du cabinet. Il tombe sur la page qui parle exactement de son problème.</p>
+              </div>
+
+              <div class="card">
+                <h3>Il se reconnaît en trois secondes</h3>
+                <p>« Elle se sépare en rayon. » C'est écrit noir sur blanc, en haut de la page. Il continue à lire.</p>
+              </div>
+              <div class="card">
+                <h3>Il comprend qui va l'aider</h3>
+                <p>La fiche de l'expert corps gras est sur la même page. Nom, parcours, usines. Sa peur de l'escroc tombe.</p>
+              </div>
+              <div class="card">
+                <h3>Il n'est pas encore prêt à appeler</h3>
+                <p>Il regarde sur son téléphone, entre deux réunions. Il ne va pas décrocher aujourd'hui. Il faut donc capter son adresse.</p>
+              </div>
+
+              <button class="btn btn-a" data-go="i-livre">
+                Voir comment on le retient
+                <svg class="ic"><use href="#i-arrow"/></svg>
+              </button>
+            </div>
+
+            <div class="view" id="i-livre">
+              <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+              <div class="sec">Étape 3 · Il laisse son adresse</div>
+
+              <div class="hero">
+                <h3>Les 7 erreurs qui font rater une émulsion industrielle</h3>
+                <p>Douze pages, écrites par l'expert. Téléchargeables contre une adresse e-mail.</p>
+              </div>
+
+              <div class="field">
+                <label for="l-mail">Votre e-mail professionnel</label>
+                <input id="l-mail" type="email" placeholder="a.sangare@somapro.ml">
+              </div>
+              <button class="btn btn-a" data-go="i-demande">
+                Recevoir le document
+                <svg class="ic"><use href="#i-doc"/></svg>
+              </button>
+
+              <div class="note">
+                <svg class="ic"><use href="#i-mail"/></svg>
+                <p>Sans ce document, un visiteur qui n'appelle pas est perdu pour toujours. Avec, il entre dans une liste et il est relancé. C'est ce qui transforme un site en machine.</p>
+              </div>
+
+              <div class="note am">
+                <svg class="ic"><use href="#i-info"/></svg>
+                <p>Le livre blanc était déjà prévu au devis d'avril, et offert. Il reste à écrire : c'est l'expert qui doit fournir la matière, l'agence rédige.</p>
+              </div>
+            </div>
+
+            <div class="view" id="i-demande">
+              <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+              <div class="sec">Étape 4 · Onze jours plus tard, il demande le diagnostic</div>
+
+              <ul class="tl">
+                <li class="done">
+                  <div class="t1">Jour 0 · Il télécharge le document</div>
+                  <div class="t2">Son adresse entre dans la liste. Il ne demande rien d'autre.</div>
+                </li>
+                <li class="done">
+                  <div class="t1">Jour 3 · Premier e-mail</div>
+                  <div class="t2">Un cas concret : une unité qui a rallongé la durée de vie de sa mayonnaise sans changer d'ingrédient.</div>
+                </li>
+                <li class="done">
+                  <div class="t1">Jour 8 · Deuxième e-mail</div>
+                  <div class="t2">La fiche de l'expert corps gras, son parcours, les lignes qu'il a mises en route.</div>
+                </li>
+                <li class="now">
+                  <div class="t1">Jour 11 · Il remplit le formulaire</div>
+                  <div class="t2">Six champs. La demande tombe dans le tableau de bord du cabinet.</div>
+                </li>
+              </ul>
+
+              <div class="card">
+                <h3>Ce qui vient de se passer</h3>
+                <p>Un industriel qui ne connaissait pas le réseau il y a onze jours vient de demander un rendez-vous, en donnant son pays, son produit et son stade d'avancement. Personne n'a passé un seul appel de prospection.</p>
+              </div>
+
+              <button class="btn btn-a" data-role-go="cabinet">
+                Voir sa demande arriver
+                <svg class="ic"><use href="#i-arrow"/></svg>
+              </button>
+            </div>
+
+            <!-- ============ VUE 3 : LE CABINET ============ -->
+
+            <div class="view" id="c-demandes">
+              <div class="simu">
+                <svg class="ic"><use href="#i-info"/></svg>
+                <p><b>Chiffres simulés.</b> Ce sont des hypothèses de travail construites sur des repères de marché, pas des résultats mesurés. Ils servent à montrer la mécanique et à discuter des ordres de grandeur.</p>
+              </div>
+
+              <div class="kpis">
+                <div class="kpi">
+                  <div class="lb"><svg class="ic"><use href="#i-mail"/></svg>Demandes ce mois</div>
+                  <div class="vl">14<small>dont 4 cette semaine</small></div>
+                </div>
+                <div class="kpi">
+                  <div class="lb"><svg class="ic"><use href="#i-calendar"/></svg>Diagnostics tenus</div>
+                  <div class="vl">9<small>sur 14 demandes</small></div>
+                </div>
+              </div>
+
+              <div class="sec">Les demandes qui arrivent</div>
+
+              <div class="item">
+                <div class="av">AS</div>
+                <div class="bd">
+                  <div class="t1">Amadou Sangaré</div>
+                  <div class="t2">SOMAPRO Industries, Bamako<br><b>Mayonnaise</b> · produit déjà, veut optimiser</div>
+                  <span class="st st-new"><svg class="ic"><use href="#i-clock"/></svg>À qualifier</span>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="av">RZ</div>
+                <div class="bd">
+                  <div class="t1">Rakiatou Zongo</div>
+                  <div class="t2">Établissements Zongo &amp; Fils, Ouagadougou<br><b>Bouillons</b> · se lance, rien d'installé</div>
+                  <span class="st st-go"><svg class="ic"><use href="#i-calendar"/></svg>Diagnostic calé</span>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="av">SM</div>
+                <div class="bd">
+                  <div class="t1">Seydou Maïga</div>
+                  <div class="t2">Sahel Food SA, Niamey<br><b>Pâtes alimentaires</b> · équipements installés</div>
+                  <span class="st st-ok"><svg class="ic"><use href="#i-check"/></svg>Mission signée</span>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="av">FC</div>
+                <div class="bd">
+                  <div class="t1">Fatoumata Cissé</div>
+                  <div class="t2">Complexe Agro du Fleuve, Dakar<br><b>Margarine</b> · produit déjà, veut optimiser</div>
+                  <span class="st st-go"><svg class="ic"><use href="#i-calendar"/></svg>Diagnostic calé</span>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="av">KN</div>
+                <div class="bd">
+                  <div class="t1">Kouadio N'Guessan</div>
+                  <div class="t2">Étudiant en génie alimentaire, Abidjan<br><b>Bouillons</b> · pas de projet industriel</div>
+                  <span class="st st-no"><svg class="ic"><use href="#i-info"/></svg>Hors cible</span>
+                </div>
+              </div>
+
+              <div class="note">
+                <svg class="ic"><use href="#i-shield"/></svg>
+                <p>La dernière ligne compte autant que les autres. Un formulaire qui qualifie permet d'écarter en dix secondes ce qui n'est pas un client, au lieu d'y passer un rendez-vous.</p>
+              </div>
+            </div>
+
+            <div class="view" id="c-origine">
+              <div class="simu">
+                <svg class="ic"><use href="#i-info"/></svg>
+                <p><b>Chiffres simulés.</b> Ordres de grandeur à valider dès le premier mois de campagne réelle.</p>
+              </div>
+
+              <div class="sec">D'où viennent les 14 demandes</div>
+
+              <div class="brow">
+                <div class="hd"><span class="nm">Publicité Facebook et Instagram</span><span class="vl">8 demandes</span></div>
+                <div class="bar"><i class="t" style="width:57%"></i></div>
+                <div class="sub">Budget du mois 450 €, soit environ 56 € la demande.</div>
+              </div>
+
+              <div class="brow">
+                <div class="hd"><span class="nm">LinkedIn, publications du réseau</span><span class="vl">4 demandes</span></div>
+                <div class="bar"><i class="b" style="width:29%"></i></div>
+                <div class="sub">Aucun budget média. Coût : le temps de publication.</div>
+              </div>
+
+              <div class="brow">
+                <div class="hd"><span class="nm">Bouche-à-oreille et recherche</span><span class="vl">2 demandes</span></div>
+                <div class="bar"><i class="p" style="width:14%"></i></div>
+                <div class="sub">Des gens qui cherchaient le cabinet par son nom.</div>
+              </div>
+
+              <div class="sec">Ce que ça dit</div>
+              <div class="card">
+                <h3>La publicité amorce, le réseau convertit</h3>
+                <p>Les demandes venues de LinkedIn se transforment mieux en missions parce que la personne a déjà vu le visage de l'expert. C'est pour ça que les fiches experts ne sont pas décoratives.</p>
+              </div>
+
+              <table class="tabledata">
+                <tr><th>Canal</th><th>Demandes</th><th>Coût</th></tr>
+                <tr><td><b>Publicité</b></td><td>8</td><td>≈ 56 €</td></tr>
+                <tr><td><b>LinkedIn</b></td><td>4</td><td>0 €</td></tr>
+                <tr><td><b>Direct</b></td><td>2</td><td>0 €</td></tr>
+              </table>
+            </div>
+
+            <div class="view" id="c-renta">
+              <div class="simu">
+                <svg class="ic"><use href="#i-info"/></svg>
+                <p><b>Chiffres simulés.</b> Le prix moyen d'une mission est l'inconnue majeure : il doit être fixé par M. GNOU et les experts avant toute projection sérieuse.</p>
+              </div>
+
+              <div class="sec">Ce que le mois produit</div>
+              <div class="fun">
+                <div class="fn">
+                  <div class="l">Demandes reçues<small>formulaire rempli</small></div>
+                  <div class="v">14</div>
+                </div>
+                <div class="fn">
+                  <div class="l">Demandes qualifiées<small>vraiment industriels</small></div>
+                  <div class="v">11</div>
+                </div>
+                <div class="fn">
+                  <div class="l">Diagnostics tenus<small>45 minutes</small></div>
+                  <div class="v">9</div>
+                </div>
+                <div class="fn hi">
+                  <div class="l">Missions signées<small>sur le mois</small></div>
+                  <div class="v">2</div>
+                </div>
+              </div>
+
+              <div class="sec">Le calcul du mois</div>
+              <table class="tabledata">
+                <tr><th>Ligne</th><th>Montant</th></tr>
+                <tr><td><b>Budget publicitaire</b></td><td>450 €</td></tr>
+                <tr><td><b>Animation du dispositif</b></td><td>150 €</td></tr>
+                <tr><td><b>Total dépensé</b></td><td>600 €</td></tr>
+                <tr><td><b>Missions signées</b></td><td>2</td></tr>
+                <tr><td><b>Seuil d'équilibre</b></td><td>300 € la mission</td></tr>
+              </table>
+
+              <div class="card" style="margin-top:14px">
+                <h3>La question à poser aux experts</h3>
+                <p>Une mission de formulation vaut-elle plus de 300 € ? Si oui, le dispositif se rembourse dès le premier mois. C'est la seule question qui décide, et elle appartient au réseau, pas à l'agence.</p>
+              </div>
+
+              <div class="note">
+                <svg class="ic"><use href="#i-bolt"/></svg>
+                <p>Ce tableau est volontairement nu. Un financeur n'a pas besoin d'une projection à cinq ans, il a besoin de savoir à partir de quand ça s'autofinance.</p>
+              </div>
+
+              <a class="btn btn-a" href="closing">
+                Voir la proposition
+                <svg class="ic"><use href="#i-arrow"/></svg>
+              </a>
+            </div>
+
+          </div><!-- /content -->
+
+          <div class="tabbar" id="tabbar" role="tablist" aria-label="Navigation"></div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function(){
+  var TABS = {
+    site: [
+      {v:'v-accueil', l:'Accueil',    i:'i-home'},
+      {v:'v-produit', l:'Produits',   i:'i-flask'},
+      {v:'v-experts', l:'Experts',    i:'i-users'},
+      {v:'v-diag',    l:'Diagnostic', i:'i-calendar'}
+    ],
+    indus: [
+      {v:'i-pub',     l:'La pub',     i:'i-target'},
+      {v:'i-page',    l:'Sa page',    i:'i-doc'},
+      {v:'i-livre',   l:'Le document',i:'i-mail'},
+      {v:'i-demande', l:'Sa demande', i:'i-check'}
+    ],
+    cabinet: [
+      {v:'c-demandes', l:'Demandes',   i:'i-mail'},
+      {v:'c-origine',  l:'Origine',    i:'i-target'},
+      {v:'c-renta',    l:'Rentabilité',i:'i-money'}
+    ]
+  };
+  var SUB = {
+    site:    'Réseau d’experts agroalimentaires',
+    indus:   'Le parcours d’un industriel',
+    cabinet: 'Poste de pilotage du cabinet'
+  };
+
+  var role = 'site';
+  var tabbar = document.getElementById('tabbar');
+  var tbSub  = document.getElementById('tbsub');
+  var content = document.getElementById('content');
+
+  function show(id){
+    var vs = document.querySelectorAll('.view');
+    for(var i=0;i<vs.length;i++){ vs[i].classList.remove('on'); }
+    var t = document.getElementById(id);
+    if(t){ t.classList.add('on'); }
+    var tb = tabbar.querySelectorAll('.tab');
+    for(var j=0;j<tb.length;j++){
+      tb[j].setAttribute('aria-selected', tb[j].dataset.v === id ? 'true' : 'false');
+    }
+    content.scrollTop = 0;
+  }
+
+  function buildTabs(){
+    var list = TABS[role], html = '';
+    for(var i=0;i<list.length;i++){
+      html += '<button class="tab" role="tab" data-v="' + list[i].v + '" aria-selected="false">'
+            + '<svg class="ic"><use href="#' + list[i].i + '"/></svg>' + list[i].l + '</button>';
+    }
+    tabbar.innerHTML = html;
+    var tb = tabbar.querySelectorAll('.tab');
+    for(var k=0;k<tb.length;k++){
+      tb[k].addEventListener('click', function(){ show(this.dataset.v); });
+    }
+  }
+
+  function setRole(r){
+    role = r;
+    var rb = document.querySelectorAll('.role');
+    for(var i=0;i<rb.length;i++){
+      rb[i].setAttribute('aria-selected', rb[i].dataset.role === r ? 'true' : 'false');
+    }
+    tbSub.textContent = SUB[r];
+    buildTabs();
+    show(TABS[r][0].v);
+  }
+
+  var rb = document.querySelectorAll('.role');
+  for(var i=0;i<rb.length;i++){
+    rb[i].addEventListener('click', function(){ setRole(this.dataset.role); });
+  }
+
+  document.addEventListener('click', function(e){
+    var g = e.target.closest ? e.target.closest('[data-go]') : null;
+    if(g){ show(g.dataset.go); return; }
+    var rg = e.target.closest ? e.target.closest('[data-role-go]') : null;
+    if(rg){ setRole(rg.dataset.roleGo); return; }
+  });
+
+  document.getElementById('open').addEventListener('click', function(){
+    document.getElementById('splash').style.display = 'none';
+    document.getElementById('app').classList.add('on');
+    window.scrollTo(0,0);
+  });
+  document.getElementById('back').addEventListener('click', function(){
+    document.getElementById('app').classList.remove('on');
+    document.getElementById('splash').style.display = 'flex';
+    window.scrollTo(0,0);
+  });
+
+  setRole('site');
+})();
+</script>
+</body>
+</html>
