@@ -46,10 +46,15 @@ a{color:var(--or-texte);text-underline-offset:3px}
 .encadre p:last-child{margin-bottom:0}
 .encadre .titre{font-weight:700;color:var(--encre);font-size:14px;margin-bottom:8px}
 
+/* En inline-block, un surlignage long occupait sa ligne entière et laissait la
+   ponctuation qui le suit orpheline sur la ligne suivante. En display:inline il
+   se coupe comme du texte, et box-decoration-break redessine le cadre sur chaque
+   fragment pour que la coupure reste propre. */
 .a-completer{
+  display:inline;
   background:#FDF7E9;border:1px solid #EFDFBC;border-radius:8px;
-  padding:2px 8px;color:var(--or-texte);font-weight:700;font-size:13px;
-  display:inline-block;
+  padding:1px 7px;color:var(--or-texte);font-weight:700;font-size:13px;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
 }
 
 table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}

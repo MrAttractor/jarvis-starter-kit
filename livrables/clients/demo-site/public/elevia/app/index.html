@@ -28,8 +28,8 @@
    fait foi désormais, la charte graphique appartient à la Cliente. */
 :root{
   --encre:#00234B; --creme:#F4F6F9; --sable:#E9EDF3; --blanc:#FFFFFF;
-  --or:#BE9440; --or-clair:#D9AC56; --or-fonce:#A87726; --or-texte:#8A6420;
-  --muted:#55606F; --gris:#6E7889; --bord:#DCE3EB;
+  --or:#BE9440; --or-vif:#C9A24A; --or-clair:#D9AC56; --or-fonce:#A87726; --or-texte:#8A6420;
+  --muted:#55606F; --gris:#6A7484; --bord:#DCE3EB;
   --succes:#1E7346; --alerte:#8C302B;
   --serif:'Playfair Display',Georgia,serif;
   --sans:'DM Sans',system-ui,-apple-system,sans-serif;
@@ -106,8 +106,14 @@ h2{font-family:var(--serif);font-size:20px;line-height:1.3;font-weight:500;margi
 .tableau .sceau{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
 }
-.tableau .sceau{padding:16px}
-.tableau .sceau-logo{width:auto;height:100%;max-height:100%;object-fit:contain}
+.tableau .sceau{padding:18px;flex-direction:column;gap:14px}
+.tableau .sceau-logo{width:auto;height:56%;max-height:56%;object-fit:contain}
+.tableau .devise{
+  display:flex;align-items:center;gap:11px;font-size:9.5px;letter-spacing:.26em;
+  color:var(--or-texte);font-weight:700;text-align:center;
+}
+.tableau .devise i{display:block;width:22px;height:1px;background:var(--or);opacity:.7}
+@media(max-width:380px){.tableau .devise{font-size:8.5px;letter-spacing:.18em}}
 
 /* ── Badges de confiance ── */
 .gages{display:grid;gap:9px;margin-bottom:24px}
@@ -179,10 +185,12 @@ input[aria-invalid="true"]{border-color:var(--alerte)}
 }
 .bouton:active:not(:disabled){transform:translateY(1px)}
 .bouton:disabled{opacity:.4;cursor:not-allowed}
-.bouton.or{background:var(--or);color:var(--blanc)}
+/* Or vif conservé, mais le texte passe en bleu nuit : blanc sur or ne donnait
+   que 2,80:1, mesuré au script. Encre sur cet or donne 6,52:1. */
+.bouton.or{background:var(--or-vif);color:var(--encre);font-weight:700}
 @media (hover:hover) and (pointer:fine){
   .bouton:hover:not(:disabled){background:#001B3A}
-  .bouton.or:hover:not(:disabled){background:var(--or-fonce)}
+  .bouton.or:hover:not(:disabled){background:var(--or)}
 }
 button{-webkit-tap-highlight-color:transparent}
 .lien{
@@ -434,9 +442,15 @@ const barre = (n) => `<div class="pas" role="presentation">${[1,2,3].map(i=>`<i 
 /* ═══════════ Accueil ═══════════ */
 function ecranAccueil() {
   /* Tant que la Cliente n'a pas fourni sa photographie, l'ouverture porte son
-     logo complet sur une plaque ivoire : c'est de sa marque, pas d'une image de
-     banque posée là pour remplir. Le jour où la photo arrive, elle prend cette
-     place et le logo reste en tête d'écran. */
+     monogramme et sa devise sur une plaque ivoire : c'est de sa marque, pas une
+     image de banque posée là pour remplir. Le jour où la photo arrive, elle prend
+     cette place.
+
+     Le logo COMPLET a d'abord été mis ici, et le rendu a montré le défaut : le mot
+     ÉLÉVIA apparaissait deux fois à deux cents pixels d'intervalle, une fois en
+     tête d'écran et une fois dans la plaque. On garde donc le monogramme seul, et
+     on remonte à la place la devise de son logo, « connecter, partager, prospérer »,
+     qui est son vocabulaire et qui ne servait nulle part. */
   const visuel = MARQUE.photoAccueil
     ? `<img src="${ech(MARQUE.photoAccueil)}" alt="" loading="eager" decoding="async">`
     : `<div class="decor"></div>
@@ -447,8 +461,8 @@ function ecranAccueil() {
          </g>
        </svg>
        <div class="sceau">
-         <img src="${ech(MARQUE.logoComplet)}" alt="Élévia, connecter, partager, prospérer"
-              class="sceau-logo" loading="eager" decoding="async">
+         <img src="${ech(MARQUE.logo)}" alt="" class="sceau-logo" loading="eager" decoding="async">
+         <p class="devise"><i></i>CONNECTER · PARTAGER · PROSPÉRER<i></i></p>
        </div>`;
 
   rendre(`
