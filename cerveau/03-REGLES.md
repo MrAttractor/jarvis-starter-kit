@@ -110,6 +110,15 @@
 **Origine** : référentiel prix.
 **Application** : environ 22 % du chiffre d'affaires est une charge du prestataire, intégrée dans le prix (net ≈ 78 %). Jamais une ligne visible côté client.
 
+### R-72 · La charte du client prime sur notre cahier des charges, et c'est son logo qui l'établit
+**Origine** : recette du Club Élévia du 08/08/2026, logo officiel reçu le 14/08. La cliente demandait « conserver partout le bleu nuit et l'or » alors que l'application était en noir et or.
+**Le fait mesuré** : les couleurs relevées dans son fichier logo sont le bleu nuit `#00234B` et l'or `#A87726` à `#D9AC56`. Aucun bleu nulle part dans notre cahier des charges, qui écrit « charte Noir & Or » **six fois, dont dans un critère d'acceptation**. Le cahier des charges n'avait pas tort par négligence : il a été rédigé **avant que le logo existe**.
+**Application** : quand un client réclame une identité visuelle différente de nos documents, ne pas lui opposer le cahier des charges. **Comparer les dates.** Un document rédigé avant que l'identité du client existe décrit un provisoire que nous avions choisi à sa place, il n'engage pas le client. On relève alors les couleurs **dans le fichier source, au script, jamais à l'œil** (voir R-24), et on bascule.
+**Ce qui reste opposable** dans le cahier des charges, ce sont les fonctionnalités, le périmètre et les critères d'acceptation fonctionnels. Pas la description d'une identité que le client n'avait pas encore fournie.
+**Pourquoi c'est structurel et pas anecdotique** : la création de charte et de logo est **explicitement hors de nos prestations**. La charte vient donc toujours du client, par construction, et rien ne garantit qu'elle arrive avant notre cahier des charges. Le cas se reproduira à chaque dossier où le client fait faire son identité en parallèle.
+**Le réflexe à prendre** : à l'ouverture d'un dossier, demander si l'identité visuelle est **figée ou en cours**. Si elle est en cours, écrire dans le cahier des charges que la charte appliquée est provisoire et sera remplacée par celle du client sans que cela constitue une demande hors périmètre. Cela évite d'avoir à choisir entre donner raison au client et défendre son propre document.
+**Assists** : quand un utilisateur constate qu'un prestataire lui oppose un document contredit par sa propre marque, l'assistant lui fait vérifier laquelle des deux pièces est antérieure à l'autre.
+
 ---
 
 ## C · PRODUCTION TECHNIQUE
