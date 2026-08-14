@@ -7,6 +7,107 @@
 
 ---
 
+## 2026-08-10 (session 129 — ETHSUN reprend vie, et une veille bien faite tirait la mauvaise conclusion)
+
+> Le dossier était à l'arrêt depuis le 31 juillet, avec un état des lieux écrit
+> et jamais envoyé. Il est parti aujourd'hui, en note de cadrage.
+
+### Ce qui est parti chez le partenaire
+- **Note de cadrage `NOTE-ETHSUN-AXES-ET-COLLABORATION.html`**, 4 pages A4, **envoyée à Jean-Calvin Ethien par WhatsApp** le 10/08. Contenu : état des lieux de ce qui est acquis et de ce qui ne l'est pas, veille marché ivoirien, trois axes proposés pour le Sprint Tourisme, et ce qu'on attend de lui pour avancer.
+- **Les trois axes** : le prix et le remplissage (recommandé), l'expérience et la réputation, les opérations et le back-office. Plus un quatrième scénario qui garde les quatre modules du catalogue avec l'axe 1 en profondeur, pour qu'il n'ait pas à retirer quelque chose.
+- **Le levier de la note** : le plan de formation ne se rédige **qu'après** le choix de l'axe, parce que les objectifs, les verbes de Bloom et les critères de réussite du gabarit ETHSUN changent selon l'axe. Argument vrai, et qui protège au passage la règle du dossier (aucun contenu pédagogique avant signature) sans avoir à la poser comme une condition.
+
+### Le document a été écrit deux fois, et la deuxième version est la bonne
+- **Première version, 6 pages, avec trois formules financières** (45 % tout au partage, 1 800 € puis 25 %, 1 800 € puis 1 400 € par session), un tableau de rendement et une commission d'apport de 10 % à ETHSUN.
+- **Mac Arthur l'a retirée en entier** : l'économie du partenariat se discute en réunion, pas par écrit. Remplacée par une section qui **pose l'ordre du jour** de cette réunion sans rien chiffrer. Le seul montant qui reste dans le document est le prix public du catalogue ETHSUN, 488 €.
+- **LEÇON TRANSFÉRABLE : envoyer des chiffres par écrit avant d'en avoir parlé, c'est se faire répondre par écrit.** Sur un partenariat, la note prépare la conversation, elle ne la remplace pas. La préparation chiffrée existe, elle reste interne.
+
+### La veille était juste, la conclusion était fausse
+- La veille du 08/07 avait établi un fait solide : **120 opérateurs touristiques ivoiriens ont été formés gratuitement à l'IA et au marketing digital en octobre 2025** par la direction en charge de la digitalisation au ministère. Le dossier en avait tiré que les modules 1 et 3 étaient « brûlés » et que **seul** le Revenue Management justifiait encore le prix.
+- **Correction de Mac Arthur : un marché déjà formé n'est pas un marché fermé.** Une sensibilisation collective fait découvrir, elle n'installe rien. Le sujet se reprend, à condition de le traiter autrement : outils standards du marché, choisis parce qu'ils sont directement applicables, paramétrés pendant le Sprint sur les chiffres réels du participant, qui repart avec quelque chose qui tourne et non avec des notes.
+- Conséquence dans le document : la formation antérieure devient une **bonne nouvelle** (public pré-éduqué, plus besoin de le convaincre que l'IA le concerne), l'axe 2 passe de « point de vigilance » à « le thème le plus attendu, et un public rapide à embarquer », et le Revenue Management redevient un ajout au lieu d'être la seule justification du prix.
+- **Écrit dans le cerveau : `R-65 · Un marché déjà formé n'est pas un marché fermé`**, avec son corollaire de veille. La différenciation ne se cherche pas dans le sujet mais dans le niveau d'exécution.
+
+### Livrables
+- `ethsun/NOTE-ETHSUN-AXES-ET-COLLABORATION.html` (externe, à imprimer en PDF, jamais envoyer le HTML).
+- `ethsun/DOSSIER.md` révisé : radar, distinction interne/externe écrite noir sur blanc pour que le programme du Sprint ne parte jamais par erreur.
+- `ethsun/ETAT-DES-LIEUX-OPPORTUNITE.md` corrigé sur le §5.5 et le §6, qui portaient le raisonnement rectifié.
+- `cerveau/03-REGLES.md` : R-65.
+- **Non fait** : la note n'a pas été relue sur un vrai téléphone avant l'envoi (R-51), alors qu'elle est partie par WhatsApp.
+
+### Reste à tracer
+Les autres chantiers du 10/08 ne sont pas couverts par cette entrée : **C'Real** (numéro de commande, reçu de paiement, message WhatsApp au format de Kezey, mode d'emploi dans le tableau de bord), **Nabycook** (débrief du 10/08, onglet En ce moment) et **Festival des Grillades** (migrations `0005` et `0006`, fuite du jeton d'animation, à l'origine des règles R-62 à R-64). À reprendre au prochain `/update`.
+
+---
+
+## 2026-08-08 (session 128 — la séance technique du Festival se tient, et l'espace de pilotage montre ce qu'elle n'a pas produit)
+
+> La première prestation de conseil vraiment tracée. Le dispositif a tenu,
+> et c'est précisément lui qui rend visible le trou laissé par la séance.
+
+### La séance a eu lieu, reportée d'un jour
+- Tenue le **jeudi 7 août** en visioconférence, environ **1 h 30**, dans l'espace de pilotage en ligne. Présents : **Marius A., DGA d'Advantage Conseils** et **Arnaud YORO, directeur adjoint de Thim Production**, animée par Mac Arthur. Ce ne sont ni Florence KONE ni Nomagbè MEÏTE, les représentantes citées au dossier : **les personnes qui viennent en séance ne sont pas toujours celles qui signent**, à vérifier avant de faire valider un relevé.
+- **Les 40 points de périmètre sont statués, la séance est close** : 28 confiés à Thim, 10 gardés par Advantage, 1 à préciser, le cadre d'ouverture validé.
+- Le rapport d'animation confirme une participation réelle et équilibrée, environ 42 minutes actives côté Advantage et 40 côté Thim, sur téléphone dans les deux cas. La traçabilité n'est pas décorative : elle prouve que les deux structures ont bien statué.
+
+### Ce que le dispositif rend visible, et qu'on n'aurait pas vu autrement
+- **Les 29 informations à obtenir d'Advantage sont toutes restées vides.** Aucune réponse, aucun porteur, aucune échéance. La séance a parcouru la liste des tâches, pas la liste des chiffres.
+- **Conséquence directe : le chiffrage ne peut pas commencer et le devis du 13 août n'est pas tenable.** Sans jauge, sans programmation, sans grille tarifaire, aucune ligne de coût ne se construit. Le budget reste vide.
+- **Le relevé n'a qu'une validation sur trois**, celle de Mr Attractor. Une répartition signée par l'animateur seul n'engage personne.
+- **LEÇON TRANSFÉRABLE : dans une séance de recueil, statuer qui fait quoi est facile et confortable, obtenir les chiffres est le vrai travail.** Traiter les informations en premier, ou leur consacrer une séance dédiée, sinon elles se font manger par le périmètre et le chiffrage reste bloqué.
+
+### Trois lignes qui contredisent le cadre validé en ouverture
+Le point d'ouverture fait de **Thim l'organisateur déclaré unique**. Trois décisions prises ensuite le contredisent, et reconstruisent l'organisateur de façade que le montage voulait éviter.
+1. **Le site** reste contracté par Advantage, première tranche déjà payée. L'occupant déclaré doit être l'organisateur.
+2. **Les contrats et la paie des artistes** restent chez Advantage, avec une avance et un solde le jour J. Un artiste qui se produit en France est **présumé salarié** (art. L.7121-3). Payé par une structure ivoirienne sans contrat français ni déclaration, c'est du travail dissimulé, et **l'organisateur déclaré en répond**. Advantage négocie et finance, Thim doit contracter et déclarer.
+3. **L'hygiène alimentaire** confiée à Advantage, alors que la déclaration DDPP se dépose en France par l'exploitant. La formation des restaurateurs peut venir d'Abidjan, la déclaration non.
+- S'y ajoute la société de sécurité de l'an dernier « reconduite tacitement » : une reconduction tacite avec un tiers n'engage pas Thim.
+
+### Ce que la séance a apporté de neuf
+- **Un acteur non identifié jusqu'ici** : Stéphane ATTA, responsable des partenariats et sponsors côté Advantage.
+- **Visas resserrés** : dépôt visé dans la **semaine du 17 août**, et non plus le 25. La liste nominative et les lettres d'invitation deviennent l'échéance la plus proche après l'assurance annulation du 15.
+- Salle déjà engagée et décrite comme aux normes, piste de dépôt-vente champagne, carte de gros au nom de Thim, staff Advantage à la commission, digital piloté depuis Abidjan et terrain France par Thim, équipe sur place vers le 8 octobre.
+- Mention d'un format **grand public visé pour 2027**, ce qui laisse penser que 2026 reste une soirée en salle. À faire confirmer, ça change tout le calibrage.
+
+### Le dossier Drive de Thim renverse le montage
+- Accès obtenu en fin de journée au dossier « F D A doc » de Thim Production. Neuf documents, dont **notre propre contrat de mandat V1**, qu'elle a repris chez elle et où elle n'a rempli **qu'une seule ligne** : l'adresse du site.
+- **Gains immédiats** : identités complètes des deux structures, et **l'adresse du site, 12 rue Gutenberg à Bobigny**, qui était l'information manquante n°3 de la séance.
+- **Le fait qui décide** : **Thim Production est une SASU au capital de 500 euros.** Le forfait acté le 5 août lui faisait acheter puis revendre une production de plusieurs dizaines de milliers d'euros en absorbant les dépassements sur sa marge. Un seul imprévu l'efface.
+- **Décision de Mac Arthur : retour au mandat de production exécutive.** Advantage finance tout, Thim ne porte pas le risque et perçoit honoraires plus commission. Le contrat au forfait, écrit le matin même, part en `_abandonne/`.
+- **Effet de bord décisif sur le calendrier** : le mandat permet de signer **sans budget arrêté**. Les 29 informations manquantes sortent du chemin critique de la signature, alors qu'elles bloquaient totalement le forfait.
+- **LEÇON TRANSFÉRABLE : la forme juridique du partenaire commande le montage, pas l'inverse.** Le forfait avait été choisi sur sa logique commerciale, sans regarder qui devait le porter. Un capital social se vérifie avant de construire l'économie d'un contrat, pas après.
+
+### Deux découvertes qui n'étaient nulle part chez nous
+- **Un pacte de non-contournement** existe, signé ou non, que l'agence n'avait jamais vu : 150 000 € par violation, 250 000 € en cas d'atteinte au concept, cinq ans, tribunal de Rennes. Son **article 7 interdit de solliciter pendant vingt-quatre mois les prestataires ayant collaboré avec l'autre partie**, ce qui vise Mr Attractor. Et ses montants font doublon avec les articles 29 et 30 du mandat, d'où un risque de double sanction du même fait.
+- **L'« offre financière » du dossier est un document de sponsoring**, montants encore à zéro, et elle **ne mentionne que Grand-Bassam et Abidjan**. Paris n'y figure pas. Aucun chiffre exploitable pour le budget.
+
+### L'angle mort du dossier
+- **Il n'existe aucune convention entre Mr Attractor et Thim Production.** Le travail court depuis le 25 juillet, rédaction de trois documents contractuels, animation de la séance, espace de pilotage. La rémunération de l'agence repose aujourd'hui sur la bonne volonté d'une SASU au capital de 500 euros, sans une ligne écrite.
+
+### Le document unique, le cahier des charges et le board
+- **Trois montages auront été traversés en une journée** : coproduction (écartée le 25/07), forfait (écarté le 08/08), et retour au **mandat de production exécutive**, enrichi. Le déclencheur du dernier arbitrage : Mac Arthur a renvoyé à **l'article 18 du mandat**, qui contient déjà le non-contournement complet, là où le projet de forfait ne le contenait pas.
+- **`CONTRAT-MANDAT-ADVANTAGE-THIM-V2.md`** : document unique envoyé aux deux parties. Garde l'économie du mandat et son article 18, et verse les apports du forfait : engagement corrélatif d'Advantage à ne pas contracter en France, **article 5 bis sur l'engagement et la paie des artistes**, substitution sur le contrat de salle, sécurité sans reconduction tacite, hygiène, fourniture des informations et suspension des délais, non-sollicitation avec la réserve qui préserve la relation directe avec Mr Attractor, et un article 36 qui donne enfin une valeur probatoire aux relevés de l'espace de pilotage.
+- **`CAHIER-DES-CHARGES-FGP-2026.md`**, Annexe 4 : les 40 opérations avec porteur, contenu et **critère d'exécution**, plus une colonne qui distingue ce qui a été coché en séance de ce qui est retenu au contrat. Les trois écarts sont signalés et justifiés, pas maquillés.
+- **Board de pilotage en ligne**, migration `0004_board_pilotage.sql` et front `festival-grillades/board/` : compte à rebours, 15 jalons datés avec porteur et statut modifiable, répartition du périmètre par lot, les 29 informations dues, actions et séances. **Les alertes de retard sont calculées côté serveur**, pas sur l'horloge du téléphone qui regarde.
+- Recette faite à la **clé anonyme**, pas au service role : tables non lisibles, jeton invalide refusé, mise à jour de jalon enregistrée au nom de son auteur, traces de test purgées. URL testée avec et sans barre oblique finale, le jeton survit au 308 de Cloudflare Pages.
+- **Non fait, et dit** : la page n'a pas encore tourné sur un vrai téléphone (R-51).
+
+### Une question d'usage débusque une faille de sécurité
+- Question de Mac Arthur : **comment met-on à jour les informations attendues ?** Réponse embarrassante : on ne pouvait pas. La fonction d'écriture refuse toute modification quand la séance est close, et elle l'est depuis le 7 août. Rouvrir la séance aurait créé une version et effacé les validations.
+- **Défaut de conception** : le recueil des informations vit sur plusieurs semaines, il avait été construit comme un objet de séance. Corrigé par une fonction de suivi hors séance, et un bloc éditable dans le board.
+- **Effet de bord traité** : le compte rendu affiche ces informations. Autoriser l'écriture aurait fait bouger un relevé figé et déjà soumis à validation. Le relevé écarte désormais toute saisie postérieure à sa clôture, il constate un état au 7 août.
+- **Et en vérifiant cela, une vraie faille** : la fonction de lecture renvoyait `to_jsonb(seance) - 'jeton'`, écrite **avant** la migration qui a ajouté la colonne `jeton_admin`. Le **jeton d'animation partait donc à tous les participants**, du 5 au 10 août. Il ouvre le rapport de connexions et surtout la **réinitialisation complète de la séance**. N'importe lequel des participants pouvait effacer le relevé qu'il venait de valider.
+- **Corrigé en trois temps** : retrait explicite de la colonne, **rotation du jeton compromis** (réparer la fonction ne suffit pas, le secret a circulé), et refus en base de toute réinitialisation dès qu'une validation existe. Vérifié à la clé anonyme : jeton absent de la réponse, ancien jeton mort, réinitialisation refusée.
+- **LEÇON : `to_jsonb(ligne) - 'secret'` est une liste noire**, et une liste noire ne connaît pas les colonnes qui n'existaient pas quand on l'a écrite. Cerveau : fiche **EXP-039**, règles **R-62 à R-64**.
+
+### Livrables
+- `festival-grillades-paris/DOSSIER.md` révisé au 08/08 : montage, séance, répartition, contradictions juridiques, séquence recalée.
+- `MANDAT-V2-MODIFICATIONS.md` : les sept champs à remplir avec une recommandation chacun, et sept modifications de fond prêtes à coller dans le Doc de Thim, dont un **article 5 bis sur l'engagement et la paie des artistes** qui corrige ce que la séance avait mal tranché.
+- `_abandonne/CONTRAT-PRESTATION-ADVANTAGE-THIM.md`, écrit puis écarté le même jour.
+- **Reste à faire** : fixer les honoraires de Thim (seul verrou), appliquer les modifications, écrire la convention Mr Attractor / Thim, faire valider le relevé par les deux structures.
+
+---
+
 ## 2026-08-08 (session 127 — Nabycook livre ses éléments, et le site cesse d'être une maquette à trous)
 
 > Nabintou a déposé son dossier dans un Drive partagé. La journée a servi à tout
