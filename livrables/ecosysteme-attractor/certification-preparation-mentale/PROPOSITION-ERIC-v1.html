@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proposition d'accompagnement - Éric, thème B</title>
+<style>
+  :root{
+    --encre:#16181C;
+    --encre-doux:#4A4F57;
+    --terre:#B85C2A;
+    --sable:#F6F2EB;
+    --sable-fonce:#EDE6DA;
+    --trait:#D9D1C4;
+    --blanc:#FFFFFF;
+    --alerte:#8E4585;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--sable);
+    color:var(--encre);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  .page{
+    max-width:920px;
+    margin:0 auto;
+    padding:32px 24px 64px;
+  }
+
+  /* ---------- En-tête ---------- */
+  .entete{
+    border-bottom:3px solid var(--encre);
+    padding-bottom:24px;
+    margin-bottom:40px;
+  }
+  .surtitre{
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--terre);
+    font-weight:700;
+    margin:0 0 8px;
+  }
+  h1{
+    font-family:var(--serif);
+    font-size:32px;
+    line-height:1.2;
+    margin:0 0 16px;
+    font-weight:700;
+  }
+  .meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 32px;
+    font-size:14px;
+    color:var(--encre-doux);
+    margin:0;
+  }
+  .meta span{white-space:nowrap}
+  .meta b{color:var(--encre);font-weight:600}
+
+  /* ---------- Sections ---------- */
+  section{margin:0 0 48px}
+  h2{
+    font-family:var(--serif);
+    font-size:24px;
+    line-height:1.25;
+    margin:0 0 8px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--trait);
+  }
+  h2 .num{
+    color:var(--terre);
+    font-size:15px;
+    font-family:var(--sans);
+    font-weight:700;
+    letter-spacing:.08em;
+    display:block;
+    margin-bottom:8px;
+    border:0;
+  }
+  h3{
+    font-size:17px;
+    margin:32px 0 8px;
+    font-weight:700;
+  }
+  p{margin:0 0 16px}
+  .chapo{
+    font-size:17px;
+    color:var(--encre-doux);
+    margin:16px 0 24px;
+  }
+  strong{font-weight:700}
+  em{font-style:italic}
+
+  /* ---------- Tableaux ---------- */
+  .tw{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    margin:0 0 24px;
+    border:1px solid var(--trait);
+    background:var(--blanc);
+  }
+  table{
+    border-collapse:collapse;
+    width:100%;
+    min-width:520px;
+    font-size:15px;
+  }
+  caption{
+    text-align:left;
+    font-size:13px;
+    color:var(--encre-doux);
+    padding:8px 16px;
+    background:var(--sable-fonce);
+    border-bottom:1px solid var(--trait);
+  }
+  th,td{
+    text-align:left;
+    padding:8px 16px;
+    border-bottom:1px solid var(--trait);
+    vertical-align:top;
+  }
+  th{
+    background:var(--sable-fonce);
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+  tr:last-child td{border-bottom:0}
+  td.num,th.num{text-align:center;font-variant-numeric:tabular-nums}
+  .haut{color:var(--terre);font-weight:700}
+  .bas{color:var(--alerte);font-weight:700}
+
+  /* ---------- Profil ---------- */
+  .scores{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    margin:0 0 24px;
+  }
+  .score{
+    background:var(--blanc);
+    border:1px solid var(--trait);
+    padding:8px;
+    text-align:center;
+  }
+  .score.fort{border-color:var(--terre);border-width:2px}
+  .score.faible{border-color:var(--alerte);border-style:dashed}
+  .score .n{
+    font-family:var(--serif);
+    font-size:24px;
+    font-weight:700;
+    display:block;
+    line-height:1.1;
+  }
+  .score .t{
+    font-size:12px;
+    color:var(--encre-doux);
+    display:block;
+    margin-top:8px;
+  }
+
+  /* ---------- Encadrés ---------- */
+  .cadre{
+    background:var(--blanc);
+    border-left:4px solid var(--terre);
+    padding:16px 24px;
+    margin:0 0 24px;
+  }
+  .cadre.sombre{
+    background:var(--encre);
+    color:var(--blanc);
+    border-left-color:var(--terre);
+  }
+  .cadre.sombre strong{color:#F0C9A8}
+  .cadre.alerte{border-left-color:var(--alerte)}
+  .cadre p:last-child{margin-bottom:0}
+  .cadre .titre{
+    font-size:12px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    font-weight:700;
+    color:var(--terre);
+    margin:0 0 8px;
+  }
+  .cadre.alerte .titre{color:var(--alerte)}
+  .cadre.sombre .titre{color:#F0C9A8}
+  .citation{
+    font-family:var(--serif);
+    font-size:19px;
+    line-height:1.45;
+    margin:0;
+  }
+
+  /* ---------- Séances ---------- */
+  .pilier{
+    background:var(--encre);
+    color:var(--blanc);
+    padding:16px 24px;
+    margin:0 0 16px;
+  }
+  .pilier h3{
+    margin:0 0 8px;
+    font-family:var(--serif);
+    font-size:20px;
+    color:var(--blanc);
+  }
+  .pilier p{
+    margin:0;
+    font-size:14px;
+    color:#C9C4BB;
+  }
+  .seance{
+    background:var(--blanc);
+    border:1px solid var(--trait);
+    padding:16px 24px;
+    margin:0 0 16px;
+  }
+  .seance h4{
+    margin:0 0 16px;
+    font-size:18px;
+    font-family:var(--serif);
+    display:flex;
+    align-items:baseline;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .seance h4 .s{
+    font-family:var(--sans);
+    font-size:12px;
+    letter-spacing:.1em;
+    font-weight:700;
+    color:var(--blanc);
+    background:var(--terre);
+    padding:4px 8px;
+    white-space:nowrap;
+  }
+  .ligne{
+    display:grid;
+    grid-template-columns:160px 1fr;
+    gap:8px 24px;
+    padding:8px 0;
+    border-top:1px solid var(--sable-fonce);
+    font-size:15px;
+  }
+  .ligne:first-of-type{border-top:0}
+  .ligne dt{
+    font-size:12px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    font-weight:700;
+    color:var(--encre-doux);
+  }
+  .ligne dd{margin:0}
+  dl{margin:0}
+
+  ul,ol{margin:0 0 16px;padding-left:24px}
+  li{margin-bottom:8px}
+
+  .fin{
+    margin-top:64px;
+    padding-top:24px;
+    border-top:1px solid var(--trait);
+    font-size:13px;
+    color:var(--encre-doux);
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width:640px){
+    .page{padding:24px 16px 48px}
+    h1{font-size:26px}
+    h2{font-size:21px}
+    .scores{grid-template-columns:repeat(2,1fr)}
+    .ligne{grid-template-columns:1fr;gap:0}
+    .ligne dt{margin-bottom:4px}
+    .cadre,.seance,.pilier{padding-left:16px;padding-right:16px}
+    .citation{font-size:17px}
+  }
+
+  /* ---------- Impression ---------- */
+  @media print{
+    @page{size:A4;margin:14mm}
+    body{background:#fff;font-size:11pt;line-height:1.45}
+    .page{max-width:none;padding:0}
+    .tw{overflow:visible;overflow-x:visible}
+    table{min-width:0;font-size:10pt}
+    section,.seance,.cadre,.pilier,.tw,table,tr,td,th,.scores,.score,dl,.ligne{
+      break-inside:avoid;
+      page-break-inside:avoid;
+      overflow:visible;
+    }
+    h2,h3,h4{break-after:avoid;page-break-after:avoid}
+    .pilier{break-after:avoid;page-break-after:avoid}
+    .cadre.sombre{background:#fff;color:#000;border:1px solid #000;border-left-width:4px}
+    .cadre.sombre strong,.cadre.sombre .titre{color:#000}
+    section{margin-bottom:28px}
+    a{text-decoration:none;color:inherit}
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="entete">
+    <p class="surtitre">Académie Puissance Mentale &middot; Certification coach en préparation mentale</p>
+    <h1>Proposition d'accompagnement<br>Thème B, Éric, 44 ans</h1>
+    <p class="meta">
+      <span><b>Auteur</b> Mac Arthur N'Guessan Kouassi</span>
+      <span><b>Soutenance</b> jeudi 3 septembre 2026, 14h-15h</span>
+      <span><b>Version</b> 1, du 10 août 2026</span>
+    </p>
+  </header>
+
+  <p class="chapo">Ce document présente l'accompagnement que je propose à Éric, et les raisons de chaque choix. La dernière section reprend les arbitrages un par un, avec l'option que j'ai écartée et ce que je réponds si on me la présente.</p>
+
+  <!-- 1 -->
+  <section>
+    <h2><span class="num">01</span>Le cas et le profil</h2>
+
+    <p>Éric, 44 ans, entrepreneur, lance une activité de coaching en stratégie marketing <strong>de groupe</strong>. Il appréhende énormément les sessions de groupe par peur de ne pas être à la hauteur de ce que les clients attendent. Il veut leur en donner beaucoup. Il est fatigué et pense à son projet 24 heures sur 24. Ses relations avec ses proches se dégradent. Il cache à sa famille qu'il se fait coacher.</p>
+
+    <div class="scores">
+      <div class="score fort"><span class="n">33</span><span class="t">7 Jouisseur</span></div>
+      <div class="score fort"><span class="n">32</span><span class="t">8 Leader</span></div>
+      <div class="score fort"><span class="n">30</span><span class="t">3 Compétiteur</span></div>
+      <div class="score fort"><span class="n">29</span><span class="t">1 Perfectionniste</span></div>
+      <div class="score"><span class="n">24</span><span class="t">6 Loyaliste</span></div>
+      <div class="score"><span class="n">23</span><span class="t">9 Médiateur</span></div>
+      <div class="score faible"><span class="n">22</span><span class="t">4 Artiste</span></div>
+      <div class="score faible"><span class="n">22</span><span class="t">5 Penseur</span></div>
+      <div class="score faible"><span class="n">14</span><span class="t">2 Aidant</span></div>
+    </div>
+
+    <div class="cadre">
+      <p class="titre">Précaution de départ</p>
+      <p>Quatre points séparent le 7 du 1. Le sommet du profil est plat. Le questionnaire interroge des <strong>comportements</strong>, l'ennéagramme se lit sur des <strong>motivations</strong>. Je pose donc une hypothèse de travail, que je valide avec Éric en séance 2, et je ne lui annonce jamais un numéro comme un verdict. Le seul typage valide est celui qu'il reconnaît lui-même.</p>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section>
+    <h2><span class="num">02</span>Ma lecture du profil</h2>
+
+    <p>Un profil fortement utilisé n'est pas un profil mal utilisé. Le travail ne consiste pas à faire baisser son 8 ou son 7, mais à <strong>rééquilibrer ses profils fortement utilisés par ses profils peu développés</strong>, et à lui apprendre à repérer quand un profil fort bascule de sa zone de maîtrise vers sa zone critique.</p>
+
+    <div class="tw">
+      <table>
+        <caption>Les quatre rééquilibrages</caption>
+        <thead>
+          <tr><th>Profil fort</th><th>En zone de maîtrise</th><th>En zone critique</th><th>Rééquilibré par</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>7 Jouisseur (33)</strong></td><td>énergie, enthousiasme, ouvre des possibles</td><td>dispersion, fuite de l'inconfort, ne finit rien</td><td><strong>5 Penseur (22)</strong> profondeur, sobriété, savoir s'arrêter</td></tr>
+          <tr><td><strong>8 Leader (32)</strong></td><td>affirmation, décision, entraîne</td><td>contrôle, directivité, refus de la vulnérabilité</td><td><strong>2 Aidant (14)</strong> écouter le besoin de l'autre, accepter de recevoir</td></tr>
+          <tr><td><strong>3 Compétiteur (30)</strong></td><td>action, engagement, résultat</td><td>valeur confondue avec la performance, action solitaire</td><td><strong>6 Loyaliste (24)</strong> collectif, fédérer, demander de l'aide</td></tr>
+          <tr><td><strong>1 Perfectionniste (29)</strong></td><td>exigence, rigueur, sens du bien fait</td><td>autocritique, rigidité, jamais assez bien</td><td><strong>4 Artiste (22)</strong> écouter ses émotions et ses besoins propres</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Les deux lectures convergent, et c'est mon argument central</h3>
+    <p>J'ai croisé deux des trois méthodes de lecture admises : le rééquilibrage profils forts vers profils peu développés, et les directions d'intégration.</p>
+    <ul>
+      <li>La direction d'intégration du <strong>8 est le 2</strong>. Son 2 est à 14, le plus bas de tout le profil.</li>
+      <li>La direction d'intégration du <strong>3 est le 6</strong>. Son 6 est à 24, peu développé.</li>
+      <li>La direction d'intégration du <strong>7 est le 5</strong>. Son 5 est à 22, peu développé.</li>
+    </ul>
+    <p>Les trois rééquilibrages désignés par les scores sont exactement les trois directions d'intégration de ses profils dominants. Deux méthodes différentes donnent le même plan de travail. Ce n'est pas une interprétation, c'est vérifiable sur les chiffres, et ça sécurise toute la construction de l'accompagnement.</p>
+
+    <div class="cadre alerte">
+      <p class="titre">Et je dis où la démonstration s'arrête</p>
+      <p>Le quatrième couple ne suit pas. <strong>Le 1 ne s'intègre pas en 4, il s'y désintègre</strong>, le 1 s'intègre en 7. Ce que ça signifie pour Éric est plus inquiétant que rassurant : son 4 faible le prive de la ressource, l'écoute de ses émotions et de ses besoins, mais sous pression son 1 peut le pousser vers le versant sombre du 4, la rumination et le découragement. Le travail sur le 4 est donc une <strong>priorité de protection</strong>, pas seulement d'équilibre.</p>
+    </div>
+
+    <h3>Il touche les deux zones critiques, et c'est rare</h3>
+    <p>Le changement de zone décrit trois bandes : la zone critique <strong>haute</strong> en sur-activation, la <strong>zone de maîtrise</strong>, la zone critique <strong>basse</strong> en sous-activation.</p>
+    <ul>
+      <li><strong>En haut</strong> : son 7 à 33 et son 8 à 32 en tension et en dispersion. Il appréhende, il charge, il veut tout donner, il pense au projet 24 heures sur 24.</li>
+      <li><strong>En bas</strong> : il est fatigué, l'épuisement le tire vers l'apathie.</li>
+    </ul>
+    <p>Éric oscille entre les deux extrêmes sans jamais s'installer au milieu. Conséquence directe sur l'outillage : tout ce qui calme ne suffit pas. Il lui faut aussi de quoi <strong>remonter</strong>, et c'est la Dynamisation Physique et Mentale. Selon la zone d'où il vient ce jour-là, il descend ou il monte.</p>
+  </section>
+
+  <!-- 3 -->
+  <section>
+    <h2><span class="num">03</span>La problématique réelle</h2>
+
+    <h3>Sa solution est son problème</h3>
+    <p>Un 8 fort et un 3 fort avec un 2 très bas produisent un comportement précis, et il le manifeste déjà dans l'énoncé : <strong>il veut leur en donner beaucoup</strong>. Il construit son offre à partir de ce que lui juge bon, sans avoir vérifié ce dont les gens ont réellement besoin. Plus il charge, plus il élève le niveau auquel il devra répondre, plus il s'épuise.</p>
+
+    <h3>Fait ou croyance</h3>
+    <p>Les faits : il se lance, il est fatigué, il cache sa démarche. La croyance : « je dois leur en donner beaucoup », et le marqueur « je dois » la signe.</p>
+    <div class="cadre sombre">
+      <p class="citation">Éric n'a aucun fait sur ce que ses clients attendent. Il a une croyance qu'il n'a jamais testée, et c'est elle qui organise toute sa fatigue.</p>
+    </div>
+    <p>Je ne démonte pas tout pour autant : son énergie et sa capacité à foncer seul sont des croyances boostantes, elles restent en place.</p>
+
+    <h3>Le retournement</h3>
+    <p><strong>Il se lance dans un métier de groupe alors que son score le plus bas de tout le profil est la fonction relationnelle.</strong> Cela reformule complètement son appréhension : il se prépare à une performance de contenu là où l'exercice est relationnel. Sa peur de ne pas être à la hauteur est légitime, mais elle porte sur le mauvais objet. Ce qui lui manque n'est pas de la matière, c'est la connexion aux besoins de son groupe. Et sa réponse, en donner plus, aggrave l'épuisement sans traiter la cause.</p>
+
+    <h3>Le secret gardé à la famille est le nœud</h3>
+    <p>Le 8 ne montre pas sa faiblesse, le 3 protège son image, demander de l'aide est vécu comme un aveu. Et c'est <strong>le même mouvement qui produit la fatigue et l'éloignement des proches</strong> : il porte seul. Je ne le forcerai pas à en parler, je travaillerai sur ce que ce secret lui coûte, à sa place logique dans le pilier 2.</p>
+
+    <div class="cadre alerte">
+      <p class="titre">Vigilance professionnelle, posée dès la séance 1</p>
+      <p>Fatigue, rumination permanente, relations dégradées, dissimulation : ce faisceau est aussi celui d'un épuisement qui s'installe. Je ne suis ni médecin ni psychologue. J'explore explicitement le sommeil, l'appétit, la capacité à ressentir du plaisir et l'existence d'idées noires. Si des signaux cliniques apparaissent, <strong>j'oriente vers son médecin traitant</strong>, et l'accompagnement se poursuit en complément, jamais en remplacement.</p>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section>
+    <h2><span class="num">04</span>L'objectif de l'accompagnement</h2>
+
+    <h3>Ce que je ne promets pas</h3>
+    <p>Éric va probablement formuler un objectif de résultat, vendre un certain nombre de places, remplir sa première session. Ce résultat ne dépend ni de lui seul ni de moi, il dépend du marché, de la demande, du moment. Comme un athlète qui prépare un championnat : je ne garantis pas le podium, il n'y a que trois places. Je garantis que toutes les conditions seront réunies.</p>
+    <p>Je le dis en séance 1, et c'est déjà une intervention de coaching : chez un 3 à 30 qui indexe sa valeur sur le résultat, distinguer ce qu'il contrôle de ce qu'il ne contrôle pas fait baisser la pression.</p>
+
+    <h3>L'objectif retenu, vérifiable et quantifiable</h3>
+    <p>Formulé avec lui en séance 1 après le mode explorateur, et portant uniquement sur ce qui dépend de lui. Question de vérification posée à voix haute : « à quoi tu verrais que tu as atteint ton but ? »</p>
+
+    <div class="cadre sombre">
+      <p class="citation">D'ici quatre mois, Éric aura construit et animé une offre de coaching de groupe fondée sur les besoins réellement exprimés par au moins <strong>dix prospects interrogés</strong>, aura animé au minimum <strong>trois sessions</strong> avec une note d'appréhension descendue <strong>sous 4 sur 10</strong>, et aura retrouvé <strong>deux soirées par semaine</strong> sans travail.</p>
+    </div>
+
+    <div class="tw">
+      <table>
+        <caption>Trois indicateurs, mesurés dès la séance 1 et suivis tout du long</caption>
+        <thead><tr><th class="num">N°</th><th>Indicateur</th><th>Ce qu'il mesure</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td>Note d'appréhension avant session, de 0 à 10</td><td>le pilier 1</td></tr>
+          <tr><td class="num">2</td><td>Nombre de besoins prospects vérifiés, pas supposés</td><td>le pilier 2</td></tr>
+          <tr><td class="num">3</td><td>Nombre de soirées par semaine sans penser au projet</td><td>protège la personne</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section>
+    <h2><span class="num">05</span>La progression en trois piliers</h2>
+
+    <p>C'est l'ossature, et l'ordre n'est pas négociable. On ne travaille pas l'objectif sans avoir renforcé la connexion à soi puis la connexion aux autres. Ce qui s'adapte à la personne, c'est la <strong>pondération</strong>, pas l'ordre.</p>
+
+    <div class="tw">
+      <table>
+        <thead><tr><th>Pilier</th><th class="num">Séances</th><th>Ce qu'on installe</th><th>Pourquoi cet ordre pour lui</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1. Connexion à soi</strong></td><td class="num">1 à 3</td><td>ses valeurs, sa zone de maîtrise, l'écoute de ses besoins</td><td>il est fatigué et n'a pas de voyant interne. Le charger avant de le reconnecter à lui-même, c'est ajouter de la charge à un homme en surcharge</td></tr>
+          <tr><td><strong>2. Connexion aux autres</strong></td><td class="num">4 à 6</td><td>le besoin réel des prospects, fédérer un groupe, accepter de recevoir</td><td>c'est son point faible objectif et c'est le cœur de son métier. Sans ce pilier, il construit une offre que personne n'attend</td></tr>
+          <tr><td><strong>3. Connexion au projet</strong></td><td class="num">7 et 8</td><td>l'offre, l'incarnation, la prise de parole, l'autonomie</td><td>l'offre ne peut se construire qu'une fois les besoins connus et les valeurs posées</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cadre">
+      <p class="titre">Pourquoi je m'écarte de l'exemple du fascicule</p>
+      <p>L'exemple pédagogique répartit 6 séances sur la connexion à soi, 1 sur la connexion aux autres et 1 sur le projet. Je répartis <strong>3 / 3 / 2</strong>. Justification : son score le plus bas de tout le profil est la fonction relationnelle, et il se lance dans un métier <strong>de groupe</strong>. Consacrer une seule séance à la connexion aux autres reviendrait à ignorer le cœur de son cas. L'ordre des piliers est respecté, c'est leur pondération qui s'adapte à la personne, et c'est ce que la méthode demande : un accompagnement sur mesure, pas un déroulé standard.</p>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section>
+    <h2><span class="num">06</span>Le cadre de travail</h2>
+
+    <h3>En amont</h3>
+    <p><strong>Séance découverte</strong> : écoute de sa demande, vérification que je suis la bonne personne, présentation du cadre et de ce que le coaching est et n'est pas. Puis, avant la séance 1, <strong>envoi du contrat</strong> et <strong>envoi du questionnaire ennéagramme</strong>, qu'il remplit chez lui et me renvoie. Je prépare mon décryptage en amont : le temps de séance sert à accompagner, pas à remplir un questionnaire qu'il pouvait remplir seul.</p>
+
+    <h3>Rythme</h3>
+    <p><strong>8 séances sur 4 mois, une toutes les deux semaines.</strong> Le fascicule fixe le cadre, « entre chaque séance il pourra y avoir 2 semaines ou 3 semaines maximum ». Deux semaines est le bon choix ici : Éric doit avoir le temps d'expérimenter entre les séances, mais un 7 à 33 décroche si l'accompagnement s'étire. Huit séances fois deux semaines font seize semaines, soit exactement quatre mois.</p>
+    <p>Entre les séances, en plus des actions : des <strong>audios personnalisés</strong> pour qu'il pratique les protocoles seul. C'est ce qui rend l'intervalle de deux semaines productif au lieu de creux.</p>
+
+    <h3>La structure de chaque séance</h3>
+    <p>Toutes les séances suivent la structure de la méthode : <strong>Briefing</strong> (feed-back, explications, acceptation), <strong>cœur de séance</strong> (état de conscience ordinaire, puis expérience en état modifié de conscience de travail), <strong>débriefing</strong> (résumé, actions). Avec deux règles que le support met en gras et que j'applique : <strong>chaque séance a son objectif de séance</strong>, distinct de l'objectif de l'accompagnement, et <strong>une progression pédagogique relie chaque séance à la suivante</strong>.</p>
+
+    <p>Quatre constantes que j'applique partout et que je ne répète pas séance par séance :</p>
+    <ul>
+      <li><strong>Briefing</strong> : mise en contact informelle, puis feed-back depuis la dernière séance. On commence toujours par les points forts, ce qu'il a fait, ressenti, testé, puis les axes d'amélioration et pourquoi. Posture rassurante, orientée solution, responsabilisation au cœur du processus. Puis explication du déroulé, puis acceptation, ressentie ou demandée directement.</li>
+      <li><strong>Débriefing</strong> : je réexplique le déroulé du protocole pour qu'il puisse le refaire seul, ce qui construit son autonomie. Attention au <strong>temps de latence</strong> après un état modifié, il reste suggestible, donc discours rassurant et aucune interprétation hâtive. Clôture systématique : « si tu avais un mot, une phrase pour résumer notre entretien, que dirais-tu ? »</li>
+      <li><strong>Les actions</strong>, quand elles ne sont pas un protocole que je propose : lui demander d'imaginer cinq solutions dont deux complètement farfelues, pour libérer la créativité, puis d'en choisir deux ou trois. Adaptées à son mode de vie, et surtout il doit être motivé à les faire.</li>
+      <li><strong>Les échelles de 0 à 10</strong> pour l'état des lieux et l'évaluation : « à combien tu te sens intuitivement, à combien voudrais-tu raisonnablement arriver d'ici trois mois ? »</li>
+    </ul>
+
+    <div class="cadre">
+      <p class="titre">Ma façon de composer les protocoles</p>
+      <p>Amener en état modifié, contextualiser, travail spécifique, ressentir et diffuser, ancrer, futuriser, sortie standardisée mot pour mot. Le fascicule autorise explicitement à composer, « soyez créatifs avec l'état modifié de conscience de travail ». Ce ne sont pas dix protocoles à réciter, c'est une grammaire à six briques, et la profondeur de l'induction est proportionnelle au travail demandé.</p>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section>
+    <h2><span class="num">07</span>La programmation, séance par séance</h2>
+
+    <div class="pilier">
+      <h3>Pilier 1 &middot; La connexion à soi</h3>
+      <p>Séances 1 à 3. On ne lui ajoute rien tant qu'il n'est pas reconnecté à lui-même.</p>
+    </div>
+
+    <article class="seance">
+      <h4><span class="s">Séance 1</span> On pose le décor</h4>
+      <dl>
+        <div class="ligne"><dt>But de la séance</dt><dd>passer de la demande exprimée à la problématique réelle, et fixer un objectif vérifiable.</dd></div>
+        <div class="ligne"><dt>Lien avec l'objectif</dt><dd>c'est la séance qui crée l'objectif. Sans elle, tout le reste est en l'air.</dd></div>
+        <div class="ligne"><dt>Dans son profil</dt><dd>rien encore, on explore. Le décryptage vient en séance 2.</dd></div>
+        <div class="ligne"><dt>Déroulé</dt><dd>mode explorateur sur où il en est vraiment. Sa demande est « j'appréhende les sessions de groupe », la problématique réelle est peut-être ailleurs : la légitimité, le positionnement, ou le fait qu'il n'a jamais vérifié ce que ses clients attendent. Screening d'épuisement et règle d'orientation médicale posée à voix haute. Distinction entre ce qui dépend de lui et ce qui n'en dépend pas. Formulation de l'objectif avec ses mots. Pose des trois indicateurs.</dd></div>
+        <div class="ligne"><dt>Protocole</dt><dd><strong>Météo intérieure, le rendez-vous avec soi-même.</strong> Anamnèse en état modifié léger sur sept plans. Trois de ces plans touchent le cas de plein fouet : le relationnel, « vos relations avec vos proches vous conviennent-elles ? », la responsabilité, prendre la sienne ou rejeter la faute, question à poser à un 8 à 32, et la satisfaction, « êtes-vous réellement épanoui ? », ce que son 4 à 22 ne regarde jamais. Il sort avec la question de clôture du protocole : <strong>« quelle est la plus petite des actions qui dépend que de vous ? »</strong></dd></div>
+        <div class="ligne"><dt>Action</dt><dd>noter chaque jour les trois indicateurs. Rien d'autre. La charge de départ est volontairement légère.</dd></div>
+      </dl>
+    </article>
+
+    <article class="seance">
+      <h4><span class="s">Séance 2</span> Ton fonctionnement</h4>
+      <dl>
+        <div class="ligne"><dt>But de la séance</dt><dd>qu'il comprenne son propre fonctionnement et voie en quoi il sert ou freine l'objectif fixé en séance 1.</dd></div>
+        <div class="ligne"><dt>Lien avec l'objectif</dt><dd>le décryptage n'est pas une restitution de scores, c'est une lecture au service de l'objectif. Je ne dis pas « tu es un 8 », je dis « ton 8 t'a permis de te lancer seul, et sans ton 2 tu risques de construire une offre que tu trouves excellente et dont tes clients n'ont pas besoin ».</dd></div>
+        <div class="ligne"><dt>Dans son profil</dt><dd>les quatre rééquilibrages, et l'introduction de la zone de maîtrise et des deux zones critiques.</dd></div>
+        <div class="ligne"><dt>Déroulé</dt><dd>validation ou correction de l'hypothèse de type. Présentation des profils forts comme des ressources, jamais comme des défauts. Mise en lumière des trois convergences entre rééquilibrage et directions d'intégration.</dd></div>
+        <div class="ligne"><dt>Protocole</dt><dd><strong>Connexion neuro-émotionnelle.</strong> Il se projette dans une session de groupe réussie, puis, second temps, <strong>il se met à la place d'un participant</strong> et ressent ce dont ce participant a besoin. Ce déplacement de point de vue travaille directement son 2 dès la deuxième séance, sans en faire un cours.</dd></div>
+        <div class="ligne"><dt>Action</dt><dd>repérer dans la quinzaine deux moments en zone de maîtrise et deux bascules en zone critique.</dd></div>
+      </dl>
+    </article>
+
+    <article class="seance">
+      <h4><span class="s">Séance 3</span> Ce qui compte vraiment</h4>
+      <dl>
+        <div class="ligne"><dt>But de la séance</dt><dd>identifier ses cinq valeurs fondamentales et en faire un filtre de décision.</dd></div>
+        <div class="ligne"><dt>Lien avec l'objectif</dt><dd>son offre de groupe devra porter ses valeurs, sinon il animera des sessions rentables qu'il n'aura pas envie de faire. Et ses valeurs deviennent le filtre qui tranche ce qu'il garde et ce qu'il coupe dans son contenu, au lieu de « tout donner ».</dd></div>
+        <div class="ligne"><dt>Dans son profil</dt><dd>le 4 peu développé. Quel plaisir prend-il réellement, quel coach a-t-il envie d'être, quelle personne veut-il incarner. Le kiff avant le cash : un objectif purement financier ne tiendra pas quatre mois chez quelqu'un déjà épuisé.</dd></div>
+        <div class="ligne"><dt>Déroulé</dt><dd>travail stratégique sur les valeurs. Il nomme trois ou quatre personnes qu'il admire, puis les qualités qu'il admire chez elles, puis dix valeurs, puis les cinq plus fortes. Les deux questions d'émergence sont « avec quelles valeurs je voudrais vivre ? » et <strong>« après ma mort, qu'est-ce que je veux que mes proches disent de moi ? »</strong>. Cette seconde question ouvre le sujet des proches dès le pilier 1, sans attaquer le secret. Puis il donne sa propre définition de chaque valeur, en une phrase.</dd></div>
+        <div class="ligne"><dt>Protocole</dt><dd><strong>Précision des valeurs en état modifié</strong> (amener, nommer, laisser venir un moment vécu, ressentir et diffuser, définir en une phrase, reformuler), puis le <strong>protocole des deux chemins</strong>. Le chemin où ses valeurs ne sont pas nourries, c'est sa trajectoire actuelle prolongée, il n'a pas à l'imaginer, il n'a qu'à continuer tout droit. On le parcourt une fois, puis <strong>deux fois</strong> celui où elles sont nourries, et on ferme dessus. On futurise. Chez un homme dont le 4 est à 22 et qui n'a aucun voyant d'alarme interne, ce protocole <em>est</em> le voyant : il fait ressentir la trajectoire au lieu de la lui expliquer.</dd></div>
+        <div class="ligne"><dt>Action</dt><dd>relire sa dernière session à la lumière de ses cinq valeurs et noter ce qui n'y correspond pas.</dd></div>
+      </dl>
+    </article>
+
+    <div class="pilier">
+      <h3>Pilier 2 &middot; La connexion aux autres</h3>
+      <p>Séances 4 à 6. Le cœur du cas : il va exercer un métier de groupe avec le profil relationnel le plus bas de son questionnaire.</p>
+    </div>
+
+    <article class="seance">
+      <h4><span class="s">Séance 4</span> De quoi ont-ils réellement besoin</h4>
+      <dl>
+        <div class="ligne"><dt>But de la séance</dt><dd>le faire passer de ce qu'il pense être bon à ce que ses clients expriment réellement.</dd></div>
+        <div class="ligne"><dt>Lien avec l'objectif</dt><dd>c'est l'indicateur 2, dix besoins vérifiés. Et c'est le traitement de sa peur : <strong>il ne peut pas être à la hauteur d'une attente qu'il n'a jamais demandée.</strong> Tant qu'il devine, il ne peut que craindre.</dd></div>
+        <div class="ligne"><dt>Dans son profil</dt><dd>le rééquilibrage du 8 vers le 2, frontalement.</dd></div>
+        <div class="ligne"><dt>Déroulé</dt><dd>d'abord, qui veut-il accompagner, en repartant des valeurs de la séance 3. Ensuite, le piège nommé sans détour : avec son 8 et son 3 à ce niveau, le risque est de lancer une offre qu'il juge excellente et dont personne ne veut. Enfin, construction d'une trame d'entretien, questions ouvertes sur ce qui les bloque, ce qu'ils ont déjà essayé, ce qu'ils attendent. <strong>Consigne stricte : il ne vend rien pendant ces entretiens, il écoute.</strong> Pour un 8 fort, se taire pendant vingt minutes est l'exercice.</dd></div>
+        <div class="ligne"><dt>Protocole</dt><dd>état modifié où il se place du côté d'un participant et ressent ce que produit chez lui le fait d'être vraiment entendu, puis ce que ça change dans sa relation à la personne qui l'écoute.</dd></div>
+        <div class="ligne"><dt>Action</dt><dd>dix entretiens d'écoute, réponses rapportées telles quelles, sans reformulation ni interprétation.</dd></div>
+      </dl>
+    </article>
+
+    <article class="seance">
+      <h4><span class="s">Séance 5</span> Fédérer un groupe</h4>
+      <dl>
+        <div class="ligne"><dt>But de la séance</dt><dd>lui donner la capacité de faire vivre un groupe au lieu de le tenir à bout de bras.</dd></div>
+        <div class="ligne"><dt>Lien avec l'objectif</dt><dd>c'est l'indicateur 1, la note d'appréhension. Et c'est aussi l'indicateur 3, la fatigue, pour la raison ci-dessous.</dd></div>
+        <div class="ligne"><dt>Dans son profil</dt><dd>le rééquilibrage du 3 vers le 6, action individuelle vers action collective.</dd></div>
+        <div class="ligne"><dt>Déroulé</dt><dd>débrief des dix entretiens et de ce que ça change dans sa vision de son offre. Puis le groupe : comment on crée la sécurité, comment on fait participer, comment on gère le silence, comment on accueille une objection. Sa crainte de fond est double, perdre le contrôle du groupe pour le 8, ne pas savoir répondre pour le 1 et le 3. <strong>Le retournement de la séance : un groupe qui participe est un groupe qui ne repose plus entièrement sur lui. Fédérer n'est pas perdre le contrôle, c'est répartir la charge.</strong> Le 6 ne le rend pas plus faible, il le soulage. C'est le point où le pilier 2 rejoint sa fatigue : porter seul consomme de l'énergie en continu, et il porte seul par construction.</dd></div>
+        <div class="ligne"><dt>Protocole</dt><dd><strong>Technique d'anticipation optimale</strong>, visualisation d'une session où une partie de l'énergie est portée par le groupe, <strong>avec l'imprévu inclus</strong>, notamment une question à laquelle il ne sait pas répondre et ce qu'il en fait. On entraîne la réaction à l'accroc, pas le déroulé parfait, parce qu'un 1 et un 3 s'effondrent au premier grain de sable s'ils n'ont visualisé que la réussite.</dd></div>
+        <div class="ligne"><dt>Action</dt><dd>concevoir sa prochaine session en réduisant d'un tiers son propre temps de parole, et préparer trois questions à poser au groupe.</dd></div>
+      </dl>
+    </article>
+
+    <article class="seance">
+      <h4><span class="s">Séance 6</span> Accepter de recevoir</h4>
+      <dl>
+        <div class="ligne"><dt>But de la séance</dt><dd>lever ce qui l'isole, et faire de l'entourage une ressource au lieu d'un risque.</dd></div>
+        <div class="ligne"><dt>Lien avec l'objectif</dt><dd>c'est l'indicateur 3, les soirées récupérées. Et c'est la condition de tenue de tout le reste : un homme qui porte seul pendant quatre mois n'ira pas au bout du programme.</dd></div>
+        <div class="ligne"><dt>Dans son profil</dt><dd>la suite du 8 vers le 2, versant recevoir, et le 6 versant demander de l'aide. Et le travail de remontée depuis la zone critique basse.</dd></div>
+        <div class="ligne"><dt>Déroulé</dt><dd>le secret gardé à la famille, abordé ici et pas avant, parce que l'alliance est maintenant assez solide et parce que c'est sa place logique dans le pilier de la connexion aux autres. Questions directes : qu'est-ce qui se passerait s'ils savaient, qu'est-ce que ça dirait de toi, qu'est-ce que ça te coûte de le porter seul. Puis élargissement, sur qui pourrait-il s'appuyer, à qui n'a-t-il jamais rien demandé. Enseignement : personne ne performe durablement seul, l'entourage n'est pas une faiblesse, c'est une infrastructure. <strong>Il ne peut pas installer dans son groupe l'ouverture qu'il refuse pour lui-même.</strong> C'est l'argument qui déplace un 8.</dd></div>
+        <div class="ligne"><dt>Protocole</dt><dd><strong>Recadrage de croyance</strong> en mode explorateur. La croyance à traiter est « demander de l'aide, c'est avouer une faiblesse ». Voie 1, chercher un moment de sa vie où l'inverse s'est vérifié, « quand, dans ta vie, le fait de demander de l'aide t'a fait gagner ? ». Voie 2, chercher un exemple extérieur. On accueille toujours la croyance, on ne la contredit jamais frontalement. Puis <strong>changement de zone</strong>, et <strong>dynamisation physique et mentale</strong> installée comme outil de remontée, puisque c'est la séance où sa fatigue est nommée.</dd></div>
+        <div class="ligne"><dt>Action</dt><dd>en parler à une personne de confiance, une seule, exposition graduée. Et solliciter une aide concrète auprès de quelqu'un, sur un point précis de son lancement.</dd></div>
+      </dl>
+    </article>
+
+    <div class="pilier">
+      <h3>Pilier 3 &middot; La connexion au projet</h3>
+      <p>Séances 7 et 8. L'offre ne se construit qu'une fois les besoins connus et les valeurs posées.</p>
+    </div>
+
+    <article class="seance">
+      <h4><span class="s">Séance 7</span> Construire l'offre et l'incarner</h4>
+      <dl>
+        <div class="ligne"><dt>But de la séance</dt><dd>transformer les besoins récoltés en une offre qui y répond, et qu'il la porte sans se trahir et sans trembler.</dd></div>
+        <div class="ligne"><dt>Lien avec l'objectif</dt><dd>c'est la production directe de l'objectif, l'offre fondée sur des besoins vérifiés, et l'indicateur 1 mesuré ensuite en conditions réelles.</dd></div>
+        <div class="ligne"><dt>Dans son profil</dt><dd>le rééquilibrage du 7 vers le 5, la sobriété. Il arrive maintenant et pas plus tôt, parce qu'il est désormais fondé sur des données de terrain et non sur une injonction de ma part. Plus le 3 sur la légitimité, le 4 sur ce qu'il a envie d'incarner, le 8 sur l'affirmation juste.</dd></div>
+        <div class="ligne"><dt>Déroulé, en conscience ordinaire</dt><dd>synthèse des dix entretiens, repérage des trois besoins qui reviennent, reconstruction de l'offre autour d'eux. <strong>Exercice de réduction : la session tient sur une page et porte un seul message.</strong> Le « moins mais mieux » n'est plus un conseil, c'est la conséquence de ce que ses prospects lui ont dit. Confrontation avec ses cinq valeurs. Puis son positionnement dit en une phrase, pour qui il est le meilleur choix <strong>et pour qui il ne l'est pas</strong> : un 7 refuse d'exclure, c'est précisément le travail, et choisir réduit mécaniquement le périmètre sur lequel il faut être à la hauteur. Enfin la question du prix, est-il à l'aise avec le tarif qu'il annonce ou tremble-t-il en le disant.</dd></div>
+        <div class="ligne"><dt>Protocole, en état modifié</dt><dd><strong>État de confiance optimal</strong> puis le protocole combiné <strong>état de confiance optimal et technique d'anticipation optimale</strong>. On repart d'une réussite qu'il a réellement vécue et on l'emmène dans la session à venir : il ne projette pas une confiance imaginée, il y transporte une confiance vécue, « futuriser dans une énergie de confiance ». Point important : Éric débute en animation de groupe et n'a sans doute aucun souvenir de réussite dans cette activité. Le fascicule le prévoit, l'expérience revécue peut être sans rapport avec l'activité travaillée puisqu'on cherche un état émotionnel et non un savoir-faire. Si rien ne vient, on balaie les différents domaines de vie. La case qu'on ouvre : <strong>« j'ai déjà réussi, donc je peux le faire à nouveau. »</strong></dd></div>
+        <div class="ligne"><dt>Ce qu'il repart avec</dt><dd>le cadre <strong>avant, pendant, après</strong> comme dispositif permanent autour de chaque session. Avant : état de confiance optimal et anticipation, plus la <strong>dynamisation physique et mentale</strong> en routine de cinq à quinze minutes. Le jour J sur place : la <strong>technique de confiance optimale</strong>, cinq étapes, sans relaxation, faisable dans un couloir, et dont la deuxième étape est la météo intérieure qu'il pratique depuis la séance 1, donc il n'apprend rien de neuf, il assemble. Pendant : un geste ou une parole de renforcement préparés à l'avance. Après : porter son focus sur ce qui a réussi, ce qui est de la récupération autant que de la confiance, donc sert aussi l'indicateur 3.</dd></div>
+        <div class="ligne"><dt>Action</dt><dd>réécrire l'offre en une page, la tester auprès de trois des personnes interrogées, puis <strong>animer une session réelle</strong> avec la nouvelle offre et la routine, et noter les trois indicateurs.</dd></div>
+      </dl>
+    </article>
+
+    <article class="seance">
+      <h4><span class="s">Séance 8</span> Tenir sans moi</h4>
+      <dl>
+        <div class="ligne"><dt>But de la séance</dt><dd>qu'il reparte capable de continuer seul.</dd></div>
+        <div class="ligne"><dt>Lien avec l'objectif</dt><dd>vérification chiffrée des trois indicateurs contre leur valeur de la séance 1.</dd></div>
+        <div class="ligne"><dt>Dans son profil</dt><dd>la sortie en maîtrise. Un 8 doit partir en contrôle, jamais en dépendance, sinon il coupe brutalement et perd les acquis. L'espacement annoncé dès le départ matérialise ce sevrage.</dd></div>
+        <div class="ligne"><dt>Déroulé</dt><dd>bilan des indicateurs, ce qui a bougé, ce qui résiste. Rédaction de son <strong>protocole personnel écrit</strong> : sa routine, sa phrase, ses cinq valeurs, ses trois signaux de bascule en zone critique et quoi faire quand ils apparaissent. <strong>Plan de rechute</strong> : ce qu'il fait quand ça revient, parce que ça reviendra. Point de suivi optionnel à trois mois.</dd></div>
+        <div class="ligne"><dt>Protocole</dt><dd>projection en état modifié à un an, la version de lui-même qui anime des groupes sans les redouter.</dd></div>
+        <div class="ligne"><dt>Action</dt><dd>aucune. La dernière séance rend l'autonomie, elle ne prescrit pas.</dd></div>
+      </dl>
+    </article>
+  </section>
+
+  <!-- 8 -->
+  <section>
+    <h2><span class="num">08</span>Les enseignements proposés au coaché</h2>
+    <p>Distillés dans l'action, jamais en cours magistral.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Enseignement</th><th class="num">Séance</th><th class="num">Pilier</th></tr></thead>
+        <tbody>
+          <tr><td>Distinguer ce qui dépend de soi de ce qui n'en dépend pas</td><td class="num">1</td><td class="num">1</td></tr>
+          <tr><td>Un profil fort n'est pas un défaut : zone de maîtrise et zones critiques</td><td class="num">2</td><td class="num">1</td></tr>
+          <tr><td>Rééquilibrer ses profils forts par ses profils peu développés</td><td class="num">2</td><td class="num">1</td></tr>
+          <tr><td>Les valeurs comme filtre de décision, et non comme décor</td><td class="num">3</td><td class="num">1</td></tr>
+          <tr><td>Le kiff avant le cash : un objectif sans plaisir ne tient pas quatre mois</td><td class="num">3</td><td class="num">1</td></tr>
+          <tr><td>On ne peut pas être à la hauteur d'une attente qu'on n'a jamais demandée</td><td class="num">4</td><td class="num">2</td></tr>
+          <tr><td>Fédérer n'est pas perdre le contrôle, c'est répartir la charge</td><td class="num">5</td><td class="num">2</td></tr>
+          <tr><td>La routine de pré-performance, et l'imagerie avec l'imprévu inclus</td><td class="num">5 et 7</td><td class="num">2 et 3</td></tr>
+          <tr><td>Personne ne performe durablement seul, l'entourage est une infrastructure</td><td class="num">6</td><td class="num">2</td></tr>
+          <tr><td>La profondeur plutôt que le volume : moins mais mieux</td><td class="num">7</td><td class="num">3</td></tr>
+          <tr><td>Choisir son couloir réduit le périmètre sur lequel il faut être à la hauteur</td><td class="num">7</td><td class="num">3</td></tr>
+          <tr><td>La bibliothèque de ressources : ce qu'on a déjà réussi est réutilisable</td><td class="num">7</td><td class="num">3</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section>
+    <h2><span class="num">09</span>Durée et tarif</h2>
+
+    <p><strong>Quatre mois, 8 séances, une toutes les deux semaines.</strong></p>
+    <p><strong>1 600 € pour l'accompagnement complet, payable en quatre fois de 400 €.</strong></p>
+
+    <h3>Ce que je facture</h3>
+    <p>Je facture l'accompagnement, pas la séance. Ce qu'Éric achète, ce n'est pas huit rendez-vous, c'est d'animer ses groupes sans les redouter et de récupérer ses soirées. Les séances sont le moyen. Le prix couvre aussi ce qui ne se voit pas : la préparation, le décryptage du questionnaire en amont, les audios personnalisés entre les séances et le suivi des indicateurs.</p>
+
+    <h3>Les trois critères sur lesquels je le justifie</h3>
+    <ol>
+      <li><strong>La cohérence avec mon expertise actuelle.</strong> Je démarre en préparation mentale. J'ai en revanche quinze ans d'accompagnement d'entrepreneurs derrière moi, et Éric est un entrepreneur en lancement, pas un athlète. Je préfère assumer un tarif juste et l'augmenter à mesure que ma pratique s'étoffe, plutôt qu'annoncer un montant lourd que je devrais ensuite porter en transpirant.</li>
+      <li><strong>Ma capacité à délivrer la transformation.</strong> Vendre n'est pas le sujet, tenir l'est. Le tarif doit refléter ce que je m'engage à tenir, pas ce que le marché tolère.</li>
+      <li><strong>Mon propre confort.</strong> Je peux annoncer 1 600 € sans trembler, et c'est le critère décisif : <strong>un prix qu'on n'assume pas s'entend à l'oral, et il se négocie tout seul.</strong></li>
+    </ol>
+
+    <h3>Et la cohérence avec sa situation</h3>
+    <p>Il est en lancement, sa trésorerie n'est pas confortable, et il cache la démarche à sa famille. Le paiement ne doit donc pas créer un point de tension domestique : le fractionnement en quatre mensualités répond à cette réalité sans brader la prestation.</p>
+  </section>
+
+  <!-- 10 -->
+  <section>
+    <h2><span class="num">10</span>Ce qui ferait évoluer la programmation</h2>
+    <p>Une programmation n'est pas figée, et je le dis à Éric dès la séance 1.</p>
+    <ul>
+      <li><strong>Si l'hypothèse de type ne se confirme pas</strong> en séance 2, les rééquilibrages changent, donc les séances 4, 5 et 7 changent de contenu.</li>
+      <li><strong>Si le screening révèle des signaux d'épuisement clinique</strong>, j'oriente vers le médecin et je prolonge le pilier 1. On ne construit pas une offre sur un homme qui s'écroule.</li>
+      <li><strong>Si les dix entretiens révèlent un besoin très différent de son offre initiale</strong>, le pilier 3 s'alourdit d'une séance. Ce serait une bonne nouvelle, pas un échec.</li>
+      <li><strong>Si l'ouverture à un proche en séance 6 est refusée</strong>, je ne force pas. Je reste sur ce que le secret lui coûte et j'y reviens plus tard.</li>
+      <li><strong>S'il n'a aucune session de groupe réelle sur la période</strong>, le dispositif perd son terrain. Je le remplace par des mises en situation filmées, moins puissantes mais exploitables.</li>
+    </ul>
+  </section>
+
+  <!-- 11 -->
+  <section>
+    <h2><span class="num">11</span>Les choix que je défends</h2>
+    <p>Un choix par ligne, l'option que j'ai écartée, et ce que je réponds si on me la présente.</p>
+
+    <div class="tw">
+      <table>
+        <thead><tr><th>Mon choix</th><th>L'option écartée</th><th>Ce que je réponds</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Une hypothèse de type, validée en séance 2</strong></td>
+            <td>annoncer « tu es un 7 » dès le décryptage</td>
+            <td>quatre points séparent le 7 du 1, le sommet est plat. Le questionnaire lit des comportements, l'ennéagramme des motivations. Et surtout : quel que soit celui de ses quatre profils hauts qui est sa base, ses ressources les plus faibles restent le 2, le 5 et le 6. <strong>Mon accompagnement tient même si mon hypothèse est fausse.</strong></td>
+          </tr>
+          <tr>
+            <td><strong>8 séances, une toutes les deux semaines</strong></td>
+            <td>10 séances en mode starter, hebdomadaire le premier mois</td>
+            <td>le support écrit « 2 semaines ou 3 semaines maximum », et ses deux exemples de déroulés font 8 séances. Huit fois deux semaines font exactement quatre mois. L'intervalle de deux semaines est ce qui laisse à Éric le temps d'expérimenter et de revenir avec du vécu, et les audios personnalisés empêchent l'intervalle d'être creux.</td>
+          </tr>
+          <tr>
+            <td><strong>Pondération 3 / 3 / 2</strong></td>
+            <td>la répartition de l'exemple, 6 / 1 / 1</td>
+            <td>son score le plus bas est la fonction relationnelle et il se lance dans un métier de groupe. Une seule séance de connexion aux autres ignorerait le cœur du cas. L'ordre des trois piliers est respecté, c'est leur pondération qui s'adapte à la personne, et c'est ce que la méthode demande.</td>
+          </tr>
+          <tr>
+            <td><strong>Un objectif de conditions</strong></td>
+            <td>un objectif de résultat, vendre X places</td>
+            <td>l'athlète et le podium, il n'y a que trois places. Je garantis que les conditions seront réunies. Et le dire est déjà une intervention : chez un 3 à 30, distinguer ce qu'il contrôle fait baisser la pression.</td>
+          </tr>
+          <tr>
+            <td><strong>Le rééquilibrage fort vers peu développé, croisé aux directions d'intégration</strong></td>
+            <td>les lois d'harmonisation</td>
+            <td>les trois méthodes sont admises. J'en croise deux parce qu'elles convergent sur ce profil précis, et la convergence est <strong>vérifiable sur les chiffres</strong>, pas interprétative. Je signale aussi là où elle s'arrête, le 1 se désintègre en 4.</td>
+          </tr>
+          <tr>
+            <td><strong>Le secret familial en séance 6</strong></td>
+            <td>l'aborder dès la séance 1, ou en séance 5</td>
+            <td>c'est du pilier 2, sa place logique. Et un 8 ne s'ouvre pas avant que l'alliance soit solide : abordé en séance 1, il ne revient pas. L'exposition est graduée, une personne, pas la famille.</td>
+          </tr>
+          <tr>
+            <td><strong>Anticipation optimale en séance 5</strong></td>
+            <td>la répétition mentale</td>
+            <td><strong>on ne répète mentalement qu'une habileté dont on a déjà connaissance</strong>, et Éric débute l'animation de groupe. L'anticipation optimale est justement faite pour une épreuve dont on connaît peu l'environnement. La répétition mentale viendra plus tard, quand il aura animé plusieurs sessions. Un protocole par stade de maturité.</td>
+          </tr>
+          <tr>
+            <td><strong>Visualiser l'imprévu, pas le déroulé parfait</strong></td>
+            <td>visualiser la session réussie</td>
+            <td>un 1 à 29 et un 3 à 30 s'effondrent au premier grain de sable s'ils n'ont visualisé que la réussite. On entraîne la réaction à l'accroc.</td>
+          </tr>
+          <tr>
+            <td><strong>Screening d'épuisement en séance 1</strong></td>
+            <td>ne pas s'en mêler, ce n'est pas du coaching</td>
+            <td>fatigue, rumination, isolement et dissimulation forment un faisceau. Je ne suis ni médecin ni psychologue, et c'est précisément pourquoi je screene et pourquoi j'oriente. Obligation de moyens, jamais de résultat, et le coaching se poursuit en complément.</td>
+          </tr>
+          <tr>
+            <td><strong>1 600 € pour l'accompagnement, en 4 fois</strong></td>
+            <td>un prix à la séance</td>
+            <td>je facture une transformation, pas des rendez-vous, et le forfait inclut la préparation, les audios et le suivi. Les trois critères : cohérence avec mon expertise, capacité à délivrer, confort à l'annoncer. Le fractionnement tient compte de sa trésorerie et du fait qu'il cache la démarche chez lui.</td>
+          </tr>
+          <tr>
+            <td><strong>Une séance 7 volontairement dense</strong></td>
+            <td>l'étaler sur deux séances</td>
+            <td>c'est le coût assumé du format en 8 séances, et la structure de la méthode le permet : la construction de l'offre se fait en conscience ordinaire, l'incarnation en état modifié, c'est une seule séance avec un seul thème, porter son offre. Si le terrain le demande, la clause d'évolution prévoit une séance supplémentaire sur le pilier 3.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 12 -->
+  <section>
+    <h2><span class="num">12</span>Points que je soumets au trinôme</h2>
+    <p>Document interne au groupe de travail, pas destiné au jury.</p>
+    <ul>
+      <li><strong>Le nombre de séances.</strong> 8 tous les quinze jours contre 10 en mode starter. Les deux sont défendables, mais nous devons dire la même chose.</li>
+      <li><strong>Le tarif.</strong> 1 600 € est un choix assumé de coach qui démarre. Défendable plus haut ou plus bas selon ce que chacun assume.</li>
+      <li><strong>La place du secret familial.</strong> Séance 6 chez moi, défendable une séance plus tôt.</li>
+      <li><strong>L'état modifié exact de la séance 6.</strong> J'ai retenu le changement de zone. L'état de confiance optimal se défend aussi à cet endroit.</li>
+      <li><strong>La répartition de la parole.</strong> Douze à quatorze minutes chacun, cinq à sept minutes de questions. Qui porte quel bloc, sachant que le jury interroge qui il veut sur ce qu'il veut, donc chacun maîtrise l'ensemble.</li>
+      <li><strong>Le corpus théorique des neuf profils.</strong> L'école a fourni l'instrument de typage, pas le contenu théorique. À réclamer, et à se répartir en attendant.</li>
+    </ul>
+  </section>
+
+  <p class="fin">Document de travail préparé pour la certification de coach en préparation mentale, Académie Puissance Mentale. La méthode, ses protocoles et le fascicule dont ce travail s'inspire sont la propriété de l'Académie, modèle déposé. Ce document n'est pas un support de diffusion.</p>
+
+</main>
+</body>
+</html>
