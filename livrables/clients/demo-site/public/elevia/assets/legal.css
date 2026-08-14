@@ -1,0 +1,89 @@
+/* Feuille commune aux documents légaux d'Élévia.
+   Charte relevée sur le logo officiel : bleu nuit #00234B, or #A87726 → #D9AC56. */
+:root{
+  --encre:#00234B; --creme:#F4F6F9; --sable:#E9EDF3; --blanc:#FFFFFF;
+  --or:#BE9440; --or-clair:#D9AC56; --or-fonce:#A87726; --or-texte:#8A6420;
+  --muted:#55606F; --gris:#6E7889; --bord:#DCE3EB;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--sans);color:var(--encre);background:var(--creme);
+  line-height:1.68;overflow-x:hidden;font-size:15px;
+}
+img{max-width:100%;display:block}
+:focus-visible{outline:2px solid var(--or-fonce);outline-offset:3px;border-radius:6px}
+
+.enveloppe{max-width:740px;margin:0 auto;padding:30px 20px 60px}
+
+.tete{text-align:center;padding-bottom:26px;border-bottom:1px solid var(--bord);margin-bottom:34px}
+.tete img{width:56px;height:56px;margin:0 auto 12px;object-fit:contain}
+.tete .nom{font-family:var(--serif);font-size:26px;letter-spacing:.14em;line-height:1}
+.tete .sous{font-size:9.5px;letter-spacing:.3em;color:var(--or-texte);margin-top:8px;font-weight:500}
+
+h1{font-family:var(--serif);font-size:28px;font-weight:500;line-height:1.25;margin-bottom:10px}
+.sous-titre{color:var(--muted);font-size:14px;margin-bottom:8px}
+.version{font-size:12.5px;color:var(--gris);margin-bottom:34px}
+
+h2{
+  font-family:var(--serif);font-size:20px;font-weight:500;line-height:1.3;
+  margin:38px 0 12px;padding-top:18px;border-top:1px solid var(--bord);
+}
+h2:first-of-type{border-top:none;padding-top:0}
+h3{font-size:15px;font-weight:700;margin:22px 0 8px;color:var(--encre)}
+p{margin-bottom:14px;color:var(--muted)}
+p strong,li strong{color:var(--encre);font-weight:500}
+ul,ol{margin:0 0 16px 20px;color:var(--muted)}
+li{margin-bottom:8px}
+a{color:var(--or-texte);text-underline-offset:3px}
+
+.encadre{
+  background:var(--blanc);border:1px solid var(--bord);border-left:3px solid var(--or);
+  border-radius:11px;padding:18px 20px;margin:22px 0;
+}
+.encadre p:last-child{margin-bottom:0}
+.encadre .titre{font-weight:700;color:var(--encre);font-size:14px;margin-bottom:8px}
+
+.a-completer{
+  background:#FDF7E9;border:1px solid #EFDFBC;border-radius:8px;
+  padding:2px 8px;color:var(--or-texte);font-weight:700;font-size:13px;
+  display:inline-block;
+}
+
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--bord);vertical-align:top}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--gris);font-weight:700}
+td{color:var(--muted)}
+td:first-child{color:var(--encre);font-weight:500}
+.tableau-large{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:18px 0}
+.tableau-large table{margin:0;min-width:460px}
+
+.pied{
+  margin-top:46px;padding-top:24px;border-top:1px solid var(--bord);
+  text-align:center;font-size:12.5px;color:var(--gris);line-height:1.8;
+}
+.pied nav{display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:center;margin-bottom:14px}
+.pied nav a{color:var(--muted);text-decoration:none;padding:6px 2px;min-height:24px;display:inline-block}
+.pied nav a:hover{text-decoration:underline}
+
+@media(max-width:420px){
+  .enveloppe{padding:24px 16px 44px}
+  h1{font-size:24px}
+  h2{font-size:18px}
+}
+
+/* Impression : ces documents seront imprimés et joints à un dossier.
+   Rien ne doit se couper au milieu d'un article ni déborder de la page. */
+@media print{
+  body{background:#fff;color:#000;font-size:11.5pt;line-height:1.5}
+  .enveloppe{max-width:none;padding:0}
+  .pied nav,.saut{display:none}
+  h1,h2,h3{break-after:avoid;page-break-after:avoid}
+  h2,h3,p,li,tr,.encadre,table{break-inside:avoid;page-break-inside:avoid}
+  .tableau-large{overflow:visible}
+  .tableau-large table{min-width:0}
+  a{color:#000;text-decoration:underline}
+  .encadre{border:1px solid #999;border-left:3px solid #666}
+}

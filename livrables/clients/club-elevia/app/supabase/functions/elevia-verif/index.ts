@@ -32,12 +32,36 @@ const GESTES = [
   "montrez trois doigts à côté de votre visage",
 ];
 
-function tirerDefi(): string {
+/** Les deux gestes séparément, pour que l'écran puisse les numéroter ① ②.
+ *  On ne peut pas les redécouper côté navigateur : certains gestes contiennent
+ *  eux-mêmes « , puis », et un découpage à l'aveugle inverserait la consigne. */
+function tirerGestes(): string[] {
   const i = crypto.getRandomValues(new Uint32Array(2));
-  let a = GESTES[i[0] % GESTES.length];
+  const a = GESTES[i[0] % GESTES.length];
   let b = GESTES[i[1] % GESTES.length];
   if (a === b) b = GESTES[(i[1] + 1) % GESTES.length];
+  return [a, b];
+}
+
+/** Phrase unique conservée en base : c'est elle que l'agent de modération lit
+ *  dans le back-office, et elle reste la référence de ce qui a été demandé. */
+function tirerDefi(): string {
+  const [a, b] = tirerGestes();
   return `${a}, puis ${b}`;
+}
+
+/** Redécoupe une consigne enregistrée en base en ses deux gestes d'origine.
+ *  On compare à la liste connue plutôt que de couper sur un séparateur, donc le
+ *  résultat est exact même quand un geste contient « , puis ». */
+function decouperDefi(defi: string): string[] | null {
+  for (const a of GESTES) {
+    const prefixe = a + ", puis ";
+    if (defi.startsWith(prefixe)) {
+      const b = defi.slice(prefixe.length);
+      if (GESTES.includes(b)) return [a, b];
+    }
+  }
+  return null;
 }
 
 Deno.serve(async (req) => {
@@ -128,7 +152,12 @@ Deno.serve(async (req) => {
         return json({ ok: false, error: "Impossible d'ouvrir l'envoi de la vidéo. Réessayez dans un instant." }, 500);
       }
 
-      return json({ ok: true, id, defi, chemin, url_depot: depot.signedUrl, jeton_depot: depot.token });
+      // `gestes` sert à l'affichage numéroté côté membre, `defi` reste la
+      // référence unique enregistrée et lue par le back-office.
+      return json({
+        ok: true, id, defi, gestes: decouperDefi(defi) ?? [defi],
+        chemin, url_depot: depot.signedUrl, jeton_depot: depot.token,
+      });
     }
 
     // ── Soumettre : la vidéo est déposée, la demande entre en file ──
