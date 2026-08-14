@@ -1,22 +1,63 @@
 # Club Élévia — l'état du dossier
 
-> Révision du 03/08/2026. **Cette fiche est la première chose à lire du dossier.**
+> Révision du 14/08/2026, après sa recette de la Web App. **Cette fiche est la première
+> chose à lire du dossier.**
 > Un chiffre ou un statut n'existe qu'ici. S'il apparaît ailleurs, c'est une copie à vérifier.
 
 | Radar | |
 |---|---|
-| Statut | attente client |
-| Dernier contact | 2026-08-04 |
-| Prochaine action | Relancer si sa signature n'arrive pas (son statut est encore `en_attente`) |
-| Échéance | 2026-08-11 |
-| Argent en attente | 2 050 € |
+| Statut | **recette intégrée, en attente de sa signature et de ses questions d'affinités** |
+| Dernier contact | 2026-08-12 (elle part en vacances, elle demande à continuer par mail) |
+| Prochaine action | **Déployer le front**, ouvrir l'app sur un vrai téléphone, puis envoyer `BROUILLON-REPONSE-ELISE-14-08.md`. **Signer soi-même** l'avenant : ta propre signature manque |
+| Échéance | relance le 25/08/2026 si aucune signature |
+| Argent en attente | 2 050 € — Tranche 2 non déclenchée |
 
 ## En une phrase
 
-Elle a lu le package le 02/08 (il était tombé dans ses spams), elle valide le fond,
-**mais elle a posé 6 conditions avant de signer**. L'Avenant n°1 est refondu en **V2**
-pour les absorber toutes. **En attente de sa signature électronique** sur les 3
-documents. Sa signature seule lance le développement : la Tranche 1 est déjà réglée.
+Elle a fait la recette des Modules 1 et 2 le 08/08 et **envoyé 16 points**, tous traités
+le 14/08. Elle juge le travail « de très bonne qualité » et « conforme au périmètre »,
+et valide les quatre premiers écrans sur le plan fonctionnel. **Rien n'est signé, ni par
+elle ni par nous**, et les questions du questionnaire d'affinités, seules bloquantes pour
+le Module 3, ne sont toujours pas arrivées.
+
+## La recette du 08/08 et ce qui en est sorti
+
+Ses 16 points portaient sur la finition, l'identité de marque et l'expérience, sans
+remise en cause de l'architecture. Traités le 14/08. Trois d'entre eux ont changé
+quelque chose de structurant :
+
+| Son point | Ce qui a été fait |
+|---|---|
+| Intégrer le logo officiel | Logo reçu le 14/08. Détouré, décliné en monogramme (8 ko) et logo complet (43 ko), dans `elevia/assets/` |
+| « Conserver partout le bleu nuit et l'or » | **Elle avait raison, et le CDC avait tort.** Les couleurs relevées dans son logo sont bleu nuit `#00234B` et or `#A87726` → `#D9AC56`. Le CDC parlait de « Noir & Or » parce qu'il précède le logo. Toute l'app est passée sur sa charte |
+| « Limitation OTP » (point 14) | **Vrai trou de sécurité trouvé grâce à elle.** Les tentatives de saisie étaient plafonnées, les demandes d'envoi non : n'importe qui pouvait inonder la boîte d'un membre et épuiser le quota d'envoi, bloquant les connexions de tous. Migration `0005`, plafond 3 par quart d'heure et 8 par jour, testé |
+
+**Trois écarts assumés par rapport à sa demande, expliqués dans le brouillon de réponse :**
+le compte à rebours affiche 10 minutes (la vraie durée) et non 2 ; l'adresse de contact
+est `clubpriveeelevia@gmail.com` car `support@elevia.fr` et `contact@ynlclub.com` n'ont
+pas de domaine acheté ; la photo de profil, les notifications et la messagerie de son
+point 10 relèvent des Modules 3 et 4, pas de maintenant.
+
+**Point qu'elle n'a pas pu voir, et qui est la dernière référence au prestataire :** les
+e-mails de connexion partent encore de `hello@agenceattractor.com`. Un service d'envoi
+n'accepte que des domaines vérifiés, donc **seul son nom de domaine peut lever ce point**
+(Contrat Art. 10 : le domaine est acheté par la Cliente, à son nom). Un `reply_to` vers
+son adresse a été ajouté en attendant.
+
+## Livré le 14/08
+
+- `demo-site/public/elevia/app/index.html` — app refondue, charte bleu nuit, 16 points
+- `demo-site/public/elevia/cgu/` et `/confidentialite/` — les deux documents **existaient
+  comme liens morts** dans l'app, ils existent vraiment maintenant. Gabarits, prévus au
+  Module 1, **à faire relire par un juriste**, avec les mentions à compléter surlignées
+- `demo-site/public/elevia/assets/` — logo, monogramme, feuille de style légale
+- `club-elevia/app/supabase/0005_elevia_limitation_envois.sql` — appliquée et prouvée à
+  la clé anon (ligne témoin insérée, invisible en anonyme, écriture refusée 42501)
+- Fonctions `elevia-auth` et `elevia-verif` redéployées en **version 4**
+
+**Non fait, et dit :** le front n'est pas en ligne (jeton Cloudflare sans permission
+Pages) et **l'app n'a pas tourné sur un vrai téléphone**, ce qui est bloquant pour tout
+ce qui touche la caméra (R-51).
 
 ## Ses 6 demandes du 02/08 et le traitement retenu
 
@@ -89,35 +130,61 @@ La différence est expliquée dans le brouillon de réponse, avant qu'elle ne la
 
 ## Le lien de signature en cours
 
-Dossier `22518a80-b693-4639-977c-b90bc5d96409`, créé le 03/08, expire le **02/09/2026**.
-Il scelle l'Avenant V2, le Devis V5 et le CDC V4. Les trois empreintes SHA-256 en base
-ont été recontrôlées le 04/08 : elles correspondent aux PDF du dossier, elle signera
-bien la dernière version.
+> Relevé en base le 14/08/2026. **Trois dossiers de signature se sont succédé**, et seul
+> le dernier vaut. Les deux liens que cette fiche donnait auparavant appartenaient au
+> dossier du 03/08, **expiré depuis le 05/08**.
+>
+> **Piège constaté :** ces deux liens périmés répondent quand même **HTTP 200**. Un test
+> au code de retour les aurait déclarés vivants. Vérifier le `statut` du dossier en base,
+> jamais la réponse HTTP (même leçon que R-60).
 
-**Le courrier de réponse est parti le 04/08, puis l'invitation à signer** (Resend
-`057e3a1d`, expéditeur `hello@agenceattractor.com`, statut **delivered** côté Outlook,
-tracée dans `sig_evenements`). C'est la première signature client réelle du module
-Signature Attractor, et la première preuve que le correctif d'expéditeur du 31/07 passe
-chez Outlook.
+**Le dossier qui vaut : `94722c2d-77d5-4579-b9a1-2e749baea1fa`**, créé le 05/08,
+statut `en_attente`, **expire le 30/09/2026**. Il scelle l'Avenant V3, le Devis V5 et le
+CDC V4.
 
-| Signataire | Lien |
-|---|---|
-| Élise CAPEL | `signature.agenceattractor.com/s/2e1e0t5x63380j0a2x6u251g1i4y1n5x3k2p3z2r061d5q4p` |
-| Mac Arthur (contresignature) | `signature.agenceattractor.com/s/6a1s225r5d5b400914570s6x5k5y0r1j1o40320g3e513r47` |
+| Signataire | Statut au 14/08 | Lien |
+|---|---|---|
+| Élise CAPEL | **`ouvert`** : elle a cliqué, elle n'a pas signé | `signature.agenceattractor.com/s/664e2w4y0v421z5q5s6i026d474q0v030f3k6e53646x1g6v` |
+| Mac Arthur (contresignature) | **`en_attente`** : ta signature manque aussi | `signature.agenceattractor.com/s/1g595w5c59035x33280n0p5s5s37590f3d1a12104e271y1x` |
 
-Le dossier du 29/07 (`a2a170aa`) est **expiré et ne peut plus être signé** : elle avait
-ouvert ce lien, elle aurait pu signer l'ancien avenant.
+C'est le lien envoyé dans le mail du 07/08, il est donc inutile d'en générer un nouveau.
+
+Dossiers antérieurs, **expirés et non signables** : `22518a80` du 03/08 et `a2a170aa` du
+29/07. Elle avait ouvert les deux sans signer.
 
 ## Prochaine action
 
-1. **Attendre sa signature.** Le courrier et l'invitation sont partis le 04/08. Son
-   statut de signataire est encore `en_attente` : tant qu'il ne passe pas à `ouvert`,
-   elle n'a pas cliqué. **Sans nouvelle sous 5 jours ouvrés, relancer** (elle n'avait
-   pas vu le package du 29/07 pendant 4 jours, il était en indésirable).
-2. Sa signature fixe le **J0** et lance les 40 jours ouvrés de développement
-3. Garde-fou de son Art. 14 : au-delà de 15 jours ouvrés de retard non justifié, elle
+1. **Déployer le front**, puis ouvrir l'app **sur un vrai téléphone** jusqu'à
+   l'enregistrement vidéo. Tant que ce n'est pas fait, la livraison n'est pas annonçable.
+   ```
+   cd livrables/clients/demo-site
+   npx wrangler pages deploy public --project-name=demo-agenceattractor --branch=master
+   ```
+   Le jeton Cloudflare du `.env` est valide mais **n'a pas la permission Pages** (vérifié :
+   lecture des zones OK, `/pages/projects` refusé en 10000). Soit lui ajouter le droit
+   « Cloudflare Pages : Edit », soit se connecter en interactif.
+2. **Envoyer `BROUILLON-REPONSE-ELISE-14-08.md`** après avoir testé les liens légaux avec
+   et sans barre oblique finale.
+3. **Signer soi-même** l'avenant : la contresignature manque, et attendre la sienne sans
+   avoir apposé la nôtre n'a pas de sens.
+4. **Relancer le 25/08** si rien ne bouge. Elle est en vacances mais a explicitement
+   demandé à continuer à recevoir les mails. Ses spams avalent nos messages, elle l'a
+   écrit deux fois : vérifier la réception plutôt que de supposer le silence.
+5. Sa signature fixe le **J0** et lance les 40 jours ouvrés de développement.
+6. Garde-fou de son Art. 14 : au-delà de 15 jours ouvrés de retard non justifié, elle
    peut mettre en demeure. Le Devis V5 inscrit la clause de suspension du décompte
    pendant ses validations, l'attente d'un élément lui incombant ou d'une tranche échue.
+
+## Ce qu'on attend d'elle, et qui bloque quoi
+
+| Élément | Ce qu'il bloque |
+|---|---|
+| **Les questions du questionnaire d'affinités** | **le Module 3 en entier**, demandé depuis le 07/08 |
+| Sa signature | le J0 et la Tranche 2 |
+| Son nom de domaine | l'adresse de contact **et** l'expéditeur des e-mails |
+| Ses informations légales | les CGU et la politique de confidentialité |
+| La photographie d'ouverture | rien, le logo occupe la place proprement en attendant |
+| Le délai de traitement des vérifications | la promesse « 24 à 48 h ouvrées » affichée aux membres |
 
 ## Historique produit
 
