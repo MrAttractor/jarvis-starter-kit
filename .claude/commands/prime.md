@@ -12,8 +12,13 @@ Quand je lance `/prime` au début d'une session, exécute la séquence suivante 
 
 Lis dans cet ordre, en intégralité :
 1. `CLAUDE.md` (le fichier racine du workspace)
-2. `context/CONTEXT.md` (mon contexte personnel et professionnel)
-3. `context/HISTORY.md` (l'historique de mes sessions précédentes)
+2. `cerveau/CERVEAU.md` (le point d'entrée du cerveau master : protocoles)
+3. `cerveau/03-REGLES.md` (ce qu'on applique, sans redemander)
+4. `context/CONTEXT.md` (mon contexte personnel et professionnel)
+5. `context/HISTORY.md` (l'historique de mes sessions précédentes)
+
+`cerveau/02-EXPERIENCES.md` et `cerveau/01-DOCTRINE.md` ne se lisent pas au démarrage, ils
+se consultent au besoin pendant la session, ou via `/cerveau [sujet]`.
 
 ### Étape 2 : Relire ce qui a été produit pour anticiper
 

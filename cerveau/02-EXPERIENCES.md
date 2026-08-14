@@ -438,6 +438,23 @@
 
 ---
 
+### EXP-039 · Le jeton d'administration fuitait à tous les participants
+**DÉBLOCAGE** · 10/08/2026 · Festival des Grillades de Paris, espace de pilotage
+
+**Situation.** L'espace de séance donne à chaque partie un lien qui vaut l'accès. Une migration ultérieure a ajouté à la même table un **jeton d'animation**, réservé à Mr Attractor, qui ouvre le rapport de connexions et surtout la **réinitialisation complète de la séance** : points, commentaires, informations, actions, journal et signatures.
+
+**Ce qui n'allait pas.** La fonction de lecture, écrite **avant** cette migration, renvoyait `to_jsonb(seance) - 'jeton'`. Elle ne retirait donc pas la colonne qui n'existait pas encore. Résultat : le jeton d'animation partait dans la réponse d'un appel parfaitement normal, à Advantage comme à Thim, du 5 au 10 août. N'importe lequel des participants pouvait effacer le relevé de la séance qu'il venait de valider.
+
+**Comment c'est trouvé.** Par hasard, en vérifiant tout autre chose : la question portait sur la mise à jour des informations attendues, ce qui a conduit à relire ce que la fonction de lecture renvoyait réellement. Aucun test ne le cherchait.
+
+**Ce qu'on a fait.** Retrait explicite de la colonne, **rotation du jeton compromis** (réparer la fonction ne suffit pas, le secret a circulé), et garde-fou en base : la réinitialisation est désormais refusée dès qu'une validation existe. Les trois points vérifiés à la clé anonyme, pas au service role.
+
+**Cause profonde.** `to_jsonb(ligne) - 'secret'` est une **liste noire**. Une liste noire ne connaît que les colonnes existant au moment où on l'écrit. Toute colonne sensible ajoutée plus tard est exposée par défaut, en silence, sans erreur.
+
+**Règles nées de là** : R-62, R-63, R-64.
+
+---
+
 ### EXP-038 · Sortir une cliente réelle d'un produit qu'on vient de mettre en pause
 **DÉBLOCAGE** · 07/08/2026 · C'Real / Attractor Assists
 

@@ -78,13 +78,41 @@ Pour chaque événement notable (bug, solution, décision, session de livraison)
 
 Ne créer des entrées que s'il y a des événements notables. Une session sans bug ni décision majeure ne nécessite pas d'entrée.
 
-### Étape 5 : Confirmer
+### Étape 5 : Nourrir le Cerveau Master
+
+Le journal garde la chronologie, le cerveau garde ce qui se réutilise. Ce sont deux choses
+différentes, cette étape ne se saute pas.
+
+Passer chaque événement de la session au test d'entrée : **est-ce que ça servira sur un
+autre dossier dans six mois ?**
+
+Ce qui passe le test se range dans `cerveau/` :
+
+| Événement de la session | Où ça va |
+|---|---|
+| Un client a dit oui, ou non, ou a disparu | fiche dans `02-EXPERIENCES.md` |
+| Un bug a coûté plus de deux heures | fiche `DÉBLOCAGE` dans `02-EXPERIENCES.md` |
+| Mac Arthur a corrigé une production ou validé une approche | règle dans `03-REGLES.md` |
+| Un livrable a été refusé | fiche `BLOCAGE` dans `02-EXPERIENCES.md` |
+| Une décision structurelle a été prise | `01-DOCTRINE.md` + `decisions-actees.md` |
+
+Pour chaque fiche, remplir obligatoirement le champ **Pourquoi** (la cause profonde, pas le
+symptôme). Croiser les références dans les deux sens entre la fiche et la règle. Enrichir
+une fiche existante plutôt que d'en créer une seconde sur le même sujet.
+
+Ce qui ne passe pas le test reste dans `HISTORY.md` ou dans le `DOSSIER.md` du client. Une
+session sans rien de réutilisable ne produit aucune fiche, et c'est normal.
+
+Si rien n'a été ajouté au cerveau depuis plus de 21 jours, le signaler à Mac Arthur.
+
+### Étape 6 : Confirmer
 
 Annonce ce qui a été fait :
 
 ```
 C'est fait. Voici ce que j'ai mis à jour :
 - [Liste des modifications fichiers]
+- Cerveau Master : [N] expérience(s), [N] règle(s) — [titres]
 - Knowledge Base Notion : [N] entrée(s) ajoutée(s) — [titres]
 
 Ton contexte est à jour. Tu peux relancer /prime à ta prochaine session pour vérifier.

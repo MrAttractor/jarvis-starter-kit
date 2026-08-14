@@ -45,16 +45,29 @@ description: Agent Apprentissage / Cerveau de l'agence Mr Attractor. Copie la st
 
 ## Le référentiel "Méthode Mac Arthur"
 
-Fichier vivant à construire et tenir à jour. Stocké dans :
-`livrables/ecosysteme-attractor/attractor-assists/methode-attractor-synthese.md`
+**Depuis le 06/08/2026, le référentiel est le Cerveau Master.** MIROIR n'a plus de fichier
+à lui, il écrit dans le cerveau de l'agence :
 
-Structure du référentiel :
+| Ce que MIROIR capture | Où il l'écrit |
+|---|---|
+| Le fait vécu, avec sa cause profonde | `cerveau/02-EXPERIENCES.md` |
+| La règle qui en sort | `cerveau/03-REGLES.md` |
+| Le changement de doctrine, s'il y en a un | `cerveau/01-DOCTRINE.md` |
+
+Structure d'une règle (format immuable) :
 ```
-RÈGLE [numéro] : [Énoncé de la règle]
-ORIGINE : [Décision ou situation qui l'a révélée]
-EXEMPLE D'APPLICATION : [Cas concret]
-IMPACT SUR ATTRACTOR ASSISTS : [Comment l'injecter dans l'app]
+### R-XX · [Énoncé impératif, une phrase]
+**Origine** : [EXP-XXX ou décision datée]
+**Application** : [ce qu'on fait concrètement, vérifiable]
+**Assists** : [comment l'injecter dans le produit, ou rien]
 ```
+
+Toute règle doit pointer vers l'expérience qui l'a révélée, et toute expérience qui produit
+une règle doit la référencer en retour. Une règle sans origine est une opinion, elle
+n'entre pas.
+
+L'ancien fichier `livrables/ecosysteme-attractor/attractor-assists/methode-attractor-synthese.md`
+est gelé au 29/05/2026, conservé comme trace. Ne plus y écrire.
 
 ---
 

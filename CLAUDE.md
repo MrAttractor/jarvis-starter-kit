@@ -59,11 +59,49 @@ Une fois que je confirme, Claude met à jour le fichier en question et ajoute un
 
 ---
 
+## Critical Instruction: Le Cerveau Master
+
+**Le dossier `cerveau/` est la source unique d'intelligence de l'agence. Claude DOIT le consulter avant de produire et le nourrir après avoir appris.**
+
+### Avant toute production, tout arbitrage, toute réponse client
+
+1. Lire `cerveau/03-REGLES.md`. Les règles priment sur l'instinct et sur l'habitude.
+2. Chercher dans `cerveau/02-EXPERIENCES.md` si un cas comparable a déjà été vécu. Si oui, partir de là.
+3. Trancher les questions de fond avec `cerveau/01-DOCTRINE.md`.
+
+Ordre de priorité en cas de contradiction :
+
+```
+Décision récente de Mac Arthur > 03-REGLES > 01-DOCTRINE > 02-EXPERIENCES > tout le reste
+```
+
+Une contradiction détectée se signale à Mac Arthur, elle ne se contourne jamais en silence.
+
+### Après chaque événement qui apprend quelque chose
+
+Claude propose systématiquement d'écrire dans le cerveau quand :
+- un client dit oui, ou dit non, ou disparaît
+- un bug a coûté plus de deux heures
+- Mac Arthur corrige une production ou valide explicitement une approche
+- un livrable est refusé
+- une décision structurelle est prise
+
+Test d'entrée unique : **« Est-ce que ça servira sur un autre dossier dans six mois ? »** Si non, ça reste dans `HISTORY.md` ou dans le `DOSSIER.md` du client.
+
+Le détail des protocoles est dans `cerveau/CERVEAU.md`.
+
+---
+
 ## Workspace Structure
 
 ```
 .
 ├── CLAUDE.md                    # Ce fichier, chargé à chaque session
+├── cerveau/                     # CERVEAU MASTER, à consulter avant toute production
+│   ├── CERVEAU.md               # Point d'entrée : protocole de consultation et d'alimentation
+│   ├── 01-DOCTRINE.md           # Ce qu'on croit et comment on fait (ex-BIBLE_ATTRACTOR.md)
+│   ├── 02-EXPERIENCES.md        # Réussites, blocages, déblocages, avec leur cause profonde
+│   └── 03-REGLES.md             # Les règles à appliquer, numérotées, avec leur origine
 ├── .env                         # Secrets et clés d'API (JAMAIS committé)
 ├── .env.example                 # Template public des variables (sans valeurs)
 ├── .gitignore                   # Exclusions git (secrets, build, etc.)
@@ -97,6 +135,7 @@ Une fois que je confirme, Claude met à jour le fichier en question et ajoute un
 
 | Dossier | Utilité |
 |---------|---------|
+| `cerveau/` | **Le cerveau master de l'agence.** Doctrine, expériences, règles. À consulter avant toute production, à nourrir après chaque session |
 | `context/` | Tout ce qui me concerne et que Claude doit savoir |
 | `context/import/` | Documents externes (PDFs, exports, notes) à analyser. **INPUTS**. Rangé par usage, règle de dépôt dans son `README.md` : rien ne reste à la racine |
 | `livrables/` | Tout ce que Claude produit pour moi. **OUTPUTS** |
