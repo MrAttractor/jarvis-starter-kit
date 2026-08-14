@@ -37,7 +37,21 @@ Calcule le total, l'acompte (50 % par défaut, ajustable) et le solde. Choisis u
 
 ## Étape 3 — Générer le devis
 
-Pars du gabarit `assets/template-devis.html`, qui est déjà au format A4 imprimable avec l'identité légale et la mention "TVA non applicable, article 293 B du CGI" en pied de page. Remplace les `{{...}}`. Ajoute une ligne de tableau par prestation ou add-on.
+**Deux gabarits, choisis selon la famille.**
+
+| Besoin | Gabarit |
+|---|---|
+| App métier, add-ons, vidéo, partenariat (Familles A et D) | `assets/template-devis.html` |
+| **Mission de conseil en 3 phases (Famille B bis)** | `assets/template-devis-consulting.html` |
+
+Le gabarit consulting présente les trois temps (vision, plan de marche, suivi), les trois parcours
+Cap / Trajectoire / Pilotage, la section « Ce qui n'est pas compris » déjà rédigée et le calendrier
+des étapes. Il est en français simple, sans jargon : les phases s'y appellent « temps 1, 2, 3 » et
+les livrables sont décrits par ce que le client reçoit, pas par leur nom de méthode.
+
+Les deux sont au format A4 imprimable avec l'identité légale et la mention "TVA non applicable,
+article 293 B du CGI" en pied de page. Remplace les `{{...}}`. Ajoute une ligne de tableau par
+prestation ou add-on.
 
 Enregistre le devis rempli dans `context/import/devis/devis-<client>-<numero>.html`.
 

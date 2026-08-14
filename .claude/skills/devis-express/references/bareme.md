@@ -57,6 +57,69 @@ Ancrage de référence : **J'Envoie Express, GetWinWorld, C'Real**. Partenariat 
 
 > **Attention cohérence des formats** : 48h et 72h (Starter/Runner) sont des **délais de livraison** d'un livrable one-shot ; les 10h d'Eagle sont un **volume horaire d'accompagnement** (pas un délai). Ne jamais les présenter côte à côte comme s'ils étaient comparables (ex. "48h / 72h / 10h" est ambigu et fait croire à tort que 10h < 72h). Décrire chaque palier par ce qu'il est.
 
+## Famille B bis — Parcours de consultance en 3 phases (05/08/2026)
+
+> Méthode arrêtée le 05/08/2026, détaillée dans `livrables/ecosysteme-attractor/METHODE-CONSULTANCE.md`.
+> À ne pas confondre avec la Famille B ci-dessus : STARTER, RUNNER et EAGLE sont trois offres
+> **alternatives** (le client en choisit une). Ici, ce sont trois phases **séquentielles**, chacune
+> conditionnée à la validation de la précédente.
+
+| Phase | Livrable | Prix | Accompagnement inclus |
+|---|---|---|---|
+| **1. Vision stratégique** | Le plan d'action stratégique | **230 000 FCFA / 350 €** | 4 h de séances |
+| **2. Plan tactique** | Le business model et le plan d'action opérationnel | **525 000 FCFA / 800 €** | 10 h de séances |
+| **3. Suivi opérationnel** | Le pilotage tenu, un accès par acteur | **mensuel, voir ci-dessous** | selon le niveau |
+
+**D'où viennent les prix des phases 1 et 2.** Ils sont calés sur la Famille B existante, pas
+inventés : la phase 1 reprend le prix RUNNER (dossier structuré, 350 €), la phase 2 reprend le
+prix EAGLE (accompagnement de 10 h, 800 €). EAGLE implique un tarif de 80 €/h en formule, contre
+120 €/h à la carte : c'est l'écart de référence de l'agence entre le cadré et le ponctuel.
+
+### Phase 3 — abonnement mensuel `[À VALIDER]`
+
+| Niveau | Prix mensuel | Séances par mois | Accès acteurs | Inclus |
+|---|---|---|---|---|
+| **Suivi Essentiel** | **100 000 FCFA / 150 €** `[À VALIDER]` | 1 séance (1 h) | 3 | Registre des décisions tenu à jour |
+| **Suivi Actif** | **165 000 FCFA / 250 €** `[À VALIDER]` | 2 séances (2 h) | 8 | + point de pilotage écrit chaque mois |
+| **Suivi Premium** | **295 000 FCFA / 450 €** `[À VALIDER]` | 4 séances (4 h) | illimités | + alerte et arbitrage sous 48 h |
+
+> **Aucun tarif récurrent de conseil n'existait au barème.** Ces trois montants sont des
+> propositions calées sur la cohérence de la grille (80 €/h en formule, plus l'outil et le
+> reporting), pas des prix déjà pratiqués. Mac Arthur tranche, puis on retire la mention.
+>
+> **La phase 3 est la seule ligne récurrente du conseil**, donc la seule qui construise du revenu
+> le mois suivant. Un devis de consultance sans phase 3 présentée est un devis incomplet, au même
+> titre qu'un devis Famille A sans ligne MRR.
+
+**Durée d'engagement minimale : 3 mois**, puis reconductible au mois. Sans durée minimale, le
+suivi s'arrête au premier mois creux et le plan retombe.
+
+### Les trois parcours à présenter
+
+Le devis montre toujours les trois, même si le client n'achète que le premier.
+
+| Parcours | Contenu | Prix |
+|---|---|---|
+| **Cap** | Phase 1 seule | 230 000 FCFA / **350 €** |
+| **Trajectoire** | Phases 1 et 2 | 755 000 FCFA / **1 150 €** |
+| **Pilotage** | Phases 1 et 2 + premier mois de Suivi Actif | 920 000 FCFA / 1 400 €, **remise volume 20 % appliquée → 735 000 FCFA / 1 120 €**, puis 165 000 FCFA / 250 € par mois |
+
+> **Point de vigilance à arbitrer.** La remise volume de 20 % ne se déclenche qu'au-dessus de
+> 1 200 €. Trajectoire est à 1 150 €, donc juste en dessous, tandis que Pilotage tombe à 1 120 €
+> après remise. **Le parcours complet coûte donc moins cher que le parcours intermédiaire.**
+> C'est un levier redoutable vers le revenu récurrent, mais un client attentif y verra une
+> incohérence de grille. Deux sorties : assumer l'effet et pousser Pilotage, ou remonter la
+> phase 2 pour que Trajectoire passe le seuil et bénéficie aussi de la remise. À trancher.
+
+### Règles propres à la consultance
+
+- **Le chef de projet est compris dans chaque phase, jamais facturé à part.**
+- **On ne vend jamais les trois phases d'un bloc à un client neuf** : on vend la phase 1, on la livre, la suite se vend sur la preuve.
+- Chaque phase se conclut par un livrable validé et signé. Pas de validation, pas de phase suivante.
+- Le nombre de séances de chaque phase figure en toutes lettres au devis. Au-delà : tarif CONSEIL 120 €/h.
+- Toute demande hors périmètre : 150 €/h, comme partout ailleurs au barème.
+- Ne pas facturer une mission de conseil là où il n'y a qu'une prestation d'exécution, et ne pas livrer du conseil gratuitement là où il y en a une.
+
 ## Famille C — Attractor Assists (abonnement)
 
 Modèle **freemium** : l'app est gratuite avec des limitations d'usage. La progression via le coaching privé crée l'envie de rester. Les utilisateurs paient pour continuer à progresser. **Tarifs définitifs à fixer lors de la refonte de l'app** (ne pas chiffrer un devis Assists tant que ce n'est pas tranché).
