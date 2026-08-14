@@ -17,7 +17,7 @@ qui dit où elle en est, ce qu'elle a coûté, et quelle est la prochaine action
 
 | Fichier | Ce qu'il est |
 |---|---|
-| `BIBLE_ATTRACTOR.md` | La source unique de l'agence : vision, méthode, commercial, design, architecture, agents, qualité, décisions |
+| ~~`BIBLE_ATTRACTOR.md`~~ | **Déplacé le 06/08/2026** vers `cerveau/01-DOCTRINE.md`, à la racine du workspace. La doctrine est désormais une pièce du Cerveau Master. Point d'entrée : `cerveau/CERVEAU.md` |
 | `UX_SYSTEM.md` | **Source de vérité UX/UI de tout l'écosystème.** À vérifier avant toute mise en production d'un écran |
 | `PROJETS-EFFECTIFS.md` | La vue transverse de tous les dossiers, dérivée des `DOSSIER.md`. C'est ce qui alimente Roland |
 
