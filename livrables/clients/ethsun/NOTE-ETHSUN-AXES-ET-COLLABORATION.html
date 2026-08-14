@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sprint IA Tourisme et Loisirs — État des lieux et axes proposés</title>
+<!--
+  NOTE DE CADRAGE — ETHSUN / Sprint IA Tourisme et Loisirs
+  Destinataire : Jean-Calvin Ethien, oxford@ethsun.org
+  Le partenaire reçoit un PDF : ouvrir dans le navigateur, puis Imprimer > Enregistrer au format PDF (A4).
+  Ne jamais envoyer le fichier HTML.
+-->
+<style>
+:root{
+  --encre:#16202B; --encre2:#414D5C; --encre3:#7C8794;
+  --or:#B08D3F; --or-cl:#F7F2E6;
+  --ard:#2F4858; --ard-cl:#EDF2F5;
+  --line:#E3E6EA; --line2:#CFD5DC;
+  --pap:#F1F3F5; --blanc:#FFFFFF;
+  --font:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--encre);background:var(--pap);padding:24px;
+  font-size:13px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.page{background:var(--blanc);width:210mm;min-height:297mm;margin:0 auto 24px;padding:16mm 15mm;
+  box-shadow:0 2px 18px rgba(0,0,0,.09);max-width:100%}
+h1,h2,h3{line-height:1.25}
+p{margin-bottom:9px}
+
+.tete{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;
+  padding-bottom:14px;border-bottom:2px solid var(--encre)}
+.marque .n{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.marque .s{font-size:10.5px;color:var(--encre3);letter-spacing:.14em;text-transform:uppercase;margin-top:3px}
+.ref{text-align:right;font-size:11px;color:var(--encre2);line-height:1.7;white-space:nowrap}
+.ref b{color:var(--encre)}
+
+.titre{margin:22px 0 6px;font-size:20px;font-weight:700}
+.sous{font-size:12.5px;color:var(--encre2)}
+
+.parties{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0 6px}
+.bloc{border:1px solid var(--line);border-radius:8px;padding:12px 14px;break-inside:avoid}
+.bloc .t{font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:var(--encre3);margin-bottom:6px}
+.bloc .c{font-size:12px;line-height:1.6}
+.bloc .c b{font-size:13px}
+
+h2.sec{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--encre3);
+  margin:26px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3.sub{font-size:13.5px;font-weight:700;margin:16px 0 6px}
+
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;
+  color:var(--encre3);padding:8px 10px;border-bottom:1px solid var(--line2)}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.r,th.r{text-align:right;white-space:nowrap}
+tr{break-inside:avoid;page-break-inside:avoid}
+.tw{overflow-x:auto}
+
+.enc{border:1px solid var(--line);border-radius:8px;padding:13px 15px;margin-top:14px;font-size:12px;break-inside:avoid}
+.enc.cle{background:var(--ard-cl);border-color:#C9D6DE}
+.enc.bonus{background:var(--or-cl);border-color:#E8DCBE}
+.enc .t{font-weight:700;margin-bottom:7px;font-size:12.5px}
+.enc ul{margin-left:16px}
+.enc li{margin-bottom:4px;color:var(--encre2)}
+
+.axes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
+.ax{border:1px solid var(--line2);border-radius:8px;padding:14px;display:flex;flex-direction:column;break-inside:avoid}
+.ax.reco{border:2px solid var(--or);background:var(--or-cl)}
+.ax .et{font-size:9px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--or);margin-bottom:6px}
+.ax .num{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ard)}
+.ax .nom{font-size:14.5px;font-weight:700;margin-top:2px}
+.ax .quoi{font-size:11.5px;color:var(--encre2);margin-top:7px;flex:1}
+.ax .pied{font-size:10.5px;color:var(--encre3);margin-top:9px;border-top:1px solid var(--line);padding-top:7px}
+
+.form{border:1px solid var(--line);border-left:3px solid var(--ard);border-radius:0 8px 8px 0;
+  padding:14px 16px;margin-bottom:12px;break-inside:avoid}
+.form.reco{border-left-color:var(--or);background:var(--or-cl);border-color:#E8DCBE}
+.form .h{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+.form .lettre{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ard)}
+.form.reco .lettre{color:var(--or)}
+.form .nom{font-size:15px;font-weight:700;margin-top:2px}
+.form .cle{font-size:15px;font-weight:700;white-space:nowrap;text-align:right}
+.form .cle small{display:block;font-size:10.5px;font-weight:500;color:var(--encre3)}
+.form ul{margin:10px 0 0 16px;font-size:12px;color:var(--encre2)}
+.form li{margin-bottom:3px}
+.form .pour{margin-top:10px;font-size:11.5px;border-top:1px dashed var(--line2);padding-top:8px;color:var(--encre2)}
+
+.pied-doc{margin-top:26px;padding-top:12px;border-top:1px solid var(--line);
+  font-size:10px;color:var(--encre3);line-height:1.65}
+.pied-doc b{color:var(--encre2)}
+.sign{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px}
+.sign .c{border:1px solid var(--line2);border-radius:8px;padding:12px;min-height:92px;break-inside:avoid}
+.sign .t{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--encre3)}
+.sign .m{font-size:10.5px;color:var(--encre3);margin-top:5px}
+
+.puce{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--or);margin-right:6px;vertical-align:middle}
+.etat-ok{color:#2F6B4F;font-weight:600}
+.etat-non{color:#9C5A2E;font-weight:600}
+
+@media print{
+  @page{size:A4;margin:11mm 11mm}
+  html,body{background:#fff!important;padding:0!important;font-size:10pt;line-height:1.5;
+    overflow:visible!important;height:auto!important;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .page{width:auto!important;min-height:auto!important;margin:0!important;padding:0!important;
+    box-shadow:none!important;overflow:visible!important}
+  .ax,.form,.enc,.sign .c,.bloc,tr,table{break-inside:avoid;page-break-inside:avoid;overflow:visible!important}
+  h2.sec,h3.sub{break-after:avoid;page-break-after:avoid}
+  .saut{break-before:page;page-break-before:always}
+  /* resserrage : la note doit rester compacte, sans rogner sur la lisibilite */
+  p{margin-bottom:6px}
+  h2.sec{margin:16px 0 8px;padding-bottom:4px}
+  h3.sub{margin:11px 0 5px}
+  .titre{margin:14px 0 4px}
+  .parties{margin:12px 0 4px;gap:10px}
+  .bloc{padding:9px 11px}
+  td{padding:5px 8px}
+  th{padding:5px 8px}
+  .enc{padding:9px 12px;margin-top:9px}
+  .enc li{margin-bottom:2px}
+  .form{padding:10px 13px;margin-bottom:9px}
+  .form ul{margin-top:7px}
+  .form .pour{margin-top:7px;padding-top:6px}
+  .ax{padding:10px}
+  .ax .quoi{margin-top:5px}
+  .ax .pied{margin-top:7px;padding-top:5px}
+  .sign{margin-top:14px}
+  .sign .c{min-height:66px}
+  .pied-doc{margin-top:16px;padding-top:9px}
+}
+@media(max-width:820px){
+  body{padding:10px}
+  .page{width:auto;padding:18px}
+  .parties,.axes,.sign{grid-template-columns:1fr}
+  .tete{flex-direction:column;gap:10px}
+  .ref{text-align:left}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================ PAGE 1 ============================ -->
+<div class="page">
+
+  <div class="tete">
+    <div class="marque">
+      <div class="n">Agence Mr Attractor</div>
+      <div class="s">Conseil et développement</div>
+    </div>
+    <div class="ref">
+      <div>Réf. <b>ATR-2026-ETH-01</b></div>
+      <div>Date : 10 août 2026</div>
+      <div>Note de cadrage, <b>4 pages</b></div>
+    </div>
+  </div>
+
+  <div class="titre">Sprint IA Tourisme et Loisirs</div>
+  <div class="sous">État des lieux du partenariat et axes proposés pour la niche touristique</div>
+
+  <div class="parties">
+    <div class="bloc">
+      <div class="t">Pour</div>
+      <div class="c"><b>ETHSUN Executive Education</b><br />
+      Jean-Calvin Ethien<br />
+      Executive AI Learning Experience Designer<br />
+      oxford@ethsun.org</div>
+    </div>
+    <div class="bloc">
+      <div class="t">Par</div>
+      <div class="c"><b>Agence Mr Attractor</b><br />Mac Arthur KOUASSI<br />
+      hello@agenceattractor.com<br />+33 7 53 90 23 23</div>
+    </div>
+  </div>
+
+  <div class="enc cle">
+    <div class="t">En une phrase</div>
+    Nos échanges depuis juin ont posé le principe d'un partenariat sur les Sprints IA, en démarrant
+    par le Tourisme et les Loisirs. Cette note fait le point sur ce qui est acquis et propose trois
+    axes possibles pour le Sprint Tourisme. <b>Le plan de formation ne sera rédigé qu'après votre
+    choix d'axe</b> : c'est l'axe retenu qui détermine les objectifs à écrire dans votre gabarit.
+    Les modalités économiques du partenariat seront traitées lors de notre prochaine réunion.
+  </div>
+
+  <h2 class="sec">1. Ce qui est acquis entre nous</h2>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Point</th><th>État</th></tr></thead>
+    <tbody>
+      <tr><td><b>Nature de la collaboration</b><div style="color:var(--encre3);font-size:11px">Partenariat, avec un rôle d'animateur et de co-concepteur du Sprint, pas d'intervention ponctuelle</div></td><td class="etat-ok">Acquis</td></tr>
+      <tr><td><b>Secteur de démarrage</b><div style="color:var(--encre3);font-size:11px">Tourisme et Loisirs, sur votre choix</div></td><td class="etat-ok">Acquis</td></tr>
+      <tr><td><b>Format</b><div style="color:var(--encre3);font-size:11px">Deux jours intensifs, entièrement en ligne, avec certificat ETHSUN</div></td><td class="etat-ok">Acquis</td></tr>
+      <tr><td><b>Prix public</b><div style="color:var(--encre3);font-size:11px">488 € HT par participant, 388 € en inscription anticipée</div></td><td class="etat-ok">Acquis</td></tr>
+      <tr><td><b>Livrables promis au participant</b><div style="color:var(--encre3);font-size:11px">Un plan d'action IA personnalisé et une bibliothèque de prompts propres au secteur</div></td><td class="etat-ok">Acquis</td></tr>
+      <tr><td><b>Principe du partage de recettes</b><div style="color:var(--encre3);font-size:11px">Annoncé et accepté des deux côtés</div></td><td class="etat-non">À traiter en réunion</td></tr>
+      <tr><td><b>Calendrier et jauge des sessions</b><div style="color:var(--encre3);font-size:11px">Prospection en cours de votre côté</div></td><td class="etat-non">À venir</td></tr>
+      <tr><td><b>Proposition de mission du 24 juin</b><div style="color:var(--encre3);font-size:11px">Audit des outils, automatisations et production de contenu, trois formules</div></td><td class="etat-non">En suspens</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 class="sec">2. Ce que nous avons vérifié sur le marché ivoirien</h2>
+
+  <p>Avant de proposer un contenu, nous sommes allés voir où en sont réellement les opérateurs
+  touristiques ivoiriens. Trois faits éclairent la façon de construire le Sprint.</p>
+
+  <p><span class="puce"></span><b>La demande est réelle et portée par l'État.</b> La stratégie
+  Sublime Côte d'Ivoire vise le top 5 des destinations africaines d'ici 2030, avec une plateforme
+  numérique de découverte, de réservation et de paiement en construction. En avril 2025, 75 cadres
+  dirigeants du ministère ont été formés aux outils d'IA.</p>
+
+  <p><span class="puce"></span><b>Le terrain est déjà préparé.</b> En octobre 2025, 120 opérateurs
+  touristiques ivoiriens (hôtellerie, artisanat, agences de voyage, loisirs) ont suivi une
+  sensibilisation de deux jours pilotée par la direction en charge de la digitalisation au
+  ministère : automatisation des réservations et des paiements le premier jour, marketing digital
+  le second. C'est une bonne nouvelle : le public sait de quoi on parle, et il n'y a plus à le
+  convaincre que l'IA le concerne.</p>
+
+  <p><span class="puce"></span><b>La gestion du prix et du remplissage n'a pas été abordée.</b> Le
+  revenue management, c'est-à-dire la prévision de la demande et la tarification dynamique, n'entre
+  dans aucun des deux jours du programme public. C'est un sujet qui touche directement le chiffre
+  d'affaires et qui reste entier.</p>
+
+  <div class="enc">
+    <div class="t">Ce que cela implique, concrètement</div>
+    Une sensibilisation collective fait découvrir, elle n'installe pas. Les participants sont
+    repartis en sachant que ces outils existent, pas en les ayant mis en service chez eux.
+    <b>Notre différence ne tient donc pas au sujet, elle tient au traitement</b> : nous reprenons
+    les mêmes thèmes avec des outils standards du marché, choisis parce qu'ils sont directement
+    applicables, et nous les paramétrons pendant le Sprint sur les propres chiffres de chaque
+    participant. Il repart avec des outils qui tournent, pas avec des notes. À quoi s'ajoute le
+    revenue management, qui n'a pas été traité, et le certificat.
+  </div>
+
+  <h2 class="sec">3. Le parti pris que nous recommandons, quel que soit l'axe</h2>
+
+  <p><b>Partir de ce que fait le participant avant de parler d'IA.</b> La première demi-journée
+  sert à récupérer ses vrais chiffres (taux d'occupation, tarifs pratiqués, canaux de vente,
+  outils en place) et à en sortir un profil de maturité écrit sur son établissement. Tout le reste
+  du Sprint se construit sur ce diagnostic. C'est ce qui distingue un Sprint payant d'une
+  sensibilisation collective, et c'est ce qui rend le certificat défendable.</p>
+
+  <p><b>Repartir avec des objets utilisables le lundi matin.</b> Un profil de maturité, trois à
+  cinq cas d'usage classés par effort et par impact, un tableur pré-rempli avec ses propres
+  chiffres, quinze à vingt prompts prêts à l'emploi, et un plan d'action en trois horizons
+  (semaine 1, mois 1, mois 3). Des outils accessibles, jamais un logiciel à plusieurs centaines
+  d'euros par mois qu'un indépendant ne prendra pas.</p>
+
+</div>
+
+<!-- ============================ BLOC 2 : LES AXES ============================ -->
+<div class="page">
+
+  <h2 class="sec">4. Les trois axes proposés pour la niche touristique</h2>
+
+  <p>Le catalogue annonce quatre modules. Les traiter à égalité en deux jours donne un survol.
+  Nous proposons donc de choisir un axe dominant, qui occupe le cœur du Sprint, les autres
+  matières étant présentées comme des options situées sur la carte. <b>Les trois axes sont
+  compatibles avec le format, le prix et le certificat.</b></p>
+
+  <div class="axes">
+    <div class="ax reco">
+      <div class="et">Notre recommandation</div>
+      <div class="num">Axe 1</div>
+      <div class="nom">Le prix et le remplissage</div>
+      <div class="quoi">Revenue management appliqué. Indicateurs de performance, prévision de la
+      demande, tarification dynamique, arbitrage entre vente directe et plateformes de
+      réservation. Atelier sur tableur et IA générative, sans logiciel payant.</div>
+      <div class="pied"><b>Pourquoi lui :</b> matière entièrement neuve pour ce public, et la plus
+      directement liée au chiffre d'affaires. Le participant repart avec sa grille tarifaire
+      construite pendant le Sprint.</div>
+    </div>
+    <div class="ax">
+      <div class="num">Axe 2</div>
+      <div class="nom">L'expérience et la réputation</div>
+      <div class="quoi">Personnalisation du séjour, assistant de réponse disponible en continu,
+      traitement automatique des avis clients, production de contenu et campagnes ciblées, avec
+      des outils standards du marché mis en service pendant le Sprint.</div>
+      <div class="pied"><b>Pourquoi lui :</b> le thème le plus attendu, et un public déjà
+      sensibilisé donc rapide à embarquer. On passe le temps du Sprint à installer et à
+      paramétrer, pas à expliquer.</div>
+    </div>
+    <div class="ax">
+      <div class="num">Axe 3</div>
+      <div class="nom">Les opérations et le back-office</div>
+      <div class="quoi">Automatiser ce qui se répète : demandes de devis, confirmations, relances,
+      planning des équipes, tableau de bord de suivi. Le participant repart avec ses propres
+      automatisations montées pendant le Sprint.</div>
+      <div class="pied"><b>Notre terrain :</b> c'est exactement ce que nous construisons et
+      déployons pour des PME au quotidien. Le plus concret des trois, le plus exigeant en
+      préparation individuelle.</div>
+    </div>
+  </div>
+
+  <div class="enc bonus">
+    <div class="t">Une quatrième possibilité, si vous préférez ne rien retirer</div>
+    Garder les quatre modules du catalogue, avec l'axe 1 traité en profondeur sur une journée
+    entière et les trois autres en tour d'horizon appliqué. C'est le meilleur compromis entre la
+    promesse du catalogue et la profondeur réelle. <b>Dites-nous simplement lequel des quatre
+    scénarios vous retenez.</b>
+  </div>
+
+  <h2 class="sec">5. Le plan de formation se rédige après le choix de l'axe</h2>
+
+  <p>Nous avons reçu votre gabarit de plan de formation et nous en avons relevé les exigences pour
+  un format de deux jours : quatre objectifs généraux au minimum, deux à cinq objectifs spécifiques
+  par objectif général, trente éléments de contenu au minimum, une durée par objectif, une activité
+  pédagogique nommée pour chaque objectif spécifique, et une formulation imposée du type
+  « être capable de », verbe d'action tiré de la taxonomie de Bloom, objet, critère de réussite et
+  conditions de réalisation.</p>
+
+  <p><b>Ces objectifs ne sont pas les mêmes selon l'axe retenu.</b> Un Sprint centré sur le prix et
+  le remplissage n'a ni les mêmes verbes, ni les mêmes critères de réussite, ni les mêmes activités
+  qu'un Sprint centré sur la réputation en ligne ou sur l'automatisation du back-office. Rédiger le
+  gabarit avant votre choix reviendrait à le réécrire ensuite en entier. <b>Nous le remplissons
+  donc dès que l'axe est arrêté, et nous vous le remettons complet, prêt à passer en validation.</b></p>
+
+  <div class="enc">
+    <div class="t">Deux précisions à nous apporter avant la rédaction</div>
+    <ul>
+      <li><b>Quel barème s'applique à un format à distance ?</b> Les seuils de sept heures et de
+      deux jours du gabarit sont écrits pour la formation en salle. Le seul format à distance qui y
+      soit cadré est le webinaire de trois heures, or le Sprint dure deux jours entièrement en
+      ligne.</li>
+      <li><b>Combien d'allers-retours de validation sont prévus, et dans quel délai ?</b> Le plan
+      passe devant l'Institut et revient avec des corrections à intégrer. Le savoir nous permet de
+      tenir votre calendrier de lancement.</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">6. Ce que nous apportons dans ce partenariat</h2>
+
+  <p>Notre différence tient à un point simple : nous ne présentons pas l'IA, nous en installons.
+  Nous construisons et déployons en production des applications métier et des automatisations pour
+  des PME et des indépendants en Côte d'Ivoire et en France. Les participants n'auront donc pas en
+  face d'eux un exposé théorique, mais quelqu'un qui a déjà fait tourner ces outils dans des
+  entreprises de leur taille, avec leurs contraintes de connexion, de budget et d'équipe.</p>
+
+  <h2 class="sec">7. Ce qu'il nous faut de votre part pour avancer</h2>
+  <div class="tw">
+  <table>
+    <thead><tr><th>#</th><th>Ce que nous attendons</th><th>Effet</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><b>Le choix de l'axe</b> pour le Sprint Tourisme, parmi les quatre scénarios du point 4.</td><td>Déclenche la rédaction du plan de formation</td></tr>
+      <tr><td>2</td><td><b>Le barème applicable</b> à un format de deux jours entièrement à distance, votre gabarit ne cadrant que le webinaire de trois heures.</td><td>Fixe le volume d'objectifs à écrire</td></tr>
+      <tr><td>3</td><td><b>Le nombre d'allers-retours de validation</b> prévus par l'Institut, et leur délai.</td><td>Permet de tenir votre calendrier de lancement</td></tr>
+      <tr><td>4</td><td><b>Le calendrier envisagé</b> : combien de sessions sur les douze prochains mois, à quelles périodes, avec quel préavis.</td><td>Nous permet de réserver les dates d'animation</td></tr>
+      <tr><td>5</td><td><b>Le périmètre</b> : le partenariat porte-t-il sur le Tourisme seul, ou d'autres secteurs du catalogue sont-ils envisagés ensuite ?</td><td>Détermine ce que nous préparons</td></tr>
+      <tr><td>6</td><td><b>Le sort de la proposition de mission du 24 juin</b> : remplacée par ce partenariat, ou menée en parallèle ?</td><td>Referme un sujet en suspens depuis six semaines</td></tr>
+      <tr><td>7</td><td><b>Les brochures du catalogue</b> des autres secteurs, que nous n'avons pas encore reçues.</td><td>Nous aide à raisonner sur la suite</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 class="sec">8. Ce que nous proposons de traiter en réunion</h2>
+
+  <p>Les sujets ci-dessous engagent les deux structures et se règlent mieux de vive voix qu'en
+  écrit. Nous les mettons à l'ordre du jour de notre prochaine réunion, et nous arriverons avec
+  des propositions chiffrées sur chacun.</p>
+
+  <div class="enc cle">
+    <ul>
+      <li><b>L'économie du partenariat</b> : le principe du partage de recettes est acquis, il
+      reste à en fixer le niveau, la base de calcul et le rythme de versement.</li>
+      <li><b>Le seuil de déclenchement d'une session</b> : à partir de combien d'inscrits une
+      session se tient, et ce qui se passe en dessous.</li>
+      <li><b>La propriété de ce qui est produit</b> : le plan de formation, les supports à votre
+      marque et le certificat vous reviennent ; reste à cadrer la réutilisation des outils
+      génériques (grille d'audit, tableur de pilotage, bibliothèque de prompts).</li>
+      <li><b>Les participants qui souhaitent aller plus loin</b> après le Sprint, et la façon dont
+      ETHSUN est intéressée aux missions qui en découlent.</li>
+    </ul>
+  </div>
+
+  <div class="enc">
+    <div class="t">La suite, telle que nous la voyons</div>
+    Vos réponses aux sept points du tableau ci-dessus tiennent en un courriel et n'attendent pas la
+    réunion. Nous fixons la réunion pour l'économie du partenariat, nous en tirons un protocole
+    court de deux pages, et la rédaction du plan de formation démarre dès l'axe choisi.
+  </div>
+
+  <div class="pied-doc">
+    <b>Agence Mr Attractor</b> — Mac Arthur KOUASSI · Micro-entreprise · SIRET 98377125400015 ·
+    hello@agenceattractor.com · +33 7 53 90 23 23 · agenceattractor.com<br />
+    <b>TVA non applicable, article 293 B du Code général des impôts.</b><br />
+    Note de cadrage. Ce document ne comporte aucune proposition financière et ne vaut pas
+    engagement de production : les modalités économiques du partenariat seront arrêtées en réunion,
+    et aucun contenu pédagogique n'est rédigé avant la signature du protocole.
+  </div>
+
+</div>
+</body>
+</html>

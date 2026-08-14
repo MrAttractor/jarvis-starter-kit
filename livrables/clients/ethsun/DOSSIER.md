@@ -4,11 +4,11 @@
 
 | Radar | |
 |---|---|
-| Statut | à relancer |
-| Dernier contact | 2026-08-10 |
-| Prochaine action | État des lieux traité le 10/08. Obtenir les 8 réponses écrites de Jean-Calvin Ethien, en priorité le seuil de déclenchement et le droit de contact |
-| Échéance | — |
-| Argent en attente | rien de chiffré, rien de signé |
+| Statut | **note envoyée, en attente de réponse** |
+| Dernier contact | 2026-08-10, note de cadrage envoyée à Jean-Calvin Ethien **par WhatsApp** |
+| Prochaine action | Obtenir le choix d'axe et les 7 réponses du point 7, puis **caler la réunion sur l'économie du partenariat**. Relancer si rien au 20/08 |
+| Échéance | relance au 20/08/2026 |
+| Argent en attente | rien de chiffré, rien de signé. **L'économie se traite en réunion, pas par écrit** (décision de Mac Arthur du 10/08) |
 
 ## En une phrase
 
@@ -73,14 +73,38 @@ académique ou conseil.
 
 ## Ce qui fait foi
 
-| Document | Fichier |
-|---|---|
-| État des lieux et axes retenus | `ETAT-DES-LIEUX-OPPORTUNITE.md` |
-| Veille et démarche | `NOTE-VEILLE-ET-DEMARCHE.md` |
-| Préparation du Sprint Tourisme | `sprint-ia-tourisme/` |
+| Document | Fichier | Usage |
+|---|---|---|
+| **Note de cadrage envoyée au partenaire** | `NOTE-ETHSUN-AXES-ET-COLLABORATION.html` | **Externe.** 4 pages A4, **sans aucun chiffre de notre part**. À ouvrir dans le navigateur, imprimer en PDF, et n'envoyer que le PDF |
+| État des lieux et axes retenus | `ETAT-DES-LIEUX-OPPORTUNITE.md` | Interne, ne sort jamais du workspace |
+| Veille et démarche | `NOTE-VEILLE-ET-DEMARCHE.md` | Interne |
+| Préparation du Sprint Tourisme | `sprint-ia-tourisme/` | Interne, ne part qu'après signature du protocole |
+
+## Ce que la note propose, en trois points
+
+1. **Trois axes** pour le Sprint Tourisme : le prix et le remplissage (recommandé, seule
+   matière non couverte par la formation publique), l'expérience et la réputation, les
+   opérations et le back-office. Plus un quatrième scénario qui garde les quatre modules
+   du catalogue avec l'axe 1 en profondeur.
+2. **Le plan de formation ne se rédige qu'après le choix de l'axe.** Les objectifs, les
+   verbes de Bloom et les critères de réussite du gabarit changent selon l'axe. C'est aussi
+   ce qui protège la règle : aucun contenu pédagogique ne part avant la signature.
+3. **Aucun chiffre.** L'économie du partenariat est renvoyée à une réunion, à la demande de
+   Mac Arthur. La note se contente d'en poser l'ordre du jour : niveau et base du partage,
+   seuil de déclenchement d'une session, propriété du contenu et réutilisation des outils
+   génériques, intéressement d'ETHSUN sur les missions issues du Sprint. Les scénarios
+   chiffrés préparés pour cette réunion restent internes, dans
+   `ETAT-DES-LIEUX-OPPORTUNITE.md`.
 
 ## Prochaine action
 
-**État des lieux traité le 10/08/2026.** Obtenir des réponses écrites de Jean-Calvin
-Ethien sur les 8 points, en priorité le seuil de déclenchement et le droit de contact avec
-les participants. Récupérer aussi les 14 brochures du catalogue, absentes du workspace.
+**Note de cadrage envoyée le 10/08/2026 par WhatsApp.** Obtenir en retour le choix d'axe,
+qui déclenche la rédaction du plan de formation, et les six autres réponses du point 7
+(barème à distance, allers-retours de validation, calendrier, périmètre sectoriel, sort de
+la proposition du 24 juin, brochures du catalogue).
+
+Puis **caler la réunion sur l'économie du partenariat**. Y aller préparé : les scénarios
+chiffrés, les seuils et les planchers sont dans `ETAT-DES-LIEUX-OPPORTUNITE.md`, ils n'ont
+jamais été envoyés et ne doivent pas l'être avant d'avoir été discutés de vive voix.
+
+**Relance si rien au 20/08/2026.**

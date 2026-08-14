@@ -76,7 +76,7 @@ C'est là que se trouve le vrai gain, comme sur Ayêla ou Beynaud.
 2. **Travailler pour zéro session.** ETHSUN prospecte, Mac Arthur ne maîtrise pas le remplissage. Sans seuil ni engagement, toute la conception peut ne jamais être amortie.
 3. **La propriété du contenu.** Remplir leur gabarit, le faire valider par leur comité et intégrer leurs corrections rend la revendication ultérieure difficile. Même logique que la réserve de réutilisation défendue sur GetWinWorld et abandonnée en conscience sur Élévia.
 4. **Le conflit d'agenda avec la DGFiP.** Deux jours pleins d'animation en semaine se prennent sur des congés. À arbitrer avant de s'engager sur des dates.
-5. **La concurrence gratuite.** La DIDDS a déjà formé 120 opérateurs ivoiriens en octobre 2025, sur des contenus qui recoupent les modules 1 et 3. Notre différenciation tient au Revenue Management et au caractère opérationnel des livrables. Si ces deux axes sont dilués, l'offre devient une redite payante d'une formation gratuite.
+5. **La concurrence gratuite, à ne pas surestimer.** La DIDDS a déjà formé 120 opérateurs ivoiriens en octobre 2025, sur des contenus qui recoupent les modules 1 et 3. **Correction de Mac Arthur du 10/08/2026 : un marché déjà sensibilisé n'est pas un marché fermé.** Une sensibilisation collective fait découvrir, elle n'installe rien. Le sujet peut donc être repris, à condition de le traiter autrement : outils standards du marché, choisis parce qu'ils sont directement applicables, et paramétrés pendant le Sprint sur les propres chiffres du participant. Le vrai risque n'est pas de reprendre les modules 1 et 3, c'est de les reprendre **au même niveau** que la formation gratuite. Le Revenue Management reste un ajout, pas la seule justification du prix.
 6. **La dépendance à une personne.** Tout passe par Jean-Calvin Ethien. Aucun autre interlocuteur ETHSUN identifié.
 
 ## 6. Les axes retenus pour le contenu
@@ -84,8 +84,8 @@ C'est là que se trouve le vrai gain, comme sur Ayêla ou Beynaud.
 Rappel de ce qui a été décidé le 08/07 et qui reste valable. C'est la ligne à défendre dans le plan de formation.
 
 1. **L'audit d'abord, le cours ensuite.** Le programme officiel présente 4 modules à plat. On part de ce que fait réellement chaque participant, avec ses chiffres, avant de parler d'IA. Un profil de maturité individuel sur 4 axes sort de la première demi-journée.
-2. **Le Revenue Management est le cœur, pas un module parmi quatre.** C'est le seul sujet qu'aucune formation gratuite locale ne couvre, donc le seul qui justifie le prix et le certificat. Il occupe une demi-journée entière.
-3. **Des outils accessibles, jamais un RMS à 1 500 $ par mois.** Tableur et IA générative gratuite, pour que l'indépendant reparte avec quelque chose qu'il peut réellement utiliser.
+2. **Le Revenue Management est le cœur, pas un module parmi quatre.** Aucune formation gratuite locale ne le couvre, et il touche directement le chiffre d'affaires. Il occupe une demi-journée entière.
+3. **Des outils standards, directement applicables, installés pendant le Sprint.** Tableur et IA générative gratuite plutôt qu'un RMS à 1 500 $ par mois. C'est ce qui différencie le Sprint d'une sensibilisation, y compris sur les sujets déjà abordés ailleurs : le participant ne repart pas avec des notes, il repart avec des outils qui tournent sur ses chiffres.
 4. **Des livrables tangibles utilisables le lundi matin.** Profil de maturité, cartographie de 3 à 5 cas d'usage priorisés, tableur pré-rempli avec leurs propres chiffres, 15 à 20 prompts, plan d'action en 3 horizons.
 5. **Positionnement de praticien.** Face à trois intervenants au profil académique ou conseil, le différenciateur est d'avoir construit et déployé de vrais systèmes pour de vraies PME.
 
