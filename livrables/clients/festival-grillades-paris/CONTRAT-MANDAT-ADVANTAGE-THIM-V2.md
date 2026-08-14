@@ -1,0 +1,790 @@
+# CONTRAT DE MANDAT DE PRODUCTION EXÉCUTIVE
+
+## FESTIVAL DES GRILLADES DE PARIS — 2e ÉDITION — 11 OCTOBRE 2026
+
+> **Version 2 du 08/08/2026.** Reprend intégralement la V1 et l'enrichit des points
+> arrêtés en séance technique du 7 août 2026 : engagement corrélatif du Mandant,
+> engagement et paie des artistes, substitution sur le contrat de salle, sécurité sans
+> reconduction tacite, fourniture des informations et effet du retard, renvoi au cahier
+> des charges. **Les ajouts par rapport à la V1 sont signalés par ▸ en note de marge
+> interne, à retirer avant envoi.**
+>
+> **C'est le seul document contractuel envoyé aux deux parties**, avec ses annexes et
+> l'accord de confidentialité. Les projets de coproduction et de prestation au forfait
+> sont abandonnés et archivés.
+
+---
+
+## ENTRE LES SOUSSIGNÉS
+
+**ADVANTAGE CONSEILS**, SARL au capital de 10 000 000 francs CFA, immatriculée au RCCM
+sous le numéro CI-ABIDJAN-2020-B-04576, ayant son siège social à Abidjan (Côte d'Ivoire),
+représentée par Madame Florence KONE,
+
+ci-après dénommée « **le Mandant** » ou « **ADVANTAGE CONSEILS** »,
+
+**D'une part,**
+
+**THIM PRODUCTION**, SASU au capital de 500 euros, immatriculée au RCS de Rennes sous le
+numéro 953 657 251, siège social : 22 rue Charles Duclos, 35000 Rennes, représentée par
+Madame Nomagbè MEÏTE épouse CADEC, Présidente,
+
+ci-après dénommée « **le Mandataire** » ou « **THIM PRODUCTION** »,
+
+**D'autre part,**
+
+ensemble dénommées « les Parties ».
+
+---
+
+## PRÉAMBULE
+
+ADVANTAGE CONSEILS est créatrice et promotrice du concept « FESTIVAL DES GRILLADES »,
+manifestation culturelle et gastronomique organisée sans discontinuité depuis 2008,
+reconnue en Côte d'Ivoire et à l'international, et déclinée en 2026 à Cotonou,
+Grand-Bassam, Abidjan, Paris, Dakar et Boundiali.
+
+THIM PRODUCTION dispose d'une expertise dans l'organisation, la production et la diffusion
+de spectacles vivants en France.
+
+ADVANTAGE CONSEILS demeure seule productrice et seule titulaire des droits sur la
+manifestation. Elle souhaite en confier la production exécutive sur le territoire français
+à THIM PRODUCTION.
+
+Le présent contrat est un contrat de mandat. Il n'emporte ni coproduction, ni société de
+fait, ni association aux résultats de l'exploitation. THIM PRODUCTION agit pour le compte
+d'ADVANTAGE CONSEILS, contre la rémunération convenue à l'article 9, et n'assume pas le
+risque économique de la manifestation.
+
+Les Parties ont préalablement signé un accord de confidentialité, de protection du secret
+des affaires et de non-divulgation, ci-après « le NDA », qui demeure applicable.
+
+Les Parties se sont réunies en séance technique le 7 août 2026 et ont arrêté, opération
+par opération, la répartition des missions. Le relevé de cette séance constitue le
+**cahier des charges annexé au présent contrat**.
+
+Il a été convenu ce qui suit.
+
+---
+
+## ARTICLE 1 — OBJET DU MANDAT
+
+Le Mandant donne mandat au Mandataire, qui l'accepte, d'assurer la production exécutive de
+la manifestation définie à l'article 2, dans les limites et selon les modalités du présent
+contrat.
+
+Le Mandataire exécute le mandat sous le contrôle du Mandant, lui rend compte de sa gestion
+dans les conditions de l'article 14, et ne peut excéder les limites fixées à l'article 7.
+
+---
+
+## ARTICLE 2 — MANIFESTATION CONCERNÉE
+
+Dénomination : FESTIVAL DES GRILLADES DE PARIS, 2e édition.
+
+Date : dimanche 11 octobre 2026.
+
+Lieu : **12 rue Gutenberg, 93000 Bobigny.**
+
+Le présent mandat porte sur cette seule édition. Toute édition ultérieure fera l'objet d'un
+nouveau contrat ou d'un avenant écrit et signé des deux Parties.
+
+**2.1 Réservation antérieure du site.** Les Parties reconnaissent qu'une réservation du
+site a été prise par le Mandant antérieurement au présent contrat, et qu'un premier
+versement a été effectué à ce titre.
+
+Dans les quinze (15) jours de la signature, les Parties sollicitent de l'exploitant du site
+soit la conclusion d'un nouveau contrat de mise à disposition au nom du Mandataire, soit la
+cession à son profit du contrat existant. Le versement déjà effectué reste acquis à
+l'opération et est imputé au budget.
+
+> ▸ *Ajout V2. L'occupant déclaré d'un lieu recevant du public doit être l'organisateur
+> déclaré. La séance a laissé le site chez Advantage, ce qui contredit l'article 3.*
+
+---
+
+## ARTICLE 3 — ÉTENDUE DE LA REPRÉSENTATION
+
+Pour tous les actes soumis à la réglementation française, notamment la mise à disposition
+du lieu, les contrats techniques et de prestation, l'engagement du personnel et des
+artistes en France, la sécurité, la billetterie et les déclarations administratives et
+sociales, le Mandataire contracte en son nom propre mais pour le compte du Mandant, en sa
+qualité d'entité établie en France.
+
+Pour les actes de représentation institutionnelle, les relations avec les partenaires et
+les prises de parole publiques, le Mandataire agit au nom et pour le compte du Mandant,
+dans la limite des autorisations écrites que celui-ci lui délivre.
+
+Le Mandataire ne peut se prévaloir d'aucune qualité autre que celle de producteur exécutif
+de la manifestation.
+
+**3.1 Engagement corrélatif du Mandant.** Le Mandant s'interdit, pour la présente édition,
+de contracter directement en France avec un prestataire, un fournisseur, un artiste ou un
+technicien intervenant sur la manifestation, sauf accord écrit préalable du Mandataire et
+régularisation dans les formes des articles 2.1 ou 5 bis.
+
+Un montage dans lequel le Mandant contracterait en France pendant que le Mandataire figure
+seul sur les déclarations administratives exposerait les deux Parties.
+
+> ▸ *Ajout V2. La V1 disait ce que Thim contracte, sans dire ce qu'Advantage s'interdit.*
+
+---
+
+## ARTICLE 4 — DURÉE DU MANDAT
+
+Le mandat prend effet à la signature du présent contrat et prend fin à l'approbation du
+compte rendu final prévu à l'article 14, et au plus tard le 31 décembre 2026.
+
+Les articles 16, 17, 18, 22, 23, 24, 29 et 30 survivent au terme du mandat pour les durées
+qui leur sont propres.
+
+---
+
+## ARTICLE 5 — MISSIONS DU MANDATAIRE
+
+Le Mandataire assure notamment :
+
+- la production exécutive ;
+- les relations avec la salle ;
+- les déclarations administratives ;
+- les contrats techniques ;
+- les autorisations préfectorales ;
+- les démarches SACEM ;
+- la coordination logistique ;
+- la sécurité de l'événement.
+
+Il assure en outre :
+
+- la sélection et la contractualisation des prestataires en France ;
+- la mise en place et l'exploitation de la billetterie ;
+- l'accueil et la logistique des artistes et intervenants désignés par le Mandant ;
+- la mise en œuvre en France du plan de communication validé par le Mandant ;
+- la production du reporting post-événement dû aux partenaires, comprenant la synthèse des
+  actions réalisées, la portée digitale et les livrables visuels.
+
+**Le détail des missions, opération par opération, avec le porteur et le critère
+d'exécution de chacune, figure au cahier des charges en Annexe 4**, lequel reprend le
+relevé de la séance technique du 7 août 2026.
+
+> ▸ *Ajout V2. Sans ce renvoi, la liste ci-dessus reste trop générale pour constater une
+> exécution ou refuser une demande hors périmètre.*
+
+---
+
+## ARTICLE 5 BIS — ENGAGEMENT ET PAIE DES ARTISTES
+
+Tout artiste du spectacle se produisant en France est présumé lié par un contrat de travail
+à la personne qui l'engage, quels que soient le mode et le montant de sa rémunération et la
+qualification donnée par les Parties (article L.7121-3 du code du travail). Cette
+présomption est d'ordre public et ne peut être écartée par convention.
+
+En conséquence, **le Mandataire établit et signe les contrats d'engagement de tous les
+artistes se produisant en France**, procède aux déclarations préalables à l'embauche,
+établit les bulletins de paie et verse les cotisations sociales correspondantes.
+
+Le Mandant conserve le choix des artistes, la négociation et la charge financière de leurs
+cachets. Il communique au Mandataire, au plus tard le 5 septembre 2026, la liste nominative
+des artistes, le montant convenu de chaque cachet, les fiches techniques et les pièces
+d'identité nécessaires. Les cachets et les charges sociales afférentes sont financés par le
+Mandant dans les conditions de l'article 8.
+
+**Aucun cachet ne peut être réglé de la main à la main le jour de la manifestation.** Tout
+règlement intervient par virement, après établissement du contrat d'engagement et du
+bulletin de paie correspondants.
+
+Les artistes résidant en France relèvent du même régime, sans exception.
+
+> ▸ *Ajout V2, le plus important. La séance avait retenu « avance et solde le jour J » avec
+> les contrats gardés par Advantage. Un artiste payé de la main à la main par une structure
+> abidjanaise pour se produire en France, sans contrat ni déclaration, relève du travail
+> dissimulé, et l'organisateur déclaré en répond. Le circuit change, la charge financière
+> ne change pas : elle reste chez Advantage.*
+
+---
+
+## ARTICLE 6 — OBLIGATIONS DU MANDANT
+
+Le Mandant assure notamment :
+
+- la direction artistique générale ;
+- la mise à disposition du concept ;
+- les relations avec les artistes africains ;
+- les relations médias africains ;
+- la supervision de l'identité du festival ;
+- les partenariats institutionnels africains.
+
+Il s'engage en outre à :
+
+- remettre au Mandataire la charte visuelle et éditoriale, les éléments de marque et la
+  grille de contreparties partenaires ;
+- arrêter et notifier le budget de l'édition de Paris dans les conditions de l'article 8 ;
+- verser les fonds selon l'échéancier convenu ;
+- notifier au Mandataire la liste des partenaires de l'édition de Paris et les
+  contreparties dues à chacun ;
+- répondre à toute demande de validation du Mandataire dans un délai de cinq (5) jours
+  ouvrés. À défaut de réponse dans ce délai, et après relance écrite restée sans effet
+  pendant deux (2) jours ouvrés, la validation est réputée acquise.
+
+**6.1 Fourniture des informations.** Le Mandant transmet au Mandataire, aux dates figurant
+au cahier des charges en Annexe 4, les informations nécessaires à l'exécution du mandat,
+notamment la jauge, les horaires, le format de la manifestation, la grille tarifaire, le
+plan de salle, la liste nominative des artistes et leurs fiches techniques, la liste des
+exposants et restaurateurs, la liste des partenaires et les contreparties dues.
+
+**6.2 Effet du retard.** Les délais d'exécution du Mandataire sont suspendus de plein droit
+pendant l'attente d'un élément incombant au Mandant. Un retard imputable à cette cause
+n'est pas opposable au Mandataire, y compris lorsqu'il conduit à l'impossibilité de
+réaliser une opération dans les délais réglementaires. Le Mandataire en informe le Mandant
+par écrit dès qu'il en a connaissance.
+
+> ▸ *Ajout V2. Les vingt-neuf informations recensées en séance sont toutes restées sans
+> réponse. Sans cette clause, leur retard devient un manquement du Mandataire.*
+
+---
+
+## ARTICLE 7 — LIMITES DU MANDAT
+
+Le Mandataire ne peut, sans accord écrit préalable du Mandant :
+
+- engager une dépense supérieure à 2 500 € non prévue au budget ;
+- conclure un contrat d'un montant supérieur à 5 000 € ;
+- modifier la programmation artistique ;
+- conclure un contrat de partenariat ou de sponsoring ;
+- modifier l'identité visuelle ou éditoriale de la manifestation ;
+- consentir une exclusivité à un tiers.
+
+Le Mandataire peut recourir à des sous-traitants pour l'exécution de ses missions, sous sa
+responsabilité et après information écrite du Mandant.
+
+---
+
+## ARTICLE 8 — BUDGET ET FINANCEMENT DE L'OPÉRATION
+
+Le budget de l'édition de Paris est arrêté d'un commun accord et annexé au présent contrat.
+
+Le Mandant finance l'intégralité de l'opération. Le Mandataire n'est pas tenu d'engager ses
+fonds propres.
+
+Échéancier de mise à disposition des fonds :
+
+- **[À COMPLÉTER : X] %** à la signature du présent contrat ;
+- **[À COMPLÉTER : X] %** au plus tard le 27 août 2026 (J-45) ;
+- le solde au plus tard le 26 septembre 2026 (J-15).
+
+À défaut de versement à l'échéance, et après mise en demeure restée sans effet pendant huit
+(8) jours, le Mandataire pourra suspendre l'exécution de ses obligations sans que cette
+suspension puisse lui être reprochée, les frais et engagements déjà souscrits demeurant à
+la charge du Mandant.
+
+> ▸ *Recommandation interne : 40 % à la signature, 40 % au 27 août, 20 % au 26 septembre.
+> Cela place la moitié des fonds avant le dépôt des visas.*
+
+---
+
+## ARTICLE 9 — RÉMUNÉRATION DU MANDATAIRE
+
+En contrepartie de l'exécution du mandat, le Mandataire perçoit :
+
+- des honoraires forfaitaires de **[À COMPLÉTER : montant] € hors taxes** ;
+- une commission de **[À COMPLÉTER : X] %** hors taxes sur le montant net encaissé des
+  partenariats et sponsorings apportés par le Mandataire sur le territoire français et
+  validés par le Mandant.
+
+Modalités de règlement des honoraires forfaitaires : **[À COMPLÉTER]**.
+
+Les honoraires sont dus indépendamment du résultat de l'exploitation de la manifestation.
+
+Le régime de taxe sur la valeur ajoutée applicable à cette rémunération sera confirmé par
+les conseils comptables respectifs des Parties avant la première facturation.
+
+> ▸ *Seul verrou réel de la signature. Le barème de l'agence ne s'applique pas, il chiffre
+> des applications métier. Usage en production exécutive : 8 à 12 % du budget de
+> production, avec un plancher forfaitaire. Commission usuelle sur apport de partenaires :
+> 10 à 15 %. Modalités recommandées : 40 % à la signature, 40 % à J-15, solde à
+> l'approbation du compte rendu final.*
+
+---
+
+## ARTICLE 10 — FRAIS ET AVANCES
+
+Le Mandant rembourse au Mandataire, sur présentation des justificatifs, l'intégralité des
+frais et avances régulièrement engagés dans l'exécution du mandat, dans un délai de quinze
+(15) jours.
+
+Le Mandataire n'assume aucune perte d'exploitation de la manifestation.
+
+---
+
+## ARTICLE 11 — COMPTE DÉDIÉ
+
+Le Mandataire ouvre un compte bancaire dédié, affecté exclusivement à l'édition de Paris.
+
+Toutes les recettes de la manifestation, notamment la billetterie et la quote-part des
+partenariats affectée à l'édition de Paris, transitent par ce compte. Aucune recette ne
+pourra être encaissée hors circuit officiel.
+
+Le Mandant dispose d'un accès permanent en consultation aux mouvements de ce compte.
+
+Le solde est reversé au Mandant dans les trente (30) jours suivant l'approbation du compte
+rendu final.
+
+---
+
+## ARTICLE 12 — BILLETTERIE
+
+La billetterie est centralisée.
+
+Les Parties disposent d'un accès permanent aux ventes, aux statistiques et aux recettes.
+
+Le Mandataire émet les titres d'accès et procède aux déclarations fiscales et sociales
+afférentes pour le compte du Mandant.
+
+La grille tarifaire, les catégories et la jauge par catégorie sont arrêtées conjointement et
+figurent en Annexe 5. Elles ne peuvent être modifiées qu'avec l'accord écrit des deux
+Parties.
+
+Le traitement de la taxe sur la valeur ajoutée sur la billetterie et l'éventuelle
+contribution due au titre des spectacles seront confirmés par les conseils comptables des
+Parties avant l'ouverture de la billetterie.
+
+> ▸ *Ajout V2 : le renvoi à l'Annexe 5. La séance a demandé un point de transparence sur la
+> solution de billetterie retenue, et attend d'Advantage le plan de salle, les prix, les
+> catégories et les commissions.*
+
+---
+
+## ARTICLE 13 — PARTENARIATS ET SPONSORING
+
+Le Mandant commercialise en central les partenariats et sponsorings, y compris les
+dispositifs couvrant plusieurs éditions du Festival des Grillades.
+
+Le Mandant notifie au Mandataire, au plus tard trente (30) jours avant la manifestation :
+
+- la liste des partenaires concernés par l'édition de Paris ;
+- les contreparties dues à chacun sur cette édition ;
+- la quote-part du montant des partenariats affectée à l'édition de Paris, laquelle est
+  versée au compte dédié prévu à l'article 11.
+
+Le Mandataire peut prospecter des partenaires sur le territoire français. Tout contrat est
+soumis à la validation écrite préalable du Mandant et donne lieu, s'il est conclu, à la
+commission prévue à l'article 9.
+
+Le Mandataire est tenu d'informer immédiatement le Mandant de toute négociation en cours.
+
+---
+
+## ARTICLE 14 — REDDITION DE COMPTES
+
+Le Mandataire rend compte de sa gestion au Mandant.
+
+Il adresse un rapport d'avancement mensuel jusqu'à la date de la manifestation.
+
+Il adresse un compte rendu final dans les quarante-cinq (45) jours suivant la
+manifestation, comprenant :
+
+- le compte d'emploi des fonds, accompagné des justificatifs ;
+- l'état complet de la billetterie ;
+- le reporting dû aux partenaires : synthèse des actions réalisées, portée digitale et
+  livrables visuels ;
+- l'inventaire des créations réalisées et des supports produits ;
+- l'état des contrats conclus et des engagements en cours.
+
+Le Mandant dispose de trente (30) jours pour approuver ce compte rendu ou formuler ses
+observations par écrit. À défaut, l'approbation est réputée acquise.
+
+---
+
+## ARTICLE 15 — AUDIT ET TRANSPARENCE
+
+Le Mandant pourra, à tout moment et sur simple demande écrite :
+
+- consulter les comptes de l'opération ;
+- vérifier les contrats conclus pour son compte ;
+- consulter les relevés du compte dédié ;
+- faire intervenir un expert-comptable de son choix, à ses frais.
+
+---
+
+## ARTICLE 16 — PROPRIÉTÉ DU CONCEPT
+
+ADVANTAGE CONSEILS demeure seule propriétaire du concept FESTIVAL DES GRILLADES, de son
+identité, de ses méthodes d'exploitation et de ses supports historiques.
+
+Le présent contrat n'emporte aucun transfert de propriété.
+
+Références du dépôt de la marque FESTIVAL DES GRILLADES en France ou dans l'Union
+européenne, numéro et classes : **[À COMPLÉTER]**.
+
+> ▸ *Information à la charge d'Advantage, restée sans réponse en séance. Sans elle, le
+> Mandataire exploite en France une marque dont il ne peut vérifier la disponibilité. La
+> garantie de l'article 21 couvre le risque en attendant.*
+
+---
+
+## ARTICLE 17 — DROITS DE PROPRIÉTÉ INTELLECTUELLE
+
+Toute création réalisée dans le cadre du projet, affiche, logo dérivé, vidéo, captation,
+contenu numérique, est la propriété exclusive du Mandant.
+
+Le Mandataire cède au Mandant, au fur et à mesure de leur réalisation, à titre exclusif,
+les droits de reproduction, de représentation et d'adaptation attachés à ces créations,
+pour le monde entier et pour la durée légale de protection, sur tout support et par tout
+moyen de diffusion. Cette cession est comprise dans la rémunération prévue à l'article 9.
+
+Le Mandataire se porte fort de l'obtention, auprès de ses prestataires, auteurs,
+techniciens et artistes, des cessions de droits nécessaires à la présente clause.
+
+Le Mandataire conserve le droit d'utiliser ces créations à titre de référence
+professionnelle, sans exploitation commerciale.
+
+---
+
+## ARTICLE 18 — NON-CONTOURNEMENT, PROTECTION DE LA CLIENTÈLE ET DU SAVOIR-FAIRE
+
+**18.1 Protection des artistes et intervenants.** Les Parties reconnaissent que les
+artistes, managers, producteurs, agents artistiques et intervenants présentés par l'une des
+Parties constituent des actifs stratégiques.
+
+Aucune Partie ne pourra contacter directement ces personnes, négocier avec elles ou conclure
+un contrat, sans l'accord écrit préalable de la Partie qui les a présentées.
+
+**18.2 Protection des sponsors et partenaires.** Aucun sponsor, annonceur, partenaire
+financier ou institutionnel présenté par une Partie ne pourra être sollicité directement
+par l'autre Partie sans autorisation écrite. Cette protection demeure applicable pendant
+cinq (5) ans après la fin des relations contractuelles.
+
+**18.3 Protection de la clientèle.** La même protection s'applique, dans les mêmes
+conditions et pour la même durée de cinq (5) ans, aux fournisseurs et aux exposants
+présentés par l'une des Parties dans le cadre du projet.
+
+**18.4 Protection du savoir-faire événementiel.** Sont également protégés au titre du
+présent article les méthodes d'organisation, les fichiers partenaires, les bases de données
+et les stratégies commerciales.
+
+Aucune Partie ne pourra les reproduire, les extraire ou les exploiter en dehors du présent
+contrat sans l'accord écrit préalable de la Partie qui les a développés ou apportés.
+
+**18.5 Non-sollicitation du personnel et des prestataires.** Chaque Partie s'interdit,
+pendant vingt-quatre (24) mois après le terme du présent contrat, de recruter ou de faire
+travailler directement les salariés, intermittents, techniciens et prestataires
+indépendants ayant collaboré avec l'autre Partie sur la manifestation.
+
+Cette stipulation ne fait pas obstacle à ce que l'une ou l'autre des Parties poursuive une
+relation contractuelle avec le coordinateur mentionné à l'article 36, dont l'intervention
+est antérieure au présent contrat et connue des deux Parties.
+
+> ▸ *Ajout V2 du seul 18.5. Il reprend l'article 7 du pacte de non-contournement, en y
+> ajoutant la réserve qui protège la relation directe entre chacune des Parties et
+> Mr Attractor. Sans cette réserve, le pacte interdirait à Advantage de travailler avec
+> l'agence pendant deux ans.*
+
+---
+
+## ARTICLE 19 — EXCLUSIVITÉ ET TERRITOIRE
+
+Pendant la durée du mandat et pendant deux (2) ans après son terme, le Mandataire s'interdit
+d'organiser ou de participer, sur le territoire français, à un événement concurrent
+utilisant directement ou indirectement la marque FESTIVAL DES GRILLADES, un concept
+similaire, ou les réseaux développés dans le cadre du présent contrat.
+
+Le Mandant conserve la pleine et entière liberté d'organiser, seul ou avec tout tiers,
+toutes les autres éditions du Festival des Grillades, en Côte d'Ivoire comme à
+l'international, présentes et à venir, sans que le présent contrat puisse lui être opposé.
+
+Priorité du Mandataire sur les éditions françaises suivantes : **[À COMPLÉTER]**.
+
+> ▸ *Recommandation interne : accorder à Thim une priorité de deux ans sur les éditions
+> françaises, sous réserve d'exécution satisfaisante. C'est sa contrepartie de long terme,
+> et elle ne coûte rien à Advantage aujourd'hui.*
+
+---
+
+## ARTICLE 20 — ASSURANCES
+
+Le Mandataire s'engage à souscrire, pour le compte de l'opération, une assurance
+Responsabilité Civile Organisateur, une assurance Responsabilité Civile Professionnelle,
+une assurance annulation et une assurance dommages matériels.
+
+Les attestations seront communiquées au Mandant avant l'événement, et au plus tard le
+11 septembre 2026.
+
+Le coût de ces polices est inscrit au budget et supporté par le Mandant.
+
+Si l'assurance annulation ne peut être souscrite ou ne peut l'être qu'à des conditions que
+le Mandant refuse, le Mandataire en informe le Mandant par écrit. Le Mandant supporte alors
+seul le risque financier d'annulation ou de report.
+
+> ▸ *Rappel interne : la fenêtre de souscription se referme le 15 août. Au-delà, les
+> assureurs refusent ou surtarifent.*
+
+---
+
+## ARTICLE 21 — CONFORMITÉ RÉGLEMENTAIRE
+
+Le Mandataire garantit l'obtention des autorisations administratives, le respect de la
+réglementation applicable aux établissements recevant du public, le respect des règles de
+sécurité, le respect de la législation du spectacle vivant, et notamment la détention du
+récépissé de déclaration d'entrepreneur de spectacles vivants dont copie est remise au
+Mandant à la signature du présent contrat, ainsi que le respect de la réglementation
+applicable à l'hygiène et à la sécurité alimentaire pour les activités de restauration et
+de grillade.
+
+**21.1 Prestataires de sécurité.** Tout prestataire de sécurité intervenant sur la
+manifestation fait l'objet d'un contrat écrit conclu au nom du Mandataire. La reconduction
+d'un contrat conclu lors d'une édition précédente par un tiers est sans effet à l'égard du
+Mandataire.
+
+**21.2 Hygiène alimentaire.** Le Mandataire porte les déclarations en France. Le Mandant
+assure ou fait assurer la formation des restaurateurs et exposants qu'il présente et
+transmet les attestations correspondantes au plus tard trente (30) jours avant la
+manifestation. Tout restaurateur recruté en France justifie du même niveau de formation.
+
+Le Mandataire peut refuser l'accès au site à tout exposant ou restaurateur dont les
+justificatifs ne lui ont pas été communiqués, sans que ce refus ouvre droit à indemnité.
+
+Le Mandant garantit au Mandataire qu'il détient l'ensemble des droits nécessaires sur le
+concept, la marque et les éléments d'identité mis à disposition, et qu'aucun tiers ne peut
+s'opposer à leur exploitation en France.
+
+> ▸ *Ajouts V2 : 21.1 et 21.2. La séance a signalé une société de sécurité « reconduite
+> tacitement » et placé l'hygiène chez Advantage, alors que la déclaration se dépose en
+> France par l'exploitant.*
+
+---
+
+## ARTICLE 22 — PROTECTION DES DONNÉES À CARACTÈRE PERSONNEL
+
+Dans le cadre de l'exécution du présent contrat, des données à caractère personnel sont
+traitées, notamment au titre de la billetterie, des fichiers partenaires et sponsors, des
+opérations de communication et de mailing, et des contrats artistes et prestataires.
+
+Le Mandant est responsable de ces traitements. Le Mandataire agit en qualité de
+sous-traitant, au sens de l'article 28 du Règlement (UE) 2016/679 dit RGPD.
+
+Les Parties s'engagent à respecter le RGPD, la loi française n° 78-17 du 6 janvier 1978
+modifiée, ainsi que la réglementation ivoirienne applicable à la protection des données à
+caractère personnel.
+
+Le Mandataire s'engage à ne traiter les données que sur instruction documentée du Mandant
+et pour les seules finalités du présent contrat, à garantir leur confidentialité et à n'y
+donner accès qu'aux personnes habilitées, à mettre en œuvre des mesures techniques et
+organisationnelles appropriées, à n'engager aucun sous-traitant ultérieur sans autorisation
+écrite du Mandant, à assister le Mandant dans le traitement des demandes d'exercice de
+droits et en cas de violation de données qu'il notifie sans délai, et à restituer ou
+supprimer les données au terme du mandat, sauf obligation légale de conservation.
+
+Tout transfert de données hors de l'Union européenne, notamment vers la Côte d'Ivoire,
+devra faire l'objet d'un encadrement conforme au chapitre V du RGPD, que les Parties
+s'engagent à mettre en place avant le premier transfert.
+
+Le fichier des acheteurs de billets appartient au Mandant.
+
+---
+
+## ARTICLE 23 — CONFIDENTIALITÉ
+
+Les Parties demeurent soumises au NDA signé séparément, dont les stipulations continuent de
+produire effet.
+
+---
+
+## ARTICLE 24 — ENGAGEMENT DES SALARIÉS, PRESTATAIRES ET SOUS-TRAITANTS
+
+Chaque Partie se porte fort du respect des obligations de confidentialité et de
+non-contournement du présent contrat par ses dirigeants, salariés, stagiaires,
+prestataires, sous-traitants et conseils.
+
+Chaque Partie fait signer à toute personne appelée à accéder aux informations
+confidentielles un engagement individuel de confidentialité de portée au moins équivalente
+à celle du présent contrat et du NDA, et en communique copie à l'autre Partie sur simple
+demande.
+
+Chaque Partie demeure responsable des manquements commis par ces personnes comme de ses
+propres manquements.
+
+---
+
+## ARTICLE 25 — RESPONSABILITÉ
+
+Le Mandataire répond des fautes commises dans l'exécution du mandat, ainsi que de celles de
+ses salariés, prestataires et sous-traitants.
+
+Le Mandataire n'assume pas le risque économique de la manifestation.
+
+Le Mandant garantit le Mandataire contre toute réclamation de tiers trouvant sa cause dans
+le concept, la marque, l'identité visuelle, la programmation artistique qu'il impose, ou
+dans les instructions écrites qu'il donne.
+
+Chaque Partie demeure responsable de ses propres obligations légales, fiscales et sociales.
+
+---
+
+## ARTICLE 26 — FORCE MAJEURE
+
+Constituent notamment des cas de force majeure : catastrophe naturelle, pandémie, décision
+administrative, guerre, attentat, mouvement social généralisé, fermeture de salle.
+
+Les Parties rechercheront alors une solution de report.
+
+En cas de report ou d'annulation pour force majeure, les frais et engagements régulièrement
+souscrits par le Mandataire demeurent à la charge du Mandant, et les honoraires prévus à
+l'article 9 sont dus au prorata des diligences accomplies, sous déduction des indemnités
+effectivement perçues au titre de l'assurance annulation.
+
+---
+
+## ARTICLE 27 — RÉVOCATION DU MANDAT
+
+Le Mandant peut révoquer le mandat à tout moment, par notification écrite.
+
+En ce cas, il rembourse au Mandataire l'intégralité des frais et avances engagés, reprend à
+son compte les engagements souscrits pour son compte auprès des tiers, et verse au
+Mandataire :
+
+- la totalité des honoraires prévus à l'article 9 si la révocation intervient à moins de
+  soixante (60) jours de la date de la manifestation ;
+- les honoraires au prorata des diligences accomplies dans les autres cas.
+
+Le Mandataire peut renoncer au mandat moyennant un préavis écrit de trente (30) jours, sauf
+à ne pas renoncer à contretemps ni dans des conditions préjudiciables au Mandant.
+
+---
+
+## ARTICLE 28 — RÉSILIATION POUR FAUTE
+
+Le contrat pourra être résilié en cas de fraude, de détournement de fonds, de violation du
+NDA, de violation de l'article 18 du présent contrat, d'atteinte grave et caractérisée à
+l'image du festival, ou de manquement du Mandant à ses obligations de financement prévues à
+l'article 8.
+
+La résiliation est immédiate en cas de fraude ou de détournement de fonds. Dans les autres
+cas, elle intervient quinze (15) jours après une mise en demeure écrite restée sans effet.
+
+---
+
+## ARTICLE 29 — CLAUSE PÉNALE
+
+Toute violation des articles 18, 22 ou 23 du présent contrat, ainsi que toute fraude ou tout
+détournement de fonds, entraînera le versement d'une indemnité forfaitaire de
+**[À COMPLÉTER : montant]**, sans préjudice des dommages et intérêts complémentaires.
+
+---
+
+## ARTICLE 30 — DÉTOURNEMENT DU CONCEPT
+
+Toute tentative d'appropriation ou d'exploitation non autorisée du concept FESTIVAL DES
+GRILLADES entraînera le versement immédiat d'une indemnité forfaitaire de
+**[À COMPLÉTER : montant]**.
+
+**Un même manquement ne peut donner lieu qu'à une seule indemnité forfaitaire**, quel que
+soit le document contractuel sur lequel il est fondé.
+
+> ▸ *Ajout V2 de la phrase de non-cumul, et point à trancher avant envoi. Un pacte de
+> non-contournement distinct circule depuis juin, détenu par Thim, avec 150 000 € par
+> violation et 250 000 € sur le concept. Il faut soit reprendre ces montants ici et
+> abandonner le pacte, soit conserver le pacte et renvoyer à lui. Sans cela, un même fait
+> est sanctionné deux fois. Rapportés à un capital social de 500 euros, ces montants
+> exposent le Mandataire autant qu'ils le protègent.*
+
+---
+
+## ARTICLE 31 — MÉDIATION
+
+Avant toute procédure judiciaire, les Parties s'engagent à rechercher une solution amiable
+pendant une durée minimale de trente (30) jours à compter de la première notification
+écrite du différend.
+
+---
+
+## ARTICLE 32 — DROIT APPLICABLE
+
+Le présent contrat est soumis au droit français.
+
+---
+
+## ARTICLE 33 — TRIBUNAL COMPÉTENT
+
+Tout litige relatif au présent contrat relèvera de la compétence exclusive du Tribunal de
+Commerce de Rennes.
+
+> ▸ *Note interne. Le NDA signé donne compétence au Tribunal de commerce d'Abidjan tout en
+> retenant le droit français. La divergence est assumée, elle se dit à Advantage plutôt
+> qu'elle ne se découvre à la relecture.*
+
+---
+
+## ARTICLE 34 — INTÉGRALITÉ CONTRACTUELLE
+
+Le présent contrat, ses annexes et le NDA constituent un ensemble contractuel indivisible et
+expriment l'intégralité de l'accord des Parties sur son objet.
+
+En cas de contradiction, l'ordre de priorité est le suivant : le présent contrat et ses
+avenants, puis le cahier des charges en Annexe 4, puis les autres annexes, puis le NDA.
+
+**Annexes :**
+
+- Annexe 1 : budget de l'édition de Paris.
+- Annexe 2 : grille de contreparties partenaires.
+- Annexe 3 : charte visuelle et éditoriale du Festival des Grillades.
+- **Annexe 4 : cahier des charges, périmètre arrêté en séance technique du 7 août 2026.**
+- **Annexe 5 : grille tarifaire, catégories et jauge par catégorie.**
+- **Annexe 6 : copie du récépissé de déclaration d'entrepreneur de spectacles du Mandataire.**
+
+---
+
+## ARTICLE 35 — ENTRÉE EN VIGUEUR
+
+Le présent contrat prend effet à compter de sa signature.
+
+---
+
+## ARTICLE 36 — COORDINATION
+
+Les Parties conviennent de confier la coordination de l'exécution du contrat et l'interface
+entre elles à **Mr Attractor**, qui anime le comité de suivi, tient le rétroplanning
+partagé et l'espace de pilotage en ligne, et établit le relevé des décisions.
+
+Mr Attractor n'est pas partie au présent contrat et ne dispose d'aucun pouvoir d'engagement
+au nom de l'une ou l'autre des Parties.
+
+Les relevés de décision établis dans l'espace de pilotage et validés par les deux Parties
+valent preuve de leur accord sur les points qu'ils constatent.
+
+> ▸ *Ajout V2. La V1 ne mentionnait nulle part le coordinateur, alors qu'il anime les
+> séances et détient l'espace de pilotage. Sans cet article, les relevés n'ont aucune
+> valeur probatoire et la réserve de l'article 18.5 n'a pas d'objet.*
+
+---
+
+## SIGNATURES
+
+Fait en deux exemplaires originaux.
+
+À ................................, le ................................
+
+| Pour ADVANTAGE CONSEILS, le Mandant | Pour THIM PRODUCTION, le Mandataire |
+|---|---|
+| Nom : Madame Florence KONE | Madame Nomagbè MEÏTE épouse CADEC |
+| Fonction : [À COMPLÉTER] | Présidente |
+| Signature : | Signature : |
+
+---
+
+## CE QUI RESTE À COMPLÉTER AVANT ENVOI
+
+> Cette page ne fait pas partie du contrat. Elle est retirée avant envoi.
+
+| # | Élément | Article | Qui décide |
+|---|---|---|---|
+| 1 | **Honoraires du Mandataire et commission** | 9 | Mac Arthur et Thim, **seul verrou réel** |
+| 2 | Répartition de l'échéancier des fonds | 8 | recommandation 40/40/20 |
+| 3 | Montants des clauses pénales, et sort du pacte de non-contournement | 29 et 30 | Mac Arthur et Thim |
+| 4 | Priorité sur les éditions françaises suivantes | 19 | Advantage |
+| 5 | Références du dépôt de la marque | 16 | Advantage |
+| 6 | Qualité exacte de Florence KONE | signatures | Advantage |
+| 7 | Numéro de récépissé d'entrepreneur de spectacles | 21 et Annexe 6 | Thim |
+| 8 | Budget, grille de contreparties, charte, grille tarifaire | Annexes 1, 2, 3, 5 | Advantage |
+
+**Rappel.** Le cahier des charges en Annexe 4 est prêt, mais le relevé de séance dont il
+procède n'a **qu'une validation sur trois**. Le faire valider par Advantage et par Thim
+avant de l'annexer.
