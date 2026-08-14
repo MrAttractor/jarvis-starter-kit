@@ -1,0 +1,20 @@
+name = "coaching-attractor"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "./public"
+
+# Deploiement :
+#   npx wrangler pages deploy public --project-name=coaching-attractor --branch=main --commit-dirty=true
+#
+# Trois pieges deja payes ailleurs dans ce workspace :
+#   1. « wrangler pages deploy », jamais « wrangler deploy » seul.
+#   2. La branche de production depend du projet et ne se devine pas. Ici c'est
+#      « main », fixe a la creation. Verifier avec
+#      « npx wrangler pages deployment list --project-name=coaching-attractor ».
+#      Se tromper envoie le deploiement en preview, sans erreur, et le domaine
+#      ne bouge pas.
+#   3. Pour un projet Pages, le dossier se declare avec « pages_build_output_dir »,
+#      pas avec un bloc [assets], sinon wrangler ignore ce fichier en silence.
+#
+# Domaine : declarer coaching.agenceattractor.com comme domaine personnalise
+# DANS le projet Pages AVANT de poser le CNAME chez GoDaddy vers
+# coaching-attractor.pages.dev. L'ordre inverse donne une erreur 522.

@@ -1,0 +1,1039 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Espace coaching · Mr Attractor</title>
+<style>
+:root{
+  --ink:#16181C; --ink-2:#4A4F57; --muted:#8A8F97;
+  --creme:#FAF7F2; --white:#FFFFFF; --sable:#E4DED4; --sable-2:#F2ECE3;
+  --accent:#B85C2A; --accent-d:#98481F; --accent-bg:#FBF1EA;
+  --bleu:#2E6FB7; --bleu-bg:#EAF1F9;
+  --prune:#8E4585; --prune-bg:#F5EDF4;
+  --vert:#2F7A4F; --vert-bg:#EAF4EE;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:var(--creme);line-height:1.5;overflow-x:hidden;-webkit-text-size-adjust:100%}
+button,input,select,textarea{font-family:inherit;font-size:16px;color:var(--ink)}
+
+/* ---------- connexion ---------- */
+#connexion{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.carte-co{background:var(--white);border:1px solid var(--sable);border-radius:16px;padding:28px 24px;max-width:400px;width:100%}
+.carte-co h1{font-size:22px;margin-bottom:8px}
+.carte-co p{color:var(--ink-2);font-size:14.5px;margin-bottom:20px}
+
+/* ---------- coque ---------- */
+#app{display:none;max-width:960px;margin:0 auto;padding:16px 16px 64px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 0 16px;flex-wrap:wrap}
+.logo{font-weight:800;font-size:17px}
+.logo span{color:var(--accent)}
+.lien-plat{background:none;border:none;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;padding:8px;min-height:44px}
+.lien-plat:hover{color:var(--ink)}
+
+h2{font-size:20px;margin-bottom:4px}
+h3{font-size:15px;margin:24px 0 8px}
+.sous{color:var(--muted);font-size:13.5px;margin-bottom:16px}
+
+/* ---------- champs ---------- */
+label{display:block;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:6px}
+input[type=text],input[type=email],input[type=date],input[type=password],input[type=number],select,textarea{
+  width:100%;padding:12px 14px;border:1.5px solid var(--sable);border-radius:10px;background:var(--white);line-height:1.45;
+}
+textarea{resize:vertical;min-height:88px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+.champ{margin-bottom:16px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:560px){.duo{grid-template-columns:1fr}}
+
+.btn{border:none;border-radius:10px;padding:12px 20px;min-height:44px;font-weight:800;color:#fff;background:var(--accent);cursor:pointer}
+.btn:hover{background:var(--accent-d)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.fantome{background:none;color:var(--ink-2);border:1.5px solid var(--sable);font-weight:700}
+.btn.fantome:hover{background:var(--white);border-color:var(--muted)}
+.btn.petit{padding:8px 14px;font-size:14px;min-height:40px}
+.barre-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+
+/* ---------- cartes ---------- */
+.carte{background:var(--white);border:1px solid var(--sable);border-radius:14px;padding:16px;margin-bottom:12px}
+.carte.cliquable{cursor:pointer;transition:border-color .12s}
+.carte.cliquable:hover{border-color:var(--accent)}
+.carte-tete{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.carte h4{font-size:16px;margin-bottom:2px}
+.carte .detail{color:var(--muted);font-size:13px}
+
+.puce{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
+.puce.gris{background:var(--sable-2);color:var(--ink-2)}
+.puce.accent{background:var(--accent-bg);color:var(--accent-d)}
+.puce.bleu{background:var(--bleu-bg);color:var(--bleu)}
+.puce.vert{background:var(--vert-bg);color:var(--vert)}
+.puce.prune{background:var(--prune-bg);color:var(--prune)}
+
+/* ---------- onglets ---------- */
+.onglets{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--sable);margin-bottom:20px;-webkit-overflow-scrolling:touch}
+.onglet{background:none;border:none;border-bottom:2px solid transparent;padding:12px 14px;min-height:44px;font-weight:700;font-size:14px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.onglet.on{color:var(--accent-d);border-bottom-color:var(--accent)}
+
+/* ---------- tunnel ---------- */
+.etape-groupe{margin-bottom:24px}
+.etape-titre{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px}
+.etape-titre em{font-style:normal;color:var(--sable);font-weight:700}
+
+/* ---------- profil ---------- */
+.profil{display:flex;flex-direction:column;gap:6px;margin:16px 0}
+.pl{display:grid;grid-template-columns:132px 1fr 74px;gap:10px;align-items:center;font-size:14px}
+@media (max-width:560px){.pl{grid-template-columns:104px 1fr 66px;font-size:13px}}
+.pl .nom{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl .jauge{height:20px;background:var(--sable-2);border-radius:4px;overflow:hidden}
+.pl .jauge i{display:block;height:100%;background:var(--muted);border-radius:4px}
+.pl.fort .jauge i{background:var(--accent)}
+.pl.faible .jauge i{background:var(--bleu)}
+.pl .val{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-2);font-size:13px}
+.legende{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:4px}
+.legende i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+.avis{border-left:3px solid var(--accent);background:var(--accent-bg);border-radius:0 10px 10px 0;padding:12px 14px;font-size:14px;color:var(--ink-2);margin:12px 0}
+.avis.bleu{border-left-color:var(--bleu);background:var(--bleu-bg)}
+.avis strong{color:var(--ink)}
+
+table.grille{width:100%;border-collapse:collapse;font-size:14px}
+table.grille th,table.grille td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--sable)}
+table.grille th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:800}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--sable);border-radius:12px;background:var(--white);margin-bottom:12px}
+table.grille{min-width:460px}
+
+/* ---------- controle 8 questions ---------- */
+.coche{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--sable-2);font-size:14.5px;cursor:pointer}
+.coche:last-child{border-bottom:none}
+.coche input{width:20px;height:20px;flex:none;margin-top:2px;accent-color:var(--accent)}
+
+/* ---------- divers ---------- */
+.vide{text-align:center;color:var(--muted);padding:32px 16px;font-size:14.5px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:600;z-index:50;max-width:calc(100% - 32px)}
+.err{color:var(--accent-d);font-size:13.5px;margin-top:8px}
+.lien-copiable{display:flex;gap:8px;align-items:center;background:var(--sable-2);border-radius:10px;padding:10px 12px;font-size:12.5px;word-break:break-all;color:var(--ink-2);margin-bottom:8px}
+
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff}
+  header,.onglets,.barre-actions,.lien-plat,.btn,.toast{display:none!important}
+  #app{max-width:none;padding:0}
+  .carte,.tw,table.grille,tr,.avis,.pl,.profil{break-inside:avoid;page-break-inside:avoid;overflow:visible}
+  h2,h3{break-after:avoid}
+  textarea{border:none;padding:0;resize:none;height:auto}
+}
+</style>
+</head>
+<body>
+
+<div id="connexion">
+  <div class="carte-co">
+    <h1>Espace coaching</h1>
+    <p>Accès réservé.</p>
+    <div class="champ"><label for="co-email">Adresse email</label><input id="co-email" type="email" autocomplete="username"></div>
+    <div class="champ"><label for="co-mdp">Mot de passe</label><input id="co-mdp" type="password" autocomplete="current-password"></div>
+    <button class="btn" id="co-btn" style="width:100%">Entrer</button>
+    <div class="err" id="co-err"></div>
+    <button class="lien-plat" id="co-oubli" style="margin-top:8px">Mot de passe oublié</button>
+  </div>
+</div>
+
+<div id="recuperation" style="display:none;min-height:100vh;align-items:center;justify-content:center;padding:24px">
+  <div class="carte-co">
+    <h1>Nouveau mot de passe</h1>
+    <p>Ce compte est le même pour tous vos outils. Le changer ici le change partout.</p>
+    <div class="champ"><label for="rec-mdp">Nouveau mot de passe</label><input id="rec-mdp" type="password" autocomplete="new-password"></div>
+    <div class="champ"><label for="rec-mdp2">Répétez-le</label><input id="rec-mdp2" type="password" autocomplete="new-password"></div>
+    <button class="btn" id="rec-btn" style="width:100%">Enregistrer</button>
+    <div class="err" id="rec-err"></div>
+  </div>
+</div>
+
+<div id="app">
+  <header>
+    <div class="logo">Mr <span>Attractor</span> · coaching</div>
+    <button class="lien-plat" id="deconnexion">Se déconnecter</button>
+  </header>
+  <div id="vue"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SB_URL = "https://lgdgbrivnhgeupqhkckd.supabase.co";
+const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
+
+// Cle de session propre a cette application. Sur un compte qui heberge
+// plusieurs outils, une cle partagee fait se deconnecter les applications
+// entre elles sans qu'on comprenne pourquoi.
+const sb = supabase.createClient(SB_URL, SB_KEY, {
+  auth: { storageKey: "pm-coach-auth", persistSession: true, autoRefreshToken: true }
+});
+
+const BASE_LIEN = location.origin + "/q?j=";
+
+// ---------------------------------------------------------------- le tunnel
+
+// Chaque etape porte trois textes :
+//   aide    : ce que l'etape signifie, affiche en permanence
+//   guide   : ce qu'il faut ECRIRE pour la clore, affiche sous le champ
+//   exemple : un modele concret, en filigrane dans le champ
+// Le champ n'est jamais pre-rempli : un texte deja present se lit comme une
+// reponse acceptable, et on le valide sans rien ecrire.
+const ETAPES = [
+  {
+    cle: "demande", nom: "La demande", porte: "Fiche de qualification",
+    aide: "La demande est reçue et qualifiée : ça relève du coaching, et je suis la bonne personne.",
+    guide: "Qui elle est, ce qu'elle demande dans ses mots, pourquoi ça relève du coaching et pas d'autre chose, et pourquoi vous êtes la bonne personne. Trois ou quatre lignes suffisent.",
+    exemple: "Contactée via Facebook. Demande : « je n'arrive plus à avancer sur mon projet, je repousse tout ». Relève du coaching : c'est un blocage d'action, pas une question technique ni un sujet de santé. Je suis la bonne personne : c'est une entrepreneure en lancement, c'est mon terrain. Séance découverte proposée jeudi 14 à 18h."
+  },
+  {
+    cle: "decouverte", nom: "Séance découverte", porte: "Accord de principe",
+    aide: "Le cadre est posé, ce que le coaching est et n'est pas a été dit. Les deux parties sont d'accord pour continuer.",
+    guide: "Ce qu'elle a dit et ce que vous soupçonnez derrière, le résultat du screening, le format et le tarif annoncés, et son accord de principe. Ou l'orientation ailleurs, avec sa raison.",
+    exemple: "Découverte tenue le 14/08. Demande : ... Ce que je soupçonne : ... Screening : sommeil correct, pas de signal clinique. Proposé : 8 séances sur 4 mois, une tous les 15 jours, ... euros en 4 fois. Accord de principe donné, contrat à envoyer."
+  },
+  {
+    cle: "engagement", nom: "L'engagement", porte: "Contrat signé, paiement, questionnaire rempli",
+    aide: "Les trois sont faits. Sans les trois, pas de première séance.",
+    guide: "Les trois dates : contrat signé, premier versement reçu, questionnaire validé. Si l'un des trois manque, la porte ne se franchit pas.",
+    exemple: "Contrat signé le 18/08. Premier versement de ... euros reçu le 18/08. Questionnaire validé le 21/08. Séance 1 calée au 25/08."
+  },
+  {
+    cle: "phase_1", nom: "Phase 1 · à soi", porte: "Objectif écrit et validé, indicateurs posés",
+    aide: "Elle sait ce qu'elle vise, dans ses mots, et les trois indicateurs de départ sont notés.",
+    guide: "L'objectif tel qu'elle l'a formulé, et les trois indicateurs avec leur valeur de départ. C'est ce qui rendra le bilan possible à la clôture.",
+    exemple: "Objectif validé par elle : « ... ». Indicateurs au départ : appréhension 7 sur 10, 0 entretien mené, 0 soirée sans travail par semaine."
+  },
+  {
+    cle: "phase_2", nom: "Phase 2 · aux autres", porte: "Le terrain a parlé",
+    aide: "Ce qu'elle croyait a été confronté à ce que les autres lui ont réellement dit.",
+    guide: "Ce que le terrain a produit, et en quoi ça déplace ce qu'elle croyait. Le chiffre compte autant que le constat.",
+    exemple: "10 entretiens menés. Trois besoins reviennent : ... Ce qu'elle pensait vendre n'est pas ce qu'on lui demande. Elle en est consciente et l'a dit elle-même."
+  },
+  {
+    cle: "phase_3", nom: "Phase 3 · au projet", porte: "Protocole personnel et plan de rechute",
+    aide: "Elle repart avec de quoi tenir seule, y compris quand ça revient.",
+    guide: "Son protocole personnel et son plan de rechute, tels qu'elle les a écrits. Pas votre reformulation : ses mots.",
+    exemple: "Protocole personnel écrit : sa routine avant une prise de parole, sa phrase, ses cinq valeurs, ses trois signaux de bascule. Plan de rechute : ce qu'elle fait quand ça revient."
+  },
+  {
+    cle: "cloture", nom: "Clôture", porte: "Bilan chiffré remis",
+    aide: "Les trois indicateurs sont comparés à leur valeur de la première séance.",
+    guide: "Les trois indicateurs, départ et arrivée, côte à côte. Ce qui a bougé et ce qui résiste.",
+    exemple: "Appréhension 7 puis 3 sur 10. Entretiens 0 puis 12. Soirées sans travail 0 puis 2. Ce qui résiste : ..."
+  },
+  {
+    cle: "suivi", nom: "Le suivi", porte: "",
+    aide: "Point à trois mois, puis accompagnement récurrent si elle le souhaite.", guide: "", exemple: ""
+  },
+  {
+    cle: "arrete", nom: "Arrêté", porte: "",
+    aide: "Le parcours s'est arrêté avant son terme.", guide: "", exemple: ""
+  }
+];
+const etapeDe = (c) => ETAPES.find((e) => e.cle === c) || ETAPES[0];
+const PHASES = { phase_1: "Phase 1 · connexion à soi", phase_2: "Phase 2 · connexion aux autres", phase_3: "Phase 3 · connexion au projet" };
+
+// Directions d'integration et de desintegration.
+// A dire tel quel devant un jury : ces fleches viennent du corpus ennéagramme
+// standard, PAS d'un support de l'Academie, qui n'a fourni que l'instrument
+// de typage. On les affiche donc comme une lecture croisee, jamais comme la
+// parole de l'ecole.
+const INTEGRATION    = { 1: 7, 2: 4, 3: 6, 4: 1, 5: 8, 6: 9, 7: 5, 8: 2, 9: 3 };
+const DESINTEGRATION = { 1: 4, 2: 8, 3: 9, 4: 2, 5: 7, 6: 3, 7: 1, 8: 5, 9: 6 };
+
+const CONTROLE = [
+  "Les 3 piliers apparaissent-ils explicitement, dans l'ordre 1 puis 2 puis 3 ?",
+  "Chaque séance a-t-elle son objectif de séance, son protocole et son lien avec l'objectif ?",
+  "Ai-je prévu une action entre chaque séance, validée par la personne et non imposée ?",
+  "Mon objectif est-il vérifiable, quantifiable, et sous le contrôle de la personne ?",
+  "Ai-je dit ce que je ne peux pas garantir ?",
+  "Le profil explique-t-il la problématique, ou est-il juste posé à côté ?",
+  "Ai-je traité les profils forts comme des ressources à rééquilibrer, jamais comme des défauts ?",
+  "Ai-je posé mes limites professionnelles, dont l'orientation médicale si signaux cliniques ?"
+];
+
+// ------------------------------------------------------------- petits outils
+
+// Aucune donnee ne passe jamais par innerHTML : on construit les noeuds et on
+// pose le texte avec textContent. Un prenom avec une apostrophe ou un chevron
+// ne doit pas pouvoir casser une page, ni pire.
+function el(tag, attrs, ...enfants) {
+  const n = document.createElement(tag);
+  if (attrs) Object.keys(attrs).forEach((k) => {
+    const v = attrs[k];
+    if (v === null || v === undefined || v === false) return;
+    if (k === "texte") n.textContent = v;
+    else if (k === "clic") n.addEventListener("click", v);
+    else if (k === "saisie") n.addEventListener("input", v);
+    else if (k === "change") n.addEventListener("change", v);
+    else if (k === "valeur") n.value = v;
+    else if (k === "coche") n.checked = !!v;
+    else n.setAttribute(k, v === true ? "" : v);
+  });
+  enfants.flat().forEach((c) => { if (c) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+  return n;
+}
+const $ = (id) => document.getElementById(id);
+const vue = () => $("vue");
+function vider(n) { n.innerHTML = ""; return n; }
+
+let minuterieToast;
+function toast(msg) {
+  const t = document.querySelector(".toast") || document.body.appendChild(el("div", { class: "toast" }));
+  t.textContent = msg;
+  clearTimeout(minuterieToast);
+  minuterieToast = setTimeout(() => t.remove(), 2600);
+}
+
+function champ(libelle, noeud, aide) {
+  return el("div", { class: "champ" }, el("label", { texte: libelle }), noeud,
+    aide ? el("div", { class: "sous", texte: aide, style: "margin:6px 0 0" }) : null);
+}
+function zone(valeur, surSaisie, lignes, exemple) {
+  return el("textarea", {
+    valeur: valeur || "", saisie: (e) => surSaisie(e.target.value),
+    rows: lignes || 3, placeholder: exemple || null
+  });
+}
+function texte(valeur, surSaisie, type) {
+  return el("input", { type: type || "text", valeur: valeur || "", saisie: (e) => surSaisie(e.target.value) });
+}
+const jour = (d) => (d ? new Date(d).toLocaleDateString("fr-FR") : "—");
+
+// ------------------------------------------------------------------- donnees
+
+let PARCOURS = [];
+let ouvert = null;      // le parcours affiché
+let ongletActif = "parcours";
+
+async function chargerListe() {
+  const { data, error } = await sb.from("pm_parcours").select("*").order("cree_le", { ascending: false });
+  if (error) { toast("Lecture impossible"); return; }
+  PARCOURS = data || [];
+}
+
+async function ouvrir(id) {
+  const { data: p } = await sb.from("pm_parcours").select("*").eq("id", id).single();
+  const { data: portes } = await sb.from("pm_portes").select("*").eq("parcours_id", id);
+  const { data: q } = await sb.from("pm_questionnaires").select("*").eq("parcours_id", id).maybeSingle();
+  const { data: seances } = await sb.from("pm_seances").select("*").eq("parcours_id", id).order("numero");
+  const ids = (seances || []).map((s) => s.id);
+  let actions = [];
+  if (ids.length) {
+    const { data: a } = await sb.from("pm_actions").select("*").in("seance_id", ids);
+    actions = a || [];
+  }
+  const { data: journal } = await sb.from("pm_journal").select("*").eq("parcours_id", id).order("horodatage", { ascending: false });
+  ouvert = { p, portes: portes || [], q: q || null, seances: seances || [], actions, journal: journal || [] };
+  rendre();
+}
+
+async function enregistrerParcours(champs) {
+  const { error } = await sb.from("pm_parcours").update(champs).eq("id", ouvert.p.id);
+  if (error) { toast(error.message); return false; }
+  Object.assign(ouvert.p, champs);
+  return true;
+}
+
+// --------------------------------------------------------------- vue : liste
+
+function rendreListe() {
+  const v = vider(vue());
+  v.appendChild(el("h2", { texte: "Le tunnel" }));
+  v.appendChild(el("div", { class: "sous", texte: PARCOURS.length + " personne(s) accompagnée(s)" }));
+  v.appendChild(el("div", { class: "barre-actions" },
+    el("button", { class: "btn", texte: "Nouvelle personne", clic: formulaireNouveau })));
+
+  if (!PARCOURS.length) {
+    v.appendChild(el("div", { class: "vide", texte: "Personne pour l'instant. La première étape est toujours une demande reçue." }));
+    return;
+  }
+
+  ETAPES.forEach((etape) => {
+    const dedans = PARCOURS.filter((p) => p.etape === etape.cle);
+    if (!dedans.length) return;
+    const g = el("div", { class: "etape-groupe" });
+    g.appendChild(el("div", { class: "etape-titre" }, el("span", { texte: etape.nom }), el("em", { texte: "· " + dedans.length })));
+    dedans.forEach((p) => {
+      const bloquant = ceQuiBloque(p);
+      g.appendChild(el("div", { class: "carte cliquable", clic: () => { ongletActif = "parcours"; ouvrir(p.id); } },
+        el("div", { class: "carte-tete" },
+          el("div", {},
+            el("h4", { texte: [p.prenom, p.nom].filter(Boolean).join(" ") }),
+            el("div", { class: "detail", texte: p.origine || "origine non renseignée" })),
+          el("span", { class: "puce " + couleurEtape(p.etape), texte: etape.nom })),
+        bloquant ? el("div", { class: "avis", style: "margin:10px 0 0" }, el("strong", { texte: "À faire : " }), bloquant) : null));
+    });
+    v.appendChild(g);
+  });
+}
+
+function couleurEtape(c) {
+  if (c === "arrete") return "gris";
+  if (c === "cloture" || c === "suivi") return "vert";
+  if (c.startsWith("phase")) return "prune";
+  return "accent";
+}
+
+function ceQuiBloque(p) {
+  if (p.etape === "engagement") return "contrat signé, paiement reçu, questionnaire rempli";
+  if (p.etape === "demande") return "tenir la séance découverte";
+  if (p.etape === "phase_1" && !p.objectif) return "écrire l'objectif avec elle";
+  return null;
+}
+
+function formulaireNouveau() {
+  const brouillon = { prenom: "", nom: "", email: "", whatsapp: "", origine: "" };
+  const v = vider(vue());
+  v.appendChild(el("button", { class: "lien-plat", texte: "← Retour au tunnel", clic: rendre }));
+  v.appendChild(el("h2", { texte: "Nouvelle personne accompagnée" }));
+  v.appendChild(el("div", { class: "sous", texte: "Le parcours démarre à l'étape « la demande ». Le lien du questionnaire est créé tout de suite, mais rien n'oblige à l'envoyer maintenant." }));
+  const c = el("div", { class: "carte" });
+  c.appendChild(el("div", { class: "duo" },
+    champ("Prénom", texte("", (x) => brouillon.prenom = x)),
+    champ("Nom", texte("", (x) => brouillon.nom = x))));
+  c.appendChild(el("div", { class: "duo" },
+    champ("Email", texte("", (x) => brouillon.email = x, "email")),
+    champ("WhatsApp", texte("", (x) => brouillon.whatsapp = x))));
+  c.appendChild(champ("D'où vient la demande", texte("", (x) => brouillon.origine = x), "Recommandation, réseau, formulaire du site, rencontre."));
+  c.appendChild(el("div", { class: "barre-actions" },
+    el("button", {
+      class: "btn", texte: "Créer le parcours", clic: async (e) => {
+        if (!brouillon.prenom.trim()) { toast("Le prénom est nécessaire"); return; }
+        e.target.disabled = true;
+        const { data, error } = await sb.from("pm_parcours").insert(brouillon).select().single();
+        if (error) { toast(error.message); e.target.disabled = false; return; }
+        await chargerListe();
+        ongletActif = "parcours";
+        ouvrir(data.id);
+      }
+    }),
+    el("button", { class: "btn fantome", texte: "Annuler", clic: rendre })));
+  v.appendChild(c);
+}
+
+// --------------------------------------------------------------- vue : fiche
+
+function rendreFiche() {
+  const { p } = ouvert;
+  const v = vider(vue());
+  v.appendChild(el("button", { class: "lien-plat", texte: "← Retour au tunnel", clic: () => { ouvert = null; rendre(); } }));
+  v.appendChild(el("h2", { texte: [p.prenom, p.nom].filter(Boolean).join(" ") }));
+  v.appendChild(el("div", { class: "sous" },
+    el("span", { class: "puce " + couleurEtape(p.etape), texte: etapeDe(p.etape).nom }),
+    el("span", { texte: "  " + (p.origine || "origine non renseignée") })));
+
+  const onglets = el("div", { class: "onglets" });
+  [["parcours", "Parcours"], ["decryptage", "Décryptage"], ["seances", "Séances"], ["journal", "Journal"]]
+    .forEach(([cle, nom]) => onglets.appendChild(el("button", {
+      class: "onglet" + (ongletActif === cle ? " on" : ""), texte: nom,
+      clic: () => { ongletActif = cle; rendre(); }
+    })));
+  v.appendChild(onglets);
+
+  const corps = el("div");
+  v.appendChild(corps);
+  if (ongletActif === "parcours") ongletParcours(corps);
+  else if (ongletActif === "decryptage") ongletDecryptage(corps);
+  else if (ongletActif === "seances") ongletSeances(corps);
+  else ongletJournal(corps);
+}
+
+// ---- onglet parcours : les etapes, les portes, le lien du questionnaire
+
+function ongletParcours(c) {
+  const { p, portes, q } = ouvert;
+
+  // Le lien du questionnaire
+  const carteLien = el("div", { class: "carte" });
+  carteLien.appendChild(el("h3", { texte: "Le questionnaire", style: "margin-top:0" }));
+  if (q && q.statut === "rempli") {
+    carteLien.appendChild(el("div", { class: "sous", texte: "Rempli le " + jour(q.rempli_le) + ". Le lien est éteint, c'est normal." }));
+  } else if (!p.jeton_actif) {
+    carteLien.appendChild(el("div", { class: "sous", texte: "Le lien est éteint." }));
+  } else {
+    carteLien.appendChild(el("div", { class: "sous", texte: (q && q.statut === "en_cours") ? "Commencé, pas encore validé." : "Pas encore ouvert." }));
+    carteLien.appendChild(el("div", { class: "lien-copiable", texte: BASE_LIEN + p.jeton }));
+    carteLien.appendChild(el("div", { class: "barre-actions", style: "margin-top:0" },
+      el("button", {
+        class: "btn petit", texte: "Copier le lien", clic: async () => {
+          try { await navigator.clipboard.writeText(BASE_LIEN + p.jeton); toast("Lien copié"); }
+          catch (e) { toast("Copie impossible, sélectionnez le lien à la main"); }
+        }
+      }),
+      p.whatsapp ? el("a", {
+        class: "btn petit fantome", style: "text-decoration:none;display:inline-flex;align-items:center",
+        target: "_blank", rel: "noopener",
+        href: "https://wa.me/" + p.whatsapp.replace(/[^0-9]/g, "") + "?text=" +
+          encodeURIComponent("Bonjour " + p.prenom + ", voici le questionnaire à remplir avant notre première séance. Comptez une vingtaine de minutes, et répondez spontanément : " + BASE_LIEN + p.jeton),
+        texte: "Envoyer sur WhatsApp"
+      }) : null,
+      el("button", {
+        class: "btn petit fantome", texte: "Régénérer le lien", clic: async (ev) => {
+          if (!confirm("Créer un nouveau lien ?\n\nL'ancien cessera de fonctionner immédiatement. À faire si le lien est parti au mauvais destinataire, ou si vous ne savez plus où il a circulé.")) return;
+          ev.target.disabled = true;
+          const { error } = await sb.rpc("pm_regenerer_jeton", { p_parcours: p.id });
+          if (error) { toast(error.message); ev.target.disabled = false; return; }
+          toast("Nouveau lien créé, l'ancien est éteint");
+          ouvrir(p.id);
+        }
+      })));
+  }
+  c.appendChild(carteLien);
+
+  // Les etapes et leurs portes
+  c.appendChild(el("h3", { texte: "Les étapes" }));
+  c.appendChild(el("div", { class: "sous", texte: "Une étape ne s'ouvre pas tant que la porte de la précédente n'est pas franchie. La règle est dans la base, pas dans cet écran." }));
+
+  const rangCourant = ETAPES.findIndex((e) => e.cle === p.etape);
+  ETAPES.filter((e) => e.cle !== "arrete").forEach((etape, i) => {
+    const franchie = portes.find((x) => x.etape === etape.cle);
+    const estCourante = etape.cle === p.etape;
+    const carte = el("div", { class: "carte" });
+    carte.appendChild(el("div", { class: "carte-tete" },
+      el("div", {}, el("h4", { texte: etape.nom }), el("div", { class: "detail", texte: etape.aide })),
+      franchie ? el("span", { class: "puce vert", texte: "franchie" })
+        : estCourante ? el("span", { class: "puce accent", texte: "en cours" })
+          : el("span", { class: "puce gris", texte: i < rangCourant ? "passée" : "à venir" })));
+
+    if (franchie) {
+      carte.appendChild(el("div", { class: "sous", style: "margin:10px 0 0", texte: "Livrable : " + franchie.livrable + " · le " + jour(franchie.franchie_le) }));
+    } else if (estCourante && etape.porte) {
+      let note = "";
+      carte.appendChild(el("div", { style: "margin-top:12px" },
+        champ("Ce que vous écrivez pour clore cette étape", zone("", (x) => note = x, 4, etape.exemple),
+          etape.guide + " Ce texte reste attaché au parcours : c'est lui que vous relirez dans trois mois, quand vous ne vous souviendrez plus de ses mots exacts.")));
+      carte.appendChild(el("div", { class: "barre-actions", style: "margin-top:0" },
+        el("button", {
+          class: "btn petit", texte: "Franchir cette porte", clic: async (ev) => {
+            // On refuse une porte vide. Un livrable rempli par defaut ne prouve
+            // rien et transforme le tunnel en simple liste de cases cochees.
+            if (note.trim().length < 20) {
+              toast("Écrivez d'abord ce qui clôt cette étape, quelques lignes suffisent.");
+              return;
+            }
+            ev.target.disabled = true;
+            const { error } = await sb.from("pm_portes").insert({
+              parcours_id: p.id, etape: etape.cle, livrable: note.trim()
+            });
+            if (error) { toast(error.message); ev.target.disabled = false; return; }
+            const suivante = ETAPES[i + 1];
+            if (suivante && suivante.cle !== "arrete") {
+              const { error: e2 } = await sb.from("pm_parcours").update({ etape: suivante.cle }).eq("id", p.id);
+              if (e2) { toast(e2.message); }
+            }
+            await chargerListe();
+            ouvrir(p.id);
+          }
+        })));
+    }
+    c.appendChild(carte);
+  });
+
+  // Fiche d'identite
+  c.appendChild(el("h3", { texte: "La fiche" }));
+  const f = el("div", { class: "carte" });
+  // Un seul objet de travail pour le format : deux champs qui reconstruisent
+  // chacun l'objet de leur cote effacent la saisie de l'autre.
+  const brouillon = { format: Object.assign({}, p.format) };
+  f.appendChild(el("div", { class: "duo" },
+    champ("Email", texte(p.email, (x) => brouillon.email = x, "email")),
+    champ("WhatsApp", texte(p.whatsapp, (x) => brouillon.whatsapp = x))));
+  f.appendChild(champ("D'où vient la demande", texte(p.origine, (x) => brouillon.origine = x)));
+  f.appendChild(el("div", { class: "duo" },
+    champ("Format convenu", texte(brouillon.format.seances || "", (x) => brouillon.format.seances = x), "Par exemple : 8 séances sur 4 mois, une tous les 15 jours."),
+    champ("Tarif", texte(brouillon.format.tarif || "", (x) => brouillon.format.tarif = x))));
+  f.appendChild(champ("Notes libres", zone(p.notes, (x) => brouillon.notes = x, 4)));
+  f.appendChild(champ("Données conservées jusqu'au", texte(p.conservation_jusqu_au, (x) => brouillon.conservation_jusqu_au = x, "date"),
+    "Cette date doit être identique à celle écrite au contrat. Passé ce jour, tout le parcours est effacé automatiquement."));
+  f.appendChild(el("div", { class: "barre-actions" },
+    el("button", {
+      class: "btn petit", texte: "Enregistrer", clic: async () => {
+        if (await enregistrerParcours(brouillon)) { toast("Enregistré"); await chargerListe(); }
+      }
+    }),
+    el("button", {
+      class: "btn petit fantome", texte: p.etape === "arrete" ? "Reprendre le parcours" : "Arrêter le parcours",
+      clic: async () => {
+        const cible = p.etape === "arrete" ? "demande" : "arrete";
+        if (!confirm(cible === "arrete" ? "Marquer ce parcours comme arrêté ?" : "Reprendre ce parcours à la première étape ?")) return;
+        if (await enregistrerParcours({ etape: cible })) { await chargerListe(); ouvrir(p.id); }
+      }
+    })));
+  c.appendChild(f);
+}
+
+// ---- onglet decryptage
+
+function ongletDecryptage(c) {
+  const { p, q } = ouvert;
+  const d = Object.assign({
+    hypothese: "", validation: "", demande: "", soupcon: "", lien: "",
+    non_promis: "", zones: "", controle: {}, piliers: {}
+  }, p.decryptage || {});
+  const brouillon = { decryptage: d, objectif: p.objectif, indicateurs: p.indicateurs || [] };
+
+  if (!q || q.statut !== "rempli") {
+    c.appendChild(el("div", { class: "vide", texte: "Le décryptage s'ouvre quand le questionnaire est validé. En attendant, le reste du parcours reste accessible." }));
+    return;
+  }
+
+  // --- ce que la machine calcule
+  const scores = q.scores || {};
+  const rangs = Object.keys(scores).map((t) => ({ type: Number(t), score: Number(scores[t]) }))
+    .sort((a, b) => b.score - a.score);
+  const total = rangs.reduce((s, r) => s + r.score, 0);
+  const forts = rangs.slice(0, 4).map((r) => r.type);
+  const faibles = rangs.slice(-4).map((r) => r.type);
+
+  c.appendChild(el("h3", { texte: "Le profil", style: "margin-top:0" }));
+  const profil = el("div", { class: "profil" });
+  rangs.forEach((r) => {
+    const part = total ? Math.round(r.score / total * 1000) / 10 : 0;
+    profil.appendChild(el("div", { class: "pl" + (forts.includes(r.type) ? " fort" : faibles.includes(r.type) ? " faible" : "") },
+      el("div", { class: "nom", texte: r.type + " " + nomType(r.type) }),
+      el("div", { class: "jauge" }, el("i", { style: "width:" + (r.score / 45 * 100) + "%" })),
+      el("div", { class: "val", texte: r.score + " · " + part + "%" })));
+  });
+  c.appendChild(profil);
+  c.appendChild(el("div", { class: "legende" },
+    el("span", {}, el("i", { style: "background:var(--accent)" }), "fortement utilisés"),
+    el("span", {}, el("i", { style: "background:var(--bleu)" }), "peu développés"),
+    el("span", { texte: "score sur 45, et part du total" })));
+
+  const ecart = rangs[0].score - rangs[3].score;
+  if (ecart < 5) {
+    c.appendChild(el("div", { class: "avis" },
+      el("strong", { texte: "Sommet plat, " + ecart + " point(s) entre le premier et le quatrième. " }),
+      "Le typage n'est pas tranché par ces chiffres. On pose une hypothèse de travail, on la valide avec la personne, et on ne lui annonce jamais un numéro comme un verdict. Le questionnaire interroge des comportements, l'ennéagramme se lit sur des motivations."));
+  }
+
+  // --- la verification croisee
+  c.appendChild(el("h3", { texte: "Les rééquilibrages" }));
+  c.appendChild(el("div", { class: "sous", texte: "Un profil fortement utilisé n'est pas un profil mal utilisé. On ne le fait pas baisser, on le rééquilibre par un profil peu développé." }));
+  const t = el("table", { class: "grille" });
+  t.appendChild(el("thead", {}, el("tr", {},
+    ["Profil fort", "Score", "Direction d'intégration", "Score de la cible", "Lecture"].map((x) => el("th", { texte: x })))));
+  const corps = el("tbody");
+  forts.forEach((type) => {
+    const cible = INTEGRATION[type];
+    const converge = faibles.includes(cible);
+    corps.appendChild(el("tr", {},
+      el("td", { texte: type + " " + nomType(type) }),
+      el("td", { texte: String(scores[type]) }),
+      el("td", { texte: cible + " " + nomType(cible) }),
+      el("td", { texte: String(scores[cible]) }),
+      el("td", { texte: converge ? "converge" : (DESINTEGRATION[type] === cible ? "désintégration" : "la cible n'est pas dans les plus bas") })));
+  });
+  t.appendChild(corps);
+  c.appendChild(el("div", { class: "tw" }, t));
+
+  const convergents = forts.filter((x) => faibles.includes(INTEGRATION[x]));
+  c.appendChild(el("div", { class: "avis bleu" },
+    convergents.length >= 2
+      ? el("span", {}, el("strong", { texte: convergents.length + " convergences. " }),
+        "Les rééquilibrages désignés par les scores sont aussi les directions d'intégration des profils dominants. Deux lectures différentes, même plan de travail, et c'est vérifiable sur les chiffres.")
+      : el("span", {}, el("strong", { texte: "Peu de convergence. " }),
+        "Les deux lectures ne se rejoignent pas ici. Le dire est plus solide que de forcer la démonstration."),
+    el("div", { style: "margin-top:8px;font-size:13px;color:var(--muted)" },
+      "Les flèches d'intégration viennent du corpus ennéagramme standard, pas d'un support de l'Académie, qui n'a fourni que l'instrument de typage. À présenter comme une lecture croisée.")));
+
+  // --- ce que le coach ecrit
+  c.appendChild(el("h3", { texte: "Le gabarit" }));
+  const g = el("div", { class: "carte" });
+  g.appendChild(el("div", { class: "duo" },
+    champ("Hypothèse de type", texte(d.hypothese, (x) => d.hypothese = x)),
+    champ("Comment je la valide", texte(d.validation, (x) => d.validation = x), "En séance 2, avec elle.")));
+  g.appendChild(champ("Ce que la personne demande", zone(d.demande, (x) => d.demande = x, 2)));
+  g.appendChild(champ("Ce que je soupçonne derrière", zone(d.soupcon, (x) => d.soupcon = x, 2), "À vérifier en mode explorateur."));
+  g.appendChild(champ("Le lien entre son profil et sa problématique", zone(d.lien, (x) => d.lien = x, 3),
+    "C'est ici que se joue la note. Le profil doit expliquer la problématique, pas être posé à côté."));
+  g.appendChild(champ("Zone de maîtrise et zones critiques", zone(d.zones, (x) => d.zones = x, 3),
+    "Il y a deux zones critiques, la haute en sur-activation et la basse en sous-activation. Une personne peut toucher les deux en alternance."));
+  g.appendChild(champ("Ce que je ne promets pas", zone(d.non_promis, (x) => d.non_promis = x, 2),
+    "Ce qui ne dépend pas d'elle. L'athlète et le podium : on garantit les conditions, jamais le résultat."));
+  g.appendChild(champ("L'objectif, vérifiable et quantifiable", zone(brouillon.objectif, (x) => brouillon.objectif = x, 3),
+    "Question de vérification : à quoi verriez-vous que vous avez atteint votre but ?"));
+  c.appendChild(g);
+
+  // indicateurs
+  c.appendChild(el("h3", { texte: "Les indicateurs" }));
+  const zi = el("div", { class: "carte" });
+  function rendreIndicateurs() {
+    vider(zi);
+    zi.appendChild(el("div", { class: "sous", style: "margin:0 0 12px", texte: "Deux ou trois, mesurés dès la première séance et suivis tout du long." }));
+    brouillon.indicateurs.forEach((ind, i) => {
+      zi.appendChild(el("div", { class: "duo" },
+        champ("Indicateur " + (i + 1), texte(ind.libelle, (x) => ind.libelle = x)),
+        el("div", { class: "duo" },
+          champ("Départ", texte(ind.depart, (x) => ind.depart = x)),
+          champ("Cible", texte(ind.cible, (x) => ind.cible = x)))));
+    });
+    zi.appendChild(el("div", { class: "barre-actions", style: "margin-top:0" },
+      el("button", { class: "btn petit fantome", texte: "Ajouter un indicateur", clic: () => { brouillon.indicateurs.push({ libelle: "", depart: "", cible: "" }); rendreIndicateurs(); } }),
+      brouillon.indicateurs.length ? el("button", { class: "btn petit fantome", texte: "Retirer le dernier", clic: () => { brouillon.indicateurs.pop(); rendreIndicateurs(); } }) : null));
+  }
+  rendreIndicateurs();
+  c.appendChild(zi);
+
+  // les 3 piliers
+  c.appendChild(el("h3", { texte: "La répartition en trois piliers" }));
+  c.appendChild(el("div", { class: "sous", texte: "L'ordre n'est pas négociable. C'est la pondération qui s'adapte à la personne, et la dernière colonne est ce qui distingue un accompagnement personnalisé d'un déroulé standard." }));
+  const zp = el("div", { class: "carte" });
+  Object.keys(PHASES).forEach((cle) => {
+    d.piliers[cle] = Object.assign({ seances: "", installe: "", pourquoi: "" }, d.piliers[cle] || {});
+    const b = d.piliers[cle];
+    zp.appendChild(el("h4", { texte: PHASES[cle], style: "margin:8px 0" }));
+    zp.appendChild(el("div", { class: "duo" },
+      champ("Séances", texte(b.seances, (x) => b.seances = x)),
+      champ("Ce que j'installe", texte(b.installe, (x) => b.installe = x))));
+    zp.appendChild(champ("Pourquoi cet ordre pour CETTE personne", zone(b.pourquoi, (x) => b.pourquoi = x, 2)));
+  });
+  c.appendChild(zp);
+
+  // controle final
+  c.appendChild(el("h3", { texte: "Contrôle final" }));
+  c.appendChild(el("div", { class: "sous", texte: "Une seule réponse « non » est un point à corriger avant la première séance." }));
+  const zc = el("div", { class: "carte" });
+  CONTROLE.forEach((q8, i) => {
+    const id = "ctrl" + i;
+    zc.appendChild(el("label", { class: "coche", for: id },
+      el("input", { type: "checkbox", id, coche: !!d.controle[i], change: (e) => d.controle[i] = e.target.checked }),
+      el("span", { texte: q8 })));
+  });
+  c.appendChild(zc);
+
+  c.appendChild(el("div", { class: "barre-actions" },
+    el("button", {
+      class: "btn", texte: "Enregistrer le décryptage", clic: async () => {
+        if (await enregistrerParcours({ decryptage: d, objectif: brouillon.objectif, indicateurs: brouillon.indicateurs })) toast("Enregistré");
+      }
+    }),
+    el("button", { class: "btn fantome", texte: "Imprimer", clic: () => window.print() })));
+}
+
+let NOMS_TYPES = {};
+const nomType = (n) => NOMS_TYPES[n] || "type " + n;
+
+// ---- onglet seances
+
+function ongletSeances(c) {
+  const { p, seances, actions } = ouvert;
+
+  // Le programme se pose d'un coup, a partir du format convenu et de la
+  // ponderation des trois piliers. On n'ajoute pas des seances une par une :
+  // le nombre et leur repartition sont des decisions d'accompagnement, prises
+  // a la decouverte et au decryptage, pas au fil de l'eau.
+  if (!seances.length) { formulaireProgramme(c); return; }
+
+  seances.forEach((s) => c.appendChild(carteSeance(s, actions.filter((a) => a.seance_id === s.id))));
+
+  c.appendChild(el("div", { class: "barre-actions" },
+    el("button", {
+      class: "btn petit fantome", texte: "Ajouter une séance hors programme", clic: async () => {
+        const numero = Math.max(...seances.map((s) => s.numero)) + 1;
+        const phase = seances[seances.length - 1].phase;
+        const { error } = await sb.from("pm_seances").insert({ parcours_id: p.id, numero, phase });
+        if (error) { toast(error.message); return; }
+        ouvrir(p.id);
+      }
+    })));
+  c.appendChild(el("div", { class: "sous", style: "margin-top:8px" },
+    "Une séance hors programme se justifie : la clause d'évolution du contrat prévoit qu'une phase s'allonge si le terrain le demande. Ce n'est pas la façon normale de construire le programme."));
+}
+
+function formulaireProgramme(c) {
+  const { p } = ouvert;
+  const f = p.format || {};
+  const r = f.repartition || {};
+  const b = {
+    phase_1: r.phase_1 || 3,
+    phase_2: r.phase_2 || 3,
+    phase_3: r.phase_3 || 2,
+    debut: f.debut || "",
+    intervalle: f.intervalle || 14
+  };
+
+  c.appendChild(el("h3", { texte: "Poser le programme", style: "margin-top:0" }));
+  c.appendChild(el("div", { class: "sous", texte: "Le nombre de séances et leur répartition se décident une fois, à partir de ce qui a été convenu. L'ordre des trois piliers ne se discute pas, c'est leur pondération qui s'adapte à la personne." }));
+
+  const carte = el("div", { class: "carte" });
+  const total = el("div", { class: "avis" });
+  function majTotal() {
+    const n = Number(b.phase_1) + Number(b.phase_2) + Number(b.phase_3);
+    vider(total);
+    total.appendChild(el("strong", { texte: n + " séance(s) au total. " }));
+    total.appendChild(document.createTextNode(
+      b.debut
+        ? "La dernière tombera vers le " + new Date(new Date(b.debut).getTime() + (n - 1) * Number(b.intervalle) * 86400000).toLocaleDateString("fr-FR") + "."
+        : "Indiquez la date de la première séance pour voir la fin du parcours."));
+  }
+
+  const nombre = (val, sur) => el("input", {
+    type: "number", min: "0", max: "12", valeur: String(val),
+    saisie: (e) => { sur(e.target.value); majTotal(); }
+  });
+
+  carte.appendChild(el("div", { class: "duo" },
+    champ("Phase 1 · à soi", nombre(b.phase_1, (x) => b.phase_1 = x), "Ses ressources, ses valeurs, l'écoute de ses besoins."),
+    champ("Phase 2 · aux autres", nombre(b.phase_2, (x) => b.phase_2 = x), "Le besoin réel des autres, fédérer, accepter de recevoir.")));
+  carte.appendChild(el("div", { class: "duo" },
+    champ("Phase 3 · au projet", nombre(b.phase_3, (x) => b.phase_3 = x), "L'offre, l'incarnation, l'autonomie."),
+    champ("Jours entre deux séances", nombre(b.intervalle, (x) => b.intervalle = x), "Quatorze jours, ou vingt et un au maximum. En dessous, elle n'a pas le temps d'expérimenter.")));
+  carte.appendChild(champ("Date de la première séance", texte(b.debut, (x) => { b.debut = x; majTotal(); }, "date")));
+  majTotal();
+  carte.appendChild(total);
+
+  carte.appendChild(el("div", { class: "barre-actions", style: "margin-top:0" },
+    el("button", {
+      class: "btn", texte: "Créer le programme", clic: async (ev) => {
+        const rep = [["phase_1", Number(b.phase_1)], ["phase_2", Number(b.phase_2)], ["phase_3", Number(b.phase_3)]];
+        const n = rep.reduce((s, x) => s + x[1], 0);
+        if (n < 1) { toast("Il faut au moins une séance."); return; }
+        if (!b.debut) { toast("Indiquez la date de la première séance."); return; }
+        ev.target.disabled = true;
+
+        const lignes = [];
+        let numero = 0;
+        rep.forEach(([phase, combien]) => {
+          for (let i = 0; i < combien; i++) {
+            const quand = new Date(new Date(b.debut).getTime() + numero * Number(b.intervalle) * 86400000);
+            numero++;
+            lignes.push({
+              parcours_id: p.id, numero, phase,
+              date_prevue: quand.toISOString().slice(0, 10)
+            });
+          }
+        });
+
+        const { error } = await sb.from("pm_seances").insert(lignes);
+        if (error) { toast(error.message); ev.target.disabled = false; return; }
+        await enregistrerParcours({
+          format: Object.assign({}, f, {
+            seances: n + " séances, une tous les " + b.intervalle + " jours",
+            repartition: { phase_1: Number(b.phase_1), phase_2: Number(b.phase_2), phase_3: Number(b.phase_3) },
+            debut: b.debut, intervalle: Number(b.intervalle)
+          })
+        });
+        toast(n + " séances créées");
+        ouvrir(p.id);
+      }
+    })));
+  c.appendChild(carte);
+
+  c.appendChild(el("div", { class: "sous" },
+    "Les dates sont prévisionnelles et se déplacent séance par séance. Les titres et les objectifs de séance se remplissent au fur et à mesure, une fois le décryptage fait : c'est lui qui dit ce que chaque séance doit travailler."));
+}
+
+function carteSeance(s, sesActions) {
+  const n = Object.assign({ briefing: {}, coeur: {}, debriefing: {} }, s.notes || {});
+  n.briefing = Object.assign({ points_forts: "", axes: "", retour_action: "" }, n.briefing);
+  n.coeur = Object.assign({ ordinaire: "", emct: "", paraverbal: "" }, n.coeur);
+  n.debriefing = Object.assign({ resume: "", mot_de_cloture: "" }, n.debriefing);
+  const b = { numero: s.numero, phase: s.phase, titre: s.titre, objectif_de_seance: s.objectif_de_seance, protocole: s.protocole, date_prevue: s.date_prevue, date_tenue: s.date_tenue, statut: s.statut, notes: n };
+
+  const carte = el("div", { class: "carte" });
+  carte.appendChild(el("div", { class: "carte-tete" },
+    el("div", {},
+      el("h4", { texte: "Séance " + s.numero + (s.titre ? " · " + s.titre : "") }),
+      el("div", { class: "detail", texte: PHASES[s.phase] + " · " + (s.date_tenue ? "tenue le " + jour(s.date_tenue) : s.date_prevue ? "prévue le " + jour(s.date_prevue) : "sans date") })),
+    el("span", { class: "puce " + (s.statut === "tenue" ? "vert" : s.statut === "annulee" ? "gris" : "accent"), texte: s.statut })));
+
+  const detail = el("div", { style: "display:none;margin-top:16px" });
+  carte.appendChild(el("div", { class: "barre-actions", style: "margin-top:12px" },
+    el("button", {
+      class: "btn petit fantome", texte: "Ouvrir la séance",
+      clic: (e) => {
+        const ouvertNow = detail.style.display !== "none";
+        detail.style.display = ouvertNow ? "none" : "block";
+        e.target.textContent = ouvertNow ? "Ouvrir la séance" : "Replier";
+      }
+    })));
+
+  detail.appendChild(el("div", { class: "duo" },
+    champ("Titre", texte(s.titre, (x) => b.titre = x)),
+    champ("Phase", el("select", {
+      change: (e) => b.phase = e.target.value
+    }, Object.keys(PHASES).map((k) => el("option", { value: k, texte: PHASES[k], selected: k === s.phase }))))));
+
+  detail.appendChild(champ("Objectif de séance", texte(s.objectif_de_seance, (x) => b.objectif_de_seance = x),
+    "Obligatoire pour déclarer la séance tenue. C'est le vocabulaire du fascicule, distinct de l'objectif de l'accompagnement, et c'est un critère de notation."));
+  detail.appendChild(champ("Protocole", texte(s.protocole, (x) => b.protocole = x)));
+  detail.appendChild(el("div", { class: "duo" },
+    champ("Date prévue", texte(s.date_prevue, (x) => b.date_prevue = x || null, "date")),
+    champ("Date tenue", texte(s.date_tenue, (x) => b.date_tenue = x || null, "date"))));
+
+  detail.appendChild(el("h4", { texte: "Briefing", style: "margin:20px 0 8px" }));
+  detail.appendChild(champ("Ses points forts depuis la dernière séance", zone(n.briefing.points_forts, (x) => n.briefing.points_forts = x, 2),
+    "On commence toujours par là, jamais par ce qui n'a pas été fait."));
+  detail.appendChild(champ("Ses axes d'amélioration", zone(n.briefing.axes, (x) => n.briefing.axes = x, 2)));
+  detail.appendChild(champ("Retour sur l'action confiée", zone(n.briefing.retour_action, (x) => n.briefing.retour_action = x, 2)));
+
+  detail.appendChild(el("h4", { texte: "Cœur de séance", style: "margin:20px 0 8px" }));
+  detail.appendChild(champ("En conscience ordinaire", zone(n.coeur.ordinaire, (x) => n.coeur.ordinaire = x, 3)));
+  detail.appendChild(champ("En état modifié", zone(n.coeur.emct, (x) => n.coeur.emct = x, 3)));
+  detail.appendChild(champ("Paraverbal et comportemental", zone(n.coeur.paraverbal, (x) => n.coeur.paraverbal = x, 2),
+    "Ce qu'elle dit, et surtout comment elle le dit. L'alignement entre le propos et le ressenti."));
+
+  detail.appendChild(el("h4", { texte: "Débriefing", style: "margin:20px 0 8px" }));
+  detail.appendChild(el("div", { class: "avis", style: "margin:0 0 12px" },
+    "Temps de latence : après un état modifié, la personne reste suggestible. Discours rassurant, aucune interprétation hâtive."));
+  detail.appendChild(champ("Résumé", zone(n.debriefing.resume, (x) => n.debriefing.resume = x, 3)));
+  detail.appendChild(champ("Son mot de clôture", zone(n.debriefing.mot_de_cloture, (x) => n.debriefing.mot_de_cloture = x, 2),
+    "« Si vous aviez un mot, une phrase pour résumer notre entretien, que diriez-vous ? »"));
+
+  // actions
+  detail.appendChild(el("h4", { texte: "Actions confiées", style: "margin:20px 0 8px" }));
+  const za = el("div");
+  sesActions.forEach((a) => {
+    const ab = { libelle: a.libelle, echeance: a.echeance, statut: a.statut, retour: a.retour };
+    za.appendChild(el("div", { class: "carte", style: "background:var(--sable-2)" },
+      champ("Action", texte(a.libelle, (x) => ab.libelle = x)),
+      el("div", { class: "duo" },
+        champ("Échéance", texte(a.echeance, (x) => ab.echeance = x || null, "date")),
+        champ("Où ça en est", el("select", { change: (e) => ab.statut = e.target.value },
+          ["confiee", "faite", "non_faite"].map((v) => el("option", { value: v, texte: { confiee: "confiée", faite: "faite", non_faite: "pas faite" }[v], selected: v === a.statut }))))),
+      champ("Ce qu'elle en dit", zone(a.retour, (x) => ab.retour = x, 2)),
+      el("div", { class: "barre-actions", style: "margin-top:0" },
+        el("button", { class: "btn petit fantome", texte: "Enregistrer l'action", clic: async () => { const { error } = await sb.from("pm_actions").update(ab).eq("id", a.id); toast(error ? error.message : "Action enregistrée"); } }),
+        el("button", { class: "btn petit fantome", texte: "Supprimer", clic: async () => { if (!confirm("Supprimer cette action ?")) return; await sb.from("pm_actions").delete().eq("id", a.id); ouvrir(ouvert.p.id); } }))));
+  });
+  detail.appendChild(za);
+  detail.appendChild(el("div", { class: "barre-actions", style: "margin-top:0" },
+    el("button", {
+      class: "btn petit fantome", texte: "Ajouter une action", clic: async () => {
+        const { error } = await sb.from("pm_actions").insert({ seance_id: s.id, libelle: "" });
+        if (error) { toast(error.message); return; }
+        ouvrir(ouvert.p.id);
+      }
+    })));
+
+  detail.appendChild(el("div", { class: "barre-actions" },
+    el("button", {
+      class: "btn petit", texte: "Enregistrer la séance", clic: async () => {
+        b.notes = n;
+        const { error } = await sb.from("pm_seances").update(b).eq("id", s.id);
+        if (error) { toast(error.message); return; }
+        toast("Séance enregistrée");
+        ouvrir(ouvert.p.id);
+      }
+    }),
+    el("button", {
+      class: "btn petit fantome", texte: "Marquer tenue", clic: async () => {
+        b.notes = n;
+        b.statut = "tenue";
+        if (!b.date_tenue) b.date_tenue = new Date().toISOString().slice(0, 10);
+        const { error } = await sb.from("pm_seances").update(b).eq("id", s.id);
+        if (error) {
+          // La base refuse une seance tenue sans objectif de seance. C'est
+          // voulu, et le message doit dire quoi faire, pas afficher l'erreur brute.
+          toast(String(error.message).includes("objectif") || String(error.code) === "23514"
+            ? "Écrivez d'abord l'objectif de séance : sans lui, la séance ne peut pas être déclarée tenue."
+            : error.message);
+          return;
+        }
+        toast("Séance tenue");
+        ouvrir(ouvert.p.id);
+      }
+    }),
+    el("button", { class: "btn petit fantome", texte: "Imprimer", clic: () => window.print() }),
+    el("button", {
+      class: "btn petit fantome", texte: "Supprimer la séance", clic: async () => {
+        if (!confirm("Supprimer la séance " + s.numero + " et ses actions ?")) return;
+        await sb.from("pm_seances").delete().eq("id", s.id);
+        ouvrir(ouvert.p.id);
+      }
+    })));
+
+  carte.appendChild(detail);
+  return carte;
+}
+
+// ---- onglet journal
+
+function ongletJournal(c) {
+  const { journal } = ouvert;
+  c.appendChild(el("div", { class: "sous", texte: "Le journal est en ajout seul. Il ne peut être ni modifié ni effacé, y compris depuis cet écran." }));
+  if (!journal.length) { c.appendChild(el("div", { class: "vide", texte: "Rien encore." })); return; }
+  const t = el("table", { class: "grille" });
+  t.appendChild(el("thead", {}, el("tr", {}, ["Quand", "Quoi", "De", "À", "Par"].map((x) => el("th", { texte: x })))));
+  const corps = el("tbody");
+  journal.forEach((l) => corps.appendChild(el("tr", {},
+    el("td", { texte: new Date(l.horodatage).toLocaleString("fr-FR") }),
+    el("td", { texte: l.objet + (l.champ ? " · " + l.champ : "") }),
+    el("td", { texte: l.avant || "—" }),
+    el("td", { texte: l.apres || "—" }),
+    el("td", { texte: l.auteur || "—" }))));
+  t.appendChild(corps);
+  c.appendChild(el("div", { class: "tw" }, t));
+}
+
+// ------------------------------------------------------------------- routage
+
+function rendre() { if (ouvert) rendreFiche(); else rendreListe(); }
+
+async function demarrer() {
+  $("connexion").style.display = "none";
+  $("app").style.display = "block";
+  const { data } = await sb.from("pm_types").select("*");
+  (data || []).forEach((t) => NOMS_TYPES[t.numero] = t.nom);
+  await chargerListe();
+  rendre();
+}
+
+// ---------------------------------------------------------------- connexion
+
+$("co-btn").addEventListener("click", async () => {
+  $("co-err").textContent = "";
+  const { error } = await sb.auth.signInWithPassword({ email: $("co-email").value.trim(), password: $("co-mdp").value });
+  if (error) { $("co-err").textContent = "Identifiants incorrects."; return; }
+  demarrer();
+});
+$("co-mdp").addEventListener("keydown", (e) => { if (e.key === "Enter") $("co-btn").click(); });
+$("co-oubli").addEventListener("click", async () => {
+  const em = $("co-email").value.trim();
+  if (!em) { $("co-err").textContent = "Indiquez d'abord votre adresse."; return; }
+  await sb.auth.resetPasswordForEmail(em, { redirectTo: location.origin });
+  $("co-err").textContent = "Si ce compte existe, un lien vient de partir.";
+});
+$("deconnexion").addEventListener("click", async () => { await sb.auth.signOut(); location.reload(); });
+
+// ---------------------------------------------------- retour d'un lien de reset
+//
+// Le lien de reinitialisation ouvre une session valide. Sans cet ecran, on
+// serait connecte sans jamais avoir choisi de mot de passe, donc bloque au
+// prochain retour. La detection se fait sur le fragment d'adresse, avant toute
+// attente, sinon le demarrage normal prend la main le premier.
+const enRecuperation = /(^|[#&])type=recovery(&|$)/.test(location.hash || "");
+
+function montrerRecuperation() {
+  $("connexion").style.display = "none";
+  $("app").style.display = "none";
+  $("recuperation").style.display = "flex";
+}
+
+$("rec-btn").addEventListener("click", async () => {
+  const a = $("rec-mdp").value, b = $("rec-mdp2").value;
+  $("rec-err").textContent = "";
+  if (a.length < 8) { $("rec-err").textContent = "Huit caractères au minimum."; return; }
+  if (a !== b) { $("rec-err").textContent = "Les deux saisies diffèrent."; return; }
+  $("rec-btn").disabled = true;
+  const { error } = await sb.auth.updateUser({ password: a });
+  if (error) { $("rec-err").textContent = error.message; $("rec-btn").disabled = false; return; }
+  history.replaceState(null, "", location.pathname);
+  $("recuperation").style.display = "none";
+  toast("Mot de passe enregistré");
+  demarrer();
+});
+
+(async () => {
+  if (enRecuperation) { montrerRecuperation(); return; }
+  const { data } = await sb.auth.getSession();
+  if (data.session) demarrer();
+})();
+</script>
+</body>
+</html>

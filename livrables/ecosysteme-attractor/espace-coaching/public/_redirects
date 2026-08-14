@@ -1,0 +1,19 @@
+# Espace Coaching - routage
+#
+# Ce fichier ne contient volontairement AUCUNE regle.
+#
+# Pourquoi. Le questionnaire est servi par le fichier « q.html », que
+# Cloudflare Pages rend directement sur « /q » avec un code 200. Une regle
+# « /q  /q/index.html  200 » produirait l'effet inverse de celui recherche :
+# Pages transforme toute reecriture vers un fichier .html en redirection 308
+# vers l'adresse propre, ce qui ajoute un saut sur le lien qu'on envoie a une
+# personne accompagnee. Mesure sur ce projet : avec la regle, « /q » repondait
+# 308 ; sans elle, il repond 200.
+#
+# NE JAMAIS AJOUTER D'ATTRAPE-TOUT « /:slug » ICI. Une regle generique est
+# evaluee AVANT le routage naturel de Pages, donc elle capture toute adresse
+# non declaree. Sur le site de demonstration, un attrape-tout a tue un lien
+# de closing pendant cinq jours sans que personne ne s'en apercoive.
+#
+# Et toujours tester l'adresse SANS sa barre oblique finale : c'est la forme
+# qu'on ecrit a la main dans un message, donc celle que la personne recoit.

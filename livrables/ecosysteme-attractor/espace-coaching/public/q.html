@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Votre questionnaire · Accompagnement Mr Attractor</title>
+<style>
+:root{
+  --ink:#16181C; --ink-2:#4A4F57; --muted:#8A8F97;
+  --creme:#FAF7F2; --white:#FFFFFF; --sable:#E4DED4;
+  --accent:#B85C2A; --accent-d:#98481F; --accent-bg:#FBF1EA;
+  --vert:#2F7A4F; --vert-bg:#EAF4EE;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:var(--font); color:var(--ink); background:var(--creme);
+  line-height:1.55; min-height:100vh; overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{
+  max-width:620px; margin:0 auto; padding:24px 16px 48px;
+  min-height:100vh; display:flex; flex-direction:column;
+}
+
+/* ---------- bandeau ---------- */
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}
+.logo{font-size:17px;font-weight:800;letter-spacing:-.01em}
+.logo span{color:var(--accent)}
+.etat{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.etat.attente{color:var(--accent-d)}
+.etat i{width:8px;height:8px;border-radius:50%;background:var(--vert);display:inline-block;flex:none}
+.etat.attente i{background:var(--accent)}
+
+.progwrap{margin-bottom:24px}
+.prog{height:6px;background:var(--sable);border-radius:6px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+.prog-lab{font-size:12px;color:var(--muted);margin-top:8px;display:flex;justify-content:space-between}
+
+/* ---------- blocs ---------- */
+.vue{flex:1;display:flex;flex-direction:column;justify-content:center}
+.centre{text-align:center;margin:auto 0}
+h1{font-size:26px;line-height:1.22;margin-bottom:16px;letter-spacing:-.01em}
+h2{font-size:21px;line-height:1.25;margin-bottom:12px}
+p{color:var(--ink-2);font-size:15.5px;margin-bottom:16px}
+p.fin{margin-bottom:0}
+.rappel{
+  background:var(--white); border:1px solid var(--sable); border-radius:14px;
+  padding:16px; text-align:left; margin:24px 0;
+}
+.rappel h3{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px}
+.rappel ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.rappel li{position:relative;padding-left:20px;font-size:14.5px;color:var(--ink-2)}
+.rappel li::before{content:"";position:absolute;left:2px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+
+/* ---------- l'affirmation ---------- */
+.numero{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.aff{font-size:19px;line-height:1.4;font-weight:600;margin-bottom:24px}
+.choix{display:flex;flex-direction:column;gap:8px}
+.ch{
+  display:flex; align-items:center; gap:12px;
+  min-height:56px; padding:12px 16px;
+  border:1.5px solid var(--sable); border-radius:12px; background:var(--white);
+  font-size:16px; font-weight:600; font-family:inherit; color:var(--ink);
+  text-align:left; cursor:pointer; transition:border-color .12s, background .12s; width:100%;
+  -webkit-tap-highlight-color:transparent;
+}
+/* Le survol n'existe que sur un appareil qui a un pointeur.
+   Sur un ecran tactile, le navigateur garde l'etat de survol sur le dernier
+   element touche : le bouton suivant, recree a la meme position, heritait du
+   cadre. Sur 135 affirmations, cela cree un point d'ancrage visuel qui pousse
+   a recliquer la meme reponse. Ce n'est pas un defaut d'apparence, c'est un
+   biais de mesure. */
+@media (hover:hover) and (pointer:fine){
+  .ch:hover{border-color:var(--accent)}
+}
+.ch.on{border-color:var(--accent);background:var(--accent-bg);color:var(--accent-d)}
+.ch:focus{outline:none}
+.ch:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ch .pastille{
+  width:26px;height:26px;border-radius:50%;border:2px solid var(--sable);
+  display:flex;align-items:center;justify-content:center;flex:none;
+  font-size:13px;font-weight:800;color:var(--muted);transition:.12s;
+}
+.ch.on .pastille{border-color:var(--accent);background:var(--accent);color:#fff}
+
+.nav{display:flex;align-items:center;gap:12px;margin-top:24px}
+.retour{
+  background:none;border:none;color:var(--muted);font-weight:700;font-size:14px;
+  font-family:inherit;cursor:pointer;padding:12px 8px;min-height:44px;
+}
+.retour:hover{color:var(--ink)}
+.btn{
+  border:none;border-radius:12px;padding:16px 24px;min-height:52px;
+  font-size:16px;font-weight:800;font-family:inherit;color:#fff;background:var(--accent);
+  cursor:pointer;transition:background .12s;
+}
+.btn:hover{background:var(--accent-d)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.large{width:100%;max-width:320px;margin:0 auto;display:block}
+.btn.fantome{background:none;color:var(--ink-2);border:1.5px solid var(--sable);font-weight:700}
+.btn.fantome:hover{background:var(--white);border-color:var(--muted)}
+
+/* ---------- etats ---------- */
+.rond{
+  width:64px;height:64px;border-radius:50%;background:var(--vert-bg);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 20px;
+}
+.rond svg{width:30px;height:30px;stroke:var(--vert);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.rond.alerte{background:var(--accent-bg)}
+.rond.alerte svg{stroke:var(--accent-d)}
+.spin{
+  width:38px;height:38px;border:3px solid var(--sable);border-top-color:var(--accent);
+  border-radius:50%;margin:0 auto 16px;animation:tourne 1s linear infinite;
+}
+@keyframes tourne{to{transform:rotate(360deg)}}
+.alerte-bloc{
+  background:var(--accent-bg);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;
+  padding:14px 16px;text-align:left;font-size:14.5px;color:var(--ink-2);margin:16px 0;
+}
+.jalon{
+  display:inline-block;padding:6px 14px;border-radius:20px;background:var(--accent-bg);
+  color:var(--accent-d);font-size:12px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase;margin-bottom:16px;
+}
+#v-pause h2{margin-bottom:12px}
+#v-pause p{max-width:420px;margin-left:auto;margin-right:auto;margin-bottom:24px}
+.pied{text-align:center;font-size:12px;color:var(--muted);margin-top:32px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="logo">Mr <span>Attractor</span></div>
+    <div class="etat" id="etat" style="display:none"><i></i><span id="etat-txt">enregistré</span></div>
+  </div>
+
+  <div class="progwrap" id="progwrap" style="display:none">
+    <div class="prog"><i id="prog"></i></div>
+    <div class="prog-lab">
+      <span id="prog-lab"></span>
+      <span id="prog-reste"></span>
+    </div>
+  </div>
+
+  <!-- chargement -->
+  <div class="centre vue" id="v-chargement">
+    <div class="spin"></div>
+    <p>Un instant, on ouvre votre questionnaire.</p>
+  </div>
+
+  <!-- accueil -->
+  <div class="centre vue" id="v-accueil" style="display:none">
+    <h1>Bonjour <span id="prenom"></span>, voici la première étape.</h1>
+    <p>Ce questionnaire sert à mieux comprendre votre façon de fonctionner, avant notre première séance. Il n'y a pas de bonne réponse, et il n'y a pas de note.</p>
+    <div class="rappel">
+      <h3>Avant de commencer</h3>
+      <ul>
+        <li><strong>135 affirmations</strong>, comptez une vingtaine de minutes.</li>
+        <li>Répondez <strong>spontanément</strong>. La première réaction est la plus juste, l'analyse la fausse.</li>
+        <li>Vos réponses sont <strong>enregistrées au fur et à mesure</strong>. Vous pouvez fermer et reprendre plus tard sur ce même lien.</li>
+        <li>Le résultat ne s'affiche pas ici. <strong>On le regarde ensemble en séance</strong>, c'est le sens de l'exercice.</li>
+      </ul>
+    </div>
+    <button class="btn large" id="b-commencer">Commencer</button>
+  </div>
+
+  <!-- une affirmation -->
+  <div class="vue" id="v-item" style="display:none">
+    <div class="numero" id="num"></div>
+    <div class="aff" id="aff"></div>
+    <div class="choix" id="choix"></div>
+    <div class="nav">
+      <button class="retour" id="b-retour" type="button">&larr; Précédente</button>
+      <button class="btn" id="b-suivant" type="button" style="flex:1">Suivante</button>
+    </div>
+  </div>
+
+  <!-- pause d'etape -->
+  <div class="centre vue" id="v-pause" style="display:none">
+    <div class="jalon" id="pause-jalon"></div>
+    <h2 id="pause-titre"></h2>
+    <p id="pause-texte"></p>
+    <button class="btn large" id="b-continuer">Je continue</button>
+  </div>
+
+  <!-- recapitulatif avant validation -->
+  <div class="centre vue" id="v-recap" style="display:none">
+    <div class="rond"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <h2>Vous avez répondu aux 135 affirmations.</h2>
+    <p>Vous pouvez encore revenir en arrière pour modifier une réponse. Une fois validé, le questionnaire se ferme et ce lien ne servira plus.</p>
+    <div id="recap-alerte"></div>
+    <button class="btn large" id="b-valider" style="margin-bottom:12px">Je valide mes réponses</button>
+    <button class="btn fantome large" id="b-relire">Revenir sur mes réponses</button>
+  </div>
+
+  <!-- termine -->
+  <div class="centre vue" id="v-fini" style="display:none">
+    <div class="rond"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <h2>C'est enregistré, merci.</h2>
+    <p>Mac Arthur prépare son analyse avant votre première séance. Vous n'avez rien d'autre à faire d'ici là.</p>
+    <p class="fin">Le résultat ne s'affiche pas sur cet écran, et ce n'est pas un oubli : un profil se restitue de vive voix, avec ses nuances, jamais sous forme de chiffres à interpréter seul.</p>
+  </div>
+
+  <!-- deja rempli -->
+  <div class="centre vue" id="v-deja" style="display:none">
+    <div class="rond"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <h2>Ce questionnaire est déjà rempli.</h2>
+    <p>Vos réponses sont bien arrivées. Il n'y a rien à refaire.</p>
+    <p class="fin">Si vous pensez qu'il y a une erreur, écrivez simplement à Mac Arthur.</p>
+  </div>
+
+  <!-- lien invalide -->
+  <div class="centre vue" id="v-erreur" style="display:none">
+    <div class="rond alerte"><svg viewBox="0 0 24 24"><path d="M12 8v5"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg></div>
+    <h2>Ce lien ne fonctionne pas.</h2>
+    <p id="err-txt">Il a peut-être expiré, ou il a été recopié incomplet. Les liens sont longs, et ils se coupent facilement dans un message.</p>
+    <p class="fin">Le plus simple est de demander à Mac Arthur de vous le renvoyer.</p>
+  </div>
+
+  <div class="pied">
+    Vos réponses ne sont lues que par votre accompagnant.<br>
+    Agence Mr Attractor
+  </div>
+</div>
+
+<script>
+const SB_URL = "https://lgdgbrivnhgeupqhkckd.supabase.co";
+const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
+
+const NOTES = [
+  { v: 0, t: "Jamais vrai" },
+  { v: 1, t: "Parfois vrai" },
+  { v: 2, t: "Souvent vrai" },
+  { v: 3, t: "Toujours vrai" }
+];
+
+// Quatre pauses, tous les 27 items, soit cinq blocs egaux.
+//
+// Elles ne sont pas decoratives. Sur un questionnaire long, ce qui se degrade
+// n'est pas la motivation mais la spontaneite : on commence a reflechir, a se
+// relire, a vouloir etre coherent avec ce qu'on a repondu plus haut. Chaque
+// pause remet une consigne de qualite au moment ou elle se perd.
+const PAUSES = [
+  {
+    apres: 27,
+    jalon: "Un cinquième de fait",
+    titre: "Vous êtes lancée.",
+    texte: "Un conseil qui vaut pour tout le reste : la première réaction est presque toujours la plus juste. Dès qu'on s'arrête pour peser une affirmation, on répond un peu à côté de soi."
+  },
+  {
+    apres: 54,
+    jalon: "54 sur 135",
+    titre: "Il n'y a pas de bonne réponse.",
+    texte: "Personne d'autre que nous deux ne verra ces réponses. Répondez pour ce que vous êtes, pas pour ce que vous aimeriez être : c'est ce qui rendra la restitution vraiment utile."
+  },
+  {
+    apres: 81,
+    jalon: "Plus de la moitié",
+    titre: "Certaines affirmations vont se ressembler.",
+    texte: "C'est voulu. Elles explorent la même chose sous un autre angle. Ne cherchez pas à rester cohérente avec ce que vous avez répondu plus haut, répondez simplement à celle que vous avez sous les yeux."
+  },
+  {
+    apres: 108,
+    jalon: "Il en reste 27",
+    titre: "Dernière ligne droite.",
+    texte: "Si la fatigue arrive, arrêtez-vous et revenez plus tard. Tout est gardé. Vingt affirmations remplies distraitement valent moins que rien du tout."
+  }
+];
+
+const $ = (id) => document.getElementById(id);
+
+// Le jeton est dans l'adresse. Pas de mot de passe : le lien vaut l'acces,
+// donc on ne l'affiche jamais et on ne le met jamais dans un titre de page.
+const JETON = new URLSearchParams(location.search).get("j") || "";
+
+let ITEMS = [];        // [{numero, texte}]
+let REPONSES = {};     // { "12": 2 }
+let position = 0;      // index dans ITEMS
+let enAttente = [];    // reponses pas encore parties vers le serveur
+let envoiEnCours = false;
+let pausesVues = [];   // pour ne jamais reafficher une pause deja passee
+
+// Cache local : une reponse saisie ne doit jamais dependre du reseau pour
+// survivre. La clientele se connecte en 4G ou en itinerance, et une coupure
+// au 90e item ne doit pas coûter les 89 precedents.
+const CLE_LOCALE = "pm-q-" + JETON.slice(-12);
+function lireCacheLocal() {
+  try { return JSON.parse(localStorage.getItem(CLE_LOCALE) || "{}"); } catch (e) { return {}; }
+}
+function ecrireCacheLocal() {
+  try { localStorage.setItem(CLE_LOCALE, JSON.stringify({ reponses: REPONSES, attente: enAttente, pauses: pausesVues })); } catch (e) {}
+}
+
+async function rpc(fonction, corps) {
+  const r = await fetch(SB_URL + "/rest/v1/rpc/" + fonction, {
+    method: "POST",
+    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify(corps)
+  });
+  const texte = await r.text();
+  let donnees = null;
+  try { donnees = texte ? JSON.parse(texte) : null; } catch (e) { donnees = null; }
+  if (!r.ok) {
+    const err = new Error((donnees && (donnees.message || donnees.hint)) || "erreur reseau");
+    err.statut = r.status;
+    throw err;
+  }
+  return donnees;
+}
+
+function montrer(vue) {
+  ["v-chargement", "v-accueil", "v-item", "v-pause", "v-recap", "v-fini", "v-deja", "v-erreur"]
+    .forEach((id) => { $(id).style.display = "none"; });
+  $(vue).style.display = vue === "v-item" ? "flex" : (vue.startsWith("v-") ? "" : "");
+  const enCours = vue === "v-item";
+  $("progwrap").style.display = enCours ? "" : "none";
+  $("etat").style.display = enCours ? "" : "none";
+  if (!enCours) window.scrollTo({ top: 0 });
+}
+
+function majEtat() {
+  const attente = enAttente.length;
+  $("etat").className = "etat" + (attente ? " attente" : "");
+  $("etat-txt").textContent = attente ? "en attente de réseau" : "enregistré";
+}
+
+function nbRepondues() { return Object.keys(REPONSES).length; }
+
+function majProgression() {
+  const n = nbRepondues();
+  $("prog").style.width = (n / ITEMS.length * 100) + "%";
+  $("prog-lab").textContent = "Affirmation " + (position + 1) + " sur " + ITEMS.length;
+  const reste = ITEMS.length - n;
+  $("prog-reste").textContent = reste === 0 ? "toutes remplies" : reste + " à remplir";
+}
+
+function afficherItem() {
+  const item = ITEMS[position];
+  if (!item) return;
+  montrer("v-item");
+  majProgression();
+  majEtat();
+  $("num").textContent = "Affirmation " + item.numero;
+  $("aff").textContent = item.texte;
+
+  const choisie = REPONSES[item.numero];
+  $("choix").innerHTML = "";
+  NOTES.forEach((n) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "ch" + (choisie === n.v ? " on" : "");
+    const pastille = document.createElement("span");
+    pastille.className = "pastille";
+    pastille.textContent = String(n.v);
+    const libelle = document.createElement("span");
+    libelle.textContent = n.t;
+    b.appendChild(pastille);
+    b.appendChild(libelle);
+    b.addEventListener("click", () => repondre(item.numero, n.v));
+    $("choix").appendChild(b);
+  });
+
+  $("b-retour").style.visibility = position === 0 ? "hidden" : "visible";
+  $("b-suivant").disabled = choisie === undefined;
+  $("b-suivant").textContent = position === ITEMS.length - 1 ? "Terminer" : "Suivante";
+}
+
+function repondre(numero, note) {
+  REPONSES[numero] = note;
+  if (!enAttente.some((e) => e.numero === numero)) enAttente.push({ numero, note });
+  else enAttente.find((e) => e.numero === numero).note = note;
+  ecrireCacheLocal();
+  afficherItem();
+  vider();
+  // On avance seul : sur 135 affirmations, un clic de plus par question
+  // fait 135 clics de plus, et c'est la que les gens abandonnent.
+  setTimeout(avancer, 220);
+}
+
+function avancer() {
+  // Une pause s'intercale entre deux affirmations, jamais a la place d'une
+  // reponse : on ne la voit qu'en avancant, et une seule fois.
+  const suivante = position + 1;
+  const pause = PAUSES.find((p) => p.apres === suivante && !pausesVues.includes(p.apres));
+  if (pause && suivante < ITEMS.length && nbRepondues() >= pause.apres) { afficherPause(pause); return; }
+
+  if (position < ITEMS.length - 1) { position++; afficherItem(); }
+  else if (nbRepondues() === ITEMS.length) afficherRecap();
+  else { position = ITEMS.findIndex((i) => REPONSES[i.numero] === undefined); afficherItem(); }
+}
+
+function afficherPause(p) {
+  montrer("v-pause");
+  $("pause-jalon").textContent = p.jalon;
+  $("pause-titre").textContent = p.titre;
+  $("pause-texte").textContent = p.texte;
+  $("b-continuer").onclick = () => {
+    if (!pausesVues.includes(p.apres)) pausesVues.push(p.apres);
+    ecrireCacheLocal();
+    position++;
+    afficherItem();
+  };
+}
+
+function reculer() { if (position > 0) { position--; afficherItem(); } }
+
+// File d'envoi. Les reponses partent une par une, et une panne de reseau
+// ne fait que differer l'envoi, jamais perdre la reponse.
+async function vider() {
+  if (envoiEnCours || !enAttente.length) return;
+  envoiEnCours = true;
+  while (enAttente.length) {
+    const e = enAttente[0];
+    try {
+      await rpc("pm_questionnaire_repondre", { p_jeton: JETON, p_item: e.numero, p_note: e.note });
+      enAttente.shift();
+      ecrireCacheLocal();
+      majEtat();
+    } catch (err) {
+      if (err.statut === 400) { enAttente.shift(); ecrireCacheLocal(); continue; }
+      break; // reseau : on garde la file et on reessaiera
+    }
+  }
+  envoiEnCours = false;
+  majEtat();
+}
+
+function afficherRecap() {
+  montrer("v-recap");
+  $("recap-alerte").innerHTML = "";
+  if (enAttente.length) {
+    const d = document.createElement("div");
+    d.className = "alerte-bloc";
+    d.textContent = enAttente.length + " réponse(s) n'ont pas encore pu être envoyées. Vérifiez votre connexion, elles partiront toutes seules.";
+    $("recap-alerte").appendChild(d);
+  }
+  $("b-valider").disabled = enAttente.length > 0;
+}
+
+async function valider() {
+  $("b-valider").disabled = true;
+  $("b-valider").textContent = "Envoi en cours…";
+  await vider();
+  if (enAttente.length) {
+    afficherRecap();
+    $("b-valider").textContent = "Je valide mes réponses";
+    return;
+  }
+  try {
+    await rpc("pm_questionnaire_valider", { p_jeton: JETON });
+    try { localStorage.removeItem(CLE_LOCALE); } catch (e) {}
+    montrer("v-fini");
+  } catch (err) {
+    $("b-valider").disabled = false;
+    $("b-valider").textContent = "Je valide mes réponses";
+    const d = document.createElement("div");
+    d.className = "alerte-bloc";
+    d.textContent = "La validation n'est pas passée. Vos réponses sont bien enregistrées, réessayez dans un instant.";
+    $("recap-alerte").appendChild(d);
+  }
+}
+
+async function demarrer() {
+  if (!JETON) { montrer("v-erreur"); return; }
+
+  let etat;
+  try {
+    etat = await rpc("pm_questionnaire_etat", { p_jeton: JETON });
+  } catch (err) {
+    montrer("v-erreur");
+    return;
+  }
+
+  if (etat.statut === "rempli") { montrer("v-deja"); return; }
+
+  ITEMS = (etat.items || []).slice().sort((a, b) => a.numero - b.numero);
+  REPONSES = {};
+  Object.keys(etat.reponses || {}).forEach((k) => { REPONSES[Number(k)] = etat.reponses[k]; });
+
+  // Ce que le serveur ignore encore, parce que le reseau a lache la
+  // derniere fois, est repris du cache local et renvoye tout de suite.
+  const cache = lireCacheLocal();
+  (cache.attente || []).forEach((e) => {
+    if (REPONSES[e.numero] === undefined) {
+      REPONSES[e.numero] = e.note;
+      enAttente.push(e);
+    }
+  });
+  pausesVues = Array.isArray(cache.pauses) ? cache.pauses : [];
+
+  $("prenom").textContent = etat.prenom || "";
+  const n = nbRepondues();
+  position = n === 0 ? 0 : Math.max(0, ITEMS.findIndex((i) => REPONSES[i.numero] === undefined));
+  if (position < 0) position = ITEMS.length - 1;
+
+  if (n === 0) {
+    montrer("v-accueil");
+  } else if (n === ITEMS.length) {
+    afficherRecap();
+  } else {
+    // Reprise en cours de route : on repart la ou la personne s'est arretee,
+    // sans lui refaire lire l'ecran d'accueil.
+    afficherItem();
+  }
+  vider();
+}
+
+$("b-commencer").addEventListener("click", () => { position = 0; afficherItem(); });
+$("b-retour").addEventListener("click", reculer);
+$("b-suivant").addEventListener("click", avancer);
+$("b-valider").addEventListener("click", valider);
+$("b-relire").addEventListener("click", () => { position = 0; afficherItem(); });
+
+window.addEventListener("online", vider);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) vider(); });
+
+demarrer();
+</script>
+</body>
+</html>
