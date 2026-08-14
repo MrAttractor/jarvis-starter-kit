@@ -170,12 +170,17 @@ const NABY = {
      Sans logo, un emplacement au nom du partenaire s'affiche.
 
      N'apparaissent ici QUE les structures dont Nabintou a
-     coché l'accord d'affichage. Deux sont volontairement
-     absentes tant que l'accord n'est pas confirmé :
+     coché l'accord d'affichage. Une reste volontairement
+     absente tant que l'accord n'est pas confirmé :
        - GAB Île-de-France (case laissée vide)
-       - EE (« demander au président »)
+
+     principal: true met le partenaire seul en tête de bande,
+     dans un cadre plus grand. Un seul à la fois.
+     Entrepreneurs Engagés : accord du président obtenu le
+     13/08/2026, confirmé par Mac Arthur.
   --------------------------------------------------------- */
   partenaires: [
+    { nom: 'Entrepreneurs Engagés', logo: 'assets/partenaires/entrepreneurs-engages.png', principal: true },
     { nom: 'Mairie du 20e', logo: 'assets/partenaires/mairie-20e.jpg' },
     { nom: 'Linkee', logo: 'assets/partenaires/linkee.png' },
     { nom: 'Mairie de Villejuif · Ferme Urbaine', logo: A_FOURNIR },

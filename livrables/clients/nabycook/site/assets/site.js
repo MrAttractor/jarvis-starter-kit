@@ -233,9 +233,15 @@
     var boite = document.createElement('div');
     boite.className = 'logos';
 
-    NABY.partenaires.forEach(function (p) {
+    // Le partenaire marque « principal » passe devant et occupe seul la
+    // premiere ligne de la bande. L'ordre des autres n'est pas touche.
+    var liste = NABY.partenaires.slice().sort(function (a, b) {
+      return (b.principal ? 1 : 0) - (a.principal ? 1 : 0);
+    });
+
+    liste.forEach(function (p) {
       var slotP = document.createElement('div');
-      slotP.className = 'logo-slot';
+      slotP.className = p.principal ? 'logo-slot logo-principal' : 'logo-slot';
 
       // Sans logo, on affiche le nom dans un cadre plein : c'est un
       // parti pris assume, pas un emplacement en attente. Le pointille
@@ -251,7 +257,7 @@
       var img = document.createElement('img');
       img.setAttribute('alt', p.nom);
       img.setAttribute('loading', 'lazy');
-      img.style.maxHeight = '56px';
+      img.style.maxHeight = p.principal ? '72px' : '56px';
       img.style.maxWidth = '100%';
       img.style.width = 'auto';
       img.addEventListener('error', nom);
@@ -898,7 +904,22 @@
         textes();
       }
       if (pa.length) {
-        NABY.partenaires = pa.map(function (e) { return { nom: e.nom, logo: e.logo }; });
+        // La base ne connait pas la notion de partenaire principal : c'est un
+        // choix editorial, pas une donnee que Nabintou saisit. On le reporte
+        // donc par correspondance de nom depuis config.js, sinon la mise en
+        // tete disparaitrait silencieusement des qu'elle ajoute un partenaire
+        // depuis son espace.
+        var enTete = {};
+        (NABY.partenaires || []).forEach(function (p) {
+          if (p.principal) enTete[String(p.nom).trim().toLowerCase()] = true;
+        });
+        NABY.partenaires = pa.map(function (e) {
+          return {
+            nom: e.nom,
+            logo: e.logo,
+            principal: enTete[String(e.nom || '').trim().toLowerCase()] === true,
+          };
+        });
         partenaires();
       }
       if (te.length) {
