@@ -33,6 +33,32 @@ C'est une app de l'écosystème ATTRACTOR, pas une commande client.
 Projet Cloudflare Pages dédié `livraisonpro`, branche `main`, sous-domaine branché chez
 GoDaddy. Backend Supabase partagé, tables `lp_`.
 
+### Comment on déploie, et pourquoi pas autrement
+
+**Ne jamais déployer le dossier entier.** Jusqu'au 12/08/2026, c'est ce qui était fait,
+et le résultat était que **cette fiche était publiquement lisible en ligne**, avec le nom
+du commercial et l'historique de la panne, en même temps que toutes les migrations SQL.
+Personne ne l'avait vu, parce que personne ne va chercher une adresse qu'on n'a pas
+publiée.
+
+On copie donc les seuls fichiers publics dans un dossier temporaire, et c'est lui qu'on
+envoie :
+
+```
+index.html · app.html · 404.html · manifest.json
+css/ · js/ · img/ · deck/ · pitch/
+```
+
+Restent à terre : `DOSSIER.md`, `supabase/`, `vercel.json`, `.vercel/`, `.gitignore`.
+
+```
+npx wrangler pages deploy <dossier-temporaire> --project-name=livraisonpro --branch=main --commit-dirty=true
+```
+
+Puis `node scripts/controle.mjs --dossier livrables/ecosysteme-attractor/livraisonpro
+--site https://livraisonpro.agenceattractor.com`, qui vérifie entre autres qu'aucun
+fichier interne n'est servi.
+
 **Le support terrain est pensé pour le commercial** : il se feuillette sur mobile, montre
 les deux côtés (marchand et livreur), déroule un cas pratique, et **capte l'avis à chaud**
 dans `lp_feedback` avec notification email. Le paramètre `?c=<commercial>` permet

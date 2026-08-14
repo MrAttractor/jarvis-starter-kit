@@ -390,7 +390,7 @@ async function toggleDispo() {
   currentUser.disponible = newVal;
   localStorage.setItem('lp_user', JSON.stringify(currentUser));
   updateDispoBtn();
-  await api({ action: 'updateDispo', userId: currentUser.id, disponible: newVal });
+  await api({ action: 'updateDispo', userId: currentUser.id, tel: currentUser.tel, disponible: newVal });
   toast(newVal ? 'Vous êtes maintenant disponible' : 'Vous êtes maintenant indisponible', newVal ? 'vt' : '');
 }
 

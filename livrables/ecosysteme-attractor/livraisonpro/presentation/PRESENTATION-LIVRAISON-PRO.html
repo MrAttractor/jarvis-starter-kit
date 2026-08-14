@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Livraison Pro · Présentation</title>
+<style>
+/* Format A5. C'est le compromis assumé : ça se lit sur un téléphone sans
+   pincer pour zoomer, et ça s'imprime vraiment, deux pages par feuille A4.
+   Le commercial montre l'un ou laisse l'autre. */
+@page { size: 148mm 210mm; margin: 0; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  color:#1A1714; font-size:11pt; line-height:1.45;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact;
+}
+.p{
+  width:148mm; height:210mm; padding:16mm 14mm;
+  page-break-after:always; break-after:page;
+  display:flex; flex-direction:column; background:#FAF6F0; position:relative;
+}
+.p:last-child{page-break-after:auto}
+.p.sombre{background:#1A1714;color:#FAF6F0}
+.corps{flex:1}
+
+.kicker{
+  font-size:8pt; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
+  color:#F25C05; margin-bottom:5mm;
+}
+.p.sombre .kicker{color:#FF7A30}
+h1{font-size:26pt;line-height:1.06;font-weight:800;letter-spacing:-.02em;margin-bottom:5mm}
+h2{font-size:17pt;line-height:1.14;font-weight:800;letter-spacing:-.01em;margin-bottom:4mm}
+.lead{font-size:12pt;line-height:1.5;color:#4A3F35}
+.p.sombre .lead{color:#D8D0C5}
+.or{color:#F25C05}
+.vt{color:#009A44}
+
+.carte{
+  background:#fff;border:.4pt solid #E8E2DA;border-radius:4mm;
+  padding:4mm 4.5mm;margin-top:3mm;display:flex;gap:4mm;align-items:flex-start;
+}
+.p.sombre .carte{background:#2A2420;border-color:rgba(255,255,255,.08)}
+.carte .ic{width:9mm;height:9mm;border-radius:2.4mm;flex:none;display:flex;align-items:center;justify-content:center}
+.carte .ic.o{background:rgba(242,92,5,.12)}
+.carte .ic.v{background:#D4F5E2}
+.carte .ic svg{width:5mm;height:5mm;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.carte .ic.o svg{stroke:#D94F02}
+.carte .ic.v svg{stroke:#007A35}
+.carte b{font-size:11.5pt;display:block;margin-bottom:.8mm}
+.carte p{font-size:9.5pt;color:#6B6055;line-height:1.4}
+.p.sombre .carte p{color:#A79C90}
+
+.chiffres{display:flex;gap:3mm;margin-top:6mm}
+.ch{flex:1;background:#fff;border:.4pt solid #E8E2DA;border-radius:3.5mm;padding:4mm 2mm;text-align:center}
+.ch .n{font-size:16pt;font-weight:800;color:#F25C05;line-height:1}
+.ch.v .n{color:#009A44}
+.ch .l{font-size:8pt;color:#6B6055;margin-top:1.5mm;line-height:1.3}
+
+.etapes{margin-top:2mm}
+.et{display:flex;gap:4mm;padding:3mm 0;border-bottom:.4pt solid #E8E2DA}
+.et:last-child{border:none}
+.et .n{
+  width:7.5mm;height:7.5mm;border-radius:50%;background:#F25C05;color:#fff;
+  font-weight:800;font-size:10pt;display:flex;align-items:center;justify-content:center;flex:none;
+}
+.et.v .n{background:#009A44}
+.et b{font-size:11pt;display:block}
+.et p{font-size:9.5pt;color:#6B6055;line-height:1.4}
+
+table{width:100%;border-collapse:collapse;font-size:10pt;margin-top:3mm}
+th,td{padding:2.4mm 2mm;border-bottom:.4pt solid #E8E2DA;text-align:left}
+th{font-size:8pt;text-transform:uppercase;letter-spacing:.06em;color:#9C9189;font-weight:800}
+td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+
+.zones{display:flex;flex-wrap:wrap;gap:2mm;margin-top:3mm}
+.zone{background:#fff;border:.4pt solid #E8E2DA;border-radius:20mm;padding:1.6mm 3.5mm;font-size:9pt}
+.p.sombre .zone{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
+
+.lien{
+  background:#F25C05;color:#fff;border-radius:4mm;padding:5mm;text-align:center;margin-top:5mm;
+}
+.lien .u{font-size:13pt;font-weight:800;letter-spacing:-.01em;word-break:break-all}
+.lien .s{font-size:9pt;opacity:.9;margin-top:1.5mm}
+a{color:inherit;text-decoration:none}
+
+.pied{
+  flex:none;font-size:7.5pt;color:#9C9189;padding-top:4mm;
+  border-top:.4pt solid #E8E2DA;display:flex;justify-content:space-between;
+}
+.p.sombre .pied{color:#6B6055;border-color:rgba(255,255,255,.1)}
+.marque{font-weight:800;color:#1A1714}
+.p.sombre .marque{color:#FAF6F0}
+.note{font-size:8.5pt;color:#9C9189;line-height:1.45;margin-top:3mm}
+.p.sombre .note{color:#8A8078}
+</style>
+</head>
+<body>
+
+<!-- 1 -->
+<section class="p sombre" style="justify-content:center">
+  <div class="corps" style="display:flex;flex-direction:column;justify-content:center">
+    <div class="kicker">Abidjan · Côte d'Ivoire</div>
+    <h1>Livraison Pro</h1>
+    <p class="lead" style="font-size:14pt;margin-top:2mm">La livraison certifiée, entre marchands et livreurs vérifiés.</p>
+    <p class="lead" style="margin-top:6mm">Trouvez le bon livreur en deux minutes. Bon de livraison automatique. Tout est tracé.</p>
+    <div class="chiffres" style="margin-top:10mm">
+      <div class="ch" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1)">
+        <div class="n">12</div><div class="l" style="color:#A79C90">communes couvertes</div></div>
+      <div class="ch v" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1)">
+        <div class="n">1<span style="font-size:10pt"> mois</span></div><div class="l" style="color:#A79C90">gratuit pour démarrer</div></div>
+      <div class="ch" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1)">
+        <div class="n">2<span style="font-size:10pt"> min</span></div><div class="l" style="color:#A79C90">pour trouver un livreur</div></div>
+    </div>
+  </div>
+  <div class="pied"><span class="marque">Livraison Pro</span><span>1 / 8</span></div>
+</section>
+
+<!-- 2 -->
+<section class="p">
+  <div class="corps">
+    <div class="kicker">Le vrai problème</div>
+    <h2>La livraison, aujourd'hui, c'est la galère. Des deux côtés.</h2>
+    <div class="carte">
+      <div class="ic o"><svg viewBox="0 0 24 24"><path d="M3 9h18l-1.5 11a2 2 0 0 1-2 1.7H6.5a2 2 0 0 1-2-1.7z"/><path d="M8 9V6a4 4 0 0 1 8 0v3"/></svg></div>
+      <div><b>Côté marchand</b><p>Des livreurs qu'on ne connaît pas, des colis perdus, des litiges qui finissent en discussion sans preuve, et du temps passé au téléphone à courir après quelqu'un.</p></div>
+    </div>
+    <div class="carte">
+      <div class="ic v"><svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h6M6 17l3-8h6l3 8"/></svg></div>
+      <div><b>Côté livreur</b><p>Pas de clients réguliers, on court après le travail, et aucun moyen de prouver son sérieux à quelqu'un qui ne vous connaît pas encore.</p></div>
+    </div>
+    <p class="note">Le point commun des deux : personne ne peut faire confiance à quelqu'un dont il n'a aucune trace.</p>
+  </div>
+  <div class="pied"><span class="marque">Livraison Pro</span><span>2 / 8</span></div>
+</section>
+
+<!-- 3 -->
+<section class="p">
+  <div class="corps">
+    <div class="kicker">La solution</div>
+    <h2>Une place de marché qui relie <span class="or">marchands</span> et <span class="vt">livreurs vérifiés</span>, en direct.</h2>
+    <p class="lead">Chaque livreur est vérifié, pièce d'identité et photo, avant d'apparaître dans le catalogue. Le marchand choisit dans sa zone. Le bon de livraison se génère tout seul.</p>
+    <div class="carte">
+      <div class="ic v"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6z"/></svg></div>
+      <div><b>Pas d'intermédiaire</b><p>Le marchand parle directement au livreur. Livraison Pro sert à se trouver et à garder une trace, pas à s'interposer.</p></div>
+    </div>
+    <div class="carte">
+      <div class="ic o"><svg viewBox="0 0 24 24"><path d="M14 3v5h5"/><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M9 13h6M9 17h4"/></svg></div>
+      <div><b>Une preuve à chaque course</b><p>Prise en charge, trajet, remise du colis. Tout est enregistré, donc il n'y a plus de parole contre parole.</p></div>
+    </div>
+  </div>
+  <div class="pied"><span class="marque">Livraison Pro</span><span>3 / 8</span></div>
+</section>
+
+<!-- 4 -->
+<section class="p">
+  <div class="corps">
+    <div class="kicker" style="color:#009A44">Vous êtes marchand ou e-commerçant</div>
+    <h2>Trouvez un livreur disponible dans votre zone, maintenant.</h2>
+    <div class="carte">
+      <div class="ic v"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div>
+      <div><b>Des livreurs vérifiés</b><p>Pièce d'identité et photo contrôlées. Vous savez à qui vous confiez vos colis, et vous voyez sa zone de couverture.</p></div>
+    </div>
+    <div class="carte">
+      <div class="ic v"><svg viewBox="0 0 24 24"><path d="M14 3v5h5"/><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M9 15l2 2 4-4"/></svg></div>
+      <div><b>Bon de livraison automatique</b><p>Généré à chaque course, sans rien remplir. Une preuve pour vous, une preuve pour votre client.</p></div>
+    </div>
+    <div class="carte">
+      <div class="ic v"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6z"/></svg></div>
+      <div><b>Moins de litiges</b><p>Le suivi est tracé de la prise en charge à la remise. Quand un client réclame, vous avez la réponse.</p></div>
+    </div>
+  </div>
+  <div class="pied"><span class="marque">Livraison Pro</span><span>4 / 8</span></div>
+</section>
+
+<!-- 5 -->
+<section class="p">
+  <div class="corps">
+    <div class="kicker">Vous êtes livreur</div>
+    <h2>Fais-toi vérifier une fois, et laisse les clients venir à toi.</h2>
+    <div class="carte">
+      <div class="ic o"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg></div>
+      <div><b>Des clients qui te trouvent</b><p>Une fois vérifié, tu apparais dans le catalogue de ta zone. Ce sont les marchands qui te contactent.</p></div>
+    </div>
+    <div class="carte">
+      <div class="ic o"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"/></svg></div>
+      <div><b>Ton sérieux, prouvé</b><p>Le badge vérifié rassure quelqu'un qui ne te connaît pas. C'est souvent ce qui fait qu'on te choisit toi.</p></div>
+    </div>
+    <div class="carte">
+      <div class="ic o"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.8 1.8 0 0 1 0 3.6h-3a1.8 1.8 0 0 0 0 3.6h4"/></svg></div>
+      <div><b>Tu gardes ce que tu gagnes</b><p>Livraison Pro ne prend aucune commission sur tes courses. Tu t'arranges directement avec le marchand.</p></div>
+    </div>
+  </div>
+  <div class="pied"><span class="marque">Livraison Pro</span><span>5 / 8</span></div>
+</section>
+
+<!-- 6 -->
+<section class="p">
+  <div class="corps">
+    <div class="kicker">En pratique</div>
+    <h2>Une course, de bout en bout.</h2>
+    <div class="etapes">
+      <div class="et"><div class="n">1</div><div><b>Awa a un colis à livrer</b><p>Marchande à Cocody, elle ouvre Livraison Pro.</p></div></div>
+      <div class="et v"><div class="n">2</div><div><b>Elle voit les livreurs vérifiés</b><p>Ceux qui sont disponibles, dans sa zone, avec leur couverture.</p></div></div>
+      <div class="et"><div class="n">3</div><div><b>Kofi prend la course</b><p>Livreur vérifié en moto, disponible à Marcory.</p></div></div>
+      <div class="et v"><div class="n">4</div><div><b>Le bon de livraison se crée</b><p>Automatiquement, et le suivi démarre. Les deux sont couverts.</p></div></div>
+      <div class="et"><div class="n">5</div><div><b>Colis remis, preuve enregistrée</b><p>Rien à réclamer, rien à discuter. Course suivante.</p></div></div>
+    </div>
+  </div>
+  <div class="pied"><span class="marque">Livraison Pro</span><span>6 / 8</span></div>
+</section>
+
+<!-- 7 -->
+<section class="p">
+  <div class="corps">
+    <div class="kicker">Ce que ça coûte</div>
+    <h2>Le premier mois est gratuit, des deux côtés.</h2>
+    <table>
+      <tr><th>Ensuite</th><th style="text-align:right">Par mois</th></tr>
+      <tr><td>Livreur</td><td class="n">2 000 FCFA</td></tr>
+      <tr><td>Marchand ou e-commerçant</td><td class="n">3 000 FCFA</td></tr>
+    </table>
+    <p class="note" style="margin-top:4mm">Aucune commission n'est prélevée sur les courses. Le prix de la course se règle directement entre le marchand et le livreur.</p>
+
+    <h2 style="font-size:13pt;margin-top:7mm">Le barème indicatif d'une course</h2>
+    <table>
+      <tr><th>Distance</th><th style="text-align:right">Moto</th><th style="text-align:right">Voiture</th></tr>
+      <tr><td>Jusqu'à 3 km</td><td class="n">500 F</td><td class="n">1 000 F</td></tr>
+      <tr><td>Jusqu'à 7 km</td><td class="n">1 000 F</td><td class="n">1 800 F</td></tr>
+      <tr><td>Jusqu'à 15 km</td><td class="n">1 500 F</td><td class="n">2 500 F</td></tr>
+      <tr><td>Jusqu'à 25 km</td><td class="n">2 000 F</td><td class="n">3 500 F</td></tr>
+    </table>
+  </div>
+  <div class="pied"><span class="marque">Livraison Pro</span><span>7 / 8</span></div>
+</section>
+
+<!-- 8 -->
+<section class="p sombre">
+  <div class="corps">
+    <div class="kicker">Pour démarrer</div>
+    <h2>L'application s'ouvre dans le navigateur. Rien à installer.</h2>
+    <p class="lead">Vous vous inscrivez avec votre nom et votre numéro, vous choisissez votre côté, et c'est parti. Le premier mois ne coûte rien.</p>
+
+    <a class="lien" href="https://livraisonpro.agenceattractor.com">
+      <div class="u">livraisonpro.agenceattractor.com</div>
+      <div class="s">Tapez cette adresse dans votre navigateur</div>
+    </a>
+
+    <div class="kicker" style="margin-top:8mm">Zones couvertes</div>
+    <div class="zones">
+      <span class="zone">Cocody</span><span class="zone">Marcory</span><span class="zone">Plateau</span>
+      <span class="zone">Yopougon</span><span class="zone">Abobo</span><span class="zone">Adjamé</span>
+      <span class="zone">Koumassi</span><span class="zone">Port-Bouët</span><span class="zone">Treichville</span>
+      <span class="zone">Attécoubé</span><span class="zone">Bingerville</span><span class="zone">Songon</span>
+    </div>
+
+    <p class="note" style="margin-top:7mm">Livraison Pro démarre. Vous inscrire maintenant, c'est faire partie des premiers livreurs et des premiers marchands du réseau, et peser sur ce qu'il deviendra.</p>
+  </div>
+  <div class="pied"><span class="marque">Livraison Pro</span><span>8 / 8</span></div>
+</section>
+
+</body>
+</html>

@@ -96,22 +96,26 @@ async function api(params) {
   }
 }
 
+// lp_users n'est plus accessible en direct. Mesure du 12/08/2026 : la clé
+// publique lisait toute la table et pouvait modifier n'importe quelle ligne,
+// donc changer le téléphone d'un livreur ou se déclarer vérifié. Tout passe
+// désormais par des fonctions qui n'exposent que le nécessaire, et les champs
+// de confiance (plan, note, vérifié, rôle) sont posés côté serveur.
 async function apiCreateUser({ nom, tel, role, commune, vehicule, zones }) {
-  const { data, error } = await sb.from('lp_users').insert({
-    nom, tel, role, commune,
-    ...(vehicule && { vehicule }),
-    ...(zones    && { zones }),
-    plan: 'gratuit', disponible: false, note: 5.0, nb_missions: 0, verifie: false,
-  }).select().single();
+  const { data, error } = await sb.rpc('lp_creer_compte', {
+    p_nom: nom, p_tel: tel, p_role: role,
+    p_commune: commune || null, p_vehicule: vehicule || null, p_zones: zones || null,
+  });
   if (error) {
-    if (error.code === '23505') return { ok: false, error: 'Ce numéro existe déjà' };
+    if ((error.message || '').includes('existe déjà')) return { ok: false, error: 'Ce numéro existe déjà' };
     return { ok: false, error: error.message };
   }
   return { ok: true, user: data };
 }
 
 async function apiGetUser({ tel }) {
-  const { data, error } = await sb.from('lp_users').select('*').eq('tel', tel).single();
+  // Un numéro exact renvoie une ligne. On ne peut plus balayer la table.
+  const { data, error } = await sb.rpc('lp_user_par_tel', { p_tel: tel });
   if (error || !data) return { ok: false, error: 'Numéro non trouvé' };
   return { ok: true, user: data };
 }
@@ -126,13 +130,11 @@ async function apiGetMissions({ userId }) {
 }
 
 async function apiGetLivreurs({ commune }) {
-  const { data, error } = await sb.from('lp_users').select('*').eq('role', 'livreur').eq('disponible', true);
+  // Le filtrage par commune se fait maintenant côté serveur : filtrer après
+  // coup obligeait à recevoir tous les livreurs de toutes les communes.
+  const { data, error } = await sb.rpc('lp_livreurs_disponibles', { p_commune: commune || null });
   if (error) return { ok: false, error: error.message };
-  const result = (data || []).filter(l =>
-    !commune || l.commune === commune ||
-    (l.zones && l.zones.toLowerCase().includes(commune.toLowerCase()))
-  );
-  return { ok: true, livreurs: result };
+  return { ok: true, livreurs: data || [] };
 }
 
 async function apiGetAlertes({ userId }) {
@@ -146,8 +148,12 @@ async function apiGetAlertes({ userId }) {
   return { ok: true, alertes: data || [] };
 }
 
-async function apiUpdateDispo({ userId, disponible }) {
-  const { error } = await sb.from('lp_users').update({ disponible }).eq('id', userId);
+async function apiUpdateDispo({ userId, tel, disponible }) {
+  // L'identifiant seul ne suffit plus : il faut aussi le numéro, sinon
+  // n'importe qui pouvait basculer la disponibilité d'un livreur inconnu.
+  const { error } = await sb.rpc('lp_definir_disponibilite', {
+    p_id: userId, p_tel: tel, p_disponible: disponible,
+  });
   if (error) return { ok: false, error: error.message };
   return { ok: true };
 }
