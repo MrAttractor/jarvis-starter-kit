@@ -182,6 +182,24 @@
 
 ---
 
+### EXP-040 · La cliente réclamait une charte que notre cahier des charges contredisait
+**DÉBLOCAGE** · 14/08/2026 · Club Élévia, recette des Modules 1 et 2
+
+**Situation.** Élise CAPEL fait la recette de la Web App et envoie 16 points. Elle juge le travail « de très bonne qualité » et « conforme au périmètre », mais demande de « conserver partout le bleu nuit, l'or premium, le blanc et le gris clair ». **L'application était en noir et or**, et notre cahier des charges écrit « charte Noir & Or » **six fois, dont dans un critère d'acceptation signé**. Le réflexe naturel était de lui opposer le document.
+
+**Ce qu'on a fait.** Ouvert son fichier logo, arrivé le jour même, et relevé les couleurs **au script plutôt qu'à l'œil** : bleu nuit `#00234B`, or `#A87726` à `#D9AC56`. Aucun bleu nulle part dans nos documents. Bascule de toute l'application sur sa charte, et on lui écrit qu'elle avait raison.
+
+**Résultat.** Le point de friction devient un point de crédibilité. Trois autres corrections en sont sorties dans la foulée, dont un **contraste de bouton à 2,80:1** (texte blanc sur or) alors qu'elle demandait justement un contraste renforcé, corrigé à 6,52:1 en gardant l'or et en passant le texte en bleu nuit.
+
+**Cause profonde.** Le cahier des charges n'avait pas tort par négligence : **il a été rédigé avant que le logo existe.** Il décrivait une identité que nous avions choisie à sa place, faute d'en avoir une. Un document antérieur à l'identité du client n'engage pas le client sur son identité. Et ce n'est pas un accident de dossier : **la création de charte et de logo est explicitement hors de nos prestations**, donc la charte vient toujours du client, par construction, et rien ne garantit qu'elle arrive avant nos documents.
+
+**Ce que ça dit de plus large.** Opposer son propre document à un client est confortable et souvent juste, mais il faut d'abord **comparer les dates des deux pièces**. Le document le plus ancien perd sur ce qu'il ne pouvait pas savoir.
+
+**Règles nées de là** : R-72, et l'extension de R-24 au contraste des textes d'interface.
+**Réutilisable pour.** Tout dossier où le client fait faire son identité visuelle en parallèle du développement, et plus généralement toute contradiction entre une demande client et un document contractuel.
+
+---
+
 ## SECTION C · TECHNIQUE ET INFRASTRUCTURE
 
 ### EXP-015 · Le deploy qui ne se voit pas

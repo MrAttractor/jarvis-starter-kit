@@ -111,7 +111,7 @@
 **Application** : environ 22 % du chiffre d'affaires est une charge du prestataire, intégrée dans le prix (net ≈ 78 %). Jamais une ligne visible côté client.
 
 ### R-72 · La charte du client prime sur notre cahier des charges, et c'est son logo qui l'établit
-**Origine** : recette du Club Élévia du 08/08/2026, logo officiel reçu le 14/08. La cliente demandait « conserver partout le bleu nuit et l'or » alors que l'application était en noir et or.
+**Origine** : EXP-040, recette du Club Élévia du 08/08/2026, logo officiel reçu le 14/08. La cliente demandait « conserver partout le bleu nuit et l'or » alors que l'application était en noir et or.
 **Le fait mesuré** : les couleurs relevées dans son fichier logo sont le bleu nuit `#00234B` et l'or `#A87726` à `#D9AC56`. Aucun bleu nulle part dans notre cahier des charges, qui écrit « charte Noir & Or » **six fois, dont dans un critère d'acceptation**. Le cahier des charges n'avait pas tort par négligence : il a été rédigé **avant que le logo existe**.
 **Application** : quand un client réclame une identité visuelle différente de nos documents, ne pas lui opposer le cahier des charges. **Comparer les dates.** Un document rédigé avant que l'identité du client existe décrit un provisoire que nous avions choisi à sa place, il n'engage pas le client. On relève alors les couleurs **dans le fichier source, au script, jamais à l'œil** (voir R-24), et on bascule.
 **Ce qui reste opposable** dans le cahier des charges, ce sont les fonctionnalités, le périmètre et les critères d'acceptation fonctionnels. Pas la description d'une identité que le client n'avait pas encore fournie.
@@ -151,9 +151,10 @@
 **Origine** : EXP-021.
 **Application** : bug non reproductible, dès la deuxième hypothèse : instrumenter (télémétrie `client-log`) plutôt que tester à l'aveugle.
 
-### R-24 · Toute palette validée au script
-**Origine** : EXP-022, protanopie.
+### R-24 · Toute palette validée au script, contraste des textes compris
+**Origine** : EXP-022, protanopie. **Étendue le 14/08/2026** aux textes d'interface, après EXP-040.
 **Application** : l'orange et le vert de la charte se confondent pour certains daltonismes. Validation automatisée, jamais à l'œil. Voir la skill `dataviz`.
+**Extension aux interfaces** : le contraste d'un texte sur fond coloré **se calcule, il ne se juge pas**. Minimum 4,5:1 pour du texte courant. Mesure qui a déclenché l'extension : le bouton principal du Club Élévia était en **blanc sur or, soit 2,80:1**, très en dessous du seuil, et personne ne l'avait vu à l'œil parce que ça paraissait élégant. **Un texte clair sur un or, un jaune ou un vert clair ne passe presque jamais** : la parade est d'inverser, texte sombre sur l'aplat coloré, ce qui conserve la couleur de marque et double le contraste (ici 6,52:1). Vérifier avant de livrer, pas après la remarque du client.
 
 ### R-25 · `wrangler pages deploy`, jamais `wrangler deploy`
 **Origine** : EXP-023, demo.agenceattractor.com.
