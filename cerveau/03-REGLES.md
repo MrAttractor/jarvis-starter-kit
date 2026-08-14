@@ -59,6 +59,12 @@
 **Origine** : EXP-009, Signature Attractor.
 **Application** : tout outil SaaS envisagé est comparé à son coût de construction maison sur la stack existante. Sous 3 jours de développement, on construit.
 
+### R-65 · Un marché déjà formé n'est pas un marché fermé
+**Origine** : correction de Mac Arthur du 10/08/2026, note de cadrage ETHSUN, après la découverte que 120 opérateurs touristiques ivoiriens avaient déjà été formés gratuitement à l'IA par le ministère.
+**Application** : découvrir qu'un sujet a déjà été enseigné, même gratuitement, même à notre cible exacte, **ne le retire pas de notre offre**. Une sensibilisation collective fait découvrir, elle n'installe rien : les participants repartent en sachant que les outils existent, pas en les ayant mis en service. La différenciation ne se cherche donc pas dans **le sujet** mais dans **le traitement** : outils standards du marché choisis parce qu'ils sont directement applicables, paramétrés pendant la prestation sur les chiffres réels du client, qui repart avec quelque chose qui tourne et non avec des notes. Le seul vrai risque est de reprendre un sujet **au même niveau** que ce qui a été donné gratuitement.
+**Corollaire de veille** : une formation antérieure sur notre terrain est un **signal de demande validée**, à traiter comme une bonne nouvelle dans nos documents, jamais comme une menace. Le public est pré-éduqué, il n'y a plus à le convaincre que le sujet le concerne.
+**Assists** : quand un utilisateur renonce à une offre parce que « ça existe déjà » ou « c'est déjà enseigné gratuitement », l'assistant déplace la question du sujet vers le niveau d'exécution.
+
 ---
 
 ## B · RELATION CLIENT ET LIVRAISON
@@ -278,9 +284,53 @@
 **Origine** : recette de sécurité du 07/08/2026.
 **Application** : un `PATCH` bloqué par une policy RLS renvoie **204**, exactement comme une modification réussie, parce que zéro ligne correspond au filtre. Toute preuve d'isolation se fait avec `Prefer: return=representation` et un **comptage des lignes**, jamais sur le seul statut HTTP. Corollaire de la leçon de session 101 : un test qui innocente n'est pas une preuve d'innocence.
 
+### R-62 · Une colonne secrète ajoutée par une migration impose de relire les fonctions antérieures
+**Origine** : EXP-039, fuite du jeton d'animation, Festival des Grillades, 10/08/2026.
+**Application** : `to_jsonb(ligne) - 'secret'` est une **liste noire**, et une liste noire ignore les colonnes qui n'existaient pas quand elle a été écrite. Toute migration qui ajoute une colonne sensible à une table déjà sérialisée entière par une fonction impose de relire **toutes** les fonctions de lecture antérieures. Vérification obligatoire à la clé anonyme : lister les clés réellement renvoyées, pas supposer.
+**Assists** : applicable à toutes les apps clientes du projet Supabase partagé.
+
+### R-63 · Une action destructrice se refuse dès qu'une preuve existe
+**Origine** : EXP-039.
+**Application** : une remise à zéro, une purge ou une réinitialisation doit être **refusée par la base** dès qu'une signature, une validation ou un relevé figé existe. Détenir le bon jeton ne suffit pas : le droit d'administrer n'est pas le droit d'effacer une preuve déjà constituée.
+
+### R-64 · Un relevé signé ne bouge jamais, le suivi vit à côté
+**Origine** : EXP-039, informations attendues du Festival des Grillades.
+**Application** : quand un document constate un état à une date (compte rendu, relevé de décisions, procès-verbal), les données saisies **après** sa clôture ne doivent pas y remonter. Filtrer sur l'horodatage de clôture, et faire vivre le suivi dans un espace distinct. Sinon un relevé soumis à validation change dans le dos de ceux qui l'ont validé.
+
 ### R-61 · Un test lancé juste après un déploiement peut mentir
 **Origine** : recette du 07/08/2026, page 404 servie en code 200.
 **Application** : le cache d'un domaine sert encore l'ancienne réponse sur les adresses déjà visitées, alors que le déploiement direct répond correctement. Vérifier sur l'URL du déploiement, ou avec un paramètre anti-cache, avant de conclure à un défaut **comme avant de conclure à un succès**.
+
+### R-66 · Jamais de `:hover` sans `@media (hover: hover)`
+**Origine** : recette du questionnaire ennéagramme sur téléphone, 12/08/2026, remontée par Mac Arthur.
+**Application** : sur un écran tactile, le navigateur **garde l'état de survol sur le dernier élément touché**. Si l'écran suivant recrée un bouton à la même position, celui-ci hérite du cadre. Toute règle de survol se place donc dans `@media (hover: hover) and (pointer: fine)`, et tout élément tapé porte `-webkit-tap-highlight-color: transparent`. **Ce n'est pas une question d'apparence.** Sur un questionnaire de 135 items, un repère visuel toujours au même endroit pousse à recliquer la même position : c'est un **biais de mesure**, et il fausse le résultat sans jamais lever d'alerte.
+
+### R-70 · On déploie des fichiers choisis, jamais un dossier de travail
+**Origine** : 12/08/2026, Livraison Pro.
+**Application** : envoyer le dossier entier expédie aussi ce qui n'a rien à faire en ligne. Mesuré : la fiche interne du produit était **publiquement lisible**, avec le nom d'un partenaire commercial et l'historique d'une panne, à côté de toutes les migrations SQL. Personne ne l'avait vu parce que personne ne va chercher une adresse qu'on n'a pas publiée. On copie les seuls fichiers publics dans un dossier temporaire et c'est lui qu'on envoie. Le contrôle avant mise en ligne teste désormais chaque `.md`, `.sql`, `.toml` et `.json` du dossier contre le site, et **bloque** s'il en trouve un servi.
+
+### R-69 · Le contrôle avant mise en ligne se lance, il ne se récite pas
+**Origine** : 12/08/2026, question de Mac Arthur sur la chasse manuelle aux défauts.
+**Application** : `node scripts/controle.mjs --dossier <chemin> --site <url>` avant chaque déploiement. Il attaque réellement la base avec la clé publique, lit les fonctions, les pages et les adresses en ligne, et **bloque** sur ce qui est prouvé.
+**Trois natures de constat, et une seule bloque** : `PROUVÉ` (mesuré ou vérifiable sans ambiguïté), `SUSPECT` (forme douteuse, exploitation non démontrée), `INCERTAIN` (le test n'a pas conclu, et **n'innocente donc rien**). L'audit précédent mélangeait les trois, signalait vingt-cinq tables dont une seule fuyait, et ne donnait pas deux fois le même résultat : plus personne ne le lançait, ce qui revenait à n'avoir aucun contrôle.
+**Ce qu'aucun script ne verra jamais** : si une formulation est comprise, si le livrable est le bon, et ce que ça donne dans la main sur un vrai téléphone. Ces trois-là restent à l'œil, et c'est justement pour ça qu'il faut automatiser le reste.
+
+### R-68 · Une identité se compare avec `is distinct from`, jamais avec `<>`
+**Origine** : espace coaching, 12/08/2026, défaut introduit et attrapé à la recette.
+**Application** : dans une fonction `SECURITY DEFINER`, le garde-fou `if auth.uid() <> '<uuid>' then raise` **ne protège rien** appelé avec la clé publique : `auth.uid()` vaut alors NULL, `NULL <> uuid` vaut NULL, la condition n'est pas vraie et la fonction s'exécute. Écrire `is distinct from`. Et **toujours `revoke all on function ... from public, anon` avant le `grant`** : Postgres accorde l'exécution à `public` par défaut à la création, donc un `grant to authenticated` seul ne restreint rien.
+**Corollaire de recette** : tester chaque fonction sensible **avec la clé anon**, et vérifier qu'elle refuse. Une fonction qu'on n'a testée que connecté n'a pas été testée.
+
+### R-67 · Un formulaire long se ponctue de pauses qui reposent la consigne
+**Origine** : même recette, proposition de Mac Arthur.
+**Application** : au-delà d'une trentaine de questions, ce qui se dégrade n'est pas la motivation mais la **spontanéité** : la personne se met à réfléchir, à se relire, à vouloir rester cohérente avec ce qu'elle a répondu plus haut. Intercaler une pause tous les cinquièmes environ, chacune reposant **une consigne de qualité** et non un encouragement décoratif. La dernière autorise explicitement à s'arrêter et à revenir : l'abandon assumé vaut mieux que vingt réponses remplies en pilote automatique.
+**Assists** : tout parcours long du produit reprend ce découpage.
+
+### R-71 · Sur un marché Mobile Money, l'achat intégré est un mur de paiement, pas un canal de vente
+**Origine** : R&D du 14/08/2026 sur la mise en store, premier cas d'étude La Beynaumania. Vérifié le jour même sur les pages officielles, pas de mémoire.
+**Le fait mesuré** : Google Play accepte les comptes développeur et marchand depuis la Côte d'Ivoire, mais **l'acheteur ivoirien n'y paie qu'en carte bancaire internationale**. Ni Mobile Money, ni facturation opérateur Orange, MTN ou Moov. Côté Apple, l'inscription au programme depuis la CI est incertaine et des cartes ivoiriennes sont refusées.
+**Application** : Apple et Google imposent l'achat intégré sur tout contenu numérique consommé dans l'app (série, replay, live payant, abonnement, bon d'achat numérique), et l'interdisent sur tout bien ou service consommé hors de l'app (billet de concert physique, marchandise, livraison, prestation réelle). Sur la cible CI et diaspora, faire passer le contenu numérique par l'achat intégré revient donc à le réserver aux porteurs de carte, une minorité, **tout en laissant 15 à 30 % de commission**. Une app sur les stores peut convertir moins bien que la PWA qu'elle remplace. Montage par défaut : **l'app store porte le gratuit, la communauté et la notoriété, le web porte l'encaissement**. Piège associé : hors des États-Unis, une app iOS n'a pas le droit de renvoyer vers un paiement web ni même de le mentionner, donc on ne peut pas « garder XPaye et mettre juste un lien ».
+**Corollaire de vente** : la question « avec quoi le client final va-t-il payer » se pose **avant** d'ouvrir le chantier, jamais après le dépôt. Prolongement direct de R-31. Procédé complet, checklist des rejets et grille de chiffrage dans `livrables/recherche-et-developpement/mise-en-store-android-ios.md`.
+**Assists** : quand un utilisateur veut vendre du contenu numérique à une audience africaine, l'assistant vérifie le moyen de paiement de l'audience avant de valider le canal de distribution.
 
 ---
 

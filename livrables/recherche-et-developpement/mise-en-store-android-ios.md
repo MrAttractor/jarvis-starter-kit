@@ -60,10 +60,10 @@ en Côte d'Ivoire, c'est le réserver aux porteurs de carte internationale, une 
 Une app sur les stores peut donc **convertir moins bien que la PWA actuelle**, tout en
 prélevant 15 à 30 %.
 
-> **Règle proposée au cerveau (R-71) : sur un marché Mobile Money, l'achat intégré est un
-> mur de paiement, pas un canal de vente.** Le store sert alors la notoriété et la
-> distribution, jamais l'encaissement du contenu numérique. La monétisation reste sur le web,
-> où Wave et Orange Money fonctionnent.
+> **Règle du cerveau, R-71 : sur un marché Mobile Money, l'achat intégré est un mur de
+> paiement, pas un canal de vente.** Le store sert alors la notoriété et la distribution,
+> jamais l'encaissement du contenu numérique. La monétisation reste sur le web, où Wave et
+> Orange Money fonctionnent. Inscrite le 14/08/2026 dans `cerveau/03-REGLES.md`.
 
 ---
 
