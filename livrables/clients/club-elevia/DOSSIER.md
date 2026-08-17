@@ -6,9 +6,9 @@
 
 | Radar | |
 |---|---|
-| Statut | **recette intégrée, en attente de sa signature et de ses questions d'affinités** |
+| Statut | **recette intégrée et EN LIGNE le 17/08. En attente de sa signature et de ses questions d'affinités** |
 | Dernier contact | 2026-08-12 (elle part en vacances, elle demande à continuer par mail) |
-| Prochaine action | **Déployer le front**, ouvrir l'app sur un vrai téléphone, puis envoyer `BROUILLON-REPONSE-ELISE-14-08.md`. **Signer soi-même** l'avenant : ta propre signature manque |
+| Prochaine action | **Ouvrir l'app sur un vrai téléphone** jusqu'à l'enregistrement vidéo, puis envoyer `BROUILLON-REPONSE-ELISE-14-08.md`. **Signer soi-même** l'avenant : ta propre signature manque |
 | Échéance | relance le 25/08/2026 si aucune signature |
 | Argent en attente | 2 050 € — Tranche 2 non déclenchée |
 
@@ -55,9 +55,21 @@ son adresse a été ajouté en attendant.
   la clé anon (ligne témoin insérée, invisible en anonyme, écriture refusée 42501)
 - Fonctions `elevia-auth` et `elevia-verif` redéployées en **version 4**
 
-**Non fait, et dit :** le front n'est pas en ligne (jeton Cloudflare sans permission
-Pages) et **l'app n'a pas tourné sur un vrai téléphone**, ce qui est bloquant pour tout
-ce qui touche la caméra (R-51).
+**En ligne depuis le 17/08.** Déploiement vérifié : les neuf adresses répondent avec et
+sans barre oblique finale, les sept marqueurs de la nouvelle version sont présents, les
+trois de l'ancienne ont disparu, et le domaine sert **exactement le même contenu que
+l'URL du déploiement direct** (empreintes identiques), donc aucun cache ne masque le
+résultat. Plafond d'envoi de codes réessayé en production : refusé à la quatrième demande.
+
+**Le déploiement avait bloqué trois jours pour une fausse raison.** Wrangler donne la
+priorité à la variable `CLOUDFLARE_API_TOKEN` sur la session OAuth déjà présente sur la
+machine. Comme ce jeton ne porte que le DNS, Cloudflare répondait `Authentication error`
+et laissait croire qu'il manquait une permission Pages. Il suffisait de neutraliser la
+variable. Deux jetons créés entre-temps se sont tronqués au copier-coller (52 caractères
+au lieu de 53). Détail en mémoire `reference_wrangler_oauth`.
+
+**Non fait, et dit :** **l'app n'a pas tourné sur un vrai téléphone**, ce qui reste
+bloquant pour tout ce qui touche la caméra (R-51). Rien ne s'annonce à la cliente avant.
 
 ## Ses 6 demandes du 02/08 et le traitement retenu
 

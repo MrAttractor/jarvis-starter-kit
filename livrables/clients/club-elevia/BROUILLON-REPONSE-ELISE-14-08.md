@@ -6,18 +6,15 @@
 > **À envoyer depuis `hello@agenceattractor.com`**, dans le fil existant
 > « Club privé Élévia - Ajout et clarification de clause ».
 >
-> ## NE PAS ENVOYER AVANT D'AVOIR DÉPLOYÉ LE FRONT
-> Les fichiers sont prêts et la base est à jour, mais la mise en ligne du dossier
-> `elevia/` n'a pas pu être faite : le jeton Cloudflare du workspace n'a pas la
-> permission Pages. Commande à lancer, puis vérifier le lien avant l'envoi :
-> `npx wrangler pages deploy public --project-name=demo-agenceattractor --branch=master`
-> (depuis `livrables/clients/demo-site/`)
+> ## Le front est EN LIGNE depuis le 17/08, vérifié
+> Les neuf adresses répondent avec et sans barre oblique finale, et le domaine sert le
+> même contenu que le déploiement direct. Les deux liens légaux sont testés.
 >
-> ## À vérifier aussi avant l'envoi
+> ## IL RESTE UNE CHOSE AVANT D'ENVOYER
 > - Ouvrir `https://demo.agenceattractor.com/elevia/app` **sur un vrai téléphone**,
->   aller jusqu'à l'enregistrement vidéo. Rien de ce qui touche la caméra n'est
->   considéré comme fini avant ça.
-> - Tester les deux liens légaux, avec et sans barre oblique finale.
+>   créer un compte et aller jusqu'à l'enregistrement vidéo. Rien de ce qui touche la
+>   caméra n'est considéré comme fini avant ça, et c'est la seule vérification que le
+>   déploiement ne remplace pas.
 >
 > **Ton propre statut de signature est `en_attente`** sur le dossier ATR-2026-0005 :
 > elle a ouvert le lien le 5 août sans signer, et toi non plus tu n'as pas signé.
