@@ -41,8 +41,14 @@
 html{-webkit-text-size-adjust:100%}
 body{
   font-family:var(--sans);color:var(--encre);background:var(--creme);
-  line-height:1.6;overflow-x:hidden;min-height:100vh;
+  line-height:1.6;overflow-x:hidden;
   display:flex;flex-direction:column;
+  /* 100vh compte la barre d'adresse du navigateur mobile comme si elle
+     n'existait pas : la page est alors toujours un peu plus haute que l'écran
+     et un défilement inutile apparaît. 100dvh mesure la hauteur réellement
+     disponible. La première ligne reste en repli pour les navigateurs anciens. */
+  min-height:100vh;
+  min-height:100dvh;
 }
 img{max-width:100%;display:block}
 
@@ -56,7 +62,16 @@ img{max-width:100%;display:block}
 }
 .saut:focus{left:0}
 
-.enveloppe{max-width:560px;margin:0 auto;padding:28px 20px 40px;width:100%;flex:1 0 auto}
+/* ── Zones de sécurité ──
+   Le document déclare viewport-fit=cover, donc la mise en page s'étend sous
+   l'encoche et sous la barre d'accueil de l'iPhone. Sans réserver ces marges,
+   le dernier bouton se retrouve sous la barre d'accueil, là où le doigt ne
+   l'atteint pas. Déclarer cover sans gérer les marges est pire que ne pas le
+   déclarer du tout. */
+.enveloppe{
+  max-width:560px;margin:0 auto;width:100%;flex:1 0 auto;
+  padding:28px max(20px, env(safe-area-inset-right)) 40px max(20px, env(safe-area-inset-left));
+}
 
 /* ── En-tête de marque ── */
 .marque{text-align:center;margin-bottom:30px}
@@ -171,11 +186,24 @@ input[aria-invalid="true"]{border-color:var(--alerte)}
 .duo button.actif{border-color:var(--or);background:var(--blanc);color:var(--encre);font-weight:500;
   box-shadow:0 0 0 3px rgba(190,148,64,.16)}
 
-/* ── Cases à cocher ── */
-.coche{display:flex;gap:11px;align-items:flex-start;margin-bottom:14px;cursor:pointer}
-.coche input{width:19px;height:19px;min-height:0;flex:0 0 auto;margin-top:2px;accent-color:var(--or)}
-.coche span{font-size:13px;color:var(--muted);line-height:1.55}
-.coche a{color:var(--or-texte);text-underline-offset:2px}
+/* ── Cases à cocher ──
+   Mesuré à 19 x 19 px, pour un minimum de 44. C'est la plus petite cible du
+   parcours, sur l'écran où l'acceptation est obligatoire pour s'inscrire.
+   La case grossit, et surtout toute la ligne devient la zone de tap.
+   Les liens vers les documents sortent du libellé : imbriqués dedans, ils
+   faisaient dépendre de deux pixels le fait de cocher ou de quitter
+   l'inscription pour ouvrir un document. */
+.coche{
+  display:flex;gap:12px;align-items:center;cursor:pointer;
+  min-height:44px;padding:6px 0;margin-bottom:4px;
+}
+.coche input{width:24px;height:24px;min-height:0;flex:0 0 auto;accent-color:var(--or)}
+.coche span{font-size:13.5px;color:var(--muted);line-height:1.5}
+.documents{display:flex;flex-wrap:wrap;gap:0 20px;margin:2px 0 16px 36px}
+.documents a{
+  display:inline-flex;align-items:center;min-height:44px;
+  font-size:13px;color:var(--or-texte);text-underline-offset:3px;
+}
 
 /* ── Boutons ── */
 .bouton{
@@ -258,7 +286,7 @@ button{-webkit-tap-highlight-color:transparent}
 /* ── Bandeau de recette ── */
 .proto{
   background:var(--encre);color:var(--creme);font-size:11.5px;text-align:center;
-  padding:9px 16px;line-height:1.5;
+  padding:calc(9px + env(safe-area-inset-top)) 16px 9px;line-height:1.5;
 }
 .proto b{color:var(--or-clair)}
 .pied .pied-societe{letter-spacing:.16em}
@@ -266,17 +294,22 @@ button{-webkit-tap-highlight-color:transparent}
 /* ── Pied de page ── */
 .pied{
   flex:0 0 auto;border-top:1px solid var(--bord);background:var(--sable);
-  padding:26px 20px 30px;text-align:center;
+  text-align:center;
+  padding:26px max(20px, env(safe-area-inset-right)) calc(30px + env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
 }
 .pied .pied-marque{font-family:var(--serif);font-size:15px;letter-spacing:.14em;color:var(--encre)}
 .pied .pied-societe{font-size:10.5px;letter-spacing:.16em;color:var(--or-texte);margin-top:6px;font-weight:500}
-.pied nav{display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:center;margin:18px 0 16px}
-.pied nav a{font-size:12.5px;color:var(--muted);text-decoration:none;padding:6px 2px;min-height:24px}
+.pied nav{display:flex;flex-wrap:wrap;gap:0 18px;justify-content:center;margin:12px 0 10px}
+/* Mesurés à 32 px de haut, sur tous les écrans. */
+.pied nav a{
+  display:inline-flex;align-items:center;min-height:44px;padding:0 4px;
+  font-size:12.5px;color:var(--muted);text-decoration:none;
+}
 .pied nav a:hover{text-decoration:underline;text-underline-offset:3px}
 .pied .mention{font-size:11px;color:var(--gris);line-height:1.7}
 
 @media(max-width:380px){
-  .enveloppe{padding:22px 15px 34px}
+  .enveloppe{padding:22px max(15px, env(safe-area-inset-right)) 34px max(15px, env(safe-area-inset-left))}
   .carte{padding:26px 19px}
   h1{font-size:22px}
 }
@@ -712,8 +745,12 @@ function ecranEngagement(msg) {
       </div>
       <label class="coche">
         <input type="checkbox" id="i-cgu">
-        <span>J'accepte les <a href="../cgu/" target="_blank" rel="noopener">conditions d'utilisation</a> et la <a href="../confidentialite/" target="_blank" rel="noopener">politique de confidentialité</a>.</span>
+        <span>J'accepte les conditions d'utilisation et la politique de confidentialité.</span>
       </label>
+      <p class="documents">
+        <a href="../cgu/" target="_blank" rel="noopener">Lire les conditions</a>
+        <a href="../confidentialite/" target="_blank" rel="noopener">Lire la politique de confidentialité</a>
+      </p>
       <label class="coche">
         <input type="checkbox" id="i-optin">
         <span>Je souhaite recevoir les suggestions de profils compatibles par e-mail. (facultatif)</span>

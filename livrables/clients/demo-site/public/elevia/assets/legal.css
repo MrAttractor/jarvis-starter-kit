@@ -69,8 +69,13 @@ td:first-child{color:var(--encre);font-weight:500}
   margin-top:46px;padding-top:24px;border-top:1px solid var(--bord);
   text-align:center;font-size:12.5px;color:var(--gris);line-height:1.8;
 }
-.pied nav{display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:center;margin-bottom:14px}
-.pied nav a{color:var(--muted);text-decoration:none;padding:6px 2px;min-height:24px;display:inline-block}
+.pied nav{display:flex;flex-wrap:wrap;gap:0 18px;justify-content:center;margin-bottom:10px}
+/* Même défaut que dans l'application : mesuré à 32 px de haut, pour un
+   minimum de 44 au doigt. */
+.pied nav a{
+  display:inline-flex;align-items:center;min-height:44px;padding:0 4px;
+  color:var(--muted);text-decoration:none;
+}
 .pied nav a:hover{text-decoration:underline}
 
 @media(max-width:420px){
