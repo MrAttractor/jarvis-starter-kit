@@ -7,6 +7,51 @@
 
 ---
 
+## 2026-08-17 (session 130 — Assists sort de pause, et le stage d'Antso devient le chantier)
+
+> Deux projets tombaient sur les mêmes quinze jours. Ils n'en font plus qu'un.
+
+### La décision
+- **Attractor Assists relancé du 17/08 au 28/08**, quinze jours bornés, verdict écrit à la
+  fin. Décision 021 au registre. **Antso Nirina RAKOTOMANANA occupe le poste de chef de
+  projet** pendant son immersion PMSMP, Mac Arthur reste seul décideur.
+- **La contradiction est écrite plutôt que contournée** : aucune des deux conditions de
+  reprise posées le 06/08 n'est remplie. Ce qui tient debout, c'est que la relance ne rouvre
+  pas le développement de fonctionnalités, qui est ce que la pause avait arrêté. Elle finance
+  en temps humain l'action de terrain qui était bloquée depuis le 15/07.
+
+### « Produit prêt » a enfin une définition
+Quatre critères prouvables au 28/08 : boutique au moins équivalente à `boutiquecreal.com`,
+**trois entrepreneurs réels au bout du tunnel sans aide**, une commande réelle d'un vrai
+client final, huit marches du tunnel mesurées une par une. Le critère 2 est la condition de
+reprise n° 1 du dossier, il n'a pas été réinventé. Hors périmètre assumé : facturation
+récurrente, tests automatisés, migration des testeurs de mai.
+
+### Le point de jonction, et pourquoi il tient
+- Antso cherchait « une vue globale mais concrète des réalités de l'activité », pour décider
+  s'il se lance. Une démonstration ne le lui aurait pas donné, un chantier avec une date, si.
+- Le produit cherchait un utilisateur qui ne sait rien et qui essaie vraiment. **Celui qui a
+  construit le tunnel ne peut plus le voir.** D'où la tâche du jour 1 : Antso passe le tunnel
+  seul, chronométré, sans explication préalable. Cette valeur expire au bout de trois jours,
+  c'est pour ça qu'elle est au jour 1.
+
+### Ce qui a été produit
+- `livrables/ecosysteme-attractor/attractor-assists/relance-aout-2026/`, quatre documents :
+  le cadre et le périmètre, le programme des dix jours heure par heure, le manuel « Penser
+  comme un product builder », le dossier PMSMP avec grille d'enquête métier et trame de bilan.
+- Programme bâti sur la **disponibilité réelle** du tuteur, salarié en journée : point audio
+  de 20 min à 9h en trajet, session de fond de 45 min au midi-deux en partage d'écran,
+  débrief un jour sur deux. Une journée en présentiel à Paris le vendredi 21/08, consacrée au
+  terrain et au recrutement des trois entrepreneurs.
+
+### Réserve
+Les quatre pièces jointes d'Antso du 03/08 (programme Uncode, bilan PMSMP, Cerfa, support
+d'enquête métier) n'ont pas pu être ouvertes depuis l'espace de travail. Les trames sont donc
+construites sur les attendus habituels du dispositif et devront être recopiées dans les
+formulaires officiels. À réenregistrer dans `context/import/formation/pmsmp-antso/`.
+
+---
+
 ## 2026-08-10 (session 129 — ETHSUN reprend vie, et une veille bien faite tirait la mauvaise conclusion)
 
 > Le dossier était à l'arrêt depuis le 31 juillet, avec un état des lieux écrit

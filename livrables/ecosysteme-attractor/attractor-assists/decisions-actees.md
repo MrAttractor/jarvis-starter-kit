@@ -6,6 +6,22 @@
 
 ---
 
+[2026-08-17] — DÉCISION 021
+Pôle concerné : Produit / R&D (Attractor Assists)
+Décision : Attractor Assists sort de pause pour quinze jours bornés, du 17/08 au 28/08, adossés à l'immersion PMSMP d'Antso Nirina RAKOTOMANANA sur le métier de product builder (convention ffa2ddc7-e4c0-40d9-96df-30eeeaf2a93c). Antso occupe le poste de chef de projet, Mac Arthur reste seul décideur. « Produit prêt » est défini par quatre critères prouvables au 28/08 à 17h : boutique au moins équivalente à boutiquecreal.com, trois entrepreneurs réels ayant terminé le tunnel sans aide, une commande réelle d'un vrai client final, huit marches du tunnel mesurées. Hors périmètre explicite et assumé : facturation récurrente, tests automatisés, migration des testeurs de mai, toute fonctionnalité nouvelle.
+Validé par : Mac Arthur
+Impacte : Produit, R&D, Commercial (recrutement des trois testeurs), Administratif (pièces PMSMP)
+Actions déclenchées :
+  → Produit : recette du tunnel par un œil neuf au J1, avant tout engagement de correctif
+  → Commercial : dix candidats entrepreneurs listés au J2, trois engagés au J5 en présentiel
+  → R&D : instrumentation des huit marches du tunnel au J4, la mesure prime sur l'intuition
+  → Administratif : bilan PMSMP et enquête métier remplis au fil de l'eau, pas la veille
+  → Mac Arthur : réenregistrer les quatre pièces jointes d'Antso dans context/import/formation/pmsmp-antso/
+Contradiction assumée : les deux conditions de reprise écrites au DOSSIER.md le 06/08 ne sont pas remplies. La relance ne rouvre pas le développement de fonctionnalités, elle finance en temps humain l'action de terrain qui était bloquée, avec une date de sortie et un verdict écrit. Si le verdict est négatif, retour en pause avec une raison mesurée.
+Statut : EN COURS (échéance 28/08/2026 17h00)
+
+---
+
 [2026-07-27] — DÉCISION 020
 Pôle concerné : Stratégy / Commercial (dossier Air CI / VSD)
 Décision : Économie VSD figée. Rétrocession de 1 €/kg à Air CI UNIQUEMENT sur les valises exceptionnelles de 32 kg à l'aller ; le retour (2×23 kg) utilise le quota bagage normal, gratuit. Fin du « bon de conversion » et du « 1,5 €/kg sur tous les kilos ». Jean Yves n'investit rien (outils déjà en main), son apport = sa présence de coordination. Règle de vocabulaire : on ne dit plus jamais « fret », on dit « colis normaux acheminés par un prestataire externe (J'Envoie Express) ».

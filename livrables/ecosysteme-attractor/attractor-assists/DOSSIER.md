@@ -4,10 +4,10 @@
 
 | Radar | |
 |---|---|
-| Statut | en pause |
-| Dernier contact | 2026-08-06 |
-| Prochaine action | Aucune. La reprise est conditionnée, voir « La mise en pause » plus bas |
-| Échéance | — |
+| Statut | **relancé du 17/08 au 28/08**, voir « La relance » plus bas |
+| Dernier contact | 2026-08-17 |
+| Prochaine action | Recette du tunnel de bout en bout par un œil neuf, J1 |
+| Échéance | vendredi 28/08/2026 17h00, verdict écrit |
 | Argent en attente | — |
 
 ## En une phrase
@@ -108,6 +108,34 @@ Tant qu'aucune des deux n'est vraie, ce dossier ne remonte pas dans le brief du 
 **Ce qui reste valide et ne se perd pas :** la mission fondatrice, le concept V3, le
 principe du CLAUDE.md dynamique, et tout ce qui est écrit dans `concept-v3.md`. La pause
 porte sur le temps investi, pas sur la vision.
+
+## La relance, décidée le 17/08/2026
+
+**Décision de Mac Arthur.** Le produit sort de pause pour quinze jours bornés, du 17/08 au
+28/08, adossés à l'immersion PMSMP d'Antso Nirina RAKOTOMANANA sur le métier de product
+builder. Antso occupe le poste de chef de projet, Mac Arthur reste le décideur.
+
+**La contradiction est assumée et écrite** : aucune des deux conditions de reprise ci-dessus
+n'est remplie à ce jour. Ce qui rend la décision défendable, c'est que la relance ne rouvre
+pas le développement de fonctionnalités, qui est ce que la pause avait arrêté. Elle finance
+en temps humain la seule action qui était bloquée, le terrain, et elle se donne une date de
+sortie avec un verdict écrit.
+
+**Ce qui reste interdit pendant ces quinze jours** : toute fonctionnalité nouvelle.
+
+**Ce que « prêt » veut dire**, et les quatre critères se prouvent ou le produit retourne en
+pause le 28/08 avec une raison mesurée :
+
+1. le tunnel produit une boutique au moins équivalente à `boutiquecreal.com` ;
+2. **trois entrepreneurs réels terminent l'onboarding sans que Mac Arthur tienne la main**,
+   ce qui est exactement la condition de reprise n° 1 ;
+3. au moins **une commande réelle** passée par un vrai client final ;
+4. les huit marches du tunnel sont mesurées une par une.
+
+Hors périmètre explicite : la facturation récurrente, les tests automatisés, la migration des
+testeurs de mai.
+
+Le dossier complet est dans `relance-aout-2026/`.
 
 ## Chantiers ouverts
 
