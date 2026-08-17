@@ -7,6 +7,96 @@
 
 ---
 
+## 2026-08-17 (point de situation — quatre dossiers attendent, deux clients ont relancé les premiers)
+
+> Pas une session de production. Un état des lieux, posé parce que le journal
+> avait sept jours de retard et que les radars des dossiers annonçaient encore
+> des échéances déjà passées.
+
+### Ce qui est entrant, et c'est le point qui compte
+- **Thim Production a relancé** sur le Festival des Grillades, pour savoir où en sont les travaux. **Élise a relancé** sur Club Élévia, pour connaître l'avancement. Dans les deux cas **le client a bougé avant nous**. Ce n'est pas neutre : sur ces deux dossiers, la dernière initiative écrite vient d'en face.
+- **JG Consulting n'a pas donné son retour** sur la maquette de closing livrée le 13/08. Le rendez-vous avec le partenaire financeur était annoncé pour le 15/08 au plus tard, son issue est inconnue à ce jour.
+- **Nabycook attend ses vidéos.** Les 3 vidéos promotionnelles du deal, qui sont la partie facturée (350 €), ne sont toujours pas tournées. Et **l'agence doit lui fournir son tableau de bord**.
+
+### Le constat qui sort de la semaine
+La semaine du 11 au 14 a produit énormément : un espace de pilotage, un questionnaire de 135 items, deux modules d'Élévia en ligne, un script de contrôle, un site livré sur son domaine, sept règles nouvelles au cerveau. **Aucun euro encaissé, aucune signature obtenue.** Le seul mouvement d'argent en attente reste identique à la semaine précédente.
+
+### Ce qu'il en sort comme chantier
+Demande de Mac Arthur : **le brief du matin doit devenir explicite**, classé par priorité, avec les travaux en cours, l'état d'avancée réel, le reste à faire, et un suivi de ce qui fait *progresser* l'agence, distinct de ce qui l'occupe. Cause identifiée avant de toucher au format : le brief n'a aujourd'hui aucune source d'état fiable, les blocs Radar des `DOSSIER.md` étant périmés. Structure proposée en cinq blocs (ce qui brûle, on attend qui, la balle est chez toi, l'avancée réelle, le reste à faire), le bloc d'avancée devant pouvoir afficher « rien n'a bougé ». Chantier ouvert, pas encore construit.
+
+---
+
+## 2026-08-13 (session 133 — Nabycook prend son domaine, sans jamais mettre sa messagerie en jeu)
+
+> Session menée avec Nabintou en direct, elle sur son compte Infomaniak,
+> Mac Arthur sur le tableau de bord Cloudflare.
+
+### L'état de départ, relevé avant de toucher à quoi que ce soit
+- `nabycook.com` était **déjà acheté chez Infomaniak** depuis le 04/06/2026, à son nom, expiration 04/06/2028.
+- **Aucun site n'était servi** : l'adresse pointait sur une IP Infomaniak qui ne répondait ni en 80 ni en 443.
+- **Mais la messagerie tournait** : MX Infomaniak, SPF, DKIM, DMARC en `p=reject`, plus deux DKIM Brevo et un code de vérification Brevo. Et **DNSSEC actif**.
+- Conclusion posée avant la manipulation : côté web on n'a rien à casser, **tout le risque est sur les mails**. Un DMARC en `p=reject` ne dégrade pas en indésirables, il fait rejeter.
+
+### La décision d'architecture
+Deux chemins, un seul retenu. **Rester chez Infomaniak** (CNAME `www` vers le projet Pages, redirection 301 de l'adresse courte) plutôt que déménager la zone chez Cloudflare. Motif : le seul gain du déménagement était une adresse courte servie sans redirection, et il se payait en recopie de cinq enregistrements de messagerie plus une désactivation de DNSSEC préalable, faute de quoi le domaine entier devient injoignable pendant la propagation.
+
+### Deux pièges, dont un évité de justesse
+- **Le formulaire de redirection d'Infomaniak coche par défaut « rediriger également le sous-domaine www ».** Validée telle quelle, cette case faisait deux dégâts d'un coup : une **boucle de redirection infinie** (www renvoyé vers www) et **l'écrasement du CNAME** créé quinze minutes plus tôt. Le message d'avertissement affiché ne nomme jamais ce qu'il va remplacer. Devenu **R-73**.
+- **Le `README.md` interne de l'agence était publiquement lisible** sur le site de la cliente, à `www.nabycook.com/README.md`. Il contenait la checklist de mise en ligne et des renvois aux autres dossiers clients. **Deuxième occurrence de R-70 en cinq jours**, après Livraison Pro le 12/08. Le déploiement part désormais d'un dossier de fichiers choisis, construit à part.
+
+### Ce qui a été livré
+- **Site en production sur `www.nabycook.com`**, adresse courte redirigée en 301, six pages vérifiées une par une, messagerie recontrôlée après bascule et intacte.
+- **Logo Entrepreneurs Engagés en tête de bande** (accord du président confirmé par Mac Arthur le 13/08, il était volontairement absent depuis le 08/08). Ramené de **690 Ko à 46 Ko**, rogné de ses marges transparentes.
+- **Garde-fou ajouté sans qu'il soit demandé** : les partenaires viennent aussi de la base, et dès que Nabintou en saisit un depuis son espace, la liste de la base remplace entièrement celle du code. Le statut de partenaire principal est désormais reporté par correspondance de nom, sinon la mise en tête aurait disparu à sa première saisie, sans erreur visible.
+- Dépôt remis à jour au passage : le commit a emporté **7 commits jamais poussés** (JG Consulting, la Mission, Nabycook du 11/08).
+
+### Ce qui n'est pas fait, et qui empêche d'annoncer le site
+1. **Pas de page 404** : le serveur renvoie l'accueil en code 200 sur toute adresse inconnue.
+2. **`noindex` toujours posé** sur les 5 pages publiques, le site n'est donc pas indexable.
+3. **Aucune balise de partage** : ses liens WhatsApp s'afficheront nus, sans image ni description, sur un dossier qui vit du bouche-à-oreille.
+4. `robots.txt` et `sitemap.xml` absents.
+5. **Le rendu n'a été vu ni à l'écran ni sur un vrai téléphone** (R-51), et l'état de sa table `nb_partenaires` n'a pas pu être lu, le projet Supabase étant injoignable depuis le poste ce soir-là.
+
+---
+
+## 2026-08-11 → 14 (sessions 130 à 134 — rattrapage, reconstitué depuis les commits)
+
+> **Nature de cette entrée :** elle n'a pas été écrite sur le moment. Elle est
+> reconstituée depuis les commits et les fichiers, et ne contient donc que ce
+> que le dépôt prouve. Les arbitrages, les conversations et les motifs de ces
+> quatre journées ne sont pas tracés et ne le seront pas.
+> La session Nabycook du 13/08 est traitée dans son entrée dédiée ci-dessus.
+
+### Festival des Grillades
+- **Mandat de production exécutive V2 et son cahier des charges** versés au dossier.
+- **Espace de pilotage étendu du recueil de séance à la boussole** : migrations `0005` à `0010` (suivi des informations hors séance, correction de la fuite du jeton d'administration, effacement d'échéance, boussole Thim, contacts et relances, date réelle de séance).
+
+### Livraison Pro
+- Support de présentation, **page 404**, et fermeture de compte (migration `0004_lp_users_fermeture`).
+- **Le contrôle avant mise en ligne devient un script qu'on lance** : `scripts/controle.mjs`. À l'origine des règles **R-69** et **R-70**.
+
+### Espace coaching et certification
+- **Questionnaire ennéagramme et son dépouillement** livrés (`livrables/ecosysteme-attractor/espace-coaching/`). À l'origine de **R-66** (jamais de `:hover` sans `@media (hover: hover)`, un survol persistant sur écran tactile est un biais de mesure), **R-67** (un formulaire long se ponctue de pauses qui reposent la consigne) et **R-68** (une identité se compare avec `is distinct from`, jamais avec `<>`).
+- **Révision du thème B**, contrat de coaching v2 et proposition Eric, en préparation de la certification du 03/09.
+
+### Club Élévia
+- **Modules 1 et 2 en ligne**, plus les pages légales.
+- **La recette d'Élise intégrée**, et le dossier réécrit pour dire l'état réel.
+- **Deux défauts que seul le rendu montrait**, à l'origine de **R-72** (la charte du client prime sur notre cahier des charges) et de **EXP-040**, qui étend **R-24** au contraste des interfaces.
+
+### Structure de l'agence
+- **Le cerveau master câblé dans le workspace**, avec la commande `/cerveau`.
+- **Méthode de consultance en trois phases** posée dans `livrables/ecosysteme-attractor/METHODE-CONSULTANCE.md`.
+- **Barème `devis-express` étendu au consulting**, avec son gabarit de devis.
+- **R-71** : sur un marché Mobile Money, l'achat intégré est un mur de paiement, pas un canal de vente. Note R&D sur la mise en store Android et iOS, le procédé et ce qui le bloque.
+
+### Autres dossiers
+- **ETHSUN** : la note de cadrage part, et la veille change de conclusion (déjà tracé en session 129).
+- **JG Consulting** : maquette de closing pour le rendez-vous financeur.
+- **Mission Armée du Seigneur** : une seule photo de couple pour les deux dirigeants.
+
+---
+
 ## 2026-08-10 (session 129 — ETHSUN reprend vie, et une veille bien faite tirait la mauvaise conclusion)
 
 > Le dossier était à l'arrêt depuis le 31 juillet, avec un état des lieux écrit

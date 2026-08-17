@@ -7,9 +7,9 @@
 | Radar | |
 |---|---|
 | Statut | **recette intégrée et EN LIGNE le 17/08. En attente de sa signature et de ses questions d'affinités** |
-| Dernier contact | 2026-08-12 (elle part en vacances, elle demande à continuer par mail) |
-| Prochaine action | **Ouvrir l'app sur un vrai téléphone** jusqu'à l'enregistrement vidéo, puis envoyer `BROUILLON-REPONSE-ELISE-14-08.md`. **Signer soi-même** l'avenant : ta propre signature manque |
-| Échéance | relance le 25/08/2026 si aucune signature |
+| Dernier contact | **2026-08-17 : c'est ELLE qui relance**, elle demande où en est l'avancement (le 12/08 elle partait en vacances et demandait à continuer par mail) |
+| Prochaine action | **Lui répondre sur l'avancement**, c'est elle qui attend. Avant d'envoyer : **ouvrir l'app sur un vrai téléphone** jusqu'à l'enregistrement vidéo, puis `BROUILLON-REPONSE-ELISE-14-08.md`. **Signer soi-même** l'avenant : ta propre signature manque |
+| Échéance | **répondre sans délai** (relance cliente en attente). Relance de signature le 25/08/2026 si toujours rien |
 | Argent en attente | 2 050 € — Tranche 2 non déclenchée |
 
 ## En une phrase

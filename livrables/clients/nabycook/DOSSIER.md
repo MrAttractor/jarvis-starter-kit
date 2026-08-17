@@ -1,20 +1,51 @@
 # Nabycook — l'état du dossier
 
-> Révision du 08/08/2026. **Cette fiche est la première chose à lire du dossier.**
+> Révision du 17/08/2026. **Cette fiche est la première chose à lire du dossier.**
 
 | Radar | |
 |---|---|
-| Statut | en production |
+| Statut | **site en production sur `nabycook.com`, mais pas annonçable** |
 | Dernier contact | 2026-08-10 (son debrief détaillé par mail) |
-| Prochaine action | Envoyer la réponse au debrief, puis lui donner la main sur son site |
+| Prochaine action | **Lui fournir son tableau de bord**, et relancer sur les 3 vidéos |
 | Échéance | forum du 5 septembre 2026 cité dans sa liste d'éléments |
-| Argent en attente | 175 € d'acompte |
+| Argent en attente | **175 € d'acompte, toujours pas encaissés** |
 
 ## En une phrase
 
-Nabintou a livré ses éléments, **le site n'est plus une maquette à trous** : infos
-légales, chiffres d'impact, partenaires, liens HelloAsso et biographie complète sont
-intégrés et en ligne. **Restent les photos, le logo HD, les témoignages et la presse.**
+Le site est **en production sur son domaine `nabycook.com`** depuis le 13/08, mais
+**quatre défauts empêchent de l'annoncer** (pas de page 404, `noindex` encore posé,
+aucune balise de partage, pas de `robots.txt`). En face, **les 3 vidéos qui sont la
+seule partie facturée ne sont pas tournées**, et **l'agence lui doit son tableau de
+bord**.
+
+## Ce qui bloque, des deux côtés
+
+**Côté agence, avant de pouvoir annoncer le site :**
+1. Une vraie page 404. Aujourd'hui l'accueil est servi en **code 200** sur toute adresse inconnue.
+2. Retirer le `noindex` des 5 pages publiques, le garder sur `admin.html`.
+3. Les balises `og:` et le `canonical` vers `www.nabycook.com`. Sans elles, ses liens WhatsApp s'affichent nus, sur un dossier qui vit du bouche-à-oreille.
+4. `robots.txt` et `sitemap.xml`, avec l'espace d'administration désindexé.
+5. Ouvrir le site **sur un vrai téléphone** (R-51), jamais fait à ce jour.
+6. Lui fournir son tableau de bord.
+
+**Côté cliente :**
+- **Les 3 vidéos promotionnelles.** C'est la partie facturée du deal (350 €), et rien n'est tourné.
+- Sa charte éditoriale, citée le 31/07 et jamais transmise.
+
+**Règle à tenir, rappelée :** encaisser les **175 €** avant de tourner. Elle vient du
+réseau personnel, la règle vaut quand même.
+
+## L'infrastructure, à ne pas réapprendre
+
+| | |
+|---|---|
+| Domaine | `nabycook.com`, acheté par elle chez **Infomaniak** le 04/06/2026, à son nom |
+| Zone DNS | **laissée chez Infomaniak**, jamais déplacée, pour ne pas mettre sa messagerie en jeu |
+| Site | `CNAME www` vers le projet Cloudflare Pages **`nabycook`**, branche de production **`main`** |
+| Adresse courte | redirection **301** vers `www.nabycook.com`, qui est l'adresse canonique |
+| Messagerie | MX Infomaniak, SPF, DKIM, **DMARC en `p=reject`**, plus deux DKIM Brevo. Intacte, vérifiée après bascule |
+| Piège | le formulaire de redirection d'Infomaniak coche par défaut « rediriger également le sous-domaine www » : boucle infinie et écrasement du CNAME. Voir **R-73** |
+| Déploiement | **jamais depuis le dossier `site/`** : son `README.md` interne était publiquement lisible. Copier les fichiers publics à part. Voir **R-70** |
 
 ## Le client
 

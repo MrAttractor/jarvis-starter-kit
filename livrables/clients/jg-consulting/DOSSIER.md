@@ -4,10 +4,10 @@
 
 | Radar | |
 |---|---|
-| Statut | **maquette de closing livrée, rendez-vous financeur sous 48h** |
+| Statut | **maquette livrée, AUCUN RETOUR du client au 17/08. Issue du rendez-vous financeur inconnue** |
 | Dernier contact | 2026-08-13, M. GNOU annonce qu'il rencontre un partenaire qui souhaite financer |
-| Prochaine action | Envoyer les deux liens et le message WhatsApp. Puis **obtenir les 3 fiches experts** et le prix moyen d'une mission |
-| Échéance | rendez-vous financeur sous 48h, soit au plus tard le **15/08/2026** |
+| Prochaine action | **Le relancer sur l'issue du rendez-vous**, il n'a jamais donné son retour. Puis **obtenir les 3 fiches experts** et le prix moyen d'une mission |
+| Échéance | **échéance du 15/08 DÉPASSÉE**, le rendez-vous financeur devait s'être tenu. Quatre jours de silence |
 | Argent en attente | **1 800 €** proposés par le client, acompte visé 900 €. Devis JGC-2026-04 d'avril expiré et remplacé |
 
 ## En une phrase

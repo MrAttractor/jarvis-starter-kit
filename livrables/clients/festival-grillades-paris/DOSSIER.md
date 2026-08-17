@@ -5,10 +5,10 @@
 
 | Radar | |
 |---|---|
-| Statut | en cours |
-| Dernier contact | 2026-08-07 (séance technique n°1, visioconférence) |
-| Prochaine action | Fixer les honoraires de Thim (art. 9), puis envoyer mandat V2 + cahier des charges + lien du board aux deux parties |
-| Échéance | 2026-08-13 |
+| Statut | **en cours. Thim Production relance sur l'avancement des travaux** |
+| Dernier contact | **2026-08-17 : c'est THIM qui relance**, elle demande la suite des travaux (avant : séance technique n°1 du 07/08) |
+| Prochaine action | **Lui répondre sur l'avancement.** Puis fixer les honoraires de Thim (art. 9), seul verrou de la signature, et envoyer mandat V2 + cahier des charges + lien du board aux deux parties. **Toujours aucune convention Mr Attractor / Thim** alors que le travail court depuis le 25/07 |
+| Échéance | **échéance du 13/08 DÉPASSÉE.** Dépôt des visas visé la semaine du 17/08, donc **maintenant**. Événement le 11/10 |
 | Argent en attente | prix du forfait non fixé, **et aucune convention Mr Attractor / Thim** |
 
 ## En une phrase
