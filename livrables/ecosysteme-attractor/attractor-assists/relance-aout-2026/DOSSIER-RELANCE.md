@@ -125,15 +125,19 @@ Semaine 1, la vérité. Semaine 2, les utilisateurs.
 | J2 | mar 18/08 | Liste des ruptures classées par gravité, choix de ce qu'on répare |
 | J3 | mer 19/08 | Correctifs bloquants, passe de nettoyage des données de démonstration |
 | J4 | jeu 20/08 | Instrumentation des huit marches du tunnel, on ne devine plus |
-| J5 | ven 21/08 | **Présentiel Paris**, terrain, recrutement des trois entrepreneurs |
+| J5 | ven 21/08 | **Présentiel Paris**, terrain, recrutement des trois entrepreneurs, enquête métier |
+| — | sam 22/08 | Call général de fin de semaine 1, matin |
+| — | dim 23/08 | Off |
 | J6 | lun 24/08 | Entrepreneur 1 passe le tunnel, observé, chronométré, non aidé |
 | J7 | mar 25/08 | Correctifs à chaud, entrepreneur 2 (demi-journée, bilan Activ'Projet d'Antso) |
 | J8 | mer 26/08 | Entrepreneur 3, première commande réelle provoquée |
 | J9 | jeu 27/08 | Recette mobile complète, comparaison à `boutiquecreal.com` |
-| J10 | ven 28/08 | Mesure finale, verdict écrit, bilan PMSMP, décision d'Antso |
+| J10 | ven 28/08 | Mesure finale, verdict écrit |
+| — | sam 29/08 | Call général de clôture, bilan PMSMP, décision d'Antso |
 
-Le détail heure par heure, avec la double lecture produit et pédagogie, est dans
-`PROGRAMME-10-JOURS.md`.
+**Le rythme quotidien**, arrêté le 17/08 : point du matin de 8h45 à 9h00, autonomie, retour
+du tuteur à 12h00, débrief de validation d'étape un jour sur deux, call général le samedi
+matin, dimanche off. Le détail est dans `PROGRAMME-10-JOURS.md`.
 
 ---
 

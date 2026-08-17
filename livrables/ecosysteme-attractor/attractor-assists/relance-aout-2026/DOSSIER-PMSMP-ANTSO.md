@@ -71,24 +71,59 @@ pas de la construction. C'est précisément ce qu'un stage chez un praticien peu
 qu'une école ne peut pas. Le programme des dix jours y consacre le présentiel du 21/08 et le
 déjeuner de travail qui va avec.
 
-## 2 bis. Réserve à lever
+## 2 bis. État des pièces
 
-Trois des quatre pièces envoyées par Antso le 03/08 n'ont pas encore pu être ouvertes : le
-**bilan PMSMP type**, le **Cerfa** et le **support d'enquête métier**. Seul le dossier Uncode
-a été partagé sur le Drive et lu. **Les trames ci-dessous sont donc construites sur les
-attendus habituels du dispositif, pas recopiées sur les formulaires officiels.** Elles
-servent à collecter la matière au fil de l'eau. Le report dans les formulaires se fait à la
-main le 28/08, en vérifiant chaque intitulé.
+Lus et intégrés le 17/08 : le dossier **Uncode School**, le **bilan PMSMP officiel** et le
+**support d'enquête métier**. Les trames ci-dessous sont désormais calquées sur les vrais
+formulaires, plus sur des suppositions.
 
-Action à faire par Mac Arthur : partager les trois pièces manquantes sur le Drive, puis les
-archiver dans `context/import/formation/pmsmp-antso/`.
+Manque encore le **Cerfa**. Faible impact : la convention est passée par Immersion Facilitée
+et elle est déjà validée, le Cerfa papier n'est en principe plus nécessaire. À partager quand
+même pour l'archive.
+
+**Trois informations à demander à Antso dès le premier point**, elles figurent en tête du
+formulaire de bilan et personne ne les a :
+
+1. son **identifiant France Travail** ;
+2. le nom exact de la **structure d'accompagnement** telle qu'elle doit apparaître, Activ'Projet
+   ou Talent Solutions Tingari ;
+3. le nom du **conseiller** à inscrire, Yamina MOUMOU ou Michael DJADEL.
 
 ---
 
-## 3. Grille d'enquête métier
+## 3. L'enquête métier, les questions officielles
+
+Le support fourni par la conseillère contient **dix questions**, dans cet ordre. Elles se
+posent au tuteur en entretien, idéalement le vendredi 21/08 en présentiel, quand Antso aura
+déjà dix jours de matière et posera de meilleures questions qu'au premier jour.
+
+1. Pouvez-vous décrire votre métier ?
+2. Quelles sont les principales missions, avez-vous des missions secondaires ?
+3. Comment se déroule une journée ou une semaine type ?
+4. Comment êtes-vous arrivé à ce poste ?
+5. Quelles formations sont nécessaires pour exercer, et pour être employable ?
+6. Quel type de recrutement est généralement utilisé ?
+7. Y a-t-il des aspects du métier qui vous ennuient ou vous agacent ?
+8. Qu'aimez-vous le plus dans vos fonctions ?
+9. Quelles sont les perspectives d'évolution ?
+10. Comment résumeriez-vous votre activité en trois ou quatre mots clés ?
+
+Puis une synthèse en cinq blocs : missions et activités principales, profil requis,
+conditions de travail (horaires, déplacements, salaire), débouchés et évolutions, autres
+questions. Et pour finir, les observations personnelles d'Antso.
+
+**Deux questions sont écrites pour un métier salarié et doivent être adaptées, pas éludées.**
+La question 6 sur le type de recrutement devient, chez un indépendant, comment on obtient un
+client. Et dans la synthèse, la ligne salaire devient le revenu réel d'une activité
+indépendante, avec sa variabilité, ses délais d'encaissement et la part non facturable du
+temps. C'est justement la matière que la formation Uncode ne donnera pas. Autant que la
+réponse soit précise plutôt qu'esquivée.
+
+### La matière quotidienne pour nourrir ces réponses
 
 Six domaines, les mêmes que le référentiel du manuel. Antso remplit une section par jour,
-avec des faits observés et datés, jamais des généralités.
+avec des faits observés et datés, jamais des généralités. Les réponses aux dix questions
+ci-dessus se construisent à partir de là, pas de mémoire le dernier jour.
 
 ### Domaine 1, découverte et cadrage
 
@@ -139,41 +174,77 @@ avec des faits observés et datés, jamais des généralités.
 
 ---
 
-## 4. Trame de bilan de fin d'immersion
+## 4. Le bilan officiel, et ses contraintes réelles
 
-À remplir par le tuteur, avec Antso, le 28/08 après-midi.
+Le formulaire tient en trois pages et impose des choix qu'il vaut mieux préparer que
+découvrir le dernier jour.
 
-**Identification** : bénéficiaire, structure, tuteur, dates, métier observé, identifiant de
-convention. Repris du paragraphe 1.
+### L'objet de la PMSMP, une seule case à cocher
 
-**Activités observées et réalisées.** Lister factuellement, pas en compétences abstraites.
-Pré-rempli d'après le programme, à corriger selon ce qui s'est réellement passé :
+Trois possibilités : découvrir un métier ou un secteur, **confirmer un projet
+professionnel**, initier une démarche de recrutement.
 
-- recette complète d'un parcours utilisateur, huit étapes, relevé des points de rupture
-- classement des anomalies par gravité et participation à l'arbitrage de ce qui est corrigé
-- construction et tenue d'un tableau de mesure du décrochage utilisateur
-- observation d'une session de construction et d'une session de correction en direct
-- prise de contact et qualification d'entrepreneurs candidats au test
-- participation à un rendez-vous client en présentiel, puis conduite d'un entretien sous
-  supervision
-- observation de trois parcours utilisateurs réels, chronométrage et relevé de verbatim
-- recette d'une application sur téléphone réel, à plusieurs résolutions
-- animation des points quotidiens et rédaction de trois relevés de décisions
-- présentation du bilan de projet devant le décideur
+**Cocher « confirmer un projet professionnel ».** Antso ne part pas de zéro : il est déjà
+admissible chez Uncode depuis le 13/08 et il vise un financement AIF. Cocher « découvrir un
+métier » décrirait mal sa démarche et affaiblirait la cohérence du dossier devant France
+Travail. Emploi ou métier à renseigner : **product builder no code**.
 
-**Aptitudes constatées.** Rigueur d'observation, capacité à restituer un fait sans
-l'interpréter, tenue des délais, aisance relationnelle en rendez-vous, esprit de synthèse,
-posture face à la contradiction.
+### Le tableau ne comporte que cinq lignes
 
-**Appréciation du tuteur.** Rédigée le 28/08, en trois points : ce qui a été fait, ce qui a
-été compris du métier, ce qui reste à travailler si le projet se confirme.
+C'est la contrainte principale. Chaque ligne reçoit une activité observée et un niveau parmi
+trois : **ne connaît pas, sait faire, maîtrise**. Cinq lignes obligent à regrouper. Voici la
+proposition, elle couvre le référentiel sans se disperser :
 
-**Avis sur la pertinence du projet professionnel.** Position argumentée du tuteur sur
-l'adéquation entre le profil d'Antso et le métier de product builder, avec les points forts
-et les points de vigilance, sans complaisance. Un avis de convenance ne rend service à
-personne dans un dossier de financement.
+| # | Activité ou compétence mise en œuvre et observée |
+|---|---|
+| 1 | Cadrer un besoin et conduire une démarche de découverte utilisateur |
+| 2 | Concevoir et éprouver un parcours utilisateur de bout en bout, relever les ruptures |
+| 3 | Mesurer l'usage réel d'un produit et en tirer une décision |
+| 4 | Piloter un projet, animer les points et tracer les décisions |
+| 5 | Conduire un entretien de découverte commercial et participer au closing |
 
-**Suites envisagées.** Entrée en formation, poursuite d'échanges, autre piste.
+**Sur les niveaux, un conseil qui compte.** Dix jours d'immersion ne produisent pas une
+maîtrise, et cocher « maîtrise » sur les cinq lignes décrédibilise le document entier auprès
+de quelqu'un qui en lit des dizaines. Un bilan crédible mélange les niveaux et assume un
+« ne connaît pas » là où c'est vrai. C'est ce qui donne du poids aux lignes cochées « sait
+faire ».
+
+### Les conclusions du tuteur
+
+Deux cases, non exclusives dans la pratique :
+
+- le bénéficiaire peut **présenter sa candidature à un poste de** [intitulé à écrire] ;
+- le bénéficiaire peut **s'orienter vers ce métier**.
+
+La seconde est celle qui correspond au projet d'Antso, puisqu'il vise une formation puis une
+activité, pas une embauche immédiate. Si la première est cochée, écrire un intitulé réaliste
+au vu de son profil, par exemple chef de projet digital no code, plutôt que product builder
+senior.
+
+### Les trois zones de texte libre
+
+**Observations du bénéficiaire.** Écrites par Antso, pas par le tuteur. Sa trame de
+restitution du paragraphe 5 sert directement à les alimenter.
+
+**Observations du tuteur.** Trois points : ce qui a été fait, ce qui a été compris du métier,
+ce qui reste à travailler si le projet se confirme.
+
+**L'avis sur la pertinence du projet.** Argumenté, avec points forts et points de vigilance.
+Un avis de convenance ne rend service à personne dans un dossier de financement de 4 100 €.
+
+### Le point logistique à ne pas rater
+
+**Les deux signatures sont manuscrites et obligatoires.** Un accord en visio ne vaut rien
+pour ce document. Deux options, à trancher d'avance :
+
+1. le signer **en main propre lors du présentiel**, ce qui suppose de le remplir avant le
+   21/08 avec ce qui est déjà acquis, et de le compléter ensuite, ce qui est bancal ;
+2. l'imprimer, le signer, le scanner de part et d'autre après le 28/08. C'est le plus
+   probable, et il faut le prévoir plutôt que le découvrir.
+
+**Recommandation** : caler une seconde rencontre courte, ou vérifier dès cette semaine
+qu'Antso peut imprimer et scanner. Un bilan signé en retard retarde son dossier France
+Travail, et le bilan Activ'Projet tombe le 25/08.
 
 ---
 

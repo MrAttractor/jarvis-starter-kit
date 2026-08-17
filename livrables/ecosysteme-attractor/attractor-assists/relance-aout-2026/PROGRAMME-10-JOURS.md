@@ -31,24 +31,33 @@ des raisons techniques.
 
 ---
 
-## Le rythme d'une journée
+## Le rythme, arrêté par Mac Arthur le 17/08
 
-Construit sur la disponibilité réelle du tuteur, qui est également salarié en journée. Deux
-rendez-vous fixes, du travail en autonomie entre les deux.
+Construit sur la disponibilité réelle du tuteur, qui est également salarié en journée.
 
 | Créneau | Format | Contenu |
 |---|---|---|
-| 9h00, 20 min | audio, tuteur en trajet | Point de cadrage. Antso l'anime : où on en est, la métrique, l'objectif du jour, ce qui bloque |
-| 9h30 à 12h30 | autonomie | Le travail du jour, fiches d'observation, tests, mesures |
-| 12h45, 45 min | visio, partage d'écran | **La session qui compte.** Le tuteur produit et pense à voix haute. Antso pose ses questions au fil de l'eau |
-| 14h00 à 17h00 | autonomie | Suite du travail, préparation du relevé de décisions |
-| 17h30, 30 min | visio, jours pairs | Débrief, arbitrages, relevé de décisions écrit et validé |
+| **8h45 à 9h00** | audio, tous les jours | Point du matin. Antso l'anime : où on en est, la métrique, l'objectif du jour, ce qui bloque |
+| 9h00 à 12h00 | autonomie | Le travail du jour, fiches d'observation, tests, mesures |
+| **12h00** | visio ou audio | Retour du tuteur sur le travail de la matinée, déblocage, cadrage de l'après-midi |
+| 13h00 à 17h00 | autonomie | Suite du travail, préparation du relevé de décisions |
+| **Fin de journée, un jour sur deux** | visio, partage d'écran | **Débrief de validation d'étape.** On valide ou on refuse ce qui a été fait, et on trace la décision |
+| **Samedi matin** | visio | Call général. Bilan de la semaine, correction de trajectoire, cap de la suivante |
+| **Dimanche** | rien | Off, des deux côtés |
 
-**Pourquoi la session de 12h45 est le cœur du dispositif.** Un métier ne s'apprend pas en
-regardant des gestes, il s'apprend en entendant des arbitrages. Le tuteur ne montre pas
-seulement ce qu'il fait, il dit pourquoi il choisit ceci plutôt que cela, ce qu'il refuse, et
-ce qui l'inquiète. C'est là qu'un stagiaire voit la différence entre le métier tel qu'on le
-raconte et le métier tel qu'il est.
+**Le débrief d'un jour sur deux est le cœur du dispositif, pas le point du matin.** Un métier
+ne s'apprend pas en regardant des gestes, il s'apprend en entendant des arbitrages. C'est là
+que le tuteur dit pourquoi il choisit ceci plutôt que cela, ce qu'il refuse, et ce qui
+l'inquiète. Et c'est là qu'une étape est validée ou renvoyée, ce qui apprend à Antso la chose
+la plus difficile du métier : reconnaître qu'une chose est finie, ou qu'elle ne l'est pas.
+
+**Les jours de débrief** : J2 mardi 18, J4 jeudi 20, J6 lundi 24, J8 mercredi 26, J10
+vendredi 28. Cinq validations d'étape, une par étape du plan.
+
+**Une règle de tenue, à poser dès le premier jour.** Le point de 8h45 ne se rate pas et ne se
+décale pas. C'est court, c'est tôt, et c'est précisément ce qui en fait un engagement. Un
+stage à distance se délite toujours par le même endroit, le rendez-vous du matin qu'on
+déplace « juste pour aujourd'hui ».
 
 ---
 
@@ -137,6 +146,19 @@ Journée en face à face, lieu et heure à confirmer, secteur Paris ou Montreuil
 - **Livrable** : trois entrepreneurs engagés avec un créneau posé en semaine 2, et
   `fiche-terrain-J5.md`.
 
+**C'est aussi le bon jour pour l'enquête métier.** Antso aura cinq jours de matière, il posera
+les dix questions du support de sa conseillère bien mieux qu'il ne les aurait posées lundi.
+Face à face, sur un vrai moment de métier, pas au téléphone.
+
+### Samedi 22/08, matin. Call général de fin de semaine 1
+
+Une heure. Trois sujets, dans cet ordre : la métrique, où en est-on vraiment. Ce que la
+recette du J1 et le terrain du J5 ont changé au plan. Le cap de la semaine 2, avec ce qu'on
+abandonne s'il faut abandonner quelque chose.
+
+**Dimanche 23/08 : off des deux côtés.** Écrit dans le programme parce qu'un stage à distance
+déborde toujours sur le week-end si personne ne pose la limite.
+
 ---
 
 ## Semaine 2, les utilisateurs décident
@@ -201,14 +223,28 @@ Demi-journée pour Antso, il finalise son bilan Activ'Projet.
 
 | Créneau | Contenu |
 |---|---|
+| 8h45 | Point du matin, comme les autres jours |
 | 9h00, 1h | Antso présente le tableau final des quatre critères. C'est lui qui présente, le tuteur écoute |
-| 10h30, 1h | Décision de Mac Arthur, écrite : le produit est prêt, ou il ne l'est pas, et ce qu'on fait ensuite. Aucune décision reportée |
-| 14h00, 1h30 | Bilan PMSMP rempli ensemble, point par point. Enquête métier finalisée |
-| 16h00, 1h | **La question d'Antso.** Est-ce qu'il se lance, oui ou non. Réponse argumentée, avec ce qui l'attire et ce qui l'inquiète, à froid |
+| 12h00, 1h | Décision de Mac Arthur, écrite : le produit est prêt, ou il ne l'est pas, et ce qu'on fait ensuite. Aucune décision reportée |
+| Fin de journée | Cinquième et dernier débrief de validation d'étape |
 
-- **Livrables** : `VERDICT-28-08.md`, bilan PMSMP signé, enquête métier complète.
+- **Livrable** : `VERDICT-28-08.md`.
 
-La convention court jusqu'au samedi 29/08. Le vendredi 28 à 17h est la fin opérationnelle.
+### Samedi 29/08, matin. Call général de clôture
+
+Dernier jour de la convention. Deux heures, et c'est la séance qui produit les pièces
+administratives.
+
+| Créneau | Contenu |
+|---|---|
+| 1re heure | Bilan PMSMP rempli ensemble, ligne par ligne. Les cinq activités, les niveaux, les conclusions du tuteur |
+| 2e heure | **La question d'Antso.** Est-ce qu'il se lance, oui ou non. Réponse argumentée, à froid, avec ce qui l'attire et ce qui l'inquiète. Puis ses observations écrites sur le formulaire |
+
+- **Livrables** : bilan PMSMP complété, enquête métier finalisée, décision écrite d'Antso.
+
+**Attention aux signatures.** Le formulaire exige **deux signatures manuscrites**, un accord
+en visio ne suffit pas. Prévoir l'impression et le scan de part et d'autre, ou une remise en
+main propre. À vérifier avec Antso cette semaine, pas le 29 au matin.
 
 ---
 
@@ -225,9 +261,15 @@ La convention court jusqu'au samedi 29/08. Le vendredi 28 à 17h est la fin opé
 
 ---
 
-## Points à confirmer par Mac Arthur avant le J2
+## Points à régler cette semaine
 
-1. Les créneaux réels de 9h00 et 12h45 tiennent-ils avec les horaires DGFiP, ou faut-il
-   basculer la session de fond en soirée.
-2. Le lieu et l'horaire du présentiel du vendredi 21/08.
-3. La liste des entrepreneurs à contacter en priorité, elle conditionne tout le reste.
+Le rythme est arrêté. Restent quatre points, et le troisième conditionne tout le reste.
+
+1. **Le lieu et l'horaire du présentiel** du vendredi 21/08.
+2. **Les trois informations administratives** à demander à Antso dès le premier point du
+   matin : son identifiant France Travail, le nom exact de la structure d'accompagnement et
+   celui du conseiller à porter sur le bilan.
+3. **La liste des entrepreneurs à contacter en priorité.** Sans eux, aucun critère ne tombe
+   et les quinze jours ne prouvent rien.
+4. **La logistique de signature** du bilan, impression et scan ou remise en main propre. À
+   vérifier maintenant, pas le 29 au matin.
