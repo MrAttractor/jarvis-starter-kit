@@ -150,6 +150,13 @@ closer en face à face, pas à prospecter à froid. Profil visé, écrit au doss
 catalogue simple, déjà habitué à vendre par WhatsApp. Seuil d'alerte : si le J4 se termine
 sans deux candidats confirmés, on le dit et on change de méthode.
 
+**Le risque est plus élevé que prévu, mesuré le 17/08.** Le balayage des 26 dossiers clients
+ne donne que **deux candidats propres**, deux autres étant bloqués par un devis en cours. Le
+portefeuille de l'agence n'est pas un vivier d'utilisateurs pour ce produit, ce qui confirme
+au passage que la distribution n'a jamais été traitée. Deux sources externes doivent donc
+s'ouvrir dès le J2 : les 35 testeurs de mai, jamais rappelés un par un, et la prospection
+physique en Île-de-France le vendredi 21/08. Détail dans `liste-candidats.md`.
+
 **Le tunnel casse sur un point qu'on ne sait pas réparer en deux semaines.** Parade : la
 recette du J1 se fait avant tout engagement, et le J2 arbitre. Si un blocage dépasse la
 capacité du délai, il est écrit et le périmètre se réduit, il ne se cache pas.
