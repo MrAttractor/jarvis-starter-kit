@@ -31,18 +31,57 @@ auprès de France Travail.
 
 ---
 
-## 2. Réserve à lever
+## 2. La formation visée, et ce que ça met en jeu
 
-Les quatre pièces envoyées par Antso le 03/08 (programme Uncode School, bilan PMSMP type,
-Cerfa, support d'enquête métier) sont en pièces jointes du fil `PMSMP Product Builder` et
-n'ont pas pu être ouvertes depuis l'espace de travail. **Les trames ci-dessous sont donc
-construites sur les attendus habituels du dispositif, pas recopiées sur les formulaires
-officiels.** Elles servent à collecter la matière au fil de l'eau. Le report dans les
-formulaires officiels se fait à la main le 28/08, en vérifiant chaque intitulé.
+Lu le 17/08 dans le dossier officiel Uncode School.
 
-Action à faire par Mac Arthur : réenregistrer les quatre fichiers dans
-`context/import/formation/pmsmp-antso/` pour que la trame soit alignée sur les vrais
-formulaires.
+| | |
+|---|---|
+| Intitulé | Devenez Product Builder No Code et IA |
+| Certification | titre professionnel **RNCP42203, niveau 6**, inscrit au RNCP |
+| Fondateur | Milan Boisgard, à l'origine du terme « Product Builder no code » |
+| Format | promotion, cours en autonomie, lives synchrones, mentor attitré |
+| Entrée | dès l'inscription, entretien conseiller obligatoire, accessible débutant |
+| Tarif | **4 100 €**, mensualisation possible, abonnements aux outils en sus |
+| Financements | CPF, OPCO, **AIF France Travail**, financement entreprise |
+
+**Ce que ça implique pour le bilan de fin d'immersion.** Le bilan n'est pas une formalité de
+courtoisie, c'est une **pièce de financement**. Il appuie la demande d'AIF auprès de France
+Travail pour 4 100 €, via le bilan Activ'Projet du 25/08. Un bilan vague ou complaisant
+affaiblit le dossier au lieu de le servir. Il doit être factuel, daté, et son avis sur la
+pertinence du projet doit être argumenté, favorable ou non.
+
+### Les six modules, et ce que le stage y ajoute
+
+| # | Module Uncode | Ce que l'immersion apporte en plus |
+|---|---|---|
+| 1 | Fondamentaux du product building, discovery, proposition de valeur, roadmap | Un cas réel qui a raté, et pourquoi. La discovery se voit mieux sur un produit à 2 utilisateurs que sur un exercice |
+| 2 | Architecture de données et back-end, RGPD, sécurité | Une base Supabase partagée par une dizaine de dossiers, avec ses contraintes réelles d'isolation |
+| 3 | Automatisation et agents IA | Des agents en production, et le coût de maintenance qu'on ne voit jamais en formation |
+| 4 | UI/UX et développement no code, déploiement | La recette sur vrais téléphones, en 4G, sur le marché visé |
+| 5 | Pilotage, conduite du changement, amélioration continue | Le poste de chef de projet tenu pendant dix jours, sur un projet avec une échéance ferme |
+| 6 | Certification et insertion professionnelle | **Le trou du programme**, voir ci-dessous |
+
+**L'angle mort à couvrir en priorité, et il justifie à lui seul l'immersion.** Le programme
+Uncode enseigne à construire et à piloter. La vente n'apparaît qu'au module 6, en préparation
+à l'insertion, et l'économie réelle du métier n'apparaît nulle part : comment on obtient un
+premier rendez-vous, ce qu'on montre avant de parler d'argent, comment un prix se fixe, ce
+qu'on refuse, ce qui se passe quand un client ne paie pas, et quelle part du revenu ne vient
+pas de la construction. C'est précisément ce qu'un stage chez un praticien peut montrer et
+qu'une école ne peut pas. Le programme des dix jours y consacre le présentiel du 21/08 et le
+déjeuner de travail qui va avec.
+
+## 2 bis. Réserve à lever
+
+Trois des quatre pièces envoyées par Antso le 03/08 n'ont pas encore pu être ouvertes : le
+**bilan PMSMP type**, le **Cerfa** et le **support d'enquête métier**. Seul le dossier Uncode
+a été partagé sur le Drive et lu. **Les trames ci-dessous sont donc construites sur les
+attendus habituels du dispositif, pas recopiées sur les formulaires officiels.** Elles
+servent à collecter la matière au fil de l'eau. Le report dans les formulaires se fait à la
+main le 28/08, en vérifiant chaque intitulé.
+
+Action à faire par Mac Arthur : partager les trois pièces manquantes sur le Drive, puis les
+archiver dans `context/import/formation/pmsmp-antso/`.
 
 ---
 

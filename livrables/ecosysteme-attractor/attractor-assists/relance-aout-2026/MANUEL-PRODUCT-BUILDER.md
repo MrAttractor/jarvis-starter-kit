@@ -185,19 +185,27 @@ C'est le référentiel qui sert de grille à Antso, et de découpage au programm
 Un product builder passe sa semaine dans ces six domaines, dans des proportions qui
 surprennent la plupart des gens qui veulent en faire leur métier.
 
-| # | Domaine | Ce qu'on y fait vraiment | Part du temps réel |
-|---|---|---|---|
-| 1 | Découverte et cadrage | écouter, reformuler, refuser des demandes | 20 % |
-| 2 | Conception du parcours | dessiner le chemin le plus court vers la valeur | 15 % |
-| 3 | Construction | assembler, brancher, faire tenir debout | 25 % |
-| 4 | Données et intégrations | modèle de données, paiement, messagerie, droits | 15 % |
-| 5 | Mise en ligne, recette, mesure | déployer, tester sur vrai téléphone, instrumenter | 10 % |
-| 6 | Vente et relation client | maquette, devis, closing, livraison, suivi | 15 % |
+| # | Domaine | Ce qu'on y fait vraiment | Temps réel | Couvert par Uncode |
+|---|---|---|---|---|
+| 1 | Découverte et cadrage | écouter, reformuler, refuser des demandes | 20 % | module 1 |
+| 2 | Conception du parcours | dessiner le chemin le plus court vers la valeur | 15 % | modules 1 et 4 |
+| 3 | Construction | assembler, brancher, faire tenir debout | 25 % | module 4 |
+| 4 | Données et intégrations | modèle de données, paiement, messagerie, droits | 15 % | modules 2 et 3 |
+| 5 | Mise en ligne, recette, mesure | déployer, tester sur vrai téléphone, instrumenter | 10 % | modules 4 et 5 |
+| 6 | Vente et relation client | maquette, devis, closing, livraison, suivi | 15 % | **quasiment pas** |
 
-Le chiffre qui compte pour la décision d'Antso : **la construction pure représente environ un
-quart du temps.** Quiconque choisit ce métier parce qu'il aime construire découvre au bout de
-trois mois qu'il passe les trois autres quarts à écouter, arbitrer, vendre et réparer. Il vaut
-mieux le savoir en quinze jours qu'après une formation.
+Deux chiffres à retenir pour la décision d'Antso.
+
+**La construction pure représente environ un quart du temps.** Quiconque choisit ce métier
+parce qu'il aime construire découvre au bout de trois mois qu'il passe les trois autres quarts
+à écouter, arbitrer, vendre et réparer. Il vaut mieux le savoir en quinze jours qu'après une
+formation.
+
+**Le domaine 6 est le seul que la formation ne couvre pas**, et c'est celui qui décide de la
+survie économique. Le programme Uncode ne l'aborde qu'au dernier module, sous l'angle de
+l'insertion. Personne n'y enseigne comment se faire payer, ni ce qu'on répond à un client qui
+demande une chose de plus « vite fait ». C'est un angle mort structurel des formations, et une
+raison suffisante de faire une immersion chez un praticien avant de s'inscrire.
 
 ---
 

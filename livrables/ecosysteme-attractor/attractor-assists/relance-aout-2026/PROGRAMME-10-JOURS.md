@@ -20,6 +20,15 @@ arbitrages, il assiste aux rendez-vous réels.
 **Ce qu'il ne fait pas**, et c'est le cadre d'une immersion : il ne code pas en production,
 il ne signe rien, il ne remplace aucun salarié et il ne porte aucune décision seul.
 
+**Ce que le stage vise en priorité, après lecture du programme Uncode.** La formation qu'Antso
+envisage, titre RNCP42203 de niveau 6, couvre sérieusement la conception, l'architecture de
+données, l'automatisation, l'interface et le pilotage. Elle ne couvre presque pas ce qui fait
+vivre ou mourir un praticien : **obtenir un client, fixer un prix, refuser, se faire payer, et
+tenir dans la durée**. Ces dix jours ne dupliquent donc pas le programme, ils vont chercher ce
+qu'aucune école ne montre. C'est aussi la seule matière qui permette à Antso de répondre
+honnêtement à sa question de départ, parce qu'on ne renonce presque jamais à ce métier pour
+des raisons techniques.
+
 ---
 
 ## Le rythme d'une journée
