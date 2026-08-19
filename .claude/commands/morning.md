@@ -145,6 +145,7 @@ matinale coûte plus de temps qu'elle n'en fait gagner.
 ## Règles importantes
 
 - **Ne jamais inventer un statut.** Ce qui n'est pas dans un radar n'existe pas dans le brief. Un radar périmé se signale comme périmé, il ne se comble pas au jugé.
+- **Dire la fraîcheur des données.** Si la dernière ligne de `context/PROGRESSION.md` date de trois jours ou plus, le brief l'annonce en tête : `/soir` n'a pas tourné, les radars vieillissent, et ce brief est donc moins fiable qu'il n'en a l'air. Un instrument qui ne sait pas dire qu'il dérive est pire qu'un instrument absent.
 - **Ne jamais adoucir.** Un dossier mort se dit mort. Une échéance dépassée se dit dépassée, avec le nombre de jours.
 - Une page maximum, hors bloc « reste à faire ».
 - Français, pas de tirets longs, pas d'emoji.
