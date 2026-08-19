@@ -5,12 +5,21 @@
 > lui-même le 19/08 : version plus courte, sans les remerciements d'ouverture, sans le
 > paragraphe sur la sécurité. Ce fichier n'est qu'une copie d'archive.
 >
-> ## Attention, deux brouillons existent
-> - **`r-8246262309023243695`** : le bon, rattaché au fil d'Élise (`19fd6fc0e0cb26c3`),
->   avec l'historique cité en dessous.
-> - `r8581636460261655071` : à supprimer. La mise à jour d'un brouillon par l'API le
->   **détache de sa conversation** et perd l'historique cité. Leçon : ne jamais corriger
->   un brouillon de réponse par `update_draft`, le recréer avec `replyToMessageId`.
+> ## Quatre brouillons existent, un seul est bon
+> | Brouillon | Sort |
+> |---|---|
+> | **`r8894317405267785988`** (le plus récent) | **à envoyer.** Dans le fil d'Élise, liens propres grâce à un `htmlBody` avec de vraies ancres |
+> | `r-8246262309023243695` | à supprimer, liens enveloppés en `google.com/url` |
+> | `r8581636460261655071` | à supprimer, détaché de la conversation |
+> | `r-3768285219602053424` | à supprimer, brouillon de test « TEST liens » |
+>
+> **Comment reconnaître le bon** : ouvrir, regarder le premier lien sous « Lien
+> d'hébergement temporaire ». S'il affiche `https://demo.agenceattractor.com/elevia/app/`
+> c'est le bon. S'il affiche `google.com/url?q=` c'est l'autre.
+>
+> Deux pièges du connecteur, détaillés en mémoire `reference_gmail_liens_enveloppes` :
+> les adresses partent enveloppées sauf si on fournit un `htmlBody`, et `update_draft`
+> détache un brouillon de sa conversation. Le connecteur ne sait ni envoyer ni supprimer.
 >
 > ## Ce qui a été modifié dans son texte, et rien d'autre
 > Le seul paragraphe touché est celui de l'adresse de contact, pour tenir compte de la
