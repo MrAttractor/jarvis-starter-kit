@@ -8,7 +8,7 @@
 |---|---|
 | Statut | **recette intégrée et EN LIGNE le 17/08. En attente de sa signature et de ses questions d'affinités** |
 | Dernier contact | **2026-08-17 : c'est ELLE qui relance**, elle demande où en est l'avancement (le 12/08 elle partait en vacances et demandait à continuer par mail) |
-| Prochaine action | **Lui répondre sur l'avancement**, c'est elle qui attend. Avant d'envoyer : **ouvrir l'app sur un vrai téléphone** jusqu'à l'enregistrement vidéo, puis `BROUILLON-REPONSE-ELISE-14-08.md`. **Signer soi-même** l'avenant : ta propre signature manque |
+| Prochaine action | **Envoyer le brouillon Gmail déjà prêt** (fil « Ajout et clarification de clause », brouillon `r8581636460261655071`). **Signer soi-même** l'avenant : ta propre signature manque |
 | Échéance | **répondre sans délai** (relance cliente en attente). Relance de signature le 25/08/2026 si toujours rien |
 | Argent en attente | 2 050 € — Tranche 2 non déclenchée |
 
@@ -68,8 +68,26 @@ et laissait croire qu'il manquait une permission Pages. Il suffisait de neutrali
 variable. Deux jetons créés entre-temps se sont tronqués au copier-coller (52 caractères
 au lieu de 53). Détail en mémoire `reference_wrangler_oauth`.
 
-**Non fait, et dit :** **l'app n'a pas tourné sur un vrai téléphone**, ce qui reste
-bloquant pour tout ce qui touche la caméra (R-51). Rien ne s'annonce à la cliente avant.
+**Recette du 19/08 et quatre défauts corrigés depuis.** L'inscription ne partait
+jamais (exception avalée, EXP-041), la liste des pays s'arrêtait à la lettre E (plafond
+de 60 entrées), le bouton de renvoi de code s'affichait trop tôt (`display` battant
+`hidden`), et « un compte existe déjà avec cette adresse » était un cul-de-sac. Tout est
+en ligne et prouvé par pilotage dans un navigateur.
+
+**Comptes de test : les deux de Mac Arthur supprimés le 19/08** (4 membres → 2,
+15 sessions → 2, aucun fichier orphelin). **Les deux comptes d'Élise sont conservés**,
+sur sa décision : elle s'en sert encore, et `Caraca` porte une vidéo de 784 ko en
+attente de décision depuis le 08/08.
+
+**Défaut latent trouvé à cette occasion, à corriger :** supprimer un membre efface sa
+ligne de vérification en cascade, mais **pas le fichier vidéo dans le stockage**. La
+purge travaille à partir des lignes de `el_verifications`, donc le fichier devient
+introuvable et n'est jamais effacé. Or la politique de confidentialité qu'on vient de
+publier promet au membre de pouvoir supprimer son compte et ses données. À traiter avant
+l'ouverture.
+
+**Non fait, et dit :** **la vérification par vidéo n'a jamais été menée jusqu'au bout sur
+un vrai téléphone** (R-51). Le brouillon ne prétend donc rien à ce sujet.
 
 ## Ses 6 demandes du 02/08 et le traitement retenu
 
