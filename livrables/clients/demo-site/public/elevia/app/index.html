@@ -226,6 +226,13 @@ button{-webkit-tap-highlight-color:transparent}
   font-family:inherit;font-size:13.5px;color:var(--muted);cursor:pointer;text-decoration:underline;
   text-underline-offset:3px;min-height:44px;
 }
+/* Un display explicite bat l'attribut hidden, qui ne doit sa valeur qu'à la
+   feuille de style du navigateur. Sans cette règle, le bouton « recevoir un
+   nouveau code » s'affichait dès l'arrivée sur l'écran alors qu'il est censé
+   n'apparaître qu'à l'expiration : le membre demandait un second code, qui
+   annule le premier, et saisissait ensuite celui qui ne marche plus.
+   Constaté sur le rendu, invisible à la relecture du code. */
+.lien[hidden]{display:none}
 
 /* ── Code à 6 chiffres ── */
 .code{
@@ -236,6 +243,10 @@ button{-webkit-tap-highlight-color:transparent}
 .minuteur{text-align:center;font-size:12.5px;color:var(--gris);margin-top:12px}
 .minuteur b{color:var(--muted);font-variant-numeric:tabular-nums;font-weight:500}
 .minuteur.fini{color:var(--alerte)}
+
+/* Porte de sortie de l'écran de code, quand on ne sait pas si un compte existe. */
+.sortie{text-align:center}
+.sortie p{font-size:13.5px;color:var(--muted);margin-bottom:14px}
 
 /* ── Messages ── */
 .message{
@@ -777,6 +788,9 @@ function ecranEngagement(msg) {
     const r = await appel("inscription", { ...etat.form, cgu: true, optin: $("#i-optin").checked });
     if (!r.ok) return ecranEngagement(r.error);
     etat.email = email;
+    // Provenance notée : après une inscription, le compte existe à coup sûr,
+    // donc l'écran suivant peut affirmer que le code est parti.
+    etat.provenance = "inscription";
     ecranCode(r.email_envoye ? null : "Votre compte est créé, mais l'envoi du code a échoué. Utilisez « recevoir un nouveau code ».");
   };
   $("#b-retour").onclick = () => ecranProfil();
@@ -799,11 +813,26 @@ let ticCode = null;
 
 function ecranCode(msg) {
   clearInterval(ticCode);
+
+  /* Deux situations très différentes derrière le même écran.
+     Après une inscription, le compte vient d'être créé : affirmer que le code
+     est parti est vrai. Après une demande de connexion, on ne sait pas si un
+     compte existe, et on ne doit surtout pas le dire. L'ancienne formulation
+     affirmait « nous l'avons envoyé à » dans les deux cas : quelqu'un qui se
+     trompait de bouton attendait dix minutes un e-mail qui n'existait pas.
+     C'est arrivé en recette. On dit donc une phrase vraie dans les deux cas,
+     et on ouvre une porte de sortie vers l'inscription. */
+  const connexion = etat.provenance === "connexion";
+
   rendre(`
     <div class="carte anime">
       <span class="etiquette">CONFIRMATION</span>
-      <h2>Votre code vient de partir</h2>
-      <p class="chapo">Nous l'avons envoyé à <strong>${ech(etat.email)}</strong>.</p>
+      ${connexion
+        ? `<h2>Vérifiez votre boîte</h2>
+           <p class="chapo">Si un compte existe avec <strong>${ech(etat.email)}</strong>,
+           un code vient d'y être envoyé. Pensez à regarder vos indésirables.</p>`
+        : `<h2>Votre code vient de partir</h2>
+           <p class="chapo">Nous l'avons envoyé à <strong>${ech(etat.email)}</strong>.</p>`}
       ${erreur(msg)}
       <div class="champ">
         <label for="i-code">Code à 6 chiffres</label>
@@ -813,7 +842,12 @@ function ecranCode(msg) {
       <p class="minuteur" id="m-code" role="status" aria-live="polite"></p>
       <button class="bouton" id="b-entrer" style="margin-top:18px" disabled>Entrer</button>
       <button class="lien" id="b-renvoi" hidden>Recevoir un nouveau code</button>
-    </div>`);
+    </div>
+    ${connexion ? `
+    <div class="carte anime-2 sortie">
+      <p>Vous n'avez pas encore de compte ?</p>
+      <button class="bouton or" id="b-adherer-ici">Demander mon adhésion</button>
+    </div>` : ""}`);
 
   const champ = $("#i-code"), entrer = $("#b-entrer"), pendule = $("#m-code"), renvoi = $("#b-renvoi");
   champ.focus();
@@ -827,11 +861,13 @@ function ecranCode(msg) {
       const mm = String(Math.floor(reste / 60)).padStart(2, "0");
       const ss = String(reste % 60).padStart(2, "0");
       pendule.className = "minuteur";
-      pendule.innerHTML = `Ce code est valable encore <b>${mm}:${ss}</b>.`;
+      // Formulation vraie dans les deux cas : elle parle du temps qu'il reste
+      // pour saisir un code, pas d'un code dont on affirmerait l'existence.
+      pendule.innerHTML = `Vous avez encore <b>${mm}:${ss}</b> pour saisir votre code.`;
       renvoi.hidden = true;
     } else {
       pendule.className = "minuteur fini";
-      pendule.textContent = "Ce code a expiré.";
+      pendule.textContent = "Le délai est écoulé.";
       renvoi.hidden = false;
       clearInterval(ticCode);
     }
@@ -858,7 +894,17 @@ function ecranCode(msg) {
   renvoi.onclick = async () => {
     renvoi.disabled = true; renvoi.textContent = "Envoi…";
     const r = await appel("connexion", { email: etat.email });
-    ecranCode(r && r.ok === false ? r.error : "Un nouveau code vient de vous être envoyé.");
+    ecranCode(r && r.ok === false ? r.error : "Une nouvelle demande vient d'être envoyée.");
+  };
+
+  // La porte de sortie : elle reprend l'adresse déjà saisie pour ne pas la
+  // redemander, et c'est elle qui récupère réellement la personne perdue.
+  const adherer = $("#b-adherer-ici");
+  if (adherer) adherer.onclick = () => {
+    clearInterval(ticCode);
+    etat.form.email = etat.email;
+    etat.pas = 1;
+    ecranPseudo();
   };
 }
 
@@ -889,7 +935,10 @@ function ecranConnexion(msg) {
     // demande un code qui n'est jamais parti.
     if (r && r.ok === false) { b.disabled = false; b.textContent = "Recevoir mon code"; return ecranConnexion(r.error); }
     etat.email = email;
-    // Réponse volontairement identique que le compte existe ou non.
+    // Réponse volontairement identique que le compte existe ou non : sur un club
+    // privé, tester une adresse ne doit jamais permettre de savoir qui est membre.
+    // L'écran suivant doit donc rester vrai sans rien révéler.
+    etat.provenance = "connexion";
     ecranCode(null);
   };
   $("#b-retour").onclick = ecranAccueil;
