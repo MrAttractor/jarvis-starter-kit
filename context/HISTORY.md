@@ -7,6 +7,70 @@
 
 ---
 
+## 2026-08-19 (session 134 — Élévia passe en ligne, et trois diagnostics faux avant le bon)
+
+> La semaine s'est jouée sur la qualité du diagnostic, pas sur la difficulté
+> technique. Trois fois de suite, la première explication était fausse, et à
+> chaque fois c'est la mesure qui a tranché.
+
+### Le déploiement, bloqué trois jours pour une raison inexistante
+
+- Depuis le 14/08, la mise en ligne échouait sur un `Authentication error` de Cloudflare. Diagnostic rendu : le jeton du `.env` n'a pas la permission Pages. **C'était faux.**
+- Une **session OAuth wrangler existait déjà sur la machine**, avec le droit `pages:write` et un renouvellement automatique. Wrangler donne simplement la priorité à la variable `CLOUDFLARE_API_TOKEN`, qui ne porte que le DNS, et qui écrasait cette session.
+- Coût de l'erreur : deux jetons créés inutilement par Mac Arthur, dont les valeurs se sont tronquées au copier-coller à 52 caractères au lieu de 53. La commande qui marchait tenait en une ligne, il suffisait de neutraliser la variable.
+- **LEÇON : un refus d'authentification ne dit pas qu'il manque un droit, il dit qu'on présente la mauvaise identité.** Vérifier quelle identité est réellement utilisée avant d'en fabriquer une nouvelle. Écrit en mémoire `reference_wrangler_oauth`.
+
+### Quatre défauts trouvés en recette, dont un qui rendait l'inscription impossible
+
+- **L'inscription ne partait jamais.** L'écran de bienvenue remplaçait le contenu de la page, et le code lisait **ensuite** la case à cocher. Elle n'existait plus, la lecture levait une exception dans un gestionnaire asynchrone, donc avalée sans rien afficher. Aucune requête, aucune ligne en base, aucun message, et le visiteur restait indéfiniment sur « Nous envoyons votre code sécurisé ». En ligne du 17 au 19.
+- **La liste des pays s'arrêtait à la lettre E**, un plafond de 60 entrées posé « pour la performance ». Sur une application qui vise une diaspora mondiale, le Sénégal et la Côte d'Ivoire étaient invisibles à qui ne pensait pas à taper.
+- **Le bouton de renvoi de code s'affichait dès l'arrivée** alors qu'il ne doit apparaître qu'à l'expiration : un `display:block` bat l'attribut `hidden`. Le membre demandait un second code, lequel annule le premier.
+- **« Un compte existe déjà avec cette adresse » était un cul-de-sac.** Ce n'est pas une erreur de saisie, c'est quelqu'un qui a oublié son compte : l'écran propose désormais de recevoir un code, ou de changer d'adresse.
+
+### Le diagnostic qui a coûté deux jours de plus
+
+- Au premier signalement, la base ne montrait **aucune trace** de l'inscription. Conclusion rendue : « il n'y a pas de panne, tu t'es trompé de bouton. » Faux. **Zéro trace signifiait que la requête n'était jamais sortie du navigateur.**
+- **LEÇON, la plus chère de la semaine : l'hypothèse de l'erreur d'usage est la plus flatteuse pour celui qui a écrit le code, donc c'est celle qu'il faut examiner en dernier.** Cerveau : fiche **EXP-041**, règle **R-74**, et **R-23** étendue à la lecture d'une absence de mesure.
+
+### L'audit mobile first, mesuré et non estimé
+
+- Chrome sans interface refusant de descendre sous 504 px, l'application a été rendue dans un cadre à largeur imposée pour relever les vraies valeurs sur 375, 390, 414 et 768 px, écran par écran.
+- Relevé : **zéro débordement partout**, et tous les champs à 16 px, donc pas de zoom automatique sur iPhone. Mais **les cases à cocher faisaient 19 × 19 px** pour un minimum de 44, avec les liens des documents imbriqués dedans à 17 px de haut. Sur l'écran où l'acceptation est obligatoire, deux pixels décidaient entre cocher et quitter l'inscription.
+- Corrigés aussi : les liens de pied de page à 32 px, le `100vh` qui ignore la barre d'adresse mobile, et un `viewport-fit=cover` déclaré sans aucune zone de sécurité, donc une mise en page qui s'étendait sous la barre d'accueil de l'iPhone.
+- **Le bouton d'adhésion est passé de 713 à 544 px du haut**, donc au-dessus de la ligne de flottaison d'un iPhone SE, en retirant de l'accueil un en-tête qui répétait le monogramme déjà présent dans la plaque d'ouverture.
+
+### Les redondances de texte venaient de nous, pas de la cliente
+
+- L'écran d'accueil annonçait **trois fois la même promesse** : le titre et le chapô commençaient tous deux par « Élévia réunit des personnes exigeantes », et les trois badges reformulaient le chapô.
+- Or la cliente avait demandé trois badges de **deux mots**. Nous les avions étoffés d'explications, et ce sont ces explications qui répétaient son texte. Ses libellés courts ont été rendus, et le chapô enchaîne désormais sur le titre au lieu de le redire.
+
+### Un domaine qui appartient à quelqu'un d'autre
+
+- La cliente demandait `support@elevia.fr` comme adresse de contact. **Vérification DNS auprès de deux résolveurs : `elevia.fr` est enregistré par un tiers, chez Gandi, avec des serveurs de courrier actifs.** Une membre écrivant à cette adresse aurait envoyé ses données personnelles à un inconnu, et le message serait bien arrivé.
+- Retenu : `contact@ynlclub.com`, sa seconde proposition, dont le domaine ne laisse aucune trace DNS. Affiché en texte et non en lien tant qu'il n'est pas acheté, un `mailto` vers un domaine inexistant étant un lien cassé livré sciemment.
+
+### Les mails clients partaient avec des liens déguisés
+
+- Question de Mac Arthur sur les adresses `google.com/url` visibles dans un brouillon. Contrôle du HTML du message **réellement envoyé le 07/08** : l'enveloppe Google était dans le lien **et dans le texte affiché**. Élise a donc reçu son lien de signature électronique sous la forme d'une longue adresse Google, ce qui ressemble à du hameçonnage.
+- Parade trouvée et vérifiée sur un envoi réel : fournir un `htmlBody` avec de vraies ancres rend le texte visible propre. La cible du lien reste réécrite par Gmail, sans conséquence pour le lecteur.
+- **Correction d'une analyse rendue trop vite** : ce redirecteur n'est pas une cause des mails en indésirables, Gmail l'applique à presque tout message sortant. Le sujet de la délivrabilité reste entier, du côté de SPF, DKIM et DMARC.
+
+### Livré et en ligne
+
+- Application refondue sur la charte **bleu nuit `#00234B` et or**, relevée dans le logo officiel de la cliente. Le cahier des charges disait « Noir & Or » six fois parce qu'il a été rédigé **avant que le logo existe**.
+- **Conditions d'utilisation et politique de confidentialité créées** : leurs liens étaient morts dans l'application depuis le début. Gabarits, avec les mentions que seule la cliente peut fournir surlignées.
+- Migration `0005` : plafond d'envoi de codes, trois par quart d'heure et huit par jour, avec un refus formulé à l'identique pour une adresse inscrite et une adresse inconnue, afin de ne pas révéler qui est membre du club.
+- Comptes de test de Mac Arthur supprimés, 4 membres à 2, sans fichier orphelin. **Ceux d'Élise conservés** : elle s'en sert, et l'un porte une vidéo en attente de décision.
+- **Réponse envoyée à Élise le 19/08 à 10h42**, après sa relance du 17. Elle lui dit franchement que son texte d'accueil a été raccourci, et propose de le remettre si elle préfère.
+
+### Ce qui reste ouvert
+
+- **Rien n'est signé, ni par elle ni par nous.** Sa signature fixe le J0 et déclenche 900 €. La contresignature de Mac Arthur manque aussi.
+- **La vérification par vidéo n'a jamais tourné jusqu'au bout sur un vrai téléphone.**
+- **Défaut latent à traiter avant l'ouverture** : supprimer un membre efface sa ligne de vérification en cascade mais **pas le fichier vidéo**, que la purge ne retrouve plus. La politique de confidentialité publiée promet pourtant au membre de pouvoir supprimer ses données.
+
+---
+
 ## 2026-08-17 (point de situation — quatre dossiers attendent, deux clients ont relancé les premiers)
 
 > Pas une session de production. Un état des lieux, posé parce que le journal

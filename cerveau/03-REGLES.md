@@ -82,9 +82,19 @@
 **Origine** : EXP-012.
 **Application** : on propose un calendrier éditorial, on ne l'écrit jamais en base à la place du client. On livre le tuyau, il met sa voix.
 
-### R-15 · Zéro lien non testé
-**Origine** : EXP-013.
+### R-15 · Zéro lien non testé, y compris dans les mails qu'on envoie
+**Origine** : EXP-013. **Étendue le 19/08/2026** aux liens des messages sortants, dossier Club Élévia.
 **Application** : navigation, CTA, mailto, ancres, liens WhatsApp. Tous testés avant tout envoi. Règle bloquante.
+**Extension aux mails** : la règle ne couvrait que les livrables, pas les messages. Or **tout brouillon Gmail créé via le connecteur enveloppe les adresses dans `google.com/url?q=…`, dans le lien ET dans le texte affiché**. Mesuré sur le message réellement envoyé à la Cliente le 07/08 : elle a reçu son **lien de signature électronique** sous la forme d'une longue adresse Google, ce qui ressemble à du hameçonnage. Le défaut a duré des mois sans que personne le voie, parce qu'on relit ce qu'on a écrit et pas ce qui est parti.
+**Parade** : fournir un `htmlBody` avec de vraies ancres `<a href="…">…</a>`. Le texte visible redevient propre. Détail en mémoire `reference_gmail_liens_enveloppes`.
+**Le réflexe à prendre** : après l'envoi d'un mail contenant un lien qui engage (signature, paiement, accès), **relire le message dans les envoyés** et regarder ce que le destinataire voit. Ce n'est pas le brouillon qui fait foi.
+
+### R-76 · Une suppression en cascade n'emporte pas les fichiers stockés
+**Origine** : ménage des comptes de test du Club Élévia, 19/08/2026.
+**Le fait mesuré** : supprimer un membre efface sa ligne de vérification par `on delete cascade`, mais **pas l'objet vidéo dans le stockage**. Or la purge automatique travaille **à partir des lignes** : le fichier devient introuvable et n'est plus jamais effacé. Une vidéo du visage d'une personne resterait donc indéfiniment, alors que la politique de confidentialité publiée lui promet de pouvoir supprimer son compte et ses données.
+**Application** : partout où une ligne pointe vers un fichier stocké, la suppression de la ligne doit **d'abord** effacer le fichier. Trois façons, par ordre de robustesse : effacer l'objet dans la fonction qui supprime, un déclencheur `BEFORE DELETE`, ou à défaut un **balayage périodique des orphelins** qui compare le stockage aux lignes existantes. Le balayage seul ne suffit pas, il rattrape au lieu de prévenir.
+**Vérification** : après toute suppression, compter les objets du stockage **sans ligne correspondante**. Zéro, sinon la promesse est cassée.
+**Pourquoi c'est une règle et pas un détail** : une donnée qu'on a promis d'effacer et qu'on conserve sans le savoir est un manquement qui ne se voit jamais de l'intérieur, puisque plus rien ne la référence. Voir R-54, une suppression promise doit être prouvable.
 
 ### R-16 · Passe de nettoyage avant mise en production
 **Origine** : EXP-014, doublons C'Real.
