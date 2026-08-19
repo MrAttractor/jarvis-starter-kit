@@ -1,34 +1,26 @@
-# Brouillon de réponse à Élise CAPEL — écrit le 14/08, réactualisé le 19/08/2026
+# Réponse à Élise CAPEL — envoyée depuis Gmail
 
-> À relire et envoyer par Mac Arthur.
-> Répond à son **debrief de recette du 8 août (14h45)**, 16 points sur la Web App,
-> **et à sa relance du 17 août** où elle demande où en est l'avancement.
-> **À envoyer depuis `hello@agenceattractor.com`**, dans le fil existant
-> « Club privé Élévia - Ajout et clarification de clause ».
+> **Le texte qui fait foi est le brouillon Gmail `r-8246262309023243695`**, dans le fil
+> « Club privé Élévia - Ajout et clarification de clause ». Mac Arthur l'a réécrit
+> lui-même le 19/08 : version plus courte, sans les remerciements d'ouverture, sans le
+> paragraphe sur la sécurité. Ce fichier n'est qu'une copie d'archive.
 >
-> ## Ce qui a changé depuis la version du 14/08
-> Le site est en ligne et vérifié. Quatre défauts ont été trouvés en recette et
-> corrigés depuis : l'inscription qui ne partait pas, la liste des pays coupée à
-> la lettre E, un bouton de renvoi de code affiché trop tôt, et un cul-de-sac
-> quand l'adresse a déjà un compte. Le mail n'entre pas dans ce détail, il dit
-> l'essentiel.
+> ## Attention, deux brouillons existent
+> - **`r-8246262309023243695`** : le bon, rattaché au fil d'Élise (`19fd6fc0e0cb26c3`),
+>   avec l'historique cité en dessous.
+> - `r8581636460261655071` : à supprimer. La mise à jour d'un brouillon par l'API le
+>   **détache de sa conversation** et perd l'historique cité. Leçon : ne jamais corriger
+>   un brouillon de réponse par `update_draft`, le recréer avec `replyToMessageId`.
 >
-> ## Un point de transparence, à assumer
-> Nous avons **raccourci son texte d'accueil**, qui est son texte à elle. C'est
-> écrit noir sur blanc dans le mail, avec la raison, et la proposition de
-> revenir en arrière si elle préfère. Ne pas retirer ce paragraphe.
+> ## Ce qui a été modifié dans son texte, et rien d'autre
+> Le seul paragraphe touché est celui de l'adresse de contact, pour tenir compte de la
+> décision du 19/08 : on affiche l'adresse que la Cliente demande, en disant qu'elle
+> n'est pas active. Les adresses enveloppées par Gmail (`google.com/url?q=`) ont aussi
+> été remises au propre.
 >
-> ## Ce qui n'est toujours pas fait
-> **La vérification par vidéo n'a jamais été menée jusqu'au bout sur un vrai
-> téléphone.** Le mail ne prétend donc rien à ce sujet. Ne pas ajouter de phrase
-> qui l'affirmerait.
->
-> ## Rappels
-> - Sa demande de vérification du 8 août attend depuis **11 jours** dans le
->   back-office. Le mail en fait une occasion de lui présenter l'écran d'équipe.
-> - **Ta signature manque** sur le dossier ATR-2026-0005 : elle a ouvert le lien
->   le 5 août sans signer, et toi non plus. Le lien du 7 août reste valable
->   jusqu'au 30 septembre.
+> ## Ce que le mail ne prétend pas
+> **La vérification par vidéo n'a jamais été menée jusqu'au bout sur un vrai téléphone.**
+> Ne pas ajouter de phrase qui l'affirmerait.
 
 ---
 
@@ -70,7 +62,11 @@ Le résultat est plus court et plus net. **Si tu préfères ton texte complet, o
 
 **Le compte à rebours du code.** Tu proposais 2 minutes. Le code est en réalité valable **10 minutes**. Afficher 2 minutes aurait poussé les gens à en redemander un alors que le premier fonctionnait encore, et le nouveau code annule le précédent : on saisit alors celui qui ne marche plus.
 
-**L'adresse de contact.** Tu proposais `support@elevia.fr` ou `contact@ynlclub.com`. Ces deux adresses supposent un nom de domaine qui n'est pas encore acheté, donc les messages seraient partis dans le vide. J'ai mis `clubpriveeelevia@gmail.com`, la seule qui existe aujourd'hui. Et je dois te signaler un point que tu n'as pas pu voir à l'écran : **les e-mails de connexion partent encore depuis le domaine de mon agence.** C'est la dernière référence au prestataire, et la plus visible puisque chaque membre la reçoit. Pour la retirer, il faut ton nom de domaine, un service d'envoi n'acceptant que des domaines vérifiés. En attendant, tes membres qui répondent à ces e-mails t'écrivent bien à toi.
+**L'adresse de contact.** J'ai mis `contact@ynlclub.com`, celle que tu proposais. Elle n'est pas encore active, puisque le domaine reste à acheter : dans la démo elle s'affiche donc en texte et non en lien, pour que personne n'écrive dans le vide. On branchera une adresse qui fonctionne pour les tests réels.
+
+Un point important sur ton autre proposition, en revanche : **`support@elevia.fr` est à écarter.** J'ai vérifié, ce domaine appartient déjà à quelqu'un d'autre, et il a des serveurs de courrier actifs. Une future membre qui écrirait à cette adresse enverrait ses informations à un inconnu, et le message arriverait bien à destination. Mieux vaut le savoir avant de l'imprimer où que ce soit.
+
+Et je dois te signaler un point que tu n'as pas pu voir à l'écran : **les e-mails de connexion partent encore depuis le domaine de mon agence.** C'est la dernière référence au prestataire, et la plus visible puisque chaque membre la reçoit. Pour la retirer, il faut ton nom de domaine, un service d'envoi n'acceptant que des domaines vérifiés. En attendant, tes membres qui répondent à ces e-mails t'écrivent bien à toi.
 
 **L'espace membre.** Tu proposais d'y ajouter la photo de profil, les notifications, la messagerie et les paramètres. Ce n'est pas oublié : la messagerie et les notifications sont prévues aux **modules 3 et 4**, et elles arriveront avec eux. Les poser maintenant reviendrait à afficher des boutons qui ne mènent nulle part. Le statut vérifié, la date d'adhésion et le pays sont déjà là. La photo de profil, elle, n'est dans aucun des quatre modules : à voir ensemble si tu la veux, car elle mérite d'être pensée sérieusement dans un club où l'identité reste confidentielle.
 
