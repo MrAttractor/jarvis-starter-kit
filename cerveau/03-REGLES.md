@@ -361,6 +361,16 @@
 
 ---
 
+### R-75 · Le noir et or n'est plus un signe de luxe, c'est un signe de production automatique
+**Origine** : refonte du site GPS, 19/08/2026. Correction de Mac Arthur, mot pour mot : « le jaune me rappelle un peu trop le AI slop ».
+**Le fait** : le trio **fond sombre + accent doré + typographie condensée en capitales** (Bebas Neue et ses sœurs) est devenu la signature visuelle des sites produits en série par des générateurs. Il ne se lit plus comme du haut de gamme, il se lit comme **du contenu non travaillé**. Le pire est qu'il paraît réussi à celui qui le fabrique : c'est une combinaison flatteuse, immédiatement lisible, et c'est exactement pour ça qu'elle est partout.
+**Application** : sur tout livrable visuel, l'or et le doré ne s'emploient que si le client les impose par **son propre logo déjà existant**, et jamais accompagnés d'une typographie condensée sur fond noir. Par défaut, préférer une DA à **un seul accent chromatique**, tiré d'une pièce réelle de son identité, sur une base neutre. Un accent unique se remarque, deux accents font décoratif, un métal fait synthétique.
+**Ce qui a été fait sur le cas réel** : bascule sur noir, blanc et **un seul rouge**, celui de son logo d'événement, réservé aux aplats et aux filets, avec les photographies en noir et blanc et une seule famille typographique. La structure n'a pas bougé, seule la couche chromatique et la typographie ont changé.
+**Le test avant de livrer** : « si je retire le nom du client, est-ce que cette page pourrait être celle de n'importe qui d'autre ? » Si oui, la direction artistique n'en est pas une.
+**Assists** : quand un utilisateur fait produire un visuel de marque, l'assistant écarte le doré par défaut et cherche l'accent dans ce que le client possède déjà.
+
+---
+
 ## Comment ajouter une règle
 
 ```

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Guy Pacôme Somian (GPS) — Animateur, maître de cérémonie et opérateur culturel</title>
 <meta name="description" content="Animateur Life Radio &amp; TV, maître de cérémonie et manager d'artistes à Abidjan. Fondateur du SAMA, Salon de la Musique d'Abidjan. Réservez une date.">
-<meta name="theme-color" content="#060810">
+<meta name="theme-color" content="#0A0A0A">
 <link rel="canonical" href="https://demo.agenceattractor.com/gps">
 <meta property="og:type" content="profile">
 <meta property="og:title" content="Guy Pacôme Somian (GPS)">
@@ -15,222 +15,214 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ---------------------------------------------------------------------------
-   Charte relevee AU SCRIPT sur son affiche personnelle, jamais a l'oeil.
-   Le fond de son affiche est un noir bleute #010812, son lettrage un or
-   #C59C5C qui donne 7,95:1 sur le noir. Le blanc monte a 20:1, le gris de
-   texte a 9,5:1.
-   Regle qui en decoule : un aplat or porte une encre NOIRE. Du blanc sur cet
-   or tombe a 2,53:1, tres en dessous du minimum lisible.
+   Noir, blanc, un seul rouge. Le rouge est celui de son logo SAMA (#E02B32),
+   il vient donc de lui. Il ne sert QU'EN APLAT et en filet : sur ce noir il
+   donne 4,30:1, ce qui ne suffit pas pour du texte. Les rares textes rouges
+   utilisent la nuance claire #FF5C61 (6,56:1).
+   Aucun metal, aucun degrade de couleur, une seule famille typographique.
+   Contrastes calcules, jamais juges a l'oeil.
 --------------------------------------------------------------------------- */
 :root{
-  --noir:#060810; --n2:#0C0F18; --n3:#141824; --n4:#1E2331;
-  --or:#C59C5C; --or-clair:#E0C08A; --or-voile:rgba(197,156,92,.16);
-  --blanc:#FFFFFF; --gris:#B2B2B2; --gris-2:#7E8291;
-  --bebas:'Bebas Neue',Impact,'Haettenschweiler',sans-serif;
-  --inter:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --noir:#0A0A0A; --n2:#141414; --n3:#1C1C1C; --n4:#2A2A2A;
+  --rouge:#E02B32; --rouge-clair:#FF5C61; --rouge-sombre:#8E1C21;
+  --blanc:#FFFFFF; --gris:#B4B4B4; --gris-2:#8A8A8A;
+  --f:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
   --max:1160px;
 }
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
 body{
   margin:0; background:var(--noir); color:var(--gris);
-  font-family:var(--inter); font-size:16px; line-height:1.7; overflow-x:hidden;
+  font-family:var(--f); font-size:16px; line-height:1.7; overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
 }
 img{max-width:100%; height:auto; display:block}
 p{margin:0 0 16px}
-a{color:var(--or); text-decoration:none}
+a{color:var(--rouge-clair); text-decoration:none}
 .wrap{max-width:var(--max); margin:0 auto; padding:0 24px}
 section{padding:72px 0}
-svg.i{width:22px; height:22px; flex:none}
+svg.i{width:20px; height:20px; flex:none}
 
-/* --- Titres : Bebas condense, en capitales, tres large ------------------ */
-h1,h2,h3{margin:0 0 16px; color:var(--blanc); font-weight:400; line-height:.92}
-h1{font-family:var(--bebas); font-size:clamp(52px,15vw,124px); letter-spacing:1px}
-h2{font-family:var(--bebas); font-size:clamp(38px,9vw,68px); letter-spacing:1px}
-h3{font-family:var(--inter); font-size:19px; font-weight:600; line-height:1.35; letter-spacing:0}
+/* --- Titres : une grotesque lourde et serree, registre presse ----------- */
+h1,h2,h3{margin:0 0 16px; color:var(--blanc); line-height:1}
+h1{font-size:clamp(40px,11.5vw,96px); font-weight:800; letter-spacing:-.035em; text-transform:uppercase; line-height:.92}
+h2{font-size:clamp(30px,6.6vw,54px); font-weight:800; letter-spacing:-.03em; text-transform:uppercase; line-height:1}
+h3{font-size:18px; font-weight:700; line-height:1.35; letter-spacing:-.01em; text-transform:none}
 .oeil{
-  font-family:var(--inter); font-size:12px; font-weight:600; letter-spacing:3px;
-  text-transform:uppercase; color:var(--or); margin:0 0 16px; display:block;
+  font-size:11px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--gris-2); margin:0 0 14px; display:flex; align-items:center; gap:10px;
 }
-.filet{width:64px; height:2px; background:var(--or); border:0; margin:0 0 24px}
+.oeil::before{content:""; width:22px; height:2px; background:var(--rouge); flex:none}
+.filet{width:56px; height:3px; background:var(--rouge); border:0; margin:0 0 24px}
 .chapo{font-size:17px; color:var(--gris); max-width:64ch}
 
-/* --- En-tete ------------------------------------------------------------ */
-header{
-  position:fixed; top:0; left:0; right:0; z-index:60; height:64px;
-  display:flex; align-items:center; transition:background .25s ease, border-color .25s ease;
-  border-bottom:1px solid transparent;
-}
-header.pose{background:rgba(6,8,16,.94); backdrop-filter:blur(12px); border-bottom-color:var(--n4)}
-.bar{display:flex; align-items:center; justify-content:space-between; gap:16px; width:100%}
-.sigle{font-family:var(--bebas); font-size:30px; letter-spacing:4px; color:var(--blanc); line-height:1}
-.sigle b{color:var(--or); font-weight:400}
-
-/* --- Boutons : cible tactile 48px --------------------------------------- */
+/* --- Boutons : cible tactile 52px, angles vifs -------------------------- */
 .btn{
   display:inline-flex; align-items:center; justify-content:center; gap:10px;
-  min-height:52px; padding:14px 28px; border:0; border-radius:2px;
-  font-family:var(--inter); font-size:13px; font-weight:700; letter-spacing:2px;
+  min-height:52px; padding:14px 26px; border:0; border-radius:0;
+  font-family:var(--f); font-size:12px; font-weight:700; letter-spacing:1.8px;
   text-transform:uppercase; cursor:pointer; text-align:center;
   transition:background .18s ease, color .18s ease; -webkit-tap-highlight-color:transparent;
 }
-.btn-or{background:var(--or); color:var(--noir)}          /* encre noire : 7,95:1 */
-.btn-fil{background:transparent; color:var(--blanc); box-shadow:inset 0 0 0 1px rgba(255,255,255,.34)}
+.btn-accent{background:var(--rouge); color:var(--blanc)}   /* blanc sur rouge : 4,60:1 */
+.btn-fil{background:transparent; color:var(--blanc); box-shadow:inset 0 0 0 1px rgba(255,255,255,.30)}
 .btn-blanc{background:var(--blanc); color:var(--noir)}
 .btn-wa{background:#25D366; color:#062A13}
 .btn:disabled{opacity:.5; cursor:not-allowed}
 /* Sur un ecran tactile, l'etat de survol reste colle au dernier element touche. */
 @media (hover:hover) and (pointer:fine){
-  .btn-or:hover{background:var(--or-clair)}
+  .btn-accent:hover{background:#F2444A}
   .btn-fil:hover{background:rgba(255,255,255,.10)}
+  .btn-blanc:hover{background:var(--gris)}
 }
-.btn-mini{min-height:44px; padding:11px 20px; font-size:12px}
+.btn-mini{min-height:44px; padding:11px 18px; font-size:11px}
+
+/* --- Formulaire --------------------------------------------------------- */
+.form-bloc{border:1px solid var(--n4); background:var(--n2); padding:28px; margin-top:40px}
+.champ{margin-bottom:20px}
+label{display:block; font-size:11px; font-weight:600; letter-spacing:1.8px; text-transform:uppercase; color:var(--blanc); margin-bottom:10px}
+label .opt{color:var(--gris-2); font-weight:400; text-transform:none; letter-spacing:0}
+input,select,textarea{
+  width:100%; max-width:100%; min-height:52px; padding:14px 16px;
+  font-family:var(--f); font-size:16px; color:var(--blanc);
+  background:var(--noir); border:1px solid var(--n4); border-radius:0; appearance:none;
+}
+textarea{min-height:120px; resize:vertical; line-height:1.6}
+select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B4B4B4' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 16px center; background-size:20px;
+  padding-right:46px;
+}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--rouge); outline-offset:0; border-color:transparent}
+.duo-form{display:grid; gap:20px}
+.message{display:none; margin-top:20px; padding:16px; font-size:15px; line-height:1.55}
+.message.ok{display:block; background:rgba(37,211,102,.10); border-left:3px solid #25D366; color:#8FE9B4}
+.message.ko{display:block; background:rgba(224,43,50,.12); border-left:3px solid var(--rouge); color:#FFB4B7}
+
+/* --- Galerie : tout en noir et blanc ------------------------------------ */
+.galerie{display:grid; grid-template-columns:repeat(2,1fr); gap:2px; margin-top:40px}
+.galerie figure{margin:0; overflow:hidden; background:var(--n2)}
+.galerie img{width:100%; object-fit:cover; filter:grayscale(1) contrast(1.04)}
+.galerie .large{grid-column:span 2}
+@media (hover:hover) and (pointer:fine){
+  .galerie img{transition:transform .45s ease}
+  .galerie figure:hover img{transform:scale(1.04)}
+}
+
+/* --- Pied de page ------------------------------------------------------- */
+footer{border-top:1px solid var(--n4); padding:56px 0 32px; background:var(--n2)}
+.signature{font-size:13px; color:var(--gris-2); margin:24px 0 0}
+.signature a{color:var(--gris)}
+
+/* --- En-tete ------------------------------------------------------------ */
+header{
+  position:fixed; top:0; left:0; right:0; z-index:60; height:64px;
+  display:flex; align-items:center; border-bottom:1px solid transparent;
+  transition:background .25s ease, border-color .25s ease;
+}
+header.pose{background:rgba(10,10,10,.95); backdrop-filter:blur(12px); border-bottom-color:var(--n4)}
+.bar{display:flex; align-items:center; justify-content:space-between; gap:16px; width:100%}
+.sigle{font-size:26px; font-weight:800; letter-spacing:-.02em; color:var(--blanc); line-height:1}
+.sigle b{color:var(--rouge-clair); font-weight:800}
 
 /* --- Hero plein ecran --------------------------------------------------- */
-.hero{
-  position:relative; min-height:100svh; display:flex; align-items:flex-end;
-  padding:96px 0 48px; overflow:hidden;
-}
+.hero{position:relative; min-height:100svh; display:flex; align-items:flex-end; padding:96px 0 48px; overflow:hidden}
 .hero-fond{position:absolute; inset:0; z-index:0}
-.hero-fond img{width:100%; height:100%; object-fit:cover; object-position:50% 22%}
+.hero-fond img{width:100%; height:100%; object-fit:cover; object-position:50% 22%; filter:grayscale(1) contrast(1.06)}
 .hero-fond::after{
   content:""; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(6,8,16,.55) 0%, rgba(6,8,16,.30) 32%, rgba(6,8,16,.92) 74%, var(--noir) 100%);
+  background:linear-gradient(180deg, rgba(10,10,10,.50) 0%, rgba(10,10,10,.26) 32%, rgba(10,10,10,.93) 74%, var(--noir) 100%);
 }
 .hero .wrap{position:relative; z-index:1; width:100%}
 .hero h1{margin:0}
-.hero h1 .ligne2{color:var(--or); display:block}
+.hero h1 .ligne2{display:block}
 .hero .role{
-  font-size:13px; font-weight:600; letter-spacing:4px; text-transform:uppercase;
-  color:var(--blanc); margin:16px 0 0;
+  font-size:12px; font-weight:600; letter-spacing:3px; text-transform:uppercase;
+  color:var(--gris); margin:20px 0 0; padding-top:20px; border-top:3px solid var(--rouge);
+  display:inline-block;
 }
-.hero .role span{color:var(--or)}
-.hero-actions{display:flex; flex-wrap:wrap; gap:12px; margin-top:32px}
+.hero .role span{color:var(--rouge-clair)}
+.hero-actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:32px}
 .hero-actions .btn{flex:1 1 240px}
 
 /* --- Bandeau defilant --------------------------------------------------- */
-.bandeau{
-  border-top:1px solid var(--n4); border-bottom:1px solid var(--n4);
-  background:var(--n2); overflow:hidden; padding:18px 0;
-}
-.piste{display:flex; gap:48px; width:max-content; animation:defile 34s linear infinite}
+.bandeau{border-top:1px solid var(--n4); border-bottom:1px solid var(--n4); background:var(--n2); overflow:hidden; padding:16px 0}
+.piste{display:flex; gap:40px; width:max-content; animation:defile 36s linear infinite}
 .piste span{
-  font-family:var(--bebas); font-size:26px; letter-spacing:3px; color:var(--gris-2);
-  white-space:nowrap; display:flex; align-items:center; gap:48px;
+  font-size:12px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--gris-2); white-space:nowrap; display:flex; align-items:center; gap:40px;
 }
-.piste span::after{content:"◆"; color:var(--or); font-size:12px}
+.piste span::after{content:""; width:5px; height:5px; background:var(--rouge); flex:none}
 @keyframes defile{from{transform:translateX(0)} to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){ .piste{animation:none; flex-wrap:wrap; width:auto} }
 
 /* --- Blocs numerotes ---------------------------------------------------- */
 .metiers{display:grid; gap:1px; background:var(--n4); border:1px solid var(--n4); margin-top:40px}
-.metier{background:var(--noir); padding:32px 28px}
-.metier .num{
-  font-family:var(--bebas); font-size:46px; line-height:1; color:var(--or-voile);
-  display:block; margin-bottom:8px;
-}
+.metier{background:var(--noir); padding:32px 26px}
+.metier .num{font-size:12px; font-weight:700; letter-spacing:2px; color:var(--rouge-clair); display:block; margin-bottom:16px}
 .metier h3{color:var(--blanc); margin-bottom:12px}
 .metier p:last-child{margin-bottom:0; font-size:15px}
 
 /* --- Medias ------------------------------------------------------------- */
 .medias{list-style:none; padding:0; margin:40px 0 0; border-top:1px solid var(--n4)}
-.media{
-  display:flex; align-items:center; justify-content:space-between; gap:20px;
-  padding:22px 0; border-bottom:1px solid var(--n4);
-}
-.media .nom{font-family:var(--bebas); font-size:30px; letter-spacing:1.5px; color:var(--blanc); line-height:1}
-.media .quoi{font-size:13px; letter-spacing:1px; text-transform:uppercase; color:var(--gris-2)}
+.media{display:flex; align-items:center; justify-content:space-between; gap:20px; padding:22px 0; border-bottom:1px solid var(--n4)}
+.media .nom{font-size:22px; font-weight:800; letter-spacing:-.02em; color:var(--blanc); line-height:1.15; text-transform:uppercase}
+.media .quoi{font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--gris-2)}
 .media .actuel{
-  font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
-  color:var(--noir); background:var(--or); padding:6px 12px; white-space:nowrap;
+  font-size:10px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase;
+  color:var(--blanc); background:var(--rouge); padding:7px 12px; white-space:nowrap;
 }
 
 /* --- SAMA : bande pleine largeur ---------------------------------------- */
 .sama{position:relative; overflow:hidden; padding:88px 0}
 .sama-fond{position:absolute; inset:0; z-index:0}
-.sama-fond img{width:100%; height:100%; object-fit:cover}
-.sama-fond::after{content:""; position:absolute; inset:0; background:rgba(6,8,16,.86)}
+.sama-fond img{width:100%; height:100%; object-fit:cover; filter:grayscale(1)}
+.sama-fond::after{content:""; position:absolute; inset:0; background:rgba(10,10,10,.88)}
 .sama .wrap{position:relative; z-index:1}
-.sama-mots{display:flex; flex-wrap:wrap; gap:10px; list-style:none; padding:0; margin:0 0 32px}
+.sama-mots{display:flex; flex-wrap:wrap; gap:8px; list-style:none; padding:0; margin:0 0 32px}
 .sama-mots li{
-  font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
-  color:var(--or); border:1px solid rgba(197,156,92,.45); padding:8px 14px;
+  font-size:10px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase;
+  color:var(--gris); border:1px solid var(--n4); padding:9px 14px;
 }
 
 /* --- Citation ----------------------------------------------------------- */
-.citation{margin:0; padding:0; border-left:2px solid var(--or); padding-left:24px}
-.citation p{font-size:clamp(20px,4.4vw,30px); line-height:1.35; color:var(--blanc); font-weight:500}
-
-/* --- Galerie ------------------------------------------------------------ */
-.galerie{display:grid; grid-template-columns:repeat(2,1fr); gap:2px; margin-top:40px}
-.galerie figure{margin:0; overflow:hidden; background:var(--n2)}
-.galerie img{width:100%; aspect-ratio:3/4; object-fit:cover; filter:grayscale(.25)}
-.galerie .large{grid-column:span 2}
-.galerie .large img{aspect-ratio:16/10}
-@media (hover:hover) and (pointer:fine){
-  .galerie img{transition:filter .3s ease, transform .4s ease}
-  .galerie figure:hover img{filter:grayscale(0); transform:scale(1.03)}
-}
+.citation{margin:0; padding:0 0 0 24px; border-left:3px solid var(--rouge)}
+.citation p{font-size:clamp(19px,4.2vw,28px); line-height:1.35; color:var(--blanc); font-weight:600; letter-spacing:-.015em}
 
 /* --- Structures --------------------------------------------------------- */
-.duo{display:grid; gap:24px}
-.bloc{border:1px solid var(--n4); padding:28px; background:var(--n2)}
-.bloc h3{color:var(--or); font-family:var(--bebas); font-size:30px; letter-spacing:1.5px; font-weight:400; margin-bottom:4px}
-.bloc .fonction{font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--gris-2); margin-bottom:16px}
+.duo{display:grid; gap:1px; background:var(--n4); border:1px solid var(--n4)}
+.bloc{padding:28px; background:var(--noir)}
+.bloc h3{color:var(--blanc); font-size:22px; font-weight:800; letter-spacing:-.02em; text-transform:uppercase; margin-bottom:6px}
+.bloc .fonction{font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--rouge-clair); margin-bottom:16px}
 .bloc p:last-child{margin-bottom:0; font-size:15px}
 
-/* --- Formulaire --------------------------------------------------------- */
-.form-bloc{border:1px solid var(--n4); background:var(--n2); padding:28px; margin-top:40px}
-.champ{margin-bottom:20px}
-label{
-  display:block; font-size:12px; font-weight:600; letter-spacing:1.5px;
-  text-transform:uppercase; color:var(--blanc); margin-bottom:10px;
-}
-label .opt{color:var(--gris-2); font-weight:400; text-transform:none; letter-spacing:0}
-input,select,textarea{
-  width:100%; max-width:100%; min-height:52px; padding:14px 16px;
-  font-family:var(--inter); font-size:16px; color:var(--blanc);
-  background:var(--noir); border:1px solid var(--n4); border-radius:0; appearance:none;
-}
-textarea{min-height:120px; resize:vertical; line-height:1.6}
-select{
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C59C5C' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat:no-repeat; background-position:right 16px center; background-size:20px;
-  padding-right:46px;
-}
-input:focus,select:focus,textarea:focus{outline:2px solid var(--or); outline-offset:0; border-color:transparent}
-.message{display:none; margin-top:20px; padding:16px; font-size:15px; line-height:1.55}
-.message.ok{display:block; background:rgba(37,211,102,.10); border-left:2px solid #25D366; color:#8FE9B4}
-.message.ko{display:block; background:rgba(224,43,50,.10); border-left:2px solid #E02B32; color:#FFB4B7}
+.galerie img{aspect-ratio:3/4}
+.galerie .large img{aspect-ratio:16/10}
 
-/* --- Pied de page ------------------------------------------------------- */
-footer{border-top:1px solid var(--n4); padding:56px 0 32px; background:var(--n2)}
-.reseaux{display:flex; flex-wrap:wrap; gap:10px; padding:0; margin:28px 0; list-style:none}
+.reseaux{display:flex; flex-wrap:wrap; gap:8px; padding:0; margin:28px 0; list-style:none}
 .reseaux a{
   display:inline-flex; align-items:center; gap:10px; min-height:48px; padding:12px 18px;
   background:var(--noir); border:1px solid var(--n4); color:var(--gris);
   font-size:14px; -webkit-tap-highlight-color:transparent;
 }
-.reseaux svg{width:18px; height:18px; color:var(--or); flex:none}
-.signature{font-size:13px; color:var(--gris-2); margin:24px 0 0}
-.signature a{color:var(--gris)}
+.reseaux svg{width:18px; height:18px; color:var(--gris-2); flex:none}
 
-/* --- Grands ecrans ------------------------------------------------------ */
 @media (min-width:760px){
   section{padding:104px 0}
   .metiers{grid-template-columns:repeat(3,1fr)}
   .metier{padding:40px 32px}
-  .duo{grid-template-columns:1fr 1fr; gap:32px}
+  .duo{grid-template-columns:1fr 1fr}
+  .bloc{padding:40px 32px}
   .galerie{grid-template-columns:repeat(4,1fr)}
   .form-bloc{padding:48px}
-  .duo-form{display:grid; grid-template-columns:1fr 1fr; gap:24px}
+  .duo-form{grid-template-columns:1fr 1fr; gap:24px}
   .hero{align-items:center; padding:120px 0 80px}
   .hero-fond img{object-position:70% 20%}
-  .hero .wrap{max-width:var(--max)}
-  .hero h1{max-width:9ch}
+  .hero h1{max-width:10ch}
+  .media .nom{font-size:30px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto}}
 </style>
@@ -253,7 +245,7 @@ footer{border-top:1px solid var(--n4); padding:56px 0 32px; background:var(--n2)
 <header id="entete">
   <div class="wrap bar">
     <div class="sigle">G<b>P</b>S</div>
-    <a class="btn btn-or btn-mini" href="#booking">Réserver</a>
+    <a class="btn btn-accent btn-mini" href="#booking">Réserver</a>
   </div>
 </header>
 
@@ -270,7 +262,7 @@ footer{border-top:1px solid var(--n4); padding:56px 0 32px; background:var(--n2)
       <h1>Guy Pacôme<span class="ligne2">Somian</span></h1>
       <p class="role">Opérateur culturel <span>·</span> Animateur Life TV &amp; Radio</p>
       <div class="hero-actions">
-        <a class="btn btn-or" href="#booking">
+        <a class="btn btn-accent" href="#booking">
           <svg class="i" aria-hidden="true"><use href="#i-agenda"/></svg>
           Réserver un booking
         </a>
@@ -510,7 +502,7 @@ footer{border-top:1px solid var(--n4); padding:56px 0 32px; background:var(--n2)
             <textarea id="b-message" name="message" placeholder="Le public attendu, l'ambiance, l'horaire, ce que vous attendez de moi…"></textarea>
           </div>
 
-          <button class="btn btn-or" type="submit" id="b-envoi" style="width:100%">
+          <button class="btn btn-accent" type="submit" id="b-envoi" style="width:100%">
             <span>Envoyer ma demande</span>
           </button>
 
