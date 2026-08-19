@@ -797,11 +797,26 @@ function ecranEngagement(msg) {
       return ecranEngagement("L'acceptation des conditions est nécessaire pour rejoindre le Club.");
     }
     etat.form.email = email;
-    const b = $("#b-valider"); b.disabled = true; b.textContent = "Un instant…";
-    // L'écran de bienvenue s'affiche pendant l'appel, pas après : c'est le moment
-    // où le réseau travaille, et où l'attente doit être habitée.
+
+    /* Tout ce qui vient du formulaire se lit MAINTENANT, avant que l'écran
+       suivant ne remplace le contenu de la page. Une version antérieure lisait
+       `$("#i-optin").checked` après l'affichage de l'écran de bienvenue : la case
+       n'existait plus, la lecture levait une exception, et comme elle survenait
+       dans un gestionnaire asynchrone, personne ne la voyait. L'inscription ne
+       partait jamais et le visiteur restait bloqué sur « Nous envoyons votre code »
+       à attendre un e-mail qui n'avait jamais été demandé. Aucune trace en base,
+       donc invisible aussi côté serveur. */
+    const optin = $("#i-optin").checked;
     ecranBienvenue();
-    const r = await appel("inscription", { ...etat.form, cgu: true, optin: $("#i-optin").checked });
+
+    // Un défaut de code ne doit pas laisser quelqu'un devant un écran qui ne
+    // bougera plus : on le ramène au formulaire avec un message.
+    let r;
+    try {
+      r = await appel("inscription", { ...etat.form, cgu: true, optin });
+    } catch (e) {
+      return ecranEngagement("Une erreur inattendue est survenue. Réessayez.");
+    }
     if (!r.ok) return ecranEngagement(r.error);
     etat.email = email;
     // Provenance notée : après une inscription, le compte existe à coup sûr,
@@ -1285,6 +1300,22 @@ function ecranMembre(bienvenue, info) {
     ecranAccueil();
   };
 }
+
+/* ═══════════ Filet de sécurité ═══════════
+   Ce défaut-ci a tenu deux jours parce qu'il ne produisait rien : pas de
+   message, pas de requête, pas de ligne en base, juste un écran qui ne bouge
+   plus. Une erreur avalée coûte plus cher qu'une erreur affichée. */
+function signalerPanne(detail) {
+  const zone = $("#vue");
+  if (!zone) return;
+  zone.insertAdjacentHTML("afterbegin",
+    `<div class="message erreur" role="alert">Une erreur inattendue est survenue. Rechargez la page et réessayez.`
+    + (MARQUE.recette ? `<br><span style="font-size:12px;opacity:.8">Détail de recette : ${ech(detail)}</span>` : "")
+    + `</div>`);
+}
+window.addEventListener("error", (e) => signalerPanne(e.message));
+window.addEventListener("unhandledrejection", (e) => signalerPanne(
+  (e.reason && (e.reason.message || String(e.reason))) || "promesse rejetée"));
 
 /* ═══════════ Démarrage ═══════════ */
 (async function () {
