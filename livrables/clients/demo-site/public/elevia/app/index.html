@@ -320,6 +320,7 @@ button{-webkit-tap-highlight-color:transparent}
   font-size:12.5px;color:var(--muted);text-decoration:none;
 }
 .pied nav a:hover{text-decoration:underline;text-underline-offset:3px}
+.pied .contact-inactif{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;font-size:12.5px;color:var(--gris)}
 .pied .mention{font-size:11px;color:var(--gris);line-height:1.7}
 
 @media(max-width:380px){
@@ -375,12 +376,20 @@ const MARQUE = {
 
   societe: "YNL CLUB",
 
-  // Adresse de contact affichée aux membres.
-  // EN ATTENTE : la Cliente a proposé support@elevia.fr et contact@ynlclub.com,
-  // qui supposent un nom de domaine qu'elle n'a pas encore acheté (Contrat Art. 10,
-  // le domaine est acheté par la Cliente, à son nom). On retient donc la seule
-  // adresse existante et prouvée à ce jour.
-  contact: "clubpriveeelevia@gmail.com",
+  /* Adresse de contact affichée aux membres. C'est celle que la Cliente a
+     demandée, et elle n'est PAS encore active : le domaine reste à acheter.
+     `contactActif` à false l'affiche en texte simple au lieu d'un lien, pour ne
+     pas ouvrir une messagerie vers une adresse qui n'existe pas. Le jour où le
+     domaine est acheté et le courrier configuré, passer le drapeau à true.
+
+     Sa première proposition, support@elevia.fr, a été ÉCARTÉE : le domaine
+     elevia.fr appartient déjà à un tiers, hébergé chez Gandi, et il porte des
+     serveurs de courrier actifs. Un membre écrivant à cette adresse aurait
+     envoyé ses données personnelles à un inconnu, et le message serait arrivé.
+     Vérifié le 19/08/2026 auprès de deux résolveurs. Ne pas la réintroduire. */
+  contact: "contact@ynlclub.com",
+  contactActif: false,
+
 
   // Photographie d'accueil. EN ATTENTE de la Cliente (rooftop, hôtel, salon privé,
   // voyage). Tant qu'elle est vide, un visuel de marque dessiné maison s'affiche :
@@ -482,8 +491,18 @@ const barre = (n) => `<div class="pas" role="presentation">${[1,2,3].map(i=>`<i 
   if (!MARQUE.recette) $("#bandeau-recette").remove();
   $("#pied-societe").textContent = "UNE MARQUE DE " + MARQUE.societe;
   $("#pied-copyright").textContent = "© " + new Date().getFullYear() + " " + MARQUE.societe;
+  // Tant que l'adresse n'est pas active, on affiche sans créer de lien : un
+  // mailto vers un domaine inexistant est un lien cassé qu'on livrerait en
+  // connaissance de cause.
   const c = $("#pied-contact");
-  c.href = "mailto:" + MARQUE.contact;
+  if (MARQUE.contactActif) {
+    c.href = "mailto:" + MARQUE.contact;
+  } else {
+    c.replaceWith(Object.assign(document.createElement("span"), {
+      className: "contact-inactif",
+      textContent: MARQUE.contact + (MARQUE.recette ? " (à activer)" : ""),
+    }));
+  }
   // Le blason n'apparaît que si le fichier existe vraiment : une image cassée
   // en haut de l'écran d'accueil coûte plus cher que pas d'image du tout.
   const img = new Image();
