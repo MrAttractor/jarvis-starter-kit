@@ -21,18 +21,22 @@
    Bleu nuit et violet electrique, les deux releves AU SCRIPT sur ses propres
    planches de presentation. Fond #0C0A32, dominante des dix planches sans
    exception.
-   L'accent est le violet de ses barres et de ses fleches, en DEUX nuances
-   choisies au calcul, parce que le #815FFC d'origine ne passait ni en texte
-   sur le fond (4,50:1) ni sous du blanc (4,22:1) :
-     #6137FB en aplat, il porte du blanc a 6,09:1
-     #997DFD en texte sur le fond nuit, a 6,07:1
+   L'accent est le violet de ses barres et de ses fleches, assombri, en DEUX
+   nuances choisies au calcul, parce que le #815FFC d'origine ne passait ni en
+   texte sur le fond (4,50:1) ni sous du blanc (4,22:1) :
+     #4A19FB en aplat, il porte du blanc a 7,44:1
+     #A78BFA en texte sur le fond nuit, a 6,98:1
+   Le jaune #F7D046 vient de son affiche SAMA et ne sert QU'EN RAPPEL :
+   filets, numeros, un seul badge. Il donne 12,73:1 sur le fond et supporte
+   une encre nuit. JAMAIS de blanc dessus : 1,49:1.
    Aucun metal, aucun degrade de couleur, une seule famille typographique.
    Le rouge ne subsiste que pour signaler une erreur, ce n'est pas un accent
    de marque. Contrastes calcules, jamais juges a l'oeil.
 --------------------------------------------------------------------------- */
 :root{
-  --noir:#0C0A32; --n2:#12103C; --n3:#191645; --n4:#241F55;
-  --rouge:#6137FB; --rouge-clair:#997DFD; --rouge-sombre:#4A19FB;
+  --noir:#0C0A32; --n2:#141042; --n3:#1C1650; --n4:#2A2160;
+  --rouge:#4A19FB; --rouge-clair:#A78BFA; --rouge-sombre:#2E0FA8;
+  --jaune:#F7D046;
   --erreur:#FF5C61;
   --blanc:#FFFFFF; --gris:#C2C0DC; --gris-2:#918EB4;
   --f:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
@@ -61,8 +65,8 @@ h3{font-size:18px; font-weight:700; line-height:1.35; letter-spacing:-.01em; tex
   font-size:11px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase;
   color:var(--gris-2); margin:0 0 14px; display:flex; align-items:center; gap:10px;
 }
-.oeil::before{content:""; width:22px; height:2px; background:var(--rouge); flex:none}
-.filet{width:56px; height:3px; background:var(--rouge); border:0; margin:0 0 24px}
+.oeil::before{content:""; width:22px; height:2px; background:var(--jaune); flex:none}
+.filet{width:56px; height:3px; background:var(--jaune); border:0; margin:0 0 24px}
 .chapo{font-size:17px; color:var(--gris); max-width:64ch}
 
 /* --- Boutons : cible tactile 52px, angles vifs -------------------------- */
@@ -80,7 +84,7 @@ h3{font-size:18px; font-weight:700; line-height:1.35; letter-spacing:-.01em; tex
 .btn:disabled{opacity:.5; cursor:not-allowed}
 /* Sur un ecran tactile, l'etat de survol reste colle au dernier element touche. */
 @media (hover:hover) and (pointer:fine){
-  .btn-accent:hover{background:#7A55FC}
+  .btn-accent:hover{background:#6137FB}
   .btn-fil:hover{background:rgba(255,255,255,.10)}
   .btn-blanc:hover{background:var(--gris)}
 }
@@ -102,7 +106,7 @@ select{
   background-repeat:no-repeat; background-position:right 16px center; background-size:20px;
   padding-right:46px;
 }
-input:focus,select:focus,textarea:focus{outline:2px solid var(--rouge); outline-offset:0; border-color:transparent}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--jaune); outline-offset:0; border-color:transparent}
 .duo-form{display:grid; gap:20px}
 .message{display:none; margin-top:20px; padding:16px; font-size:15px; line-height:1.55}
 .message.ok{display:block; background:rgba(37,211,102,.10); border-left:3px solid #25D366; color:#8FE9B4}
@@ -146,7 +150,7 @@ header{
 .hero .wrap{position:relative; z-index:1}
 .marque-sama{
   display:inline-block; font-size:clamp(46px,14vw,104px); font-weight:800;
-  letter-spacing:.06em; line-height:1; color:var(--blanc); background:var(--rouge);
+  letter-spacing:.06em; line-height:1; color:var(--noir); background:var(--jaune);
   padding:12px 20px 10px; margin:0 0 28px;
 }
 .hero-actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:32px}
@@ -155,7 +159,7 @@ header{
 /* --- Programme ---------------------------------------------------------- */
 .axes{display:grid; gap:1px; background:var(--n4); border:1px solid var(--n4); margin-top:40px}
 .axe{background:var(--noir); padding:28px 26px}
-.axe .num{font-size:12px; font-weight:700; letter-spacing:2px; color:var(--rouge-clair); display:block; margin-bottom:16px}
+.axe .num{font-size:12px; font-weight:700; letter-spacing:2px; color:var(--jaune); display:block; margin-bottom:16px}
 .axe h3{color:var(--blanc); margin-bottom:10px}
 .axe p:last-child{margin-bottom:0; font-size:15px}
 
