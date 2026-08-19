@@ -4,9 +4,9 @@
 
 | Radar | |
 |---|---|
-| Statut | **ouvert le 19/08. Les deux pages sont écrites, pas encore déployées ni montrées au client** |
+| Statut | **EN LIGNE le 19/08 sur `demo.agenceattractor.com/gps`. Recette faite. Pas encore montré au client** |
 | Dernier contact | 2026-08-19, dépôt de 66 visuels dans le dossier Drive par Mac Arthur |
-| Prochaine action | **Déployer** (migration SQL, edge function, site), tester sur un vrai téléphone, puis écrire la proposition d'échange |
+| Prochaine action | **Ouvrir les deux pages sur un vrai téléphone**, puis écrire la proposition d'échange et lui envoyer le lien |
 | Échéance | à fixer. Elle dépend de la date du SAMA, encore inconnue |
 | Argent en attente | **0 €. C'est une DMV**, la contrepartie est en promotion ouverte et en marchandises |
 
@@ -88,14 +88,37 @@ partage et le référencement sur ce domaine propre.
 Un aplat corail porte une **encre sombre** : du blanc dessus tombe à 2,11:1.
 Détail dans `FICHE-LECTURE-VISUELS.md`.
 
+## La recette du 19/08, ce qui est prouvé
+
+| Vérification | Résultat |
+|---|---|
+| `demo.agenceattractor.com/gps` **sans barre oblique** | 308 vers `/gps/`, une seule redirection, page servie |
+| `/gps/sama` | 200, bon titre |
+| Adresse inconnue sous `/gps/` | **404**, aucun attrape-tout |
+| Les 8 visuels de la page principale | 200 |
+| Préflight `OPTIONS` sur l'edge function | 200 |
+| Demande de booking et message SAMA | écrits en base, **lignes comptées** |
+| Champs obligatoires manquants, e-mail invalide | refusés en 400, message clair |
+| Valeur hors liste fermée (`<script>`) | acceptée mais **rangée en null**, rien n'est stocké |
+| **Lecture de `gps_demandes` à la clé anon** | **0 ligne renvoyée**, mesuré, pas déduit du code HTTP |
+| Notification Resend | 3 e-mails reçus sur `hello@agenceattractor.com` |
+| Lignes de recette | **supprimées**, la table est vide |
+
+**Non fait, et ça reste bloquant avant de lui envoyer le lien :** les deux pages
+n'ont **pas été ouvertes sur un vrai téléphone**. Tant que ça n'est pas fait, le
+livrable n'est pas fini.
+
 ## Ce qui reste avant de lui montrer
 
-1. Appliquer la migration et déployer l'edge function, avec `GPS_NOTIFY_TO`.
-2. Déployer le site et **tester une demande de bout en bout**, en vérifiant la ligne
-   en base, pas seulement le message à l'écran.
-3. Vérifier que la clé anon ne peut pas lire `gps_demandes`, en comptant les lignes.
-4. **Ouvrir les deux pages sur un vrai téléphone.**
-5. Écrire la proposition d'échange, en parallèle comme décidé.
-6. Obtenir de son équipe les **logos vectoriels** SAMA, Médium Africa et Kultur'Famân,
-   et les liens exacts de ses réseaux : les trois liens du pied de page pointent
-   aujourd'hui vers l'accueil des plateformes, faute d'URL précises.
+1. **Ouvrir les deux pages sur un vrai téléphone**, en 4G, pas sur un simulateur.
+2. Écrire la proposition d'échange, en parallèle comme décidé : périmètre borné
+   côté nous, contrepartie chiffrée côté lui (canaux, fréquence, durée, nature et
+   valeur des marchandises), jalons réciproques, clause de sortie.
+3. Faire valider par lui la `FICHE-LECTURE-VISUELS.md`, en particulier la phrase
+   sur Roger Fulgence Kassy, qu'il a choisi de garder.
+4. Obtenir de son équipe les **logos vectoriels** SAMA, Médium Africa et
+   Kultur'Famân, et les **liens exacts de ses réseaux** : les trois liens du pied
+   de page pointent aujourd'hui vers l'accueil des plateformes, faute d'URL précises.
+5. Décider si les notifications doivent aussi partir chez lui : aujourd'hui elles
+   arrivent seulement sur `hello@agenceattractor.com`. Il suffit d'ajouter le secret
+   `GPS_NOTIFY_TO` au projet Supabase.
