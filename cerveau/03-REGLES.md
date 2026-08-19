@@ -147,9 +147,11 @@
 **Origine** : EXP-020.
 **Application** : sans traitement du préflight, l'appel échoue en silence, surtout en fire-and-forget.
 
-### R-23 · Mesurer avant de deviner
-**Origine** : EXP-021.
+### R-23 · Mesurer avant de deviner, et savoir lire une absence de mesure
+**Origine** : EXP-021. **Étendue le 19/08/2026** après EXP-041.
 **Application** : bug non reproductible, dès la deuxième hypothèse : instrumenter (télémétrie `client-log`) plutôt que tester à l'aveugle.
+**Le corollaire, qui a coûté deux jours** : une instrumentation correcte ne protège pas d'une mauvaise lecture. Face à un rapport de panne, **aucune trace côté serveur ne veut pas dire que l'utilisateur s'est trompé, ça veut dire que la requête n'est jamais partie du navigateur.** C'est un résultat, pas un vide. L'ordre des hypothèses est donc : le code client a échoué avant l'appel · l'appel a échoué en transport · le serveur a refusé. Chercher l'erreur d'usage **en dernier**, jamais en premier : c'est l'hypothèse la plus flatteuse pour celui qui a écrit le code, donc la plus suspecte.
+**Ce qui distingue les deux cas** : une trace partielle (une ligne dans un journal de demandes, sans la suite) prouve que la requête est arrivée. **Zéro trace du tout** oriente vers le navigateur.
 
 ### R-24 · Toute palette validée au script, contraste des textes compris
 **Origine** : EXP-022, protanopie. **Étendue le 14/08/2026** aux textes d'interface, après EXP-040.
@@ -175,6 +177,16 @@
 ### R-43 · GitHub est la source de vérité des fichiers de site
 **Origine** : règle du 19/07/2026.
 **Application** : commit et push sans attendre pour tous les sites. Architecture main/branches à standardiser.
+
+### R-74 · Ce qui vient du formulaire se lit avant de changer d'écran, et tout écran d'attente a une issue
+**Origine** : EXP-041, inscription du Club Élévia, défaut en ligne du 17 au 19/08/2026.
+**Le fait mesuré** : l'écran de bienvenue remplaçait le contenu de la page, puis le code lisait `$("#i-optin").checked`. La case n'existait plus, `null.checked` levait une exception **dans un gestionnaire asynchrone, donc avalée sans rien afficher**. Aucune requête ne partait, aucune ligne en base, aucun message, et le visiteur restait bloqué sur « Nous envoyons votre code sécurisé » à attendre un e-mail jamais demandé.
+**Application, en trois temps** :
+1. **Lire d'abord, afficher ensuite.** Toute valeur issue du formulaire est extraite dans des variables **avant** l'appel qui change d'écran. Un écran de chargement affiché pendant une requête est une bonne idée, mais il détruit le formulaire qu'on n'a pas fini de lire.
+2. **Tout écran d'attente a une sortie.** Un appel réseau est enveloppé de façon à ramener l'utilisateur à l'écran précédent avec un message. Rester bloqué sans explication est **le pire mode de panne** : il est indiscernable d'une lenteur, donc l'utilisateur attend au lieu de réessayer, et il ne signale rien.
+3. **Un filet global.** `window.addEventListener("error")` et `"unhandledrejection"` affichent un message à l'écran, avec le détail technique en mode recette. Ce défaut a tenu deux jours **précisément parce qu'il ne produisait rien à regarder**.
+**Vérification** : piloter le formulaire de bout en bout dans un navigateur, réseau intercepté, et constater que la requête part avec tous ses champs. Un clic manuel qui « semble marcher » ne prouve pas qu'une requête est partie.
+**Assists** : tout parcours du produit qui attend une réponse serveur porte une issue visible en cas d'échec.
 
 ---
 

@@ -305,6 +305,26 @@
 
 ---
 
+### EXP-041 · L'inscription ne partait jamais, et l'absence de trace a été mal lue
+**DÉBLOCAGE** · 19/08/2026 · Club Élévia, Module 1
+
+**Situation.** Mac Arthur signale deux fois en deux jours que le code de connexion n'arrive pas à l'inscription. Le tuyau d'envoi était pourtant prouvé fonctionnel : la cliente s'était connectée avec succès la nuit précédente, code accepté par le service d'envoi et consommé 22 secondes plus tard.
+
+**Le défaut.** L'écran de bienvenue remplaçait le contenu de la page, **puis** le code lisait `$("#i-optin").checked` pour construire la requête. La case n'existait plus. `null.checked` levait une exception, dans un gestionnaire asynchrone, donc **avalée sans rien afficher**. Introduit le 14/08, en ligne du 17 au 19.
+
+**Ce que ça produisait, exactement.** Rien. Aucune requête, aucune ligne en base, aucun message. Le visiteur restait indéfiniment sur « Nous envoyons votre code sécurisé » à attendre un e-mail qui n'avait jamais été demandé.
+
+**La première erreur de diagnostic, et c'est la vraie leçon.** Au premier signalement, la base ne montrait aucune trace de l'inscription, seulement une ligne de demande de code venue du bouton de connexion. La conclusion rendue a été « il n'y a pas de panne, tu t'es trompé de bouton ». C'était faux : **zéro trace ne signifiait pas une erreur d'usage, mais que la requête n'était jamais sortie du navigateur.** L'instrumentation était bonne, la lecture ne l'était pas. Le défaut est resté en ligne deux jours de plus.
+
+**Ce qu'on a fait.** Lecture de toutes les valeurs du formulaire avant le changement d'écran, appel enveloppé pour ramener au formulaire en cas d'imprévu, et **filet global** sur `error` et `unhandledrejection` qui affiche le message à l'écran avec le détail en mode recette. Preuve par pilotage du formulaire complet dans un navigateur, réseau intercepté : la requête part avec tous ses champs. Vérification faite qu'aucune autre lecture du DOM ne suit un changement d'écran dans le fichier.
+
+**Cause profonde.** Deux causes, et la seconde est la plus chère. Techniquement, **un écran de chargement détruit le formulaire qu'on n'a pas fini de lire**. Méthodologiquement, **l'hypothèse de l'erreur d'usage est la plus flatteuse pour celui qui a écrit le code, donc celle qu'il faut examiner en dernier.**
+
+**Règles nées de là** : R-74, et l'extension de R-23 sur la lecture d'une absence de mesure.
+**Réutilisable pour.** Tout parcours qui affiche un écran d'attente pendant un appel réseau, et tout signalement de panne où la base ne montre rien.
+
+---
+
 ## SECTION D · PILOTAGE ET DISCIPLINE
 
 ### EXP-025 · L'automatisation morte que personne n'a vue
