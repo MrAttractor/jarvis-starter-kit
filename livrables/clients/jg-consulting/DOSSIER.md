@@ -4,7 +4,7 @@
 
 | Radar | |
 |---|---|
-| Statut | **maquette livrée, AUCUN RETOUR du client au 17/08. Issue du rendez-vous financeur inconnue** |
+| Statut | **maquette livrée, relancé le 19/08. Il dit revenir vers nous, l'issue du rendez-vous financeur reste inconnue** |
 | Dernier contact | 2026-08-19, relance envoyée à M. GNOU sur l'issue du rendez-vous avec le financeur. Il répond qu'il revient vers nous |
 | Prochaine action | **Attendre le retour de M. GNOU** sur l'issue du rendez-vous financeur. Puis **obtenir les 3 fiches experts** et le prix moyen d'une mission |
 | Échéance | échéance du 15/08 caduque, retirée. Relance faite le 19/08, pas de nouvelle date donnée |
