@@ -705,10 +705,15 @@ function monterCombo() {
 
   const chercher = (q) => {
     const k = aplat(q);
-    visibles = !k ? PAYS.slice(0, 60)
+    /* Aucun plafond. Une version antérieure coupait à 60 entrées « pour la
+       performance » : à l'ouverture, la liste s'arrêtait donc au milieu de la
+       lettre E, sans le dire, et tout membre résidant après devait deviner qu'il
+       fallait taper pour se trouver. Signalé en recette. Deux cent quarante
+       lignes dans un conteneur qui défile ne coûtent rien, une liste qui ment
+       coûte une inscription. */
+    visibles = !k ? PAYS.slice()
       : PAYS.filter((p) => p.cle.includes(k))
-            .sort((a, b) => (a.cle.startsWith(k) ? 0 : 1) - (b.cle.startsWith(k) ? 0 : 1))
-            .slice(0, 60);
+            .sort((a, b) => (a.cle.startsWith(k) ? 0 : 1) - (b.cle.startsWith(k) ? 0 : 1));
     curseur = visibles.length ? 0 : -1;
     peindre();
   };
@@ -817,6 +822,10 @@ function ecranEngagement(msg) {
     } catch (e) {
       return ecranEngagement("Une erreur inattendue est survenue. Réessayez.");
     }
+    // Une adresse déjà inscrite n'est pas une erreur de saisie, c'est quelqu'un
+    // qui a oublié qu'il avait un compte. Le lui dire sans lui offrir d'y entrer
+    // est un cul-de-sac : il recommence, ou il abandonne.
+    if (!r.ok && r.champ === "email") return ecranComptePresent(email);
     if (!r.ok) return ecranEngagement(r.error);
     etat.email = email;
     // Provenance notée : après une inscription, le compte existe à coup sûr,
@@ -825,6 +834,36 @@ function ecranEngagement(msg) {
     ecranCode(r.email_envoye ? null : "Votre compte est créé, mais l'envoi du code a échoué. Utilisez « recevoir un nouveau code ».");
   };
   $("#b-retour").onclick = () => ecranProfil();
+}
+
+/* ═══════════ Cette adresse a déjà un compte ═══════════
+   On sait ici, avec certitude, que le compte existe : la base vient de refuser
+   la création pour cette raison. Le message peut donc être affirmatif, et
+   surtout il porte l'action au lieu de renvoyer l'utilisateur à son formulaire. */
+function ecranComptePresent(email) {
+  rendre(`
+    <div class="carte anime">
+      <span class="etiquette">VOUS ÊTES DÉJÀ DES NÔTRES</span>
+      <h2>Un compte existe déjà avec cette adresse</h2>
+      <p class="chapo">Inutile de recommencer votre inscription. Nous vous envoyons un code
+      et vous retrouvez votre profil.</p>
+      <div class="message info" style="margin-bottom:22px">${ech(email)}</div>
+      <button class="bouton or" id="b-connecter">Recevoir mon code de connexion</button>
+      <button class="lien" id="b-autre">Utiliser une autre adresse</button>
+    </div>`);
+
+  $("#b-connecter").onclick = async () => {
+    const b = $("#b-connecter"); b.disabled = true; b.textContent = "Envoi…";
+    const r = await appel("connexion", { email });
+    if (r && r.ok === false) { b.disabled = false; b.textContent = "Recevoir mon code de connexion"; return ecranComptePresent(email); }
+    etat.email = email;
+    // Le compte existe, prouvé par le refus de création : la formulation
+    // affirmative de l'écran de code est donc vraie ici.
+    etat.provenance = "compte_existant";
+    ecranCode(null);
+  };
+
+  $("#b-autre").onclick = () => { etat.form.email = ""; ecranEngagement(); };
 }
 
 /* ═══════════ Bienvenue, juste avant le code ═══════════ */
