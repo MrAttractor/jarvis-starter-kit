@@ -7,8 +7,8 @@
 | Radar | |
 |---|---|
 | Statut | **recette intégrée et EN LIGNE le 17/08. En attente de sa signature et de ses questions d'affinités** |
-| Dernier contact | **2026-08-17 : c'est ELLE qui relance**, elle demande où en est l'avancement (le 12/08 elle partait en vacances et demandait à continuer par mail) |
-| Prochaine action | **Envoyer le brouillon Gmail déjà prêt** (fil « Ajout et clarification de clause », brouillon `r8581636460261655071`). **Signer soi-même** l'avenant : ta propre signature manque |
+| Dernier contact | **2026-08-19 : réponse envoyée** (message `1a0199dcdc3f5674`), après sa relance du 17/08. En attente de son retour |
+| Prochaine action | **Signer soi-même** l'avenant, la contresignature manque. Puis attendre ses réponses : questions d'affinités, nom de domaine, informations légales |
 | Échéance | **répondre sans délai** (relance cliente en attente). Relance de signature le 25/08/2026 si toujours rien |
 | Argent en attente | 2 050 € — Tranche 2 non déclenchée |
 
