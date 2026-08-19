@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Guy Pacôme Somian (GPS) — Animateur, maître de cérémonie et opérateur culturel</title>
 <meta name="description" content="Animateur Life Radio &amp; TV, maître de cérémonie et manager d'artistes à Abidjan. Fondateur du SAMA, Salon de la Musique d'Abidjan. Réservez une date.">
-<meta name="theme-color" content="#0A0A0A">
+<meta name="theme-color" content="#0C0A32">
 <link rel="canonical" href="https://demo.agenceattractor.com/gps">
 <meta property="og:type" content="profile">
 <meta property="og:title" content="Guy Pacôme Somian (GPS)">
@@ -18,17 +18,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ---------------------------------------------------------------------------
-   Noir, blanc, un seul rouge. Le rouge est celui de son logo SAMA (#E02B32),
-   il vient donc de lui. Il ne sert QU'EN APLAT et en filet : sur ce noir il
-   donne 4,30:1, ce qui ne suffit pas pour du texte. Les rares textes rouges
-   utilisent la nuance claire #FF5C61 (6,56:1).
+   Bleu nuit et violet electrique, les deux releves AU SCRIPT sur ses propres
+   planches de presentation. Fond #0C0A32, dominante des dix planches sans
+   exception.
+   L'accent est le violet de ses barres et de ses fleches, en DEUX nuances
+   choisies au calcul, parce que le #815FFC d'origine ne passait ni en texte
+   sur le fond (4,50:1) ni sous du blanc (4,22:1) :
+     #6137FB en aplat, il porte du blanc a 6,09:1
+     #997DFD en texte sur le fond nuit, a 6,07:1
    Aucun metal, aucun degrade de couleur, une seule famille typographique.
-   Contrastes calcules, jamais juges a l'oeil.
+   Le rouge ne subsiste que pour signaler une erreur, ce n'est pas un accent
+   de marque. Contrastes calcules, jamais juges a l'oeil.
 --------------------------------------------------------------------------- */
 :root{
-  --noir:#0A0A0A; --n2:#141414; --n3:#1C1C1C; --n4:#2A2A2A;
-  --rouge:#E02B32; --rouge-clair:#FF5C61; --rouge-sombre:#8E1C21;
-  --blanc:#FFFFFF; --gris:#B4B4B4; --gris-2:#8A8A8A;
+  --noir:#0C0A32; --n2:#12103C; --n3:#191645; --n4:#241F55;
+  --rouge:#6137FB; --rouge-clair:#997DFD; --rouge-sombre:#4A19FB;
+  --erreur:#FF5C61;
+  --blanc:#FFFFFF; --gris:#C2C0DC; --gris-2:#918EB4;
   --f:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
   --max:1160px;
 }
@@ -74,7 +80,7 @@ h3{font-size:18px; font-weight:700; line-height:1.35; letter-spacing:-.01em; tex
 .btn:disabled{opacity:.5; cursor:not-allowed}
 /* Sur un ecran tactile, l'etat de survol reste colle au dernier element touche. */
 @media (hover:hover) and (pointer:fine){
-  .btn-accent:hover{background:#F2444A}
+  .btn-accent:hover{background:#7A55FC}
   .btn-fil:hover{background:rgba(255,255,255,.10)}
   .btn-blanc:hover{background:var(--gris)}
 }
@@ -100,7 +106,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--rouge); outline-
 .duo-form{display:grid; gap:20px}
 .message{display:none; margin-top:20px; padding:16px; font-size:15px; line-height:1.55}
 .message.ok{display:block; background:rgba(37,211,102,.10); border-left:3px solid #25D366; color:#8FE9B4}
-.message.ko{display:block; background:rgba(224,43,50,.12); border-left:3px solid var(--rouge); color:#FFB4B7}
+.message.ko{display:block; background:rgba(255,92,97,.12); border-left:3px solid var(--erreur); color:#FFB4B7}
 
 /* --- Galerie : tout en noir et blanc ------------------------------------ */
 .galerie{display:grid; grid-template-columns:repeat(2,1fr); gap:2px; margin-top:40px}
@@ -123,7 +129,7 @@ header{
   display:flex; align-items:center; border-bottom:1px solid transparent;
   transition:background .25s ease, border-color .25s ease;
 }
-header.pose{background:rgba(10,10,10,.95); backdrop-filter:blur(12px); border-bottom-color:var(--n4)}
+header.pose{background:rgba(12,10,50,.95); backdrop-filter:blur(12px); border-bottom-color:var(--n4)}
 .bar{display:flex; align-items:center; justify-content:space-between; gap:16px; width:100%}
 .sigle{font-size:26px; font-weight:800; letter-spacing:-.02em; color:var(--blanc); line-height:1}
 .sigle b{color:var(--rouge-clair); font-weight:800}
@@ -131,10 +137,10 @@ header.pose{background:rgba(10,10,10,.95); backdrop-filter:blur(12px); border-bo
 /* --- Hero plein ecran --------------------------------------------------- */
 .hero{position:relative; min-height:100svh; display:flex; align-items:flex-end; padding:96px 0 48px; overflow:hidden}
 .hero-fond{position:absolute; inset:0; z-index:0}
-.hero-fond img{width:100%; height:100%; object-fit:cover; object-position:50% 22%; filter:grayscale(1) contrast(1.06)}
+.hero-fond img{width:100%; height:100%; object-fit:cover; object-position:50% 22%; filter:grayscale(1) contrast(1.05) brightness(.94)}
 .hero-fond::after{
   content:""; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(10,10,10,.50) 0%, rgba(10,10,10,.26) 32%, rgba(10,10,10,.93) 74%, var(--noir) 100%);
+  background:linear-gradient(180deg, rgba(12,10,50,.50) 0%, rgba(12,10,50,.26) 32%, rgba(12,10,50,.93) 74%, var(--noir) 100%);
 }
 .hero .wrap{position:relative; z-index:1; width:100%}
 .hero h1{margin:0}
@@ -180,7 +186,7 @@ header.pose{background:rgba(10,10,10,.95); backdrop-filter:blur(12px); border-bo
 .sama{position:relative; overflow:hidden; padding:88px 0}
 .sama-fond{position:absolute; inset:0; z-index:0}
 .sama-fond img{width:100%; height:100%; object-fit:cover; filter:grayscale(1)}
-.sama-fond::after{content:""; position:absolute; inset:0; background:rgba(10,10,10,.88)}
+.sama-fond::after{content:""; position:absolute; inset:0; background:rgba(12,10,50,.88)}
 .sama .wrap{position:relative; z-index:1}
 .sama-mots{display:flex; flex-wrap:wrap; gap:8px; list-style:none; padding:0; margin:0 0 32px}
 .sama-mots li{
