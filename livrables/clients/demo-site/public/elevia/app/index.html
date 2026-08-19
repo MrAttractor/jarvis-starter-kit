@@ -80,6 +80,9 @@ img{max-width:100%;display:block}
 .marque .nom{font-family:var(--serif);font-size:30px;letter-spacing:.14em;line-height:1}
 .marque .sous{font-size:9.5px;letter-spacing:.3em;color:var(--or);margin-top:8px;font-weight:500}
 .filet{width:44px;height:1px;background:var(--or);margin:15px auto 0;opacity:.6}
+/* Explicite, même si .marque ne déclare pas de display : c'est exactement le
+   piège qui rendait visible le bouton « recevoir un nouveau code ». */
+.marque[hidden]{display:none}
 
 /* ── Cartes ── */
 .carte{
@@ -335,7 +338,7 @@ button{-webkit-tap-highlight-color:transparent}
 </div>
 
 <main class="enveloppe">
-  <div class="marque">
+  <div class="marque" id="marque">
     <div class="blason" id="blason"></div>
     <div class="nom">ÉLÉVIA</div>
     <div class="sous">CLUB PRIVÉ</div>
@@ -431,6 +434,7 @@ PAYS.forEach((p) => { p.cle = aplat(p.nom); });
 
 const $ = (s) => document.querySelector(s);
 const vue = $("#vue");
+const marque = $("#marque");
 const etat = { pas: 1, form: {}, email: "", membre: null, jeton: localStorage.getItem("elevia_jeton") || "" };
 
 const ech = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
@@ -459,6 +463,11 @@ async function appel(action, corps = {}) {
 
 function rendre(html) {
   vue.innerHTML = html;
+  // L'en-tête de marque est visible par défaut sur tous les écrans. Seul
+  // l'accueil le retire, juste après, parce qu'il affiche déjà le monogramme
+  // dans sa plaque d'ouverture. Le remettre ici évite qu'un écran atteint
+  // depuis l'accueil hérite de son absence.
+  marque.hidden = false;
   window.scrollTo({ top: 0, behavior: "smooth" });
   // Le lecteur d'écran doit apprendre le changement d'écran, sinon il reste
   // sur l'ancien contenu et l'utilisateur ne sait pas qu'il a avancé.
@@ -523,6 +532,13 @@ function ecranAccueil() {
       <button class="bouton or" id="b-adherer">Demander mon adhésion</button>
       <button class="lien" id="b-connexion">J'ai déjà un compte</button>
     </div>`);
+  /* L'en-tête est retiré ici, et seulement ici. Il affichait le monogramme,
+     puis la plaque juste en dessous affichait le même monogramme : 139 px de
+     hauteur pour redire la même chose. Mesuré : sans lui et sans le bandeau de
+     recette, le bouton d'adhésion remonte de 713 à 521 px, donc au-dessus de la
+     ligne de flottaison d'un écran de 667 px. */
+  marque.hidden = true;
+
   $("#b-adherer").onclick = () => { etat.pas = 1; ecranPseudo(); };
   $("#b-connexion").onclick = () => ecranConnexion();
 }
