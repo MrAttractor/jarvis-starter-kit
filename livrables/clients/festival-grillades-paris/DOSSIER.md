@@ -8,6 +8,7 @@
 | Statut | **en cours. Thim Production relance sur l'avancement des travaux** |
 | Dernier contact | **2026-08-17 : c'est THIM qui relance**, elle demande la suite des travaux (avant : séance technique n°1 du 07/08) |
 | Prochaine action | **Lui répondre sur l'avancement.** Puis fixer les honoraires de Thim (art. 9), seul verrou de la signature, et envoyer mandat V2 + cahier des charges + lien du board aux deux parties. **Toujours aucune convention Mr Attractor / Thim** alors que le travail court depuis le 25/07 |
+| Chantier ouvert le 19/08 | **demande de partenariat aux sponsors**, déposable par Thim. Bloquée sur deux pièces : l'autorisation écrite d'Advantage (art. 3) et la liste des entreprises déjà démarchées depuis Abidjan |
 | Échéance | **échéance du 13/08 DÉPASSÉE.** Dépôt des visas visé la semaine du 17/08, donc **maintenant**. Événement le 11/10 |
 | Argent en attente | prix du forfait non fixé, **et aucune convention Mr Attractor / Thim** |
 
@@ -50,6 +51,9 @@ L'édition de Paris n'a pas la main sur ses partenaires.
 | **Cahier des charges** | source `CAHIER-DES-CHARGES-FGP-2026.md`, page en ligne `demo.agenceattractor.com/festival-grillades/cahier-des-charges` | les deux parties | **Annexe 4 du contrat**, les 40 opérations avec porteur et critère, imprimable en PDF depuis le navigateur |
 | **Board de pilotage en ligne** | `0004_board_pilotage.sql`, front dans `demo-site/public/festival-grillades/board/` | les trois parties | **en ligne et testé** |
 | **Boussole de production** | `0008_boussole_thim.sql`, front dans `demo-site/public/festival-grillades/boussole/` | Thim en premier, partageable aux trois | **en ligne**, 48 tâches en 11 postes, dont 29 à chiffrer, dates calculées à rebours du 11 octobre |
+| **Demande de partenariat** | source `DEMANDE-PARTENARIAT-PARIS-2026.md`, PDF du même nom, page `demo-site/public/festival-grillades/demande-partenariat/` | **destinée aux sponsors**, à personnaliser avant chaque dépôt | **prête**, 8 champs à compléter dont les montants des formules |
+| **Autorisation de prospection** | `AUTORISATION-ADVANTAGE-A-THIM-PARTENARIATS.md` et PDF | Advantage la signe, le sponsor la lit | **à faire signer**, exigée par l'article 3 du mandat, **rien ne se dépose sans elle** |
+| Note interne sur la demande | `NOTE-INTERNE-DEMANDE-PARTENARIAT.md` | **interne Thim + Mr Attractor** | verrous juridique et commercial, champs à compléter, cibles, mode de dépôt |
 
 > ## UN SEUL LIEN À ENVOYER (regroupement du 13/08/2026)
 >
@@ -271,9 +275,37 @@ critique de la signature**. Il devient une annexe à compléter, et un écart ne
 
 ## Prochaine action
 
-Quatre choses, dans cet ordre.
+Six choses, dans cet ordre.
 
 1. **Fixer les honoraires de Thim**, article 9 du mandat V2. C'est le seul verrou de la signature, et personne ne peut le remplir à notre place. Méthode et fourchette en note de marge de l'article.
 2. **Trancher le sort du pacte de non-contournement** : abandonné au profit de l'article 18, ou conservé avec renvoi. Sinon un même fait est sanctionné deux fois.
 3. **Écrire la convention Mr Attractor / Thim.** Elle n'existe pas, le travail court depuis le 25 juillet, et notre rémunération dépend aujourd'hui d'une SASU au capital de 500 euros sans rien d'écrit.
 4. **Envoyer aux deux parties** le mandat V2, le cahier des charges et le lien du board, et faire valider le relevé de la séance n°1, qui n'a qu'une signature sur trois et qui devient l'Annexe 4.
+5. **Faire signer l'autorisation de prospection à Advantage.** Elle ne dépend pas du mandat, elle est révocable, elle ne coûte rien à Advantage, et sans elle Thim ne peut rien déposer chez un sponsor. C'est le déblocage le moins cher du dossier.
+6. **Demander à Stéphane ATTA la liste des entreprises déjà démarchées depuis Abidjan**, les exclusivités déjà consenties et la grille officielle de contreparties. Sans cette liste, le Festival risque de se présenter deux fois chez la même entreprise, avec deux discours. En attendant, ne déposer que chez des entreprises françaises sans présence à Abidjan.
+
+## La demande de partenariat aux sponsors (19/08/2026)
+
+Trois pièces produites, décrites dans `NOTE-INTERNE-DEMANDE-PARTENARIAT.md` : la demande
+elle-même, l'autorisation qu'Advantage doit signer, et la note interne.
+
+**Ce qui est nouveau dans le dossier.** Le PDF « Présentation FGP 2026 » d'Advantage
+raconte le Festival et ses six éditions, mais ne demande rien : pas de lettre signée, pas
+de formule, pas de prix, pas de coupon-réponse, et rien de spécifique à Paris. Notre
+document est la demande elle-même. Il porte la signature de Nomagbè MEÏTE, quatre formules
+dont une contribution en nature, les engagements pris envers le partenaire, et un
+coupon-réponse. Le PDF d'Advantage reste la pièce jointe qui raconte le Festival.
+
+**Ce qu'il ne fait pas, volontairement.** Aucun chiffre de fréquentation ni de portée n'y
+figure : nous n'en avons aucun de vérifié, et un chiffre inventé dans un dossier de
+sponsoring se retourne au premier contrôle. La preuve de 2025 est qualitative. Les montants
+des formules sont laissés à compléter, la grille de contreparties d'Advantage n'ayant
+jamais été transmise.
+
+**Deux verrous avant le premier dépôt**, l'un juridique, l'autre commercial : l'autorisation
+écrite d'Advantage exigée par l'article 3, et la liste des entreprises déjà démarchées
+depuis Abidjan. Voir les points 5 et 6 ci-dessus.
+
+**Et pour nous.** La commission de l'article 9 sur les partenariats apportés par Thim en
+France n'est pas plus chiffrée que ses honoraires. Prospecter avant de l'avoir fixée, c'est
+travailler gratuitement sur un résultat qui profite à Advantage.
