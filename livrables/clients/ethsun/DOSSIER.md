@@ -5,8 +5,8 @@
 | Radar | |
 |---|---|
 | Statut | **note envoyée, en attente de réponse** |
-| Dernier contact | 2026-08-10, note de cadrage envoyée à Jean-Calvin Ethien **par WhatsApp** |
-| Prochaine action | Obtenir le choix d'axe et les 7 réponses du point 7, puis **caler la réunion sur l'économie du partenariat**. Relancer si rien au 20/08 |
+| Dernier contact | 2026-08-19, échange bref avec Jean-Calvin Ethien, relance amicale envoyée le jour même |
+| Prochaine action | Obtenir le choix d'axe et les 7 réponses du point 7, puis **caler la réunion sur l'économie du partenariat** |
 | Échéance | relance au 20/08/2026 |
 | Argent en attente | rien de chiffré, rien de signé. **L'économie se traite en réunion, pas par écrit** (décision de Mac Arthur du 10/08) |
 
