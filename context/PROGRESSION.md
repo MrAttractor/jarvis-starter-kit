@@ -15,6 +15,7 @@
 
 | Date | Dû, non encaissé | En jeu | Clients qui attendent une réponse | Silence 14 j et plus | Ce qui a progressé |
 |---|---|---|---|---|---|
+| 2026-08-19 | 2 317 € | 3 900 à 5 800 € | 1 (Nabycook) | 10 dossiers, dont 5 au-delà de 21 jours | rien |
 | 2026-08-19 | 2 317 € | 3 900 à 5 800 € | 3 (Thim, Élise, Nabycook) | 10 dossiers, dont 5 au-delà de 21 jours | rien |
 | 2026-08-17 | **2 317 €** | 3 900 à 5 800 € | **3** (Thim, Élise, Nabycook) | **8 dossiers**, dont 5 au-delà de 21 jours | **Rien.** Aucun encaissement, aucune signature, aucun rendez-vous obtenu. Une mise en production : `nabycook.com` le 13/08 |
 

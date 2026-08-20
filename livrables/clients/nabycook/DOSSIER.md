@@ -5,7 +5,7 @@
 | Radar | |
 |---|---|
 | Statut | **site en production sur `nabycook.com`, mais pas annonçable** |
-| Dernier contact | 2026-08-10 (son debrief détaillé par mail) |
+| Dernier contact | **2026-08-19 : elle demande si elle peut verser une seconde tranche (le solde) dans les jours à venir** |
 | Prochaine action | **Lui fournir son tableau de bord**, et relancer sur les 3 vidéos |
 | Échéance | forum du 5 septembre 2026 cité dans sa liste d'éléments |
 | Argent en attente | **175 € d'acompte, toujours pas encaissés** |
