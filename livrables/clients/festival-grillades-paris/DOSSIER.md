@@ -6,8 +6,8 @@
 | Radar | |
 |---|---|
 | Statut | **en cours. Thim Production relance sur l'avancement des travaux** |
-| Dernier contact | **2026-08-19 : documents envoyés à Thim Production**, en réponse à sa relance du 17/08 |
-| Prochaine action | **Envoyer le mail de l'accord de confidentialité signé par les deux parties**, puis **demander à Thim les next steps** vu le temps restant. Fixer les honoraires de Thim (art. 9), seul verrou de la signature. **Toujours aucune convention Mr Attractor / Thim** alors que le travail court depuis le 25/07 |
+| Dernier contact | **2026-08-20 : accord de confidentialité envoyé à Thim Production** |
+| Prochaine action | **Demander à Thim les next steps** vu le temps restant. Fixer les honoraires de Thim (art. 9), seul verrou de la signature. **Toujours aucune convention Mr Attractor / Thim** alors que le travail court depuis le 25/07 |
 | Échéance | **échéance du 13/08 DÉPASSÉE.** Dépôt des visas visé la semaine du 17/08, donc **maintenant**. Événement le 11/10 |
 | Argent en attente | prix du forfait non fixé, **et aucune convention Mr Attractor / Thim** |
 
