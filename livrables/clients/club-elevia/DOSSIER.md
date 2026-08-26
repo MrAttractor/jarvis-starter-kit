@@ -1,15 +1,15 @@
 # Club Élévia — l'état du dossier
 
-> Révision du 14/08/2026, après sa recette de la Web App. **Cette fiche est la première
+> Révision du 26/08/2026, après sa deuxième recette. **Cette fiche est la première
 > chose à lire du dossier.**
 > Un chiffre ou un statut n'existe qu'ici. S'il apparaît ailleurs, c'est une copie à vérifier.
 
 | Radar | |
 |---|---|
-| Statut | **recette intégrée et EN LIGNE le 17/08. En attente de sa signature et de ses questions d'affinités** |
-| Dernier contact | **2026-08-19 : réponse envoyée** (message `1a0199dcdc3f5674`), après sa relance du 17/08. En attente de son retour |
-| Prochaine action | **Signer soi-même** l'avenant, la contresignature manque. Puis attendre ses réponses : questions d'affinités, nom de domaine, informations légales |
-| Échéance | **répondre sans délai** (relance cliente en attente). Relance de signature le 25/08/2026 si toujours rien |
+| Statut | **2e recette reçue le 20/08. Elle ne demande plus de modification importante, seulement des finitions. Ses six points sont traités au 26/08** |
+| Dernier contact | **2026-08-20 à 20h51 : sa 2e recette** (message `1a020835c741a2fd`). Réponse rédigée, **pas encore envoyée** |
+| Prochaine action | **Envoyer la réponse** (brouillon Gmail dans le fil, en cours de retouche par Mac Arthur). Puis **signer soi-même** l'avenant, la contresignature manque |
+| Échéance | **répondre sans délai**, son mail a déjà 6 jours. Signature : lien valable jusqu'au 30/09/2026 |
 | Argent en attente | 2 050 € — Tranche 2 non déclenchée |
 
 ## En une phrase
@@ -19,6 +19,73 @@ le 14/08. Elle juge le travail « de très bonne qualité » et « conforme au p
 et valide les quatre premiers écrans sur le plan fonctionnel. **Rien n'est signé, ni par
 elle ni par nous**, et les questions du questionnaire d'affinités, seules bloquantes pour
 le Module 3, ne sont toujours pas arrivées.
+
+## La 2e recette, du 20/08, et le lien qui n'ouvrait pas
+
+Six points, dont un seul comptait vraiment pour elle : **le lien de démonstration ne
+s'ouvrait ni chez sa collègue ni depuis un autre poste**. Elle demandait de chercher un
+filtrage, un pare-feu ou un anti-robot côté hébergement.
+
+**Mesuré le 26/08, et ce n'était rien de tout cela.** Le site répond 200 partout, sur
+iPhone, sur Android et sans identification de navigateur, sans redirection ni blocage.
+Le défaut venait du lien lui-même : Gmail avait réécrit l'adresse en
+`google.com/url?q=…&ust=1787222221318000`, et ce paramètre `ust` est **une date
+d'expiration, arrivée à terme le 20/08 à 12h37**. Élise a cliqué avant, chez elle ça
+marchait. Sa collègue a cliqué après et a reçu une page Google « Avertissement de
+redirection », pas le site. **Troisième fois que ce redirecteur coûte quelque chose sur
+ce dossier**, après le lien de signature déguisé du 07/08. Voir R-15.
+
+**Ce qui est corrigé et en ligne le 26/08** (déploiement `aa2f6b38`, vérifié sur le
+domaine réel, pas sur l'alias) :
+
+- l'aide affichée quand la caméra est refusée **dépend maintenant de l'appareil**. Elle
+  parlait du « cadenas à gauche de l'adresse », repère qui n'existe pas dans Safari sur
+  iPhone. Sur iPhone elle indique le bouton de réglages de page, puis Réglages du site
+  web, puis Caméra, avec le chemin par les Réglages du téléphone en second recours. Et
+  le bouton principal devient **Recharger la page**, seul geste qui reprend la main après
+  un refus sur Safari ;
+- le badge « Confidentialité garantie » devient **« Identité protégée »**, et l'écran du
+  pseudonyme reprend sa formulation : « votre identité réelle ne leur est jamais
+  affichée ». Elle jugeait ses propres formulations trop absolues, elle a raison ;
+- « Tous les pays sont proposés, sans exception » devient **« Sélectionnez votre pays de
+  résidence »**, sa phrase exacte ;
+- « Nous envoyons votre code sécurisé à l'instant » devient **« Nous vous envoyons votre
+  code sécurisé immédiatement »**, sa phrase exacte.
+
+**Son point 4, corrigé le 26/08 avant de lui répondre.** Elle demandait de confirmer par
+écrit que la suppression à 24 h est **garantie techniquement**. Elle ne l'était pas : la
+ligne partait en cascade et **le fichier restait dans le stockage**, introuvable pour la
+purge qui travaille à partir des lignes (R-76). Un **second trou du même ordre** a été
+découvert en corrigeant le premier : entre « demarrer » et « soumettre », la vidéo est
+déjà déposée alors que la colonne `chemin` est encore vide, donc une personne qui
+enregistre puis abandonne laissait elle aussi un fichier que rien ne référençait.
+
+Dispositif livré, migration `0006_elevia_orphelins.sql` plus l'edge function `elevia-verif` :
+
+- un **déclencheur `BEFORE DELETE`** inscrit le chemin dans `el_fichiers_orphelins` dès
+  qu'une ligne portant une vidéo est supprimée, cascade comprise ;
+- l'edge function **vide cette file à chaque appel** et n'horodate la purge qu'après
+  l'effacement réel (R-54) ;
+- une action **`balayer`** compare le stockage aux lignes et efface tout objet que plus
+  rien ne réclame, avec une marge de 2 heures pour ne jamais toucher un dépôt en cours.
+
+**Prouvé le 26/08, pas supposé.** Recette de bout en bout : membre créé, vidéo réellement
+déposée, membre supprimé, **fichier constaté encore présent** (le défaut), puis un appel
+à la fonction et **fichier absent, purge horodatée**. Données de recette nettoyées.
+Contrôle de non-régression : la vidéo d'Élise, toujours en attente de décision, est
+reconnue comme référencée, donc le balayage n'y touche pas. État du stockage après
+travaux : **1 vidéo, la sienne, 0 orphelin**. Les quatre fonctions SQL sont inexécutables
+par `anon`, `authenticated` et `public` (R-68), vérifié.
+
+**Reste aussi à faire, à l'œil et sur un vrai téléphone** : l'écran de refus caméra n'a
+pas été vu sur un iPhone réel (R-51). C'est le seul point de ce lot qui n'est pas prouvé.
+
+**Au passage, ménage R-70.** Le déploiement partait du dossier de travail entier :
+`cockpit/README.md` était **publiquement lisible** sur le site, et cinq autres fichiers
+internes s'y trouvaient (notes de build, caches `.wrangler`, schémas SQL). Le déploiement
+part désormais d'une copie nettoyée. **Sujet ouvert, hors de ce dossier** :
+`getwinworld.net/supabase-schema.sql` expose le schéma du projet Supabase partagé, avec
+son identifiant, sur le site d'un client.
 
 ## La recette du 08/08 et ce qui en est sorti
 

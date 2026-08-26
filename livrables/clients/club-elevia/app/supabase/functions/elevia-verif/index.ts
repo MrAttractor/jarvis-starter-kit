@@ -4,7 +4,9 @@
 // Trois engagements de l'Avenant V3 (Art. 15), tenus ici :
 //   · aucune reconnaissance faciale : un geste tiré au sort, jugé par un humain ;
 //   · la décision porte toujours le nom de l'agent qui l'a prise ;
-//   · la vidéo est effacée dans les 24 h suivant la décision, de façon vérifiable.
+//   · la vidéo est effacée dans les 24 h suivant la décision, de façon vérifiable,
+//     ET elle ne survit pas à la ligne qui la référence : un membre supprimé
+//     emporte sa vidéo, un dépôt abandonné est balayé (26/08/2026, R-76).
 //
 // La vidéo ne transite jamais par cette fonction : le navigateur l'envoie
 // directement au stockage privé avec une URL signée à usage unique. Le bucket
@@ -90,6 +92,48 @@ Deno.serve(async (req) => {
     return ids.length;
   }
 
+  /** Vide la file des fichiers dont la LIGNE a disparu, alimentée par le
+   *  déclencheur el_verif_avant_suppression. Sans elle, supprimer un membre
+   *  laissait sa vidéo dans le stockage pour toujours : la purge ci-dessus
+   *  travaille à partir des lignes, et il n'y en avait plus. */
+  async function purgerOrphelins(): Promise<number> {
+    const { data: liste } = await db.rpc("el_orphelins_a_purger");
+    if (!liste || liste.length === 0) return 0;
+    const chemins = liste.map((o: { chemin: string }) => o.chemin).filter(Boolean);
+    const { error } = await db.storage.from(BUCKET).remove(chemins);
+    // Marqué seulement après l'effacement réel, sinon la preuve mentirait.
+    if (error) return 0;
+    const ids = liste.map((o: { id: string }) => o.id);
+    await db.rpc("el_marquer_orphelins_purges", { ids });
+    return ids.length;
+  }
+
+  /** Balayage du stockage : tout objet que plus aucune ligne ne réclame est
+   *  effacé. Rattrape ce qu'aucun déclencheur ne peut voir, en particulier la
+   *  vidéo déposée puis abandonnée avant l'envoi : entre « demarrer » et
+   *  « soumettre », le fichier existe alors que la colonne chemin est encore
+   *  vide, donc rien ne le référence. Marge de 2 heures pour ne jamais toucher
+   *  un dépôt en cours. Coûteux, donc réservé à une action explicite. */
+  async function balayer(): Promise<{ vus: number; effaces: number }> {
+    const MARGE_MS = 2 * 60 * 60 * 1000;
+    const objets: { chemin: string; cree: string }[] = [];
+    const { data: racine } = await db.storage.from(BUCKET).list("", { limit: 1000 });
+    for (const d of racine ?? []) {
+      if (d.id) { objets.push({ chemin: d.name, cree: d.created_at }); continue; }
+      const { data: fichiers } = await db.storage.from(BUCKET).list(d.name, { limit: 1000 });
+      for (const f of fichiers ?? []) if (f.id) objets.push({ chemin: `${d.name}/${f.name}`, cree: f.created_at });
+    }
+    const murs = objets.filter((o) => Date.now() - new Date(o.cree).getTime() > MARGE_MS);
+    if (murs.length === 0) return { vus: objets.length, effaces: 0 };
+    const { data: connus } = await db.rpc("el_chemins_references", { chemins: murs.map((o) => o.chemin) });
+    const references = new Set((connus ?? []).map((c: { chemin: string }) => c.chemin));
+    const aEffacer = murs.filter((o) => !references.has(o.chemin)).map((o) => o.chemin);
+    if (aEffacer.length === 0) return { vus: objets.length, effaces: 0 };
+    const { error } = await db.storage.from(BUCKET).remove(aEffacer);
+    if (error) return { vus: objets.length, effaces: 0 };
+    return { vus: objets.length, effaces: aEffacer.length };
+  }
+
   /** Session -> membre. Toute action passe par là. */
   async function membreDe(jeton: unknown) {
     const { data: sess } = await db.from("el_sessions")
@@ -103,6 +147,7 @@ Deno.serve(async (req) => {
   try {
     const { action, jeton, ...p } = await req.json();
     const purgees = await purger();
+    const orphelines = await purgerOrphelins();
 
     const membre = await membreDe(jeton);
     if (!membre) return json({ ok: false, error: "Session expirée." }, 401);
@@ -204,7 +249,7 @@ Deno.serve(async (req) => {
         }
         enrichies.push({ ...l, chemin: undefined, video, membre: parId[l.membre_id] ?? null });
       }
-      return json({ ok: true, agent: membre.pseudo, purgees, demandes: enrichies });
+      return json({ ok: true, agent: membre.pseudo, purgees, orphelines, demandes: enrichies });
     }
 
     // ── Décider ──────────────────────────────────────────────
@@ -233,8 +278,9 @@ Deno.serve(async (req) => {
       return json({ ok: true });
     }
 
-    // ── Purge forcée (contrôle manuel) ───────────────────────
-    if (action === "purger") return json({ ok: true, purgees });
+    // ── Purge forcée et balayage (contrôle manuel) ───────────
+    if (action === "purger") return json({ ok: true, purgees, orphelines });
+    if (action === "balayer") return json({ ok: true, purgees, orphelines, balayage: await balayer() });
 
     return json({ ok: false, error: "Action inconnue." }, 400);
   } catch (err) {

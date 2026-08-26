@@ -545,7 +545,7 @@ function ecranAccueil() {
       <p class="chapo">Elles privilégient la confiance, la discrétion et des rencontres de qualité.</p>
       <div class="gages">
         <div class="gage">${ICONE.ok}<span>Membres vérifiés</span></div>
-        <div class="gage">${ICONE.bouclier}<span>Confidentialité garantie</span></div>
+        <div class="gage">${ICONE.bouclier}<span>Identité protégée</span></div>
         <div class="gage">${ICONE.globe}<span>Présence internationale</span></div>
       </div>
       <button class="bouton or" id="b-adherer">Demander mon adhésion</button>
@@ -569,7 +569,7 @@ function ecranPseudo(msg) {
       ${barre(1)}
       <span class="etiquette">ÉTAPE 1 SUR 3</span>
       <h2>Sous quel nom souhaitez-vous être connu ?</h2>
-      <p class="chapo">C'est le seul nom que les autres membres verront. Votre identité réelle reste privée.</p>
+      <p class="chapo">C'est le seul nom que les autres membres verront. Votre identité réelle ne leur est jamais affichée.</p>
       ${erreur(msg)}
       <div class="champ">
         <label for="i-pseudo">Votre pseudonyme <span class="compteur" id="c-pseudo">0 / 24</span></label>
@@ -652,7 +652,7 @@ function ecranProfil(msg) {
                  value="${ech(paysChoisi ? paysChoisi.nom : "")}">
           <div class="combo-liste" id="l-pays" role="listbox" aria-label="Pays"></div>
         </div>
-        <p class="aide" id="a-pays">Tous les pays sont proposés, sans exception.</p>
+        <p class="aide" id="a-pays">Sélectionnez votre pays de résidence.</p>
       </div>
       <div class="champ">
         <label for="i-naissance">Date de naissance</label>
@@ -891,7 +891,7 @@ function ecranBienvenue() {
     <div class="carte anime" style="text-align:center">
       <div class="medaille" style="margin-bottom:18px">${ICONE.ok}</div>
       <h2>Bienvenue chez Élévia</h2>
-      <p class="chapo" style="margin-bottom:0">Nous envoyons votre code sécurisé à l'instant.</p>
+      <p class="chapo" style="margin-bottom:0">Nous vous envoyons votre code sécurisé immédiatement.</p>
     </div>`);
   const m = vue.querySelector(".medaille svg");
   if (m) { m.style.width = "30px"; m.style.height = "30px"; m.style.stroke = "var(--or-fonce)"; m.style.strokeWidth = "2.4"; m.style.fill = "none"; }
@@ -1100,17 +1100,35 @@ async function ecranVerifCamera() {
   } catch (e) {
     // Le CDC demande un message d'aide, pas un simple échec.
     const refus = e && (e.name === "NotAllowedError" || e.name === "SecurityError");
+    /* L'aide dépend de l'appareil. La formulation précédente parlait du « cadenas
+       à gauche de l'adresse », repère qui n'existe pas dans Safari sur iPhone :
+       la personne le cherchait sans le trouver et restait bloquée là.
+       Remonté par la cliente le 20/08/2026. */
+    const surIphone = /iPad|iPhone|iPod/.test(navigator.userAgent)
+      || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const etape = (t) => `<li>${ICONE.ok.replace('<svg', '<svg class="coche-or"')}<span>${t}</span></li>`;
+    const aide = surIphone
+      ? etape("Touchez le bouton de réglages de la page dans la barre d'adresse, marqué <b>aA</b> ou <b>&#8943;</b>.")
+        + etape("Choisissez <b>Réglages du site web</b>, puis mettez <b>Caméra</b> sur <b>Autoriser</b>.")
+        + etape("Revenez ici et rechargez la page.")
+      : etape("Touchez l'icône à gauche de l'adresse du site, en haut de votre navigateur.")
+        + etape("Activez la caméra pour ce site.")
+        + etape("Rechargez la page.");
     rendre(`
       <div class="carte anime">
         <span class="etiquette">VÉRIFICATION</span>
         <h2>${refus ? "L'accès à la caméra a été refusé" : "Aucune caméra n'a été trouvée"}</h2>
         <p class="chapo">${refus
-          ? "Pour autoriser l'accès : touchez l'icône de cadenas (ou de caméra) à gauche de l'adresse du site, en haut de votre navigateur, puis activez la caméra et rechargez la page."
+          ? "Votre navigateur bloque la caméra pour ce site. Voici comment l'autoriser à nouveau."
           : "Vérifiez qu'une caméra est bien connectée et qu'aucune autre application ne l'utilise en ce moment."}</p>
-        <button class="bouton" id="b-reessayer">Réessayer</button>
+        ${refus ? `<ul class="consignes">${aide}</ul>` : ""}
+        ${refus && surIphone ? `<p class="aide">Si vous ne trouvez pas ce bouton : ouvrez <b>Réglages</b>, puis <b>Safari</b>, puis <b>Caméra</b>, et choisissez <b>Demander</b>.</p>` : ""}
+        <button class="bouton" id="b-reessayer">${refus ? "Recharger la page" : "Réessayer"}</button>
         <button class="lien" id="b-retour">Revenir à mon profil</button>
       </div>`);
-    $("#b-reessayer").onclick = ecranVerifCamera;
+    /* Après un refus, redemander l'autorisation sans recharger ne donne rien sur
+       Safari : le navigateur garde sa décision jusqu'au rechargement de la page. */
+    $("#b-reessayer").onclick = refus ? () => location.reload() : ecranVerifCamera;
     $("#b-retour").onclick = () => ecranMembre(false);
     return;
   }
