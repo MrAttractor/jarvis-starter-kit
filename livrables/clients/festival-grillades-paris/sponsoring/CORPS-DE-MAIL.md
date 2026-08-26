@@ -1,0 +1,109 @@
+# Corps de mail d'accompagnement des documents
+
+> ▸ **Note interne, retirée à la génération.** Ces messages accompagnent l'envoi du courrier et
+> du dossier de présentation en pièces jointes. Ils sont donc courts par construction : quand
+> les documents sont joints, le mail ne les répète pas, il donne une raison de les ouvrir et
+> demande le rendez-vous.
+>
+> ▸ Ordre d'envoi : Taptap Send et la maison de champagne quand tu veux, **Orange Money France
+> seulement après l'accord écrit de Stéphane ATTA**.
+>
+> ▸ Deux pièces jointes à chaque envoi : la lettre au format PDF, et le dossier de présentation.
+> Le PDF plutôt que le Word, un destinataire ne doit pas pouvoir modifier un courrier signé.
+
+## Le bloc de signature, identique dans les trois
+
+```
+Arnaud YORO
+Manager général, Thim Production
+Producteur délégué de l'édition parisienne du Festival des Grillades
+06 12 87 94 04 · thimproduction22@gmail.com
+```
+
+---
+
+## Mail 1 · Taptap Send
+
+**Objet :** Festival des Grillades de Paris, 11 octobre, proposition de partenariat
+
+```
+Bonjour [Prénom],
+
+Le Festival des Grillades se tient à Abidjan chaque année depuis 2008. Le 11 octobre, il fait sa deuxième édition parisienne, à Bobigny : une journée entière autour de la cuisine ivoirienne, de midi à vingt et une heures, avec un plateau d'artistes.
+
+Nous produisons cette édition pour le compte d'Advantage Conseils, propriétaire du Festival, et nous constituons le cercle de ses partenaires en France.
+
+Je pense à Taptap Send pour une raison simple : les personnes qui seront dans cette salle sont celles qui envoient de l'argent au pays tous les mois. Elles auront payé cent cinquante euros leur place, et la première édition parisienne a affiché complet.
+
+Vous trouverez ci-joint notre courrier et le dossier de présentation de l'édition.
+
+Seriez-vous disponible pour un échange de vingt minutes cette semaine ou la prochaine ? Je vous montre ce que la journée permet de faire pour une marque comme la vôtre, et vous me dites si c'est votre sujet.
+
+Bien à vous,
+```
+
+---
+
+## Mail 2 · Orange Money France
+
+**Objet :** Festival des Grillades de Paris, 11 octobre, proposition de partenariat
+
+```
+Bonjour [Prénom],
+
+Le Festival des Grillades se tient à Abidjan chaque année depuis 2008, et se décline en 2026 sur sept villes et trois pays. Le 11 octobre, il fait sa deuxième édition parisienne, à Bobigny, de midi à vingt et une heures.
+
+Nous produisons cette édition pour le compte d'Advantage Conseils, propriétaire du Festival, et nous constituons le cercle de ses partenaires en France.
+
+Je vous écris parce que le public de cette journée garde un lien quotidien avec la Côte d'Ivoire : il appelle, il envoie de l'argent, il voyage. Ce sont vos clients, réunis une journée entière dans une même salle, chacun ayant payé son entrée pour venir. Votre marque leur est familière des deux côtés du lien, ce qui est rare.
+
+Vous trouverez ci-joint notre courrier et le dossier de présentation de l'édition.
+
+Seriez-vous disponible pour un échange de vingt minutes dans les prochains jours ? Je vous présente le dispositif, et vous me direz s'il a sa place dans vos actions de fin d'année.
+
+Bien à vous,
+```
+
+---
+
+## Mail 3 · Maison de champagne
+
+> ▸ Destinataire : le responsable du réseau cafés, hôtels et restaurants, ou le grossiste.
+> **Jamais le service sponsoring ou mécénat.** Et aucune mention de visibilité, nulle part.
+
+**Objet :** Journée du 11 octobre à Bobigny, proposition de collaboration
+
+```
+Bonjour [Prénom],
+
+Nous produisons l'édition parisienne du Festival des Grillades, le 11 octobre à Bobigny : une journée de gastronomie ivoirienne, de midi à vingt et une heures, avec restauration, plateau d'artistes et bar. La salle compte cinq cents places et nous attendons quatre cents convives, qui achètent leur entrée.
+
+Nous constituons en ce moment la carte du bar et nous souhaitons y associer une grande maison de champagne. C'est l'objet du courrier ci-joint, qui présente l'opportunité et notre intention d'ouvrir la discussion.
+
+Concrètement, nous pensons à un accord d'approvisionnement, à l'achat ou en dépôt-vente. Le service est assuré par notre équipe, et le relevé des volumes réellement servis vous est remis après l'événement.
+
+Pouvez-vous m'indiquer vos conditions sur ce type d'opération, et si le dépôt-vente est envisageable ? Je reste à votre disposition pour un échange.
+
+Bien à vous,
+```
+
+---
+
+## Ce qui se passe après l'envoi
+
+**À J+3, un appel.** Pas un mail. « Je me permets de revenir vers vous après mon envoi de lundi.
+Si le sujet n'est pas le vôtre, dites-le moi franchement, je n'insiste pas. S'il l'est, vingt
+minutes suffisent. »
+
+**Si on demande le prix par retour de mail**, ne pas l'écrire. « Il y a plusieurs niveaux
+d'engagement, et le bon dépend de ce que vous voulez faire ce jour-là. Vingt minutes et je vous
+présente la grille. » Les conditions financières se présentent en rendez-vous, jamais en pièce
+jointe d'un premier envoi.
+
+**Si la maison de champagne parle de visibilité ou de sponsoring d'elle-même**, ne pas embrayer par
+écrit. Répondre que la discussion porte sur l'approvisionnement, et traiter le reste de vive voix
+avec un juriste dans la boucle.
+
+**Un envoi, une trace.** Chaque destinataire est inscrit au carnet de contacts de l'espace de
+pilotage, avec la date et le numéro de référence du courrier. C'est ce qui évite qu'une même
+entreprise soit sollicitée deux fois, par Paris et par Abidjan.

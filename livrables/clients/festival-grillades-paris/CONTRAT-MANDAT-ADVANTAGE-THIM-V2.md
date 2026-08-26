@@ -762,11 +762,21 @@ Fait en deux exemplaires originaux.
 
 À ................................, le ................................
 
-| Pour ADVANTAGE CONSEILS, le Mandant | Pour THIM PRODUCTION, le Mandataire |
-|---|---|
-| Nom : Madame Florence KONE | Madame Nomagbè MEÏTE épouse CADEC |
-| Fonction : [À COMPLÉTER] | Présidente |
-| Signature : | Signature : |
+**Pour ADVANTAGE CONSEILS, le Mandant**
+
+Nom : Madame Florence KONE
+
+Fonction : [À COMPLÉTER]
+
+Signature et cachet :
+
+**Pour THIM PRODUCTION, le Mandataire**
+
+Nom : Madame Nomagbè MEÏTE épouse CADEC
+
+Fonction : Présidente
+
+Signature et cachet :
 
 ---
 

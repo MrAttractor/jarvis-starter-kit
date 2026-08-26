@@ -293,6 +293,9 @@ const sb=supabase.createClient(SB_URL,SB_KEY);
 const P=new URLSearchParams(location.search).get("s");
 let JETON=P||"";
 try{ if(P)localStorage.setItem("fgp_jeton",P); else JETON=localStorage.getItem("fgp_jeton")||""; }catch(e){}
+/* Le jeton est retenu, on le retire de l'adresse : le lien redevient court et
+   presentable, et un rafraichissement continue de fonctionner. */
+if(P){ try{ history.replaceState(null,"",location.pathname); }catch(e){} }
 
 const $=s=>document.querySelector(s);
 const esc=s=>(s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -366,6 +369,14 @@ function rendreEtat(){
    +`<div class="cb${infosDues.length?" rouge":""}"><div class="n">${infosDues.length}</div><div class="l">infos manquantes</div></div>`
    +`<div class="cb"><div class="n">${BOUS?BOUS.avancement.faites:0}/${BOUS?BOUS.avancement.total:0}</div><div class="l">tâches faites</div></div>`
    +'</div>';
+
+  /* La reunion du jour se rejoint d'ici, pas par un second lien a retrouver. */
+  const ouverte=(BOARD.seances||[]).filter(s=>s.statut==="ouverte").sort((a,b)=>b.numero-a.numero)[0];
+  if(ouverte&&ouverte.jeton){
+    h+=`<div class="urg"><h3>${esc(ouverte.titre)}, séance ouverte</h3>
+      <p>Prévue le ${jolie(ouverte.date_seance)}. On y statue les points de l'ordre du jour, et le relevé se fige à la clôture.</p>
+      <a class="bouton" href="seance/?s=${encodeURIComponent(ouverte.jeton)}">Entrer dans la séance</a></div>`;
+  }
 
   const u=[];
   j.forEach(x=>{

@@ -5,11 +5,11 @@
 
 | Radar | |
 |---|---|
-| Statut | **en cours. Thim Production relance sur l'avancement des travaux** |
-| Dernier contact | **2026-08-17 : c'est THIM qui relance**, elle demande la suite des travaux (avant : séance technique n°1 du 07/08) |
-| Prochaine action | **Lui répondre sur l'avancement.** Puis fixer les honoraires de Thim (art. 9), seul verrou de la signature, et envoyer mandat V2 + cahier des charges + lien du board aux deux parties. **Toujours aucune convention Mr Attractor / Thim** alors que le travail court depuis le 25/07 |
-| Échéance | **échéance du 13/08 DÉPASSÉE.** Dépôt des visas visé la semaine du 17/08, donc **maintenant**. Événement le 11/10 |
-| Argent en attente | prix du forfait non fixé, **et aucune convention Mr Attractor / Thim** |
+| Statut | **en cours, et le dossier se réveille. Advantage attend LE CONTRAT, et propose une réunion hebdomadaire jusqu'au 11/10** |
+| Dernier contact | **2026-08-19 : mail de Marius A. (Advantage) à Arnaud YORO (Thim)**. Il réclame le contrat, annonce le démarrage de la communication officielle, donne le prix du billet (150 €) et l'état de la salle (12 000 €, 7 800 € payés), demande un plan de communication, une solution de billetterie et le prix de l'assistance visas. Réponse rédigée dans `REPONSE-A-MARIUS-2026-08-20.md`, préparation de séance dans `SEANCE-2-PREPARATION.md` |
+| Prochaine action | Dans cet ordre : **1.** fixer les honoraires de Thim (art. 9) **aujourd'hui**, c'est ce qu'Advantage attend. **2.** envoyer la réponse à Marius avec le logo Thim et l'attestation de mandat. **3.** signer la convention Mr Attractor / Thim avant de produire les quatre nouveaux chantiers demandés (plan de communication, billetterie, visas, sécurité). **4.** tenir la séance n°2 vendredi et en sortir avec la jauge, le titulaire du contrat de salle et la liste nominative des artistes |
+| Échéance | **réunion vendredi 21/08**, puis hebdomadaire. Passeports des artistes disponibles la semaine du 24/08, donc lettres d'invitation avant. Solde de la salle, 4 200 €, fin août. Événement le 11/10 |
+| Argent en attente | **honoraires de Thim toujours non fixés, et c'est désormais le seul obstacle à un contrat qu'Advantage réclame par écrit.** Toujours aucune convention Mr Attractor / Thim, alors que le mail du 19/08 ajoute quatre chantiers qui atterrissent chez nous |
 
 ## En une phrase
 
@@ -46,10 +46,12 @@ L'édition de Paris n'a pas la main sur ses partenaires.
 | Recueil du périmètre | `RECUEIL-SESSION-TECHNIQUE.md` | version papier de secours | a servi de trame, périmé depuis la séance |
 | Cadre et liste des tâches | `CADRE-PRESTATION-ET-TACHES.md` | **interne Thim + Mr Attractor** | à recaler sur la répartition réellement arrêtée |
 | Budgétisation et prix | `BUDGET-KIT-PARIS-2026.md` | **confidentiel Thim** | **toujours vide, faute d'informations**, **seul document qui porte les chiffres** |
-| **Contrat de mandat de production exécutive V2** | `CONTRAT-MANDAT-ADVANTAGE-THIM-V2.md` | **document unique envoyé aux deux parties** | **prêt, 8 champs à compléter dont les honoraires** |
+| **Contrat de mandat de production exécutive V2** | source `CONTRAT-MANDAT-ADVANTAGE-THIM-V2.md`, version à envoyer `CONTRAT-MANDAT-V2-A-ENVOYER.txt` | **document unique envoyé aux deux parties** | **prêt, 10 champs à compléter dont les honoraires. ATTENTION : la version qui circule chez Thim au 20/08 est la V1**, elle n'a ni 2.1, ni 3.1, ni 5 bis, ni 6.1, ni 6.2, ni 18.5, ni 21.1, ni 21.2, ni 36, et n'annexe pas le cahier des charges |
+| **Trame de budget** | `TRAME-BUDGET-PARIS-2026.md`, version à envoyer `TRAME-BUDGET-A-ENVOYER.txt` | Advantage | **prête**, remplace la demande de budget restée sans effet depuis trois semaines |
 | **Cahier des charges** | source `CAHIER-DES-CHARGES-FGP-2026.md`, page en ligne `demo.agenceattractor.com/festival-grillades/cahier-des-charges` | les deux parties | **Annexe 4 du contrat**, les 40 opérations avec porteur et critère, imprimable en PDF depuis le navigateur |
 | **Board de pilotage en ligne** | `0004_board_pilotage.sql`, front dans `demo-site/public/festival-grillades/board/` | les trois parties | **en ligne et testé** |
 | **Boussole de production** | `0008_boussole_thim.sql`, front dans `demo-site/public/festival-grillades/boussole/` | Thim en premier, partageable aux trois | **en ligne**, 48 tâches en 11 postes, dont 29 à chiffrer, dates calculées à rebours du 11 octobre |
+| **Campagne de sponsoring France** | dossier `sponsoring/` (7 pièces) | **rien n'est encore diffusé** | **produite le 19/08**, bloquée par 3 verrous, voir la section ci-dessous |
 
 > ## UN SEUL LIEN À ENVOYER (regroupement du 13/08/2026)
 >
@@ -222,6 +224,45 @@ risque de prêt de licence que le montage voulait éviter (voir section suivante
 est reconduite tacitement. Une reconduction tacite avec un tiers n'engage pas Thim, il
 faut un contrat au nom de l'organisateur déclaré.
 
+## La campagne de sponsoring de l'édition parisienne (19/08/2026)
+
+Thim démarche les partenaires **en France, pour le compte d'Advantage**. Le lot complet est dans
+`sponsoring/` : dossier de partenariat imprimable, lettre de sollicitation avec ses accroches par
+catégorie, messages et relances, convention de partenariat type, attestation de mandat de
+démarchage, cibles par catégorie, note interne. **Les montants ne sont écrits qu'à un seul
+endroit**, `sponsoring/dossier-sponsoring.html`.
+
+Calibrage retenu : **soirée en salle, format prestige**. Quatre paliers plus une formule en nature.
+Périmètre : **France et diaspora, hors comptes déjà engagés à Abidjan**. Signataire des conventions :
+**Thim, en son nom mais pour le compte d'Advantage**.
+
+**Rien ne part avant ces trois verrous** :
+
+1. **Neuf informations manquent au dossier**, dont la jauge et la fréquentation de la première
+   édition parisienne. Six sont chez Advantage et font partie des 29, trois sont des décisions de
+   Thim qu'elle peut prendre aujourd'hui.
+2. **La grille de montants doit être validée par Advantage.** Elle fixe les tarifs de son concept,
+   sinon deux grilles circulent et un sponsor compare Paris à un package d'Abidjan.
+3. **L'attestation de mandat de démarchage n'est pas signée.** Une page, prête, elle débloque la
+   campagne sans attendre l'article 9 du mandat.
+
+Trois points juridiques relevés à la production, détaillés dans `sponsoring/NOTE-INTERNE-CAMPAGNE.md` :
+le **parrainage par un producteur de boissons alcooliques est interdit en France** (art. L.3323-2
+du code de la santé publique), ce qui vise directement la piste de dépôt-vente champagne évoquée
+en séance ; l'**encaissement pour le compte d'Advantage** doit être écrit, sinon chaque euro de
+sponsoring devient du chiffre d'affaires imposable chez Thim ; la **TVA** reste à confirmer par son
+comptable.
+
+**Ce qui part chez Thim** : `sponsoring/pour-thim/`, sept documents Word modifiables plus l'aperçu
+de mise en page en PDF, et l'archive `Sponsoring-Paris-2026-pour-Thim.zip` (0,59 Mo). Les `.docx`
+sont des **produits dérivés** : on ne les corrige jamais à la main, on modifie la source puis on
+relance `sh sponsoring/construire-pour-thim.sh`. La note interne de campagne, le plancher de
+négociation et les scénarios de recettes **ne sont pas dans l'envoi**.
+
+**Fenêtre réelle : quatre semaines.** Le 19 septembre est le dernier jour utile pour signer et
+figurer sur les supports imprimés. Conséquence assumée : le palier haut est un actif pour 2027, ce
+qui se signera en 2026 sont les décisions à un seul décideur et les partenariats en nature.
+
 ## Ce qui bloque
 
 **Le verrou immédiat est le montant des honoraires de Thim**, article 9 du mandat. Tant
@@ -253,7 +294,7 @@ articles 29 et 30 du mandat.
 | 1. Recueil du périmètre | 7 août | Advantage dit ce qu'elle confie à Thim | **fait, 40 points statués** |
 | 2. Validation du relevé | à obtenir | Advantage et Thim valident le compte rendu en ligne | **1 signature sur 3** |
 | 3. Honoraires de Thim | **immédiat** | fixer le montant de l'article 9, seul verrou du mandat | **à décider** |
-| 4. Mandat V2 | dans la foulée | appliquer `MANDAT-V2-MODIFICATIONS.md` dans le Doc de Thim | prêt à appliquer |
+| 4. Mandat V2 | dans la foulée | envoyer `CONTRAT-MANDAT-V2-A-ENVOYER.txt`, généré sans les notes de marge internes | **prêt, 10 champs à compléter** |
 | 5. Convention Mr Attractor / Thim | **en parallèle** | fixer notre rémunération, rien n'est écrit à ce jour | **inexistante** |
 | 6. Signature du mandat | dès que 3 et 4 sont faits | signature et premier versement d'Advantage | |
 | 7. Budget de l'édition | après les 29 informations | Annexe 1 du mandat, construite par Advantage | bloqué |
@@ -277,3 +318,4 @@ Quatre choses, dans cet ordre.
 2. **Trancher le sort du pacte de non-contournement** : abandonné au profit de l'article 18, ou conservé avec renvoi. Sinon un même fait est sanctionné deux fois.
 3. **Écrire la convention Mr Attractor / Thim.** Elle n'existe pas, le travail court depuis le 25 juillet, et notre rémunération dépend aujourd'hui d'une SASU au capital de 500 euros sans rien d'écrit.
 4. **Envoyer aux deux parties** le mandat V2, le cahier des charges et le lien du board, et faire valider le relevé de la séance n°1, qui n'a qu'une signature sur trois et qui devient l'Annexe 4.
+5. **Lancer la campagne de sponsoring** : faire signer l'attestation de mandat de démarchage à Advantage, obtenir de Stéphane ATTA la liste des comptes réservés aux accords multi-éditions, faire valider la grille de montants, et réclamer en priorité la jauge et la fréquentation de la première édition parisienne. Les trois décisions qui appartiennent à Thim, elle peut les prendre aujourd'hui.
