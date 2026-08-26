@@ -24,11 +24,23 @@ Une contradiction trouvée ne se contourne pas en silence : elle se signale à M
 
 ## CHAPITRE 1 — VISION
 
+### La thèse (posée le 26/08/2026)
+
+> **Je crois que les bâtisseurs qui pensent avoir un problème d'argent ont d'abord une faille de connexion, à eux-mêmes et aux autres. Aucune stratégie ne les emmènera là où ils doivent aller tant qu'elle n'est pas réparée.**
+
+Ce que l'agence voit et que les autres ne voient pas. Elle nomme la cible (**les bâtisseurs**, pas les entrepreneurs qui veulent grandir), l'ennemi (**l'auto-censure**, et la croyance que le blocage est financier alors qu'il est intérieur), et le trajet (**de visionnaire à bâtisseur**, par les trois connexions : à soi, aux autres, au projet).
+
+**Elle ne s'annonce jamais à l'entrée d'une relation commerciale, elle se démontre** (R-02).
+
+**Source de vérité unique, avec les preuves, l'origine et les formulations écartées** : `livrables/commercial/positionnement/THESE.md`. Aucune copie ailleurs.
+
 ### La phrase boussole
 
 > "Un bras droit intelligent qui soulage les gens des tâches quotidiennes, tout en les aidant à devenir numéro 1 dans leur couloir."
 
 C'est la mesure de toute décision produit, commerciale ou organisationnelle. Si une action ne sert pas cette phrase, elle n'est pas prioritaire.
+
+**Articulation avec la thèse** : la phrase boussole dit **ce qu'on fait**, la thèse dit **pourquoi ça marche**. La première est la promesse, la seconde est la conviction qui la fonde. Elles ne se remplacent pas.
 
 ### La mission de l'agence
 
