@@ -8,7 +8,7 @@
 |---|---|
 | Statut | **Elle veut lancer.** Son mail du 28/08 fixe le périmètre V1 qu'elle souhaite et demande une date. Ce périmètre **déborde le CDC V4 sur trois briques** (paiement, événements, conciergerie), nommément renvoyées à un devis complémentaire |
 | Dernier contact | **2026-08-28 à 21h36 : son mail de cadrage** (message `1a04a4dec2777833`). Notre réponse du 26/08 **a bien été envoyée**, contrairement à ce que disait cette fiche |
-| Prochaine action | **Valider les cinq prix du devis complémentaire ATR-2026-0014**, puis envoyer `BROUILLON-REPONSE-ELISE-2026-09-03.md` avec le devis en pièce jointe. Puis **signer soi-même** l'avenant |
+| Prochaine action | **Valider les cinq prix du devis complémentaire ATR-2026-0014**, puis envoyer `BROUILLON-REPONSE-ELISE-2026-09-03.md` avec le devis en pièce jointe |
 | Échéance | **son mail a 6 jours au 03/09.** La date de lancement annoncée (12/10) suppose signature et questionnaire reçus **avant le lundi 07/09**. Signature : lien valable jusqu'au 30/09/2026 |
 | Argent en attente | 2 050 € sur la V1, **plus 1 736 € de devis complémentaire** si elle prend les cinq lots |
 
@@ -310,10 +310,10 @@ La différence est expliquée dans le brouillon de réponse, avant qu'elle ne la
 statut `en_attente`, **expire le 30/09/2026**. Il scelle l'Avenant V3, le Devis V5 et le
 CDC V4.
 
-| Signataire | Statut au 14/08 | Lien |
+| Signataire | Statut | Lien |
 |---|---|---|
-| Élise CAPEL | **`ouvert`** : elle a cliqué, elle n'a pas signé | `signature.agenceattractor.com/s/664e2w4y0v421z5q5s6i026d474q0v030f3k6e53646x1g6v` |
-| Mac Arthur (contresignature) | **`en_attente`** : ta signature manque aussi | `signature.agenceattractor.com/s/1g595w5c59035x33280n0p5s5s37590f3d1a12104e271y1x` |
+| Élise CAPEL | **`ouvert` au 14/08** : elle a cliqué, elle n'a pas signé. Seule signature manquante | `https://signature.agenceattractor.com/s/664e2w4y0v421z5q5s6i026d474q0v030f3k6e53646x1g6v` |
+| Mac Arthur (contresignature) | **signée**, confirmé par Mac Arthur le 03/09/2026. Statut en base non revérifié | `https://signature.agenceattractor.com/s/1g595w5c59035x33280n0p5s5s37590f3d1a12104e271y1x` |
 
 C'est le lien envoyé dans le mail du 07/08, il est donc inutile d'en générer un nouveau.
 
@@ -328,8 +328,9 @@ Dossiers antérieurs, **expirés et non signables** : `22518a80` du 03/08 et `a2
    (voir plus haut, c'est l'erreur du 26/08).
 3. **Vérifier d'un navigateur** que `http://demo.agenceattractor.com/elevia/app/` bascule
    bien en HTTPS avant de l'affirmer à Élise. Non mesurable depuis le workspace.
-4. **Signer soi-même** l'avenant : la contresignature manque, et attendre la sienne sans
-   avoir apposé la nôtre n'a pas de sens.
+4. ~~Signer soi-même l'avenant~~ : **fait**, confirmé le 03/09. Il ne manque plus que sa
+   signature à elle, et c'est un meilleur levier de relance qu'une signature en attente
+   des deux côtés.
 5. **Ne pas commencer le Module 3** avant la signature des trois documents et l'encaissement
    de la Tranche 2. C'est l'arbitrage du 03/09, il tient tant qu'il n'est pas révoqué.
 6. **Relancer le 10/09** si rien ne bouge. Ses spams avalent nos messages, elle l'a écrit

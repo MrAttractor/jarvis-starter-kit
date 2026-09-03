@@ -53,7 +53,7 @@ Deux ajouts plus légers, que je te propose de prendre au passage : les champs *
 Trois, et deux dépendent de toi.
 
 1. **Les questions du questionnaire d'affinités.** Je te les demande depuis le 7 août. C'est le cœur d'Élévia, personne ne peut les écrire à ta place, et tant qu'elles ne sont pas là je ne peux pas commencer ce module. C'est le seul vrai blocage technique aujourd'hui.
-2. **La signature.** L'avenant, le devis et le cahier des charges attendent toujours ta signature et la mienne. Tant qu'ils ne sont pas signés, le document qui fait foi reste le contrat d'origine, celui qui parle d'applications iOS et Android publiées sur les stores, alors que nous construisons une Web App. Ce décalage ne nous sert ni l'un ni l'autre. Le lien reste valable jusqu'au 30 septembre.
+2. **La signature.** J'ai signé de mon côté, l'avenant, le devis et le cahier des charges n'attendent plus que toi. Tant qu'ils ne sont pas signés des deux côtés, le document qui fait foi reste le contrat d'origine, celui qui parle d'applications iOS et Android publiées sur les stores, alors que nous construisons une Web App. Ce décalage ne nous sert ni l'un ni l'autre. Le lien reste valable jusqu'au 30 septembre.
 3. **Ton nom de domaine et tes informations légales.** Le domaine débloque d'un coup l'adresse de contact et l'expéditeur des e-mails, qui portent encore mon nom d'agence. Les informations légales de YNL complètent les deux documents juridiques. Ni l'un ni l'autre n'empêche de développer, mais les deux empêchent d'ouvrir au public.
 
 Une remarque de fond, dite simplement. Le socle et la vérification ont été construits, déployés et corrigés deux fois avant que le projet ne soit officiellement lancé, sur les 950 € versés en juillet. Je l'ai fait volontiers, parce que tu avais besoin de voir pour décider. Mais pour la suite, je repars sur ce qui est écrit : la signature des trois documents, et la tranche 2 de 900 €, qui correspond au prototype fonctionnel que tu as déjà entre les mains et validé.
@@ -116,7 +116,7 @@ Enfin, un rappel que j'avais déjà écrit et qui reste vrai : ces deux textes s
 ## Ce dont j'ai besoin de toi, dans l'ordre
 
 1. **Les questions du questionnaire d'affinités.** Le seul vrai blocage.
-2. **La signature** des trois documents, et je signe dans la foulée.
+2. **La signature** des trois documents. La mienne est déjà apposée, il ne manque que la tienne.
 3. **Ta réponse sur le devis complémentaire**, ne serait-ce que pour savoir si le paiement entre dans la V1 ou non.
 4. **Ton nom de domaine**, dès que tu l'as acheté.
 5. **Les informations légales de YNL** et l'adresse de contact définitive.
