@@ -1,16 +1,84 @@
 # Club Élévia — l'état du dossier
 
-> Révision du 26/08/2026, après sa deuxième recette. **Cette fiche est la première
+> Révision du 03/09/2026, après son mail de cadrage du 28/08. **Cette fiche est la première
 > chose à lire du dossier.**
 > Un chiffre ou un statut n'existe qu'ici. S'il apparaît ailleurs, c'est une copie à vérifier.
 
 | Radar | |
 |---|---|
-| Statut | **2e recette reçue le 20/08. Elle ne demande plus de modification importante, seulement des finitions. Ses six points sont traités au 26/08** |
-| Dernier contact | **2026-08-20 à 20h51 : sa 2e recette** (message `1a020835c741a2fd`). Réponse rédigée, **pas encore envoyée** |
-| Prochaine action | **Envoyer la réponse** (brouillon Gmail dans le fil, en cours de retouche par Mac Arthur). Puis **signer soi-même** l'avenant, la contresignature manque |
-| Échéance | **répondre sans délai**, son mail a déjà 6 jours. Signature : lien valable jusqu'au 30/09/2026 |
-| Argent en attente | 2 050 € — Tranche 2 non déclenchée |
+| Statut | **Elle veut lancer.** Son mail du 28/08 fixe le périmètre V1 qu'elle souhaite et demande une date. Ce périmètre **déborde le CDC V4 sur trois briques** (paiement, événements, conciergerie), nommément renvoyées à un devis complémentaire |
+| Dernier contact | **2026-08-28 à 21h36 : son mail de cadrage** (message `1a04a4dec2777833`). Notre réponse du 26/08 **a bien été envoyée**, contrairement à ce que disait cette fiche |
+| Prochaine action | **Valider les cinq prix du devis complémentaire ATR-2026-0014**, puis envoyer `BROUILLON-REPONSE-ELISE-2026-09-03.md` avec le devis en pièce jointe. Puis **signer soi-même** l'avenant |
+| Échéance | **son mail a 6 jours au 03/09.** La date de lancement annoncée (12/10) suppose signature et questionnaire reçus **avant le lundi 07/09**. Signature : lien valable jusqu'au 30/09/2026 |
+| Argent en attente | 2 050 € sur la V1, **plus 1 736 € de devis complémentaire** si elle prend les cinq lots |
+
+## Son mail du 28/08 : elle passe en mode lancement, et le périmètre bouge
+
+Elle ne demande plus de corrections, elle demande **une direction et une date** : ce qui est
+terminé, ce qu'il reste, les blocages, le délai. Elle veut « une V1 élégante, fiable et
+commercialisable » pour accueillir de vrais membres.
+
+**Le parcours V1 qu'elle décrit :** découvrir → candidater → vérification → validation ou refus
+→ **choix de l'adhésion → paiement** → accès au Club. Puis, une fois membre : profil,
+intentions relationnelles, **services**, **événements**, mise en relation, **conciergerie**.
+Côté administration elle ajoute le **suivi des adhésions** et la **gestion des événements**, et
+dans les points d'avant lancement le **suivi des visites, candidatures, inscriptions et
+adhésions**.
+
+**Trois de ces briques sont explicitement hors du prix de 3 000 €** (CDC V4, section 9) :
+l'encaissement des abonnements et la passerelle de paiement, le module Événements, l'Espace
+Concierge. Le suivi d'audience et les champs de profil internationaux (ville, langues, attaches
+culturelles) ne figurent nulle part au CDC : ce sont des ajouts nets. **Quatrième vague de
+demandes**, sur un dossier où 950 € sont encaissés et où le J0 n'est toujours pas lancé.
+
+**Arbitrage retenu le 03/09 par Mac Arthur :**
+
+1. **V1 contractuelle tenue**, les ajouts partent dans le devis complémentaire
+   **ATR-2026-0014** (5 lots, 2 170 € avant remise volume, **1 736 €** après). Prix calés sur
+   le prix de la V1 elle-même, **à valider avant envoi**, voir le fichier du devis.
+2. **La reprise du développement (Modules 3 et 4) est conditionnée à la signature des trois
+   documents et à l'encaissement de la Tranche 2** (900 €). Argument : la Phase 2 est livrée et
+   recettée deux fois, donc la Tranche 2 est déjà exigible dès que le J0 est acté.
+
+**Date annoncée dans la réponse :** J0 le lundi 07/09 si signature et questionnaire arrivent
+avant, bêta complète le 28/09, **mise en ligne le lundi 12 octobre 2026**. Une semaine de plus
+si elle prend le lot paiement dans la V1.
+
+## Ses CGU et sa politique version 1.1, et ce qu'on lui confirme
+
+Elle joint au mail du 28/08 **sa propre révision** de nos deux gabarits. Travail sérieux, ton
+juste, et surtout elle remplace nos affirmations techniques absolues par des formulations sous
+réserve, en demandant au prestataire de confirmer par écrit ce qui est réellement vrai. Elle a
+raison de le faire.
+
+**Vérifié dans le code le 03/09, et confirmé dans la réponse :**
+
+| Ce qu'elle veut faire confirmer | Vérification |
+|---|---|
+| Aucune reconnaissance faciale ni analyse automatique du visage | **Vrai.** Aucun détecteur de visage dans le front, aucune bibliothèque de vision. La vidéo est enregistrée et regardée par une personne |
+| Vidéo supprimée sous 24 h après décision, 30 jours maximum sans décision | **Vrai.** Les deux règles sont en base (`0004_elevia_expiration.sql`), purge horodatée, trous des fichiers orphelins comblés le 26/08 |
+| Vidéos dans un espace privé | **Vrai**, bucket privé, non listable publiquement |
+| HTTPS, code à 10 minutes, tentatives limitées | **Vrai**, plus le plafond de demandes d'envoi depuis le 14/08 |
+| Aucun traceur, aucune mesure d'audience | **Vrai aujourd'hui** : un seul élément en `localStorage`, le jeton de session. **Devient faux le jour où le lot D est développé**, un bandeau de consentement sera alors obligatoire |
+
+**Deux corrections à lui demander :** trois adresses de contact différentes circulent dans ses
+documents, dont une avec un accent (`contact@ynlsociéte.com`) qui ne peut pas exister ; et le
+champ « origines ou attaches culturelles » doit rester libre et facultatif, sans liste imposée,
+pour ne pas basculer en donnée sensible au sens de l'article 9 du RGPD.
+
+## Son point HTTP contre HTTPS : c'est notre erreur, et elle est bénigne
+
+Elle signale que le dernier lien commence par `http` alors que le précédent était en `https`.
+**Cause :** le 26/08, pour éviter la réécriture Gmail (R-15), l'adresse a été collée en texte
+brut **sans le préfixe `https://`**, et le client de messagerie l'a complétée en `http://`.
+Le site n'a jamais été qu'en HTTPS.
+
+**Leçon, à ajouter à R-15 :** coller le lien en texte brut, mais **toujours avec le préfixe
+`https://`**. Sans schéma, la messagerie du destinataire en invente un, et c'est le mauvais.
+
+> Non vérifié depuis cet environnement : la redirection HTTP vers HTTPS n'a pas pu être
+> mesurée, le proxy sortant bloque `demo.agenceattractor.com`. À confirmer d'un navigateur
+> avant d'affirmer quoi que ce soit à Élise.
 
 ## En une phrase
 
@@ -204,7 +272,10 @@ de son Art. 2 : Contrat > CDC > Cession PI > Devis > NDA.
 | CDC V4 | `CDC-ATR-2026-0005-ClubElevia` | **à signer** |
 | Reçus 001 à 004 | `RECU-ATR-2026-00x-ClubElevia` | émis |
 | Annexes de vision (offertes) | `ELEVIA-Vision-et-proposition-de-valeur`, `ELEVIA-Grandes-orientations` | envoyées |
-| Réponse à son mail du 02/08 | `BROUILLON-REPONSE-ELISE-03-08.md` | **à relire et envoyer** |
+| **Devis complémentaire** | `DEVIS-ATR-2026-0014-ClubElevia-Complementaire.md` | **prix à valider, puis à mettre en forme et joindre** |
+| **Réponse à son mail du 28/08** | `BROUILLON-REPONSE-ELISE-2026-09-03.md` | **à valider et envoyer** |
+| Réponse à son mail du 20/08 | `REPONSE-ELISE-2026-08-26.md` | **envoyée le 26/08 à 13h50** |
+| Réponse à son mail du 02/08 | `BROUILLON-REPONSE-ELISE-03-08.md` | envoyée |
 | Réponse du 29/07 | `BROUILLON-REPONSE-ELISE-29-07.md` | envoyée |
 
 Tout ce qui est dans `_archive/` ne fait plus autorité. Voir son README.
@@ -251,33 +322,43 @@ Dossiers antérieurs, **expirés et non signables** : `22518a80` du 03/08 et `a2
 
 ## Prochaine action
 
-1. **Déployer le front**, puis ouvrir l'app **sur un vrai téléphone** jusqu'à
-   l'enregistrement vidéo. Tant que ce n'est pas fait, la livraison n'est pas annonçable.
-   ```
-   cd livrables/clients/demo-site
-   npx wrangler pages deploy public --project-name=demo-agenceattractor --branch=master
-   ```
-   Le jeton Cloudflare du `.env` est valide mais **n'a pas la permission Pages** (vérifié :
-   lecture des zones OK, `/pages/projects` refusé en 10000). Soit lui ajouter le droit
-   « Cloudflare Pages : Edit », soit se connecter en interactif.
-2. **Envoyer `BROUILLON-REPONSE-ELISE-14-08.md`** après avoir testé les liens légaux avec
-   et sans barre oblique finale.
-3. **Signer soi-même** l'avenant : la contresignature manque, et attendre la sienne sans
+1. **Valider les cinq prix** du devis complémentaire ATR-2026-0014. Rien ne part avant.
+2. **Envoyer `BROUILLON-REPONSE-ELISE-2026-09-03.md`**, devis en pièce jointe, en réponse
+   dans le fil existant. Coller le lien de démonstration en texte brut **avec** `https://`
+   (voir plus haut, c'est l'erreur du 26/08).
+3. **Vérifier d'un navigateur** que `http://demo.agenceattractor.com/elevia/app/` bascule
+   bien en HTTPS avant de l'affirmer à Élise. Non mesurable depuis le workspace.
+4. **Signer soi-même** l'avenant : la contresignature manque, et attendre la sienne sans
    avoir apposé la nôtre n'a pas de sens.
-4. **Relancer le 25/08** si rien ne bouge. Elle est en vacances mais a explicitement
-   demandé à continuer à recevoir les mails. Ses spams avalent nos messages, elle l'a
-   écrit deux fois : vérifier la réception plutôt que de supposer le silence.
-5. Sa signature fixe le **J0** et lance les 40 jours ouvrés de développement.
-6. Garde-fou de son Art. 14 : au-delà de 15 jours ouvrés de retard non justifié, elle
+5. **Ne pas commencer le Module 3** avant la signature des trois documents et l'encaissement
+   de la Tranche 2. C'est l'arbitrage du 03/09, il tient tant qu'il n'est pas révoqué.
+6. **Relancer le 10/09** si rien ne bouge. Ses spams avalent nos messages, elle l'a écrit
+   deux fois : vérifier la réception plutôt que de supposer le silence.
+7. **L'écran de refus caméra n'a toujours pas été vu sur un iPhone réel** (R-51). Seul point
+   du lot d'août qui n'est pas prouvé, et elle a été invitée à le tester elle-même.
+8. Sa signature fixe le **J0**. Il reste **25 jours ouvrés** sur les 40, la Phase 2 étant
+   livrée et recettée.
+9. Garde-fou de son Art. 14 : au-delà de 15 jours ouvrés de retard non justifié, elle
    peut mettre en demeure. Le Devis V5 inscrit la clause de suspension du décompte
    pendant ses validations, l'attente d'un élément lui incombant ou d'une tranche échue.
+
+**Rappel de déploiement**, quand il faudra remettre en ligne :
+
+```
+cd livrables/clients/demo-site
+npx wrangler pages deploy public --project-name=demo-agenceattractor --branch=master
+```
+
+Neutraliser `CLOUDFLARE_API_TOKEN` avant de lancer la commande : Wrangler lui donne la
+priorité sur la session OAuth, et ce jeton ne porte que le DNS.
 
 ## Ce qu'on attend d'elle, et qui bloque quoi
 
 | Élément | Ce qu'il bloque |
 |---|---|
 | **Les questions du questionnaire d'affinités** | **le Module 3 en entier**, demandé depuis le 07/08 |
-| Sa signature | le J0 et la Tranche 2 |
+| Sa signature **et la Tranche 2** | la reprise du développement, décision du 03/09 |
+| Sa réponse au devis complémentaire | le lot paiement, donc sa capacité à commercialiser dès l'ouverture |
 | Son nom de domaine | l'adresse de contact **et** l'expéditeur des e-mails |
 | Ses informations légales | les CGU et la politique de confidentialité |
 | La photographie d'ouverture | rien, le logo occupe la place proprement en attendant |
@@ -288,3 +369,9 @@ Dossiers antérieurs, **expirés et non signables** : `22518a80` du 03/08 et `a2
 - V1 (en cours) : inscription, profils, vérification, mise en relation, messagerie, administration
 - V2 : applications natives iOS et Android, publication sur les stores
 - V3 : événements, conciergerie, suggestions par IA, traduction des messages
+
+**Depuis le 28/08, elle tire les événements et la conciergerie de la V3 vers la V1**, et y
+ajoute le paiement des adhésions. C'est légitime de sa part, c'est ce qui rend son Club
+commercialisable. C'est aussi exactement ce que le devis complémentaire ATR-2026-0014 chiffre,
+au lieu de le laisser absorber. Note de posture du barème : « le client qui demande plus ne
+ment pas, il découvre son besoin en utilisant l'outil ».
