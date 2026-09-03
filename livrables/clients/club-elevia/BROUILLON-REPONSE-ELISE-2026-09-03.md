@@ -1,14 +1,18 @@
 # Réponse à Élise, mail du 28/08 à 21h36
 
-> À envoyer depuis hello@agenceattractor.com, en réponse dans le fil existant.
-> **R-15 : coller le lien en texte brut, mais AVEC le préfixe `https://` cette fois.**
-> C'est l'omission du préfixe le 26/08 qui a produit son point « le lien commence par HTTP ».
+> **Le brouillon Gmail existe** : `r-6075573311782687823`, dans le fil `19fd6fc0e0cb26c3`,
+> en réponse à son message `1a04a4dec2777833`. Ce fichier en est la copie de référence.
 >
-> **À faire valider par Mac Arthur avant envoi :** les cinq prix du devis complémentaire
-> (section « Ce qui se chiffre à part »), calés sur le barème mais jamais pratiqués sur ce
-> dossier. Détail et justification dans `DEVIS-ATR-2026-0014-ClubElevia-Complementaire.md`.
+> **Deux choses à faire avant d'envoyer :**
+> 1. **Valider les cinq prix** du devis complémentaire, puis le joindre en PDF.
+>    Voir `DEVIS-ATR-2026-0014-ClubElevia-Complementaire.md`.
+> 2. **Appliquer `0007_elevia_agents.sql`** avec l'adresse réelle de son compte, sinon
+>    la phrase sur son espace d'administration est fausse : le rôle `agent` n'est porté
+>    par personne et elle recevrait « Accès réservé à l'équipe Élévia ».
 >
-> Pièce jointe à préparer : le devis complémentaire en PDF.
+> **Ne pas retoucher ce brouillon avec `update_draft`** : cette opération le sort du fil
+> de conversation, mesuré le 03/09. Retoucher, c'est supprimer et recréer avec
+> `replyToMessageId`.
 
 ---
 
@@ -18,16 +22,24 @@ Bonjour Élise,
 
 Merci pour ce cadrage, il est clair et il tombe au bon moment. Je te réponds dans ton ordre, puis je te donne une date.
 
+**Avant tout, les trois adresses du projet.** Recopie-les dans ton navigateur plutôt que de cliquer dessus, je t'explique pourquoi à la fin du message :
+
+| | |
+|---|---|
+| Ton Club, côté membre | https://demo.agenceattractor.com/elevia/app/ |
+| Ton espace d'administration | https://demo.agenceattractor.com/elevia/admin/ |
+| Ta signature, jusqu'au 30 septembre | https://signature.agenceattractor.com/s/664e2w4y0v421z5q5s6i026d474q0v030f3k6e53646x1g6v |
+
 ## 1. Ce qui est terminé
 
-Deux modules sur quatre, développés, déployés et recettés deux fois par toi :
+Deux modules sur quatre, développés, mis en ligne, et que tu as testés deux fois :
 
 - **L'identité et l'inscription.** Pseudonyme vérifié en temps réel, genre, pays de résidence, date de naissance avec blocage strict des moins de 18 ans, acceptation des conditions, connexion par code à 6 chiffres sans mot de passe. Base de données hébergée en Europe.
 - **La vérification.** Enregistrement de la vidéo avec deux gestes tirés au sort, dépôt dans un espace privé, file d'attente côté administration, décision prise par une personne, badge de profil vérifié, notification au membre.
-- **Ton espace d'administration**, dans sa première forme : les demandes en attente, la vidéo, accepter ou refuser, l'historique des décisions.
-- **La suppression des vidéos**, automatique et vérifiée. J'y reviens au point sur tes documents.
+- **Ton espace d'administration**, dans sa première forme, à l'adresse ci-dessus : les demandes en attente, la vidéo, accepter ou refuser avec un motif, l'historique des décisions. Tu t'y connectes avec ton compte Élévia habituel, il reconnaît que tu fais partie de l'équipe. C'est là que se traite la vidéo que tu as déposée le 8 août, et qui attend toujours.
+- **La suppression des vidéos**, automatique et vérifiée. J'y reviens plus bas.
 - **Les conditions d'utilisation et la politique de confidentialité** en ligne, dans leur version gabarit, plus ton logo et ta charte bleu nuit et or partout.
-- **Les six points de ta recette du 20 août**, tous traités.
+- **Les six points que tu m'as envoyés le 20 août**, tous traités.
 
 ## 2. Ce qu'il reste à terminer
 
@@ -36,7 +48,9 @@ D'abord ce qui est prévu et déjà payé dans ce que nous avons cadré en juill
 - **Le questionnaire d'affinités et la découverte des membres.** Le membre indique ce qu'il recherche, le Club lui propose des profils, il demande une mise en relation, l'autre accepte ou non.
 - **La messagerie**, ouverte uniquement après acceptation des deux côtés.
 - **La modération complète** (signalements, suspension d'un compte, journal des décisions) et **ton tableau de bord** de pilotage.
-- **La recette finale** sur mobile et sur ordinateur, et la mise en ligne sur ton nom de domaine.
+- **Les tests finaux** sur mobile et sur ordinateur, et la mise en ligne sur ton nom de domaine.
+
+Un point d'honnêteté sur l'état d'aujourd'hui : un membre dont tu valides la vidéo obtient son badge, et s'arrête là. Il n'a pas encore d'autres membres à découvrir ni personne à qui écrire, puisque c'est exactement ce que contiennent les deux modules qui restent. C'est normal à ce stade, mais il faut le savoir avant d'inviter de vraies personnes.
 
 Ensuite, trois choses de ta liste qui ne sont pas dans ce périmètre, et je préfère te le dire tout de suite plutôt qu'au moment de la facture :
 
@@ -53,10 +67,10 @@ Deux ajouts plus légers, que je te propose de prendre au passage : les champs *
 Trois, et deux dépendent de toi.
 
 1. **Les questions du questionnaire d'affinités.** Je te les demande depuis le 7 août. C'est le cœur d'Élévia, personne ne peut les écrire à ta place, et tant qu'elles ne sont pas là je ne peux pas commencer ce module. C'est le seul vrai blocage technique aujourd'hui.
-2. **La signature.** J'ai signé de mon côté, l'avenant, le devis et le cahier des charges n'attendent plus que toi. Tant qu'ils ne sont pas signés des deux côtés, le document qui fait foi reste le contrat d'origine, celui qui parle d'applications iOS et Android publiées sur les stores, alors que nous construisons une Web App. Ce décalage ne nous sert ni l'un ni l'autre. Le lien reste valable jusqu'au 30 septembre.
+2. **La signature.** J'ai signé de mon côté, l'avenant, le devis et le cahier des charges n'attendent plus que toi. Tant qu'ils ne sont pas signés des deux côtés, le document qui fait foi reste le contrat d'origine, celui qui parle d'applications iOS et Android publiées sur les stores, alors que nous construisons une Web App. Ce décalage ne nous sert ni l'un ni l'autre. L'adresse de signature est dans le tableau en haut de ce message, elle reste valable jusqu'au 30 septembre.
 3. **Ton nom de domaine et tes informations légales.** Le domaine débloque d'un coup l'adresse de contact et l'expéditeur des e-mails, qui portent encore mon nom d'agence. Les informations légales de YNL complètent les deux documents juridiques. Ni l'un ni l'autre n'empêche de développer, mais les deux empêchent d'ouvrir au public.
 
-Une remarque de fond, dite simplement. Le socle et la vérification ont été construits, déployés et corrigés deux fois avant que le projet ne soit officiellement lancé, sur les 950 € versés en juillet. Je l'ai fait volontiers, parce que tu avais besoin de voir pour décider. Mais pour la suite, je repars sur ce qui est écrit : la signature des trois documents, et la tranche 2 de 900 €, qui correspond au prototype fonctionnel que tu as déjà entre les mains et validé.
+Une remarque de fond, dite simplement. Le socle et la vérification ont été construits, mis en ligne et corrigés deux fois avant que le projet ne soit officiellement lancé, sur les 950 € versés en juillet. Je l'ai fait volontiers, parce que tu avais besoin de voir pour décider. Mais pour la suite, je repars sur ce qui est écrit : la signature des trois documents, et la tranche 2 de 900 €, qui correspond au prototype fonctionnel que tu as déjà entre les mains et validé.
 
 ## 4. Le délai, et la date
 
@@ -67,8 +81,8 @@ Si je reçois ta signature et tes questions d'affinités **avant le lundi 7 sept
 | Étape | Date |
 |---|---|
 | Démarrage | lundi 7 septembre |
-| Version bêta complète, testable de bout en bout | lundi 28 septembre |
-| Recette, corrections et mise en ligne | **lundi 12 octobre 2026** |
+| Version complète, que tu peux tester de bout en bout | lundi 28 septembre |
+| Tes tests, les corrections et la mise en ligne | **lundi 12 octobre 2026** |
 
 Ces jours se comptent en jours de production, c'est-à-dire hors périodes où j'attends un élément de ta part. Chaque jour sans les questions du questionnaire décale la date d'autant, et c'est la seule chose qui puisse la décaler.
 
@@ -86,15 +100,11 @@ Si tu prends l'adhésion et le paiement dans la V1, compte **une semaine de plus
 
 Le devis complémentaire joint chiffre chaque ligne séparément. Tu peux en prendre une seule.
 
-## Ton point sur le lien en HTTP
+## Ton point sur le lien en HTTP, et pourquoi il faut recopier les adresses
 
-Tu as bien vu, et l'erreur vient de moi. Le 26 août je t'ai écrit l'adresse sans son préfixe, pour éviter que ta messagerie ne la réécrive comme la fois précédente. Résultat : ton logiciel l'a complétée tout seul, et il l'a complétée en `http`. Le site n'a jamais été autrement qu'en `https`, la version non sécurisée bascule automatiquement.
+Tu as bien vu, et j'ai trouvé la cause exacte. Elle ne vient ni de ton ordinateur ni du site : elle vient de ma messagerie. **Gmail réécrit systématiquement toute adresse que je t'envoie**, et la remplace par une adresse à lui, de la forme `google.com/url?q=…`. Cette adresse de remplacement contient une date d'expiration, d'environ 24 heures. C'est ce qui explique les trois incidents de ce dossier : ta collègue qui tombait sur un avertissement Google, ton lien de signature qui ressemblait à une adresse douteuse en août, et le `http` que tu as vu le 26, ajouté par cette réécriture.
 
-Voici l'adresse définitive à utiliser pour tous les tests, à recopier telle quelle :
-
-https://demo.agenceattractor.com/elevia/app/
-
-Elle restera valable jusqu'à la mise en ligne sur ton propre nom de domaine, qui deviendra alors la seule adresse.
+Tant que nous n'aurons pas basculé sur ton propre nom de domaine, la parade est simple : **recopie les adresses du tableau en haut de ce message dans la barre de ton navigateur, ne clique pas dessus.** Recopiées, elles ne périment jamais, et elles sont toutes en `https`. Le site n'a d'ailleurs jamais été autrement, la version non sécurisée bascule automatiquement.
 
 ## Tes conditions d'utilisation et ta politique, version 1.1
 

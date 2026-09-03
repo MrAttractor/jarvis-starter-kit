@@ -44,6 +44,42 @@ demandes**, sur un dossier où 950 € sont encaissés et où le J0 n'est toujou
 avant, bêta complète le 28/09, **mise en ligne le lundi 12 octobre 2026**. Une semaine de plus
 si elle prend le lot paiement dans la V1.
 
+## Peut-elle vraiment se servir de l'application ? Audit du code, 03/09
+
+Question posée par Mac Arthur, vérifiée ligne à ligne. **Réponse : à moitié, et le trou est
+sérieux.**
+
+**Comme membre, le parcours tient debout.** Elle peut créer son compte, recevoir son code,
+se connecter, enregistrer et envoyer sa vidéo, revenir sur son espace, voir le statut de sa
+vérification, lire le motif d'un refus et recommencer sans limite. Les cas tordus sont
+traités : demande expirée, refus sans motif, vidéo déjà en attente.
+
+**Mais un membre validé arrive dans un cul-de-sac.** `ecranMembre` affiche « Votre profil est
+vérifié, le badge est visible par les autres membres », et il n'y a **aucun autre membre à
+voir, personne à contacter, rien à faire**. C'est attendu, ce sont les Modules 3 et 4, mais
+c'est à dire avant qu'elle n'invite de vraies personnes. C'est écrit dans la réponse du 03/09.
+
+**Comme administratrice, elle est très probablement bloquée dehors.** `elevia-verif` refuse la
+file de modération à tout ce qui n'a pas `role = 'agent'` (403, « Accès réservé à l'équipe
+Élévia »). Or `el_membres.role` vaut `'membre'` par défaut, et **aucune migration, aucun
+script, aucune ligne du dépôt ne promeut qui que ce soit en `agent`**. Le rôle existe depuis
+la migration `0003`, personne ne le porte.
+
+**Ce que ça implique, en chaîne :** elle ne peut pas ouvrir `/elevia/admin/`, donc elle ne
+peut valider aucune candidature, donc **aucun membre ne peut devenir vérifié**. La vidéo de
+son compte, en attente depuis le 08/08, n'est pas restée là par oubli : personne côté client
+n'a jamais eu le moyen de la traiter.
+
+**Livré :** `app/supabase/0007_elevia_agents.sql`, qui promeut un compte nommé, échoue
+bruyamment si l'adresse n'existe pas, et refuse de s'exécuter tant que l'adresse n'a pas été
+renseignée. **À appliquer avant d'envoyer la réponse**, sinon la phrase du mail sur son espace
+d'administration est fausse.
+
+> **Réserve honnête** : l'état réel de la base n'a pas pu être vérifié depuis le workspace,
+> le proxy sortant bloque les domaines du projet. Si un `update` manuel a déjà été fait en
+> base sans être tracé dans le dépôt, elle a déjà l'accès et `0007` ne fera rien de plus.
+> Le contrôle tient en une requête : `select pseudo, email, role from el_membres;`
+
 ## Ses CGU et sa politique version 1.1, et ce qu'on lui confirme
 
 Elle joint au mail du 28/08 **sa propre révision** de nos deux gabarits. Travail sérieux, ton
@@ -66,15 +102,25 @@ documents, dont une avec un accent (`contact@ynlsociéte.com`) qui ne peut pas e
 champ « origines ou attaches culturelles » doit rester libre et facultatif, sans liste imposée,
 pour ne pas basculer en donnée sensible au sens de l'article 9 du RGPD.
 
-## Son point HTTP contre HTTPS : c'est notre erreur, et elle est bénigne
+## Son point HTTP contre HTTPS : c'est Gmail, et c'est plus large qu'un détail
 
 Elle signale que le dernier lien commence par `http` alors que le précédent était en `https`.
-**Cause :** le 26/08, pour éviter la réécriture Gmail (R-15), l'adresse a été collée en texte
-brut **sans le préfixe `https://`**, et le client de messagerie l'a complétée en `http://`.
-Le site n'a jamais été qu'en HTTPS.
+**Cause mesurée dans le message réellement envoyé le 26/08**, et non supposée : l'adresse
+avait été collée en texte brut sans préfixe pour éviter la réécriture (R-15), et **Gmail l'a
+linkifiée puis enveloppée quand même**, en choisissant `http://` faute de schéma explicite.
+Le destinataire a reçu `google.com/url?q=http://demo.agenceattractor.com/…`. Le site n'a
+jamais été qu'en HTTPS.
 
-**Leçon, à ajouter à R-15 :** coller le lien en texte brut, mais **toujours avec le préfixe
-`https://`**. Sans schéma, la messagerie du destinataire en invente un, et c'est le mauvais.
+**Ce que la mesure du 03/09 apprend de plus, et qui invalide la parade en vigueur :** un
+brouillon créé avec de **vraies ancres HTML** est enveloppé lui aussi. Seul le texte affiché
+reste propre. Et l'enveloppe porte un paramètre `ust` qui est une **date d'expiration à
+environ 24 heures**. Autrement dit **tout lien envoyé depuis ce Gmail meurt en un jour**,
+quelle que soit la façon de l'écrire. C'est la cause des trois incidents du dossier, pas
+seulement du dernier.
+
+**Parade retenue, écrite dans R-15 :** donner les adresses **avec leur `https://`** et
+**demander explicitement de les recopier dans le navigateur plutôt que de cliquer**. Le mail
+du 03/09 les regroupe pour cela dans un tableau en tête de message, avec l'explication.
 
 > Non vérifié depuis cet environnement : la redirection HTTP vers HTTPS n'a pas pu être
 > mesurée, le proxy sortant bloque `demo.agenceattractor.com`. À confirmer d'un navigateur
@@ -323,23 +369,28 @@ Dossiers antérieurs, **expirés et non signables** : `22518a80` du 03/08 et `a2
 ## Prochaine action
 
 1. **Valider les cinq prix** du devis complémentaire ATR-2026-0014. Rien ne part avant.
-2. **Envoyer `BROUILLON-REPONSE-ELISE-2026-09-03.md`**, devis en pièce jointe, en réponse
-   dans le fil existant. Coller le lien de démonstration en texte brut **avec** `https://`
-   (voir plus haut, c'est l'erreur du 26/08).
-3. **Vérifier d'un navigateur** que `http://demo.agenceattractor.com/elevia/app/` bascule
+2. **Appliquer `0007_elevia_agents.sql`** avec l'adresse réelle de son compte Élévia, et
+   contrôler le résultat. Sans ça, la phrase du mail sur son espace d'administration est
+   fausse et elle s'en apercevra en trois secondes.
+3. **Envoyer le brouillon Gmail `r-6075573311782687823`** (fil `19fd6fc0e0cb26c3`, déjà
+   rédigé et positionné en réponse à son message du 28/08), devis en pièce jointe.
+   ⚠️ **Ne jamais le retoucher avec `update_draft`** : mesuré le 03/09, cette opération le
+   sort du fil de conversation. Pour le modifier, supprimer et recréer avec
+   `replyToMessageId`.
+4. **Vérifier d'un navigateur** que `http://demo.agenceattractor.com/elevia/app/` bascule
    bien en HTTPS avant de l'affirmer à Élise. Non mesurable depuis le workspace.
-4. ~~Signer soi-même l'avenant~~ : **fait**, confirmé le 03/09. Il ne manque plus que sa
+5. ~~Signer soi-même l'avenant~~ : **fait**, confirmé le 03/09. Il ne manque plus que sa
    signature à elle, et c'est un meilleur levier de relance qu'une signature en attente
    des deux côtés.
-5. **Ne pas commencer le Module 3** avant la signature des trois documents et l'encaissement
+6. **Ne pas commencer le Module 3** avant la signature des trois documents et l'encaissement
    de la Tranche 2. C'est l'arbitrage du 03/09, il tient tant qu'il n'est pas révoqué.
-6. **Relancer le 10/09** si rien ne bouge. Ses spams avalent nos messages, elle l'a écrit
+7. **Relancer le 10/09** si rien ne bouge. Ses spams avalent nos messages, elle l'a écrit
    deux fois : vérifier la réception plutôt que de supposer le silence.
-7. **L'écran de refus caméra n'a toujours pas été vu sur un iPhone réel** (R-51). Seul point
+8. **L'écran de refus caméra n'a toujours pas été vu sur un iPhone réel** (R-51). Seul point
    du lot d'août qui n'est pas prouvé, et elle a été invitée à le tester elle-même.
-8. Sa signature fixe le **J0**. Il reste **25 jours ouvrés** sur les 40, la Phase 2 étant
+9. Sa signature fixe le **J0**. Il reste **25 jours ouvrés** sur les 40, la Phase 2 étant
    livrée et recettée.
-9. Garde-fou de son Art. 14 : au-delà de 15 jours ouvrés de retard non justifié, elle
+10. Garde-fou de son Art. 14 : au-delà de 15 jours ouvrés de retard non justifié, elle
    peut mettre en demeure. Le Devis V5 inscrit la clause de suspension du décompte
    pendant ses validations, l'attente d'un élément lui incombant ou d'une tranche échue.
 
