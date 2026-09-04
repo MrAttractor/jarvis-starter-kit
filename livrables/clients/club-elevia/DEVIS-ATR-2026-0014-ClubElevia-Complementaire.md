@@ -5,7 +5,13 @@
 > l'adhésion et le paiement, et les champs de profil internationaux. Il ne reste ici que ce
 > qui s'ajoute réellement au Club une fois qu'il vit.
 >
-> **Prix à valider par Mac Arthur avant tout envoi.**
+> ⏸️ **MIS DE CÔTÉ le 04/09, décision de Mac Arthur.** Ce devis **ne part pas** avec la
+> réponse du 04/09 : parler d'un prix supplémentaire dans le message où l'on tient le prix
+> de 3 000 € brouillerait le propos. Les trois lots sont nommés dans le mail, sans montant,
+> et feront l'objet d'un échange séparé une fois le Club ouvert.
+>
+> **Prix à valider par Mac Arthur le jour où ce devis sortira**, et à mettre en forme avec
+> le gabarit de l'agence : en l'état c'est un document de travail, pas un devis client.
 > Complète, sans le modifier, le Devis ATR-2026-0005 révision 6 (3 000 €, dont 950 € réglés).
 
 ## Pourquoi ce devis a maigri

@@ -8,9 +8,9 @@
 |---|---|
 | Statut | **Elle conteste le prix et suspend la signature ET les règlements.** Deux causes : un amalgame de vocabulaire (« V1 » désignait trois choses) et le sentiment de payer 3 000 € pour un Club qui ne peut pas encaisser. **Les deux sont traitées au 04/09**, documents réécrits |
 | Dernier contact | **2026-09-03 : son mail sur le budget**, puis sa reformulation du vocabulaire, à laquelle elle demande confirmation. Le brouillon de réponse `r-3462316856525416283` attend dans le fil `19fd6fc0e0cb26c3` |
-| Prochaine action | **Valider les 3 prix du devis complémentaire, régénérer un dossier de signature** (l'ancien est caduc), appliquer `0007`, puis envoyer `BROUILLON-REPONSE-ELISE-2026-09-04.md` avec les 4 documents joints |
+| Prochaine action | **Remplacer les 3 documents en attente** dans le dossier de signature, appliquer `0007`, puis envoyer le brouillon du 04/09 avec les 3 documents joints. **Le devis complémentaire ne part pas**, il fera l'objet d'un échange séparé |
 | Échéance | La date annoncée (**21/10**) suppose signature, questionnaire d'affinités et formules d'adhésion reçus **avant le lundi 07/09** |
-| Argent en attente | 2 050 € sur la prestation, **plus 1 130 €** si elle prend les trois lots restants |
+| Argent en attente | 2 050 € sur la prestation. Les 1 130 € des trois lots restants ne sont **pas** proposés maintenant |
 
 ## Le 03/09 : elle conteste le prix, et elle a un demi-argument
 
@@ -414,7 +414,10 @@ Dossiers antérieurs, **expirés et non signables** : `22518a80` du 03/08 et `a2
 
 ## Prochaine action
 
-1. **Valider les trois prix** du devis complémentaire ATR-2026-0014 (490 / 350 / 290 €).
+1. **Le devis complémentaire ATR-2026-0014 est mis de côté** (décision du 04/09). Il ne part
+   pas avec cette réponse : annoncer un prix supplémentaire dans le message où l'on tient les
+   3 000 € brouillerait le propos. Les trois lots sont nommés dans le mail, sans montant, et
+   se rediscuteront une fois le Club ouvert.
 2. **Relire les trois PDF régénérés** avant tout envoi. Ce sont des documents contractuels,
    produits par conversion automatique du HTML : la relecture n'est pas optionnelle.
 3. **Remplacer les trois documents en attente** dans le dossier de signature existant. Le

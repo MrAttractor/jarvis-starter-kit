@@ -4,12 +4,15 @@
 > l'encaissement des adhésions à un devis complémentaire, ce qui est précisément le point
 > qu'elle conteste. Arbitrage du 04/09 : le paiement entre dans les 3 000 €.
 >
+> **Décision du 04/09 : le devis complémentaire ne part PAS avec ce mail.** Événements,
+> conciergerie et suivi des visites feront l'objet d'un échange séparé, plus tard. Le mail
+> les nomme sans les chiffrer.
+>
 > **À faire avant d'envoyer :**
-> 1. **Valider les trois prix** du devis complémentaire révisé (490 / 350 / 290 €).
-> 2. **Remplacer les trois documents en attente** dans le dossier de signature existant
+> 1. **Remplacer les trois documents en attente** dans le dossier de signature existant
 >    (`94722c2d`) par les PDF régénérés. Le lien d'Élise ne change pas, c'est la consigne
 >    de Mac Arthur du 04/09 : on ne recrée pas de dossier.
-> 3. **Appliquer `0007_elevia_agents.sql`** pour qu'elle puisse entrer dans son back-office.
+> 2. **Appliquer `0007_elevia_agents.sql`** pour qu'elle puisse entrer dans son back-office.
 
 ---
 
@@ -66,7 +69,7 @@ Ce qui suit n'a jamais figuré dans ce cahier des charges. Trois choses seulemen
 - **la conciergerie**,
 - **le suivi des visites** et le bandeau de consentement qu'il rend obligatoire.
 
-Ce sont des services qui s'ajoutent à un Club qui vit déjà. Le devis joint les chiffre ligne par ligne, tu peux n'en prendre aucun, un seul, ou les trois, quand tu veux. Rien ne t'oblige à décider aujourd'hui.
+Ce sont des services qui s'ajoutent à un Club qui vit déjà, pas des conditions de son ouverture. Je te les chiffrerai le moment venu, séparément, quand tu sauras lesquels te servent vraiment. Rien à décider aujourd'hui là-dessus.
 
 **Et l'extension mobile**, les applications installables depuis les stores, qui reste l'étape suivante du produit. Comme je te l'ai dit dès le début, je n'ai encore publié aucune application sur les stores, je ne vais donc pas t'annoncer un montant que je ne connais pas : ce sont des frais annuels, fixés par Apple et par Google, que tu leur verses directement, et je te les donnerai au moment d'ouvrir les comptes. Une fois la structure prête, il s'agit d'ouvrir un compte chez chacun des deux. Et surtout, **Apple et Google restent seuls juges** d'accepter une application. C'est pour cette raison que je construis dès aujourd'hui en respectant leurs critères, pour que ce passage ne demande pas de tout refaire.
 
