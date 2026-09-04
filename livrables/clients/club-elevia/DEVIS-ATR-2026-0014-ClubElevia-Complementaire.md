@@ -69,8 +69,8 @@ l'extension mobile, pas ici.
 ## Ce qui n'est inclus nulle part, ni ici ni dans les 3 000 €
 
 - Les applications mobiles natives iOS et Android et leur publication sur les stores.
-- Les frais du prestataire de paiement (commission par transaction) et les comptes développeur
-  Apple et Google, tous à la charge de la Cliente et à son nom.
+- Les frais du prestataire de paiement (commission par transaction) et les comptes Apple et
+  Google, tous à la charge de la Cliente, à son nom, à des tarifs fixés par ces sociétés.
 - Le nom de domaine, l'hébergement et les comptes de services externes.
 - La rédaction juridique des conditions de vente liées aux adhésions payantes.
 - La billetterie payante et le contrôle d'accès par QR code des événements.

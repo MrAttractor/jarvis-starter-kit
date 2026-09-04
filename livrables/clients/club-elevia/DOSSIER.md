@@ -7,7 +7,7 @@
 | Radar | |
 |---|---|
 | Statut | **Elle conteste le prix et suspend la signature ET les règlements.** Deux causes : un amalgame de vocabulaire (« V1 » désignait trois choses) et le sentiment de payer 3 000 € pour un Club qui ne peut pas encaisser. **Les deux sont traitées au 04/09**, documents réécrits |
-| Dernier contact | **2026-09-03 : son mail sur le budget**, puis sa reformulation du vocabulaire, à laquelle elle demande confirmation. Le brouillon de réponse `r-7959372918801779481` attend dans le fil `19fd6fc0e0cb26c3` |
+| Dernier contact | **2026-09-03 : son mail sur le budget**, puis sa reformulation du vocabulaire, à laquelle elle demande confirmation. Le brouillon de réponse `r-3462316856525416283` attend dans le fil `19fd6fc0e0cb26c3` |
 | Prochaine action | **Valider les 3 prix du devis complémentaire, régénérer un dossier de signature** (l'ancien est caduc), appliquer `0007`, puis envoyer `BROUILLON-REPONSE-ELISE-2026-09-04.md` avec les 4 documents joints |
 | Échéance | La date annoncée (**21/10**) suppose signature, questionnaire d'affinités et formules d'adhésion reçus **avant le lundi 07/09** |
 | Argent en attente | 2 050 € sur la prestation, **plus 1 130 €** si elle prend les trois lots restants |
@@ -393,14 +393,14 @@ La différence est expliquée dans le brouillon de réponse, avant qu'elle ne la
 > au code de retour les aurait déclarés vivants. Vérifier le `statut` du dossier en base,
 > jamais la réponse HTTP (même leçon que R-60).
 
-> ⚠️ **Caduc depuis le 04/09.** Ce dossier scelle l'Avenant révision 3, le Devis révision 5 et
-> le CDC révision 4, c'est-à-dire les versions que la réécriture vient de remplacer. **Un
-> nouveau dossier de signature doit être créé** avec les trois PDF régénérés, et c'est son
-> lien qu'il faut envoyer. Ne pas renvoyer celui ci-dessous.
+> **Le dossier ne change pas, ses documents si.** Décision de Mac Arthur le 04/09 : dans le
+> dossier existant, on **remplace les trois documents en attente de signature** par les PDF
+> régénérés, au lieu de créer un nouveau dossier. Le lien d'Élise reste donc valable et
+> c'est celui-là qu'on lui renvoie. Le contrat déjà signé n'est pas touché.
 
-**Le dossier périmé : `94722c2d-77d5-4579-b9a1-2e749baea1fa`**, créé le 05/08,
-statut `en_attente` au 14/08, expiration prévue au 30/09/2026. Il scelle **les anciennes
-révisions**.
+**Le dossier en cours : `94722c2d-77d5-4579-b9a1-2e749baea1fa`**, créé le 05/08,
+statut `en_attente` au 14/08, **expire le 30/09/2026**. Il porte l'avenant, le devis et le
+CDC, tous trois remplacés par leurs révisions du 04/09.
 
 | Signataire | Statut | Lien |
 |---|---|---|
@@ -417,12 +417,12 @@ Dossiers antérieurs, **expirés et non signables** : `22518a80` du 03/08 et `a2
 1. **Valider les trois prix** du devis complémentaire ATR-2026-0014 (490 / 350 / 290 €).
 2. **Relire les trois PDF régénérés** avant tout envoi. Ce sont des documents contractuels,
    produits par conversion automatique du HTML : la relecture n'est pas optionnelle.
-3. **Créer un nouveau dossier de signature** portant ces trois PDF, et **signer soi-même**.
-   L'ancien lien est caduc, voir plus bas.
+3. **Remplacer les trois documents en attente** dans le dossier de signature existant. Le
+   lien d'Élise ne change pas, elle l'a déjà.
 4. **Appliquer `0007_elevia_agents.sql`** avec l'adresse réelle de son compte Élévia. Sans ça,
    la phrase du mail sur son espace d'administration est fausse et elle s'en apercevra en
    trois secondes.
-5. **Envoyer le brouillon Gmail `r-7959372918801779481`** (fil `19fd6fc0e0cb26c3`), avec les
+5. **Envoyer le brouillon Gmail `r-3462316856525416283`** (fil `19fd6fc0e0cb26c3`), avec les
    trois documents et le devis complémentaire en pièces jointes, plus le nouveau lien de
    signature en texte brut.
    ⚠️ **Ne jamais le retoucher avec `update_draft`** : mesuré le 03/09, cette opération le

@@ -6,8 +6,9 @@
 >
 > **À faire avant d'envoyer :**
 > 1. **Valider les trois prix** du devis complémentaire révisé (490 / 350 / 290 €).
-> 2. **Régénérer les PDF** des trois documents réécrits, et **créer un nouveau dossier de
->    signature**. L'actuel (`94722c2d`) scelle les anciennes révisions : il est caduc.
+> 2. **Remplacer les trois documents en attente** dans le dossier de signature existant
+>    (`94722c2d`) par les PDF régénérés. Le lien d'Élise ne change pas, c'est la consigne
+>    de Mac Arthur du 04/09 : on ne recrée pas de dossier.
 > 3. **Appliquer `0007_elevia_agents.sql`** pour qu'elle puisse entrer dans son back-office.
 
 ---
@@ -57,7 +58,9 @@ Sur les 950 € déjà versés, tu as déjà entre les mains deux modules livré
 
 ## 3. Ce qui reste chiffré à part, et pourquoi
 
-Trois choses seulement, et aucune n'empêche ton Club d'ouvrir :
+Avant tout, pour lever le doute : **tout ce que décrit le cahier des charges est construit et livré dans les 3 000 €**, du premier écran jusqu'au paiement de l'adhésion. Je ne retire rien de ce que nous avons cadré.
+
+Ce qui suit n'a jamais figuré dans ce cahier des charges. Trois choses seulement, et aucune n'empêche ton Club d'ouvrir :
 
 - **les événements du Club** et leur billetterie,
 - **la conciergerie**,
@@ -65,7 +68,7 @@ Trois choses seulement, et aucune n'empêche ton Club d'ouvrir :
 
 Ce sont des services qui s'ajoutent à un Club qui vit déjà. Le devis joint les chiffre ligne par ligne, tu peux n'en prendre aucun, un seul, ou les trois, quand tu veux. Rien ne t'oblige à décider aujourd'hui.
 
-**Et l'extension mobile**, les applications installables depuis les stores, qui reste l'étape suivante du produit. Deux choses à savoir dès maintenant : les comptes développeur s'ouvrent à ton nom chez Apple et Google et leurs frais leur sont versés directement, de l'ordre de 99 $ par an pour Apple et 25 $ une seule fois pour Google, à vérifier au moment de l'ouverture. Et surtout, **Apple et Google restent seuls juges** de l'acceptation d'une application. C'est pour cette raison que je construis dès aujourd'hui en respectant leurs critères, pour que ce passage ne demande pas de tout refaire.
+**Et l'extension mobile**, les applications installables depuis les stores, qui reste l'étape suivante du produit. Comme je te l'ai dit dès le début, je n'ai encore publié aucune application sur les stores, je ne vais donc pas t'annoncer un montant que je ne connais pas : ce sont des frais annuels, fixés par Apple et par Google, que tu leur verses directement, et je te les donnerai au moment d'ouvrir les comptes. Une fois la structure prête, il s'agit d'ouvrir un compte chez chacun des deux. Et surtout, **Apple et Google restent seuls juges** d'accepter une application. C'est pour cette raison que je construis dès aujourd'hui en respectant leurs critères, pour que ce passage ne demande pas de tout refaire.
 
 ## 4. Ce qu'il reste à construire, et la date
 
@@ -96,7 +99,11 @@ Ces jours se comptent hors périodes où j'attends un élément de ta part. Chaq
 
 Les trois documents sont réécrits et joints à ce message : l'avenant en révision 4, le cahier des charges en révision 5, le devis en révision 6. Le prix n'a pas changé, le périmètre a grandi, et le vocabulaire est clarifié.
 
-**Le lien de signature que je t'avais envoyé ne vaut plus**, puisqu'il scellait les versions précédentes. Je t'en envoie un nouveau, qui porte ces trois documents. **J'ai déjà signé de mon côté.**
+**Ton lien de signature ne change pas.** J'y ai simplement remplacé les documents en attente par ces versions à jour, tu retrouves donc exactement le lien que je t'avais envoyé, valable jusqu'au 30 septembre. À recopier dans ton navigateur :
+
+https://signature.agenceattractor.com/s/664e2w4y0v421z5q5s6i026d474q0v030f3k6e53646x1g6v
+
+**J'ai déjà signé de mon côté**, il ne manque plus que toi.
 
 Lis-les avant de signer, en particulier la section 0 du cahier des charges, qui est courte et qui fixe le vocabulaire, et le module 5, qui est nouveau.
 
