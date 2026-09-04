@@ -100,9 +100,8 @@ p:last-child{margin-bottom:0}
 .box-red{background:var(--red-bg);border-left:3px solid var(--red);padding:10px 14px;border-radius:0 6px 6px 0;font-size:12px;margin:8px 0}
 .box-amber{background:#FFFDF5;border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 6px 6px 0;font-size:12px;margin:8px 0}
 .box-green strong,.box-red strong,.box-amber strong{display:block;margin-bottom:3px;font-size:12.5px}
-.box-red ul,.box-green ul,.box-amber ul{margin:6px 0 0 16px}
-.box-red li,.box-green li,.box-amber li{font-size:11.5px;margin-bottom:4px}
-.box-amber li strong,.box-red li strong,.box-green li strong{display:inline;font-size:inherit;margin:0}
+.box-red ul,.box-green ul{margin:6px 0 0 16px}
+.box-red li,.box-green li{font-size:11.5px;margin-bottom:3px}
 
 /* JALONS résumé */
 .jalon-mini{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:8px 0}
@@ -154,8 +153,8 @@ p:last-child{margin-bottom:0}
     </div>
     <div class="docmeta">
       <div class="t">Cahier des charges fonctionnel</div>
-      <div class="ref">Réf. CDC-ATR-2026-0005 — Révision 5</div>
-      <div class="date">Émis le 15 juillet 2026 — révisé le 4 septembre 2026</div>
+      <div class="ref">Réf. CDC-ATR-2026-0005 — Révision V4</div>
+      <div class="date">Émis le 15 juillet 2026</div>
     </div>
   </div>
 
@@ -179,7 +178,7 @@ p:last-child{margin-bottom:0}
 
   <!-- NOTE DE CADRAGE -->
   <div class="cadrage-note" style="margin-top:14px">
-    <strong>Document contractuel — Annexe de rang 2 au Contrat de prestation signé (Art. 2).</strong> Le présent cahier des charges détaille le périmètre fonctionnel de la Web App Club Élévia — écran par écran, donnée par donnée, règle par règle — afin d'éliminer toute ambiguïté entre les parties. Il s'articule avec le Contrat, son <strong>Avenant n°1 révision 4</strong> (périmètre Web App, Phase 5 stores exclue) et le Devis révision 6 (<strong>3 000 €</strong>, dont 950 € déjà réglés au 29 juillet 2026, règlement en <strong>4 tranches 30 / 30 / 30 / 10</strong> adossées à une durée de réalisation estimée à <strong>40 jours ouvrés</strong>). En cas de divergence entre documents, l'<strong>ordre de priorité de l'Article 2 du Contrat</strong> s'applique : Contrat, puis présent cahier des charges, puis Devis.
+    <strong>Document contractuel — Annexe de rang 2 au Contrat de prestation signé (Art. 2).</strong> Le présent cahier des charges détaille le périmètre fonctionnel de la Web App Club Élévia — écran par écran, donnée par donnée, règle par règle — afin d'éliminer toute ambiguïté entre les parties. Il s'articule avec le Contrat, son <strong>Avenant n°1</strong> (périmètre Web App, Phase 5 stores exclue) et le Devis V5 (<strong>3 000 €</strong>, dont 950 € déjà réglés au 29 juillet 2026, règlement en <strong>4 tranches 30 / 30 / 30 / 10</strong> adossées à une durée de réalisation estimée à <strong>40 jours ouvrés</strong>). En cas de divergence entre documents, l'<strong>ordre de priorité de l'Article 2 du Contrat</strong> s'applique : Contrat, puis présent cahier des charges, puis Devis.
   </div>
 
   <!-- SOMMAIRE -->
@@ -191,7 +190,7 @@ p:last-child{margin-bottom:0}
       <li>Profils utilisateurs</li>
       <li>Ce que déclenche la validation de ce document</li>
       <li>Phases de production et déclencheurs de paiement</li>
-      <li>Spécifications fonctionnelles — Modules 1 à 5</li>
+      <li>Spécifications fonctionnelles — Modules 1 à 4</li>
       <li>Exigences transverses</li>
       <li>Livrables transférés à la Cliente</li>
       <li>Hors périmètre</li>
@@ -201,34 +200,19 @@ p:last-child{margin-bottom:0}
     <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--line)">
       <b>Annexe A</b> — Vision et proposition de valeur d'Élévia<br>
       <b>Annexe B</b> — Grandes orientations fonctionnelles<br>
-      <span style="color:var(--muted)">Section 0 — <b>Comment lire ce document</b> : en tête, avant les définitions.<br>Feuille de route indicative des étapes du produit : entre les sections 10 et 11.</span>
+      <span style="color:var(--muted)">Feuille de route indicative V1 / V2 / V3 : entre les sections 10 et 11.</span>
     </div>
-  </div>
-
-  <!-- 0. LEXIQUE -->
-  <h2>0. Comment lire ce document : trois mots qui se ressemblent</h2>
-  <div class="box-amber">
-    <strong>Section ajoutée à la révision 5, après un échange avec la Cliente début septembre 2026.</strong>
-    Les révisions précédentes employaient le même code, « V1 », « V2 », « V3 », pour désigner trois choses différentes. C'est la source de l'incompréhension, elle est levée ici, et ce vocabulaire s'applique désormais à tous les documents du dossier.
-    <ul>
-      <li><strong>Les phases de production, numérotées 1 à 4.</strong> Les étapes du chantier : maquettes, prototype, version testable, version finale. Elles se suivent dans le temps, chacune se valide par écrit avant que la suivante commence, et elles aboutissent toutes à <strong>une seule et même application</strong>. Ce sont elles qui déclenchent les tranches de règlement. Voir section 5.</li>
-      <li><strong>Les itérations, ou versions de travail.</strong> À l'intérieur d'une phase, les allers-retours entre le Prestataire et la Cliente jusqu'à validation. La phase 1 en a compté trois avant que la direction visuelle soit arrêtée. Elles ne sont ni facturées séparément, ni comptées comme des versions du produit : c'est la façon normale de travailler.</li>
-      <li><strong>Les étapes du produit.</strong> Ce que devient Élévia dans le temps : d'abord <strong>la Web App Élévia</strong>, objet du présent document et de la présente prestation, puis <strong>l'extension mobile</strong> (applications installables depuis les stores), puis les <strong>évolutions ultérieures</strong>. Ce document ne les appelle plus « V1 », « V2 » ni « V3 ».</li>
-    </ul>
-    <p style="margin:8px 0 0">Enfin, une mention comme « CDC révision 5 » ou « Devis révision 6 » ne désigne ni une phase, ni une étape du produit : c'est le <strong>numéro de révision du document lui-même</strong>, qui change à chaque correction apportée au texte.</p>
   </div>
 
   <!-- 1. DÉFINITIONS -->
   <h2>1. Définitions</h2>
   <p style="font-size:11.5px;color:var(--muted);margin-bottom:6px">Les termes ci-dessous, utilisés dans le présent document ainsi que dans le Contrat et le Devis, ont le sens qui leur est donné ici et nulle part ailleurs.</p>
   <div class="glossary">
-    <div class="gloss-row"><div class="gloss-term">Web App responsive</div><div class="gloss-def">Application accessible via un navigateur internet (Chrome, Safari, etc.), sans installation depuis un store, dont la mise en page s'adapte automatiquement à la taille de l'écran (mobile, tablette, desktop). C'est le périmètre exclusif de la présente prestation.</div></div>
-    <div class="gloss-row"><div class="gloss-term">Application native</div><div class="gloss-def">Application installée depuis l'App Store (iOS) ou le Google Play Store (Android), développée avec les technologies propres à chaque plateforme. <strong>Non incluse dans la présente prestation</strong> (Phase 5), fera l'objet d'un devis séparé au titre de l'extension mobile.</div></div>
-    <div class="gloss-row"><div class="gloss-term">Étape du produit</div><div class="gloss-def">Ce que devient Élévia dans le temps : la Web App Élévia (présente prestation), puis l'extension mobile, puis les évolutions ultérieures. À ne pas confondre avec une phase de production, qui est une étape du chantier à l'intérieur de la présente prestation. Voir section 0.</div></div>
-    <div class="gloss-row"><div class="gloss-term">Itération (version de travail)</div><div class="gloss-def">Aller-retour de correction à l'intérieur d'une phase, jusqu'à validation par la Cliente. Deux itérations sont incluses par phase livrée ; au-delà, le tarif de la section 11 s'applique. Une itération n'est pas une version du produit.</div></div>
+    <div class="gloss-row"><div class="gloss-term">Web App responsive</div><div class="gloss-def">Application accessible via un navigateur internet (Chrome, Safari, etc.), sans installation depuis un store, dont la mise en page s'adapte automatiquement à la taille de l'écran (mobile, tablette, desktop). C'est le périmètre exclusif de la présente prestation (V1).</div></div>
+    <div class="gloss-row"><div class="gloss-term">Application native</div><div class="gloss-def">Application installée depuis l'App Store (iOS) ou le Google Play Store (Android), développée avec les technologies propres à chaque plateforme. <strong>Non incluse en V1</strong> (Phase 5), fera l'objet d'un devis V2 séparé.</div></div>
     <div class="gloss-row"><div class="gloss-term">Phase de production</div><div class="gloss-def">Étape du cycle de vie du projet (Maquettes, Prototype, Bêta, Version finale, Publication stores) — voir Section 5. Décrit l'avancement du projet et les déclencheurs de paiement.</div></div>
-    <div class="gloss-row"><div class="gloss-term">Module fonctionnel</div><div class="gloss-def">Regroupement de fonctionnalités par domaine métier (Identité, Confiance, Rencontre, Communauté, Adhésion) — voir Section 6. Décrit ce qui est construit. Les cinq modules sont conçus en Phase 1, développés en Phase 2, intégrés en Phase 3 et finalisés en Phase 4.</div></div>
-    <div class="gloss-row"><div class="gloss-term">Version bêta</div><div class="gloss-def">État du projet une fois la Phase 3 livrée et validée par écrit : les cinq modules fonctionnels intégrés et testables de bout en bout, application non encore ouverte au grand public. Déclenche la Tranche 3.</div></div>
+    <div class="gloss-row"><div class="gloss-term">Module fonctionnel</div><div class="gloss-def">Regroupement de fonctionnalités par domaine métier (Identité, Confiance, Rencontre, Communauté) — voir Section 6. Décrit ce qui est construit. Les quatre modules sont conçus en Phase 1, développés en Phase 2, intégrés en Phase 3 et finalisés en Phase 4.</div></div>
+    <div class="gloss-row"><div class="gloss-term">Version bêta</div><div class="gloss-def">État du projet une fois la Phase 3 livrée et validée par écrit : les quatre modules fonctionnels intégrés et testables de bout en bout, application non encore ouverte au grand public. Déclenche la Tranche 3.</div></div>
     <div class="gloss-row"><div class="gloss-term">Mise en ligne effective</div><div class="gloss-def">Déploiement en production de la version finale (Phase 4) validée, sur l'infrastructure définitive, accessible publiquement à l'adresse web du projet. Ne signifie pas et n'implique pas de publication sur un store mobile. Déclenche la Tranche 4 et ouvre la période de maintenance corrective de 3 mois (Contrat, Art. 13).</div></div>
     <div class="gloss-row"><div class="gloss-term">Frais de tiers</div><div class="gloss-def">Nom de domaine, hébergement, comptes de services externes et autres supports nécessaires à la plateforme. Achetés directement par la Cliente, à son nom, et lui appartiennent. Non inclus dans le Devis.</div></div>
     <div class="gloss-row"><div class="gloss-term">Jour ouvré</div><div class="gloss-def">Du lundi au vendredi, hors jours fériés légaux français.</div></div>
@@ -267,14 +251,14 @@ p:last-child{margin-bottom:0}
   <h2>4. Ce que déclenche la validation de ce document</h2>
   <div class="trigger-box">
     <div class="tb-title">Déclencheur de démarrage</div>
-    La signature de ce cahier des charges et du Devis ATR-2026-0005 révision 6 — le Contrat et son Avenant n°1 de périmètre étant déjà signés — vaut <strong>bon pour démarrage</strong>. La <strong>Tranche 1 est déjà intégralement réglée</strong> (950 € reçus au 29 juillet 2026, soit les 900 € de la tranche et 50 € d'avance sur la Tranche 2) : rien n'est à verser au démarrage. <strong>La signature fixe le jour J0</strong>, lance la <strong>Phase 2 (Prototype fonctionnel)</strong> et démarre le décompte des <strong>40 jours ouvrés</strong> de réalisation. La Phase 1 (Maquettes UX/UI) étant réalisée et validée, elle n'est pas reconduite. Sans ces signatures, la production ne démarre pas.
+    La signature de ce cahier des charges et du Devis ATR-2026-0005 V5 — le Contrat et son Avenant n°1 de périmètre étant déjà signés — vaut <strong>bon pour démarrage</strong>. La <strong>Tranche 1 est déjà intégralement réglée</strong> (950 € reçus au 29 juillet 2026, soit les 900 € de la tranche et 50 € d'avance sur la Tranche 2) : rien n'est à verser au démarrage. <strong>La signature fixe le jour J0</strong>, lance la <strong>Phase 2 (Prototype fonctionnel)</strong> et démarre le décompte des <strong>40 jours ouvrés</strong> de réalisation. La Phase 1 (Maquettes UX/UI) étant réalisée et validée, elle n'est pas reconduite. Sans ces signatures, la production ne démarre pas.
   </div>
 
   <div class="pagebreak"></div>
 
   <!-- 5. PHASES DE PRODUCTION -->
   <h2>5. Phases de production et déclencheurs de paiement</h2>
-  <p style="font-size:11.5px;color:var(--muted)">Le projet suit cinq phases de production successives. Les cinq modules fonctionnels décrits en Section 6 traversent ces phases : ils sont d'abord maquettés (Phase 1), puis développés (Phase 2), intégrés et rendus testables (Phase 3), enfin finalisés et mis en ligne (Phase 4). <strong>La Phase 1 est réalisée et validée</strong> ; les Phases 2 à 4 restent à réaliser, sur une durée estimée à <strong>40 jours ouvrés</strong> de production effective à compter du jour J0 (signature du présent cahier des charges et du Devis, la Tranche 1 étant déjà réglée). La Phase 5 est hors périmètre de la présente prestation.</p>
+  <p style="font-size:11.5px;color:var(--muted)">Le projet suit cinq phases de production successives. Les quatre modules fonctionnels décrits en Section 6 traversent ces phases : ils sont d'abord maquettés (Phase 1), puis développés (Phase 2), intégrés et rendus testables (Phase 3), enfin finalisés et mis en ligne (Phase 4). <strong>La Phase 1 est réalisée et validée</strong> ; les Phases 2 à 4 restent à réaliser, sur une durée estimée à <strong>40 jours ouvrés</strong> de production effective à compter du jour J0 (signature du présent cahier des charges et du Devis, la Tranche 1 étant déjà réglée). La Phase 5 est hors périmètre de la présente prestation.</p>
   <div class="lifecycle">
     <div class="lc-row">
       <div class="lc-num">Phase 1<br>Maquettes</div>
@@ -296,7 +280,7 @@ p:last-child{margin-bottom:0}
       <div class="lc-num">Phase 3<br>Bêta</div>
       <div class="lc-body">
         <div class="lc-title">Version bêta — J+16 à J+30 ouvrés</div>
-        <div class="lc-desc">Les cinq modules intégrés et testables de bout en bout (Identité, Confiance, Rencontre, Communauté, Adhésion). Application utilisable en conditions réelles, non encore ouverte au grand public.</div>
+        <div class="lc-desc">Les quatre modules intégrés et testables de bout en bout (Identité, Confiance, Rencontre, Communauté). Application utilisable en conditions réelles, non encore ouverte au grand public.</div>
         <span class="lc-trigger">Livraison + validation → déclenche la Tranche 3 (30 %)</span>
       </div>
     </div>
@@ -304,7 +288,7 @@ p:last-child{margin-bottom:0}
       <div class="lc-num">Phase 4<br>Finale</div>
       <div class="lc-body">
         <div class="lc-title">Version finale &amp; mise en ligne — J+31 à J+40 ouvrés</div>
-        <div class="lc-desc">Recette complète, corrections, tests de charge et optimisation, puis déploiement en production. La Web App Élévia est accessible publiquement à son adresse web : mise en ligne effective.</div>
+        <div class="lc-desc">Recette complète, corrections, tests de charge et optimisation, puis déploiement en production. La Web App V1 est accessible publiquement à son adresse web : mise en ligne effective.</div>
         <span class="lc-trigger">Mise en ligne → déclenche la Tranche 4 (10 %)</span>
       </div>
     </div>
@@ -320,8 +304,8 @@ p:last-child{margin-bottom:0}
   <div class="pagebreak"></div>
 
   <!-- 6. SPECS FONCTIONNELLES -->
-  <h2>6. Spécifications fonctionnelles — la Web App Élévia (3 000 €)</h2>
-  <p style="font-size:11px;color:var(--muted)">Les cinq modules ci-dessous constituent l'intégralité du périmètre fonctionnel livré pour 3 000 €. Référence visuelle : maquette de référence, section correspondante indiquée pour chaque bloc.</p>
+  <h2>6. Spécifications fonctionnelles — Web App V1 (3 000 €)</h2>
+  <p style="font-size:11px;color:var(--muted)">Les quatre modules ci-dessous constituent l'intégralité du périmètre fonctionnel livré. Référence visuelle : maquette de référence, section correspondante indiquée pour chaque bloc.</p>
 
   <!-- MODULE 1 -->
   <div class="phase">
@@ -336,7 +320,6 @@ p:last-child{margin-bottom:0}
         <li>Inscription : choix d'un pseudo unique, vérifié en disponibilité en temps réel (message "disponible" / "déjà pris")</li>
         <li>Sélection du genre (femme / homme — liste extensible sur demande de la Cliente)</li>
         <li>Pays de résidence (liste des pays à valider avec la Cliente, cf. note ci-dessous)</li>
-        <li><strong>Ville de résidence, langues parlées et attaches culturelles</strong> — ajoutés à la révision 5, sans supplément. Les attaches culturelles sont un champ libre et facultatif, jamais une liste imposée : c'est la rédaction la plus sûre au regard de l'article 9 du RGPD, qui encadre les données révélant l'origine. Le membre choisit ce qu'il affiche.</li>
         <li>Date de naissance avec contrôle de majorité (18 ans minimum)</li>
         <li>Case à cocher obligatoire d'acceptation des CGU / politique de confidentialité, case optionnelle d'opt-in aux recommandations par e-mail</li>
         <li>Authentification sécurisée par code à 6 chiffres envoyé par e-mail (OTP), sans mot de passe à retenir</li>
@@ -347,7 +330,7 @@ p:last-child{margin-bottom:0}
 
       <div class="sub">Données collectées</div>
       <ul>
-        <li>Pseudo (public), genre, pays et ville de résidence, langues parlées, attaches culturelles (facultatives), date de naissance, adresse e-mail (privée), consentements CGU/marketing</li>
+        <li>Pseudo (public), genre, pays de résidence, date de naissance, adresse e-mail (privée), consentements CGU/marketing</li>
         <li>L'identité réelle (nom, prénom) n'est jamais affichée publiquement ni communiquée aux autres membres</li>
       </ul>
 
@@ -474,7 +457,7 @@ p:last-child{margin-bottom:0}
       <div class="sub">Cas particuliers à gérer</div>
       <ul>
         <li>Compte suspendu → ses conversations en cours deviennent inaccessibles à l'autre membre, avec message explicatif neutre ("ce membre n'est plus disponible")</li>
-        <li>Envoi de photo dans la messagerie → contrôle de format et de taille de fichier, pas de contrôle automatisé de contenu à ce stade (la modération de contenu se fait via signalement manuel)</li>
+        <li>Envoi de photo dans la messagerie → contrôle de format et de taille de fichier, pas de contrôle automatisé de contenu en V1 (la modération de contenu se fait via signalement manuel)</li>
       </ul>
 
       <div class="sub">Critères d'acceptation</div>
@@ -483,56 +466,6 @@ p:last-child{margin-bottom:0}
         <li>Un agent Élévia peut suspendre un compte et consulter le journal de modération depuis le back-office</li>
         <li>Le dashboard propriétaire affiche les indicateurs clés à jour</li>
         <li>L'application reste stable et réactive lors d'un test de charge simulé avant l'ouverture publique</li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- MODULE 5 -->
-  <div class="phase">
-    <div class="phase-head">
-      <div><div class="ph-label">Module 5</div><div class="ph-title">Adhésion &amp; paiement</div></div>
-    </div>
-    <div class="phase-body">
-      <div class="box-amber" style="margin-bottom:12px">
-        <strong>Module ajouté à la révision 5 du 4 septembre 2026, sans supplément de prix.</strong>
-        Les révisions précédentes renvoyaient l'encaissement des adhésions à un devis complémentaire. La Cliente a fait valoir qu'un Club qui ne peut pas encaisser n'est pas commercialisable, et que ce n'était pas ce qu'elle avait compris de l'estimation initiale. Le point est accordé : l'adhésion et le paiement entrent dans les 3 000 € du présent cahier des charges.
-      </div>
-      <div class="screens-ref"><strong>Écrans concernés :</strong> Rejoindre le Club (choix de la formule), paiement, confirmation d'adhésion, suivi des adhésions au back-office</div>
-
-      <div class="sub">Fonctionnalités</div>
-      <ul>
-        <li>Présentation des formules d'adhésion définies par la Cliente : nom, prix TTC, contenu, durée, conditions de renouvellement, affichés avant tout engagement du membre</li>
-        <li>Souscription <strong>après</strong> validation de la candidature : le paiement ne contourne jamais la sélection du Club, conformément aux conditions d'utilisation</li>
-        <li>Encaissement par carte bancaire via un prestataire de paiement du marché, compte ouvert au nom de la Cliente</li>
-        <li>Adhésion récurrente : renouvellement automatique, arrêt possible à tout moment par le membre</li>
-        <li>Traitement des échecs de paiement : relance du membre, délai de grâce, puis suspension de l'accès aux services réservés</li>
-        <li>Statut d'adhésion visible par le membre sur son profil, et par l'équipe dans le back-office</li>
-        <li>Suivi des adhésions au back-office : liste des membres à jour et en retard, date de prochain renouvellement, historique des règlements, export</li>
-      </ul>
-
-      <div class="sub">Cas particuliers à gérer</div>
-      <ul>
-        <li>Candidature refusée après paiement → remboursement intégral, et le compte ne devient pas membre</li>
-        <li>Membre qui arrête son adhésion → accès maintenu jusqu'au terme de la période déjà réglée, puis retour au statut sans adhésion</li>
-        <li>Paiement refusé au renouvellement → relance automatique avant toute suspension, jamais de coupure silencieuse</li>
-      </ul>
-
-      <div class="box-red" style="margin:12px 0">
-        <strong>Informations requises avant développement — bloquantes, au même titre que le questionnaire d'affinités</strong>
-        <ul>
-          <li>les <strong>formules exactes</strong> : intitulés, prix TTC, durées, ce que chacune donne, conditions de renouvellement ;</li>
-          <li>le <strong>prestataire de paiement retenu et son compte ouvert au nom de la Cliente</strong>, avec les justificatifs qu'il exige (identité, coordonnées bancaires, informations d'entreprise). Ce compte ne peut pas être ouvert par le Prestataire ;</li>
-          <li>les <strong>conditions de vente</strong> associées (rétractation, résiliation, remboursement, médiation de la consommation), qui relèvent d'un professionnel du droit et non du Prestataire.</li>
-        </ul>
-        Tant que ces trois éléments ne sont pas fournis, ce module ne peut pas être développé, et son retard n'engage pas la responsabilité du Prestataire (Contrat, Art. 6).
-      </div>
-
-      <div class="sub">Critères d'acceptation</div>
-      <ul class="accept-list">
-        <li>Un membre dont la candidature est validée peut choisir une formule, la régler par carte, et voir son adhésion active sur son profil</li>
-        <li>Un renouvellement se déclenche seul à l'échéance, et un échec de paiement produit une relance avant toute suspension</li>
-        <li>Un membre peut arrêter son adhésion sans écrire à personne, et conserve l'accès jusqu'au terme de la période réglée</li>
-        <li>La Cliente voit dans son back-office la liste de ses adhésions à jour, avec les échéances et l'historique des règlements</li>
       </ul>
     </div>
   </div>
@@ -588,13 +521,13 @@ p:last-child{margin-bottom:0}
   </div>
 
   <!-- 9. HORS PERIMETRE -->
-  <h2>9. Hors périmètre — ce qui n'est pas dans les 3 000 €</h2>
+  <h2>9. Hors périmètre — Web App V1</h2>
   <div class="box-red">
     <strong>Non inclus dans la prestation (3 000 €)</strong>
     <ul>
-      <li><strong>Les applications mobiles natives iOS et Android et leur publication sur l'App Store et le Google Play Store</strong> (Phase 5, exclue par l'Avenant n°1). C'est la seule brique du parcours d'un membre qui reste dehors : tout ce qu'il fait dans son Club, de la candidature au paiement de son adhésion, est livré ici, dans un navigateur. L'extension mobile fera l'objet d'un devis séparé</li>
-      <li><strong>Les événements du Club</strong> (dîners, brunchs, rencontres), leur billetterie et le contrôle d'accès, ainsi que <strong>l'Espace Conciergerie</strong>. Ce sont des services qui s'ajoutent au Club une fois qu'il vit, et non des conditions de son ouverture : ils feront l'objet d'un devis séparé, présenté en même temps que le présent document pour que la Cliente sache exactement ce qu'ils coûtent</li>
-      <li>La <strong>mesure d'audience</strong> (suivi des visites, taux de passage d'une étape à l'autre) et le bandeau de consentement qu'elle rend obligatoire — même devis séparé</li>
+      <li>Application mobile native iOS et Android, publication App Store / Google Play (Phase 5, hors périmètre par l'Avenant n°1) — fera l'objet d'un devis V2 séparé</li>
+      <li>Encaissement effectif des abonnements récurrents (Membre Élégance 29 €/mois, Membre Prestige 79 €/mois, Cercle Privé sur sélection) et toute passerelle de paiement associée. L'écran "Rejoindre le Club" de la maquette de référence présente cette grille à titre de <strong>vision produit</strong> uniquement ; sa mise en paiement réel fera l'objet d'un devis complémentaire</li>
+      <li>Module Événements club (dîners, brunchs, networking), Espace Concierge Relationnel, billetterie et QR code d'accès — devis complémentaire</li>
       <li>Frais de tiers : nom de domaine, hébergement, comptes de services externes (achetés et détenus directement par la Cliente)</li>
       <li>Version multilingue de l'interface (au-delà du français)</li>
       <li>Modération automatisée de contenu (photos, messages) par intelligence artificielle — modération manuelle sur signalement uniquement en V1</li>
@@ -615,15 +548,15 @@ p:last-child{margin-bottom:0}
     <div class="jm-cell"><div class="jm-pct">30 %</div><div class="jm-title">Tranche 3 — J+30 ouvrés</div><div class="jm-desc">900 €. Phase 3 (Version bêta) livrée et validée.</div></div>
     <div class="jm-cell"><div class="jm-pct">10 %</div><div class="jm-title">Tranche 4 — J+40 ouvrés</div><div class="jm-desc">300 €. Phase 4 déployée en production.</div></div>
   </div>
-  <p style="font-size:11px;color:var(--muted)">Total 3 000 € HT, dont <strong>950 € déjà réglés</strong> au 29 juillet 2026 (Tranche 1 soldée et 50 € d'avance sur la Tranche 2), soit <strong>2 050 € restant à régler</strong>. Le décompte des 40 jours ouvrés démarre à la signature et se compte en jours de production effective (voir Définitions, Section 1). Détail complet des montants, des moyens de paiement et des cas de suspension du décompte dans le <strong>Devis ATR-2026-0005 révision 6</strong>.</p>
+  <p style="font-size:11px;color:var(--muted)">Total 3 000 € HT, dont <strong>950 € déjà réglés</strong> au 29 juillet 2026 (Tranche 1 soldée et 50 € d'avance sur la Tranche 2), soit <strong>2 050 € restant à régler</strong>. Le décompte des 40 jours ouvrés démarre à la signature et se compte en jours de production effective (voir Définitions, Section 1). Détail complet des montants, des moyens de paiement et des cas de suspension du décompte dans le <strong>Devis ATR-2026-0005 V5</strong>.</p>
 
   <!-- ROADMAP INDICATIVE -->
-  <h2>Feuille de route indicative — les étapes du produit après la Web App</h2>
-  <p style="font-size:11px;color:var(--muted)">À titre <strong>purement indicatif</strong>, pour donner une vision d'ensemble du développement d'Élévia. Ces étapes sont <strong>hors périmètre de la présente prestation</strong> et feront chacune l'objet d'un devis séparé, sur accord écrit préalable de la Cliente.</p>
+  <h2>Feuille de route indicative — évolutions futures (V2, V3)</h2>
+  <p style="font-size:11px;color:var(--muted)">À titre <strong>purement indicatif</strong>, pour donner une vision d'ensemble du développement d'Élévia. Ces versions sont <strong>hors périmètre de la présente prestation (V1)</strong> et feront chacune l'objet d'un devis séparé, sur accord écrit préalable de la Cliente.</p>
   <div class="lifecycle">
-    <div class="lc-row"><div class="lc-num">Étape 1<br>en cours</div><div class="lc-body"><div class="lc-title">La Web App Élévia — l'objet du présent contrat</div><div class="lc-desc">Inscription, profils, vérification d'identité, mise en relation, messagerie, adhésion et paiement, back-office d'administration. Accessible depuis n'importe quel navigateur, sur téléphone comme sur ordinateur, sans rien installer.</div></div></div>
-    <div class="lc-row hors"><div class="lc-num">Étape 2<br>indicatif</div><div class="lc-body"><div class="lc-title">Applications mobiles</div><div class="lc-desc">Les mêmes services, dans une application que le membre installe depuis l'App Store ou le Google Play Store : notifications sur son téléphone, navigation plus fluide, présence dans les stores.<br><br><strong>Ce que cette étape suppose, et qui ne dépend pas du Prestataire :</strong> l'ouverture d'un compte développeur au nom de la Cliente chez Apple et chez Google, dont les frais leur sont versés directement (ordre de grandeur à vérifier au moment de l'ouverture : environ 99 $ par an chez Apple, environ 25 $ une seule fois chez Google). Surtout, <strong>Apple et Google se réservent le droit d'accepter ou de refuser une application</strong>, selon leurs propres règles. C'est la raison pour laquelle la Web App est construite dès aujourd'hui en respectant leurs critères, afin que ce passage se fasse sans tout reconstruire.</div></div></div>
-    <div class="lc-row hors"><div class="lc-num">Étape 3<br>indicatif</div><div class="lc-body"><div class="lc-title">Expérience premium &amp; internationale</div><div class="lc-desc">Événements du club, <strong>service de conciergerie relationnelle</strong>, suggestions de profils par intelligence artificielle, traduction des messages et expérience multilingue internationale.</div></div></div>
+    <div class="lc-row"><div class="lc-num">V1<br>en cours</div><div class="lc-body"><div class="lc-title">Web App — le socle</div><div class="lc-desc">Inscription, profils, vérification d'identité, matching, messagerie et back-office d'administration. C'est l'objet du présent contrat.</div></div></div>
+    <div class="lc-row hors"><div class="lc-num">V2<br>indicatif</div><div class="lc-body"><div class="lc-title">Applications mobiles</div><div class="lc-desc">Applications natives iOS et Android, expérience de swipe fluide, notifications push, recherche avancée et abonnements intégrés (encaissement récurrent).</div></div></div>
+    <div class="lc-row hors"><div class="lc-num">V3<br>indicatif</div><div class="lc-body"><div class="lc-title">Expérience premium &amp; internationale</div><div class="lc-desc">Événements du club, <strong>service de conciergerie relationnelle</strong>, suggestions de profils par intelligence artificielle, traduction des messages et expérience multilingue internationale.</div></div></div>
   </div>
 
   <!-- 11. VALIDATION -->
@@ -688,7 +621,7 @@ p:last-child{margin-bottom:0}
 
   <!-- ANNEXE B — GRANDES ORIENTATIONS FONCTIONNELLES -->
   <h2>Annexe B — Grandes orientations fonctionnelles</h2>
-  <p style="font-size:11.5px;color:var(--muted);margin-bottom:8px">Annexe rédigée à la demande de la Cliente, à partir des orientations qu'elle a exprimées. Elle décrit ce qui distinguera Élévia des applications traditionnelles au-delà de la Web App livrée ici. <strong>Elle est indicative et n'a pas de valeur d'engagement contractuel</strong> : chaque orientation devenue projet fera l'objet d'une spécification et d'un devis distincts. Le périmètre engagé du présent contrat reste celui de la Section 6.</p>
+  <p style="font-size:11.5px;color:var(--muted);margin-bottom:8px">Annexe rédigée à la demande de la Cliente, à partir des orientations qu'elle a exprimées. Elle décrit ce qui distinguera Élévia des applications traditionnelles au-delà de la V1. <strong>Elle est indicative et n'a pas de valeur d'engagement contractuel</strong> : chaque orientation devenue projet fera l'objet d'une spécification et d'un devis distincts. Le périmètre engagé du présent contrat reste celui de la Section 6.</p>
 
   <div class="cadrage-note">
     <strong>La logique d'ensemble.</strong> Une application de rencontre classique s'arrête à la mise en relation : deux personnes se trouvent, échangent, et l'application n'a plus d'utilité. Élévia est construite sur l'idée inverse. La mise en relation est le point d'entrée, pas la finalité. Ce qui retient les membres et justifie une adhésion premium, c'est ce qui se passe <em>autour</em> de la rencontre : se retrouver, vivre des choses ensemble, appartenir à un cercle. Les cinq orientations ci-dessous décrivent cet écosystème.
@@ -735,7 +668,7 @@ p:last-child{margin-bottom:0}
   </div>
 
   <h3>Où ces orientations se situent dans le temps</h3>
-  <p>Aucune de ces cinq orientations n'appartient au périmètre livré ici, et c'est délibéré. La Web App doit d'abord prouver que le cercle se remplit et que les membres s'y parlent. Les événements, la conciergerie et les expériences n'ont de sens qu'avec une communauté active : les construire trop tôt reviendrait à équiper une maison vide. Elles sont positionnées en V3 dans la feuille de route indicative ci-dessus, à l'exception du réseau de partenaires, qui peut être amorcé dès la V2 sans développement lourd.</p>
+  <p>Aucune de ces cinq orientations n'appartient à la V1, et c'est délibéré. La V1 doit d'abord prouver que le cercle se remplit et que les membres s'y parlent. Les événements, la conciergerie et les expériences n'ont de sens qu'avec une communauté active : les construire trop tôt reviendrait à équiper une maison vide. Elles sont positionnées en V3 dans la feuille de route indicative ci-dessus, à l'exception du réseau de partenaires, qui peut être amorcé dès la V2 sans développement lourd.</p>
 
   <!-- ACCEPTATION -->
   <div class="acceptance">
@@ -762,7 +695,7 @@ p:last-child{margin-bottom:0}
   <div class="foot">
     Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015 — Immatriculée le 01/02/2024<br>
     TVA non applicable, article 293 B du CGI — hello@agenceattractor.com — +33 7 53 90 23 23 — agenceattractor.com<br>
-    Cahier des charges N° CDC-ATR-2026-0005 — Révision V5 (mise à jour du 17/07/2026) — Annexe au Devis révision 6 et au Contrat — Projet Club privé Élévia
+    Cahier des charges N° CDC-ATR-2026-0005 — Révision V5 (mise à jour du 17/07/2026) — Annexe au Devis V5 et au Contrat — Projet Club privé Élévia
   </div>
 
 </div>

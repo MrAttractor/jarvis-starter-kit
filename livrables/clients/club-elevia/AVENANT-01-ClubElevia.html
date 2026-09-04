@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Avenant n°1 (révision 4) — Périmètre, données, réception et mise en production — Club Élévia × Mr Attractor</title>
+<style>
+:root{
+  --brand:#0E1A2B;
+  --accent:#C9A84C;
+  --ink:#1A1F2B;
+  --muted:#6B7280;
+  --line:#E5E7EB;
+  --bg-soft:#F7F5EF;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+  --green:#1B5E20;
+  --green-bg:#E8F5E9;
+  --red:#B91C1C;
+  --red-bg:#FFF5F5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:#f0f2f5;padding:24px;line-height:1.6}
+.page{width:210mm;max-width:100%;margin:0 auto 24px auto;background:#fff;padding:16mm 16mm;box-shadow:0 6px 30px rgba(0,0,0,.12)}
+
+.head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--accent);padding-bottom:16px;margin-bottom:24px}
+.brand h1{color:var(--brand);font-size:22px;letter-spacing:.02em}
+.brand .tag{color:var(--muted);font-size:12px;margin-top:2px}
+.docmeta{text-align:right}
+.docmeta .t{color:var(--accent);font-weight:700;font-size:16px;letter-spacing:.06em;text-transform:uppercase}
+.docmeta .ref{color:var(--brand);font-weight:700;font-size:13px;margin-top:4px}
+.docmeta .date{color:var(--muted);font-size:12px;margin-top:2px}
+
+h2{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:22px 0 10px 0;padding-bottom:5px;border-bottom:1px solid var(--line)}
+
+.parties{display:flex;gap:16px;margin-bottom:4px}
+.partie{flex:1;border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:12.5px}
+.partie .label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.partie strong{color:var(--brand);display:block;font-size:13px;margin-bottom:2px}
+
+.preamble{background:var(--bg-soft);border-left:3px solid var(--accent);padding:12px 16px;font-size:12.5px;margin:6px 0;line-height:1.6}
+.preamble strong{color:var(--brand)}
+
+.revnote{background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:10px 14px;font-size:11.5px;color:#78350F;margin:10px 0;line-height:1.55}
+.revnote strong{color:#5B2C06}
+
+p{font-size:12.5px;margin-bottom:8px;line-height:1.65}
+
+.art{border:1px solid var(--line);border-radius:8px;margin:10px 0;overflow:hidden}
+.art-head{background:var(--brand);color:#fff;padding:10px 16px;font-size:12.5px;font-weight:700}
+.art-head span{color:var(--accent);text-transform:uppercase;letter-spacing:.05em;font-size:10px;display:block}
+.art-body{padding:12px 16px;font-size:12px}
+.art-body .was{background:var(--red-bg);border-left:3px solid var(--red);padding:8px 12px;border-radius:0 6px 6px 0;margin-bottom:8px;color:#7a1616}
+.art-body .now{background:var(--green-bg);border-left:3px solid #4CAF50;padding:8px 12px;border-radius:0 6px 6px 0;color:#14401a}
+.art-body .now + .now{margin-top:8px}
+.art-body .lbl{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:3px;opacity:.8}
+.art-body ul{margin:6px 0 0 16px}
+.art-body li{font-size:11.5px;margin-bottom:3px}
+.art-body .note{font-size:11px;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.55}
+
+.keep{background:#EEF2FF;border:1px solid #C7D2FE;border-radius:8px;padding:12px 16px;font-size:12px;color:#3730a3;margin:10px 0;line-height:1.55}
+.keep strong{color:#1e1b7a}
+
+.acceptance{border:2px solid var(--brand);border-radius:8px;padding:16px;margin-top:20px}
+.acceptance .acc-title{color:var(--brand);font-weight:700;font-size:13px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
+.acceptance .acc-text{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6}
+.signatures{display:flex;gap:20px}
+.sig{flex:1}
+.sig .sig-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.sig .sig-name{color:var(--brand);font-weight:700;font-size:13px}
+.sig .sig-role{color:var(--muted);font-size:11.5px;margin-top:1px}
+.sig .sig-mention{font-size:10.5px;color:var(--muted);margin-top:6px;font-style:italic}
+.sig .sig-space{height:44px;border-bottom:1px dotted var(--line);margin:10px 0 6px}
+.sig .sig-date{font-size:11.5px;color:var(--muted)}
+
+.foot{margin-top:20px;border-top:1px solid var(--line);padding-top:10px;font-size:10px;color:var(--muted);text-align:center;line-height:1.7}
+
+@media (max-width:820px){
+  body{padding:12px}
+  .page{padding:14px}
+  .parties,.signatures{flex-direction:column}
+  .head{flex-direction:column;gap:10px}
+  .docmeta{text-align:left}
+}
+
+@media print{
+  body{background:#fff;padding:0}
+  .page{box-shadow:none;margin:0;width:100%;padding:10mm 12mm}
+  .art,.keep,.parties,.acceptance,.preamble,.revnote,.art-body .now,.art-body .was,.sig{
+    page-break-inside:avoid;break-inside:avoid;overflow:visible}
+  .art{overflow:visible}
+  h2{page-break-after:avoid;break-after:avoid}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- EN-TÊTE -->
+  <div class="head">
+    <div class="brand">
+      <h1>Mr Attractor</h1>
+      <div class="tag">Conception d'applications web métier</div>
+    </div>
+    <div class="docmeta">
+      <div class="t">Avenant n°1</div>
+      <div class="ref">Révision 4 — Précisions au contrat</div>
+      <div class="date">Fait le 3 août 2026, révisé le 4 septembre 2026</div>
+    </div>
+  </div>
+
+  <!-- PARTIES -->
+  <h2>Entre les parties</h2>
+  <div class="parties">
+    <div class="partie">
+      <div class="label">La Cliente</div>
+      <strong>Madame Elise CAPEL</strong>
+      Porteuse du projet Club Privé Élévia<br/>
+      Elisepelagie@outlook.be
+    </div>
+    <div class="partie">
+      <div class="label">Le Prestataire</div>
+      <strong>Mac Arthur KOUASSI</strong>
+      Mr Attractor — Auto-entrepreneur<br/>
+      SIRET 98377125400015 — Paris, France<br/>
+      hello@agenceattractor.com — +33 7 53 90 23 23
+    </div>
+  </div>
+
+  <div class="revnote">
+    <strong>Révision 4 du 4 septembre 2026.</strong> Elle lève l'ambiguïté du sigle « V1 », qui désignait à la fois la Web App, les étapes futures du produit et les révisions des documents : la Web App est désormais nommée par son nom, et le vocabulaire commun est fixé à la section 0 du cahier des charges. Elle intègre également l'adhésion et son encaissement au périmètre livré, sans supplément de prix. La révision 4 annule et remplace les versions du 17 juillet et du 3 août 2026, dont aucune n'a été signée. Elle en reprend l'intégralité du contenu et y ajoute, à la demande de la Cliente formulée par courriel du 4 août 2026, les <strong>Articles 17 et 18</strong> ci-après, relatifs à la réception des livrables et à la mise en production. La révision du 3 août avait elle-même ajouté les Articles 8, 12, 15 et 16 et allongé le délai de validation, à la demande du 2 août. <strong>Aucune disposition des versions précédentes n'a été retirée ni réduite.</strong>
+  </div>
+
+  <!-- PRÉAMBULE -->
+  <h2>Préambule</h2>
+  <div class="preamble">
+    Les Parties ont conclu un <strong>Contrat de prestation de développement informatique</strong> relatif au projet <strong>Club Privé Élévia</strong>. À la suite de leurs échanges, il est apparu nécessaire d'apporter par écrit plusieurs précisions : <strong>le périmètre technique</strong> de la prestation, afin de lever toute ambiguïté entre une <strong>application web (Web App responsive)</strong> et des <strong>applications mobiles natives</strong> ; le <strong>processus de validation des livrables</strong> ; les <strong>modalités de remise du code source et de réversibilité</strong> ; la <strong>propriété intellectuelle</strong> ; la <strong>protection des données personnelles</strong> ; l'<strong>évolutivité de l'architecture</strong> ; le <strong>périmètre exact de la clause de non-réutilisation</strong> ; les <strong>conditions objectives de réception des livrables</strong> et le traitement des anomalies ; et le <strong>contenu exact de la mise en production</strong> de la Web App. Le présent avenant a pour objet de formaliser ces précisions. Conformément à l'Article 2 du Contrat (ordre de priorité des documents), il précise les articles visés ci-après, qui prévalent dès lors dans leur rédaction issue du présent avenant.
+  </div>
+
+  <!-- ARTICLE 1 -->
+  <div class="art">
+    <div class="art-head"><span>Modifie l'Article 1 du Contrat</span>Objet du contrat</div>
+    <div class="art-body">
+      <div class="was"><span class="lbl">Rédaction antérieure</span>« … la conception, le développement et la livraison de l'application mobile Club Privé ÉLÉVIA … »</div>
+      <div class="now"><span class="lbl">Nouvelle rédaction</span>Le présent contrat a pour objet la conception, le développement et la livraison de la <strong>plateforme Club Privé Élévia sous forme de Web App responsive</strong> (application accessible via navigateur internet sur mobile, tablette et ordinateur, sans installation depuis un store), dénommée ci-après « la Web App ». Le développement d'applications mobiles natives (iOS, Android) et leur publication sur les stores ne relèvent pas de la Web App et sont renvoyés à la Phase 5 (voir Article 4 modifié).</div>
+    </div>
+  </div>
+
+  <!-- ARTICLE 3 -->
+  <div class="art">
+    <div class="art-head"><span>Modifie l'Article 3 du Contrat</span>Description des prestations</div>
+    <div class="art-body">
+      <div class="was"><span class="lbl">Rédaction antérieure</span>Incluait notamment : « Développer l'application mobile iOS ; Développer l'application mobile Android ».</div>
+      <div class="now"><span class="lbl">Nouvelle rédaction — prestations de la Web App</span>
+        <ul>
+          <li>Concevoir les maquettes UX/UI ;</li>
+          <li>Développer la <strong>Web App responsive</strong> (interface membres) ;</li>
+          <li>Développer le <strong>back-office d'administration</strong> ;</li>
+          <li>Assurer les tests techniques ;</li>
+          <li>Corriger les anomalies avant livraison ;</li>
+          <li>Fournir la documentation technique.</li>
+        </ul>
+        Les mentions « Développer l'application mobile iOS » et « Développer l'application mobile Android » sont retirées de la Web App et renvoyées à la Phase 5. Les fonctionnalités détaillées figurent dans le cahier des charges annexé.</div>
+    </div>
+  </div>
+
+  <!-- ARTICLE 4 -->
+  <div class="art">
+    <div class="art-head"><span>Précise l'Article 4 du Contrat</span>Calendrier de réalisation</div>
+    <div class="art-body">
+      <div class="now"><span class="lbl">Périmètre des phases</span>
+        Les Phases 1 à 4 (Maquettes UX/UI → Prototype fonctionnel → Version bêta → Version finale) portent sur la <strong>Web App responsive</strong> et sont comprises dans la prestation. La <strong>Phase 5 — Publication sur les stores</strong> (développement natif iOS/Android et publication App Store / Google Play) est <strong>hors périmètre de la présente prestation</strong> ; elle fera l'objet d'un <strong>devis séparé au titre de l'extension mobile</strong>, chiffré selon le périmètre retenu. La « mise en ligne effective » déclenchant le solde s'entend du déploiement en production de la Web App, et non d'une publication sur un store.</div>
+    </div>
+  </div>
+
+  <!-- ARTICLE 10 -->
+  <div class="art">
+    <div class="art-head"><span>Précise l'Article 10 du Contrat</span>Accès techniques</div>
+    <div class="art-body">
+      <div class="now"><span class="lbl">Accès concernés</span>
+        Les accès techniques créés au nom de la Cliente, ou transférés à celle-ci, pour la Web App sont : <strong>nom de domaine, hébergement, base de données, dépôt de code (GitHub ou équivalent)</strong> et, le cas échéant, outils de paiement effectivement mis en œuvre. Ces frais de tiers (domaine, hébergement, services externes) sont <strong>achetés directement par la Cliente, à son nom</strong>, et ne sont pas inclus dans le devis. Les comptes <strong>Apple Développeur</strong> et <strong>Google Play</strong> sont <strong>sans objet à ce stade</strong> (absence de développement natif) et seront traités, le cas échéant, dans le devis relatif à la Phase 5.</div>
+    </div>
+  </div>
+
+  <!-- ARTICLE 6 — VALIDATION -->
+  <div class="art">
+    <div class="art-head"><span>Précise l'Article 6 du Contrat</span>Validation des livrables</div>
+    <div class="art-body">
+      <div class="now"><span class="lbl">Processus de validation</span>
+        La validation d'une phase s'effectue par l'<strong>accord écrit de la Cliente</strong> (courriel suffisant). À chaque phase, la Cliente dispose de <strong>7 jours ouvrés</strong> pour valider le livrable ou formuler ses observations par écrit. <strong>En l'absence de retour à l'issue de ce délai, le Prestataire adresse d'abord à la Cliente une relance écrite</strong> (courriel). Ce n'est qu'à défaut de réponse dans un délai de <strong>5 jours ouvrés suivant cette relance</strong> que la validation est réputée acquise.</div>
+      <div class="note">Le délai post-relance est porté de 3 à 5 jours ouvrés à la demande de la Cliente. Les Parties conviennent que ce mécanisme de dernier recours est maintenu : il ne prive la Cliente d'aucun droit d'observation, mais il garantit que le projet ne puisse être immobilisé sans terme par une absence de réponse, alors que le calendrier et l'échéancier de paiement sont adossés à la validation des phases. Au total, la Cliente dispose donc de 12 jours ouvrés et d'une relance nominative avant qu'une validation puisse être réputée acquise.</div>
+    </div>
+  </div>
+
+  <!-- ARTICLE 8 — PROPRIÉTÉ INTELLECTUELLE -->
+  <div class="art">
+    <div class="art-head"><span>Précise l'Article 8 du Contrat</span>Propriété intellectuelle des développements spécifiques</div>
+    <div class="art-body">
+      <div class="now"><span class="lbl">Ce qui devient la propriété de la Cliente</span>
+        Les Parties confirment qu'au <strong>règlement intégral du prix</strong>, le Prestataire cède à la Cliente, à titre exclusif et définitif, pour la durée légale des droits et pour le monde entier, l'ensemble des droits patrimoniaux (reproduction, représentation, adaptation, modification, distribution) portant sur les <strong>éléments spécifiquement développés pour Élévia</strong>, à savoir :
+        <ul>
+          <li>le <strong>code source</strong> de la Web App (interface membres et back-office d'administration) ;</li>
+          <li>le <strong>schéma et le contenu de la base de données</strong>, ainsi que l'intégralité des données qu'elle contient ;</li>
+          <li>les <strong>interfaces, maquettes UX/UI et éléments graphiques</strong> conçus pour Élévia ;</li>
+          <li>la <strong>documentation technique et fonctionnelle</strong> produite au titre de la prestation.</li>
+        </ul>
+      </div>
+      <div class="now"><span class="lbl">Jusqu'au règlement intégral</span>
+        Jusqu'au paiement intégral du prix, le Prestataire demeure titulaire des droits sur les développements réalisés, la Cliente bénéficiant d'un droit d'usage aux seules fins de recette et de validation des livrables. Cette réserve de propriété prend fin de plein droit au règlement du solde, sans formalité.</div>
+    </div>
+  </div>
+
+  <!-- ARTICLES 8 & 10 — RÉVERSIBILITÉ -->
+  <div class="art">
+    <div class="art-head"><span>Précise les Articles 8 et 10 du Contrat</span>Remise du code source et réversibilité</div>
+    <div class="art-body">
+      <div class="now"><span class="lbl">Éléments remis en fin de prestation</span>
+        Au <strong>terme du projet et après paiement intégral</strong>, le Prestataire remet à la Cliente, dans un délai de <strong>15 jours ouvrés</strong>, l'ensemble des éléments nécessaires à la continuité et à la reprise autonome du projet :
+        <ul>
+          <li><strong>l'intégralité du code source</strong> de la Web App, dans un <strong>dépôt GitHub (ou équivalent) dont la Cliente est propriétaire ou administratrice</strong>, avec son historique ;</li>
+          <li>une <strong>sauvegarde exploitable de la base de données</strong> dans un format standard (export SQL ou équivalent) ;</li>
+          <li>la <strong>documentation technique</strong> : architecture, variables d'environnement, procédure d'installation et de déploiement ;</li>
+          <li>les <strong>accès administrateur</strong> à l'hébergement, au nom de domaine, à la base de données, aux services tiers et aux clés d'API utilisés par la Web App ;</li>
+          <li>la <strong>liste des services tiers</strong> mis en œuvre, avec leur rôle et leur coût récurrent connu à la date de la remise.</li>
+        </ul>
+      </div>
+      <div class="now"><span class="lbl">Réversibilité en cours de projet</span>
+        En cas de résiliation anticipée pour quelque cause que ce soit, la Cliente reçoit, après règlement des sommes dues au titre des phases effectivement réalisées, les mêmes éléments dans leur état d'avancement à la date de la résiliation. <strong>Le Prestataire ne peut en aucun cas retenir les données personnelles des membres</strong>, qui demeurent la propriété de la Cliente et lui sont restituées sans condition, conformément à l'Article 15.</div>
+      <div class="note">La restitution des livrables reste conditionnée au paiement, à la seule exception des données personnelles des membres, restituées sans condition. Cette distinction est volontaire : elle protège les personnes concernées, dont les droits ne dépendent pas de la relation commerciale entre les Parties.</div>
+    </div>
+  </div>
+
+  <!-- ARTICLE 12 — NON-RÉUTILISATION -->
+  <div class="art">
+    <div class="art-head"><span>Précise l'Article 12 du Contrat</span>Périmètre de la non-réutilisation</div>
+    <div class="art-body">
+      <div class="now"><span class="lbl">Ce que le Prestataire s'interdit de réutiliser</span>
+        Pendant la durée de <strong>5 ans</strong> prévue à l'Article 12, le Prestataire s'interdit de reproduire, d'exploiter ou de céder à un tiers, pour un projet concurrent, les <strong>éléments spécifiques d'Élévia</strong> : le concept et la marque Élévia, son positionnement et son identité visuelle, ses contenus rédactionnels, ses règles métier propres (notamment les critères et la pondération du score de compatibilité, les règles d'admission et le parcours de vérification tels que spécifiés pour Élévia), le schéma de sa base de données et les données de ses membres.</div>
+      <div class="now"><span class="lbl">Ce qui demeure la propriété du Prestataire</span>
+        Les Parties conviennent expressément que cette interdiction <strong>ne s'étend pas au savoir-faire général, aux méthodes, aux compétences et aux composants génériques du Prestataire</strong>, notamment : son architecture technique de référence et ses gabarits de projet, ses composants d'interface réutilisables, ses modules d'authentification, d'administration et de messagerie, ses scripts de déploiement, ainsi que toute connaissance ou technique acquise dans l'exercice de son métier. Ces éléments préexistent au projet ou sont réutilisés d'un projet à l'autre, et le Prestataire conserve le droit de les employer librement, y compris pour d'autres clients, <strong>sans que cela puisse être qualifié de projet concurrent</strong>, dès lors qu'aucun élément spécifique d'Élévia énuméré ci-dessus n'est repris.</div>
+      <div class="note">Cette distinction est demandée par la Cliente et acceptée par le Prestataire. Elle sécurise les deux Parties : la Cliente est protégée sur ce qui fait la singularité d'Élévia, et le Prestataire conserve l'usage de l'outillage qui lui permet d'exercer son métier.</div>
+    </div>
+  </div>
+
+  <!-- ARTICLE 15 — DONNÉES PERSONNELLES -->
+  <div class="art">
+    <div class="art-head"><span>Complète le Contrat — Article 15 (nouveau)</span>Protection des données personnelles</div>
+    <div class="art-body">
+      <div class="now"><span class="lbl">15.1 — Rôle de chaque Partie</span>
+        La <strong>Cliente est responsable de traitement</strong> au sens du RGPD : elle détermine les finalités et les moyens du traitement des données des membres d'Élévia. Le <strong>Prestataire est sous-traitant</strong> : il ne traite ces données que sur instruction documentée de la Cliente et pour les seuls besoins de la prestation. Il s'interdit tout usage propre, notamment à des fins de démonstration, de statistique ou de prospection.</div>
+
+      <div class="now"><span class="lbl">15.2 — Engagements du Prestataire</span>
+        <ul>
+          <li><strong>Hébergement en Union européenne</strong>, sans transfert des données hors UE ;</li>
+          <li><strong>Confidentialité</strong> : accès limité aux seules personnes ayant à en connaître, engagées à la confidentialité ;</li>
+          <li><strong>Sécurité</strong> : chiffrement des échanges (HTTPS), chiffrement des données au repos, mots de passe non réversibles, cloisonnement des accès par rôle, journalisation des accès au back-office, sauvegardes régulières ;</li>
+          <li><strong>Sous-traitants ultérieurs</strong> : la Cliente autorise le recours aux prestataires d'infrastructure nécessaires au fonctionnement de la plateforme (hébergement, base de données, envoi d'e-mails). Leur liste à jour est communiquée à la Cliente, qui est informée avant tout ajout ou remplacement et peut s'y opposer pour un motif légitime ;</li>
+          <li><strong>Violation de données</strong> : notification à la Cliente <strong>sans délai et au plus tard sous 24 heures</strong> après en avoir eu connaissance, avec les éléments utiles à sa propre déclaration à l'autorité de contrôle ;</li>
+          <li><strong>Assistance</strong> : aide raisonnable à la Cliente pour répondre aux demandes d'exercice de droits des membres (accès, rectification, effacement, portabilité) et pour ses obligations de sécurité ;</li>
+          <li><strong>Fin de la prestation</strong> : restitution des données à la Cliente puis <strong>suppression de toute copie</strong> détenue par le Prestataire dans un délai de 30 jours, sauf obligation légale de conservation.</li>
+        </ul>
+      </div>
+
+      <div class="now"><span class="lbl">15.3 — Vidéos de vérification</span>
+        Les vidéos soumises par les membres lors de la vérification sont conservées le temps strictement nécessaire à la décision de l'équipe d'Élévia, et <strong>supprimées automatiquement et de façon irréversible dans les 24 heures suivant cette décision</strong>, qu'elle soit favorable ou défavorable. Elles ne sont accessibles qu'aux comptes administrateurs habilités par la Cliente, et ne sont ni téléchargeables, ni exportables, ni conservées en sauvegarde au-delà de ce délai.</div>
+
+      <div class="now"><span class="lbl">15.4 — Absence de traitement biométrique</span>
+        Le dispositif de vérification vidéo spécifié est un <strong>contrôle de présence humaine</strong> (détection d'un visage et exécution d'un geste demandé) destiné à écarter les photographies et les usurpations. Il <strong>ne procède à aucune identification biométrique</strong> : aucun gabarit du visage n'est calculé, stocké ni comparé. Les Parties conviennent que la mise en place ultérieure d'une reconnaissance faciale constituerait un traitement de données biométriques au sens de l'article 9 du RGPD, relèverait d'un devis distinct, et supposerait au préalable le recueil du consentement explicite des membres ainsi que la réalisation d'une analyse d'impact, celle-ci incombant à la Cliente en sa qualité de responsable de traitement.</div>
+
+      <div class="now"><span class="lbl">15.5 — Obligations propres à la Cliente</span>
+        Il appartient à la Cliente, en sa qualité de responsable de traitement : de définir les durées de conservation des données des membres et de les communiquer au Prestataire ; de publier une politique de confidentialité et de recueillir les consentements nécessaires ; de tenir son registre des traitements ; de répondre aux demandes des personnes concernées ; et d'apprécier la nécessité d'une analyse d'impact. Le Prestataire livre l'<strong>infrastructure technique permettant ces obligations</strong> (registre des consentements, mentions légales et politique de confidentialité types, outils d'accès et de suppression) telle que décrite au cahier des charges, sans que cela emporte de sa part une mission de conseil juridique ni la responsabilité des choix de la Cliente.</div>
+
+      <div class="note">Les Parties peuvent, si la Cliente le souhaite, formaliser ces stipulations dans un accord de sous-traitance distinct et détaillé (DPA) annexé au Contrat. Le présent article s'applique pleinement à défaut d'un tel accord.</div>
+    </div>
+  </div>
+
+  <!-- ARTICLE 16 — ÉVOLUTIVITÉ -->
+  <div class="art">
+    <div class="art-head"><span>Complète le Contrat — Article 16 (nouveau)</span>Évolutivité de l'architecture</div>
+    <div class="art-body">
+      <div class="now"><span class="lbl">Engagements d'architecture</span>
+        Le Prestataire conçoit la Web App de manière à permettre l'ajout ultérieur des fonctionnalités renvoyées aux étapes suivantes du produit (applications natives iOS et Android, événements, conciergerie, suggestions par IA, traduction des messages) sans réécriture du socle. À ce titre, il s'engage sur les points vérifiables suivants :
+        <ul>
+          <li><strong>séparation du socle applicatif et de l'interface</strong>, les données et les traitements étant exposés par une <strong>API documentée</strong> réutilisable par une future application mobile ;</li>
+          <li><strong>base de données relationnelle standard</strong>, hébergée sur un compte au nom de la Cliente, exportable à tout moment dans un format ouvert ;</li>
+          <li>recours à des <strong>technologies répandues et documentées</strong>, à l'exclusion de tout format propriétaire fermé qui rendrait la reprise dépendante du seul Prestataire ;</li>
+          <li><strong>points d'extension prévus</strong> pour l'encaissement en ligne et la gestion des abonnements, de sorte que leur activation ne requière pas de refonte du modèle de données ;</li>
+          <li><strong>documentation technique</strong> permettant à un développeur tiers compétent de reprendre le projet.</li>
+        </ul>
+      </div>
+      <div class="note">Cet article porte sur la <strong>conception de l'architecture</strong>. Il n'emporte ni engagement de prix, ni engagement de délai, ni obligation de réalisation de ces fonctionnalités ultérieures, lesquelles font l'objet de devis distincts. Il ne garantit pas davantage la compatibilité de la Web App avec des services tiers futurs dont les conditions techniques ne sont pas connues à ce jour.</div>
+    </div>
+  </div>
+
+  <!-- ARTICLE 17 — RÉCEPTION DES LIVRABLES ET ANOMALIES -->
+  <div class="art">
+    <div class="art-head"><span>Complète le Contrat — Article 17 (nouveau)</span>Réception des livrables et traitement des anomalies</div>
+    <div class="art-body">
+      <div class="now"><span class="lbl">Sur quoi repose une validation</span>
+        La validation d'une phase repose sur des éléments objectifs, et non sur une appréciation générale. Une phase est réputée conforme lorsque les <strong>critères d'acceptation définis pour chacun de ses modules au CDC (Section 6)</strong> sont satisfaits, que le livrable est conforme au CDC et au présent avenant, et qu'aucune <strong>anomalie bloquante</strong> au sens ci-dessous ne subsiste. Ces critères sont énoncés fonctionnalité par fonctionnalité et sont opposables aux deux Parties.
+      </div>
+      <div class="now"><span class="lbl">Recette conjointe avant la réception définitive</span>
+        Avant la réception définitive de la Web App, les Parties procèdent ensemble à une <strong>recette complète</strong> : une session de vérification, menée à distance ou en présentiel, au cours de laquelle l'ensemble des fonctionnalités prévues au CDC est parcouru contradictoirement. Le résultat est consigné par écrit (courriel ou procès-verbal de réception) et liste, le cas échéant, les anomalies constatées et leur classement. Cette recette est organisée par le Prestataire dans les <strong>5 jours ouvrés</strong> suivant la mise à disposition de la version finale.
+      </div>
+      <div class="now"><span class="lbl">Classification des anomalies</span>
+        Les Parties conviennent d'un vocabulaire commun, afin qu'un défaut constaté n'ait pas à être négocié au cas par cas :
+        <ul>
+          <li><strong>Anomalie bloquante</strong> : elle empêche l'utilisation d'une fonctionnalité essentielle au sens du CDC, ou compromet l'intégrité, la sécurité ou la confidentialité des données. <strong>Elle fait obstacle à la réception</strong> et doit être corrigée par le Prestataire dans un délai de <strong>5 jours ouvrés</strong>.</li>
+          <li><strong>Anomalie majeure</strong> : une fonctionnalité prévue ne se comporte pas conformément au CDC, mais un contournement praticable existe. <strong>Elle ne fait pas obstacle à la réception</strong> dès lors qu'elle est corrigée dans un délai de <strong>10 jours ouvrés</strong> suivant celle-ci.</li>
+          <li><strong>Anomalie mineure</strong> : écart d'affichage, de formulation ou de confort d'usage, sans effet sur le fonctionnement. <strong>Elle ne fait obstacle ni à la réception, ni au règlement de la tranche correspondante</strong> et est traitée au titre de la maintenance corrective (Contrat, Art. 13).</li>
+        </ul>
+      </div>
+      <div class="now"><span class="lbl">Signalement</span>
+        Une anomalie est signalée par écrit, avec les éléments permettant de la reproduire : la page ou l'écran concerné, l'action effectuée, le résultat obtenu et le résultat attendu. Les délais de correction ci-dessus courent à compter de ce signalement.
+      </div>
+      <div class="note">Ce qui n'est pas une anomalie : une <strong>demande nouvelle</strong>, une évolution ou un changement d'orientation, même mineur, ne constitue pas un défaut de conformité. Ces demandes restent les bienvenues, mais relèvent de l'Article 11 du CDC (2 séries d'ajustements incluses par phase, puis devis complémentaire), et non du présent article. Cette distinction protège les deux Parties : elle évite que la réception soit indéfiniment repoussée, et elle garantit à la Cliente que tout défaut réel sera corrigé dans un délai connu d'avance.</div>
+    </div>
+  </div>
+
+  <!-- ARTICLE 18 — MISE EN PRODUCTION -->
+  <div class="art">
+    <div class="art-head"><span>Complète le Contrat — Article 18 (nouveau)</span>Mise en production de la Web App</div>
+    <div class="art-body">
+      <div class="now"><span class="lbl">Ce que comprend la mise en ligne</span>
+        L'accompagnement à la mise en production comprend la <strong>configuration finale de l'ensemble des services nécessaires au fonctionnement de la Web App</strong>, jusqu'à l'obtention d'une plateforme pleinement opérationnelle et accessible au public. À ce titre :
+        <ul>
+          <li><strong>nom de domaine</strong> : branchement, configuration des enregistrements DNS et des redirections ;</li>
+          <li><strong>hébergement</strong> : mise en service et paramétrage de l'environnement de production ;</li>
+          <li><strong>certificat SSL</strong> : activation et vérification de l'accès sécurisé en HTTPS sur l'ensemble du site ;</li>
+          <li><strong>base de données</strong> : mise en production, sauvegardes activées, droits d'accès configurés ;</li>
+          <li><strong>services tiers prévus au périmètre</strong> : configuration et raccordement à la plateforme (notamment l'envoi des courriels de connexion) ;</li>
+          <li><strong>vérification finale</strong> : contrôle du bon fonctionnement de la plateforme en conditions réelles après mise en ligne.</li>
+        </ul>
+      </div>
+      <div class="note">Limites, énoncées pour éviter tout malentendu : les <strong>frais de tiers</strong> (achat du nom de domaine, abonnements d'hébergement et de services tiers) restent à la charge de la Cliente et souscrits à son nom, conformément à l'Article 10 du Contrat. L'engagement du Prestataire porte sur la <strong>configuration</strong> de ces services, non sur la disponibilité ou les délais propres aux fournisseurs (propagation DNS, validation d'un compte par un opérateur, interruption de service d'un tiers), qui ne lui sont pas imputables. Le défaut de fourniture d'un accès ou d'un règlement incombant à la Cliente suspend d'autant le délai de mise en production.</div>
+    </div>
+  </div>
+
+  <!-- CLAUSES INCHANGÉES -->
+  <h2>Dispositions inchangées</h2>
+  <div class="keep">
+    <strong>Tous les autres articles du Contrat demeurent inchangés et pleinement applicables</strong>, notamment l'Article 7 (prix et modalités de paiement), l'Article 9 (propriété du concept Élévia), l'Article 13 (maintenance corrective, 3 mois), l'Article 14 (retard et mise en demeure), ainsi que le NDA signé entre les Parties.
+    <p style="margin:8px 0 0 0;font-size:12px;color:#3730a3"><strong>Prix et délais :</strong> le présent avenant ne modifie par lui-même ni le prix, ni le calendrier de réalisation, ni la répartition des tranches. Conformément à l'Article 4 du Contrat (« Les dates précises seront fixées dans le devis ») et à son Article 7 (« Le montant total sera fixé dans le devis »), ces éléments sont fixés par le <strong>Devis ATR-2026-0005 révision 6</strong>, qui remplace la révision 5 : prix total de <strong>3 000 €</strong> (dont 950 € déjà réglés au 3 août 2026), durée de réalisation estimée à <strong>40 jours ouvrés</strong> de production effective, et règlement en <strong>4 tranches</strong> suivant la répartition 30 / 30 / 30 / 10 recommandée à l'Article 7.</p>
+    <p style="margin:8px 0 0 0;font-size:12px;color:#3730a3"><strong>Point de départ des délais :</strong> le décompte des 40 jours ouvrés court à compter de la signature du présent avenant, du Devis révision 6 et du CDC révision 5, la Tranche 1 étant déjà réglée.</p>
+  </div>
+
+  <!-- ACCEPTATION -->
+  <div class="acceptance">
+    <div class="acc-title">Bon pour accord</div>
+    <div class="acc-text">Les Parties reconnaissent avoir pris connaissance du présent avenant et l'acceptent sans réserve. Il annule et remplace la version du 17 juillet 2026, non signée, et fait partie intégrante du Contrat de prestation relatif au projet Club Privé Élévia.</div>
+    <div class="signatures">
+      <div class="sig">
+        <div class="sig-label">La Cliente</div>
+        <div class="sig-name">Elise CAPEL</div>
+        <div class="sig-role">Club Privé Élévia</div>
+        <div class="sig-mention">Précédée de la mention « Lu et approuvé »</div>
+        <div class="sig-space"></div>
+        <div class="sig-date">Fait le __________, à __________</div>
+      </div>
+      <div class="sig">
+        <div class="sig-label">Le Prestataire</div>
+        <div class="sig-name">Mac Arthur KOUASSI</div>
+        <div class="sig-role">Mr Attractor — Auto-entrepreneur</div>
+        <div class="sig-mention">Précédée de la mention « Lu et approuvé »</div>
+        <div class="sig-space"></div>
+        <div class="sig-date">Fait le 3 août 2026, révisé le 4 septembre 2026, à Paris</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Agence Mr Attractor — Mac Arthur KOUASSI — Micro-entreprise — SIRET 98377125400015 — Immatriculée le 01/02/2024<br>
+    TVA non applicable, article 293 B du CGI — hello@agenceattractor.com — +33 7 53 90 23 23 — agenceattractor.com<br>
+    Avenant n°1 révision 4 — Précisions au contrat — Contrat de prestation Club Privé Élévia
+  </div>
+
+</div>
+</body>
+</html>

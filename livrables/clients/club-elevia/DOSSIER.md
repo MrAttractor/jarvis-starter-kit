@@ -1,16 +1,65 @@
 # Club Élévia — l'état du dossier
 
-> Révision du 03/09/2026, après son mail de cadrage du 28/08. **Cette fiche est la première
+> Révision du 04/09/2026, après sa contestation du prix et la clarification du vocabulaire. **Cette fiche est la première
 > chose à lire du dossier.**
 > Un chiffre ou un statut n'existe qu'ici. S'il apparaît ailleurs, c'est une copie à vérifier.
 
 | Radar | |
 |---|---|
-| Statut | **Elle veut lancer.** Son mail du 28/08 fixe le périmètre V1 qu'elle souhaite et demande une date. Ce périmètre **déborde le CDC V4 sur trois briques** (paiement, événements, conciergerie), nommément renvoyées à un devis complémentaire |
-| Dernier contact | **2026-08-28 à 21h36 : son mail de cadrage** (message `1a04a4dec2777833`). Notre réponse du 26/08 **a bien été envoyée**, contrairement à ce que disait cette fiche |
-| Prochaine action | **Valider les cinq prix du devis complémentaire ATR-2026-0014**, puis envoyer `BROUILLON-REPONSE-ELISE-2026-09-03.md` avec le devis en pièce jointe |
-| Échéance | **son mail a 6 jours au 03/09.** La date de lancement annoncée (12/10) suppose signature et questionnaire reçus **avant le lundi 07/09**. Signature : lien valable jusqu'au 30/09/2026 |
-| Argent en attente | 2 050 € sur la V1, **plus 1 736 € de devis complémentaire** si elle prend les cinq lots |
+| Statut | **Elle conteste le prix et suspend la signature ET les règlements.** Deux causes : un amalgame de vocabulaire (« V1 » désignait trois choses) et le sentiment de payer 3 000 € pour un Club qui ne peut pas encaisser. **Les deux sont traitées au 04/09**, documents réécrits |
+| Dernier contact | **2026-09-03 : son mail sur le budget**, puis sa reformulation du vocabulaire, à laquelle elle demande confirmation. Le brouillon de réponse `r-7959372918801779481` attend dans le fil `19fd6fc0e0cb26c3` |
+| Prochaine action | **Valider les 3 prix du devis complémentaire, régénérer un dossier de signature** (l'ancien est caduc), appliquer `0007`, puis envoyer `BROUILLON-REPONSE-ELISE-2026-09-04.md` avec les 4 documents joints |
+| Échéance | La date annoncée (**21/10**) suppose signature, questionnaire d'affinités et formules d'adhésion reçus **avant le lundi 07/09** |
+| Argent en attente | 2 050 € sur la prestation, **plus 1 130 €** si elle prend les trois lots restants |
+
+## Le 03/09 : elle conteste le prix, et elle a un demi-argument
+
+**Son mail :** l'estimation initiale annoncée était de **2 000 à 3 000 €**. Si elle avait su que
+3 000 € ne couvraient que la « V1 », avec des devis supplémentaires pour l'encaissement et la
+suite, elle aurait négocié **autour de 2 000 € voire moins**. Elle veut clarifier « avant de
+signer et de poursuivre les règlements ». Elle précise ne pas remettre en cause le travail.
+
+**Ce qui est vrai dans son argument :** la fourchette orale a existé, et le mot « V1 » a rendu
+notre lecture illisible. Surtout, **un Club qui ne peut pas encaisser n'est pas commercialisable** :
+renvoyer le paiement à un devis complémentaire lui retirait la possibilité d'ouvrir.
+
+**Ce qui est faux :** les exclusions étaient écrites dans un document qu'elle a lu ligne à ligne
+et commenté deux fois (6 demandes le 02/08, 16 points le 08/08) sans jamais les contester. Elle
+ne les découvre pas. Mais rien n'étant signé, elle est libre de renégocier.
+
+**Arbitrage du 04/09, décidé par Mac Arthur :**
+
+1. **Le prix reste à 3 000 €.** Descendre à 2 000 € reviendrait à financer les deux modules les
+   plus lourds avec 1 050 €. Non tenable, et dit franchement dans la réponse.
+2. **L'adhésion et le paiement entrent dans le périmètre**, plus les champs internationaux
+   (ville, langues, attaches culturelles). Environ **1 040 € de valeur offerte**, nommée comme
+   telle dans la réponse pour qu'elle ne devienne pas un dû.
+3. **Restent chiffrés à part** : événements, conciergerie, mesure d'audience. Devis
+   ATR-2026-0014 ramené de 1 736 € à **1 130 €**.
+
+## L'amalgame de vocabulaire, cause profonde du blocage
+
+Le sigle « V1 » désignait **trois choses différentes** dans les documents de ce dossier :
+
+| Usage | Exemple | Qui l'employait ainsi |
+|---|---|---|
+| La Web App, par opposition au mobile natif | « la V1 », « Web App V1 » | Mac Arthur et les documents |
+| Les étapes du chantier | « la phase 1 a eu 3 versions » | Élise |
+| Le numéro de révision d'un document | « CDC V4 », « Devis V5 » | Les documents eux-mêmes |
+
+**Elle a reformulé juste**, et demande confirmation : ses « V1 à V4 » étaient les phases 1 à 4,
+qui aboutissent toutes à une seule application.
+
+**Vocabulaire arrêté le 04/09, à tenir partout désormais :**
+
+- **la Web App Élévia** — le produit livré. Ne plus jamais écrire « V1 »
+- **les phases 1 à 4** — les étapes du chantier, qui déclenchent les tranches
+- **les itérations** — les allers-retours à l'intérieur d'une phase, jamais facturés
+- **l'extension mobile** — l'étape suivante du produit, au lieu de « V2 »
+- **les évolutions ultérieures** — au lieu de « V3 »
+- **révision 4, 5, 6** — les numéros de version des documents, écrits en toutes lettres
+
+Le CDC s'ouvre désormais sur une **section 0** qui pose ces trois mots avant toute autre chose.
 
 ## Son mail du 28/08 : elle passe en mode lancement, et le périmètre bouge
 
@@ -31,18 +80,10 @@ Concierge. Le suivi d'audience et les champs de profil internationaux (ville, la
 culturelles) ne figurent nulle part au CDC : ce sont des ajouts nets. **Quatrième vague de
 demandes**, sur un dossier où 950 € sont encaissés et où le J0 n'est toujours pas lancé.
 
-**Arbitrage retenu le 03/09 par Mac Arthur :**
-
-1. **V1 contractuelle tenue**, les ajouts partent dans le devis complémentaire
-   **ATR-2026-0014** (5 lots, 2 170 € avant remise volume, **1 736 €** après). Prix calés sur
-   le prix de la V1 elle-même, **à valider avant envoi**, voir le fichier du devis.
-2. **La reprise du développement (Modules 3 et 4) est conditionnée à la signature des trois
-   documents et à l'encaissement de la Tranche 2** (900 €). Argument : la Phase 2 est livrée et
-   recettée deux fois, donc la Tranche 2 est déjà exigible dès que le J0 est acté.
-
-**Date annoncée dans la réponse :** J0 le lundi 07/09 si signature et questionnaire arrivent
-avant, bêta complète le 28/09, **mise en ligne le lundi 12 octobre 2026**. Une semaine de plus
-si elle prend le lot paiement dans la V1.
+> **L'arbitrage du 03/09 (tout renvoyer à un devis complémentaire de 1 736 €) est caduc.**
+> Il a tenu une journée : son mail du 03/09 sur le budget l'a rendu intenable. Voir
+> l'arbitrage du 04/09 en tête de fiche. Le brouillon `BROUILLON-REPONSE-ELISE-2026-09-03.md`
+> ne doit **pas** être envoyé, il dit le contraire de la position actuelle.
 
 ## Peut-elle vraiment se servir de l'application ? Audit du code, 03/09
 
@@ -313,9 +354,9 @@ de son Art. 2 : Contrat > CDC > Cession PI > Devis > NDA.
 |---|---|---|
 | Contrat signé | `CONTRAT DE PRESTATION DE DÉVELOPPEMENT INFORMATIQUE (signed).pdf` | **signé le 09/07** |
 | NDA | `NDA-V2-ClubElevia-MrAttractor-2026-06-13.html` | signé |
-| Avenant n°1 **révision V2** | `AVENANT-01-V2-ClubElevia.html` | **à signer** (la V1 du 17/07 est dans `_archive/`, non signée) |
-| Devis V5 | `DEVIS-ATR-2026-0005-ClubElevia` | **à signer** |
-| CDC V4 | `CDC-ATR-2026-0005-ClubElevia` | **à signer** |
+| Avenant n°1 **révision 4** | `AVENANT-01-ClubElevia.html` | **à signer**, réécrit le 04/09 |
+| Devis **révision 6** | `DEVIS-ATR-2026-0005-ClubElevia` | **à signer**, réécrit le 04/09 |
+| CDC **révision 5** | `CDC-ATR-2026-0005-ClubElevia` | **à signer**, réécrit le 04/09, section 0 et Module 5 ajoutés |
 | Reçus 001 à 004 | `RECU-ATR-2026-00x-ClubElevia` | émis |
 | Annexes de vision (offertes) | `ELEVIA-Vision-et-proposition-de-valeur`, `ELEVIA-Grandes-orientations` | envoyées |
 | **Devis complémentaire** | `DEVIS-ATR-2026-0014-ClubElevia-Complementaire.md` | **prix à valider, puis à mettre en forme et joindre** |
@@ -352,9 +393,14 @@ La différence est expliquée dans le brouillon de réponse, avant qu'elle ne la
 > au code de retour les aurait déclarés vivants. Vérifier le `statut` du dossier en base,
 > jamais la réponse HTTP (même leçon que R-60).
 
-**Le dossier qui vaut : `94722c2d-77d5-4579-b9a1-2e749baea1fa`**, créé le 05/08,
-statut `en_attente`, **expire le 30/09/2026**. Il scelle l'Avenant V3, le Devis V5 et le
-CDC V4.
+> ⚠️ **Caduc depuis le 04/09.** Ce dossier scelle l'Avenant révision 3, le Devis révision 5 et
+> le CDC révision 4, c'est-à-dire les versions que la réécriture vient de remplacer. **Un
+> nouveau dossier de signature doit être créé** avec les trois PDF régénérés, et c'est son
+> lien qu'il faut envoyer. Ne pas renvoyer celui ci-dessous.
+
+**Le dossier périmé : `94722c2d-77d5-4579-b9a1-2e749baea1fa`**, créé le 05/08,
+statut `en_attente` au 14/08, expiration prévue au 30/09/2026. Il scelle **les anciennes
+révisions**.
 
 | Signataire | Statut | Lien |
 |---|---|---|
@@ -368,12 +414,17 @@ Dossiers antérieurs, **expirés et non signables** : `22518a80` du 03/08 et `a2
 
 ## Prochaine action
 
-1. **Valider les cinq prix** du devis complémentaire ATR-2026-0014. Rien ne part avant.
-2. **Appliquer `0007_elevia_agents.sql`** avec l'adresse réelle de son compte Élévia, et
-   contrôler le résultat. Sans ça, la phrase du mail sur son espace d'administration est
-   fausse et elle s'en apercevra en trois secondes.
-3. **Envoyer le brouillon Gmail `r-6075573311782687823`** (fil `19fd6fc0e0cb26c3`, déjà
-   rédigé et positionné en réponse à son message du 28/08), devis en pièce jointe.
+1. **Valider les trois prix** du devis complémentaire ATR-2026-0014 (490 / 350 / 290 €).
+2. **Relire les trois PDF régénérés** avant tout envoi. Ce sont des documents contractuels,
+   produits par conversion automatique du HTML : la relecture n'est pas optionnelle.
+3. **Créer un nouveau dossier de signature** portant ces trois PDF, et **signer soi-même**.
+   L'ancien lien est caduc, voir plus bas.
+4. **Appliquer `0007_elevia_agents.sql`** avec l'adresse réelle de son compte Élévia. Sans ça,
+   la phrase du mail sur son espace d'administration est fausse et elle s'en apercevra en
+   trois secondes.
+5. **Envoyer le brouillon Gmail `r-7959372918801779481`** (fil `19fd6fc0e0cb26c3`), avec les
+   trois documents et le devis complémentaire en pièces jointes, plus le nouveau lien de
+   signature en texte brut.
    ⚠️ **Ne jamais le retoucher avec `update_draft`** : mesuré le 03/09, cette opération le
    sort du fil de conversation. Pour le modifier, supprimer et recréer avec
    `replyToMessageId`.

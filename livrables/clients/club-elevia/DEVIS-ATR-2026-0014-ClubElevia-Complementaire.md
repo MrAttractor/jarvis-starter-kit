@@ -1,97 +1,94 @@
 # Devis complémentaire ATR-2026-0014 — Club Élévia
 
-> **Document de travail, prix à valider par Mac Arthur avant toute mise en forme et tout envoi.**
-> Émis en réponse au mail d'Élise du 28/08/2026, qui demande pour la V1 des fonctionnalités
-> nommées hors périmètre à la section 9 du CDC V4.
+> **Révision du 04/09/2026, après son mail de contestation du prix.**
+> Deux lots sur cinq ont été **retirés de ce devis et intégrés au périmètre des 3 000 €** :
+> l'adhésion et le paiement, et les champs de profil internationaux. Il ne reste ici que ce
+> qui s'ajoute réellement au Club une fois qu'il vit.
 >
-> Complète, sans le modifier, le Devis ATR-2026-0005 V5 (3 000 €, dont 950 € réglés).
-> Rien ici ne remplace le périmètre déjà signé : ce devis ne porte que les ajouts.
+> **Prix à valider par Mac Arthur avant tout envoi.**
+> Complète, sans le modifier, le Devis ATR-2026-0005 révision 6 (3 000 €, dont 950 € réglés).
 
-## Ce qu'elle demande, et pourquoi c'est un devis à part
+## Pourquoi ce devis a maigri
 
-Son mail du 28/08 décrit le parcours V1 souhaité : candidature, vérification, validation,
-**choix de l'adhésion, paiement**, accès au Club. Puis, une fois membre : profil, intentions,
-**services**, **événements**, mise en relation, **conciergerie**. Côté administration, elle
-ajoute le **suivi des adhésions** et la **gestion des événements**, et dans les points d'avant
-lancement le **suivi des visites, candidatures, inscriptions et adhésions**.
+Le 28/08 puis le 03/09, la Cliente a fait valoir deux choses.
 
-Le CDC V4, section 9, exclut nommément du prix de 3 000 € :
+D'abord que l'estimation initiale annoncée oralement était de **2 000 à 3 000 €**, et que si
+elle avait su que 3 000 € ne couvraient qu'une partie, elle aurait négocié à 2 000 €.
 
-- « Encaissement effectif des abonnements récurrents et toute passerelle de paiement associée.
-  L'écran Rejoindre le Club présente cette grille à titre de **vision produit** uniquement ;
-  sa mise en paiement réel fera l'objet d'un devis complémentaire »
-- « Module Événements club, Espace Concierge Relationnel, billetterie et QR code d'accès,
-  devis complémentaire »
+Ensuite, et c'est l'argument qui porte, qu'**un Club qui ne peut pas encaisser ses adhésions
+n'est pas commercialisable**. Le renvoi de l'encaissement à un devis complémentaire lui
+retirait la possibilité même d'ouvrir.
 
-Le suivi d'audience et les champs de profil internationaux ne figurent nulle part au CDC :
-ce sont des ajouts nets.
+**Arbitrage du 04/09 :** le prix reste à 3 000 €, et l'adhésion, le paiement et les champs
+internationaux entrent dans ce prix. Ce qui suit reste chiffré à part, parce que ce sont des
+services qui s'ajoutent au Club une fois qu'il vit, et non des conditions de son ouverture.
 
-## Les lots
+## Les lots restants
 
 | Réf | Lot | Contenu | Charge estimée | Prix proposé |
 |---|---|---|---|---|
-| **A** | Adhésion et paiement | Écran des formules, souscription, encaissement par carte, abonnement récurrent et renouvellement, échec de paiement et relance, statut d'adhésion sur le profil, suivi des adhésions dans le back-office. Prestataire de paiement à choisir avec la Cliente | 7 j | **890 €** |
-| **B** | Événements | Création, modification et clôture d'un événement côté administration, liste et fiche côté membre, inscription et désinscription, liste des inscrits exportable. Billetterie payante et QR code d'accès non compris, ils dépendent du lot A | 4 j | **490 €** |
-| **C** | Conciergerie | Formulaire de demande côté membre, file de traitement côté administration, statuts, réponse écrite au membre, historique | 2,5 j | **350 €** |
-| **D** | Mesure d'audience et conversion | Comptage des visites, candidatures, inscriptions et adhésions, taux de passage entre étapes, tableau restitué dans le back-office, bandeau de consentement rendu obligatoire par cette mesure, mise à jour de la section cookies de la politique | 2 j | **290 €** |
-| **E** | Profil international | Ville de résidence, langues parlées, attaches culturelles en champ libre facultatif, avec le cadrage RGPD du champ sensible et son affichage conditionnel | 1 j | **150 €** |
+| **A** | Événements du Club | Création, modification et clôture d'un événement côté administration, liste et fiche côté membre, inscription et désinscription, liste des inscrits exportable. Billetterie payante et contrôle d'accès par QR code non compris | 4 j | **490 €** |
+| **B** | Conciergerie | Formulaire de demande côté membre, file de traitement côté administration, statuts, réponse écrite au membre, historique | 2,5 j | **350 €** |
+| **C** | Mesure d'audience et conversion | Comptage des visites, candidatures, inscriptions et adhésions, taux de passage entre étapes, tableau restitué dans le back-office, bandeau de consentement rendu obligatoire par cette mesure, mise à jour de la section cookies de la politique | 2 j | **290 €** |
 
-**Sous-total : 2 170 €** pour 16,5 jours ouvrés.
+**Total si les trois lots sont pris : 1 130 €** pour 8,5 jours ouvrés.
 
-**Remise volume 20 % au-delà de 1 200 € (barème, règle du 16/07/2026) : − 434 €**
+La remise volume de 20 % du barème ne se déclenche qu'au-delà de 1 200 €, seuil que ce devis
+ne franchit pas. Chaque lot reste commandable seul.
 
-**Total si tous les lots sont pris : 1 736 €**
+## Ce qui est passé dans les 3 000 €, et ce que ça coûte à l'agence
 
-Chaque lot est indépendant et peut être commandé seul. La remise ne s'applique qu'au-dessus
-de 1 200 €, donc à partir de A + B, ou A + B + C.
+| Ce qui a basculé | Charge | Valeur au barème |
+|---|---|---|
+| Adhésion et paiement (formules, souscription, encaissement récurrent, relances, suivi au back-office) | 7 j | 890 € |
+| Profil international (ville, langues, attaches culturelles avec le cadrage RGPD) | 1 j | 150 € |
 
-## D'où viennent ces prix, honnêtement
+**Environ 1 040 € de valeur offerte**, en échange de quoi la signature se débloque, la Tranche 2
+de 900 € devient exigible, et les 2 050 € restants redeviennent atteignables. C'est un geste,
+il doit être **nommé comme tel dans la réponse**, sinon il se transforme en dû.
 
-Le barème de l'agence ne couvre pas ce cas de figure : ses add-ons chiffrés visent de petites
-apps métier à 250 à 1 200 €, et son tarif hors périmètre de 150 €/h est calibré pour des
-débordements de quelques heures, pas pour cinq modules entiers. Appliqué tel quel au lot A,
-il donnerait 8 400 €, ce qui n'est ni crédible ni défendable face à une V1 vendue 3 000 €.
+**Ce que ce geste ne couvre pas, et qu'il faut tenir :** le prestataire de paiement, son compte
+au nom de la Cliente, et les conditions de vente rédigées par un juriste restent à sa charge.
+Sans ces trois éléments, le module ne peut pas être développé, exactement comme le questionnaire
+d'affinités bloque la mise en relation. C'est écrit dans le cahier des charges révision 5.
 
-Les prix ci-dessus sont donc calés sur **le prix de la V1 elle-même** : 3 000 € pour 40 jours
-ouvrés, soit 75 € par jour de production. Les lots sont chiffrés à environ **105 € par jour**,
-c'est-à-dire au-dessus du tarif consenti sur ce dossier tout en restant cohérent avec lui.
+## D'où viennent ces prix
 
-**Ce dossier est structurellement sous-tarifé** (3 000 € pour une plateforme à quatre modules
-avec vérification vidéo et back-office), et ces lots reproduisent ce niveau de prix plutôt que
-de le corriger. Le corriger sur un devis complémentaire, en pleine négociation de périmètre,
-n'était pas le bon moment. À garder en tête pour la V2 native, qui devra, elle, sortir du
-barème de cette V1.
+Le barème de l'agence ne couvre pas ce cas : ses add-ons visent de petites apps métier à 250 à
+1 200 €, et son tarif hors périmètre de 150 €/h est calibré pour des débordements de quelques
+heures, pas pour des modules entiers.
 
-**Décision attendue de Mac Arthur :** valider les cinq montants, ou les remonter. Tant que ce
-n'est pas tranché, ce devis ne s'envoie pas et le mail du 03/09 ne part pas avec.
+Les prix ci-dessus sont calés sur **le prix de la prestation elle-même** : 3 000 € pour 40 jours
+ouvrés, soit 75 € par jour. Les lots sont chiffrés autour de **130 € par jour**, au-dessus du
+tarif consenti sur ce dossier, ce qui est assumé : ce sont des ajouts hors du contrat initial.
 
-## Ce qui n'est pas inclus
+**Ce dossier reste structurellement sous-tarifé** : une plateforme à cinq modules, avec
+vérification vidéo, back-office et encaissement récurrent, pour 3 000 €. À corriger sur
+l'extension mobile, pas ici.
 
-- Les frais du prestataire de paiement (commission par transaction, à la charge de la Cliente,
-  ainsi que son contrat avec ce prestataire).
-- Le nom de domaine, l'hébergement et les comptes de services externes, achetés par la Cliente
-  à son nom, comme au contrat d'origine (Art. 10).
-- La rédaction juridique des conditions de vente liées aux adhésions payantes (rétractation,
-  résiliation, remboursement, médiation), qui relève d'un professionnel du droit. Le lot A
-  livre le mécanisme technique, pas le texte contractuel.
-- La billetterie payante et le contrôle d'accès par QR code pour les événements.
-- L'application native iOS et Android, toujours hors périmètre par l'Avenant n°1.
+## Ce qui n'est inclus nulle part, ni ici ni dans les 3 000 €
+
+- Les applications mobiles natives iOS et Android et leur publication sur les stores.
+- Les frais du prestataire de paiement (commission par transaction) et les comptes développeur
+  Apple et Google, tous à la charge de la Cliente et à son nom.
+- Le nom de domaine, l'hébergement et les comptes de services externes.
+- La rédaction juridique des conditions de vente liées aux adhésions payantes.
+- La billetterie payante et le contrôle d'accès par QR code des événements.
 - Les traductions de l'interface au-delà du français.
 
 ## Conditions
 
 - **Validité : 15 jours** à compter de l'envoi.
 - **Acompte 50 % à la commande**, solde à la livraison du dernier lot commandé.
-- Les lots commandés s'exécutent **après la livraison de la V1** sauf pour le lot A, qui peut
-  être mené en parallèle du dernier module, la Cliente ayant indiqué vouloir commercialiser
-  dès l'ouverture. Dans ce cas la mise en ligne se décale d'une semaine.
-- Toute demande supplémentaire hors de ce devis suit la règle de périmètre du barème : accord
-  écrit préalable, jamais sur la foi d'un échange oral.
+- Les lots commandés s'exécutent **après la mise en ligne de la Web App**, pour ne pas retarder
+  l'ouverture du Club.
+- Toute demande supplémentaire suit la règle de périmètre du barème : accord écrit préalable,
+  jamais sur la foi d'un échange oral.
 - TVA non applicable, article 293 B du CGI.
 
 ## Maintenance
 
-Le plan de continuité à 250 €/mois avait été retiré du Devis V5 le 15/07 pour alléger le prix
-d'entrée. **Il se repropose à la mise en ligne, pas avant, et pas après** : une plateforme qui
-encaisse des adhésions récurrentes ne peut pas rester sans maintenance contractuelle. À inscrire
-au moment de la livraison de la V1, faute de quoi il ne se signera jamais.
+Le plan de continuité à 250 €/mois avait été retiré du devis le 15/07 pour alléger le prix
+d'entrée. **Il se repropose à la mise en ligne, pas avant, pas après.** Une plateforme qui
+encaisse des adhésions récurrentes ne peut pas rester sans maintenance contractuelle, et
+l'argument est maintenant beaucoup plus facile à tenir puisque l'encaissement est livré.
