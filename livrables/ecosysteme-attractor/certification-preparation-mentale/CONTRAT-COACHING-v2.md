@@ -7,12 +7,14 @@
 > manquantes, corrige trois coquilles, et retire la transmission à un tiers
 > non identifié.
 >
-> **Ce que cette version n'est pas.** Un avis juridique. Deux points demandent
-> une vérification avant le premier euro encaissé : la clause de médiation
-> suppose d'avoir **réellement adhéré** à un médiateur de la consommation, et
-> l'assurance responsabilité civile professionnelle suppose d'être **réellement
-> assuré**. Écrire ces clauses sans la souscription derrière serait pire que
-> de ne rien écrire.
+> **Ce que cette version n'est pas.** Un avis juridique. Trois points demandent
+> un acte réel avant le premier euro encaissé : la clause de médiation suppose
+> d'avoir **réellement adhéré** à un médiateur de la consommation, l'assurance
+> responsabilité civile professionnelle suppose d'être **réellement assuré**, et
+> la qualité annoncée dans l'en-tête suppose d'avoir le titre **réellement en
+> main**. Écrire ces clauses sans l'acte derrière serait pire que de ne rien
+> écrire. Le détail de ce qui se remplit et de ce qui se retire est en fin de
+> document, section « Note d'usage ».
 
 ---
 
@@ -51,7 +53,7 @@ Nom et prénom : Mac Arthur N'GUESSAN KOUASSI, exerçant sous l'enseigne Mr Attr
 Demeurant : ...............................................................
 Numéro SIRET : ............................................................
 Téléphone : ............................  Courriel : ......................
-Certifié en préparation mentale par l'Académie Puissance Mentale.
+Formé à la préparation mentale par l'Académie Puissance Mentale.
 
 Ci-après désignés ensemble « les parties ».
 
@@ -324,13 +326,40 @@ Fait à ........................., le .........................
 
 ## Note d'usage, à retirer avant envoi
 
-Avant le premier envoi, remplir ou supprimer : SIRET, adresse, assureur et
-numéro de police, médiateur et ses coordonnées, durée de validité en mois,
-montant et échéancier.
-
 **Ne pas laisser une ligne à trous dans un contrat envoyé.** Un blanc dans une
 clause d'assurance ou de médiation se lit comme une clause sans contenu, et il
 vaut mieux retirer l'article que de l'afficher vide.
+
+### Ce qui se remplit sans rien souscrire
+
+| À remplir | Où |
+|---|---|
+| SIRET, adresse, téléphone, courriel du praticien | en-tête |
+| Durée de validité de l'accompagnement, en mois | art. 3 |
+| Montant et échéancier | art. 8 |
+| Lieu et date | signature |
+
+### Ce qui ne se remplit qu'après une démarche
+
+Ces trois lignes ne sont pas des blancs à combler au clavier. Chacune suppose
+un acte réel derrière, et écrire la clause sans l'acte est plus dangereux que
+de ne pas l'écrire.
+
+| Ligne | Ce qu'il faut avoir fait avant | Si ce n'est pas fait |
+|---|---|---|
+| Assureur et n° de police (art. 13) | Avoir souscrit une **responsabilité civile professionnelle** couvrant l'accompagnement. Non obligatoire par la loi pour cette activité, mais l'article la déclare : la déclarer sans l'avoir est une fausse déclaration contractuelle. | **Retirer l'article 13 en entier.** Ne jamais le laisser à trous. |
+| Médiateur et coordonnées (art. 14) | Avoir **adhéré** à un médiateur de la consommation référencé par la CECMC. L'adhésion est obligatoire dès qu'on vend à un particulier, et elle est payante et nominative : on ne peut pas citer un médiateur auquel on n'a pas adhéré, il refuserait la saisine. | L'obligation existe quand même. **Adhérer avant le premier encaissement auprès d'un particulier**, ce n'est pas une clause à supprimer. |
+| « Certifié en préparation mentale » | Avoir le **certificat en main**, écrit. Tant que le résultat de la soutenance du 3 septembre 2026 n'est pas connu, l'en-tête dit « **Formé à** la préparation mentale par l'Académie Puissance Mentale », qui est vrai dans tous les cas. | Laisser « formé à ». Une fois le certificat reçu, l'en-tête devient « Certifié en préparation mentale par l'Académie Puissance Mentale, certificat n° … du … ». |
+
+### La question encore ouverte à l'Académie
+
+Le modèle de l'école prévoyait un troisième exemplaire « pour le coach qui le
+transmet à l'association ». Il a été retiré. Tant que l'Académie n'a pas dit de
+quelle association il s'agit, ce qu'elle reçoit exactement et si la personne
+accompagnée en est informée, **aucun exemplaire nominatif ne part vers un
+tiers**.
+
+### Le point qui doit rester synchronisé
 
 La durée de conservation de l'article 11, **vingt-quatre mois**, doit rester
 identique à la date inscrite dans l'espace de suivi, qui déclenche l'effacement

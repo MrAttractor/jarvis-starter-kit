@@ -4,9 +4,9 @@
 
 | Radar | |
 |---|---|
-| Statut | en ligne, non branché sur son domaine |
-| Dernier mouvement | 2026-08-11 |
-| Prochaine action | Déclarer `coaching.agenceattractor.com` dans le projet Pages, puis le CNAME chez GoDaddy |
+| Statut | en mise en service, recette d'écran passée |
+| Dernier mouvement | 2026-09-04 |
+| Prochaine action | Déployer les corrections, puis suivre `MISE-EN-SERVICE.md` de l'étape 2 à l'étape 5 |
 | Échéance | avant la première séance avec la cliente test |
 | Argent en attente | — |
 
@@ -21,7 +21,7 @@ coaching annoncée le 15 octobre.
 
 | Quoi | Où |
 |---|---|
-| Espace du coach | `coaching.agenceattractor.com` *(à brancher)*, en attendant `coaching-attractor.pages.dev` |
+| Espace du coach | `coaching.agenceattractor.com` *(CNAME posé et résolvant vers Cloudflare le 04/09 ; reste à confirmer que le domaine est déclaré dans le projet Pages, sinon 522)*, sinon `coaching-attractor.pages.dev` |
 | Questionnaire de la personne | la même adresse suivie de `/q?j=<jeton>` |
 | Projet Cloudflare Pages | `coaching-attractor`, **branche de production `main`** |
 | Base | projet Supabase partagé, tables préfixées `pm_` |
@@ -39,6 +39,8 @@ n'est pas franchie, et la règle est en base, pas dans l'écran.**
 
 | Document | Fichier |
 |---|---|
+| **La marche à suivre pour ouvrir** | `MISE-EN-SERVICE.md` |
+| Recette d'écran, à rejouer avant tout déploiement | `tests/README.md`, `tests/recette.mjs` |
 | Le plan du tunnel | `~/.claude/plans/distributed-marinating-muffin.md` |
 | Socle de base | `supabase/0001_pm_socle.sql` |
 | Référentiel du questionnaire | `supabase/0002_pm_reference.sql`, **généré**, jamais écrit à la main |
@@ -72,12 +74,30 @@ le même jour, sinon la promesse ment.
 
 ## Ce qui reste
 
-1. Déclarer le domaine personnalisé **dans le projet Pages**, puis seulement
-   après, le CNAME `coaching` vers `coaching-attractor.pages.dev` chez GoDaddy.
-   L'ordre inverse donne une erreur 522.
-2. Ouvrir les deux pages dans un navigateur, puis **sur un vrai téléphone**.
-   Rien n'a encore été vu à l'écran.
-3. Remplir les blancs du contrat, dont l'assureur et le médiateur, ou retirer
-   ces articles. Une clause à trous vaut moins qu'une clause absente.
-4. Demander à l'Académie ce qu'est « l'association » à qui son modèle de
+Le détail, avec les cases à cocher, est dans `MISE-EN-SERVICE.md`. En résumé :
+
+1. **Déployer** les corrections du 04/09 (`wrangler pages deploy`, branche
+   `main`), après avoir rejoué la recette d'écran.
+2. **Confirmer le domaine.** Le CNAME est posé et résout. Reste à vérifier que
+   `coaching.agenceattractor.com` est déclaré dans le projet Pages : sans cette
+   déclaration, l'adresse répond 522.
+3. **Le voir sur un vrai téléphone**, en particulier le questionnaire, et
+   couper la 4G au milieu pour vérifier la reprise. C'est écrit, ce n'est pas
+   encore observé.
+4. **Assurance RC pro et adhésion à un médiateur.** Ces deux lignes du contrat
+   ne se remplissent pas au clavier, elles supposent une souscription. Sans
+   elles, l'article 13 se retire, et l'adhésion au médiateur reste obligatoire
+   avant le premier encaissement auprès d'un particulier.
+5. **Demander à l'Académie** ce qu'est « l'association » à qui son modèle de
    contrat prévoit d'envoyer un exemplaire nominatif.
+
+## Ce qui a bougé le 04/09/2026
+
+- Recette d'écran créée dans `tests/`. 12 scènes × 6 résolutions. Elle passe.
+- Trois défauts attrapés et corrigés dans `public/index.html` : 14 boutons
+  secondaires à 40 px au lieu de 44, les 8 cases du contrôle final à 42 px, et
+  « Se déconnecter » mal placé sous 400 px. Aucun débordement horizontal nulle
+  part, aucune erreur JavaScript.
+- Contrat : l'en-tête annonçait « Certifié en préparation mentale ». Le
+  résultat de la soutenance du 3 septembre n'est pas connu, la ligne est passée
+  à « **Formé à** la préparation mentale », vraie dans tous les cas.
