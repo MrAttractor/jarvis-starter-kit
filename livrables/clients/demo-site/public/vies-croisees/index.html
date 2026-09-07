@@ -831,6 +831,18 @@ function enLigne(row) {
 }
 function visiblesPublic(liste) { return adminMode ? liste : liste.filter(enLigne); }
 
+// La date qui fait foi pour l'ordre d'affichage est la date de MISE EN LIGNE,
+// jamais la date de creation. Les episodes ont ete crees tous ensemble a la
+// meme seconde : trier sur `created_at` rendait l'ordre arbitraire, et c'est
+// le plus ancien qui restait en vedette sur l'accueil.
+function datePublication(row) {
+  return new Date(row && (row.publie_le || row.created_at) || 0).getTime();
+}
+// Du plus recent au plus ancien. Copie la liste, ne la modifie pas sur place.
+function triRecentDabord(liste) {
+  return liste.slice().sort(function(a, b){ return datePublication(b) - datePublication(a); });
+}
+
 async function loadPublicData() {
   var r1 = await SB.from('vc_episodes').select('*').order('created_at',{ascending:false});
   var r2 = await SB.from('vc_articles').select('*').order('created_at',{ascending:false});
@@ -863,8 +875,12 @@ async function loadAdminData() {
 
 // ── PUBLIC RENDER ─────────────────────────────────────────────────
 function renderHome(){
-  var visibles = visiblesPublic(eps);
-  var latest = visibles.find(function(e){ return e.statut === 'publie'; }) || visibles[0];
+  var visibles = triRecentDabord(visiblesPublic(eps));
+  // En vedette : le dernier episode reellement en ligne. On ne filtre pas sur
+  // `statut === 'publie'`, un episode programme dont la date est passee est
+  // public au meme titre (c'est la policy de la migration 0004, et c'est la
+  // facon dont Andrea publie en pratique).
+  var latest = visibles[0];
   var el = document.getElementById('home-ep');
   // Version compacte : ni commentaires ni partage sur l'accueil. Le même
   // épisode est déjà rendu dans l'onglet Épisodes, et deux blocs de
@@ -873,7 +889,7 @@ function renderHome(){
     ? '<div class="card">' + epHtml(latest, true) + '<a href="#" class="blog-link" onclick="go(\'episodes\');return false">Voir la fiche complète →</a></div>'
     : '<div class="card"><p style="color:var(--muted);font-size:13px">Le premier épisode arrive bientôt.</p></div>';
 
-  var artsVis = visiblesPublic(arts);
+  var artsVis = triRecentDabord(visiblesPublic(arts));
   var artEl = document.getElementById('home-arts');
   if (artsVis.length) {
     artEl.innerHTML = '<div class="card">' + artsVis.slice(0,2).map(function(a){
@@ -901,14 +917,14 @@ function renderPartners(){
 }
 
 function renderEpList(){
-  var visibles = visiblesPublic(eps);
+  var visibles = triRecentDabord(visiblesPublic(eps));
   var el = document.getElementById('ep-list');
   if (!visibles.length) { el.innerHTML = '<div class="card" style="grid-column:1/-1"><p style="color:var(--muted);font-size:13px">Les épisodes arrivent bientôt.</p></div>'; return; }
   el.innerHTML = visibles.map(function(e){ return '<div class="card" id="ep-card-' + e.id + '">' + epHtml(e) + '</div>'; }).join('');
 }
 
 function renderBlogList(){
-  var visibles = visiblesPublic(arts);
+  var visibles = triRecentDabord(visiblesPublic(arts));
   var el = document.getElementById('blog-list');
   if (!visibles.length) { el.innerHTML = '<div class="card" style="grid-column:1/-1"><p style="color:var(--muted);font-size:13px">Les articles arrivent bientôt.</p></div>'; return; }
   el.innerHTML = visibles.map(function(a){
