@@ -5,11 +5,11 @@
 
 | Radar | |
 |---|---|
-| Statut | en cours |
+| Statut | **fermé** — dossier classé le 08/09, relance sur le devis non envoyée |
 | Dernier contact | 2026-08-10 |
-| Prochaine action | Devis envoyé et reçu par Lorraine Yapi. Faire une relance amicale |
+| Prochaine action | **Aucune — dossier classé** |
 | Échéance | — |
-| Argent en attente | 490 à 1 790 € à vendre |
+| Argent en attente | **0 € — dossier classé, 490 à 1 790 € non poursuivis** |
 
 ## En une phrase
 

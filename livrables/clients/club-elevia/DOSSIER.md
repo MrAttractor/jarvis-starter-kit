@@ -6,10 +6,10 @@
 
 | Radar | |
 |---|---|
-| Statut | **2e recette reçue le 20/08. Elle ne demande plus de modification importante, seulement des finitions. Ses six points sont traités au 26/08** |
-| Dernier contact | **2026-08-20 à 20h51 : sa 2e recette** (message `1a020835c741a2fd`). Réponse rédigée, **pas encore envoyée** |
-| Prochaine action | **Envoyer la réponse** (brouillon Gmail dans le fil, en cours de retouche par Mac Arthur). Puis **signer soi-même** l'avenant, la contresignature manque |
-| Échéance | **répondre sans délai**, son mail a déjà 6 jours. Signature : lien valable jusqu'au 30/09/2026 |
+| Statut | **Package contractuel signé le 08/09 (avenant, devis V5, CDC V4).** 2e recette du 20/08 : ses six points sont traités au 26/08 |
+| Dernier contact | **2026-09-08 : signature du package contractuel (avenant, devis, CDC)** |
+| Prochaine action | **Lancer le développement (J0 le 08/09).** Envoyer la réponse à sa 2e recette si ce n'est pas encore fait |
+| Échéance | **J0 fixé au 08/09/2026** : développement à livrer sous 40 jours ouvrés |
 | Argent en attente | 2 050 € — Tranche 2 non déclenchée |
 
 ## En une phrase
