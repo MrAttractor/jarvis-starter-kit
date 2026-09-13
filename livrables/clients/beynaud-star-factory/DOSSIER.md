@@ -163,7 +163,19 @@ adaptative ni diffuser un direct : **le live restera sur Stream**, déjà chiffr
 ## Le partenaire
 
 **Serge GNOLOU, dit Serge Beynaud**, artiste afrobeat ivoirien, structure **STAR FACTORY**.
-Environ 10 millions d'abonnés cumulés toutes plateformes. Interlocuteur : **Latiss**.
+Environ 10 millions d'abonnés cumulés toutes plateformes.
+
+> **Correction du 14/09/2026, par Mac Arthur.** **Latiss, c'est Serge Beynaud lui-même**,
+> le petit nom que ses fans lui donnent, une version drôle de l'artiste. Cette fiche
+> écrivait depuis juillet « Interlocuteur : Latiss » comme s'il s'agissait d'une personne
+> distincte, un manager. **C'était faux.**
+>
+> Conséquence à lire dans tout ce dossier : partout où il est écrit « Latiss relancé,
+> sans réponse », **c'est l'artiste en personne qui ne répond pas**, pas un intermédiaire.
+> Ce n'est pas la même chose, et ça change la lecture du silence depuis le 10/08.
+>
+> Côté produit, « Latiss » est le nom employé face aux fans, parce que c'est le leur
+> (R-38). « Serge Beynaud » reste le nom officiel.
 
 Accord de principe obtenu à Paris le 01/07/2026. Sa vision : projet de long terme, la
 plateforme devient l'outil de conversion de sa communication publique, le contenu exclusif

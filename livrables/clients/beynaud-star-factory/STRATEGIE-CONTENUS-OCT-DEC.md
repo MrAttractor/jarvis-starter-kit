@@ -3,6 +3,8 @@
 > Octobre, novembre, décembre 2026. Écrit le 13/09/2026.
 > **Deux lecteurs** : Mac Arthur pour la stratégie, le vidéaste à Abidjan pour
 > la partie tournage, qui commence à la section 5 et se lit seule.
+> **Vocabulaire** : **Latiss, c'est Serge Beynaud**, le petit nom que ses fans lui
+> donnent. On l'emploie face aux fans, « Serge Beynaud » reste le nom officiel.
 > Les chiffres du modèle restent dans `COUTS-LIVE-PRO.md`, l'état du dossier
 > dans `DOSSIER.md`, les paliers dans `SCHEMA-TUNNEL.md`. Rien n'est recopié.
 
@@ -136,7 +138,7 @@ le plan.
 **Le problème** : sans habitude, un fan ne revient pas, même prévenu.
 
 **Ce qu'on tourne** : un format court, **toujours le même jour, toujours la même
-forme**, 60 à 90 secondes. Le nom vient de Serge et de Latiss, pas de nous.
+forme**, 60 à 90 secondes. Le nom vient de l'artiste, pas de nous.
 
 Trois variantes qui tournent, pour ne pas lasser :
 - il raconte sa semaine, sans filtre
@@ -366,8 +368,8 @@ volume, et il devient une raison de le devenir.
 ## 9. Ce qui se décide maintenant
 
 1. **On tourne avant ou après la signature de Latiss ?** (section 0)
-2. **Le nom du rendez-vous hebdomadaire**, qui doit venir de Serge ou de Latiss, pas
-   de nous. Le vocabulaire de l'artiste, jamais le nôtre.
+2. **Le nom du rendez-vous hebdomadaire**, qui doit venir de l'artiste, pas de nous.
+   Le vocabulaire de l'artiste, jamais le nôtre (R-38).
 3. **La date du live**, qui commande tout le reste du calendrier.
 4. **Les dix villes** de l'accueil personnalisé, à choisir sur les vraies villes des
    membres et non au hasard.
