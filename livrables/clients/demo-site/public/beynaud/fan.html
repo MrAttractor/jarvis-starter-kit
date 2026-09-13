@@ -186,51 +186,27 @@ body.splash-on{overflow:hidden;}
   min-height:44px;padding:0 4px;flex-shrink:0;}
 .empty{font-size:13px;color:var(--dim);text-align:center;padding:28px 20px;line-height:1.7;}
 
-/* Le concours. C'est le moteur du lancement : les fans recrutent a la place
-   de l'artiste, et l'artiste commente les scores. Le classement doit donc se
-   lire d'un coup d'oeil, et surtout dire au fan CE QU'IL LUI MANQUE. */
-.conc{background:var(--n3);border:1px solid var(--faint);border-radius:16px;overflow:hidden;margin-bottom:14px;}
-.conc-h{padding:15px 16px 13px;background:linear-gradient(180deg,rgba(212,160,23,.13),transparent);
-  border-bottom:1px solid var(--faint);}
-.conc-t{font-family:var(--bebas);font-size:22px;letter-spacing:.6px;line-height:1;}
-.conc-t .o{color:var(--or);}
-.conc-j{font-size:11px;color:var(--dim);margin-top:5px;}
-.conc-j b{color:var(--or);}
-/* Ma place. Le gros chiffre, c'est ce que le fan cherche en premier. */
-.conc-moi{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--faint);}
-.conc-rang{font-family:var(--bebas);font-size:38px;line-height:.85;color:var(--or);flex-shrink:0;}
-.conc-rang sup{font-family:var(--inter);font-size:12px;font-weight:800;vertical-align:super;margin-left:1px;}
-.conc-moi-d{flex:1;min-width:0;}
-.conc-moi-l1{font-size:13px;font-weight:800;}
-.conc-moi-l2{font-size:11.5px;color:var(--dim);margin-top:3px;line-height:1.5;}
-.conc-relance{margin:0 16px 14px;background:rgba(204,0,0,.10);border:1px solid rgba(204,0,0,.3);
+/* Le concours, fondu dans la carte de parrainage. C'est le meme sujet :
+   inviter. Deux cartes separees pour une seule action, c'est deux fois plus
+   a lire pour rien. */
+.conc-ligne{display:flex;align-items:baseline;gap:8px;margin-top:13px;padding-top:12px;
+  border-top:1px solid var(--faint);font-size:13px;flex-wrap:wrap;}
+.conc-ligne b{color:var(--or);font-weight:800;}
+.conc-ligne .gris{color:var(--dim);font-size:11.5px;}
+.conc-relance{margin-top:10px;background:rgba(204,0,0,.10);border:1px solid rgba(204,0,0,.3);
   border-radius:11px;padding:11px 13px;font-size:12px;line-height:1.6;color:rgba(255,255,255,.86);}
 .conc-relance b{color:var(--rouge-vif);}
-.conc-l{padding:6px 8px 12px;}
-.conc-r{display:flex;align-items:center;gap:11px;padding:9px 8px;border-radius:10px;}
+.conc-voir{display:block;width:100%;text-align:left;background:none;color:var(--dim);
+  font-size:12px;font-weight:600;min-height:44px;padding:0;}
+.conc-l{padding:2px 0 4px;}
+.conc-r{display:flex;align-items:center;gap:11px;padding:8px 2px;border-radius:9px;}
 .conc-r.mien{background:rgba(212,160,23,.1);}
-.conc-n{width:26px;text-align:center;font-size:13px;font-weight:800;color:var(--dim);flex-shrink:0;}
+.conc-n{width:22px;text-align:center;font-size:12px;font-weight:800;color:var(--dim);flex-shrink:0;}
 .conc-r.or .conc-n{color:var(--or);}
 .conc-nom{flex:1;min-width:0;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .conc-nom span{color:var(--dim);font-weight:500;font-size:11px;margin-left:6px;}
 .conc-p{font-size:13px;font-weight:800;color:var(--or);flex-shrink:0;}
 .conc-p span{font-size:10px;color:var(--dim);font-weight:600;margin-left:3px;}
-.conc-regle{padding:0 16px 14px;font-size:11px;color:var(--dim);line-height:1.6;}
-
-/* Garder son acces. Le jeton n'apparait jamais a l'ecran : on le glisse dans
-   l'adresse le temps d'ajouter la page a l'ecran d'accueil, puis on l'enleve.
-   Le fan ne peut donc pas le confondre avec son lien de parrainage, qui lui
-   est fait pour etre partage. */
-.garde{background:var(--n3);border:1px solid var(--faint);border-radius:16px;padding:16px;margin-bottom:14px;}
-.garde-t{font-size:14px;font-weight:800;margin-bottom:5px;}
-.garde-d{font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:13px;}
-.garde-b{width:100%;min-height:46px;background:var(--n5);color:#fff;border-radius:11px;font-size:13px;font-weight:800;}
-.garde-b:active{background:var(--or);color:#000;}
-.garde-pas{background:rgba(212,160,23,.10);border:1px solid rgba(212,160,23,.35);border-radius:11px;
-  padding:13px 14px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.9);}
-.garde-pas b{color:var(--or);}
-.garde-pas ol{margin:8px 0 0 18px;padding:0;}
-.garde-pas li{margin-bottom:5px;}
 
 /* La carte des notifications. Meme famille visuelle que le filet de
    securite : ce sont deux propositions, pas deux alertes. */
@@ -421,50 +397,33 @@ body.splash-on{overflow:hidden;}
       <div class="card amb-card" id="amb-card">
         <div class="amb-h">
           <svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-          <div class="amb-title">Fais grandir la Beynaumania</div>
+          <div class="amb-title">Tente de devenir le meilleur ambassadeur</div>
         </div>
-        <p class="amb-desc">Partage ton lien. Chaque personne qui entre grâce à toi te rapproche du grade <b style="color:var(--or)">Ambassadeur</b> et de contenus réservés.</p>
+        <p class="amb-desc">Partage ton lien. Tous ceux qui rejoignent la communauté grâce à toi te rapprochent du grade <b style="color:var(--or)">Ambassadeur</b>.</p>
         <div class="amb-link"><input id="amb-url" type="text" readonly/><button class="amb-copy" onclick="copyLink()">Copier</button></div>
         <button class="amb-share" onclick="shareWa()">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18c-1.5 0-3-.4-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3C4 15.4 3.6 13.7 3.6 12 3.6 7.4 7.4 3.6 12 3.6S20.4 7.4 20.4 12 16.6 20.4 12 20.4z"/><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.6.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.7-.9-2.9-1.6-4-3.5-.3-.5.3-.5.8-1.6.1-.2 0-.4 0-.5C10 8.5 9.5 7.2 9.3 6.7c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.9.9-1.1 2-1 2.3.4 2.3 1.7 3.9 3.7 5.5 2.6 2.1 4.3 2 5.3 1.9.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
           Inviter sur WhatsApp
         </button>
-        <div id="amb-progress"></div>
+        <div id="amb-rang"></div>
+        <button class="conc-voir hidden" id="conc-voir">Voir le classement</button>
+        <div class="conc-l hidden" id="conc-liste"></div>
       </div>
 
-      <div class="conc hidden" id="conc"></div>
-
-      <div class="garde hidden" id="garde">
-        <div class="garde-t">Garde ton accès sur ce téléphone</div>
-        <div class="garde-d">Ajoute la Beynaumania à ton écran d’accueil et tu ne rempliras plus jamais ce formulaire, même en changeant de navigateur.</div>
-        <button class="garde-b" id="garde-b">Garder mon accès</button>
-        <div class="garde-pas hidden" id="garde-pas"></div>
-      </div>
+      <div id="fil"></div>
 
       <div class="cloche hidden" id="cloche">
         <div class="cloche-i">
           <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
         </div>
         <div class="cloche-c">
-          <div class="cloche-t" id="cloche-t">Sois prévenu quand Serge poste</div>
-          <div class="cloche-d" id="cloche-d">Une notification sur ton téléphone dès qu’il publie. Rien d’autre, et tu peux couper quand tu veux.</div>
+          <div class="cloche-t" id="cloche-t">Sois prévenu quand Latiss poste</div>
+          <div class="cloche-d" id="cloche-d">Une notification sur ton téléphone dès qu’il publie.</div>
           <button class="cloche-b" id="cloche-b">Activer les notifications</button>
           <div class="cloche-n" id="cloche-n"></div>
+          <div class="garde-pas hidden" id="garde-pas"></div>
         </div>
       </div>
-
-      <div class="filet hidden" id="filet">
-        <div class="filet-t">Ne perds jamais ton compte</div>
-        <div class="filet-d">Ton compte vit dans ce téléphone. Laisse ton WhatsApp et tu le retrouveras partout, même si tu changes d’appareil. Ton numéro n’est montré à personne.</div>
-        <div class="filet-l">
-          <input id="f-wa" type="tel" placeholder="+225 07 00 00 00 00" autocomplete="tel"/>
-          <input id="f-lieu" type="text" placeholder="D’où tu nous écris ? Ex : Abidjan"/>
-          <button class="filet-b" id="f-btn">Sécuriser mon compte</button>
-          <div class="filet-err" id="f-err"></div>
-        </div>
-      </div>
-
-      <div id="fil"></div>
 
       <div class="zone-danger">
         <button class="lien-danger" id="btn-supprimer">Effacer mon compte</button>
@@ -568,12 +527,9 @@ function peindreCoquille(m){
   gb.className='grade-badge '+(m.grade==='ambassadeur'?'ambassadeur':'membre');
   gb.textContent=m.grade==='ambassadeur'?'★ Ambassadeur':'Membre';
   document.getElementById('amb-url').value=ambLink(m.code_ambassadeur);
-  renderProgress(m);
   // Le filet ne s'affiche que tant qu'il n'a pas de numero enregistre.
-  document.getElementById('filet').classList.toggle('hidden', !!m.a_numero);
   document.querySelector('.zone-danger').classList.remove('hidden');
   etatCloche();
-  etatGarde();
   chargerConcours();
 }
 
@@ -592,9 +548,7 @@ function peindreApercu(){
   h.appendChild(document.createTextNode('LA '));
   h.appendChild(el('span','r','BEYNAUMANIA'));
   document.getElementById('m-hello-sub').textContent='L’univers officiel de Serge Beynaud. Voici un aperçu.';
-  document.getElementById('filet').classList.add('hidden');
   document.getElementById('cloche').classList.add('hidden');
-  document.getElementById('garde').classList.add('hidden');
   document.getElementById('conc').classList.add('hidden');
   document.querySelector('.zone-danger').classList.add('hidden');
 }
@@ -610,93 +564,71 @@ function joursRestants(fin){
 }
 
 async function chargerConcours(){
-  const box = document.getElementById('conc');
-  if(APERCU || !ME){ box.classList.add('hidden'); return; }
+  const ligne = document.getElementById('amb-rang');
+  const voir = document.getElementById('conc-voir');
+  const liste = document.getElementById('conc-liste');
+  ligne.innerHTML = ''; liste.innerHTML = '';
+  voir.classList.add('hidden'); liste.classList.add('hidden');
+  if(APERCU || !ME) return;
 
   let r = null;
   try{ r = await api({ action:'classement', membre_id: ME.id }); }catch(e){ r = null; }
-  if(!r || !r.ok || !r.saison){ box.classList.add('hidden'); return; }
+  if(!r || !r.ok || !r.saison) return;
 
-  box.innerHTML = '';
-  box.classList.remove('hidden');
+  const moi = r.moi || {};
+  const marques = r.podium.filter(function(p){ return (p.points || 0) > 0; });
+  const jours = joursRestants(r.saison.fin);
 
-  // --- l'en-tete et le decompte ---
-  const h = el('div','conc-h');
-  const t = el('div','conc-t');
-  t.appendChild(document.createTextNode('MEILLEUR '));
-  t.appendChild(el('span','o','AMBASSADEUR'));
-  h.appendChild(t);
-  const j = el('div','conc-j');
-  if(r.ouvert){
-    const n = joursRestants(r.saison.fin);
-    j.appendChild(document.createTextNode('Il reste '));
-    j.appendChild(el('b', null, n + (n > 1 ? ' jours' : ' jour')));
-    j.appendChild(document.createTextNode(' · ' + r.saison.nom));
+  const l = el('div','conc-ligne');
+  if(!marques.length){
+    // Sept personnes toutes premieres avec zero point ne disent rien a
+    // personne. Tant que le tableau est vide, on ne montre pas un tableau :
+    // on montre la place a prendre.
+    l.appendChild(el('b', null, 'Personne n’a encore de point.'));
+    l.appendChild(document.createTextNode(' Le premier qui fait entrer un ami passe 1er.'));
+  } else if(moi.points > 0){
+    l.appendChild(el('b', null, moi.rang + (moi.rang === 1 ? 'er' : 'e')));
+    l.appendChild(document.createTextNode(' · ' + moi.points + (moi.points > 1 ? ' amis confirmés' : ' ami confirmé')));
+    if(r.ouvert && moi.manque > 0)
+      l.appendChild(el('span','gris', '· encore ' + moi.manque + ' pour passer devant'));
   } else {
-    j.textContent = 'Terminé · ' + r.saison.nom;
+    l.appendChild(document.createTextNode('Tu n’as pas encore de point. '));
+    l.appendChild(el('b', null, marques[0].prenom));
+    l.appendChild(document.createTextNode(' mène avec ' + marques[0].points + '.'));
   }
-  h.appendChild(j);
-  box.appendChild(h);
+  if(r.ouvert) l.appendChild(el('span','gris', '· il reste ' + jours + (jours > 1 ? ' jours' : ' jour')));
+  ligne.appendChild(l);
 
-  // --- ma place ---
-  const moi = r.moi;
-  if(moi){
-    const w = el('div','conc-moi');
-    const rg = el('div','conc-rang');
-    rg.appendChild(document.createTextNode(String(moi.rang)));
-    rg.appendChild(el('sup', null, moi.rang === 1 ? 'er' : 'e'));
-    w.appendChild(rg);
-    const d = el('div','conc-moi-d');
-    d.appendChild(el('div','conc-moi-l1',
-      moi.points > 0 ? (moi.points + (moi.points > 1 ? ' amis confirmés' : ' ami confirmé')) : 'Tu n’as pas encore de point'));
-    let l2 = '';
-    if(moi.en_attente > 0) l2 = moi.en_attente + (moi.en_attente > 1 ? ' invités pas encore confirmés' : ' invité pas encore confirmé');
-    else if(moi.points === 0) l2 = 'Partage ton lien, c’est parti';
-    if(r.ouvert && moi.manque > 0) l2 += (l2 ? ' · ' : '') + 'encore ' + moi.manque + ' pour passer devant';
-    d.appendChild(el('div','conc-moi-l2', l2));
-    w.appendChild(d);
-    box.appendChild(w);
-
-    // La relance : c'est ici que le concours se joue vraiment. Un invite qui
-    // n'active pas ses notifications ne compte pas, et le parrain doit le
-    // savoir pour aller le chercher.
-    if(moi.en_attente > 0){
-      const rl = el('div','conc-relance');
-      rl.appendChild(document.createTextNode(moi.en_attente > 1
-        ? String(moi.en_attente) + ' personnes sont entrées grâce à toi mais ne comptent pas encore. '
-        : 'Une personne est entrée grâce à toi mais ne compte pas encore. '));
-      const plusieurs = moi.en_attente > 1;
-      rl.appendChild(el('b', null, plusieurs ? 'Dis-leur d’activer les notifications' : 'Dis-lui d’activer les notifications'));
-      rl.appendChild(document.createTextNode(plusieurs
-        ? ', sinon elles ratent tout et toi tu perds tes points.'
-        : ', sinon elle rate tout et toi tu perds ton point.'));
-      box.appendChild(rl);
-    }
+  // La relance : c'est ici que le concours se joue. Un invite qui n'active pas
+  // ses notifications ne compte pas, et son parrain doit le savoir.
+  if(moi.en_attente > 0){
+    const plusieurs = moi.en_attente > 1;
+    const rl = el('div','conc-relance');
+    rl.appendChild(document.createTextNode(plusieurs
+      ? String(moi.en_attente) + ' personnes sont entrées grâce à toi mais ne comptent pas encore. '
+      : 'Une personne est entrée grâce à toi mais ne compte pas encore. '));
+    rl.appendChild(el('b', null, plusieurs ? 'Dis-leur d’activer les notifications.' : 'Dis-lui d’activer les notifications.'));
+    ligne.appendChild(rl);
   }
 
-  // --- le podium ---
-  const liste = el('div','conc-l');
-  if(!r.podium.length){
-    liste.appendChild(el('div','empty','Personne n’a encore marqué. La première place est libre.'));
-  } else {
-    r.podium.forEach(function(p, i){
-      const ligne = el('div','conc-r' + (i < 3 ? ' or' : '') + (moi && p.prenom === moi.prenom && p.rang === moi.rang ? ' mien' : ''));
-      ligne.appendChild(el('div','conc-n', String(p.rang)));
-      const nom = el('div','conc-nom');
-      nom.appendChild(document.createTextNode(p.prenom || 'Fan'));
-      if(p.lieu) nom.appendChild(el('span', null, p.lieu));
-      ligne.appendChild(nom);
-      const pts = el('div','conc-p');
-      pts.appendChild(document.createTextNode(String(p.points)));
-      pts.appendChild(el('span', null, p.points > 1 ? 'pts' : 'pt'));
-      ligne.appendChild(pts);
-      liste.appendChild(ligne);
-    });
-  }
-  box.appendChild(liste);
-
-  box.appendChild(el('div','conc-regle',
-    'Un ami compte quand il a activé les notifications. C’est la règle, pour que personne ne triche.'));
+  // Le classement complet reste plie : on ne l'ouvre que si on le demande.
+  if(!marques.length) return;
+  voir.classList.remove('hidden');
+  voir.textContent = 'Voir le classement';
+  liste.innerHTML = '';
+  marques.forEach(function(p, k){
+    const w = el('div','conc-r' + (k < 3 ? ' or' : '') + ((moi.rang === p.rang && moi.prenom === p.prenom) ? ' mien' : ''));
+    w.appendChild(el('div','conc-n', String(p.rang)));
+    const nom = el('div','conc-nom');
+    nom.appendChild(document.createTextNode(p.prenom || 'Fan'));
+    if(p.lieu) nom.appendChild(el('span', null, p.lieu));
+    w.appendChild(nom);
+    const pt = el('div','conc-p');
+    pt.appendChild(document.createTextNode(String(p.points)));
+    pt.appendChild(el('span', null, p.points > 1 ? 'pts' : 'pt'));
+    w.appendChild(pt);
+    liste.appendChild(w);
+  });
 }
 
 /* ===================== GARDER SON ACCES =====================
@@ -732,41 +664,31 @@ function monLienAcces(){
   return j ? (location.origin + location.pathname + '?m=' + encodeURIComponent(j)) : '';
 }
 
-function etatGarde(){
-  const c = document.getElementById('garde');
-  if(APERCU || !ME || !monJeton()){ c.classList.add('hidden'); return; }
-  // Deja installee sur l'ecran d'accueil : la carte n'a plus d'objet.
-  const installee = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
-    || window.navigator.standalone === true;
-  c.classList.toggle('hidden', installee);
-}
-
+/* Sur iPhone, "ajouter a l'ecran d'accueil" fait DEUX choses d'un coup :
+   ca autorise les notifications, et ca garde la session. Deux cartes pour un
+   seul geste, c'etait une de trop. */
 function garderAcces(){
-  const lien = monLienAcces();
-  if(!lien) return;
-  // On pose le jeton dans l'adresse : sur iPhone, "Sur l'ecran d'accueil"
-  // enregistre l'adresse affichee a cet instant. C'est le seul moment ou il
-  // doit y etre.
-  history.replaceState(null, '', location.pathname + '?m=' + encodeURIComponent(monJeton()));
+  const j = monJeton();
+  if(!j) return;
+  // Le jeton n'entre dans l'adresse qu'ici : sur iPhone, "Sur l'ecran
+  // d'accueil" enregistre l'adresse affichee a cet instant.
+  history.replaceState(null, '', location.pathname + '?m=' + encodeURIComponent(j));
 
   const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   const box = document.getElementById('garde-pas');
   box.innerHTML = '';
   box.classList.remove('hidden');
   const t = el('div');
-  t.appendChild(document.createTextNode('C’est prêt. '));
-  t.appendChild(el('b', null, 'Maintenant, sans fermer cette page :'));
+  t.appendChild(el('b', null, 'Sans fermer cette page :'));
   box.appendChild(t);
   const ol = document.createElement('ol');
   const pas = iOS
-    ? ['Appuie sur le bouton Partager, en bas de l’écran', 'Choisis « Sur l’écran d’accueil »', 'Valide avec « Ajouter »']
+    ? ['Appuie sur Partager, en bas de l’écran', 'Choisis « Sur l’écran d’accueil »', 'Valide avec « Ajouter »']
     : ['Ouvre le menu du navigateur, en haut à droite', 'Choisis « Ajouter à l’écran d’accueil »', 'Valide'];
   for(const p of pas) ol.appendChild(el('li', null, p));
   box.appendChild(ol);
-  document.getElementById('garde-b').textContent = 'C’est fait';
 
-  // Deux minutes suffisent largement pour ajouter le raccourci. Passe ce
-  // delai, on retire le jeton de l'adresse pour qu'il ne traine pas.
+  // Deux minutes suffisent. Ensuite le jeton quitte l'adresse.
   setTimeout(nettoyerUrl, 120000);
 }
 
@@ -800,19 +722,26 @@ async function etatCloche(){
   const desc = document.getElementById('cloche-d');
   if(APERCU || !ME){ carte.classList.add('hidden'); return; }
 
-  if(!pushDisponible()){
-    // Surtout sur iPhone : les notifications n'existent que si la
-    // Beynaumania a ete ajoutee a l'ecran d'accueil. On le dit, au lieu
-    // d'afficher un bouton qui ne marchera pas.
-    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    if(!iOS){ carte.classList.add('hidden'); return; }
+  const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const installee = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+    || window.navigator.standalone === true;
+
+  // Sur iPhone, ajouter a l'ecran d'accueil regle les DEUX sujets d'un coup :
+  // les notifications deviennent possibles, et la session ne se perd plus au
+  // changement de navigateur. Une seule carte, un seul geste.
+  if(iOS && !installee){
     carte.classList.remove('hidden');
     titre.textContent = 'Ajoute la Beynaumania à ton écran';
-    desc.textContent = 'Sur iPhone, les notifications ne marchent qu’une fois l’application ajoutée à l’écran d’accueil.';
-    btn.classList.add('hidden');
-    note.textContent = 'Bouton Partager, puis « Sur l’écran d’accueil ».';
+    desc.textContent = 'Tu seras prévenu quand Latiss poste, et tu ne rempliras plus jamais ce formulaire.';
+    btn.classList.remove('hidden');
+    btn.classList.remove('calme');
+    btn.textContent = 'Montre-moi comment';
+    btn.onclick = null;
+    note.textContent = '';
     return;
   }
+
+  if(!pushDisponible()){ carte.classList.add('hidden'); return; }
 
   if(Notification.permission === 'denied'){
     carte.classList.remove('hidden');
@@ -829,7 +758,7 @@ async function etatCloche(){
   carte.classList.remove('hidden');
   btn.classList.remove('hidden');
   btn.classList.remove('calme');
-  titre.textContent = 'Sois prévenu quand Serge poste';
+  titre.textContent = 'Sois prévenu quand Latiss poste';
   desc.textContent = 'Une notification sur ton téléphone dès qu’il publie. Rien d’autre, et tu peux couper quand tu veux.';
   btn.textContent = 'Activer les notifications';
   note.textContent = '';
@@ -842,7 +771,7 @@ async function etatCloche(){
 
   if(abo){
     titre.textContent = 'Tu es prévenu';
-    desc.textContent = 'Tu recevras une notification dès que Serge publie.';
+    desc.textContent = 'Tu recevras une notification dès que Latiss publie.';
     btn.textContent = 'Ne plus être prévenu';
     btn.classList.add('calme');
     note.textContent = '';
@@ -914,22 +843,6 @@ function b64uVersOctets(s){
   const out = new Uint8Array(bin.length);
   for(let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
   return out;
-}
-
-/* Le filet de securite : il donne son numero quand il le decide. */
-async function securiser(){
-  const wa=document.getElementById('f-wa').value.trim();
-  const lieu=document.getElementById('f-lieu').value.trim();
-  const err=document.getElementById('f-err'); err.textContent='';
-  if(wa.replace(/\D/g,'').length<8){err.textContent='Un numéro valide, avec l’indicatif du pays.';return;}
-  const b=document.getElementById('f-btn'); b.disabled=true; const t=b.textContent; b.textContent='…';
-  let res=null;
-  try{ res=await api({action:'profil_maj',membre_id:ME.id,whatsapp:wa,lieu:lieu||undefined}); }catch(e){ res=null; }
-  b.disabled=false; b.textContent=t;
-  if(!res||!res.ok){ err.textContent=(res&&res.error)||'Réessaie dans un instant.'; return; }
-  saveMembre(res.membre); ME=res.membre;
-  document.getElementById('filet').classList.add('hidden');
-  toast('C’est enregistré. Ton compte est en sécurité.');
 }
 
 /* La desinscription, promise a l'ecran depuis juillet et inexistante. R-54 :
@@ -1197,35 +1110,6 @@ function majTexteLikes(node, n){
   node.textContent = n > 0 ? (n + ' j’aime') : '';
 }
 
-/* Construit en DOM et non en chaine (R-19) : le compteur vient du serveur. */
-function renderProgress(m){
-  const box=document.getElementById('amb-progress');
-  box.innerHTML='';
-  const n=Number(m.filleuls)||0;
-  if(m.grade==='ambassadeur'){
-    const d=el('div','amb-done');
-    const s2=document.createElementNS(NS,'svg');
-    s2.setAttribute('viewBox','0 0 24 24'); s2.setAttribute('width','16'); s2.setAttribute('height','16');
-    s2.setAttribute('fill','none'); s2.setAttribute('stroke','currentColor'); s2.setAttribute('stroke-width','2.5');
-    const p=document.createElementNS(NS,'path'); p.setAttribute('d','M20 6L9 17l-5-5'); s2.appendChild(p);
-    d.appendChild(s2);
-    d.appendChild(document.createTextNode('Tu es AMBASSADEUR · '+n+' fan'+(n>1?'s':'')+' amené'+(n>1?'s':'')+'. Respect.'));
-    box.appendChild(d);
-    return;
-  }
-  const but=5, pct=Math.round(Math.min(n,but)/but*100);
-  const lbl=el('div','amb-prog-lbl');
-  lbl.appendChild(el('span',null,'Vers le grade Ambassadeur'));
-  const compte=el('span');
-  compte.appendChild(el('b',null,String(n)));
-  compte.appendChild(document.createTextNode(' / '+but));
-  lbl.appendChild(compte);
-  const bar=el('div','amb-bar');
-  const fill=el('div','amb-fill'); fill.style.width=pct+'%';
-  bar.appendChild(fill);
-  box.appendChild(lbl); box.appendChild(bar);
-}
-
 /* ===================== LECTEUR FERME =====================
    Une video du fil ne charge rien tant qu'on ne la lance pas : on pose une
    vignette, et le lecteur n'arrive qu'au clic. Il arrive sans sa barre
@@ -1390,7 +1274,7 @@ function renderFil(){
   if(!FIL.length){
     // R-58 : un fil vide est un debut, pas une panne. On invite, on n'alerte pas.
     box.appendChild(el('div', 'empty',
-      'La Beynaumania démarre. Serge poste très bientôt, et tu seras prévenu ici en premier.'));
+      'La Beynaumania démarre. Latiss poste très bientôt, et tu seras prévenu ici en premier.'));
     if(APERCU) box.appendChild(carteEntree());
     return;
   }
@@ -1682,10 +1566,21 @@ function fermerSplash(){
   window.scrollTo(0,0);
 }
 document.getElementById('enter-btn').addEventListener('click',fermerSplash);
-document.getElementById('f-btn').addEventListener('click',securiser);
-document.getElementById('cloche-b').addEventListener('click',basculerCloche);
-document.getElementById('garde-b').addEventListener('click',garderAcces);
+document.getElementById('cloche-b').addEventListener('click',function(){
+  // Le meme bouton, deux roles : sur un iPhone pas encore installe il explique
+  // comment ajouter a l'ecran d'accueil, ailleurs il active les notifications.
+  const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const installee = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+    || window.navigator.standalone === true;
+  if(iOS && !installee) garderAcces(); else basculerCloche();
+});
 document.getElementById('btn-supprimer').addEventListener('click',supprimerCompte);
+document.getElementById('conc-voir').addEventListener('click',function(){
+  const l = document.getElementById('conc-liste');
+  const ouvert = !l.classList.contains('hidden');
+  l.classList.toggle('hidden', ouvert);
+  this.textContent = ouvert ? 'Voir le classement' : 'Masquer le classement';
+});
 document.getElementById('retour-apercu').addEventListener('click',function(){
   document.getElementById('view-join').classList.add('hidden');
   document.getElementById('view-member').classList.remove('hidden');
