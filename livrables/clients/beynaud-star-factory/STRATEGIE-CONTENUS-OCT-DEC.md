@@ -298,31 +298,31 @@ Découvert le 13/09 dans le fil de la plateforme, écrit par Serge lui-même :
 > « 05/12/26 👇🏼👇🏼 Beynaud.tikerama.com »
 
 **Il a un concert le 5 décembre 2026, et la billetterie tourne déjà chez Tikerama.**
-On n''a donc plus d''événement à inventer, ni de date à négocier, ni de promotion à
+On n'a donc plus d'événement à inventer, ni de date à négocier, ni de promotion à
 créer de zéro : elle se fera de toute façon.
 
-### On ne touche pas à la billetterie, et c''est la force du montage
+### On ne touche pas à la billetterie, et c'est la force du montage
 
-**Tikerama vend les places physiques. On n''y touche pas.** Notre revenu est une
+**Tikerama vend les places physiques. On n'y touche pas.** Notre revenu est une
 **source séparée** : la diffusion en direct, vendue en ligne, encaissée par XPaye.
 
-Le point qui fait accepter l''offre, et il faut le dire dans ces termes à Latiss :
+Le point qui fait accepter l'offre, et il faut le dire dans ces termes à Latiss :
 
 > **Les deux publics ne se recouvrent pas.**
 > Celui qui achète sur Tikerama est à Abidjan et vient au concert.
-> Celui qui achète le direct est à Paris, Bruxelles ou Montréal et n''y sera jamais.
+> Celui qui achète le direct est à Paris, Bruxelles ou Montréal et n'y sera jamais.
 
 On ne prend une place à personne. On ne concurrence ni la billetterie, ni le
-partenaire qui la tient. **C''est de l''argent nouveau, pris sur une audience qui ne
-rapporte rien aujourd''hui.** Une offre qui n''enlève rien à personne se signe
-beaucoup plus vite qu''une offre qui redistribue.
+partenaire qui la tient. **C'est de l'argent nouveau, pris sur une audience qui ne
+rapporte rien aujourd'hui.** Une offre qui n'enlève rien à personne se signe
+beaucoup plus vite qu'une offre qui redistribue.
 
-### Ce qu''on vend
+### Ce qu'on vend
 
 Pas une vidéo. **Une soirée, en même temps que le pays.**
 
-L''acheteur type : un Ivoirien à Paris, Bruxelles, Montréal ou Milan, qui ne rentre
-pas pour les fêtes. Ce qu''il achète, c''est d''y être quand même.
+L'acheteur type : un Ivoirien à Paris, Bruxelles, Montréal ou Milan, qui ne rentre
+pas pour les fêtes. Ce qu'il achète, c'est d'y être quand même.
 
 ### Ce que la vente exige, et qui n'existe pas encore
 
