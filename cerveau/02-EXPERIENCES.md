@@ -325,6 +325,26 @@
 
 ---
 
+### EXP-042 · La base a été migrée avant le code qui la lit, la plateforme est tombée
+**BLOCAGE** · 13/09/2026 · La Beynaumania, Serge Beynaud
+
+**Situation.** Refonte du fil de la Beynaumania façon Instagram. Les cœurs et les commentaires ne visaient qu'un « mot de Serge », par une colonne `message_id` liée en dur. Il fallait les généraliser à n'importe quel post pour qu'une photo se like et qu'une vidéo se commente.
+
+**Ce qu'on a fait, et dans le mauvais ordre.** La migration a été écrite, exécutée et vérifiée en base : colonne `message_id` supprimée, remplacée par un couple `(cible_type, cible_id)`, 6 cœurs et 3 commentaires repris sans perte. Le travail a ensuite continué sur la fonction serveur, **qui n'était pas encore déployée**.
+
+**Résultat.** Pendant une vingtaine de minutes, la fonction en production a continué d'interroger une colonne disparue. La réponse n'était plus une liste mais un objet d'erreur, le parcours de cette réponse levait une exception, et le fil est revenu vide. **Mac Arthur a signalé le défaut de lui-même : « les visuels ont disparu », et sa publication depuis le tableau de bord ne s'affichait plus.** Rien n'a été perdu en base : ce qu'il avait publié pendant la panne est réapparu à la réparation.
+
+**Comment ça a été rattrapé.** La nouvelle fonction a été rendue **compatible avec l'ancien écran** avant d'être déployée : elle renvoie le nouveau fil et, à côté, les anciennes listes séparées alimentées par les mêmes calculs. Service rétabli sans attendre la refonte de l'écran, qui a pu continuer tranquillement derrière.
+
+**Cause profonde.** Une migration et le code qui la lit forment **un seul déploiement, pas deux**. Tant qu'ils sont séparés dans le temps, il existe une fenêtre où la production lit un schéma qui n'existe plus. La faute n'est pas d'avoir migré, c'est d'avoir migré **en soustrayant** : une migration qui ajoute ne casse jamais rien, une migration qui retire casse tout ce qui n'a pas été redéployé.
+
+**Le signal qu'il ne faut pas mal lire.** « Ça ne s'affiche plus alors que je publie » ne dit pas que la publication est cassée. Ici l'écriture fonctionnait parfaitement, c'est la lecture qui échouait. Même famille que EXP-041 : le symptôme désigne rarement l'organe.
+
+**Règle née de là** : R-77.
+**Réutilisable pour.** Toute migration qui retire ou renomme une colonne sur une application déjà en ligne, sur le projet Supabase partagé en particulier.
+
+---
+
 ## SECTION D · PILOTAGE ET DISCIPLINE
 
 ### EXP-025 · L'automatisation morte que personne n'a vue

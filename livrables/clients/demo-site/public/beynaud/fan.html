@@ -132,31 +132,57 @@ body.splash-on{overflow:hidden;}
 .amb-fill{height:100%;background:linear-gradient(90deg,var(--or),#f0c14b);border-radius:5px;transition:width .5s;}
 .amb-done{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--or);font-weight:700;}
 
-/* Messages + engagement */
-.msg{background:var(--n3);border:1px solid var(--faint);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
-.msg-head{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
-.msg-av{width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid var(--rouge);flex-shrink:0;}
-.msg-av img{width:100%;height:100%;object-fit:cover;object-position:top;}
-.msg-name{font-size:13px;font-weight:800;}
-.msg-verif{font-size:10px;color:var(--rouge);font-weight:700;}
-.msg-time{font-size:10px;color:var(--dim);margin-left:auto;}
-.msg-body{font-size:13px;line-height:1.6;color:rgba(255,255,255,.85);white-space:pre-wrap;}
-.msg-actions{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:11px;border-top:1px solid var(--faint);}
-.act-btn{display:flex;align-items:center;gap:6px;background:var(--n4);border:1px solid var(--faint);border-radius:9px;padding:7px 12px;font-size:12px;font-weight:700;color:var(--dim);}
-.act-btn svg{width:15px;height:15px;}
-.act-btn.liked{color:var(--rouge);border-color:rgba(204,0,0,.4);background:rgba(204,0,0,.08);}
-.act-btn.liked svg{fill:var(--rouge);stroke:var(--rouge);}
-.comments{margin-top:11px;}
-.cmt{display:flex;gap:8px;padding:8px 0;border-top:1px solid var(--faint);}
-.cmt-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#333,#555);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
+/* ===================== LE FIL =====================
+   Une seule colonne de posts, dans la grammaire que les fans connaissent
+   deja : media, coeur, bulle, legende, commentaires. L'identite reste
+   celle de la Beynaumania (noir et rouge), on emprunte les gestes, pas
+   la marque : un fan qui ne verrait aucune difference se demanderait
+   pourquoi il n'est pas reste sur Instagram. */
+.post{background:var(--n3);border:1px solid var(--faint);border-radius:16px;overflow:hidden;margin-bottom:14px;}
+.post-head{display:flex;align-items:center;gap:10px;padding:12px 14px;}
+.post-av{width:38px;height:38px;border-radius:50%;overflow:hidden;border:2px solid var(--rouge);flex-shrink:0;}
+.post-av img{width:100%;height:100%;object-fit:cover;object-position:top;}
+.post-id{min-width:0;}
+.post-name{font-size:13px;font-weight:800;display:flex;align-items:center;gap:5px;}
+.post-verif{color:var(--rouge);font-size:12px;}
+.post-sub{font-size:10px;color:var(--dim);margin-top:1px;}
+.post-time{font-size:10px;color:var(--dim);margin-left:auto;flex-shrink:0;}
+.post-media{background:#000;line-height:0;}
+.post-media img{width:100%;display:block;max-height:78vh;object-fit:cover;cursor:pointer;}
+.post-corps{padding:0 14px 12px;}
+.post-titre{font-size:15px;font-weight:800;margin-bottom:3px;}
+.post-desc{font-size:12px;color:var(--dim);line-height:1.5;}
+.post-tag{display:inline-block;font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--or);border:1px solid var(--or-dim);border-radius:3px;padding:3px 7px;margin:0 14px 8px;}
+/* Chaque bouton d'action fait au moins 44 px de haut (UX_SYSTEM). */
+.post-actions{display:flex;align-items:center;gap:2px;padding:2px 8px;}
+.ico-btn{display:flex;align-items:center;gap:6px;background:none;color:var(--blanc);
+  padding:11px 8px;min-height:44px;font-size:13px;font-weight:700;transition:opacity .15s;}
+.ico-btn svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.9;}
+.ico-btn.liked{color:var(--rouge);}
+.ico-btn.liked svg{fill:var(--rouge);stroke:var(--rouge);}
+.ico-btn:active{opacity:.5;}
+.post-likes{padding:0 14px 4px;font-size:13px;font-weight:800;}
+.post-legende{padding:0 14px 10px;font-size:13.5px;line-height:1.55;color:rgba(255,255,255,.88);
+  white-space:pre-wrap;overflow-wrap:anywhere;}
+.post-legende b{font-weight:800;margin-right:6px;}
+.voir-cmt{display:block;width:100%;text-align:left;padding:4px 14px 10px;min-height:44px;
+  font-size:13px;color:var(--dim);background:none;}
+.cmts{padding:0 14px 4px;}
+.cmt{display:flex;gap:9px;padding:7px 0;}
+.cmt-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3a3a3a,#5a5a5a);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
 .cmt-b{flex:1;min-width:0;}
-.cmt-name{font-size:11px;font-weight:700;}
-.cmt-name span{color:var(--dim);font-weight:500;margin-left:6px;font-size:10px;}
-.cmt-text{font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;margin-top:2px;word-wrap:break-word;}
-.cmt-form{display:flex;gap:7px;margin-top:10px;}
-.cmt-form input{flex:1;background:rgba(0,0,0,.35);border:1px solid var(--faint);border-radius:9px;padding:9px 11px;font-size:12px;color:#fff;min-width:0;}
-.cmt-form button{background:var(--rouge);color:#fff;border-radius:9px;padding:0 14px;font-size:12px;font-weight:700;}
-.empty{font-size:13px;color:var(--dim);text-align:center;padding:18px;line-height:1.6;}
+.cmt-l1{font-size:12.5px;line-height:1.5;overflow-wrap:anywhere;}
+.cmt-l1 b{font-weight:800;margin-right:6px;}
+.cmt-time{font-size:10px;color:var(--dim);margin-top:2px;}
+.cmt-form{display:flex;gap:8px;align-items:center;padding:8px 14px 12px;border-top:1px solid var(--faint);margin-top:4px;}
+/* 16 px obligatoires : en dessous, Safari iOS zoome tout seul a la saisie. */
+.cmt-form input{flex:1;background:rgba(0,0,0,.35);border:1px solid var(--faint);border-radius:22px;
+  padding:11px 15px;font-size:16px;color:#fff;min-width:0;}
+.cmt-form button{background:none;color:var(--rouge);font-size:14px;font-weight:800;
+  min-height:44px;padding:0 4px;flex-shrink:0;}
+.empty{font-size:13px;color:var(--dim);text-align:center;padding:28px 20px;line-height:1.7;}
 
 /* Live */
 .live-badge-row{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
@@ -176,22 +202,13 @@ body.splash-on{overflow:hidden;}
 .poll-res-pct{position:relative;font-size:13px;font-weight:800;color:var(--rouge);}
 .poll-total{font-size:11px;color:var(--dim);margin-top:10px;}
 
-/* Contenu */
-.content-item{margin-bottom:16px;}
-.content-tag{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--rouge);margin-bottom:5px;}
-.content-title{font-size:15px;font-weight:800;margin-bottom:3px;}
-.content-desc{font-size:12px;color:var(--dim);margin-bottom:9px;line-height:1.5;}
-.embed{position:relative;padding-bottom:56.25%;height:0;border-radius:14px;overflow:hidden;background:#000;border:1px solid var(--faint);}
+.embed{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000;}
 .embed iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
-
-/* Photos */
-.photo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;}
-.photo-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--faint);}
 .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px;flex-direction:column;gap:12px;}
 .lightbox.open{display:flex;}
 .lightbox img{max-width:100%;max-height:82vh;border-radius:12px;}
 .lightbox .lb-cap{font-size:13px;color:rgba(255,255,255,.7);text-align:center;}
-.lightbox .lb-close{position:absolute;top:18px;right:20px;font-size:30px;color:#fff;line-height:1;background:none;}
+.lightbox .lb-close{position:absolute;top:14px;right:16px;width:44px;height:44px;font-size:30px;color:#fff;line-height:1;background:none;}
 
 /* Toast */
 .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(120px);background:var(--n2);border:1px solid rgba(204,0,0,.45);border-radius:13px;padding:12px 20px;font-size:13px;font-weight:600;z-index:1100;transition:transform .3s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 40px rgba(0,0,0,.7);max-width:90vw;text-align:center;}
@@ -281,16 +298,7 @@ body.splash-on{overflow:hidden;}
         <div id="amb-progress"></div>
       </div>
 
-      <div id="poll-section"></div>
-
-      <div class="sec-title">LE MOT DE SERGE</div>
-      <div id="msg-wall"></div>
-
-      <div class="sec-title">PHOTOS EXCLUSIVES</div>
-      <div id="photo-wall"></div>
-
-      <div class="sec-title">CONTENU EXCLUSIF</div>
-      <div id="content-list"></div>
+      <div id="fil"></div>
     </div>
   </div>
 
@@ -308,7 +316,7 @@ const SB_URL="https://lgdgbrivnhgeupqhkckd.supabase.co";
 const SB_ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
 const FN=SB_URL+"/functions/v1/bey-public";
 const LS="bey_membre";
-let ME=null, MSGS=[];
+let ME=null;
 let _tt;
 function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>e.classList.remove('show'),2600);}
 function refParam(){return new URLSearchParams(location.search).get('ref');}
@@ -347,12 +355,7 @@ async function recover(){
 }
 function logout(){localStorage.removeItem(LS);location.href=location.origin+location.pathname;}
 
-function renderProgress(m){
-  const box=document.getElementById('amb-progress');
-  if(m.grade==='ambassadeur'){box.innerHTML='<div class="amb-done"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Tu es AMBASSADEUR · '+m.filleuls+' fans amenés. Respect.</div>';return;}
-  const goal=5,n=Math.min(m.filleuls,goal),pct=Math.round(n/goal*100);
-  box.innerHTML='<div class="amb-prog-lbl"><span>Vers le grade Ambassadeur</span><span><b>'+m.filleuls+'</b> / '+goal+'</span></div><div class="amb-bar"><div class="amb-fill" style="width:'+pct+'%"></div></div>';
-}
+
 
 async function renderMember(m){
   ME=m;
@@ -365,106 +368,368 @@ async function renderMember(m){
   document.getElementById('amb-url').value=ambLink(m.code_ambassadeur);
   renderProgress(m);
   const res=await api({action:'feed',grade:m.grade,membre_id:m.id});
-  const cont=res.contenus||[];
-  renderLive(cont.filter(c=>c.type==='live'));
-  renderPolls(res.sondages||[]);
-  MSGS=res.messages||[];
-  renderWall();
-  renderPhotos(res.photos||[]);
-  renderContent(cont.filter(c=>c.type!=='live'));
+  // Le serveur trie et fusionne : l'ecran ne fait plus que peindre.
+  renderLive(res.lives||[]);
+  FIL=res.fil||[];
+  renderFil();
 }
 
 function heart(filled){return '<svg viewBox="0 0 24 24" fill="'+(filled?'currentColor':'none')+'" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';}
-function renderWall(){
-  const el=document.getElementById('msg-wall');
-  if(!MSGS.length){el.innerHTML='<div class="empty">Serge n\'a pas encore posté. Reste connecté, ça arrive.</div>';return;}
-  el.innerHTML=MSGS.map(m=>{
-    const comms=(m.comments||[]).map(c=>`<div class="cmt"><div class="cmt-av">${esc((c.prenom||'?')[0]).toUpperCase()}</div><div class="cmt-b"><div class="cmt-name">${esc(c.prenom)}<span>${timeAgo(c.created_at)}</span></div><div class="cmt-text">${esc(c.contenu)}</div></div></div>`).join('');
-    return `<div class="msg" data-id="${m.id}">
-      <div class="msg-head"><div class="msg-av"><img src="serge-portrait.jpg" alt=""/></div>
-      <div><div class="msg-name">Serge Beynaud</div><div class="msg-verif">✓ Officiel</div></div>
-      <div class="msg-time">${timeAgo(m.created_at)}</div></div>
-      <div class="msg-body">${esc(m.contenu)}</div>
-      <div class="msg-actions">
-        <button class="act-btn like-btn ${m.liked?'liked':''}" onclick="toggleLike('${m.id}')">${heart(m.liked)}<span>${m.likes||0}</span></button>
-        <button class="act-btn" onclick="toggleComments('${m.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>${(m.comments||[]).length}</span></button>
-      </div>
-      <div class="comments hidden" id="cm-${m.id}">
-        <div id="cl-${m.id}">${comms}</div>
-        <div class="cmt-form"><input id="ci-${m.id}" type="text" maxlength="500" placeholder="Écris un commentaire…" onkeydown="if(event.key==='Enter')addComment('${m.id}')"/><button onclick="addComment('${m.id}')">Envoyer</button></div>
-      </div>
-    </div>`;
-  }).join('');
+/* ===================== LE FIL =====================
+   Tout est construit en DOM et jamais en chaine (R-19) : ce fil affiche des
+   commentaires ecrits par des fans et des legendes saisies depuis le tableau
+   de bord. Une apostrophe dans une legende suffisait a casser l'ancien rendu,
+   qui glissait les valeurs dans des attributs onclick. */
+let FIL = [];
+const NS = 'http://www.w3.org/2000/svg';
+
+function el(tag, cls, txt){
+  const n = document.createElement(tag);
+  if(cls) n.className = cls;
+  if(txt != null) n.textContent = txt;
+  return n;
 }
-async function toggleLike(id){
-  const m=MSGS.find(x=>x.id===id); if(!m)return;
-  m.liked=!m.liked; m.likes=(m.likes||0)+(m.liked?1:-1); renderWall();
-  const res=await api({action:'like',membre_id:ME.id,message_id:id,on:m.liked});
-  if(res.ok){m.likes=res.likes;m.liked=res.liked;renderWall();}
+function ico(d){
+  const s = document.createElementNS(NS, 'svg');
+  s.setAttribute('viewBox', '0 0 24 24');
+  const p = document.createElementNS(NS, 'path');
+  p.setAttribute('d', d);
+  s.appendChild(p);
+  return s;
 }
-function toggleComments(id){document.getElementById('cm-'+id).classList.toggle('hidden');}
-async function addComment(id){
-  const inp=document.getElementById('ci-'+id); const v=inp.value.trim(); if(!v)return;
-  inp.value='';
-  const res=await api({action:'comment_add',membre_id:ME.id,message_id:id,contenu:v});
-  if(res.ok&&res.commentaire){
-    if(res.masque){ toast('Ton commentaire sera visible après vérification.'); return; }
-    const m=MSGS.find(x=>x.id===id); (m.comments=m.comments||[]).push(res.commentaire);
-    renderWall(); const box=document.getElementById('cm-'+id); if(box)box.classList.remove('hidden');
-    toast('Commentaire publié.');
-  } else toast('Erreur, réessaie.');
+const D_COEUR = 'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z';
+const D_BULLE = 'M21 11.5a8.4 8.4 0 0 1-8.9 8.4 9.2 9.2 0 0 1-4.1-1L3 20.5l1.6-4.4A8.4 8.4 0 0 1 3 11.5a8.4 8.4 0 0 1 8.9-8.4 8.4 8.4 0 0 1 9.1 8.4z';
+const D_AVION = 'M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z';
+
+const cle = (p) => p.type + '-' + p.id;
+
+/* En-tete : c'est toujours Serge qui poste, quel que soit le type. */
+function enTete(p){
+  const h = el('div', 'post-head');
+  const av = el('div', 'post-av');
+  const img = el('img'); img.src = 'serge-portrait.jpg'; img.alt = '';
+  av.appendChild(img);
+  const id = el('div', 'post-id');
+  const nom = el('div', 'post-name');
+  nom.appendChild(document.createTextNode('Serge Beynaud'));
+  nom.appendChild(el('span', 'post-verif', '✓'));
+  id.appendChild(nom);
+  id.appendChild(el('div', 'post-sub', 'La Beynaumania · Officiel'));
+  h.appendChild(av); h.appendChild(id);
+  h.appendChild(el('div', 'post-time', timeAgo(p.created_at)));
+  return h;
 }
 
-function renderPhotos(photos){
-  const el=document.getElementById('photo-wall');
-  if(!photos.length){el.innerHTML='<div class="empty">Bientôt des photos exclusives.</div>';return;}
-  el.innerHTML='<div class="photo-grid">'+photos.map(p=>`<img src="${esc(p.url)}" alt="${esc(p.legende||'')}" onclick="openLb('${esc(p.url)}','${esc(p.legende||'')}')"/>`).join('')+'</div>';
-}
-function openLb(url,cap){document.getElementById('lb-img').src=url;document.getElementById('lb-cap').textContent=cap||'';document.getElementById('lightbox').classList.add('open');}
-function closeLb(e,force){if(force||e.target.id==='lightbox'||e.target.classList.contains('lb-close'))document.getElementById('lightbox').classList.remove('open');}
+/* Barre d'actions, la meme pour les quatre types de post. */
+function barreActions(p){
+  const row = el('div', 'post-actions');
 
-let POLLS=[];
-function renderPolls(sondages){
-  POLLS=sondages||[];
-  const el=document.getElementById('poll-section');
-  if(!POLLS.length){el.innerHTML='';return;}
-  el.innerHTML='<div class="sec-title">SONDAGES</div>'+POLLS.map(pollHtml).join('');
+  const bLike = el('button', 'ico-btn' + (p.liked ? ' liked' : ''));
+  bLike.appendChild(ico(D_COEUR));
+  bLike.setAttribute('aria-label', p.liked ? "Retirer mon coeur" : "Aimer");
+  bLike.addEventListener('click', () => basculerCoeur(p));
+
+  const bCmt = el('button', 'ico-btn');
+  bCmt.appendChild(ico(D_BULLE));
+  bCmt.appendChild(el('span', null, String((p.comments || []).length || '')));
+  bCmt.setAttribute('aria-label', 'Commenter');
+  bCmt.addEventListener('click', () => ouvrirCommentaires(p, true));
+
+  const bShare = el('button', 'ico-btn');
+  bShare.appendChild(ico(D_AVION));
+  bShare.setAttribute('aria-label', 'Inviter un ami');
+  // Partager un post, c'est partager son lien de parrainage : le geste le plus
+  // naturel du fil est aussi celui qui fait grandir la Beynaumania.
+  bShare.addEventListener('click', shareWa);
+
+  row.appendChild(bLike); row.appendChild(bCmt); row.appendChild(bShare);
+  return row;
 }
-function pollHtml(s){
-  const voted=s.mon_vote!=null, total=s.total||0;
-  const opts=(s.options||[]).map((o,i)=>{
-    if(voted){
-      const c=(s.counts&&s.counts[i])||0, pct=total?Math.round(c/total*100):0, mine=s.mon_vote===i;
-      return `<div class="poll-res ${mine?'mine':''}"><div class="poll-res-bar" style="width:${pct}%"></div><span class="poll-res-lbl">${esc(o)}${mine?' ✓':''}</span><span class="poll-res-pct">${pct}%</span></div>`;
+
+/* Le corps change selon le type, le reste est commun. */
+function corpsDuPost(p){
+  const frag = document.createDocumentFragment();
+
+  if(p.grade_requis === 'ambassadeur'){
+    frag.appendChild(el('div', 'post-tag', 'Réservé aux Ambassadeurs'));
+  }
+
+  if(p.type === 'photo'){
+    const media = el('div', 'post-media');
+    const img = el('img');
+    img.src = p.url; img.alt = p.legende || '';
+    img.loading = 'lazy';
+    img.addEventListener('click', () => ouvrirVisuel(p.url, p.legende));
+    media.appendChild(img);
+    frag.appendChild(media);
+  }
+
+  if(p.type === 'contenu'){
+    const media = el('div', 'post-media');
+    const box = el('div', 'embed');
+    const f = document.createElement('iframe');
+    f.src = p.youtube_url;
+    f.loading = 'lazy';
+    f.setAttribute('allowfullscreen', '');
+    f.setAttribute('allow', 'accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture');
+    box.appendChild(f); media.appendChild(box);
+    frag.appendChild(media);
+  }
+
+  if(p.type === 'sondage'){
+    frag.appendChild(blocSondage(p));
+  }
+
+  return frag;
+}
+
+/* Legende : le nom en gras puis le texte, comme dans le fil que les fans
+   connaissent. Le mot de Serge n'a pas de media, c'est sa legende qui porte
+   tout le post. */
+function legendeDuPost(p){
+  let texte = '';
+  if(p.type === 'message') texte = p.contenu || '';
+  else if(p.type === 'photo') texte = p.legende || '';
+  else if(p.type === 'contenu') texte = [p.titre, p.description].filter(Boolean).join(' — ');
+  else if(p.type === 'sondage') texte = '';
+  if(!texte) return null;
+  const d = el('div', 'post-legende');
+  d.appendChild(el('b', null, 'sergebeynaud'));
+  d.appendChild(document.createTextNode(texte));
+  return d;
+}
+
+function ligneCommentaire(c){
+  const w = el('div', 'cmt');
+  w.appendChild(el('div', 'cmt-av', String(c.prenom || '?').charAt(0).toUpperCase()));
+  const b = el('div', 'cmt-b');
+  const l1 = el('div', 'cmt-l1');
+  l1.appendChild(el('b', null, c.prenom || 'Fan'));
+  l1.appendChild(document.createTextNode(c.contenu || ''));
+  b.appendChild(l1);
+  b.appendChild(el('div', 'cmt-time', timeAgo(c.created_at)));
+  w.appendChild(b);
+  return w;
+}
+
+function construirePost(p){
+  const art = el('article', 'post');
+  art.id = 'post-' + cle(p);
+  art.appendChild(enTete(p));
+  art.appendChild(corpsDuPost(p));
+  art.appendChild(barreActions(p));
+
+  const likes = el('div', 'post-likes');
+  likes.id = 'likes-' + cle(p);
+  majTexteLikes(likes, p.likes || 0);
+  art.appendChild(likes);
+
+  const lg = legendeDuPost(p);
+  if(lg) art.appendChild(lg);
+
+  const n = (p.comments || []).length;
+  const voir = el('button', 'voir-cmt');
+  voir.id = 'voir-' + cle(p);
+  voir.textContent = n ? ('Voir les ' + n + ' commentaire' + (n > 1 ? 's' : '')) : 'Sois le premier à commenter';
+  voir.addEventListener('click', () => ouvrirCommentaires(p, true));
+  art.appendChild(voir);
+
+  const zone = el('div', 'cmts hidden');
+  zone.id = 'cmts-' + cle(p);
+  for(const c of (p.comments || [])) zone.appendChild(ligneCommentaire(c));
+  art.appendChild(zone);
+
+  const form = el('div', 'cmt-form hidden');
+  form.id = 'form-' + cle(p);
+  const inp = document.createElement('input');
+  inp.type = 'text'; inp.maxLength = 500; inp.placeholder = 'Écris un commentaire…';
+  inp.id = 'saisie-' + cle(p);
+  inp.addEventListener('keydown', (e) => { if(e.key === 'Enter') envoyerCommentaire(p); });
+  const env = el('button', null, 'Publier');
+  env.addEventListener('click', () => envoyerCommentaire(p));
+  form.appendChild(inp); form.appendChild(env);
+  art.appendChild(form);
+
+  return art;
+}
+
+function majTexteLikes(node, n){
+  node.textContent = n > 0 ? (n + ' j’aime') : '';
+}
+
+/* Construit en DOM et non en chaine (R-19) : le compteur vient du serveur. */
+function renderProgress(m){
+  const box=document.getElementById('amb-progress');
+  box.innerHTML='';
+  const n=Number(m.filleuls)||0;
+  if(m.grade==='ambassadeur'){
+    const d=el('div','amb-done');
+    const s2=document.createElementNS(NS,'svg');
+    s2.setAttribute('viewBox','0 0 24 24'); s2.setAttribute('width','16'); s2.setAttribute('height','16');
+    s2.setAttribute('fill','none'); s2.setAttribute('stroke','currentColor'); s2.setAttribute('stroke-width','2.5');
+    const p=document.createElementNS(NS,'path'); p.setAttribute('d','M20 6L9 17l-5-5'); s2.appendChild(p);
+    d.appendChild(s2);
+    d.appendChild(document.createTextNode('Tu es AMBASSADEUR · '+n+' fan'+(n>1?'s':'')+' amené'+(n>1?'s':'')+'. Respect.'));
+    box.appendChild(d);
+    return;
+  }
+  const but=5, pct=Math.round(Math.min(n,but)/but*100);
+  const lbl=el('div','amb-prog-lbl');
+  lbl.appendChild(el('span',null,'Vers le grade Ambassadeur'));
+  const compte=el('span');
+  compte.appendChild(el('b',null,String(n)));
+  compte.appendChild(document.createTextNode(' / '+but));
+  lbl.appendChild(compte);
+  const bar=el('div','amb-bar');
+  const fill=el('div','amb-fill'); fill.style.width=pct+'%';
+  bar.appendChild(fill);
+  box.appendChild(lbl); box.appendChild(bar);
+}
+
+function renderFil(){
+  const box = document.getElementById('fil');
+  box.innerHTML = '';
+  if(!FIL.length){
+    // R-58 : un fil vide est un debut, pas une panne. On invite, on n'alerte pas.
+    box.appendChild(el('div', 'empty',
+      'La Beynaumania démarre. Serge poste très bientôt, et tu seras prévenu ici en premier.'));
+    return;
+  }
+  const frag = document.createDocumentFragment();
+  for(const p of FIL) frag.appendChild(construirePost(p));
+  box.appendChild(frag);
+}
+
+/* Le coeur se met a jour sur place, jamais en redessinant tout le fil : sur un
+   telephone, un rendu complet ferait sauter la position de lecture. */
+async function basculerCoeur(p){
+  p.liked = !p.liked;
+  p.likes = Math.max(0, (p.likes || 0) + (p.liked ? 1 : -1));
+  const art = document.getElementById('post-' + cle(p));
+  const btn = art && art.querySelector('.post-actions .ico-btn');
+  if(btn) btn.classList.toggle('liked', p.liked);
+  const lk = document.getElementById('likes-' + cle(p));
+  if(lk) majTexteLikes(lk, p.likes);
+
+  const res = await api({ action: 'like', membre_id: ME.id, cible_type: p.type, cible_id: p.id, on: p.liked });
+  if(res && res.ok){
+    p.likes = res.likes; p.liked = res.liked;
+    if(btn) btn.classList.toggle('liked', p.liked);
+    if(lk) majTexteLikes(lk, p.likes);
+  }
+}
+
+function ouvrirCommentaires(p, focus){
+  const zone = document.getElementById('cmts-' + cle(p));
+  const form = document.getElementById('form-' + cle(p));
+  if(!zone || !form) return;
+  zone.classList.remove('hidden');
+  form.classList.remove('hidden');
+  const voir = document.getElementById('voir-' + cle(p));
+  if(voir) voir.classList.add('hidden');
+  if(focus){ const i = document.getElementById('saisie-' + cle(p)); if(i) i.focus(); }
+}
+
+async function envoyerCommentaire(p){
+  const inp = document.getElementById('saisie-' + cle(p));
+  const v = inp ? inp.value.trim() : '';
+  if(!v) return;
+  inp.value = '';
+  const res = await api({ action: 'comment_add', membre_id: ME.id, cible_type: p.type, cible_id: p.id, contenu: v });
+  if(!res || !res.ok){ toast('Erreur, réessaie.'); return; }
+  if(res.masque){ toast('Ton commentaire sera visible après vérification.'); return; }
+  (p.comments = p.comments || []).push(res.commentaire);
+  const zone = document.getElementById('cmts-' + cle(p));
+  if(zone) zone.appendChild(ligneCommentaire(res.commentaire));
+  const art = document.getElementById('post-' + cle(p));
+  const cmtBtn = art && art.querySelectorAll('.post-actions .ico-btn')[1];
+  const span = cmtBtn && cmtBtn.querySelector('span');
+  if(span) span.textContent = String(p.comments.length);
+  toast('Commentaire publié.');
+}
+
+/* ---------- Sondage, rendu a l'interieur de son post ---------- */
+function blocSondage(p){
+  const box = el('div', 'post-corps');
+  box.id = 'sond-' + p.id;
+  peindreSondage(box, p);
+  return box;
+}
+function peindreSondage(box, p){
+  box.innerHTML = '';
+  box.appendChild(el('div', 'poll-q', p.question || ''));
+  const opts = el('div', 'poll-opts');
+  const vote = p.mon_vote != null;
+  const total = p.total || 0;
+  (p.options || []).forEach((o, idx) => {
+    if(vote){
+      const c = (p.counts && p.counts[idx]) || 0;
+      const pct = total ? Math.round(c / total * 100) : 0;
+      const mien = p.mon_vote === idx;
+      const r = el('div', 'poll-res' + (mien ? ' mine' : ''));
+      const bar = el('div', 'poll-res-bar'); bar.style.width = pct + '%';
+      r.appendChild(bar);
+      r.appendChild(el('span', 'poll-res-lbl', String(o) + (mien ? ' ✓' : '')));
+      r.appendChild(el('span', 'poll-res-pct', pct + '%'));
+      opts.appendChild(r);
+    } else {
+      const b = el('button', 'poll-opt', String(o));
+      b.addEventListener('click', () => voter(p, idx));
+      opts.appendChild(b);
     }
-    return `<button class="poll-opt" onclick="votePoll('${s.id}',${i})">${esc(o)}</button>`;
-  }).join('');
-  return `<div class="card"><div class="poll-q">${esc(s.question)}</div><div class="poll-opts">${opts}</div><div class="poll-total">${voted?(total+' vote'+(total>1?'s':'')):'Vote pour voir les résultats'}</div></div>`;
+  });
+  box.appendChild(opts);
+  box.appendChild(el('div', 'poll-total',
+    vote ? (total + ' vote' + (total > 1 ? 's' : '')) : 'Vote pour voir les résultats'));
 }
-async function votePoll(id,oi){
-  const res=await api({action:'vote',membre_id:ME.id,sondage_id:id,option_index:oi});
-  if(res&&res.ok){const s=POLLS.find(x=>x.id===id);if(s){s.counts=res.counts;s.total=res.total;s.mon_vote=res.mon_vote;}renderPolls(POLLS);toast('Vote enregistré !');}
-  else toast('Erreur, réessaie.');
+async function voter(p, idx){
+  const res = await api({ action: 'vote', membre_id: ME.id, sondage_id: p.id, option_index: idx });
+  if(!res || !res.ok){ toast('Erreur, réessaie.'); return; }
+  p.counts = res.counts; p.total = res.total; p.mon_vote = res.mon_vote;
+  const box = document.getElementById('sond-' + p.id);
+  if(box) peindreSondage(box, p);
+  toast('Vote enregistré !');
 }
+
+/* ---------- Le live reste epingle en tete, ce n'est pas un post ---------- */
 function renderLive(lives){
-  const el=document.getElementById('live-section');
-  if(!lives||!lives.length){el.innerHTML='';return;}
-  el.innerHTML='<div class="sec-title" style="color:var(--rouge);margin-top:6px;">EN DIRECT</div>'+lives.map(c=>`
-    <div class="content-item">
-      <div class="live-badge-row"><span class="live-badge"><span class="live-dot2"></span>EN DIRECT</span><span class="live-title">${esc(c.titre)}</span></div>
-      <div class="embed"><iframe src="${esc(c.youtube_url)}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe></div>
-    </div>`).join('');
+  const el2 = document.getElementById('live-section');
+  el2.innerHTML = '';
+  if(!lives || !lives.length) return;
+  const t = el('div', 'sec-title', 'EN DIRECT');
+  t.style.color = 'var(--rouge)'; t.style.marginTop = '6px';
+  el2.appendChild(t);
+  for(const c of lives){
+    const w = el('div', 'post');
+    const row = el('div', 'live-badge-row');
+    row.style.padding = '12px 14px 8px';
+    const badge = el('span', 'live-badge');
+    badge.appendChild(el('span', 'live-dot2'));
+    badge.appendChild(document.createTextNode('EN DIRECT'));
+    row.appendChild(badge);
+    row.appendChild(el('span', 'live-title', c.titre || ''));
+    w.appendChild(row);
+    const media = el('div', 'post-media');
+    const box = el('div', 'embed');
+    const f = document.createElement('iframe');
+    f.src = c.youtube_url;
+    f.setAttribute('allowfullscreen', '');
+    f.setAttribute('allow', 'accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture');
+    box.appendChild(f); media.appendChild(box); w.appendChild(media);
+    el2.appendChild(w);
+  }
 }
-function renderContent(items){
-  const el=document.getElementById('content-list');
-  if(!items.length){el.innerHTML='<div class="empty">Le contenu exclusif arrive très vite.</div>';return;}
-  el.innerHTML=items.map(c=>`<div class="content-item">
-    <div class="content-tag">${c.grade_requis==='ambassadeur'?'Réservé Ambassadeurs':'Exclusif Beynaumania'}</div>
-    <div class="content-title">${esc(c.titre)}</div>
-    ${c.description?`<div class="content-desc">${esc(c.description)}</div>`:''}
-    <div class="embed"><iframe src="${esc(c.youtube_url)}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
-  </div>`).join('');
+
+function ouvrirVisuel(url, cap){
+  document.getElementById('lb-img').src = url;
+  document.getElementById('lb-cap').textContent = cap || '';
+  document.getElementById('lightbox').classList.add('open');
 }
+function closeLb(e, force){
+  if(force || e.target.id === 'lightbox' || e.target.classList.contains('lb-close'))
+    document.getElementById('lightbox').classList.remove('open');
+}
+
 function copyLink(){const i=document.getElementById('amb-url');navigator.clipboard?.writeText(i.value).then(()=>toast('Lien copié ! Partage-le.'),()=>{i.select();document.execCommand('copy');toast('Lien copié !');});}
 function shareWa(){const txt="🔥 Rejoins LA BEYNAUMANIA, l'univers officiel de Serge Beynaud ! Contenu exclusif rien que pour nous. C'est gratuit 👉 "+ambLink(ME.code_ambassadeur);window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');}
 

@@ -88,6 +88,7 @@
 **Extension aux mails** : la règle ne couvrait que les livrables, pas les messages. Or **tout brouillon Gmail créé via le connecteur enveloppe les adresses dans `google.com/url?q=…`, dans le lien ET dans le texte affiché**. Mesuré sur le message réellement envoyé à la Cliente le 07/08 : elle a reçu son **lien de signature électronique** sous la forme d'une longue adresse Google, ce qui ressemble à du hameçonnage. Le défaut a duré des mois sans que personne le voie, parce qu'on relit ce qu'on a écrit et pas ce qui est parti.
 **Parade** : fournir un `htmlBody` avec de vraies ancres `<a href="…">…</a>`. Le texte visible redevient propre. Détail en mémoire `reference_gmail_liens_enveloppes`.
 **Le réflexe à prendre** : après l'envoi d'un mail contenant un lien qui engage (signature, paiement, accès), **relire le message dans les envoyés** et regarder ce que le destinataire voit. Ce n'est pas le brouillon qui fait foi.
+**Extension du 01/09/2026, la parade appliquée de travers a aggravé le défaut.** Pour échapper au redirecteur, l'adresse avait été collée **en texte brut sans `https://`** dans le mail du 26/08 à la Cliente d'Élévia. Résultat mesuré sur le message parti : Gmail l'a linkifiée en **`http://`**, puis **l'a réenveloppée quand même** dans `google.com/url` avec une expiration au lendemain midi. Le mail censé corriger le problème l'a donc reproduit, **en dégradant en plus l'adresse en non sécurisée** aux yeux de la Cliente, qui l'a remarqué et l'a écrit. **Une adresse nue n'échappe à rien** : elle perd son protocole et se fait envelopper comme les autres. La seule parade reste le `htmlBody` avec une vraie ancre, et **le protocole `https://` s'écrit toujours en toutes lettres**. Corollaire pour le client : lui dire de **recopier l'adresse à la main** ou de l'enregistrer en favori, un lien transmis en faisant suivre le mail reste enveloppé.
 
 ### R-76 · Une suppression en cascade n'emporte pas les fichiers stockés
 **Origine** : ménage des comptes de test du Club Élévia, 19/08/2026.
@@ -188,6 +189,11 @@
 ### R-43 · GitHub est la source de vérité des fichiers de site
 **Origine** : règle du 19/07/2026.
 **Application** : commit et push sans attendre pour tous les sites. Architecture main/branches à standardiser.
+
+### R-77 · Une migration qui retire se déploie avec son code, ou elle n'est qu'additive
+**Origine** : EXP-042, La Beynaumania tombée 20 minutes le 13/09/2026.
+**Application** : retirer ou renommer une colonne sur une application en ligne casse tout code non redéployé. Deux chemins seulement, jamais un troisième. Soit **le code part d'abord** et la migration suit. Soit la migration est **purement additive** (on ajoute, on recopie, on ne retire rien), le code part, et le nettoyage fait l'objet d'une migration ultérieure. Quand la bascule change la forme d'une réponse, la nouvelle version **renvoie aussi l'ancienne forme** le temps que les écrans suivent : un onglet reste ouvert des jours sur un téléphone.
+**Assists** : l'assistant qui accompagne une évolution de données impose l'ordre, et signale la fenêtre de casse avant qu'elle s'ouvre.
 
 ### R-74 · Ce qui vient du formulaire se lit avant de changer d'écran, et tout écran d'attente a une issue
 **Origine** : EXP-041, inscription du Club Élévia, défaut en ligne du 17 au 19/08/2026.
