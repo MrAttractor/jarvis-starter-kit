@@ -393,7 +393,7 @@ body.splash-on{overflow:hidden;}
       <div class="m-hero-c">
         <div class="m-top">
           <div class="brand"><div class="brand-logo">BM</div><span class="brand-name">La Beynaumania</span></div>
-          <button class="logout" id="m-logout" onclick="logout()">Se déconnecter</button>
+
         </div>
         <div id="m-grade" class="grade-badge membre">Membre</div>
         <div class="m-hello" id="m-hello"></div>
@@ -505,7 +505,19 @@ async function recover(){
   if(!res.ok){toast("Aucun compte ne correspond à ce numéro et ce prénom.");return;}
   saveMembre(res.membre); renderMember(res.membre);
 }
+/* Il n'y a plus de bouton "Se deconnecter", et c'est voulu.
+   Sans mot de passe ni numero, se deconnecter ne deconnecte pas : ca detruit
+   le compte, sans aucun moyen d'y revenir. Chaque reconnexion en creait un
+   neuf. Constate le 13/09 : quatre comptes pour une seule personne en une
+   heure. Le fan qui veut vraiment partir a "Effacer mon compte", qui demande
+   confirmation et dit ce qu'il perd.
+   Reste une porte de service pour la recette, invisible pour un fan :
+   ajouter ?reset a l'adresse. */
 function logout(){localStorage.removeItem(LS);location.href=location.origin+location.pathname;}
+if(new URLSearchParams(location.search).get('reset')!==null){
+  try{localStorage.removeItem(LS);}catch(e){}
+  location.replace(location.origin+location.pathname);
+}
 
 
 
@@ -517,7 +529,7 @@ function peindreCoquille(m){
   APERCU=false; ME=m;
   document.getElementById('view-join').classList.add('hidden');
   document.getElementById('view-member').classList.remove('hidden');
-  document.getElementById('m-logout').classList.remove('hidden');
+  
   document.getElementById('amb-card').classList.remove('hidden');
   const h=document.getElementById('m-hello');
   h.innerHTML='';
@@ -544,7 +556,7 @@ function peindreApercu(){
   APERCU=true; ME=null;
   document.getElementById('view-join').classList.add('hidden');
   document.getElementById('view-member').classList.remove('hidden');
-  document.getElementById('m-logout').classList.add('hidden');
+  
   document.getElementById('amb-card').classList.add('hidden');
   document.getElementById('m-grade').classList.add('hidden');
   const h=document.getElementById('m-hello');

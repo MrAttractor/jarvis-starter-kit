@@ -289,14 +289,40 @@ publicité du concours suivant : les autres fans voient ce qu'ils ont raté.
 
 ---
 
-## 7. Le live de décembre
+## 7. Le live du 5 décembre
 
-### Ce qu'on vend
+### La date existe déjà, et ça change tout
+
+Découvert le 13/09 dans le fil de la plateforme, écrit par Serge lui-même :
+
+> « 05/12/26 👇🏼👇🏼 Beynaud.tikerama.com »
+
+**Il a un concert le 5 décembre 2026, et la billetterie tourne déjà chez Tikerama.**
+On n''a donc plus d''événement à inventer, ni de date à négocier, ni de promotion à
+créer de zéro : elle se fera de toute façon.
+
+### On ne touche pas à la billetterie, et c''est la force du montage
+
+**Tikerama vend les places physiques. On n''y touche pas.** Notre revenu est une
+**source séparée** : la diffusion en direct, vendue en ligne, encaissée par XPaye.
+
+Le point qui fait accepter l''offre, et il faut le dire dans ces termes à Latiss :
+
+> **Les deux publics ne se recouvrent pas.**
+> Celui qui achète sur Tikerama est à Abidjan et vient au concert.
+> Celui qui achète le direct est à Paris, Bruxelles ou Montréal et n''y sera jamais.
+
+On ne prend une place à personne. On ne concurrence ni la billetterie, ni le
+partenaire qui la tient. **C''est de l''argent nouveau, pris sur une audience qui ne
+rapporte rien aujourd''hui.** Une offre qui n''enlève rien à personne se signe
+beaucoup plus vite qu''une offre qui redistribue.
+
+### Ce qu''on vend
 
 Pas une vidéo. **Une soirée, en même temps que le pays.**
 
-L'acheteur type : un Ivoirien à Paris, Bruxelles, Montréal ou Milan, qui ne rentre
-pas pour les fêtes. Ce qu'il achète, c'est d'y être quand même.
+L''acheteur type : un Ivoirien à Paris, Bruxelles, Montréal ou Milan, qui ne rentre
+pas pour les fêtes. Ce qu''il achète, c''est d''y être quand même.
 
 ### Ce que la vente exige, et qui n'existe pas encore
 
@@ -312,7 +338,7 @@ pas pour les fêtes. Ce qu'il achète, c'est d'y être quand même.
 
 ### Le calendrier de vente
 
-La billetterie ouvre **quatre semaines avant**, se ferme **48 heures avant**, et
+La vente du direct ouvre **quatre semaines avant le 5 décembre, soit le 7 novembre**, se ferme **48 heures avant**, et
 l'annonce se fait d'abord **aux Ambassadeurs, 24 heures avant tout le monde**. C'est le
 palier de privilège du schéma, et c'est ce qui donne sa valeur au grade.
 
@@ -327,7 +353,7 @@ Par ordre d'urgence pour ce plan. Aucun n'est construit à ce jour.
 | **Le canal vers l'artiste** (écrire à Serge, réservé aux Ambassadeurs) | la récompense du concours n'existe pas, et il manque la fonction gratuite la plus forte du secteur | octobre |
 | **Le classement des ambassadeurs** + sa place à soi | le concours ne peut pas se tenir | octobre |
 | **L'accueil par ville** (montrer la bonne vidéo selon le lieu) | le format 1 perd tout son effet | octobre |
-| **L'hébergement vidéo protégé** | le live payant n'est pas vendable | **1er novembre, décision** |
+| **L'hébergement vidéo protégé** | le live payant n'est pas vendable | **1er novembre au plus tard** — le concert est le 5 décembre |
 | **La billetterie et le paiement** | rien ne s'encaisse | novembre |
 
 **Le canal vers l'artiste mérite une précision.** Il ne doit pas être ouvert à tous :
