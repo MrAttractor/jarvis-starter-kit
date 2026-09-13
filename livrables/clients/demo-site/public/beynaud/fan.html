@@ -563,16 +563,29 @@ function joursRestants(fin){
   return Math.max(0, Math.ceil(ms / 86400000));
 }
 
+/* Cette fonction est appelee deux fois au demarrage : une fois avec ce que le
+   telephone a garde, une fois apres confirmation du serveur. Elle vidait la
+   zone AVANT d'attendre la reponse, donc les deux appels vidaient d'abord puis
+   ecrivaient chacun : la ligne apparaissait en double. On vide au moment
+   d'ecrire, et un compteur fait qu'une reponse en retard ne repeint jamais
+   par-dessus une plus recente. */
+let concSeq = 0;
 async function chargerConcours(){
+  const rang = ++concSeq;
   const ligne = document.getElementById('amb-rang');
   const voir = document.getElementById('conc-voir');
   const liste = document.getElementById('conc-liste');
-  ligne.innerHTML = ''; liste.innerHTML = '';
-  voir.classList.add('hidden'); liste.classList.add('hidden');
-  if(APERCU || !ME) return;
+  if(APERCU || !ME){
+    ligne.innerHTML = ''; liste.innerHTML = '';
+    voir.classList.add('hidden'); liste.classList.add('hidden');
+    return;
+  }
 
   let r = null;
   try{ r = await api({ action:'classement', membre_id: ME.id }); }catch(e){ r = null; }
+  if(rang !== concSeq) return; // une demande plus recente est passee devant
+  ligne.innerHTML = ''; liste.innerHTML = '';
+  voir.classList.add('hidden'); liste.classList.add('hidden');
   if(!r || !r.ok || !r.saison) return;
 
   const moi = r.moi || {};
