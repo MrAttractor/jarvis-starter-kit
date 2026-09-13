@@ -1,7 +1,9 @@
 // ============================================================
 // bey-public — BEYNAUD ARMY, côté fan (pas de JWT, service role)
 // Actions : join, me, feed (un seul fil : mots + photos + videos + sondages),
-//           vote, like (bascule), comment_add.
+//           vote, like (bascule), comment_add, profil_maj, compte_supprimer.
+// Depuis le 13/09 le numero n'est plus demande a l'inscription : un prenom
+// suffit. Il se donne ensuite, dans l'espace, comme filet de securite.
 // Depuis la migration 0005 les coeurs et les commentaires visent un couple
 // (cible_type, cible_id), donc n'importe quel post du fil et plus seulement
 // un "mot de Serge".
@@ -36,7 +38,18 @@ async function countRows(table: string, filter: string): Promise<number> {
   const r = await sb(`${table}?${filter}&select=*`, { headers: { Prefer: "count=exact", Range: "0-0" } });
   return parseInt((r.headers.get("content-range") || "*/0").split("/")[1] || "0", 10) || 0;
 }
-const normWa = (s: unknown) => String(s ?? "").trim().replace(/[^\d+]/g, "");
+// Un numero n'existe qu'en UNE forme : indicatif pays precede d'un plus.
+// Motif mesure le 13/09 : le meme numero etait entre trois fois dans la base
+// sous "+33753902323", "0753902323" et "753902323", donc trois comptes pour
+// une personne, et la cle unique ne servait a rien. Le 00 international est
+// converti, et un numero sans indicatif est refuse plutot que devine : on ne
+// peut pas savoir si 07... est ivoirien ou francais.
+const normWa = (s: unknown) => {
+  let v = String(s ?? "").trim().replace(/[^\d+]/g, "");
+  if (v.startsWith("00")) v = "+" + v.slice(2);
+  return v;
+};
+const waValide = (v: string) => /^\+[1-9]\d{7,14}$/.test(v);
 const slug = (s: unknown) =>
   (String(s ?? "FAN").toUpperCase().normalize("NFD").replace(/[^A-Z]/g, "").slice(0, 6) || "FAN");
 function makeCode(prenom: unknown) {
@@ -46,7 +59,14 @@ function makeCode(prenom: unknown) {
 const pub = (m: any) => ({
   id: m.id, prenom: m.prenom, lieu: m.lieu,
   code_ambassadeur: m.code_ambassadeur, grade: m.grade, filleuls: m.filleuls,
+  // On dit SI un numero est enregistre, jamais lequel. L'ecran a besoin de
+  // savoir s'il doit encore proposer le filet de securite, pas de le lire.
+  a_numero: !!m.whatsapp,
 });
+// Comparaison de prenoms tolerante : accents, casse et espaces ne doivent pas
+// empecher quelqu'un de retrouver son propre compte.
+const pliPrenom = (x: unknown) =>
+  String(x ?? "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ");
 const esc = (s: unknown) => String(s ?? "");
 
 // ── Auto-modération hybride : filtre de mots (instantané) + IA (Claude Haiku) ──
@@ -115,12 +135,17 @@ Deno.serve(async (req) => {
 
     // ── JOIN ──
     if (action === "join") {
-      const wa = normWa(d.whatsapp);
       const prenom = String(d.prenom ?? "").trim();
-      if (!prenom || wa.replace(/\D/g, "").length < 6)
-        return json({ ok: false, error: "Prénom et WhatsApp valides requis." });
-      const ex = await (await sb(`bey_membres?whatsapp=eq.${encodeURIComponent(wa)}&select=*`)).json();
-      if (Array.isArray(ex) && ex.length) return json({ ok: true, membre: pub(ex[0]), returning: true });
+      if (!prenom) return json({ ok: false, error: "Ton prénom, stp." });
+
+      // Le numero est facultatif depuis le 13/09. Quand il est donne quand meme,
+      // il sert a retrouver un compte existant plutot qu'a en creer un doublon.
+      const wa = normWa(d.whatsapp);
+      const avecNumero = waValide(wa);
+      if (avecNumero) {
+        const ex = await (await sb(`bey_membres?whatsapp=eq.${encodeURIComponent(wa)}&select=*`)).json();
+        if (Array.isArray(ex) && ex.length) return json({ ok: true, membre: pub(ex[0]), returning: true });
+      }
 
       const ref = d.ref ? String(d.ref).toUpperCase().replace(/[^A-Z0-9]/g, "") : null;
       let inserted: any = null;
@@ -128,13 +153,14 @@ Deno.serve(async (req) => {
         const res = await sb("bey_membres", {
           method: "POST", headers: { Prefer: "return=representation" },
           body: JSON.stringify({
-            prenom, whatsapp: wa, lieu: d.lieu ? String(d.lieu).trim() : null,
+            prenom, whatsapp: avecNumero ? wa : null,
+            lieu: d.lieu ? String(d.lieu).trim() : null,
             code_ambassadeur: makeCode(prenom), parraine_par: ref,
           }),
         });
         if (res.ok) { inserted = (await res.json())[0]; break; }
         const t = await res.text();
-        if (t.includes("whatsapp")) {
+        if (avecNumero && t.includes("whatsapp")) {
           const again = await (await sb(`bey_membres?whatsapp=eq.${encodeURIComponent(wa)}&select=*`)).json();
           if (again.length) return json({ ok: true, membre: pub(again[0]), returning: true });
           return json({ ok: false, error: "inscription impossible" });
@@ -155,13 +181,87 @@ Deno.serve(async (req) => {
 
     // ── ME ──
     if (action === "me") {
-      let q = "";
-      if (d.id) q = `id=eq.${encodeURIComponent(d.id)}`;
-      else if (d.whatsapp) q = `whatsapp=eq.${encodeURIComponent(normWa(d.whatsapp))}`;
-      else return json({ ok: false, error: "id ou whatsapp requis" });
-      const m = await (await sb(`bey_membres?${q}&select=*`)).json();
-      if (!Array.isArray(m) || !m.length) return json({ ok: false, error: "introuvable" });
-      return json({ ok: true, membre: pub(m[0]) });
+      if (d.id) {
+        const m = await (await sb(`bey_membres?id=eq.${encodeURIComponent(String(d.id))}&select=*`)).json();
+        if (!Array.isArray(m) || !m.length) return json({ ok: false, error: "introuvable" });
+        return json({ ok: true, membre: pub(m[0]) });
+      }
+      // Reprise par le numero : le prenom est desormais exige EN PLUS. Connaitre
+      // le seul numero d'un fan suffisait a entrer dans son compte, ce qui a ete
+      // constate le 13/09. Ce n'est pas une verification, c'est un cran de plus :
+      // la vraie parade sera un code a usage unique, le jour ou on en enverra.
+      if (d.whatsapp) {
+        const wa = normWa(d.whatsapp);
+        const prenom = pliPrenom(d.prenom);
+        if (!prenom) return json({ ok: false, error: "prénom requis" });
+        const m = await (await sb(`bey_membres?whatsapp=eq.${encodeURIComponent(wa)}&select=*`)).json();
+        if (!Array.isArray(m) || !m.length || pliPrenom(m[0].prenom) !== prenom)
+          return json({ ok: false, error: "introuvable" });
+        return json({ ok: true, membre: pub(m[0]) });
+      }
+      return json({ ok: false, error: "id ou whatsapp requis" });
+    }
+
+    // ── PROFIL_MAJ : le filet de securite, donne apres coup ──
+    if (action === "profil_maj") {
+      const mid = String(d.membre_id ?? "");
+      if (!mid) return json({ ok: false, error: "membre_id requis" });
+      const patch: Record<string, unknown> = {};
+      if (d.whatsapp !== undefined) {
+        const wa = normWa(d.whatsapp);
+        if (wa && !waValide(wa))
+          return json({ ok: false, error: "Commence par l'indicatif du pays : +225 pour la Côte d'Ivoire, +33 pour la France." });
+        patch.whatsapp = wa || null;
+      }
+      if (d.lieu !== undefined) patch.lieu = d.lieu ? String(d.lieu).trim().slice(0, 80) : null;
+      if (!Object.keys(patch).length) return json({ ok: false, error: "rien à modifier" });
+
+      const res = await sb(`bey_membres?id=eq.${encodeURIComponent(mid)}`, {
+        method: "PATCH", headers: { Prefer: "return=representation" },
+        body: JSON.stringify(patch),
+      });
+      if (!res.ok) {
+        const t = await res.text();
+        // Le numero appartient deja a un autre compte : on le dit sans reveler
+        // a qui, et sans laisser croire que la modification a eu lieu.
+        if (t.includes("whatsapp"))
+          return json({ ok: false, error: "Ce numéro est déjà rattaché à un autre compte." });
+        return json({ ok: false, error: "modification impossible" });
+      }
+      const m = (await res.json())[0];
+      if (!m) return json({ ok: false, error: "introuvable" });
+      return json({ ok: true, membre: pub(m) });
+    }
+
+    // ── COMPTE_SUPPRIMER : la desinscription promise a l'ecran ──
+    // Elle etait affichee depuis juillet et n'existait pas. R-54 : ce qu'on
+    // promet doit etre fait, et prouvable par l'absence.
+    if (action === "compte_supprimer") {
+      const mid = String(d.membre_id ?? "");
+      if (!mid) return json({ ok: false, error: "membre_id requis" });
+      const m = await (await sb(`bey_membres?id=eq.${encodeURIComponent(mid)}&select=id,parraine_par`)).json();
+      if (!Array.isArray(m) || !m.length) return json({ ok: true, deja: true });
+
+      // Ses commentaires partent avec lui : la cle etrangere les detacherait
+      // sans les effacer, et son prenom resterait affiche sous ses messages.
+      await sb(`bey_commentaires?membre_id=eq.${encodeURIComponent(mid)}`, { method: "DELETE" });
+      // Coeurs et votes tombent par cascade.
+      const del = await sb(`bey_membres?id=eq.${encodeURIComponent(mid)}`, { method: "DELETE" });
+      if (!del.ok) return json({ ok: false, error: "suppression impossible" });
+
+      // Son parrain perd le filleul qu'il n'a plus. Le grade acquis, lui, reste :
+      // il a bien fait le travail, on ne le lui retire pas retroactivement.
+      const code = m[0].parraine_par;
+      if (code) {
+        const p = await (await sb(`bey_membres?code_ambassadeur=eq.${encodeURIComponent(code)}&select=id,filleuls`)).json();
+        if (Array.isArray(p) && p.length) {
+          await sb(`bey_membres?id=eq.${p[0].id}`, {
+            method: "PATCH",
+            body: JSON.stringify({ filleuls: Math.max(0, (p[0].filleuls || 0) - 1) }),
+          });
+        }
+      }
+      return json({ ok: true });
     }
 
     // -- FEED : un seul fil chronologique, plus les lives epingles --

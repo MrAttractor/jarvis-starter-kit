@@ -184,6 +184,24 @@ body.splash-on{overflow:hidden;}
   min-height:44px;padding:0 4px;flex-shrink:0;}
 .empty{font-size:13px;color:var(--dim);text-align:center;padding:28px 20px;line-height:1.7;}
 
+/* Le filet de securite, propose dans l'espace et jamais a la porte. Le fan
+   donne son numero quand il a deja quelque chose a perdre, pas avant. */
+.filet{background:var(--n3);border:1px solid var(--faint);border-radius:16px;padding:16px;margin-bottom:14px;}
+.filet-t{font-size:14px;font-weight:800;margin-bottom:5px;}
+.filet-d{font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:13px;}
+.filet-l{display:flex;flex-direction:column;gap:9px;}
+/* 16px : en dessous, Safari iOS zoome tout seul a la saisie. */
+.filet-l input{background:rgba(0,0,0,.35);border:1px solid var(--faint);border-radius:11px;
+  padding:12px 14px;font-size:16px;color:#fff;width:100%;}
+.filet-b{width:100%;min-height:48px;background:var(--n5);color:#fff;border-radius:11px;
+  font-size:13px;font-weight:800;letter-spacing:.6px;}
+.filet-b:active{background:var(--rouge);}
+.filet-ok{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--vert);font-weight:700;}
+.filet-err{font-size:12px;color:#ff6b6b;min-height:16px;}
+.zone-danger{text-align:center;padding:6px 0 26px;}
+.lien-danger{background:none;color:rgba(255,255,255,.3);font-size:12px;min-height:44px;padding:0 12px;}
+.lien-danger:active{color:#ff6b6b;}
+
 /* La porte, en bas de l'apercu. Ce n'est pas un mur : le visiteur vient de
    lire trois vraies publications, elle lui dit seulement ce qu'il rate. */
 .porte{background:linear-gradient(180deg,rgba(204,0,0,.12),var(--n3));
@@ -302,21 +320,19 @@ body.splash-on{overflow:hidden;}
     <div class="join-c">
       <div class="eyebrow"><span class="pulse"></span>La Beynaumania · Officiel</div>
       <div class="join-title">LA<br><span class="r">BEYNAUMANIA</span></div>
-      <p class="join-sub">L'univers officiel de Serge Beynaud. Contenu exclusif, coulisses, séries à suivre uniquement ici. Gratuit. Ta place en 20 secondes.</p>
+      <p class="join-sub">L'univers officiel de Serge Beynaud. Ton prénom suffit, et tu es dedans.</p>
       <div id="ref-note" class="ref-note hidden">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
         <span>Tu entres sur l'invitation d'un membre de la Beynaumania.</span>
       </div>
       <div class="field"><label>Ton prénom</label><input id="j-prenom" type="text" placeholder="Ex : Awa" autocomplete="given-name"/></div>
-      <div class="field"><label>Ton WhatsApp</label><input id="j-wa" type="tel" placeholder="+225 07 00 00 00 00" autocomplete="tel"/></div>
-      <div class="field"><label>D'où te connectes-tu ?</label><input id="j-lieu" type="text" placeholder="Ex : Abidjan, Paris, Dakar…"/></div>
       <button id="j-btn" class="btn-join" onclick="doJoin()">Entrer dans la Beynaumania
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
       </button>
       <div id="j-err" class="err"></div>
       <div class="join-alt">Déjà membre ? <a onclick="recover()">Retrouver mon espace</a></div>
       <button class="retour-apercu" id="retour-apercu">Revenir à l’aperçu</button>
-      <div class="legal">En rejoignant, tu acceptes de recevoir les actus officielles de Serge Beynaud sur ton WhatsApp. Désinscription à tout moment.</div>
+      <div class="legal">C’est gratuit. On ne demande rien d’autre que ton prénom, et tu peux effacer ton compte quand tu veux depuis ton espace.</div>
     </div>
   </div>
 
@@ -351,7 +367,22 @@ body.splash-on{overflow:hidden;}
         <div id="amb-progress"></div>
       </div>
 
+      <div class="filet hidden" id="filet">
+        <div class="filet-t">Ne perds jamais ton compte</div>
+        <div class="filet-d">Ton compte vit dans ce téléphone. Laisse ton WhatsApp et tu le retrouveras partout, même si tu changes d’appareil. Ton numéro n’est montré à personne.</div>
+        <div class="filet-l">
+          <input id="f-wa" type="tel" placeholder="+225 07 00 00 00 00" autocomplete="tel"/>
+          <input id="f-lieu" type="text" placeholder="D’où tu nous écris ? Ex : Abidjan"/>
+          <button class="filet-b" id="f-btn">Sécuriser mon compte</button>
+          <div class="filet-err" id="f-err"></div>
+        </div>
+      </div>
+
       <div id="fil"></div>
+
+      <div class="zone-danger">
+        <button class="lien-danger" id="btn-supprimer">Effacer mon compte</button>
+      </div>
     </div>
   </div>
 
@@ -386,13 +417,12 @@ function getMembre(){try{return JSON.parse(localStorage.getItem(LS)||'null');}ca
 
 async function doJoin(){
   const prenom=document.getElementById('j-prenom').value.trim();
-  const wa=document.getElementById('j-wa').value.trim();
-  const lieu=document.getElementById('j-lieu').value.trim();
   const err=document.getElementById('j-err'); err.textContent='';
   if(!prenom){err.textContent='Ton prénom, stp.';return;}
-  if(wa.replace(/\D/g,'').length<8){err.textContent='Un numéro WhatsApp valide (avec indicatif).';return;}
   const btn=document.getElementById('j-btn'); btn.disabled=true; const old=btn.innerHTML; btn.innerHTML='<span class="spin"></span>';
-  const res=await api({action:'join',prenom,whatsapp:wa,lieu,ref:refParam()});
+  // Un seul champ part au serveur. Le numero se proposera plus tard, dans son
+  // espace, quand il aura quelque chose a perdre.
+  const res=await api({action:'join',prenom,ref:refParam()});
   btn.disabled=false; btn.innerHTML=old;
   if(!res.ok){err.textContent=res.error||'Une erreur est survenue.';return;}
   saveMembre(res.membre);
@@ -400,10 +430,15 @@ async function doJoin(){
   renderMember(res.membre);
 }
 async function recover(){
-  const wa=prompt("Entre le numéro WhatsApp avec lequel tu t'es inscrit (avec indicatif) :");
+  // Le prenom est demande EN PLUS du numero. Connaitre le seul numero d'un fan
+  // suffisait a entrer dans son compte. Ce n'est pas une verification, c'est un
+  // cran de plus en attendant un vrai code a usage unique.
+  const wa=prompt("Le numéro WhatsApp que tu as enregistré (avec l’indicatif) :");
   if(!wa) return;
-  const res=await api({action:'me',whatsapp:wa});
-  if(!res.ok){toast("Aucun compte trouvé avec ce numéro.");return;}
+  const prenom=prompt("Et le prénom de ton compte :");
+  if(!prenom) return;
+  const res=await api({action:'me',whatsapp:wa,prenom});
+  if(!res.ok){toast("Aucun compte ne correspond à ce numéro et ce prénom.");return;}
   saveMembre(res.membre); renderMember(res.membre);
 }
 function logout(){localStorage.removeItem(LS);location.href=location.origin+location.pathname;}
@@ -431,6 +466,9 @@ function peindreCoquille(m){
   gb.textContent=m.grade==='ambassadeur'?'★ Ambassadeur':'Membre';
   document.getElementById('amb-url').value=ambLink(m.code_ambassadeur);
   renderProgress(m);
+  // Le filet ne s'affiche que tant qu'il n'a pas de numero enregistre.
+  document.getElementById('filet').classList.toggle('hidden', !!m.a_numero);
+  document.querySelector('.zone-danger').classList.remove('hidden');
 }
 
 /* Visiteur : le meme ecran, mais sans son nom, sans ses outils, et avec trois
@@ -448,6 +486,37 @@ function peindreApercu(){
   h.appendChild(document.createTextNode('LA '));
   h.appendChild(el('span','r','BEYNAUMANIA'));
   document.getElementById('m-hello-sub').textContent='L’univers officiel de Serge Beynaud. Voici un aperçu.';
+  document.getElementById('filet').classList.add('hidden');
+  document.querySelector('.zone-danger').classList.add('hidden');
+}
+
+/* Le filet de securite : il donne son numero quand il le decide. */
+async function securiser(){
+  const wa=document.getElementById('f-wa').value.trim();
+  const lieu=document.getElementById('f-lieu').value.trim();
+  const err=document.getElementById('f-err'); err.textContent='';
+  if(wa.replace(/\D/g,'').length<8){err.textContent='Un numéro valide, avec l’indicatif du pays.';return;}
+  const b=document.getElementById('f-btn'); b.disabled=true; const t=b.textContent; b.textContent='…';
+  let res=null;
+  try{ res=await api({action:'profil_maj',membre_id:ME.id,whatsapp:wa,lieu:lieu||undefined}); }catch(e){ res=null; }
+  b.disabled=false; b.textContent=t;
+  if(!res||!res.ok){ err.textContent=(res&&res.error)||'Réessaie dans un instant.'; return; }
+  saveMembre(res.membre); ME=res.membre;
+  document.getElementById('filet').classList.add('hidden');
+  toast('C’est enregistré. Ton compte est en sécurité.');
+}
+
+/* La desinscription, promise a l'ecran depuis juillet et inexistante. R-54 :
+   ce qu'on promet doit etre fait, et prouvable par l'absence. */
+async function supprimerCompte(){
+  if(!ME) return;
+  if(!confirm('Effacer ton compte ? Tu perds ton grade, tes filleuls et tes commentaires. C’est définitif.')) return;
+  let res=null;
+  try{ res=await api({action:'compte_supprimer',membre_id:ME.id}); }catch(e){ res=null; }
+  if(!res||!res.ok){ toast('La suppression n’a pas abouti. Réessaie.'); return; }
+  try{ localStorage.removeItem(LS); }catch(e){}
+  toast('Ton compte est effacé.');
+  setTimeout(function(){ location.href=location.origin+location.pathname; }, 900);
 }
 
 /* La porte s'ouvre des que le visiteur veut agir : aimer, commenter, voter,
@@ -1161,6 +1230,8 @@ function fermerSplash(){
   window.scrollTo(0,0);
 }
 document.getElementById('enter-btn').addEventListener('click',fermerSplash);
+document.getElementById('f-btn').addEventListener('click',securiser);
+document.getElementById('btn-supprimer').addEventListener('click',supprimerCompte);
 document.getElementById('retour-apercu').addEventListener('click',function(){
   document.getElementById('view-join').classList.add('hidden');
   document.getElementById('view-member').classList.remove('hidden');
