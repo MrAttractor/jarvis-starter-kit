@@ -184,6 +184,18 @@ body.splash-on{overflow:hidden;}
   min-height:44px;padding:0 4px;flex-shrink:0;}
 .empty{font-size:13px;color:var(--dim);text-align:center;padding:28px 20px;line-height:1.7;}
 
+/* Squelette d'attente : le fil met une seconde a arriver, et pendant ce
+   temps il ne faut montrer ni un vide ("La Beynaumania demarre" serait faux,
+   R-58) ni rien du tout. On montre la forme de ce qui arrive. */
+.sq{background:var(--n3);border:1px solid var(--faint);border-radius:16px;margin-bottom:14px;padding:14px;}
+.sq-l{background:linear-gradient(90deg,var(--n4) 25%,#262626 50%,var(--n4) 75%);
+  background-size:280% 100%;animation:brille 1.4s ease-in-out infinite;border-radius:6px;}
+.sq-tete{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.sq-rond{width:38px;height:38px;border-radius:50%;flex-shrink:0;}
+.sq-media{height:190px;border-radius:10px;margin-bottom:12px;}
+@keyframes brille{0%{background-position:140% 0}100%{background-position:-40% 0}}
+@media (prefers-reduced-motion:reduce){.sq-l{animation:none;}}
+
 /* ===== LECTEUR FERME =====
    On n'affiche jamais la barre de YouTube : c'est elle qui porte le titre
    cliquable, le bouton "Regarder sur YouTube", le partage et l'avatar de la
@@ -378,7 +390,10 @@ function logout(){localStorage.removeItem(LS);location.href=location.origin+loca
 
 
 
-async function renderMember(m){
+/* Peint son espace immediatement, avec ce que le telephone a garde de lui.
+   Aucun appel reseau ici : c'est tout l'interet. Avant, le formulaire des
+   inconnus restait affiche pendant que le serveur confirmait son compte. */
+function peindreCoquille(m){
   ME=m;
   document.getElementById('view-join').classList.add('hidden');
   document.getElementById('view-member').classList.remove('hidden');
@@ -388,11 +403,61 @@ async function renderMember(m){
   gb.textContent=m.grade==='ambassadeur'?'★ Ambassadeur':'Membre';
   document.getElementById('amb-url').value=ambLink(m.code_ambassadeur);
   renderProgress(m);
-  const res=await api({action:'feed',grade:m.grade,membre_id:m.id});
+}
+
+/* Retour au formulaire, quand son compte n'existe plus cote serveur. */
+function revenirAuFormulaire(){
+  ME=null;
+  document.getElementById('view-member').classList.add('hidden');
+  document.getElementById('view-join').classList.remove('hidden');
+}
+
+function squelettePost(avecMedia){
+  const c=el('div','sq');
+  const t=el('div','sq-tete');
+  const r=el('div','sq-l sq-rond'); t.appendChild(r);
+  const col=el('div'); col.style.flex='1';
+  const l1=el('div','sq-l'); l1.style.height='11px'; l1.style.width='42%';
+  const l2=el('div','sq-l'); l2.style.height='9px'; l2.style.width='26%'; l2.style.marginTop='6px';
+  col.appendChild(l1); col.appendChild(l2); t.appendChild(col);
+  c.appendChild(t);
+  if(avecMedia) c.appendChild(el('div','sq-l sq-media'));
+  const p1=el('div','sq-l'); p1.style.height='10px'; p1.style.width='92%';
+  const p2=el('div','sq-l'); p2.style.height='10px'; p2.style.width='64%'; p2.style.marginTop='7px';
+  c.appendChild(p1); c.appendChild(p2);
+  return c;
+}
+function filEnChargement(){
+  const box=document.getElementById('fil');
+  box.innerHTML='';
+  box.appendChild(squelettePost(true));
+  box.appendChild(squelettePost(false));
+}
+
+async function chargerFil(m){
+  let res=null;
+  try{ res=await api({action:'feed',grade:m.grade,membre_id:m.id}); }catch(e){ res=null; }
+  if(!res||!res.ok){
+    const box=document.getElementById('fil');
+    box.innerHTML='';
+    // R-59 : une alerte porte son action. Ici, le bouton refait l'appel.
+    const w=el('div','empty','La connexion a lâché. Le fil n’a pas pu se charger.');
+    const b=el('button','voir-cmt','Réessayer');
+    b.style.textAlign='center';
+    b.addEventListener('click',function(){ filEnChargement(); chargerFil(m); });
+    box.appendChild(w); box.appendChild(b);
+    return;
+  }
   // Le serveur trie et fusionne : l'ecran ne fait plus que peindre.
   renderLive(res.lives||[]);
   FIL=res.fil||[];
   renderFil();
+}
+
+async function renderMember(m){
+  peindreCoquille(m);
+  filEnChargement();
+  await chargerFil(m);
 }
 
 function heart(filled){return '<svg viewBox="0 0 24 24" fill="'+(filled?'currentColor':'none')+'" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';}
@@ -1003,17 +1068,37 @@ document.getElementById('enter-btn').addEventListener('click',fermerSplash);
 (async function(){
   if(refParam()) document.getElementById('ref-note').classList.remove('hidden');
   const m=getMembre();
-  if(m&&m.id){
-    const res=await api({action:'me',id:m.id});
-    if(res.ok){saveMembre(res.membre);renderMember(res.membre);return;}
+
+  // Pas de session : c'est un visiteur, le clip s'ouvre.
+  if(!(m&&m.id)){ monterClip(); return; }
+
+  // Session connue : on l'installe chez lui tout de suite, sans attendre le
+  // serveur. C'est ce qui supprime la seconde de formulaire d'inscription
+  // qu'un membre de retour voyait s'afficher avant son espace.
+  peindreCoquille(m);
+  filEnChargement();
+  const fil=chargerFil(m);
+
+  // Puis on confirme aupres du serveur : son prenom, son grade et son nombre
+  // de filleuls ont pu changer depuis sa derniere visite.
+  let res=null;
+  try{ res=await api({action:'me',id:m.id}); }catch(e){ res=null; }
+  if(res&&res.ok){
+    const avant=m.grade;
+    saveMembre(res.membre);
+    peindreCoquille(res.membre);
+    // Passe Ambassadeur entre-temps : le fil avait ete demande avec l'ancien
+    // grade, il lui manquerait les contenus qui lui sont desormais ouverts.
+    if(res.membre.grade!==avant){ filEnChargement(); chargerFil(res.membre); return; }
+  } else if(res&&res.error==='introuvable'){
+    // Son compte n'existe plus. Une simple panne de reseau, elle, ne doit
+    // jamais le deconnecter : on ne sort que sur un refus explicite.
     localStorage.removeItem(LS);
-    // Sa session ne vaut plus rien : on ne lui rejoue pas le clip, on le
-    // laisse sur le formulaire, qui est exactement ce dont il a besoin.
+    revenirAuFormulaire();
     fermerSplash();
     return;
   }
-  // Pas de session : c'est un visiteur, le clip s'ouvre.
-  monterClip();
+  await fil;
 })();
 </script>
 </body>
