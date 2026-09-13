@@ -184,6 +184,27 @@ body.splash-on{overflow:hidden;}
   min-height:44px;padding:0 4px;flex-shrink:0;}
 .empty{font-size:13px;color:var(--dim);text-align:center;padding:28px 20px;line-height:1.7;}
 
+/* ===== LECTEUR FERME =====
+   On n'affiche jamais la barre de YouTube : c'est elle qui porte le titre
+   cliquable, le bouton "Regarder sur YouTube", le partage et l'avatar de la
+   chaine, soit quatre sorties hors de la Beynaumania. On la remplace par nos
+   propres commandes. Le lecteur reste celui de YouTube, il n'est pas masque :
+   recouvrir leur interface violerait leurs conditions. */
+.video{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000;}
+.video>iframe,.video>.vignette{position:absolute;inset:0;width:100%;height:100%;border:none;}
+.vignette{background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.vignette::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.28);}
+.play-rond{position:relative;z-index:2;width:62px;height:62px;border-radius:50%;background:var(--rouge);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px var(--rouge-glow);transition:transform .2s;}
+.vignette:active .play-rond{transform:scale(.93);}
+.play-rond svg{width:24px;height:24px;fill:#fff;stroke:none;margin-left:3px;}
+.v-barre{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--n4);}
+.v-btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:none;flex-shrink:0;}
+.v-btn svg{width:19px;height:19px;fill:#fff;stroke:none;}
+.v-piste{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.16);overflow:hidden;min-width:0;}
+.v-lu{height:100%;width:0;background:var(--rouge);transition:width .25s linear;}
+.v-temps{font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums;flex-shrink:0;}
+
 /* Live */
 .live-badge-row{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
 .live-badge{display:inline-flex;align-items:center;gap:6px;background:var(--rouge);color:#fff;font-size:10px;font-weight:800;letter-spacing:1px;padding:4px 9px;border-radius:4px;box-shadow:0 4px 14px var(--rouge-glow);}
@@ -466,13 +487,7 @@ function corpsDuPost(p){
 
   if(p.type === 'contenu'){
     const media = el('div', 'post-media');
-    const box = el('div', 'embed');
-    const f = document.createElement('iframe');
-    f.src = p.youtube_url;
-    f.loading = 'lazy';
-    f.setAttribute('allowfullscreen', '');
-    f.setAttribute('allow', 'accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture');
-    box.appendChild(f); media.appendChild(box);
+    media.appendChild(blocVideo(p.youtube_url, p.cover_url));
     frag.appendChild(media);
   }
 
@@ -584,6 +599,143 @@ function renderProgress(m){
   const fill=el('div','amb-fill'); fill.style.width=pct+'%';
   bar.appendChild(fill);
   box.appendChild(lbl); box.appendChild(bar);
+}
+
+/* ===================== LECTEUR FERME =====================
+   Une video du fil ne charge rien tant qu'on ne la lance pas : on pose une
+   vignette, et le lecteur n'arrive qu'au clic. Il arrive sans sa barre
+   (controls:0), donc sans les quatre chemins qui menent hors de la
+   Beynaumania, et nos propres commandes prennent le relais. */
+const D_PLAY = 'M8 5v14l11-7z';
+const D_PAUSE = 'M6 5h4v14H6zM14 5h4v14h-4z';
+
+/* Sur une chaine saisie a la main, on ne garde que l'identifiant : le reste
+   (parametres de suivi, playlist, horodatage) est reconstruit par nous. */
+function idYoutube(u){
+  if(!u) return '';
+  const m = String(u).match(/(?:v=|youtu\.be\/|embed\/|shorts\/|live\/)([A-Za-z0-9_-]{6,})/);
+  return m ? m[1] : '';
+}
+function urlFermee(id){
+  return 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) +
+    '?enablejsapi=1&autoplay=1&controls=0&rel=0&modestbranding=1&playsinline=1' +
+    '&iv_load_policy=3&fs=0&disablekb=1&cc_load_policy=0&color=white' +
+    '&origin=' + encodeURIComponent(location.origin);
+}
+function mmss(t){
+  t = Math.max(0, Math.floor(t || 0));
+  return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0');
+}
+
+/* Construit le bloc video complet : vignette, puis lecteur et commandes. */
+function blocVideo(url, coverUrl){
+  const id = idYoutube(url);
+  const wrap = el('div');
+  const cadre = el('div', 'video');
+  wrap.appendChild(cadre);
+
+  if(!id){
+    // Lien inexploitable : on le dit calmement plutot que d'afficher un carre noir.
+    cadre.appendChild(el('div', 'empty', 'Cette vidéo est momentanément indisponible.'));
+    return wrap;
+  }
+
+  const vign = el('div', 'vignette');
+  // La vignette de YouTube evite d'avoir a stocker une image de plus.
+  vign.style.backgroundImage = 'url("' + (coverUrl || ('https://i.ytimg.com/vi/' + id + '/hqdefault.jpg')) + '")';
+  const rond = el('div', 'play-rond');
+  rond.appendChild(ico(D_PLAY));
+  vign.appendChild(rond);
+  vign.setAttribute('role', 'button');
+  vign.setAttribute('aria-label', 'Lancer la vidéo');
+  cadre.appendChild(vign);
+
+  const barre = el('div', 'v-barre hidden');
+  const bPP = el('button', 'v-btn');
+  bPP.appendChild(ico(D_PAUSE));
+  bPP.setAttribute('aria-label', 'Pause');
+  const piste = el('div', 'v-piste');
+  const lu = el('div', 'v-lu');
+  piste.appendChild(lu);
+  const temps = el('div', 'v-temps', '0:00');
+  barre.appendChild(bPP); barre.appendChild(piste); barre.appendChild(temps);
+  wrap.appendChild(barre);
+
+  let lecteur = null, tic = null;
+
+  function poserIcone(joue){
+    bPP.innerHTML = '';
+    bPP.appendChild(ico(joue ? D_PAUSE : D_PLAY));
+    bPP.setAttribute('aria-label', joue ? 'Pause' : 'Lecture');
+  }
+  function suivre(){
+    clearInterval(tic);
+    tic = setInterval(function(){
+      if(!lecteur || !lecteur.getDuration) return;
+      const d = lecteur.getDuration() || 0, t = lecteur.getCurrentTime() || 0;
+      lu.style.width = (d ? (t / d * 100) : 0) + '%';
+      temps.textContent = mmss(t) + (d ? ' / ' + mmss(d) : '');
+    }, 500);
+  }
+
+  function lancer(){
+    vign.remove();
+    barre.classList.remove('hidden');
+    const hote = el('div');
+    hote.id = 'yt-' + id + '-' + Math.random().toString(36).slice(2, 7);
+    cadre.appendChild(hote);
+    demarrerApiYoutube(function(){
+      /* global YT */
+      lecteur = new YT.Player(hote.id, {
+        videoId: id,
+        host: 'https://www.youtube-nocookie.com',
+        playerVars: {
+          autoplay: 1, controls: 0, rel: 0, modestbranding: 1, playsinline: 1,
+          iv_load_policy: 3, fs: 0, disablekb: 1, cc_load_policy: 0, color: 'white',
+        },
+        events: {
+          onReady: function(e){ e.target.playVideo(); suivre(); },
+          onStateChange: function(e){ poserIcone(e.data === 1); if(e.data === 0){ clearInterval(tic); poserIcone(false); } },
+        },
+      });
+    });
+  }
+
+  vign.addEventListener('click', lancer);
+  bPP.addEventListener('click', function(){
+    if(!lecteur) return;
+    const s2 = lecteur.getPlayerState ? lecteur.getPlayerState() : -1;
+    if(s2 === 1) lecteur.pauseVideo(); else lecteur.playVideo();
+  });
+  piste.addEventListener('click', function(ev){
+    if(!lecteur || !lecteur.getDuration) return;
+    const r = piste.getBoundingClientRect();
+    const d = lecteur.getDuration() || 0;
+    if(d) lecteur.seekTo(d * Math.min(1, Math.max(0, (ev.clientX - r.left) / r.width)), true);
+  });
+
+  return wrap;
+}
+
+/* L'API de YouTube ne se charge qu'une fois pour toute la page, et plusieurs
+   videos peuvent la reclamer en meme temps : on met les demandes en file. */
+let apiPrete = false, fileApi = [];
+function demarrerApiYoutube(cb){
+  if(apiPrete || (window.YT && window.YT.Player)){ apiPrete = true; cb(); return; }
+  fileApi.push(cb);
+  if(fileApi.length > 1) return;
+  const precedent = window.onYouTubeIframeAPIReady;
+  window.onYouTubeIframeAPIReady = function(){
+    if(typeof precedent === 'function') { try{ precedent(); }catch(e){} }
+    apiPrete = true;
+    const f = fileApi; fileApi = [];
+    for(const g of f) g();
+  };
+  if(!document.getElementById('yt-api')){
+    const t = document.createElement('script');
+    t.id = 'yt-api'; t.src = 'https://www.youtube.com/iframe_api'; t.async = true;
+    document.head.appendChild(t);
+  }
 }
 
 function renderFil(){
@@ -710,12 +862,8 @@ function renderLive(lives){
     row.appendChild(el('span', 'live-title', c.titre || ''));
     w.appendChild(row);
     const media = el('div', 'post-media');
-    const box = el('div', 'embed');
-    const f = document.createElement('iframe');
-    f.src = c.youtube_url;
-    f.setAttribute('allowfullscreen', '');
-    f.setAttribute('allow', 'accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture');
-    box.appendChild(f); media.appendChild(box); w.appendChild(media);
+    media.appendChild(blocVideo(c.youtube_url, c.cover_url));
+    w.appendChild(media);
     el2.appendChild(w);
   }
 }
