@@ -344,7 +344,21 @@ async function doBroadcast(){
   const btn=document.getElementById('bc-btn'); btn.disabled=true; const old=btn.innerHTML; btn.innerHTML='<span class="spin"></span>';
   const res=await api({action:'broadcast',contenu:t});
   btn.disabled=false; btn.innerHTML=old;
-  if(res&&res.ok){document.getElementById('bc-text').value='';toast('Diffusé à '+res.envoye_a+' membre(s) !');loadStats();}
+  if(res&&res.ok){
+    document.getElementById('bc-text').value='';
+    // On dit ce qui est REELLEMENT parti. Jusqu au 13/09 cet ecran annoncait
+    // "Diffuse a N membres" alors qu aucune notification n existait : le mot
+    // etait seulement pose sur le mur, et Serge croyait avoir touche sa
+    // communaute.
+    var n=res.notifies||0, a=res.abonnes||0, m=res.membres||0;
+    var msg;
+    if(!res.push_configure) msg='Message publié sur le mur. Les notifications ne sont pas encore branchées.';
+    else if(n>0) msg='Publié, et '+n+' fan'+(n>1?'s':'')+' prévenu'+(n>1?'s':'')+' sur son téléphone.';
+    else if(a===0) msg='Publié sur le mur. Personne n a encore activé les notifications ('+m+' membre'+(m>1?'s':'')+').';
+    else msg='Publié, mais aucune notification n est partie. À vérifier.';
+    toast(msg);
+    loadStats();
+  }
   else toast('Erreur : '+((res&&res.error)||'réessaie'));
 }
 

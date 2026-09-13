@@ -1,7 +1,8 @@
 // ============================================================
 // bey-public — BEYNAUD ARMY, côté fan (pas de JWT, service role)
 // Actions : join, me, feed (un seul fil : mots + photos + videos + sondages),
-//           vote, like (bascule), comment_add, profil_maj, compte_supprimer.
+//           vote, like (bascule), comment_add, profil_maj, compte_supprimer,
+//           push_abonner, push_desabonner.
 // Depuis le 13/09 le numero n'est plus demande a l'inscription : un prenom
 // suffit. Il se donne ensuite, dans l'espace, comme filet de securite.
 // Depuis la migration 0005 les coeurs et les commentaires visent un couple
@@ -461,6 +462,46 @@ Deno.serve(async (req) => {
         ok: true, masque,
         commentaire: { id: cm.id, prenom: cm.prenom, contenu: cm.contenu, created_at: cm.created_at },
       });
+    }
+
+
+    // ── PUSH_ABONNER : le fan accepte d'etre prevenu ──
+    // Un fan a souvent deux appareils. On enregistre chaque appareil, et on
+    // reconnait un abonnement deja connu par son endpoint, qui est unique.
+    if (action === "push_abonner") {
+      const mid = String(d.membre_id ?? "");
+      const ab = d.abonnement || {};
+      const endpoint = String(ab.endpoint ?? "");
+      const p256dh = String((ab.keys || {}).p256dh ?? "");
+      const auth = String((ab.keys || {}).auth ?? "");
+      if (!mid || !endpoint || !p256dh || !auth)
+        return json({ ok: false, error: "abonnement incomplet" });
+      if (!/^https:\/\//.test(endpoint)) return json({ ok: false, error: "abonnement invalide" });
+
+      // Le meme appareil peut revenir apres une reinstallation, ou changer de
+      // main : on rattache l'endpoint au membre courant plutot que d'echouer.
+      const existe = await (await sb(`bey_push?endpoint=eq.${encodeURIComponent(endpoint)}&select=id`)).json();
+      if (Array.isArray(existe) && existe.length) {
+        await sb(`bey_push?id=eq.${existe[0].id}`, {
+          method: "PATCH",
+          body: JSON.stringify({ membre_id: mid, p256dh, auth, echecs: 0, vu_le: new Date().toISOString() }),
+        });
+        return json({ ok: true, deja: true });
+      }
+      const res = await sb("bey_push", {
+        method: "POST",
+        body: JSON.stringify({ membre_id: mid, endpoint, p256dh, auth }),
+      });
+      if (!res.ok) return json({ ok: false, error: "enregistrement impossible" });
+      return json({ ok: true });
+    }
+
+    // ── PUSH_DESABONNER ──
+    if (action === "push_desabonner") {
+      const endpoint = String(d.endpoint ?? "");
+      if (!endpoint) return json({ ok: false, error: "endpoint requis" });
+      await sb(`bey_push?endpoint=eq.${encodeURIComponent(endpoint)}`, { method: "DELETE" });
+      return json({ ok: true });
     }
 
     return json({ ok: false, error: "action inconnue" });

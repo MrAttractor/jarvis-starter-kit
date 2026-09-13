@@ -4,6 +4,7 @@
 // Actions : stats, broadcast, content_(list|add|toggle),
 //           comments_recent, comment_moderate, photo_(add|list|toggle|delete).
 // ============================================================
+import { envoyer, type Abonnement, type Reglages } from "../_partage/webpush.ts";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 // Liste blanche d'UID admin (séparés par virgule). Rétrocompatible avec un seul UID.
@@ -29,6 +30,54 @@ function sb(path: string, opts: RequestInit = {}) {
 async function countRows(table: string, filter = ""): Promise<number> {
   const r = await sb(`${table}?select=*${filter}`, { headers: { Prefer: "count=exact", Range: "0-0" } });
   return parseInt((r.headers.get("content-range") || "*/0").split("/")[1] || "0", 10) || 0;
+}
+
+
+// ── Notifications : les reglages VAPID, lus une fois ──
+function reglagesPush(): Reglages | null {
+  const brut = Deno.env.get("VAPID_PRIVATE_JWK") ?? "";
+  const publique = Deno.env.get("VAPID_PUBLIC") ?? "";
+  const sujet = Deno.env.get("VAPID_SUBJECT") ?? "";
+  if (!brut || !publique || !sujet) return null;
+  try { return { publique, sujet, priveeJwk: JSON.parse(brut) as JsonWebKey }; }
+  catch (_) { return null; }
+}
+
+/** Previent tous les abonnes. Renvoie ce qui est REELLEMENT parti, pas le
+ *  nombre de membres : le tableau de bord annoncait "envoye a N" alors que
+ *  rien ne partait, et Serge croyait avoir touche sa communaute. */
+async function prevenirTous(titre: string, corps: string, url: string) {
+  const r = reglagesPush();
+  if (!r) return { envoyes: 0, echecs: 0, nettoyes: 0, configure: false };
+
+  const abos = await (await sb("bey_push?select=id,endpoint,p256dh,auth")).json();
+  const liste: any[] = Array.isArray(abos) ? abos : [];
+  if (!liste.length) return { envoyes: 0, echecs: 0, nettoyes: 0, configure: true };
+
+  const message = JSON.stringify({ titre, corps, url });
+  let envoyes = 0, echecs = 0;
+  const perimes: string[] = [];
+
+  // Par paquets : quelques milliers d'abonnes lances d'un coup epuisent les
+  // connexions sortantes de la fonction.
+  const PAQUET = 40;
+  for (let i = 0; i < liste.length; i += PAQUET) {
+    const lot = liste.slice(i, i + PAQUET);
+    const res = await Promise.all(
+      lot.map((x) => envoyer({ endpoint: x.endpoint, p256dh: x.p256dh, auth: x.auth } as Abonnement, message, r)),
+    );
+    res.forEach((v, k) => {
+      if (v.ok) envoyes++;
+      else { echecs++; if (v.perime) perimes.push(lot[k].id); }
+    });
+  }
+
+  // Un abonnement mort le reste : on le retire plutot que de le retenter a
+  // chaque publication pendant des mois.
+  if (perimes.length) {
+    await sb(`bey_push?id=in.(${perimes.join(",")})`, { method: "DELETE" });
+  }
+  return { envoyes, echecs, nettoyes: perimes.length, configure: true };
 }
 
 Deno.serve(async (req) => {
@@ -67,10 +116,26 @@ Deno.serve(async (req) => {
     if (action === "broadcast") {
       const contenu = String(d.contenu ?? "").trim();
       if (!contenu) return json({ ok: false, error: "message vide" });
-      const total = await countRows("bey_membres");
       const res = await sb("bey_messages", { method: "POST", headers: { Prefer: "return=representation" }, body: JSON.stringify({ contenu }) });
       if (!res.ok) return json({ ok: false, error: await res.text() });
-      return json({ ok: true, envoye_a: total });
+
+      // Le mot est ecrit. Reste a prevenir ceux qui l'ont accepte.
+      const p = await prevenirTous(
+        "Serge Beynaud",
+        contenu.length > 120 ? contenu.slice(0, 117) + "..." : contenu,
+        "/beynaud/fan",
+      );
+      // On renvoie ce qui est parti pour de vrai. L'ancienne reponse annoncait
+      // le nombre de membres, alors qu'aucune notification n'existait.
+      return json({
+        ok: true,
+        notifies: p.envoyes,
+        echecs: p.echecs,
+        nettoyes: p.nettoyes,
+        push_configure: p.configure,
+        abonnes: await countRows("bey_push"),
+        membres: await countRows("bey_membres"),
+      });
     }
 
     // ── CONTENUS ──

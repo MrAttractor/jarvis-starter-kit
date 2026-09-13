@@ -184,6 +184,23 @@ body.splash-on{overflow:hidden;}
   min-height:44px;padding:0 4px;flex-shrink:0;}
 .empty{font-size:13px;color:var(--dim);text-align:center;padding:28px 20px;line-height:1.7;}
 
+/* La carte des notifications. Meme famille visuelle que le filet de
+   securite : ce sont deux propositions, pas deux alertes. */
+.cloche{background:linear-gradient(180deg,rgba(204,0,0,.10),var(--n3));
+  border:1px solid rgba(204,0,0,.28);border-radius:16px;padding:16px;margin-bottom:14px;
+  display:flex;gap:13px;align-items:flex-start;}
+.cloche-i{width:38px;height:38px;border-radius:11px;background:rgba(204,0,0,.16);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cloche-i svg{width:20px;height:20px;stroke:var(--rouge-vif);fill:none;stroke-width:2;}
+.cloche-c{flex:1;min-width:0;}
+.cloche-t{font-size:14px;font-weight:800;margin-bottom:4px;}
+.cloche-d{font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:12px;}
+.cloche-b{width:100%;min-height:46px;background:var(--rouge);color:#fff;border-radius:11px;
+  font-size:13px;font-weight:800;letter-spacing:.6px;box-shadow:0 6px 20px var(--rouge-glow);}
+.cloche-b:active{background:var(--rouge-vif);}
+.cloche-b.calme{background:var(--n5);box-shadow:none;}
+.cloche-n{font-size:11px;color:var(--dim);margin-top:9px;line-height:1.5;}
+
 /* Le filet de securite, propose dans l'espace et jamais a la porte. Le fan
    donne son numero quand il a deja quelque chose a perdre, pas avant. */
 .filet{background:var(--n3);border:1px solid var(--faint);border-radius:16px;padding:16px;margin-bottom:14px;}
@@ -367,6 +384,18 @@ body.splash-on{overflow:hidden;}
         <div id="amb-progress"></div>
       </div>
 
+      <div class="cloche hidden" id="cloche">
+        <div class="cloche-i">
+          <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        </div>
+        <div class="cloche-c">
+          <div class="cloche-t" id="cloche-t">Sois prévenu quand Serge poste</div>
+          <div class="cloche-d" id="cloche-d">Une notification sur ton téléphone dès qu’il publie. Rien d’autre, et tu peux couper quand tu veux.</div>
+          <button class="cloche-b" id="cloche-b">Activer les notifications</button>
+          <div class="cloche-n" id="cloche-n"></div>
+        </div>
+      </div>
+
       <div class="filet hidden" id="filet">
         <div class="filet-t">Ne perds jamais ton compte</div>
         <div class="filet-d">Ton compte vit dans ce téléphone. Laisse ton WhatsApp et tu le retrouveras partout, même si tu changes d’appareil. Ton numéro n’est montré à personne.</div>
@@ -469,6 +498,7 @@ function peindreCoquille(m){
   // Le filet ne s'affiche que tant qu'il n'a pas de numero enregistre.
   document.getElementById('filet').classList.toggle('hidden', !!m.a_numero);
   document.querySelector('.zone-danger').classList.remove('hidden');
+  etatCloche();
 }
 
 /* Visiteur : le meme ecran, mais sans son nom, sans ses outils, et avec trois
@@ -487,7 +517,151 @@ function peindreApercu(){
   h.appendChild(el('span','r','BEYNAUMANIA'));
   document.getElementById('m-hello-sub').textContent='L’univers officiel de Serge Beynaud. Voici un aperçu.';
   document.getElementById('filet').classList.add('hidden');
+  document.getElementById('cloche').classList.add('hidden');
   document.querySelector('.zone-danger').classList.add('hidden');
+}
+
+/* ===================== LES NOTIFICATIONS =====================
+   Regle tenue ici : on ne demande JAMAIS la permission a l'ouverture. Un
+   navigateur qui recoit la demande trop tot se voit refuser, et cette
+   permission ne se redemande pas : elle est perdue pour de bon. On la
+   demande donc sur un geste volontaire, depuis une carte qui explique. */
+const VAPID_PUBLIQUE = 'BPy567zKA03UA9iH1BgX-Rp8HWDJt-61qbQ5Axpy7SHi4H_Tks605sSCO-FD7D-LOjuI_ZSsPor5WSR9HVkPMM0';
+
+function pushDisponible(){
+  return ('serviceWorker' in navigator) && ('PushManager' in window) && ('Notification' in window);
+}
+
+/* navigator.serviceWorker.ready ne rejette JAMAIS : sans service worker
+   enregistre, elle reste suspendue pour toujours. Un await dessus arrete
+   silencieusement tout le reste de la fonction. On borne l'attente. */
+function swPret(delai){
+  if(!('serviceWorker' in navigator)) return Promise.resolve(null);
+  return Promise.race([
+    navigator.serviceWorker.ready,
+    new Promise(function(r){ setTimeout(function(){ r(null); }, delai || 4000); })
+  ]);
+}
+
+async function etatCloche(){
+  const carte = document.getElementById('cloche');
+  const btn = document.getElementById('cloche-b');
+  const note = document.getElementById('cloche-n');
+  const titre = document.getElementById('cloche-t');
+  const desc = document.getElementById('cloche-d');
+  if(APERCU || !ME){ carte.classList.add('hidden'); return; }
+
+  if(!pushDisponible()){
+    // Surtout sur iPhone : les notifications n'existent que si la
+    // Beynaumania a ete ajoutee a l'ecran d'accueil. On le dit, au lieu
+    // d'afficher un bouton qui ne marchera pas.
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if(!iOS){ carte.classList.add('hidden'); return; }
+    carte.classList.remove('hidden');
+    titre.textContent = 'Ajoute la Beynaumania à ton écran';
+    desc.textContent = 'Sur iPhone, les notifications ne marchent qu’une fois l’application ajoutée à l’écran d’accueil.';
+    btn.classList.add('hidden');
+    note.textContent = 'Bouton Partager, puis « Sur l’écran d’accueil ».';
+    return;
+  }
+
+  if(Notification.permission === 'denied'){
+    carte.classList.remove('hidden');
+    titre.textContent = 'Les notifications sont bloquées';
+    desc.textContent = 'Tu as refusé les notifications pour ce site. Ça se remet dans les réglages de ton navigateur.';
+    btn.classList.add('hidden');
+    note.textContent = '';
+    return;
+  }
+
+  // On affiche l'offre tout de suite, dans son etat par defaut. Interroger le
+  // navigateur d'abord revenait a ne rien afficher tant qu'il ne repondait pas,
+  // et a ne jamais rien afficher s'il ne repondait pas du tout.
+  carte.classList.remove('hidden');
+  btn.classList.remove('hidden');
+  btn.classList.remove('calme');
+  titre.textContent = 'Sois prévenu quand Serge poste';
+  desc.textContent = 'Une notification sur ton téléphone dès qu’il publie. Rien d’autre, et tu peux couper quand tu veux.';
+  btn.textContent = 'Activer les notifications';
+  note.textContent = '';
+
+  let abo = null;
+  try{
+    const reg = await swPret(4000);
+    if(reg) abo = await reg.pushManager.getSubscription();
+  }catch(e){ abo = null; }
+
+  if(abo){
+    titre.textContent = 'Tu es prévenu';
+    desc.textContent = 'Tu recevras une notification dès que Serge publie.';
+    btn.textContent = 'Ne plus être prévenu';
+    btn.classList.add('calme');
+    note.textContent = '';
+  }
+}
+
+async function basculerCloche(){
+  if(!ME || !pushDisponible()) return;
+  const btn = document.getElementById('cloche-b');
+  const note = document.getElementById('cloche-n');
+  btn.disabled = true;
+  const avant = btn.textContent;
+  btn.textContent = '…';
+  try{
+    const reg = await swPret(6000);
+    if(!reg){
+      // Le service worker n'est pas la : sans lui, aucune notification n'est
+      // possible. On le dit plutot que de laisser le bouton tourner dans le vide.
+      note.textContent = 'Les notifications ne sont pas disponibles ici. Réessaie depuis ton navigateur habituel.';
+      btn.disabled = false; btn.textContent = avant;
+      return;
+    }
+    const dejaLa = await reg.pushManager.getSubscription();
+
+    if(dejaLa){
+      const url = dejaLa.endpoint;
+      await dejaLa.unsubscribe();
+      await api({ action:'push_desabonner', endpoint:url });
+      toast('C’est coupé. Tu ne seras plus prévenu.');
+    } else {
+      const perm = await Notification.requestPermission();
+      if(perm !== 'granted'){
+        note.textContent = perm === 'denied'
+          ? 'Refusé. Ça se remet dans les réglages de ton navigateur.'
+          : 'Tu pourras l’activer plus tard.';
+        btn.disabled = false; btn.textContent = avant;
+        await etatCloche();
+        return;
+      }
+      const abo = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: b64uVersOctets(VAPID_PUBLIQUE),
+      });
+      // On envoie l'abonnement brut : le serveur a besoin des deux cles que
+      // le navigateur vient de fabriquer, elles ne sont valables que pour lui.
+      const res = await api({ action:'push_abonner', membre_id:ME.id, abonnement: abo.toJSON() });
+      if(!res || !res.ok){
+        await abo.unsubscribe();
+        note.textContent = 'Ça n’a pas pu être enregistré. Réessaie.';
+        btn.disabled = false; btn.textContent = avant;
+        return;
+      }
+      toast('C’est activé. Tu seras prévenu.');
+    }
+  }catch(e){
+    note.textContent = 'Ton navigateur a refusé. Réessaie plus tard.';
+  }
+  btn.disabled = false;
+  await etatCloche();
+}
+
+/* La cle publique se transmet en octets, pas en texte. */
+function b64uVersOctets(s){
+  const p = (s + '='.repeat((4 - (s.length % 4)) % 4)).replace(/-/g, '+').replace(/_/g, '/');
+  const bin = atob(p);
+  const out = new Uint8Array(bin.length);
+  for(let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
 }
 
 /* Le filet de securite : il donne son numero quand il le decide. */
@@ -1231,6 +1405,7 @@ function fermerSplash(){
 }
 document.getElementById('enter-btn').addEventListener('click',fermerSplash);
 document.getElementById('f-btn').addEventListener('click',securiser);
+document.getElementById('cloche-b').addEventListener('click',basculerCloche);
 document.getElementById('btn-supprimer').addEventListener('click',supprimerCompte);
 document.getElementById('retour-apercu').addEventListener('click',function(){
   document.getElementById('view-join').classList.add('hidden');
