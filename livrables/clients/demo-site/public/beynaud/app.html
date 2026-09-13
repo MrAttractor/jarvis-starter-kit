@@ -318,7 +318,9 @@ async function loadMod(){
   const cs=(res&&res.commentaires)||[];
   if(!cs.length){el.innerHTML='<div class="row-sub">Aucun commentaire pour l\'instant.</div>';return;}
   el.innerHTML=cs.map(c=>{
-    const ctx=c.bey_messages&&c.bey_messages.contenu?('Sur : "'+esc(c.bey_messages.contenu).slice(0,50)+'…"'):'';
+    // cible_libelle est calcule par bey-admin depuis la migration 0005 :
+    // le commentaire peut porter sur un mot, une photo, une video ou un sondage.
+    const ctx=c.cible_libelle?esc(c.cible_libelle):'';
     return `<div class="cm ${c.masque?'masked':''}">
       <div class="cm-top"><div class="cm-name">${esc(c.prenom)}</div><div class="cm-time">${timeAgo(c.created_at)}${c.masque?(' · masqué'+(c.motif?' ('+esc(c.motif)+')':'')):''}</div></div>
       ${ctx?`<div class="cm-ctx">${ctx}</div>`:''}

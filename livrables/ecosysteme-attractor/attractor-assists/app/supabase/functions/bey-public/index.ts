@@ -1,7 +1,10 @@
 // ============================================================
 // bey-public — BEYNAUD ARMY, côté fan (pas de JWT, service role)
-// Actions : join, me, feed (contenu + messages + likes + commentaires + photos),
-//           like (toggle), comment_add.
+// Actions : join, me, feed (un seul fil : mots + photos + videos + sondages),
+//           vote, like (bascule), comment_add.
+// Depuis la migration 0005 les coeurs et les commentaires visent un couple
+// (cible_type, cible_id), donc n'importe quel post du fil et plus seulement
+// un "mot de Serge".
 // Sécurité : RLS bloque l'accès direct ; service role uniquement.
 // On n'expose jamais le WhatsApp des autres membres.
 // ============================================================
@@ -9,6 +12,8 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 const AMB_THRESHOLD = 5;
+// Doit rester aligne sur la contrainte bey_*_cible_type_chk de la migration 0005.
+const CIBLES = new Set(["message", "photo", "contenu", "sondage"]);
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -157,64 +162,113 @@ Deno.serve(async (req) => {
       return json({ ok: true, membre: pub(m[0]) });
     }
 
-    // ── FEED : contenu + messages(+likes/comments) + photos ──
+    // -- FEED : un seul fil chronologique, plus les lives epingles --
+    // Les quatre origines (mot de Serge, photo, video, sondage) deviennent des
+    // posts de meme nature. Le live n'en est pas un : il est ponctuel et reste
+    // en tete, il ne doit pas redescendre dans le fil au fil des jours.
     if (action === "feed") {
       const grade = d.grade === "ambassadeur" ? "ambassadeur" : "membre";
       const gate = grade === "ambassadeur" ? "" : "&grade_requis=eq.membre";
       const membreId = d.membre_id ? String(d.membre_id) : null;
+      const j = (path: string) => sb(path).then((r) => r.json()).catch(() => []);
+      const arr = (x: unknown) => (Array.isArray(x) ? x : []);
 
-      const contenus = await (await sb(
-        `bey_contenus?actif=eq.true${gate}&order=ordre.asc&select=id,titre,description,type,youtube_url,cover_url,grade_requis`,
-      )).json();
-      const photos = await (await sb(
-        `bey_photos?actif=eq.true${gate}&order=created_at.desc&limit=30&select=id,url,legende,grade_requis,created_at`,
-      )).json();
-      const messages = await (await sb(
-        `bey_messages?order=created_at.desc&limit=20&select=id,contenu,created_at`,
-      )).json();
+      const [contenus, photos, messages, sondages] = await Promise.all([
+        j(`bey_contenus?actif=eq.true${gate}&order=created_at.desc&select=id,titre,description,type,youtube_url,cover_url,grade_requis,created_at`),
+        j(`bey_photos?actif=eq.true${gate}&order=created_at.desc&limit=60&select=id,url,legende,grade_requis,created_at`),
+        j(`bey_messages?order=created_at.desc&limit=40&select=id,contenu,created_at`),
+        j(`bey_sondages?actif=eq.true${gate}&order=created_at.desc&select=id,question,options,grade_requis,created_at`),
+      ]);
 
-      if (Array.isArray(messages) && messages.length) {
-        const ids = messages.map((m: any) => m.id);
-        const inList = `(${ids.join(",")})`;
-        const reactions = await (await sb(`bey_reactions?message_id=in.${inList}&select=message_id,membre_id`)).json();
-        const comments = await (await sb(
-          `bey_commentaires?message_id=in.${inList}&masque=eq.false&order=created_at.asc&select=id,message_id,prenom,contenu,created_at`,
-        )).json();
+      const lives = arr(contenus).filter((c: any) => c.type === "live");
+      const videos = arr(contenus).filter((c: any) => c.type !== "live");
+
+      const fil: any[] = [];
+      for (const m of arr(messages)) {
+        fil.push({ type: "message", id: m.id, created_at: m.created_at, contenu: m.contenu });
+      }
+      for (const p of arr(photos)) {
+        fil.push({ type: "photo", id: p.id, created_at: p.created_at, url: p.url, legende: p.legende, grade_requis: p.grade_requis });
+      }
+      for (const c of arr(videos)) {
+        // "format" et non "type" : ici type dit la place dans le fil, format dit
+        // la nature de la video. Les confondre casserait le rendu.
+        fil.push({ type: "contenu", id: c.id, created_at: c.created_at, titre: c.titre, description: c.description, format: c.type, youtube_url: c.youtube_url, cover_url: c.cover_url, grade_requis: c.grade_requis });
+      }
+      for (const q of arr(sondages)) {
+        fil.push({ type: "sondage", id: q.id, created_at: q.created_at, question: q.question, options: q.options || [], grade_requis: q.grade_requis });
+      }
+
+      fil.sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+
+      // Coeurs et commentaires de tout le fil en deux requetes, pas une par post.
+      if (fil.length) {
+        const inList = `(${fil.map((p) => p.id).join(",")})`;
+        const [reactions, comments] = await Promise.all([
+          j(`bey_reactions?cible_id=in.${inList}&select=cible_type,cible_id,membre_id`),
+          j(`bey_commentaires?cible_id=in.${inList}&masque=eq.false&order=created_at.asc&select=id,cible_type,cible_id,prenom,contenu,created_at`),
+        ]);
+        const cle = (t: string, i: string) => t + ":" + i;
         const likeCount: Record<string, number> = {};
         const likedByMe: Record<string, boolean> = {};
-        for (const r of (reactions || [])) {
-          likeCount[r.message_id] = (likeCount[r.message_id] || 0) + 1;
-          if (membreId && r.membre_id === membreId) likedByMe[r.message_id] = true;
+        for (const r of arr(reactions)) {
+          const k = cle(r.cible_type, r.cible_id);
+          likeCount[k] = (likeCount[k] || 0) + 1;
+          if (membreId && r.membre_id === membreId) likedByMe[k] = true;
         }
-        const commByMsg: Record<string, any[]> = {};
-        for (const c of (comments || [])) (commByMsg[c.message_id] ||= []).push(c);
-        for (const m of messages) {
-          m.likes = likeCount[m.id] || 0;
-          m.liked = !!likedByMe[m.id];
-          m.comments = commByMsg[m.id] || [];
+        const commBy: Record<string, any[]> = {};
+        for (const c of arr(comments)) {
+          (commBy[cle(c.cible_type, c.cible_id)] ||= []).push({ id: c.id, prenom: c.prenom, contenu: c.contenu, created_at: c.created_at });
         }
-      }
-      // Sondages actifs (gatés) + résultats + vote du membre
-      const sondages = await (await sb(
-        `bey_sondages?actif=eq.true${gate}&order=created_at.desc&select=id,question,options,grade_requis,created_at`,
-      )).json();
-      if (Array.isArray(sondages) && sondages.length) {
-        const sids = sondages.map((s: any) => s.id);
-        const votes = await (await sb(`bey_votes?sondage_id=in.(${sids.join(",")})&select=sondage_id,membre_id,option_index`)).json();
-        const cnt: Record<string, number[]> = {};
-        const mine: Record<string, number> = {};
-        for (const s of sondages) cnt[s.id] = new Array((s.options || []).length).fill(0);
-        for (const v of (votes || [])) {
-          if (cnt[v.sondage_id] && v.option_index < cnt[v.sondage_id].length) cnt[v.sondage_id][v.option_index]++;
-          if (membreId && v.membre_id === membreId) mine[v.sondage_id] = v.option_index;
-        }
-        for (const s of sondages) {
-          s.counts = cnt[s.id];
-          s.total = cnt[s.id].reduce((a: number, b: number) => a + b, 0);
-          s.mon_vote = (s.id in mine) ? mine[s.id] : null;
+        for (const p of fil) {
+          const k = cle(p.type, p.id);
+          p.likes = likeCount[k] || 0;
+          p.liked = !!likedByMe[k];
+          p.comments = commBy[k] || [];
         }
       }
-      return json({ ok: true, contenus, messages, photos, sondages: sondages || [] });
+
+      // Resultats des sondages du fil, et le vote de ce membre.
+      const sids = fil.filter((p) => p.type === "sondage").map((p) => p.id);
+      if (sids.length) {
+        const votes = await j(`bey_votes?sondage_id=in.(${sids.join(",")})&select=sondage_id,membre_id,option_index`);
+        for (const p of fil) {
+          if (p.type !== "sondage") continue;
+          const counts = new Array((p.options || []).length).fill(0);
+          let mon: number | null = null;
+          for (const v of arr(votes)) {
+            if (v.sondage_id !== p.id) continue;
+            if (v.option_index < counts.length) counts[v.option_index]++;
+            if (membreId && v.membre_id === membreId) mon = v.option_index;
+          }
+          p.counts = counts;
+          p.total = counts.reduce((a: number, b: number) => a + b, 0);
+          p.mon_vote = mon;
+        }
+      }
+
+      // Compatibilite : l'ecran deja en ligne attend encore les quatre listes
+      // separees. On les renvoie a cote du fil, alimentees par les memes
+      // calculs, pour qu'un fan dont l'onglet est ouvert ne voie rien casser
+      // pendant la bascule. A retirer quand fan.html ne lira plus que "fil".
+      const parId: Record<string, any> = {};
+      for (const p of fil) parId[p.type + ":" + p.id] = p;
+      const enrichir = (t: string, ligne: any) => {
+        const p = parId[t + ":" + ligne.id];
+        if (!p) return ligne;
+        ligne.likes = p.likes; ligne.liked = p.liked; ligne.comments = p.comments;
+        if (t === "sondage") { ligne.counts = p.counts; ligne.total = p.total; ligne.mon_vote = p.mon_vote; }
+        return ligne;
+      };
+      return json({
+        ok: true,
+        fil,
+        lives,
+        contenus: arr(contenus).map((c: any) => enrichir("contenu", c)),
+        photos: arr(photos).map((p: any) => enrichir("photo", p)),
+        messages: arr(messages).map((m: any) => enrichir("message", m)),
+        sondages: arr(sondages).map((q: any) => enrichir("sondage", q)),
+      });
     }
 
     // ── VOTE (1 par fan / sondage) ──
@@ -235,44 +289,57 @@ Deno.serve(async (req) => {
       return json({ ok: true, counts, total: counts.reduce((a: number, b: number) => a + b, 0), mon_vote: mon });
     }
 
-    // ── LIKE (toggle) ──
+    // -- Quelle cible ? --
+    // message_id est l'ancien nom du parametre. Un onglet peut rester ouvert
+    // des jours sur un telephone : il continuerait de l'envoyer, et le fan
+    // verrait son coeur echouer sans rien comprendre. On l'accepte encore.
+    const lireCible = (x: any) => {
+      const ct = String(x.cible_type ?? (x.message_id ? "message" : ""));
+      const ci = String(x.cible_id ?? x.message_id ?? "");
+      return CIBLES.has(ct) && ci ? { ct, ci } : null;
+    };
+
+    // -- LIKE (bascule), sur n'importe quel post --
     if (action === "like") {
-      const mid = String(d.membre_id ?? ""), msg = String(d.message_id ?? "");
-      if (!mid || !msg) return json({ ok: false, error: "membre_id + message_id requis" });
+      const mid = String(d.membre_id ?? "");
+      const c = lireCible(d);
+      if (!mid || !c) return json({ ok: false, error: "membre_id + cible valides requis" });
+      const ou = `cible_type=eq.${encodeURIComponent(c.ct)}&cible_id=eq.${encodeURIComponent(c.ci)}`;
       if (d.on) {
         await sb("bey_reactions", {
           method: "POST", headers: { Prefer: "resolution=ignore-duplicates" },
-          body: JSON.stringify({ message_id: msg, membre_id: mid }),
+          body: JSON.stringify({ cible_type: c.ct, cible_id: c.ci, membre_id: mid }),
         });
       } else {
-        await sb(`bey_reactions?message_id=eq.${encodeURIComponent(msg)}&membre_id=eq.${encodeURIComponent(mid)}`, { method: "DELETE" });
+        await sb(`bey_reactions?${ou}&membre_id=eq.${encodeURIComponent(mid)}`, { method: "DELETE" });
       }
-      const likes = await countRows("bey_reactions", `message_id=eq.${encodeURIComponent(msg)}`);
+      const likes = await countRows("bey_reactions", ou);
       return json({ ok: true, likes, liked: !!d.on });
     }
 
-    // ── COMMENT_ADD ──
+    // -- COMMENT_ADD, sur n'importe quel post --
     if (action === "comment_add") {
-      const mid = String(d.membre_id ?? ""), msg = String(d.message_id ?? "");
+      const mid = String(d.membre_id ?? "");
+      const c = lireCible(d);
       const contenu = String(d.contenu ?? "").trim().slice(0, 500);
-      if (!mid || !msg || !contenu) return json({ ok: false, error: "commentaire vide" });
+      if (!mid || !c || !contenu) return json({ ok: false, error: "commentaire vide ou cible invalide" });
       const m = await (await sb(`bey_membres?id=eq.${encodeURIComponent(mid)}&select=prenom`)).json();
       if (!Array.isArray(m) || !m.length) return json({ ok: false, error: "membre inconnu" });
 
-      // Auto-modération hybride : filtre de mots puis IA. Flaggé = masqué (Serge révise).
+      // Auto-moderation hybride : filtre de mots puis IA. Flagge = masque (Serge revise).
       let masque = false, motif: string | null = null;
       if (blocklistHit(contenu)) { masque = true; motif = "Filtre de mots"; }
       else { const ai = await aiModerate(contenu); if (ai && ai.toxic) { masque = true; motif = "IA : " + ai.motif; } }
 
       const res = await sb("bey_commentaires", {
         method: "POST", headers: { Prefer: "return=representation" },
-        body: JSON.stringify({ message_id: msg, membre_id: mid, prenom: m[0].prenom, contenu, masque, motif }),
+        body: JSON.stringify({ cible_type: c.ct, cible_id: c.ci, membre_id: mid, prenom: m[0].prenom, contenu, masque, motif }),
       });
       if (!res.ok) return json({ ok: false, error: await res.text() });
-      const c = (await res.json())[0];
+      const cm = (await res.json())[0];
       return json({
         ok: true, masque,
-        commentaire: { id: c.id, prenom: c.prenom, contenu: c.contenu, created_at: c.created_at },
+        commentaire: { id: cm.id, prenom: cm.prenom, contenu: cm.contenu, created_at: cm.created_at },
       });
     }
 

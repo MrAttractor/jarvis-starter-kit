@@ -101,8 +101,35 @@ Deno.serve(async (req) => {
 
     // ── MODÉRATION COMMENTAIRES ──
     if (action === "comments_recent") {
-      const c = await (await sb(`bey_commentaires?order=created_at.desc&limit=40&select=id,prenom,contenu,masque,motif,created_at,message_id,bey_messages(contenu)`)).json();
-      return json({ ok: true, commentaires: c });
+      // La migration 0005 a retire la cle etrangere vers bey_messages : on ne
+      // peut plus imbriquer le post parent. On le retrouve par son type, en une
+      // requete par type present, et on renvoie un libelle deja pret a afficher.
+      const brut = await (await sb(`bey_commentaires?order=created_at.desc&limit=40&select=id,prenom,contenu,masque,motif,created_at,cible_type,cible_id`)).json();
+      const rows = Array.isArray(brut) ? brut : [];
+      const TABLES: Record<string, [string, string, string]> = {
+        message: ["bey_messages", "contenu", "Sur le mot"],
+        photo: ["bey_photos", "legende", "Sur la photo"],
+        contenu: ["bey_contenus", "titre", "Sur la video"],
+        sondage: ["bey_sondages", "question", "Sur le sondage"],
+      };
+      const parType: Record<string, string[]> = {};
+      for (const x of rows) (parType[x.cible_type] ||= []).push(x.cible_id);
+      const texte: Record<string, string> = {};
+      for (const t of Object.keys(parType)) {
+        const spec = TABLES[t];
+        const ids = [...new Set(parType[t])];
+        if (!spec || !ids.length) continue;
+        const r = await (await sb(`${spec[0]}?id=in.(${ids.join(",")})&select=id,${spec[1]}`)).json();
+        for (const row of (Array.isArray(r) ? r : [])) texte[t + ":" + row.id] = String(row[spec[1]] ?? "");
+      }
+      for (const x of rows) {
+        const spec = TABLES[x.cible_type];
+        const t = texte[x.cible_type + ":" + x.cible_id] || "";
+        // Un post supprime laisse son libelle vide : on le dit, plutot que
+        // d'afficher un commentaire qui semble ne porter sur rien.
+        x.cible_libelle = spec ? (t ? spec[2] + ' : "' + t.slice(0, 60) + '"' : spec[2] + " (supprime)") : "";
+      }
+      return json({ ok: true, commentaires: rows });
     }
     if (action === "comment_moderate") {
       if (!d.id) return json({ ok: false, error: "id requis" });
