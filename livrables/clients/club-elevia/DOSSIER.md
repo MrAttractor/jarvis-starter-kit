@@ -1,24 +1,69 @@
 # Club Élévia — l'état du dossier
 
-> Révision du 26/08/2026, après sa deuxième recette. **Cette fiche est la première
-> chose à lire du dossier.**
+> Révision du 01/09/2026, après son mail de cadrage du 28/08. **Cette fiche est la
+> première chose à lire du dossier.**
 > Un chiffre ou un statut n'existe qu'ici. S'il apparaît ailleurs, c'est une copie à vérifier.
 
 | Radar | |
 |---|---|
-| Statut | **2e recette reçue le 20/08. Elle ne demande plus de modification importante, seulement des finitions. Ses six points sont traités au 26/08** |
-| Dernier contact | **2026-08-20 à 20h51 : sa 2e recette** (message `1a020835c741a2fd`). Réponse rédigée, **pas encore envoyée** |
-| Prochaine action | **Envoyer la réponse** (brouillon Gmail dans le fil, en cours de retouche par Mac Arthur). Puis **signer soi-même** l'avenant, la contresignature manque |
-| Échéance | **répondre sans délai**, son mail a déjà 6 jours. Signature : lien valable jusqu'au 30/09/2026 |
-| Argent en attente | 2 050 € — Tranche 2 non déclenchée |
+| Statut | **PACKAGE SIGNÉ DES DEUX CÔTÉS.** Élise le 06/09 à 20h21 UTC, Mac Arthur le 07/09 à 21h10 UTC. Dossier `signe`, preuves vérifiées, documents intacts. **Le J0 est posé, la production commence** |
+| Dernier contact | **2026-09-07 à 21h10 : contresignature.** Côté cliente, sa signature du 06/09 à 20h21 |
+| Prochaine action | **1.** Envoyer la réponse aux 4 questions (`REPONSE-ELISE-2026-09-01.md`, toujours pas envoyée, son mail a 10 jours). **2.** Lui transmettre le certificat complet, elle n'a que celui de sa propre signature. **3.** Démarrer la Phase 2, prototype fonctionnel |
+| Échéance | **Tranche 2 le 28/09**, bêta le 19/10, mise en production le **02/11/2026**. Calendrier détaillé plus bas |
+| Argent en attente | 2 050 €. **Tranche 2 (900 €) exigible à la livraison du prototype, visée au 28/09.** Le devis complémentaire n'a plus lieu d'être sur l'encaissement, il est entré au périmètre |
+
+## Son mail du 28/08 : ce qu'il demande vraiment
+
+Elle écrit vouloir « aller à l'essentiel » et « ne pas ajouter beaucoup de nouvelles
+fonctionnalités ». **Le parcours qu'elle décrit ajoute pourtant trois blocs rangés en
+section 9 du CDC** (« hors périmètre, devis complémentaire ») :
+
+| Ce qu'elle demande | Où c'est rangé |
+|---|---|
+| choix de l'adhésion → **paiement** → accès au Club | **hors périmètre** : « encaissement effectif des abonnements et toute passerelle de paiement associée » |
+| accéder aux **événements**, les gérer côté admin | **hors périmètre** : « Module Événements club » |
+| contacter la **conciergerie**, recevoir ses demandes | **hors périmètre** : « Espace Concierge Relationnel » |
+| **suivi des visites** | hors CDC, et déclenche l'obligation de bannière cookies |
+
+Le piège : le paiement est placé **au milieu du parcours obligatoire**, entre la
+validation et l'accès. Répondre à ses 4 questions sans traiter ce point revient à
+accepter en silence un périmètre élargi pour 3 000 €. **R-09 et R-10.**
+
+**Sortie proposée dans la réponse** : ouvrir le Club **sans encaissement**, adhésions
+fondatrices offertes et validées à la main, paiement branché ensuite. Elle lance à
+l'heure, on ne travaille pas gratuitement, et le devis complémentaire reste sur la table.
+
+### Deux points de droit relevés dans ses documents
+
+- **Champ « origines ou attaches culturelles »** qu'elle veut ajouter, et **intentions
+  relationnelles** croisées avec le genre déjà collecté : données sensibles au sens de
+  l'article 9 du RGPD (origine, orientation sexuelle). Sa propre v1.1 le pressent sans
+  le nommer. À faire valider avant mise en service.
+- **Trois adresses de contact différentes** dans ses deux documents :
+  `contact@ynlsociéte.com` (avec accent, techniquement impossible),
+  `contact@ynlsociete.com` et `contact@ynlclub.com`. Aucun de ces domaines n'est acheté.
+
+### Le lien HTTP, cause trouvée et prouvée
+
+Elle signale que le dernier lien commence par `http`. **Le site n'est pas en cause** :
+mesuré le 01/09, `http://` renvoie un **301 vers `https://`**, et `https://` répond 200.
+
+La cause est dans notre mail du 26/08. Pour contourner le redirecteur Gmail (R-15),
+l'adresse avait été collée **en texte brut sans `https://`**. Gmail l'a linkifiée en
+`http://`, **puis l'a réenveloppée quand même** dans son redirecteur, avec une expiration
+au 27/08 vers 13h. Résultat : le scheme dégradé **et** le défaut d'origine reproduit,
+dans le mail censé le corriger.
+
+**La parade est celle de `reference_gmail_liens_enveloppes`** : fournir un `htmlBody`
+avec une vraie ancre. Coller une adresse nue est pire que ne rien faire.
 
 ## En une phrase
 
 Elle a fait la recette des Modules 1 et 2 le 08/08 et **envoyé 16 points**, tous traités
 le 14/08. Elle juge le travail « de très bonne qualité » et « conforme au périmètre »,
-et valide les quatre premiers écrans sur le plan fonctionnel. **Rien n'est signé, ni par
-elle ni par nous**, et les questions du questionnaire d'affinités, seules bloquantes pour
-le Module 3, ne sont toujours pas arrivées.
+et valide les quatre premiers écrans sur le plan fonctionnel. **Notre contresignature est
+apposée depuis le 01/09, la sienne manque toujours**, et les questions du questionnaire
+d'affinités, seules bloquantes pour le Module 3, ne sont toujours pas arrivées.
 
 ## La 2e recette, du 20/08, et le lien qui n'ouvrait pas
 
@@ -195,17 +240,37 @@ mise en ligne**, sinon il ne se signera jamais.
 **C'est SON contrat à elle qui a été signé**, pas celui de l'agence. Ordre de priorité
 de son Art. 2 : Contrat > CDC > Cession PI > Devis > NDA.
 
+> **Rangement du 06/09/2026.** La racine du dossier ne contient plus que ce qui fait
+> foi aujourd'hui. Toutes les révisions antérieures et la correspondance déjà envoyée
+> sont dans `_archive/`, avec leur motif dans son README. Les fichiers ont repris la
+> convention de nommage du dossier (`AVENANT-01-ClubElevia.pdf` et non
+> `AVENANT01ClubElevia.pdf`).
+
 | Document | Fichier | État |
 |---|---|---|
 | Contrat signé | `CONTRAT DE PRESTATION DE DÉVELOPPEMENT INFORMATIQUE (signed).pdf` | **signé le 09/07** |
 | NDA | `NDA-V2-ClubElevia-MrAttractor-2026-06-13.html` | signé |
-| Avenant n°1 **révision V2** | `AVENANT-01-V2-ClubElevia.html` | **à signer** (la V1 du 17/07 est dans `_archive/`, non signée) |
-| Devis V5 | `DEVIS-ATR-2026-0005-ClubElevia` | **à signer** |
-| CDC V4 | `CDC-ATR-2026-0005-ClubElevia` | **à signer** |
+| Avenant n°1 **révision 4** | `AVENANT-01-ClubElevia.pdf` | **à signer** (V3, V2 et V1 dans `_archive/`, aucune signée) |
+| Devis **révision 6** | `DEVIS-ATR-2026-0005-ClubElevia.pdf` | **à signer** (V5 dans `_archive/`) |
+| CDC **révision 5** | `CDC-ATR-2026-0005-ClubElevia.pdf` | **à signer** (V4 dans `_archive/`) |
 | Reçus 001 à 004 | `RECU-ATR-2026-00x-ClubElevia` | émis |
 | Annexes de vision (offertes) | `ELEVIA-Vision-et-proposition-de-valeur`, `ELEVIA-Grandes-orientations` | envoyées |
-| Réponse à son mail du 02/08 | `BROUILLON-REPONSE-ELISE-03-08.md` | **à relire et envoyer** |
-| Réponse du 29/07 | `BROUILLON-REPONSE-ELISE-29-07.md` | envoyée |
+| Réponse à son mail du 28/08 | `REPONSE-ELISE-2026-09-01.md` | **à envoyer**, seul document de correspondance resté à la racine |
+
+**Les révisions 4, 5 et 6 n'existent qu'en PDF.** Leur source HTML n'a jamais été
+versée au dépôt : les seuls HTML disponibles sont ceux des révisions antérieures,
+désormais dans `_archive/`. Toute correction se fait donc dans le PDF, par
+`scripts/corrige_pdf_elevia.py`, qui repart des fichiers d'origine conservés dans
+`_archive/recu-2026-09-06/`. À récupérer dès que possible, sinon chaque révision
+future coûtera une chirurgie.
+
+**Corrigé le 06/09 dans les trois documents** : validité du devis portée au
+30 septembre 2026 (elle apparaissait à trois endroits, dont un pied de page qui
+annonçait encore « V5 ») ; réserve ajoutée au Devis et à l'Article 10 de l'Avenant,
+« les commissions et frais de transaction du prestataire de paiement restent
+également à la charge de la Cliente » ; pied de page du CDC réaligné sur sa
+couverture. La concession de l'encaissement est donc gratuite **hors frais
+d'opérations**, conformément à l'arbitrage de Mac Arthur.
 
 Tout ce qui est dans `_archive/` ne fait plus autorité. Voir son README.
 
@@ -227,27 +292,77 @@ La différence est expliquée dans le brouillon de réponse, avant qu'elle ne la
 
 ## Le lien de signature en cours
 
-> Relevé en base le 14/08/2026. **Trois dossiers de signature se sont succédé**, et seul
-> le dernier vaut. Les deux liens que cette fiche donnait auparavant appartenaient au
-> dossier du 03/08, **expiré depuis le 05/08**.
->
-> **Piège constaté :** ces deux liens périmés répondent quand même **HTTP 200**. Un test
-> au code de retour les aurait déclarés vivants. Vérifier le `statut` du dossier en base,
-> jamais la réponse HTTP (même leçon que R-60).
+> Refait le 06/09/2026, parce que les documents ont changé. **Vérifier toujours le
+> `statut` du dossier en base, jamais la réponse HTTP** : un lien périmé répond quand
+> même 200 (même leçon que R-60).
 
-**Le dossier qui vaut : `94722c2d-77d5-4579-b9a1-2e749baea1fa`**, créé le 05/08,
-statut `en_attente`, **expire le 30/09/2026**. Il scelle l'Avenant V3, le Devis V5 et le
-CDC V4.
+**Le dossier qui vaut : `f9f8c931-a6ed-48cf-881d-e0316b7dbaad`**, créé le 06/09,
+statut `en_attente`, **expire le 30/09/2026 à 23h59**. Il scelle l'**Avenant révision 4**,
+le **Devis révision 6** et le **CDC révision 5**, dans leur état corrigé du 06/09.
 
-| Signataire | Statut au 14/08 | Lien |
+| Signataire | Statut |
+|---|---|
+| Élise CAPEL | **`signe` le 06/09/2026 à 20h21m57 UTC**, consentement recueilli, tracé manuscrit, IP 176.148.9.158, preuve `d1b9e732…` |
+| Mac Arthur (contresignature) | **`signe` le 07/09/2026 à 21h10m31 UTC**, preuve `a05cda3f…` |
+
+**Le dossier est `signe`, clos le 07/09/2026 à 21h10m31 UTC.** Vérifié dans
+`sig_dossiers` et `sig_signataires`, pas au code de retour de la page (R-60).
+
+### Le calendrier que la signature déclenche
+
+J0 = **lundi 07/09/2026**. Jours ouvrés du lundi au vendredi, Toussaint et 11 novembre
+déduits. Le décompte se suspend pendant les validations de la Cliente, l'attente d'un
+élément lui incombant, d'une tranche échue ou des frais de tiers (Devis, section
+Calendrier).
+
+| Jalon | Date visée | Ce qui se passe |
 |---|---|---|
-| Élise CAPEL | **`ouvert`** : elle a cliqué, elle n'a pas signé | `signature.agenceattractor.com/s/664e2w4y0v421z5q5s6i026d474q0v030f3k6e53646x1g6v` |
-| Mac Arthur (contresignature) | **`en_attente`** : ta signature manque aussi | `signature.agenceattractor.com/s/1g595w5c59035x33280n0p5s5s37590f3d1a12104e271y1x` |
+| J+15 ouvrés | **lundi 28/09/2026** | Prototype fonctionnel livré et validé → **Tranche 2, 900 €** |
+| J+30 ouvrés | **lundi 19/10/2026** | Version bêta livrée et validée → **Tranche 3, 900 €** |
+| J+40 ouvrés | **lundi 02/11/2026** | Mise en production → **Tranche 4, 300 €**, et démarrage des 3 mois de maintenance corrective |
 
-C'est le lien envoyé dans le mail du 07/08, il est donc inutile d'en générer un nouveau.
+### Un trou du service de signature, constaté ici
 
-Dossiers antérieurs, **expirés et non signables** : `22518a80` du 03/08 et `a2a170aa` du
-29/07. Elle avait ouvert les deux sans signer.
+Quand le dernier signataire clôt un dossier, `sign-verify` envoie le certificat **au
+signataire du moment et à l'agence**. Ici les deux adresses sont la même,
+`hello@agenceattractor.com` : **Élise n'a donc jamais reçu le certificat du dossier
+complet.** Elle n'a que celui de sa propre signature du 06/09, qui ne montre pas la
+contresignature. Il faut le lui transmettre à la main.
+
+**À corriger dans le produit** : à la clôture, l'exemplaire signé doit partir vers
+**toutes les parties**, pas seulement vers le dernier signataire. Le cas se reproduira
+sur chaque dossier où l'agence signe en dernier.
+
+**Aucun ordre séquentiel n'est imposé** par `sign-verify` : le seul refus possible est
+« déjà signé ».
+
+**Sa signature est vérifiée, pas seulement enregistrée** (contrôle du 07/09 par
+`scripts/verifier_signature_elevia.mjs`) : les trois documents servis aujourd'hui ont
+toujours l'empreinte scellée, et son `preuve_hash` se recalcule à l'identique. Le
+contrôle d'intégrité interne de `sign-verify` était donc passé au moment de l'acte :
+elle a bien signé les révisions 4, 5 et 6, pas autre chose.
+
+**Ce que son journal raconte, et qui compte pour la suite.** Elle a ouvert le lien à
+20h12, consulté les documents **cinq fois entre 20h14 et 20h20**, demandé son code à
+20h21m29, signé à 20h21m57, puis **rouvert un document à 20h23m56**. Elle a lu avant de
+signer, et elle est revenue vérifier après. C'est une cliente qui relit : les documents
+qu'on lui envoie doivent être justes du premier coup.
+
+### Pourquoi un nouveau dossier, et pas une mise à jour de l'ancien
+
+L'ancien dossier `94722c2d` scellait l'Avenant V3, le Devis V5 et le CDC V4, et
+**Mac Arthur l'avait signé le 01/09 à 09h23 UTC**. Or le `preuve_hash` d'une signature
+est calculé sur l'empreinte des documents au moment où elle est apposée. Remplacer les
+documents sous cette signature l'aurait rendue invérifiable, et aurait fait dire au
+dossier que Mac Arthur avait signé le 01/09 une révision 4 qui n'existait pas encore.
+Le déclencheur `sig_signature_scellee` interdit d'ailleurs de retoucher une ligne signée.
+
+L'ancien dossier est donc **passé en `expire` le 06/09**, avec un événement `remplace`
+inscrit à son journal. Sa preuve reste intacte et vérifiable : le `preuve_hash`
+`7f3b5732…` se recalcule toujours à l'identique. Son lien ne signe plus.
+
+Dossiers antérieurs, tous expirés et non signables : `94722c2d` du 05/08, `22518a80`
+du 03/08, `a2a170aa` du 29/07.
 
 ## Prochaine action
 
@@ -262,8 +377,8 @@ Dossiers antérieurs, **expirés et non signables** : `22518a80` du 03/08 et `a2
    « Cloudflare Pages : Edit », soit se connecter en interactif.
 2. **Envoyer `BROUILLON-REPONSE-ELISE-14-08.md`** après avoir testé les liens légaux avec
    et sans barre oblique finale.
-3. **Signer soi-même** l'avenant : la contresignature manque, et attendre la sienne sans
-   avoir apposé la nôtre n'a pas de sens.
+3. ~~**Signer le package**~~ **Fait. Élise le 06/09 à 20h21 UTC, Mac Arthur le 07/09
+   à 21h10 UTC.** Dossier clos, J0 posé au 07/09, Phase 2 lancée.
 4. **Relancer le 25/08** si rien ne bouge. Elle est en vacances mais a explicitement
    demandé à continuer à recevoir les mails. Ses spams avalent nos messages, elle l'a
    écrit deux fois : vérifier la réception plutôt que de supposer le silence.
