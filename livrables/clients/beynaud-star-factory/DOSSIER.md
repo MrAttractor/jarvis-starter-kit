@@ -222,6 +222,7 @@ séries et live YouTube verrouillés, sondages, application installable.
 | Protocole d'accord (pré-contrat) | `PROTOCOLE-ACCORD-Beynaud-StarFactory-MrAttractor-2026-07-01` (html + pdf) |
 | Coûts du live professionnel | `COUTS-LIVE-PRO.md` |
 | Tunnel de conversion et paliers | `SCHEMA-TUNNEL.md` (13/09/2026) |
+| Stratégie éditoriale et guide de tournage | `STRATEGIE-CONTENUS-OCT-DEC.md` (13/09/2026) |
 | Brief interne du RDV du 30 juin | `BRIEF-RDV-2026-06-30.html` |
 
 ## Prochaine action
