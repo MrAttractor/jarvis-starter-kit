@@ -63,6 +63,11 @@ const pub = (m: any) => ({
   // On dit SI un numero est enregistre, jamais lequel. L'ecran a besoin de
   // savoir s'il doit encore proposer le filet de securite, pas de le lire.
   a_numero: !!m.whatsapp,
+  // Le jeton d'acces personnel. Il n'est renvoye QUE dans la reponse au
+  // membre lui-meme (join, me, profil_maj) : pub() n'est jamais applique au
+  // dossier de quelqu'un d'autre, et le classement passe par une vue qui ne
+  // l'expose pas. C'est une cle porteuse : qui l'a, entre.
+  jeton: m.jeton,
 });
 // Comparaison de prenoms tolerante : accents, casse et espaces ne doivent pas
 // empecher quelqu'un de retrouver son propre compte.
@@ -191,6 +196,16 @@ Deno.serve(async (req) => {
       // le seul numero d'un fan suffisait a entrer dans son compte, ce qui a ete
       // constate le 13/09. Ce n'est pas une verification, c'est un cran de plus :
       // la vraie parade sera un code a usage unique, le jour ou on en enverra.
+      // Reprise par le lien personnel : c'est le chemin normal quand le fan
+      // change de navigateur ou ouvre depuis son ecran d'accueil, qui sur
+      // iPhone possede son propre stockage, separe de Safari.
+      if (d.jeton) {
+        const j = String(d.jeton).replace(/[^a-zA-Z0-9]/g, "").slice(0, 64);
+        if (j.length < 16) return json({ ok: false, error: "introuvable" });
+        const m = await (await sb(`bey_membres?jeton=eq.${encodeURIComponent(j)}&select=*`)).json();
+        if (!Array.isArray(m) || !m.length) return json({ ok: false, error: "introuvable" });
+        return json({ ok: true, membre: pub(m[0]) });
+      }
       if (d.whatsapp) {
         const wa = normWa(d.whatsapp);
         const prenom = pliPrenom(d.prenom);

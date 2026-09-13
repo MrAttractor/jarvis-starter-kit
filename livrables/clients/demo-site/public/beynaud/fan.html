@@ -217,6 +217,21 @@ body.splash-on{overflow:hidden;}
 .conc-p span{font-size:10px;color:var(--dim);font-weight:600;margin-left:3px;}
 .conc-regle{padding:0 16px 14px;font-size:11px;color:var(--dim);line-height:1.6;}
 
+/* Garder son acces. Le jeton n'apparait jamais a l'ecran : on le glisse dans
+   l'adresse le temps d'ajouter la page a l'ecran d'accueil, puis on l'enleve.
+   Le fan ne peut donc pas le confondre avec son lien de parrainage, qui lui
+   est fait pour etre partage. */
+.garde{background:var(--n3);border:1px solid var(--faint);border-radius:16px;padding:16px;margin-bottom:14px;}
+.garde-t{font-size:14px;font-weight:800;margin-bottom:5px;}
+.garde-d{font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:13px;}
+.garde-b{width:100%;min-height:46px;background:var(--n5);color:#fff;border-radius:11px;font-size:13px;font-weight:800;}
+.garde-b:active{background:var(--or);color:#000;}
+.garde-pas{background:rgba(212,160,23,.10);border:1px solid rgba(212,160,23,.35);border-radius:11px;
+  padding:13px 14px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.9);}
+.garde-pas b{color:var(--or);}
+.garde-pas ol{margin:8px 0 0 18px;padding:0;}
+.garde-pas li{margin-bottom:5px;}
+
 /* La carte des notifications. Meme famille visuelle que le filet de
    securite : ce sont deux propositions, pas deux alertes. */
 .cloche{background:linear-gradient(180deg,rgba(204,0,0,.10),var(--n3));
@@ -419,6 +434,13 @@ body.splash-on{overflow:hidden;}
 
       <div class="conc hidden" id="conc"></div>
 
+      <div class="garde hidden" id="garde">
+        <div class="garde-t">Garde ton accès sur ce téléphone</div>
+        <div class="garde-d">Ajoute la Beynaumania à ton écran d’accueil et tu ne rempliras plus jamais ce formulaire, même en changeant de navigateur.</div>
+        <button class="garde-b" id="garde-b">Garder mon accès</button>
+        <div class="garde-pas hidden" id="garde-pas"></div>
+      </div>
+
       <div class="cloche hidden" id="cloche">
         <div class="cloche-i">
           <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
@@ -476,7 +498,12 @@ async function api(body){
   const r=await fetch(FN,{method:'POST',headers:{'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON,'Content-Type':'application/json'},body:JSON.stringify(body)});
   return r.json();
 }
-function saveMembre(m){localStorage.setItem(LS,JSON.stringify(m));}
+function saveMembre(m){
+  localStorage.setItem(LS,JSON.stringify(m));
+  // Range a part : si la session est perdue mais que le navigateur garde le
+  // reste, le jeton suffit a rentrer.
+  try{ if(m&&m.jeton) localStorage.setItem(CLE_JETON, m.jeton); }catch(e){}
+}
 function getMembre(){try{return JSON.parse(localStorage.getItem(LS)||'null');}catch(e){return null;}}
 
 async function doJoin(){
@@ -546,6 +573,7 @@ function peindreCoquille(m){
   document.getElementById('filet').classList.toggle('hidden', !!m.a_numero);
   document.querySelector('.zone-danger').classList.remove('hidden');
   etatCloche();
+  etatGarde();
   chargerConcours();
 }
 
@@ -566,6 +594,7 @@ function peindreApercu(){
   document.getElementById('m-hello-sub').textContent='L’univers officiel de Serge Beynaud. Voici un aperçu.';
   document.getElementById('filet').classList.add('hidden');
   document.getElementById('cloche').classList.add('hidden');
+  document.getElementById('garde').classList.add('hidden');
   document.getElementById('conc').classList.add('hidden');
   document.querySelector('.zone-danger').classList.add('hidden');
 }
@@ -668,6 +697,77 @@ async function chargerConcours(){
 
   box.appendChild(el('div','conc-regle',
     'Un ami compte quand il a activé les notifications. C’est la règle, pour que personne ne triche.'));
+}
+
+/* ===================== GARDER SON ACCES =====================
+   Le compte vit dans le stockage du navigateur. Or une application ajoutee a
+   l'ecran d'accueil d'un iPhone a SON PROPRE stockage, separe de Safari,
+   lui-meme separe du navigateur integre de WhatsApp. Trois mondes qui ne se
+   voient pas, et les fans recevront le lien par WhatsApp.
+
+   Le jeton personnel resout ca. Il n'est JAMAIS affiche ni copiable : on le
+   glisse dans l'adresse le temps de l'ajout a l'ecran d'accueil, puis on
+   l'efface. Sans quoi le fan le confondrait avec son lien de parrainage,
+   qui lui est fait pour etre partage : ce serait donner son compte. */
+const CLE_JETON = 'bey_jeton';
+
+function lireJetonUrl(){
+  const v = new URLSearchParams(location.search).get('m');
+  return v ? String(v).replace(/[^a-zA-Z0-9]/g, '').slice(0, 64) : '';
+}
+/* On retire le jeton de la barre d'adresse aussitot lu : il ne doit trainer ni
+   dans l'historique partage, ni dans une capture d'ecran. */
+function nettoyerUrl(){
+  const u = new URL(location.href);
+  if(!u.searchParams.has('m')) return;
+  u.searchParams.delete('m');
+  history.replaceState(null, '', u.pathname + (u.search || '') + u.hash);
+}
+function monJeton(){
+  if(ME && ME.jeton) return ME.jeton;
+  try{ return localStorage.getItem(CLE_JETON) || ''; }catch(e){ return ''; }
+}
+function monLienAcces(){
+  const j = monJeton();
+  return j ? (location.origin + location.pathname + '?m=' + encodeURIComponent(j)) : '';
+}
+
+function etatGarde(){
+  const c = document.getElementById('garde');
+  if(APERCU || !ME || !monJeton()){ c.classList.add('hidden'); return; }
+  // Deja installee sur l'ecran d'accueil : la carte n'a plus d'objet.
+  const installee = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+    || window.navigator.standalone === true;
+  c.classList.toggle('hidden', installee);
+}
+
+function garderAcces(){
+  const lien = monLienAcces();
+  if(!lien) return;
+  // On pose le jeton dans l'adresse : sur iPhone, "Sur l'ecran d'accueil"
+  // enregistre l'adresse affichee a cet instant. C'est le seul moment ou il
+  // doit y etre.
+  history.replaceState(null, '', location.pathname + '?m=' + encodeURIComponent(monJeton()));
+
+  const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const box = document.getElementById('garde-pas');
+  box.innerHTML = '';
+  box.classList.remove('hidden');
+  const t = el('div');
+  t.appendChild(document.createTextNode('C’est prêt. '));
+  t.appendChild(el('b', null, 'Maintenant, sans fermer cette page :'));
+  box.appendChild(t);
+  const ol = document.createElement('ol');
+  const pas = iOS
+    ? ['Appuie sur le bouton Partager, en bas de l’écran', 'Choisis « Sur l’écran d’accueil »', 'Valide avec « Ajouter »']
+    : ['Ouvre le menu du navigateur, en haut à droite', 'Choisis « Ajouter à l’écran d’accueil »', 'Valide'];
+  for(const p of pas) ol.appendChild(el('li', null, p));
+  box.appendChild(ol);
+  document.getElementById('garde-b').textContent = 'C’est fait';
+
+  // Deux minutes suffisent largement pour ajouter le raccourci. Passe ce
+  // delai, on retire le jeton de l'adresse pour qu'il ne traine pas.
+  setTimeout(nettoyerUrl, 120000);
 }
 
 /* ===================== LES NOTIFICATIONS =====================
@@ -1460,6 +1560,13 @@ const CLIP = {
   // Changer ce seul chiffre suffit.
   start  : 25,
 
+  // duree de la boucle, en secondes. On repart au depart avant la fin du clip.
+  // Motif : quand une video YouTube se termine, le lecteur affiche son ecran de
+  // fin, avec le bouton rejouer et les suggestions, et tout l'habillage qu'on
+  // cherche a cacher reapparait d'un coup. En bouclant court, la fin n'est
+  // jamais atteinte et le plan reste toujours fort.
+  duree  : 22,
+
   // image de repli. Elle reste DERRIERE la video : si la lecture automatique
   // est refusee (iPhone, economie de donnees), le fan voit cette image et
   // jamais un ecran noir.
@@ -1510,12 +1617,31 @@ function monterYouTube(layer,id){
         onStateChange:function(e){
           couperSousTitres(e.target);
           // 1 = en lecture. C'est le seul moment ou l'on devoile le clip.
-          if(e.data===1) layer.classList.add('joue');
+          if(e.data===1){ layer.classList.add('joue'); surveillerBoucle(e.target); }
+          // 0 = terminee. Filet de secours si la boucle a laisse passer la fin :
+          // on repart aussitot, plutot que de laisser paraitre l'ecran de fin.
+          if(e.data===0){ try{ e.target.seekTo(CLIP.start||0, true); e.target.playVideo(); }catch(_){} }
         },
         onError:function(){layer.classList.remove('joue');}
       }
     });
   }
+  /* On ne se fie pas au parametre loop de YouTube : avec un depart decale il
+     repart a zero et non sur le bon plan, et il laisse parfois l'ecran de fin
+     apparaitre une fraction de seconde. On boucle nous-memes. */
+  let veille = null;
+  function surveillerBoucle(p){
+    clearInterval(veille);
+    const debut = CLIP.start || 0;
+    const fin = debut + (CLIP.duree || 22);
+    veille = setInterval(function(){
+      try{
+        const t = p.getCurrentTime();
+        if(t >= fin || t < debut - 1) p.seekTo(debut, true);
+      }catch(e){}
+    }, 400);
+  }
+
   if(window.YT&&window.YT.Player){demarrer();return;}
   window.onYouTubeIframeAPIReady=demarrer;
   const tag=document.createElement('script');
@@ -1558,6 +1684,7 @@ function fermerSplash(){
 document.getElementById('enter-btn').addEventListener('click',fermerSplash);
 document.getElementById('f-btn').addEventListener('click',securiser);
 document.getElementById('cloche-b').addEventListener('click',basculerCloche);
+document.getElementById('garde-b').addEventListener('click',garderAcces);
 document.getElementById('btn-supprimer').addEventListener('click',supprimerCompte);
 document.getElementById('retour-apercu').addEventListener('click',function(){
   document.getElementById('view-join').classList.add('hidden');
@@ -1567,6 +1694,25 @@ document.getElementById('retour-apercu').addEventListener('click',function(){
 
 (async function(){
   if(refParam()) document.getElementById('ref-note').classList.remove('hidden');
+
+  // Un lien d'acces personnel prime sur tout : c'est justement le cas ou le
+  // navigateur n'a aucune session, parce que ce n'est pas le meme navigateur.
+  const jetonUrl = lireJetonUrl();
+  if(jetonUrl){
+    nettoyerUrl();
+    let r = null;
+    try{ r = await api({action:'me', jeton: jetonUrl}); }catch(e){ r = null; }
+    if(r && r.ok){
+      saveMembre(r.membre);
+      peindreCoquille(r.membre);
+      filEnChargement();
+      fermerSplash();
+      await chargerFil(r.membre);
+      return;
+    }
+    // Jeton perime ou invalide : on ne dit rien, on deroule le parcours normal.
+  }
+
   const m=getMembre();
 
   // Pas de session : c'est un visiteur. Le clip s'ouvre, et l'apercu se
