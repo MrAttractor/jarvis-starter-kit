@@ -190,6 +190,12 @@
 **Origine** : règle du 19/07/2026.
 **Application** : commit et push sans attendre pour tous les sites. Architecture main/branches à standardiser.
 
+### R-78 · Une promesse du navigateur qui ne rejette jamais se borne par un délai
+**Origine** : La Beynaumania, 13/09/2026. La carte des notifications ne s'affichait jamais.
+**Le fait** : `navigator.serviceWorker.ready` **ne rejette pas** quand il n'y a pas de service worker, elle reste suspendue indéfiniment. Un `await` dessus arrête tout le code qui suit, **sans exception, sans erreur, sans trace en console**. Le `try/catch` qui l'entourait ne servait à rien : il n'y a rien à attraper.
+**Application** : toute attente d'une réponse du navigateur (`serviceWorker.ready`, permissions, lecture d'un média, géolocalisation) passe par un `Promise.race` avec un délai. Et l'écran se **peint d'abord dans son état par défaut**, on interroge ensuite : sinon une absence de réponse devient une absence d'affichage. Même famille qu'EXP-041, avec une nuance qui compte : là une exception était avalée, ici il n'y a même pas d'exception.
+**Assists** : l'assistant qui écrit du front borne toute attente d'une API du navigateur.
+
 ### R-77 · Une migration qui retire se déploie avec son code, ou elle n'est qu'additive
 **Origine** : EXP-042, La Beynaumania tombée 20 minutes le 13/09/2026.
 **Application** : retirer ou renommer une colonne sur une application en ligne casse tout code non redéployé. Deux chemins seulement, jamais un troisième. Soit **le code part d'abord** et la migration suit. Soit la migration est **purement additive** (on ajoute, on recopie, on ne retire rien), le code part, et le nettoyage fait l'objet d'une migration ultérieure. Quand la bascule change la forme d'une réponse, la nouvelle version **renvoie aussi l'ancienne forme** le temps que les écrans suivent : un onglet reste ouvert des jours sur un téléphone.

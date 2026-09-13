@@ -6,7 +6,7 @@
 
 | Radar | |
 |---|---|
-| Statut | **le rapport de force a changé : c'est l'artiste qui demande maintenant.** Il veut diffuser ses concerts en direct, payants, exclusivement sur son site. La plateforme a été refondue le 13/09 (tunnel raccourci, fil unique, lecteur fermé), elle reste **volontairement non diffusée** |
+| Statut | **le rapport de force a changé : c'est l'artiste qui demande maintenant.** Il veut diffuser ses concerts en direct, payants, exclusivement sur son site. Plateforme entièrement refondue le 13/09 (aperçu avant inscription, fil unique, inscription à un champ, **notifications en service**), elle reste **volontairement non diffusée** |
 | Dernier contact | 2026-08-10, relance Latiss sur le protocole. **Sans réponse depuis 34 jours** |
 | Prochaine action | **1.** Monter le contenu de démarrage : le fil tourne encore sur le jeu de test. **2.** Chiffrer l'offre live, c'est la seule chose qu'il ait demandée de lui-même. **3.** Envoi groupé à Latiss : la plateforme + l'offre live chiffrée + le protocole à signer |
 | Échéance | à fixer avec la date du prochain concert, encore inconnue |
@@ -67,6 +67,60 @@ Les conditions de YouTube imposent que leur lecteur reste joignable, et la chaî
 est l'actif du dossier. Gain mesuré au passage : **plus aucune iframe YouTube ne se charge
 tant que le fan ne lance pas une vidéo**, contre trois auparavant à chaque ouverture.
 
+### L'entrée : on montre avant de demander
+
+Le visiteur arrivait sur un formulaire de trois champs sans avoir rien vu. Il voit
+maintenant le clip, puis **trois publications réelles**, la dernière en fondu, puis une
+porte qui annonce ce qui reste. Le formulaire n'arrive qu'au moment où il veut agir.
+
+**La coupe est faite au serveur, pas à l'écran.** Sans compte, la fonction ne renvoie que
+trois posts et retire le texte des commentaires. Tronquer à l'affichage aurait laissé tout
+le fil dans la réponse, lisible dans les outils du navigateur. Le **nombre** de commentaires
+survit à la coupe, volontairement : c'est la preuve sociale.
+
+### L'inscription tombe à un champ
+
+Le formulaire ne demande plus que le prénom. Le numéro était collecté depuis juillet et
+**n'a jamais servi à contacter personne**, aucun envoi n'y était branché. Il est désormais
+proposé plus tard, dans l'espace du membre, comme un filet : « ne perds jamais ton compte ».
+
+Trois défauts réglés au passage :
+
+1. **Connaître le seul numéro d'un fan suffisait à entrer dans son compte**, prouvé le 13/09
+   sur le compte de test de Mac Arthur. La reprise exige maintenant le numéro **et** le
+   prénom. Ce n'est pas une vérification, c'est un cran de plus en attendant un code à
+   usage unique.
+2. **Le même numéro existait en base sous trois écritures** (`+33753902323`, `0753902323`,
+   `753902323`), donc trois comptes pour Mac Arthur lui-même, et la clé unique ne
+   dédupliquait rien. Le serveur impose l'indicatif précédé d'un plus, convertit le `00`
+   international, et refuse un numéro sans indicatif plutôt que de deviner le pays.
+3. **« Désinscription à tout moment » était affiché sans aucun mécanisme**, et l'écran
+   annonçait des actus WhatsApp qui n'ont jamais existé. La suppression de compte existe
+   maintenant vraiment, commentaires compris. R-54.
+
+### Les notifications, la pièce qui manquait
+
+**Personne n'était prévenu de rien.** Le service worker ne contenait qu'un cache, l'écran
+ne demandait jamais la permission, et la colonne `push_subscription` posée en juillet
+n'avait jamais été remplie. Serge publiait dans le vide, et son tableau de bord lui
+répondait « Diffusé à N membres » alors qu'aucune notification n'existait.
+
+C'est en service depuis le 13/09, et **vérifié sur un vrai téléphone par Mac Arthur**.
+
+L'envoi est écrit à la main dans `_partage/webpush.ts` plutôt qu'importé : c'est du
+chiffrement, et une bibliothèque qui échoue sur ce moteur produirait des notifications qui
+ne partent jamais, sans trace. Deux preuves avant livraison : le message chiffré puis
+déchiffré avec la clé du destinataire revient identique, et le vrai serveur de Google
+répond 410 et non 401 sur une adresse inventée, donc la signature est acceptée.
+
+**La permission n'est jamais demandée à l'ouverture** : un navigateur à qui on demande trop
+tôt refuse définitivement. Elle passe par une carte qui explique. Sur iPhone, la carte dit
+qu'il faut ajouter la page à l'écran d'accueil, au lieu d'afficher un bouton inopérant.
+C'est une vraie limite pour la diaspora en France.
+
+Migration `0007` : une table plutôt qu'une colonne, un fan a souvent deux appareils. Les
+abonnements morts sont retirés au lieu d'être retentés indéfiniment.
+
 ### Deux défauts corrigés
 
 - **Le formulaire d'inscription clignotait une seconde** avant l'espace membre : le code
@@ -77,6 +131,11 @@ tant que le fan ne lance pas une vidéo**, contre trois auparavant à chaque ouv
 - **La plateforme est tombée une vingtaine de minutes** en cours de session : la migration
   a été lancée avant le déploiement des fonctions qui la lisent. Rien perdu en base. Fiche
   **EXP-042** et règle **R-77** au cerveau.
+- **La carte des notifications ne s'affichait pas du tout**, sans erreur : `serviceWorker.ready`
+  ne rejette jamais, elle reste suspendue quand il n'y a pas de service worker, et arrête
+  tout le code qui suit. Trouvé en recette automatisée. Règle **R-78**.
+- **Le bouton du clip disait « Rejoins la Beynaumania »** alors qu'il n'ouvre plus que
+  l'aperçu. Il promettait une inscription et livrait une visite. Signalé par Mac Arthur.
 
 ## L'exclusivité est fictive, et c'est le vrai sujet
 
@@ -137,7 +196,7 @@ pour le premium payant** (YouTube ne sait pas verrouiller un contenu payant).
 
 | Quoi | Où |
 |---|---|
-| Espace fan, clip d'entrée compris | `demo.agenceattractor.com/beynaud/fan` |
+| **Le lien à envoyer** | **`demo.agenceattractor.com/beynaud/fan`** |
 | Ancienne porte d'entrée, redirige | `demo.agenceattractor.com/beynaud/rejoindre` |
 | Tableau de bord artiste | `demo.agenceattractor.com/beynaud/app` |
 
@@ -148,7 +207,7 @@ sous `BRIEF-RDV-2026-06-30.html`. L'offre confidentielle reste en ligne, elle po
 
 Backend Supabase partagé, tables `bey_`, deux fonctions (`bey-public` sans connexion,
 `bey-admin` verrouillée sur l'UID de Serge). Aucun accès direct à la base : tout passe par
-les fonctions. Le WhatsApp des fans n'est jamais exposé. 5 migrations dans `supabase/`.
+les fonctions. Le WhatsApp des fans n'est jamais exposé. 7 migrations dans `supabase/`.
 
 Fonctions livrées et testées : inscription, **moteur ambassadeur** (lien personnel,
 compteur de filleuls, passage Membre → Ambassadeur à 5 parrainages), mur de diffusion,
