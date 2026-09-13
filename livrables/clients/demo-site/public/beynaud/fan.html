@@ -184,6 +184,25 @@ body.splash-on{overflow:hidden;}
   min-height:44px;padding:0 4px;flex-shrink:0;}
 .empty{font-size:13px;color:var(--dim);text-align:center;padding:28px 20px;line-height:1.7;}
 
+/* La porte, en bas de l'apercu. Ce n'est pas un mur : le visiteur vient de
+   lire trois vraies publications, elle lui dit seulement ce qu'il rate. */
+.porte{background:linear-gradient(180deg,rgba(204,0,0,.12),var(--n3));
+  border:1px solid rgba(204,0,0,.35);border-radius:16px;padding:22px 18px;text-align:center;margin-bottom:14px;}
+.porte-t{font-family:var(--bebas);font-size:26px;letter-spacing:.5px;line-height:1.05;}
+.porte-t .r{color:var(--rouge-vif);}
+.porte-d{font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;margin:9px 0 16px;}
+.porte-b{width:100%;min-height:52px;background:var(--rouge);color:#fff;border-radius:12px;
+  font-size:14px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  box-shadow:0 8px 26px var(--rouge-glow);}
+.porte-b:active{background:var(--rouge-vif);}
+.porte-n{font-size:11px;color:var(--dim);margin-top:11px;}
+/* Fondu sur le dernier post de l'apercu : on sent que ca continue. */
+.fondu{position:relative;}
+.fondu::after{content:'';position:absolute;left:0;right:0;bottom:0;height:120px;
+  background:linear-gradient(180deg,rgba(7,7,7,0),var(--noir));pointer-events:none;border-radius:0 0 16px 16px;}
+.retour-apercu{display:block;width:100%;text-align:center;background:none;color:var(--dim);
+  font-size:13px;font-weight:600;min-height:44px;margin-top:6px;}
+
 /* Squelette d'attente : le fil met une seconde a arriver, et pendant ce
    temps il ne faut montrer ni un vide ("La Beynaumania demarre" serait faux,
    R-58) ni rien du tout. On montre la forme de ce qui arrive. */
@@ -296,6 +315,7 @@ body.splash-on{overflow:hidden;}
       </button>
       <div id="j-err" class="err"></div>
       <div class="join-alt">Déjà membre ? <a onclick="recover()">Retrouver mon espace</a></div>
+      <button class="retour-apercu" id="retour-apercu">Revenir à l’aperçu</button>
       <div class="legal">En rejoignant, tu acceptes de recevoir les actus officielles de Serge Beynaud sur ton WhatsApp. Désinscription à tout moment.</div>
     </div>
   </div>
@@ -307,17 +327,17 @@ body.splash-on{overflow:hidden;}
       <div class="m-hero-c">
         <div class="m-top">
           <div class="brand"><div class="brand-logo">BM</div><span class="brand-name">La Beynaumania</span></div>
-          <button class="logout" onclick="logout()">Se déconnecter</button>
+          <button class="logout" id="m-logout" onclick="logout()">Se déconnecter</button>
         </div>
         <div id="m-grade" class="grade-badge membre">Membre</div>
-        <div class="m-hello">SALUT <span id="m-prenom" class="r">FAMI</span></div>
-        <div class="m-hello-sub">Tu es dans la Beynaumania. Bienvenue chez toi.</div>
+        <div class="m-hello" id="m-hello"></div>
+        <div class="m-hello-sub" id="m-hello-sub"></div>
       </div>
     </div>
 
     <div class="scroll">
       <div id="live-section"></div>
-      <div class="card amb-card">
+      <div class="card amb-card" id="amb-card">
         <div class="amb-h">
           <svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
           <div class="amb-title">Fais grandir la Beynaumania</div>
@@ -393,16 +413,54 @@ function logout(){localStorage.removeItem(LS);location.href=location.origin+loca
 /* Peint son espace immediatement, avec ce que le telephone a garde de lui.
    Aucun appel reseau ici : c'est tout l'interet. Avant, le formulaire des
    inconnus restait affiche pendant que le serveur confirmait son compte. */
+/* Vrai membre : son espace, avec son nom et ses outils. */
 function peindreCoquille(m){
-  ME=m;
+  APERCU=false; ME=m;
   document.getElementById('view-join').classList.add('hidden');
   document.getElementById('view-member').classList.remove('hidden');
-  document.getElementById('m-prenom').textContent=(m.prenom||'Fami').toUpperCase();
+  document.getElementById('m-logout').classList.remove('hidden');
+  document.getElementById('amb-card').classList.remove('hidden');
+  const h=document.getElementById('m-hello');
+  h.innerHTML='';
+  h.appendChild(document.createTextNode('SALUT '));
+  h.appendChild(el('span','r',(m.prenom||'Fami').toUpperCase()));
+  document.getElementById('m-hello-sub').textContent='Tu es dans la Beynaumania. Bienvenue chez toi.';
   const gb=document.getElementById('m-grade');
+  gb.classList.remove('hidden');
   gb.className='grade-badge '+(m.grade==='ambassadeur'?'ambassadeur':'membre');
   gb.textContent=m.grade==='ambassadeur'?'★ Ambassadeur':'Membre';
   document.getElementById('amb-url').value=ambLink(m.code_ambassadeur);
   renderProgress(m);
+}
+
+/* Visiteur : le meme ecran, mais sans son nom, sans ses outils, et avec trois
+   publications seulement. On montre avant de demander : le formulaire posé
+   devant la porte faisait fuir avant meme d'avoir rien prouve. */
+function peindreApercu(){
+  APERCU=true; ME=null;
+  document.getElementById('view-join').classList.add('hidden');
+  document.getElementById('view-member').classList.remove('hidden');
+  document.getElementById('m-logout').classList.add('hidden');
+  document.getElementById('amb-card').classList.add('hidden');
+  document.getElementById('m-grade').classList.add('hidden');
+  const h=document.getElementById('m-hello');
+  h.innerHTML='';
+  h.appendChild(document.createTextNode('LA '));
+  h.appendChild(el('span','r','BEYNAUMANIA'));
+  document.getElementById('m-hello-sub').textContent='L’univers officiel de Serge Beynaud. Voici un aperçu.';
+}
+
+/* La porte s'ouvre des que le visiteur veut agir : aimer, commenter, voter,
+   partager, ou lire la suite. Le geste devient la demande d'inscription. */
+function ouvrirInscription(){
+  document.getElementById('view-member').classList.add('hidden');
+  document.getElementById('view-join').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+function porte(){
+  if(!APERCU) return false;
+  ouvrirInscription();
+  return true;
 }
 
 /* Retour au formulaire, quand son compte n'existe plus cote serveur. */
@@ -436,7 +494,9 @@ function filEnChargement(){
 
 async function chargerFil(m){
   let res=null;
-  try{ res=await api({action:'feed',grade:m.grade,membre_id:m.id}); }catch(e){ res=null; }
+  // Sans membre_id, le serveur repond en mode apercu et coupe lui-meme le fil.
+  const q=m&&m.id ? {action:'feed',grade:m.grade,membre_id:m.id} : {action:'feed',grade:'membre'};
+  try{ res=await api(q); }catch(e){ res=null; }
   if(!res||!res.ok){
     const box=document.getElementById('fil');
     box.innerHTML='';
@@ -448,9 +508,10 @@ async function chargerFil(m){
     box.appendChild(w); box.appendChild(b);
     return;
   }
-  // Le serveur trie et fusionne : l'ecran ne fait plus que peindre.
+  // Le serveur trie, fusionne et coupe : l'ecran ne fait plus que peindre.
   renderLive(res.lives||[]);
   FIL=res.fil||[];
+  RESTANTS=res.restants||0;
   renderFil();
 }
 
@@ -467,6 +528,8 @@ function heart(filled){return '<svg viewBox="0 0 24 24" fill="'+(filled?'current
    de bord. Une apostrophe dans une legende suffisait a casser l'ancien rendu,
    qui glissait les valeurs dans des attributs onclick. */
 let FIL = [];
+let APERCU = false;
+let RESTANTS = 0;
 const NS = 'http://www.w3.org/2000/svg';
 
 function el(tag, cls, txt){
@@ -517,7 +580,7 @@ function barreActions(p){
 
   const bCmt = el('button', 'ico-btn');
   bCmt.appendChild(ico(D_BULLE));
-  bCmt.appendChild(el('span', null, String((p.comments || []).length || '')));
+  bCmt.appendChild(el('span', null, String((p.nb_comments != null ? p.nb_comments : (p.comments || []).length) || '')));
   bCmt.setAttribute('aria-label', 'Commenter');
   bCmt.addEventListener('click', () => ouvrirCommentaires(p, true));
 
@@ -607,7 +670,9 @@ function construirePost(p){
   const lg = legendeDuPost(p);
   if(lg) art.appendChild(lg);
 
-  const n = (p.comments || []).length;
+  // En apercu les textes sont retires par le serveur, mais le compte reste :
+  // c'est la preuve sociale, et c'est elle qui donne envie d'entrer.
+  const n = (p.nb_comments != null) ? p.nb_comments : (p.comments || []).length;
   const voir = el('button', 'voir-cmt');
   voir.id = 'voir-' + cle(p);
   voir.textContent = n ? ('Voir les ' + n + ' commentaire' + (n > 1 ? 's' : '')) : 'Sois le premier à commenter';
@@ -803,6 +868,27 @@ function demarrerApiYoutube(cb){
   }
 }
 
+function carteEntree(){
+  const c = el('div', 'porte');
+  const t = el('div', 'porte-t');
+  if(RESTANTS > 0){
+    t.appendChild(document.createTextNode(String(RESTANTS) + ' AUTRES '));
+    t.appendChild(el('span', 'r', 'PUBLICATIONS'));
+    t.appendChild(document.createTextNode(' T’ATTENDENT'));
+  } else {
+    t.appendChild(document.createTextNode('ENTRE DANS LA '));
+    t.appendChild(el('span', 'r', 'BEYNAUMANIA'));
+  }
+  c.appendChild(t);
+  c.appendChild(el('div', 'porte-d',
+    'Réagis, commente, vote, et ramène ton monde. Les Ambassadeurs passent devant tout le monde.'));
+  const b = el('button', 'porte-b', 'Entrer, c’est gratuit');
+  b.addEventListener('click', ouvrirInscription);
+  c.appendChild(b);
+  c.appendChild(el('div', 'porte-n', 'Un prénom suffit. 10 secondes.'));
+  return c;
+}
+
 function renderFil(){
   const box = document.getElementById('fil');
   box.innerHTML = '';
@@ -810,16 +896,24 @@ function renderFil(){
     // R-58 : un fil vide est un debut, pas une panne. On invite, on n'alerte pas.
     box.appendChild(el('div', 'empty',
       'La Beynaumania démarre. Serge poste très bientôt, et tu seras prévenu ici en premier.'));
+    if(APERCU) box.appendChild(carteEntree());
     return;
   }
   const frag = document.createDocumentFragment();
-  for(const p of FIL) frag.appendChild(construirePost(p));
+  FIL.forEach(function(p, i){
+    const art = construirePost(p);
+    // Le dernier post de l'apercu s'estompe : on sent que le fil continue.
+    if(APERCU && i === FIL.length - 1) art.classList.add('fondu');
+    frag.appendChild(art);
+  });
   box.appendChild(frag);
+  if(APERCU) box.appendChild(carteEntree());
 }
 
 /* Le coeur se met a jour sur place, jamais en redessinant tout le fil : sur un
    telephone, un rendu complet ferait sauter la position de lecture. */
 async function basculerCoeur(p){
+  if(porte()) return;
   p.liked = !p.liked;
   p.likes = Math.max(0, (p.likes || 0) + (p.liked ? 1 : -1));
   const art = document.getElementById('post-' + cle(p));
@@ -837,6 +931,7 @@ async function basculerCoeur(p){
 }
 
 function ouvrirCommentaires(p, focus){
+  if(porte()) return;
   const zone = document.getElementById('cmts-' + cle(p));
   const form = document.getElementById('form-' + cle(p));
   if(!zone || !form) return;
@@ -848,6 +943,7 @@ function ouvrirCommentaires(p, focus){
 }
 
 async function envoyerCommentaire(p){
+  if(porte()) return;
   const inp = document.getElementById('saisie-' + cle(p));
   const v = inp ? inp.value.trim() : '';
   if(!v) return;
@@ -900,6 +996,7 @@ function peindreSondage(box, p){
     vote ? (total + ' vote' + (total > 1 ? 's' : '')) : 'Vote pour voir les résultats'));
 }
 async function voter(p, idx){
+  if(porte()) return;
   const res = await api({ action: 'vote', membre_id: ME.id, sondage_id: p.id, option_index: idx });
   if(!res || !res.ok){ toast('Erreur, réessaie.'); return; }
   p.counts = res.counts; p.total = res.total; p.mon_vote = res.mon_vote;
@@ -944,7 +1041,7 @@ function closeLb(e, force){
 }
 
 function copyLink(){const i=document.getElementById('amb-url');navigator.clipboard?.writeText(i.value).then(()=>toast('Lien copié ! Partage-le.'),()=>{i.select();document.execCommand('copy');toast('Lien copié !');});}
-function shareWa(){const txt="🔥 Rejoins LA BEYNAUMANIA, l'univers officiel de Serge Beynaud ! Contenu exclusif rien que pour nous. C'est gratuit 👉 "+ambLink(ME.code_ambassadeur);window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');}
+function shareWa(){if(porte())return;const txt="🔥 Rejoins LA BEYNAUMANIA, l'univers officiel de Serge Beynaud ! Contenu exclusif rien que pour nous. C'est gratuit 👉 "+ambLink(ME.code_ambassadeur);window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');}
 
 /* =====================================================================
    LE CLIP D'ENTREE  —  c'est la seule chose a changer
@@ -1064,13 +1161,25 @@ function fermerSplash(){
   window.scrollTo(0,0);
 }
 document.getElementById('enter-btn').addEventListener('click',fermerSplash);
+document.getElementById('retour-apercu').addEventListener('click',function(){
+  document.getElementById('view-join').classList.add('hidden');
+  document.getElementById('view-member').classList.remove('hidden');
+  window.scrollTo(0,0);
+});
 
 (async function(){
   if(refParam()) document.getElementById('ref-note').classList.remove('hidden');
   const m=getMembre();
 
-  // Pas de session : c'est un visiteur, le clip s'ouvre.
-  if(!(m&&m.id)){ monterClip(); return; }
+  // Pas de session : c'est un visiteur. Le clip s'ouvre, et l'apercu se
+  // prepare DERRIERE lui : quand il appuie sur le bouton, le fil est deja la.
+  if(!(m&&m.id)){
+    peindreApercu();
+    filEnChargement();
+    monterClip();
+    chargerFil(null);
+    return;
+  }
 
   // Session connue : on l'installe chez lui tout de suite, sans attendre le
   // serveur. C'est ce qui supprime la seconde de formulaire d'inscription

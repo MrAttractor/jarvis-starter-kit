@@ -14,6 +14,8 @@ const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 const AMB_THRESHOLD = 5;
 // Doit rester aligne sur la contrainte bey_*_cible_type_chk de la migration 0005.
 const CIBLES = new Set(["message", "photo", "contenu", "sondage"]);
+// Combien de posts un visiteur sans compte voit avant la porte.
+const APERCU = 3;
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -225,6 +227,9 @@ Deno.serve(async (req) => {
           p.likes = likeCount[k] || 0;
           p.liked = !!likedByMe[k];
           p.comments = commBy[k] || [];
+          // Le nombre survit a l'aperçu meme quand les textes sont retires :
+          // c'est la preuve sociale, et c'est elle qui donne envie d'entrer.
+          p.nb_comments = p.comments.length;
         }
       }
 
@@ -247,6 +252,18 @@ Deno.serve(async (req) => {
         }
       }
 
+      // -- Aperçu : un visiteur sans compte ne recoit que les premiers posts --
+      // La coupe est faite ICI et pas a l'ecran. Tronquer a l'affichage
+      // laisserait le reste du fil dans la reponse, lisible par quiconque
+      // ouvre les outils du navigateur : ce ne serait pas un aperçu.
+      const apercu = !membreId;
+      let filRendu = fil;
+      const totalPosts = fil.length;
+      if (apercu) {
+        filRendu = fil.slice(0, APERCU);
+        for (const p of filRendu) p.comments = [];
+      }
+
       // Compatibilite : l'ecran deja en ligne attend encore les quatre listes
       // separees. On les renvoie a cote du fil, alimentees par les memes
       // calculs, pour qu'un fan dont l'onglet est ouvert ne voie rien casser
@@ -262,7 +279,10 @@ Deno.serve(async (req) => {
       };
       return json({
         ok: true,
-        fil,
+        fil: filRendu,
+        apercu,
+        total_posts: totalPosts,
+        restants: Math.max(0, totalPosts - filRendu.length),
         lives,
         contenus: arr(contenus).map((c: any) => enrichir("contenu", c)),
         photos: arr(photos).map((p: any) => enrichir("photo", p)),
