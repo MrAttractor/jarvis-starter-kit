@@ -2,7 +2,8 @@
 // bey-admin — LA BEYNAUMANIA, côté artiste (Serge)
 // Gaté par JWT : le caller doit être connecté ET son UID == BEY_ADMIN_UID.
 // Actions : stats, broadcast, content_(list|add|toggle),
-//           comments_recent, comment_moderate, photo_(add|list|toggle|delete).
+//           comments_recent, comment_moderate, photo_(add|list|toggle|delete),
+//           classement.
 // ============================================================
 import { envoyer, type Abonnement, type Reglages } from "../_partage/webpush.ts";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -290,6 +291,28 @@ Deno.serve(async (req) => {
       const res = await sb(`bey_sondages?id=eq.${encodeURIComponent(d.id)}`, { method: "DELETE" });
       if (!res.ok) return json({ ok: false, error: await res.text() });
       return json({ ok: true });
+    }
+
+
+    // ── CLASSEMENT : ce que Serge lit face camera ──
+    // Vingt places et non dix : il commente aussi ceux qui montent, pas
+    // seulement ceux qui gagnent. C'est ce qui donne envie aux autres.
+    if (action === "classement") {
+      const saisons = await (await sb("bey_saisons?active=is.true&select=nom,debut,fin&limit=1")).json();
+      const saison = Array.isArray(saisons) && saisons.length ? saisons[0] : null;
+      const podium = await (await sb(
+        "v_bey_classement?order=points.desc,inscrits.desc,prenom.asc&limit=20&select=prenom,lieu,points,inscrits,rang",
+      )).json();
+      const liste = Array.isArray(podium) ? podium : [];
+      return json({
+        ok: true,
+        saison,
+        podium: liste,
+        // De quoi dire une phrase vraie en video : combien ont vraiment joue.
+        joueurs: liste.filter((x: any) => (x.inscrits || 0) > 0).length,
+        confirmes: liste.reduce((n: number, x: any) => n + (x.points || 0), 0),
+        abonnes: await countRows("bey_push"),
+      });
     }
 
     return json({ ok: false, error: "action inconnue" });

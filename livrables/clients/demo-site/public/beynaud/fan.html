@@ -105,7 +105,9 @@ body.splash-on{overflow:hidden;}
 .brand{display:flex;align-items:center;gap:8px;}
 .brand-logo{width:30px;height:30px;background:var(--rouge);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--bebas);font-size:15px;color:#fff;box-shadow:0 4px 12px var(--rouge-glow);}
 .brand-name{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);}
-.logout{font-size:11px;color:rgba(255,255,255,.35);background:none;}
+/* 44px minimum sur toute zone tactile (UX_SYSTEM). Ce bouton faisait 14px
+   de haut : on visait a cote une fois sur deux. */
+.logout{font-size:11px;color:rgba(255,255,255,.35);background:none;min-height:44px;padding:0 4px;display:flex;align-items:center;}
 .grade-badge{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:5px 13px;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px;}
 .grade-badge.membre{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.12);}
 .grade-badge.ambassadeur{background:var(--or-dim);color:var(--or);border:1px solid rgba(212,160,23,.4);}
@@ -124,8 +126,8 @@ body.splash-on{overflow:hidden;}
 .amb-desc{font-size:12px;color:var(--dim);line-height:1.55;margin-bottom:14px;}
 .amb-link{display:flex;gap:8px;margin-bottom:14px;}
 .amb-link input{flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 12px;font-size:12px;color:var(--or);min-width:0;}
-.amb-copy{background:var(--or);color:#000;border-radius:10px;padding:0 16px;font-size:12px;font-weight:800;white-space:nowrap;}
-.amb-share{width:100%;background:#25D366;color:#fff;border-radius:11px;padding:13px;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:14px;}
+.amb-copy{background:var(--or);color:#000;border-radius:10px;padding:0 16px;min-height:44px;font-size:12px;font-weight:800;white-space:nowrap;}
+.amb-share{width:100%;background:#25D366;color:#fff;border-radius:11px;padding:13px;min-height:44px;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:14px;}
 .amb-prog-lbl{display:flex;justify-content:space-between;font-size:12px;margin-bottom:7px;}
 .amb-prog-lbl b{color:var(--or);}
 .amb-bar{height:8px;background:rgba(255,255,255,.08);border-radius:5px;overflow:hidden;}
@@ -183,6 +185,37 @@ body.splash-on{overflow:hidden;}
 .cmt-form button{background:none;color:var(--rouge);font-size:14px;font-weight:800;
   min-height:44px;padding:0 4px;flex-shrink:0;}
 .empty{font-size:13px;color:var(--dim);text-align:center;padding:28px 20px;line-height:1.7;}
+
+/* Le concours. C'est le moteur du lancement : les fans recrutent a la place
+   de l'artiste, et l'artiste commente les scores. Le classement doit donc se
+   lire d'un coup d'oeil, et surtout dire au fan CE QU'IL LUI MANQUE. */
+.conc{background:var(--n3);border:1px solid var(--faint);border-radius:16px;overflow:hidden;margin-bottom:14px;}
+.conc-h{padding:15px 16px 13px;background:linear-gradient(180deg,rgba(212,160,23,.13),transparent);
+  border-bottom:1px solid var(--faint);}
+.conc-t{font-family:var(--bebas);font-size:22px;letter-spacing:.6px;line-height:1;}
+.conc-t .o{color:var(--or);}
+.conc-j{font-size:11px;color:var(--dim);margin-top:5px;}
+.conc-j b{color:var(--or);}
+/* Ma place. Le gros chiffre, c'est ce que le fan cherche en premier. */
+.conc-moi{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--faint);}
+.conc-rang{font-family:var(--bebas);font-size:38px;line-height:.85;color:var(--or);flex-shrink:0;}
+.conc-rang sup{font-family:var(--inter);font-size:12px;font-weight:800;vertical-align:super;margin-left:1px;}
+.conc-moi-d{flex:1;min-width:0;}
+.conc-moi-l1{font-size:13px;font-weight:800;}
+.conc-moi-l2{font-size:11.5px;color:var(--dim);margin-top:3px;line-height:1.5;}
+.conc-relance{margin:0 16px 14px;background:rgba(204,0,0,.10);border:1px solid rgba(204,0,0,.3);
+  border-radius:11px;padding:11px 13px;font-size:12px;line-height:1.6;color:rgba(255,255,255,.86);}
+.conc-relance b{color:var(--rouge-vif);}
+.conc-l{padding:6px 8px 12px;}
+.conc-r{display:flex;align-items:center;gap:11px;padding:9px 8px;border-radius:10px;}
+.conc-r.mien{background:rgba(212,160,23,.1);}
+.conc-n{width:26px;text-align:center;font-size:13px;font-weight:800;color:var(--dim);flex-shrink:0;}
+.conc-r.or .conc-n{color:var(--or);}
+.conc-nom{flex:1;min-width:0;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.conc-nom span{color:var(--dim);font-weight:500;font-size:11px;margin-left:6px;}
+.conc-p{font-size:13px;font-weight:800;color:var(--or);flex-shrink:0;}
+.conc-p span{font-size:10px;color:var(--dim);font-weight:600;margin-left:3px;}
+.conc-regle{padding:0 16px 14px;font-size:11px;color:var(--dim);line-height:1.6;}
 
 /* La carte des notifications. Meme famille visuelle que le filet de
    securite : ce sont deux propositions, pas deux alertes. */
@@ -280,7 +313,7 @@ body.splash-on{overflow:hidden;}
 /* Sondages */
 .poll-q{font-size:14px;font-weight:800;margin-bottom:12px;line-height:1.4;}
 .poll-opts{display:flex;flex-direction:column;gap:8px;}
-.poll-opt{width:100%;text-align:left;background:var(--n4);border:1px solid var(--faint);border-radius:11px;padding:12px 14px;font-size:13px;font-weight:600;color:#fff;}
+.poll-opt{width:100%;text-align:left;background:var(--n4);border:1px solid var(--faint);border-radius:11px;padding:12px 14px;min-height:44px;font-size:13px;font-weight:600;color:#fff;}
 .poll-opt:active{border-color:var(--rouge);background:rgba(204,0,0,.1);}
 .poll-res{position:relative;border-radius:11px;overflow:hidden;background:var(--n4);border:1px solid var(--faint);padding:12px 14px;display:flex;align-items:center;gap:8px;}
 .poll-res.mine{border-color:var(--rouge);}
@@ -383,6 +416,8 @@ body.splash-on{overflow:hidden;}
         </button>
         <div id="amb-progress"></div>
       </div>
+
+      <div class="conc hidden" id="conc"></div>
 
       <div class="cloche hidden" id="cloche">
         <div class="cloche-i">
@@ -499,6 +534,7 @@ function peindreCoquille(m){
   document.getElementById('filet').classList.toggle('hidden', !!m.a_numero);
   document.querySelector('.zone-danger').classList.remove('hidden');
   etatCloche();
+  chargerConcours();
 }
 
 /* Visiteur : le meme ecran, mais sans son nom, sans ses outils, et avec trois
@@ -518,7 +554,108 @@ function peindreApercu(){
   document.getElementById('m-hello-sub').textContent='L’univers officiel de Serge Beynaud. Voici un aperçu.';
   document.getElementById('filet').classList.add('hidden');
   document.getElementById('cloche').classList.add('hidden');
+  document.getElementById('conc').classList.add('hidden');
   document.querySelector('.zone-danger').classList.add('hidden');
+}
+
+/* ===================== LE CONCOURS =====================
+   Un point se gagne quand un filleul ACTIVE LES NOTIFICATIONS, pas quand il
+   s'inscrit. Le calcul est au serveur ; ici on peint, et surtout on dit au
+   fan ce qui lui MANQUE : un classement qui affiche seulement une position
+   n'a jamais fait bouger personne. */
+function joursRestants(fin){
+  const ms = new Date(fin).getTime() - Date.now();
+  return Math.max(0, Math.ceil(ms / 86400000));
+}
+
+async function chargerConcours(){
+  const box = document.getElementById('conc');
+  if(APERCU || !ME){ box.classList.add('hidden'); return; }
+
+  let r = null;
+  try{ r = await api({ action:'classement', membre_id: ME.id }); }catch(e){ r = null; }
+  if(!r || !r.ok || !r.saison){ box.classList.add('hidden'); return; }
+
+  box.innerHTML = '';
+  box.classList.remove('hidden');
+
+  // --- l'en-tete et le decompte ---
+  const h = el('div','conc-h');
+  const t = el('div','conc-t');
+  t.appendChild(document.createTextNode('MEILLEUR '));
+  t.appendChild(el('span','o','AMBASSADEUR'));
+  h.appendChild(t);
+  const j = el('div','conc-j');
+  if(r.ouvert){
+    const n = joursRestants(r.saison.fin);
+    j.appendChild(document.createTextNode('Il reste '));
+    j.appendChild(el('b', null, n + (n > 1 ? ' jours' : ' jour')));
+    j.appendChild(document.createTextNode(' · ' + r.saison.nom));
+  } else {
+    j.textContent = 'Terminé · ' + r.saison.nom;
+  }
+  h.appendChild(j);
+  box.appendChild(h);
+
+  // --- ma place ---
+  const moi = r.moi;
+  if(moi){
+    const w = el('div','conc-moi');
+    const rg = el('div','conc-rang');
+    rg.appendChild(document.createTextNode(String(moi.rang)));
+    rg.appendChild(el('sup', null, moi.rang === 1 ? 'er' : 'e'));
+    w.appendChild(rg);
+    const d = el('div','conc-moi-d');
+    d.appendChild(el('div','conc-moi-l1',
+      moi.points > 0 ? (moi.points + (moi.points > 1 ? ' amis confirmés' : ' ami confirmé')) : 'Tu n’as pas encore de point'));
+    let l2 = '';
+    if(moi.en_attente > 0) l2 = moi.en_attente + (moi.en_attente > 1 ? ' invités pas encore confirmés' : ' invité pas encore confirmé');
+    else if(moi.points === 0) l2 = 'Partage ton lien, c’est parti';
+    if(r.ouvert && moi.manque > 0) l2 += (l2 ? ' · ' : '') + 'encore ' + moi.manque + ' pour passer devant';
+    d.appendChild(el('div','conc-moi-l2', l2));
+    w.appendChild(d);
+    box.appendChild(w);
+
+    // La relance : c'est ici que le concours se joue vraiment. Un invite qui
+    // n'active pas ses notifications ne compte pas, et le parrain doit le
+    // savoir pour aller le chercher.
+    if(moi.en_attente > 0){
+      const rl = el('div','conc-relance');
+      rl.appendChild(document.createTextNode(moi.en_attente > 1
+        ? String(moi.en_attente) + ' personnes sont entrées grâce à toi mais ne comptent pas encore. '
+        : 'Une personne est entrée grâce à toi mais ne compte pas encore. '));
+      const plusieurs = moi.en_attente > 1;
+      rl.appendChild(el('b', null, plusieurs ? 'Dis-leur d’activer les notifications' : 'Dis-lui d’activer les notifications'));
+      rl.appendChild(document.createTextNode(plusieurs
+        ? ', sinon elles ratent tout et toi tu perds tes points.'
+        : ', sinon elle rate tout et toi tu perds ton point.'));
+      box.appendChild(rl);
+    }
+  }
+
+  // --- le podium ---
+  const liste = el('div','conc-l');
+  if(!r.podium.length){
+    liste.appendChild(el('div','empty','Personne n’a encore marqué. La première place est libre.'));
+  } else {
+    r.podium.forEach(function(p, i){
+      const ligne = el('div','conc-r' + (i < 3 ? ' or' : '') + (moi && p.prenom === moi.prenom && p.rang === moi.rang ? ' mien' : ''));
+      ligne.appendChild(el('div','conc-n', String(p.rang)));
+      const nom = el('div','conc-nom');
+      nom.appendChild(document.createTextNode(p.prenom || 'Fan'));
+      if(p.lieu) nom.appendChild(el('span', null, p.lieu));
+      ligne.appendChild(nom);
+      const pts = el('div','conc-p');
+      pts.appendChild(document.createTextNode(String(p.points)));
+      pts.appendChild(el('span', null, p.points > 1 ? 'pts' : 'pt'));
+      ligne.appendChild(pts);
+      liste.appendChild(ligne);
+    });
+  }
+  box.appendChild(liste);
+
+  box.appendChild(el('div','conc-regle',
+    'Un ami compte quand il a activé les notifications. C’est la règle, pour que personne ne triche.'));
 }
 
 /* ===================== LES NOTIFICATIONS =====================
@@ -647,6 +784,9 @@ async function basculerCloche(){
         return;
       }
       toast('C’est activé. Tu seras prévenu.');
+      // Activer ses notifications fait gagner un point A SON PARRAIN : le
+      // classement change a cette seconde, autant le montrer tout de suite.
+      chargerConcours();
     }
   }catch(e){
     note.textContent = 'Ton navigateur a refusé. Réessaie plus tard.';

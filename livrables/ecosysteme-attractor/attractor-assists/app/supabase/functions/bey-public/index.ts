@@ -2,7 +2,7 @@
 // bey-public — BEYNAUD ARMY, côté fan (pas de JWT, service role)
 // Actions : join, me, feed (un seul fil : mots + photos + videos + sondages),
 //           vote, like (bascule), comment_add, profil_maj, compte_supprimer,
-//           push_abonner, push_desabonner.
+//           push_abonner, push_desabonner, classement.
 // Depuis le 13/09 le numero n'est plus demande a l'inscription : un prenom
 // suffit. Il se donne ensuite, dans l'espace, comme filet de securite.
 // Depuis la migration 0005 les coeurs et les commentaires visent un couple
@@ -502,6 +502,59 @@ Deno.serve(async (req) => {
       if (!endpoint) return json({ ok: false, error: "endpoint requis" });
       await sb(`bey_push?endpoint=eq.${encodeURIComponent(endpoint)}`, { method: "DELETE" });
       return json({ ok: true });
+    }
+
+
+    // ── CLASSEMENT : le concours du meilleur ambassadeur ──
+    // Un point se gagne quand un filleul ACTIVE LES NOTIFICATIONS, pas quand
+    // il s'inscrit. Depuis que l'inscription ne demande qu'un prenom, se
+    // parrainer cinquante fois en fenetre privee prend dix minutes ; exiger la
+    // notification rend la fraude de masse tres difficile, et fait recruter des
+    // fans joignables plutot que des lignes en base. Le calcul vit dans la vue
+    // v_bey_classement, jamais dans un compteur entretenu a la main.
+    if (action === "classement") {
+      const mid = d.membre_id ? String(d.membre_id) : null;
+
+      const saisons = await (await sb("bey_saisons?active=is.true&select=nom,debut,fin&limit=1")).json();
+      const saison = Array.isArray(saisons) && saisons.length ? saisons[0] : null;
+      if (!saison) return json({ ok: true, ouvert: false, podium: [], saison: null });
+
+      const finie = new Date(saison.fin).getTime() < Date.now();
+
+      // Le podium : on n'expose que le prenom et la ville, jamais le contact.
+      const podium = await (await sb(
+        "v_bey_classement?order=points.desc,inscrits.desc,prenom.asc&limit=10&select=prenom,lieu,points,inscrits,rang",
+      )).json();
+
+      let moi = null;
+      if (mid) {
+        const r = await (await sb(
+          `v_bey_classement?id=eq.${encodeURIComponent(mid)}&select=prenom,points,inscrits,rang&limit=1`,
+        )).json();
+        if (Array.isArray(r) && r.length) {
+          moi = r[0];
+          // L'ecart avec le rang du dessus. Un compteur qui n'indique pas ce
+          // qui manque ne motive personne : le fan doit savoir combien il lui
+          // reste a faire, pas seulement ou il en est.
+          const dessus = await (await sb(
+            `v_bey_classement?points=gt.${moi.points}&order=points.asc&limit=1&select=points`,
+          )).json();
+          moi.manque = (Array.isArray(dessus) && dessus.length)
+            ? Math.max(1, dessus[0].points - moi.points)
+            : 0;
+          // Ce qui est invite mais pas encore confirme : c'est la relance a
+          // faire, et c'est la phrase que Serge peut repeter en video.
+          moi.en_attente = Math.max(0, (moi.inscrits || 0) - (moi.points || 0));
+        }
+      }
+
+      return json({
+        ok: true,
+        ouvert: !finie,
+        saison: { nom: saison.nom, debut: saison.debut, fin: saison.fin },
+        podium: Array.isArray(podium) ? podium : [],
+        moi,
+      });
     }
 
     return json({ ok: false, error: "action inconnue" });
