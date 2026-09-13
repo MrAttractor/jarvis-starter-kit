@@ -190,6 +190,24 @@
 **Origine** : règle du 19/07/2026.
 **Application** : commit et push sans attendre pour tous les sites. Architecture main/branches à standardiser.
 
+### R-79 · On montre avant de demander
+**Origine** : La Beynaumania, 13/09/2026. Analyse de Weverse, Laylo et des parcours d'inscription.
+**Le fait mesuré** : environ **64 % des visiteurs abandonnent** un parcours d'inscription classique. La Beynaumania demandait trois champs avant d'avoir rien montré, pour donner accès à du contenu déjà public ailleurs.
+**Application** : aucun formulaire ne se met devant la porte. Le visiteur voit d'abord un vrai morceau de ce qu'on lui promet, et le formulaire n'arrive qu'au moment où il veut **agir** : aimer, commenter, commander, réserver. Vaut pour toute vitrine, toute boutique, tout espace client. Corollaire : le compteur social se montre même quand le contenu est coupé, c'est lui qui donne envie d'entrer.
+**Assists** : l'assistant qui construit une boutique ou un espace membre place l'inscription après la démonstration, jamais avant.
+
+### R-80 · Le gating se fait au serveur, jamais à l'écran
+**Origine** : La Beynaumania, 13/09/2026, aperçu avant inscription.
+**Application** : quand un contenu est réservé, c'est le serveur qui **ne l'envoie pas**. Tronquer à l'affichage laisse tout le reste dans la réponse, lisible par quiconque ouvre les outils du navigateur : ce n'est pas un aperçu, c'est un rideau. Même chose pour un prix réservé, un document client, un tableau de bord partiel.
+**Assists** : toute fonction qui sert du contenu gaté décide côté serveur en fonction de qui demande.
+
+### R-81 · Le stockage d'un navigateur n'est pas partagé, et une session qui n'y survit pas fabrique des doublons
+**Origine** : La Beynaumania, 13/09/2026. Mac Arthur : « à chaque fois que je sors et que je reviens je dois renseigner les mêmes infos », et neuf comptes créés pour une seule personne.
+**Le fait** : sur iPhone, une application ajoutée à l'écran d'accueil possède **son propre stockage**, séparé de Safari, lui-même séparé du navigateur intégré de WhatsApp. Trois mondes qui ne se voient pas. Or c'est par WhatsApp que les liens circulent en Côte d'Ivoire.
+**Application** : toute application dont le compte vit dans le navigateur doit offrir un **moyen de reprise indépendant de l'appareil**. Un lien d'accès personnel est le plus simple, à condition qu'il ne soit **jamais affiché ni copiable** : le fan a déjà un lien fait pour être partagé, les confondre revient à donner son compte. Et **aucun bouton de déconnexion** quand il n'y a ni mot de passe ni identifiant : ça ne déconnecte pas, ça détruit le compte.
+**À vérifier ailleurs** : Ayêla, GetWinWorld et J'Envoie Express reposent sur le même mécanisme de session et ont probablement le même défaut.
+**Assists** : l'assistant qui construit un espace client sans mot de passe prévoit la reprise avant la première inscription.
+
 ### R-78 · Une promesse du navigateur qui ne rejette jamais se borne par un délai
 **Origine** : La Beynaumania, 13/09/2026. La carte des notifications ne s'affichait jamais.
 **Le fait** : `navigator.serviceWorker.ready` **ne rejette pas** quand il n'y a pas de service worker, elle reste suspendue indéfiniment. Un `await` dessus arrête tout le code qui suit, **sans exception, sans erreur, sans trace en console**. Le `try/catch` qui l'entourait ne servait à rien : il n'y a rien à attraper.

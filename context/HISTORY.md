@@ -7,6 +7,109 @@
 
 ---
 
+## 2026-09-13 → 14 (session 135 — La Beynaumania devient une vraie plateforme, en une nuit)
+
+> Session longue, entièrement sur Beynaud, menée en aller-retour avec Mac Arthur
+> qui testait sur son téléphone pendant que ça se construisait. 23 commits, tout
+> déployé et vérifié. **Le journal a un trou du 20/08 au 12/09**, non reconstitué :
+> ce qui s'est passé dans ces trois semaines n'est pas ici, seulement dans les
+> commits et les `DOSSIER.md`.
+
+### Le point de départ
+
+La plateforme existait depuis juillet mais demandait trois champs avant d'avoir
+rien montré, affichait du contenu déjà public sur YouTube, et **ne prévenait
+personne de rien**. Mac Arthur a envoyé le lien à Serge Beynaud en cours de
+session, ce qui a mis la recette sous pression réelle.
+
+### Ce qui a été construit
+
+- **L'aperçu avant inscription.** Le visiteur voit le clip, puis trois vraies
+  publications, puis une porte. Le formulaire n'arrive qu'au moment où il veut
+  agir. **La coupe est faite au serveur** : tronquer à l'affichage aurait laissé
+  tout le fil dans la réponse.
+- **Le fil unique**, dans la grammaire d'Instagram. Migration `0005` : les cœurs
+  et les commentaires visent désormais n'importe quel post, plus seulement un mot
+  de Serge. La clé étrangère retirée emportait la cascade, remplacée par quatre
+  déclencheurs (R-76).
+- **Le lecteur fermé.** Plus de barre YouTube, donc plus de titre cliquable, de
+  bouton « Regarder sur YouTube », de partage ni d'avatar de chaîne. Effet mesuré :
+  **aucune iframe chargée tant qu'on ne lance pas une vidéo**, contre trois avant.
+- **L'inscription à un champ.** Le numéro était collecté depuis juillet et n'a
+  jamais servi à contacter personne. Migration `0006`.
+- **Les notifications**, écrites à la main (RFC 8291 et 8292) plutôt qu'importées.
+  Migration `0007`. **Vérifiées sur le vrai téléphone de Mac Arthur.**
+- **Le concours ambassadeur**, migration `0008`. Un point se gagne quand un
+  filleul **active les notifications**, pas quand il s'inscrit.
+- **Le lien d'accès personnel**, migration `0009`, jamais affiché ni copiable.
+
+### Trois défauts de sécurité trouvés en chemin, tous corrigés
+
+1. **Connaître le seul numéro d'un fan suffisait à entrer dans son compte.**
+   Prouvé sur le compte de test de Mac Arthur. La reprise exige maintenant le
+   numéro et le prénom.
+2. **Le même numéro existait en base sous trois écritures** (`+33753902323`,
+   `0753902323`, `753902323`), donc trois comptes pour Mac Arthur lui-même. Le
+   serveur impose l'indicatif et refuse de deviner le pays.
+3. **Le brief interne du RDV du 30 juin était lisible et indexable** sur
+   `demo.agenceattractor.com/beynaud/brief`. Troisième occurrence de R-70 en un
+   mois. Retiré du dossier publié.
+
+### Deux promesses affichées qui n'existaient pas
+
+L'écran annonçait des actus WhatsApp qui n'ont jamais été envoyées, et une
+« désinscription à tout moment » sans aucun mécanisme. Et le tableau de bord de
+Serge répondait « Diffusé à N membres » alors qu'**aucune notification n'existait**.
+Les trois disent maintenant la vérité, et la suppression de compte est réelle.
+
+### Mes propres erreurs, et elles sont instructives
+
+- **La plateforme est tombée vingt minutes** : migration lancée avant le
+  déploiement des fonctions qui la lisent. Fiche EXP-042, règle **R-77**.
+- **Puis j'ai enfreint R-77 une seconde fois le soir même**, en posant une
+  contrainte avant sa valeur par défaut. Les inscriptions ont échoué une minute.
+- **Ma simplification a emporté tout le lecteur vidéo**, placé juste derrière la
+  fonction que je supprimais. Le fil ne s'affichait plus, et c'était parti en ligne.
+
+**Les trois ont été rattrapées par la recette automatisée au navigateur, pas par
+la relecture du code.** C'est la leçon de la nuit, fiche **EXP-043**.
+
+### Ce que Mac Arthur a corrigé
+
+- **Latiss, c'est Serge Beynaud lui-même**, le petit nom que ses fans lui donnent.
+  Le dossier écrivait depuis juillet « Interlocuteur : Latiss » comme s'il
+  s'agissait d'un manager. Conséquence : partout où il est écrit « Latiss relancé,
+  sans réponse », **c'est l'artiste en personne qui ne répond pas**.
+- **Tikerama garde la billetterie physique.** Le direct est une source de revenus
+  séparée, encaissée par XPaye. Les deux publics ne se recouvrent pas : l'offre
+  n'enlève rien à personne, ce qui la rend bien plus facile à faire signer.
+
+### La découverte qui date le live
+
+Dans son propre fil, écrit par Serge : **« 05/12/26 Beynaud.tikerama.com »**. Il a
+un concert le 5 décembre 2026. Le live payant n'a plus de date à inventer.
+
+### Trois documents produits
+
+`SCHEMA-TUNNEL.md` (le tunnel en cinq paliers, appuyé sur Weverse et Laylo),
+`STRATEGIE-CONTENUS-OCT-DEC.md` (six formats à tourner, guide de tournage autonome
+pour le vidéaste d'Abidjan), et le `DOSSIER.md` remis à l'état réel.
+
+### Ce qui reste ouvert
+
+- **Le canal pour écrire à l'artiste n'existe pas**, et c'est la récompense
+  centrale du concours. Vérifié action par action : seul le commentaire public
+  existe, il n'y a aucune boîte de réception côté artiste.
+- **Le contenu de démarrage** : le fil tourne sur le jeu de test.
+- **L'exclusivité reste fictive** : les trois contenus « exclusifs » sont publics
+  sur la chaîne de Serge.
+- **Décision d'hébergement vidéo au 1er novembre**, sinon le live du 5 décembre
+  n'est pas vendable.
+- **Rien n'est poussé sur GitHub** : 23 commits en local, un commit distant
+  d'avance, et du travail non commité sur ETHSUN, le Festival et la certification.
+
+---
+
 ## 2026-08-19 (session 134 — Élévia passe en ligne, et trois diagnostics faux avant le bon)
 
 > La semaine s'est jouée sur la qualité du diagnostic, pas sur la difficulté

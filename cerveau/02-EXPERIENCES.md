@@ -340,8 +340,33 @@
 
 **Le signal qu'il ne faut pas mal lire.** « Ça ne s'affiche plus alors que je publie » ne dit pas que la publication est cassée. Ici l'écriture fonctionnait parfaitement, c'est la lecture qui échouait. Même famille que EXP-041 : le symptôme désigne rarement l'organe.
 
-**Règle née de là** : R-77.
-**Réutilisable pour.** Toute migration qui retire ou renomme une colonne sur une application déjà en ligne, sur le projet Supabase partagé en particulier.
+**La récidive, le soir même.** Quelques heures après avoir écrit R-77, la même erreur a été refaite sur le même dossier, sous une autre forme : une colonne `NOT NULL` ajoutée **avant** sa valeur par défaut. Le code en ligne n'envoyait pas ce champ, donc **toutes les inscriptions ont échoué** le temps de s'en apercevoir. Ce n'est plus la même manipulation, c'est la même famille : **une contrainte posée avant que le code sache la satisfaire**. Ce qui prouve qu'écrire la règle ne suffit pas, il faut la relire au moment d'écrire un `alter table`.
+
+**Règle née de là** : R-77, dans ses deux volets, retrait de colonne et ajout de contrainte.
+**Réutilisable pour.** Toute migration qui retire, renomme, ou **contraint** sur une application déjà en ligne, sur le projet Supabase partagé en particulier.
+
+---
+
+### EXP-043 · Trois défauts invisibles à la relecture, tous trouvés en pilotant un navigateur
+**DÉBLOCAGE** · 13-14/09/2026 · La Beynaumania
+
+**Situation.** Nuit de refonte complète de la plateforme : aperçu avant inscription, fil unique, inscription à un champ, notifications, concours, lien d'accès. Neuf migrations, une dizaine de déploiements, en aller-retour avec Mac Arthur qui testait sur son téléphone.
+
+**Ce qui a été fait à chaque étape.** Plutôt que relire le code, une page de recette était copiée dans un bac à sable, la session d'un vrai membre y était injectée, et un navigateur sans interface la rendait pour de bon, contre la vraie base. Une sonde lisait ensuite le résultat : nombre de posts, éléments qui débordent, boutons trop petits, erreurs JavaScript.
+
+**Ce que ça a trouvé, et qu'aucune relecture n'avait vu.**
+1. **La carte des notifications ne s'affichait jamais.** `navigator.serviceWorker.ready` ne rejette pas quand il n'y a pas de service worker, elle reste suspendue, et arrête tout le code qui suit. **Aucune exception, aucune trace.** Le `try/catch` autour ne servait à rien.
+2. **Le lecteur vidéo avait entièrement disparu.** Une suppression par bornes textuelles, censée retirer une fonction, avait emporté le bloc voisin qui s'était glissé entre les deux bornes au fil des modifications. Le fil ne s'affichait plus, et c'était déjà en ligne.
+3. **La ligne du concours s'écrivait deux fois.** La fonction, appelée deux fois au démarrage, vidait la zone **avant** d'attendre la réponse réseau : les deux appels vidaient d'abord, puis écrivaient chacun au retour.
+
+**Ce que la mesure a aussi corrigé.** Un audit de largeur dans un cadre imposé à 360 px, Chrome sans interface refusant de descendre sous 489, a montré zéro débordement mais **quatre zones tactiles sous 44 px**, dont un bouton de déconnexion à 14 px, en place depuis juillet.
+
+**Cause profonde.** Ces trois défauts ont un point commun : **ils ne produisent aucune erreur.** Une promesse suspendue, du code supprimé qui n'est appelé que plus tard, une course entre deux affichages. La relecture ne les voit pas parce qu'il n'y a rien à voir : le code est syntaxiquement juste et se lit bien. **Seul le rendu réel les révèle.** Le contrôle statique dit ce qui est écrit, il ne dit pas ce qui se passe.
+
+**Le corollaire, plus dur.** Enchaîner des modifications structurelles sans recette entre chaque, c'est empiler des défauts silencieux. Les deux régressions sur trois avaient été introduites par la simplification elle-même, quelques minutes plus tôt.
+
+**Règles nées de là** : R-78 (la promesse qui ne rejette jamais), et la confirmation de R-69, le contrôle avant mise en ligne se lance, il ne se récite pas.
+**Réutilisable pour.** Toute refonte front-end en plusieurs étapes, et tout écran qui dépend d'une API du navigateur.
 
 ---
 
