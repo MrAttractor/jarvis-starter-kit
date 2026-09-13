@@ -13,13 +13,15 @@
   desormais dans fan.html, parce que c'est cette page-la que partagent les
   Ambassadeurs : tant que le clip etait ici, tous les liens de parrainage le
   sautaient. On garde l'adresse vivante, les liens deja partages fonctionnent.
+  On vise l adresse propre et non fan.html : Cloudflare Pages renvoie un 308
+  sur les .html, ce qui ajoutait un aller-retour reseau pour rien.
   location.replace, et non href, pour que le retour arriere ne reboucle pas.
 -->
-<script>location.replace('fan.html'+location.search+location.hash);</script>
+<script>location.replace('fan'+location.search+location.hash);</script>
 </head>
 <body>
 <noscript>
-  <a href="fan.html" style="display:block;padding:24px;color:#fff;font-family:system-ui,sans-serif;font-size:16px">
+  <a href="fan" style="display:block;padding:24px;color:#fff;font-family:system-ui,sans-serif;font-size:16px">
     Entrer dans la Beynaumania
   </a>
 </noscript>
