@@ -157,6 +157,33 @@ Deno.serve(async (req) => {
       });
     }
 
+    /* Les mots deja diffuses. Ils n'etaient listes nulle part : Serge publiait
+       et ne pouvait plus ni les relire, ni corriger une faute, ni retirer une
+       annonce perimee. Meme manque que pour les videos, trouve le 14/09. */
+    if (action === "message_list") {
+      return json({ ok: true, messages: await (await sb(`bey_messages?order=created_at.desc&limit=60&select=*`)).json() });
+    }
+    if (action === "message_update") {
+      if (!d.id) return json({ ok: false, error: "id requis" });
+      const contenu = String(d.contenu ?? "").trim();
+      if (!contenu) return json({ ok: false, error: "message vide" });
+      // Une correction ne renotifie pas : les fans ont deja ete prevenus.
+      const res = await sb(`bey_messages?id=eq.${encodeURIComponent(d.id)}`, {
+        method: "PATCH", headers: { Prefer: "return=representation" }, body: JSON.stringify({ contenu }),
+      });
+      if (!res.ok) return json({ ok: false, error: await res.text() });
+      const rows = await res.json();
+      if (!Array.isArray(rows) || !rows.length) return json({ ok: false, error: "message introuvable" });
+      return json({ ok: true, message: rows[0] });
+    }
+    if (action === "message_delete") {
+      if (!d.id) return json({ ok: false, error: "id requis" });
+      // Les coeurs et commentaires partent avec, par declencheur (R-76).
+      const res = await sb(`bey_messages?id=eq.${encodeURIComponent(d.id)}`, { method: "DELETE" });
+      if (!res.ok) return json({ ok: false, error: await res.text() });
+      return json({ ok: true });
+    }
+
     // ── CONTENUS ──
     if (action === "content_list") {
       return json({ ok: true, contenus: await (await sb(`bey_contenus?order=ordre.asc&select=*`)).json() });

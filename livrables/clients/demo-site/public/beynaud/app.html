@@ -142,6 +142,85 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;}
 @keyframes sp{to{transform:rotate(360deg)}}
+
+/* ══ REFONTE DU 14/09 : trois onglets au lieu d'un defilement de onze blocs ══
+   Le pilotage s'allongeait a chaque fonctionnalite. Le vrai probleme n'etait
+   pas la longueur mais l'eclatement : le geste principal, publier, vivait dans
+   cinq formulaires separes. Un onglet par intention, et le reste suit. */
+.panneau{animation:apparait .25s ease both;}
+@keyframes apparait{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* La barre du bas. Pouce-compatible : 56 px de haut, hors encoche. */
+.onglets{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;
+  background:rgba(10,10,10,.94);backdrop-filter:blur(14px);
+  border-top:1px solid var(--faint);padding-bottom:env(safe-area-inset-bottom,0px);}
+.onglet{position:relative;flex:1;min-height:56px;background:none;color:var(--dim);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  font-size:10.5px;font-weight:700;letter-spacing:.3px;padding:8px 4px;transition:color .2s;}
+.onglet svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.onglet.actif{color:var(--rouge);}
+.onglet.actif::before{content:'';position:absolute;top:0;left:22%;right:22%;height:2px;background:var(--rouge);border-radius:0 0 3px 3px;}
+.pastille{position:absolute;top:7px;left:calc(50% + 9px);min-width:17px;height:17px;padding:0 4px;
+  border-radius:9px;background:var(--rouge);color:#fff;font-size:10px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;}
+/* Le defilement s'arrete au-dessus de la barre, sinon la derniere ligne est
+   inatteignable sur un iPhone. */
+.scroll{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px));}
+
+/* La ligne d'etat : ce que Serge se demande en ouvrant. */
+.etat{background:var(--n3);border:1px solid var(--faint);border-radius:14px;
+  padding:13px 15px;margin-bottom:14px;font-size:12.5px;line-height:1.5;color:var(--dim);}
+.etat b{color:var(--blanc);font-weight:800;}
+.etat .alerte{color:var(--rouge);font-weight:800;}
+
+/* Le selecteur de type du composeur. */
+.types{display:flex;gap:5px;margin:-2px -2px 14px;padding:2px;}
+.type{flex:1 1 0;min-width:0;font-size:11.5px;font-weight:700;padding:0 4px;border-radius:9px;
+  background:var(--n4);color:var(--dim);border:1px solid var(--faint);transition:all .18s;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.type.actif{background:var(--rouge);color:#fff;border-color:var(--rouge);}
+
+/* Les filtres de la liste publiee. */
+.filtres{display:flex;gap:5px;margin-bottom:12px;}
+.filtre{flex:1 1 0;min-width:0;font-size:11px;font-weight:700;padding:0 3px;border-radius:8px;
+  background:transparent;color:var(--dim);border:1px solid var(--faint);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.filtre.actif{color:var(--blanc);border-color:rgba(255,255,255,.28);background:var(--n4);}
+
+/* Une ligne de la liste publiee, tous types confondus. */
+.pub{display:flex;gap:11px;padding:12px 0;border-bottom:1px solid var(--faint);align-items:flex-start;}
+.pub:last-child{border-bottom:none;}
+.pub-vig{width:46px;height:46px;border-radius:10px;flex-shrink:0;object-fit:cover;background:var(--n4);
+  display:flex;align-items:center;justify-content:center;color:var(--dim);}
+.pub-vig svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.pub-body{flex:1;min-width:0;}
+.pub-t{font-size:13px;font-weight:600;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.pub-s{font-size:11px;color:var(--dim);margin-top:4px;}
+.pub-s .masque{color:#ff8a8a;}
+.pub-s .direct{color:var(--rouge);font-weight:800;}
+.pub-s .amb{color:var(--or);}
+.pub-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.pub-btns button{font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;
+  border:1px solid var(--faint);color:var(--dim);background:var(--n4);}
+.pub-btns button.on{color:var(--vert);border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.08);}
+.pub-btns button.danger{color:#ff6b6b;border-color:rgba(255,107,107,.3);}
+
+/* Zone de tap : 44 px minimum, regle de UX_SYSTEM section 9. La recette
+   automatisee comptait 38 boutons en dessous, dont « Quitter » a 14 px de
+   haut. Sur cette application tout se fait au pouce, en marchant, sur un
+   telephone : un bouton de 28 px se rate. */
+.pub-btns button,
+.filtre,
+.type,
+.add-toggle,
+.cm-btns button,
+.ct-toggle, .ct-edit, .ct-del,
+.logout{
+  min-height:44px;min-width:44px;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+/* Les rangees d'actions respirent, sinon trois boutons de 44 px se collent. */
+.pub-btns{gap:8px;}
 </style>
 </head>
 <body>
@@ -159,108 +238,146 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
   <div id="view-dash" class="hidden">
     <div class="header">
       <div class="brand"><div class="brand-logo">BM</div><span class="brand-name">La Beynaumania</span></div>
-      <div class="hbtns"><div class="live-pill"><span class="live-dot"></span>EN DIRECT</div><button class="logout" onclick="logout()">Quitter</button></div>
+      <div class="hbtns"><div class="live-pill hidden" id="live-pill"><span class="live-dot"></span>EN DIRECT</div><button class="logout" onclick="logout()">Quitter</button></div>
     </div>
+
     <div class="scroll">
-      <div class="greeting-sub">Bonjour Serge</div>
-      <div class="greeting-t">TA <span>BEYNAUMANIA</span></div>
 
-      <div class="live-block">
-        <div class="lb-tag"><span class="live-dot"></span>MEMBRES DE LA BEYNAUMANIA</div>
-        <div class="lb-main"><div class="lb-num" id="s-total">—</div><div class="lb-unit">fans inscrits</div></div>
-      </div>
+      <!-- ═══════════ PUBLIER ═══════════
+           Cinq formulaires vivaient dans cinq cartes separees : le mot, le
+           live, le sondage, la video, la photo. Pour Serge c'est un seul
+           geste. Un seul bloc, un selecteur de type, et en dessous tout ce
+           qui est deja publie, dans le meme ordre que le fil du fan. -->
+      <section class="panneau" id="p-publier">
+        <div class="etat" id="etat">Chargement…</div>
 
-      <div class="stats-row">
-        <div class="stat"><div class="stat-val or" id="s-amb">—</div><div class="stat-lbl">Ambassadeurs</div></div>
-        <div class="stat"><div class="stat-val" id="s-msg">—</div><div class="stat-lbl">Messages</div></div>
-        <div class="stat"><div class="stat-val" id="s-cmt">—</div><div class="stat-lbl">Commentaires</div></div>
-      </div>
+        <div class="card">
+          <div class="types" id="types">
+            <button class="type actif" onclick="choisirType('mot')" data-t="mot">Mot</button>
+            <button class="type" onclick="choisirType('photo')" data-t="photo">Photo</button>
+            <button class="type" onclick="choisirType('video')" data-t="video">Vidéo</button>
+            <button class="type" onclick="choisirType('sondage')" data-t="sondage">Sondage</button>
+            <button class="type" onclick="choisirType('live')" data-t="live">Live</button>
+          </div>
 
-      <div class="card bc-card">
-        <div class="block-title">Envoyer à la Beynaumania</div>
-        <div class="field"><textarea id="bc-text" placeholder="Ton message à toute la Beynaumania… (annonce, coulisse, date de concert)"></textarea></div>
-        <button class="bc-btn" id="bc-btn" onclick="doBroadcast()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
-          Diffuser maintenant
-        </button>
-        <div class="bc-hint">Le message s'affiche instantanément chez chaque fan, qui peut liker et commenter. (WhatsApp de masse : à venir.)</div>
-      </div>
+          <div class="f-type" id="f-mot">
+            <div class="field"><textarea id="bc-text" placeholder="Ton message à toute la Beynaumania… (annonce, coulisse, date de concert)"></textarea></div>
+            <button class="bc-btn" id="bc-btn" onclick="doBroadcast()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+              <span id="bc-label">Diffuser maintenant</span>
+            </button>
+            <button class="add-toggle hidden" id="bc-annuler" onclick="annulerMot()">Annuler la modification</button>
+            <div class="bc-hint">Le message s'affiche chez chaque fan, qui peut liker et commenter. Ceux qui ont activé les notifications sont prévenus sur leur téléphone.</div>
+          </div>
 
-      <div class="card">
-        <div class="block-title">Live</div>
-        <div id="live-body"></div>
-      </div>
+          <div class="f-type hidden" id="f-photo">
+            <div class="field"><input id="photo-cap" type="text" placeholder="Légende (optionnelle)"/></div>
+            <button class="btn" onclick="document.getElementById('photo-file').click()">Choisir une photo et publier</button>
+            <input type="file" id="photo-file" accept="image/*" class="hidden" onchange="uploadPhoto(this)"/>
+            <div class="bc-hint">La photo est compressée sur ton téléphone avant l'envoi.</div>
+          </div>
 
-      <div class="card">
-        <div class="block-title">Sondages · fais participer tes fans</div>
-        <div id="polls-list"></div>
-        <button class="add-toggle" onclick="togglePoll()">+ Créer un sondage</button>
-        <div id="poll-form" class="add-form hidden">
-          <div class="field"><input id="pq" type="text" placeholder="Ta question (ex : Quel titre je sors en premier ?)"/></div>
-          <div class="field"><input id="po0" type="text" placeholder="Option 1"/></div>
-          <div class="field"><input id="po1" type="text" placeholder="Option 2"/></div>
-          <div class="field"><input id="po2" type="text" placeholder="Option 3 (optionnel)"/></div>
-          <div class="field"><input id="po3" type="text" placeholder="Option 4 (optionnel)"/></div>
-          <button class="btn" onclick="addPoll()">Publier le sondage</button>
+          <div class="f-type hidden" id="f-video">
+            <div class="field"><label>Titre</label><input id="c-titre" type="text" placeholder="Ex : Série des coulisses"/></div>
+            <div class="field"><label>Lien YouTube</label><input id="c-url" type="text" placeholder="https://youtube.com/..."/></div>
+            <div class="field"><label>Accès</label><select id="c-grade"><option value="membre">Tous les membres</option><option value="ambassadeur">Ambassadeurs seulement</option></select></div>
+            <button class="btn" id="c-btn" onclick="saveContent()">Publier</button>
+            <button class="add-toggle hidden" id="c-annuler" onclick="cancelEdit()">Annuler la modification</button>
+          </div>
+
+          <div class="f-type hidden" id="f-sondage">
+            <div class="field"><input id="pq" type="text" placeholder="Ta question (ex : Quel titre je sors en premier ?)"/></div>
+            <div class="field"><input id="po0" type="text" placeholder="Option 1"/></div>
+            <div class="field"><input id="po1" type="text" placeholder="Option 2"/></div>
+            <div class="field"><input id="po2" type="text" placeholder="Option 3 (optionnel)"/></div>
+            <div class="field"><input id="po3" type="text" placeholder="Option 4 (optionnel)"/></div>
+            <button class="btn" onclick="addPoll()">Publier le sondage</button>
+          </div>
+
+          <div class="f-type hidden" id="f-live"><div id="live-body"></div></div>
         </div>
-      </div>
 
-      <div class="card">
-        <div class="block-title">Modération des commentaires</div>
-        <div id="mod-list"><div class="row-sub">Chargement…</div></div>
-      </div>
-
-      <div class="card">
-        <div class="block-title">Top ambassadeurs</div>
-        <div class="row-sub" style="margin-bottom:8px">Par nombre de filleuls, depuis le début.</div>
-        <div id="top-amb"></div>
-      </div>
-
-      <!-- Le classement du concours. Il existait au serveur depuis le 13/09 et
-           n'etait montre qu'aux fans : Serge, pour qui il a ete construit, ne
-           l'avait nulle part. Ce n'est pas le meme chiffre que le bloc ci-dessus :
-           un point se gagne quand un filleul ACTIVE LES NOTIFICATIONS, pas quand
-           il s'inscrit. -->
-      <div class="card">
-        <div class="block-title">Classement du concours</div>
-        <div id="cl-saison" class="row-sub" style="margin-bottom:10px">Chargement…</div>
-        <div id="cl-liste"></div>
-        <button class="add-toggle hidden" id="cl-copier" onclick="copierClassement()">Copier le classement à lire</button>
-      </div>
-
-      <div class="card">
-        <div class="block-title">Ta Beynaumania dans le monde</div>
-        <div class="map-surface" id="carte"></div>
-        <div class="villes" id="villes"></div>
-        <div id="lieux-hors" class="row-sub" style="margin-top:10px"></div>
-      </div>
-
-      <div class="card">
-        <div class="block-title">Inscriptions récentes</div>
-        <div id="recents"></div>
-      </div>
-
-      <div class="card">
-        <div class="block-title">Photos exclusives</div>
-        <div id="photos"></div>
-        <button class="add-toggle" onclick="document.getElementById('photo-file').click()">+ Ajouter une photo</button>
-        <input type="file" id="photo-file" accept="image/*" class="hidden" onchange="uploadPhoto(this)"/>
-        <div class="field" style="margin-top:10px;"><input id="photo-cap" type="text" placeholder="Légende (optionnelle)"/></div>
-      </div>
-
-      <div class="card">
-        <div class="block-title">Séries & vidéos</div>
-        <div id="contents"></div>
-        <button class="add-toggle" onclick="toggleAdd()">+ Ajouter une vidéo / série</button>
-        <div id="add-form" class="add-form hidden">
-          <div class="field"><label>Titre</label><input id="c-titre" type="text" placeholder="Ex : Série des coulisses"/></div>
-          <div class="field"><label>Lien YouTube (vidéo ou playlist)</label><input id="c-url" type="text" placeholder="https://youtube.com/..."/></div>
-          <div class="field"><label>Accès</label><select id="c-grade"><option value="membre">Tous les membres</option><option value="ambassadeur">Ambassadeurs seulement</option></select></div>
-          <button class="btn" id="c-btn" onclick="saveContent()">Publier</button>
-          <button class="add-toggle hidden" id="c-annuler" onclick="cancelEdit()">Annuler la modification</button>
+        <div class="card">
+          <div class="block-title">Ce qui est publié</div>
+          <div class="filtres" id="filtres">
+            <button class="filtre actif" onclick="filtrer('tout')" data-f="tout">Tout</button>
+            <button class="filtre" onclick="filtrer('mot')" data-f="mot">Mots</button>
+            <button class="filtre" onclick="filtrer('photo')" data-f="photo">Photos</button>
+            <button class="filtre" onclick="filtrer('video')" data-f="video">Vidéos</button>
+            <button class="filtre" onclick="filtrer('sondage')" data-f="sondage">Sondages</button>
+          </div>
+          <div id="publie"><div class="row-sub">Chargement…</div></div>
         </div>
-      </div>
+      </section>
+
+      <!-- ═══════════ COMMUNAUTÉ ═══════════ -->
+      <section class="panneau hidden" id="p-communaute">
+        <div class="greeting-sub">Bonjour Serge</div>
+        <div class="greeting-t">TA <span>BEYNAUMANIA</span></div>
+
+        <div class="live-block">
+          <div class="lb-tag"><span class="live-dot"></span>MEMBRES DE LA BEYNAUMANIA</div>
+          <div class="lb-main"><div class="lb-num" id="s-total">—</div><div class="lb-unit">fans inscrits</div></div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat"><div class="stat-val or" id="s-amb">—</div><div class="stat-lbl">Ambassadeurs</div></div>
+          <div class="stat"><div class="stat-val" id="s-msg">—</div><div class="stat-lbl">Messages</div></div>
+          <div class="stat"><div class="stat-val" id="s-cmt">—</div><div class="stat-lbl">Commentaires</div></div>
+        </div>
+
+        <div class="card">
+          <div class="block-title">Ta Beynaumania dans le monde</div>
+          <div class="map-surface" id="carte"></div>
+          <div class="villes" id="villes"></div>
+          <div id="lieux-hors" class="row-sub" style="margin-top:10px"></div>
+        </div>
+
+        <!-- Le classement du concours. Ce n'est pas le meme chiffre que le top
+             ci-dessous : un point se gagne quand un filleul ACTIVE LES
+             NOTIFICATIONS, pas quand il s'inscrit. -->
+        <div class="card">
+          <div class="block-title">Classement du concours</div>
+          <div id="cl-saison" class="row-sub" style="margin-bottom:10px">Chargement…</div>
+          <div id="cl-liste"></div>
+          <button class="add-toggle hidden" id="cl-copier" onclick="copierClassement()">Copier le classement à lire</button>
+        </div>
+
+        <div class="card">
+          <div class="block-title">Top ambassadeurs</div>
+          <div class="row-sub" style="margin-bottom:8px">Par nombre de filleuls, depuis le début.</div>
+          <div id="top-amb"></div>
+        </div>
+
+        <div class="card">
+          <div class="block-title">Inscriptions récentes</div>
+          <div id="recents"></div>
+        </div>
+      </section>
+
+      <!-- ═══════════ MODÉRATION ═══════════ -->
+      <section class="panneau hidden" id="p-moderation">
+        <div class="card">
+          <div class="block-title">Modération des commentaires</div>
+          <div class="row-sub" style="margin-bottom:10px">Un commentaire masqué automatiquement attend ton avis. Rien n'est jamais supprimé sans toi.</div>
+          <div id="mod-list"><div class="row-sub">Chargement…</div></div>
+        </div>
+      </section>
+
     </div>
+
+    <nav class="onglets">
+      <button class="onglet actif" id="o-publier" onclick="allerA('publier')">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Publier</span>
+      </button>
+      <button class="onglet" id="o-communaute" onclick="allerA('communaute')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.8 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.8-3.8-9S9.5 5.7 12 3z"/></svg><span>Communauté</span>
+      </button>
+      <button class="onglet" id="o-moderation" onclick="allerA('moderation')">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Modération</span>
+        <span class="pastille hidden" id="pastille-mod">0</span>
+      </button>
+    </nav>
   </div>
 
 </div>
@@ -310,11 +427,18 @@ function logout(){localStorage.removeItem(LS);document.getElementById('view-dash
 async function showDash(){
   document.getElementById('view-login').classList.add('hidden');
   document.getElementById('view-dash').classList.remove('hidden');
-  await Promise.all([loadStats(),loadMod(),loadContents(),loadPhotos(),loadPolls(),loadClassement()]);
+  // L'onglet d'abord : l'ecran doit etre juste avant meme que les donnees
+  // arrivent, sinon Serge voit le mauvais panneau pendant une seconde.
+  allerA(ongletRetenu());
+  await Promise.all([loadStats(),loadMod(),chargerPublie(),loadClassement()]);
 }
 
-let pollOpen=false;
-function togglePoll(){pollOpen=!pollOpen;document.getElementById('poll-form').classList.toggle('hidden',!pollOpen);}
+/* Les formulaires ne se replient plus : chacun vit dans son onglet du
+   composeur. Ces deux fonctions n'ouvrent donc plus rien, elles amenent au
+   bon onglet. Elles restent parce que le reste du code les appelle, et
+   surtout parce qu'elles visaient des conteneurs supprimes par la refonte :
+   un seul noeud absent suffit a arreter la fonction qui l'appelle. R-83. */
+function togglePoll(){ choisirType('sondage'); }
 async function addPoll(){
   const q=document.getElementById('pq').value.trim();
   const opts=['po0','po1','po2','po3'].map(id=>document.getElementById(id).value.trim()).filter(Boolean);
@@ -322,16 +446,6 @@ async function addPoll(){
   const res=await api({action:'poll_add',question:q,options:opts,grade_requis:'membre'});
   if(res&&res.ok){document.getElementById('pq').value='';['po0','po1','po2','po3'].forEach(id=>document.getElementById(id).value='');togglePoll();toast(messagePublication(res));loadPolls();}
   else toast('Erreur : '+((res&&res.error)||'réessaie'));
-}
-async function loadPolls(){
-  const res=await api({action:'poll_list'});
-  const el=document.getElementById('polls-list');
-  const ps=(res&&res.sondages)||[];
-  el.innerHTML=ps.length?ps.map(s=>{
-    const total=s.total||0;
-    const bars=(s.options||[]).map((o,i)=>{const c=(s.counts&&s.counts[i])||0;const pct=total?Math.round(c/total*100):0;return `<div class="poll-res"><div class="poll-res-bar" style="width:${pct}%"></div><span class="poll-res-lbl">${esc(o)}</span><span class="poll-res-pct">${pct}% (${c})</span></div>`;}).join('');
-    return `<div class="poll-item"><div class="ct-title" style="margin-bottom:8px">${esc(s.question)}${s.actif?'':' <span style="color:var(--dim);font-weight:500">(fermé)</span>'}</div><div class="poll-opts">${bars}</div><div style="display:flex;gap:7px;margin-top:9px;align-items:center"><button class="ct-toggle ${s.actif?'ct-on':'ct-off'}" onclick="togglePollActive('${s.id}',${s.actif?'false':'true'})">${s.actif?'Ouvert':'Fermé'}</button><button class="ct-del" onclick="delPoll('${s.id}')">Suppr.</button><span class="ct-sub" style="margin-left:auto">${total} vote(s)</span></div></div>`;
-  }).join(''):'<div class="row-sub">Aucun sondage. Lance-en un pour faire réagir tes fans.</div>';
 }
 async function togglePollActive(id,actif){const res=await api({action:'poll_toggle',id,actif:actif===true||actif==='true'});if(res&&res.ok)loadPolls();else toast('Erreur.');}
 async function delPoll(id){if(!confirm('Supprimer ce sondage et ses votes ?'))return;const res=await api({action:'poll_delete',id});if(res&&res.ok){toast('Sondage supprimé.');loadPolls();}else toast('Erreur.');}
@@ -445,7 +559,7 @@ function peindreCarte(lieux){
 
   villes.innerHTML = situes.length
     ? situes.slice(0,12).map((l,i)=>'<div class="ville"><div class="ville-pt" style="background:'+(i===0?'var(--rouge)':(i<3?'var(--or)':'#bdbdbd'))+'"></div>'+esc(l.lieu)+' <span class="ville-n">'+l.n+'</span></div>').join('')
-    : '<div class="row-sub">Aucun lieu renseigné pour l instant.</div>';
+    : '<div class="row-sub">Aucun lieu renseigné pour l’instant.</div>';
 
   // Ce qu'on n'a pas su placer se dit, il ne disparait pas.
   hors.textContent = inconnus.length
@@ -453,8 +567,201 @@ function peindreCarte(lieux){
     : '';
 }
 
+/* ══════════ LA NAVIGATION ══════════
+   Trois onglets : ce qu'on publie, la communaute, ce qui attend un avis.
+   L'onglet ouvert survit a un rechargement, sinon Serge repart de la page
+   d'accueil chaque fois qu'il rouvre l'application. */
+const ONGLETS = ['publier','communaute','moderation'];
+function allerA(nom){
+  if(ONGLETS.indexOf(nom) < 0) nom = 'publier';
+  ONGLETS.forEach(o=>{
+    const p = document.getElementById('p-'+o);
+    const b = document.getElementById('o-'+o);
+    if(p) p.classList.toggle('hidden', o!==nom);
+    if(b) b.classList.toggle('actif', o===nom);
+  });
+  try{ localStorage.setItem('bey_onglet', nom); }catch(e){}
+  document.querySelector('.scroll').scrollTop = 0;
+  window.scrollTo(0,0);
+}
+function ongletRetenu(){
+  try{ return localStorage.getItem('bey_onglet') || 'publier'; }catch(e){ return 'publier'; }
+}
+
+/* ══════════ LE COMPOSEUR ══════════
+   Un seul bloc, cinq formulaires. Avant, c'etaient cinq cartes eparpillees
+   dans un defilement de onze blocs, alors que c'est le meme geste. */
+let TYPE_ACTIF = 'mot';
+function choisirType(t){
+  TYPE_ACTIF = t;
+  ['mot','photo','video','sondage','live'].forEach(x=>{
+    const f = document.getElementById('f-'+x);
+    if(f) f.classList.toggle('hidden', x!==t);
+  });
+  document.querySelectorAll('#types .type').forEach(b=>b.classList.toggle('actif', b.dataset.t===t));
+}
+
+/* ══════════ CE QUI EST PUBLIE ══════════
+   Un seul fil, dans le meme ordre que celui du fan : un mot, une photo, une
+   video et un sondage y sont des publications equivalentes. Elles l'etaient
+   deja pour le fan depuis le 13/09, elles ne l'etaient pas pour Serge. */
+let MESSAGES=[], PHOTOS=[], SONDAGES=[];
+let FILTRE='tout';
+
+function filtrer(f){
+  FILTRE=f;
+  document.querySelectorAll('#filtres .filtre').forEach(b=>b.classList.toggle('actif', b.dataset.f===f));
+  peindrePublie();
+}
+
+const ICONES = {
+  mot:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  video:'<path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/>',
+  sondage:'<path d="M18 20V10M12 20V4M6 20v-6"/>'
+};
+
+async function chargerPublie(){
+  const [m,c,p,s] = await Promise.all([
+    api({action:'message_list'}), api({action:'content_list'}),
+    api({action:'photo_list'}),   api({action:'poll_list'}),
+  ]);
+  MESSAGES = (m&&m.messages)||[];
+  CONTENUS = (c&&c.contenus)||[];
+  PHOTOS   = (p&&p.photos)||[];
+  SONDAGES = (s&&s.sondages)||[];
+  renderLiveCard(CONTENUS.filter(x=>x.type==='live'));
+  const direct = CONTENUS.some(x=>x.type==='live' && x.actif);
+  document.getElementById('live-pill').classList.toggle('hidden', !direct);
+  peindrePublie();
+}
+
+function lignesPubliees(){
+  const l = [];
+  MESSAGES.forEach(x=>l.push({k:'mot', id:x.id, date:x.created_at, titre:x.contenu, actif:true}));
+  PHOTOS.forEach(x=>l.push({k:'photo', id:x.id, date:x.created_at, titre:x.legende||'Photo sans légende', img:x.url, actif:x.actif, grade:x.grade_requis}));
+  CONTENUS.filter(x=>x.type!=='live').forEach(x=>l.push({k:'video', id:x.id, date:x.created_at, titre:x.titre, lien:x.youtube_url, actif:x.actif, grade:x.grade_requis}));
+  CONTENUS.filter(x=>x.type==='live').forEach(x=>l.push({k:'video', live:true, id:x.id, date:x.created_at, titre:x.titre, lien:x.youtube_url, actif:x.actif, grade:x.grade_requis}));
+  SONDAGES.forEach(x=>l.push({k:'sondage', id:x.id, date:x.created_at, titre:x.question, actif:x.actif, grade:x.grade_requis, sondage:x}));
+  // Une publication sans date remonte en tete plutot que de disparaitre en bas.
+  return l.sort((a,b)=> new Date(b.date||0) - new Date(a.date||0));
+}
+
+function barresSondage(s){
+  const total = s.total||0;
+  return (s.options||[]).map((o,i)=>{
+    const c=(s.counts&&s.counts[i])||0;
+    const pct=total?Math.round(c/total*100):0;
+    return '<div class="poll-res"><div class="poll-res-bar" style="width:'+pct+'%"></div>'
+      + '<span class="poll-res-lbl">'+esc(o)+'</span>'
+      + '<span class="poll-res-pct">'+pct+'% ('+c+')</span></div>';
+  }).join('');
+}
+
+function peindrePublie(){
+  const el = document.getElementById('publie');
+  const tout = lignesPubliees();
+  const vues = FILTRE==='tout' ? tout : tout.filter(x=>x.k===FILTRE);
+  if(!vues.length){
+    el.innerHTML = '<div class="row-sub">'+(FILTRE==='tout'
+      ? 'Rien de publié pour l’instant. Le fil de tes fans est vide.'
+      : 'Rien dans cette catégorie.')+'</div>';
+    return;
+  }
+  el.innerHTML = vues.map(x=>{
+    const vig = x.img
+      ? '<img class="pub-vig" src="'+esc(x.img)+'" alt=""/>'
+      : '<div class="pub-vig"><svg viewBox="0 0 24 24">'+(ICONES[x.k]||ICONES.mot)+'</svg></div>';
+
+    const nom = {mot:'Mot', photo:'Photo', video:'Vidéo', sondage:'Sondage'}[x.k];
+    const bouts = [nom, timeAgo(x.date)];
+    if(x.live && x.actif) bouts.push('<span class="direct">EN DIRECT</span>');
+    if(x.k!=='mot' && !x.actif) bouts.push('<span class="masque">masqué</span>');
+    if(x.grade==='ambassadeur') bouts.push('<span class="amb">Ambassadeurs</span>');
+    if(x.k==='sondage') bouts.push((x.sondage.total||0)+' vote'+((x.sondage.total||0)>1?'s':''));
+
+    const btns = [];
+    if(x.k==='mot'){
+      btns.push('<button onclick="editMessage(\''+x.id+'\')">Modifier</button>');
+      btns.push('<button class="danger" onclick="delMessage(\''+x.id+'\')">Suppr.</button>');
+    } else if(x.k==='photo'){
+      btns.push('<button class="'+(x.actif?'on':'')+'" onclick="togglePhoto(\''+x.id+'\','+(x.actif?'false':'true')+')">'+(x.actif?'Visible':'Masquée')+'</button>');
+      btns.push('<button class="danger" onclick="delPhoto(\''+x.id+'\')">Suppr.</button>');
+    } else if(x.k==='video'){
+      btns.push('<button class="'+(x.actif?'on':'')+'" onclick="toggleContent(\''+x.id+'\','+(x.actif?'false':'true')+')">'+(x.actif?(x.live?'En direct':'Actif'):'Masqué')+'</button>');
+      btns.push('<button onclick="editContent(\''+x.id+'\')">Modifier</button>');
+      btns.push('<button class="danger" onclick="delContent(\''+x.id+'\')">Suppr.</button>');
+    } else {
+      btns.push('<button class="'+(x.actif?'on':'')+'" onclick="togglePollActive(\''+x.id+'\','+(x.actif?'false':'true')+')">'+(x.actif?'Ouvert':'Fermé')+'</button>');
+      btns.push('<button class="danger" onclick="delPoll(\''+x.id+'\')">Suppr.</button>');
+    }
+
+    return '<div class="pub" data-id="'+esc(x.id)+'" data-k="'+x.k+'">'+vig
+      + '<div class="pub-body"><div class="pub-t">'+esc(x.titre)+'</div>'
+      + '<div class="pub-s">'+bouts.join(' · ')+'</div>'
+      + (x.k==='sondage' ? '<div class="poll-opts" style="margin-top:9px">'+barresSondage(x.sondage)+'</div>' : '')
+      + (x.k==='video' ? '<div class="pub-s"><span class="ct-url">'+esc(x.lien||'lien manquant')+'</span></div>' : '')
+      + '<div class="pub-btns">'+btns.join('')+'</div></div></div>';
+  }).join('');
+}
+
+/* ══════════ CORRIGER OU RETIRER UN MOT ══════════
+   Comme les videos ce matin : il etait publie, et plus rien ne permettait de
+   le relire, de corriger une faute ou de retirer une annonce perimee. */
+let motEnEdition = null;
+function editMessage(id){
+  const m = MESSAGES.find(x=>String(x.id)===String(id));
+  if(!m){ toast('Message introuvable, recharge la page.'); return; }
+  motEnEdition = m.id;
+  choisirType('mot');
+  document.getElementById('bc-text').value = m.contenu||'';
+  document.getElementById('bc-label').textContent = 'Enregistrer';
+  document.getElementById('bc-annuler').classList.remove('hidden');
+  document.getElementById('bc-text').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function annulerMot(){
+  motEnEdition = null;
+  document.getElementById('bc-text').value = '';
+  document.getElementById('bc-label').textContent = 'Diffuser maintenant';
+  document.getElementById('bc-annuler').classList.add('hidden');
+}
+async function delMessage(id){
+  if(!confirm('Supprimer ce message ? Les cœurs et commentaires qui le visent partent avec.')) return;
+  const res = await api({action:'message_delete', id});
+  if(res&&res.ok){ if(String(motEnEdition)===String(id)) annulerMot(); toast('Message supprimé.'); chargerPublie(); loadStats(); }
+  else toast('Erreur : '+((res&&res.error)||'réessaie'));
+}
+
+/* ══════════ LA LIGNE D'ETAT ══════════
+   Ce que Serge se demande en ouvrant : est-ce qu'il s'est passe quelque chose,
+   et est-ce que quelque chose m'attend. Deux phrases, pas un tableau de bord.
+   Les chiffres arrivent de deux appels qui ne finissent pas en meme temps :
+   chacun depose le sien et redemande la peinture, plutot que d'attendre. */
+let STATS = null, MOD_ATTENTE = 0;
+function majEtat(){
+  const e = document.getElementById('etat');
+  if(!e) return;
+  const st = STATS;
+  const t = [];
+  const n = (st && st.total) || 0;
+  t.push('<b>' + n + '</b> fan' + (n>1?'s':'') + ' dans la Beynaumania');
+  const sem = ((st && st.recents) || []).filter(m => Date.now() - new Date(m.created_at).getTime() < 7*86400000).length;
+  if(sem) t.push('<b>' + sem + '</b> arrivé' + (sem>1?'s':'') + ' cette semaine');
+  let s = t.join(' · ') + '.';
+  s += MOD_ATTENTE
+    ? ' <span class="alerte">' + MOD_ATTENTE + ' commentaire' + (MOD_ATTENTE>1?'s':'') + ' attend' + (MOD_ATTENTE>1?'ent':'') + ' ton avis.</span>'
+    : ' Rien n’attend ton avis.';
+  e.innerHTML = s;
+}
+/* Les trois anciens chargeurs peignaient chacun leur carte. Il n'y a plus
+   qu'une liste : ils y renvoient tous, pour que les boutons deja ecrits
+   continuent de fonctionner sans etre repris un par un. */
+async function loadContents(){ return chargerPublie(); }
+async function loadPhotos(){ return chargerPublie(); }
+async function loadPolls(){ return chargerPublie(); }
+
 async function loadStats(){
   const st=await api({action:'stats'}); if(!st||!st.ok) return;
+  STATS=st; majEtat();
   document.getElementById('s-total').textContent=(st.total||0).toLocaleString('fr-FR');
   document.getElementById('s-amb').textContent=(st.ambassadeurs||0).toLocaleString('fr-FR');
   document.getElementById('s-msg').textContent=(st.nbMessages||0).toLocaleString('fr-FR');
@@ -498,7 +805,7 @@ async function loadClassement(){
         <div class="row-body"><div class="row-name">${esc(m.prenom)}</div><div class="row-sub">${esc(m.lieu||'—')} · ${m.inscrits||0} inscrit${(m.inscrits||0)>1?'s':''}</div></div>
         <div class="row-amt">${m.points||0}</div>
       </div>`).join('')
-    : '<div class="row-sub">Personne n a encore marqué. Un point se gagne quand un filleul <b>active les notifications</b>, pas quand il s inscrit. ' + p.length + ' membre' + (p.length>1?'s':'') + ' peuvent jouer.</div>';
+    : '<div class="row-sub">Personne n’a encore marqué. Un point se gagne quand un filleul <b>active les notifications</b>, pas quand il s’inscrit. ' + p.length + ' membre' + (p.length>1?'s':'') + ' peuvent jouer.</div>';
   btn.classList.toggle('hidden', !enJeu.length);
 }
 /* De quoi lire une phrase vraie en video, ou la coller dans un message. */
@@ -516,6 +823,12 @@ async function loadMod(){
   const res=await api({action:'comments_recent'});
   const el=document.getElementById('mod-list');
   const cs=(res&&res.commentaires)||[];
+  // Ce qui attend vraiment un avis : ce que la moderation automatique a masque.
+  // C'est ce chiffre qui s'affiche sur l'onglet et dans la ligne d'etat.
+  MOD_ATTENTE = cs.filter(c=>c.masque).length;
+  const past=document.getElementById('pastille-mod');
+  past.textContent=MOD_ATTENTE; past.classList.toggle('hidden', !MOD_ATTENTE);
+  majEtat();
   if(!cs.length){el.innerHTML='<div class="row-sub">Aucun commentaire pour l\'instant.</div>';return;}
   el.innerHTML=cs.map(c=>{
     // cible_libelle est calcule par bey-admin depuis la migration 0005 :
@@ -554,7 +867,11 @@ async function doBroadcast(){
   const t=document.getElementById('bc-text').value.trim();
   if(!t){toast('Écris un message.');return;}
   const btn=document.getElementById('bc-btn'); btn.disabled=true; const old=btn.innerHTML; btn.innerHTML='<span class="spin"></span>';
-  const res=await api({action:'broadcast',contenu:t});
+  // Le meme bouton diffuse ou corrige. Une correction ne renotifie pas : les
+  // fans ont deja ete prevenus a la diffusion.
+  const res = motEnEdition
+    ? await api({action:'message_update', id:motEnEdition, contenu:t})
+    : await api({action:'broadcast', contenu:t});
   btn.disabled=false; btn.innerHTML=old;
   if(res&&res.ok){
     document.getElementById('bc-text').value='';
@@ -562,8 +879,10 @@ async function doBroadcast(){
     // "Diffuse a N membres" alors qu aucune notification n existait : le mot
     // etait seulement pose sur le mur, et Serge croyait avoir touche sa
     // communaute.
-    toast(messagePublication(res));
-    loadStats();
+    const corrige = !!motEnEdition;
+    annulerMot();
+    toast(corrige ? 'Message corrigé.' : messagePublication(res));
+    loadStats(); chargerPublie();
   }
   else toast('Erreur : '+((res&&res.error)||'réessaie'));
 }
@@ -587,17 +906,6 @@ function uploadPhoto(input){
     else toast('Erreur : '+((res&&res.error)||'upload'));
   });
 }
-async function loadPhotos(){
-  const res=await api({action:'photo_list'});
-  const el=document.getElementById('photos');
-  const ps=(res&&res.photos)||[];
-  el.innerHTML=ps.length?ps.map(p=>`<div class="ct-item">
-    <img class="ct-thumb" src="${esc(p.url)}" alt=""/>
-    <div class="ct-body"><div class="ct-title">${esc(p.legende||'Sans légende')}</div><div class="ct-sub">${p.actif?'Visible':'Masquée'}</div></div>
-    <button class="ct-toggle ${p.actif?'ct-on':'ct-off'}" onclick="togglePhoto('${p.id}',${p.actif?'false':'true'})">${p.actif?'Visible':'Masquée'}</button>
-    <button class="ct-del" onclick="delPhoto('${p.id}')">Suppr.</button>
-  </div>`).join(''):'<div class="row-sub">Aucune photo. Ajoute la première.</div>';
-}
 async function togglePhoto(id,actif){const res=await api({action:'photo_toggle',id,actif:actif===true||actif==='true'});if(res&&res.ok)loadPhotos();else toast('Erreur.');}
 async function delPhoto(id){if(!confirm('Supprimer cette photo ?'))return;const res=await api({action:'photo_delete',id});if(res&&res.ok){toast('Photo supprimée.');loadPhotos();}else toast('Erreur.');}
 
@@ -611,7 +919,6 @@ function normalizeYt(u){
   if(list)return 'https://www.youtube.com/embed/videoseries?list='+list;
   return u;
 }
-let addOpen=false;
 /* La derniere liste recue, pour pouvoir remplir le formulaire de correction
    sans redemander au serveur. */
 let CONTENUS=[];
@@ -619,11 +926,7 @@ let CONTENUS=[];
    meme chose, c'est deux fois plus d'endroits ou se tromper. */
 let editId=null;
 
-function toggleAdd(force){
-  addOpen = (force===undefined) ? !addOpen : !!force;
-  document.getElementById('add-form').classList.toggle('hidden',!addOpen);
-  if(!addOpen && editId) cancelEdit(true);
-}
+function toggleAdd(force){ if(force!==false) choisirType('video'); }
 
 /* Passe le formulaire en correction : champs remplis, bouton renomme, et une
    sortie visible. Sans le bouton Annuler, on reste coince en modification et
@@ -678,25 +981,6 @@ async function delContent(id){
   const res=await api({action:'content_delete',id});
   if(res&&res.ok){ if(String(editId)===String(id)) cancelEdit(); toast('Contenu supprimé.'); loadContents(); }
   else toast('Erreur : '+((res&&res.error)||'réessaie'));
-}
-async function loadContents(){
-  const res=await api({action:'content_list'});
-  const cs=(res&&res.contenus)||[];
-  CONTENUS=cs;
-  renderLiveCard(cs.filter(c=>c.type==='live'));
-  const nonLive=cs.filter(c=>c.type!=='live');
-  const el=document.getElementById('contents');
-  // Le lien est affiche : un lien mal colle ne se voit pas dans un titre, et
-  // c'est justement ce qu'on vient corriger.
-  el.innerHTML=nonLive.length?nonLive.map(c=>`<div class="ct-item" data-id="${esc(c.id)}">
-    <div class="ct-body">
-      <div class="ct-title">${esc(c.titre)}</div>
-      <div class="ct-sub">${c.grade_requis==='ambassadeur'?'Ambassadeurs':'Tous membres'} · <span class="ct-url">${esc(c.youtube_url||'lien manquant')}</span></div>
-    </div>
-    <button class="ct-toggle ${c.actif?'ct-on':'ct-off'}" onclick="toggleContent('${c.id}',${c.actif?'false':'true'})">${c.actif?'Actif':'Masqué'}</button>
-    <button class="ct-edit" onclick="editContent('${c.id}')">Modifier</button>
-    <button class="ct-del" onclick="delContent('${c.id}')">Suppr.</button>
-  </div>`).join(''):'<div class="row-sub">Aucun contenu.</div>';
 }
 function renderLiveCard(lives){
   const active=(lives||[]).find(c=>c.actif);

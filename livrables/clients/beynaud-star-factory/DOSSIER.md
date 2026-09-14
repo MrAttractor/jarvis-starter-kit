@@ -298,6 +298,41 @@ pays qui comptent pour cette audience, accents et raccourcis compris (`abj`, `ya
 `ouaga`, « Cocody, Abidjan »). **Ce qui n'est pas reconnu est cité sous la carte**, jamais
 jeté en silence.
 
+### La refonte du tableau de bord : onze blocs deviennent trois écrans
+
+Constat de Mac Arthur : « le fil du pilotage s'allonge ». Onze cartes sur un seul
+défilement, et une carte de plus à chaque fonctionnalité.
+
+**Le vrai problème n'était pas la longueur.** Le geste principal, publier, vivait dans
+**cinq formulaires séparés** : le mot, la photo, la vidéo, le sondage, le live. Alors que
+pour Serge c'est un seul geste, et que le fil du fan les traite déjà comme des publications
+équivalentes depuis le 13/09.
+
+| | Avant | Après |
+|---|---|---|
+| Navigation | onze blocs empilés | **trois onglets** en bas : Publier, Communauté, Modération |
+| Publier | cinq cartes éparpillées | **un bloc**, un sélecteur de type, cinq formulaires |
+| Ce qui est publié | quatre listes dans quatre cartes | **une liste unique**, filtrable, dans l'ordre du fil du fan |
+| Un mot déjà diffusé | ni relisible, ni corrigible, ni supprimable | Modifier et Supprimer, comme le reste |
+| En ouvrant | il faut chercher | **une ligne d'état** : combien de fans, combien cette semaine, ce qui attend son avis |
+| Commentaires en attente | à aller voir | **une pastille** sur l'onglet |
+
+L'onglet ouvert est retenu d'une visite à l'autre.
+
+**Deux ajouts côté serveur** : `message_list`, `message_update` et `message_delete`. Le mot
+de Serge avait exactement le même manque que les vidéos ce matin, il était publié et plus
+rien ne permettait d'y revenir.
+
+**Le défaut de ce matin a failli revenir.** Les fonctions `togglePoll` et `toggleAdd`
+visaient les conteneurs repliables supprimés par la refonte. Un nœud absent, la fonction
+s'arrête, et tout ce qui suit avec. C'est **R-83**, trouvé cette fois par la recette avant
+la mise en ligne et non par Mac Arthur après.
+
+**Contrôlé avant livraison** : les trois onglets, les cinq types du composeur, les cinq
+filtres, la barre du bas qui ne recouvre plus la dernière ligne, **aucun débordement et
+aucune zone de tap sous 44 px sur les six résolutions de référence**, et le parcours du
+visiteur rejoué pour vérifier qu'il n'a pas bougé.
+
 ## L'exclusivité est fictive, et c'est le vrai sujet
 
 Vérifié le 13/09 : les trois « contenus exclusifs » du fil sont **publiquement lisibles sur
