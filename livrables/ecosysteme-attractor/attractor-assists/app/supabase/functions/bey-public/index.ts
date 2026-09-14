@@ -588,7 +588,7 @@ Deno.serve(async (req) => {
       let moi = null;
       if (mid) {
         const r = await (await sb(
-          `v_bey_classement?id=eq.${encodeURIComponent(mid)}&select=prenom,points,inscrits,rang&limit=1`,
+          `v_bey_classement?id=eq.${encodeURIComponent(mid)}&select=prenom,points,inscrits,rang,code_ambassadeur&limit=1`,
         )).json();
         if (Array.isArray(r) && r.length) {
           moi = r[0];
@@ -604,6 +604,45 @@ Deno.serve(async (req) => {
           // Ce qui est invite mais pas encore confirme : c'est la relance a
           // faire, et c'est la phrase que Serge peut repeter en video.
           moi.en_attente = Math.max(0, (moi.inscrits || 0) - (moi.points || 0));
+
+          /* Qui est entre grace a lui, nommement. Sans cette liste, la relance
+             disait "2 personnes ne comptent pas encore, dis-leur d'activer
+             leurs notifications" sans dire A QUI le dire : un parrain ne peut
+             pas relancer un nombre. Mac Arthur l'a signale le 14/09 en
+             cherchant les prenoms de ses deux filleules.
+
+             Le filtre de date est celui de v_bey_classement, a la lettre :
+             sans lui la liste afficherait trois noms sous une phrase qui en
+             annonce deux, c'est-a-dire l'incoherence meme qu'on corrige.
+
+             On n'expose que le prenom et la ville, jamais le contact, comme le
+             podium. Le parrain a de toute facon invite ces gens lui-meme. */
+          if (moi.code_ambassadeur) {
+            const depuis = encodeURIComponent(saison.debut);
+            const fs = await (await sb(
+              `bey_membres?parraine_par=eq.${encodeURIComponent(moi.code_ambassadeur)}` +
+              `&created_at=gte.${depuis}&order=created_at.asc&limit=50` +
+              `&select=id,prenom,lieu,created_at`,
+            )).json();
+            const liste = Array.isArray(fs) ? fs : [];
+            // Un filleul "compte" quand il a un abonnement de notification :
+            // c'est la definition d'un point dans v_bey_classement, on la
+            // relit ici plutot que de la reinventer.
+            const ids = liste.map((x: any) => x.id).filter(Boolean);
+            const confirmes = new Set<string>();
+            if (ids.length) {
+              const ps = await (await sb(
+                `bey_push?membre_id=in.(${ids.join(",")})&select=membre_id`,
+              )).json();
+              for (const p of (Array.isArray(ps) ? ps : [])) confirmes.add(String(p.membre_id));
+            }
+            moi.filleuls = liste.map((x: any) => ({
+              prenom: x.prenom, lieu: x.lieu || null, confirme: confirmes.has(String(x.id)),
+            }));
+          }
+          // Le code ne sort pas de la fonction : il sert au calcul, il n'a rien
+          // a faire dans la reponse.
+          delete moi.code_ambassadeur;
         }
       }
 

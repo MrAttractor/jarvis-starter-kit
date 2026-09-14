@@ -209,6 +209,13 @@ body.splash-on{overflow:hidden;}
 
 /* Ambassadeur */
 .amb-card{background:linear-gradient(135deg,var(--amb-fond),var(--n3));border:1px solid rgba(212,160,23,.28);}
+/* Le fond brun de cette carte est plus clair que la page : le texte secondaire
+   y tombe a 4,48:1 au lieu des 4,5 exiges, mesure par la recette et non juge a
+   l'oeil (R-24). On releve le jeton pour cette carte seulement, ce qui corrige
+   d'un coup les quatre textes concernes, dont le paragraphe qui etait deja la,
+   au lieu d'en eclaircir un seul et de desaccorder la carte. Le mode clair,
+   lui, est deja a 5,79:1 et n'a pas besoin d'etre touche. */
+:root:not([data-theme="clair"]) .amb-card{--dim:rgba(255,255,255,.52);}
 .amb-h{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
 .amb-h svg{width:20px;height:20px;stroke:var(--or);fill:none;stroke-width:2;}
 .amb-title{font-size:15px;font-weight:800;}
@@ -285,6 +292,28 @@ body.splash-on{overflow:hidden;}
 .conc-relance{margin-top:10px;background:rgba(204,0,0,.10);border:1px solid rgba(204,0,0,.3);
   border-radius:11px;padding:11px 13px;font-size:12px;line-height:1.6;color:var(--doux);}
 .conc-relance b{color:var(--rouge-vif);}
+/* ===== QUI EST ENTRE GRACE A LUI =====
+   La relance annoncait "2 personnes ne comptent pas encore, dis-leur
+   d'activer leurs notifications" sans dire a qui le dire. On ne relance pas
+   un nombre. Une ligne par filleul, son prenom, et son etat en clair.
+   Pas d'emoji comme icone (R-42) : deux SVG maison, un crochet et une
+   horloge. Les couleurs passent par les jetons, donc les deux themes
+   suivent sans regle dupliquee. */
+.fil-l{margin-top:11px;padding-top:11px;border-top:1px solid var(--faint);
+  display:flex;flex-direction:column;gap:2px;}
+.fil-t{font-size:11.5px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;
+  color:var(--dim);margin-bottom:5px;}
+.fil-r{display:flex;align-items:center;gap:9px;padding:6px 0;}
+.fil-i{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.fil-i svg{width:16px;height:16px;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.fil-r.ok .fil-i svg{stroke:var(--vert);}
+.fil-r.attente .fil-i svg{stroke:var(--or);}
+.fil-n{flex:1;min-width:0;font-size:13px;font-weight:700;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fil-n span{color:var(--dim);font-weight:500;font-size:11px;margin-left:6px;}
+.fil-e{font-size:11px;font-weight:700;flex-shrink:0;}
+.fil-r.ok .fil-e{color:var(--vert);}
+.fil-r.attente .fil-e{color:var(--or);}
 .conc-voir{display:block;width:100%;text-align:left;background:none;color:var(--dim);
   font-size:12px;font-weight:600;min-height:44px;padding:0;}
 .conc-l{padding:2px 0 4px;}
@@ -780,6 +809,35 @@ async function chargerConcours(){
       : 'Une personne est entrée grâce à toi mais ne compte pas encore. '));
     rl.appendChild(el('b', null, plusieurs ? 'Dis-leur d’activer les notifications.' : 'Dis-lui d’activer les notifications.'));
     ligne.appendChild(rl);
+  }
+
+  /* Et maintenant QUI. La phrase ci-dessus disait "dis-leur" sans nommer
+     personne : Mac Arthur a cherche les prenoms de ses deux filleules le
+     14/09 et ne les a trouves nulle part. Le classement, lui, ne montre que
+     les gens a points > 0, donc personne tant que rien n'est confirme.
+     La liste vient du serveur avec le MEME filtre de saison que le compteur
+     juste au-dessus, sinon on afficherait trois noms sous une phrase qui en
+     annonce deux. */
+  const fs = Array.isArray(moi.filleuls) ? moi.filleuls : [];
+  if(fs.length){
+    const box = el('div','fil-l');
+    const t = el('div','fil-t', fs.length > 1 ? 'Entrés grâce à toi' : 'Entré grâce à toi');
+    box.appendChild(t);
+    fs.forEach(function(p){
+      const r = el('div','fil-r ' + (p.confirme ? 'ok' : 'attente'));
+      const ic = el('div','fil-i');
+      ic.innerHTML = p.confirme
+        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>'
+        : '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5l3.5 2"/></svg>';
+      r.appendChild(ic);
+      const nom = el('div','fil-n');
+      nom.appendChild(document.createTextNode(p.prenom || 'Fan'));
+      if(p.lieu) nom.appendChild(el('span', null, p.lieu));
+      r.appendChild(nom);
+      r.appendChild(el('div','fil-e', p.confirme ? 'compte' : 'à relancer'));
+      box.appendChild(r);
+    });
+    ligne.appendChild(box);
   }
 
   // Le classement complet reste plie : on ne l'ouvre que si on le demande.

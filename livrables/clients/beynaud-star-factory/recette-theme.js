@@ -363,6 +363,25 @@ function trierContrastes() {
         return route.fulfill({ status: 200, contentType: 'application/json',
           body: JSON.stringify({ ok: true, membre: MEMBRE_RECETTE }) });
       }
+      /* Le classement aussi : le membre de recette n'existe pas en base, donc
+         le vrai serveur renvoie un classement vide et la liste des filleuls ne
+         se peindrait jamais. On force les DEUX etats d'un filleul, confirme et
+         a relancer, sinon la moitie des couleurs neuves ne sont pas mesurees. */
+      if (action === 'classement') {
+        return route.fulfill({ status: 200, contentType: 'application/json',
+          body: JSON.stringify({
+            ok: true, ouvert: true,
+            saison: { nom: 'Saison 1', debut: '2026-09-13T21:30:04Z', fin: '2026-10-31T23:59:59Z' },
+            podium: [],
+            moi: {
+              prenom: 'Awa', points: 0, inscrits: 2, rang: 1, manque: 0, en_attente: 1,
+              filleuls: [
+                { prenom: 'Cynthia', lieu: 'Abidjan', confirme: true },
+                { prenom: 'Mano', lieu: null, confirme: false },
+              ],
+            },
+          }) });
+      }
       try { route.fulfill({ response: await route.fetch() }); }
       catch (e) { route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":false}' }); }
     });
