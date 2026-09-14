@@ -235,6 +235,28 @@ Règle **R-85**.
 À ce jour : **1 abonnement aux notifications** en base, pour 6 membres. C'est le téléphone
 de Mac Arthur. Le chiffre ne veut encore rien dire, la plateforme n'est pas diffusée.
 
+### Le tableau de bord de Serge : deux manques comblés
+
+**Une vidéo ne pouvait ni se corriger ni se supprimer.** Elle se publie par un lien
+YouTube (pas par envoi de fichier, contrairement aux photos), et il n'existait qu'un
+interrupteur « masquer ». Un lien mal collé restait en base pour toujours. `content_update`
+et `content_delete` ajoutés, boutons **Modifier** et **Suppr.** sur chaque ligne, et le
+lien est désormais affiché sous le titre, puisque c'est justement ce qu'on vient corriger.
+Une correction ne renotifie pas. Vérifié de bout en bout dans un navigateur piloté.
+
+**Serge ne voyait pas le classement du concours.** L'action `classement` existait au
+serveur depuis le 13/09 et n'était appelée que par l'espace fan. Son tableau de bord ne
+montrait qu'un « Top ambassadeurs » par **nombre de filleuls bruts**, qui n'est pas le
+score du concours : un point se gagne quand un filleul **active les notifications**, pas
+quand il s'inscrit. Le classement est maintenant dans son tableau de bord, avec la saison,
+les jours restants, le nombre en lice, les points confirmés, et un bouton pour le copier
+tel qu'il le lira face caméra. Tant que personne n'a marqué, l'écran affiche la règle
+plutôt qu'une liste de zéros.
+
+**Ce que la démo montre aujourd'hui** : Saison 1, 48 jours restants, 0 en lice, 6 membres
+qui peuvent jouer. Deux des six sont le même compte de Mac Arthur en double, séquelle du
+numéro enregistré sous trois écritures avant le correctif du 13/09.
+
 ## L'exclusivité est fictive, et c'est le vrai sujet
 
 Vérifié le 13/09 : les trois « contenus exclusifs » du fil sont **publiquement lisibles sur

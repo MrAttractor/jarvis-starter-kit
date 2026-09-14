@@ -176,6 +176,48 @@ Deno.serve(async (req) => {
       const p = await prevenirTous("Serge Beynaud", corpsNotif(d.description || titre, "Du nouveau contenu dans la Beynaumania."), "/beynaud/fan");
       return json(reponsePublication({ contenu }, p, await countRows("bey_push")));
     }
+    /* Corriger un contenu. Il manquait : un lien YouTube mal colle ne pouvait
+       plus etre repare, ni le titre change. Serge n'avait qu'un interrupteur
+       "masquer", ce qui laisse la ligne fautive en base pour toujours.
+       Une correction NE PREVIENT PAS : les fans ont deja ete notifies a la
+       publication, une faute de frappe corrigee ne vaut pas une notification. */
+    if (action === "content_update") {
+      if (!d.id) return json({ ok: false, error: "id requis" });
+      const champs: Record<string, unknown> = {};
+      if (d.titre !== undefined) {
+        const t = String(d.titre).trim();
+        if (!t) return json({ ok: false, error: "titre vide" });
+        champs.titre = t;
+      }
+      if (d.youtube_url !== undefined) {
+        const u = String(d.youtube_url).trim();
+        if (!u) return json({ ok: false, error: "lien vide" });
+        champs.youtube_url = u;
+      }
+      if (d.description !== undefined) champs.description = String(d.description).trim() || null;
+      if (d.grade_requis !== undefined) champs.grade_requis = d.grade_requis === "ambassadeur" ? "ambassadeur" : "membre";
+      if (d.ordre !== undefined) champs.ordre = Number(d.ordre) || 99;
+      if (d.type !== undefined) champs.type = (d.type === "video" || d.type === "live") ? d.type : "serie";
+      if (!Object.keys(champs).length) return json({ ok: false, error: "rien à modifier" });
+      const res = await sb(`bey_contenus?id=eq.${encodeURIComponent(d.id)}`, {
+        method: "PATCH", headers: { Prefer: "return=representation" }, body: JSON.stringify(champs),
+      });
+      if (!res.ok) return json({ ok: false, error: await res.text() });
+      const rows = await res.json();
+      if (!Array.isArray(rows) || !rows.length) return json({ ok: false, error: "contenu introuvable" });
+      return json({ ok: true, contenu: rows[0] });
+    }
+
+    /* Supprimer un contenu. Les coeurs et commentaires qui le visaient partent
+       avec lui : depuis la migration 0005 la cle etrangere n'existe plus, ce
+       sont des declencheurs qui s'en chargent (R-76). Rien a faire ici. */
+    if (action === "content_delete") {
+      if (!d.id) return json({ ok: false, error: "id requis" });
+      const res = await sb(`bey_contenus?id=eq.${encodeURIComponent(d.id)}`, { method: "DELETE" });
+      if (!res.ok) return json({ ok: false, error: await res.text() });
+      return json({ ok: true });
+    }
+
     if (action === "content_toggle") {
       if (!d.id) return json({ ok: false, error: "id requis" });
       const res = await sb(`bey_contenus?id=eq.${encodeURIComponent(d.id)}`, { method: "PATCH", body: JSON.stringify({ actif: !!d.actif }) });

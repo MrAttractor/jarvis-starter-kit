@@ -77,6 +77,8 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .tag-amb{background:var(--or-dim);color:var(--or);}
 .tag-mem{background:var(--n5);color:var(--dim);}
 .row-amt{font-family:var(--bebas);font-size:20px;color:var(--or);flex-shrink:0;}
+.cl-rang{width:26px;font-family:var(--bebas);font-size:19px;color:var(--dim);flex-shrink:0;text-align:center;}
+.cl-rang.podium{color:var(--or);}
 .lieu-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
 .lieu-name{font-size:12px;width:96px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .lieu-bar{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden;}
@@ -104,6 +106,8 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .ct-toggle{font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;flex-shrink:0;border:1px solid;}
 .ct-on{color:var(--vert);border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.08);}
 .ct-off{color:var(--dim);border-color:var(--faint);background:var(--n4);}
+.ct-edit{font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;border:1px solid var(--faint);color:var(--dim);background:var(--n4);flex-shrink:0;}
+.ct-url{opacity:.6;word-break:break-all;}
 .ct-del{font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,107,107,.3);color:#ff6b6b;background:var(--n4);flex-shrink:0;}
 .add-toggle{width:100%;margin-top:8px;background:var(--n4);border:1px dashed rgba(255,255,255,.15);border-radius:11px;padding:12px;font-size:12px;font-weight:700;color:var(--dim);}
 .add-form{margin-top:12px;}
@@ -190,7 +194,20 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 
       <div class="card">
         <div class="block-title">Top ambassadeurs</div>
+        <div class="row-sub" style="margin-bottom:8px">Par nombre de filleuls, depuis le début.</div>
         <div id="top-amb"></div>
+      </div>
+
+      <!-- Le classement du concours. Il existait au serveur depuis le 13/09 et
+           n'etait montre qu'aux fans : Serge, pour qui il a ete construit, ne
+           l'avait nulle part. Ce n'est pas le meme chiffre que le bloc ci-dessus :
+           un point se gagne quand un filleul ACTIVE LES NOTIFICATIONS, pas quand
+           il s'inscrit. -->
+      <div class="card">
+        <div class="block-title">Classement du concours</div>
+        <div id="cl-saison" class="row-sub" style="margin-bottom:10px">Chargement…</div>
+        <div id="cl-liste"></div>
+        <button class="add-toggle hidden" id="cl-copier" onclick="copierClassement()">Copier le classement à lire</button>
       </div>
 
       <div class="card">
@@ -219,7 +236,8 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
           <div class="field"><label>Titre</label><input id="c-titre" type="text" placeholder="Ex : Série des coulisses"/></div>
           <div class="field"><label>Lien YouTube (vidéo ou playlist)</label><input id="c-url" type="text" placeholder="https://youtube.com/..."/></div>
           <div class="field"><label>Accès</label><select id="c-grade"><option value="membre">Tous les membres</option><option value="ambassadeur">Ambassadeurs seulement</option></select></div>
-          <button class="btn" id="c-btn" onclick="addContent()">Publier</button>
+          <button class="btn" id="c-btn" onclick="saveContent()">Publier</button>
+          <button class="add-toggle hidden" id="c-annuler" onclick="cancelEdit()">Annuler la modification</button>
         </div>
       </div>
     </div>
@@ -272,7 +290,7 @@ function logout(){localStorage.removeItem(LS);document.getElementById('view-dash
 async function showDash(){
   document.getElementById('view-login').classList.add('hidden');
   document.getElementById('view-dash').classList.remove('hidden');
-  await Promise.all([loadStats(),loadMod(),loadContents(),loadPhotos(),loadPolls()]);
+  await Promise.all([loadStats(),loadMod(),loadContents(),loadPhotos(),loadPolls(),loadClassement()]);
 }
 
 let pollOpen=false;
@@ -310,6 +328,52 @@ async function loadStats(){
   lx.innerHTML=(st.lieux&&st.lieux.length)?st.lieux.map(l=>`<div class="lieu-row"><div class="lieu-name">${esc(l.lieu)}</div><div class="lieu-bar"><div class="lieu-fill" style="width:${Math.round(l.n/max*100)}%"></div></div><div class="lieu-n">${l.n}</div></div>`).join(''):'<div class="row-sub">—</div>';
   const rc=document.getElementById('recents');
   rc.innerHTML=(st.recents&&st.recents.length)?st.recents.map(m=>`<div class="row"><div class="av${m.grade==='ambassadeur'?' or':''}">${esc((m.prenom||'?')[0]).toUpperCase()}</div><div class="row-body"><div class="row-name">${esc(m.prenom)}</div><div class="row-sub">${esc(m.lieu||'—')} · ${timeAgo(m.created_at)}</div></div><div class="row-tag ${m.grade==='ambassadeur'?'tag-amb':'tag-mem'}">${m.grade==='ambassadeur'?'Ambassadeur':'Membre'}</div></div>`).join(''):'<div class="row-sub">Aucune inscription encore. Partage le lien fan pour lancer la Beynaumania.</div>';
+}
+
+/* Le classement du concours, celui que Serge lit face camera. Deux chiffres
+   seulement en tete, pas un tableau de bord : combien ont vraiment joue, et
+   combien de points sont confirmes. Un classement qui affiche une position
+   sans dire ce qui la fait bouger n'a jamais fait bouger personne. */
+let CLASSEMENT=null;
+function joursRestants(fin){
+  const ms = new Date(fin).getTime() - Date.now();
+  return Math.max(0, Math.ceil(ms / 86400000));
+}
+async function loadClassement(){
+  const res = await api({action:'classement'});
+  const info = document.getElementById('cl-saison');
+  const liste = document.getElementById('cl-liste');
+  const btn = document.getElementById('cl-copier');
+  if(!res || !res.ok){ info.textContent = 'Classement indisponible pour le moment.'; liste.innerHTML=''; return; }
+  CLASSEMENT = res;
+  const p = res.podium || [];
+  const s = res.saison;
+  info.textContent = s
+    ? s.nom + ' · ' + joursRestants(s.fin) + ' jour' + (joursRestants(s.fin)>1?'s':'') + ' restant' + (joursRestants(s.fin)>1?'s':'') + ' · ' + (res.joueurs||0) + ' en lice · ' + (res.confirmes||0) + ' point' + ((res.confirmes||0)>1?'s':'') + ' confirmé' + ((res.confirmes||0)>1?'s':'')
+    : 'Aucune saison en cours.';
+  // Tant que personne n'a marque, la vue renvoie tout le monde a egalite, donc
+  // six lignes "1er, 0 point". Ca ne dit rien. On affiche la regle a la place :
+  // c'est ce qui fait bouger un classement, pas la liste des zeros.
+  const enJeu = p.filter(m=>(m.points||0)>0 || (m.inscrits||0)>0);
+  liste.innerHTML = enJeu.length
+    ? p.map((m,i)=>`<div class="row">
+        <div class="cl-rang ${i<3?'podium':''}">${m.rang||i+1}</div>
+        <div class="av${i<3?' or':''}">${esc((m.prenom||'?')[0]).toUpperCase()}</div>
+        <div class="row-body"><div class="row-name">${esc(m.prenom)}</div><div class="row-sub">${esc(m.lieu||'—')} · ${m.inscrits||0} inscrit${(m.inscrits||0)>1?'s':''}</div></div>
+        <div class="row-amt">${m.points||0}</div>
+      </div>`).join('')
+    : '<div class="row-sub">Personne n a encore marqué. Un point se gagne quand un filleul <b>active les notifications</b>, pas quand il s inscrit. ' + p.length + ' membre' + (p.length>1?'s':'') + ' peuvent jouer.</div>';
+  btn.classList.toggle('hidden', !enJeu.length);
+}
+/* De quoi lire une phrase vraie en video, ou la coller dans un message. */
+function copierClassement(){
+  if(!CLASSEMENT) return;
+  const s=CLASSEMENT.saison;
+  const lignes=[s?('Classement '+s.nom+' — '+joursRestants(s.fin)+' jours restants'):'Classement des ambassadeurs'];
+  (CLASSEMENT.podium||[]).forEach((m,i)=>lignes.push((m.rang||i+1)+'. '+m.prenom+(m.lieu?' ('+m.lieu+')':'')+' — '+(m.points||0)+' pt'+((m.points||0)>1?'s':'')));
+  const t=lignes.join(String.fromCharCode(10));
+  if(navigator.clipboard) navigator.clipboard.writeText(t).then(()=>toast('Classement copié.'),()=>toast('Copie impossible.'));
+  else toast('Copie impossible sur ce navigateur.');
 }
 
 async function loadMod(){
@@ -412,25 +476,91 @@ function normalizeYt(u){
   return u;
 }
 let addOpen=false;
-function toggleAdd(){addOpen=!addOpen;document.getElementById('add-form').classList.toggle('hidden',!addOpen);}
-async function addContent(){
+/* La derniere liste recue, pour pouvoir remplir le formulaire de correction
+   sans redemander au serveur. */
+let CONTENUS=[];
+/* Le meme formulaire publie et corrige. Deux formulaires cote a cote pour la
+   meme chose, c'est deux fois plus d'endroits ou se tromper. */
+let editId=null;
+
+function toggleAdd(force){
+  addOpen = (force===undefined) ? !addOpen : !!force;
+  document.getElementById('add-form').classList.toggle('hidden',!addOpen);
+  if(!addOpen && editId) cancelEdit(true);
+}
+
+/* Passe le formulaire en correction : champs remplis, bouton renomme, et une
+   sortie visible. Sans le bouton Annuler, on reste coince en modification et
+   la publication suivante ecrase l'ancienne ligne. */
+function editContent(id){
+  const c = CONTENUS.find(x=>String(x.id)===String(id));
+  if(!c){toast('Contenu introuvable, recharge la page.');return;}
+  editId = c.id;
+  document.getElementById('c-titre').value = c.titre||'';
+  document.getElementById('c-url').value = c.youtube_url||'';
+  document.getElementById('c-grade').value = c.grade_requis==='ambassadeur'?'ambassadeur':'membre';
+  document.getElementById('c-btn').textContent = 'Enregistrer';
+  document.getElementById('c-annuler').classList.remove('hidden');
+  toggleAdd(true);
+  document.getElementById('c-titre').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function cancelEdit(silencieux){
+  editId = null;
+  document.getElementById('c-titre').value='';
+  document.getElementById('c-url').value='';
+  document.getElementById('c-grade').value='membre';
+  document.getElementById('c-btn').textContent = 'Publier';
+  document.getElementById('c-annuler').classList.add('hidden');
+  if(!silencieux) toggleAdd(false);
+}
+
+async function saveContent(){
   const titre=document.getElementById('c-titre').value.trim();
   const url=normalizeYt(document.getElementById('c-url').value);
   const grade=document.getElementById('c-grade').value;
   if(!titre||!url){toast('Titre et lien requis.');return;}
   const btn=document.getElementById('c-btn'); btn.disabled=true; const old=btn.innerHTML; btn.innerHTML='<span class="spin"></span>';
-  const res=await api({action:'content_add',titre,youtube_url:url,grade_requis:grade,type:'serie',ordre:50});
+  // Une correction ne renotifie pas : les fans ont deja ete prevenus a la
+  // publication, une faute de frappe corrigee ne vaut pas une notification.
+  const res = editId
+    ? await api({action:'content_update',id:editId,titre,youtube_url:url,grade_requis:grade})
+    : await api({action:'content_add',titre,youtube_url:url,grade_requis:grade,type:'serie',ordre:50});
   btn.disabled=false; btn.innerHTML=old;
-  if(res&&res.ok){document.getElementById('c-titre').value='';document.getElementById('c-url').value='';toggleAdd();toast(messagePublication(res));loadContents();}
+  if(res&&res.ok){
+    const corrige = !!editId;
+    cancelEdit(true); toggleAdd(false);
+    toast(corrige ? 'Contenu corrigé.' : messagePublication(res));
+    loadContents();
+  }
+  else toast('Erreur : '+((res&&res.error)||'réessaie'));
+}
+
+async function delContent(id){
+  const c = CONTENUS.find(x=>String(x.id)===String(id));
+  if(!confirm('Supprimer définitivement « '+((c&&c.titre)||'ce contenu')+' » ? Les cœurs et commentaires qui le visent partent avec.')) return;
+  const res=await api({action:'content_delete',id});
+  if(res&&res.ok){ if(String(editId)===String(id)) cancelEdit(); toast('Contenu supprimé.'); loadContents(); }
   else toast('Erreur : '+((res&&res.error)||'réessaie'));
 }
 async function loadContents(){
   const res=await api({action:'content_list'});
   const cs=(res&&res.contenus)||[];
+  CONTENUS=cs;
   renderLiveCard(cs.filter(c=>c.type==='live'));
   const nonLive=cs.filter(c=>c.type!=='live');
   const el=document.getElementById('contents');
-  el.innerHTML=nonLive.length?nonLive.map(c=>`<div class="ct-item"><div class="ct-body"><div class="ct-title">${esc(c.titre)}</div><div class="ct-sub">${c.grade_requis==='ambassadeur'?'Ambassadeurs':'Tous membres'}</div></div><button class="ct-toggle ${c.actif?'ct-on':'ct-off'}" onclick="toggleContent('${c.id}',${c.actif?'false':'true'})">${c.actif?'Actif':'Masqué'}</button></div>`).join(''):'<div class="row-sub">Aucun contenu.</div>';
+  // Le lien est affiche : un lien mal colle ne se voit pas dans un titre, et
+  // c'est justement ce qu'on vient corriger.
+  el.innerHTML=nonLive.length?nonLive.map(c=>`<div class="ct-item" data-id="${esc(c.id)}">
+    <div class="ct-body">
+      <div class="ct-title">${esc(c.titre)}</div>
+      <div class="ct-sub">${c.grade_requis==='ambassadeur'?'Ambassadeurs':'Tous membres'} · <span class="ct-url">${esc(c.youtube_url||'lien manquant')}</span></div>
+    </div>
+    <button class="ct-toggle ${c.actif?'ct-on':'ct-off'}" onclick="toggleContent('${c.id}',${c.actif?'false':'true'})">${c.actif?'Actif':'Masqué'}</button>
+    <button class="ct-edit" onclick="editContent('${c.id}')">Modifier</button>
+    <button class="ct-del" onclick="delContent('${c.id}')">Suppr.</button>
+  </div>`).join(''):'<div class="row-sub">Aucun contenu.</div>';
 }
 function renderLiveCard(lives){
   const active=(lives||[]).find(c=>c.actif);
