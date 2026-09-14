@@ -376,6 +376,14 @@ sait dire ce que la bascule a cassé et ce qui n'allait pas avant elle.
 44 textes sous le seuil en sombre passent tous en clair. Le parcours du visiteur a été
 rejoué pour vérifier qu'il n'a pas bougé (R-84).
 
+**En ligne depuis le 14/09/2026**, branche `master` du projet Pages `demo-agenceattractor`.
+Les deux recettes ont été **rejouées sur la version en ligne** après le déploiement, pas
+seulement sur les fichiers locaux, et le domaine sert bien le même contenu que l'URL du
+déploiement direct (R-61 : si les deux sont identiques, le cache ne ment pas et la branche
+de production était la bonne). **Reste à ouvrir les deux thèmes sur un vrai téléphone**
+avant de considérer la bascule finie : les tests automatisés vérifient la plomberie
+imaginée par le développeur, jamais le navigateur réel (R-51).
+
 **Ce que la recette signale et qui est antérieur à la bascule**, donc à arbitrer à part :
 
 | Quoi | Mesure | Dans quel thème |
