@@ -398,6 +398,67 @@ sombre sur l'aplat vert, ce qui donnerait 10,7:1. **Ce n'est pas fait** : c'est 
 reproduction délibérée du bouton de WhatsApp, dont la convention est le blanc sur vert.
 C'est un choix de direction artistique, pas une correction technique.
 
+## Le compte se duplique, et ça explique les deux symptômes du 14/09
+
+**Ce que Mac Arthur signale.** Il active les notifications, l'application le lui redemande.
+Il vote, et au retour il doit voter à nouveau.
+
+**Mesuré en base, pas supposé.** Il existait **trois comptes « Mr Attractor »**, créés le
+13/09 à 20h28, le 14/09 à 06h54 et le 14/09 à 12h13, et **chacun portait exactement un
+vote**. Deux portaient un abonnement de notification Apple distinct. Les deux symptômes n'en
+font qu'un seul : à chaque fois c'est une identité neuve, donc l'état de la précédente
+n'est plus le sien.
+
+**La cause, en trois maillons.**
+
+1. Le numéro est **facultatif depuis le 13/09**, donc le formulaire ne demande que le
+   prénom et les trois comptes avaient `whatsapp: null`.
+2. Côté serveur, le dédoublonnage de `join` n'existe **que si un numéro est fourni** :
+   sans numéro, l'insertion est directe. On ne peut pas dédoublonner sur le prénom, deux
+   fans peuvent s'appeler pareil. L'identité ne vit donc que dans le `localStorage`.
+3. Sur iPhone, **Safari, l'app installée et le navigateur interne de WhatsApp sont trois
+   stockages séparés**. Entrer par une autre porte, c'est ne pas être reconnu, donc créer
+   un compte.
+
+**Et la porte de retour est condamnée.** « Déjà membre ? Retrouver mon espace » réclame le
+numéro WhatsApp. Sans numéro enregistré, cette porte ne peut pas s'ouvrir. Le filet existe
+(`.filet`, proposé dans l'espace et jamais à la porte, à raison), mais Mac Arthur ne l'avait
+jamais rempli, donc il n'avait aucun ancrage.
+
+**Le défaut avait déjà été vu, et seulement déplacé.** Le commentaire de `logout()` dit
+« Constaté le 13/09 : quatre comptes pour une seule personne en une heure ». Le bouton de
+déconnexion a été retiré en réponse. Ce n'est donc plus la déconnexion qui duplique, c'est
+le changement de porte : la cause était l'absence d'ancrage durable, pas le bouton.
+
+**Ménage fait le 14/09**, migration `0010_menage_comptes_doublons.sql`, exécutée et vérifiée.
+Reste un seul compte, `MRATTR0IB`. **Ce n'est pas le plus récent, et c'était le piège** :
+`parraine_par` stocke le **code ambassadeur en texte sans aucune clé étrangère**, et
+`MRATTR0IB` portait les deux seuls parrainages réels de la plateforme, Cynthia et Mano.
+Garder le compte le plus récent, qui est le réflexe, aurait fait disparaître ces deux
+parrainages du classement **sans lever la moindre erreur**. Même famille que R-76.
+
+**Preuve que ça avait déjà frappé** : Dany et Camille-Coralie étaient marquées parrainées par
+`MACOCO0UQ`, un code n'existant dans aucun compte, résidu d'un ancien compte de test
+supprimé. Les références mortes ont été retirées et le compteur `filleuls` recalculé depuis
+les faits. Le compte Dany et son commentaire ont été supprimés à la demande de Mac Arthur.
+
+**Deux choses restent ouvertes.**
+
+- **L'ancrage durable n'existe pas**, donc un quatrième compte naîtra à la prochaine entrée
+  par une porte neuve. La parade immédiate coûte zéro ligne : le **lien d'accès personnel**
+  (`/beynaud/fan?m=<jeton>`) existe déjà et prime sur tout, il suffit de le donner au membre
+  pour qu'il le garde. La parade propre est un code à usage unique par e-mail ou WhatsApp,
+  mais elle **contredit la décision du 13/09** de ne demander qu'un prénom à la porte : à
+  arbitrer, pas à trancher en silence.
+- **`recover()` est faible** : `action:'me'` avec un numéro et un prénom suffit à entrer dans
+  le compte d'un fan. Le code l'admet lui-même, « ce n'est pas une vérification ». À traiter
+  avant que la plateforme ait de vrais fans, pas après.
+
+**Résidu connu et non traité** : un commentaire « Oui Fami ! » du 11/07 signé « Macoco »
+reste visible, son compte ayant été supprimé avant que `bey_commentaires` soit nettoyé.
+`bey_commentaires` est en `SET NULL` et porte une colonne `prenom` dénormalisée, donc le
+commentaire survit à son auteur. Une ligne de SQL suffit à le retirer, en attente d'accord.
+
 ## L'exclusivité est fictive, et c'est le vrai sujet
 
 Vérifié le 13/09 : les trois « contenus exclusifs » du fil sont **publiquement lisibles sur
