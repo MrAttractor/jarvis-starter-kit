@@ -17,17 +17,13 @@
  *
  * Prerequis, une fois : npm i playwright-core && npx playwright install chromium
  */
+/* Meme resolution que recette-visiteur.js : playwright-core n'est pas installe
+   dans ce dossier client, on le cherche la ou il se trouve. */
 let chromium;
 try { chromium = require('playwright-core').chromium; }
 catch (e) {
-  const essais = [];
-  try { essais.push(require('child_process').execSync('npm root -g').toString().trim()); } catch (_) {}
-  essais.push(process.env.TEMP + '/claude');
-  let ok = false;
-  for (const base of essais) {
-    try { chromium = require(base + '/playwright-core').chromium; ok = true; break; } catch (_) {}
-  }
-  if (!ok) {
+  try { chromium = require(require('child_process').execSync('npm root -g').toString().trim() + '/playwright-core').chromium; }
+  catch (_) {
     console.error('playwright-core est absent. Depuis ce dossier :');
     console.error('  npm i playwright-core && npx playwright install chromium');
     process.exit(2);
