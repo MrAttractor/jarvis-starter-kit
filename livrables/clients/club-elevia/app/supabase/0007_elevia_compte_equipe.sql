@@ -16,6 +16,12 @@
 -- l'application elle-même et non insérés à la main. Il ne reste qu'à lui
 -- donner son rôle.
 --
+-- APPLIQUÉE le 14/09/2026, sur accord de Mac Arthur. Contrôlé dans la foulée :
+-- la file s'ouvre au nom de « EquipeElevia », la demande du 04/09 y apparaît
+-- avec sa vidéo lisible, les boutons de décision répondent, sur téléphone
+-- comme sur ordinateur, sans débordement ni erreur. Aucune décision n'a été
+-- prise : trancher une vérification d'identité est un acte humain.
+--
 -- Comment s'en servir une fois cette migration appliquée :
 --   1. ouvrir https://demo.agenceattractor.com/elevia/app/
 --   2. « J'ai déjà un compte », adresse macarthur@agenceattractor.com
