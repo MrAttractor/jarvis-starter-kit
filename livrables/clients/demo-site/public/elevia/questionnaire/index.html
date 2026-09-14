@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<!-- Sans cela, le navigateur mobile transforme la date en lien cliquable et
+     l'affiche dans sa propre couleur, au milieu d'une ligne grise. -->
+<meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+<title>Élévia — questionnaire d'affinités, proposition à valider</title>
+<style>
+/* Charte relevée sur le logo officiel de la Cliente : bleu nuit et or. */
+:root{
+  --encre:#00234B; --creme:#F4F6F9; --sable:#E9EDF3; --blanc:#FFFFFF;
+  --or:#BE9440; --or-clair:#D9AC56; --or-fonce:#A87726; --or-texte:#8A6420;
+  --muted:#55606F; --gris:#6A7484; --bord:#DCE3EB;
+  --alerte:#8A4B10; --alerte-fond:#FDF4E9; --alerte-bord:#E8C89A;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--creme);color:var(--encre);
+  font-family:"DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:16px;line-height:1.65;-webkit-text-size-adjust:100%}
+.page{max-width:820px;margin:0 auto;padding:32px 20px 72px}
+h1,h2,h3{font-family:"Playfair Display",Georgia,"Times New Roman",serif;font-weight:600;line-height:1.25;margin:0}
+h1{font-size:30px;letter-spacing:-.01em}
+h2{font-size:23px;margin:0 0 6px}
+h3{font-size:18px;margin:0 0 4px}
+p{margin:0 0 14px}
+a{color:var(--or-texte)}
+
+/* En-tête */
+.entete{text-align:center;padding:28px 0 22px;border-bottom:1px solid var(--bord);margin-bottom:32px}
+.monogramme{font-family:"Playfair Display",Georgia,serif;font-size:13px;letter-spacing:.34em;
+  color:var(--or-texte);text-transform:uppercase;margin-bottom:14px}
+.entete .sur{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--or-texte);margin-bottom:10px}
+.entete .meta{color:var(--gris);font-size:14px;margin-top:12px}
+
+/* Encadrés */
+.mot{background:var(--blanc);border:1px solid var(--bord);border-left:3px solid var(--or);
+  border-radius:12px;padding:20px 22px;margin:0 0 28px}
+.mot h2{margin-bottom:10px}
+.mot p:last-child{margin-bottom:0}
+
+.alerte{background:var(--alerte-fond);border:1px solid var(--alerte-bord);border-radius:12px;
+  padding:18px 20px;margin:0 0 28px}
+.alerte h3{color:var(--alerte);margin-bottom:8px}
+.alerte p:last-child{margin-bottom:0}
+.alerte strong{color:var(--alerte)}
+
+/* Recommandation */
+.reco{background:var(--encre);color:#EAF0F7;border-radius:12px;padding:22px 24px;margin:0 0 32px}
+.reco h2{color:var(--or-clair);margin-bottom:10px}
+.reco p{margin-bottom:12px}
+.reco p:last-child{margin-bottom:0}
+.reco strong{color:#fff}
+
+/* Sections de questions */
+.bloc{margin:0 0 34px}
+.bloc > header{border-bottom:2px solid var(--or-clair);padding-bottom:10px;margin-bottom:6px}
+.bloc > header .compte{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--or-texte)}
+.bloc > header p{color:var(--muted);font-size:15px;margin:6px 0 0}
+
+.q{background:var(--blanc);border:1px solid var(--bord);border-radius:12px;
+  padding:16px 18px;margin:14px 0;break-inside:avoid;page-break-inside:avoid}
+.q.sensible{border-color:var(--alerte-bord);background:var(--alerte-fond)}
+.q .num{display:inline-block;min-width:30px;font-weight:700;color:var(--or-texte)}
+.q .libelle{font-weight:600;font-size:17px}
+.q .reponse{color:var(--muted);font-size:14px;margin:8px 0 0;padding-left:30px}
+.q .reponse b{color:var(--encre);font-weight:600}
+.q .usage{color:var(--gris);font-size:13.5px;font-style:italic;margin:6px 0 0;padding-left:30px}
+.q .drapeau{display:inline-block;background:var(--alerte);color:#fff;font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:99px;
+  margin-left:8px;vertical-align:middle;font-style:normal;font-weight:600}
+.arbitrage{margin:12px 0 0;padding-left:30px;font-size:13px;color:var(--gris)}
+.case{display:inline-block;width:13px;height:13px;border:1.5px solid var(--gris);
+  border-radius:3px;vertical-align:-2px;margin-right:5px}
+.arbitrage span{margin-right:18px;white-space:nowrap}
+
+/* Tableau récapitulatif */
+.tableau{width:100%;border-collapse:collapse;margin:16px 0 0;font-size:14.5px}
+.tableau th,.tableau td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--bord);vertical-align:top}
+.tableau th{background:var(--sable);font-weight:600;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--or-texte)}
+.tableau tr:last-child td{border-bottom:none}
+.enrouleur{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* Pied */
+.pied{margin-top:44px;padding-top:22px;border-top:1px solid var(--bord);
+  color:var(--gris);font-size:13.5px;text-align:center}
+.pied .signature{font-family:"Playfair Display",Georgia,serif;font-size:15px;color:var(--encre);margin-bottom:4px}
+
+@media (max-width:480px){
+  .page{padding:20px 16px 56px}
+  h1{font-size:25px} h2{font-size:20px}
+  .q .reponse,.q .usage,.arbitrage{padding-left:0}
+  .arbitrage span{display:block;margin:4px 0}
+}
+
+/* Impression : rien ne se coupe au milieu, rien ne déborde. */
+@media print{
+  body{background:#fff;font-size:11.5pt}
+  .page{max-width:none;padding:0}
+  .q,.mot,.alerte,.reco,.bloc,.tableau tr{break-inside:avoid;page-break-inside:avoid;overflow:visible}
+  .bloc > header{break-after:avoid;page-break-after:avoid}
+  .reco{background:#fff;color:var(--encre);border:2px solid var(--encre)}
+  .reco h2{color:var(--or-texte)} .reco strong{color:var(--encre)}
+  .enrouleur{overflow:visible}
+  a{color:var(--encre);text-decoration:none}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="entete">
+    <div class="monogramme">Élévia</div>
+    <div class="sur">Proposition à valider</div>
+    <h1>Le questionnaire d'affinités</h1>
+    <p class="meta">Club privé Élévia &middot; dossier ATR-2026-0005 &middot; 14 septembre 2026<br>
+    Préparé par Mr Attractor pour Élise CAPEL</p>
+  </header>
+
+  <div class="mot">
+    <h2>Pourquoi ce document</h2>
+    <p>Le questionnaire est ce qui distingue Élévia de n'importe quelle autre plateforme.
+    C'est lui qui décide quels profils se rencontrent, et il porte votre regard sur les gens,
+    pas le mien. Je ne peux donc pas l'inventer à votre place.</p>
+    <p>Ce que je peux faire, et c'est l'objet de ce document, c'est vous proposer une base
+    complète pour que vous n'ayez plus qu'à trancher. <strong>Trente questions</strong>, dans
+    l'ordre où la membre les verra, avec pour chacune le type de réponse et ce qu'elle sert à
+    calculer.</p>
+    <p>Vous n'avez rien à rédiger. Pour chaque question, dites simplement si vous la gardez,
+    la modifiez ou la retirez. Une question retirée ne coûte rien. Une question ajoutée non plus,
+    tant qu'elle arrive avant le développement du module.</p>
+  </div>
+
+  <div class="reco">
+    <h2>Ma recommandation, et elle vous fait gagner du temps</h2>
+    <p>Quatre des trente questions relèvent de ce que le règlement européen appelle des
+    <strong>données sensibles</strong>. Elles sont signalées en orange. Elles ne sont pas
+    interdites, mais elles demandent une rédaction précise et un consentement distinct, et
+    votre juriste doit les valider avant leur mise en service.</p>
+    <p><strong>Ne bloquons pas les vingt-six autres en les attendant.</strong> Validez les
+    vingt-six aujourd'hui, je démarre le module demain. Les quatre sensibles s'ajoutent
+    ensuite, quand votre juriste s'est prononcé, sans rien casser de ce qui aura été
+    construit : elles sont conçues pour être facultatives dès l'origine.</p>
+    <p>Si vous préférez ouvrir le Club sans aucune des quatre, cela fonctionne aussi. Les
+    affinités restent pertinentes sans elles.</p>
+  </div>
+
+  <div class="alerte">
+    <h3>Ce que je vous demande de ne pas faire</h3>
+    <p>Ne remplissez pas ce questionnaire comme si vous étiez membre. Lisez-le comme la
+    fondatrice du Club : est-ce que ces questions font apparaître les bonnes personnes en face
+    les unes des autres ? C'est la seule chose qui compte ici.</p>
+  </div>
+
+  <!-- ══════════ BLOC A ══════════ -->
+  <section class="bloc">
+    <header>
+      <div class="compte">Première partie &middot; 6 questions</div>
+      <h2>Qui vous êtes</h2>
+      <p>Ce que la membre remplit en premier. Court, factuel, sans effort. C'est ce qui
+      s'affiche sur son profil et ce qui permet les premiers rapprochements géographiques.</p>
+    </header>
+
+    <div class="q">
+      <div><span class="num">1.</span><span class="libelle">Dans quelle ville vivez-vous aujourd'hui ?</span></div>
+      <p class="reponse"><b>Réponse :</b> une ville, saisie libre avec suggestions</p>
+      <p class="usage">Sert à proposer d'abord des membres joignables, puis à élargir.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">2.</span><span class="libelle">Quelles autres villes comptent dans votre vie ?</span></div>
+      <p class="reponse"><b>Réponse :</b> jusqu'à trois villes &middot; facultatif</p>
+      <p class="usage">Le cœur du Club international : deux membres qui ne vivent pas au même
+      endroit mais qui retournent tous les deux au même endroit ont une vraie raison de se rencontrer.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">3.</span><span class="libelle">Quelles langues parlez-vous couramment ?</span></div>
+      <p class="reponse"><b>Réponse :</b> plusieurs choix dans une liste</p>
+      <p class="usage">Condition élémentaire d'une conversation. Évite de présenter deux
+      personnes qui ne pourront pas se parler.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">4.</span><span class="libelle">Quel est votre domaine d'activité ?</span></div>
+      <p class="reponse"><b>Réponse :</b> un choix dans une liste de secteurs</p>
+      <p class="usage">Le secteur, jamais le nom de l'employeur. Une personne connue reste
+      identifiable par son employeur, et la discrétion est une promesse du Club.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">5.</span><span class="libelle">Où en êtes-vous dans votre parcours ?</span></div>
+      <p class="reponse"><b>Réponse :</b> un choix &middot; <i>je construis quelque chose &middot; je dirige &middot;
+      je transmets et j'accompagne &middot; je me réinvente</i></p>
+      <p class="usage">Rapproche les gens par le moment de vie plutôt que par le métier. Deux
+      personnes de secteurs différents au même moment de leur trajectoire se comprennent souvent mieux.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">6.</span><span class="libelle">En trois mots, comment vos proches vous décriraient-ils ?</span></div>
+      <p class="reponse"><b>Réponse :</b> trois mots libres, courts</p>
+      <p class="usage">La seule question de cette partie qui laisse passer une personnalité.
+      S'affiche sur le profil et donne une entrée en matière à celui qui écrit le premier message.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+  </section>
+
+  <!-- ══════════ BLOC B ══════════ -->
+  <section class="bloc">
+    <header>
+      <div class="compte">Deuxième partie &middot; 5 questions</div>
+      <h2>Votre vie et votre rythme</h2>
+      <p>Ce qui décide si deux personnes peuvent réellement se voir. C'est la partie que les
+      plateformes ordinaires oublient, et c'est pour cela que leurs mises en relation
+      n'aboutissent jamais.</p>
+    </header>
+
+    <div class="q">
+      <div><span class="num">7.</span><span class="libelle">Combien de fois quittez-vous votre pays dans l'année ?</span></div>
+      <p class="reponse"><b>Réponse :</b> un choix &middot; <i>rarement &middot; deux ou trois fois &middot;
+      souvent &middot; je vis entre plusieurs pays</i></p>
+      <p class="usage">Deux grands voyageurs se croiseront. Un sédentaire et un nomade, presque jamais.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">8.</span><span class="libelle">Vos déplacements sont surtout…</span></div>
+      <p class="reponse"><b>Réponse :</b> plusieurs choix &middot; <i>professionnels &middot; familiaux &middot;
+      de loisir &middot; je ne me déplace pas beaucoup</i></p>
+      <p class="usage">Complète la précédente. Quelqu'un qui voyage pour sa famille n'est pas
+      disponible de la même façon que quelqu'un qui voyage pour affaires.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">9.</span><span class="libelle">Une soirée réussie, pour vous, ressemble plutôt à…</span></div>
+      <p class="reponse"><b>Réponse :</b> un choix &middot; <i>une table de six &middot; un tête-à-tête &middot;
+      un grand événement &middot; recevoir chez soi</i></p>
+      <p class="usage">Un discriminant plus fiable que les centres d'intérêt. Deux personnes qui
+      aiment la même chose mais pas dans le même cadre passent une mauvaise soirée.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">10.</span><span class="libelle">Quand êtes-vous le plus disponible ?</span></div>
+      <p class="reponse"><b>Réponse :</b> plusieurs choix &middot; <i>en semaine &middot; le week-end &middot;
+      cela dépend des périodes</i></p>
+      <p class="usage">Évite la mise en relation qui n'aboutit jamais faute de créneau commun.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">11.</span><span class="libelle">Quelle place tient votre travail dans votre vie en ce moment ?</span></div>
+      <p class="reponse"><b>Réponse :</b> un choix &middot; <i>il passe avant le reste &middot; il compte
+      beaucoup mais j'ai trouvé un équilibre &middot; je lève le pied &middot; je suis dans une autre étape</i></p>
+      <p class="usage">Question de rythme, pas d'ambition. Elle prévient le décalage le plus
+      fréquent entre deux personnes exigeantes.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+  </section>
+
+  <!-- ══════════ BLOC C ══════════ -->
+  <section class="bloc">
+    <header>
+      <div class="compte">Troisième partie &middot; 5 questions</div>
+      <h2>Ce que vous venez chercher</h2>
+      <p>La partie qui porte le positionnement d'Élévia. Le Club n'est pas une plateforme de
+      rencontre amoureuse&nbsp;: il couvre plusieurs intentions, et cette partie le dit clairement
+      à la membre dès son arrivée.</p>
+    </header>
+
+    <div class="q">
+      <div><span class="num">12.</span><span class="libelle">Qu'attendez-vous d'abord du Club ?</span></div>
+      <p class="reponse"><b>Réponse :</b> classer par ordre d'importance &middot; <i>des amitiés
+      de qualité &middot; un cercle professionnel &middot; du conseil et du mentorat &middot; une rencontre
+      amoureuse &middot; des lieux et des expériences</i></p>
+      <p class="usage">La question la plus importante des trente. C'est elle qui évite qu'une
+      membre venue chercher un cercle professionnel reçoive des propositions amoureuses.
+      <b>On classe, on ne coche pas</b> : presque tout le monde cocherait tout.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">13.</span><span class="libelle">Préférez-vous rencontrer des membres de votre ville, ou partout dans le monde ?</span></div>
+      <p class="reponse"><b>Réponse :</b> un choix &middot; <i>ma ville d'abord &middot; mon pays &middot;
+      partout, la distance ne me gêne pas</i></p>
+      <p class="usage">Règle le rayon de recherche. Indispensable tant que le Club compte peu
+      de membres dans chaque ville.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">14.</span><span class="libelle">Combien de nouvelles personnes souhaitez-vous rencontrer par mois ?</span></div>
+      <p class="reponse"><b>Réponse :</b> un choix &middot; <i>une &middot; deux ou trois &middot; davantage &middot;
+      je préfère ne pas me fixer de nombre</i></p>
+      <p class="usage">Protège l'expérience : personne ne reçoit plus de propositions qu'il n'en
+      a demandé. C'est un marqueur de club privé, à l'opposé du flux continu des applications de masse.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">15.</span><span class="libelle">Comment préférez-vous que les rencontres se fassent ?</span></div>
+      <p class="reponse"><b>Réponse :</b> un choix &middot; <i>je découvre les profils et je fais le
+      premier pas &middot; on me propose des profils choisis &middot; les deux</i></p>
+      <p class="usage">Détermine ce que la membre voit en arrivant. C'est aussi ce qui
+      préparera la conciergerie, quand elle arrivera.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">16.</span><span class="libelle">Dans six mois, qu'est-ce qui vous fera dire que le Club en valait la peine ?</span></div>
+      <p class="reponse"><b>Réponse :</b> texte libre, quelques lignes &middot; facultatif</p>
+      <p class="usage">N'entre dans aucun calcul. C'est votre matière première à vous : lue à
+      l'admission, elle vous dit qui entre dans votre Club et ce qu'on en attend vraiment.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+  </section>
+
+  <!-- ══════════ BLOC D ══════════ -->
+  <section class="bloc">
+    <header>
+      <div class="compte">Quatrième partie &middot; 7 questions</div>
+      <h2>Vos affinités</h2>
+      <p>Le cœur du calcul de compatibilité. Deux questions de cette partie sont signalées
+      comme sensibles.</p>
+    </header>
+
+    <div class="q">
+      <div><span class="num">17.</span><span class="libelle">Sur quels sujets aimez-vous échanger ?</span></div>
+      <p class="reponse"><b>Réponse :</b> jusqu'à cinq choix &middot; <i>entrepreneuriat &middot;
+      investissement &middot; art et culture &middot; sport &middot; gastronomie &middot; voyage &middot; éducation &middot;
+      philanthropie &middot; technologie &middot; mode &middot; immobilier &middot; santé et bien-être</i></p>
+      <p class="usage">La base du score d'affinités. <b>Le plafond à cinq est volontaire</b> :
+      sans lui, tout le monde coche tout et la question ne distingue plus personne.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">18.</span><span class="libelle">Que faites-vous de votre temps libre ?</span></div>
+      <p class="reponse"><b>Réponse :</b> texte libre, deux ou trois lignes</p>
+      <p class="usage">S'affiche sur le profil. C'est souvent cette phrase-là qui déclenche le
+      premier message, davantage que les cases cochées.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">19.</span><span class="libelle">Quel est votre rapport au sport ?</span></div>
+      <p class="reponse"><b>Réponse :</b> un choix &middot; <i>c'est un pilier de ma vie &middot; je pratique
+      régulièrement &middot; de temps en temps &middot; ce n'est pas mon sujet</i></p>
+      <p class="usage">Indicateur de mode de vie, et prétexte de rencontre très efficace.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q sensible">
+      <div><span class="num">20.</span><span class="libelle">Quelle place la spiritualité ou la foi tient-elle dans votre vie ?</span><span class="drapeau">Donnée sensible</span></div>
+      <p class="reponse"><b>Réponse :</b> un choix &middot; <i>centrale &middot; présente &middot; discrète &middot;
+      aucune &middot; je préfère ne pas répondre</i> &middot; <b>facultatif</b></p>
+      <p class="usage"><strong>Pourquoi elle est signalée :</strong> l'article 9 du règlement
+      européen range les convictions religieuses parmi les données sensibles. Elle reste
+      possible, à trois conditions : elle est facultative, « je préfère ne pas répondre » est
+      proposé, et la membre accepte explicitement de la renseigner par une case distincte.
+      <b>À faire valider par votre juriste.</b></p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q sensible">
+      <div><span class="num">21.</span><span class="libelle">Quelle importance donnez-vous à vos attaches culturelles ?</span><span class="drapeau">Donnée sensible</span></div>
+      <p class="reponse"><b>Réponse :</b> un choix &middot; <i>elles structurent ma vie &middot; elles
+      comptent &middot; elles sont une partie de moi parmi d'autres &middot; je préfère ne pas répondre</i>
+      &middot; <b>facultatif</b></p>
+      <p class="usage"><strong>Pourquoi elle est signalée :</strong> c'est la question des
+      « origines ou attaches culturelles » de votre document, et elle peut révéler une origine
+      ethnique, sensible au sens de l'article 9. <b>Telle qu'elle est écrite ici, elle demande
+      quelle place vous leur donnez, pas lesquelles.</b> C'est ce qui la rend défendable, et
+      c'est aussi ce qui la rend utile : ce qui rapproche deux membres, c'est l'importance
+      qu'ils y accordent, pas le pays. <b>À faire valider par votre juriste.</b></p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">22.</span><span class="libelle">Auprès de quel type de personne vous sentez-vous à l'aise ?</span></div>
+      <p class="reponse"><b>Réponse :</b> jusqu'à trois choix &middot; <i>les gens réservés &middot;
+      les gens expansifs &middot; ceux qui font rire &middot; ceux qui écoutent &middot; ceux qui bousculent &middot;
+      ceux qui rassurent</i></p>
+      <p class="usage">Introduit le tempérament dans le calcul, là où la plupart des
+      plateformes s'arrêtent aux centres d'intérêt.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">23.</span><span class="libelle">Y a-t-il des sujets que vous préférez éviter ?</span></div>
+      <p class="reponse"><b>Réponse :</b> texte libre &middot; facultatif</p>
+      <p class="usage">Marqueur de club privé. Une plateforme ordinaire demande ce qu'on aime ;
+      un club demande aussi ce qu'on ne veut pas, et le respecte.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+  </section>
+
+  <!-- ══════════ BLOC E ══════════ -->
+  <section class="bloc">
+    <header>
+      <div class="compte">Cinquième partie &middot; 7 questions</div>
+      <h2>Le cadre que vous posez</h2>
+      <p>Les limites que chaque membre fixe, et que le Club s'engage à tenir. Deux questions
+      sont signalées comme sensibles.</p>
+    </header>
+
+    <div class="q sensible">
+      <div><span class="num">24.</span><span class="libelle">Souhaitez-vous être mise en relation avec…</span><span class="drapeau">Donnée sensible</span></div>
+      <p class="reponse"><b>Réponse :</b> plusieurs choix &middot; <i>des femmes &middot; des hommes &middot;
+      les deux</i>, <b>et pour quelle intention</b> (reprend la question 12)</p>
+      <p class="usage"><strong>Pourquoi elle est signalée :</strong> croisée avec le genre déjà
+      collecté à l'inscription, cette réponse peut révéler une orientation sexuelle, sensible au
+      sens de l'article 9 <b>dès lors que l'intention amoureuse est retenue</b>.
+      <br><strong>La parade, et elle est simple :</strong> séparer les deux. « Avec qui » pour
+      les rencontres amicales et professionnelles ne pose aucun problème. Ce n'est que la case
+      amoureuse qui rend l'ensemble sensible, et elle seule demande alors un consentement
+      distinct. <b>À faire valider par votre juriste.</b></p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">25.</span><span class="libelle">Quelle tranche d'âge vous convient ?</span></div>
+      <p class="reponse"><b>Réponse :</b> deux curseurs, de 18 à 80 ans et plus</p>
+      <p class="usage">L'âge exact n'est jamais affiché, conformément à ce qui est déjà promis
+      à l'inscription. Seule la tranche entre dans le calcul.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q sensible">
+      <div><span class="num">26.</span><span class="libelle">Quelle est votre situation aujourd'hui ?</span><span class="drapeau">Donnée sensible</span></div>
+      <p class="reponse"><b>Réponse :</b> un choix &middot; <i>célibataire &middot; en couple &middot;
+      c'est plus compliqué que cela &middot; je préfère ne pas répondre</i> &middot; <b>facultatif</b></p>
+      <p class="usage"><strong>Pourquoi elle est signalée :</strong> la situation familiale n'est
+      pas sensible en elle-même, mais croisée avec l'intention amoureuse elle touche à la vie
+      privée de façon appuyée. <b>Elle n'a de sens que si vous retenez l'intention amoureuse à la
+      question 12.</b> Si le Club ouvre sans cette intention, retirez-la : elle ne sert à rien.
+      <b>À faire valider par votre juriste.</b></p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">27.</span><span class="libelle">Y a-t-il quelque chose que vous ne transigez pas ?</span></div>
+      <p class="reponse"><b>Réponse :</b> texte libre &middot; facultatif</p>
+      <p class="usage">Lu par votre équipe, jamais par un automate. C'est ce qui permet de
+      retirer un profil d'une suggestion pour une raison qu'aucune case ne prévoyait.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">28.</span><span class="libelle">Quelle discrétion attendez-vous ?</span></div>
+      <p class="reponse"><b>Réponse :</b> un choix &middot; <i>mon profil peut être découvert par
+      tous les membres vérifiés &middot; uniquement par ceux à qui le Club me propose &middot;
+      je veux valider avant d'être visible</i></p>
+      <p class="usage">La question qui incarne le mieux le positionnement d'Élévia. Aucune
+      plateforme de masse ne la pose, parce qu'elle réduit leur audience. Ici, elle la qualifie.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">29.</span><span class="libelle">Souhaitez-vous être prévenue lorsqu'un profil vous correspond ?</span></div>
+      <p class="reponse"><b>Réponse :</b> un choix &middot; <i>oui, par e-mail &middot; oui, uniquement
+      dans le Club &middot; non, je viendrai voir moi-même</i></p>
+      <p class="usage">Recueille un consentement propre aux notifications, ce que la politique
+      de confidentialité publiée exige déjà.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+
+    <div class="q">
+      <div><span class="num">30.</span><span class="libelle">Y a-t-il autre chose que nous devrions savoir ?</span></div>
+      <p class="reponse"><b>Réponse :</b> texte libre &middot; facultatif</p>
+      <p class="usage">La sortie de secours. Elle rattrape ce que les vingt-neuf autres n'ont
+      pas prévu, et elle vous apprendra quelles questions ajouter à la version suivante.</p>
+      <p class="arbitrage"><span><i class="case"></i>Je garde</span><span><i class="case"></i>Je modifie</span><span><i class="case"></i>Je retire</span></p>
+    </div>
+  </section>
+
+  <!-- ══════════ RÉCAPITULATIF ══════════ -->
+  <section class="bloc">
+    <header>
+      <div class="compte">Pour décider vite</div>
+      <h2>Ce qu'il faut retenir</h2>
+    </header>
+    <div class="enrouleur">
+      <table class="tableau">
+        <tr><th>Partie</th><th>Questions</th><th>Ce qu'elle sert</th><th>Statut</th></tr>
+        <tr><td>Qui vous êtes</td><td>1 à 6</td><td>Le profil affiché, le rapprochement géographique</td><td>Prêt</td></tr>
+        <tr><td>Votre vie et votre rythme</td><td>7 à 11</td><td>La faisabilité réelle d'une rencontre</td><td>Prêt</td></tr>
+        <tr><td>Ce que vous cherchez</td><td>12 à 16</td><td>L'intention, et donc tout le reste</td><td>Prêt</td></tr>
+        <tr><td>Vos affinités</td><td>17 à 23</td><td>Le calcul de compatibilité</td><td>Prêt sauf 20 et 21</td></tr>
+        <tr><td>Le cadre que vous posez</td><td>24 à 30</td><td>Les limites que le Club s'engage à tenir</td><td>Prêt sauf 24 et 26</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <div class="reco">
+    <h2>Ce dont j'ai besoin de vous</h2>
+    <p><strong>Une seule réponse suffit à démarrer :</strong> « je valide les vingt-six, on verra
+    les quatre autres avec mon juriste ». Le module d'affinités démarre le lendemain.</p>
+    <p>Si vous voulez modifier des questions, donnez-moi simplement leur numéro et ce que vous
+    voulez à la place. Si vous voulez en ajouter, dites-le-moi maintenant : une question ajoutée
+    avant le développement ne coûte rien, une question ajoutée après demande de reprendre
+    l'écran, le calcul et la base.</p>
+  </div>
+
+  <footer class="pied">
+    <div class="signature">Mac Arthur KOUASSI &middot; Mr Attractor</div>
+    <div>hello@agenceattractor.com</div>
+    <div style="margin-top:12px">Document de travail préparé pour le Club privé Élévia, dossier ATR-2026-0005.<br>
+    Il ne modifie pas le périmètre du cahier des charges signé le 6 septembre 2026.</div>
+  </footer>
+
+</div>
+</body>
+</html>
