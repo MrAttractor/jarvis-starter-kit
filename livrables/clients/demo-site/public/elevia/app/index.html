@@ -398,7 +398,11 @@ const MARQUE = {
 
   // Bandeau « Version de recette ». À passer sur false pour une présentation
   // investisseur, à condition d'assumer que les comptes créés restent réels.
-  recette: true,
+  // Retiré le 14/09/2026, sur décision de Mac Arthur : le package est signé,
+  // la Cliente transmet le lien autour d'elle, et le bandeau était la première
+  // chose que voyait toute personne à qui elle l'envoyait. Les comptes créés
+  // restent réels, c'est assumé.
+  recette: false,
 };
 
 /* ═══════════ Configuration technique ═══════════ */
@@ -500,7 +504,12 @@ const barre = (n) => `<div class="pas" role="presentation">${[1,2,3].map(i=>`<i 
   } else {
     c.replaceWith(Object.assign(document.createElement("span"), {
       className: "contact-inactif",
-      textContent: MARQUE.contact + (MARQUE.recette ? " (à activer)" : ""),
+      // La mention dépend de `contactActif`, jamais de `recette` : ces deux
+      // drapeaux disent des choses différentes. Le 14/09/2026, retirer le
+      // bandeau de recette aurait sinon effacé cette mention et affiché
+      // contact@ynlclub.com comme une adresse ouverte, alors que le domaine
+      // n'est toujours pas acheté. Un membre aurait écrit dans le vide.
+      textContent: MARQUE.contact + " (à activer)",
     }));
   }
   // Le blason n'apparaît que si le fichier existe vraiment : une image cassée
