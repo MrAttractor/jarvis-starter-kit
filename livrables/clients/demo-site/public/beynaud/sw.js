@@ -4,7 +4,7 @@
 // Le gestionnaire de notification manquait jusqu'au 13/09 : le fichier ne
 // faisait que du cache. Serge publiait, et personne n'était prévenu.
 
-const CACHE = 'beynaumania-v2';
+const CACHE = 'beynaumania-v3';
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
@@ -31,10 +31,14 @@ self.addEventListener('push', (e) => {
       body: d.corps,
       icon: 'icon-192.png',
       badge: 'icon-192.png',
-      // Un seul fil de notifications : une nouvelle remplace la précédente
-      // au lieu d'empiler dix lignes dans le volet du téléphone.
-      tag: 'beynaumania',
-      renotify: true,
+      // Un tag par publication, et surtout pas un tag fixe. iOS ne connaît pas
+      // `renotify` : une notification qui réutilise un tag déjà présent
+      // REMPLACE la précédente en silence, sans bannière et sans son. Avec un
+      // tag fixe, l'application n'alertait donc qu'une seule fois dans sa vie,
+      // et toutes les suivantes se substituaient à elle sans rien dire. C'est
+      // ce que Mac Arthur a pris pour « la notification ne part pas », alors
+      // que le serveur l'envoyait et qu'Apple l'acceptait.
+      tag: 'bey-' + (d.id || Date.now()),
       data: { url: d.url || '/beynaud/fan' },
     })
   );

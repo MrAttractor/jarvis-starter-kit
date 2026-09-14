@@ -55,7 +55,9 @@ async function prevenirTous(titre: string, corps: string, url: string) {
   const liste: any[] = Array.isArray(abos) ? abos : [];
   if (!liste.length) return { envoyes: 0, echecs: 0, nettoyes: 0, configure: true };
 
-  const message = JSON.stringify({ titre, corps, url });
+  // L'identifiant sert de tag cote telephone : sans lui, iOS remplace la
+  // notification precedente en silence au lieu d'en afficher une nouvelle.
+  const message = JSON.stringify({ titre, corps, url, id: crypto.randomUUID() });
   let envoyes = 0, echecs = 0;
   const perimes: string[] = [];
 

@@ -257,6 +257,47 @@ plutôt qu'une liste de zéros.
 qui peuvent jouer. Deux des six sont le même compte de Mac Arthur en double, séquelle du
 numéro enregistré sous trois écritures avant le correctif du 13/09.
 
+### La notification partait, Apple l'acceptait, et elle n'apparaissait pas
+
+Deuxième signalement de Mac Arthur après le correctif de 9h. Le serveur répondait
+`notifies: 1, echecs: 0`, et Apple acceptait bien le message. Le défaut était **sur le
+téléphone**.
+
+Le service worker posait **le même `tag` sur toutes les notifications**, avec `renotify`.
+Or **iOS ne connaît pas `renotify`** : une notification qui réutilise un tag déjà présent
+**remplace la précédente en silence**, sans bannière et sans son. Avec un tag fixe,
+l'application n'alertait donc **qu'une seule fois dans sa vie**, et toutes les suivantes se
+substituaient à elle sans rien dire. Le commentaire du code assumait ce choix, « un seul
+fil de notifications plutôt que dix lignes empilées », et c'est exactement ce qui l'a rendue
+invisible.
+
+Chaque publication porte maintenant son propre tag. Deux ajouts pour qu'on n'ait plus jamais
+à deviner :
+
+- **un fan reçoit une notification de confirmation** dans la seconde où il les active.
+  C'est la seule preuve que la chaîne marche de bout en bout, et elle vaut mieux qu'un texte
+  qui promet qu'elle marchera ;
+- action `push_test` dans `bey-public` : renvoyer une notification à soi-même sans rien
+  publier.
+
+**Attention au déploiement** : un service worker ne se met à jour qu'au relancement de
+l'application. Tant que le téléphone n'a pas rouvert la Beynaumania, il tourne encore sur
+l'ancien.
+
+### La carte du monde remplace les barres
+
+Demande de Mac Arthur : la carte à points de l'ancienne maquette était plus parlante que la
+liste de barres. Elle était **fausse** : une grille décorative, des points posés à la main et
+des chiffres inventés (« Abidjan 1 284 »).
+
+La nouvelle est réelle. Le fond est une trame de points calculée à partir des contours des
+continents, cadrée sur Amériques + Afrique + Europe, 33 Ko. Projection équirectangulaire,
+donc un lieu se pose au bon endroit par une règle de trois, sans bibliothèque. Le champ
+`lieu` étant saisi librement, un répertoire d'environ 120 entrées reconnaît les villes et
+pays qui comptent pour cette audience, accents et raccourcis compris (`abj`, `yakro`,
+`ouaga`, « Cocody, Abidjan »). **Ce qui n'est pas reconnu est cité sous la carte**, jamais
+jeté en silence.
+
 ## L'exclusivité est fictive, et c'est le vrai sujet
 
 Vérifié le 13/09 : les trois « contenus exclusifs » du fil sont **publiquement lisibles sur

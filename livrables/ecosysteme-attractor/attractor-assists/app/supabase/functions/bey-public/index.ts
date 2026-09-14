@@ -11,6 +11,7 @@
 // Sécurité : RLS bloque l'accès direct ; service role uniquement.
 // On n'expose jamais le WhatsApp des autres membres.
 // ============================================================
+import { envoyer, type Abonnement, type Reglages } from "../_partage/webpush.ts";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
@@ -25,6 +26,36 @@ const CORS = {
   "Access-Control-Allow-Headers": "authorization, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
+
+/* Les reglages de notification, identiques a ceux du cote artiste. */
+function reglagesPush(): Reglages | null {
+  const brut = Deno.env.get("VAPID_PRIVATE_JWK") ?? "";
+  const publique = Deno.env.get("VAPID_PUBLIC") ?? "";
+  const sujet = Deno.env.get("VAPID_SUBJECT") ?? "";
+  if (!brut || !publique || !sujet) return null;
+  try { return { publique, sujet, priveeJwk: JSON.parse(brut) as JsonWebKey }; }
+  catch (_) { return null; }
+}
+
+/* Previent UN SEUL membre, sur ses propres appareils. Sert a lui confirmer que
+   ses notifications marchent, tout de suite apres qu'il les a activees.
+   Motif : le 14/09, une notification partait, Apple l'acceptait, et elle
+   n'apparaissait nulle part. Sans preuve immediate cote fan, on ne peut que
+   deviner. Maintenant il voit, ou il ne voit pas, et on sait. */
+async function prevenirUn(membreId: string, titre: string, corps: string) {
+  const r = reglagesPush();
+  if (!r) return { envoyes: 0, echecs: 0, configure: false };
+  const abos = await (await sb(`bey_push?membre_id=eq.${encodeURIComponent(membreId)}&select=id,endpoint,p256dh,auth`)).json();
+  const liste: any[] = Array.isArray(abos) ? abos : [];
+  if (!liste.length) return { envoyes: 0, echecs: 0, configure: true };
+  const message = JSON.stringify({ titre, corps, url: "/beynaud/fan", id: crypto.randomUUID() });
+  let envoyes = 0, echecs = 0;
+  const perimes: string[] = [];
+  const res = await Promise.all(liste.map((x) => envoyer({ endpoint: x.endpoint, p256dh: x.p256dh, auth: x.auth } as Abonnement, message, r)));
+  res.forEach((v, k) => { if (v.ok) envoyes++; else { echecs++; if (v.perime) perimes.push(liste[k].id); } });
+  if (perimes.length) await sb(`bey_push?id=in.(${perimes.join(",")})`, { method: "DELETE" });
+  return { envoyes, echecs, configure: true };
+}
 
 function sb(path: string, opts: RequestInit = {}) {
   return fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
@@ -501,17 +532,30 @@ Deno.serve(async (req) => {
           method: "PATCH",
           body: JSON.stringify({ membre_id: mid, p256dh, auth, echecs: 0, vu_le: new Date().toISOString() }),
         });
-        return json({ ok: true, deja: true });
+        const c1 = await prevenirUn(mid, "La Beynaumania", "C'est bon, tu es prévenu quand Latiss publie.");
+        return json({ ok: true, deja: true, test: c1.envoyes });
       }
       const res = await sb("bey_push", {
         method: "POST",
         body: JSON.stringify({ membre_id: mid, endpoint, p256dh, auth }),
       });
       if (!res.ok) return json({ ok: false, error: "enregistrement impossible" });
-      return json({ ok: true });
+      // Une notification de bienvenue, tout de suite : c'est la seule preuve
+      // que la chaine marche de bout en bout, et elle vaut mieux qu'un texte
+      // qui promet qu'elle marchera.
+      const c2 = await prevenirUn(mid, "La Beynaumania", "C'est bon, tu es prévenu quand Latiss publie.");
+      return json({ ok: true, test: c2.envoyes });
     }
 
     // ── PUSH_DESABONNER ──
+    /* Renvoyer une notification a soi-meme, pour verifier sans publier. */
+    if (action === "push_test") {
+      const mid = String(d.membre_id ?? "");
+      if (!mid) return json({ ok: false, error: "membre requis" });
+      const c = await prevenirUn(mid, "La Beynaumania", "Test reçu. Tes notifications marchent.");
+      return json({ ok: true, envoyes: c.envoyes, echecs: c.echecs, configure: c.configure });
+    }
+
     if (action === "push_desabonner") {
       const endpoint = String(d.endpoint ?? "");
       if (!endpoint) return json({ ok: false, error: "endpoint requis" });

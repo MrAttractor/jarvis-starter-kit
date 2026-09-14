@@ -79,6 +79,24 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .row-amt{font-family:var(--bebas);font-size:20px;color:var(--or);flex-shrink:0;}
 .cl-rang{width:26px;font-family:var(--bebas);font-size:19px;color:var(--dim);flex-shrink:0;text-align:center;}
 .cl-rang.podium{color:var(--or);}
+/* ── La carte du monde ──────────────────────────────────────────────
+   Le fond est une trame de points calculee a partir des contours reels des
+   continents, cadree sur Ameriques + Afrique + Europe. Le monde entier rendrait
+   les points illisibles sur un telephone, et la Beynaumania n'a personne
+   au-dela. Projection equirectangulaire : longitude et latitude se convertissent
+   en pourcentages par une regle de trois, donc un point se pose exactement ou il
+   doit etre, sans bibliotheque. */
+.map-surface{position:relative;width:100%;aspect-ratio:742/441;background:var(--n4) url('monde.webp') center/contain no-repeat;border-radius:12px;overflow:hidden;margin-bottom:14px;}
+.mp{position:absolute;border-radius:50%;transform:translate(-50%,-50%);}
+.mp::after{content:'';position:absolute;inset:-3px;border-radius:50%;animation:ring 2.6s infinite ease-out;}
+@keyframes ring{0%{box-shadow:0 0 0 0 currentColor;opacity:.75}100%{box-shadow:0 0 0 13px transparent;opacity:0}}
+.mp.r1{background:var(--rouge);color:rgba(204,0,0,.55);}
+.mp.r2{background:var(--or);color:rgba(212,160,23,.5);}
+.mp.r3{background:#bdbdbd;color:rgba(200,200,200,.32);}
+.villes{display:flex;flex-wrap:wrap;gap:7px 13px;}
+.ville{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;}
+.ville-pt{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.ville-n{color:var(--dim);font-weight:700;}
 .lieu-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
 .lieu-name{font-size:12px;width:96px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .lieu-bar{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden;}
@@ -212,7 +230,9 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 
       <div class="card">
         <div class="block-title">Ta Beynaumania dans le monde</div>
-        <div id="lieux"></div>
+        <div class="map-surface" id="carte"></div>
+        <div class="villes" id="villes"></div>
+        <div id="lieux-hors" class="row-sub" style="margin-top:10px"></div>
       </div>
 
       <div class="card">
@@ -316,6 +336,123 @@ async function loadPolls(){
 async function togglePollActive(id,actif){const res=await api({action:'poll_toggle',id,actif:actif===true||actif==='true'});if(res&&res.ok)loadPolls();else toast('Erreur.');}
 async function delPoll(id){if(!confirm('Supprimer ce sondage et ses votes ?'))return;const res=await api({action:'poll_delete',id});if(res&&res.ok){toast('Sondage supprimé.');loadPolls();}else toast('Erreur.');}
 
+/* ── LA CARTE DU MONDE ─────────────────────────────────────────────────
+   Le champ "lieu" est saisi librement par le fan : « Abidjan », « Cocody »,
+   « togo », « — ». On ne devine donc pas, on reconnait. Ce qu'on ne reconnait
+   pas n'est jamais jete en silence : il est cite sous la carte, sinon un
+   membre disparaitrait du tableau de bord de Serge sans que personne le sache.
+
+   Le cadre doit rester identique a celui qui a servi a dessiner monde.webp. */
+const CADRE = { lon0:-130, lon1:60, lat0:-40, lat1:72 };
+
+const LIEUX = {
+  'abidjan':[5.35,-4.02],'cocody':[5.36,-3.99],'yopougon':[5.34,-4.09],'treichville':[5.29,-4.01],
+  'marcory':[5.30,-3.98],'plateau':[5.32,-4.02],'adjame':[5.36,-4.03],'abobo':[5.43,-4.02],
+  'koumassi':[5.29,-3.95],'port bouet':[5.26,-3.93],'bingerville':[5.36,-3.89],'anyama':[5.49,-4.05],
+  'bouake':[7.69,-5.03],'yamoussoukro':[6.82,-5.28],'bassam':[5.21,-3.74],'grand bassam':[5.21,-3.74],
+  'san pedro':[4.75,-6.64],'daloa':[6.88,-6.45],'korhogo':[9.46,-5.63],'man':[7.41,-7.55],
+  'gagnoa':[6.13,-5.95],'divo':[5.84,-5.36],'abengourou':[6.73,-3.49],'soubre':[5.79,-6.60],
+  'dabou':[5.32,-4.38],'agboville':[5.93,-4.22],'seguela':[7.96,-6.67],'odienne':[9.51,-7.56],
+  'cote divoire':[7.54,-5.55],'cote d ivoire':[7.54,-5.55],'ivory coast':[7.54,-5.55],
+  // Les raccourcis qu'on ecrit vraiment dans un formulaire.
+  'abj':[5.35,-4.02],'yakro':[6.82,-5.28],'ouaga':[12.37,-1.52],'bxl':[50.85,4.35],
+  'rci':[7.54,-5.55],'ivoire':[7.54,-5.55],
+
+  'paris':[48.86,2.35],'montreuil':[48.86,2.44],'lyon':[45.76,4.84],'marseille':[43.30,5.37],
+  'lille':[50.63,3.06],'toulouse':[43.60,1.44],'bordeaux':[44.84,-0.58],'nantes':[47.22,-1.55],
+  'strasbourg':[48.58,7.75],'montpellier':[43.61,3.88],'nice':[43.70,7.27],'rouen':[49.44,1.10],
+  'rennes':[48.11,-1.68],'grenoble':[45.19,5.72],'france':[46.60,2.30],
+
+  'bruxelles':[50.85,4.35],'belgique':[50.50,4.50],'anvers':[51.22,4.40],
+  'londres':[51.51,-0.13],'angleterre':[52.40,-1.50],'royaume uni':[54.00,-2.00],
+  'geneve':[46.20,6.14],'suisse':[46.80,8.20],'zurich':[47.37,8.54],
+  'berlin':[52.52,13.40],'allemagne':[51.20,10.40],'hambourg':[53.55,9.99],
+  'rome':[41.90,12.50],'italie':[42.80,12.60],'milan':[45.46,9.19],
+  'madrid':[40.42,-3.70],'espagne':[40.20,-3.70],'barcelone':[41.39,2.17],
+  'lisbonne':[38.72,-9.14],'portugal':[39.40,-8.20],
+  'amsterdam':[52.37,4.90],'pays bas':[52.20,5.30],
+
+  'dakar':[14.72,-17.47],'senegal':[14.50,-14.50],
+  'bamako':[12.64,-8.00],'mali':[17.60,-4.00],
+  'ouagadougou':[12.37,-1.52],'burkina':[12.20,-1.60],'burkina faso':[12.20,-1.60],
+  'lome':[6.13,1.22],'togo':[8.60,0.80],
+  'cotonou':[6.37,2.43],'benin':[9.30,2.30],
+  'accra':[5.60,-0.19],'ghana':[7.90,-1.00],
+  'conakry':[9.64,-13.58],'guinee':[9.90,-11.30],
+  'douala':[4.05,9.70],'yaounde':[3.85,11.50],'cameroun':[5.70,12.70],
+  'libreville':[0.42,9.47],'gabon':[-0.80,11.60],
+  'kinshasa':[-4.32,15.31],'rdc':[-2.90,23.60],'congo':[-0.70,15.80],'brazzaville':[-4.27,15.28],
+  'casablanca':[33.57,-7.59],'maroc':[31.80,-7.10],'rabat':[34.02,-6.83],
+  'tunis':[36.81,10.18],'tunisie':[34.00,9.60],'alger':[36.75,3.06],'algerie':[28.00,1.70],
+  'lagos':[6.52,3.38],'abuja':[9.07,7.49],'nigeria':[9.10,8.70],
+  'niamey':[13.51,2.11],'niger':[17.60,8.10],
+  'nouakchott':[18.08,-15.98],'mauritanie':[20.30,-10.30],
+  'monrovia':[6.30,-10.80],'liberia':[6.40,-9.40],
+  'freetown':[8.48,-13.23],'sierra leone':[8.50,-11.80],
+  'johannesburg':[-26.20,28.04],'afrique du sud':[-30.60,22.90],
+
+  'montreal':[45.50,-73.57],'toronto':[43.65,-79.38],'ottawa':[45.42,-75.70],'canada':[56.10,-106.30],
+  'new york':[40.71,-74.01],'atlanta':[33.75,-84.39],'washington':[38.91,-77.04],
+  'houston':[29.76,-95.37],'chicago':[41.88,-87.63],'los angeles':[34.05,-118.24],'miami':[25.76,-80.19],
+  'etats unis':[39.80,-98.60],'bresil':[-14.20,-51.90],
+  'dubai':[25.20,55.27],'emirats':[23.40,53.80]
+};
+
+/* « Cocody, Abidjan » et « ABIDJAN » doivent tomber au meme endroit. */
+function normLieu(v){
+  return String(v||'').toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/[^a-z ]/g,' ').replace(/\s+/g,' ').trim();
+}
+function trouverLieu(v){
+  const n = normLieu(v);
+  if(!n) return null;
+  if(LIEUX[n]) return LIEUX[n];
+  // Un nom compose : on retient la cle la plus longue qui y figure comme mot
+  // entier, pour que « cocody abidjan » ne tombe pas sur une cle plus courte.
+  const mots = ' ' + n + ' ';
+  let meilleure = null;
+  for(const k in LIEUX){
+    if(mots.indexOf(' ' + k + ' ') > -1 && (!meilleure || k.length > meilleure.length)) meilleure = k;
+  }
+  return meilleure ? LIEUX[meilleure] : null;
+}
+
+function peindreCarte(lieux){
+  const carte=document.getElementById('carte');
+  const villes=document.getElementById('villes');
+  const hors=document.getElementById('lieux-hors');
+  const places=(lieux||[]).slice().sort((a,b)=>b.n-a.n);
+  const max=Math.max(1,...places.map(l=>l.n));
+
+  const situes=[], inconnus=[];
+  places.forEach(l=>{
+    const c=trouverLieu(l.lieu);
+    if(!c){ inconnus.push(l); return; }
+    const x=(c[1]-CADRE.lon0)/(CADRE.lon1-CADRE.lon0)*100;
+    const y=(CADRE.lat1-c[0])/(CADRE.lat1-CADRE.lat0)*100;
+    // Hors du cadre dessine : on ne le colle pas au bord, on le cite dessous.
+    if(x<0||x>100||y<0||y>100){ inconnus.push(l); return; }
+    situes.push({lieu:l.lieu, n:l.n, x:x, y:y});
+  });
+
+  const rang=i=> i===0?'r1':(i<3?'r2':'r3');
+  carte.innerHTML = situes.map((l,i)=>{
+    // Le point grossit avec le nombre, mais reste visible a un seul membre.
+    const d=7+Math.round(Math.sqrt(l.n/max)*11);
+    return '<div class="mp '+rang(i)+'" style="left:'+l.x.toFixed(2)+'%;top:'+l.y.toFixed(2)+'%;width:'+d+'px;height:'+d+'px" title="'+esc(l.lieu)+' · '+l.n+'"></div>';
+  }).join('');
+
+  villes.innerHTML = situes.length
+    ? situes.slice(0,12).map((l,i)=>'<div class="ville"><div class="ville-pt" style="background:'+(i===0?'var(--rouge)':(i<3?'var(--or)':'#bdbdbd'))+'"></div>'+esc(l.lieu)+' <span class="ville-n">'+l.n+'</span></div>').join('')
+    : '<div class="row-sub">Aucun lieu renseigné pour l instant.</div>';
+
+  // Ce qu'on n'a pas su placer se dit, il ne disparait pas.
+  hors.textContent = inconnus.length
+    ? 'Non situé sur la carte : ' + inconnus.map(l=>l.lieu+' ('+l.n+')').join(', ')
+    : '';
+}
+
 async function loadStats(){
   const st=await api({action:'stats'}); if(!st||!st.ok) return;
   document.getElementById('s-total').textContent=(st.total||0).toLocaleString('fr-FR');
@@ -324,8 +461,7 @@ async function loadStats(){
   document.getElementById('s-cmt').textContent=(st.nbComments||0).toLocaleString('fr-FR');
   const ta=document.getElementById('top-amb');
   ta.innerHTML=(st.topAmb&&st.topAmb.length)?st.topAmb.map(m=>`<div class="row"><div class="av or">${esc((m.prenom||'?')[0]).toUpperCase()}</div><div class="row-body"><div class="row-name">${esc(m.prenom)}</div><div class="row-sub">${esc(m.lieu||'—')}</div></div><div class="row-amt">${m.filleuls}</div></div>`).join(''):'<div class="row-sub">Aucun parrainage pour l\'instant.</div>';
-  const lx=document.getElementById('lieux'); const max=Math.max(1,...(st.lieux||[]).map(l=>l.n));
-  lx.innerHTML=(st.lieux&&st.lieux.length)?st.lieux.map(l=>`<div class="lieu-row"><div class="lieu-name">${esc(l.lieu)}</div><div class="lieu-bar"><div class="lieu-fill" style="width:${Math.round(l.n/max*100)}%"></div></div><div class="lieu-n">${l.n}</div></div>`).join(''):'<div class="row-sub">—</div>';
+  peindreCarte(st.lieux||[]);
   const rc=document.getElementById('recents');
   rc.innerHTML=(st.recents&&st.recents.length)?st.recents.map(m=>`<div class="row"><div class="av${m.grade==='ambassadeur'?' or':''}">${esc((m.prenom||'?')[0]).toUpperCase()}</div><div class="row-body"><div class="row-name">${esc(m.prenom)}</div><div class="row-sub">${esc(m.lieu||'—')} · ${timeAgo(m.created_at)}</div></div><div class="row-tag ${m.grade==='ambassadeur'?'tag-amb':'tag-mem'}">${m.grade==='ambassadeur'?'Ambassadeur':'Membre'}</div></div>`).join(''):'<div class="row-sub">Aucune inscription encore. Partage le lien fan pour lancer la Beynaumania.</div>';
 }
