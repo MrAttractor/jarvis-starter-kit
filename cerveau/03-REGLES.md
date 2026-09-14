@@ -207,6 +207,23 @@
 **À vérifier ailleurs** : tous les mini-sites de `demo.agenceattractor.com` partagent le même `_headers` et le même réflexe d'image de héros. Ayêla, GetWinWorld, Vies Croisées et les maquettes de closing sont à repasser au même filtre.
 **Assists** : l'assistant qui livre un écran d'accueil vérifie que sa première image est réclamée dans l'en-tête, et qu'il y a quelque chose à regarder avant qu'elle arrive.
 
+### R-83 · Une fonction qui peint un écran ne dépend d'aucun nœud, et le contenu ne dépend pas de la peinture
+**Origine** : EXP-044, La Beynaumania, 14/09/2026. Une ligne visant un identifiant inexistant a vidé toute la page du visiteur.
+**Le fait** : `document.getElementById('absent').classList.add(...)` lève une exception qui **emporte toutes les instructions suivantes de la fonction et de son appelant**. Ici la ligne était en plus inutile. Résultat : pas de clip, pas de publications, un vide noir, et un bouton de suppression de compte resté visible parce qu'il était après le point de rupture.
+**Application, en trois temps** :
+1. Masquer et dévoiler passent par des fonctions **tolérantes à l'absence** (`cacher(...)`, `montrer(...)`), jamais par un accès direct au nœud. Un bouton qui change de nom ne doit pas pouvoir éteindre un écran.
+2. **Ce qui remplit l'écran part avant ce qui l'habille**, et ne dépend pas de lui : le média, le squelette et l'appel des données d'abord, la peinture de la coquille ensuite, **isolée**.
+3. L'isolation **journalise** l'erreur, elle ne l'avale pas. Un `try` muet transforme une panne bruyante en panne invisible, ce qui est pire.
+**À vérifier ailleurs** : toutes les applications qui peignent deux états du même écran, donc Ayêla, GetWinWorld, J'Envoie Express, Élévia et les maquettes de closing.
+**Assists** : l'assistant qui écrit un écran à plusieurs états n'accède jamais à un nœud sans filet, et ne met jamais le chargement du contenu après la décoration.
+
+### R-84 · Le parcours de l'inconnu se teste en premier, c'est le seul qui rapporte
+**Origine** : EXP-044. Le défaut ne touchait que le visiteur sans compte, et il est resté en ligne avec le lien déjà chez l'artiste.
+**Le fait** : l'agence teste toujours avec une session ouverte, par commodité. C'est l'autre branche du code. **L'écran que voit un inconnu, celui qui convertit, était le seul jamais parcouru.**
+**Application** : toute recette d'une application publique se lance **d'abord en navigation privée, sans session**, et ce parcours-là est celui qu'on rejoue à chaque mise en ligne. On y vérifie trois choses au minimum : le contenu s'affiche, l'appel à l'action est présent, et rien qui appartient au membre ne fuit. Le parcours du membre vient ensuite.
+**À vérifier ailleurs** : partout où une démo ou une plateforme circule par lien, donc tout `demo.agenceattractor.com`.
+**Assists** : l'assistant qui livre un lien public le vérifie comme un inconnu avant de l'annoncer.
+
 ### R-80 · Le gating se fait au serveur, jamais à l'écran
 **Origine** : La Beynaumania, 13/09/2026, aperçu avant inscription.
 **Application** : quand un contenu est réservé, c'est le serveur qui **ne l'envoie pas**. Tronquer à l'affichage laisse tout le reste dans la réponse, lisible par quiconque ouvre les outils du navigateur : ce n'est pas un aperçu, c'est un rideau. Même chose pour un prix réservé, un document client, un tableau de bord partiel.

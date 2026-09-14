@@ -370,6 +370,28 @@
 
 ---
 
+### EXP-044 · Une ligne visant un bouton qui n'existait pas a vidé la page, et l'artiste avait le lien
+**BLOCAGE** · 14/09/2026 · La Beynaumania
+
+**Situation.** Mac Arthur ouvre la plateforme sur son iPhone, en 5G, et envoie une capture : après le bouton « Voir ce qui se passe », un écran noir, le titre, et une mention « Effacer mon compte » qui n'a rien à faire là. Sa phrase : « Serge Beynaud a eu le lien, ce serait dommage que ça bug. »
+
+**Le défaut.** Une seule ligne, dans la fonction qui peint l'aperçu du visiteur : `document.getElementById('conc').classList.add('hidden')`. **Cet identifiant n'a jamais existé dans la page.** Le concours y vit sous deux autres noms, et à l'intérieur d'une carte déjà masquée deux lignes plus haut. La ligne était donc inutile en plus d'être fausse.
+
+**L'ampleur, hors de toute proportion avec la cause.** L'exception remontait hors de la fonction et emportait les trois instructions suivantes du démarrage : le clip ne se lançait pas, le squelette du fil ne se posait pas, **et les publications n'étaient jamais demandées**. Le visiteur tombait sur un vide noir. Seule la ligne d'avant, qui masquait la cloche, avait eu le temps de s'exécuter : d'où le « Effacer mon compte » resté à l'écran, qui est le seul indice visible de l'endroit exact où le code s'est arrêté.
+
+**Ce qui l'a caché.** Le défaut ne touchait **que le parcours du visiteur**. Mac Arthur et l'agence testaient avec une session déjà en mémoire, donc sur l'autre branche du démarrage, celle du membre. Le seul écran que voit un inconnu, c'est-à-dire le seul qui convertit, était le seul jamais parcouru. Et il était en ligne avec le lien déjà entre les mains de l'artiste.
+
+**Le diagnostic.** Le même parcours a été rejoué dans un navigateur piloté, en iPhone, sur la version en ligne puis sur la version corrigée : `Cannot read properties of null`, zéro publication, « Effacer mon compte » visible d'un côté ; trois publications, la porte d'inscription et aucune erreur de l'autre. **La capture de Mac Arthur a été reproduite à l'identique avant d'écrire la moindre correction.**
+
+**Cause profonde.** Une fonction d'affichage s'écrit comme une suite d'ordres, et se lit comme si chacun était indépendant. Il n'en est rien : **le premier qui échoue annule tous les suivants, en silence.** Renommer un bouton, déplacer un bloc, supprimer une section suffit à transformer une ligne cosmétique en panne totale de l'écran. Même famille qu'EXP-041 et R-78 : le symptôme, un vide, ne désigne jamais l'organe.
+
+**Ce que ça dit du contrôle.** EXP-043 avait établi la veille qu'on pilote un navigateur au lieu de relire. La leçon avait été appliquée à l'écran du membre, **pas à celui du visiteur**. Une recette qui ne couvre pas le parcours qui rapporte de l'argent ne couvre rien.
+
+**Règles nées de là** : R-83 (une peinture d'écran ne dépend d'aucun nœud, et le contenu ne dépend pas de la peinture) et R-84 (le parcours de l'inconnu se teste en premier).
+**Réutilisable pour.** Toute application où le même écran sert deux publics, et toute recette qui se lance depuis une session déjà ouverte.
+
+---
+
 ## SECTION D · PILOTAGE ET DISCIPLINE
 
 ### EXP-025 · L'automatisation morte que personne n'a vue

@@ -534,6 +534,21 @@ if(new URLSearchParams(location.search).get('reset')!==null){
 
 
 
+/* Masquer et devoiler sans jamais dependre de la presence d'un noeud.
+   Motif : le 14/09, UNE ligne visant un identifiant inexistant a suffi a
+   arreter la peinture de l'ecran, donc le chargement du fil et le clip avec.
+   Le visiteur tombait sur un vide noir. Une fonction d'affichage n'a pas le
+   droit de s'interrompre parce qu'un bouton a change de nom. R-83. */
+/* Isole la peinture d'un ecran : une panne dedans ne peut plus emporter ce qui
+   suit, et elle se lit dans la console au lieu de se traduire par du vide. On
+   n'avale pas l'erreur, on l'empeche seulement de tout arreter. */
+function essayer(nom, fn){
+  try{ return fn(); }
+  catch(e){ console.error('[beynaumania] ' + nom + ' : ' + ((e && e.message) || e)); }
+}
+function cacher(){ for(const id of arguments){ const n=document.getElementById(id); if(n) n.classList.add('hidden'); } }
+function montrer(){ for(const id of arguments){ const n=document.getElementById(id); if(n) n.classList.remove('hidden'); } }
+
 /* Peint son espace immediatement, avec ce que le telephone a garde de lui.
    Aucun appel reseau ici : c'est tout l'interet. Avant, le formulaire des
    inconnus restait affiche pendant que le serveur confirmait son compte. */
@@ -576,7 +591,10 @@ function peindreApercu(){
   h.appendChild(el('span','r','BEYNAUMANIA'));
   document.getElementById('m-hello-sub').textContent='L’univers officiel de Serge Beynaud. Voici un aperçu.';
   document.getElementById('cloche').classList.add('hidden');
-  document.getElementById('conc').classList.add('hidden');
+  // Le concours vit DANS la carte ambassadeur, deja masquee juste au-dessus.
+  // Cette ligne visait un id 'conc' qui n'a jamais existe dans la page : elle
+  // levait une exception et emportait tout le demarrage avec elle. R-83.
+  cacher('conc-voir','conc-liste');
   document.querySelector('.zone-danger').classList.add('hidden');
 }
 
@@ -1562,7 +1580,12 @@ function monterYouTube(layer,id){
     new YT.Player('yt-player',{
       videoId:id,
       host:'https://www.youtube-nocookie.com',
-      playerVars:{autoplay:1,mute:1,controls:0,loop:1,playlist:id,
+      // Ni loop ni playlist : ils etaient inutiles, le code boucle lui-meme un
+      // peu plus bas, et surtout "playlist" fait croire au lecteur mobile qu'il
+      // en joue une. Il rallume alors son habillage avec pause, piste
+      // precedente et piste suivante, en plein milieu du clip. C'est ce qui
+      // ramenait les sorties vers YouTube que la refonte du 13/09 avait fermees.
+      playerVars:{autoplay:1,mute:1,controls:0,
         start:CLIP.start||0,playsinline:1,rel:0,modestbranding:1,
         disablekb:1,iv_load_policy:3,fs:0,cc_load_policy:0,annotations:3},
       events:{
@@ -1684,9 +1707,13 @@ document.getElementById('retour-apercu').addEventListener('click',function(){
   // Pas de session : c'est un visiteur. Le clip s'ouvre, et l'apercu se
   // prepare DERRIERE lui : quand il appuie sur le bouton, le fil est deja la.
   if(!(m&&m.id)){
-    peindreApercu();
-    filEnChargement();
+    // Le clip part EN PREMIER, et la peinture de l'apercu est isolee : ni l'un
+    // ni le fil ne doivent dependre d'elle. Le 14/09 elle a echoue sur un
+    // identifiant inexistant, et le visiteur est tombe sur un vide noir alors
+    // que le clip et les trois publications n'avaient aucune raison de manquer.
     monterClip();
+    filEnChargement();
+    essayer('apercu', peindreApercu);
     chargerFil(null);
     return;
   }
@@ -1694,7 +1721,7 @@ document.getElementById('retour-apercu').addEventListener('click',function(){
   // Session connue : on l'installe chez lui tout de suite, sans attendre le
   // serveur. C'est ce qui supprime la seconde de formulaire d'inscription
   // qu'un membre de retour voyait s'afficher avant son espace.
-  peindreCoquille(m);
+  essayer('coquille', function(){ peindreCoquille(m); });
   filEnChargement();
   const fil=chargerFil(m);
 

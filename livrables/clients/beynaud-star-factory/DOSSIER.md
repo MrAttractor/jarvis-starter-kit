@@ -175,6 +175,49 @@ secondes gagnées.
 
 Règle **R-82** au cerveau, avec la liste des autres sites à repasser au même filtre.
 
+## Le défaut du 14/09 : la page du visiteur était vide, et l'artiste avait le lien
+
+Mac Arthur ouvre la plateforme sur son iPhone : après le bouton « Voir ce qui se passe »,
+un écran noir, et une mention « Effacer mon compte » qui n'a rien à faire là.
+
+**Une seule ligne**, dans la fonction qui peint l'aperçu du visiteur, visait un identifiant
+`conc` **qui n'a jamais existé dans la page**. Elle était en plus inutile : le concours vit
+dans la carte ambassadeur, déjà masquée deux lignes plus haut.
+
+L'exception remontait et emportait les trois instructions suivantes du démarrage : **le clip
+ne partait pas, et les publications n'étaient jamais demandées.** Le « Effacer mon compte »
+resté à l'écran est le seul indice visible de l'endroit exact où le code s'est arrêté.
+
+**Ce qui l'a caché.** Le défaut ne touchait **que le parcours du visiteur**. L'agence teste
+toujours avec une session déjà en mémoire, donc sur l'autre branche du code. Le seul écran
+que voit un inconnu, c'est-à-dire le seul qui convertit, était le seul jamais parcouru.
+
+Le même parcours a été rejoué dans un navigateur piloté, en iPhone, **sur la version en ligne
+avant toute correction** : `Cannot read properties of null`, zéro publication, « Effacer mon
+compte » visible. La capture de Mac Arthur reproduite à l'identique. Puis sur la version
+corrigée : trois publications, la porte d'inscription, aucune erreur.
+
+Trois parades, pas une :
+
+1. la ligne fautive est remplacée par un masquage **tolérant à l'absence** d'un nœud ;
+2. **ce qui remplit l'écran part avant ce qui l'habille** : le clip, le squelette et l'appel
+   des données d'abord, la peinture de la coquille ensuite, **isolée**, avec l'erreur
+   journalisée et non avalée ;
+3. **`recette-visiteur.js`** dans ce dossier rejoue le parcours de l'inconnu dans un vrai
+   navigateur et échoue si le fil est vide, si le clip ne démarre pas, ou si quelque chose
+   qui appartient au membre fuit. **À lancer avant chaque mise en ligne.**
+
+Règles **R-83** et **R-84** au cerveau, fiche **EXP-044**.
+
+### Les commandes YouTube étaient revenues
+
+Signalé dans la foulée par Mac Arthur, capture à l'appui : pause, piste précédente et piste
+suivante en plein milieu du clip. **Piste précédente et suivante n'ont aucun sens pour une
+vidéo seule** : le lecteur était monté avec `loop:1, playlist:<id>`, donc il se croyait sur
+une playlist et rallumait son habillage mobile. Ces paramètres étaient inutiles, le code
+boucle lui-même. Retirés. C'est ce qui ramenait les sorties vers YouTube que la refonte du
+13/09 avait fermées.
+
 ## L'exclusivité est fictive, et c'est le vrai sujet
 
 Vérifié le 13/09 : les trois « contenus exclusifs » du fil sont **publiquement lisibles sur
