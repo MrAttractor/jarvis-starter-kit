@@ -747,7 +747,16 @@ async function chargerConcours(){
     // personne. Tant que le tableau est vide, on ne montre pas un tableau :
     // on montre la place a prendre.
     l.appendChild(el('b', null, 'Personne n’a encore de point.'));
-    l.appendChild(document.createTextNode(' Le premier qui fait entrer un ami passe 1er.'));
+    /* « Le premier qui fait entrer un ami passe 1er » est FAUX pour qui en a
+       deja fait entrer. C'est exactement ce que lisait Mac Arthur le 14/09
+       avec deux invites au compteur, deux lignes au-dessus d'un bloc qui lui
+       disait « 2 personnes sont entrees grace a toi ». La carte se contredisait
+       elle-meme. R-58 : un etat vide n'a pas le droit de mentir.
+       Quand il a deja invite, on lui dit ce qui lui manque vraiment, et c'est
+       exact : personne n'ayant de point, un seul suffit pour prendre la tete. */
+    l.appendChild(document.createTextNode((moi.inscrits > 0)
+      ? ' Un seul de tes invités qui active ses notifications te fait passer 1er.'
+      : ' Le premier qui fait entrer un ami passe 1er.'));
   } else if(moi.points > 0){
     l.appendChild(el('b', null, moi.rang + (moi.rang === 1 ? 'er' : 'e')));
     l.appendChild(document.createTextNode(' · ' + moi.points + (moi.points > 1 ? ' amis confirmés' : ' ami confirmé')));
