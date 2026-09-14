@@ -282,7 +282,7 @@ async function addPoll(){
   const opts=['po0','po1','po2','po3'].map(id=>document.getElementById(id).value.trim()).filter(Boolean);
   if(!q||opts.length<2){toast('Question + 2 options minimum.');return;}
   const res=await api({action:'poll_add',question:q,options:opts,grade_requis:'membre'});
-  if(res&&res.ok){document.getElementById('pq').value='';['po0','po1','po2','po3'].forEach(id=>document.getElementById(id).value='');togglePoll();toast('Sondage publié.');loadPolls();}
+  if(res&&res.ok){document.getElementById('pq').value='';['po0','po1','po2','po3'].forEach(id=>document.getElementById(id).value='');togglePoll();toast(messagePublication(res));loadPolls();}
   else toast('Erreur : '+((res&&res.error)||'réessaie'));
 }
 async function loadPolls(){
@@ -338,6 +338,18 @@ async function moderate(id,mode){
   else toast('Erreur.');
 }
 
+/* Ce que Serge lit apres CHAQUE publication, photo et sondage compris. Il ne
+   doit jamais croire qu'il a touche sa communaute quand rien n'est parti : le
+   14/09 une photo a ete publiee et personne n'a rien recu, parce que seule la
+   diffusion du mot prevenait. On dit ce qui est REELLEMENT parti. */
+function messagePublication(res){
+  var n=res.notifies||0, a=res.abonnes||0, m=res.membres||0;
+  if(!res.push_configure) return 'Publié. Les notifications ne sont pas encore branchées.';
+  if(n>0) return 'Publié, et '+n+' fan'+(n>1?'s':'')+' prévenu'+(n>1?'s':'')+' sur son téléphone.';
+  if(a===0) return 'Publié. Personne n a encore activé les notifications'+(m?' ('+m+' membre'+(m>1?'s':'')+')':'')+'.';
+  return 'Publié, mais aucune notification n est partie. À vérifier.';
+}
+
 async function doBroadcast(){
   const t=document.getElementById('bc-text').value.trim();
   if(!t){toast('Écris un message.');return;}
@@ -350,13 +362,7 @@ async function doBroadcast(){
     // "Diffuse a N membres" alors qu aucune notification n existait : le mot
     // etait seulement pose sur le mur, et Serge croyait avoir touche sa
     // communaute.
-    var n=res.notifies||0, a=res.abonnes||0, m=res.membres||0;
-    var msg;
-    if(!res.push_configure) msg='Message publié sur le mur. Les notifications ne sont pas encore branchées.';
-    else if(n>0) msg='Publié, et '+n+' fan'+(n>1?'s':'')+' prévenu'+(n>1?'s':'')+' sur son téléphone.';
-    else if(a===0) msg='Publié sur le mur. Personne n a encore activé les notifications ('+m+' membre'+(m>1?'s':'')+').';
-    else msg='Publié, mais aucune notification n est partie. À vérifier.';
-    toast(msg);
+    toast(messagePublication(res));
     loadStats();
   }
   else toast('Erreur : '+((res&&res.error)||'réessaie'));
@@ -377,7 +383,7 @@ function uploadPhoto(input){
   fileToJpeg(f,1280,async(dataUrl)=>{
     const cap=document.getElementById('photo-cap').value.trim();
     const res=await api({action:'photo_add',data:dataUrl,legende:cap,grade_requis:'membre'});
-    if(res&&res.ok){document.getElementById('photo-cap').value='';toast('Photo publiée.');loadPhotos();}
+    if(res&&res.ok){document.getElementById('photo-cap').value='';toast(messagePublication(res));loadPhotos();}
     else toast('Erreur : '+((res&&res.error)||'upload'));
   });
 }
@@ -415,7 +421,7 @@ async function addContent(){
   const btn=document.getElementById('c-btn'); btn.disabled=true; const old=btn.innerHTML; btn.innerHTML='<span class="spin"></span>';
   const res=await api({action:'content_add',titre,youtube_url:url,grade_requis:grade,type:'serie',ordre:50});
   btn.disabled=false; btn.innerHTML=old;
-  if(res&&res.ok){document.getElementById('c-titre').value='';document.getElementById('c-url').value='';toggleAdd();toast('Contenu publié.');loadContents();}
+  if(res&&res.ok){document.getElementById('c-titre').value='';document.getElementById('c-url').value='';toggleAdd();toast(messagePublication(res));loadContents();}
   else toast('Erreur : '+((res&&res.error)||'réessaie'));
 }
 async function loadContents(){

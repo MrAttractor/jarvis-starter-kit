@@ -218,6 +218,23 @@ une playlist et rallumait son habillage mobile. Ces paramètres étaient inutile
 boucle lui-même. Retirés. C'est ce qui ramenait les sorties vers YouTube que la refonte du
 13/09 avait fermées.
 
+### La notification ne partait que pour le mot de Serge
+
+Mac Arthur publie une photo, rien n'arrive sur son téléphone. La refonte du 13/09 a fondu
+quatre rubriques en **un seul fil** où photo, vidéo, sondage et mot de Serge sont des
+publications équivalentes. **À l'écran seulement** : sur les quatre chemins d'écriture, un
+seul prévenait les abonnés. Les trois autres écrivaient en base et se taisaient.
+
+Le piège : la notification avait été livrée la veille et vérifiée sur un vrai téléphone.
+Elle marchait. **Elle ne marchait que sur le chemin testé.**
+
+Les quatre chemins préviennent désormais, et le tableau de bord de Serge dit après chaque
+publication ce qui est **réellement parti**, jamais le nombre de destinataires possibles.
+Règle **R-85**.
+
+À ce jour : **1 abonnement aux notifications** en base, pour 6 membres. C'est le téléphone
+de Mac Arthur. Le chiffre ne veut encore rien dire, la plateforme n'est pas diffusée.
+
 ## L'exclusivité est fictive, et c'est le vrai sujet
 
 Vérifié le 13/09 : les trois « contenus exclusifs » du fil sont **publiquement lisibles sur

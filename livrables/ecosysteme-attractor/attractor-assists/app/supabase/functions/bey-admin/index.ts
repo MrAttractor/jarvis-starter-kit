@@ -81,6 +81,22 @@ async function prevenirTous(titre: string, corps: string, url: string) {
   return { envoyes, echecs, nettoyes: perimes.length, configure: true };
 }
 
+/* Prevenir n'etait branche QUE sur le mot de Serge. Depuis la refonte du 13/09
+   le fil est unique : une photo, une video et un sondage y sont des publications
+   comme les autres. Serge a publie une photo le 14/09, personne n'a rien recu.
+   Toute publication previent donc, et renvoie ce qui est REELLEMENT parti. */
+function reponsePublication(base: Record<string, unknown>, p: { envoyes: number; echecs: number; nettoyes: number; configure: boolean }, abonnes: number) {
+  return { ok: true, ...base, notifies: p.envoyes, echecs: p.echecs, nettoyes: p.nettoyes, push_configure: p.configure, abonnes };
+}
+
+/* Une legende vide ne doit pas produire une notification vide : on retombe sur
+   une phrase qui dit au moins de quoi il s'agit. */
+function corpsNotif(texte: unknown, defaut: string) {
+  const t = String(texte ?? "").trim();
+  if (!t) return defaut;
+  return t.length > 120 ? t.slice(0, 117) + "..." : t;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   const json = (b: unknown, status = 200) =>
@@ -156,7 +172,9 @@ Deno.serve(async (req) => {
         }),
       });
       if (!res.ok) return json({ ok: false, error: await res.text() });
-      return json({ ok: true, contenu: (await res.json())[0] });
+      const contenu = (await res.json())[0];
+      const p = await prevenirTous("Serge Beynaud", corpsNotif(d.description || titre, "Du nouveau contenu dans la Beynaumania."), "/beynaud/fan");
+      return json(reponsePublication({ contenu }, p, await countRows("bey_push")));
     }
     if (action === "content_toggle") {
       if (!d.id) return json({ ok: false, error: "id requis" });
@@ -234,7 +252,9 @@ Deno.serve(async (req) => {
         }),
       });
       if (!res.ok) return json({ ok: false, error: await res.text() });
-      return json({ ok: true, photo: (await res.json())[0] });
+      const photo = (await res.json())[0];
+      const p = await prevenirTous("Serge Beynaud", corpsNotif(d.legende, "Une nouvelle photo dans la Beynaumania."), "/beynaud/fan");
+      return json(reponsePublication({ photo }, p, await countRows("bey_push")));
     }
     if (action === "photo_list") {
       return json({ ok: true, photos: await (await sb(`bey_photos?order=created_at.desc&select=*`)).json() });
@@ -266,7 +286,9 @@ Deno.serve(async (req) => {
         body: JSON.stringify({ question, options, grade_requis: d.grade_requis === "ambassadeur" ? "ambassadeur" : "membre" }),
       });
       if (!res.ok) return json({ ok: false, error: await res.text() });
-      return json({ ok: true, sondage: (await res.json())[0] });
+      const sondage = (await res.json())[0];
+      const p = await prevenirTous("Serge Beynaud", corpsNotif(question, "Serge te pose une question."), "/beynaud/fan");
+      return json(reponsePublication({ sondage }, p, await countRows("bey_push")));
     }
     if (action === "poll_list") {
       const sondages = await (await sb(`bey_sondages?order=created_at.desc&select=*`)).json();

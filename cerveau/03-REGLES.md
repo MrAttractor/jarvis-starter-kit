@@ -224,6 +224,14 @@
 **À vérifier ailleurs** : partout où une démo ou une plateforme circule par lien, donc tout `demo.agenceattractor.com`.
 **Assists** : l'assistant qui livre un lien public le vérifie comme un inconnu avant de l'annoncer.
 
+### R-85 · Unifier des contenus à l'écran oblige à unifier leurs effets au serveur
+**Origine** : La Beynaumania, 14/09/2026. Mac Arthur publie une photo, aucune notification ne part.
+**Le fait** : la refonte du 13/09 a fondu quatre rubriques en **un seul fil** où une photo, une vidéo, un sondage et le mot de Serge sont des publications équivalentes. À l'écran, oui. **Au serveur, non** : sur les quatre chemins d'écriture, un seul prévenait les abonnés, celui du mot. Les trois autres écrivaient en base et se taisaient. L'artiste publiait en croyant toucher sa communauté.
+**Le piège** : la notification avait été livrée la veille et **vérifiée sur un vrai téléphone**. Elle marchait. Elle ne marchait que sur le chemin testé.
+**Application** : quand plusieurs contenus deviennent équivalents pour l'utilisateur, lister **tous** les chemins d'écriture et leur faire produire les mêmes effets de bord (notification, journal, compteur, purge de cache). Ce qui se factorise à l'écran se factorise aussi derrière : ici une fonction de réponse commune, pour qu'ajouter un cinquième type de publication oblige à passer par elle. Et l'écran d'administration **dit ce qui est réellement parti**, jamais le nombre de destinataires possibles.
+**À vérifier ailleurs** : partout où un back-office a plusieurs boutons « publier » (Élévia, Ayêla, Vies Croisées, La Beynaumania).
+**Assists** : l'assistant qui unifie un affichage vérifie que les effets de bord ont suivi, et ne déclare la fonctionnalité livrée qu'après avoir emprunté chaque chemin.
+
 ### R-80 · Le gating se fait au serveur, jamais à l'écran
 **Origine** : La Beynaumania, 13/09/2026, aperçu avant inscription.
 **Application** : quand un contenu est réservé, c'est le serveur qui **ne l'envoie pas**. Tronquer à l'affichage laisse tout le reste dans la réponse, lisible par quiconque ouvre les outils du navigateur : ce n'est pas un aperçu, c'est un rideau. Même chose pour un prix réservé, un document client, un tableau de bord partiel.
