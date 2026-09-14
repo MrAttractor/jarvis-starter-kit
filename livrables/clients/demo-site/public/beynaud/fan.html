@@ -209,6 +209,43 @@ body.splash-on{overflow:hidden;}
 
 /* Ambassadeur */
 .amb-card{background:linear-gradient(135deg,var(--amb-fond),var(--n3));border:1px solid rgba(212,160,23,.28);}
+/* ===== LE SCORE, EN CHIFFRES PLUTOT QU'EN PHRASES =====
+   Le 14/09, cette carte disait QUATRE fois la meme chose : une phrase sur les
+   points, une phrase sur ce qui manque, un encart rouge de relance, puis la
+   liste nommee. Mac Arthur : « ce bloc fait trop texte ». Le defaut n'etait pas
+   un manque de decoration, c'etait de la redondance.
+   Trois chiffres dans la grammaire que l'application utilise deja ailleurs (le
+   Bebas des grands nombres du pilotage), et les deux compteurs du concours
+   deviennent lisibles d'un coup d'oeil : c'etait justement la confusion de
+   depart entre « 2 entres » et « 0 point ». */
+.sc{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  margin:16px 0 0;padding:16px 0;
+  border-top:1px solid var(--faint);border-bottom:1px solid var(--faint);}
+.sc-c{min-width:0;text-align:center;}
+.sc-n{font-family:var(--bebas);font-size:34px;line-height:.9;letter-spacing:1px;}
+.sc-c.pts .sc-n{color:var(--or);}
+.sc-c.j .sc-n{color:var(--dim);}
+.sc-l{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--dim);margin-top:8px;}
+/* La barre vers le grade existait en CSS depuis l'origine et AUCUN element ne
+   la peignait : la carte promettait un grade sans jamais montrer la
+   progression. Elle sert enfin. */
+/* 24 px sous la barre : a 4 px elle touchait le champ du lien, les deux
+   blocs se lisaient comme un seul. */
+.gr{margin:16px 0 24px;}
+
+/* Le bouton de relance. Un bouton par personne serait impossible : on n'a pas
+   leur numero, et l'exposer violerait la regle « on n'expose jamais le
+   WhatsApp des autres membres ». Un seul bouton, un message pret, le fan
+   choisit le destinataire dans WhatsApp. Volontairement plus discret que
+   « Inviter » : relancer n'est pas le geste principal. */
+.fil-b{width:100%;margin-top:16px;min-height:44px;background:var(--n4);
+  border:1px solid var(--faint);border-radius:11px;color:var(--blanc);
+  font-size:12.5px;font-weight:800;letter-spacing:.3px;
+  display:flex;align-items:center;justify-content:center;gap:8px;}
+.fil-b:active{background:var(--n5);}
+.fil-b svg{width:15px;height:15px;fill:currentColor;stroke:none;flex-shrink:0;}
+
 /* Le fond brun de cette carte est plus clair que la page : le texte secondaire
    y tombe a 4,48:1 au lieu des 4,5 exiges, mesure par la recette et non juge a
    l'oeil (R-24). On releve le jeton pour cette carte seulement, ce qui corrige
@@ -299,11 +336,11 @@ body.splash-on{overflow:hidden;}
    Pas d'emoji comme icone (R-42) : deux SVG maison, un crochet et une
    horloge. Les couleurs passent par les jetons, donc les deux themes
    suivent sans regle dupliquee. */
-.fil-l{margin-top:11px;padding-top:11px;border-top:1px solid var(--faint);
+.fil-l{margin-top:16px;padding-top:16px;border-top:1px solid var(--faint);
   display:flex;flex-direction:column;gap:2px;}
 .fil-t{font-size:11.5px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;
-  color:var(--dim);margin-bottom:5px;}
-.fil-r{display:flex;align-items:center;gap:9px;padding:6px 0;}
+  color:var(--dim);margin-bottom:8px;}
+.fil-r{display:flex;align-items:center;gap:9px;padding:8px 0;}
 .fil-i{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .fil-i svg{width:16px;height:16px;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
 .fil-r.ok .fil-i svg{stroke:var(--vert);}
@@ -528,7 +565,8 @@ body.splash-on{overflow:hidden;}
           <svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
           <div class="amb-title">Tente de devenir le meilleur ambassadeur</div>
         </div>
-        <p class="amb-desc">Partage ton lien. Tous ceux qui rejoignent la communauté grâce à toi te rapprochent du grade <b style="color:var(--or)">Ambassadeur</b>.</p>
+        <p class="amb-desc">Partage ton lien. Chaque personne qui entre te rapproche du grade <b style="color:var(--or)">Ambassadeur</b>.</p>
+        <div id="amb-score"></div>
         <div class="amb-link"><input id="amb-url" type="text" readonly/><button class="amb-copy" onclick="copyLink()">Copier</button></div>
         <button class="amb-share" onclick="shareWa()">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18c-1.5 0-3-.4-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3C4 15.4 3.6 13.7 3.6 12 3.6 7.4 7.4 3.6 12 3.6S20.4 7.4 20.4 12 16.6 20.4 12 20.4z"/><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.6.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.7-.9-2.9-1.6-4-3.5-.3-.5.3-.5.8-1.6.1-.2 0-.4 0-.5C10 8.5 9.5 7.2 9.3 6.7c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.9.9-1.1 2-1 2.3.4 2.3 1.7 3.9 3.7 5.5 2.6 2.1 4.3 2 5.3 1.9.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
@@ -751,10 +789,11 @@ let concSeq = 0;
 async function chargerConcours(){
   const rang = ++concSeq;
   const ligne = document.getElementById('amb-rang');
+  const scoreBox = document.getElementById('amb-score');
   const voir = document.getElementById('conc-voir');
   const liste = document.getElementById('conc-liste');
   if(APERCU || !ME){
-    ligne.innerHTML = ''; liste.innerHTML = '';
+    ligne.innerHTML = ''; liste.innerHTML = ''; scoreBox.innerHTML = '';
     voir.classList.add('hidden'); liste.classList.add('hidden');
     return;
   }
@@ -762,7 +801,7 @@ async function chargerConcours(){
   let r = null;
   try{ r = await api({ action:'classement', membre_id: ME.id }); }catch(e){ r = null; }
   if(rang !== concSeq) return; // une demande plus recente est passee devant
-  ligne.innerHTML = ''; liste.innerHTML = '';
+  ligne.innerHTML = ''; liste.innerHTML = ''; scoreBox.innerHTML = '';
   voir.classList.add('hidden'); liste.classList.add('hidden');
   if(!r || !r.ok || !r.saison) return;
 
@@ -770,45 +809,62 @@ async function chargerConcours(){
   const marques = r.podium.filter(function(p){ return (p.points || 0) > 0; });
   const jours = joursRestants(r.saison.fin);
 
-  const l = el('div','conc-ligne');
-  if(!marques.length){
-    // Sept personnes toutes premieres avec zero point ne disent rien a
-    // personne. Tant que le tableau est vide, on ne montre pas un tableau :
-    // on montre la place a prendre.
-    l.appendChild(el('b', null, 'Personne n’a encore de point.'));
-    /* « Le premier qui fait entrer un ami passe 1er » est FAUX pour qui en a
-       deja fait entrer. C'est exactement ce que lisait Mac Arthur le 14/09
-       avec deux invites au compteur, deux lignes au-dessus d'un bloc qui lui
-       disait « 2 personnes sont entrees grace a toi ». La carte se contredisait
-       elle-meme. R-58 : un etat vide n'a pas le droit de mentir.
-       Quand il a deja invite, on lui dit ce qui lui manque vraiment, et c'est
-       exact : personne n'ayant de point, un seul suffit pour prendre la tete. */
-    l.appendChild(document.createTextNode((moi.inscrits > 0)
-      ? ' Un seul de tes invités qui active ses notifications te fait passer 1er.'
-      : ' Le premier qui fait entrer un ami passe 1er.'));
-  } else if(moi.points > 0){
-    l.appendChild(el('b', null, moi.rang + (moi.rang === 1 ? 'er' : 'e')));
-    l.appendChild(document.createTextNode(' · ' + moi.points + (moi.points > 1 ? ' amis confirmés' : ' ami confirmé')));
-    if(r.ouvert && moi.manque > 0)
-      l.appendChild(el('span','gris', '· encore ' + moi.manque + ' pour passer devant'));
-  } else {
-    l.appendChild(document.createTextNode('Tu n’as pas encore de point. '));
-    l.appendChild(el('b', null, marques[0].prenom));
-    l.appendChild(document.createTextNode(' mène avec ' + marques[0].points + '.'));
-  }
-  if(r.ouvert) l.appendChild(el('span','gris', '· il reste ' + jours + (jours > 1 ? ' jours' : ' jour')));
-  ligne.appendChild(l);
+  /* ── Les trois chiffres ──────────────────────────────────────
+     Ils remplacent trois phrases. « entres » et « points » cote a cote
+     repondent d'eux-memes a la question que Mac Arthur a posee : pourquoi
+     j'ai 2 d'un cote et 0 de l'autre. */
+  const sc = el('div','sc');
+  const chiffre = function(cls, valeur, libelle){
+    const c = el('div','sc-c' + (cls ? ' ' + cls : ''));
+    c.appendChild(el('div','sc-n', String(valeur)));
+    c.appendChild(el('div','sc-l', libelle));
+    return c;
+  };
+  const entres = moi.inscrits || 0;
+  sc.appendChild(chiffre(null, entres, entres > 1 ? 'entrés' : 'entré'));
+  sc.appendChild(chiffre('pts', moi.points || 0, (moi.points || 0) > 1 ? 'points' : 'point'));
+  if(r.ouvert) sc.appendChild(chiffre('j', jours, jours > 1 ? 'jours' : 'jour'));
+  else sc.appendChild(chiffre('j', '—', 'terminé'));
+  scoreBox.appendChild(sc);
 
-  // La relance : c'est ici que le concours se joue. Un invite qui n'active pas
-  // ses notifications ne compte pas, et son parrain doit le savoir.
-  if(moi.en_attente > 0){
-    const plusieurs = moi.en_attente > 1;
-    const rl = el('div','conc-relance');
-    rl.appendChild(document.createTextNode(plusieurs
-      ? String(moi.en_attente) + ' personnes sont entrées grâce à toi mais ne comptent pas encore. '
-      : 'Une personne est entrée grâce à toi mais ne compte pas encore. '));
-    rl.appendChild(el('b', null, plusieurs ? 'Dis-leur d’activer les notifications.' : 'Dis-lui d’activer les notifications.'));
-    ligne.appendChild(rl);
+  /* ── La barre vers le grade ─────────────────────────────────
+     Elle lit le compteur TOUT-TEMPS du membre, pas les inscrits de la
+     saison : c'est ce compteur-la que le serveur utilise pour accorder le
+     grade. Les confondre ferait une troisieme monnaie, et c'est deja la
+     confusion entre deux qui a coute une session. */
+  const SEUIL_AMBASSADEUR = 5; // doit rester aligne sur AMB_THRESHOLD, bey-public
+  const gr = el('div','gr');
+  if(ME.grade === 'ambassadeur'){
+    const d = el('div','amb-done');
+    d.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+    d.appendChild(document.createTextNode('Tu es Ambassadeur'));
+    gr.appendChild(d);
+  } else {
+    const total = ME.filleuls || 0;
+    const lbl = el('div','amb-prog-lbl');
+    lbl.appendChild(el('span', null, 'Vers le grade Ambassadeur'));
+    lbl.appendChild(el('b', null, total + '/' + SEUIL_AMBASSADEUR));
+    const bar = el('div','amb-bar');
+    const fill = el('div','amb-fill');
+    fill.style.width = Math.min(100, Math.round(total / SEUIL_AMBASSADEUR * 100)) + '%';
+    bar.appendChild(fill);
+    gr.appendChild(lbl); gr.appendChild(bar);
+  }
+  scoreBox.appendChild(gr);
+
+  /* ── Une seule ligne de contexte, et seulement si elle apprend quelque
+     chose. L'encart rouge de relance a ete supprime : il disait ce que la
+     liste nommee juste en dessous dit mieux, et c'est ce doublon qui faisait
+     « trop texte ». */
+  if(marques.length && moi.points > 0 && r.ouvert && moi.manque > 0){
+    const l = el('div','conc-ligne');
+    l.appendChild(el('b', null, moi.rang + (moi.rang === 1 ? 'er' : 'e')));
+    l.appendChild(el('span','gris', '· encore ' + moi.manque + ' point' + (moi.manque > 1 ? 's' : '') + ' pour passer devant'));
+    ligne.appendChild(l);
+  } else if(marques.length && !moi.points){
+    const l = el('div','conc-ligne');
+    l.appendChild(el('span','gris', marques[0].prenom + ' mène avec ' + marques[0].points + '.'));
+    ligne.appendChild(l);
   }
 
   /* Et maintenant QUI. La phrase ci-dessus disait "dis-leur" sans nommer
@@ -838,6 +894,15 @@ async function chargerConcours(){
       box.appendChild(r);
     });
     ligne.appendChild(box);
+
+    // Et le geste, pas seulement le constat.
+    if(moi.en_attente > 0){
+      const b = el('button','fil-b');
+      b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18c-1.5 0-3-.4-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3C4 15.4 3.6 13.7 3.6 12 3.6 7.4 7.4 3.6 12 3.6S20.4 7.4 20.4 12 16.6 20.4 12 20.4z"/><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.6.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.7-.9-2.9-1.6-4-3.5-.3-.5.3-.5.8-1.6.1-.2 0-.4 0-.5C10 8.5 9.5 7.2 9.3 6.7c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.9.9-1.1 2-1 2.3.4 2.3 1.7 3.9 3.7 5.5 2.6 2.1 4.3 2 5.3 1.9.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>';
+      b.appendChild(document.createTextNode(moi.en_attente > 1 ? 'Relancer mes invités' : 'Relancer mon invité'));
+      b.addEventListener('click', relancerInvites);
+      ligne.appendChild(b);
+    }
   }
 
   // Le classement complet reste plie : on ne l'ouvre que si on le demande.
@@ -1649,6 +1714,16 @@ function closeLb(e, force){
 }
 
 function copyLink(){const i=document.getElementById('amb-url');navigator.clipboard?.writeText(i.value).then(()=>toast('Lien copié ! Partage-le.'),()=>{i.select();document.execCommand('copy');toast('Lien copié !');});}
+/* Relancer ceux qui sont entres mais n'ont pas active leurs notifications.
+   Sans numero, on ne peut pas viser : WhatsApp ouvre le choix du destinataire,
+   et le message est deja ecrit. C'est la seule facon de rendre la relance
+   actionnable sans exposer le contact d'un autre membre. */
+function relancerInvites(){
+  if(porte()) return;
+  const txt = "Salut ! Tu es bien dans La Beynaumania \u{1F44A} Pense à activer les notifications depuis ton espace, sinon tu rates ce que Serge publie : "
+    + location.origin + location.pathname;
+  window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank');
+}
 function shareWa(){if(porte())return;const txt="🔥 Rejoins LA BEYNAUMANIA, l'univers officiel de Serge Beynaud ! Contenu exclusif rien que pour nous. C'est gratuit 👉 "+ambLink(ME.code_ambassadeur);window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');}
 
 /* =====================================================================

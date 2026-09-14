@@ -258,7 +258,11 @@ const FACADE = {
    fragiles en mode clair. */
 const MEMBRE_RECETTE = {
   id: '00000000-0000-0000-0000-000000000001', prenom: 'Awa',
-  grade: 'ambassadeur', code_ambassadeur: 'AWA777', filleuls: 12
+  // Membre et non Ambassadeur, avec 2 filleuls sur 5 : c'est l'etat reel de
+  // Mac Arthur, et c'est le seul qui peint la barre de progression vers le
+  // grade. En Ambassadeur la barre est remplacee par une ligne « Tu es
+  // Ambassadeur » et la moitie des couleurs neuves n'est jamais mesuree.
+  grade: 'membre', code_ambassadeur: 'AWA777', filleuls: 2
 };
 
 const echecs = [], notes = [];
