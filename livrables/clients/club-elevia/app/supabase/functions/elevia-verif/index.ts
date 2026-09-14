@@ -16,6 +16,10 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+/** Secret partagé avec la tâche planifiée d'entretien (migration 0008).
+ *  Sans lui, l'entretien n'est pas ouvrable de l'extérieur. */
+const CRON_SECRET = Deno.env.get("ELEVIA_CRON_SECRET") ?? "";
 const BUCKET = "elevia-verifications";
 
 const CORS = {
@@ -23,6 +27,92 @@ const CORS = {
   "Access-Control-Allow-Headers": "authorization, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
+
+const esc = (s: string) =>
+  String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+
+/** Prévient la personne de la décision prise sur sa demande.
+ *
+ *  Ajouté le 14/09/2026. L'écran de l'application promettait depuis l'origine
+ *  « Vous recevrez un e-mail dès qu'une décision sera prise », et rien n'était
+ *  envoyé : une candidate refusée restait sans nouvelle en croyant qu'on
+ *  l'avait oubliée. Constaté sur une vraie décision, pas en relisant le code.
+ *
+ *  Le message ne dit jamais « automatique » ni « système » : la vérification
+ *  est faite par une personne, et le Club le promet aux membres. Le motif d'un
+ *  refus est repris tel qu'il a été écrit par l'équipe, et la marche à suivre
+ *  est toujours donnée, un refus n'étant jamais définitif. */
+async function prevenirDecision(
+  email: string, pseudo: string, decision: string, motif: string | null,
+): Promise<boolean> {
+  if (!RESEND_KEY || !email) return false;
+  const valide = decision === "valide";
+
+  const coeur = valide
+    ? `<p style="font-size:15px;color:#55606F;margin:0 0 18px;line-height:1.65">
+         Bonjour ${esc(pseudo)}, votre profil est vérifié.
+       </p>
+       <div style="font-family:Georgia,serif;font-size:22px;color:#00234B;margin:0 0 18px">
+         Bienvenue au Club
+       </div>
+       <p style="font-size:14px;color:#6E7889;margin:0;line-height:1.65">
+         Le badge « Vérifié » apparaît désormais sur votre profil. Comme convenu,
+         votre vidéo est supprimée de nos serveurs dans les vingt-quatre heures.
+       </p>`
+    : `<p style="font-size:15px;color:#55606F;margin:0 0 18px;line-height:1.65">
+         Bonjour ${esc(pseudo)}, nous n'avons pas pu vérifier votre profil à partir
+         de la vidéo que vous nous avez adressée.
+       </p>
+       ${motif ? `<div style="background:#F4F6F9;border-left:3px solid #BE9440;border-radius:8px;padding:14px 16px;margin:0 0 18px;text-align:left">
+         <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#8A6420;margin-bottom:6px">Ce que notre équipe a constaté</div>
+         <div style="font-size:14px;color:#00234B;line-height:1.6">${esc(motif)}</div>
+       </div>` : ""}
+       <p style="font-size:14px;color:#6E7889;margin:0;line-height:1.65">
+         Ce n'est pas un refus d'adhésion : vous pouvez enregistrer une nouvelle
+         vidéo dès maintenant depuis votre profil. La précédente est supprimée de
+         nos serveurs dans les vingt-quatre heures.
+       </p>`;
+
+  const html = `<!doctype html><html lang="fr"><body style="margin:0;background:#F4F6F9;font-family:'Segoe UI',system-ui,sans-serif;color:#00234B">
+    <div style="max-width:520px;margin:0 auto;padding:32px 20px">
+      <div style="text-align:center;margin-bottom:28px">
+        <div style="font-family:Georgia,serif;font-size:26px;letter-spacing:.12em;color:#00234B">ÉLÉVIA</div>
+        <div style="font-size:10px;letter-spacing:.28em;color:#8A6420;margin-top:6px">CLUB PRIVÉ</div>
+      </div>
+      <div style="background:#fff;border:1px solid #DCE3EB;border-radius:14px;padding:32px 28px;text-align:center">
+        ${coeur}
+      </div>
+      <p style="text-align:center;font-size:11px;color:#6E7889;margin-top:22px;line-height:1.6">
+        Votre demande a été examinée par une personne de notre équipe, jamais par un automate.
+      </p>
+      <p style="text-align:center;font-size:11px;color:#6E7889;margin-top:18px;line-height:1.6">
+        ÉLÉVIA — une marque de YNL CLUB
+      </p>
+    </div></body></html>`;
+
+  const texte = valide
+    ? `Bonjour ${pseudo}, votre profil est vérifié. Le badge « Vérifié » apparaît désormais sur votre profil, et votre vidéo est supprimée de nos serveurs dans les vingt-quatre heures.\n\nVotre demande a été examinée par une personne de notre équipe, jamais par un automate.\n\nÉLÉVIA — une marque de YNL CLUB`
+    : `Bonjour ${pseudo}, nous n'avons pas pu vérifier votre profil à partir de la vidéo que vous nous avez adressée.${motif ? `\n\nCe que notre équipe a constaté : ${motif}` : ""}\n\nCe n'est pas un refus d'adhésion : vous pouvez enregistrer une nouvelle vidéo dès maintenant depuis votre profil. La précédente est supprimée de nos serveurs dans les vingt-quatre heures.\n\nVotre demande a été examinée par une personne de notre équipe, jamais par un automate.\n\nÉLÉVIA — une marque de YNL CLUB`;
+
+  try {
+    const r = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from: "Club Élévia <hello@agenceattractor.com>",
+        reply_to: "clubpriveeelevia@gmail.com",
+        to: [email],
+        subject: valide ? "Votre profil Élévia est vérifié" : "Votre vérification Élévia — une nouvelle vidéo est nécessaire",
+        html,
+        text: texte,
+      }),
+    });
+    return r.ok;
+  } catch (_) {
+    return false;
+  }
+}
 
 /** Gestes volontairement simples à faire et évidents à juger à l'œil. */
 const GESTES = [
@@ -149,6 +239,26 @@ Deno.serve(async (req) => {
     const purgees = await purger();
     const orphelines = await purgerOrphelins();
 
+    /* ── Entretien planifié ────────────────────────────────────
+       La purge ci-dessus ne tournait qu'à l'occasion d'un appel à cette
+       fonction. Sur un Club calme, aucun appel pendant trois jours voulait
+       dire une vidéo gardée trois jours, alors que la politique de
+       confidentialité publiée promet vingt-quatre heures. La promesse ne
+       pouvait donc pas être tenue par construction (constaté le 14/09/2026).
+
+       Cette action est appelée toutes les heures par la tâche planifiée de la
+       migration 0008. Elle est placée AVANT le contrôle de session, parce
+       qu'une tâche n'a pas de session, et protégée par un secret partagé
+       plutôt que par un rôle. Sans secret configuré, elle reste fermée : on
+       ne laisse pas une porte ouverte au prétexte qu'elle est vide. */
+    if (action === "entretien") {
+      const presente = req.headers.get("x-elevia-entretien") ?? "";
+      if (!CRON_SECRET || presente !== CRON_SECRET) {
+        return json({ ok: false, error: "Accès refusé." }, 403);
+      }
+      return json({ ok: true, purgees, orphelines, balayage: await balayer() });
+    }
+
     const membre = await membreDe(jeton);
     if (!membre) return json({ ok: false, error: "Session expirée." }, 401);
 
@@ -262,20 +372,36 @@ Deno.serve(async (req) => {
       if (!dem) return json({ ok: false, error: "Demande introuvable." }, 404);
       if (dem.statut !== "en_attente") return json({ ok: false, error: "Cette demande a déjà été tranchée." }, 400);
 
+      const motif = decision === "refuse"
+        ? (String(p.motif ?? "").trim() || "La vidéo ne permettait pas de vous identifier.")
+        : null;
+
       const { error } = await db.from("el_verifications").update({
         statut: decision,
-        motif: decision === "refuse" ? (String(p.motif ?? "").trim() || "La vidéo ne permettait pas de vous identifier.") : null,
+        motif,
         decide_le: new Date().toISOString(),
         decide_par: membre.id,            // une décision porte toujours un nom
       }).eq("id", dem.id);
       if (error) return json({ ok: false, error: error.message }, 500);
 
       await db.from("el_membres").update({ statut_verif: decision }).eq("id", dem.membre_id);
+
+      /* Prévenir la personne. L'écran le promet depuis l'origine, et jusqu'au
+         14/09/2026 rien ne partait. L'envoi vient APRÈS l'écriture en base :
+         une panne du service d'envoi ne doit pas empêcher une décision d'être
+         prise, mais elle doit se voir. D'où le résultat inscrit au journal, et
+         renvoyé à l'écran qui l'affiche. */
+      const { data: destinataire } = await db.from("el_membres")
+        .select("email, pseudo").eq("id", dem.membre_id).maybeSingle();
+      const prevenu = destinataire
+        ? await prevenirDecision(destinataire.email, destinataire.pseudo, decision, motif)
+        : false;
+
       await db.from("el_evenements").insert({
         membre_id: dem.membre_id, type: "verif_decidee",
-        meta: { decision, agent: membre.pseudo },
+        meta: { decision, agent: membre.pseudo, prevenu },
       });
-      return json({ ok: true });
+      return json({ ok: true, prevenu });
     }
 
     // ── Purge forcée et balayage (contrôle manuel) ───────────
