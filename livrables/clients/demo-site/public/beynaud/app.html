@@ -4,17 +4,48 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>La Beynaumania — Dashboard Artiste</title>
+<meta name="theme-color" content="#070707" id="meta-theme"/>
+<!-- Meme moteur que le fil du fan : l'attribut est pose sur <html> avant le
+     premier pixel, sinon l'ecran clignote en noir avant de passer en clair.
+     La cle est commune aux deux pages, mais chacune a son propre stockage de
+     navigateur : le choix ne voyage pas de l'une a l'autre. -->
+<script>(function(){try{if(localStorage.getItem("bey_theme")==="clair")document.documentElement.setAttribute("data-theme","clair");}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
+  color-scheme:dark;
   --noir:#070707;--n2:#0f0f0f;--n3:#171717;--n4:#1f1f1f;--n5:#2a2a2a;
   --rouge:#CC0000;--rouge-vif:#E8000B;--rouge-glow:rgba(204,0,0,.4);
-  --or:#D4A017;--or-dim:rgba(212,160,23,.18);--vert:#22C55E;
-  --blanc:#fff;--dim:rgba(255,255,255,.45);--faint:rgba(255,255,255,.07);
+  --or:#D4A017;--or-plein:#D4A017;--or-dim:rgba(212,160,23,.18);--vert:#22C55E;
+  --blanc:#fff;--doux:rgba(255,255,255,.82);--dim:rgba(255,255,255,.45);
+  --faint:rgba(255,255,255,.07);
+  --champ:rgba(255,255,255,.06);--champ-bord:rgba(255,255,255,.12);
+  --bord-actif:rgba(255,255,255,.28);--bord-erreur:rgba(255,107,107,.3);--masque:#ff8a8a;
+  --piste:rgba(255,255,255,.06);--ombre:rgba(0,0,0,.7);--erreur:#ff6b6b;
+  --brulee:#140000;--brulee2:#0d0d0d;--barre:rgba(10,10,10,.94);
   --bebas:'Bebas Neue',sans-serif;--inter:'Inter',sans-serif;
+}
+/* ===== MODE CLAIR =====
+   Seuls les jetons changent. Les valeurs sont calculees, pas choisies a
+   l'oeil (R-24) : tout texte reste au-dessus de 4,5:1 sur son fond. L'or
+   de la charte tombe a 2,1:1 sur du blanc, il descend donc a #7A5906 pour
+   le texte ; l'aplat or ne bouge pas (--or-plein). La carte du monde reste
+   sombre dans les deux themes : sa trame de points est claire, elle
+   disparaitrait sur un fond clair. */
+:root[data-theme="clair"]{
+  color-scheme:light;
+  --noir:#F6F5F3;--n2:#fff;--n3:#fff;--n4:#F0EEE9;--n5:#E4E1DA;
+  --rouge:#B80000;--rouge-vif:#A00008;--rouge-glow:rgba(184,0,0,.22);
+  --or:#7A5906;--or-dim:rgba(212,160,23,.22);--vert:#15803D;
+  --blanc:#141414;--doux:rgba(20,20,20,.84);--dim:rgba(20,20,20,.66);
+  --faint:rgba(20,20,20,.10);
+  --champ:#F0EEE9;--champ-bord:rgba(20,20,20,.16);
+  --bord-actif:rgba(20,20,20,.30);--bord-erreur:rgba(176,34,34,.38);--masque:#B02222;
+  --piste:rgba(20,20,20,.10);--ombre:rgba(20,20,20,.16);--erreur:#C81E1E;
+  --brulee:#FFF2F2;--brulee2:#fff;--barre:rgba(252,251,250,.95);
 }
 html,body{background:var(--noir);color:var(--blanc);font-family:var(--inter);overflow-x:hidden;min-height:100%;}
 button,input,textarea,select{font-family:var(--inter);outline:none;}
@@ -24,31 +55,50 @@ svg{display:block;}
 .hidden{display:none!important;}
 .login{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:30px 24px;}
 .login-brand{display:flex;align-items:center;gap:10px;margin-bottom:26px;}
-.login-logo{width:44px;height:44px;background:var(--rouge);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--bebas);font-size:20px;box-shadow:0 6px 20px var(--rouge-glow);}
+/* Texte blanc impose : ces pastilles sont posees sur du rouge ou de l'or,
+   et en mode clair le jeton --blanc est sombre. */
+.login-logo{width:44px;height:44px;background:var(--rouge);color:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--bebas);font-size:20px;box-shadow:0 6px 20px var(--rouge-glow);}
 .login-t{font-family:var(--bebas);font-size:36px;letter-spacing:1px;line-height:.95;margin-bottom:4px;}
 .login-sub{font-size:13px;color:var(--dim);margin-bottom:26px;}
 .field{margin-bottom:13px;}
 .field label{display:block;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--dim);margin-bottom:6px;}
-.field input,.field textarea,.field select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:13px 14px;font-size:15px;color:#fff;}
+.field input,.field textarea,.field select{width:100%;background:var(--champ);border:1px solid var(--champ-bord);border-radius:11px;padding:13px 14px;font-size:15px;color:var(--blanc);}
 .field input:focus,.field textarea:focus{border-color:var(--rouge);}
 .btn{width:100%;background:var(--rouge);color:#fff;padding:15px;border-radius:12px;font-size:14px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;box-shadow:0 8px 30px var(--rouge-glow);display:flex;align-items:center;justify-content:center;gap:9px;}
 .btn:active{background:var(--rouge-vif);}
 .btn:disabled{opacity:.55;}
-.err{color:#ff6b6b;font-size:12px;margin-top:10px;text-align:center;min-height:16px;}
+.err{color:var(--erreur);font-size:12px;margin-top:10px;text-align:center;min-height:16px;}
 .header{padding:20px 20px 0;display:flex;align-items:center;justify-content:space-between;}
 .brand{display:flex;align-items:center;gap:8px;}
-.brand-logo{width:32px;height:32px;background:var(--rouge);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:var(--bebas);font-size:16px;box-shadow:0 4px 12px var(--rouge-glow);}
-.brand-name{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);}
+.brand-logo{width:32px;height:32px;background:var(--rouge);color:#fff;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:var(--bebas);font-size:16px;box-shadow:0 4px 12px var(--rouge-glow);}
+.brand-name{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);white-space:nowrap;}
+/* Sur un telephone, l'en-tete porte desormais quatre choses : le logo, la
+   pastille EN DIRECT, la bascule et Quitter. « LA BEYNAUMANIA » passait sur
+   deux lignes et l'en-tete doublait de hauteur. Le logo BM suffit a dire ou
+   on est, et le titre juste en dessous le redit. */
+@media (max-width:430px){ .header .brand-name{display:none;} }
 .hbtns{display:flex;align-items:center;gap:10px;}
+/* La bascule clair / sombre. 44 px de cote (UX_SYSTEM section 9) : sur cette
+   page tout se fait au pouce. L'icone montre ce qu'on va obtenir, pas ce
+   qu'on quitte : soleil en mode sombre, lune en mode clair. */
+.bascule{width:44px;height:44px;flex-shrink:0;background:var(--n4);
+  border:1px solid var(--faint);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.bascule:active{background:var(--n5);}
+.bascule svg{width:20px;height:20px;stroke:var(--dim);fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;}
+.bascule .ico-lune{display:none;}
+:root[data-theme="clair"] .bascule .ico-lune{display:block;}
+:root[data-theme="clair"] .bascule .ico-soleil{display:none;}
 .live-pill{display:flex;align-items:center;gap:5px;background:rgba(204,0,0,.12);border:1px solid rgba(204,0,0,.3);border-radius:20px;padding:5px 11px;font-size:10px;font-weight:800;color:var(--rouge);letter-spacing:.5px;}
 .live-dot{width:6px;height:6px;border-radius:50%;background:var(--rouge);animation:pulse 1.4s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.logout{font-size:11px;color:rgba(255,255,255,.4);background:none;}
+.logout{font-size:11px;color:var(--dim);background:none;}
 .scroll{padding:18px 20px 60px;}
 .greeting-sub{font-size:13px;color:var(--dim);margin-bottom:3px;}
 .greeting-t{font-family:var(--bebas);font-size:42px;letter-spacing:1px;line-height:1;margin-bottom:18px;}
 .greeting-t span{color:var(--rouge);}
-.live-block{background:linear-gradient(135deg,#140000,#0d0d0d);border:1px solid rgba(204,0,0,.3);border-radius:20px;padding:22px 20px;margin-bottom:14px;position:relative;overflow:hidden;}
+.live-block{background:linear-gradient(135deg,var(--brulee),var(--brulee2));border:1px solid rgba(204,0,0,.3);border-radius:20px;padding:22px 20px;margin-bottom:14px;position:relative;overflow:hidden;}
 .live-block::before{content:'';position:absolute;right:-30px;top:-30px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(204,0,0,.12),transparent 70%);}
 .lb-tag{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--rouge);display:flex;align-items:center;gap:5px;margin-bottom:10px;}
 .lb-main{display:flex;align-items:baseline;gap:10px;}
@@ -61,15 +111,15 @@ svg{display:block;}
 .stat-lbl{font-size:10px;color:var(--dim);margin-top:2px;}
 .card{background:var(--n3);border:1px solid var(--faint);border-radius:18px;padding:18px;margin-bottom:14px;}
 .block-title{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);margin-bottom:12px;}
-.bc-card{background:linear-gradient(135deg,#140000,var(--n3));border-color:rgba(204,0,0,.3);}
+.bc-card{background:linear-gradient(135deg,var(--brulee),var(--n3));border-color:rgba(204,0,0,.3);}
 textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .bc-btn{width:100%;margin-top:11px;background:var(--rouge);color:#fff;border-radius:12px;padding:14px;font-size:13px;font-weight:800;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 6px 22px var(--rouge-glow);}
 .bc-btn:active{background:var(--rouge-vif);}
 .bc-hint{font-size:11px;color:var(--dim);margin-top:9px;line-height:1.5;}
 .row{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--faint);}
 .row:last-child{border-bottom:none;}
-.av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--rouge),#800000);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;}
-.av.or{background:linear-gradient(135deg,var(--or),#8B6914);color:#000;}
+.av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--rouge),#800000);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;}
+.av.or{background:linear-gradient(135deg,var(--or-plein),#8B6914);color:#000;}
 .row-body{flex:1;min-width:0;}
 .row-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .row-sub{font-size:11px;color:var(--dim);margin-top:1px;}
@@ -86,12 +136,14 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
    au-dela. Projection equirectangulaire : longitude et latitude se convertissent
    en pourcentages par une regle de trois, donc un point se pose exactement ou il
    doit etre, sans bibliotheque. */
-.map-surface{position:relative;width:100%;aspect-ratio:742/441;background:var(--n4) url('monde.webp') center/contain no-repeat;border-radius:12px;overflow:hidden;margin-bottom:14px;}
+/* Fond sombre impose : la trame de points est claire, elle disparaitrait
+   sur un fond clair. */
+.map-surface{position:relative;width:100%;aspect-ratio:742/441;background:#1f1f1f url('monde.webp') center/contain no-repeat;border-radius:12px;overflow:hidden;margin-bottom:14px;}
 .mp{position:absolute;border-radius:50%;transform:translate(-50%,-50%);}
 .mp::after{content:'';position:absolute;inset:-3px;border-radius:50%;animation:ring 2.6s infinite ease-out;}
 @keyframes ring{0%{box-shadow:0 0 0 0 currentColor;opacity:.75}100%{box-shadow:0 0 0 13px transparent;opacity:0}}
 .mp.r1{background:var(--rouge);color:rgba(204,0,0,.55);}
-.mp.r2{background:var(--or);color:rgba(212,160,23,.5);}
+.mp.r2{background:var(--or-plein);color:rgba(212,160,23,.5);}
 .mp.r3{background:#bdbdbd;color:rgba(200,200,200,.32);}
 .villes{display:flex;flex-wrap:wrap;gap:7px 13px;}
 .ville{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;}
@@ -99,7 +151,7 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .ville-n{color:var(--dim);font-weight:700;}
 .lieu-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
 .lieu-name{font-size:12px;width:96px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.lieu-bar{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden;}
+.lieu-bar{flex:1;height:8px;background:var(--piste);border-radius:5px;overflow:hidden;}
 .lieu-fill{height:100%;background:linear-gradient(90deg,var(--rouge),#ff5555);border-radius:5px;}
 .lieu-n{font-size:12px;font-weight:700;width:34px;text-align:right;flex-shrink:0;}
 /* Modération */
@@ -110,10 +162,10 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .cm-name{font-size:12px;font-weight:700;}
 .cm-time{font-size:10px;color:var(--dim);margin-left:auto;}
 .cm-ctx{font-size:10px;color:var(--dim);font-style:italic;margin-bottom:4px;}
-.cm-text{font-size:13px;color:rgba(255,255,255,.82);line-height:1.5;word-wrap:break-word;margin-bottom:8px;}
+.cm-text{font-size:13px;color:var(--doux);line-height:1.5;word-wrap:break-word;margin-bottom:8px;}
 .cm-btns{display:flex;gap:7px;}
 .cm-btns button{font-size:11px;font-weight:700;padding:6px 11px;border-radius:8px;border:1px solid var(--faint);background:var(--n4);color:var(--dim);}
-.cm-btns .danger{color:#ff6b6b;border-color:rgba(255,107,107,.3);}
+.cm-btns .danger{color:var(--erreur);border-color:var(--bord-erreur);}
 /* Contenus / Photos */
 .ct-item{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--faint);}
 .ct-item:last-child{border-bottom:none;}
@@ -126,8 +178,8 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .ct-off{color:var(--dim);border-color:var(--faint);background:var(--n4);}
 .ct-edit{font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;border:1px solid var(--faint);color:var(--dim);background:var(--n4);flex-shrink:0;}
 .ct-url{opacity:.6;word-break:break-all;}
-.ct-del{font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,107,107,.3);color:#ff6b6b;background:var(--n4);flex-shrink:0;}
-.add-toggle{width:100%;margin-top:8px;background:var(--n4);border:1px dashed rgba(255,255,255,.15);border-radius:11px;padding:12px;font-size:12px;font-weight:700;color:var(--dim);}
+.ct-del{font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;border:1px solid var(--bord-erreur);color:var(--erreur);background:var(--n4);flex-shrink:0;}
+.add-toggle{width:100%;margin-top:8px;background:var(--n4);border:1px dashed var(--champ-bord);border-radius:11px;padding:12px;font-size:12px;font-weight:700;color:var(--dim);}
 .add-form{margin-top:12px;}
 .add-form .field{margin-bottom:9px;}
 /* Sondages */
@@ -138,7 +190,7 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .poll-res-bar{position:absolute;left:0;top:0;bottom:0;background:rgba(204,0,0,.2);}
 .poll-res-lbl{position:relative;font-size:12px;font-weight:600;flex:1;}
 .poll-res-pct{position:relative;font-size:12px;font-weight:800;color:var(--rouge);}
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(120px);background:var(--n2);border:1px solid rgba(204,0,0,.45);border-radius:13px;padding:12px 20px;font-size:13px;font-weight:600;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 40px rgba(0,0,0,.7);max-width:90vw;text-align:center;}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(120px);background:var(--n2);border:1px solid rgba(204,0,0,.45);border-radius:13px;padding:12px 20px;font-size:13px;font-weight:600;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 40px var(--ombre);max-width:90vw;text-align:center;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -152,7 +204,7 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 
 /* La barre du bas. Pouce-compatible : 56 px de haut, hors encoche. */
 .onglets{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;
-  background:rgba(10,10,10,.94);backdrop-filter:blur(14px);
+  background:var(--barre);backdrop-filter:blur(14px);
   border-top:1px solid var(--faint);padding-bottom:env(safe-area-inset-bottom,0px);}
 .onglet{position:relative;flex:1;min-height:56px;background:none;color:var(--dim);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
@@ -185,7 +237,7 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .filtre{flex:1 1 0;min-width:0;font-size:11px;font-weight:700;padding:0 3px;border-radius:8px;
   background:transparent;color:var(--dim);border:1px solid var(--faint);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.filtre.actif{color:var(--blanc);border-color:rgba(255,255,255,.28);background:var(--n4);}
+.filtre.actif{color:var(--blanc);border-color:var(--bord-actif);background:var(--n4);}
 
 /* Une ligne de la liste publiee, tous types confondus. */
 .pub{display:flex;gap:11px;padding:12px 0;border-bottom:1px solid var(--faint);align-items:flex-start;}
@@ -196,14 +248,14 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .pub-body{flex:1;min-width:0;}
 .pub-t{font-size:13px;font-weight:600;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
 .pub-s{font-size:11px;color:var(--dim);margin-top:4px;}
-.pub-s .masque{color:#ff8a8a;}
+.pub-s .masque{color:var(--masque);}
 .pub-s .direct{color:var(--rouge);font-weight:800;}
 .pub-s .amb{color:var(--or);}
 .pub-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
 .pub-btns button{font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;
   border:1px solid var(--faint);color:var(--dim);background:var(--n4);}
 .pub-btns button.on{color:var(--vert);border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.08);}
-.pub-btns button.danger{color:#ff6b6b;border-color:rgba(255,107,107,.3);}
+.pub-btns button.danger{color:var(--erreur);border-color:var(--bord-erreur);}
 
 /* Zone de tap : 44 px minimum, regle de UX_SYSTEM section 9. La recette
    automatisee comptait 38 boutons en dessous, dont « Quitter » a 14 px de
@@ -238,7 +290,12 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
   <div id="view-dash" class="hidden">
     <div class="header">
       <div class="brand"><div class="brand-logo">BM</div><span class="brand-name">La Beynaumania</span></div>
-      <div class="hbtns"><div class="live-pill hidden" id="live-pill"><span class="live-dot"></span>EN DIRECT</div><button class="logout" onclick="logout()">Quitter</button></div>
+      <div class="hbtns"><div class="live-pill hidden" id="live-pill"><span class="live-dot"></span>EN DIRECT</div>
+        <button class="bascule" id="bascule-theme" type="button" aria-pressed="false" aria-label="Passer en mode clair">
+          <svg class="ico-soleil" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.2v2.3M12 19.5v2.3M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.2 12h2.3M19.5 12h2.3M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+          <svg class="ico-lune" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 13.1A8.6 8.6 0 1 1 10.9 3.2a6.8 6.8 0 0 0 9.9 9.9z"/></svg>
+        </button>
+        <button class="logout" onclick="logout()">Quitter</button></div>
     </div>
 
     <div class="scroll">
@@ -423,6 +480,36 @@ async function api(body,retry=true){
   return r.json();
 }
 function logout(){localStorage.removeItem(LS);document.getElementById('view-dash').classList.add('hidden');document.getElementById('view-login').classList.remove('hidden');}
+
+/* ===================== CLAIR / SOMBRE =====================
+   Le choix vit dans le navigateur, pas en base : c'est un confort de lecture.
+   L'attribut est deja pose par le script du <head> ; ici on synchronise la
+   couleur de la barre du telephone et l'etat du bouton, puis on bascule au
+   clic. Sans la couleur de barre, un iPhone garde un bandeau noir au-dessus
+   d'une page claire. */
+const CLE_THEME='bey_theme';
+function themeClair(){ return document.documentElement.getAttribute('data-theme')==='clair'; }
+function appliquerTheme(clair){
+  const r=document.documentElement;
+  if(clair) r.setAttribute('data-theme','clair'); else r.removeAttribute('data-theme');
+  const meta=document.getElementById('meta-theme');
+  if(meta) meta.setAttribute('content', clair?'#F6F5F3':'#070707');
+  const b=document.getElementById('bascule-theme');
+  if(b){
+    b.setAttribute('aria-pressed', clair?'true':'false');
+    b.setAttribute('aria-label', clair?'Passer en mode sombre':'Passer en mode clair');
+  }
+}
+function basculerTheme(){
+  const clair=!themeClair();
+  try{ localStorage.setItem(CLE_THEME, clair?'clair':'sombre'); }catch(e){}
+  appliquerTheme(clair);
+}
+(function(){
+  appliquerTheme(themeClair());
+  const b=document.getElementById('bascule-theme');
+  if(b) b.addEventListener('click', basculerTheme);
+})();
 
 async function showDash(){
   document.getElementById('view-login').classList.add('hidden');

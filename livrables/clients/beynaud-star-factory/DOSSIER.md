@@ -333,6 +333,63 @@ filtres, la barre du bas qui ne recouvre plus la dernière ligne, **aucun débor
 aucune zone de tap sous 44 px sur les six résolutions de référence**, et le parcours du
 visiteur rejoué pour vérifier qu'il n'a pas bougé.
 
+### Le mode clair, demandé le 14/09
+
+Une bascule clair / sombre sur le fil du fan et sur le pilotage de Serge. Bouton de
+44 px dans l'en-tête, l'icône montre ce qu'on va obtenir et pas ce qu'on quitte : soleil
+en sombre, lune en clair. **Sombre par défaut**, c'est l'identité de la Beynaumania ; le
+choix du fan est retenu d'une visite à l'autre, et la couleur de la barre du téléphone
+suit, sinon un iPhone garde un bandeau noir au-dessus d'une page claire.
+
+**Un seul jeu de jetons change, aucune règle de mise en page n'est dupliquée.** Le thème
+se pose sur `<html>` par un script de quatre lignes dans le `<head>`, avant le premier
+pixel : lu plus tard, l'écran clignoterait en noir avant de passer en clair.
+
+**Les trois blocs photo restent sombres dans les deux thèmes** : l'écran d'entrée, le
+bandeau du fil et l'écran d'inscription. Un texte posé sur une photo éclaircie n'a plus
+de contraste garanti, et cette photo est l'identité. La parade n'est pas d'épingler les
+couleurs une par une, c'est de **redéclarer le jeu sombre à l'intérieur de ces blocs** :
+tout ce qui y sera écrit plus tard sera juste d'office. La première version épinglait à
+la main, et elle en avait oublié trois.
+
+**L'or de la charte ne passe pas sur du blanc : 2,1:1.** Il descend à `#7A5906` pour le
+texte en mode clair, l'aplat or ne bouge pas. Le rouge `#CC0000` descend à `#B80000`, ce
+qui fait repasser d'un coup toute la famille rouge sur fond clair, la pastille EN DIRECT
+comprise. Ces valeurs sont **calculées, pas choisies à l'œil** (R-24).
+
+**Le thème sombre n'a pas bougé d'un pixel.** Chaque valeur d'origine a retrouvé son
+jeton : la première passe avait fondu `.08` et `.16` dans un même jeton de piste, et
+`.12` / `.15` / `.28` dans un même jeton de bordure, ce qui aurait discrètement modifié
+une application en ligne.
+
+**Un défaut visuel que le débordement horizontal n'aurait pas vu.** Ajouter un bouton de
+44 px dans l'en-tête du pilotage faisait passer « LA BEYNAUMANIA » sur deux lignes, sans
+le moindre débordement. Le nom est masqué sous 430 px, le logo BM suffit, et la recette
+mesure désormais la hauteur de l'en-tête.
+
+**Contrôlé avant livraison**, par `recette-theme.js` : le rapport de contraste **de chaque
+texte affiché**, dans les deux thèmes, sur les six résolutions de référence, transparences
+composées et fonds en dégradé compris. Le même texte étant mesuré deux fois, la recette
+sait dire ce que la bascule a cassé et ce qui n'allait pas avant elle.
+
+**Verdict : zéro régression.** Tout texte qui passait en sombre passe en clair, et les
+44 textes sous le seuil en sombre passent tous en clair. Le parcours du visiteur a été
+rejoué pour vérifier qu'il n'a pas bougé (R-84).
+
+**Ce que la recette signale et qui est antérieur à la bascule**, donc à arbitrer à part :
+
+| Quoi | Mesure | Dans quel thème |
+|---|---|---|
+| « Inviter sur WhatsApp », blanc sur le vert WhatsApp | **1,98:1** | les deux |
+| L'initiale noire des pastilles Ambassadeur (dégradé or) | **4,13:1** | les deux |
+| Les boutons d'action du fil (cœur, bulle, partage) | **39 px de large** | les deux |
+| 44 textes secondaires de la charte sombre | 2,55 à 4,50:1 | sombre seulement |
+
+Le cas WhatsApp est le seul vraiment illisible. La parade de R-24 est d'inverser, texte
+sombre sur l'aplat vert, ce qui donnerait 10,7:1. **Ce n'est pas fait** : c'est la
+reproduction délibérée du bouton de WhatsApp, dont la convention est le blanc sur vert.
+C'est un choix de direction artistique, pas une correction technique.
+
 ## L'exclusivité est fictive, et c'est le vrai sujet
 
 Vérifié le 13/09 : les trois « contenus exclusifs » du fil sont **publiquement lisibles sur
@@ -432,6 +489,8 @@ séries et live YouTube verrouillés, sondages, application installable.
 | Tunnel de conversion et paliers | `SCHEMA-TUNNEL.md` (13/09/2026) |
 | Stratégie éditoriale et guide de tournage | `STRATEGIE-CONTENUS-OCT-DEC.md` (13/09/2026) |
 | Brief interne du RDV du 30 juin | `BRIEF-RDV-2026-06-30.html` |
+| Recette du parcours visiteur | `recette-visiteur.js` (R-84) |
+| Recette clair / sombre, contraste calculé | `recette-theme.js` (14/09/2026, R-24 et R-41) |
 
 ## Prochaine action
 

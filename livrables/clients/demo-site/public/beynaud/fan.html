@@ -4,7 +4,12 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>La Beynaumania — Serge Beynaud</title>
-<meta name="theme-color" content="#070707"/>
+<meta name="theme-color" content="#070707" id="meta-theme"/>
+<!-- Le theme se pose sur <html> avant le premier pixel. Lu plus tard, dans le
+     script principal, l'ecran clignoterait en noir avant de passer en clair.
+     Sombre par defaut : c'est l'identite de la Beynaumania, le clair est un
+     choix que le fan fait et qu'on retient. -->
+<script>(function(){try{if(localStorage.getItem("bey_theme")==="clair")document.documentElement.setAttribute("data-theme","clair");}catch(e){}})();</script>
 <link rel="manifest" href="manifest.webmanifest"/>
 <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
 <link rel="icon" href="apple-touch-icon.png"/>
@@ -33,11 +38,57 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
+  color-scheme:dark;
   --noir:#070707;--n2:#0f0f0f;--n3:#171717;--n4:#1f1f1f;--n5:#2a2a2a;
   --rouge:#CC0000;--rouge-vif:#E8000B;--rouge-glow:rgba(204,0,0,.4);
-  --or:#D4A017;--or-dim:rgba(212,160,23,.18);
-  --blanc:#fff;--dim:rgba(255,255,255,.45);--faint:rgba(255,255,255,.07);
-  --vert:#22C55E;--bebas:'Bebas Neue',sans-serif;--inter:'Inter',sans-serif;
+  --or:#D4A017;--or-plein:#D4A017;--or-dim:rgba(212,160,23,.18);
+  --blanc:#fff;--doux:rgba(255,255,255,.87);--dim:rgba(255,255,255,.45);
+  --tres-dim:rgba(255,255,255,.3);--faint:rgba(255,255,255,.07);
+  --champ:rgba(0,0,0,.35);--piste:rgba(255,255,255,.16);--piste-douce:rgba(255,255,255,.08);
+  --media:#000;--sq-hi:#262626;--amb-fond:#160800;--av1:#3a3a3a;--av2:#5a5a5a;
+  --voile:rgba(7,7,7,0);--ombre:rgba(0,0,0,.7);
+  --vert:#22C55E;--erreur:#ff6b6b;
+  --bebas:'Bebas Neue',sans-serif;--inter:'Inter',sans-serif;
+}
+/* ===== MODE CLAIR =====
+   Seuls les jetons changent : aucune regle de mise en page n'est dupliquee.
+   Les valeurs ne sont pas choisies a l'oeil, elles sont calculees (R-24) :
+   chaque texte reste au-dessus de 4,5:1 sur son fond. L'or de la charte
+   descend a #7A5906 pour le texte, parce que le #D4A017 d'origine ne fait
+   que 2,1:1 sur du blanc ; l'aplat or, lui, ne bouge pas (--or-plein).
+   Le bandeau photo, l'ecran d'entree et l'ecran d'inscription restent
+   sombres dans les deux themes : ce sont des images, et un texte pose sur
+   une photo eclaircie n'a plus de contraste garanti. */
+:root[data-theme="clair"]{
+  color-scheme:light;
+  --noir:#F6F5F3;--n2:#fff;--n3:#fff;--n4:#F0EEE9;--n5:#E4E1DA;
+  --rouge:#B80000;--rouge-vif:#A00008;--rouge-glow:rgba(184,0,0,.22);
+  --or:#7A5906;--or-dim:rgba(212,160,23,.22);
+  --blanc:#141414;--doux:rgba(20,20,20,.86);--dim:rgba(20,20,20,.66);
+  --tres-dim:rgba(20,20,20,.60);--faint:rgba(20,20,20,.10);
+  --champ:#F0EEE9;--piste:rgba(20,20,20,.16);--piste-douce:rgba(20,20,20,.12);
+  --media:#E9E6E1;--sq-hi:#E6E3DD;--amb-fond:#FFF8E8;--av1:#D8D5CF;--av2:#C4C0B8;
+  --voile:rgba(246,245,243,0);--ombre:rgba(20,20,20,.16);
+  --vert:#15803D;--erreur:#C81E1E;
+}
+/* ===== LES TROIS BLOCS PHOTO =====
+   L'ecran d'entree, le bandeau et l'ecran d'inscription portent une photo de
+   Serge et restent sombres dans les deux themes : un texte pose sur une photo
+   eclaircie n'a plus de contraste garanti, et la photo est l'identite.
+   On y redeclare donc le jeu sombre au complet, au lieu d'epingler une
+   couleur a la fois. La premiere version epinglait a la main, et elle en a
+   oublie trois : « Retrouver mon espace », « Revenir a l'apercu » et le
+   prenom en rouge du bandeau devenaient sombres sur du sombre. Avec cette
+   regle, tout ce qui sera ecrit dans ces blocs sera juste d'office. */
+:root[data-theme="clair"] #splash,
+:root[data-theme="clair"] .m-hero,
+:root[data-theme="clair"] .join-hero{
+  --noir:#070707;--n2:#0f0f0f;--n3:#171717;--n4:#1f1f1f;--n5:#2a2a2a;
+  --rouge:#CC0000;--rouge-vif:#E8000B;--rouge-glow:rgba(204,0,0,.4);
+  --or:#D4A017;--or-plein:#D4A017;--or-dim:rgba(212,160,23,.18);
+  --blanc:#fff;--doux:rgba(255,255,255,.87);--dim:rgba(255,255,255,.45);
+  --tres-dim:rgba(255,255,255,.3);--faint:rgba(255,255,255,.07);
+  --champ:rgba(0,0,0,.35);--vert:#22C55E;--erreur:#ff6b6b;
 }
 html,body{background:var(--noir);color:var(--blanc);font-family:var(--inter);overflow-x:hidden;min-height:100%;}
 button,input{font-family:var(--inter);outline:none;}
@@ -96,7 +147,8 @@ body.splash-on{overflow:hidden;}
 .join-hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:28px 22px 34px;overflow:hidden;}
 .join-bg{position:absolute;inset:0;background:url('serge-hero.jpg') center 15%/cover no-repeat;filter:brightness(.44);}
 .join-ov{position:absolute;inset:0;background:linear-gradient(0deg,var(--noir) 4%,rgba(7,7,7,.6) 46%,rgba(150,0,0,.15) 78%,rgba(7,7,7,.85) 100%);}
-.join-c{position:relative;z-index:2;}
+/* Meme raison que le bandeau : une photo plein ecran derriere. */
+.join-c{position:relative;z-index:2;color:var(--blanc);}
 .eyebrow{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(204,0,0,.5);border-radius:2px;padding:5px 11px;font-size:10px;font-weight:800;color:var(--rouge);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:16px;}
 .pulse{width:6px;height:6px;border-radius:50%;background:var(--rouge);animation:pulse 1.5s infinite;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
@@ -121,8 +173,24 @@ body.splash-on{overflow:hidden;}
 .m-hero{position:relative;padding:26px 20px 22px;overflow:hidden;}
 .m-hero-bg{position:absolute;inset:0;background:url('serge-hero.jpg') center 12%/cover no-repeat;filter:brightness(.34);}
 .m-hero-ov{position:absolute;inset:0;background:linear-gradient(0deg,var(--noir),rgba(7,7,7,.45));}
-.m-hero-c{position:relative;z-index:2;}
-.m-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+/* Le bandeau porte la photo de Serge dans les deux themes. La couleur du
+   texte doit etre posee ici : body porte var(--blanc), et body est en
+   dehors du bloc, donc en dehors de la redeclaration des jetons. */
+.m-hero-c{position:relative;z-index:2;color:var(--blanc);}
+.m-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;}
+/* La bascule clair / sombre. Posee sur la photo du bandeau, donc trait blanc
+   dans les deux themes. 44 px de cote (UX_SYSTEM section 9) : c'est la seule
+   commande de cet ecran, elle ne se rate pas. L'icone montre ce qu'on va
+   obtenir, pas ce qu'on quitte : soleil en mode sombre, lune en mode clair. */
+.bascule{width:44px;height:44px;flex-shrink:0;background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.20);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.bascule:active{background:rgba(255,255,255,.24);}
+.bascule svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;}
+.bascule .ico-lune{display:none;}
+:root[data-theme="clair"] .bascule .ico-lune{display:block;}
+:root[data-theme="clair"] .bascule .ico-soleil{display:none;}
 .brand{display:flex;align-items:center;gap:8px;}
 .brand-logo{width:30px;height:30px;background:var(--rouge);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--bebas);font-size:15px;color:#fff;box-shadow:0 4px 12px var(--rouge-glow);}
 .brand-name{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);}
@@ -140,19 +208,19 @@ body.splash-on{overflow:hidden;}
 .sec-title{font-family:var(--bebas);font-size:24px;letter-spacing:1px;margin:22px 0 12px;}
 
 /* Ambassadeur */
-.amb-card{background:linear-gradient(135deg,#160800,var(--n3));border:1px solid rgba(212,160,23,.28);}
+.amb-card{background:linear-gradient(135deg,var(--amb-fond),var(--n3));border:1px solid rgba(212,160,23,.28);}
 .amb-h{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
 .amb-h svg{width:20px;height:20px;stroke:var(--or);fill:none;stroke-width:2;}
 .amb-title{font-size:15px;font-weight:800;}
 .amb-desc{font-size:12px;color:var(--dim);line-height:1.55;margin-bottom:14px;}
 .amb-link{display:flex;gap:8px;margin-bottom:14px;}
-.amb-link input{flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 12px;font-size:12px;color:var(--or);min-width:0;}
-.amb-copy{background:var(--or);color:#000;border-radius:10px;padding:0 16px;min-height:44px;font-size:12px;font-weight:800;white-space:nowrap;}
+.amb-link input{flex:1;background:var(--champ);border:1px solid var(--faint);border-radius:10px;padding:11px 12px;font-size:12px;color:var(--or);min-width:0;}
+.amb-copy{background:var(--or-plein);color:#000;border-radius:10px;padding:0 16px;min-height:44px;font-size:12px;font-weight:800;white-space:nowrap;}
 .amb-share{width:100%;background:#25D366;color:#fff;border-radius:11px;padding:13px;min-height:44px;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:14px;}
 .amb-prog-lbl{display:flex;justify-content:space-between;font-size:12px;margin-bottom:7px;}
 .amb-prog-lbl b{color:var(--or);}
-.amb-bar{height:8px;background:rgba(255,255,255,.08);border-radius:5px;overflow:hidden;}
-.amb-fill{height:100%;background:linear-gradient(90deg,var(--or),#f0c14b);border-radius:5px;transition:width .5s;}
+.amb-bar{height:8px;background:var(--piste-douce);border-radius:5px;overflow:hidden;}
+.amb-fill{height:100%;background:linear-gradient(90deg,var(--or-plein),#f0c14b);border-radius:5px;transition:width .5s;}
 .amb-done{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--or);font-weight:700;}
 
 /* ===================== LE FIL =====================
@@ -170,7 +238,7 @@ body.splash-on{overflow:hidden;}
 .post-verif{color:var(--rouge);font-size:12px;}
 .post-sub{font-size:10px;color:var(--dim);margin-top:1px;}
 .post-time{font-size:10px;color:var(--dim);margin-left:auto;flex-shrink:0;}
-.post-media{background:#000;line-height:0;}
+.post-media{background:var(--media);line-height:0;}
 .post-media img{width:100%;display:block;max-height:78vh;object-fit:cover;cursor:pointer;}
 .post-corps{padding:0 14px 12px;}
 .post-titre{font-size:15px;font-weight:800;margin-bottom:3px;}
@@ -186,14 +254,14 @@ body.splash-on{overflow:hidden;}
 .ico-btn.liked svg{fill:var(--rouge);stroke:var(--rouge);}
 .ico-btn:active{opacity:.5;}
 .post-likes{padding:0 14px 4px;font-size:13px;font-weight:800;}
-.post-legende{padding:0 14px 10px;font-size:13.5px;line-height:1.55;color:rgba(255,255,255,.88);
+.post-legende{padding:0 14px 10px;font-size:13.5px;line-height:1.55;color:var(--doux);
   white-space:pre-wrap;overflow-wrap:anywhere;}
 .post-legende b{font-weight:800;margin-right:6px;}
 .voir-cmt{display:block;width:100%;text-align:left;padding:4px 14px 10px;min-height:44px;
   font-size:13px;color:var(--dim);background:none;}
 .cmts{padding:0 14px 4px;}
 .cmt{display:flex;gap:9px;padding:7px 0;}
-.cmt-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3a3a3a,#5a5a5a);
+.cmt-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--av1),var(--av2));
   display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
 .cmt-b{flex:1;min-width:0;}
 .cmt-l1{font-size:12.5px;line-height:1.5;overflow-wrap:anywhere;}
@@ -201,8 +269,8 @@ body.splash-on{overflow:hidden;}
 .cmt-time{font-size:10px;color:var(--dim);margin-top:2px;}
 .cmt-form{display:flex;gap:8px;align-items:center;padding:8px 14px 12px;border-top:1px solid var(--faint);margin-top:4px;}
 /* 16 px obligatoires : en dessous, Safari iOS zoome tout seul a la saisie. */
-.cmt-form input{flex:1;background:rgba(0,0,0,.35);border:1px solid var(--faint);border-radius:22px;
-  padding:11px 15px;font-size:16px;color:#fff;min-width:0;}
+.cmt-form input{flex:1;background:var(--champ);border:1px solid var(--faint);border-radius:22px;
+  padding:11px 15px;font-size:16px;color:var(--blanc);min-width:0;}
 .cmt-form button{background:none;color:var(--rouge);font-size:14px;font-weight:800;
   min-height:44px;padding:0 4px;flex-shrink:0;}
 .empty{font-size:13px;color:var(--dim);text-align:center;padding:28px 20px;line-height:1.7;}
@@ -215,7 +283,7 @@ body.splash-on{overflow:hidden;}
 .conc-ligne b{color:var(--or);font-weight:800;}
 .conc-ligne .gris{color:var(--dim);font-size:11.5px;}
 .conc-relance{margin-top:10px;background:rgba(204,0,0,.10);border:1px solid rgba(204,0,0,.3);
-  border-radius:11px;padding:11px 13px;font-size:12px;line-height:1.6;color:rgba(255,255,255,.86);}
+  border-radius:11px;padding:11px 13px;font-size:12px;line-height:1.6;color:var(--doux);}
 .conc-relance b{color:var(--rouge-vif);}
 .conc-voir{display:block;width:100%;text-align:left;background:none;color:var(--dim);
   font-size:12px;font-weight:600;min-height:44px;padding:0;}
@@ -243,7 +311,7 @@ body.splash-on{overflow:hidden;}
 .cloche-b{width:100%;min-height:46px;background:var(--rouge);color:#fff;border-radius:11px;
   font-size:13px;font-weight:800;letter-spacing:.6px;box-shadow:0 6px 20px var(--rouge-glow);}
 .cloche-b:active{background:var(--rouge-vif);}
-.cloche-b.calme{background:var(--n5);box-shadow:none;}
+.cloche-b.calme{background:var(--n5);color:var(--blanc);box-shadow:none;}
 .cloche-n{font-size:11px;color:var(--dim);margin-top:9px;line-height:1.5;}
 
 /* Le filet de securite, propose dans l'espace et jamais a la porte. Le fan
@@ -253,16 +321,18 @@ body.splash-on{overflow:hidden;}
 .filet-d{font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:13px;}
 .filet-l{display:flex;flex-direction:column;gap:9px;}
 /* 16px : en dessous, Safari iOS zoome tout seul a la saisie. */
-.filet-l input{background:rgba(0,0,0,.35);border:1px solid var(--faint);border-radius:11px;
-  padding:12px 14px;font-size:16px;color:#fff;width:100%;}
-.filet-b{width:100%;min-height:48px;background:var(--n5);color:#fff;border-radius:11px;
+.filet-l input{background:var(--champ);border:1px solid var(--faint);border-radius:11px;
+  padding:12px 14px;font-size:16px;color:var(--blanc);width:100%;}
+.filet-b{width:100%;min-height:48px;background:var(--n5);color:var(--blanc);border-radius:11px;
   font-size:13px;font-weight:800;letter-spacing:.6px;}
-.filet-b:active{background:var(--rouge);}
+/* Le fond rouge de l'appui reclame un texte blanc, meme en mode clair ou le
+   jeton --blanc est sombre. */
+.filet-b:active{background:var(--rouge);color:#fff;}
 .filet-ok{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--vert);font-weight:700;}
-.filet-err{font-size:12px;color:#ff6b6b;min-height:16px;}
+.filet-err{font-size:12px;color:var(--erreur);min-height:16px;}
 .zone-danger{text-align:center;padding:6px 0 26px;}
-.lien-danger{background:none;color:rgba(255,255,255,.3);font-size:12px;min-height:44px;padding:0 12px;}
-.lien-danger:active{color:#ff6b6b;}
+.lien-danger{background:none;color:var(--tres-dim);font-size:12px;min-height:44px;padding:0 12px;}
+.lien-danger:active{color:var(--erreur);}
 
 /* La porte, en bas de l'apercu. Ce n'est pas un mur : le visiteur vient de
    lire trois vraies publications, elle lui dit seulement ce qu'il rate. */
@@ -270,7 +340,7 @@ body.splash-on{overflow:hidden;}
   border:1px solid rgba(204,0,0,.35);border-radius:16px;padding:22px 18px;text-align:center;margin-bottom:14px;}
 .porte-t{font-family:var(--bebas);font-size:26px;letter-spacing:.5px;line-height:1.05;}
 .porte-t .r{color:var(--rouge-vif);}
-.porte-d{font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;margin:9px 0 16px;}
+.porte-d{font-size:13px;color:var(--dim);line-height:1.6;margin:9px 0 16px;}
 .porte-b{width:100%;min-height:52px;background:var(--rouge);color:#fff;border-radius:12px;
   font-size:14px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
   box-shadow:0 8px 26px var(--rouge-glow);}
@@ -279,7 +349,7 @@ body.splash-on{overflow:hidden;}
 /* Fondu sur le dernier post de l'apercu : on sent que ca continue. */
 .fondu{position:relative;}
 .fondu::after{content:'';position:absolute;left:0;right:0;bottom:0;height:120px;
-  background:linear-gradient(180deg,rgba(7,7,7,0),var(--noir));pointer-events:none;border-radius:0 0 16px 16px;}
+  background:linear-gradient(180deg,var(--voile),var(--noir));pointer-events:none;border-radius:0 0 16px 16px;}
 .retour-apercu{display:block;width:100%;text-align:center;background:none;color:var(--dim);
   font-size:13px;font-weight:600;min-height:44px;margin-top:6px;}
 
@@ -287,7 +357,7 @@ body.splash-on{overflow:hidden;}
    temps il ne faut montrer ni un vide ("La Beynaumania demarre" serait faux,
    R-58) ni rien du tout. On montre la forme de ce qui arrive. */
 .sq{background:var(--n3);border:1px solid var(--faint);border-radius:16px;margin-bottom:14px;padding:14px;}
-.sq-l{background:linear-gradient(90deg,var(--n4) 25%,#262626 50%,var(--n4) 75%);
+.sq-l{background:linear-gradient(90deg,var(--n4) 25%,var(--sq-hi) 50%,var(--n4) 75%);
   background-size:280% 100%;animation:brille 1.4s ease-in-out infinite;border-radius:6px;}
 .sq-tete{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
 .sq-rond{width:38px;height:38px;border-radius:50%;flex-shrink:0;}
@@ -311,8 +381,8 @@ body.splash-on{overflow:hidden;}
 .play-rond svg{width:24px;height:24px;fill:#fff;stroke:none;margin-left:3px;}
 .v-barre{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--n4);}
 .v-btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:none;flex-shrink:0;}
-.v-btn svg{width:19px;height:19px;fill:#fff;stroke:none;}
-.v-piste{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.16);overflow:hidden;min-width:0;}
+.v-btn svg{width:19px;height:19px;fill:var(--blanc);stroke:none;}
+.v-piste{flex:1;height:4px;border-radius:2px;background:var(--piste);overflow:hidden;min-width:0;}
 .v-lu{height:100%;width:0;background:var(--rouge);transition:width .25s linear;}
 .v-temps{font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums;flex-shrink:0;}
 
@@ -325,7 +395,7 @@ body.splash-on{overflow:hidden;}
 /* Sondages */
 .poll-q{font-size:14px;font-weight:800;margin-bottom:12px;line-height:1.4;}
 .poll-opts{display:flex;flex-direction:column;gap:8px;}
-.poll-opt{width:100%;text-align:left;background:var(--n4);border:1px solid var(--faint);border-radius:11px;padding:12px 14px;min-height:44px;font-size:13px;font-weight:600;color:#fff;}
+.poll-opt{width:100%;text-align:left;background:var(--n4);border:1px solid var(--faint);border-radius:11px;padding:12px 14px;min-height:44px;font-size:13px;font-weight:600;color:var(--blanc);}
 .poll-opt:active{border-color:var(--rouge);background:rgba(204,0,0,.1);}
 .poll-res{position:relative;border-radius:11px;overflow:hidden;background:var(--n4);border:1px solid var(--faint);padding:12px 14px;display:flex;align-items:center;gap:8px;}
 .poll-res.mine{border-color:var(--rouge);}
@@ -343,7 +413,7 @@ body.splash-on{overflow:hidden;}
 .lightbox .lb-close{position:absolute;top:14px;right:16px;width:44px;height:44px;font-size:30px;color:#fff;line-height:1;background:none;}
 
 /* Toast */
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(120px);background:var(--n2);border:1px solid rgba(204,0,0,.45);border-radius:13px;padding:12px 20px;font-size:13px;font-weight:600;z-index:1100;transition:transform .3s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 40px rgba(0,0,0,.7);max-width:90vw;text-align:center;}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(120px);background:var(--n2);border:1px solid rgba(204,0,0,.45);border-radius:13px;padding:12px 20px;font-size:13px;font-weight:600;z-index:1100;transition:transform .3s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 40px var(--ombre);max-width:90vw;text-align:center;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -411,7 +481,10 @@ body.splash-on{overflow:hidden;}
       <div class="m-hero-c">
         <div class="m-top">
           <div class="brand"><div class="brand-logo">BM</div><span class="brand-name">La Beynaumania</span></div>
-
+          <button class="bascule" id="bascule-theme" type="button" aria-pressed="false" aria-label="Passer en mode clair">
+            <svg class="ico-soleil" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.2v2.3M12 19.5v2.3M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.2 12h2.3M19.5 12h2.3M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+            <svg class="ico-lune" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 13.1A8.6 8.6 0 1 1 10.9 3.2a6.8 6.8 0 0 0 9.9 9.9z"/></svg>
+          </button>
         </div>
         <div id="m-grade" class="grade-badge membre">Membre</div>
         <div class="m-hello" id="m-hello"></div>
@@ -468,6 +541,37 @@ body.splash-on{overflow:hidden;}
 
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+
+/* ===================== CLAIR / SOMBRE =====================
+   Le choix est garde sur le telephone, pas en base : c'est un confort de
+   lecture, il n'a pas a voyager ni a attendre le reseau. L'attribut est
+   deja pose par le script du <head> avant la premiere peinture ; ici on ne
+   fait que synchroniser la couleur de la barre du telephone et l'etat du
+   bouton, puis basculer au clic. Sans la couleur de barre, un iPhone garde
+   un bandeau noir au-dessus d'une page claire. */
+const CLE_THEME='bey_theme';
+function themeClair(){ return document.documentElement.getAttribute('data-theme')==='clair'; }
+function appliquerTheme(clair){
+  const r=document.documentElement;
+  if(clair) r.setAttribute('data-theme','clair'); else r.removeAttribute('data-theme');
+  const meta=document.getElementById('meta-theme');
+  if(meta) meta.setAttribute('content', clair?'#F6F5F3':'#070707');
+  const b=document.getElementById('bascule-theme');
+  if(b){
+    b.setAttribute('aria-pressed', clair?'true':'false');
+    b.setAttribute('aria-label', clair?'Passer en mode sombre':'Passer en mode clair');
+  }
+}
+function basculerTheme(){
+  const clair=!themeClair();
+  try{ localStorage.setItem(CLE_THEME, clair?'clair':'sombre'); }catch(e){}
+  appliquerTheme(clair);
+}
+(function(){
+  appliquerTheme(themeClair());
+  const b=document.getElementById('bascule-theme');
+  if(b) b.addEventListener('click', basculerTheme);
+})();
 const SB_URL="https://lgdgbrivnhgeupqhkckd.supabase.co";
 const SB_ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnZGdicml2bmhnZXVwcWhrY2tkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDI1OTEsImV4cCI6MjA5NTU3ODU5MX0.kMmpwsQAUJQ6VkEpj4OOloijP1HoZbYYzbjWW2hg7Gk";
 const FN=SB_URL+"/functions/v1/bey-public";
