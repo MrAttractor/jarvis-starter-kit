@@ -392,6 +392,32 @@
 
 ---
 
+### EXP-045 · Un second thème double le nombre de couleurs, et l'audit qui rassure est celui qui saute des blocs
+**RÉUSSITE** · 14/09/2026 · La Beynaumania
+
+**Situation.** Mac Arthur demande une bascule clair / sombre sur le fil du fan et sur le pilotage de Serge. Deux applications entièrement dessinées en noir et rouge depuis l'origine, et en production, l'une avec le lien déjà chez l'artiste.
+
+**Ce qui a été fait.** Un seul jeu de jetons change, aucune règle de mise en page n'est dupliquée. Le thème se pose sur `<html>` par quatre lignes dans le `<head>`, avant la première peinture : lu plus tard, l'écran clignote en noir avant de passer en clair. Le choix vit dans le navigateur, la couleur de la barre du téléphone suit.
+
+**Le calcul a contredit l'œil, deux fois.** L'or de la charte `#D4A017` fait **2,1:1 sur du blanc**, illisible ; il descend à `#7A5906` pour le texte, l'aplat or ne bouge pas. Le rouge `#CC0000` tient sur du blanc (5,9:1) mais **pas sur un aplat rouge très pâle** : la pastille EN DIRECT tombait à 4,34:1. Le faire descendre à `#B80000` dans le seul mode clair a fait repasser toute la famille rouge d'un coup, au lieu de rattraper huit cas séparément.
+
+**Le premier angle mort : épingler à la main.** Trois blocs portent une photo de Serge et doivent rester sombres dans les deux thèmes. Ils ont d'abord été traités en épinglant les couleurs une par une. **Trois ont été oubliées** : « Retrouver mon espace », « Revenir à l'aperçu » et le prénom du fan en rouge sur le bandeau devenaient sombres sur du sombre. La parade qui tient est de **redéclarer le jeu de jetons sombre à l'intérieur de ces blocs** : une règle, et tout ce qui y sera écrit plus tard est juste d'office.
+
+**Le second angle mort, plus grave : l'audit sautait ces blocs.** L'outil de mesure écrit pour l'occasion déclarait ces textes « non calculables » parce que la photo est portée par un frère en position absolue, donc invisible en remontant les parents. Il rendait « contraste OK » **sans les avoir regardés**. C'est en ouvrant une capture de l'écran d'inscription, à l'œil, que les trois couleurs oubliées sont apparues. L'outil censé remplacer l'œil avait besoin de l'œil pour être corrigé.
+
+**Le troisième défaut, qu'aucun contrôle existant ne pouvait voir.** Ajouter un bouton de 44 px dans l'en-tête du pilotage faisait passer « LA BEYNAUMANIA » sur deux lignes. **Zéro débordement horizontal, zéro zone de tap trop petite, zéro contraste sous le seuil** : la checklist UX_SYSTEM passait entièrement, et l'en-tête doublait de hauteur.
+
+**Ce qui a permis de livrer sans régression.** Chaque texte est mesuré **dans les deux thèmes**, et rangé sous une clé stable. Un manque de contraste devient alors deux choses différentes : une régression de la bascule, ou une dette antérieure. Résultat : **zéro régression**, 7 textes sous le seuil dans les deux thèmes et **44 en sombre seulement** — tous antérieurs, tous passants en clair. Sans cette comparaison, les 51 arrivaient dans le même tas et la bascule portait le chapeau.
+
+**Un piège évité de justesse.** La première passe avait fondu plusieurs valeurs voisines dans un même jeton : `.08` et `.16` dans la piste, `.12` / `.15` / `.28` dans les bordures. Le mode clair était juste, et **le mode sombre en production avait discrètement changé**. Un thème qu'on ajoute ne touche pas celui qui existe.
+
+**Cause profonde.** Un second thème ne double pas le travail de design, il **double la surface de vérification** : chaque couleur existe désormais dans deux contextes, et rien dans le code ne dit laquelle des deux est fausse. Le seul contrôle qui tient est celui qui mesure les deux et les compare. Et un outil de mesure qui a le droit de répondre « non calculable » **répond à côté** : tant qu'il saute une zone, il certifie ce qu'il n'a pas vu, ce qui est plus dangereux qu'une absence d'outil.
+
+**Règles nées de là** : R-86 (un thème s'ajoute par les jetons, se mesure dans les deux sens, et ne touche pas l'existant) et extension de R-24 (un audit n'a pas le droit de sauter une zone).
+**Réutilisable pour.** Toute bascule de thème, tout changement de charte sur une app en production, et toute recette automatisée qui rend un verdict global.
+
+---
+
 ## SECTION D · PILOTAGE ET DISCIPLINE
 
 ### EXP-025 · L'automatisation morte que personne n'a vue
