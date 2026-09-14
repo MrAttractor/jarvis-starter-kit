@@ -196,6 +196,17 @@
 **Application** : aucun formulaire ne se met devant la porte. Le visiteur voit d'abord un vrai morceau de ce qu'on lui promet, et le formulaire n'arrive qu'au moment où il veut **agir** : aimer, commenter, commander, réserver. Vaut pour toute vitrine, toute boutique, tout espace client. Corollaire : le compteur social se montre même quand le contenu est coupé, c'est lui qui donne envie d'entrer.
 **Assists** : l'assistant qui construit une boutique ou un espace membre place l'inscription après la démonstration, jamais avant.
 
+### R-82 · Une image d'accueil se réclame dans l'en-tête, jamais depuis le script
+**Origine** : La Beynaumania, 14/09/2026. Mac Arthur : « je constate un ralentissement au lancement de la page d'accueil, l'écran est noir, on ne voit que le CTA en bas ».
+**Le fait mesuré** : la photo de fond n'existait nulle part dans le HTML, elle était créée par le script tout en bas de page. Le téléphone devait donc lire 80 Ko de HTML et exécuter 1 200 lignes de code **avant même de réclamer l'image**. Pendant ce temps il affichait ce qu'il avait : un aplat noir et le bouton rouge. S'y ajoutaient une feuille de polices distante qui bloquait le premier affichage (276 ms mesurés), un cache d'images à `max-age=0` qui repayait un aller-retour à chaque visite, et le lecteur YouTube lancé en même temps que la photo, avec qui il se disputait la bande passante.
+**Application, en quatre temps** :
+1. Toute image qui occupe le premier écran est déclarée en `<link rel="preload" as="image" fetchpriority="high">` dans l'en-tête **et** posée dans le balisage. Le script ne fait que la retrouver.
+2. Le premier écran ne reste jamais vide en attendant le réseau : une vignette de 24 px floutée, encodée dans la feuille de style, coûte 200 caractères et zéro requête. **C'est elle qui supprime l'écran noir, pas le gain de vitesse.**
+3. Ce qui pèse lourd et n'est pas le sujet (lecteur vidéo tiers, scripts de mesure) part **après** que l'image du premier écran est à l'écran, avec un délai de sécurité.
+4. Les images d'un site servi par Cloudflare Pages sortent en `max-age=0, must-revalidate` par défaut : poser une règle dans `_headers`, et **renommer le fichier pour remplacer une image** plutôt que l'écraser.
+**À vérifier ailleurs** : tous les mini-sites de `demo.agenceattractor.com` partagent le même `_headers` et le même réflexe d'image de héros. Ayêla, GetWinWorld, Vies Croisées et les maquettes de closing sont à repasser au même filtre.
+**Assists** : l'assistant qui livre un écran d'accueil vérifie que sa première image est réclamée dans l'en-tête, et qu'il y a quelque chose à regarder avant qu'elle arrive.
+
 ### R-80 · Le gating se fait au serveur, jamais à l'écran
 **Origine** : La Beynaumania, 13/09/2026, aperçu avant inscription.
 **Application** : quand un contenu est réservé, c'est le serveur qui **ne l'envoie pas**. Tronquer à l'affichage laisse tout le reste dans la réponse, lisible par quiconque ouvre les outils du navigateur : ce n'est pas un aperçu, c'est un rideau. Même chose pour un prix réservé, un document client, un tableau de bord partiel.

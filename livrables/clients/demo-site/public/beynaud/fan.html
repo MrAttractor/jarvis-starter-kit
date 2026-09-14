@@ -13,9 +13,23 @@
 <meta name="apple-mobile-web-app-title" content="Beynaumania"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="application-name" content="Beynaumania"/>
+<!-- La photo de Serge est demandee des les premiers octets de la page. Avant,
+     elle n'etait creee que par le script, tout en bas : le telephone attendait
+     d'avoir lu 80 Ko de HTML avant meme de la reclamer, et l'ecran restait noir
+     avec le seul bouton rouge. R-82. -->
+<link rel="preload" as="image" href="serge-hero.webp" type="image/webp" fetchpriority="high"/>
+<link rel="preconnect" href="https://www.youtube-nocookie.com"/>
+<link rel="preconnect" href="https://i.ytimg.com"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<!-- Les polices ne bloquent plus le premier affichage : elles partaient chez
+     Google avant que quoi que ce soit ne soit peint, soit un aller-retour
+     complet sur un domaine tiers avant la premiere image. Le "media=print"
+     detourne la feuille du rendu, le onload la remet en service des qu'elle
+     est la. display=swap etait deja pose, le texte ne clignote pas davantage. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/></noscript>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -42,7 +56,14 @@ svg{display:block;}
   transition:opacity .5s ease,visibility .5s ease;}
 #splash.out{opacity:0;visibility:hidden;}
 body.splash-on{overflow:hidden;}
-.clip-layer{position:absolute;inset:0;z-index:0;overflow:hidden;background:var(--noir);}
+/* Une vignette de 24 pixels de cote, floutee, ecrite dans la feuille de style :
+   elle ne coute aucune requete et se peint donc en meme temps que le bouton.
+   Le fan voit la silhouette de Serge tout de suite, la vraie photo prend sa
+   place ensuite. C'est ce qui supprime l'ecran noir, pas le gain de vitesse. */
+.clip-layer{position:absolute;inset:0;z-index:0;overflow:hidden;
+  background:var(--noir) url('data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAADwBACdASoYABgAPrVInEsnJKMht+gA4BaJaADI1DJQ0QeIWkh5phHNaz2FrylzEgAA/vaIuUc1c4GFVxmRYikYbbN8WMbtoLHae2ux1Vt79aL1hIq5P4JMUTPk7Q6XrwUJyEpebrb5tXnljgc9rfUU15MqkDmo0u+NOo+ZmgAAAA==') center 18%/cover no-repeat;}
+.clip-layer img{opacity:0;transition:opacity .45s ease;}
+.clip-layer img.vue{opacity:1;}
 .clip-layer video,.clip-layer img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 18%;}
 .clip-layer video{opacity:0;transition:opacity 1s ease;}
 .clip-layer.joue video{opacity:1;}
@@ -332,7 +353,13 @@ body.splash-on{overflow:hidden;}
 
 <!-- ===================== L'ECRAN D'ENTREE : LE CLIP ===================== -->
 <section id="splash">
-  <div class="clip-layer" id="clip-layer"></div>
+  <div class="clip-layer" id="clip-layer">
+    <picture>
+      <source srcset="serge-hero.webp" type="image/webp"/>
+      <img id="clip-img" src="serge-hero.jpg" alt="" fetchpriority="high" decoding="async"
+           onload="this.classList.add('vue')" onerror="this.remove()"/>
+    </picture>
+  </div>
   <div class="clip-ov"></div>
   <div class="splash-c">
     <button class="btn-clip" id="enter-btn">
@@ -1475,10 +1502,40 @@ function ytId(v){
   const m=String(v).match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([A-Za-z0-9_-]{6,})/);
   return m ? m[1] : String(v).trim();
 }
+/* L'image de repli est desormais posee dans le HTML, pas creee ici : elle
+   partait sinon avec tout le reste du script et le fan regardait un ecran noir
+   pendant ce temps. On se contente de la retrouver, et on ne la fabrique que si
+   quelqu'un a change CLIP.image sans toucher au balisage. */
 function poserImage(layer){
-  const img=document.createElement('img');
-  img.src=CLIP.image; img.alt='';
+  let img = layer.querySelector('img');
+  if(img){
+    if(CLIP.image && img.getAttribute('src') !== CLIP.image){
+      // Le <source> webp du balisage primerait sur le nouveau src : on le retire,
+      // sinon changer CLIP.image ne changerait rien a l'ecran.
+      const src = layer.querySelector('source'); if(src) src.remove();
+      img.classList.remove('vue'); img.src = CLIP.image;
+    }
+    if(img.complete && img.naturalWidth) img.classList.add('vue');
+    return img;
+  }
+  img=document.createElement('img');
+  img.alt=''; img.addEventListener('load',function(){img.classList.add('vue');});
+  img.src=CLIP.image;
   layer.appendChild(img);
+  return img;
+}
+
+/* Le lecteur YouTube traine plus d'un megaoctet derriere lui. Lance en meme
+   temps que la photo, il lui prend la bande passante et rallonge d'autant le
+   moment ou l'ecran cesse d'etre noir. On le laisse donc passer apres, avec un
+   filet de 1,5 s pour le cas ou l'image ne dirait jamais rien. */
+function apresImage(img, suite){
+  let parti=false;
+  const go=function(){ if(parti) return; parti=true; suite(); };
+  setTimeout(go, 1500);
+  if(!img || (img.complete && img.naturalWidth)) return go();
+  img.addEventListener('load', go);
+  img.addEventListener('error', go);
 }
 
 /* YouTube en fond, avec une regle stricte : on ne montre le lecteur QUE s'il
@@ -1564,9 +1621,10 @@ function monterClip(){
     return;
   }
   if(CLIP.source==='youtube'&&ytId(CLIP.youtube)){
-    // L'image est posee AVANT le lecteur : elle reste visible dessous.
-    poserImage(layer);
-    monterYouTube(layer,ytId(CLIP.youtube));
+    // L'image est posee AVANT le lecteur : elle reste visible dessous, et le
+    // lecteur ne demarre qu'une fois qu'elle est a l'ecran.
+    const img = poserImage(layer);
+    apresImage(img, function(){ monterYouTube(layer, ytId(CLIP.youtube)); });
     return;
   }
   poserImage(layer);

@@ -137,6 +137,44 @@ abonnements morts sont retirés au lieu d'être retentés indéfiniment.
 - **Le bouton du clip disait « Rejoins la Beynaumania »** alors qu'il n'ouvre plus que
   l'aperçu. Il promettait une inscription et livrait une visite. Signalé par Mac Arthur.
 
+## Le correctif du 14/09/2026 : l'écran noir au lancement
+
+Signalé par Mac Arthur : « un ralentissement au lancement, l'écran est noir, on ne voit
+que le bouton en bas ». Ce n'était pas une impression, et ce n'était pas le réseau.
+
+**La photo de fond n'existait nulle part dans la page.** Elle était fabriquée par le
+script, tout en bas des 80 Ko de `fan.html`. Le téléphone devait donc lire toute la page
+et exécuter 1 200 lignes de code **avant même de réclamer l'image**. Entre-temps il
+affichait ce qu'il avait : du noir et le bouton rouge. Sur une connexion mobile
+ivoirienne, plusieurs secondes.
+
+Trois aggravants trouvés au passage :
+
+- la feuille de polices de Google **bloquait le premier affichage**, soit un aller-retour
+  complet sur un domaine tiers avant le moindre pixel (276 ms mesurés depuis la France) ;
+- les images sortaient en `max-age=0, must-revalidate`, donc **un aller-retour réseau à
+  chaque visite** pour s'entendre dire que la photo n'avait pas changé ;
+- le lecteur YouTube, plus d'un mégaoctet, démarrait **en même temps** que la photo et lui
+  prenait la bande passante.
+
+Ce qui a été fait :
+
+| Quoi | Avant | Après |
+|---|---|---|
+| La photo est réclamée | après les 80 Ko de page et le script | dans l'en-tête, avec les premiers octets |
+| Poids de la photo | 126 566 octets (JPEG) | **51 074 octets** (WebP, repli JPEG conservé) |
+| Pendant qu'elle arrive | écran noir | une vignette floutée de Serge, **écrite dans la feuille de style, zéro requête** |
+| Les polices | bloquent le premier affichage | ne le bloquent plus |
+| Une visite de retour | revalidation réseau | 7 jours de cache (`_headers`) |
+| Le lecteur YouTube | démarre avec la photo | démarre après elle |
+
+**La vignette floutée est la vraie réponse à l'écran noir.** Elle coûte 200 caractères de
+feuille de style et se peint en même temps que le bouton : même sur une connexion coupée,
+le fan voit la silhouette de Serge et jamais un aplat noir. Le reste, ce sont des
+secondes gagnées.
+
+Règle **R-82** au cerveau, avec la liste des autres sites à repasser au même filtre.
+
 ## L'exclusivité est fictive, et c'est le vrai sujet
 
 Vérifié le 13/09 : les trois « contenus exclusifs » du fil sont **publiquement lisibles sur
