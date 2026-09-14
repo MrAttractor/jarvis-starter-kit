@@ -421,6 +421,59 @@ adaptative ni diffuser un direct : **le live restera sur Stream**, déjà chiffr
 
 **Ce qui manque encore** : le contenu de démarrage. Le fil tourne sur le jeu de test.
 
+### Le dépôt direct de vidéos : tranché le 14/09, en phase 2
+
+Mac Arthur demande de pouvoir **déposer une vidéo directement**, sans passer par YouTube.
+C'est la fonctionnalité qui rend l'exclusivité réelle, donc elle répond au sujet ci-dessus.
+
+**Séquence arrêtée le 14/09, et elle confirme la décision du 13/09** : relance de Latiss
+pour son retour, puis signature du contrat et **répartition des charges**, et seulement
+ensuite la phase 2 technique. Rien ne se construit avant. Motif inchangé : pas
+d'infrastructure de plus sans contrepartie signée.
+
+**Le geste attendu, spécifié pour le jour où** (les trois, pas un seul) :
+
+1. Choisir une vidéo dans la galerie du téléphone, mettre une légende, publier. Le geste
+   exact de la photo aujourd'hui.
+2. Filmer sur le moment, l'appareil s'ouvrant depuis l'app. Un attribut de plus sur le même
+   champ, quasi gratuit si le point 1 est fait.
+3. **Garder le lien YouTube en parallèle** : YouTube pour ce qui est public et sert de
+   téaser, dépôt direct pour ce qui est réservé aux membres et aux Ambassadeurs.
+
+**Le chemin actuel ne peut pas porter une vidéo, et ce n'est pas une question
+d'optimisation.** La photo part en base64 dans le corps de la requête et la fonction la
+décode en mémoire. Les fonctions Supabase ont une **limite de 150 Mo de mémoire
+d'exécution** ; une vidéo de téléphone de 3 minutes pèse environ 150 Mo, soit ~200 Mo en
+base64, plus les octets décodés. Il faudra que le navigateur envoie le fichier **directement
+à l'hébergeur**, la fonction ne délivrant qu'une autorisation d'écriture à usage unique.
+
+**L'hébergement reste la seule question ouverte**, et elle se tranche avec la répartition
+des charges parce que c'est une charge variable :
+
+| | Cloudflare R2 | Cloudflare Stream | Supabase Storage |
+|---|---|---|---|
+| Diffusion, 3 min × 1 000 fans | **0 $** | 3 $ | 13,50 $ |
+| Modèle de facturation | stockage seul, 0,015 $/Go/mois | 1 $ / 1 000 min vues + ~5 $/mois | 0,09 $/Go sortant |
+| Qualité adaptative | non | **oui** | non |
+| Fan à Abidjan en 3G | dépend du poids qu'on dépose | **joue toujours** | 150 Mo ou rien |
+| URL signée, exclusivité réelle | oui | oui | **non, URL publique** |
+| Le direct | impossible | **oui** | impossible |
+
+Supabase Storage est écarté : URL publique, donc pas d'exclusivité, et le plus cher des
+trois. **Le vrai arbitrage est R2 contre Stream** : payer Stream pour ne jamais se soucier
+du réseau des fans, ou prendre R2 sans frais de diffusion en acceptant de maîtriser le poids
+des fichiers à la main, ce qui suppose de transcoder avant de déposer. Le live reste sur
+Stream dans les deux cas, c'est tranché et chiffré dans `COUTS-LIVE-PRO.md`.
+
+**Ce que ça change à la table de négociation.** Sur R2 le coût de diffusion est nul et ne
+dépend pas du succès. Sur Stream il monte avec l'audience de Serge, ce qui est l'argument
+même d'un partage de revenus plutôt que d'un forfait. La question d'hébergement n'est donc
+pas seulement technique, elle instruit la clause de répartition des charges.
+
+**Préférence exprimée par Mac Arthur le 14/09 : Cloudflare Stream.** Elle a été formulée sur
+un comparatif à deux colonnes qui **omettait R2**, l'option que la note du 13/09 mettait en
+tête. À reprendre avant la phase 2, avec les trois colonnes.
+
 ## Le partenaire
 
 **Serge GNOLOU, dit Serge Beynaud**, artiste afrobeat ivoirien, structure **STAR FACTORY**.
@@ -504,7 +557,7 @@ séries et live YouTube verrouillés, sondages, application installable.
 
 1. **Monter le contenu de démarrage.** Le fil est prêt mais tourne sur le jeu de test, et un fil presque vide se voit plus qu'une page à rubriques presque vide. C'est le préalable à tout envoi.
 2. **Chiffrer l'offre premium « Concerts »** (live professionnel + replays payants + billetterie), base dans `COUTS-LIVE-PRO.md` : environ 0,06 $ par fan et par heure, soit ~600 $ pour 10 000 fans, couvert par la billetterie. **C'est la seule chose que l'artiste ait demandée de lui-même**, donc le levier qui rouvre la négociation par le haut.
-3. **Envoi groupé à Latiss** : la plateforme, l'offre live chiffrée, le protocole à signer. Relancé le 10/08, sans réponse depuis. Rien ne peut se monétiser avant signature.
+3. **Envoi groupé à Latiss, puis signature et répartition des charges** : la plateforme, l'offre live chiffrée, le protocole à signer. Relancé le 10/08, sans réponse depuis. Rien ne peut se monétiser avant signature. **C'est aussi la condition de la phase 2 technique**, dépôt direct de vidéos compris : séquence confirmée par Mac Arthur le 14/09. L'arbitrage d'hébergement R2 contre Stream instruit directement la clause de répartition, puisque c'est une charge variable.
 4. Obtenir les **vrais titres des séries** (elles sont encore en « Série exclusive 1 / 2 »).
 
 **Contradiction à connaître avant d'envoyer.** La note du 02/08 dit de ne pas proposer
