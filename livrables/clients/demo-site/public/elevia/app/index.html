@@ -328,6 +328,146 @@ button{-webkit-tap-highlight-color:transparent}
   .carte{padding:26px 19px}
   h1{font-size:22px}
 }
+
+/* ═══════════ Module 3 : affinités et mises en relation ═══════════ */
+
+/* ── Options d'une question ──
+   Toute la ligne est la cible, jamais la petite case seule : c'est la leçon
+   de l'audit du 19/08, où 19 px décidaient entre cocher et abandonner. */
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{
+  display:flex;align-items:center;gap:12px;width:100%;
+  padding:14px 15px;border:1px solid var(--bord);border-radius:10px;
+  background:var(--creme);font-family:inherit;font-size:14.5px;color:var(--muted);
+  text-align:left;cursor:pointer;min-height:52px;
+  transition:border-color .15s,background .15s,color .15s,box-shadow .15s;
+}
+.opt:active{transform:translateY(1px)}
+.opt.actif{
+  border-color:var(--or);background:var(--blanc);color:var(--encre);font-weight:500;
+  box-shadow:0 0 0 3px rgba(190,148,64,.16);
+}
+.opt .marque-opt{
+  flex:0 0 auto;width:22px;height:22px;border:1.5px solid var(--bord);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;background:var(--blanc);
+}
+.opt.ronde .marque-opt{border-radius:50%}
+.opt.actif .marque-opt{border-color:var(--or);background:var(--or-vif)}
+.opt .marque-opt svg{width:13px;height:13px;stroke:var(--encre);stroke-width:3;fill:none;opacity:0}
+.opt.actif .marque-opt svg{opacity:1}
+/* Le rang, pour un classement : on clique dans l'ordre de préférence. */
+.opt .marque-opt.rang{
+  border-radius:50%;font-size:12.5px;font-weight:700;color:var(--gris);
+  font-family:Georgia,serif;
+}
+.opt.actif .marque-opt.rang{color:var(--encre)}
+.opt[disabled]{opacity:.45;cursor:not-allowed}
+
+/* ── Étiquettes saisies : villes, mots ── */
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.tag{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 12px;
+  background:var(--sable);border-radius:99px;font-size:13.5px;color:var(--encre);
+}
+/* Mesuré à 24 x 24 px par la recette du 15/09, pour un minimum de 44.
+   Le bouton fait donc réellement 44 x 44, et des marges négatives rendent au
+   tag sa taille d'origine. Un pseudo-élément aurait suffi à capter le doigt,
+   mais aucune mesure automatique ne l'aurait vu : une cible conforme doit
+   pouvoir se prouver, pas seulement se croire. */
+.tag button{
+  border:none;background:none;padding:0;margin:-10px -10px -10px 0;cursor:pointer;
+  width:44px;height:44px;min-height:44px;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;flex:0 0 auto;
+}
+.tag button svg{width:11px;height:11px;stroke:var(--gris);stroke-width:2.6;fill:none}
+.tag button:hover svg{stroke:var(--alerte)}
+
+/* ── Tranche d'âge : deux curseurs séparés ──
+   Deux curseurs superposés se battent sous le doigt. Séparés, chacun a sa
+   piste et sa valeur lisible. */
+.curseurs{display:flex;flex-direction:column;gap:18px;margin-top:6px}
+.curseur-ligne label{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.curseur-ligne label b{color:var(--encre);font-size:15px;font-weight:600}
+input[type="range"]{
+  -webkit-appearance:none;appearance:none;width:100%;height:44px;padding:0;
+  background:transparent;border:none;min-height:44px;
+}
+input[type="range"]::-webkit-slider-runnable-track{height:4px;background:var(--sable);border-radius:2px}
+input[type="range"]::-moz-range-track{height:4px;background:var(--sable);border-radius:2px}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:28px;height:28px;border-radius:50%;
+  background:var(--or-vif);border:3px solid var(--blanc);margin-top:-12px;
+  box-shadow:0 2px 8px rgba(0,35,75,.25);cursor:pointer;
+}
+input[type="range"]::-moz-range-thumb{
+  width:28px;height:28px;border-radius:50%;background:var(--or-vif);
+  border:3px solid var(--blanc);box-shadow:0 2px 8px rgba(0,35,75,.25);cursor:pointer;
+}
+
+/* ── Avancement du questionnaire ── */
+.avancee{margin-bottom:22px}
+.avancee-piste{height:5px;background:var(--sable);border-radius:3px;overflow:hidden}
+.avancee-part{height:100%;background:var(--or-vif);border-radius:3px;transition:width .35s ease}
+.avancee-texte{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-size:12px;color:var(--gris);margin-top:8px;letter-spacing:.02em;
+}
+.avancee-texte b{color:var(--or-texte);font-weight:600}
+
+/* ── Mention d'une question sensible ── */
+.sensible-mot{
+  background:#FDF6EC;border:1px solid #EBD9BC;border-radius:9px;
+  padding:11px 13px;margin:0 0 14px;font-size:12.5px;color:#7A5A22;line-height:1.55;
+}
+
+/* ── Un profil proposé ── */
+.profil-carte{
+  border:1px solid var(--bord);border-radius:13px;padding:18px;background:var(--blanc);
+  margin-bottom:14px;
+}
+.profil-haut{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.ou-large{font-size:13.5px;color:var(--gris);margin:0 0 14px;line-height:1.5}
+.profil-haut .medaille{width:48px;height:48px;font-size:19px;margin:0;flex:0 0 auto}
+.profil-haut .qui{flex:1;min-width:0}
+.profil-haut .nom{font-family:Georgia,serif;font-size:17px;color:var(--encre);font-weight:600}
+.profil-haut .ou{font-size:13px;color:var(--gris);margin-top:2px}
+.accord{
+  flex:0 0 auto;text-align:center;padding:7px 11px;border-radius:10px;
+  background:var(--sable);min-width:60px;
+}
+.accord .chiffre{font-family:Georgia,serif;font-size:19px;font-weight:700;color:var(--or-texte);line-height:1}
+.accord .mot{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gris);margin-top:3px}
+.accord.fort{background:#F6F0E2}
+
+/* Les raisons : c'est ce qu'on montre, le score ne sert qu'à ordonner. */
+.raisons{list-style:none;padding:0;margin:0 0 16px;display:flex;flex-direction:column;gap:7px}
+.raisons li{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;color:var(--muted);line-height:1.5}
+.raisons li svg{width:13px;height:13px;flex:0 0 auto;margin-top:4px;stroke:var(--or);stroke-width:2.6;fill:none}
+.raisons li.plus{color:var(--gris);font-size:12.5px;padding-left:22px}
+
+.mots-trois{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+.mot-trois{
+  font-size:12px;padding:5px 10px;border-radius:99px;
+  background:var(--creme);border:1px solid var(--bord);color:var(--muted);
+}
+
+/* ── Demandes reçues ── */
+.demande{border:1px solid var(--bord);border-radius:13px;padding:18px;background:var(--blanc);margin-bottom:14px}
+.demande .mot-intro{
+  background:var(--creme);border-left:3px solid var(--or);border-radius:8px;
+  padding:13px 15px;margin:12px 0 16px;font-size:14px;color:var(--encre);
+  line-height:1.6;font-style:italic;
+}
+.duo-reponse{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.duo-reponse .bouton{margin:0}
+.bouton.sobre{background:var(--creme);color:var(--muted);border:1px solid var(--bord)}
+
+.vide{text-align:center;padding:28px 18px;color:var(--gris);font-size:14px;line-height:1.6}
+.vide svg{width:34px;height:34px;stroke:var(--bord);stroke-width:1.6;fill:none;margin-bottom:12px}
+
+@media (min-width:560px){
+  .opts.deux{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+}
 </style>
 </head>
 <body>
@@ -1291,6 +1431,686 @@ function ecranDemandeEnregistree() {
 }
 
 /* ═══════════ Espace membre ═══════════ */
+/* ═══════════════════════════════════════════════════════════════
+   MODULE 3 — Affinités et mises en relation
+
+   Les questions ne sont PAS écrites ici. Elles viennent de la table
+   `el_questions`, et cet écran se construit à partir de ce qu'il reçoit.
+   Quand la Cliente retire ou reformule une question, rien ne change dans ce
+   fichier : c'est pour cela que le module a pu être construit avant qu'elle
+   ait validé sa liste.
+   ═══════════════════════════════════════════════════════════════ */
+
+const API_CLUB = "https://lgdgbrivnhgeupqhkckd.supabase.co/functions/v1/elevia-club";
+
+async function appelClub(action, corps = {}) {
+  try {
+    const r = await fetch(API_CLUB, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: CLE, Authorization: "Bearer " + CLE },
+      body: JSON.stringify({ action, jeton: etat.jeton, ...corps }),
+    });
+    return await r.json();
+  } catch (_) {
+    return { ok: false, error: "La connexion a échoué. Vérifiez votre réseau et réessayez." };
+  }
+}
+
+/* Les cinq parties, dans l'ordre. Le titre et le chapô appartiennent à
+   l'écran, pas à la base : ce sont des mots d'accueil, pas des questions. */
+const PARTIES = [
+  { cle: "identite",  titre: "Qui vous êtes",             chapo: "Court et factuel. C'est ce qui apparaît sur votre profil." },
+  { cle: "rythme",    titre: "Votre vie et votre rythme",  chapo: "Ce qui décide si une rencontre est réellement possible." },
+  { cle: "attentes",  titre: "Ce que vous venez chercher", chapo: "La partie la plus importante : elle détermine tout le reste." },
+  { cle: "affinites", titre: "Vos affinités",              chapo: "Ce qui rapproche deux membres au-delà de la géographie." },
+  { cle: "cadre",     titre: "Le cadre que vous posez",    chapo: "Vos limites. Le Club s'engage à les tenir." },
+];
+
+/* ── Introduction ────────────────────────────────────────────── */
+function ecranAffinitesIntro(msg) {
+  rendre(`
+    ${erreur(msg)}
+    <div class="carte anime">
+      <span class="etiquette">Affinités</span>
+      <h2>Dites-nous qui vous êtes</h2>
+      <p class="chapo">
+        Une trentaine de questions, en cinq temps. Comptez sept minutes, et vous
+        pouvez vous arrêter à tout moment : chaque partie est enregistrée quand
+        vous la quittez.
+      </p>
+      <div class="ligne"><span class="cle">Ce que ça vous apporte</span><span class="val">Des profils choisis</span></div>
+      <div class="ligne"><span class="cle">Qui lit vos réponses</span><span class="val">Vous et notre équipe</span></div>
+      <div class="ligne"><span class="cle">Revenir sur une réponse</span><span class="val">À tout moment</span></div>
+      <button class="bouton or" id="b-commencer" style="margin-top:22px">Commencer</button>
+      <button class="lien" id="b-retour-profil">Plus tard</button>
+    </div>`);
+  $("#b-commencer").onclick = () => ouvrirQuestionnaire();
+  $("#b-retour-profil").onclick = () => ecranMembre(false);
+}
+
+async function ouvrirQuestionnaire(partie = 0) {
+  rendre('<div class="carte anime"><p class="chapo" style="margin:0">Nous préparons vos questions…</p></div>');
+  const r = await appelClub("questionnaire");
+  if (!r.ok) return ecranAffinitesIntro(r.error || "Le questionnaire n'a pas pu être chargé.");
+  etat.questionnaire = r;
+  etat.brouillon = { ...r.reponses };
+  ecranQuestionnaire(partie);
+}
+
+/* ── Une partie du questionnaire ─────────────────────────────── */
+function ecranQuestionnaire(iPartie, msg) {
+  const Q = etat.questionnaire;
+  const partie = PARTIES[iPartie];
+  const questions = Q.questions.filter((q) => q.partie === partie.cle);
+
+  // Une partie vide se saute : la Cliente peut avoir retiré toutes ses
+  // questions, l'écran ne doit pas s'arrêter sur une page blanche.
+  if (questions.length === 0) {
+    return iPartie + 1 < PARTIES.length ? ecranQuestionnaire(iPartie + 1, msg) : terminerQuestionnaire();
+  }
+
+  const av = Q.avancee || { total: 0, repondues: 0 };
+  const pourcent = av.total ? Math.round(100 * av.repondues / av.total) : 0;
+
+  rendre(`
+    ${erreur(msg)}
+    ${Q.apercu ? '<div class="message info" style="margin-bottom:18px">Aperçu réservé à l\'équipe : ce questionnaire n\'est pas encore ouvert aux membres.</div>' : ""}
+    <div class="avancee">
+      <div class="avancee-piste"><div class="avancee-part" style="width:${pourcent}%"></div></div>
+      <div class="avancee-texte">
+        <span>Partie ${iPartie + 1} sur ${PARTIES.length}</span>
+        <span><b>${av.repondues}</b> / ${av.total} questions</span>
+      </div>
+    </div>
+    <div class="carte anime">
+      <span class="etiquette">${ech(partie.titre)}</span>
+      <h2 style="font-size:21px">${ech(partie.chapo)}</h2>
+      <div id="questions" style="margin-top:26px">
+        ${questions.map((q) => bloc_question(q)).join("")}
+      </div>
+      <button class="bouton or" id="b-suivant" style="margin-top:8px">
+        ${iPartie + 1 < PARTIES.length ? "Continuer" : "Terminer"}
+      </button>
+      <button class="lien" id="b-plus-tard-q">Reprendre plus tard</button>
+    </div>`);
+
+  questions.forEach((q) => brancher_question(q));
+
+  $("#b-suivant").onclick = async () => {
+    const b = $("#b-suivant");
+    b.disabled = true; b.textContent = "Enregistrement…";
+    const rendreLaMain = () => {
+      b.disabled = false;
+      b.textContent = iPartie + 1 < PARTIES.length ? "Continuer" : "Terminer";
+    };
+    // Une question à moitié répondue est refusée par le serveur, et jusqu'au
+    // 15/09 elle l'était en silence : le membre avançait en croyant avoir
+    // répondu, et sa réponse n'existait pas. On la retient donc ici, avec ce
+    // qui manque, plutôt que de la laisser partir pour rien.
+    const bancale = questions.map((q) => [q, defaut_reponse(q, etat.brouillon[q.code])])
+                             .find(([, d]) => d);
+    if (bancale) {
+      rendreLaMain();
+      const el = document.getElementById("q-" + bancale[0].code);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      return ecranQuestionnaire(iPartie, bancale[1]);
+    }
+    const lot = {};
+    questions.forEach((q) => { lot[q.code] = vide(etat.brouillon[q.code]) ? null : etat.brouillon[q.code]; });
+    const r = await appelClub("repondre", { reponses: lot, consentement_sensible: !!etat.consentSensible });
+    if (!r.ok) {
+      rendreLaMain();
+      return ecranQuestionnaire(iPartie, r.error || "L'enregistrement a échoué.");
+    }
+    // Le serveur dit ce qu'il a refusé. Ne pas l'afficher reviendrait à
+    // annoncer un enregistrement qui n'a pas eu lieu.
+    if (Array.isArray(r.refusees) && r.refusees.length) {
+      rendreLaMain();
+      const noms = r.refusees
+        .map((c) => (questions.find((q) => q.code === c) || {}).libelle)
+        .filter(Boolean);
+      return ecranQuestionnaire(iPartie,
+        noms.length
+          ? "Cette réponse n'a pas pu être enregistrée : « " + noms[0] + " ». Vérifiez-la et réessayez."
+          : "Une réponse n'a pas pu être enregistrée. Vérifiez-la et réessayez.");
+    }
+    etat.questionnaire.avancee = r.avancee;
+    if (iPartie + 1 < PARTIES.length) return ecranQuestionnaire(iPartie + 1);
+    terminerQuestionnaire();
+  };
+
+  $("#b-plus-tard-q").onclick = async () => {
+    // On enregistre ce qui est rempli, sans exiger les obligatoires : partir
+    // en cours de route ne doit rien faire perdre.
+    const lot = {};
+    questions.forEach((q) => { if (!vide(etat.brouillon[q.code])) lot[q.code] = etat.brouillon[q.code]; });
+    if (Object.keys(lot).length) await appelClub("repondre", { reponses: lot, consentement_sensible: !!etat.consentSensible });
+    ecranMembre(false, "Vos réponses sont enregistrées. Vous pourrez reprendre où vous en étiez.");
+  };
+}
+
+const vide = (v) => v === undefined || v === null || v === "" ||
+  (Array.isArray(v) && v.length === 0) ||
+  (typeof v === "object" && !Array.isArray(v) && Object.keys(v).length === 0);
+
+/* Ce qui manque à une réponse, en une phrase à montrer, ou rien si elle tient.
+   Les mêmes règles que le serveur, dites du côté du membre : c'est lui qui
+   peut corriger, encore faut-il qu'il sache quoi. */
+function defaut_reponse(q, v) {
+  const absente = vide(v);
+  if (absente) {
+    return q.obligatoire ? "Il reste une question sans réponse : « " + q.libelle + " »" : null;
+  }
+  // Un classement vaut par son ordre : à moitié classé, il ne veut rien dire,
+  // et le serveur le refuse.
+  if (q.type === "classement") {
+    const n = (q.options || []).length;
+    if (!Array.isArray(v) || v.length !== n) {
+      return "Classez les " + n + " propositions de « " + q.libelle + " », de la plus importante à la moins importante.";
+    }
+  }
+  if ((q.type === "choix_multi" || q.type === "liste_multi") && q.max_choix && Array.isArray(v) && v.length > q.max_choix) {
+    return "Choisissez " + q.max_choix + " réponses au maximum pour « " + q.libelle + " »";
+  }
+  return null;
+}
+
+/* ── Le rendu d'une question, par type ───────────────────────── */
+function bloc_question(q) {
+  const v = etat.brouillon[q.code];
+  const id = "q-" + q.code;
+  let corps = "";
+
+  if (q.type === "ville" || q.type === "texte_court") {
+    corps = `<input type="text" id="i-${q.code}" value="${ech(v || "")}"
+               placeholder="${q.type === "ville" ? "Paris, Abidjan, Bruxelles…" : ""}" maxlength="120">`;
+
+  } else if (q.type === "texte_long") {
+    corps = `<input type="text" id="i-${q.code}" value="${ech(v || "")}" maxlength="1200">`;
+
+  } else if (q.type === "villes" || q.type === "mots_cles") {
+    const max = q.max_choix || 3;
+    const liste = Array.isArray(v) ? v : [];
+    corps = `
+      <div style="display:flex;gap:8px">
+        <input type="text" id="i-${q.code}" maxlength="60"
+               placeholder="${q.type === "villes" ? "Ajouter une ville" : "Un mot"}"
+               ${liste.length >= max ? "disabled" : ""}>
+        <button class="bouton sobre" id="b-add-${q.code}" style="width:auto;padding:0 18px;margin:0"
+                ${liste.length >= max ? "disabled" : ""}>Ajouter</button>
+      </div>
+      <div class="tags" id="tags-${q.code}">
+        ${liste.map((x, i) => `<span class="tag">${ech(x)}
+          <button type="button" data-i="${i}" aria-label="Retirer ${ech(x)}">${ICONE.non}</button></span>`).join("")}
+      </div>`;
+
+  } else if (q.type === "liste") {
+    corps = `<select id="i-${q.code}">
+        <option value="">Choisir…</option>
+        ${(q.options || []).map((o) => `<option ${v === o ? "selected" : ""}>${ech(o)}</option>`).join("")}
+      </select>`;
+
+  } else if (q.type === "choix") {
+    corps = `<div class="opts${(q.options || []).length > 4 ? "" : " deux"}">
+        ${(q.options || []).map((o) => `
+          <button type="button" class="opt ronde ${v === o ? "actif" : ""}" data-code="${q.code}" data-val="${ech(o)}">
+            <span class="marque-opt">${ICONE.ok}</span><span>${ech(o)}</span>
+          </button>`).join("")}
+      </div>`;
+
+  } else if (q.type === "choix_multi" || q.type === "liste_multi") {
+    const liste = Array.isArray(v) ? v : [];
+    const max = q.max_choix || (q.options || []).length;
+    const plein = liste.length >= max;
+    corps = `<div class="opts${(q.options || []).length > 6 ? "" : " deux"}">
+        ${(q.options || []).map((o) => {
+          const pris = liste.includes(o);
+          return `<button type="button" class="opt ${pris ? "actif" : ""}" data-code="${q.code}" data-val="${ech(o)}"
+                    ${!pris && plein ? "disabled" : ""}>
+            <span class="marque-opt">${ICONE.ok}</span><span>${ech(o)}</span>
+          </button>`;
+        }).join("")}
+      </div>
+      ${q.max_choix ? `<div class="aide" id="cpt-${q.code}">${liste.length} sur ${max} au maximum</div>` : ""}`;
+
+  } else if (q.type === "classement") {
+    const liste = Array.isArray(v) ? v : [];
+    corps = `<div class="opts">
+        ${(q.options || []).map((o) => {
+          const rang = liste.indexOf(o);
+          return `<button type="button" class="opt ${rang >= 0 ? "actif" : ""}" data-code="${q.code}" data-val="${ech(o)}">
+            <span class="marque-opt rang">${rang >= 0 ? rang + 1 : ""}</span><span>${ech(o)}</span>
+          </button>`;
+        }).join("")}
+      </div>
+      <div class="aide" id="cpt-${q.code}">Touchez dans votre ordre de préférence. ${liste.length} sur ${(q.options || []).length} classés.</div>`;
+
+  } else if (q.type === "tranche_age") {
+    const t = (v && typeof v === "object") ? v : { min: 30, max: 55 };
+    corps = `<div class="curseurs">
+        <div class="curseur-ligne">
+          <label for="i-${q.code}-min">À partir de <b id="vmin-${q.code}">${t.min} ans</b></label>
+          <input type="range" id="i-${q.code}-min" min="18" max="100" value="${t.min}">
+        </div>
+        <div class="curseur-ligne">
+          <label for="i-${q.code}-max">Jusqu'à <b id="vmax-${q.code}">${t.max} ans</b></label>
+          <input type="range" id="i-${q.code}-max" min="18" max="100" value="${t.max}">
+        </div>
+      </div>`;
+  }
+
+  return `
+    <div class="champ" id="${id}" style="margin-bottom:30px">
+      <label for="i-${q.code}" style="font-size:15px;color:var(--encre);font-weight:500;margin-bottom:${q.aide ? "6px" : "12px"}">
+        ${ech(q.libelle)}${q.obligatoire ? "" : ' <span style="color:var(--gris);font-weight:400">(facultatif)</span>'}
+      </label>
+      ${q.aide ? `<p class="aide" style="margin:0 0 14px">${ech(q.aide)}</p>` : ""}
+      ${q.sensible ? '<div class="sensible-mot">Cette information est sensible au sens de la loi européenne. Elle est facultative, et vous pouvez la retirer à tout moment.</div>' : ""}
+      ${corps}
+    </div>`;
+}
+
+/* ── Le comportement d'une question ─────────────────────────── */
+function brancher_question(q) {
+  const maj = (v) => { etat.brouillon[q.code] = v; };
+
+  if (q.type === "ville" || q.type === "texte_court" || q.type === "texte_long") {
+    const c = $("#i-" + q.code);
+    if (c) c.oninput = () => maj(c.value.trim());
+
+  } else if (q.type === "liste") {
+    const s = $("#i-" + q.code);
+    if (s) s.onchange = () => maj(s.value || null);
+
+  } else if (q.type === "villes" || q.type === "mots_cles") {
+    const champ = $("#i-" + q.code), ajout = $("#b-add-" + q.code);
+    const ajouter = () => {
+      const x = (champ.value || "").trim();
+      if (!x) return;
+      const liste = Array.isArray(etat.brouillon[q.code]) ? [...etat.brouillon[q.code]] : [];
+      if (liste.length >= (q.max_choix || 3) || liste.includes(x)) { champ.value = ""; return; }
+      liste.push(x); maj(liste); champ.value = "";
+      redessiner_question(q);
+    };
+    if (ajout) ajout.onclick = ajouter;
+    if (champ) champ.onkeydown = (e) => { if (e.key === "Enter") { e.preventDefault(); ajouter(); } };
+    const tags = $("#tags-" + q.code);
+    if (tags) tags.querySelectorAll("button").forEach((b) => {
+      b.onclick = () => {
+        const liste = [...(etat.brouillon[q.code] || [])];
+        liste.splice(Number(b.dataset.i), 1);
+        maj(liste.length ? liste : null);
+        redessiner_question(q);
+      };
+    });
+
+  } else if (q.type === "choix") {
+    document.querySelectorAll(`.opt[data-code="${q.code}"]`).forEach((b) => {
+      b.onclick = () => {
+        // Retoucher un choix unique le retire : sans cela, une réponse
+        // facultative cochée par erreur ne pourrait plus être annulée.
+        maj(etat.brouillon[q.code] === b.dataset.val ? null : b.dataset.val);
+        rafraichir_options(q);
+      };
+    });
+
+  } else if (q.type === "choix_multi" || q.type === "liste_multi") {
+    const max = q.max_choix || (q.options || []).length;
+    document.querySelectorAll(`.opt[data-code="${q.code}"]`).forEach((b) => {
+      b.onclick = () => {
+        const liste = Array.isArray(etat.brouillon[q.code]) ? [...etat.brouillon[q.code]] : [];
+        const i = liste.indexOf(b.dataset.val);
+        if (i >= 0) liste.splice(i, 1);
+        else if (liste.length < max) liste.push(b.dataset.val);
+        maj(liste.length ? liste : null);
+        rafraichir_options(q);
+      };
+    });
+
+  } else if (q.type === "classement") {
+    document.querySelectorAll(`.opt[data-code="${q.code}"]`).forEach((b) => {
+      b.onclick = () => {
+        const liste = Array.isArray(etat.brouillon[q.code]) ? [...etat.brouillon[q.code]] : [];
+        const i = liste.indexOf(b.dataset.val);
+        // Retirer un élément du milieu renumérote la suite toute seule :
+        // c'est l'ordre du tableau qui fait le rang, jamais un champ à part.
+        if (i >= 0) liste.splice(i, 1); else liste.push(b.dataset.val);
+        maj(liste.length ? liste : null);
+        rafraichir_options(q);
+      };
+    });
+
+  } else if (q.type === "tranche_age") {
+    const cmin = $("#i-" + q.code + "-min"), cmax = $("#i-" + q.code + "-max");
+    const lire = () => {
+      let a = Number(cmin.value), b = Number(cmax.value);
+      // Le curseur du bas ne passe jamais au-dessus de celui du haut : on
+      // pousse l'autre plutôt que de refuser le geste.
+      if (a > b) { if (document.activeElement === cmin) { b = a; cmax.value = b; } else { a = b; cmin.value = a; } }
+      $("#vmin-" + q.code).textContent = a + " ans";
+      $("#vmax-" + q.code).textContent = b + " ans";
+      maj({ min: a, max: b });
+    };
+    if (cmin && cmax) { cmin.oninput = lire; cmax.oninput = lire; lire(); }
+  }
+}
+
+/* Met à jour l'apparence des options SANS toucher au DOM.
+   Reconstruire le bloc à chaque clic le faisait disparaître puis réapparaître
+   sous le doigt : sur un classement de cinq éléments, cinq reconstructions,
+   donc cinq sauts de page et le focus perdu à chaque fois. Ici on ne change
+   que des classes et deux libellés. Constaté en recette le 15/09. */
+function rafraichir_options(q) {
+  const v = etat.brouillon[q.code];
+  const liste = Array.isArray(v) ? v : [];
+  const max = q.max_choix || (q.options || []).length;
+  const plein = (q.type === "choix_multi" || q.type === "liste_multi") && liste.length >= max;
+
+  document.querySelectorAll(`.opt[data-code="${q.code}"]`).forEach((b) => {
+    const val = b.dataset.val;
+    let actif = false, marque = "";
+
+    if (q.type === "choix") {
+      actif = v === val;
+    } else if (q.type === "classement") {
+      const rang = liste.indexOf(val);
+      actif = rang >= 0;
+      marque = actif ? String(rang + 1) : "";
+    } else {
+      actif = liste.includes(val);
+      b.disabled = !actif && plein;
+    }
+
+    b.classList.toggle("actif", actif);
+    if (q.type === "classement") {
+      const m = b.querySelector(".marque-opt");
+      if (m) m.textContent = marque;
+    }
+  });
+
+  const cpt = document.getElementById("cpt-" + q.code);
+  if (cpt) {
+    cpt.textContent = q.type === "classement"
+      ? `Touchez dans votre ordre de préférence. ${liste.length} sur ${(q.options || []).length} classés.`
+      : `${liste.length} sur ${max} au maximum`;
+  }
+}
+
+/* Redessine une seule question sans reconstruire tout l'écran : refaire la
+   page entière ferait perdre le défilement et le focus au milieu d'une saisie.
+   Réservé aux étiquettes, dont la structure change vraiment à chaque ajout. */
+function redessiner_question(q) {
+  const el = document.getElementById("q-" + q.code);
+  if (!el) return;
+  const neuf = document.createElement("div");
+  neuf.innerHTML = bloc_question(q);
+  el.replaceWith(neuf.firstElementChild);
+  brancher_question(q);
+}
+
+/* ── Fin du questionnaire ────────────────────────────────────── */
+async function terminerQuestionnaire() {
+  const r = await appelClub("questionnaire");
+  if (r.ok) etat.questionnaire = r;
+  const complet = r.ok && r.avancee && r.avancee.complet;
+  rendre(`
+    <div class="carte anime">
+      <span class="etiquette">${complet ? "C'est fait" : "Presque"}</span>
+      <h2>${complet ? "Merci, nous savons qui vous êtes" : "Il reste quelques questions"}</h2>
+      <p class="chapo">
+        ${complet
+          ? "Nous pouvons maintenant vous présenter des profils qui vous correspondent vraiment, et vous dire pourquoi."
+          : "Les questions sans réponse ne vous empêchent pas d'avancer, mais chacune rend les propositions plus justes."}
+      </p>
+      <button class="bouton or" id="b-voir">${complet ? "Découvrir les profils" : "Terminer les questions"}</button>
+      <button class="lien" id="b-retour-profil2">Revenir à mon profil</button>
+    </div>`);
+  $("#b-voir").onclick = () => complet ? ecranDecouverte() : ouvrirQuestionnaire(0);
+  $("#b-retour-profil2").onclick = () => ecranMembre(false);
+}
+
+/* ── La découverte ──────────────────────────────────────────── */
+async function ecranDecouverte(msg) {
+  rendre('<div class="carte anime"><p class="chapo" style="margin:0">Nous cherchons vos profils…</p></div>');
+  const r = await appelClub("decouverte");
+  if (!r.ok) return ecranMembre(false, r.error || "La découverte n'est pas disponible.");
+
+  if (r.attendu === "questionnaire") {
+    rendre(`
+      <div class="carte anime">
+        <span class="etiquette">Affinités</span>
+        <h2>Le questionnaire d'abord</h2>
+        <p class="chapo">Nous ne pouvons pas vous proposer quelqu'un sans savoir ce que vous cherchez.</p>
+        <button class="bouton or" id="b-q">Répondre aux questions</button>
+        <button class="lien" id="b-r">Revenir à mon profil</button>
+      </div>`);
+    $("#b-q").onclick = () => ouvrirQuestionnaire();
+    $("#b-r").onclick = () => ecranMembre(false);
+    return;
+  }
+
+  const profils = r.profils || [];
+  rendre(`
+    ${erreur(msg)}
+    ${r.attendu === "verification" ? '<div class="message info" style="margin-bottom:18px">Faites vérifier votre profil pour pouvoir demander une mise en relation.</div>' : ""}
+    <div class="carte anime">
+      <span class="etiquette">Votre cercle</span>
+      <h2>${profils.length ? "Ces membres vous correspondent" : "Personne à vous proposer aujourd'hui"}</h2>
+      <p class="chapo">
+        ${profils.length
+          ? "Choisis parmi les membres vérifiés, et présentés avec la raison pour laquelle ils vous sont proposés."
+          : "Le Club grandit doucement, et c'est voulu. Revenez dans quelques jours : vous serez prévenue dès qu'un profil vous correspond."}
+      </p>
+      ${profils.length ? profils.map((p) => carte_profil(p)).join("") : `
+        <div class="vide">${ICONE.globe}<div>Aucun profil ne correspond encore à ce que vous cherchez.</div></div>`}
+      <button class="lien" id="b-retour-profil3" style="margin-top:8px">Revenir à mon profil</button>
+    </div>`);
+
+  profils.forEach((p) => {
+    const b = document.getElementById("b-dem-" + p.id);
+    if (b) b.onclick = () => ecranDemande(p);
+  });
+  $("#b-retour-profil3").onclick = () => ecranMembre(false);
+}
+
+function carte_profil(p) {
+  const raisons = (p.raisons || []);
+  const troisMots = Array.isArray(p.trois_mots) ? p.trois_mots : [];
+  const peutDemander = etat.membre && etat.membre.statut_verif === "valide";
+  return `
+    <div class="profil-carte">
+      <div class="profil-haut">
+        <div class="medaille">${ech(String(p.pseudo || "?").slice(0, 1).toUpperCase())}</div>
+        <div class="qui"><div class="nom">${ech(p.pseudo)}</div></div>
+        <div class="accord ${p.score >= 70 ? "fort" : ""}">
+          <div class="chiffre">${Number(p.score) || 0}</div>
+          <div class="mot">Affinité</div>
+        </div>
+      </div>
+      <!-- La ville et le parcours passent sous la ligne du nom, en pleine
+           largeur : coincés entre la médaille et le score, ils tombaient sur
+           trois lignes et écrasaient le pseudo (mesuré à 390 px le 15/09). -->
+      ${[p.ville, p.parcours].filter(Boolean).length
+        ? `<div class="ou-large">${ech([p.ville, p.parcours].filter(Boolean).join(" · "))}</div>`
+        : ""}
+      ${troisMots.length ? `<div class="mots-trois">${troisMots.map((m) => `<span class="mot-trois">${ech(m)}</span>`).join("")}</div>` : ""}
+      ${raisons.length ? `<ul class="raisons">
+          ${raisons.slice(0, 4).map((x) => `<li>${ICONE.ok}<span>${ech(x.texte)}</span></li>`).join("")}
+          ${raisons.length > 4 ? `<li class="plus">et ${raisons.length - 4} autre${raisons.length - 4 > 1 ? "s" : ""} point${raisons.length - 4 > 1 ? "s" : ""} commun${raisons.length - 4 > 1 ? "s" : ""}</li>` : ""}
+        </ul>` : ""}
+      <button class="bouton ${peutDemander ? "or" : "sobre"}" id="b-dem-${ech(p.id)}" ${peutDemander ? "" : "disabled"} style="margin:0">
+        ${peutDemander ? "Demander une mise en relation" : "Vérification requise"}
+      </button>
+    </div>`;
+}
+
+/* ── Demander une mise en relation ──────────────────────────── */
+function ecranDemande(p, msg) {
+  rendre(`
+    ${erreur(msg)}
+    <div class="carte anime">
+      <span class="etiquette">Mise en relation</span>
+      <h2>Écrire à ${ech(p.pseudo)}</h2>
+      <p class="chapo">
+        ${ech(p.pseudo)} recevra votre demande et votre mot d'introduction. Vous
+        ne pourrez échanger que si elle l'accepte, et elle ne verra rien d'autre
+        de vous que votre profil.
+      </p>
+      ${(p.raisons || []).length ? `<ul class="raisons">
+        ${(p.raisons || []).slice(0, 3).map((x) => `<li>${ICONE.ok}<span>${ech(x.texte)}</span></li>`).join("")}
+      </ul>` : ""}
+      <div class="champ">
+        <label for="i-mot">Votre mot d'introduction <span style="color:var(--gris);font-weight:400">(facultatif)</span></label>
+        <input type="text" id="i-mot" maxlength="400" placeholder="Deux phrases suffisent.">
+        <div class="aide">Court volontairement : c'est une présentation, pas encore une conversation.</div>
+      </div>
+      <button class="bouton or" id="b-envoyer-dem">Envoyer ma demande</button>
+      <button class="lien" id="b-annuler-dem">Revenir aux profils</button>
+    </div>`);
+
+  $("#b-annuler-dem").onclick = () => ecranDecouverte();
+  $("#b-envoyer-dem").onclick = async () => {
+    const b = $("#b-envoyer-dem");
+    b.disabled = true; b.textContent = "Envoi…";
+    const r = await appelClub("demander", { membre: p.id, mot: $("#i-mot").value.trim() });
+    if (!r.ok) { b.disabled = false; b.textContent = "Envoyer ma demande"; return ecranDemande(p, r.error); }
+    rendre(`
+      <div class="carte anime">
+        <span class="etiquette">Demande envoyée</span>
+        <h2>C'est parti</h2>
+        <p class="chapo">
+          ${ech(p.pseudo)} a reçu votre demande. Vous serez prévenue de sa réponse.
+          Aucune relance ne sera envoyée de votre part : au Club, on n'insiste pas.
+        </p>
+        <button class="bouton or" id="b-autres">Voir d'autres profils</button>
+        <button class="lien" id="b-profil-fin">Revenir à mon profil</button>
+      </div>`);
+    $("#b-autres").onclick = () => ecranDecouverte();
+    $("#b-profil-fin").onclick = () => ecranMembre(false);
+  };
+}
+
+/* ── Les cartes du Module 3 sur l'écran de profil ─────────────
+   Chargées après le rendu, et en silence : si l'appel échoue, l'écran de
+   profil reste utilisable et n'affiche simplement pas ces cartes. Une panne
+   du Module 3 ne doit pas empêcher un membre de voir son compte. */
+async function garnir_zone_club() {
+  const zone = $("#zone-club");
+  if (!zone) return;
+
+  const [q, rel] = await Promise.all([appelClub("questionnaire"), appelClub("relations")]);
+
+  // Le questionnaire n'est pas encore ouvert par la Cliente : on ne montre
+  // rien du tout plutôt qu'une porte qui ne mène nulle part.
+  if (!q.ok && q.ferme) return;
+  if (!$("#zone-club")) return;            // l'écran a changé entre-temps
+
+  let html = "";
+
+  const recues = (rel.ok && rel.recues) ? rel.recues : [];
+  if (recues.length) {
+    html += `
+      <div class="carte anime-2">
+        <span class="etiquette">Demandes reçues</span>
+        <h2 style="font-size:19px">${recues.length === 1 ? "Une personne souhaite vous rencontrer" : recues.length + " personnes souhaitent vous rencontrer"}</h2>
+        <p class="chapo" style="margin-bottom:18px">${ech(recues.slice(0, 3).map((d) => d.pseudo).join(", "))}${recues.length > 3 ? "…" : ""}</p>
+        <button class="bouton or" id="b-voir-demandes" style="margin:0">Voir les demandes</button>
+      </div>`;
+  }
+
+  if (q.ok) {
+    const av = q.avancee || { total: 0, repondues: 0, complet: false };
+    const pourcent = av.total ? Math.round(100 * av.repondues / av.total) : 0;
+    html += `
+      <div class="carte anime-2">
+        <span class="etiquette">${q.apercu ? "Aperçu équipe" : "Affinités"}</span>
+        <h2 style="font-size:19px">${av.complet ? "Votre cercle vous attend" : av.repondues ? "Reprendre le questionnaire" : "Le questionnaire d'affinités"}</h2>
+        <p class="chapo" style="margin-bottom:${av.repondues ? "14px" : "20px"}">
+          ${av.complet
+            ? "Nous pouvons vous présenter des membres qui vous correspondent, et vous dire pourquoi."
+            : av.repondues
+              ? "Chaque réponse rend les profils qu'on vous propose plus justes."
+              : "C'est lui qui décide quels membres vous sont présentés. Comptez sept minutes."}
+        </p>
+        ${av.repondues ? `<div class="avancee">
+          <div class="avancee-piste"><div class="avancee-part" style="width:${pourcent}%"></div></div>
+          <div class="avancee-texte"><span>Questionnaire</span><span><b>${av.repondues}</b> / ${av.total}</span></div>
+        </div>` : ""}
+        <button class="bouton ${av.complet ? "or" : "or"}" id="b-aff" style="margin:0">
+          ${av.complet ? "Découvrir les profils" : av.repondues ? "Reprendre" : "Commencer"}
+        </button>
+        ${av.complet ? `<button class="lien" id="b-revoir-q">Revoir mes réponses</button>` : ""}
+      </div>`;
+  }
+
+  zone.innerHTML = html;
+  if ($("#b-voir-demandes")) $("#b-voir-demandes").onclick = () => ecranRelations();
+  if ($("#b-aff")) {
+    const complet = q.ok && q.avancee && q.avancee.complet;
+    $("#b-aff").onclick = () => complet ? ecranDecouverte()
+      : (q.avancee && q.avancee.repondues ? ouvrirQuestionnaire() : ecranAffinitesIntro());
+  }
+  if ($("#b-revoir-q")) $("#b-revoir-q").onclick = () => ouvrirQuestionnaire();
+}
+
+/* ── Mes demandes reçues ────────────────────────────────────── */
+async function ecranRelations(msg) {
+  rendre('<div class="carte anime"><p class="chapo" style="margin:0">Un instant…</p></div>');
+  const r = await appelClub("relations");
+  if (!r.ok) return ecranMembre(false, r.error || "Vos demandes ne sont pas disponibles.");
+  const recues = r.recues || [], envoyees = r.envoyees || [], acceptees = r.acceptees || [];
+
+  rendre(`
+    ${erreur(msg)}
+    <div class="carte anime">
+      <span class="etiquette">Demandes reçues</span>
+      <h2>${recues.length ? (recues.length === 1 ? "Une personne souhaite vous rencontrer" : recues.length + " personnes souhaitent vous rencontrer") : "Aucune demande en attente"}</h2>
+      ${recues.length ? recues.map((d) => `
+        <div class="demande" id="dem-${ech(d.id)}">
+          <div class="profil-haut">
+            <div class="medaille">${ech(String(d.pseudo || "?").slice(0, 1).toUpperCase())}</div>
+            <div class="qui"><div class="nom">${ech(d.pseudo)}</div>
+              <div class="ou">${new Date(d.quand).toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}</div></div>
+          </div>
+          ${(d.raisons || []).length ? `<ul class="raisons">
+            ${(d.raisons || []).slice(0, 3).map((x) => `<li>${ICONE.ok}<span>${ech(x.texte)}</span></li>`).join("")}
+          </ul>` : ""}
+          ${d.mot ? `<div class="mot-intro">${ech(d.mot)}</div>` : ""}
+          <div class="duo-reponse">
+            <button class="bouton or" data-rel="${ech(d.id)}" data-rep="acceptee">Accepter</button>
+            <button class="bouton sobre" data-rel="${ech(d.id)}" data-rep="refusee">Décliner</button>
+          </div>
+        </div>`).join("") : `<p class="chapo" style="margin:0">Vous serez prévenue dès qu'un membre souhaitera vous rencontrer.</p>`}
+    </div>
+
+    ${acceptees.length ? `<div class="carte anime-2">
+      <span class="etiquette">Votre cercle</span>
+      <h2 style="font-size:19px">${acceptees.length} mise${acceptees.length > 1 ? "s" : ""} en relation</h2>
+      ${acceptees.map((a) => `<div class="ligne"><span class="cle">${ech(a.pseudo)}</span><span class="val">acceptée</span></div>`).join("")}
+      <p class="aide" style="margin-top:14px">La messagerie arrive avec le prochain module.</p>
+    </div>` : ""}
+
+    ${envoyees.length ? `<div class="carte anime-2">
+      <span class="etiquette">Vos demandes</span>
+      ${envoyees.map((e) => `<div class="ligne"><span class="cle">${ech(e.pseudo)}</span>
+        <span class="val">${e.statut === "demandee" ? "en attente" : "déclinée"}</span></div>`).join("")}
+    </div>` : ""}
+
+    <div class="carte anime-2"><button class="lien" id="b-retour-profil4" style="margin:0">Revenir à mon profil</button></div>`);
+
+  document.querySelectorAll("button[data-rel]").forEach((b) => {
+    b.onclick = async () => {
+      document.querySelectorAll("button[data-rel]").forEach((x) => { x.disabled = true; });
+      const r2 = await appelClub("repondre_relation", { relation: b.dataset.rel, reponse: b.dataset.rep });
+      if (!r2.ok) return ecranRelations(r2.error);
+      ecranRelations(b.dataset.rep === "acceptee"
+        ? "Vous êtes en relation. La messagerie arrive avec le prochain module."
+        : "Demande déclinée. Ce membre ne pourra pas vous redemander.");
+    };
+  });
+  $("#b-retour-profil4").onclick = () => ecranMembre(false);
+}
+
 function ecranMembre(bienvenue, info) {
   clearInterval(ticCode);
   const m = etat.membre;
@@ -1351,9 +2171,15 @@ function ecranMembre(bienvenue, info) {
       ${bloc.bouton ? `<button class="bouton or" id="b-verif">${bloc.bouton}</button>` : ""}
     </div>
 
+    <!-- Module 3. Rempli juste après, quand l'état revient du serveur : cet
+         écran ne doit jamais attendre un appel réseau pour s'afficher. -->
+    <div id="zone-club"></div>
+
     <div class="carte anime-2">
       <button class="lien" id="b-sortir" style="margin:0">Me déconnecter</button>
     </div>`);
+
+  garnir_zone_club();
 
   // Surtout pas « onclick = ecranVerifIntro » : le navigateur passerait l'événement
   // du clic en premier argument, qui finirait affiché en bandeau rouge sous la
