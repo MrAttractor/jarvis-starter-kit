@@ -171,7 +171,39 @@ body.splash-on{overflow:hidden;}
 
 /* MEMBER */
 .m-hero{position:relative;padding:26px 20px 22px;overflow:hidden;}
-.m-hero-bg{position:absolute;inset:0;background:url('serge-hero.jpg') center 12%/cover no-repeat;filter:brightness(.34);}
+/* ===== LE BANDEAU QUI DEFILE =====
+   Le bandeau etait une photo fixe. Il devient le defilement, DERRIERE le nom du
+   fan : aucune hauteur ajoutee, et l'ecran devient vivant sans devenir plus
+   charge. C'etait la seule facon de tenir les deux demandes de Mac Arthur du
+   15/09, « un hero qui defile » et « une interface moins fouillis », qui se
+   contredisent des qu'on ajoute un troisieme bloc d'image avant le fil.
+
+   Les vues glissent de gauche a droite par translation de la piste, et non par
+   fondu : c'est le geste demande.
+
+   Le poids est la seule vraie contrainte. La premiere vue est la photo DEJA
+   prechargee dans le <head> (R-82, l'ecran noir du 14/09) : elle ne coute donc
+   rien de plus. Les deux suivantes sont posees par le script APRES le
+   chargement de la page, sinon trois images se disputeraient le premier
+   affichage sur un reseau ivoirien, et on retomberait exactement dans le
+   defaut qu'on a corrige. */
+.m-hero-bg{position:absolute;inset:0;overflow:hidden;filter:brightness(.34);}
+.hb-piste{display:flex;height:100%;width:100%;
+  transition:transform .9s cubic-bezier(.4,0,.2,1);will-change:transform;}
+.hb-i{flex:0 0 100%;height:100%;background-position:center 12%;
+  background-size:cover;background-repeat:no-repeat;}
+/* Les puces disent seulement ou on en est. Elles ne sont pas cliquables, donc
+   pas de zone de tap a 44 px a caser dans un bandeau qu'on veut epure : c'est
+   un fond decoratif, il ne porte aucune information qu'on puisse manquer. */
+.hb-pts{position:absolute;right:20px;bottom:14px;z-index:3;display:flex;gap:6px;}
+.hb-pt{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);
+  transition:background .3s,width .3s;}
+.hb-pt.on{width:18px;border-radius:3px;background:#fff;}
+/* Mouvement reduit : on ne fait plus defiler, et la premiere vue reste. */
+@media (prefers-reduced-motion:reduce){
+  .hb-piste{transition:none;}
+  .hb-pts{display:none;}
+}
 .m-hero-ov{position:absolute;inset:0;background:linear-gradient(0deg,var(--noir),rgba(7,7,7,.45));}
 /* Le bandeau porte la photo de Serge dans les deux themes. La couleur du
    texte doit etre posee ici : body porte var(--blanc), et body est en
@@ -206,6 +238,37 @@ body.splash-on{overflow:hidden;}
 .scroll{padding:4px 20px 60px;}
 .card{background:var(--n3);border:1px solid var(--faint);border-radius:18px;padding:18px;margin-bottom:14px;}
 .sec-title{font-family:var(--bebas);font-size:24px;letter-spacing:1px;margin:22px 0 12px;}
+
+/* ===== AMBASSADEUR, REPLIABLE =====
+   « La partie Ambassadeur prend trop de place » (Mac Arthur, 15/09). Depliee
+   elle fait pres de 600 px avant le premier post, alors qu'on ne partage pas
+   son lien a chaque visite : on vient lire le fil. Repliee par defaut, elle
+   garde ses chiffres en tete, donc elle reste utile sans rien couter.
+
+   Le repli est retenu d'une visite a l'autre, comme l'onglet du pilotage.
+   Attention en y touchant : la refonte du 13/09 avait SUPPRIME des conteneurs
+   repliables et deux fonctions visaient encore les noeuds disparus, ce qui a
+   vide un ecran entier (R-83). Ici le corps reste dans le document, seulement
+   masque : tout ce que le script y ecrit continue de le trouver. */
+.amb-tete{width:100%;display:flex;align-items:center;gap:10px;background:none;
+  padding:0;min-height:44px;text-align:left;color:var(--blanc);}
+.amb-tete svg.et{width:20px;height:20px;stroke:var(--or);fill:none;stroke-width:2;flex-shrink:0;}
+.amb-tt{flex:1;min-width:0;}
+.amb-tt b{display:block;font-size:14px;font-weight:800;}
+.amb-res{font-size:11.5px;color:var(--dim);margin-top:2px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.amb-res i{font-style:normal;color:var(--or);font-weight:700;}
+.amb-chev{width:20px;height:20px;flex-shrink:0;transition:transform .25s;}
+.amb-chev svg{width:20px;height:20px;stroke:var(--dim);fill:none;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round;}
+.amb-card.ouvert .amb-chev{transform:rotate(180deg);}
+.amb-corps{display:none;}
+.amb-card.ouvert .amb-corps{display:block;animation:deplie .25s ease both;}
+@keyframes deplie{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  .amb-card.ouvert .amb-corps{animation:none;}
+  .amb-chev{transition:none;}
+}
 
 /* Ambassadeur */
 .amb-card{background:linear-gradient(135deg,var(--amb-fond),var(--n3));border:1px solid rgba(212,160,23,.28);}
@@ -543,7 +606,23 @@ body.splash-on{overflow:hidden;}
   <!-- MEMBER -->
   <div id="view-member" class="hidden">
     <div class="m-hero">
-      <div class="m-hero-bg"></div><div class="m-hero-ov"></div>
+      <div class="m-hero-bg">
+        <div class="hb-piste" id="hb-piste">
+          <!-- La premiere vue porte la photo prechargee dans le <head>. Les
+               deux autres sont remplies par le script apres le chargement. -->
+          <div class="hb-i" style="background-image:url('serge-hero.webp')"></div>
+          <!-- Deux vues seulement, et c'est un choix mesure, pas un oubli.
+               Des quatre fichiers disponibles, serge-concert.jpg est en fait
+               l'affiche CREATAIR : fond blanc et typographie, donc du texte
+               sous le nom du fan, ce que la direction artistique interdit. Et
+               serge-creatair.jpg est la MEME photo que serge-portrait.jpg,
+               en 2048 px pour 167 Ko contre 72 Ko : aucun gain a 390 px de
+               large. Une troisieme vue demande une photo de plus. -->
+          <div class="hb-i" data-src="serge-portrait.jpg" data-pos="center 8%"></div>
+        </div>
+      </div>
+      <div class="m-hero-ov"></div>
+      <div class="hb-pts" id="hb-pts" aria-hidden="true"></div>
       <div class="m-hero-c">
         <div class="m-top">
           <div class="brand"><div class="brand-logo">BM</div><span class="brand-name">La Beynaumania</span></div>
@@ -561,10 +640,12 @@ body.splash-on{overflow:hidden;}
     <div class="scroll">
       <div id="live-section"></div>
       <div class="card amb-card" id="amb-card">
-        <div class="amb-h">
-          <svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-          <div class="amb-title">Tente de devenir le meilleur ambassadeur</div>
-        </div>
+        <button class="amb-tete" id="amb-tete" type="button" aria-expanded="false" aria-controls="amb-corps">
+          <svg class="et" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+          <span class="amb-tt"><b>Ambassadeur</b><span class="amb-res" id="amb-res">Partage ton lien</span></span>
+          <span class="amb-chev" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="amb-corps" id="amb-corps">
         <p class="amb-desc">Partage ton lien. Chaque personne qui entre te rapproche du grade <b style="color:var(--or)">Ambassadeur</b>.</p>
         <div id="amb-score"></div>
         <div class="amb-link"><input id="amb-url" type="text" readonly/><button class="amb-copy" onclick="copyLink()">Copier</button></div>
@@ -575,6 +656,7 @@ body.splash-on{overflow:hidden;}
         <div id="amb-rang"></div>
         <button class="conc-voir hidden" id="conc-voir">Voir le classement</button>
         <div class="conc-l hidden" id="conc-liste"></div>
+        </div>
       </div>
 
       <div id="fil"></div>
@@ -851,6 +933,25 @@ async function chargerConcours(){
     gr.appendChild(lbl); gr.appendChild(bar);
   }
   scoreBox.appendChild(gr);
+
+  /* Le resume de la tete repliee. C'est lui qui fait que replier ne coute
+     rien : les deux chiffres qui comptent restent lisibles ferme. */
+  const res = document.getElementById('amb-res');
+  if(res){
+    res.innerHTML = '';
+    if(entres > 0){
+      res.appendChild(el('i', null, String(entres)));
+      res.appendChild(document.createTextNode(entres > 1 ? ' entrés · ' : ' entré · '));
+      res.appendChild(el('i', null, String(moi.points || 0)));
+      res.appendChild(document.createTextNode((moi.points || 0) > 1 ? ' points' : ' point'));
+      if(ME.grade !== 'ambassadeur')
+        res.appendChild(document.createTextNode(' · ' + (ME.filleuls || 0) + '/' + SEUIL_AMBASSADEUR));
+    } else {
+      res.textContent = ME.grade === 'ambassadeur'
+        ? 'Tu es Ambassadeur'
+        : 'Partage ton lien, ' + SEUIL_AMBASSADEUR + ' entrées pour le grade';
+    }
+  }
 
   /* ── Une seule ligne de contexte, et seulement si elle apprend quelque
      chose. L'encart rouge de relance a ete supprime : il disait ce que la
@@ -1724,6 +1825,74 @@ function relancerInvites(){
     + location.origin + location.pathname;
   window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank');
 }
+/* ══════════ LE BANDEAU QUI DEFILE ══════════
+   Les deux vues suivantes ne sont demandees qu'apres le chargement de la page :
+   trois images qui se disputent le premier affichage, c'est l'ecran noir du
+   14/09 qui revient (R-82). */
+function monterBandeau(){
+  const piste = document.getElementById('hb-piste');
+  const pts = document.getElementById('hb-pts');
+  if(!piste || !pts) return;
+  const vues = Array.prototype.slice.call(piste.querySelectorAll('.hb-i'));
+  if(vues.length < 2) return;
+
+  pts.innerHTML = '';
+  vues.forEach(function(_, i){ pts.appendChild(el('span','hb-pt' + (i ? '' : ' on'))); });
+  const puces = Array.prototype.slice.call(pts.querySelectorAll('.hb-pt'));
+
+  // Les vues 2 et 3, une fois la page posee.
+  const charger = function(){
+    vues.forEach(function(v){
+      const src = v.getAttribute('data-src');
+      if(src){
+        v.style.backgroundImage = "url('" + src + "')";
+        // Une source carree ne se cadre pas comme une source large : sans ca,
+        // le visage de Serge sort du cadre sur la photo en 800x800.
+        const pos = v.getAttribute('data-pos');
+        if(pos) v.style.backgroundPosition = pos;
+        v.removeAttribute('data-src');
+      }
+    });
+  };
+  if(document.readyState === 'complete') setTimeout(charger, 400);
+  else window.addEventListener('load', function(){ setTimeout(charger, 400); });
+
+  const calme = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(calme) return; // la premiere vue reste, et les puces sont masquees en CSS
+
+  let i = 0;
+  setInterval(function(){
+    // Rien ne defile pendant que l'ecran d'entree est encore la, ni quand
+    // l'onglet est en arriere-plan : ca ne servirait qu'a chauffer le telephone.
+    if(document.hidden) return;
+    if(!document.getElementById('splash').classList.contains('out')) return;
+    i = (i + 1) % vues.length;
+    piste.style.transform = 'translateX(-' + (i * 100) + '%)';
+    puces.forEach(function(p, k){ p.classList.toggle('on', k === i); });
+  }, 5000);
+}
+
+/* ══════════ LE REPLI DE LA CARTE AMBASSADEUR ══════════ */
+const CLE_AMB = 'bey_amb_ouvert';
+function replierAmb(ouvrir){
+  const carte = document.getElementById('amb-card');
+  const tete = document.getElementById('amb-tete');
+  if(!carte || !tete) return;
+  carte.classList.toggle('ouvert', !!ouvrir);
+  tete.setAttribute('aria-expanded', ouvrir ? 'true' : 'false');
+  try{ localStorage.setItem(CLE_AMB, ouvrir ? '1' : '0'); }catch(e){}
+}
+(function(){
+  const tete = document.getElementById('amb-tete');
+  if(!tete) return;
+  let ouvert = false;
+  try{ ouvert = localStorage.getItem(CLE_AMB) === '1'; }catch(e){}
+  replierAmb(ouvert);
+  tete.addEventListener('click', function(){
+    replierAmb(!document.getElementById('amb-card').classList.contains('ouvert'));
+  });
+})();
+
 function shareWa(){if(porte())return;const txt="🔥 Rejoins LA BEYNAUMANIA, l'univers officiel de Serge Beynaud ! Contenu exclusif rien que pour nous. C'est gratuit 👉 "+ambLink(ME.code_ambassadeur);window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');}
 
 /* =====================================================================
@@ -1936,6 +2105,13 @@ document.getElementById('retour-apercu').addEventListener('click',function(){
 
   // Un lien d'acces personnel prime sur tout : c'est justement le cas ou le
   // navigateur n'a aucune session, parce que ce n'est pas le meme navigateur.
+  /* Le bandeau ne depend d'aucun compte : il se monte UNE fois, avant que le
+     demarrage se separe en branches. Pose sur chaque branche, il en manquait
+     deja une, celle du lien d'acces personnel, c'est-a-dire justement celle
+     qu'emprunte quelqu'un qui ouvre l'application sur un nouvel appareil.
+     Meme famille que R-84 : la branche qu'on ne teste pas est celle qui casse. */
+  essayer('bandeau', monterBandeau);
+
   const jetonUrl = lireJetonUrl();
   if(jetonUrl){
     nettoyerUrl();

@@ -257,6 +257,18 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .pub-btns button.on{color:var(--vert);border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.08);}
 .pub-btns button.danger{color:var(--erreur);border-color:var(--bord-erreur);}
 
+/* « Ce qui est publié » s'allongeait : 14 lignes aujourd'hui, pres de 1 800 px
+   de defilement, et ca ne fera que grandir. On en montre 5 et on deplie au
+   clic. Les filtres par type restent : couper la liste ne remplace pas de
+   pouvoir chercher dedans. */
+.pub-plus{width:100%;margin-top:12px;min-height:44px;background:var(--n4);
+  border:1px solid var(--faint);border-radius:11px;color:var(--blanc);
+  font-size:12.5px;font-weight:800;letter-spacing:.3px;
+  display:flex;align-items:center;justify-content:center;gap:8px;}
+.pub-plus:active{background:var(--n5);}
+.pub-plus svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.4;
+  stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+
 /* Zone de tap : 44 px minimum, regle de UX_SYSTEM section 9. La recette
    automatisee comptait 38 boutons en dessous, dont « Quitter » a 14 px de
    haut. Sur cette application tout se fait au pouce, en marchant, sur un
@@ -694,9 +706,15 @@ function choisirType(t){
    deja pour le fan depuis le 13/09, elles ne l'etaient pas pour Serge. */
 let MESSAGES=[], PHOTOS=[], SONDAGES=[];
 let FILTRE='tout';
+/* Combien de publications la liste montre. Remis a 5 des qu'on change de
+   filtre : garder un deplaiement en changeant de categorie ferait afficher
+   « Voir les 0 autres ». */
+const PUBLIE_PAS = 5;
+let PUBLIE_VU = PUBLIE_PAS;
 
 function filtrer(f){
   FILTRE=f;
+  PUBLIE_VU = PUBLIE_PAS;
   document.querySelectorAll('#filtres .filtre').forEach(b=>b.classList.toggle('actif', b.dataset.f===f));
   peindrePublie();
 }
@@ -754,7 +772,8 @@ function peindrePublie(){
       : 'Rien dans cette catégorie.')+'</div>';
     return;
   }
-  el.innerHTML = vues.map(x=>{
+  const cachees = Math.max(0, vues.length - PUBLIE_VU);
+  el.innerHTML = vues.slice(0, PUBLIE_VU).map(x=>{
     const vig = x.img
       ? '<img class="pub-vig" src="'+esc(x.img)+'" alt=""/>'
       : '<div class="pub-vig"><svg viewBox="0 0 24 24">'+(ICONES[x.k]||ICONES.mot)+'</svg></div>';
@@ -789,6 +808,31 @@ function peindrePublie(){
       + (x.k==='video' ? '<div class="pub-s"><span class="ct-url">'+esc(x.lien||'lien manquant')+'</span></div>' : '')
       + '<div class="pub-btns">'+btns.join('')+'</div></div></div>';
   }).join('');
+
+  /* Le bouton dit COMBIEN il en reste, pas « Voir plus » : Serge doit savoir
+     s'il en cache trois ou deux cents avant de decider d'appuyer. */
+  if(cachees > 0){
+    const b = document.createElement('button');
+    b.className = 'pub-plus';
+    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+    b.appendChild(document.createTextNode(
+      cachees > 1 ? 'Voir les ' + cachees + ' autres' : 'Voir la dernière'));
+    b.addEventListener('click', function(){ PUBLIE_VU = vues.length; peindrePublie(); });
+    el.appendChild(b);
+  } else if(PUBLIE_VU > PUBLIE_PAS && vues.length > PUBLIE_PAS){
+    // Tout est deplie : on propose de refermer, sinon la liste ne se replie
+    // plus jamais sans changer de filtre.
+    const b = document.createElement('button');
+    b.className = 'pub-plus';
+    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>';
+    b.appendChild(document.createTextNode('Replier la liste'));
+    b.addEventListener('click', function(){
+      PUBLIE_VU = PUBLIE_PAS;
+      peindrePublie();
+      el.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    });
+    el.appendChild(b);
+  }
 }
 
 /* ══════════ CORRIGER OU RETIRER UN MOT ══════════

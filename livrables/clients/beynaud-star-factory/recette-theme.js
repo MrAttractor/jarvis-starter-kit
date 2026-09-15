@@ -414,6 +414,22 @@ function trierContrastes() {
       if (!parDefaut.bouton) echecs.push('la bascule est absente du fil du fan');
       if (!parDefaut.soleilVisible) echecs.push("en sombre, la bascule doit montrer le soleil (ce qu'on va obtenir)");
     }
+    if (largeur === 390) {
+      const hero = await page.evaluate(() => {
+        const p = document.getElementById('hb-piste');
+        const vues = p ? p.querySelectorAll('.hb-i') : [];
+        return {
+          vues: vues.length,
+          puces: document.querySelectorAll('#hb-pts .hb-pt').length,
+          // La premiere vue porte la photo prechargee ; les suivantes ne
+          // doivent PAS encore etre demandees au premier affichage (R-82).
+          premiereRemplie: vues.length ? /url\(/.test(vues[0].style.backgroundImage || '') : false,
+        };
+      });
+      if (hero.vues < 2) echecs.push('le bandeau ne défile pas : ' + hero.vues + ' vue(s)');
+      if (hero.puces !== hero.vues) echecs.push('les puces du bandeau ne correspondent pas aux vues');
+      if (!hero.premiereRemplie) echecs.push('la première vue du bandeau est vide');
+    }
     await auditer(page, 'fan · visiteur', 'sombre', largeur);
     if (largeur === 390) await page.screenshot({ path: path.join(__dirname, 'recette-theme-fan-sombre.png'), fullPage: true });
 
@@ -444,6 +460,42 @@ function trierContrastes() {
     await page.waitForTimeout(2200);
     const retenu = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
     if (largeur === 390 && retenu !== 'clair') echecs.push('le choix clair est perdu au rechargement (data-theme=' + retenu + ')');
+
+    /* La carte Ambassadeur est repliee par defaut depuis le 15/09. Son corps
+       est donc en display:none, et l'audit de contraste ignore ce qui n'est pas
+       affiche : sans l'ouvrir, la moitie de la carte ne serait plus mesuree du
+       tout, et la recette passerait au vert en ayant arrete de regarder. */
+    const amb = await page.evaluate(() => {
+      const c = document.getElementById('amb-card'), t = document.getElementById('amb-tete');
+      const r = document.getElementById('amb-res');
+      return {
+        tete: !!t, replieParDefaut: !!c && !c.classList.contains('ouvert'),
+        expanded: t ? t.getAttribute('aria-expanded') : null,
+        resume: r ? r.innerText.trim() : '',
+        hauteurRepliee: c ? Math.round(c.getBoundingClientRect().height) : -1,
+      };
+    });
+    if (largeur === 390) {
+      if (!amb.tete) echecs.push("la carte Ambassadeur n'a pas de tête cliquable");
+      if (!amb.replieParDefaut) echecs.push('la carte Ambassadeur devrait être repliée par défaut');
+      if (amb.expanded !== 'false') echecs.push('aria-expanded devrait valoir false une fois repliée');
+      if (!amb.resume) echecs.push('la tête repliée ne montre aucun résumé, replier coûterait alors une information');
+      if (amb.hauteurRepliee > 130) echecs.push('la carte repliée fait encore ' + amb.hauteurRepliee + 'px de haut');
+    }
+    await page.click('#amb-tete');
+    await page.waitForTimeout(450);
+    const ouvert = await page.evaluate(() => ({
+      ouvert: document.getElementById('amb-card').classList.contains('ouvert'),
+      expanded: document.getElementById('amb-tete').getAttribute('aria-expanded'),
+      barre: !!document.querySelector('.amb-bar .amb-fill'),
+      chiffres: document.querySelectorAll('#amb-score .sc-n').length,
+    }));
+    if (largeur === 390) {
+      if (!ouvert.ouvert) echecs.push("le clic n'ouvre pas la carte Ambassadeur");
+      if (ouvert.expanded !== 'true') echecs.push('aria-expanded devrait valoir true une fois ouverte');
+      if (!ouvert.barre) echecs.push('la barre vers le grade ne se peint pas dans la carte ouverte');
+      if (ouvert.chiffres !== 3) echecs.push('attendu 3 chiffres dans la carte, trouvé ' + ouvert.chiffres);
+    }
     await auditer(page, 'fan · membre', 'clair', largeur);
     if (largeur === 390) await page.screenshot({ path: path.join(__dirname, 'recette-theme-fan-membre-clair.png'), fullPage: true });
 
@@ -492,6 +544,15 @@ function trierContrastes() {
       for (const onglet of ['publier', 'communaute', 'moderation']) {
         await page.click('#o-' + onglet);
         await page.waitForTimeout(350);
+        if (onglet === 'publier' && largeur === 390) {
+          const p = await page.evaluate(() => {
+            const b = document.querySelector('#publie .pub-plus');
+            return { lignes: document.querySelectorAll('#publie .pub').length,
+                     bouton: b ? b.innerText.trim() : null };
+          });
+          if (p.lignes > 5) echecs.push('la liste publiée montre ' + p.lignes + ' lignes, 5 attendues');
+          if (!p.bouton) echecs.push('le bouton de dépliement de la liste publiée est absent');
+        }
         await auditer(page, 'app · ' + onglet, theme, largeur);
         if (largeur === 390) {
           await page.screenshot({ path: path.join(__dirname, 'recette-theme-app-' + onglet + '-' + theme + '.png'), fullPage: true });
