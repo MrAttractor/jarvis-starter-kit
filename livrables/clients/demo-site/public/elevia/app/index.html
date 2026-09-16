@@ -146,12 +146,16 @@ h2{font-family:var(--serif);font-size:20px;line-height:1.3;font-weight:500;margi
 /* ── Champs ── */
 .champ{margin-bottom:20px}
 label{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-bottom:7px}
-input,select{
+input,select,textarea{
   width:100%;padding:14px 15px;border:1px solid var(--bord);border-radius:10px;
   font-size:16px;font-family:inherit;color:var(--encre);background:var(--creme);
   min-height:48px;transition:border-color .15s,background .15s,box-shadow .15s;
 }
-input:focus,select:focus{outline:none;border-color:var(--or);background:var(--blanc);box-shadow:0 0 0 3px rgba(190,148,64,.17)}
+/* 16 px au moins, sinon iOS zoome sur le champ au premier appui et ne
+   dézoome jamais. Le redimensionnement est vertical seulement : en libre,
+   une poignée tirée de travers déborde de la carte. */
+textarea{resize:vertical;line-height:1.55;-webkit-appearance:none;box-sizing:border-box;max-width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--or);background:var(--blanc);box-shadow:0 0 0 3px rgba(190,148,64,.17)}
 input[aria-invalid="true"]{border-color:var(--alerte)}
 .aide{font-size:12px;color:var(--gris);margin-top:6px;line-height:1.5;display:flex;align-items:flex-start;gap:6px}
 .aide.ok{color:var(--succes);font-weight:500}
@@ -174,7 +178,6 @@ input[aria-invalid="true"]{border-color:var(--alerte)}
   padding:11px 13px;border-radius:8px;font-size:14.5px;cursor:pointer;
   min-height:44px;display:flex;align-items:center;
 }
-.combo-liste div[role="option"]:hover,
 .combo-liste div[role="option"].survol{background:var(--sable)}
 .combo-liste div[role="option"][aria-selected="true"]{color:var(--or-texte);font-weight:500}
 .combo-vide{padding:14px 13px;font-size:13.5px;color:var(--gris)}
@@ -222,6 +225,12 @@ input[aria-invalid="true"]{border-color:var(--alerte)}
 @media (hover:hover) and (pointer:fine){
   .bouton:hover:not(:disabled){background:#001B3A}
   .bouton.or:hover:not(:disabled){background:var(--or)}
+  /* R-66 : sur un ecran tactile, le survol reste colle au dernier element
+     touche, et l'ecran suivant herite du cadre a la meme position. */
+  .combo-liste div[role="option"]:hover{background:var(--sable)}
+  .pied nav a:hover{text-decoration:underline;text-underline-offset:3px}
+  .tag button:hover svg{stroke:var(--alerte)}
+  .discret:hover{color:var(--muted)}
 }
 button{-webkit-tap-highlight-color:transparent}
 .lien{
@@ -319,7 +328,6 @@ button{-webkit-tap-highlight-color:transparent}
   display:inline-flex;align-items:center;min-height:44px;padding:0 4px;
   font-size:12.5px;color:var(--muted);text-decoration:none;
 }
-.pied nav a:hover{text-decoration:underline;text-underline-offset:3px}
 .pied .contact-inactif{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;font-size:12.5px;color:var(--gris)}
 .pied .mention{font-size:11px;color:var(--gris);line-height:1.7}
 
@@ -380,7 +388,6 @@ button{-webkit-tap-highlight-color:transparent}
   border-radius:50%;flex:0 0 auto;
 }
 .tag button svg{width:11px;height:11px;stroke:var(--gris);stroke-width:2.6;fill:none}
-.tag button:hover svg{stroke:var(--alerte)}
 
 /* ── Tranche d'âge : deux curseurs séparés ──
    Deux curseurs superposés se battent sous le doigt. Séparés, chacun a sa
@@ -461,6 +468,59 @@ input[type="range"]::-moz-range-thumb{
 .duo-reponse{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .duo-reponse .bouton{margin:0}
 .bouton.sobre{background:var(--creme);color:var(--muted);border:1px solid var(--bord)}
+
+/* ── Badge « Vérifié » porté par chaque profil proposé ──
+   Le Club ne propose que des membres vérifiés : le badge ne distingue donc
+   personne, il rassure. C'est un critère d'acceptation du cahier des charges
+   (Module 3, « score et badge »). */
+.verifie{
+  display:inline-flex;align-items:center;gap:5px;font-size:11.5px;
+  color:var(--or-texte);background:var(--sable);border-radius:99px;
+  padding:3px 9px;margin-top:4px;white-space:nowrap;
+}
+.verifie svg{width:11px;height:11px;stroke:var(--or);stroke-width:2.8;fill:none}
+
+/* ── Le filtre de zone ──
+   Trois portes, jamais une liste déroulante : à trois choix, le déroulant
+   cache deux options sur trois et coûte deux gestes au lieu d'un. */
+.zones{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:0 0 18px}
+.zones button{
+  min-height:44px;padding:10px 6px;border-radius:10px;font-size:13px;
+  border:1px solid var(--bord);background:var(--blanc);color:var(--muted);
+  cursor:pointer;font-family:inherit;line-height:1.3;
+}
+.zones button.actif{background:var(--sable);border-color:var(--or);color:var(--or-texte);font-weight:600}
+.zones button:disabled{opacity:.55;cursor:default}
+
+/* ── Le premier échange ──
+   Texte seul, et c'est voulu : le vocal, la photo et l'historique
+   consultable appartiennent au Module 4. */
+.fil{display:flex;flex-direction:column;gap:10px;margin:0 0 18px;max-height:52vh;overflow-y:auto;padding:2px}
+.bulle{
+  max-width:82%;padding:11px 14px;border-radius:14px;font-size:14px;line-height:1.55;
+  word-break:break-word;white-space:pre-wrap;
+}
+.bulle.moi{align-self:flex-end;background:var(--sable);color:var(--encre);border-bottom-right-radius:5px}
+.bulle.elle{align-self:flex-start;background:var(--creme);color:var(--encre);border:1px solid var(--bord);border-bottom-left-radius:5px}
+.bulle .quand{display:block;font-size:10.5px;color:var(--gris);margin-top:5px}
+.fil-vide{text-align:center;color:var(--gris);font-size:13.5px;line-height:1.6;padding:22px 10px}
+
+/* ── Connexion établie ── */
+.celebration{text-align:center;padding:6px 0 4px}
+.celebration .duo-medailles{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:20px}
+.celebration .duo-medailles .medaille{width:58px;height:58px;font-size:22px;margin:0}
+.celebration .duo-medailles .noeud{
+  width:28px;height:28px;border-radius:50%;background:var(--sable);
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+}
+.celebration .duo-medailles .noeud svg{width:14px;height:14px;stroke:var(--or);stroke-width:2.8;fill:none}
+
+/* ── Action discrète, sous une carte ── */
+.discret{
+  display:block;width:100%;background:none;border:0;padding:12px 4px;margin:2px 0 0;
+  min-height:44px;font-family:inherit;font-size:12.5px;color:var(--gris);
+  text-decoration:underline;text-underline-offset:3px;cursor:pointer;
+}
 
 .vide{text-align:center;padding:28px 18px;color:var(--gris);font-size:14px;line-height:1.6}
 .vide svg{width:34px;height:34px;stroke:var(--bord);stroke-width:1.6;fill:none;margin-bottom:12px}
@@ -1869,10 +1929,14 @@ async function terminerQuestionnaire() {
   $("#b-retour-profil2").onclick = () => ecranMembre(false);
 }
 
-/* ── La découverte ──────────────────────────────────────────── */
+/* ── La découverte ────────────────────────────────────────────
+   La zone survit au va-et-vient entre la grille et une fiche : la remettre
+   à « partout » chaque fois obligerait à refiltrer après chaque retour. */
+let zoneChoisie = "partout";
+
 async function ecranDecouverte(msg) {
   rendre('<div class="carte anime"><p class="chapo" style="margin:0">Nous cherchons vos profils…</p></div>');
-  const r = await appelClub("decouverte");
+  const r = await appelClub("decouverte", { zone: zoneChoisie });
   if (!r.ok) return ecranMembre(false, r.error || "La découverte n'est pas disponible.");
 
   if (r.attendu === "questionnaire") {
@@ -1890,25 +1954,51 @@ async function ecranDecouverte(msg) {
   }
 
   const profils = r.profils || [];
+  const filtre = zoneChoisie !== "partout";
+  const ZONES = [["partout", "Partout"], ["pays", "Mon pays"], ["ville", "Ma ville"]];
+
   rendre(`
     ${erreur(msg)}
     ${r.attendu === "verification" ? '<div class="message info" style="margin-bottom:18px">Faites vérifier votre profil pour pouvoir demander une mise en relation.</div>' : ""}
     <div class="carte anime">
       <span class="etiquette">Votre cercle</span>
-      <h2>${profils.length ? "Ces membres vous correspondent" : "Personne à vous proposer aujourd'hui"}</h2>
+      <h2>${profils.length ? "Ces membres vous correspondent" : filtre ? "Personne dans cette zone" : "Personne à vous proposer aujourd'hui"}</h2>
       <p class="chapo">
         ${profils.length
           ? "Choisis parmi les membres vérifiés, et présentés avec la raison pour laquelle ils vous sont proposés."
-          : "Le Club grandit doucement, et c'est voulu. Revenez dans quelques jours : vous serez prévenue dès qu'un profil vous correspond."}
+          : filtre
+            ? "Élargissez la zone pour voir les membres qui vous correspondent ailleurs."
+            : "Le Club grandit doucement, et c'est voulu. Revenez dans quelques jours : vous serez prévenue dès qu'un profil vous correspond."}
       </p>
+      <div class="zones" role="group" aria-label="Zone de recherche">
+        ${ZONES.map(([cle, mot]) => `
+          <button type="button" data-zone="${cle}" class="${zoneChoisie === cle ? "actif" : ""}"
+                  aria-pressed="${zoneChoisie === cle}">${mot}</button>`).join("")}
+      </div>
+      <!-- Le Club ne propose que des membres vérifiés : une case à cocher
+           « vérifiés uniquement » ne changerait rien et mentirait sur ce
+           qu'elle fait. On le dit, et chaque profil porte le badge. -->
+      <p class="aide" style="margin:-8px 0 18px">Tous les profils proposés sont vérifiés.</p>
       ${profils.length ? profils.map((p) => carte_profil(p)).join("") : `
-        <div class="vide">${ICONE.globe}<div>Aucun profil ne correspond encore à ce que vous cherchez.</div></div>`}
+        <div class="vide">${ICONE.globe}<div>${filtre
+            ? "Aucun membre de cette zone ne correspond encore à ce que vous cherchez."
+            : "Aucun profil ne correspond encore à ce que vous cherchez."}</div></div>`}
       <button class="lien" id="b-retour-profil3" style="margin-top:8px">Revenir à mon profil</button>
     </div>`);
 
+  document.querySelectorAll("button[data-zone]").forEach((b) => {
+    b.onclick = () => {
+      if (b.dataset.zone === zoneChoisie) return;
+      zoneChoisie = b.dataset.zone;
+      document.querySelectorAll("button[data-zone]").forEach((x) => { x.disabled = true; });
+      ecranDecouverte();
+    };
+  });
   profils.forEach((p) => {
     const b = document.getElementById("b-dem-" + p.id);
     if (b) b.onclick = () => ecranDemande(p);
+    const g = document.getElementById("b-sig-" + p.id);
+    if (g) g.onclick = () => ecranSignaler(p.id, p.pseudo, "decouverte");
   });
   $("#b-retour-profil3").onclick = () => ecranMembre(false);
 }
@@ -1921,7 +2011,10 @@ function carte_profil(p) {
     <div class="profil-carte">
       <div class="profil-haut">
         <div class="medaille">${ech(String(p.pseudo || "?").slice(0, 1).toUpperCase())}</div>
-        <div class="qui"><div class="nom">${ech(p.pseudo)}</div></div>
+        <div class="qui">
+          <div class="nom">${ech(p.pseudo)}</div>
+          <span class="verifie">${ICONE.bouclier}Vérifié</span>
+        </div>
         <div class="accord ${p.score >= 70 ? "fort" : ""}">
           <div class="chiffre">${Number(p.score) || 0}</div>
           <div class="mot">Affinité</div>
@@ -1941,6 +2034,7 @@ function carte_profil(p) {
       <button class="bouton ${peutDemander ? "or" : "sobre"}" id="b-dem-${ech(p.id)}" ${peutDemander ? "" : "disabled"} style="margin:0">
         ${peutDemander ? "Demander une mise en relation" : "Vérification requise"}
       </button>
+      <button class="discret" id="b-sig-${ech(p.id)}">Signaler ce profil</button>
     </div>`;
 }
 
@@ -1990,6 +2084,162 @@ function ecranDemande(p, msg) {
   };
 }
 
+/* ── Bloquer ou signaler ──────────────────────────────────────
+   Deux gestes voisins et très différents, donc un écran qui les sépare et
+   qui dit ce que chacun fait, plutôt que deux boutons de plus sous une
+   demande. `retour` dit d'où l'on vient, pour y revenir. */
+function ecranSignaler(membreId, pseudo, retour, relationId, msg) {
+  const revenir = () => retour === "decouverte" ? ecranDecouverte() : ecranRelations();
+
+  rendre(`
+    ${erreur(msg)}
+    <div class="carte anime">
+      <span class="etiquette">Signaler</span>
+      <h2>Signaler ${ech(pseudo)}</h2>
+      <p class="chapo">
+        Le profil est immédiatement retiré des profils proposés, à vous comme
+        aux autres membres, le temps que notre équipe l'examine. ${ech(pseudo)}
+        n'est pas prévenue que le signalement vient de vous, et ne pourra plus
+        vous être présentée.
+      </p>
+      <div class="champ">
+        <label for="i-motif">Que s'est-il passé ? <span style="color:var(--gris);font-weight:400">(facultatif)</span></label>
+        <textarea id="i-motif" rows="4" maxlength="1000" placeholder="Quelques mots aident notre équipe à trancher vite."></textarea>
+      </div>
+      <button class="bouton or" id="b-sig-ok">Signaler ce profil</button>
+      ${relationId ? `<button class="bouton sobre" id="b-bloq">Bloquer sans signaler</button>` : ""}
+      <button class="lien" id="b-sig-non">Annuler</button>
+    </div>`);
+
+  $("#b-sig-non").onclick = revenir;
+
+  $("#b-sig-ok").onclick = async () => {
+    const b = $("#b-sig-ok");
+    b.disabled = true; b.textContent = "Envoi…";
+    const r = await appelClub("signaler", { membre: membreId, motif: $("#i-motif").value.trim() });
+    if (!r.ok) {
+      b.disabled = false; b.textContent = "Signaler ce profil";
+      return ecranSignaler(membreId, pseudo, retour, relationId, r.error);
+    }
+    rendre(`
+      <div class="carte anime">
+        <span class="etiquette">Signalement transmis</span>
+        <h2>C'est fait</h2>
+        <p class="chapo">
+          Notre équipe examine ce profil. Il ne vous sera plus présenté, quelle
+          que soit sa conclusion.
+        </p>
+        <button class="bouton or" id="b-sig-fin">Revenir</button>
+      </div>`);
+    $("#b-sig-fin").onclick = revenir;
+  };
+
+  if ($("#b-bloq")) $("#b-bloq").onclick = async () => {
+    const b = $("#b-bloq");
+    b.disabled = true; b.textContent = "Un instant…";
+    const r = await appelClub("repondre_relation", { relation: relationId, reponse: "bloquee" });
+    if (!r.ok) {
+      b.disabled = false; b.textContent = "Bloquer sans signaler";
+      return ecranSignaler(membreId, pseudo, retour, relationId, r.error);
+    }
+    ecranRelations(`${pseudo} est bloquée. Vous ne vous verrez plus proposer l'une à l'autre.`);
+  };
+}
+
+/* ── Connexion établie ────────────────────────────────────────
+   Le cahier des charges veut cet écran AUX DEUX MEMBRES. Celle qui accepte
+   le voit dans la foulée de son geste ; celle qui a demandé ne sait encore
+   rien, et le découvre à sa visite suivante. C'est pourquoi le serveur garde
+   qui l'a déjà vu, au lieu de le déduire de la présence à l'écran. */
+/* Les annonces déjà montrées dans CETTE session. Le serveur est la mémoire
+   longue, mais son enregistrement est asynchrone : sans ce garde local,
+   « Plus tard » renvoie vers un écran qui relit la file avant que le serveur
+   ait noté quoi que ce soit, retrouve la même annonce, et la remontre. Une
+   boucle dont on ne sort qu'en fermant l'onglet. */
+const annoncesVues = new Set();
+
+async function ecranConnexionEtablie(annonce, suite) {
+  annoncesVues.add(String(annonce.id));
+  const moi = (etat.membre && etat.membre.pseudo) || "?";
+  rendre(`
+    <div class="carte anime">
+      <span class="etiquette">Connexion établie</span>
+      <div class="celebration">
+        <div class="duo-medailles">
+          <div class="medaille">${ech(moi.slice(0, 1).toUpperCase())}</div>
+          <div class="noeud">${ICONE.ok}</div>
+          <div class="medaille">${ech(String(annonce.pseudo || "?").slice(0, 1).toUpperCase())}</div>
+        </div>
+        <h2 style="margin-bottom:10px">Vous êtes en relation avec ${ech(annonce.pseudo)}</h2>
+        <p class="chapo">
+          Vous pouvez maintenant vous écrire. Personne d'autre ne voit cet
+          échange, et il s'arrête le jour où l'une de vous le décide.
+        </p>
+      </div>
+      <button class="bouton or" id="b-ecrire">Écrire à ${ech(annonce.pseudo)}</button>
+      <button class="lien" id="b-plus-tard">Plus tard</button>
+    </div>`);
+
+  // Marquée vue dès l'affichage, pas au clic : une annonce fermée d'un revers
+  // de pouce a bien été vue, et la remontrer à chaque ouverture la userait.
+  appelClub("connexion_vue", { relation: annonce.id });
+
+  $("#b-ecrire").onclick = () => ecranFil(annonce.id);
+  $("#b-plus-tard").onclick = () => suite ? suite() : ecranMembre(false);
+}
+
+/* ── Le premier échange ───────────────────────────────────────
+   Texte seul. Le vocal, la photo et l'historique consultable appartiennent
+   au Module 4 : le cahier des charges trace cette ligne lui-même, et la
+   tenir évite de livrer le Module 4 sans l'avoir facturé. */
+async function ecranFil(relationId, msg) {
+  rendre('<div class="carte anime"><p class="chapo" style="margin:0">Un instant…</p></div>');
+  const r = await appelClub("fil", { relation: relationId });
+  if (!r.ok) return ecranRelations(r.error || "Cette conversation n'est pas disponible.");
+
+  const messages = r.messages || [];
+  const quand = (d) => new Date(d).toLocaleString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+
+  rendre(`
+    ${erreur(msg)}
+    <div class="carte anime">
+      <span class="etiquette">Votre échange</span>
+      <h2 style="font-size:19px">${ech(r.pseudo)}</h2>
+      ${messages.length ? `<div class="fil" id="fil">
+        ${messages.map((m) => `
+          <div class="bulle ${m.a_moi ? "moi" : "elle"}">${ech(m.texte)}
+            <span class="quand">${ech(quand(m.quand))}</span>
+          </div>`).join("")}
+      </div>` : `<div class="fil-vide">
+        Aucun message pour l'instant.<br>C'est à l'une de vous de commencer.
+      </div>`}
+      <div class="champ">
+        <label for="i-msg">Votre message</label>
+        <textarea id="i-msg" rows="3" maxlength="2000" placeholder="Écrivez ici."></textarea>
+      </div>
+      <button class="bouton or" id="b-env-msg">Envoyer</button>
+      <button class="lien" id="b-fil-retour">Revenir à mes relations</button>
+    </div>`);
+
+  const fil = $("#fil");
+  if (fil) fil.scrollTop = fil.scrollHeight;
+
+  $("#b-fil-retour").onclick = () => ecranRelations();
+  $("#b-env-msg").onclick = async () => {
+    // R-74 : on lit le champ AVANT de changer d'écran, sinon il n'existe plus.
+    const texte = $("#i-msg").value.trim();
+    if (!texte) return ecranFil(relationId, "Votre message est vide.");
+    const b = $("#b-env-msg");
+    b.disabled = true; b.textContent = "Envoi…";
+    const r2 = await appelClub("message", { relation: relationId, texte });
+    if (!r2.ok) {
+      b.disabled = false; b.textContent = "Envoyer";
+      return ecranFil(relationId, r2.error);
+    }
+    ecranFil(relationId);
+  };
+}
+
 /* ── Les cartes du Module 3 sur l'écran de profil ─────────────
    Chargées après le rendu, et en silence : si l'appel échoue, l'écran de
    profil reste utilisable et n'affiche simplement pas ces cartes. Une panne
@@ -2006,6 +2256,34 @@ async function garnir_zone_club() {
   if (!$("#zone-club")) return;            // l'écran a changé entre-temps
 
   let html = "";
+
+  // Une connexion établie non annoncée passe avant tout le reste : le
+  // cahier des charges veut qu'elle soit vue des deux côtés, et celle qui a
+  // demandé ne l'apprend qu'ici.
+  const annonces = ((rel.ok && rel.annonces) ? rel.annonces : [])
+    .filter((a) => !annoncesVues.has(String(a.id)));
+  if (annonces.length) {
+    html += `
+      <div class="carte anime-2">
+        <span class="etiquette">Connexion établie</span>
+        <h2 style="font-size:19px">${annonces.length === 1
+          ? ech(annonces[0].pseudo) + " a accepté votre demande"
+          : annonces.length + " personnes ont accepté votre demande"}</h2>
+        <p class="chapo" style="margin-bottom:18px">Vous pouvez maintenant vous écrire.</p>
+        <button class="bouton or" id="b-annonce" style="margin:0">Voir</button>
+      </div>`;
+  }
+
+  const nonLus = (rel.ok && rel.acceptees ? rel.acceptees : [])
+    .reduce((n, a) => n + (Number(a.non_lus) || 0), 0);
+  if (nonLus && !annonces.length) {
+    html += `
+      <div class="carte anime-2">
+        <span class="etiquette">Votre cercle</span>
+        <h2 style="font-size:19px">${nonLus === 1 ? "Un message vous attend" : nonLus + " messages vous attendent"}</h2>
+        <button class="bouton or" id="b-non-lus" style="margin:18px 0 0">Ouvrir mes échanges</button>
+      </div>`;
+  }
 
   const recues = (rel.ok && rel.recues) ? rel.recues : [];
   if (recues.length) {
@@ -2044,6 +2322,8 @@ async function garnir_zone_club() {
   }
 
   zone.innerHTML = html;
+  if ($("#b-annonce")) $("#b-annonce").onclick = () => ecranConnexionEtablie(annonces[0], () => ecranMembre(false));
+  if ($("#b-non-lus")) $("#b-non-lus").onclick = () => ecranRelations();
   if ($("#b-voir-demandes")) $("#b-voir-demandes").onclick = () => ecranRelations();
   if ($("#b-aff")) {
     const complet = q.ok && q.avancee && q.avancee.complet;
@@ -2059,6 +2339,12 @@ async function ecranRelations(msg) {
   const r = await appelClub("relations");
   if (!r.ok) return ecranMembre(false, r.error || "Vos demandes ne sont pas disponibles.");
   const recues = r.recues || [], envoyees = r.envoyees || [], acceptees = r.acceptees || [];
+
+  // Une connexion que ce membre n'a pas encore vue passe devant tout le
+  // reste : c'est la seule bonne nouvelle de l'écran, elle ne se découvre
+  // pas au milieu d'une liste.
+  const annonces = (r.annonces || []).filter((a) => !annoncesVues.has(String(a.id)));
+  if (annonces.length) return ecranConnexionEtablie(annonces[0], () => ecranRelations(msg));
 
   rendre(`
     ${erreur(msg)}
@@ -2080,14 +2366,30 @@ async function ecranRelations(msg) {
             <button class="bouton or" data-rel="${ech(d.id)}" data-rep="acceptee">Accepter</button>
             <button class="bouton sobre" data-rel="${ech(d.id)}" data-rep="refusee">Décliner</button>
           </div>
+          <button class="discret" data-sig="${ech(d.id)}" data-qui="${ech(d.membre)}"
+                  data-nom="${ech(d.pseudo)}">Bloquer ou signaler</button>
         </div>`).join("") : `<p class="chapo" style="margin:0">Vous serez prévenue dès qu'un membre souhaitera vous rencontrer.</p>`}
     </div>
 
     ${acceptees.length ? `<div class="carte anime-2">
       <span class="etiquette">Votre cercle</span>
       <h2 style="font-size:19px">${acceptees.length} mise${acceptees.length > 1 ? "s" : ""} en relation</h2>
-      ${acceptees.map((a) => `<div class="ligne"><span class="cle">${ech(a.pseudo)}</span><span class="val">acceptée</span></div>`).join("")}
-      <p class="aide" style="margin-top:14px">La messagerie arrive avec le prochain module.</p>
+      ${acceptees.map((a) => `
+        <div class="demande">
+          <div class="profil-haut">
+            <div class="medaille">${ech(String(a.pseudo || "?").slice(0, 1).toUpperCase())}</div>
+            <div class="qui"><div class="nom">${ech(a.pseudo)}</div>
+              <div class="ou">${Number(a.non_lus) > 0
+                  ? (Number(a.non_lus) === 1 ? "1 message non lu" : Number(a.non_lus) + " messages non lus")
+                  : Number(a.messages) > 0 ? "Échange en cours" : "Aucun message encore"}</div></div>
+          </div>
+          <button class="bouton ${Number(a.non_lus) > 0 ? "or" : "sobre"}" data-fil="${ech(a.id)}" style="margin:0">
+            ${Number(a.messages) > 0 ? "Ouvrir l'échange" : "Écrire le premier message"}
+          </button>
+          <button class="discret" data-sig="${ech(a.id)}" data-qui="${ech(a.membre)}"
+                  data-nom="${ech(a.pseudo)}">Bloquer ou signaler</button>
+        </div>`).join("")}
+      <p class="aide" style="margin-top:4px">Le message vocal, la photo et l'historique complet arrivent avec le prochain module.</p>
     </div>` : ""}
 
     ${envoyees.length ? `<div class="carte anime-2">
@@ -2103,10 +2405,18 @@ async function ecranRelations(msg) {
       document.querySelectorAll("button[data-rel]").forEach((x) => { x.disabled = true; });
       const r2 = await appelClub("repondre_relation", { relation: b.dataset.rel, reponse: b.dataset.rep });
       if (!r2.ok) return ecranRelations(r2.error);
+      // Accepter ouvre l'annonce de connexion, que le prochain passage par
+      // ecranRelations trouvera en tête de la file des annonces.
       ecranRelations(b.dataset.rep === "acceptee"
-        ? "Vous êtes en relation. La messagerie arrive avec le prochain module."
+        ? null
         : "Demande déclinée. Ce membre ne pourra pas vous redemander.");
     };
+  });
+  document.querySelectorAll("button[data-fil]").forEach((b) => {
+    b.onclick = () => ecranFil(b.dataset.fil);
+  });
+  document.querySelectorAll("button[data-sig]").forEach((b) => {
+    b.onclick = () => ecranSignaler(b.dataset.qui, b.dataset.nom, "relations", b.dataset.sig);
   });
   $("#b-retour-profil4").onclick = () => ecranMembre(false);
 }

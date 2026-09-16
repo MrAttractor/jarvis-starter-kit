@@ -170,14 +170,20 @@ Deno.serve(async (req) => {
       if (!avancee?.complet) {
         return json({ ok: true, avancee, profils: [], attendu: "questionnaire" });
       }
+      // La zone est une valeur close, jamais la chaîne reçue : un filtre est
+      // une porte, et une porte ne se laisse pas dicter son ouverture par
+      // l'appelant. Toute autre valeur retombe sur « partout ».
+      const zone = ["partout", "ville", "pays"].includes(String(p.zone ?? ""))
+        ? String(p.zone) : "partout";
+      const { data: profils } = await db.rpc("el_decouverte", {
+        p_membre: membre.id, p_limite: 12, p_zone: zone,
+      });
       if (membre.statut_verif !== "valide") {
         // On montre quand même les profils : c'est ce qui donne envie de
         // finir la vérification. Seule la demande est fermée, et l'écran le dit.
-        const { data: profils } = await db.rpc("el_decouverte", { p_membre: membre.id, p_limite: 12 });
-        return json({ ok: true, avancee, profils: profils ?? [], attendu: "verification" });
+        return json({ ok: true, avancee, zone, profils: profils ?? [], attendu: "verification" });
       }
-      const { data: profils } = await db.rpc("el_decouverte", { p_membre: membre.id, p_limite: 12 });
-      return json({ ok: true, avancee, profils: profils ?? [] });
+      return json({ ok: true, avancee, zone, profils: profils ?? [] });
     }
 
     // ── Demander une mise en relation ─────────────────────────
@@ -214,6 +220,56 @@ Deno.serve(async (req) => {
     if (action === "relations") {
       const { data: r } = await db.rpc("el_mes_relations", { p_membre: membre.id });
       return json({ ok: true, ...(r ?? {}) });
+    }
+
+    // ── Signaler un profil ────────────────────────────────────
+    // Le signalement retire le profil de la découverte de tous le temps de
+    // l'examen (CDC Module 3), et bloque la paire au passage : on ne veut
+    // pas reproposer à quelqu'un la personne qu'il vient de signaler.
+    if (action === "signaler") {
+      const { data: r } = await db.rpc("el_signaler", {
+        p_membre: membre.id,
+        p_cible: String(p.membre ?? ""),
+        p_motif: typeof p.motif === "string" ? p.motif.slice(0, 1000) : null,
+      });
+      if (r?.ok) {
+        await db.from("el_evenements").insert({
+          membre_id: membre.id, type: "profil_signale", meta: { vise: String(p.membre ?? "") },
+        });
+      }
+      return json(r ?? { ok: false, error: "Signalement impossible." });
+    }
+
+    // ── L'annonce « connexion établie » ───────────────────────
+    // Elle se marque vue par membre, sinon celui qui a demandé ne la verrait
+    // jamais, ou la reverrait à chaque ouverture.
+    if (action === "connexion_vue") {
+      const { data: r } = await db.rpc("el_connexion_vue", {
+        p_membre: membre.id, p_relation: String(p.relation ?? ""),
+      });
+      return json(r ?? { ok: false, error: "Impossible." });
+    }
+
+    // ── Le premier échange, après acceptation seulement ───────
+    if (action === "fil") {
+      const { data: r } = await db.rpc("el_fil", {
+        p_membre: membre.id, p_relation: String(p.relation ?? ""),
+      });
+      return json(r ?? { ok: false, error: "Conversation indisponible." });
+    }
+
+    if (action === "message") {
+      const { data: r } = await db.rpc("el_envoyer_message", {
+        p_membre: membre.id,
+        p_relation: String(p.relation ?? ""),
+        p_texte: typeof p.texte === "string" ? p.texte : "",
+      });
+      if (r?.ok) {
+        await db.from("el_evenements").insert({
+          membre_id: membre.id, type: "message_envoye", meta: { relation: String(p.relation ?? "") },
+        });
+      }
+      return json(r ?? { ok: false, error: "Envoi impossible." });
     }
 
     return json({ ok: false, error: "Action inconnue." }, 400);
