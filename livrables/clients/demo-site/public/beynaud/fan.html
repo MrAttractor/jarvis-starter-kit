@@ -223,6 +223,38 @@ body.splash-on{overflow:hidden;}
 .bascule .ico-lune{display:none;}
 :root[data-theme="clair"] .bascule .ico-lune{display:block;}
 :root[data-theme="clair"] .bascule .ico-soleil{display:none;}
+/* Les deux commandes du bandeau, groupees a droite. */
+.m-act{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+/* ===== LA CLOCHE, EN HAUT =====
+   L'activation vivait TOUT EN BAS de l'espace, sous la totalite du fil : pour
+   la trouver il fallait avoir fait defiler chaque publication, donc elle ne se
+   trouvait pas. Elle monte dans le bandeau, au meme gabarit que la bascule,
+   44 px (UX_SYSTEM section 9).
+   La cloche porte l'etat, le panneau porte les mots. Un appui ouvre le
+   panneau, et c'est le panneau qui declenche la demande du navigateur : on ne
+   demande jamais la permission sans l'avoir expliquee, parce qu'un refus ne se
+   redemande pas, il est perdu pour de bon. */
+.cloche-h{position:relative;width:44px;height:44px;flex-shrink:0;
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  transition:background .2s,border-color .2s;}
+.cloche-h:active{background:rgba(255,255,255,.24);}
+.cloche-h svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;}
+/* Active : le fond passe au rouge de la marque. Une epaisseur de trait qui
+   change ne se lit pas a 20 px, une surface pleine se lit de loin. */
+.cloche-h.on{background:var(--rouge);border-color:transparent;}
+/* Bloquee par le navigateur : la cloche s'eteint et se barre. Elle reste la,
+   parce qu'elle est le seul endroit qui explique comment debloquer. */
+.cloche-h.non svg{stroke:rgba(255,255,255,.45);}
+.cloche-h .barre{display:none;}
+.cloche-h.non .barre{display:block;}
+/* La pastille ne dit qu'une chose : il reste un geste a faire. Elle s'eteint
+   des que c'est actif, et ne revient jamais reclamer. Le cerne sombre la
+   detache de la photo du bandeau, qui peut etre claire a cet endroit. */
+.cloche-pt{position:absolute;top:7px;right:7px;width:9px;height:9px;
+  border-radius:50%;background:var(--rouge-vif);
+  box-shadow:0 0 0 2px rgba(7,7,7,.55);}
 .brand{display:flex;align-items:center;gap:8px;}
 .brand-logo{width:30px;height:30px;background:var(--rouge);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--bebas);font-size:15px;color:#fff;box-shadow:0 4px 12px var(--rouge-glow);}
 .brand-name{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);}
@@ -426,16 +458,25 @@ body.splash-on{overflow:hidden;}
 .conc-p{font-size:13px;font-weight:800;color:var(--or);flex-shrink:0;}
 .conc-p span{font-size:10px;color:var(--dim);font-weight:600;margin-left:3px;}
 
-/* La carte des notifications. Meme famille visuelle que le filet de
-   securite : ce sont deux propositions, pas deux alertes. */
-.cloche{background:linear-gradient(180deg,rgba(204,0,0,.10),var(--n3));
+/* Le panneau des notifications, ouvert par la cloche du bandeau et jamais de
+   lui-meme. Meme famille visuelle que le filet de securite : ce sont deux
+   propositions, pas deux alertes. */
+.cloche{position:relative;background:linear-gradient(180deg,rgba(204,0,0,.10),var(--n3));
   border:1px solid rgba(204,0,0,.28);border-radius:16px;padding:16px;margin-bottom:14px;
   display:flex;gap:13px;align-items:flex-start;}
 .cloche-i{width:38px;height:38px;border-radius:11px;background:rgba(204,0,0,.16);
   display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .cloche-i svg{width:20px;height:20px;stroke:var(--rouge-vif);fill:none;stroke-width:2;}
 .cloche-c{flex:1;min-width:0;}
-.cloche-t{font-size:14px;font-weight:800;margin-bottom:4px;}
+/* Le titre s'arrete avant la croix, sinon il passe dessous sur un ecran de
+   375 px, ou le titre tient sur deux lignes. */
+.cloche-t{font-size:14px;font-weight:800;margin-bottom:4px;padding-right:32px;}
+/* Refermer est un geste a part entiere : 44 px comme le reste, meme si la
+   croix qu'on y voit est petite. */
+.cloche-x{position:absolute;top:2px;right:2px;width:44px;height:44px;background:none;
+  display:flex;align-items:center;justify-content:center;}
+.cloche-x svg{width:15px;height:15px;stroke:var(--dim);fill:none;stroke-width:2.2;stroke-linecap:round;}
+.cloche-x:active svg{stroke:var(--blanc);}
 .cloche-d{font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:12px;}
 .cloche-b{width:100%;min-height:46px;background:var(--rouge);color:#fff;border-radius:11px;
   font-size:13px;font-weight:800;letter-spacing:.6px;box-shadow:0 6px 20px var(--rouge-glow);}
@@ -626,10 +667,20 @@ body.splash-on{overflow:hidden;}
       <div class="m-hero-c">
         <div class="m-top">
           <div class="brand"><div class="brand-logo">BM</div><span class="brand-name">La Beynaumania</span></div>
-          <button class="bascule" id="bascule-theme" type="button" aria-pressed="false" aria-label="Passer en mode clair">
-            <svg class="ico-soleil" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.2v2.3M12 19.5v2.3M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.2 12h2.3M19.5 12h2.3M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
-            <svg class="ico-lune" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 13.1A8.6 8.6 0 1 1 10.9 3.2a6.8 6.8 0 0 0 9.9 9.9z"/></svg>
-          </button>
+          <div class="m-act">
+            <button class="cloche-h hidden" id="cloche-h" type="button" aria-expanded="false" aria-controls="cloche" aria-label="Être prévenu quand Latiss publie">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+                <path d="M13.7 21a2 2 0 0 1-3.4 0"/>
+                <path class="barre" d="M4 3.4 20 20.6"/>
+              </svg>
+              <span class="cloche-pt hidden" id="cloche-pt" aria-hidden="true"></span>
+            </button>
+            <button class="bascule" id="bascule-theme" type="button" aria-pressed="false" aria-label="Passer en mode clair">
+              <svg class="ico-soleil" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.2v2.3M12 19.5v2.3M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.2 12h2.3M19.5 12h2.3M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+              <svg class="ico-lune" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 13.1A8.6 8.6 0 1 1 10.9 3.2a6.8 6.8 0 0 0 9.9 9.9z"/></svg>
+            </button>
+          </div>
         </div>
         <div id="m-grade" class="grade-badge membre">Membre</div>
         <div class="m-hello" id="m-hello"></div>
@@ -638,6 +689,25 @@ body.splash-on{overflow:hidden;}
     </div>
 
     <div class="scroll">
+      <!-- Le panneau des notifications. Il ne s'ouvre que sur un appui sur la
+           cloche du bandeau, juste au-dessus de lui : ouvert, il est donc a
+           l'endroit meme ou le pouce vient de se poser. -->
+      <div class="cloche hidden" id="cloche">
+        <div class="cloche-i">
+          <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        </div>
+        <div class="cloche-c">
+          <div class="cloche-t" id="cloche-t">Sois prévenu quand Latiss poste</div>
+          <div class="cloche-d" id="cloche-d">Une notification sur ton téléphone dès qu’il publie.</div>
+          <button class="cloche-b" id="cloche-b">Activer les notifications</button>
+          <div class="cloche-n" id="cloche-n"></div>
+          <div class="garde-pas hidden" id="garde-pas"></div>
+        </div>
+        <button class="cloche-x" id="cloche-x" type="button" aria-label="Fermer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+
       <div id="live-section"></div>
       <div class="card amb-card" id="amb-card">
         <button class="amb-tete" id="amb-tete" type="button" aria-expanded="false" aria-controls="amb-corps">
@@ -660,19 +730,6 @@ body.splash-on{overflow:hidden;}
       </div>
 
       <div id="fil"></div>
-
-      <div class="cloche hidden" id="cloche">
-        <div class="cloche-i">
-          <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-        </div>
-        <div class="cloche-c">
-          <div class="cloche-t" id="cloche-t">Sois prévenu quand Latiss poste</div>
-          <div class="cloche-d" id="cloche-d">Une notification sur ton téléphone dès qu’il publie.</div>
-          <button class="cloche-b" id="cloche-b">Activer les notifications</button>
-          <div class="cloche-n" id="cloche-n"></div>
-          <div class="garde-pas hidden" id="garde-pas"></div>
-        </div>
-      </div>
 
       <div class="zone-danger">
         <button class="lien-danger" id="btn-supprimer">Effacer mon compte</button>
@@ -844,6 +901,7 @@ function peindreApercu(){
   h.appendChild(el('span','r','BEYNAUMANIA'));
   document.getElementById('m-hello-sub').textContent='L’univers officiel de Serge Beynaud. Voici un aperçu.';
   document.getElementById('cloche').classList.add('hidden');
+  document.getElementById('cloche-h').classList.add('hidden');
   // Le concours vit DANS la carte ambassadeur, deja masquee juste au-dessus.
   // Cette ligne visait un id 'conc' qui n'a jamais existe dans la page : elle
   // levait une exception et emportait tout le demarrage avec elle. R-83.
@@ -1109,13 +1167,45 @@ function swPret(delai){
   ]);
 }
 
+/* La cloche du bandeau porte l'ETAT, le panneau porte les MOTS. etatCloche()
+   ne fait que preparer les deux : elle n'ouvre jamais le panneau d'elle-meme,
+   c'est l'appui sur la cloche qui l'ouvre. Seul le cas "rien a proposer"
+   touche a la visibilite du panneau, pour le refermer s'il etait reste
+   ouvert. */
+function ouvrirCloche(){
+  const carte = document.getElementById('cloche');
+  carte.classList.remove('hidden');
+  document.getElementById('cloche-h').setAttribute('aria-expanded','true');
+  // Le panneau est en haut du defilement, sous le bandeau. Si le fan est
+  // descendu dans le fil, la cloche a disparu avec le bandeau ; mais il peut
+  // aussi l'avoir ouvert a mi-hauteur depuis un retour en haut partiel.
+  carte.scrollIntoView({ block:'nearest', behavior:'smooth' });
+}
+function fermerCloche(){
+  document.getElementById('cloche').classList.add('hidden');
+  document.getElementById('cloche-h').setAttribute('aria-expanded','false');
+  // Ce qui a ete dit une fois ne doit pas ressurgir a la reouverture : ni le
+  // message d'erreur de la tentative precedente, ni les pas d'installation.
+  document.getElementById('cloche-n').textContent = '';
+  document.getElementById('garde-pas').classList.add('hidden');
+}
+
 async function etatCloche(){
+  const bell = document.getElementById('cloche-h');
+  const pastille = document.getElementById('cloche-pt');
   const carte = document.getElementById('cloche');
   const btn = document.getElementById('cloche-b');
   const note = document.getElementById('cloche-n');
   const titre = document.getElementById('cloche-t');
   const desc = document.getElementById('cloche-d');
-  if(APERCU || !ME){ carte.classList.add('hidden'); return; }
+
+  // Rien a proposer : la cloche s'efface, et le panneau avec elle. Une cloche
+  // qui ne mene a rien est pire qu'une cloche absente.
+  if(APERCU || !ME){
+    bell.classList.add('hidden');
+    carte.classList.add('hidden');
+    return;
+  }
 
   const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   const installee = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
@@ -1123,9 +1213,12 @@ async function etatCloche(){
 
   // Sur iPhone, ajouter a l'ecran d'accueil regle les DEUX sujets d'un coup :
   // les notifications deviennent possibles, et la session ne se perd plus au
-  // changement de navigateur. Une seule carte, un seul geste.
+  // changement de navigateur. Une seule porte, un seul geste.
   if(iOS && !installee){
-    carte.classList.remove('hidden');
+    bell.classList.remove('hidden');
+    bell.classList.remove('on','non');
+    pastille.classList.remove('hidden');
+    bell.setAttribute('aria-label','Être prévenu quand Latiss publie');
     titre.textContent = 'Ajoute la Beynaumania à ton écran';
     desc.textContent = 'Tu seras prévenu quand Latiss poste, et tu ne rempliras plus jamais ce formulaire.';
     btn.classList.remove('hidden');
@@ -1136,10 +1229,20 @@ async function etatCloche(){
     return;
   }
 
-  if(!pushDisponible()){ carte.classList.add('hidden'); return; }
+  if(!pushDisponible()){
+    bell.classList.add('hidden');
+    carte.classList.add('hidden');
+    return;
+  }
 
   if(Notification.permission === 'denied'){
-    carte.classList.remove('hidden');
+    // La cloche reste, barree : elle est le seul endroit qui explique comment
+    // debloquer, et le fan qui a refuse est justement celui qui la cherchera.
+    bell.classList.remove('hidden');
+    bell.classList.remove('on');
+    bell.classList.add('non');
+    pastille.classList.add('hidden');
+    bell.setAttribute('aria-label','Les notifications sont bloquées');
     titre.textContent = 'Les notifications sont bloquées';
     desc.textContent = 'Tu as refusé les notifications pour ce site. Ça se remet dans les réglages de ton navigateur.';
     btn.classList.add('hidden');
@@ -1147,10 +1250,13 @@ async function etatCloche(){
     return;
   }
 
-  // On affiche l'offre tout de suite, dans son etat par defaut. Interroger le
-  // navigateur d'abord revenait a ne rien afficher tant qu'il ne repondait pas,
-  // et a ne jamais rien afficher s'il ne repondait pas du tout.
-  carte.classList.remove('hidden');
+  // On peint l'etat par defaut tout de suite. Interroger le navigateur d'abord
+  // revenait a ne rien afficher tant qu'il ne repondait pas, et a ne jamais
+  // rien afficher s'il ne repondait pas du tout.
+  bell.classList.remove('hidden');
+  bell.classList.remove('on','non');
+  pastille.classList.remove('hidden');
+  bell.setAttribute('aria-label','Être prévenu quand Latiss publie');
   btn.classList.remove('hidden');
   btn.classList.remove('calme');
   titre.textContent = 'Sois prévenu quand Latiss poste';
@@ -1165,6 +1271,13 @@ async function etatCloche(){
   }catch(e){ abo = null; }
 
   if(abo){
+    // Actif : la cloche se remplit et la pastille s'eteint. Couper passe par
+    // le panneau, jamais par un appui direct sur la cloche : se desabonner
+    // d'un coup de pouce malheureux ne se remarque qu'a la publication
+    // suivante, celle qu'on vient de rater.
+    bell.classList.add('on');
+    pastille.classList.add('hidden');
+    bell.setAttribute('aria-label','Tu es prévenu. Ouvrir pour couper.');
     titre.textContent = 'Tu es prévenu';
     desc.textContent = 'Tu recevras une notification dès que Latiss publie.';
     btn.textContent = 'Ne plus être prévenu';
@@ -1180,6 +1293,9 @@ async function basculerCloche(){
   btn.disabled = true;
   const avant = btn.textContent;
   btn.textContent = '…';
+  // Le panneau ne se referme que sur un geste abouti. Sur un echec il reste
+  // ouvert : c'est lui qui porte la raison, et la refermer l'emporterait.
+  let abouti = false;
   try{
     const reg = await swPret(6000);
     if(!reg){
@@ -1196,6 +1312,7 @@ async function basculerCloche(){
       await dejaLa.unsubscribe();
       await api({ action:'push_desabonner', endpoint:url });
       toast('C’est coupé. Tu ne seras plus prévenu.');
+      abouti = true;
     } else {
       const perm = await Notification.requestPermission();
       if(perm !== 'granted'){
@@ -1220,6 +1337,7 @@ async function basculerCloche(){
         return;
       }
       toast('C’est activé. Tu seras prévenu.');
+      abouti = true;
       // Activer ses notifications fait gagner un point A SON PARRAIN : le
       // classement change a cette seconde, autant le montrer tout de suite.
       chargerConcours();
@@ -1229,6 +1347,7 @@ async function basculerCloche(){
   }
   btn.disabled = false;
   await etatCloche();
+  if(abouti) fermerCloche();
 }
 
 /* La cle publique se transmet en octets, pas en texte. */
@@ -2079,6 +2198,14 @@ function fermerSplash(){
   window.scrollTo(0,0);
 }
 document.getElementById('enter-btn').addEventListener('click',fermerSplash);
+// La cloche ouvre et referme le panneau, elle ne declenche jamais la demande
+// du navigateur elle-meme : c'est le panneau qui explique, et un refus ne se
+// redemande pas.
+document.getElementById('cloche-h').addEventListener('click',function(){
+  if(document.getElementById('cloche').classList.contains('hidden')) ouvrirCloche();
+  else fermerCloche();
+});
+document.getElementById('cloche-x').addEventListener('click',fermerCloche);
 document.getElementById('cloche-b').addEventListener('click',function(){
   // Le meme bouton, deux roles : sur un iPhone pas encore installe il explique
   // comment ajouter a l'ecran d'accueil, ailleurs il active les notifications.
