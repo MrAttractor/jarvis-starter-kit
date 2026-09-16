@@ -559,6 +559,25 @@ body.splash-on{overflow:hidden;}
    propres commandes. Le lecteur reste celui de YouTube, il n'est pas masque :
    recouvrir leur interface violerait leurs conditions. */
 .video{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000;}
+/* ===== LE CADRE VERTICAL, POUR LES REELS =====
+   Le cadre etait verrouille en 16/9. Une video verticale s'y affichait au
+   tiers de la largeur, entre deux bandes noires : le format fait pour attirer
+   etait celui qui s'affichait le plus mal.
+   Le 9/16 plein ferait 694 px de haut sur un telephone de 390 px, soit un post
+   qui remplit l'ecran a lui seul et cache qu'il y a un fil derriere. On plafonne
+   donc a 78 % de la hauteur visible : c'est la largeur qui se reduit, jamais
+   l'image qui s'etire, et il reste toujours de quoi voir que ca continue
+   dessous. */
+@supports (aspect-ratio:1){
+  .video.vert{padding-bottom:0;height:auto;aspect-ratio:9/16;
+    max-width:min(100%,calc(78vh * 9 / 16));margin-inline:auto;}
+}
+/* Un navigateur trop ancien pour aspect-ratio garde le calage par la marge,
+   sans plafond de hauteur : verticale et entiere vaut mieux que repliee a
+   zero, ce qu'une hauteur automatique donnerait ici. */
+@supports not (aspect-ratio:1){
+  .video.vert{padding-bottom:177.78%;}
+}
 .video>iframe,.video>.vignette{position:absolute;inset:0;width:100%;height:100%;border:none;}
 .vignette{background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;cursor:pointer;}
 .vignette::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.28);}
@@ -1689,7 +1708,16 @@ function mmss(t){
 function blocVideo(url, coverUrl){
   const id = idYoutube(url);
   const wrap = el('div');
-  const cadre = el('div', 'video');
+  /* Le format se lit dans l'adresse elle-meme : YouTube ne sert « /shorts/ »
+     que pour de la video verticale, et c'est l'adresse que donne son bouton
+     Partager sur un Short. Aucune colonne de plus en base, aucun champ de plus
+     pour Serge, donc rien de plus a penser au moment de publier.
+     La limite, et elle est reelle : le meme Short ouvert depuis un ordinateur
+     donne une adresse « watch?v= », qui ne dit pas le format. Colle depuis un
+     telephone, le cadre est juste ; colle depuis un ordinateur, on retombe en
+     16/9. Le jour ou ca gene, c'est un bouton Vertical dans l'espace de Serge. */
+  const vertical = /\/shorts\//i.test(String(url || ''));
+  const cadre = el('div', vertical ? 'video vert' : 'video');
   wrap.appendChild(cadre);
 
   if(!id){
