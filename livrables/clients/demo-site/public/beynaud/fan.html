@@ -264,6 +264,23 @@ body.splash-on{overflow:hidden;}
 .grade-badge{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:5px 13px;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px;}
 .grade-badge.membre{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.12);}
 .grade-badge.ambassadeur{background:var(--or-dim);color:var(--or);border:1px solid rgba(212,160,23,.4);}
+/* Le rappel, juste au-dessus du prenom. La cloche est en haut a droite, ou
+   rien n'oblige a regarder : cette ligne est la seule chose qui la designe.
+   Elle se lit avant le prenom, donc avant tout le reste de l'ecran.
+   Elle ne vit que tant qu'il reste le geste a faire, et disparait pour
+   toujours des que les notifications sont actives : un rappel qui survit a
+   son objet devient du decor, et on n'en lit plus aucun.
+   Cliquable, et pas seulement du texte : designer un bouton sans reagir au
+   doigt qui se pose dessus, c'est fabriquer un defaut. 44 px de haut
+   (UX_SYSTEM section 9), pris en partie sur la marge du badge de grade
+   au-dessus, pour ne pas rallonger le bandeau qu'on vient de raccourcir. */
+.rappel-cloche{display:inline-flex;align-items:center;gap:7px;min-height:44px;
+  padding:0 2px;margin:-6px 0 2px;background:none;text-align:left;
+  font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.72);}
+.rappel-cloche svg{width:15px;height:15px;flex-shrink:0;stroke:var(--rouge-vif);
+  fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.rappel-cloche u{text-decoration-color:rgba(255,255,255,.35);text-underline-offset:3px;}
+.rappel-cloche:active{color:#fff;}
 .m-hello{font-family:var(--bebas);font-size:40px;line-height:.95;letter-spacing:1px;}
 .m-hello .r{color:var(--rouge);}
 .m-hello-sub{font-size:13px;color:rgba(255,255,255,.5);margin-top:6px;}
@@ -683,6 +700,13 @@ body.splash-on{overflow:hidden;}
           </div>
         </div>
         <div id="m-grade" class="grade-badge membre">Membre</div>
+        <button class="rappel-cloche hidden" id="rappel-cloche" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.7 21a2 2 0 0 1-3.4 0"/>
+          </svg>
+          <span>Pense à activer <u>la cloche en haut</u> pour ne rien rater</span>
+        </button>
         <div class="m-hello" id="m-hello"></div>
         <div class="m-hello-sub" id="m-hello-sub"></div>
       </div>
@@ -902,6 +926,7 @@ function peindreApercu(){
   document.getElementById('m-hello-sub').textContent='L’univers officiel de Serge Beynaud. Voici un aperçu.';
   document.getElementById('cloche').classList.add('hidden');
   document.getElementById('cloche-h').classList.add('hidden');
+  document.getElementById('rappel-cloche').classList.add('hidden');
   // Le concours vit DANS la carte ambassadeur, deja masquee juste au-dessus.
   // Cette ligne visait un id 'conc' qui n'a jamais existe dans la page : elle
   // levait une exception et emportait tout le demarrage avec elle. R-83.
@@ -1193,7 +1218,15 @@ function fermerCloche(){
 async function etatCloche(){
   const bell = document.getElementById('cloche-h');
   const pastille = document.getElementById('cloche-pt');
+  const rappel = document.getElementById('rappel-cloche');
   const carte = document.getElementById('cloche');
+  /* La pastille et la ligne de rappel disent la meme chose, il reste un geste
+     a faire. Elles s'allument et s'eteignent donc ensemble, par construction :
+     deux endroits a tenir separement, c'est un endroit qu'on oubliera. */
+  const resteUnGeste = (oui) => {
+    pastille.classList.toggle('hidden', !oui);
+    rappel.classList.toggle('hidden', !oui);
+  };
   const btn = document.getElementById('cloche-b');
   const note = document.getElementById('cloche-n');
   const titre = document.getElementById('cloche-t');
@@ -1204,6 +1237,7 @@ async function etatCloche(){
   if(APERCU || !ME){
     bell.classList.add('hidden');
     carte.classList.add('hidden');
+    resteUnGeste(false);
     return;
   }
 
@@ -1217,7 +1251,7 @@ async function etatCloche(){
   if(iOS && !installee){
     bell.classList.remove('hidden');
     bell.classList.remove('on','non');
-    pastille.classList.remove('hidden');
+    resteUnGeste(true);
     bell.setAttribute('aria-label','Être prévenu quand Latiss publie');
     titre.textContent = 'Ajoute la Beynaumania à ton écran';
     desc.textContent = 'Tu seras prévenu quand Latiss poste, et tu ne rempliras plus jamais ce formulaire.';
@@ -1232,6 +1266,7 @@ async function etatCloche(){
   if(!pushDisponible()){
     bell.classList.add('hidden');
     carte.classList.add('hidden');
+    resteUnGeste(false);
     return;
   }
 
@@ -1241,7 +1276,7 @@ async function etatCloche(){
     bell.classList.remove('hidden');
     bell.classList.remove('on');
     bell.classList.add('non');
-    pastille.classList.add('hidden');
+    resteUnGeste(false);
     bell.setAttribute('aria-label','Les notifications sont bloquées');
     titre.textContent = 'Les notifications sont bloquées';
     desc.textContent = 'Tu as refusé les notifications pour ce site. Ça se remet dans les réglages de ton navigateur.';
@@ -1255,7 +1290,7 @@ async function etatCloche(){
   // rien afficher s'il ne repondait pas du tout.
   bell.classList.remove('hidden');
   bell.classList.remove('on','non');
-  pastille.classList.remove('hidden');
+  resteUnGeste(true);
   bell.setAttribute('aria-label','Être prévenu quand Latiss publie');
   btn.classList.remove('hidden');
   btn.classList.remove('calme');
@@ -1276,7 +1311,7 @@ async function etatCloche(){
     // d'un coup de pouce malheureux ne se remarque qu'a la publication
     // suivante, celle qu'on vient de rater.
     bell.classList.add('on');
-    pastille.classList.add('hidden');
+    resteUnGeste(false);
     bell.setAttribute('aria-label','Tu es prévenu. Ouvrir pour couper.');
     titre.textContent = 'Tu es prévenu';
     desc.textContent = 'Tu recevras une notification dès que Latiss publie.';
@@ -2206,6 +2241,8 @@ document.getElementById('cloche-h').addEventListener('click',function(){
   else fermerCloche();
 });
 document.getElementById('cloche-x').addEventListener('click',fermerCloche);
+// Le rappel designe la cloche : il ouvre donc exactement ce qu'elle ouvre.
+document.getElementById('rappel-cloche').addEventListener('click',ouvrirCloche);
 document.getElementById('cloche-b').addEventListener('click',function(){
   // Le meme bouton, deux roles : sur un iPhone pas encore installe il explique
   // comment ajouter a l'ecran d'accueil, ailleurs il active les notifications.
