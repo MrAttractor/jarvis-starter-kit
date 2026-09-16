@@ -1,6 +1,7 @@
 # Beynaud / STAR FACTORY — l'état du dossier
 
-> Révision du 13/09/2026, après la refonte du tunnel et du fil.
+> Révision du 17/09/2026 : coûts de la plateforme mesurés et stratégie de rentabilité de
+> l'agence ajoutées. Révision précédente du 13/09/2026, après la refonte du tunnel et du fil.
 > **Cette fiche est la première chose à lire du dossier.**
 > Un chiffre ou un statut n'existe qu'ici. S'il apparaît ailleurs, c'est une copie à vérifier.
 
@@ -11,6 +12,8 @@
 | Prochaine action | **1.** Monter le contenu de démarrage : le fil tourne encore sur le jeu de test. **2.** Chiffrer l'offre live, c'est la seule chose qu'il ait demandée de lui-même. **3.** Envoi groupé à Latiss : la plateforme + l'offre live chiffrée + le protocole à signer |
 | Échéance | à fixer avec la date du prochain concert, encore inconnue |
 | Argent en attente | non chiffré, plateforme livrée sans contrepartie signée. **Le live est le premier poste qui engage de la trésorerie réelle** (voir `COUTS-LIVE-PRO.md`) |
+| Coût de fonctionnement | mesuré le 17/09 : **~26 $/mois à 50 000 fans** hors vidéo exclusive, **+50 $ par vidéo exclusive vue par tous**. Aujourd'hui 0 $, mais sur un forfait gratuit **partagé avec tous les autres clients**, qui tombent ensemble s'il saute |
+| Alerte juridique | **le protocole interdit à l'agence de se dire prestataire de Serge pendant 5 ans** (Art. 3). Clause de droit de référence à ajouter **avant** signature |
 
 ## En une phrase
 
@@ -569,7 +572,250 @@ Trois clauses engageantes dès signature : **NDA 5 ans**, **non-contournement 24
 **À compléter avant signature** : la qualité du représentant de STAR FACTORY, le RCCM, les
 coordonnées, et le montant de l'indemnité forfaitaire de non-contournement.
 
+## Ce que la plateforme coûte réellement — mesuré le 17/09/2026
+
+> Jusqu'ici ce dossier chiffrait le live (`COUTS-LIVE-PRO.md`) et rien d'autre. Le coût de
+> la plateforme au repos n'avait jamais été mesuré. Il l'est ici, sur la production, pas
+> en théorie. **Les chiffres du live restent dans `COUTS-LIVE-PRO.md`, ils ne sont pas
+> recopiés ici.**
+
+### Les mesures, sur la production
+
+| Quoi | Mesure |
+|---|---|
+| Une ouverture de page (appel `feed`) | 265 à 300 ms, 7,5 Ko de JSON |
+| Le premier appel après une période creuse | 590 ms, réveil de la fonction |
+| Poids des photos du fil | 136, 184 et 328 Ko. **Moyenne 211 Ko** |
+| En-tête de cache des photos | **`Cache-Control: no-cache`** |
+| Base de données | 42 Mo sur les 500 Mo du forfait gratuit |
+| Membres réels | 9, dont **3 avec un WhatsApp**, 2 abonnés aux notifications |
+
+Deux défauts se lisent directement dans ces mesures.
+
+**Les photos ne sont jamais redimensionnées.** Ce sont des fichiers d'appareil photo servis
+tels quels. Une photo de fil devrait peser 60 à 80 Ko en WebP, pas 211 Ko en JPEG.
+
+**Les photos ne se mettent pas en cache.** Le `no-cache` est le réglage par défaut de
+Supabase Storage, que personne n'a changé. Chaque ouverture de l'app refait un aller-retour
+réseau pour chaque photo. Sur une 3G à Abidjan, c'est de l'attente à chaque visite.
+
+### Le forfait, et le vrai danger
+
+Le projet Supabase est en **forfait gratuit**, et il est **partagé par tous les clients de
+l'agence** : 245 tables, celles de la Beynaumania à côté de J'Envoie Express, Élévia,
+Ayêla, Vies Croisées et Attractor Assists.
+
+**Le quota est celui du projet, pas de l'application.** Si la Beynaumania le fait sauter,
+Supabase restreint tout le projet : les autres clients tombent en même temps. Un lancement
+réussi chez Serge devient une panne chez tout le monde. **C'est aujourd'hui le point de
+rupture unique de tout le portefeuille de l'agence**, et ce n'est pas un risque propre à ce
+dossier.
+
+### La projection à 50 000 fans
+
+Hypothèses posées : 50 000 inscrits, Serge publie 12 fois par mois, un fan ouvre l'app
+8 fois par mois.
+
+| Poste | Par mois |
+|---|---|
+| Réponses JSON du fil | 2,9 Go |
+| Photos telles qu'elles sont | **120,6 Go** |
+| **Total de sortie réseau** | **123,4 Go** |
+
+Soit **25 fois le plafond gratuit de 5 Go**. En forfait Pro, Beynaud seul consomme **49 %
+des 250 Go inclus**, alors que huit autres clients partagent le même projet.
+
+Les appels de fonction atteignent **400 000 par mois, soit 80 % du plafond gratuit**, pour
+un seul client.
+
+Et le pic de lancement, si 50 000 personnes arrivent en une heure : **14 ouvertures par
+seconde, soit 83 requêtes SQL par seconde** sur la plus petite machine que Supabase
+propose.
+
+### La facture mensuelle à 50 000 fans
+
+| Poste | Coût |
+|---|---|
+| Supabase Pro | 25 $ |
+| Photos servies par Cloudflare | 0 $ |
+| Le site sur Cloudflare Pages | 0 $ |
+| Notifications push | 0 $ |
+| Domaine | ~1 $ |
+| **Sous-total, sans vidéo exclusive** | **~26 $ / mois** |
+| 1 vidéo exclusive d'une minute vue par 50 000 fans | **50 $** |
+| 4 vidéos exclusives par mois | **200 $ / mois** |
+
+**La lecture qui compte pour la négociation : la facture monte avec l'audience de Serge, pas
+avec le travail de l'agence.** C'est l'argument central d'un partage de revenus plutôt que
+d'un forfait, et il est maintenant chiffré au lieu d'être affirmé.
+
+### Les trois correctifs à faire avant tout lancement
+
+Ils ne dépendent d'aucune décision de Latiss et divisent la facture par quatre.
+
+1. **Redimensionner les photos au dépôt.** 211 Ko qui deviennent 70 Ko, c'est 80 Go de
+   sortie en moins par mois et une app trois fois plus rapide en Côte d'Ivoire.
+2. **Poser un vrai cache sur les photos.** Le `no-cache` est un défaut de réglage, pas un
+   choix.
+3. **Sortir les photos de Supabase vers Cloudflare**, où la sortie est gratuite.
+
+À quoi s'ajoutent deux défauts de robustesse relevés en lisant le code de `bey-public` :
+
+4. **L'inscription n'a aucun garde-fou**, ni limite de cadence ni captcha, et la clé
+   publique est lisible dans la page. Un script peut créer des milliers de faux fans et les
+   créditer au code ambassadeur de son choix. **Le concours est truquable**, et il le
+   deviendra le jour où il y aura un prix à gagner.
+5. **Le compteur de parrainage lit puis écrit.** Deux inscriptions simultanées sur le même
+   code, et l'une des deux est effacée par l'autre. En pic de lancement, les Ambassadeurs
+   sont sous-comptés, et c'est précisément ce dont ils se plaindront.
+
+### Ce qui n'a pas pu être mesuré
+
+Un banc de montée en charge a été écrit, avec paliers, plafond de 200 comptes marqués et
+supprimés, et arrêt automatique. **Le garde-fou de sécurité de l'outil a refusé de
+l'exécuter** : un script qui envoie des rafales vers un serveur et crée des centaines de
+comptes ressemble, vu de l'extérieur, à une attaque. Restent donc inconnus, et ils ne se
+déduisent pas :
+
+- le nombre d'arrivées simultanées à partir duquel la base décroche ;
+- le nombre réel de points de parrainage perdus dans la course entre deux inscriptions ;
+- les collisions de code ambassadeur en rafale.
+
+## La stratégie de rentabilité pour l'agence — 17/09/2026
+
+> Cette section ne regarde pas le dossier du point de vue du client, mais du point de vue de
+> l'argent que l'agence gagne. Elle complète `STRATEGIE-CONTENUS-OCT-DEC.md`, qui traite du
+> contenu pour les fans, et ne la contredit pas.
+
+### L'état financier, sans habillage
+
+L'agence a livré une plateforme complète, la maintient, en porte les coûts, et **n'a encaissé
+zéro euro**. Le protocole n'est pas signé depuis le 01/07. L'artiste ne répond plus depuis le
+10/08. C'est un pari assumé, mais un pari qui dure.
+
+### Le fait qui change tout : ce n'est pas un projet, c'est un produit
+
+Le coût marginal d'un artiste supplémentaire sur la même architecture est **proche de zéro**.
+Le Supabase Pro à 25 $ se partage entre tous, Cloudflare Pages est gratuit, les notifications
+sont gratuites. Le seul coût vraiment variable est la vidéo, et il se refacture.
+
+Autrement dit : **vendre vingt plateformes de fans ne coûte presque rien de plus que d'en
+vendre une.** La marge brute d'un tel produit est de l'ordre de 90 à 95 %.
+
+C'est la vraie nouvelle de ce dossier. La Beynaumania n'est pas un chantier client, c'est le
+**premier exemplaire d'un produit** : la plateforme de communauté d'artiste, duplicable pour
+les artistes ivoiriens et de la diaspora, les humoristes, les prédicateurs, les influenceurs.
+
+### Combien rapporte Beynaud en direct, et pourquoi c'est peu
+
+Le meilleur scénario direct connu, tiré de `COUTS-LIVE-PRO.md` : un live payant à 1 000 FCFA
+vendu à 5 000 personnes, soit 5 000 000 FCFA de recettes, environ 360 000 FCFA de coût de
+diffusion. Si l'agence obtient 30 % du net, cela fait environ **1 390 000 FCFA, soit environ
+2 120 €, par événement**.
+
+Deux ou trois événements par an, c'est entre 4 000 et 6 500 € annuels. C'est réel, ce n'est pas
+négligeable, mais **ce n'est pas ce qui amène l'agence à 10 000 € par mois**, et surtout c'est
+**ponctuel**, alors que le trou de l'agence est le récurrent : à ce jour aucun mensuel n'est
+encaissé sur aucun dossier.
+
+### Ce que Beynaud vaut vraiment : la preuve
+
+La valeur de Serge pour l'agence n'est pas dans ce qu'il paie. Elle est dans ce qu'il prouve :
+une plateforme en production, portant le nom d'un artiste à 10 millions d'abonnés, avec des
+chiffres d'engagement réels. **C'est l'actif commercial le plus cher du portefeuille**, et il
+ne coûte rien à produire puisqu'il existe déjà.
+
+### Le blocage juridique que personne n'a vu
+
+**Le protocole ne contient aucune clause donnant à l'agence le droit de citer Serge Beynaud
+comme référence.** Pire, l'article 3, engageant dès signature, range explicitement parmi les
+informations confidentielles pour cinq ans « l'identité du ou des prestataires pressentis ».
+
+Lu strictement : **en signant en l'état, l'agence s'interdit de dire publiquement qu'elle a
+construit la Beynaumania.** L'actif le plus précieux du dossier est verrouillé par le
+document censé le sécuriser.
+
+Ce n'est pas une fatalité, c'est une clause à ajouter : un droit de référence encadré, par
+exemple le droit de citer le nom et de montrer des captures d'écran une fois la plateforme
+publique, avec accord préalable sur les chiffres communiqués. **C'est à porter avant
+signature, pas après.**
+
+### La stratégie recommandée, par ordre de rendement
+
+1. **Obtenir la signature, avec la clause de droit de référence.** Sans elle, tout ce qui
+   suit est impossible. C'est le point de passage obligé, et il ne coûte qu'une négociation.
+2. **Traiter Beynaud comme une vitrine, pas comme une ligne de revenus.** Accepter d'y gagner
+   peu, à condition d'avoir le droit de s'en servir. Un dossier qui rapporte 5 000 € par an
+   mais qui en fait signer dix autres vaut dix fois son chiffre d'affaires.
+3. **Industrialiser la plateforme de fans en produit à trois formules**, sur le modèle déjà
+   validé par l'agence, et le vendre aux artistes suivants sans repartir de zéro.
+4. **Ne jamais mettre la vidéo dans un forfait.** C'est le seul coût qui monte avec le succès.
+   Il se refacture à l'événement ou se partage en pourcentage. Un artiste qui réussit ne doit
+   jamais dégrader la marge.
+5. **Le live du 5 décembre est le seul revenu direct à court terme.** Il est aussi la
+   meilleure occasion de filmer la preuve. Les deux se préparent ensemble.
+
+### Le modèle de deal à appliquer au produit
+
+Le modèle **Famille D, Partenariat Performance**, déjà inventé par l'agence sur le dossier
+Beracca, est celui qui convient : une mise en place modeste, un mensuel modeste, et un
+pourcentage sur ce que la plateforme rapporte réellement.
+
+Appliqué à la plateforme de fans, cela donne une grille à trois entrées, dont les montants
+restent à arrêter avec le DAF :
+
+| Formule | Ce qu'elle contient | Logique |
+|---|---|---|
+| Essentielle | fil, photos, notifications, installation sur l'écran d'accueil | entrée de gamme, marge pure |
+| Active | + ambassadeurs, sondages, modération assistée | le cœur du produit |
+| Premium | + lives payants, billetterie, vidéo exclusive | **vidéo refacturée, jamais incluse** |
+
+L'arithmétique à garder en tête, et elle est sobre : vingt artistes à 65 € de mensuel moyen
+font **1 300 € par mois de récurrent**, soit 13 % de l'objectif de 10 000 €. Ce n'est pas la
+solution unique, mais ce serait **le premier revenu récurrent réel de l'agence**, et il a
+une marge de 90 %.
+
+### Le flux de contenu, lu du côté de l'argent
+
+`STRATEGIE-CONTENUS-OCT-DEC.md` définit six formats pour les fans. Vus sous l'angle
+financier, ils se rangent en quatre flux, et **le quatrième n'existe pas encore.**
+
+| Flux | Contenu | Coût | Ce qu'il rapporte |
+|---|---|---|---|
+| **1. Attirer** | reels verticaux publics, YouTube Shorts | ~0 | des inscriptions |
+| **2. Retenir** | le fil, photos, sondages, réponses nommées | hébergement | des gens joignables le jour où on vend |
+| **3. Convertir** | live payant, replays, série inédite | Stream, couvert par la billetterie | le revenu direct |
+| **4. Prouver** | **les chiffres, les captures, le témoignage de l'artiste** | **~0** | **la vente des vingt plateformes suivantes** |
+
+Le flux 4 est celui qui rapporte le plus à l'agence et **personne ne le produit**. Chaque
+palier de la Beynaumania est un actif de vente : le millième fan, le premier live, le premier
+Ambassadeur à cinq filleuls. Cela se capture au moment où ça arrive, pas six mois après.
+
+Deux conséquences opérationnelles immédiates.
+
+**Le flux 1 est aujourd'hui le maillon le plus faible.** Les reels publics attirent depuis
+YouTube, donc la plupart des partages profitent à YouTube et non à la plateforme. Le lien
+partagé depuis l'app est de surcroît générique : il ouvre l'accueil, pas la vidéo dont on a
+parlé. Un lien qui ouvre sur le contenu, en conservant le parrainage, vaut plus que bien des
+fonctionnalités déjà livrées.
+
+**Le flux 2 est muet.** Trois fans sur neuf ont laissé un WhatsApp, deux ont activé les
+notifications. À ce rythme, un lancement à 50 000 personnes produirait environ **33 000
+numéros et 17 000 fans injoignables à vie**. Une base qui prouve le succès du lancement et
+qui ne sert à rien le lendemain. Le concours d'Ambassadeur est le levier honnête pour
+corriger cela : **on ne remet pas un prix à quelqu'un qu'on ne sait pas joindre.**
+
+### Ce que ça change dans la prochaine action
+
+L'envoi groupé à Latiss doit maintenant porter **quatre** pièces et non trois : la
+plateforme, l'offre live chiffrée, le protocole à signer, **et la clause de droit de
+référence**. Cette dernière ne coûte rien à l'artiste et vaut, pour l'agence, plus que le
+reste du dossier.
+
 ## Le modèle économique
+
+> Complété le 17/09/2026 par la section « La stratégie de rentabilité pour l'agence »
+> ci-dessus, qui en donne la lecture côté agence et les chiffres mesurés.
 
 **Adhésion gratuite** pour maximiser le volume et les ambassadeurs. La monétisation se fait
 sur des **événements payants ponctuels, une série spéciale et des replays de concert**,
@@ -618,8 +864,9 @@ séries et live YouTube verrouillés, sondages, application installable.
 
 1. **Monter le contenu de démarrage.** Le fil est prêt mais tourne sur le jeu de test, et un fil presque vide se voit plus qu'une page à rubriques presque vide. C'est le préalable à tout envoi.
 2. **Chiffrer l'offre premium « Concerts »** (live professionnel + replays payants + billetterie), base dans `COUTS-LIVE-PRO.md` : environ 0,06 $ par fan et par heure, soit ~600 $ pour 10 000 fans, couvert par la billetterie. **C'est la seule chose que l'artiste ait demandée de lui-même**, donc le levier qui rouvre la négociation par le haut.
-3. **Envoi groupé à Latiss, puis signature et répartition des charges** : la plateforme, l'offre live chiffrée, le protocole à signer. Relancé le 10/08, sans réponse depuis. Rien ne peut se monétiser avant signature. **C'est aussi la condition de la phase 2 technique**, dépôt direct de vidéos compris : séquence confirmée par Mac Arthur le 14/09. L'arbitrage d'hébergement R2 contre Stream instruit directement la clause de répartition, puisque c'est une charge variable.
+3. **Envoi groupé à Latiss, puis signature et répartition des charges** : la plateforme, l'offre live chiffrée, le protocole à signer, **et la clause de droit de référence** (ajoutée le 17/09 : sans elle, l'agence s'interdit pour 5 ans de dire qu'elle a construit la Beynaumania, ce qui annule l'actif le plus précieux du dossier). Relancé le 10/08, sans réponse depuis. Rien ne peut se monétiser avant signature. **C'est aussi la condition de la phase 2 technique**, dépôt direct de vidéos compris : séquence confirmée par Mac Arthur le 14/09. L'arbitrage d'hébergement R2 contre Stream instruit directement la clause de répartition, puisque c'est une charge variable.
 4. Obtenir les **vrais titres des séries** (elles sont encore en « Série exclusive 1 / 2 »).
+5. **Les cinq correctifs d'avant-lancement**, qui ne dépendent d'aucune décision de Latiss : redimensionner les photos, poser un vrai cache, sortir les photos vers Cloudflare, mettre un garde-fou à l'inscription, rendre le compteur de parrainage atomique. Détail et chiffres dans la section « Ce que la plateforme coûte réellement ». **Tant qu'ils ne sont pas faits, un lancement réussi peut faire tomber les autres clients de l'agence.**
 
 **Contradiction à connaître avant d'envoyer.** La note du 02/08 dit de ne pas proposer
 l'offre « Concerts » depuis une position non signée. Le 12/09 a changé la condition :
