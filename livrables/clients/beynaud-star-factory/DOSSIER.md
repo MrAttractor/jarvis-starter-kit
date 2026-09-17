@@ -924,13 +924,40 @@ La page ne tomberait pas, elle deviendrait lente : plusieurs secondes d'attente,
 connexion mobile ivoirienne, au moment précis où l'on découvre la plateforme. Pour un
 lancement, c'est presque aussi grave qu'une panne.
 
-**Le remède n'est pas une plus grosse machine, c'est de ne plus poser la question à la
+**Le remède n'était pas une plus grosse machine, c'était de ne plus poser la question à la
 base.** Au lancement, l'écrasante majorité des arrivants ne sont pas encore membres : ils
 ouvrent la page en aperçu, et cette réponse est **rigoureusement identique pour tout le
-monde**. On interroge pourtant la base 6 fois par visiteur pour recalculer la même chose.
-Mise en cache une minute au bord du réseau, elle coûte **une requête par minute quel que
-soit le nombre de visiteurs**. Le genou devient sans objet. C'est le même geste que celui
-qui vient d'être fait pour les photos, appliqué au fil.
+monde**. On interrogeait pourtant la base 6 fois par visiteur pour recalculer la même chose.
+
+### Le cache du fil, posé le 18/09 — le genou a disparu
+
+Le fil du visiteur passe désormais par `/beynaud/api/feed`, sur notre domaine, où il est
+gardé 30 secondes au bord du réseau. Même banc, même machine, avant et après :
+
+| Appels simultanés | Avant, sur Supabase | Après, par le cache |
+|---|---|---|
+| 20 | 421 ms | **67 ms** |
+| 40 | 751 ms | **53 ms** |
+| 80 | 1 403 ms | **77 ms** |
+
+Avant, le débit plafonnait à 55 par seconde quoi qu'on fasse : signature d'un goulot
+distant. Après, il monte avec la charge jusqu'à **environ 1 000 par seconde**, et ce qui
+cède à 160 simultanés est la machine qui tire, pas le serveur : la latence explose sans
+**aucune erreur** sur 1 500 requêtes. Un appel isolé passe de 2 380 ms à **23 ms**.
+
+Le pic de 200 par seconde qu'exigerait un lancement à 30 000 visiteurs en une heure est
+donc largement couvert.
+
+**Ce qui n'est jamais mis en cache, et c'est la seule chose qui comptait.** La réponse
+change quand l'appel porte un `membre_id` : chaque publication y porte `liked`, qui dit si
+**ce** membre a aimé. La servir à quelqu'un d'autre serait une fuite de données. Ces appels
+passent en direct, le relais les refuse au cache, et la recette le vérifie sur un membre
+réel : Cynthia voit ses 7 cœurs, le visiteur suivant en voit zéro. Le grade a sa propre
+entrée de cache, sinon le contenu réservé aux Ambassadeurs s'afficherait pour tout le monde.
+
+Le relais ne relaie que le fil : toute autre action est refusée. Et la page retombe sur
+l'appel direct à Supabase si le relais tombe, pour qu'un défaut du cache ne devienne jamais
+une panne du fil.
 
 **Soldé le 17/09** : D-03, D-04, D-05 et D-10, soit tout le poste photo. Une seule mesure
 résume le gain : le quota gratuit tombait à **8 197 visiteurs**, les photos n'y comptent plus.

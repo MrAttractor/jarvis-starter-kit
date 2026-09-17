@@ -844,8 +844,33 @@ function ambLink(code){return location.origin+location.pathname+'?ref='+code;}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function timeAgo(iso){const s=Math.floor((Date.now()-new Date(iso).getTime())/1000);if(s<60)return "à l'instant";if(s<3600)return Math.floor(s/60)+' min';if(s<86400)return Math.floor(s/3600)+' h';return Math.floor(s/86400)+' j';}
 
+/* Le fil du VISITEUR passe par notre domaine, ou il est mis en cache 30 s au
+   bord du reseau. Au lancement, presque tous les arrivants sont dans ce cas, et
+   ils recoivent tous la meme reponse : on la recalculait pour chacun d'eux, a
+   6 requetes SQL l'unite, avec un plafond mesure a 55 ouvertures par seconde.
+
+   Le fil d'un MEMBRE n'y passe jamais. Sa reponse porte `liked` sur chaque post,
+   donc elle lui est propre, et la mettre en cache serait une fuite. Le relais
+   refuse d'ailleurs lui-meme tout appel portant un membre_id.
+
+   Repli : si le relais tombe, on repart vers Supabase en direct. Un defaut de
+   MON cache ne doit jamais devenir une panne du fil. */
+const RELAIS_FIL = 'api/feed';
+function passeParLeRelais(body){
+  return body && body.action === 'feed'
+    && (body.membre_id === undefined || body.membre_id === null || body.membre_id === '');
+}
+async function appelBrut(url, body){
+  return fetch(url,{method:'POST',headers:{'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON,'Content-Type':'application/json'},body:JSON.stringify(body)});
+}
 async function api(body){
-  const r=await fetch(FN,{method:'POST',headers:{'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(passeParLeRelais(body)){
+    try{
+      const r = await appelBrut(RELAIS_FIL, body);
+      if(r.ok) return r.json();
+    }catch(e){ /* on retombe sur l'appel direct */ }
+  }
+  const r=await appelBrut(FN, body);
   return r.json();
 }
 function saveMembre(m){
