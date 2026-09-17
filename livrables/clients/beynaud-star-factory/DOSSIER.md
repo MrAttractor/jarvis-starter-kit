@@ -900,7 +900,7 @@ séries et live YouTube verrouillés, sondages, application installable.
 | D-05 | **Photos servies par Supabase** | 640 Ko par visiteur, quota gratuit épuisé à **8 197 visiteurs** | **soldée le 17/09.** Une fonction Cloudflare sert `/beynaud/img/<fichier>`. Recette en ligne : 7 photos sur 7 passent par notre domaine, **zéro par Supabase**, `CF-Cache-Status: HIT`. La bande passante de Cloudflare est gratuite et illimitée : la taille du lancement cesse d'être une question de quota photo |
 | D-06 | **Inscription sans garde-fou**, ni cadence ni captcha, clé publique lisible | **le concours d'Ambassadeur est truquable** dès qu'il y a un prix | ouvert |
 | D-07 | **Compteur de parrainage lu puis écrit**, non atomique | des points perdus en pic, sans moyen de reconstituer la vérité | ouvert |
-| D-08 | **Point de rupture inconnu**, le banc de charge n'a jamais tourné | on découvrira le plafond pendant le lancement au lieu d'avant | ouvert |
+| D-08 | **Point de rupture inconnu** | on découvrirait le plafond pendant le lancement | **mesuré le 17/09, en lecture seule.** Genou de saturation à **~55 ouvertures de page par seconde** : de 40 à 80 appels simultanés, la latence double (751 → 1 403 ms) et le débit ne gagne que 7 %. **Zéro erreur sur 975 requêtes** : sous surcharge le système ralentit, il ne casse pas. Reste inconnu : le comportement en écriture, non testé pour ne pas créer de faux comptes en production |
 | D-09 | **Doublons de comptes** : sans numéro, une réinscription crée une ligne de plus | des fans fantômes qu'aucune clé ne permet de reconnaître | ouvert |
 | D-10 | **`photo_add` force `.jpg` et `image/jpeg`** en dur | un fichier qui ment sur son contenu, et le WebP impossible | **soldée le 17/09.** Le type est lu sur l'image elle-même, liste blanche webp/jpeg/png, extension déduite. `bey-admin` v19 |
 | D-11 | **Colonne morte `bey_membres.push_subscription`**, 0 ligne renseignée, les abonnements vivent dans `bey_push` | schéma qui ment sur lui-même, piège pour la prochaine personne | ouvert |
@@ -912,6 +912,25 @@ séries et live YouTube verrouillés, sondages, application installable.
 exclusivité. Elle sera remplacée par le dépôt verrouillé de la phase 2, adresse signée et
 domaine restreint. Elle n'entre pas dans le registre parce qu'elle est datée, documentée et
 remplaçable, mais elle ne doit **jamais** servir à du contenu réservé.
+
+### Ce que la mesure du 17/09 dit du lancement
+
+55 ouvertures par seconde, c'est 198 000 visiteurs à l'heure **si le flux était régulier**.
+Il ne l'est jamais. Une annonce concentre son monde sur les premières minutes : pour
+30 000 visiteurs en une heure, la moyenne est de 50 par seconde mais le pic tourne autour
+de 200. **À 200 par seconde on est quatre fois au-delà du genou.**
+
+La page ne tomberait pas, elle deviendrait lente : plusieurs secondes d'attente, sur une
+connexion mobile ivoirienne, au moment précis où l'on découvre la plateforme. Pour un
+lancement, c'est presque aussi grave qu'une panne.
+
+**Le remède n'est pas une plus grosse machine, c'est de ne plus poser la question à la
+base.** Au lancement, l'écrasante majorité des arrivants ne sont pas encore membres : ils
+ouvrent la page en aperçu, et cette réponse est **rigoureusement identique pour tout le
+monde**. On interroge pourtant la base 6 fois par visiteur pour recalculer la même chose.
+Mise en cache une minute au bord du réseau, elle coûte **une requête par minute quel que
+soit le nombre de visiteurs**. Le genou devient sans objet. C'est le même geste que celui
+qui vient d'être fait pour les photos, appliqué au fil.
 
 **Soldé le 17/09** : D-03, D-04, D-05 et D-10, soit tout le poste photo. Une seule mesure
 résume le gain : le quota gratuit tombait à **8 197 visiteurs**, les photos n'y comptent plus.
