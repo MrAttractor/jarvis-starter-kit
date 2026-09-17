@@ -708,15 +708,39 @@ les artistes ivoiriens et de la diaspora, les humoristes, les prédicateurs, les
 
 ### Combien rapporte Beynaud en direct, et pourquoi c'est peu
 
-Le meilleur scénario direct connu, tiré de `COUTS-LIVE-PRO.md` : un live payant à 1 000 FCFA
-vendu à 5 000 personnes, soit 5 000 000 FCFA de recettes, environ 360 000 FCFA de coût de
-diffusion. Si l'agence obtient 30 % du net, cela fait environ **1 390 000 FCFA, soit environ
-2 120 €, par événement**.
+> **Avertissement sur les chiffres qui suivent, ajouté le 17/09 après relecture.** Ce sont
+> des simulations, pas des résultats. Une seule donnée y est solide, le coût de diffusion,
+> tiré de `COUTS-LIVE-PRO.md` et calculé sur le tarif publié de Cloudflare. **Le pourcentage
+> revenant à l'agence n'est convenu nulle part** : le protocole le renvoie au « Jalon 2 ·
+> Modèle économique ». Et le nombre d'acheteurs est une hypothèse, alors que la plateforme
+> compte **9 membres réels** à ce jour.
 
-Deux ou trois événements par an, c'est entre 4 000 et 6 500 € annuels. C'est réel, ce n'est pas
-négligeable, mais **ce n'est pas ce qui amène l'agence à 10 000 € par mois**, et surtout c'est
-**ponctuel**, alors que le trou de l'agence est le récurrent : à ce jour aucun mensuel n'est
-encaissé sur aucun dossier.
+Le scénario de référence de `COUTS-LIVE-PRO.md` : un live payant à 1 000 FCFA vendu à
+5 000 personnes, soit 5 000 000 FCFA de recettes et environ 360 000 FCFA de diffusion, donc
+4 640 000 FCFA nets.
+
+Ce que l'agence en tire, selon les deux inconnues, **avant cotisations** :
+
+| Acheteurs | part 20 % | part 30 % | part 40 % |
+|---|---|---|---|
+| 500 | 141 € | 212 € | 283 € |
+| 1 000 | 283 € | 424 € | 566 € |
+| 3 000 | 849 € | 1 273 € | 1 698 € |
+| 5 000 | 1 415 € | 2 122 € | 2 829 € |
+
+**Trois coûts manquent encore** à cette simulation : la commission XPaye sur l'encaissement,
+le coût de production du live lui-même (`COUTS-LIVE-PRO.md` ne chiffre que la diffusion, pas
+le tournage), et les **cotisations à ~22 % du chiffre d'affaires**, qui ramènent par exemple
+2 122 € à environ **1 655 € réellement encaissés**.
+
+Autrement dit, la fourchette réaliste d'un événement va de **quelques centaines d'euros à
+moins de 3 000 €**. Deux ou trois événements par an, c'est un ordre de grandeur de quelques
+milliers d'euros annuels. C'est réel, ce n'est pas négligeable, mais **ce n'est pas ce qui
+amène l'agence à 10 000 € par mois**, et surtout c'est **ponctuel**, alors que le trou de
+l'agence est le récurrent : à ce jour aucun mensuel n'est encaissé sur aucun dossier.
+
+**Et c'est justement ce qui rend la suite décisive** : même au coin haut du tableau, le
+revenu direct reste petit devant la valeur de la référence.
 
 ### Ce que Beynaud vaut vraiment : la preuve
 
