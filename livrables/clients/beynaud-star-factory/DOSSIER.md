@@ -884,6 +884,39 @@ séries et live YouTube verrouillés, sondages, application installable.
 | Recette du parcours visiteur | `recette-visiteur.js` (R-84) |
 | Recette clair / sombre, contraste calculé | `recette-theme.js` (14/09/2026, R-24 et R-41) |
 
+## Le registre de dette technique
+
+> **Règle posée par Mac Arthur le 17/09/2026.** Beynaud est un projet costaud : on pense
+> l'architecture pour la masse, on signale les risques sans attendre la question, et on vise
+> **zéro dette technique**. Une rustine non écrite est une dette cachée ; ce registre existe
+> pour qu'aucune ne le reste. Il se met à jour à chaque fois qu'on en crée ou qu'on en solde.
+
+| # | Dette | Ce que ça devient à l'échelle | État |
+|---|---|---|---|
+| D-01 | **Aucune sauvegarde.** Liste vide, restauration à un instant donné désactivée | perte définitive de la base, pour Beynaud **et** les 8 autres clients | ouvert |
+| D-02 | **Projet Supabase partagé**, quota au niveau du projet | un succès chez Serge restreint J'Envoie Express, Élévia, Ayêla, Vies Croisées | migration commencée le 17/09, projet `beynaumania` créé et vide, **en pause** |
+| D-03 | **Photos jamais redimensionnées**, 211 Ko mesurés | 120 Go de sortie par mois à 50 000 fans | ouvert |
+| D-04 | **Photos en `no-cache`**, réglage par défaut jamais changé | un aller-retour réseau par photo et par visite, pénalisant en 3G | ouvert |
+| D-05 | **Photos servies par Supabase**, pas par Cloudflare | consomme un quota payant là où Cloudflare est gratuit | ouvert |
+| D-06 | **Inscription sans garde-fou**, ni cadence ni captcha, clé publique lisible | **le concours d'Ambassadeur est truquable** dès qu'il y a un prix | ouvert |
+| D-07 | **Compteur de parrainage lu puis écrit**, non atomique | des points perdus en pic, sans moyen de reconstituer la vérité | ouvert |
+| D-08 | **Point de rupture inconnu**, le banc de charge n'a jamais tourné | on découvrira le plafond pendant le lancement au lieu d'avant | ouvert |
+| D-09 | **Doublons de comptes** : sans numéro, une réinscription crée une ligne de plus | des fans fantômes qu'aucune clé ne permet de reconnaître | ouvert |
+| D-10 | **`photo_add` force `.jpg` et `image/jpeg`** en dur | interdit le dépôt de tout autre média par ce chemin | ouvert |
+| D-11 | **Colonne morte `bey_membres.push_subscription`**, 0 ligne renseignée, les abonnements vivent dans `bey_push` | schéma qui ment sur lui-même, piège pour la prochaine personne | ouvert |
+| D-12 | **Panier `bey-photos` public** | aucune exclusivité possible sur une photo, quel que soit le grade | ouvert |
+| D-13 | **Lien de partage générique** : il ouvre l'accueil, pas la publication partagée | l'ami arrive et doit chercher la vidéo dont on lui a parlé | ouvert |
+
+**Rustines assumées, écrites comme telles.** La vidéo déposée en fichier (17/09) est un chemin
+**pour essayer** : le fichier reste téléchargeable par son adresse, il n'y a aucune
+exclusivité. Elle sera remplacée par le dépôt verrouillé de la phase 2, adresse signée et
+domaine restreint. Elle n'entre pas dans le registre parce qu'elle est datée, documentée et
+remplaçable, mais elle ne doit **jamais** servir à du contenu réservé.
+
+**Ce qui solde le plus de dette au meilleur prix** : le forfait Pro solde D-01 d'un coup et
+pour tous les clients, sans migration ni coupure. La journée de travail des correctifs solde
+D-03 à D-07 et D-10 à D-11. D-08 ne demande qu'une autorisation.
+
 ## Prochaine action
 
 1. **Monter le contenu de démarrage.** Le fil est prêt mais tourne sur le jeu de test, et un fil presque vide se voit plus qu'une page à rubriques presque vide. C'est le préalable à tout envoi.
