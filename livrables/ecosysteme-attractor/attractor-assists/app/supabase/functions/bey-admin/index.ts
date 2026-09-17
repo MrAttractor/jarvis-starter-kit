@@ -307,10 +307,30 @@ Deno.serve(async (req) => {
       let bytes: Uint8Array;
       try { bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0)); }
       catch (_) { return json({ ok: false, error: "image invalide" }); }
-      const path = crypto.randomUUID() + ".jpg";
+      // Le type vient de l'image elle-meme, il n'est plus decrete ici. Le
+      // telephone envoie du WebP quand il sait en faire (deux fois plus leger a
+      // qualite egale, mesure du 17/09), et du JPEG sinon. Ecrire ".jpg" en dur
+      // sur des octets WebP donnait un fichier qui ment sur son contenu : ca
+      // s'affiche quand meme, parce que les navigateurs reniflent, et c'est
+      // exactement le genre de dette qu'on ne voit jamais jusqu'au jour ou un
+      // outil, lui, fait confiance a l'extension.
+      const TYPES: Record<string, string> = {
+        "image/webp": "webp", "image/jpeg": "jpg", "image/png": "png",
+      };
+      const declare = /^data:([a-z/+-]+);base64,/i.exec(String(d.data ?? ""))?.[1]?.toLowerCase() ?? "";
+      const mime = TYPES[declare] ? declare : "image/jpeg";
+      const path = crypto.randomUUID() + "." + TYPES[mime];
       const up = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`, {
         method: "POST",
-        headers: { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}`, "Content-Type": "image/jpeg" },
+        headers: {
+          apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}`,
+          "Content-Type": mime,
+          // Supabase pose "no-cache" par defaut : chaque ouverture de l'app
+          // refaisait un aller-retour reseau pour CHAQUE photo, ce qui se paie
+          // en attente sur une 3G ivoirienne. Le nom du fichier est un UUID,
+          // donc son contenu ne changera jamais : un an, et immuable.
+          "Cache-Control": "public, max-age=31536000, immutable",
+        },
         body: bytes,
       });
       if (!up.ok) return json({ ok: false, error: "upload: " + (await up.text()) });

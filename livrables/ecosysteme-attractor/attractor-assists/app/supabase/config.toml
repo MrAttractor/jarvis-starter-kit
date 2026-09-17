@@ -35,3 +35,15 @@ verify_jwt = false
 # se fait en service role cote fonction, aucune ecriture directe possible.
 [functions.vsd-inscription]
 verify_jwt = false
+
+# ── Beynaumania ──
+# Les deux tournent en verify_jwt = true depuis toujours et c'est VOLONTAIRE :
+# la page du fan envoie la cle anon en Authorization, et une cle anon est un JWT
+# valide. Le vrai controle est fait DANS la fonction (bey-admin compare l'UID au
+# secret BEY_ADMIN_UID). Ces entrees ne changent rien, elles evitent d'avoir a
+# reverifier l'etat reel avant chaque deploiement. Ajoutees le 17/09/2026.
+[functions.bey-public]
+verify_jwt = true
+
+[functions.bey-admin]
+verify_jwt = true

@@ -1022,19 +1022,46 @@ async function doBroadcast(){
   else toast('Erreur : '+((res&&res.error)||'réessaie'));
 }
 
-/* Photos */
-function fileToJpeg(file,maxW,cb){
+/* Photos
+   ────────────────────────────────────────────────────────────────
+   La compression se fait ICI, sur le telephone, avant l'envoi. C'est le seul
+   endroit ou elle fait gagner deux fois : le fichier monte plus vite depuis
+   une connexion mobile, et il redescend plus vite chez chaque fan.
+
+   Mesure du 17/09 sur les trois vraies photos du fil, meme image en entree :
+     1280 px JPEG 0.82  ->  135 Ko   (ce qui etait fait jusqu'ici)
+     1080 px JPEG 0.82  ->  110 Ko
+     1080 px WebP 0.82  ->   54 Ko   <- retenu
+     1080 px WebP 0.75  ->   42 Ko
+   A dimensions egales, le WebP divise le poids par deux. On ne descend pas a
+   0.75 : ce sont des visages, et c'est la que les artefacts se voient d'abord.
+
+   1080 px et pas 1280 : un telephone de 390 px de large a 3x de densite affiche
+   au mieux 1170 px. Au-dela on transporte des pixels que personne ne voit.
+
+   LE PIEGE, et il est silencieux. Un navigateur qui ne sait pas encoder le type
+   demande ne previent pas : toDataURL renvoie du PNG, qui peut peser DIX FOIS
+   plus lourd qu'un JPEG. On verifie donc ce qui est reellement sorti au lieu de
+   faire confiance, et on retombe sur le JPEG si ce n'est pas du WebP. */
+function fileToPhoto(file,maxW,cb){
   const img=new Image(); const url=URL.createObjectURL(file);
-  img.onload=()=>{const s=Math.min(1,maxW/img.width);const w=Math.round(img.width*s),h=Math.round(img.height*s);
-    const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
-    URL.revokeObjectURL(url);cb(c.toDataURL('image/jpeg',0.82));};
+  img.onload=()=>{
+    const s=Math.min(1,maxW/img.width);
+    const w=Math.round(img.width*s),h=Math.round(img.height*s);
+    const c=document.createElement('canvas');c.width=w;c.height=h;
+    c.getContext('2d').drawImage(img,0,0,w,h);
+    URL.revokeObjectURL(url);
+    let out=c.toDataURL('image/webp',0.82);
+    if(out.indexOf('data:image/webp')!==0) out=c.toDataURL('image/jpeg',0.82);
+    cb(out);
+  };
   img.onerror=()=>{URL.revokeObjectURL(url);toast('Image illisible.');};
   img.src=url;
 }
 function uploadPhoto(input){
   const f=input.files&&input.files[0]; if(!f)return; input.value='';
   toast('Compression…');
-  fileToJpeg(f,1280,async(dataUrl)=>{
+  fileToPhoto(f,1080,async(dataUrl)=>{
     const cap=document.getElementById('photo-cap').value.trim();
     const res=await api({action:'photo_add',data:dataUrl,legende:cap,grade_requis:'membre'});
     if(res&&res.ok){document.getElementById('photo-cap').value='';toast(messagePublication(res));loadPhotos();}

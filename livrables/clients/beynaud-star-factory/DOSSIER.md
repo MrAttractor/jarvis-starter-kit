@@ -895,16 +895,16 @@ séries et live YouTube verrouillés, sondages, application installable.
 |---|---|---|---|
 | D-01 | **Aucune sauvegarde.** Liste vide, restauration à un instant donné désactivée | perte définitive de la base, pour Beynaud **et** les 8 autres clients | ouvert |
 | D-02 | **Projet Supabase partagé**, quota et moteur au niveau du projet | un succès chez Serge ralentit ou restreint J'Envoie Express, Élévia, Ayêla, Vies Croisées | **reporté, sciemment.** Un projet dédié a été créé puis supprimé le 17/09 : à l'usage, corriger les photos (D-03 à D-05) fait passer Beynaud de 123 Go à ~3 Go par mois, ce qui rend la séparation inutile **pour les quotas**. Elle reste justifiée par le partage du moteur au moment du pic et par la séparation des données de Serge (NDA). À redécider avec la taille réelle du lancement. Se recrée en deux minutes |
-| D-03 | **Photos jamais redimensionnées**, 211 Ko mesurés | 120 Go de sortie par mois à 50 000 fans | ouvert |
-| D-04 | **Photos en `no-cache`**, réglage par défaut jamais changé | un aller-retour réseau par photo et par visite, pénalisant en 3G | ouvert |
-| D-05 | **Photos servies par Supabase**, pas par Cloudflare | consomme un quota payant là où Cloudflare est gratuit | ouvert |
+| D-03 | **Photos trop lourdes**, 211 Ko en ligne | 120 Go de sortie par mois à 50 000 fans | **soldée le 17/09.** Le téléphone encode en WebP 1080 px au lieu de JPEG 1280. Mesuré sur les 3 vraies photos, même image en entrée : 135 Ko → **54 Ko**. Repli automatique en JPEG si le navigateur ne sait pas encoder le WebP, vérifié sur ce qui sort réellement et non sur ce qu'on a demandé. Les photos déjà en ligne restent lourdes mais sont désormais mises en cache |
+| D-04 | **Photos en `no-cache`** | un aller-retour réseau par photo et par visite, pénalisant en 3G | **soldée le 17/09, ailleurs que prévu.** Supabase inscrit `no-cache` en dur dans les métadonnées et **ignore les deux formes d'en-tête documentées**, vérifié en dépôt direct et en formulaire. Le cache ne se règle donc pas à la source : il est posé par Cloudflare, à un an et immuable |
+| D-05 | **Photos servies par Supabase** | 640 Ko par visiteur, quota gratuit épuisé à **8 197 visiteurs** | **soldée le 17/09.** Une fonction Cloudflare sert `/beynaud/img/<fichier>`. Recette en ligne : 7 photos sur 7 passent par notre domaine, **zéro par Supabase**, `CF-Cache-Status: HIT`. La bande passante de Cloudflare est gratuite et illimitée : la taille du lancement cesse d'être une question de quota photo |
 | D-06 | **Inscription sans garde-fou**, ni cadence ni captcha, clé publique lisible | **le concours d'Ambassadeur est truquable** dès qu'il y a un prix | ouvert |
 | D-07 | **Compteur de parrainage lu puis écrit**, non atomique | des points perdus en pic, sans moyen de reconstituer la vérité | ouvert |
 | D-08 | **Point de rupture inconnu**, le banc de charge n'a jamais tourné | on découvrira le plafond pendant le lancement au lieu d'avant | ouvert |
 | D-09 | **Doublons de comptes** : sans numéro, une réinscription crée une ligne de plus | des fans fantômes qu'aucune clé ne permet de reconnaître | ouvert |
-| D-10 | **`photo_add` force `.jpg` et `image/jpeg`** en dur | interdit le dépôt de tout autre média par ce chemin | ouvert |
+| D-10 | **`photo_add` force `.jpg` et `image/jpeg`** en dur | un fichier qui ment sur son contenu, et le WebP impossible | **soldée le 17/09.** Le type est lu sur l'image elle-même, liste blanche webp/jpeg/png, extension déduite. `bey-admin` v19 |
 | D-11 | **Colonne morte `bey_membres.push_subscription`**, 0 ligne renseignée, les abonnements vivent dans `bey_push` | schéma qui ment sur lui-même, piège pour la prochaine personne | ouvert |
-| D-12 | **Panier `bey-photos` public** | aucune exclusivité possible sur une photo, quel que soit le grade | ouvert |
+| D-12 | **Panier `bey-photos` public** | aucune exclusivité possible sur une photo, quel que soit le grade | ouvert. **La fonction Cloudflare ne la referme pas** : l'adresse Supabase d'origine reste accessible directement. Servir par notre domaine est une affaire de coût et de vitesse, pas de verrou |
 | D-13 | **Lien de partage générique** : il ouvre l'accueil, pas la publication partagée | l'ami arrive et doit chercher la vidéo dont on lui a parlé | ouvert |
 
 **Rustines assumées, écrites comme telles.** La vidéo déposée en fichier (17/09) est un chemin
@@ -913,9 +913,12 @@ exclusivité. Elle sera remplacée par le dépôt verrouillé de la phase 2, adr
 domaine restreint. Elle n'entre pas dans le registre parce qu'elle est datée, documentée et
 remplaçable, mais elle ne doit **jamais** servir à du contenu réservé.
 
-**Ce qui solde le plus de dette au meilleur prix** : le forfait Pro solde D-01 d'un coup et
-pour tous les clients, sans migration ni coupure. La journée de travail des correctifs solde
-D-03 à D-07 et D-10 à D-11. D-08 ne demande qu'une autorisation.
+**Soldé le 17/09** : D-03, D-04, D-05 et D-10, soit tout le poste photo. Une seule mesure
+résume le gain : le quota gratuit tombait à **8 197 visiteurs**, les photos n'y comptent plus.
+
+**Ce qui solde le plus de dette au meilleur prix, maintenant** : le forfait Pro solde D-01
+d'un coup et pour tous les clients, sans migration ni coupure. D-06, D-07, D-09 et D-11 se
+traitent en une journée, sans dépense. D-08 ne demande qu'une autorisation.
 
 ## Prochaine action
 

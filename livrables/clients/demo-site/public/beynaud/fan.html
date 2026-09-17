@@ -1589,9 +1589,9 @@ function corpsDuPost(p){
   if(p.type === 'photo'){
     const media = el('div', 'post-media');
     const img = el('img');
-    img.src = p.url; img.alt = p.legende || '';
+    img.src = urlPhoto(p.url); img.alt = p.legende || '';
     img.loading = 'lazy';
-    img.addEventListener('click', () => ouvrirVisuel(p.url, p.legende));
+    img.addEventListener('click', () => ouvrirVisuel(urlPhoto(p.url), p.legende));
     media.appendChild(img);
     frag.appendChild(media);
   }
@@ -1712,6 +1712,19 @@ function mmss(t){
 }
 
 /* Construit le bloc video complet : vignette, puis lecteur et commandes. */
+/* Les photos passent par notre domaine, plus par Supabase.
+   Supabase enregistre « no-cache » en dur et ignore les en-tetes de cache :
+   chaque ouverture de l'app repayait donc un aller-retour par photo, et chaque
+   photo vue sortait du quota Supabase. Derriere Cloudflare, la photo est mise
+   en cache un an et la bande passante est gratuite.
+   On derive l'adresse du nom de fichier, sans rien changer en base : les lignes
+   deja enregistrees marchent telles quelles, et une adresse qu'on ne reconnait
+   pas est renvoyee intacte plutot que cassee. */
+function urlPhoto(u){
+  const m = /\/bey-photos\/([0-9a-f-]{36}\.(?:jpg|jpeg|png|webp))(?:$|\?)/i.exec(String(u || ''));
+  return m ? 'img/' + m[1] : u;
+}
+
 function blocVideo(url, coverUrl){
   const id = idYoutube(url);
   const wrap = el('div');
