@@ -205,13 +205,18 @@ Deno.serve(async (req) => {
       }
       if (!inserted) return json({ ok: false, error: "inscription impossible" });
       if (ref) {
-        const p = await (await sb(`bey_membres?code_ambassadeur=eq.${encodeURIComponent(ref)}&select=id,filleuls,grade`)).json();
-        if (Array.isArray(p) && p.length) {
-          const nf = (p[0].filleuls || 0) + 1;
-          const patch: any = { filleuls: nf };
-          if (nf >= AMB_THRESHOLD && p[0].grade !== "ambassadeur") patch.grade = "ambassadeur";
-          await sb(`bey_membres?id=eq.${p[0].id}`, { method: "PATCH", body: JSON.stringify(patch) });
-        }
+        // Un seul appel, une seule ecriture. Avant, on LISAIT le compteur puis on
+        // le REECRIVAIT : deux personnes qui s'inscrivaient au meme instant sur le
+        // meme lien lisaient toutes les deux 5 et ecrivaient toutes les deux 6, et
+        // le second parrainage disparaissait sans trace ni erreur. La base
+        // verrouille maintenant la ligne le temps de l'increment, donc les appels
+        // simultanes se mettent en file au lieu de s'ecraser. Migration 0011.
+        // Le passage au grade Ambassadeur est calcule dans le meme mouvement : le
+        // separer rouvrirait exactement la meme fenetre pour le grade.
+        await sb("rpc/bey_crediter_parrain", {
+          method: "POST",
+          body: JSON.stringify({ p_code: ref, p_seuil: AMB_THRESHOLD }),
+        });
       }
       return json({ ok: true, membre: pub(inserted) });
     }

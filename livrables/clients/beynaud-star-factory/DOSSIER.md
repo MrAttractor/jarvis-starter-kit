@@ -899,7 +899,7 @@ séries et live YouTube verrouillés, sondages, application installable.
 | D-04 | **Photos en `no-cache`** | un aller-retour réseau par photo et par visite, pénalisant en 3G | **soldée le 17/09, ailleurs que prévu.** Supabase inscrit `no-cache` en dur dans les métadonnées et **ignore les deux formes d'en-tête documentées**, vérifié en dépôt direct et en formulaire. Le cache ne se règle donc pas à la source : il est posé par Cloudflare, à un an et immuable |
 | D-05 | **Photos servies par Supabase** | 640 Ko par visiteur, quota gratuit épuisé à **8 197 visiteurs** | **soldée le 17/09.** Une fonction Cloudflare sert `/beynaud/img/<fichier>`. Recette en ligne : 7 photos sur 7 passent par notre domaine, **zéro par Supabase**, `CF-Cache-Status: HIT`. La bande passante de Cloudflare est gratuite et illimitée : la taille du lancement cesse d'être une question de quota photo |
 | D-06 | **Inscription sans garde-fou**, ni cadence ni captcha, clé publique lisible | **le concours d'Ambassadeur est truquable** dès qu'il y a un prix | ouvert |
-| D-07 | **Compteur de parrainage lu puis écrit**, non atomique | des points perdus en pic, sans moyen de reconstituer la vérité | ouvert |
+| D-07 | **Compteur de parrainage lu puis écrit**, non atomique | des points perdus en pic, sans moyen de reconstituer la vérité | **soldée le 18/09.** Un seul `update` en base (migration 0011), la ligne se verrouille et les appels simultanés se mettent en file. Éprouvé sur la production : **12 inscriptions au même instant sur un même lien, compteur à 12**, grade Ambassadeur déclenché automatiquement, 13 lignes de test supprimées derrière. Une fonction de recalage est livrée avec, pour recoler le compteur sur la vérité le jour où l'on doute d'un classement |
 | D-08 | **Point de rupture inconnu** | on découvrirait le plafond pendant le lancement | **mesuré le 17/09, en lecture seule.** Genou de saturation à **~55 ouvertures de page par seconde** : de 40 à 80 appels simultanés, la latence double (751 → 1 403 ms) et le débit ne gagne que 7 %. **Zéro erreur sur 975 requêtes** : sous surcharge le système ralentit, il ne casse pas. Reste inconnu : le comportement en écriture, non testé pour ne pas créer de faux comptes en production |
 | D-09 | **Doublons de comptes** : sans numéro, une réinscription crée une ligne de plus | des fans fantômes qu'aucune clé ne permet de reconnaître | ouvert |
 | D-10 | **`photo_add` force `.jpg` et `image/jpeg`** en dur | un fichier qui ment sur son contenu, et le WebP impossible | **soldée le 17/09.** Le type est lu sur l'image elle-même, liste blanche webp/jpeg/png, extension déduite. `bey-admin` v19 |
@@ -958,6 +958,8 @@ entrée de cache, sinon le contenu réservé aux Ambassadeurs s'afficherait pour
 Le relais ne relaie que le fil : toute autre action est refusée. Et la page retombe sur
 l'appel direct à Supabase si le relais tombe, pour qu'un défaut du cache ne devienne jamais
 une panne du fil.
+
+**Soldé le 18/09** : D-07, le compteur de parrainage, et D-08 mesurée puis annulée par le cache du fil.
 
 **Soldé le 17/09** : D-03, D-04, D-05 et D-10, soit tout le poste photo. Une seule mesure
 résume le gain : le quota gratuit tombait à **8 197 visiteurs**, les photos n'y comptent plus.
