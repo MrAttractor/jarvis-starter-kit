@@ -894,7 +894,7 @@ séries et live YouTube verrouillés, sondages, application installable.
 | # | Dette | Ce que ça devient à l'échelle | État |
 |---|---|---|---|
 | D-01 | **Aucune sauvegarde.** Liste vide, restauration à un instant donné désactivée | perte définitive de la base, pour Beynaud **et** les 8 autres clients | ouvert |
-| D-02 | **Projet Supabase partagé**, quota au niveau du projet | un succès chez Serge restreint J'Envoie Express, Élévia, Ayêla, Vies Croisées | migration commencée le 17/09, projet `beynaumania` créé et vide, **en pause** |
+| D-02 | **Projet Supabase partagé**, quota et moteur au niveau du projet | un succès chez Serge ralentit ou restreint J'Envoie Express, Élévia, Ayêla, Vies Croisées | **reporté, sciemment.** Un projet dédié a été créé puis supprimé le 17/09 : à l'usage, corriger les photos (D-03 à D-05) fait passer Beynaud de 123 Go à ~3 Go par mois, ce qui rend la séparation inutile **pour les quotas**. Elle reste justifiée par le partage du moteur au moment du pic et par la séparation des données de Serge (NDA). À redécider avec la taille réelle du lancement. Se recrée en deux minutes |
 | D-03 | **Photos jamais redimensionnées**, 211 Ko mesurés | 120 Go de sortie par mois à 50 000 fans | ouvert |
 | D-04 | **Photos en `no-cache`**, réglage par défaut jamais changé | un aller-retour réseau par photo et par visite, pénalisant en 3G | ouvert |
 | D-05 | **Photos servies par Supabase**, pas par Cloudflare | consomme un quota payant là où Cloudflare est gratuit | ouvert |
