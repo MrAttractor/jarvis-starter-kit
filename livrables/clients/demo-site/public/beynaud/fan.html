@@ -791,7 +791,11 @@ body.splash-on{overflow:hidden;}
 
 <div class="lightbox" id="lightbox" onclick="closeLb(event)">
   <button class="lb-close" onclick="closeLb(event,true)">&times;</button>
-  <img id="lb-img" src="" alt=""/><div class="lb-cap" id="lb-cap"></div>
+  <!-- Pas de src="" ici : un src vide n'est pas neutre, le navigateur va chercher
+       la PAGE elle-meme comme si c'etait une image. Une requete inutile a chaque
+       ouverture, pour chaque visiteur, et une image cassee dans le document. Sans
+       l'attribut, aucune requete n'est faite tant qu'on n'a pas ouvert une photo. -->
+  <img id="lb-img" alt=""/><div class="lb-cap" id="lb-cap"></div>
 </div>
 <div class="toast" id="toast"></div>
 
