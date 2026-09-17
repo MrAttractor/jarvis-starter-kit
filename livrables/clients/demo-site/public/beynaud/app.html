@@ -64,6 +64,10 @@ svg{display:block;}
 .field label{display:block;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--dim);margin-bottom:6px;}
 .field input,.field textarea,.field select{width:100%;background:var(--champ);border:1px solid var(--champ-bord);border-radius:11px;padding:13px 14px;font-size:15px;color:var(--blanc);}
 .field input:focus,.field textarea:focus{border-color:var(--rouge);}
+/* L'aide sous un champ. Elle explique ce que le champ accepte, la ou l'etiquette
+   se contente de le nommer : « Lien de la video » ne dit pas qu'un fichier .mp4
+   passe aussi, et personne n'essaie ce qu'on ne lui a pas dit possible. */
+.aide-champ{font-size:11.5px;line-height:1.5;color:var(--dim);margin-top:6px;}
 .btn{width:100%;background:var(--rouge);color:#fff;padding:15px;border-radius:12px;font-size:14px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;box-shadow:0 8px 30px var(--rouge-glow);display:flex;align-items:center;justify-content:center;gap:9px;}
 .btn:active{background:var(--rouge-vif);}
 .btn:disabled{opacity:.55;}
@@ -348,7 +352,7 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 
           <div class="f-type hidden" id="f-video">
             <div class="field"><label>Titre</label><input id="c-titre" type="text" placeholder="Ex : Série des coulisses"/></div>
-            <div class="field"><label>Lien YouTube</label><input id="c-url" type="text" placeholder="https://youtube.com/..."/></div>
+            <div class="field"><label>Lien de la vidéo</label><input id="c-url" type="text" placeholder="https://youtube.com/... ou un fichier .mp4"/><div class="aide-champ">YouTube pour ce qui est public. Un lien finissant par .mp4 est lu directement dans l’app, sans passer par YouTube.</div></div>
             <div class="field"><label>Accès</label><select id="c-grade"><option value="membre">Tous les membres</option><option value="ambassadeur">Ambassadeurs seulement</option></select></div>
             <button class="btn" id="c-btn" onclick="saveContent()">Publier</button>
             <button class="add-toggle hidden" id="c-annuler" onclick="cancelEdit()">Annuler la modification</button>
