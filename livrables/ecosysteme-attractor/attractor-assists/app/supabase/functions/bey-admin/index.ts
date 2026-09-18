@@ -197,6 +197,11 @@ Deno.serve(async (req) => {
           titre, youtube_url: url, description: d.description ? String(d.description) : null,
           type: (d.type === "video" || d.type === "live") ? d.type : "serie",
           grade_requis: d.grade_requis === "ambassadeur" ? "ambassadeur" : "membre",
+          // Un grade se gagne, un billet s'achete : deux champs, jamais un seul.
+          // Le second est volontairement en "=== true" et non en truthy, pour
+          // qu'une chaine vide ou un "false" venu d'un formulaire ne rende
+          // jamais un contenu payant par accident.
+          billet_requis: d.billet_requis === true,
           ordre: Number(d.ordre) || 99,
         }),
       });
@@ -222,6 +227,12 @@ Deno.serve(async (req) => {
         const u = String(d.youtube_url).trim();
         if (!u) return json({ ok: false, error: "lien vide" });
         champs.youtube_url = u;
+      }
+      if (d.billet_requis !== undefined) {
+        // On accepte de RETIRER un billet exige autant que d'en poser un : un
+        // contenu passe en payant par erreur doit pouvoir redevenir libre sans
+        // repasser par la base.
+        champs.billet_requis = d.billet_requis === true;
       }
       if (d.description !== undefined) champs.description = String(d.description).trim() || null;
       if (d.grade_requis !== undefined) champs.grade_requis = d.grade_requis === "ambassadeur" ? "ambassadeur" : "membre";

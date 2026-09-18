@@ -359,7 +359,7 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
           <div class="f-type hidden" id="f-video">
             <div class="field"><label>Titre</label><input id="c-titre" type="text" placeholder="Ex : Série des coulisses"/></div>
             <div class="field"><label>Lien de la vidéo</label><input id="c-url" type="text" placeholder="https://youtube.com/... ou un fichier .mp4"/><div class="aide-champ">YouTube pour ce qui est public. Un lien finissant par .mp4 est lu directement dans l’app, sans passer par YouTube.</div></div>
-            <div class="field"><label>Accès</label><select id="c-grade"><option value="membre">Tous les membres</option><option value="ambassadeur">Ambassadeurs seulement</option></select></div>
+            <div class="field"><label>Accès</label><select id="c-grade"><option value="membre">Tous les membres</option><option value="ambassadeur">Ambassadeurs seulement</option><option value="billet">Payant, billet requis</option></select><div class="aide-champ">Un grade se gagne, un billet s’achète. « Payant » laisse la publication visible de tous, mais la vidéo ne s’ouvre qu’avec un billet.</div></div>
             <button class="btn" id="c-btn" onclick="saveContent()">Publier</button>
             <button class="add-toggle hidden" id="c-annuler" onclick="cancelEdit()">Annuler la modification</button>
           </div>
@@ -1131,8 +1131,8 @@ async function saveContent(){
   // Une correction ne renotifie pas : les fans ont deja ete prevenus a la
   // publication, une faute de frappe corrigee ne vaut pas une notification.
   const res = editId
-    ? await api({action:'content_update',id:editId,titre,youtube_url:url,grade_requis:grade})
-    : await api({action:'content_add',titre,youtube_url:url,grade_requis:grade,type:'serie',ordre:50});
+    ? await api({action:'content_update',id:editId,titre,youtube_url:url,...acces(grade)})
+    : await api({action:'content_add',titre,youtube_url:url,...acces(grade),type:'serie',ordre:50});
   btn.disabled=false; btn.innerHTML=old;
   if(res&&res.ok){
     const corrige = !!editId;
@@ -1158,15 +1158,27 @@ function renderLiveCard(lives){
   } else {
     el.innerHTML=`<div class="field"><input id="live-titre" type="text" placeholder="Titre du live (ex : Live spécial CREATAIR)"/></div>
       <div class="field"><input id="live-url" type="text" placeholder="Lien du live YouTube"/></div>
+      <div class="field"><label>Accès</label><select id="live-acces"><option value="membre">Tous les membres</option><option value="ambassadeur">Ambassadeurs seulement</option><option value="billet">Payant, billet requis</option></select></div>
       <button class="btn" onclick="launchLive()">Passer en direct</button>
       <div class="bc-hint">Colle le lien de ton live YouTube : il s'affiche en gros et en direct chez tous les fans.</div>`;
   }
 }
+/* Le selecteur d'acces propose trois choses, la base en stocke deux : un grade,
+   qui se gagne, et un billet, qui s'achete. « Payant » n'est donc pas un grade
+   de plus, c'est un grade « membre » PLUS un billet exige. Traduire ici, en un
+   seul endroit, evite que les deux champs se contredisent un jour. */
+function acces(choix){
+  if(choix === 'billet')      return { grade_requis:'membre',      billet_requis:true  };
+  if(choix === 'ambassadeur') return { grade_requis:'ambassadeur', billet_requis:false };
+  return { grade_requis:'membre', billet_requis:false };
+}
+
 async function launchLive(){
   const titre=document.getElementById('live-titre').value.trim();
   const url=normalizeYt(document.getElementById('live-url').value);
   if(!titre||!url){toast('Titre et lien du live requis.');return;}
-  const res=await api({action:'content_add',titre,youtube_url:url,type:'live',grade_requis:'membre',ordre:1});
+  const choix=(document.getElementById('live-acces')||{}).value||'membre';
+  const res=await api({action:'content_add',titre,youtube_url:url,type:'live',...acces(choix),ordre:1});
   if(res&&res.ok){toast('Tu es EN DIRECT !');loadContents();}else toast('Erreur : '+((res&&res.error)||'réessaie'));
 }
 async function endLive(id){
