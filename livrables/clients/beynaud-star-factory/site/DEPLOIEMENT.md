@@ -42,12 +42,44 @@ homonyme, déjà vécu le 01/07/2026. Le nom est corrigé : **ne pas y retoucher
 | Titulaire | **le compte de l'agence.** À passer à STAR FACTORY, voir le `DOSSIER.md` |
 | Contenu | la page d'attente : le clip, le nom, « Bientôt disponible ». Rien d'autre |
 
-## Deux réglages à poser avant que l'application déménage ici
+## L'adresse officielle : `latiss.net`, sans `www`
 
-**Always Use HTTPS.** Vérifié le 19/09 : `http://latiss.net` répond en clair, sans basculer
-vers le HTTPS. Une case à cocher, SSL/TLS → Edge Certificates → **Always Use HTTPS**.
+Arrêté le 19/09/2026 par Mac Arthur. **Tout lien fabriqué par l'application doit porter
+`https://latiss.net`**, jamais `www`, jamais `http`.
 
-**Une seule adresse canonique, et c'est le point qui compte.** `latiss.net` et
+Deux règles de redirection Cloudflare le garantissent, dans cet ordre :
+
+| Ordre | Règle | Effet |
+|---|---|---|
+| 1 | `HTTP vers HTTPS` | `http://*` → `https://${1}`, 301 |
+| 2 | `www vers latiss.net` | `https://www.*` → racine, 301 |
+
+Les deux conservent **la chaîne de requête**, et ce n'est pas un détail de confort : c'est
+elle qui porte le `?ref=` des liens de parrainage. Sans elle, un filleul arrive sans le code
+de son parrain, personne ne voit d'erreur, et le compteur de l'Ambassadeur reste
+simplement à zéro.
+
+Vérifié le 19/09, les quatre portes d'entrée convergent et le code survit à chacune :
+
+```
+http://latiss.net/fan?ref=AWA777       -> 1 saut  -> https://latiss.net/fan?ref=AWA777
+http://www.latiss.net/fan?ref=AWA777   -> 2 sauts -> https://latiss.net/fan?ref=AWA777
+https://www.latiss.net/fan?ref=AWA777  -> 1 saut  -> https://latiss.net/fan?ref=AWA777
+https://latiss.net/fan?ref=AWA777      -> direct
+```
+
+**Pourquoi le domaine nu plutôt que `www`.** Il se dicte mieux, à la radio comme sur scène,
+et il se tape plus vite sur un clavier de téléphone. Les deux marchent de toute façon :
+`www` n'est pas refusé, il est déplacé.
+
+## L'ancien réglage, réglé
+
+
+
+**Fait le 19/09** : le HTTP est forcé en HTTPS par une règle de redirection, ce qui rend
+inutile la case SSL/TLS → Edge Certificates → Always Use HTTPS.
+
+**L'adresse canonique, et pourquoi elle comptait.** `latiss.net` et
 `www.latiss.net` servent aujourd'hui la même page, donc ça ne se voit pas. Mais
 **le stockage du navigateur est propre à chaque adresse** : l'espace fan garde la session
 dans `localStorage`, sous la clé `bey_membre`. Le jour où l'application vivra ici, un fan
