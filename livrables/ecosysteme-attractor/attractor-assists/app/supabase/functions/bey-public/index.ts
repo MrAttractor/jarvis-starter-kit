@@ -365,11 +365,24 @@ Deno.serve(async (req) => {
       const arr = (x: unknown) => (Array.isArray(x) ? x : []);
 
       const [contenus, photos, messages, sondages] = await Promise.all([
-        j(`bey_contenus?actif=eq.true${gate}&order=created_at.desc&select=id,titre,description,type,youtube_url,cover_url,grade_requis,created_at`),
+        j(`bey_contenus?actif=eq.true${gate}&order=created_at.desc&select=id,titre,description,type,youtube_url,cover_url,grade_requis,billet_requis,created_at`),
         j(`bey_photos?actif=eq.true${gate}&order=created_at.desc&limit=60&select=id,url,legende,grade_requis,created_at`),
         j(`bey_messages?order=created_at.desc&limit=40&select=id,contenu,created_at`),
         j(`bey_sondages?actif=eq.true${gate}&order=created_at.desc&select=id,question,options,grade_requis,created_at`),
       ]);
+
+      /* Les billets du membre, en UNE requete. Le billet est nominatif et ne
+         s'obtient par aucun parrainage : un grade se gagne, un billet s'achete.
+         Sans membre identifie, l'ensemble est vide, donc tout ce qui est payant
+         est verrouille. L'echec de lecture laisse l'ensemble vide lui aussi :
+         ici encore, une panne ne doit jamais ouvrir. */
+      const billets = new Set<string>();
+      if (membreId) {
+        try {
+          const b = await (await sb(`bey_billets?membre_id=eq.${membreId}&select=contenu_id`)).json();
+          if (Array.isArray(b)) for (const x of b) billets.add(String((x as any).contenu_id));
+        } catch (_) { /* ferme */ }
+      }
 
       const lives = arr(contenus).filter((c: any) => c.type === "live");
       const videos = arr(contenus).filter((c: any) => c.type !== "live");
@@ -384,7 +397,18 @@ Deno.serve(async (req) => {
       for (const c of arr(videos)) {
         // "format" et non "type" : ici type dit la place dans le fil, format dit
         // la nature de la video. Les confondre casserait le rendu.
-        fil.push({ type: "contenu", id: c.id, created_at: c.created_at, titre: c.titre, description: c.description, format: c.type, youtube_url: c.youtube_url, cover_url: c.cover_url, grade_requis: c.grade_requis });
+        /* ── LE CONTENU PAYANT RESTE VISIBLE, SON ADRESSE NON ──
+           On ne retire PAS la publication du fil : si elle disparait, personne
+           ne sait qu'elle existe, donc personne ne l'achete. On envoie donc le
+           titre, la description et l'image, c'est-a-dire l'offre, et on retire
+           `youtube_url`, c'est-a-dire l'acces.
+
+           Le verrou est pose ICI, cote serveur, et pas a l'affichage. Une
+           adresse envoyee au navigateur est une adresse donnee : un fan qui
+           ouvre les outils de developpement la lit, quelle que soit l'apparence
+           de la carte. */
+        const verrouille = c.billet_requis === true && !billets.has(String(c.id));
+        fil.push({ type: "contenu", id: c.id, created_at: c.created_at, titre: c.titre, description: c.description, format: c.type, youtube_url: verrouille ? null : c.youtube_url, cover_url: c.cover_url, grade_requis: c.grade_requis, billet_requis: c.billet_requis === true, verrouille });
       }
       for (const q of arr(sondages)) {
         fil.push({ type: "sondage", id: q.id, created_at: q.created_at, question: q.question, options: q.options || [], grade_requis: q.grade_requis });

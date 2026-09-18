@@ -578,6 +578,18 @@ body.splash-on{overflow:hidden;}
    chaine, soit quatre sorties hors de la Beynaumania. On la remplace par nos
    propres commandes. Le lecteur reste celui de YouTube, il n'est pas masque :
    recouvrir leur interface violerait leurs conditions. */
+/* Le contenu qui demande un billet. Meme gabarit que le lecteur video, pour
+   que le fil garde son rythme, et l'affiche en fond quand elle existe : on
+   montre ce qu'on vend. */
+.verrou{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;
+  background:var(--n4);background-size:cover;background-position:center;}
+.verrou.avec-affiche::before{content:'';position:absolute;inset:0;background:rgba(7,7,7,.72);}
+.verrou-c{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:0 24px;gap:7px;}
+.verrou-i{width:30px;height:30px;stroke:var(--rouge-texte);fill:none;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;}
+.verrou-t{font-family:var(--bebas);font-size:22px;letter-spacing:1px;color:var(--blanc);}
+.verrou-d{font-size:12.5px;color:var(--dim);line-height:1.5;max-width:270px;}
 .video{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000;}
 /* ===== LE CADRE VERTICAL, POUR LES REELS =====
    Le cadre etait verrouille en 16/9. Une video verticale s'y affichait au
@@ -1657,7 +1669,14 @@ function corpsDuPost(p){
 
   if(p.type === 'contenu'){
     const media = el('div', 'post-media');
-    media.appendChild(blocVideo(p.youtube_url, p.cover_url));
+    /* Verrouille : le serveur a deliberement retire l'adresse de la video,
+       parce que ce contenu demande un billet que ce membre n'a pas. On montre
+       donc l'OFFRE et pas le contenu. Sans ce cas, le lecteur affichait
+       « momentanement indisponible », ce qui est faux et ne vend rien.
+       Le verrou n'est pas ici : il est cote serveur. Cet ecran ne fait que
+       dire proprement ce qui a deja ete decide ailleurs. */
+    if(p.verrouille) media.appendChild(blocVerrouille(p));
+    else media.appendChild(blocVideo(p.youtube_url, p.cover_url));
     frag.appendChild(media);
   }
 
@@ -1771,6 +1790,33 @@ function mmss(t){
 }
 
 /* Construit le bloc video complet : vignette, puis lecteur et commandes. */
+/* La carte d'un contenu qui demande un billet.
+   Elle porte l'affiche quand il y en a une, un cadenas, et le nom de ce qui
+   attend derriere. Pas de faux bouton d'achat tant que le paiement n'est pas
+   branche : promettre un achat qui ne se fait pas coute plus cher que de dire
+   qu'il arrive. */
+function blocVerrouille(p){
+  const cadre = el('div', 'verrou');
+  if(p.cover_url){
+    cadre.style.backgroundImage = 'url("' + p.cover_url + '")';
+    cadre.classList.add('avec-affiche');
+  }
+  const centre = el('div', 'verrou-c');
+  const ico = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  ico.setAttribute('viewBox','0 0 24 24'); ico.setAttribute('class','verrou-i');
+  const corps = document.createElementNS('http://www.w3.org/2000/svg','rect');
+  corps.setAttribute('x','4'); corps.setAttribute('y','10.5'); corps.setAttribute('width','16');
+  corps.setAttribute('height','10'); corps.setAttribute('rx','2.2');
+  const anse = document.createElementNS('http://www.w3.org/2000/svg','path');
+  anse.setAttribute('d','M8 10.5V7.5a4 4 0 0 1 8 0v3');
+  ico.appendChild(corps); ico.appendChild(anse);
+  centre.appendChild(ico);
+  centre.appendChild(el('div','verrou-t','Réservé'));
+  centre.appendChild(el('div','verrou-d','Cet accès s’achète. Il sera bientôt disponible ici.'));
+  cadre.appendChild(centre);
+  return cadre;
+}
+
 /* Les photos passent par notre domaine, plus par Supabase.
    Supabase enregistre « no-cache » en dur et ignore les en-tetes de cache :
    chaque ouverture de l'app repayait donc un aller-retour par photo, et chaque
