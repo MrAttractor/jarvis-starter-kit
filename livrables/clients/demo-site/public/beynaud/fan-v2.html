@@ -351,12 +351,20 @@ body.splash-on{overflow:hidden;}
   -webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .reels::-webkit-scrollbar{display:none;}
 .reel{flex:0 0 108px;height:192px;border-radius:14px;scroll-snap-align:start;
-  position:relative;overflow:hidden;background:var(--n4) center/cover no-repeat;
+  position:relative;overflow:hidden;background:var(--n4);
   border:1px solid var(--faint);display:flex;align-items:flex-end;padding:10px;}
+/* `cover` fait le travail : quelle que soit la forme de l'image d'origine, elle
+   remplit la carte et c'est le debord qui est coupe, jamais l'inverse. C'est ce
+   qui rend les vignettes UNIFORMES : sans lui, une image 4/3 se pose dans un
+   cadre vertical en laissant du vide en haut et en bas, et une carte sur deux
+   parait cassee. */
+.reel-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  object-position:center;display:block;}
 .reel::after{content:'';position:absolute;inset:0;
-  background:linear-gradient(0deg,rgba(7,7,7,.88),transparent 55%);}
+  background:linear-gradient(0deg,rgba(7,7,7,.94) 0%,rgba(7,7,7,.55) 38%,transparent 72%);}
+/* Deux lignes, pas trois : a la troisieme le titre mangeait l'image. */
 .reel-t{position:relative;z-index:2;font-size:11px;font-weight:700;line-height:1.3;
-  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .reels-titre{font-size:11px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;
   color:var(--dim);padding:2px 0 10px;}
 
@@ -2214,11 +2222,35 @@ function renderReels(liste){
   reels.slice(0, 12).forEach(function(p, i){
     const c = el('div', 'reel');
     const id = idYoutube(p.youtube_url);
-    const vignette = p.cover_url || (id ? 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg' : '');
-    if(vignette){
-      if(i < 3) c.style.backgroundImage = 'url("' + vignette + '")';
-      else c.dataset.fond = vignette;   // posee au defilement
+
+    if(p.cover_url || id){
+      const img = document.createElement('img');
+      img.className = 'reel-img';
+      img.alt = '';
+      img.decoding = 'async';
+      /* Les trois premieres arrivent tout de suite, les suivantes quand on
+         defile jusqu'a elles. C'est le navigateur qui s'en charge, pas nous :
+         moins de code a tenir, et il le fait mieux dans un defilement
+         horizontal. */
+      img.loading = i < 3 ? 'eager' : 'lazy';
+
+      if(p.cover_url){
+        img.src = p.cover_url;
+      } else {
+        /* `hqdefault` renvoie une image 4/3 avec des bandes noires INCRUSTEES :
+           recadree dans une carte verticale, une vignette sur deux parait vide.
+           `maxresdefault` est en 16/9 sans bande, mais elle n'existe pas pour
+           toutes les videos. On la tente, et on retombe sur `mqdefault`, qui est
+           elle aussi sans bande et TOUJOURS presente. */
+        img.src = 'https://i.ytimg.com/vi/' + id + '/maxresdefault.jpg';
+        img.addEventListener('error', function repli(){
+          img.removeEventListener('error', repli);
+          img.src = 'https://i.ytimg.com/vi/' + id + '/mqdefault.jpg';
+        });
+      }
+      c.appendChild(img);
     }
+
     c.appendChild(el('div', 'reel-t', p.titre || ''));
     c.setAttribute('role', 'button');
     c.setAttribute('aria-label', 'Voir ' + (p.titre || 'la vidéo'));
@@ -2228,20 +2260,6 @@ function renderReels(liste){
     });
     box.appendChild(c);
   });
-
-  // Les vignettes au-dela de la troisieme n'arrivent que si on defile jusqu'a
-  // elles. Sur une 3G ivoirienne, huit images de plus a l'ouverture se sentent.
-  const poser = () => {
-    box.querySelectorAll('.reel[data-fond]').forEach(function(c){
-      const r = c.getBoundingClientRect();
-      if(r.left < window.innerWidth + 200){
-        c.style.backgroundImage = 'url("' + c.dataset.fond + '")';
-        delete c.dataset.fond;
-      }
-    });
-  };
-  box.addEventListener('scroll', poser, { passive: true });
-  poser();
 }
 
 /* Les pastilles des onglets : elles disent qu'il y a quelque chose a voir
