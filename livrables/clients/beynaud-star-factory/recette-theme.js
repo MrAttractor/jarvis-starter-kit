@@ -454,6 +454,14 @@ function trierContrastes() {
     await auditer(page, 'fan · visiteur', 'clair', largeur);
     if (largeur === 390) await page.screenshot({ path: path.join(__dirname, 'recette-theme-fan-clair.png'), fullPage: true });
 
+    /* La carte Ambassadeur a demenage dans l'onglet Le Club le 19/09, avec la
+       refonte a trois onglets. On y va avant de la mesurer, sinon la recette
+       cherche un element cache et echoue sur un faux probleme. */
+    const allerAuClub = async (pg) => {
+      await pg.evaluate(() => { if (typeof allerOnglet === 'function') allerOnglet('club'); });
+      await pg.waitForTimeout(350);
+    };
+
     /* ── 2. LE FIL DU FAN, parcours du membre, en clair conserve ── */
     await page.evaluate(m => { localStorage.setItem('bey_membre', JSON.stringify(m)); }, MEMBRE_RECETTE);
     await page.reload({ waitUntil: 'domcontentloaded' });
@@ -465,6 +473,7 @@ function trierContrastes() {
        est donc en display:none, et l'audit de contraste ignore ce qui n'est pas
        affiche : sans l'ouvrir, la moitie de la carte ne serait plus mesuree du
        tout, et la recette passerait au vert en ayant arrete de regarder. */
+    await allerAuClub(page);
     const amb = await page.evaluate(() => {
       const c = document.getElementById('amb-card'), t = document.getElementById('amb-tete');
       const r = document.getElementById('amb-res');
