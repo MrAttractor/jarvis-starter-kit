@@ -42,6 +42,23 @@ homonyme, déjà vécu le 01/07/2026. Le nom est corrigé : **ne pas y retoucher
 | Titulaire | **le compte de l'agence.** À passer à STAR FACTORY, voir le `DOSSIER.md` |
 | Contenu | la page d'attente : le clip, le nom, « Bientôt disponible ». Rien d'autre |
 
+## Deux réglages à poser avant que l'application déménage ici
+
+**Always Use HTTPS.** Vérifié le 19/09 : `http://latiss.net` répond en clair, sans basculer
+vers le HTTPS. Une case à cocher, SSL/TLS → Edge Certificates → **Always Use HTTPS**.
+
+**Une seule adresse canonique, et c'est le point qui compte.** `latiss.net` et
+`www.latiss.net` servent aujourd'hui la même page, donc ça ne se voit pas. Mais
+**le stockage du navigateur est propre à chaque adresse** : l'espace fan garde la session
+dans `localStorage`, sous la clé `bey_membre`. Le jour où l'application vivra ici, un fan
+inscrit sur `www.latiss.net` qui revient sur `latiss.net` **n'aura plus de compte** : ni
+prénom, ni grade, ni lien de parrainage. Il croira avoir tout perdu, et il aura raison de
+le croire.
+
+Choisir `latiss.net` comme adresse canonique, plus court à dicter et à écrire sur une
+affiche, et rediriger `www` vers lui. **À faire avant la bascule de l'espace fan, pas
+après** : après, ce sont de vrais fans qui perdent leur compte.
+
 ## Ce qui n'a PAS été fait, et pourquoi
 
 **L'espace fan n'a pas bougé.** Il reste sur `demo.agenceattractor.com/beynaud/fan`, et
