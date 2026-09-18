@@ -321,9 +321,46 @@ Deno.serve(async (req) => {
     // posts de meme nature. Le live n'en est pas un : il est ponctuel et reste
     // en tete, il ne doit pas redescendre dans le fil au fil des jours.
     if (action === "feed") {
-      const grade = d.grade === "ambassadeur" ? "ambassadeur" : "membre";
+      /* ── LE GRADE NE VIENT PLUS DU CLIENT ──────────────────────────────
+         Il etait lu dans le corps de la requete et servait directement de
+         filtre : `gate` devenait VIDE des que la valeur valait "ambassadeur".
+         Un curl anonyme portant {"action":"feed","grade":"ambassadeur"} lisait
+         donc tout le contenu reserve, sans compte et sans payer.
+
+         Ce n'etait pas une hypothese : demontre en production le 18/09 sur un
+         contenu de test reserve aux Ambassadeurs, lu sans aucun compte, puis
+         supprime. Un premier essai n'avait rien montre, pour une mauvaise
+         raison, il n'existait alors aucun contenu reserve a faire fuiter.
+
+         Le grade se lit DESORMAIS dans la ligne du membre. Ce que le client
+         affirme etre n'entre plus dans la decision : `d.grade` est ignore.
+         Sans identification valide, on reste membre, donc filtre. */
+      let membreId: string | null = null;
+      let grade = "membre";
+      const prendreGrade = (m: unknown) => {
+        if (!Array.isArray(m) || !m.length) return;
+        membreId = String((m[0] as any).id);
+        grade = (m[0] as any).grade === "ambassadeur" ? "ambassadeur" : "membre";
+      };
+      try {
+        if (d.jeton) {
+          // Le jeton est le chemin authentifie : c'est le meme secret que celui
+          // qui sert deja a reprendre son compte depuis un autre appareil.
+          const j = String(d.jeton).replace(/[^a-zA-Z0-9]/g, "").slice(0, 64);
+          if (j) prendreGrade(await (await sb(`bey_membres?jeton=eq.${encodeURIComponent(j)}&select=id,grade`)).json());
+        } else if (d.membre_id) {
+          // Ancien chemin, garde le temps que les pages ouvertes se rechargent.
+          // Il vaut moins que le jeton, un identifiant se recopie, mais il faut
+          // au moins connaitre celui d'un vrai membre : ce n'est plus une
+          // simple affirmation. Filtre a la forme d'un UUID pour ne jamais
+          // laisser passer de fragment de requete.
+          const id = String(d.membre_id).toLowerCase();
+          if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id)) {
+            prendreGrade(await (await sb(`bey_membres?id=eq.${id}&select=id,grade`)).json());
+          }
+        }
+      } catch (_) { /* on reste membre, donc filtre : l'echec ne doit jamais ouvrir */ }
       const gate = grade === "ambassadeur" ? "" : "&grade_requis=eq.membre";
-      const membreId = d.membre_id ? String(d.membre_id) : null;
       const j = (path: string) => sb(path).then((r) => r.json()).catch(() => []);
       const arr = (x: unknown) => (Array.isArray(x) ? x : []);
 

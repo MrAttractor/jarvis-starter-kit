@@ -877,8 +877,11 @@ function timeAgo(iso){const s=Math.floor((Date.now()-new Date(iso).getTime())/10
    MON cache ne doit jamais devenir une panne du fil. */
 const RELAIS_FIL = 'api/feed';
 function passeParLeRelais(body){
-  return body && body.action === 'feed'
-    && (body.membre_id === undefined || body.membre_id === null || body.membre_id === '');
+  if(!body || body.action !== 'feed') return false;
+  const vide = (v) => v === undefined || v === null || v === '';
+  // Un fil identifie, par jeton ou par identifiant, ne passe jamais par le
+  // cache : sa reponse est propre a une personne.
+  return vide(body.membre_id) && vide(body.jeton);
 }
 async function appelBrut(url, body){
   return fetch(url,{method:'POST',headers:{'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON,'Content-Type':'application/json'},body:JSON.stringify(body)});
@@ -1527,7 +1530,14 @@ function filEnChargement(){
 async function chargerFil(m){
   let res=null;
   // Sans membre_id, le serveur repond en mode apercu et coupe lui-meme le fil.
-  const q=m&&m.id ? {action:'feed',grade:m.grade,membre_id:m.id} : {action:'feed',grade:'membre'};
+  /* On envoie le JETON, plus le grade. Le grade etait pris au mot par le
+     serveur : il suffisait d'ecrire « ambassadeur » pour lire tout le contenu
+     reserve. Corrige le 18/09, le serveur lit maintenant le grade dans la ligne
+     du membre et ignore ce que la page affirme. On transmet donc de quoi
+     s'identifier, et rien de plus. */
+  const q = m && m.jeton ? {action:'feed', jeton:m.jeton}
+          : m && m.id    ? {action:'feed', membre_id:m.id}
+          :                {action:'feed'};
   try{ res=await api(q); }catch(e){ res=null; }
   if(!res||!res.ok){
     const box=document.getElementById('fil');

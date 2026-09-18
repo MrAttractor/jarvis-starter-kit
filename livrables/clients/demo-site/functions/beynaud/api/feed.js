@@ -38,10 +38,19 @@ export async function onRequestPost({ request, waitUntil }) {
   // Supabase : un relais generique serait une porte ouverte a maintenir.
   if (!corps || corps.action !== 'feed') return json({ ok: false, error: 'action non relayee ici' }, 400);
 
+  // Volontairement strict : toute valeur de membre_id OU de jeton, meme
+  // inattendue, sort du cache. On se trompe du cote qui ne fuite pas.
+  //
+  // Le jeton a ete ajoute le 18/09 en meme temps que la correction du serveur :
+  // depuis, le fil d'un membre s'identifie par son jeton, et une reponse
+  // identifiee ne doit JAMAIS entrer dans un cache partage.
+  const porte = (v) => v !== undefined && v !== null && v !== '';
+  const personnalise = porte(corps.membre_id) || porte(corps.jeton);
+  // Le grade ne sert plus qu'a separer les caches d'apercu. Il ne donne acces a
+  // rien : le serveur ignore desormais ce que le client affirme etre, et lit le
+  // grade dans la ligne du membre. On le garde ici uniquement pour ne pas servir
+  // un aperçu calcule pour un grade a un appel qui en demandait un autre.
   const grade = corps.grade === 'ambassadeur' ? 'ambassadeur' : 'membre';
-  // Volontairement strict : toute valeur de membre_id, meme inattendue, sort du
-  // cache. On se trompe du cote qui ne fuite pas.
-  const personnalise = corps.membre_id !== undefined && corps.membre_id !== null && corps.membre_id !== '';
 
   const entetes = {
     'Content-Type': 'application/json',
