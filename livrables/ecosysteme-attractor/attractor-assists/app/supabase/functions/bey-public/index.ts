@@ -637,6 +637,44 @@ Deno.serve(async (req) => {
     // notification rend la fraude de masse tres difficile, et fait recruter des
     // fans joignables plutot que des lignes en base. Le calcul vit dans la vue
     // v_bey_classement, jamais dans un compteur entretenu a la main.
+    /* ── UTILISER UN CODE D'ACCES ──────────────────────────────────────
+       Le fan a paye par le moyen qu'il voulait, Wave, Orange Money ou en main
+       propre, on lui a remis un code, il le saisit ici. XPaye est en veille
+       depuis le 18/09 et aucune documentation de leur API n'existe : inventer
+       leurs endpoints aurait produit du code qui echoue le soir du concert.
+
+       L'identification passe par le JETON, jamais par un identifiant envoye par
+       la page : sinon n'importe qui pourrait consommer un code au profit du
+       compte de son choix.
+
+       Toute la logique d'usage unique est en base (migration 0013). C'est un
+       UPDATE conditionnel qui arbitre, pas ce fichier : deux personnes qui
+       saisissent le meme code au meme instant, une seule le prend. */
+    if (action === "utiliser_code") {
+      const j = String(d.jeton ?? "").replace(/[^a-zA-Z0-9]/g, "").slice(0, 64);
+      if (!j) return json({ ok: false, error: "Session expirée." }, 401);
+      const m = await (await sb(`bey_membres?jeton=eq.${encodeURIComponent(j)}&select=id`)).json();
+      if (!Array.isArray(m) || !m.length) return json({ ok: false, error: "Session expirée." }, 401);
+
+      const code = String(d.code ?? "").trim();
+      if (!code) return json({ ok: false, error: "Entre ton code." });
+
+      const r = await sb("rpc/bey_utiliser_code", {
+        method: "POST",
+        body: JSON.stringify({ p_code: code, p_membre: m[0].id }),
+      });
+      if (!r.ok) return json({ ok: false, error: "Le code n'a pas pu être vérifié. Réessaie." });
+      const lignes = await r.json();
+      const etat = Array.isArray(lignes) && lignes.length ? String(lignes[0].etat) : "inconnu";
+
+      // On repond en francais, du point de vue du fan, et on ne dit jamais si un
+      // code inconnu existe ailleurs : ca donnerait de quoi en deviner d'autres.
+      if (etat === "ok")           return json({ ok: true, etat, message: "C'est bon, l'accès est ouvert." });
+      if (etat === "a_toi")        return json({ ok: true, etat, message: "Ce code est déjà le tien, l'accès est ouvert." });
+      if (etat === "deja_utilise") return json({ ok: false, etat, error: "Ce code a déjà été utilisé." });
+      return json({ ok: false, etat: "inconnu", error: "Ce code n'existe pas. Vérifie les lettres." });
+    }
+
     if (action === "classement") {
       const mid = d.membre_id ? String(d.membre_id) : null;
 

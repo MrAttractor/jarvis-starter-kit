@@ -590,6 +590,18 @@ body.splash-on{overflow:hidden;}
   stroke-linecap:round;stroke-linejoin:round;}
 .verrou-t{font-family:var(--bebas);font-size:22px;letter-spacing:1px;color:var(--blanc);}
 .verrou-d{font-size:12.5px;color:var(--dim);line-height:1.5;max-width:270px;}
+/* 16 px au moins sur le champ : en dessous, Safari iOS zoome a la saisie et ne
+   dezoome jamais. Et 44 px de haut des deux cotes, comme toute zone tactile. */
+.verrou-form{display:flex;gap:8px;margin-top:10px;width:100%;max-width:290px;}
+.verrou-in{flex:1;min-width:0;min-height:44px;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.22);border-radius:10px;padding:0 12px;
+  font-size:16px;font-weight:700;letter-spacing:1.5px;text-align:center;
+  color:var(--blanc);text-transform:uppercase;}
+.verrou-in::placeholder{color:rgba(255,255,255,.35);font-weight:500;letter-spacing:1px;}
+.verrou-b{min-height:44px;min-width:76px;background:var(--rouge);color:#fff;border-radius:10px;
+  font-size:13px;font-weight:800;letter-spacing:.5px;flex-shrink:0;}
+.verrou-b:active{background:var(--rouge-vif);}
+.verrou-n{font-size:11.5px;color:var(--rouge-texte);margin-top:8px;min-height:14px;}
 .video{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000;}
 /* ===== LE CADRE VERTICAL, POUR LES REELS =====
    Le cadre etait verrouille en 16/9. Une video verticale s'y affichait au
@@ -1812,7 +1824,42 @@ function blocVerrouille(p){
   ico.appendChild(corps); ico.appendChild(anse);
   centre.appendChild(ico);
   centre.appendChild(el('div','verrou-t','Réservé'));
-  centre.appendChild(el('div','verrou-d','Cet accès s’achète. Il sera bientôt disponible ici.'));
+  centre.appendChild(el('div','verrou-d','Tu as un code ? Saisis-le pour ouvrir l’accès.'));
+
+  /* Le champ de code. Il n'est propose qu'aux membres : un visiteur qui n'a pas
+     encore de compte n'a rien a quoi rattacher un billet, et lui montrer un
+     champ qui echouera est une deception evitable. */
+  if(ME && ME.jeton){
+    const ligne = el('div','verrou-form');
+    const champ = document.createElement('input');
+    champ.type = 'text'; champ.className = 'verrou-in';
+    champ.placeholder = 'ABCD-EFGH'; champ.maxLength = 9;
+    champ.setAttribute('autocapitalize','characters');
+    champ.setAttribute('autocomplete','off');
+    champ.setAttribute('aria-label','Ton code d’accès');
+    const bouton = el('button','verrou-b','Ouvrir');
+    const note = el('div','verrou-n');
+    const envoyer = async () => {
+      const code = champ.value.trim();
+      if(!code){ note.textContent = 'Entre ton code.'; return; }
+      bouton.disabled = true; const avant = bouton.textContent; bouton.textContent = '…';
+      const res = await api({ action:'utiliser_code', jeton: ME.jeton, code });
+      if(res && res.ok){
+        toast(res.message || 'Accès ouvert.');
+        // On recharge le fil : le serveur renverra desormais l'adresse de la
+        // video, qu'il avait retiree. On ne deverrouille rien ici, on redemande.
+        chargerFil(ME);
+        return;
+      }
+      bouton.disabled = false; bouton.textContent = avant;
+      note.textContent = (res && res.error) || 'Ce code n’a pas pu être vérifié.';
+    };
+    bouton.addEventListener('click', envoyer);
+    champ.addEventListener('keydown', (e) => { if(e.key === 'Enter') envoyer(); });
+    ligne.appendChild(champ); ligne.appendChild(bouton);
+    centre.appendChild(ligne); centre.appendChild(note);
+  }
+
   cadre.appendChild(centre);
   return cadre;
 }

@@ -185,6 +185,34 @@ Deno.serve(async (req) => {
     }
 
     // ── CONTENUS ──
+    /* ── LES CODES D'ACCES ─────────────────────────────────────────────
+       Serge genere un lot, le vend par le moyen qu'il veut, et suit ce qu'il
+       lui reste. Les codes ne sont JAMAIS renvoyes en entier une fois generes :
+       cette action les rend UNE fois, au moment ou on les fabrique, pour qu'il
+       les copie. Les relire plus tard donnerait a quiconque ouvre ce tableau de
+       bord la liste des acces gratuits. */
+    if (action === "codes_generer") {
+      const contenu = String(d.contenu_id ?? "");
+      const combien = Number(d.combien) || 0;
+      if (!contenu) return json({ ok: false, error: "contenu requis" });
+      if (combien < 1 || combien > 2000) return json({ ok: false, error: "entre 1 et 2000 codes" });
+      const r = await sb("rpc/bey_generer_codes", {
+        method: "POST",
+        body: JSON.stringify({ p_contenu: contenu, p_combien: combien, p_lot: d.lot ? String(d.lot) : null }),
+      });
+      if (!r.ok) return json({ ok: false, error: await r.text() });
+      const lignes = await r.json();
+      return json({ ok: true, codes: Array.isArray(lignes) ? lignes.map((x: any) => x.code) : [] });
+    }
+
+    if (action === "codes_etat") {
+      const contenu = String(d.contenu_id ?? "");
+      if (!contenu) return json({ ok: false, error: "contenu requis" });
+      const r = await sb("rpc/bey_etat_codes", { method: "POST", body: JSON.stringify({ p_contenu: contenu }) });
+      if (!r.ok) return json({ ok: false, error: await r.text() });
+      return json({ ok: true, lots: await r.json() });
+    }
+
     if (action === "content_list") {
       return json({ ok: true, contenus: await (await sb(`bey_contenus?order=ordre.asc&select=*`)).json() });
     }
