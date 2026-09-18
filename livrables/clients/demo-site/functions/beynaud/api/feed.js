@@ -70,7 +70,7 @@ export async function onRequestPost({ request, waitUntil }) {
   // Clé synthétique : le cache de Cloudflare n'indexe que des GET. On fabrique
   // donc une adresse qui represente exactement cette reponse-la.
   const cache = caches.default;
-  const cle = new Request(`https://fil.beynaumania.interne/apercu/${grade}`, { method: 'GET' });
+  const cle = new Request(`https://fil.latiss.interne/apercu/${grade}`, { method: 'GET' });
 
   const enCache = await cache.match(cle);
   if (enCache) {

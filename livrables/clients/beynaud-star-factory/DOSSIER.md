@@ -1,7 +1,7 @@
 # Beynaud / STAR FACTORY — l'état du dossier
 
-> Révision du 17/09/2026 : coûts de la plateforme mesurés et stratégie de rentabilité de
-> l'agence ajoutées. Révision précédente du 13/09/2026, après la refonte du tunnel et du fil.
+> Révision du 19/09/2026 : **la plateforme s'appelle latiss.net**, voir la section du même
+> nom. Révision précédente du 17/09/2026, coûts mesurés et stratégie de rentabilité.
 > **Cette fiche est la première chose à lire du dossier.**
 > Un chiffre ou un statut n'existe qu'ici. S'il apparaît ailleurs, c'est une copie à vérifier.
 
@@ -17,10 +17,49 @@
 
 ## En une phrase
 
-La plateforme **La Beynaumania** est construite et en production, gratuite, à remplir de
+La plateforme **latiss.net** est construite et en production, gratuite, à remplir de
 vrais membres. **Le protocole d'accord n'est toujours pas signé**, mais depuis le 12/09
 l'artiste demande lui-même une fonctionnalité payante, ce qui rouvre la négociation par
 le haut.
+
+## Le renommage du 19/09/2026 : de La Beynaumania à latiss.net
+
+Décision de Mac Arthur. **Le nom s'écrit `latiss.net`, en entier, minuscules comprises.**
+Pas « Latiss » : ce mot-là est déjà pris, c'est le nom que les fans donnent à l'artiste, et
+l'application s'en sert dans ses propres phrases (« Sois prévenu quand Latiss poste »).
+Écrire la plateforme avec son extension sépare les deux sens sans jamais avoir à choisir
+lequel on veut dire. Une phrase comme « Latiss démarre, Latiss poste bientôt » n'existe pas.
+
+**La marque s'écrit à la main.** Police Caveat en graisse 700, choisie sur planche contre
+quatre autres : Great Vibes et Sacramento sont illisibles à 13 px, la taille réelle du nom
+dans l'en-tête, et une signature qu'on ne lit pas n'est pas une signature. Elle sert là où
+le nom se pose en tant que nom, et **nulle part où l'adresse doit être lue puis tapée** :
+le titre de l'onglet, le manifeste, la notification et le message WhatsApp restent en
+caractères ordinaires. Une adresse manuscrite dans un message WhatsApp ne se copie pas,
+elle se devine.
+
+Sur la page d'attente de `latiss.net`, la signature est **gravée en haut à gauche**, à la
+place du carré rouge marqué d'un L, et le centre porte **OHWW LATISS**. Chacun son rôle :
+écrire l'adresse aux deux endroits ne dirait rien de plus et ferait perdre à la signature
+son statut de marque.
+
+### Ce qui a été renommé, et ce qui ne l'a pas été
+
+| | |
+|---|---|
+| Renommé | les textes vus par un fan, l'icône maskable (**BM** devient **L**), le nom du cache du service worker, le titre des notifications, le message d'invitation WhatsApp, les deux captures du manifeste |
+| **Pas** renommé | les identifiants techniques : tables `bey_*`, fonctions `bey-public` et `bey-admin`, seau `bey-photos`, clé `bey_membre` du navigateur |
+| **Pas** renommé non plus | `"id": "/beynaud/"` dans le manifeste, et le chemin `/beynaud/fan` |
+
+**Pourquoi les identifiants restent.** Les renommer imposerait une migration de base et
+ferait perdre sa session à chaque membre déjà inscrit, sans qu'un seul fan voie la
+différence. Le `id` du manifeste, lui, est ce par quoi Android reconnaît l'application
+déjà installée : le changer créerait une **seconde** application et rendrait orphelines
+les installations existantes.
+
+**Pourquoi le chemin reste, pour l'instant.** Des Ambassadeurs ont déjà partagé des liens
+de parrainage en `demo.agenceattractor.com/beynaud/fan` sur WhatsApp. La bascule vers
+`latiss.net` se fera avec la redirection des anciens liens posée le jour même, pas après.
 
 ## La refonte du 13/09/2026
 

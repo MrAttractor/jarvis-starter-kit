@@ -8,11 +8,11 @@
      On ne fait pas decouvrir une refonte a de vrais fans par surprise. -->
 <meta name="robots" content="noindex,nofollow"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>La Beynaumania — Serge Beynaud</title>
+<title>latiss.net — Serge Beynaud</title>
 <meta name="theme-color" content="#070707" id="meta-theme"/>
 <!-- Le theme se pose sur <html> avant le premier pixel. Lu plus tard, dans le
      script principal, l'ecran clignoterait en noir avant de passer en clair.
-     Sombre par defaut : c'est l'identite de la Beynaumania, le clair est un
+     Sombre par defaut : c'est l'identite de latiss.net, le clair est un
      choix que le fan fait et qu'on retient. -->
 <script>(function(){try{if(localStorage.getItem("bey_theme")==="clair")document.documentElement.setAttribute("data-theme","clair");}catch(e){}})();</script>
 <link rel="manifest" href="manifest.webmanifest"/>
@@ -20,9 +20,9 @@
 <link rel="icon" href="apple-touch-icon.png"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="Beynaumania"/>
+<meta name="apple-mobile-web-app-title" content="latiss.net"/>
 <meta name="mobile-web-app-capable" content="yes"/>
-<meta name="application-name" content="Beynaumania"/>
+<meta name="application-name" content="latiss.net"/>
 <!-- La photo de Serge est demandee des les premiers octets de la page. Avant,
      elle n'etait creee que par le script, tout en bas : le telephone attendait
      d'avoir lu 80 Ko de HTML avant meme de la reclamer, et l'ecran restait noir
@@ -37,9 +37,9 @@
      complet sur un domaine tiers avant la premiere image. Le "media=print"
      detourne la feuille du rendu, le onload la remet en service des qu'elle
      est la. display=swap etait deja pose, le texte ne clignote pas davantage. -->
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap"/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"/>
-<noscript><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Inter:wght@400;500;600;700;800&display=swap"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/></noscript>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -61,7 +61,7 @@
   --media:#000;--sq-hi:#262626;--amb-fond:#160800;--av1:#3a3a3a;--av2:#5a5a5a;
   --voile:rgba(7,7,7,0);--ombre:rgba(0,0,0,.7);
   --vert:#22C55E;--erreur:#ff6b6b;
-  --bebas:'Bebas Neue',sans-serif;--inter:'Inter',sans-serif;
+  --bebas:'Bebas Neue',sans-serif;--inter:'Inter',sans-serif;--manus:'Caveat',cursive;
 }
 /* ===== MODE CLAIR =====
    Seuls les jetons changent : aucune regle de mise en page n'est dupliquee.
@@ -169,6 +169,10 @@ body.splash-on{overflow:hidden;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
 .join-title{font-family:var(--bebas);font-size:66px;line-height:.86;letter-spacing:1px;margin-bottom:10px;}
 .join-title .r{color:var(--rouge);}
+/* La signature de la marque. Elle remplace les capitales partout ou le nom
+   se pose en tant que nom, jamais dans un texte a lire ou a recopier. */
+.sig{font-family:var(--manus);font-weight:700;letter-spacing:0;
+  text-transform:none;font-size:1.2em;line-height:1;}
 .join-sub{font-size:14px;color:rgba(255,255,255,.66);line-height:1.6;margin-bottom:22px;max-width:410px;}
 .ref-note{display:flex;align-items:center;gap:8px;background:var(--or-dim);border:1px solid rgba(212,160,23,.3);border-radius:10px;padding:10px 13px;font-size:12px;color:#e8c778;margin-bottom:18px;}
 .field{margin-bottom:12px;}
@@ -271,8 +275,7 @@ body.splash-on{overflow:hidden;}
   border-radius:50%;background:var(--rouge-vif);
   box-shadow:0 0 0 2px rgba(7,7,7,.55);}
 .brand{display:flex;align-items:center;gap:8px;}
-.brand-logo{width:30px;height:30px;background:var(--rouge);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--bebas);font-size:15px;color:#fff;box-shadow:0 4px 12px var(--rouge-glow);}
-.brand-name{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);}
+.brand-name{font-family:var(--manus);font-size:20px;font-weight:700;letter-spacing:0;text-transform:none;color:rgba(255,255,255,.78);}
 /* 44px minimum sur toute zone tactile (UX_SYSTEM). Ce bouton faisait 14px
    de haut : on visait a cote une fois sur deux. */
 .logout{font-size:11px;color:rgba(255,255,255,.35);background:none;min-height:44px;padding:0 4px;display:flex;align-items:center;}
@@ -472,7 +475,7 @@ body.splash-on{overflow:hidden;}
 /* ===================== LE FIL =====================
    Une seule colonne de posts, dans la grammaire que les fans connaissent
    deja : media, coeur, bulle, legende, commentaires. L'identite reste
-   celle de la Beynaumania (noir et rouge), on emprunte les gestes, pas
+   celle de latiss.net (noir et rouge), on emprunte les gestes, pas
    la marque : un fan qui ne verrait aucune difference se demanderait
    pourquoi il n'est pas reste sur Instagram. */
 .post{background:var(--n3);border:1px solid var(--faint);border-radius:16px;overflow:hidden;margin-bottom:14px;}
@@ -641,7 +644,7 @@ body.splash-on{overflow:hidden;}
   font-size:13px;font-weight:600;min-height:44px;margin-top:6px;}
 
 /* Squelette d'attente : le fil met une seconde a arriver, et pendant ce
-   temps il ne faut montrer ni un vide ("La Beynaumania demarre" serait faux,
+   temps il ne faut montrer ni un vide ("latiss.net demarre" serait faux,
    R-58) ni rien du tout. On montre la forme de ce qui arrive. */
 .sq{background:var(--n3);border:1px solid var(--faint);border-radius:16px;margin-bottom:14px;padding:14px;}
 .sq-l{background:linear-gradient(90deg,var(--n4) 25%,var(--sq-hi) 50%,var(--n4) 75%);
@@ -655,7 +658,7 @@ body.splash-on{overflow:hidden;}
 /* ===== LECTEUR FERME =====
    On n'affiche jamais la barre de YouTube : c'est elle qui porte le titre
    cliquable, le bouton "Regarder sur YouTube", le partage et l'avatar de la
-   chaine, soit quatre sorties hors de la Beynaumania. On la remplace par nos
+   chaine, soit quatre sorties hors de latiss.net. On la remplace par nos
    propres commandes. Le lecteur reste celui de YouTube, il n'est pas masque :
    recouvrir leur interface violerait leurs conditions. */
 /* Le contenu qui demande un billet. Meme gabarit que le lecteur video, pour
@@ -705,7 +708,7 @@ body.splash-on{overflow:hidden;}
 .video>iframe,.video>.vignette{position:absolute;inset:0;width:100%;height:100%;border:none;}
 /* Une video deposee en fichier, par opposition a un lien YouTube. Le lecteur du
    navigateur suffit : il ne porte aucune marque, donc aucune sortie hors de la
-   Beynaumania a masquer, contrairement a la barre de YouTube.
+   latiss.net a masquer, contrairement a la barre de YouTube.
    `contain` et pas `cover` : on ne recadre jamais l'image de l'artiste pour
    qu'elle remplisse une boite, on adapte la boite. */
 .video>video{position:absolute;inset:0;width:100%;height:100%;border:none;
@@ -793,15 +796,15 @@ body.splash-on{overflow:hidden;}
   <div id="view-join" class="join-hero">
     <div class="join-bg"></div><div class="join-ov"></div>
     <div class="join-c">
-      <div class="eyebrow"><span class="pulse"></span>La Beynaumania · Officiel</div>
-      <div class="join-title">LA<br><span class="r">BEYNAUMANIA</span></div>
+      <div class="eyebrow"><span class="pulse"></span>latiss.net · Officiel</div>
+      <div class="join-title"><span class="r sig">latiss.net</span></div>
       <p class="join-sub">L'univers officiel de Serge Beynaud. Ton prénom suffit, et tu es dedans.</p>
       <div id="ref-note" class="ref-note hidden">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-        <span>Tu entres sur l'invitation d'un membre de la Beynaumania.</span>
+        <span>Tu entres sur l'invitation d'un membre de latiss.net.</span>
       </div>
       <div class="field"><label>Ton prénom</label><input id="j-prenom" type="text" placeholder="Ex : Awa" autocomplete="given-name"/></div>
-      <button id="j-btn" class="btn-join" onclick="doJoin()">Entrer dans la Beynaumania
+      <button id="j-btn" class="btn-join" onclick="doJoin()">Entrer sur latiss.net
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
       </button>
       <div id="j-err" class="err"></div>
@@ -833,7 +836,7 @@ body.splash-on{overflow:hidden;}
       <div class="hb-pts" id="hb-pts" aria-hidden="true"></div>
       <div class="m-hero-c">
         <div class="m-top">
-          <div class="brand"><div class="brand-logo">BM</div><span class="brand-name">La Beynaumania</span></div>
+          <div class="brand"><span class="brand-name">latiss.net</span></div>
           <div class="m-act">
             <button class="cloche-h hidden" id="cloche-h" type="button" aria-expanded="false" aria-controls="cloche" aria-label="Être prévenu quand Latiss publie">
               <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -1092,7 +1095,7 @@ if(new URLSearchParams(location.search).get('reset')!==null){
    n'avale pas l'erreur, on l'empeche seulement de tout arreter. */
 function essayer(nom, fn){
   try{ return fn(); }
-  catch(e){ console.error('[beynaumania] ' + nom + ' : ' + ((e && e.message) || e)); }
+  catch(e){ console.error('[latiss] ' + nom + ' : ' + ((e && e.message) || e)); }
 }
 function cacher(){ for(const id of arguments){ const n=document.getElementById(id); if(n) n.classList.add('hidden'); } }
 function montrer(){ for(const id of arguments){ const n=document.getElementById(id); if(n) n.classList.remove('hidden'); } }
@@ -1115,7 +1118,7 @@ function peindreCoquille(m){
   h.innerHTML='';
   h.appendChild(document.createTextNode('SALUT '));
   h.appendChild(el('span','r',(m.prenom||'Fami').toUpperCase()));
-  document.getElementById('m-hello-sub').textContent='Tu es dans la Beynaumania. Bienvenue chez toi.';
+  document.getElementById('m-hello-sub').textContent='Tu es sur latiss.net. Bienvenue chez toi.';
   const gb=document.getElementById('m-grade');
   gb.classList.remove('hidden');
   gb.className='grade-badge '+(m.grade==='ambassadeur'?'ambassadeur':'membre');
@@ -1139,8 +1142,7 @@ function peindreApercu(){
   document.getElementById('m-grade').classList.add('hidden');
   const h=document.getElementById('m-hello');
   h.innerHTML='';
-  h.appendChild(document.createTextNode('LA '));
-  h.appendChild(el('span','r','BEYNAUMANIA'));
+  h.appendChild(el('span','r sig','latiss.net'));
   document.getElementById('m-hello-sub').textContent='L’univers officiel de Serge Beynaud. Voici un aperçu.';
   document.getElementById('cloche').classList.add('hidden');
   document.getElementById('cloche-h').classList.add('hidden');
@@ -1475,7 +1477,7 @@ async function etatCloche(){
     bell.classList.remove('on','non');
     resteUnGeste(true);
     bell.setAttribute('aria-label','Être prévenu quand Latiss publie');
-    titre.textContent = 'Ajoute la Beynaumania à ton écran';
+    titre.textContent = 'Ajoute latiss.net à ton écran';
     desc.textContent = 'Tu seras prévenu quand Latiss poste, et tu ne rempliras plus jamais ce formulaire.';
     btn.classList.remove('hidden');
     btn.classList.remove('calme');
@@ -1749,7 +1751,7 @@ function enTete(p){
   nom.appendChild(document.createTextNode('Serge Beynaud'));
   nom.appendChild(el('span', 'post-verif', '✓'));
   id.appendChild(nom);
-  id.appendChild(el('div', 'post-sub', 'La Beynaumania · Officiel'));
+  id.appendChild(el('div', 'post-sub', 'latiss.net · Officiel'));
   h.appendChild(av); h.appendChild(id);
   h.appendChild(el('div', 'post-time', timeAgo(p.created_at)));
   return h;
@@ -1774,7 +1776,7 @@ function barreActions(p){
   bShare.appendChild(ico(D_AVION));
   bShare.setAttribute('aria-label', 'Inviter un ami');
   // Partager un post, c'est partager son lien de parrainage : le geste le plus
-  // naturel du fil est aussi celui qui fait grandir la Beynaumania.
+  // naturel du fil est aussi celui qui fait grandir latiss.net.
   bShare.addEventListener('click', shareWa);
 
   row.appendChild(bLike); row.appendChild(bCmt); row.appendChild(bShare);
@@ -1899,7 +1901,7 @@ function majTexteLikes(node, n){
    Une video du fil ne charge rien tant qu'on ne la lance pas : on pose une
    vignette, et le lecteur n'arrive qu'au clic. Il arrive sans sa barre
    (controls:0), donc sans les quatre chemins qui menent hors de la
-   Beynaumania, et nos propres commandes prennent le relais. */
+   latiss.net, et nos propres commandes prennent le relais. */
 const D_PLAY = 'M8 5v14l11-7z';
 const D_PAUSE = 'M6 5h4v14H6zM14 5h4v14h-4z';
 
@@ -2150,13 +2152,13 @@ function carteEntree(){
     t.appendChild(el('span', 'r', 'PUBLICATIONS'));
     t.appendChild(document.createTextNode(' T’ATTENDENT'));
   } else {
-    t.appendChild(document.createTextNode('ENTRE DANS LA '));
-    t.appendChild(el('span', 'r', 'BEYNAUMANIA'));
+    t.appendChild(document.createTextNode('ENTRE SUR '));
+    t.appendChild(el('span', 'r sig', 'latiss.net'));
   }
   c.appendChild(t);
   c.appendChild(el('div', 'porte-d',
     'Réagis, commente, vote, et ramène ton monde. Les Ambassadeurs passent devant tout le monde.'));
-  const b = el('button', 'porte-b', 'Rejoins la Beynaumania');
+  const b = el('button', 'porte-b', 'Rejoins latiss.net');
   b.addEventListener('click', ouvrirInscription);
   c.appendChild(b);
   c.appendChild(el('div', 'porte-n', 'C’est gratuit. Un prénom suffit, 10 secondes.'));
@@ -2169,7 +2171,7 @@ function renderFil(){
   if(!FIL.length){
     // R-58 : un fil vide est un debut, pas une panne. On invite, on n'alerte pas.
     box.appendChild(el('div', 'empty',
-      'La Beynaumania démarre. Latiss poste très bientôt, et tu seras prévenu ici en premier.'));
+      'Ça démarre ici. Latiss poste très bientôt, et tu seras prévenu en premier.'));
     if(APERCU) box.appendChild(carteEntree());
     return;
   }
@@ -2491,7 +2493,7 @@ function copyLink(){const i=document.getElementById('amb-url');navigator.clipboa
    actionnable sans exposer le contact d'un autre membre. */
 function relancerInvites(){
   if(porte()) return;
-  const txt = "Salut ! Tu es bien dans La Beynaumania \u{1F44A} Pense à activer les notifications depuis ton espace, sinon tu rates ce que Serge publie : "
+  const txt = "Salut ! Tu es bien sur latiss.net \u{1F44A} Pense à activer les notifications depuis ton espace, sinon tu rates ce que Serge publie : "
     + location.origin + location.pathname;
   window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank');
 }
@@ -2563,7 +2565,7 @@ function replierAmb(ouvrir){
   });
 })();
 
-function shareWa(){if(porte())return;const txt="🔥 Rejoins LA BEYNAUMANIA, l'univers officiel de Serge Beynaud ! Contenu exclusif rien que pour nous. C'est gratuit 👉 "+ambLink(ME.code_ambassadeur);window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');}
+function shareWa(){if(porte())return;const txt="🔥 Rejoins latiss.net, l'univers officiel de Serge Beynaud ! Contenu exclusif rien que pour nous. C'est gratuit 👉 "+ambLink(ME.code_ambassadeur);window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');}
 
 /* =====================================================================
    LE CLIP D'ENTREE  —  c'est la seule chose a changer

@@ -1,4 +1,4 @@
-/* Les photos de la Beynaumania, servies par Cloudflare au lieu de Supabase.
+/* Les photos de Latiss, servies par Cloudflare au lieu de Supabase.
  * ─────────────────────────────────────────────────────────────────────────
  * Deux defauts mesures le 17/09, qui se corrigent tous les deux ici.
  *

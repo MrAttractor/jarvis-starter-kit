@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.youtube-nocookie.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&display=block" rel="stylesheet">
 <link rel="preload" as="image" href="serge-hero.webp">
 <style>
 /* ═══════════════════════════════════════════════════════════════════
@@ -24,7 +24,7 @@
    Une page d'attente qui promet trop est une page qu'il faudra dementir.
    ═══════════════════════════════════════════════════════════════════ */
 :root{--noir:#070707;--rouge:#CC0000;--rouge-glow:rgba(204,0,0,.4);
-  --bebas:'Bebas Neue',sans-serif;}
+  --bebas:'Bebas Neue',sans-serif;--manus:'Caveat',cursive;}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;}
 body{background:var(--noir);color:#fff;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
@@ -47,13 +47,11 @@ body{background:var(--noir);color:#fff;font-family:system-ui,-apple-system,'Sego
 .voile{position:absolute;inset:0;background:linear-gradient(0deg,
   rgba(7,7,7,.97) 0%, rgba(7,7,7,.72) 32%, rgba(7,7,7,.26) 60%, rgba(7,7,7,.52) 100%);}
 
-.marque{position:absolute;top:calc(22px + env(safe-area-inset-top,0px));left:24px;z-index:3;
-  display:flex;align-items:center;gap:10px;}
-.logo{width:34px;height:34px;background:var(--rouge);border-radius:9px;display:flex;
-  align-items:center;justify-content:center;font-family:var(--bebas);font-size:17px;
-  box-shadow:0 4px 14px var(--rouge-glow);}
-.nom-h{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-  color:rgba(255,255,255,.55);}
+.signature{position:absolute;top:calc(20px + env(safe-area-inset-top,0px));left:24px;z-index:3;
+  font-family:var(--manus);font-size:30px;line-height:1;color:rgba(255,255,255,.94);
+  text-shadow:0 1px 0 rgba(255,255,255,.22), 0 -1px 1px rgba(0,0,0,.55),
+              0 2px 14px rgba(0,0,0,.75);
+  transform:rotate(-3deg);transform-origin:left center;}
 
 .son{position:absolute;top:calc(22px + env(safe-area-inset-top,0px));right:24px;z-index:3;
   width:44px;height:44px;border-radius:12px;background:rgba(7,7,7,.5);
@@ -84,15 +82,16 @@ body{background:var(--noir);color:#fff;font-family:system-ui,-apple-system,'Sego
   <div class="clip" id="clip"><div id="hote"></div></div>
   <div class="voile"></div>
 
-  <!-- La marque seule, sans son nom ecrit : « LATISS » est deja en geant au
-       centre, et le repeter en petit a 60 px de la ne dit rien de plus. -->
-  <div class="marque"><div class="logo">L</div></div>
+  <!-- La signature porte l'adresse, le centre porte la phrase. Chacun son
+       role : ecrire « latiss.net » aux deux endroits n'ajouterait rien et
+       ferait perdre a la signature son statut de marque. -->
+  <div class="signature">latiss.net</div>
 
   <button class="son" id="son" type="button" aria-label="Activer le son">
     <svg viewBox="0 0 24 24" id="ico"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
   </button>
 
-  <h1 class="titre">LATISS</h1>
+  <h1 class="titre">OHWW<br>LATISS</h1>
   <div class="bientot"><span class="pt"></span>Bientôt disponible</div>
 </div>
 
@@ -119,7 +118,7 @@ var CLIP = { video: 'dJgduuEnnR8', depart: 68 };
     f.src = 'https://www.youtube-nocookie.com/embed/' + CLIP.video
           + '?autoplay=1&mute=1&controls=0&loop=1&playlist=' + CLIP.video
           + '&playsinline=1&rel=0&modestbranding=1&disablekb=1&iv_load_policy=3'
-          + '&fs=0&start=' + CLIP.depart
+          + '&cc_load_policy=0&fs=0&start=' + CLIP.depart
           + '&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
     hote.appendChild(f);
     // On ne devoile qu'une fois la lecture lancee, sinon le cadre noir de

@@ -1,10 +1,10 @@
-// La Beynaumania — service worker
+// latiss.net — service worker
 // Installabilité, repli hors-ligne, et notifications.
 //
 // Le gestionnaire de notification manquait jusqu'au 13/09 : le fichier ne
 // faisait que du cache. Serge publiait, et personne n'était prévenu.
 
-const CACHE = 'beynaumania-v3';
+const CACHE = 'latiss-v4';
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
@@ -23,7 +23,7 @@ self.addEventListener('push', (e) => {
   // Un push sans contenu lisible reste un push : on affiche quelque chose
   // plutôt que rien. Un navigateur qui reçoit une notification et n'affiche
   // rien peut révoquer la permission.
-  let d = { titre: 'La Beynaumania', corps: 'Du nouveau chez Serge.', url: '/beynaud/fan' };
+  let d = { titre: 'latiss.net', corps: 'Du nouveau chez Serge.', url: '/beynaud/fan' };
   try { if (e.data) d = Object.assign(d, JSON.parse(e.data.text())); } catch (_) {}
 
   e.waitUntil(
@@ -50,7 +50,7 @@ self.addEventListener('notificationclick', (e) => {
   const cible = (e.notification.data && e.notification.data.url) || '/beynaud/fan';
   e.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((fenetres) => {
-      // Si la Beynaumania est déjà ouverte quelque part, on la ramène au
+      // Si latiss.net est déjà ouvert quelque part, on le ramène au
       // premier plan plutôt que d'ouvrir un deuxième onglet.
       for (const f of fenetres) {
         if (f.url.indexOf('/beynaud/') !== -1 && 'focus' in f) return f.focus();
