@@ -108,10 +108,19 @@ Play Store, plus le risque de retarder le contenu de démarrage qui attend déj�
 
 ## 7. Arbitrage — rempli APRÈS la relecture adverse
 
+> Contre-audit rendu le 18/09/2026 par l'avocat du diable, en contexte neuf.
+> Chaque trouvaille a ensuite été vérifiée dans le code, et pour la n°3 démontrée
+> en production. Verdict et Motif restent à remplir par Mac Arthur.
+
 | # | Trouvaille | Gravité | Verdict | Motif | Qui / Quand |
 |---|---|---|---|---|---|
-| 1 | | | Retenu / Écarté / Différé | | |
-| 2 | | | | | |
+| 1 | **Le grade revendiqué n'est jamais vérifié.** `bey-public` lit `grade` dans le corps de la requête et retire le filtre si la valeur vaut `ambassadeur`. Un appel anonyme voit tout le contenu réservé. **Démontré en production** : contenu de test réservé, lu sans compte, en une commande | **BLOQUANT — CONFIRMÉE** | Retenu / Écarté / Différé | | |
+| 2 | **Aucun niveau d'accès où poser du payant.** Deux grades seulement, et le second s'obtient gratuitement en 5 auto-parrainages (D-06 ouverte). De plus `launchLive` écrit `grade_requis:'membre'` en dur : un direct **ne peut pas** être réservé aujourd'hui | **BLOQUANT — CONFIRMÉE** | | | |
+| 3 | **Le chemin d'écriture n'est pas couvert par le cache et n'a jamais été mesuré au-delà de 12 appels simultanés.** `join` part en direct sur Supabase, dont le genou mesuré est à 55 appels/seconde, alors que le pic attendu est de 200 | **BLOQUANT — CONFIRMÉE**, mécanisme nuancé : le verrou de ligne n'est pas le goulot, un `update` d'une ligne est rapide ; le goulot est le débit de la fonction et de la base | | | |
+| 4 | **L'échéance qui justifie l'urgence n'est pas acquise.** Protocole non signé, aucune réponse de Latiss depuis le 10/08, et ce dossier de décision n'en dit pas un mot | **MAJEUR — CONFIRMÉE** | | | |
+| 5 | **`ambLink()` dérive du chemin courant** (`fan.html:863`). Un routage d'onglets par chemin casserait tous les liens de parrainage déjà partagés | **MAJEUR — CONFIRMÉE**, conditionnelle : ne se déclenche que si les onglets changent le chemin, ce qui n'est pas encore décidé | | | |
+| 6 | **Les vignettes de reels viennent de `i.ytimg.com`** (`fan.html:1826`) et échappent à la fonction Cloudflare : 8 reels ajoutent 200 à 280 Ko à l'écran d'ouverture. Contredit l'hypothèse « un onglet de plus n'ajoute pas de sortie réseau » | **MAJEUR — CONFIRMÉE** | | | |
+| 7 | **La sortie « en une demi-journée » serait fausse** si la rangée de reels demande un nouveau type de contenu en base, dans l'espace de Serge et dans `bey-public` | **MAJEUR — NON CONFIRMÉE.** Le lecteur détecte déjà le format vertical dans l'adresse (`/shorts/`), sans champ en base : la rangée peut se construire sur les `type:'serie'` existants, sans migration ni changement serveur. Reste vraie **si** on choisit d'introduire un type `reel`, ce qui n'est pas la conception retenue | | | |
 
 **Règle :** aucune trouvaille ne sort du tableau sans un motif écrit.
 « Écarté » sans motif se lit « ignoré », et c'est exactement ce qu'on cherche à éviter.
