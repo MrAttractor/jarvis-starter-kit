@@ -1,0 +1,18 @@
+{
+  // Le nom DOIT rester "latiss".
+  //
+  // Wrangler l'avait ecrit "site", d'apres le nom du dossier, alors que le
+  // Worker reellement deploye s'appelle "latiss". Un `wrangler deploy` lance
+  // ici aurait donc cree un SECOND Worker nomme "site", aurait dit "reussi", et
+  // n'aurait jamais touche latiss.net. C'est le piege du Worker homonyme, deja
+  // vecu le 01/07/2026 sur demo-agenceattractor, une demi-journee perdue.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "latiss",
+  "compatibility_date": "2026-09-18",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "public"
+  }
+}

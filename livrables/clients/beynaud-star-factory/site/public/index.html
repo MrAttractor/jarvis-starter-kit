@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Latiss</title>
+<meta name="description" content="L'univers officiel de Serge Beynaud. Bientôt disponible."/>
+<meta property="og:title" content="Latiss"/>
+<meta property="og:description" content="L'univers officiel de Serge Beynaud. Bientôt disponible."/>
+<meta property="og:type" content="website"/>
+<meta name="theme-color" content="#070707"/>
+<link rel="icon" href="icon-192.png"/>
+<link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.youtube-nocookie.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="serge-hero.webp">
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   LATISS — la page d'attente
+   Le clip, le nom, trois mots. Rien d'autre, et c'est une consigne, pas
+   un manque de temps : les textes definitifs dependent du nom, de l'offre
+   et de la voix de l'artiste, et aucun des trois n'est arrete.
+   Une page d'attente qui promet trop est une page qu'il faudra dementir.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{--noir:#070707;--rouge:#CC0000;--rouge-glow:rgba(204,0,0,.4);
+  --bebas:'Bebas Neue',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{background:var(--noir);color:#fff;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
+  overflow:hidden;max-width:100%;}
+
+.scene{position:relative;height:100svh;min-height:100%;width:100%;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  padding:0 24px calc(44px + env(safe-area-inset-bottom,0px));}
+
+/* La photo se voit AVANT la video, donc l'ecran n'est jamais noir, et elle
+   reste si la lecture est refusee. Motif : l'ecran noir du 14/09. */
+.fond{position:absolute;inset:0;background:url('serge-hero.webp') center 18%/cover no-repeat;}
+.clip{position:absolute;inset:0;overflow:hidden;}
+.clip iframe{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:100vw;height:56.25vw;min-height:100%;min-width:177.78vh;border:0;pointer-events:none;
+  opacity:0;transition:opacity 1.2s ease;}
+.clip.joue iframe{opacity:1;}
+/* Sans ce voile, le nom blanc se pose sur une image qui bouge et devient
+   illisible une seconde sur deux. */
+.voile{position:absolute;inset:0;background:linear-gradient(0deg,
+  rgba(7,7,7,.97) 0%, rgba(7,7,7,.72) 32%, rgba(7,7,7,.26) 60%, rgba(7,7,7,.52) 100%);}
+
+.marque{position:absolute;top:calc(22px + env(safe-area-inset-top,0px));left:24px;z-index:3;
+  display:flex;align-items:center;gap:10px;}
+.logo{width:34px;height:34px;background:var(--rouge);border-radius:9px;display:flex;
+  align-items:center;justify-content:center;font-family:var(--bebas);font-size:17px;
+  box-shadow:0 4px 14px var(--rouge-glow);}
+.nom-h{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.55);}
+
+.son{position:absolute;top:calc(22px + env(safe-area-inset-top,0px));right:24px;z-index:3;
+  width:44px;height:44px;border-radius:12px;background:rgba(7,7,7,.5);
+  border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;}
+.son svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;}
+
+.titre{position:relative;z-index:2;font-family:var(--bebas);font-size:clamp(58px,19vw,104px);
+  line-height:.86;letter-spacing:2px;text-align:center;margin-bottom:26px;}
+
+/* « Bientot disponible » n'est PAS un bouton : il n'y a rien derriere. Un
+   bouton qui ne mene nulle part est un defaut, pas une attente. C'est donc
+   une pastille, et elle se lit comme un etat. */
+.bientot{position:relative;z-index:2;display:inline-flex;align-items:center;gap:10px;
+  min-height:52px;padding:0 26px;border-radius:99px;
+  background:rgba(204,0,0,.16);border:1px solid rgba(204,0,0,.55);
+  font-size:13px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;}
+.pt{width:8px;height:8px;border-radius:50%;background:var(--rouge);animation:bat 2s infinite;}
+@keyframes bat{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.8)}}
+@media (prefers-reduced-motion:reduce){.pt{animation:none}}
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="fond"></div>
+  <div class="clip" id="clip"><div id="hote"></div></div>
+  <div class="voile"></div>
+
+  <!-- La marque seule, sans son nom ecrit : « LATISS » est deja en geant au
+       centre, et le repeter en petit a 60 px de la ne dit rien de plus. -->
+  <div class="marque"><div class="logo">L</div></div>
+
+  <button class="son" id="son" type="button" aria-label="Activer le son">
+    <svg viewBox="0 0 24 24" id="ico"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
+  </button>
+
+  <h1 class="titre">LATISS</h1>
+  <div class="bientot"><span class="pt"></span>Bientôt disponible</div>
+</div>
+
+<script>
+/* Le clip tient en une ligne. Les videos deja publiees sur la plateforme :
+     dJgduuEnnR8  Attraper pour laisser « Special Mariam »   <- retenu
+     UaL7_2HKysY  Attraper pour laisser
+     lU4_kmReLEs  DJ CDR
+     n6qOMTZRnXU  Sur les traces de l'artiste   (ecarte : patinoire, sous-titres
+                  incrustes, rien a voir avec l'artiste malgre son titre)
+   `depart` compte autant que la video : les premieres secondes d'un clip sont
+   presque toujours un logo ou un plan large. */
+var CLIP = { video: 'dJgduuEnnR8', depart: 68 };
+
+(function(){
+  var clip = document.getElementById('clip');
+  var hote = document.getElementById('hote');
+  var actif = false;
+
+  function monter(){
+    var f = document.createElement('iframe');
+    f.id = 'yt';
+    f.allow = 'autoplay; encrypted-media';
+    f.src = 'https://www.youtube-nocookie.com/embed/' + CLIP.video
+          + '?autoplay=1&mute=1&controls=0&loop=1&playlist=' + CLIP.video
+          + '&playsinline=1&rel=0&modestbranding=1&disablekb=1&iv_load_policy=3'
+          + '&fs=0&start=' + CLIP.depart
+          + '&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
+    hote.appendChild(f);
+    // On ne devoile qu'une fois la lecture lancee, sinon le cadre noir de
+    // YouTube passe devant la photo.
+    setTimeout(function(){ clip.classList.add('joue'); }, 1400);
+  }
+
+  // Mouvement reduit : la photo reste, fixe. Une video qui tourne en fond est
+  // exactement ce que ce reglage demande d'eviter.
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if(document.readyState === 'complete') monter();
+  else window.addEventListener('load', monter);
+
+  document.getElementById('son').addEventListener('click', function(){
+    var f = document.getElementById('yt');
+    if(!f) return;
+    actif = !actif;
+    f.contentWindow.postMessage(JSON.stringify({
+      event:'command', func: actif ? 'unMute' : 'mute', args: []
+    }), '*');
+    document.getElementById('ico').innerHTML = actif
+      ? '<path d="M11 5L6 9H3v6h3l5 4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a9 9 0 0 1 0 12"/>'
+      : '<path d="M11 5L6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/>';
+  });
+})();
+</script>
+</body>
+</html>

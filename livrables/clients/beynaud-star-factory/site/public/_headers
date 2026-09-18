@@ -1,0 +1,11 @@
+# La page d'attente change souvent tant que les textes ne sont pas arrêtés :
+# elle se revalide à chaque visite. Les images, elles, portent un nom stable et
+# ne bougent pas : un an de cache, et on change le NOM du fichier pour en
+# remplacer une, jamais son contenu. Même règle que sur le site mutualisé.
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+/*.png
+  Cache-Control: public, max-age=31536000, immutable
