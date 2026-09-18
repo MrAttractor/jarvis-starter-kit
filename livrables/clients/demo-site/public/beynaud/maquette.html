@@ -58,19 +58,33 @@ h2{font-family:var(--bebas);font-size:27px;letter-spacing:.8px;margin-bottom:3px
 
 /* ── 1. L'entree ── */
 #e-entree{padding:0;}
-.video-plein{position:relative;height:calc(100vh - 150px);min-height:440px;
-  background:linear-gradient(180deg,#2a0a0a,#070707);display:flex;flex-direction:column;
-  align-items:center;justify-content:flex-end;padding:0 24px 34px;overflow:hidden;}
-.video-plein::after{content:'';position:absolute;inset:0;
-  background:radial-gradient(circle at 50% 38%, rgba(204,0,0,.22), transparent 62%);}
-.visage{position:absolute;top:16%;left:50%;transform:translateX(-50%);width:172px;height:172px;
-  border-radius:50%;background:var(--n4);border:2px solid rgba(255,255,255,.14);
-  display:flex;align-items:center;justify-content:center;font-family:var(--bebas);
-  font-size:15px;color:var(--dim);text-align:center;line-height:1.3;padding:18px;}
-.lecture{position:absolute;top:calc(16% + 62px);left:50%;transform:translateX(-50%);
-  width:56px;height:56px;border-radius:50%;background:var(--rouge);display:flex;
-  align-items:center;justify-content:center;box-shadow:0 8px 30px var(--rouge-glow);z-index:3;}
-.lecture svg{width:22px;height:22px;fill:#fff;margin-left:3px;}
+/* ── L'ENTREE : une video qui passe, un bouton qui n'attend pas ──
+   La video demarre seule, muette et en boucle : c'est la seule facon qu'un
+   navigateur mobile accepte de la lancer sans geste. Elle se recadre pour
+   couvrir l'ecran sans bande noire, comme le fait deja l'application reelle a
+   son ouverture.
+   Le bouton d'entree est au-dessus des le premier instant : sur des donnees
+   mobiles ivoiriennes, une video obligatoire avant le formulaire, ce sont des
+   gens qui partent. Elle donne envie, elle ne retient pas. */
+.video-plein{position:relative;height:calc(100vh - 44px);min-height:520px;
+  background:#000;display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-end;padding:0 24px 38px;overflow:hidden;}
+.clip{position:absolute;inset:0;overflow:hidden;}
+.clip iframe{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:100vw;height:56.25vw;min-height:100%;min-width:177.78vh;border:0;pointer-events:none;
+  opacity:0;transition:opacity 1.1s ease;}
+.clip.joue iframe{opacity:1;}
+/* La photo derriere : elle s'affiche AVANT que la video soit prete, donc
+   l'ecran n'est jamais noir, et elle sert de repli si la lecture est refusee. */
+.clip-photo{position:absolute;inset:0;background-size:cover;background-position:center 18%;}
+/* Le voile : sans lui le titre blanc se pose sur une image qui bouge, et il
+   devient illisible une seconde sur deux. */
+.voile{position:absolute;inset:0;background:linear-gradient(0deg,
+  rgba(7,7,7,.96) 0%, rgba(7,7,7,.72) 34%, rgba(7,7,7,.30) 62%, rgba(7,7,7,.55) 100%);}
+.son{position:absolute;top:16px;right:16px;z-index:4;width:44px;height:44px;border-radius:12px;
+  background:rgba(7,7,7,.55);border:1px solid rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;}
+.son svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
 .titre-geant{position:relative;z-index:2;font-family:var(--bebas);font-size:46px;line-height:.92;
   text-align:center;letter-spacing:1px;margin-bottom:8px;}
 .titre-geant .r{color:var(--rouge-texte);}
@@ -199,8 +213,14 @@ h2{font-family:var(--bebas);font-size:27px;letter-spacing:.8px;margin-bottom:3px
 <!-- ════════ 1. L'ENTRÉE ════════ -->
 <section id="e-entree">
   <div class="video-plein">
-    <div class="visage">la vidéo d'accueil<br>de Latiss</div>
-    <div class="lecture"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+    <div class="clip" id="clip">
+      <div class="clip-photo" style="background-image:url('serge-hero.webp')"></div>
+      <div id="clip-hote"></div>
+    </div>
+    <div class="voile"></div>
+    <button class="son" id="son" aria-label="Activer le son">
+      <svg viewBox="0 0 24 24" id="ico-son"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>
+    </button>
     <div class="titre-geant">BIENVENUE CHEZ<br><span class="r">LATISS</span></div>
     <div class="sous">L'univers officiel de Serge Beynaud. Ses vidéos, ses directs, et ce qu'il ne montre nulle part ailleurs.</div>
     <button class="cta" onclick="aller('inscription')">Entrer</button>
@@ -403,6 +423,82 @@ function aller(nom){
   window.scrollTo(0, 0);
 }
 aller('entree');
+
+/* ── La video d'accueil ──────────────────────────────────────────────
+   Muette au depart : aucun navigateur mobile ne lance une video avec du son
+   sans geste de l'utilisateur, et une video qui refuse de demarrer laisse un
+   ecran noir. Le bouton en haut a droite rend le son a qui le veut.
+   Dans l'application reelle, ce clip devrait etre un FICHIER depose et non un
+   lien YouTube : pas de marque tierce, et l'exclusivite devient possible. Le
+   lecteur de fichiers est deja en place depuis le 17/09. */
+/* ── LE CLIP D'ACCUEIL, en un seul endroit ─────────────────────────
+   Pour en changer : une ligne, pas une fouille dans le fichier.
+
+   Les quatre videos deja publiees sur la plateforme, au 18/09 :
+     dJgduuEnnR8  Attraper pour laisser « Special Mariam »  (clip, danse)
+     UaL7_2HKysY  Attraper pour laisser                     (clip officiel)
+     lU4_kmReLEs  DJ CDR
+     n6qOMTZRnXU  Sur les traces de l'artiste               <- retenu
+
+   ESSAI DU 18/09, ET SON ECHEC. « Sur les traces de l'artiste » avait ete
+   retenu sur son titre, en pariant qu'un documentaire SUR lui montrerait son
+   visage. Regarde a l'ecran, il montre une patinoire, des passants et un
+   sous-titre incruste qui traine en bas. Choisir une video de fond sur son
+   titre ne marche pas : il faut la regarder.
+
+   On revient donc au clip que l'application utilise deja a son ouverture. Il
+   n'est pas ideal, c'est de la danse et pas le visage de Serge, mais il est au
+   moins de son univers et il a ete choisi par eux.
+
+   CE QU'IL FAUT VRAIMENT : 20 secondes de Serge face camera, deposees en
+   FICHIER. Pas de marque tierce, pas de sous-titre incruste, pas de bande
+   noire, et l'exclusivite devient possible.
+
+   `depart` est la seconde ou commence la lecture. C'est le reglage qui compte
+   le plus : les dix premieres secondes d'une video YouTube sont presque
+   toujours un logo, un jingle ou un plan large. On entre dans le vif. */
+var CLIP = { video: 'dJgduuEnnR8', depart: 68 };
+
+(function(){
+  var hote = document.getElementById('clip-hote');
+  var clip = document.getElementById('clip');
+  var lecteur = null;
+
+  function monter(){
+    var f = document.createElement('iframe');
+    f.id = 'clip-yt';
+    f.allow = 'autoplay; encrypted-media';
+    f.setAttribute('allowfullscreen','');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + CLIP.video
+          + '?autoplay=1&mute=1&controls=0&loop=1&playlist=' + CLIP.video
+          + '&playsinline=1&rel=0&modestbranding=1&disablekb=1&iv_load_policy=3'
+          + '&fs=0&start=' + CLIP.depart
+          + '&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
+    hote.appendChild(f);
+    // On ne devoile la video qu'une fois qu'elle a eu le temps de demarrer :
+    // sinon on voit le cadre noir de YouTube passer devant la photo.
+    setTimeout(function(){ clip.classList.add('joue'); }, 1400);
+  }
+
+  // Mouvement reduit : on garde la photo, fixe. Une video qui tourne en fond
+  // est exactement ce que ce reglage demande d'eviter.
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if(document.readyState === 'complete') monter();
+  else window.addEventListener('load', monter);
+
+  var actif = false;
+  document.getElementById('son').addEventListener('click', function(){
+    var f = document.getElementById('clip-yt');
+    if(!f) return;
+    actif = !actif;
+    f.contentWindow.postMessage(JSON.stringify({
+      event:'command', func: actif ? 'unMute' : 'mute', args: []
+    }), '*');
+    document.getElementById('ico-son').innerHTML = actif
+      ? '<path d="M11 5L6 9H3v6h3l5 4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a9 9 0 0 1 0 12"/>'
+      : '<path d="M11 5L6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/>';
+  });
+})();
 </script>
 </body>
 </html>
