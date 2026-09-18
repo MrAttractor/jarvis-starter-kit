@@ -19,6 +19,11 @@
   color-scheme:dark;
   --noir:#070707;--n2:#0f0f0f;--n3:#171717;--n4:#1f1f1f;--n5:#2a2a2a;
   --rouge:#CC0000;--rouge-vif:#E8000B;--rouge-glow:rgba(204,0,0,.4);
+  /* Le rouge lisible en PETIT texte sur fond sombre. Mesure du 18/09 : #CC0000
+     a 10 px plafonne a 3,3:1, et aucun rouge sature ne peut atteindre 4,5:1 sur
+     du noir. #FF4D4D donne 5 a 6:1 selon le fond. Meme rouge, eclairci pour le
+     fond ou il se pose ; celui de la charte reste celui des aplats. */
+  --rouge-texte:#FF4D4D;
   --or:#D4A017;--or-plein:#D4A017;--or-dim:rgba(212,160,23,.18);--vert:#22C55E;
   --blanc:#fff;--doux:rgba(255,255,255,.82);--dim:rgba(255,255,255,.45);
   --faint:rgba(255,255,255,.07);
@@ -39,6 +44,7 @@
   color-scheme:light;
   --noir:#F6F5F3;--n2:#fff;--n3:#fff;--n4:#F0EEE9;--n5:#E4E1DA;
   --rouge:#B80000;--rouge-vif:#A00008;--rouge-glow:rgba(184,0,0,.22);
+  --rouge-texte:#B80000;
   --or:#7A5906;--or-dim:rgba(212,160,23,.22);--vert:#15803D;
   --blanc:#141414;--doux:rgba(20,20,20,.84);--dim:rgba(20,20,20,.66);
   --faint:rgba(20,20,20,.10);
@@ -94,7 +100,7 @@ svg{display:block;}
 .bascule .ico-lune{display:none;}
 :root[data-theme="clair"] .bascule .ico-lune{display:block;}
 :root[data-theme="clair"] .bascule .ico-soleil{display:none;}
-.live-pill{display:flex;align-items:center;gap:5px;background:rgba(204,0,0,.12);border:1px solid rgba(204,0,0,.3);border-radius:20px;padding:5px 11px;font-size:10px;font-weight:800;color:var(--rouge);letter-spacing:.5px;}
+.live-pill{display:flex;align-items:center;gap:5px;background:rgba(204,0,0,.12);border:1px solid rgba(204,0,0,.3);border-radius:20px;padding:5px 11px;font-size:10px;font-weight:800;color:var(--rouge-texte);letter-spacing:.5px;}
 .live-dot{width:6px;height:6px;border-radius:50%;background:var(--rouge);animation:pulse 1.4s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .logout{font-size:11px;color:var(--dim);background:none;}
@@ -104,7 +110,7 @@ svg{display:block;}
 .greeting-t span{color:var(--rouge);}
 .live-block{background:linear-gradient(135deg,var(--brulee),var(--brulee2));border:1px solid rgba(204,0,0,.3);border-radius:20px;padding:22px 20px;margin-bottom:14px;position:relative;overflow:hidden;}
 .live-block::before{content:'';position:absolute;right:-30px;top:-30px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(204,0,0,.12),transparent 70%);}
-.lb-tag{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--rouge);display:flex;align-items:center;gap:5px;margin-bottom:10px;}
+.lb-tag{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--rouge-texte);display:flex;align-items:center;gap:5px;margin-bottom:10px;}
 .lb-main{display:flex;align-items:baseline;gap:10px;}
 .lb-num{font-family:var(--bebas);font-size:64px;letter-spacing:2px;line-height:1;}
 .lb-unit{font-size:14px;font-weight:600;color:var(--dim);}
@@ -193,7 +199,7 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .poll-res{position:relative;border-radius:9px;overflow:hidden;background:var(--n4);border:1px solid var(--faint);padding:9px 12px;display:flex;align-items:center;gap:8px;}
 .poll-res-bar{position:absolute;left:0;top:0;bottom:0;background:rgba(204,0,0,.2);}
 .poll-res-lbl{position:relative;font-size:12px;font-weight:600;flex:1;}
-.poll-res-pct{position:relative;font-size:12px;font-weight:800;color:var(--rouge);}
+.poll-res-pct{position:relative;font-size:12px;font-weight:800;color:var(--rouge-texte);}
 .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(120px);background:var(--n2);border:1px solid rgba(204,0,0,.45);border-radius:13px;padding:12px 20px;font-size:13px;font-weight:600;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 40px var(--ombre);max-width:90vw;text-align:center;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;}
@@ -214,7 +220,7 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
   font-size:10.5px;font-weight:700;letter-spacing:.3px;padding:8px 4px;transition:color .2s;}
 .onglet svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.onglet.actif{color:var(--rouge);}
+.onglet.actif{color:var(--rouge-texte);}
 .onglet.actif::before{content:'';position:absolute;top:0;left:22%;right:22%;height:2px;background:var(--rouge);border-radius:0 0 3px 3px;}
 .pastille{position:absolute;top:7px;left:calc(50% + 9px);min-width:17px;height:17px;padding:0 4px;
   border-radius:9px;background:var(--rouge);color:#fff;font-size:10px;font-weight:800;
@@ -227,14 +233,14 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .etat{background:var(--n3);border:1px solid var(--faint);border-radius:14px;
   padding:13px 15px;margin-bottom:14px;font-size:12.5px;line-height:1.5;color:var(--dim);}
 .etat b{color:var(--blanc);font-weight:800;}
-.etat .alerte{color:var(--rouge);font-weight:800;}
+.etat .alerte{color:var(--rouge-texte);font-weight:800;}
 
 /* Le selecteur de type du composeur. */
 .types{display:flex;gap:5px;margin:-2px -2px 14px;padding:2px;}
 .type{flex:1 1 0;min-width:0;font-size:11.5px;font-weight:700;padding:0 4px;border-radius:9px;
   background:var(--n4);color:var(--dim);border:1px solid var(--faint);transition:all .18s;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.type.actif{background:var(--rouge);color:#fff;border-color:var(--rouge);}
+.type.actif{background:var(--rouge);color:#fff;border-color:var(--rouge-texte);}
 
 /* Les filtres de la liste publiee. */
 .filtres{display:flex;gap:5px;margin-bottom:12px;}
@@ -253,7 +259,7 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .pub-t{font-size:13px;font-weight:600;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
 .pub-s{font-size:11px;color:var(--dim);margin-top:4px;}
 .pub-s .masque{color:var(--masque);}
-.pub-s .direct{color:var(--rouge);font-weight:800;}
+.pub-s .direct{color:var(--rouge-texte);font-weight:800;}
 .pub-s .amb{color:var(--or);}
 .pub-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
 .pub-btns button{font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;
