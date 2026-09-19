@@ -50,7 +50,7 @@
      rouge de la charte reste celui des aplats et des grands titres. */
   --rouge-texte:#FF4D4D;
   --or:#D4A017;--or-plein:#D4A017;--or-dim:rgba(212,160,23,.18);
-  --blanc:#fff;--doux:rgba(255,255,255,.87);--dim:rgba(255,255,255,.45);
+  --blanc:#fff;--doux:rgba(255,255,255,.87);--dim:rgba(255,255,255,.48);
   --tres-dim:rgba(255,255,255,.3);--faint:rgba(255,255,255,.07);
   --champ:rgba(0,0,0,.35);--piste:rgba(255,255,255,.16);--piste-douce:rgba(255,255,255,.08);
   --media:#000;--sq-hi:#262626;--amb-fond:#160800;--av1:#3a3a3a;--av2:#5a5a5a;
@@ -96,7 +96,7 @@
   --noir:#070707;--n2:#0f0f0f;--n3:#171717;--n4:#1f1f1f;--n5:#2a2a2a;
   --rouge:#CC0000;--rouge-vif:#E8000B;--rouge-glow:rgba(204,0,0,.4);
   --or:#D4A017;--or-plein:#D4A017;--or-dim:rgba(212,160,23,.18);
-  --blanc:#fff;--doux:rgba(255,255,255,.87);--dim:rgba(255,255,255,.45);
+  --blanc:#fff;--doux:rgba(255,255,255,.87);--dim:rgba(255,255,255,.48);
   --tres-dim:rgba(255,255,255,.3);--faint:rgba(255,255,255,.07);
   --champ:rgba(0,0,0,.35);--vert:#22C55E;--erreur:#ff6b6b;
 }
@@ -453,7 +453,14 @@ body.splash-on{overflow:hidden;}
    au lieu d'en eclaircir un seul et de desaccorder la carte. Le mode clair,
    lui, est deja a 5,79:1 et n'a pas besoin d'etre touche. */
 :root:not([data-theme="clair"]) .amb-card{--dim:rgba(255,255,255,.52);}
-/* Meme motif pour le compte a rebours du direct. Le jeton --dim est calibre
+/* Le jeton --dim est passe de .45 a .48 le 19/09. A .45 il rendait 4,40 a
+   4,47:1 selon le fond, c est-a-dire SOUS le seuil de 4,5 partout sauf sur
+   le fond de la page, ou il tenait a 4,53 tout juste. Un jeton cale au
+   centieme pres sur une seule surface n est pas cale, il est chanceux.
+   Mesure apres : 4,95:1 sur le fond de la page, 4,94 sur la carte teintee
+   de rouge, 4,84 sur une carte claire.
+
+   Meme motif pour le compte a rebours du direct. Le jeton --dim est calibre
    sur le fond de la page (#0D0D0D, 4,53:1, tout juste au-dessus du seuil).
    Pose sur une carte plus claire (--n4), il tombe a 4,40:1 et « jours »,
    « heures », « min » passent sous le seuil en mode sombre. Trouve par la
