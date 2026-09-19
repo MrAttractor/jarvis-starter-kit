@@ -22,6 +22,68 @@ vrais membres. **Le protocole d'accord n'est toujours pas signé**, mais depuis 
 l'artiste demande lui-même une fonctionnalité payante, ce qui rouvre la négociation par
 le haut.
 
+## Le chemin d'inscription mesuré, 19/09/2026 — le dernier point bloquant est levé
+
+C'était la trouvaille n°3 du contre-audit, et la seule qui restait : **le chemin d'écriture
+n'avait jamais été mesuré au-delà de 12 appels simultanés**, pour un pic attendu de 200. Il
+ne l'avait pas été pour une bonne raison : s'inscrire crée un compte, et mesurer voulait
+dire fabriquer des centaines de faux fans en production.
+
+Résolu avec un marqueur qui ne peut pas se tromper : les comptes de test portent un numéro
+en **`+999`**, un indicatif que l'UIT n'attribue à aucun pays. Aucun fan ne peut en porter
+un, donc le ménage ne peut pas emporter une vraie ligne.
+
+### Les trois mesures
+
+| Ce qui est mesuré | Débit | Médiane | 95ᵉ | Pannes |
+|---|---|---|---|---|
+| Tout sauf l'écriture (numéro déjà inscrit) | **452/s** | 81 ms | 130 ms | **0** sur ~15 500 |
+| 200 inscriptions réelles, sans parrain | **133/s** | 994 ms | 1 418 ms | **0** |
+| 200 inscriptions réelles, **toutes sur le même lien de parrainage** | **11/s** | 1 357 ms | 2 016 ms | **0** |
+
+### Ce que ça veut dire pour le lancement
+
+**Le pic attendu de 200 inscriptions simultanées est absorbé.** Sans parrain, en une seconde
+et demie. Toutes sur le même lien d'Ambassadeur, en dix-huit secondes, le fan le plus lent
+attendant deux secondes. Personne n'échoue : sous charge le système ralentit, il ne casse
+pas.
+
+**Le parrainage divise le débit par douze, et c'est voulu.** Toutes ces inscriptions
+écrivent sur **la même ligne** : celle de l'Ambassadeur dont le lien circule. La base les met
+en file, depuis la migration `0011` qui a rendu l'incrément atomique. C'est le seul endroit
+du produit où la contention existe.
+
+**Et le compteur est juste.** C'était la seule preuve qui comptait, parce qu'un parrainage
+perdu ne lève aucune erreur : il disparaît. Après 200 inscriptions simultanées sur le même
+parrain, son compteur valait **exactement 200**, avec 200 filleuls réels en base, et son
+passage au grade Ambassadeur s'est fait tout seul. **Pas un parrainage perdu.**
+
+### L'instrument était faux, et le témoin l'a prouvé
+
+La première version du test lançait 200 appels d'un coup. Elle montrait **38 pannes sur 200**
+et un effondrement du débit à partir de 100 appels. C'était faux.
+
+Le témoin : la même charge, depuis le même poste, sur **un fichier statique servi par
+Cloudflare**, qui ne peut pas être saturé par 200 requêtes. Il échouait **13 fois sur 200**,
+avec la même erreur de connexion et le même débit de 19/s. Le plafond mesuré était celui de
+l'ordinateur portable, pas celui de Supabase.
+
+La version corrigée garde un petit nombre de connexions ouvertes et y fait passer les
+requêtes en continu. Elle mesure le débit du serveur, pas la capacité d'un poste à ouvrir
+des sockets. **Règle générale : avant de conclure qu'un serveur plafonne, lancer la même
+charge sur une cible qui ne peut pas plafonner. Si elle tombe aussi, c'est l'instrument.**
+
+### Ce que la mesure ne dit pas
+
+Elle part de France. Un fan à Abidjan ajoute sa propre latence réseau, que ce test ne voit
+pas : on mesure le plafond du **serveur**, pas le temps ressenti. Et le pic a été mesuré en
+**une rafale**, pas en flot soutenu sur plusieurs minutes. Le test est rejouable :
+`node charge-inscription.js`, et `node charge-inscription.js lecture` pour la partie qui
+n'écrit rien.
+
+Base vérifiée après chaque passage : **0 compte de test restant, 0 filleul orphelin,
+11 membres, 18 cœurs, 3 commentaires, 2 votes**. Exactement son état de départ.
+
 ## La porte à trois champs, et le trou qu'elle a révélé — 19/09/2026
 
 **Décision de Mac Arthur.** L'inscription demande maintenant **le prénom, le numéro
@@ -1069,7 +1131,7 @@ séries et live YouTube verrouillés, sondages, application installable.
 | D-18 | **XPaye n'est pas branché**, et aucune documentation de leur API n'existe dans le dossier | tout encaissement reste manuel, donc non automatisable au-delà de quelques centaines d'acheteurs | **en veille, décidé par Mac Arthur le 18/09.** À rouvrir avec la documentation XPaye. Les codes d'accès ne seront pas à jeter : le paiement délivrera un code, ou écrira directement le billet |
 | D-17 | **L'espace de Serge ne savait pas cocher « payant »** | le verrou existait mais Serge ne pouvait pas l'activer seul | **soldée le 18/09.** Le sélecteur d'accès propose trois valeurs, pour une vidéo comme pour un direct : tous les membres, Ambassadeurs, ou payant. La base garde deux notions distinctes, la traduction se fait en un seul endroit |
 | D-07 | **Compteur de parrainage lu puis écrit**, non atomique | des points perdus en pic, sans moyen de reconstituer la vérité | **soldée le 18/09.** Un seul `update` en base (migration 0011), la ligne se verrouille et les appels simultanés se mettent en file. Éprouvé sur la production : **12 inscriptions au même instant sur un même lien, compteur à 12**, grade Ambassadeur déclenché automatiquement, 13 lignes de test supprimées derrière. Une fonction de recalage est livrée avec, pour recoler le compteur sur la vérité le jour où l'on doute d'un classement |
-| D-08 | **Point de rupture inconnu** | on découvrirait le plafond pendant le lancement | **mesuré le 17/09, en lecture seule.** Genou de saturation à **~55 ouvertures de page par seconde** : de 40 à 80 appels simultanés, la latence double (751 → 1 403 ms) et le débit ne gagne que 7 %. **Zéro erreur sur 975 requêtes** : sous surcharge le système ralentit, il ne casse pas. Reste inconnu : le comportement en écriture, non testé pour ne pas créer de faux comptes en production |
+| D-08 | **Point de rupture inconnu** | on découvrirait le plafond pendant le lancement | **mesuré le 17/09, en lecture seule.** Genou de saturation à **~55 ouvertures de page par seconde** : de 40 à 80 appels simultanés, la latence double (751 → 1 403 ms) et le débit ne gagne que 7 %. **Zéro erreur sur 975 requêtes** : sous surcharge le système ralentit, il ne casse pas. Reste inconnu : le comportement en écriture, non testé pour ne pas créer de faux comptes en production. **Le chemin d'ECRITURE est mesuré le 19/09** : 452/s sur tout sauf l'écriture, 133/s en inscriptions réelles, 11/s quand elles partagent le même lien de parrainage. Zéro panne partout, et le compteur du parrain vaut exactement 200 après 200 inscriptions simultanées sur sa ligne. Le pic attendu est absorbé |
 | D-09 | **Doublons de comptes** : sans numéro, une réinscription crée une ligne de plus | des fans fantômes qu'aucune clé ne permet de reconnaître | **soldée le 19/09.** Le numéro WhatsApp devient obligatoire à l'inscription, et la colonne porte une contrainte d'unicité : le doublon n'est plus découragé, il est impossible |
 | D-10 | **`photo_add` force `.jpg` et `image/jpeg`** en dur | un fichier qui ment sur son contenu, et le WebP impossible | **soldée le 17/09.** Le type est lu sur l'image elle-même, liste blanche webp/jpeg/png, extension déduite. `bey-admin` v19 |
 | D-11 | **Colonne morte `bey_membres.push_subscription`**, 0 ligne renseignée, les abonnements vivent dans `bey_push` | schéma qui ment sur lui-même, piège pour la prochaine personne | ouvert |
