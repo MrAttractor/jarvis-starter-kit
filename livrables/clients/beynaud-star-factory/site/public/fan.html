@@ -460,6 +460,39 @@ body.bienvenue-on{overflow:hidden;}
 /* Deux lignes, pas trois : a la troisieme le titre mangeait l'image. */
 .reel-t{position:relative;z-index:2;font-size:11px;font-weight:700;line-height:1.3;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+/* ── LE LECTEUR PLEIN ECRAN DES VERTICALES ──
+   La piste defile a la verticale et chaque video se colle a l'ecran. Le
+   mouvement est celui du navigateur : meme inertie que partout ailleurs sur
+   le telephone, et aucun code de toucher a maintenir. */
+#reels-plein{position:fixed;inset:0;z-index:95;background:#000;visibility:hidden;opacity:0;
+  transition:opacity .25s ease,visibility .25s ease;}
+#reels-plein.ouvert{visibility:visible;opacity:1;}
+body.reels-on{overflow:hidden;}
+.rp-piste{height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.rp-piste::-webkit-scrollbar{display:none;}
+.rp-vue{height:100%;scroll-snap-align:start;scroll-snap-stop:always;
+  position:relative;overflow:hidden;background:#000;}
+.rp-vue img.rp-affiche,.rp-vue video,.rp-vue iframe{position:absolute;inset:0;
+  width:100%;height:100%;object-fit:cover;border:0;display:block;}
+/* L'iframe de YouTube ne se recadre pas comme une image : on l'agrandit
+   au-dela de l'ecran et on la recentre, sinon un Short arrive avec deux
+   bandes noires sur les cotes. */
+.rp-vue iframe{width:100vw;height:56.25vw;min-height:100%;min-width:177.78vh;
+  top:50%;left:50%;inset:auto;transform:translate(-50%,-50%);pointer-events:none;}
+.rp-voile{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(0deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.25) 26%,rgba(0,0,0,0) 48%);}
+.rp-bas{position:absolute;left:0;right:0;bottom:0;z-index:3;
+  padding:0 20px calc(26px + env(safe-area-inset-bottom,0px));}
+.rp-titre{font-size:15px;font-weight:700;line-height:1.35;}
+.rp-sous{font-family:var(--manus);font-size:19px;color:rgba(255,255,255,.8);margin-top:4px;}
+.rp-x,.rp-son{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));z-index:4;
+  width:44px;height:44px;border-radius:12px;background:rgba(0,0,0,.45);
+  border:1px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;}
+.rp-x{right:16px;}
+.rp-son{right:68px;}
+.rp-x svg,.rp-son svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;}
 .reels-titre{font-size:11px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;
   color:var(--dim);padding:2px 0 10px;}
 
@@ -1054,6 +1087,8 @@ const MOTS = {
     inviter_ami: 'Inviter un ami',
     en_direct: 'EN DIRECT',
     voir_suite: 'Voir la suite',
+    reel_fermer: 'Fermer la vidéo',
+    reel_son: 'Couper le son',
     premier_commentaire: 'Sois le premier à commenter',
     code_etiquette: 'Ton code d’accès',
     code_ouvert: 'Accès ouvert.',
@@ -1325,6 +1360,18 @@ remplirMots(document);
   </div>
 
 </div>
+
+<!-- Le lecteur plein ecran des verticales. Vide tant qu'on ne l'ouvre pas :
+     monter douze lecteurs d'avance, c'est douze lecteurs qui chargent. -->
+<section id="reels-plein" aria-hidden="true">
+  <div class="rp-piste" id="rp-piste"></div>
+  <button class="rp-son" id="rp-son" type="button" data-mot-label="fil.reel_son">
+    <svg viewBox="0 0 24 24" id="rp-son-ico" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a9 9 0 0 1 0 12"/></svg>
+  </button>
+  <button class="rp-x" id="rp-x" type="button" data-mot-label="fil.reel_fermer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+</section>
 
 <div class="lightbox" id="lightbox" onclick="closeLb(event)">
   <button class="lb-close" onclick="closeLb(event,true)">&times;</button>
@@ -2590,6 +2637,161 @@ function carteEntree(){
   return c;
 }
 
+/* ═══ LE LECTEUR PLEIN ECRAN DES VERTICALES ═══════════════════════════
+   Un appui sur une vignette ouvrait le fil a l'endroit du post : doublon
+   du fil, sans rien de plus. La video s'ouvre maintenant en plein ecran et
+   on passe a la suivante du doigt.
+
+   Le defilement est celui du NAVIGATEUR : scroll-snap colle chaque video a
+   l'ecran. Meme inertie que partout ailleurs sur le telephone, aucun code
+   de toucher a maintenir, et un geste reecrit a la main se reconnait tout
+   de suite — il accroche. */
+let RP_LISTE = [];
+let RP_VEILLE = null;
+let RP_MUET = false;
+
+function rpOuvert(){
+  const s = document.getElementById('reels-plein');
+  return !!s && s.classList.contains('ouvert');
+}
+
+function rpVider(vue){
+  const l = vue.querySelector('video, iframe');
+  if(l) l.remove();
+}
+
+/* On ne monte le lecteur que sur la vue REGARDEE, et on le retire des
+   qu'on la quitte : sinon la video precedente continue de jouer, son
+   compris, derriere celle qu'on regarde. */
+function rpMonter(vue){
+  if(vue.querySelector('video, iframe')) return;
+  const url = vue.dataset.url || '';
+  const affiche = vue.querySelector('.rp-affiche');
+
+  if(/\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(url)){
+    const v = document.createElement('video');
+    v.src = url; v.loop = true; v.playsInline = true;
+    v.setAttribute('playsinline',''); v.preload = 'auto';
+    v.muted = RP_MUET;
+    vue.insertBefore(v, affiche ? affiche.nextSibling : vue.firstChild);
+    v.play().catch(function(){ v.muted = true; RP_MUET = true; rpIconeSon(); v.play().catch(function(){}); });
+    return;
+  }
+
+  const id = idYoutube(url);
+  if(!id) return;
+  const f = document.createElement('iframe');
+  f.allow = 'autoplay; encrypted-media';
+  f.src = 'https://www.youtube-nocookie.com/embed/' + id
+        + '?autoplay=1&mute=' + (RP_MUET ? 1 : 0)
+        + '&controls=0&loop=1&playlist=' + id
+        + '&playsinline=1&rel=0&modestbranding=1&disablekb=1&iv_load_policy=3'
+        + '&cc_load_policy=0&fs=0&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
+  vue.insertBefore(f, affiche ? affiche.nextSibling : vue.firstChild);
+}
+
+function rpIconeSon(){
+  const ico = document.getElementById('rp-son-ico');
+  if(!ico) return;
+  ico.innerHTML = RP_MUET
+    ? '<path d="M11 5L6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/>'
+    : '<path d="M11 5L6 9H3v6h3l5 4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a9 9 0 0 1 0 12"/>';
+}
+
+function rpAppliquerSon(){
+  const vue = document.querySelector('#rp-piste .rp-vue.vue');
+  if(!vue) return;
+  const v = vue.querySelector('video');
+  if(v){ v.muted = RP_MUET; if(!RP_MUET) v.play().catch(function(){}); return; }
+  const f = vue.querySelector('iframe');
+  if(f && f.contentWindow){
+    try{
+      f.contentWindow.postMessage(JSON.stringify({
+        event:'command', func: RP_MUET ? 'mute' : 'unMute', args: []
+      }), '*');
+    }catch(_){}
+  }
+}
+
+function ouvrirReelsPlein(liste, depart){
+  const section = document.getElementById('reels-plein');
+  const piste = document.getElementById('rp-piste');
+  if(!section || !piste || !liste.length) return;
+  RP_LISTE = liste;
+  piste.innerHTML = '';
+
+  liste.forEach(function(p){
+    const vue = el('div', 'rp-vue');
+    vue.dataset.url = p.youtube_url || '';
+    const id = idYoutube(p.youtube_url);
+    if(p.cover_url || id){
+      const img = document.createElement('img');
+      img.className = 'rp-affiche';
+      img.alt = '';
+      img.decoding = 'async';
+      img.src = p.cover_url || ('https://i.ytimg.com/vi/' + id + '/maxresdefault.jpg');
+      img.addEventListener('error', function repli(){
+        img.removeEventListener('error', repli);
+        if(id) img.src = 'https://i.ytimg.com/vi/' + id + '/mqdefault.jpg';
+      });
+      vue.appendChild(img);
+    }
+    vue.appendChild(el('div', 'rp-voile'));
+    const bas = el('div', 'rp-bas');
+    if(p.titre) bas.appendChild(el('div', 'rp-titre', p.titre));
+    bas.appendChild(el('div', 'rp-sous', 'latiss.net'));
+    vue.appendChild(bas);
+    piste.appendChild(vue);
+  });
+
+  section.classList.add('ouvert');
+  section.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('reels-on');
+
+  const vues = piste.querySelectorAll('.rp-vue');
+  const i = Math.max(0, Math.min(vues.length - 1, depart || 0));
+  piste.scrollTop = i * piste.clientHeight;
+
+  /* On arrive d'un appui : le telephone autorise donc le son. */
+  RP_MUET = false;
+  rpIconeSon();
+
+  if(RP_VEILLE) RP_VEILLE.disconnect();
+  RP_VEILLE = new IntersectionObserver(function(entrees){
+    entrees.forEach(function(e){
+      if(e.isIntersecting && e.intersectionRatio > 0.6){
+        e.target.classList.add('vue');
+        rpMonter(e.target);
+      } else {
+        e.target.classList.remove('vue');
+        rpVider(e.target);
+      }
+    });
+  }, { root: piste, threshold: [0, 0.6, 1] });
+  vues.forEach(function(v){ RP_VEILLE.observe(v); });
+
+  // Monte tout de suite celle sur laquelle on a appuye : l'observateur ne
+  // se declenche qu'au prochain calcul de mise en page.
+  vues[i].classList.add('vue');
+  rpMonter(vues[i]);
+
+  // Le Retour du telephone ferme le lecteur au lieu de quitter l'onglet.
+  history.pushState({ reels: true }, '', location.href);
+}
+
+function fermerReelsPlein(viaHistorique){
+  const section = document.getElementById('reels-plein');
+  const piste = document.getElementById('rp-piste');
+  if(!section || !section.classList.contains('ouvert')) return;
+  if(RP_VEILLE){ RP_VEILLE.disconnect(); RP_VEILLE = null; }
+  piste.querySelectorAll('.rp-vue').forEach(rpVider);
+  piste.innerHTML = '';
+  section.classList.remove('ouvert');
+  section.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('reels-on');
+  if(!viaHistorique) history.back();
+}
+
 /* Le fil se peint par tranches de dix. Avant, tout partait d'un coup :
    avec quatre publications ca ne se voyait pas, mais le serveur en remonte
    jusqu'a cent, et peindre cent cartes avant d'afficher la premiere se paie
@@ -2693,7 +2895,8 @@ function renderReels(liste){
   if(!reels.length){ box.classList.add('hidden'); return; }
   box.classList.remove('hidden');
 
-  reels.slice(0, 12).forEach(function(p, i){
+  const aGarder = reels.slice(0, 12);
+  aGarder.forEach(function(p, i){
     const c = el('div', 'reel');
     const id = idYoutube(p.youtube_url);
 
@@ -2728,10 +2931,12 @@ function renderReels(liste){
     c.appendChild(el('div', 'reel-t', p.titre || ''));
     c.setAttribute('role', 'button');
     c.setAttribute('aria-label', 'Voir ' + (p.titre || 'la vidéo'));
-    c.addEventListener('click', () => {
-      const cible = document.getElementById('post-' + cle(p));
-      if(cible) cible.scrollIntoView({ block: 'center', behavior: 'smooth' });
-    });
+    /* Avant le 19/09, l'appui descendait jusqu'au post dans le fil : c'etait
+       un doublon du fil, et la vignette ne servait a rien. Elle ouvre
+       maintenant la video en plein ecran, et on passe aux suivantes du
+       doigt. On passe la liste ENTIERE et le rang : les autres verticales
+       sont a portee de pouce, ce qui est tout l'interet. */
+    c.addEventListener('click', () => ouvrirReelsPlein(aGarder, i));
     box.appendChild(c);
   });
 }
@@ -2876,6 +3081,9 @@ function allerOnglet(nom, viaHistorique){
 }
 
 window.addEventListener('popstate', function(e){
+  /* Le lecteur plein ecran d'abord : quelqu'un qui regarde une video et
+     appuie sur Retour veut fermer la video, pas changer d'onglet. */
+  if(rpOuvert()){ fermerReelsPlein(true); return; }
   allerOnglet((e.state && e.state.onglet) || 'latiss', true);
 });
 
@@ -3381,6 +3589,11 @@ function ouvrirBienvenue(){
   setTimeout(function(){ suite.classList.add('vu'); },
              BIENVENUE.fichier ? (BIENVENUE.avant_suite * 1000) : 0);
 }
+
+document.getElementById('rp-x').addEventListener('click', function(){ fermerReelsPlein(); });
+document.getElementById('rp-son').addEventListener('click', function(){
+  RP_MUET = !RP_MUET; rpIconeSon(); rpAppliquerSon();
+});
 
 document.getElementById('bv-suite').addEventListener('click', allerAuFil);
 document.getElementById('bv-son').addEventListener('click', function(){
