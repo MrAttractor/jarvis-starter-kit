@@ -418,6 +418,72 @@
 
 ---
 
+### EXP-048 · Un contrôle vert parce qu'il avait cessé de regarder, quatre fois dans la même journée
+**BLOCAGE** · 19/09/2026 · latiss.net (ex-Beynaumania)
+
+**Situation.** Journée de refonte lourde sur la plateforme fan : passage à trois onglets, déménagement sur le domaine propre, nouvelle porte d'inscription. La recette automatique, écrite en juillet, couvrait contraste, débordement et zones de tap sur six résolutions et deux thèmes. Elle est restée verte tout du long.
+
+**Ce qui n'allait pas.** Quatre fois, un défaut réel est apparu **au moment précis où un contrôle a su regarder au bon endroit**, jamais avant.
+
+| Ce qui a changé | Ce que la recette a cessé de voir | Ce qu'elle a trouvé dès qu'elle a su regarder |
+|---|---|---|
+| Trois onglets | 53 textes mesurés → **34** : un onglet fermé n'affiche rien, et ce qui n'est pas affiché n'est pas mesuré | 3 textes du compte à rebours à 4,40:1 |
+| Jeton de gris corrigé surface par surface | rien : elle regardait la surface réparée | 3 autres textes à 4,45:1, dont les deux phrases de la carte qui convertit |
+| Nouvelle porte d'inscription | la recette n'ouvrait **jamais** ce formulaire : elle mesurait l'aperçu, puis passait au membre | 2 textes à 2,67:1 et 2,5:1, et un lien de 131 × 15 px |
+| Déménagement de domaine | elle pointait encore l'ancienne adresse, qu'elle aurait suivie en redirection sans rien dire | (attrapé avant) |
+
+**Ce qu'on a fait.** Étendu la couverture à chaque fois **avant** de corriger le défaut, pour que la mesure prouve la correction. La recette parcourt maintenant les trois onglets et le formulaire d'inscription, dans les deux thèmes, et vérifie que la liste des lieux est réellement servie : vide, personne ne pourrait s'inscrire, et rien d'autre ne le dirait.
+
+**Résultat.** De 34 à 97 textes mesurés côté fan. Sept défauts trouvés dans la journée, aucun par l'œil, sur une page travaillée une semaine durant.
+
+**Pourquoi.** Un contrôle automatique mesure **ce qui est affiché au moment où il regarde**. Toute refonte qui déplace du contenu derrière un onglet, un dépliant, un écran ou un domaine **réduit sa couverture sans réduire son verdict**. Il reste vert, et le vert veut dire deux choses indiscernables : « j'ai regardé et c'est bon », ou « je n'ai rien regardé ». Un compteur de ce qui a été mesuré distingue les deux ; un verdict seul, non.
+
+**Règle.** → R-87
+
+**Réutilisable pour.** Toute refonte de navigation, tout déplacement d'écran, tout déménagement d'adresse, sur n'importe quel dossier client qui porte une recette automatique.
+
+---
+
+### EXP-047 · Connaître le numéro d'un fan suffisait à prendre son compte
+**DÉBLOCAGE** · 19/09/2026 · latiss.net (ex-Beynaumania)
+
+**Situation.** L'inscription ne demandait qu'un prénom. Le serveur savait pourtant reconnaître un numéro WhatsApp déjà enregistré pour éviter un doublon : il renvoyait alors le compte existant. Décision du jour : rendre le numéro obligatoire à la porte, pour tuer les doublons et constituer une base de contacts joignables.
+
+**Ce qui n'allait pas.** Mac Arthur a posé la question qui tue : *« Je connais le numéro de Cynthia. Je rentre son numéro, et hop je suis connecté avec son compte ? »* Oui — et le serveur ne renvoyait pas une session, il renvoyait le **jeton d'accès personnel**, décrit dans le code lui-même comme « une clé porteuse : qui l'a, entre ». Deux lignes plus haut, un commentaire affirmait que ce dossier n'est jamais appliqué à quelqu'un d'autre : il décrivait une règle que le code ne tenait pas.
+
+Le défaut **dormait**, puisque aucun écran n'envoyait de numéro. Ajouter le champ l'aurait réveillé : n'importe qui aurait pris n'importe quel compte en tapant un seul champ dans une page web.
+
+**Ce qu'on a fait.** Refermé aux **deux** endroits — la vérification d'avance et le rattrapage quand deux inscriptions arrivent au même instant. Le serveur répond « ce numéro est déjà inscrit » et rien d'autre. Vérifié en production avec le vrai numéro d'un membre : aucun dossier renvoyé.
+
+**Résultat.** Le champ a pu être ajouté le jour même sans ouvrir la porte. La vraie serrure — identifiant plus mot de passe choisi — est planifiée au moment où le fan a quelque chose à perdre : badge Ambassadeur ou achat.
+
+**Pourquoi.** Un numéro de téléphone, une adresse email, un prénom sont des **identifiants** : ils désignent quelqu'un et circulent. Une **clé** est un secret que seul l'intéressé connaît. Confondre les deux ne se voit pas tant que personne ne saisit l'identifiant d'un autre, et devient un vol de compte le jour où on ajoute le champ qui le permet. Le défaut n'était pas dans le code du jour, il attendait dans celui d'avant.
+
+**Règle.** → R-88
+
+**Réutilisable pour.** Toute reprise de compte par téléphone ou email, tout « retrouver mon accès », tout lien de connexion sans mot de passe, sur n'importe quel produit de l'écosystème.
+
+---
+
+### EXP-046 · Un gris calé au centième près sur une seule surface
+**DÉBLOCAGE** · 19/09/2026 · latiss.net (ex-Beynaumania)
+
+**Situation.** Le jeton `--dim`, le gris des textes atténués, rendait 4,53:1 sur le fond de la page — juste au-dessus du seuil de 4,5.
+
+**Ce qui n'allait pas.** Posé sur une carte un peu plus claire, le même jeton tombait à 4,40:1. Sur une carte teintée de rouge, à 4,45:1. Soit **sous le seuil partout sauf à l'endroit où il avait été calé**. Corrigé une première fois carte par carte, il est ressorti deux heures plus tard sur trois autres textes, dont les deux phrases de la carte qui transforme un visiteur en membre.
+
+**Ce qu'on a fait.** Relevé le jeton à la racine plutôt que surface par surface, et mesuré sur les trois fonds : 4,95 sur la page, 4,94 sur la carte rouge, 4,84 sur la carte claire. Même famille de défaut le soir même sur l'écran d'entrée, qui reste noir dans les deux thèmes : les jetons du thème clair y mentaient sur leur fond, et le rouge sombre y tombait à 2,67:1.
+
+**Résultat.** Deux écrans entiers repassés au vert. Aucun de ces textes n'avait été signalé à l'œil.
+
+**Pourquoi.** Un jeton de couleur n'a pas de contraste : il en a un **par fond**. Le valider sur une seule surface, et au centième près, produit un jeton qui n'est pas calé mais chanceux. Et un jeton de thème ne vaut que sur une surface qui **change** de thème : posé sur une photo sous voile sombre, qui reste noire dans les deux modes, il désigne une couleur pensée pour un fond qui n'existe pas là.
+
+**Règle.** → R-89
+
+**Réutilisable pour.** Toute charte à jetons, tout passage clair/sombre, tout écran à image de fond, sur n'importe quel livrable.
+
+---
+
 ## SECTION D · PILOTAGE ET DISCIPLINE
 
 ### EXP-025 · L'automatisation morte que personne n'a vue

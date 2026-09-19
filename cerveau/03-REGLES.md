@@ -277,6 +277,27 @@
 **Vérification** : piloter le formulaire de bout en bout dans un navigateur, réseau intercepté, et constater que la requête part avec tous ses champs. Un clic manuel qui « semble marcher » ne prouve pas qu'une requête est partie.
 **Assists** : tout parcours du produit qui attend une réponse serveur porte une issue visible en cas d'échec.
 
+### R-87 · Une recette ne se plaint jamais de ce qu'elle a cessé de voir : elle compte ce qu'elle mesure, et le compte se relit après chaque refonte
+**Origine** : EXP-048, quatre fois dans la journée du 19/09/2026.
+**Application** : toute recette automatique affiche **le nombre d'éléments mesurés**, pas seulement son verdict. Ce nombre se relit après toute refonte qui déplace du contenu : onglet, dépliant, écran, domaine. Une chute du compte est un échec, même si tout le reste est vert. Et on étend la couverture **avant** de corriger le défaut qu'elle révèle, pour que la mesure prouve la correction.
+**Assists** : tout contrôle automatique du produit rend un couple (verdict, volume mesuré), jamais un verdict seul.
+
+---
+
+### R-88 · Un identifiant n'est pas une clé : un numéro, un email ou un prénom désignent, ils ne prouvent rien
+**Origine** : EXP-047, trouvée par Mac Arthur le 19/09/2026.
+**Application** : aucun chemin ne rend un compte, une session ou un jeton sur la seule présentation d'un identifiant — numéro, email, prénom, code de parrainage, ou n'importe quelle combinaison d'identifiants. Reconnaître quelqu'un et le laisser entrer sont deux actes différents. Pour entrer, il faut un secret choisi par l'intéressé, ou une preuve de possession (code à usage unique). Et quand on refuse, on refuse **sans rien renvoyer** : un message, jamais un dossier.
+**Vérification** : envoyer l'identifiant d'un autre utilisateur au serveur, en production, et constater qu'aucune donnée ne revient. Un formulaire qui ne propose pas le champ ne prouve rien : le défaut dort, il ne disparaît pas.
+**Assists** : toute reprise d'accès du produit passe par un secret ou une preuve de possession, jamais par un identifiant seul.
+
+---
+
+### R-89 · Un jeton de couleur se valide sur CHAQUE fond où on le pose, et un jeton de thème ne vaut que sur une surface qui change de thème
+**Origine** : EXP-046, 19/09/2026.
+**Application** : un jeton de texte atténué se mesure sur tous les fonds du produit, pas sur le fond de la page. S'il ne passe qu'à un seul endroit, et au centième près, il n'est pas calé : il est chanceux, et il tombera ailleurs. On corrige **à la racine**, pas surface par surface. Cas particulier à chercher systématiquement : une surface qui ne bascule pas avec le thème — image de fond, photo sous voile, écran d'entrée. Les jetons du thème clair y désignent un fond qui n'existe pas, et il faut y redéclarer les jetons sombres.
+**Vérification** : au script, jamais à l'œil. Sept défauts de ce type le 19/09, zéro signalé à l'œil sur une page travaillée une semaine.
+**Assists** : la charte du produit livre ses jetons avec le contraste mesuré sur chaque surface où ils servent.
+
 ---
 
 ## D · PILOTAGE ET DISCIPLINE
