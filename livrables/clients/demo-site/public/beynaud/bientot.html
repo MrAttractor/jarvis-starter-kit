@@ -104,7 +104,7 @@ body{background:var(--noir);color:#fff;font-family:system-ui,-apple-system,'Sego
                   incrustes, rien a voir avec l'artiste malgre son titre)
    `depart` compte autant que la video : les premieres secondes d'un clip sont
    presque toujours un logo ou un plan large. */
-var CLIP = { video: 'dJgduuEnnR8', depart: 68 };
+var CLIP = { video: 'dJgduuEnnR8', depart: 30 };
 
 (function(){
   var clip = document.getElementById('clip');
@@ -121,6 +121,25 @@ var CLIP = { video: 'dJgduuEnnR8', depart: 68 };
           + '&cc_load_policy=0&fs=0&start=' + CLIP.depart
           + '&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
     hote.appendChild(f);
+
+    /* Couper les sous-titres, pour de bon.
+       Le parametre cc_load_policy=0 de l'adresse ne fait qu'exprimer une
+       preference : un visiteur qui a active les sous-titres dans son compte
+       YouTube les voit quand meme, en travers du clip et du nom. La seule
+       consigne que le lecteur respecte est unloadModule, envoyee par message.
+       On l'envoie plusieurs fois pendant les premieres secondes : le lecteur
+       n'accepte les commandes qu'une fois pret, et il ne previent pas. */
+    var coupes = 0;
+    var couper = setInterval(function(){
+      try{
+        ['captions','cc'].forEach(function(m){
+          f.contentWindow.postMessage(JSON.stringify({
+            event:'command', func:'unloadModule', args:[m]
+          }), '*');
+        });
+      }catch(_){}
+      if(++coupes > 12) clearInterval(couper);   // ~6 secondes, puis on lache
+    }, 500);
     // On ne devoile qu'une fois la lecture lancee, sinon le cadre noir de
     // YouTube passe devant la photo.
     setTimeout(function(){ clip.classList.add('joue'); }, 1400);
