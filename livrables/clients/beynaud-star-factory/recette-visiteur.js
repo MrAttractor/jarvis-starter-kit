@@ -30,7 +30,8 @@ const http = require('http'), fs = require('fs'), path = require('path');
 
 const RACINE = process.argv[2] || null;
 const PORT = 8787;
-const EN_LIGNE = 'https://demo.agenceattractor.com/beynaud/fan';
+// L'application a demenage le 19/09/2026.
+const EN_LIGNE = 'https://latiss.net/fan';
 
 const TYPES = {'.html':'text/html; charset=utf-8','.js':'text/javascript','.json':'application/json',
   '.webmanifest':'application/manifest+json','.jpg':'image/jpeg','.webp':'image/webp','.png':'image/png'};
@@ -40,7 +41,7 @@ const TYPES = {'.html':'text/html; charset=utf-8','.js':'text/javascript','.json
 function servir(racine){
   return http.createServer((req,res)=>{
     let u = decodeURIComponent(req.url.split('?')[0]);
-    if(u === '/beynaud/fan') u = '/beynaud/fan.html';
+    if(u === '/fan') u = '/fan.html';
     const f = path.join(racine, u);
     fs.readFile(f,(e,d)=>{
       if(e){ res.writeHead(404); return res.end('404'); }
@@ -52,7 +53,7 @@ function servir(racine){
 
 (async ()=>{
   let serveur = null, url = EN_LIGNE;
-  if(RACINE){ serveur = servir(RACINE); await new Promise(r=>serveur.listen(PORT,r)); url = `http://localhost:${PORT}/beynaud/fan`; }
+  if(RACINE){ serveur = servir(RACINE); await new Promise(r=>serveur.listen(PORT,r)); url = `http://localhost:${PORT}/fan`; }
   console.log('Recette sur ' + url + '\n');
 
   const nav = await chromium.launch();

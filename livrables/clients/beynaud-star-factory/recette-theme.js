@@ -33,7 +33,9 @@ const http = require('http'), fs = require('fs'), path = require('path');
 
 const RACINE = process.argv[2] || null;
 const PORT = 8788;
-const EN_LIGNE = 'https://demo.agenceattractor.com/beynaud';
+// L'application a demenage le 19/09/2026. Une recette laissee sur
+// l'ancienne adresse suivrait la redirection sans rien dire.
+const EN_LIGNE = 'https://latiss.net';
 const LARGEURS = [375, 390, 414, 768, 1024, 1440];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.json': 'application/json',
@@ -42,7 +44,9 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '
 function servir(racine) {
   return http.createServer((req, res) => {
     let u = decodeURIComponent(req.url.split('?')[0]);
-    if (/^\/beynaud\/(fan|app)$/.test(u)) u += '.html';
+    // Meme regle d'adresse propre que Cloudflare : /fan sert fan.html.
+    if (/^\/(fan|app|rejoindre)$/.test(u)) u += '.html';
+    if (u === '/') u = '/index.html';
     const f = path.join(racine, u);
     fs.readFile(f, (e, d) => {
       if (e) { res.writeHead(404); return res.end('404'); }
@@ -321,7 +325,7 @@ function trierContrastes() {
   if (RACINE) {
     serveur = servir(RACINE);
     await new Promise(r => serveur.listen(PORT, r));
-    base = 'http://localhost:' + PORT + '/beynaud';
+    base = 'http://localhost:' + PORT;
   }
   console.log('Recette clair / sombre sur ' + base + '\n');
 
