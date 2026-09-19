@@ -256,6 +256,15 @@ body.bienvenue-on{overflow:hidden;}
 .btn-join:active{background:var(--rouge-vif);}
 .btn-join:disabled{opacity:.55;}
 .join-alt{text-align:center;margin-top:16px;font-size:12px;color:var(--dim);}
+/* Le bandeau du retour, montre a qui ouvre l'application installee sans y
+   avoir de compte. Il passe AVANT le formulaire parce que cette personne-la
+   n'a presque jamais besoin de s'inscrire : elle a deja un compte ailleurs. */
+.j-revenir{background:var(--n3);border:1px solid var(--or-dim);border-radius:14px;
+  padding:14px 16px;margin-bottom:18px;}
+.j-revenir-t{font-size:13px;font-weight:800;margin-bottom:4px;}
+.j-revenir-d{font-size:12px;color:var(--dim);line-height:1.5;margin-bottom:11px;}
+.j-revenir-b{width:100%;min-height:46px;background:var(--or);color:#141414;border-radius:11px;
+  font-size:13px;font-weight:800;letter-spacing:.4px;}
 .j-retour{margin-top:8px;min-height:44px;padding:0 14px;background:none;
   color:var(--rouge-texte);font-size:13px;font-weight:700;text-decoration:underline;
   text-underline-offset:3px;}
@@ -921,13 +930,16 @@ const MOTS = {
     parrain: 'Tu entres sur l\'invitation d\'un membre de latiss.net.',
     champ: 'Ton prénom',
     exemple: 'Ex : Awa',
-    numero: 'Ton numero WhatsApp',
+    numero: 'Ton numéro WhatsApp',
     numero_exemple: '07 09 54 33 55',
-    lieu: 'Tu es ou ?',
+    lieu: 'Tu es où ?',
     lieu_choisir: 'Choisis ton lieu',
-    numero_manquant: 'Ton numero WhatsApp, stp.',
-    lieu_manquant: 'Dis-nous ou tu es.',
+    numero_manquant: 'Ton numéro WhatsApp, stp.',
+    lieu_manquant: 'Dis-nous où tu es.',
     retrouver: 'Retrouver mon espace',
+    installee_titre: 'Tu es déjà membre ?',
+    installee_desc: 'Ton compte est resté dans ton navigateur. Retrouve-le avec ton numéro WhatsApp, tu gardes ton grade et tes filleuls.',
+    installee_bouton: 'Retrouver mon compte',
     bouton: 'Entrer sur latiss.net',
     prenom_manquant: 'Ton prénom, stp.',
     deja_membre: 'Déjà membre ?',
@@ -1130,6 +1142,11 @@ remplirMots(document);
   <div id="view-join" class="join-hero">
     <div class="join-bg"></div><div class="join-ov"></div>
     <div class="join-c">
+      <div class="j-revenir hidden" id="j-revenir">
+        <div class="j-revenir-t" data-mot="entree.installee_titre"></div>
+        <div class="j-revenir-d" data-mot="entree.installee_desc"></div>
+        <button class="j-revenir-b" type="button" onclick="recover()" data-mot="entree.installee_bouton"></button>
+      </div>
       <div class="eyebrow"><span class="pulse"></span><span data-mot="entree.surtitre"></span></div>
       <div class="join-title"><span class="r sig" data-mot="entree.titre"></span></div>
       <p class="join-sub" data-mot="entree.sous_titre"></p>
@@ -2017,6 +2034,13 @@ async function supprimerCompte(){
 function ouvrirInscription(){
   document.getElementById('view-member').classList.add('hidden');
   document.getElementById('view-join').classList.remove('hidden');
+  /* Quelqu’un qui ouvre l application INSTALLEE sans y avoir de compte l’a
+     presque toujours installee DEPUIS son espace de membre : il ne vient pas
+     s’inscrire, il revient. Sans ce bandeau il remplit le formulaire et se
+     fabrique un deuxieme compte, ce qui est arrive quatre fois a Mac Arthur
+     entre le 13 et le 19/09. */
+  const revenir = document.getElementById('j-revenir');
+  if(revenir) revenir.classList.toggle('hidden', !lanceeDepuisEcranAccueil());
   window.scrollTo(0,0);
 }
 function porte(){
@@ -3217,6 +3241,18 @@ const INDICATIFS = {
   const ind = document.getElementById('j-ind');
   if(ind) ind.addEventListener('input', function(){ ind.dataset.modifie = '1'; });
 })();
+
+/* L'application est-elle lancee depuis l'ecran d'accueil ?
+   `display-mode: standalone` vaut pour Android et pour les navigateurs
+   recents ; `navigator.standalone` est la reponse d'iPhone, qui ne connait
+   pas encore l'autre. On interroge les deux. */
+function lanceeDepuisEcranAccueil(){
+  try{
+    if(window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return true;
+    if(window.navigator && window.navigator.standalone === true) return true;
+  }catch(_){}
+  return false;
+}
 
 const bienvenueEl = document.getElementById('bienvenue');
 

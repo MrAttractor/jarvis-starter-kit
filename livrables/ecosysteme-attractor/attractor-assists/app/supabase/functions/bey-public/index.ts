@@ -210,7 +210,7 @@ Deno.serve(async (req) => {
          on ne vend pas un billet a un prenom. */
       const wa = normWa(d.whatsapp);
       if (!waValide(wa)) {
-        return json({ ok: false, error: "Ton numero WhatsApp, avec l'indicatif du pays." });
+        return json({ ok: false, error: "Ton numéro WhatsApp, avec l'indicatif du pays." });
       }
 
       const lieu = String(d.lieu ?? "").trim();
@@ -234,7 +234,7 @@ Deno.serve(async (req) => {
       const ex = await (await sb(`bey_membres?whatsapp=eq.${encodeURIComponent(wa)}&select=id`)).json();
       if (Array.isArray(ex) && ex.length) {
         return json({ ok: false, code: "deja_inscrit",
-          error: "Ce numero est deja inscrit. Utilise « Retrouver mon espace »." });
+          error: "Ce numéro est déjà inscrit. Utilise « Retrouver mon espace »." });
       }
 
       const ref = d.ref ? String(d.ref).toUpperCase().replace(/[^A-Z0-9]/g, "") : null;
@@ -254,7 +254,7 @@ Deno.serve(async (req) => {
            pour la meme raison qu'au-dessus. */
         if (t.includes("whatsapp")) {
           return json({ ok: false, code: "deja_inscrit",
-            error: "Ce numero est deja inscrit. Utilise « Retrouver mon espace »." });
+            error: "Ce numéro est déjà inscrit. Utilise « Retrouver mon espace »." });
         }
       }
       if (!inserted) return json({ ok: false, error: "inscription impossible" });
