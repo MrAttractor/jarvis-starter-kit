@@ -3,6 +3,13 @@
 > Ce dossier est l'**entrée unique** de l'avocat du diable. Il est gelé avant la relecture :
 > on ne le modifie plus tant que le contre-audit n'est pas rendu.
 
+**État au 19/09/2026 :** la décision est **appliquée et en service**. Mac Arthur a validé les
+trois onglets et fait supprimer la version à fil unique. Les trouvailles 1, 2, 5 et 7 sont
+traitées (grade vérifié côté serveur, droit d’accès séparé du grade, onglets sans changement
+de chemin, reels bâtis sur l’existant). **La trouvaille 3 reste ouverte et bloquante** : le
+chemin d’écriture n’est toujours ni caché ni mesuré au-delà de 12 appels simultanés.
+Verdict et Motif du tableau restent à remplir par Mac Arthur.
+
 **Date de gel :** 2026-09-18
 **Auteur :** Mac Arthur
 **Portée :** l'espace fan de la plateforme Latiss (ex-Beynaumania), `public/beynaud/fan.html`

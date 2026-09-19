@@ -505,12 +505,50 @@ function trierContrastes() {
       if (!ouvert.barre) echecs.push('la barre vers le grade ne se peint pas dans la carte ouverte');
       if (ouvert.chiffres !== 3) echecs.push('attendu 3 chiffres dans la carte, trouvé ' + ouvert.chiffres);
     }
-    await auditer(page, 'fan · membre', 'clair', largeur);
+    /* Les trois onglets, un par un, dans les deux themes. Un onglet ferme
+       n'affiche rien, et ce qui n'est pas affiche n'est pas mesure : sans
+       cette boucle la recette ne verrait qu'un tiers de l'application. */
+    const ONGLETS = ['club', 'latiss', 'live'];
+    const allerA = async (pg, nom) => {
+      await pg.evaluate((n) => { if (typeof allerOnglet === 'function') allerOnglet(n); }, nom);
+      await pg.waitForTimeout(400);
+    };
+
+    for (const onglet of ONGLETS) {
+      await allerA(page, onglet);
+      await auditer(page, 'fan · membre · ' + onglet, 'clair', largeur);
+    }
+    await allerA(page, 'club');
     if (largeur === 390) await page.screenshot({ path: path.join(__dirname, 'recette-theme-fan-membre-clair.png'), fullPage: true });
 
     await page.click('#bascule-theme');
     await page.waitForTimeout(400);
-    await auditer(page, 'fan · membre', 'sombre', largeur);
+    for (const onglet of ONGLETS) {
+      await allerA(page, onglet);
+      await auditer(page, 'fan · membre · ' + onglet, 'sombre', largeur);
+    }
+
+    /* La barre des onglets elle-meme : trois zones de tap, et trois libelles
+       dont on a deja vu qu'ils pouvaient devenir invisibles en mode clair
+       quand le fond de la barre etait ecrit en dur. */
+    if (largeur === 390) {
+      const barre = await page.evaluate(() => {
+        const b = document.getElementById('barre-ong');
+        if (!b) return null;
+        return [...b.querySelectorAll('button')].map((x) => {
+          const r = x.getBoundingClientRect();
+          return { texte: x.innerText.trim(), l: Math.round(r.width), h: Math.round(r.height) };
+        });
+      });
+      if (!barre) echecs.push('la barre des trois onglets est absente');
+      else {
+        if (barre.length !== 3) echecs.push('attendu 3 onglets, trouve ' + barre.length);
+        barre.forEach((o) => {
+          if (o.h < 44) echecs.push('onglet « ' + o.texte + ' » : ' + o.h + ' px de haut, seuil 44');
+          if (!o.texte) echecs.push('un onglet de la barre n\'a pas de libelle');
+        });
+      }
+    }
 
     await ctx.close();
   }

@@ -2,6 +2,10 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8"/>
+<!-- VERSION DE TRAVAIL, pas l'espace fan en service.
+     La refonte a trois onglets s'essaie ICI, sur une adresse que personne ne
+     connait, pendant que /beynaud/fan continue de servir les membres.
+     On ne fait pas decouvrir une refonte a de vrais fans par surprise. -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>latiss.net — Serge Beynaud</title>
 <meta name="theme-color" content="#070707" id="meta-theme"/>
@@ -297,7 +301,82 @@ body.splash-on{overflow:hidden;}
 .m-hello{font-family:var(--bebas);font-size:40px;line-height:.95;letter-spacing:1px;}
 .m-hello .r{color:var(--rouge);}
 .m-hello-sub{font-size:13px;color:rgba(255,255,255,.5);margin-top:6px;}
-.scroll{padding:4px 20px 60px;}
+/* La place pour la barre du bas, plus l'encoche du telephone. Sans ca, le
+   dernier post se cache derriere la barre et personne ne le lit. */
+.scroll{padding:4px 20px calc(78px + env(safe-area-inset-bottom,0px));}
+
+/* ═══════════ LES TROIS ONGLETS ═══════════
+   La bascule se fait EN MEMOIRE : ni le chemin ni la query string ne bougent.
+   Ce n'est pas un detail d'implementation, c'est une contrainte. ambLink()
+   fabrique le lien de parrainage a partir de location.pathname, et les
+   Ambassadeurs en ont deja partage sur WhatsApp : un routage par chemin les
+   casserait tous. Trouvaille n°5 du contre-audit du 18/09. */
+/* Le fond passe par un JETON, pas par une couleur ecrite en dur. La premiere
+   version portait rgba(13,13,13,.97) : en mode clair, le texte devenait sombre
+   et le fond restait noir, soit du sombre sur du sombre, contraste 1:1. Les
+   libelles des trois onglets etaient purement invisibles. Trouve par
+   recette-theme.js le 19/09, pas a l'oeil. */
+.barre-ong{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;
+  background:var(--n2);backdrop-filter:blur(14px);
+  border-top:1px solid var(--faint);padding-bottom:env(safe-area-inset-bottom,0px);}
+.ong{flex:1;min-height:64px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:4px;background:none;color:var(--dim);
+  font-size:10.5px;font-weight:700;letter-spacing:.4px;position:relative;}
+.ong svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;}
+.ong.on{color:var(--blanc);}
+/* L'onglet du centre porte un bouton plein. Sans lui il se lit comme « le
+   deuxieme des trois » alors qu'il est l'accueil. */
+.ong.centre .ong-rond{width:46px;height:46px;border-radius:15px;background:var(--n4);
+  border:1px solid var(--faint);display:flex;align-items:center;justify-content:center;
+  margin-top:-10px;transition:background .2s,border-color .2s;}
+/* L'icone du centre devient blanche quand le fond passe au rouge, dans les deux
+   themes : sinon en clair elle reste sombre sur du rouge. */
+.ong.centre.on .ong-rond svg{stroke:#fff;}
+.ong.centre.on .ong-rond{background:var(--rouge);border-color:transparent;
+  box-shadow:0 6px 20px var(--rouge-glow);}
+.ong-pt{position:absolute;top:11px;right:calc(50% - 17px);width:7px;height:7px;
+  border-radius:50%;background:var(--rouge-vif);}
+
+/* ═══════════ LA RANGEE DE REELS ═══════════
+   Elle se construit sur les contenus DEJA en base dont l'adresse contient
+   « /shorts/ », que le lecteur sait deja reconnaitre comme verticaux. Aucun
+   nouveau type de contenu, aucune migration, aucun champ de plus pour Serge :
+   c'est ce qui garde la marche arriere a une demi-journee (trouvaille n°7).
+
+   Et les vignettes viennent de YouTube, hors de notre fonction Cloudflare. Huit
+   reels ajouteraient 200 a 280 Ko a l'ecran d'ouverture, ce qui reprendrait d'une
+   main le gain des photos (trouvaille n°6). On en charge donc TROIS tout de
+   suite, et les suivantes au defilement. */
+.reels{display:flex;gap:10px;overflow-x:auto;padding:2px 0 16px;margin:0 -20px;
+  padding-left:20px;padding-right:20px;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.reels::-webkit-scrollbar{display:none;}
+.reel{flex:0 0 108px;height:192px;border-radius:14px;scroll-snap-align:start;
+  position:relative;overflow:hidden;background:var(--n4);
+  border:1px solid var(--faint);display:flex;align-items:flex-end;padding:10px;}
+/* `cover` fait le travail : quelle que soit la forme de l'image d'origine, elle
+   remplit la carte et c'est le debord qui est coupe, jamais l'inverse. C'est ce
+   qui rend les vignettes UNIFORMES : sans lui, une image 4/3 se pose dans un
+   cadre vertical en laissant du vide en haut et en bas, et une carte sur deux
+   parait cassee. */
+.reel-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  object-position:center;display:block;}
+.reel::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(0deg,rgba(7,7,7,.94) 0%,rgba(7,7,7,.55) 38%,transparent 72%);}
+/* Deux lignes, pas trois : a la troisieme le titre mangeait l'image. */
+.reel-t{position:relative;z-index:2;font-size:11px;font-weight:700;line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.reels-titre{font-size:11px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--dim);padding:2px 0 10px;}
+
+/* Le Live au repos : il porte la date et les rediffusions, donc il n'est jamais
+   vide. Un onglet eteint pendant deux mois et demi ne dit pas « pas de live »,
+   il dit « c'est casse ». */
+.compte{display:flex;gap:9px;margin:14px 0 4px;}
+.compte div{flex:1;background:var(--n4);border-radius:12px;padding:11px 6px;text-align:center;}
+.compte b{display:block;font-family:var(--bebas);font-size:27px;line-height:1;font-weight:400;}
+.compte span{font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim);}
 .card{background:var(--n3);border:1px solid var(--faint);border-radius:18px;padding:18px;margin-bottom:14px;}
 .sec-title{font-family:var(--bebas);font-size:24px;letter-spacing:1px;margin:22px 0 12px;}
 
@@ -378,6 +457,14 @@ body.splash-on{overflow:hidden;}
    au lieu d'en eclaircir un seul et de desaccorder la carte. Le mode clair,
    lui, est deja a 5,79:1 et n'a pas besoin d'etre touche. */
 :root:not([data-theme="clair"]) .amb-card{--dim:rgba(255,255,255,.52);}
+/* Meme motif pour le compte a rebours du direct. Le jeton --dim est calibre
+   sur le fond de la page (#0D0D0D, 4,53:1, tout juste au-dessus du seuil).
+   Pose sur une carte plus claire (--n4), il tombe a 4,40:1 et « jours »,
+   « heures », « min » passent sous le seuil en mode sombre. Trouve par la
+   recette le 19/09, jamais par l’oeil : ces trois mots font 9,5 px.
+   Regle generale : un jeton de texte attenue se revalide sur CHAQUE fond ou
+   on le pose, il ne se transporte pas. */
+:root:not([data-theme="clair"]) .compte div{--dim:rgba(255,255,255,.52);}
 .amb-h{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
 .amb-h svg{width:20px;height:20px;stroke:var(--or);fill:none;stroke-width:2;}
 .amb-title{font-size:15px;font-weight:800;}
@@ -1013,7 +1100,14 @@ remplirMots(document);
         </button>
       </div>
 
-      <div id="live-section"></div>
+      <!-- ═══ ONGLET LATISS — l'ecran par defaut ═══ -->
+      <section class="panneau" id="p-latiss">
+        <div class="reels hidden" id="reels"></div>
+        <div id="fil"></div>
+      </section>
+
+      <!-- ═══ ONGLET LE CLUB ═══ -->
+      <section class="panneau hidden" id="p-club">
       <div class="card amb-card" id="amb-card">
         <button class="amb-tete" id="amb-tete" type="button" aria-expanded="false" aria-controls="amb-corps">
           <svg class="et" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
@@ -1034,12 +1128,37 @@ remplirMots(document);
         </div>
       </div>
 
-      <div id="fil"></div>
+      <div id="club-sondages"></div>
 
       <div class="zone-danger">
         <button class="lien-danger" id="btn-supprimer" data-mot="membre.effacer"></button>
       </div>
+      </section>
+
+      <!-- ═══ ONGLET LIVE — jamais vide, jamais grise ═══ -->
+      <section class="panneau hidden" id="p-live">
+        <div id="live-section"></div>
+        <div id="live-repos"></div>
+      </section>
     </div>
+
+    <!-- La barre des trois onglets. Latiss au centre, plus fort que ses voisins :
+         sans ca il se lit comme « le deuxieme des trois » alors qu'il est
+         l'accueil. -->
+    <nav class="barre-ong hidden" id="barre-ong">
+      <button class="ong" data-ong="club" type="button" aria-label="Le Club">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15.1,8.3 22,9.3 17,14.1 18.2,21 12,17.8 5.8,21 7,14.1 2,9.3 8.9,8.3"/></svg>
+        <span>Le Club</span><span class="ong-pt hidden" id="ong-pt-club"></span>
+      </button>
+      <button class="ong centre" data-ong="latiss" type="button" aria-label="Latiss">
+        <span class="ong-rond"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></span>
+        <span>Latiss</span>
+      </button>
+      <button class="ong" data-ong="live" type="button" aria-label="Live">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M6.3 6.3a8 8 0 0 0 0 11.4M17.7 6.3a8 8 0 0 1 0 11.4M3.5 3.5a12 12 0 0 0 0 17M20.5 3.5a12 12 0 0 1 0 17"/></svg>
+        <span>Live</span><span class="ong-pt hidden" id="ong-pt-live"></span>
+      </button>
+    </nav>
   </div>
 
 </div>
@@ -1206,6 +1325,10 @@ function montrer(){ for(const id of arguments){ const n=document.getElementById(
 /* Vrai membre : son espace, avec son nom et ses outils. */
 function peindreCoquille(m){
   APERCU=false; ME=m;
+  /* La barre des trois onglets n'existe que pour un membre. On ouvre toujours
+     sur Latiss : c'est l'accueil, meme s'il est au centre et pas a gauche. */
+  document.getElementById('barre-ong').classList.remove('hidden');
+  allerOnglet('latiss', true);
   document.getElementById('view-join').classList.add('hidden');
   document.getElementById('view-member').classList.remove('hidden');
   
@@ -1243,6 +1366,10 @@ function peindreApercu(){
   document.getElementById('cloche').classList.add('hidden');
   document.getElementById('cloche-h').classList.add('hidden');
   document.getElementById('rappel-cloche').classList.add('hidden');
+  /* Pas de barre d'onglets pour un visiteur : Le Club et le Live n'ont rien a
+     lui montrer, et trois onglets dont deux vides donnent l'impression d'une
+     application cassee au moment precis ou on cherche a le convaincre. */
+  document.getElementById('barre-ong').classList.add('hidden');
   // Le concours vit DANS la carte ambassadeur, deja masquee juste au-dessus.
   // Cette ligne visait un id 'conc' qui n'a jamais existe dans la page : elle
   // levait une exception et emportait tout le demarrage avec elle. R-83.
@@ -2267,15 +2394,100 @@ function renderFil(){
     if(APERCU) box.appendChild(carteEntree());
     return;
   }
+  /* Les sondages quittent le fil pour Le Club, ou Mac Arthur les a places le
+     18/09. C'est un tri a l'AFFICHAGE, pas en base : le serveur continue de tout
+     renvoyer dans un seul fil, et rien ne change cote Serge. */
+  const pourLeFil = FIL.filter(p => p.type !== 'sondage');
+  const sondages  = FIL.filter(p => p.type === 'sondage');
+
   const frag = document.createDocumentFragment();
-  FIL.forEach(function(p, i){
+  pourLeFil.forEach(function(p, i){
     const art = construirePost(p);
     // Le dernier post de l'apercu s'estompe : on sent que le fil continue.
-    if(APERCU && i === FIL.length - 1) art.classList.add('fondu');
+    if(APERCU && i === pourLeFil.length - 1) art.classList.add('fondu');
     frag.appendChild(art);
   });
   box.appendChild(frag);
   if(APERCU) box.appendChild(carteEntree());
+
+  renderSondages(sondages);
+  renderReels(pourLeFil);
+  marquerOnglets(sondages.length);
+}
+
+/* Les sondages, dans Le Club. */
+function renderSondages(liste){
+  const box = document.getElementById('club-sondages');
+  if(!box) return;
+  box.innerHTML = '';
+  if(!liste.length) return;
+  const t = el('div', 'reels-titre', 'Latiss te demande');
+  box.appendChild(t);
+  liste.forEach(p => box.appendChild(construirePost(p)));
+}
+
+/* La rangee de reels, batie sur ce qui EXISTE deja.
+   Aucun nouveau type de contenu : on reconnait un format vertical a son
+   adresse, exactement comme le lecteur le fait depuis le 17/09. Trois vignettes
+   chargees tout de suite, les suivantes au defilement : elles viennent de
+   YouTube et echappent a notre fonction Cloudflare, donc chacune coute. */
+function renderReels(liste){
+  const box = document.getElementById('reels');
+  if(!box) return;
+  box.innerHTML = '';
+  const reels = liste.filter(p =>
+    p.type === 'contenu' && !p.verrouille && /\/shorts\//i.test(String(p.youtube_url || '')));
+  if(!reels.length){ box.classList.add('hidden'); return; }
+  box.classList.remove('hidden');
+
+  reels.slice(0, 12).forEach(function(p, i){
+    const c = el('div', 'reel');
+    const id = idYoutube(p.youtube_url);
+
+    if(p.cover_url || id){
+      const img = document.createElement('img');
+      img.className = 'reel-img';
+      img.alt = '';
+      img.decoding = 'async';
+      /* Les trois premieres arrivent tout de suite, les suivantes quand on
+         defile jusqu'a elles. C'est le navigateur qui s'en charge, pas nous :
+         moins de code a tenir, et il le fait mieux dans un defilement
+         horizontal. */
+      img.loading = i < 3 ? 'eager' : 'lazy';
+
+      if(p.cover_url){
+        img.src = p.cover_url;
+      } else {
+        /* `hqdefault` renvoie une image 4/3 avec des bandes noires INCRUSTEES :
+           recadree dans une carte verticale, une vignette sur deux parait vide.
+           `maxresdefault` est en 16/9 sans bande, mais elle n'existe pas pour
+           toutes les videos. On la tente, et on retombe sur `mqdefault`, qui est
+           elle aussi sans bande et TOUJOURS presente. */
+        img.src = 'https://i.ytimg.com/vi/' + id + '/maxresdefault.jpg';
+        img.addEventListener('error', function repli(){
+          img.removeEventListener('error', repli);
+          img.src = 'https://i.ytimg.com/vi/' + id + '/mqdefault.jpg';
+        });
+      }
+      c.appendChild(img);
+    }
+
+    c.appendChild(el('div', 'reel-t', p.titre || ''));
+    c.setAttribute('role', 'button');
+    c.setAttribute('aria-label', 'Voir ' + (p.titre || 'la vidéo'));
+    c.addEventListener('click', () => {
+      const cible = document.getElementById('post-' + cle(p));
+      if(cible) cible.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    });
+    box.appendChild(c);
+  });
+}
+
+/* Les pastilles des onglets : elles disent qu'il y a quelque chose a voir
+   ailleurs. Elles ne reclament pas, elles informent. */
+function marquerOnglets(nbSondages){
+  const s = document.getElementById('ong-pt-club');
+  if(s) s.classList.toggle('hidden', !nbSondages);
 }
 
 /* Le coeur se met a jour sur place, jamais en redessinant tout le fil : sur un
@@ -2374,10 +2586,101 @@ async function voter(p, idx){
 }
 
 /* ---------- Le live reste epingle en tete, ce n'est pas un post ---------- */
+/* ═══════════ LA BASCULE D'ONGLET ═══════════
+   EN MEMOIRE, et c'est une contrainte, pas un choix de commodite. ambLink()
+   fabrique le lien de parrainage a partir de location.pathname, et les
+   Ambassadeurs en ont deja partage sur WhatsApp. Un routage par chemin les
+   casserait tous, sans que rien ne s'affiche en erreur : le filleul arriverait
+   sur une page de membre au lieu de l'inscription, et le parrainage ne serait
+   jamais credite. Trouvaille n°5 du contre-audit du 18/09.
+
+   Le bouton Retour d'Android est gere ici aussi. Sans lui, Retour depuis Le Club
+   FERME l'application au lieu de revenir au fil : c'est le premier defaut qu'un
+   vrai telephone remonte, et la zone d'ombre du contre-audit le signalait. On
+   empile donc une entree d'historique SANS changer l'adresse. */
+let ONGLET = 'latiss';
+
+function allerOnglet(nom, viaHistorique){
+  if(!['latiss','club','live'].includes(nom)) nom = 'latiss';
+  ONGLET = nom;
+  ['latiss','club','live'].forEach(function(o){
+    const panneau = document.getElementById('p-' + o);
+    if(panneau) panneau.classList.toggle('hidden', o !== nom);
+  });
+  document.querySelectorAll('.ong').forEach(function(b){
+    const actif = b.dataset.ong === nom;
+    b.classList.toggle('on', actif);
+    /* La classe ne dit rien a un lecteur d’ecran : sans aria-current, une
+       personne qui navigue a la voix entend trois onglets identiques et ne
+       sait jamais lequel elle regarde. */
+    if(actif) b.setAttribute('aria-current', 'page');
+    else b.removeAttribute('aria-current');
+  });
+  window.scrollTo(0, 0);
+  // Meme adresse, nouvelle entree d'historique : le Retour revient a l'onglet
+  // precedent au lieu de quitter l'application.
+  if(!viaHistorique) history.pushState({ onglet: nom }, '', location.href);
+}
+
+window.addEventListener('popstate', function(e){
+  allerOnglet((e.state && e.state.onglet) || 'latiss', true);
+});
+
+/* L'onglet Live au repos. Il n'est JAMAIS vide ni grise : au repos il porte le
+   prochain rendez-vous et les rediffusions. Un onglet eteint pendant deux mois
+   et demi ne dit pas « pas de live », il dit « c'est casse ». */
+const PROCHAIN_LIVE = { titre: 'Le concert du 5 décembre', quand: '2026-12-05T20:00:00+00:00' };
+
+function renderLiveRepos(ilYAUnDirect){
+  const box = document.getElementById('live-repos');
+  if(!box) return;
+  box.innerHTML = '';
+  if(ilYAUnDirect) return;
+
+  const c = el('div', 'card');
+  c.appendChild(el('div', 'reels-titre', 'Prochain rendez-vous'));
+  const t = el('div', 'sec-title', PROCHAIN_LIVE.titre.toUpperCase());
+  t.style.marginTop = '0';
+  c.appendChild(t);
+
+  const reste = new Date(PROCHAIN_LIVE.quand) - Date.now();
+  if(reste > 0){
+    const j = Math.floor(reste / 86400000);
+    const h = Math.floor(reste / 3600000) % 24;
+    const m = Math.floor(reste / 60000) % 60;
+    const grille = el('div', 'compte');
+    [[j, 'jours'], [h, 'heures'], [m, 'min']].forEach(function(x){
+      const b = el('div');
+      b.appendChild(el('b', null, String(x[0])));
+      b.appendChild(el('span', null, x[1]));
+      grille.appendChild(b);
+    });
+    c.appendChild(grille);
+  } else {
+    c.appendChild(el('div', 'chapo', 'La date approche. Tu seras prévenu ici.'));
+  }
+  box.appendChild(c);
+
+  // Les rediffusions : ce sont les contenus de type live deja passes. On ne les
+  // invente pas, on les lit dans ce que le serveur a deja envoye.
+  const passes = (FIL || []).filter(p => p.type === 'contenu' && p.format === 'live');
+  if(passes.length){
+    const r = el('div', 'card');
+    r.appendChild(el('div', 'reels-titre', 'À revoir'));
+    passes.forEach(p => r.appendChild(construirePost(p)));
+    box.appendChild(r);
+  }
+}
+
 function renderLive(lives){
   const el2 = document.getElementById('live-section');
   el2.innerHTML = '';
-  if(!lives || !lives.length) return;
+  const enDirect = !!(lives && lives.length);
+  // La pastille de l'onglet Live ne s'allume que pour un VRAI direct.
+  const pt = document.getElementById('ong-pt-live');
+  if(pt) pt.classList.toggle('hidden', !enDirect);
+  renderLiveRepos(enDirect);
+  if(!enDirect) return;
   const t = el('div', 'sec-title', MOTS.fil.en_direct);
   t.style.color = 'var(--rouge)'; t.style.marginTop = '6px';
   el2.appendChild(t);
@@ -2677,6 +2980,11 @@ document.getElementById('enter-btn').addEventListener('click',fermerSplash);
 // La cloche ouvre et referme le panneau, elle ne declenche jamais la demande
 // du navigateur elle-meme : c'est le panneau qui explique, et un refus ne se
 // redemande pas.
+/* Les trois onglets. */
+document.querySelectorAll('.ong').forEach(function(b){
+  b.addEventListener('click', function(){ allerOnglet(b.dataset.ong); });
+});
+
 document.getElementById('cloche-h').addEventListener('click',function(){
   if(document.getElementById('cloche').classList.contains('hidden')) ouvrirCloche();
   else fermerCloche();

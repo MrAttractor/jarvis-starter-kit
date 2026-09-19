@@ -22,6 +22,26 @@ vrais membres. **Le protocole d'accord n'est toujours pas signé**, mais depuis 
 l'artiste demande lui-même une fonctionnalité payante, ce qui rouvre la négociation par
 le haut.
 
+## La navigation à trois onglets, en service le 19/09/2026
+
+Validée par Mac Arthur. **Le fil unique est supprimé**, et avec lui le fichier jumeau qui
+doublait chaque correction de texte. L'espace fan ouvre sur **Latiss** au centre, avec
+**Le Club** à gauche et **Live** à droite. Le détail de la décision, ses alternatives
+écartées et le contre-audit qui l'a relue sont dans
+`decisions/2026-09-navigation-latiss.md`.
+
+**Les onglets ne changent pas l'adresse.** Le lien de parrainage se fabrique à partir du
+chemin de la page : un routage par chemin aurait cassé tous les liens déjà partagés sur
+WhatsApp par les Ambassadeurs. C'était la trouvaille n°5 du contre-audit, et c'est la
+raison pour laquelle les onglets se changent en mémoire, sans jamais toucher à l'URL.
+
+**Ce que la bascule a failli emporter sans bruit.** La recette mesurait 53 textes dans
+l'espace du membre, elle est tombée à 34 : un onglet fermé n'affiche rien, et ce qui n'est
+pas affiché n'est pas mesuré. Aucun contrôle ne s'en est plaint. C'est le même piège que
+celui de la carte Ambassadeur repliée, noté le 15/09. La recette parcourt maintenant les
+trois onglets dans les deux thèmes, et vérifie en plus la barre elle-même : ses trois
+libellés, et la hauteur de ses zones de tap.
+
 ## Le renommage du 19/09/2026 : de La Beynaumania à latiss.net
 
 Décision de Mac Arthur. **Le nom s'écrit `latiss.net`, en entier, minuscules comprises.**
