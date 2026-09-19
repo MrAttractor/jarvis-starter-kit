@@ -758,6 +758,213 @@ body.splash-on{overflow:hidden;}
 .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;}
 @keyframes sp{to{transform:rotate(360deg)}}
 </style>
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   LES MOTS DE LATISS.NET
+   ───────────────────────────────────────────────────────────────────
+   Toutes les phrases que lit un fan sont ici, dans l'ordre du parcours :
+   le clip, l'apercu, l'entree, l'espace du membre, la cloche, le jeu des
+   Ambassadeurs, le fil, et ce qui s'affiche quand ca casse.
+
+   Pourquoi ce bloc existe. Elles etaient eparpillees sur 2600 lignes,
+   moitie dans le HTML, moitie dans le script. Revoir le ton d'un ecran
+   voulait dire chasser ses phrases une par une, et une correction oubliee
+   quelque part revenait toute seule. Ici, on relit l'ecran d'un coup d'oeil
+   et on change une ligne.
+
+   Deux choses ne sont PAS ici, et c'est voulu :
+
+   1. Le <title> et la meta description, en haut du fichier. Un moteur de
+      recherche et un apercu WhatsApp les lisent sans executer le script :
+      ils doivent rester ecrits dans le HTML.
+
+   2. Les phrases qui se fabriquent autour d'un chiffre qui change
+      (« 2 entres · 0 point », « encore 3 points pour passer devant »,
+      « 13 autres publications t'attendent »). Les couper en morceaux pour
+      les ranger ici les rendrait illisibles des deux cotes. Elles restent
+      a leur place, et les voici pour que rien ne soit invisible :
+         ligne ~1150  « · encore N point(s) pour passer devant »
+         ligne ~2032  « N AUTRES PUBLICATIONS T'ATTENDENT »
+         ligne ~2221  le detail du score de l'Ambassadeur
+
+   Comment ca marche. Une valeur texte va dans le HTML par data-mot :
+      <span data-mot="clip.bouton"></span>
+   Une valeur qui contient du gras ou du souligne s'ecrit { html: '...' }.
+   Rien d'autre que nos propres phrases ne passe par la.
+   ═══════════════════════════════════════════════════════════════════ */
+const MOTS = {
+
+  /* ── 1. LE CLIP, la toute premiere seconde ── */
+  clip: {
+    bouton: 'Voir ce qui se passe',
+  },
+
+  /* ── 2. L'APERCU, ce que voit quelqu'un qui n'est pas encore entre ── */
+  apercu: {
+    sous_titre: 'L’univers officiel de Serge Beynaud. Voici un aperçu.',
+    fil_vide: 'Ça démarre ici. Latiss poste très bientôt, et tu seras prévenu en premier.',
+    porte_mot_rouge: 'PUBLICATIONS',
+    porte_desc: 'Réagis, commente, vote, et ramène ton monde. Les Ambassadeurs passent devant tout le monde.',
+    porte_bouton: 'Rejoins latiss.net',
+    porte_note: 'C’est gratuit. Un prénom suffit, 10 secondes.',
+  },
+
+  /* ── 3. L'ENTREE, le formulaire a un champ ── */
+  entree: {
+    surtitre: 'latiss.net · Officiel',
+    titre: 'latiss.net',
+    sous_titre: 'L\'univers officiel de Serge Beynaud. Ton prénom suffit, et tu es dedans.',
+    parrain: 'Tu entres sur l\'invitation d\'un membre de latiss.net.',
+    champ: 'Ton prénom',
+    exemple: 'Ex : Awa',
+    bouton: 'Entrer sur latiss.net',
+    prenom_manquant: 'Ton prénom, stp.',
+    deja_membre: { html: 'Déjà membre ? <a onclick="recover()">Retrouver mon espace</a>' },
+    retour_apercu: 'Revenir à l’aperçu',
+    legal: 'C’est gratuit. On ne demande rien d’autre que ton prénom, et tu peux effacer ton compte quand tu veux depuis ton espace.',
+    retrouver_numero: 'Le numéro WhatsApp que tu as enregistré (avec l’indicatif) :',
+    retrouver_prenom: 'Et le prénom de ton compte :',
+    retrouver_introuvable: 'Aucun compte ne correspond à ce numéro et ce prénom.',
+  },
+
+  /* ── 4. L'ESPACE DU MEMBRE ── */
+  membre: {
+    marque: 'latiss.net',
+    grade: 'Membre',
+    sous_titre: 'Tu es sur latiss.net. Bienvenue chez toi.',
+    retour: 'Content de te revoir, {prenom} !',
+    rappel_cloche: { html: 'Pense à activer <u>la cloche en haut</u> pour ne rien rater' },
+    theme_vers_sombre: 'Passer en mode sombre',
+    theme_vers_clair: 'Passer en mode clair',
+    effacer: 'Effacer mon compte',
+    effacer_confirmation: 'Effacer ton compte ? Tu perds ton grade, tes filleuls et tes commentaires. C’est définitif.',
+    effacer_echec: 'La suppression n’a pas abouti. Réessaie.',
+    effacer_fait: 'Ton compte est effacé.',
+    fermer: 'Fermer',
+  },
+
+  /* ── 5. LA CLOCHE, les notifications ── */
+  cloche: {
+    etiquette_proposer: 'Être prévenu quand Latiss publie',
+    etiquette_active: 'Tu es prévenu. Ouvrir pour couper.',
+    etiquette_bloquee: 'Les notifications sont bloquées',
+
+    proposer_titre: 'Sois prévenu quand Latiss poste',
+    proposer_desc_courte: 'Une notification sur ton téléphone dès qu’il publie.',
+    proposer_desc: 'Une notification sur ton téléphone dès qu’il publie. Rien d’autre, et tu peux couper quand tu veux.',
+    proposer_bouton: 'Activer les notifications',
+
+    active_titre: 'Tu es prévenu',
+    active_desc: 'Tu recevras une notification dès que Latiss publie.',
+    active_bouton: 'Ne plus être prévenu',
+
+    bloquee_titre: 'Les notifications sont bloquées',
+    bloquee_desc: 'Tu as refusé les notifications pour ce site. Ça se remet dans les réglages de ton navigateur.',
+
+    ecran_titre: 'Ajoute latiss.net à ton écran',
+    ecran_desc: 'Tu seras prévenu quand Latiss poste, et tu ne rempliras plus jamais ce formulaire.',
+    ecran_bouton: 'Montre-moi comment',
+    // Le mode d'emploi, different sur iPhone et sur Android.
+    ecran_iphone: ['Appuie sur Partager, en bas de l’écran', 'Choisis « Sur l’écran d’accueil »', 'Valide avec « Ajouter »'],
+    ecran_android: ['Ouvre le menu du navigateur, en haut à droite', 'Choisis « Ajouter à l’écran d’accueil »', 'Valide'],
+
+    indisponible: 'Les notifications ne sont pas disponibles ici. Réessaie depuis ton navigateur habituel.',
+    pas_enregistre: 'Ça n’a pas pu être enregistré. Réessaie.',
+    navigateur_refuse: 'Ton navigateur a refusé. Réessaie plus tard.',
+    coupe: 'C’est coupé. Tu ne seras plus prévenu.',
+    refuse: 'Refusé. Ça se remet dans les réglages de ton navigateur.',
+    plus_tard: 'Tu pourras l’activer plus tard.',
+    active: 'C’est activé. Tu seras prévenu.',
+
+    rappel_whatsapp: 'Salut ! Tu es bien sur latiss.net \u{1F44A} Pense à activer les notifications depuis ton espace, sinon tu rates ce que Serge publie : ',
+  },
+
+  /* ── 6. LE JEU DES AMBASSADEURS ── */
+  ambassadeur: {
+    titre: 'Ambassadeur',
+    resume: 'Partage ton lien',
+    desc: { html: 'Partage ton lien. Chaque personne qui entre te rapproche du grade <b style="color:var(--or)">Ambassadeur</b>.' },
+    copier: 'Copier',
+    whatsapp: 'Inviter sur WhatsApp',
+    voir_classement: 'Voir le classement',
+    entres_titre_un: 'Entré grâce à toi',
+    entres_titre_plusieurs: 'Entrés grâce à toi',
+    relancer_un: 'Relancer mon invité',
+    relancer_plusieurs: 'Relancer mes invités',
+    deja_ambassadeur: 'Tu es Ambassadeur',
+    vers_le_grade: 'Vers le grade Ambassadeur',
+    resume_seuil: 'Partage ton lien, {n} entrées pour le grade',
+    tete_classement: '{prenom} mène avec {points}.',
+    lien_copie: 'Lien copié ! Partage-le.',
+    lien_copie_court: 'Lien copié !',
+    masquer_classement: 'Masquer le classement',
+    invitation_whatsapp: '🔥 Rejoins latiss.net, l\'univers officiel de Serge Beynaud ! Contenu exclusif rien que pour nous. C\'est gratuit 👉 ',
+  },
+
+  /* ── 7. LE FIL ── */
+  fil: {
+    signature: 'latiss.net · Officiel',
+    reserve_tag: 'Réservé aux Ambassadeurs',
+    verrou_titre: 'Réservé',
+    verrou_desc: 'Tu as un code ? Saisis-le pour ouvrir l’accès.',
+    verrou_bouton: 'Ouvrir',
+    code_manquant: 'Entre ton code.',
+    aimer: 'Aimer',
+    retirer_coeur: 'Retirer mon coeur',
+    commenter: 'Commenter',
+    inviter_ami: 'Inviter un ami',
+    en_direct: 'EN DIRECT',
+    premier_commentaire: 'Sois le premier à commenter',
+    code_etiquette: 'Ton code d’accès',
+    code_ouvert: 'Accès ouvert.',
+    code_refuse: 'Ce code n’a pas pu être vérifié.',
+    lancer_video: 'Lancer la vidéo',
+    commentaire_en_attente: 'Ton commentaire sera visible après vérification.',
+    commentaire_publie: 'Commentaire publié.',
+    vote_invite: 'Vote pour voir les résultats',
+    vote_enregistre: 'Vote enregistré !',
+    commentaire_exemple: 'Écris un commentaire…',
+    voir_commentaires: 'Voir les {n} commentaire{s}',
+  },
+
+  /* ── 8. QUAND CA CASSE ── */
+  erreur: {
+    fil_injoignable: 'La connexion a lâché. Le fil n’a pas pu se charger.',
+    reessayer: 'Réessayer',
+    video_indisponible: 'Cette vidéo est momentanément indisponible.',
+    generique: 'Une erreur est survenue.',
+    reessaie: 'Erreur, réessaie.',
+  },
+};
+
+/* Pose les mots dans le HTML. Appelee deux fois, et ce n'est pas une
+   maladresse : une fois juste apres le clip, pour que son bouton ne
+   clignote pas le temps que le reste de la page se lise, une fois apres
+   le reste. Un element deja rempli n'est pas retouche. */
+function remplirMots(racine) {
+  (racine || document).querySelectorAll('[data-mot]').forEach(function (n) {
+    if (n.dataset.motPose === '1') return;
+    var v = MOTS;
+    n.dataset.mot.split('.').forEach(function (c) { v = v && v[c]; });
+    if (v === undefined || v === null) return;   // cle inconnue : on ne vide rien
+    if (typeof v === 'object' && typeof v.html === 'string') n.innerHTML = v.html;
+    else n.textContent = String(v);
+    n.dataset.motPose = '1';
+  });
+  /* Les etiquettes lues par un lecteur d'ecran suivent le meme chemin :
+     elles sont des phrases, elles ont leur place avec les autres. */
+  (racine || document).querySelectorAll('[data-mot-label]').forEach(function (n) {
+    var v = MOTS;
+    n.dataset.motLabel.split('.').forEach(function (c) { v = v && v[c]; });
+    if (typeof v === 'string') n.setAttribute('aria-label', v);
+  });
+  (racine || document).querySelectorAll('[data-mot-ph]').forEach(function (n) {
+    var v = MOTS;
+    n.dataset.motPh.split('.').forEach(function (c) { v = v && v[c]; });
+    if (typeof v === 'string') n.setAttribute('placeholder', v);
+  });
+}
+</script>
 </head>
 <body>
 
@@ -773,7 +980,7 @@ body.splash-on{overflow:hidden;}
   <div class="clip-ov"></div>
   <div class="splash-c">
     <button class="btn-clip" id="enter-btn">
-      <span>Voir ce qui se passe</span>
+      <span data-mot="clip.bouton"></span>
       <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </button>
   </div>
@@ -788,6 +995,7 @@ body.splash-on{overflow:hidden;}
   if(connu) document.getElementById('splash').classList.add('out');
   else document.body.classList.add('splash-on');
 })();
+remplirMots(document);
 </script>
 
 <div class="wrap">
@@ -796,21 +1004,21 @@ body.splash-on{overflow:hidden;}
   <div id="view-join" class="join-hero">
     <div class="join-bg"></div><div class="join-ov"></div>
     <div class="join-c">
-      <div class="eyebrow"><span class="pulse"></span>latiss.net · Officiel</div>
-      <div class="join-title"><span class="r sig">latiss.net</span></div>
-      <p class="join-sub">L'univers officiel de Serge Beynaud. Ton prénom suffit, et tu es dedans.</p>
+      <div class="eyebrow"><span class="pulse"></span><span data-mot="entree.surtitre"></span></div>
+      <div class="join-title"><span class="r sig" data-mot="entree.titre"></span></div>
+      <p class="join-sub" data-mot="entree.sous_titre"></p>
       <div id="ref-note" class="ref-note hidden">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-        <span>Tu entres sur l'invitation d'un membre de latiss.net.</span>
+        <span data-mot="entree.parrain"></span>
       </div>
-      <div class="field"><label>Ton prénom</label><input id="j-prenom" type="text" placeholder="Ex : Awa" autocomplete="given-name"/></div>
-      <button id="j-btn" class="btn-join" onclick="doJoin()">Entrer sur latiss.net
+      <div class="field"><label data-mot="entree.champ"></label><input id="j-prenom" type="text" data-mot-ph="entree.exemple" autocomplete="given-name"/></div>
+      <button id="j-btn" class="btn-join" onclick="doJoin()"><span data-mot="entree.bouton"></span>
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
       </button>
       <div id="j-err" class="err"></div>
-      <div class="join-alt">Déjà membre ? <a onclick="recover()">Retrouver mon espace</a></div>
-      <button class="retour-apercu" id="retour-apercu">Revenir à l’aperçu</button>
-      <div class="legal">C’est gratuit. On ne demande rien d’autre que ton prénom, et tu peux effacer ton compte quand tu veux depuis ton espace.</div>
+      <div class="join-alt" data-mot="entree.deja_membre"></div>
+      <button class="retour-apercu" id="retour-apercu" data-mot="entree.retour_apercu"></button>
+      <div class="legal" data-mot="entree.legal"></div>
     </div>
   </div>
 
@@ -836,9 +1044,9 @@ body.splash-on{overflow:hidden;}
       <div class="hb-pts" id="hb-pts" aria-hidden="true"></div>
       <div class="m-hero-c">
         <div class="m-top">
-          <div class="brand"><span class="brand-name">latiss.net</span></div>
+          <div class="brand"><span class="brand-name" data-mot="membre.marque"></span></div>
           <div class="m-act">
-            <button class="cloche-h hidden" id="cloche-h" type="button" aria-expanded="false" aria-controls="cloche" aria-label="Être prévenu quand Latiss publie">
+            <button class="cloche-h hidden" id="cloche-h" type="button" aria-expanded="false" aria-controls="cloche" data-mot-label="cloche.etiquette_proposer">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
                 <path d="M13.7 21a2 2 0 0 1-3.4 0"/>
@@ -846,19 +1054,19 @@ body.splash-on{overflow:hidden;}
               </svg>
               <span class="cloche-pt hidden" id="cloche-pt" aria-hidden="true"></span>
             </button>
-            <button class="bascule" id="bascule-theme" type="button" aria-pressed="false" aria-label="Passer en mode clair">
+            <button class="bascule" id="bascule-theme" type="button" aria-pressed="false" data-mot-label="membre.theme_vers_clair">
               <svg class="ico-soleil" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.2v2.3M12 19.5v2.3M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.2 12h2.3M19.5 12h2.3M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
               <svg class="ico-lune" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 13.1A8.6 8.6 0 1 1 10.9 3.2a6.8 6.8 0 0 0 9.9 9.9z"/></svg>
             </button>
           </div>
         </div>
-        <div id="m-grade" class="grade-badge membre">Membre</div>
+        <div id="m-grade" class="grade-badge membre" data-mot="membre.grade"></div>
         <button class="rappel-cloche hidden" id="rappel-cloche" type="button">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
             <path d="M13.7 21a2 2 0 0 1-3.4 0"/>
           </svg>
-          <span>Pense à activer <u>la cloche en haut</u> pour ne rien rater</span>
+          <span data-mot="membre.rappel_cloche"></span>
         </button>
         <div class="m-hello" id="m-hello"></div>
         <div class="m-hello-sub" id="m-hello-sub"></div>
@@ -874,13 +1082,13 @@ body.splash-on{overflow:hidden;}
           <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
         </div>
         <div class="cloche-c">
-          <div class="cloche-t" id="cloche-t">Sois prévenu quand Latiss poste</div>
-          <div class="cloche-d" id="cloche-d">Une notification sur ton téléphone dès qu’il publie.</div>
-          <button class="cloche-b" id="cloche-b">Activer les notifications</button>
+          <div class="cloche-t" id="cloche-t" data-mot="cloche.proposer_titre"></div>
+          <div class="cloche-d" id="cloche-d" data-mot="cloche.proposer_desc_courte"></div>
+          <button class="cloche-b" id="cloche-b" data-mot="cloche.proposer_bouton"></button>
           <div class="cloche-n" id="cloche-n"></div>
           <div class="garde-pas hidden" id="garde-pas"></div>
         </div>
-        <button class="cloche-x" id="cloche-x" type="button" aria-label="Fermer">
+        <button class="cloche-x" id="cloche-x" type="button" data-mot-label="membre.fermer">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </button>
       </div>
@@ -896,19 +1104,19 @@ body.splash-on{overflow:hidden;}
       <div class="card amb-card" id="amb-card">
         <button class="amb-tete" id="amb-tete" type="button" aria-expanded="false" aria-controls="amb-corps">
           <svg class="et" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-          <span class="amb-tt"><b>Ambassadeur</b><span class="amb-res" id="amb-res">Partage ton lien</span></span>
+          <span class="amb-tt"><b data-mot="ambassadeur.titre"></b><span class="amb-res" id="amb-res" data-mot="ambassadeur.resume"></span></span>
           <span class="amb-chev" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span>
         </button>
         <div class="amb-corps" id="amb-corps">
-        <p class="amb-desc">Partage ton lien. Chaque personne qui entre te rapproche du grade <b style="color:var(--or)">Ambassadeur</b>.</p>
+        <p class="amb-desc" data-mot="ambassadeur.desc"></p>
         <div id="amb-score"></div>
-        <div class="amb-link"><input id="amb-url" type="text" readonly/><button class="amb-copy" onclick="copyLink()">Copier</button></div>
+        <div class="amb-link"><input id="amb-url" type="text" readonly/><button class="amb-copy" onclick="copyLink()" data-mot="ambassadeur.copier"></button></div>
         <button class="amb-share" onclick="shareWa()">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18c-1.5 0-3-.4-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3C4 15.4 3.6 13.7 3.6 12 3.6 7.4 7.4 3.6 12 3.6S20.4 7.4 20.4 12 16.6 20.4 12 20.4z"/><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.6.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.7-.9-2.9-1.6-4-3.5-.3-.5.3-.5.8-1.6.1-.2 0-.4 0-.5C10 8.5 9.5 7.2 9.3 6.7c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.9.9-1.1 2-1 2.3.4 2.3 1.7 3.9 3.7 5.5 2.6 2.1 4.3 2 5.3 1.9.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
-          Inviter sur WhatsApp
+          <span data-mot="ambassadeur.whatsapp"></span>
         </button>
         <div id="amb-rang"></div>
-        <button class="conc-voir hidden" id="conc-voir">Voir le classement</button>
+        <button class="conc-voir hidden" id="conc-voir" data-mot="ambassadeur.voir_classement"></button>
         <div class="conc-l hidden" id="conc-liste"></div>
         </div>
       </div>
@@ -916,7 +1124,7 @@ body.splash-on{overflow:hidden;}
       <div id="club-sondages"></div>
 
       <div class="zone-danger">
-        <button class="lien-danger" id="btn-supprimer">Effacer mon compte</button>
+        <button class="lien-danger" id="btn-supprimer" data-mot="membre.effacer"></button>
       </div>
       </section>
 
@@ -959,6 +1167,10 @@ body.splash-on{overflow:hidden;}
 <div class="toast" id="toast"></div>
 
 <script>
+/* Deuxieme pose des mots : le premier appel, juste apres le clip, n'avait
+   sous la main que le bouton du clip. Le reste du HTML est lu maintenant. */
+remplirMots(document);
+
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
 
 /* ===================== CLAIR / SOMBRE =====================
@@ -978,7 +1190,7 @@ function appliquerTheme(clair){
   const b=document.getElementById('bascule-theme');
   if(b){
     b.setAttribute('aria-pressed', clair?'true':'false');
-    b.setAttribute('aria-label', clair?'Passer en mode sombre':'Passer en mode clair');
+    b.setAttribute('aria-label', clair ? MOTS.membre.theme_vers_sombre : MOTS.membre.theme_vers_clair);
   }
 }
 function basculerTheme(){
@@ -1046,27 +1258,27 @@ function getMembre(){try{return JSON.parse(localStorage.getItem(LS)||'null');}ca
 async function doJoin(){
   const prenom=document.getElementById('j-prenom').value.trim();
   const err=document.getElementById('j-err'); err.textContent='';
-  if(!prenom){err.textContent='Ton prénom, stp.';return;}
+  if(!prenom){err.textContent=MOTS.entree.prenom_manquant;return;}
   const btn=document.getElementById('j-btn'); btn.disabled=true; const old=btn.innerHTML; btn.innerHTML='<span class="spin"></span>';
   // Un seul champ part au serveur. Le numero se proposera plus tard, dans son
   // espace, quand il aura quelque chose a perdre.
   const res=await api({action:'join',prenom,ref:refParam()});
   btn.disabled=false; btn.innerHTML=old;
-  if(!res.ok){err.textContent=res.error||'Une erreur est survenue.';return;}
+  if(!res.ok){err.textContent=res.error||MOTS.erreur.generique;return;}
   saveMembre(res.membre);
-  if(res.returning) toast('Content de te revoir, '+res.membre.prenom+' !');
+  if(res.returning) toast(MOTS.membre.retour.replace('{prenom}', res.membre.prenom));
   renderMember(res.membre);
 }
 async function recover(){
   // Le prenom est demande EN PLUS du numero. Connaitre le seul numero d'un fan
   // suffisait a entrer dans son compte. Ce n'est pas une verification, c'est un
   // cran de plus en attendant un vrai code a usage unique.
-  const wa=prompt("Le numéro WhatsApp que tu as enregistré (avec l’indicatif) :");
+  const wa=prompt(MOTS.entree.retrouver_numero);
   if(!wa) return;
-  const prenom=prompt("Et le prénom de ton compte :");
+  const prenom=prompt(MOTS.entree.retrouver_prenom);
   if(!prenom) return;
   const res=await api({action:'me',whatsapp:wa,prenom});
-  if(!res.ok){toast("Aucun compte ne correspond à ce numéro et ce prénom.");return;}
+  if(!res.ok){toast(MOTS.entree.retrouver_introuvable);return;}
   saveMembre(res.membre); renderMember(res.membre);
 }
 /* Il n'y a plus de bouton "Se deconnecter", et c'est voulu.
@@ -1118,7 +1330,7 @@ function peindreCoquille(m){
   h.innerHTML='';
   h.appendChild(document.createTextNode('SALUT '));
   h.appendChild(el('span','r',(m.prenom||'Fami').toUpperCase()));
-  document.getElementById('m-hello-sub').textContent='Tu es sur latiss.net. Bienvenue chez toi.';
+  document.getElementById('m-hello-sub').textContent=MOTS.membre.sous_titre;
   const gb=document.getElementById('m-grade');
   gb.classList.remove('hidden');
   gb.className='grade-badge '+(m.grade==='ambassadeur'?'ambassadeur':'membre');
@@ -1143,7 +1355,7 @@ function peindreApercu(){
   const h=document.getElementById('m-hello');
   h.innerHTML='';
   h.appendChild(el('span','r sig','latiss.net'));
-  document.getElementById('m-hello-sub').textContent='L’univers officiel de Serge Beynaud. Voici un aperçu.';
+  document.getElementById('m-hello-sub').textContent=MOTS.apercu.sous_titre;
   document.getElementById('cloche').classList.add('hidden');
   document.getElementById('cloche-h').classList.add('hidden');
   document.getElementById('rappel-cloche').classList.add('hidden');
@@ -1226,12 +1438,12 @@ async function chargerConcours(){
   if(ME.grade === 'ambassadeur'){
     const d = el('div','amb-done');
     d.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
-    d.appendChild(document.createTextNode('Tu es Ambassadeur'));
+    d.appendChild(document.createTextNode(MOTS.ambassadeur.deja_ambassadeur));
     gr.appendChild(d);
   } else {
     const total = ME.filleuls || 0;
     const lbl = el('div','amb-prog-lbl');
-    lbl.appendChild(el('span', null, 'Vers le grade Ambassadeur'));
+    lbl.appendChild(el('span', null, MOTS.ambassadeur.vers_le_grade));
     lbl.appendChild(el('b', null, total + '/' + SEUIL_AMBASSADEUR));
     const bar = el('div','amb-bar');
     const fill = el('div','amb-fill');
@@ -1255,8 +1467,8 @@ async function chargerConcours(){
         res.appendChild(document.createTextNode(' · ' + (ME.filleuls || 0) + '/' + SEUIL_AMBASSADEUR));
     } else {
       res.textContent = ME.grade === 'ambassadeur'
-        ? 'Tu es Ambassadeur'
-        : 'Partage ton lien, ' + SEUIL_AMBASSADEUR + ' entrées pour le grade';
+        ? MOTS.ambassadeur.deja_ambassadeur
+        : MOTS.ambassadeur.resume_seuil.replace('{n}', SEUIL_AMBASSADEUR);
     }
   }
 
@@ -1271,7 +1483,7 @@ async function chargerConcours(){
     ligne.appendChild(l);
   } else if(marques.length && !moi.points){
     const l = el('div','conc-ligne');
-    l.appendChild(el('span','gris', marques[0].prenom + ' mène avec ' + marques[0].points + '.'));
+    l.appendChild(el('span','gris', MOTS.ambassadeur.tete_classement.replace('{prenom}', marques[0].prenom).replace('{points}', marques[0].points)));
     ligne.appendChild(l);
   }
 
@@ -1285,7 +1497,7 @@ async function chargerConcours(){
   const fs = Array.isArray(moi.filleuls) ? moi.filleuls : [];
   if(fs.length){
     const box = el('div','fil-l');
-    const t = el('div','fil-t', fs.length > 1 ? 'Entrés grâce à toi' : 'Entré grâce à toi');
+    const t = el('div','fil-t', fs.length > 1 ? MOTS.ambassadeur.entres_titre_plusieurs : MOTS.ambassadeur.entres_titre_un);
     box.appendChild(t);
     fs.forEach(function(p){
       const r = el('div','fil-r ' + (p.confirme ? 'ok' : 'attente'));
@@ -1307,7 +1519,7 @@ async function chargerConcours(){
     if(moi.en_attente > 0){
       const b = el('button','fil-b');
       b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18c-1.5 0-3-.4-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3C4 15.4 3.6 13.7 3.6 12 3.6 7.4 7.4 3.6 12 3.6S20.4 7.4 20.4 12 16.6 20.4 12 20.4z"/><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.6.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.7-.9-2.9-1.6-4-3.5-.3-.5.3-.5.8-1.6.1-.2 0-.4 0-.5C10 8.5 9.5 7.2 9.3 6.7c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.9.9-1.1 2-1 2.3.4 2.3 1.7 3.9 3.7 5.5 2.6 2.1 4.3 2 5.3 1.9.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>';
-      b.appendChild(document.createTextNode(moi.en_attente > 1 ? 'Relancer mes invités' : 'Relancer mon invité'));
+      b.appendChild(document.createTextNode(moi.en_attente > 1 ? MOTS.ambassadeur.relancer_plusieurs : MOTS.ambassadeur.relancer_un));
       b.addEventListener('click', relancerInvites);
       ligne.appendChild(b);
     }
@@ -1316,7 +1528,7 @@ async function chargerConcours(){
   // Le classement complet reste plie : on ne l'ouvre que si on le demande.
   if(!marques.length) return;
   voir.classList.remove('hidden');
-  voir.textContent = 'Voir le classement';
+  voir.textContent = MOTS.ambassadeur.voir_classement;
   liste.innerHTML = '';
   marques.forEach(function(p, k){
     const w = el('div','conc-r' + (k < 3 ? ' or' : '') + ((moi.rang === p.rang && moi.prenom === p.prenom) ? ' mien' : ''));
@@ -1385,8 +1597,8 @@ function garderAcces(){
   box.appendChild(t);
   const ol = document.createElement('ol');
   const pas = iOS
-    ? ['Appuie sur Partager, en bas de l’écran', 'Choisis « Sur l’écran d’accueil »', 'Valide avec « Ajouter »']
-    : ['Ouvre le menu du navigateur, en haut à droite', 'Choisis « Ajouter à l’écran d’accueil »', 'Valide'];
+    ? MOTS.cloche.ecran_iphone
+    : MOTS.cloche.ecran_android;
   for(const p of pas) ol.appendChild(el('li', null, p));
   box.appendChild(ol);
 
@@ -1476,12 +1688,12 @@ async function etatCloche(){
     bell.classList.remove('hidden');
     bell.classList.remove('on','non');
     resteUnGeste(true);
-    bell.setAttribute('aria-label','Être prévenu quand Latiss publie');
-    titre.textContent = 'Ajoute latiss.net à ton écran';
-    desc.textContent = 'Tu seras prévenu quand Latiss poste, et tu ne rempliras plus jamais ce formulaire.';
+    bell.setAttribute('aria-label', MOTS.cloche.etiquette_proposer);
+    titre.textContent = MOTS.cloche.ecran_titre;
+    desc.textContent = MOTS.cloche.ecran_desc;
     btn.classList.remove('hidden');
     btn.classList.remove('calme');
-    btn.textContent = 'Montre-moi comment';
+    btn.textContent = MOTS.cloche.ecran_bouton;
     btn.onclick = null;
     note.textContent = '';
     return;
@@ -1501,9 +1713,9 @@ async function etatCloche(){
     bell.classList.remove('on');
     bell.classList.add('non');
     resteUnGeste(false);
-    bell.setAttribute('aria-label','Les notifications sont bloquées');
-    titre.textContent = 'Les notifications sont bloquées';
-    desc.textContent = 'Tu as refusé les notifications pour ce site. Ça se remet dans les réglages de ton navigateur.';
+    bell.setAttribute('aria-label', MOTS.cloche.etiquette_bloquee);
+    titre.textContent = MOTS.cloche.bloquee_titre;
+    desc.textContent = MOTS.cloche.bloquee_desc;
     btn.classList.add('hidden');
     note.textContent = '';
     return;
@@ -1515,12 +1727,12 @@ async function etatCloche(){
   bell.classList.remove('hidden');
   bell.classList.remove('on','non');
   resteUnGeste(true);
-  bell.setAttribute('aria-label','Être prévenu quand Latiss publie');
+  bell.setAttribute('aria-label', MOTS.cloche.etiquette_proposer);
   btn.classList.remove('hidden');
   btn.classList.remove('calme');
-  titre.textContent = 'Sois prévenu quand Latiss poste';
-  desc.textContent = 'Une notification sur ton téléphone dès qu’il publie. Rien d’autre, et tu peux couper quand tu veux.';
-  btn.textContent = 'Activer les notifications';
+  titre.textContent = MOTS.cloche.proposer_titre;
+  desc.textContent = MOTS.cloche.proposer_desc;
+  btn.textContent = MOTS.cloche.proposer_bouton;
   note.textContent = '';
 
   let abo = null;
@@ -1536,10 +1748,10 @@ async function etatCloche(){
     // suivante, celle qu'on vient de rater.
     bell.classList.add('on');
     resteUnGeste(false);
-    bell.setAttribute('aria-label','Tu es prévenu. Ouvrir pour couper.');
-    titre.textContent = 'Tu es prévenu';
-    desc.textContent = 'Tu recevras une notification dès que Latiss publie.';
-    btn.textContent = 'Ne plus être prévenu';
+    bell.setAttribute('aria-label', MOTS.cloche.etiquette_active);
+    titre.textContent = MOTS.cloche.active_titre;
+    desc.textContent = MOTS.cloche.active_desc;
+    btn.textContent = MOTS.cloche.active_bouton;
     btn.classList.add('calme');
     note.textContent = '';
   }
@@ -1560,7 +1772,7 @@ async function basculerCloche(){
     if(!reg){
       // Le service worker n'est pas la : sans lui, aucune notification n'est
       // possible. On le dit plutot que de laisser le bouton tourner dans le vide.
-      note.textContent = 'Les notifications ne sont pas disponibles ici. Réessaie depuis ton navigateur habituel.';
+      note.textContent = MOTS.cloche.indisponible;
       btn.disabled = false; btn.textContent = avant;
       return;
     }
@@ -1570,14 +1782,14 @@ async function basculerCloche(){
       const url = dejaLa.endpoint;
       await dejaLa.unsubscribe();
       await api({ action:'push_desabonner', endpoint:url });
-      toast('C’est coupé. Tu ne seras plus prévenu.');
+      toast(MOTS.cloche.coupe);
       abouti = true;
     } else {
       const perm = await Notification.requestPermission();
       if(perm !== 'granted'){
         note.textContent = perm === 'denied'
-          ? 'Refusé. Ça se remet dans les réglages de ton navigateur.'
-          : 'Tu pourras l’activer plus tard.';
+          ? MOTS.cloche.refuse
+          : MOTS.cloche.plus_tard;
         btn.disabled = false; btn.textContent = avant;
         await etatCloche();
         return;
@@ -1591,18 +1803,18 @@ async function basculerCloche(){
       const res = await api({ action:'push_abonner', membre_id:ME.id, abonnement: abo.toJSON() });
       if(!res || !res.ok){
         await abo.unsubscribe();
-        note.textContent = 'Ça n’a pas pu être enregistré. Réessaie.';
+        note.textContent = MOTS.cloche.pas_enregistre;
         btn.disabled = false; btn.textContent = avant;
         return;
       }
-      toast('C’est activé. Tu seras prévenu.');
+      toast(MOTS.cloche.active);
       abouti = true;
       // Activer ses notifications fait gagner un point A SON PARRAIN : le
       // classement change a cette seconde, autant le montrer tout de suite.
       chargerConcours();
     }
   }catch(e){
-    note.textContent = 'Ton navigateur a refusé. Réessaie plus tard.';
+    note.textContent = MOTS.cloche.navigateur_refuse;
   }
   btn.disabled = false;
   await etatCloche();
@@ -1622,12 +1834,12 @@ function b64uVersOctets(s){
    ce qu'on promet doit etre fait, et prouvable par l'absence. */
 async function supprimerCompte(){
   if(!ME) return;
-  if(!confirm('Effacer ton compte ? Tu perds ton grade, tes filleuls et tes commentaires. C’est définitif.')) return;
+  if(!confirm(MOTS.membre.effacer_confirmation)) return;
   let res=null;
   try{ res=await api({action:'compte_supprimer',membre_id:ME.id}); }catch(e){ res=null; }
-  if(!res||!res.ok){ toast('La suppression n’a pas abouti. Réessaie.'); return; }
+  if(!res||!res.ok){ toast(MOTS.membre.effacer_echec); return; }
   try{ localStorage.removeItem(LS); }catch(e){}
-  toast('Ton compte est effacé.');
+  toast(MOTS.membre.effacer_fait);
   setTimeout(function(){ location.href=location.origin+location.pathname; }, 900);
 }
 
@@ -1689,8 +1901,8 @@ async function chargerFil(m){
     const box=document.getElementById('fil');
     box.innerHTML='';
     // R-59 : une alerte porte son action. Ici, le bouton refait l'appel.
-    const w=el('div','empty','La connexion a lâché. Le fil n’a pas pu se charger.');
-    const b=el('button','voir-cmt','Réessayer');
+    const w=el('div','empty', MOTS.erreur.fil_injoignable);
+    const b=el('button','voir-cmt', MOTS.erreur.reessayer);
     b.style.textAlign='center';
     b.addEventListener('click',function(){ filEnChargement(); chargerFil(m); });
     box.appendChild(w); box.appendChild(b);
@@ -1751,7 +1963,7 @@ function enTete(p){
   nom.appendChild(document.createTextNode('Serge Beynaud'));
   nom.appendChild(el('span', 'post-verif', '✓'));
   id.appendChild(nom);
-  id.appendChild(el('div', 'post-sub', 'latiss.net · Officiel'));
+  id.appendChild(el('div', 'post-sub', MOTS.fil.signature));
   h.appendChild(av); h.appendChild(id);
   h.appendChild(el('div', 'post-time', timeAgo(p.created_at)));
   return h;
@@ -1763,18 +1975,18 @@ function barreActions(p){
 
   const bLike = el('button', 'ico-btn' + (p.liked ? ' liked' : ''));
   bLike.appendChild(ico(D_COEUR));
-  bLike.setAttribute('aria-label', p.liked ? "Retirer mon coeur" : "Aimer");
+  bLike.setAttribute('aria-label', p.liked ? MOTS.fil.retirer_coeur : MOTS.fil.aimer);
   bLike.addEventListener('click', () => basculerCoeur(p));
 
   const bCmt = el('button', 'ico-btn');
   bCmt.appendChild(ico(D_BULLE));
   bCmt.appendChild(el('span', null, String((p.nb_comments != null ? p.nb_comments : (p.comments || []).length) || '')));
-  bCmt.setAttribute('aria-label', 'Commenter');
+  bCmt.setAttribute('aria-label', MOTS.fil.commenter);
   bCmt.addEventListener('click', () => ouvrirCommentaires(p, true));
 
   const bShare = el('button', 'ico-btn');
   bShare.appendChild(ico(D_AVION));
-  bShare.setAttribute('aria-label', 'Inviter un ami');
+  bShare.setAttribute('aria-label', MOTS.fil.inviter_ami);
   // Partager un post, c'est partager son lien de parrainage : le geste le plus
   // naturel du fil est aussi celui qui fait grandir latiss.net.
   bShare.addEventListener('click', shareWa);
@@ -1788,7 +2000,7 @@ function corpsDuPost(p){
   const frag = document.createDocumentFragment();
 
   if(p.grade_requis === 'ambassadeur'){
-    frag.appendChild(el('div', 'post-tag', 'Réservé aux Ambassadeurs'));
+    frag.appendChild(el('div', 'post-tag', MOTS.fil.reserve_tag));
   }
 
   if(p.type === 'photo'){
@@ -1870,7 +2082,7 @@ function construirePost(p){
   const n = (p.nb_comments != null) ? p.nb_comments : (p.comments || []).length;
   const voir = el('button', 'voir-cmt');
   voir.id = 'voir-' + cle(p);
-  voir.textContent = n ? ('Voir les ' + n + ' commentaire' + (n > 1 ? 's' : '')) : 'Sois le premier à commenter';
+  voir.textContent = n ? MOTS.fil.voir_commentaires.replace('{n}', n).replace('{s}', n > 1 ? 's' : '') : MOTS.fil.premier_commentaire;
   voir.addEventListener('click', () => ouvrirCommentaires(p, true));
   art.appendChild(voir);
 
@@ -1882,7 +2094,7 @@ function construirePost(p){
   const form = el('div', 'cmt-form hidden');
   form.id = 'form-' + cle(p);
   const inp = document.createElement('input');
-  inp.type = 'text'; inp.maxLength = 500; inp.placeholder = 'Écris un commentaire…';
+  inp.type = 'text'; inp.maxLength = 500; inp.placeholder = MOTS.fil.commentaire_exemple;
   inp.id = 'saisie-' + cle(p);
   inp.addEventListener('keydown', (e) => { if(e.key === 'Enter') envoyerCommentaire(p); });
   const env = el('button', null, 'Publier');
@@ -1945,8 +2157,8 @@ function blocVerrouille(p){
   anse.setAttribute('d','M8 10.5V7.5a4 4 0 0 1 8 0v3');
   ico.appendChild(corps); ico.appendChild(anse);
   centre.appendChild(ico);
-  centre.appendChild(el('div','verrou-t','Réservé'));
-  centre.appendChild(el('div','verrou-d','Tu as un code ? Saisis-le pour ouvrir l’accès.'));
+  centre.appendChild(el('div','verrou-t', MOTS.fil.verrou_titre));
+  centre.appendChild(el('div','verrou-d', MOTS.fil.verrou_desc));
 
   /* Le champ de code. Il n'est propose qu'aux membres : un visiteur qui n'a pas
      encore de compte n'a rien a quoi rattacher un billet, et lui montrer un
@@ -1958,23 +2170,23 @@ function blocVerrouille(p){
     champ.placeholder = 'ABCD-EFGH'; champ.maxLength = 9;
     champ.setAttribute('autocapitalize','characters');
     champ.setAttribute('autocomplete','off');
-    champ.setAttribute('aria-label','Ton code d’accès');
-    const bouton = el('button','verrou-b','Ouvrir');
+    champ.setAttribute('aria-label', MOTS.fil.code_etiquette);
+    const bouton = el('button','verrou-b', MOTS.fil.verrou_bouton);
     const note = el('div','verrou-n');
     const envoyer = async () => {
       const code = champ.value.trim();
-      if(!code){ note.textContent = 'Entre ton code.'; return; }
+      if(!code){ note.textContent = MOTS.fil.code_manquant; return; }
       bouton.disabled = true; const avant = bouton.textContent; bouton.textContent = '…';
       const res = await api({ action:'utiliser_code', jeton: ME.jeton, code });
       if(res && res.ok){
-        toast(res.message || 'Accès ouvert.');
+        toast(res.message || MOTS.fil.code_ouvert);
         // On recharge le fil : le serveur renverra desormais l'adresse de la
         // video, qu'il avait retiree. On ne deverrouille rien ici, on redemande.
         chargerFil(ME);
         return;
       }
       bouton.disabled = false; bouton.textContent = avant;
-      note.textContent = (res && res.error) || 'Ce code n’a pas pu être vérifié.';
+      note.textContent = (res && res.error) || MOTS.fil.code_refuse;
     };
     bouton.addEventListener('click', envoyer);
     champ.addEventListener('keydown', (e) => { if(e.key === 'Enter') envoyer(); });
@@ -2042,7 +2254,7 @@ function blocVideo(url, coverUrl){
 
   if(!id){
     // Lien inexploitable : on le dit calmement plutot que d'afficher un carre noir.
-    cadre.appendChild(el('div', 'empty', 'Cette vidéo est momentanément indisponible.'));
+    cadre.appendChild(el('div', 'empty', MOTS.erreur.video_indisponible));
     return wrap;
   }
 
@@ -2053,7 +2265,7 @@ function blocVideo(url, coverUrl){
   rond.appendChild(ico(D_PLAY));
   vign.appendChild(rond);
   vign.setAttribute('role', 'button');
-  vign.setAttribute('aria-label', 'Lancer la vidéo');
+  vign.setAttribute('aria-label', MOTS.fil.lancer_video);
   cadre.appendChild(vign);
 
   const barre = el('div', 'v-barre hidden');
@@ -2149,7 +2361,7 @@ function carteEntree(){
   const t = el('div', 'porte-t');
   if(RESTANTS > 0){
     t.appendChild(document.createTextNode(String(RESTANTS) + ' AUTRES '));
-    t.appendChild(el('span', 'r', 'PUBLICATIONS'));
+    t.appendChild(el('span', 'r', MOTS.apercu.porte_mot_rouge));
     t.appendChild(document.createTextNode(' T’ATTENDENT'));
   } else {
     t.appendChild(document.createTextNode('ENTRE SUR '));
@@ -2157,11 +2369,11 @@ function carteEntree(){
   }
   c.appendChild(t);
   c.appendChild(el('div', 'porte-d',
-    'Réagis, commente, vote, et ramène ton monde. Les Ambassadeurs passent devant tout le monde.'));
-  const b = el('button', 'porte-b', 'Rejoins latiss.net');
+    MOTS.apercu.porte_desc));
+  const b = el('button', 'porte-b', MOTS.apercu.porte_bouton);
   b.addEventListener('click', ouvrirInscription);
   c.appendChild(b);
-  c.appendChild(el('div', 'porte-n', 'C’est gratuit. Un prénom suffit, 10 secondes.'));
+  c.appendChild(el('div', 'porte-n', MOTS.apercu.porte_note));
   return c;
 }
 
@@ -2171,7 +2383,7 @@ function renderFil(){
   if(!FIL.length){
     // R-58 : un fil vide est un debut, pas une panne. On invite, on n'alerte pas.
     box.appendChild(el('div', 'empty',
-      'Ça démarre ici. Latiss poste très bientôt, et tu seras prévenu en premier.'));
+      MOTS.apercu.fil_vide));
     if(APERCU) box.appendChild(carteEntree());
     return;
   }
@@ -2310,8 +2522,8 @@ async function envoyerCommentaire(p){
   if(!v) return;
   inp.value = '';
   const res = await api({ action: 'comment_add', membre_id: ME.id, cible_type: p.type, cible_id: p.id, contenu: v });
-  if(!res || !res.ok){ toast('Erreur, réessaie.'); return; }
-  if(res.masque){ toast('Ton commentaire sera visible après vérification.'); return; }
+  if(!res || !res.ok){ toast(MOTS.erreur.reessaie); return; }
+  if(res.masque){ toast(MOTS.fil.commentaire_en_attente); return; }
   (p.comments = p.comments || []).push(res.commentaire);
   const zone = document.getElementById('cmts-' + cle(p));
   if(zone) zone.appendChild(ligneCommentaire(res.commentaire));
@@ -2319,7 +2531,7 @@ async function envoyerCommentaire(p){
   const cmtBtn = art && art.querySelectorAll('.post-actions .ico-btn')[1];
   const span = cmtBtn && cmtBtn.querySelector('span');
   if(span) span.textContent = String(p.comments.length);
-  toast('Commentaire publié.');
+  toast(MOTS.fil.commentaire_publie);
 }
 
 /* ---------- Sondage, rendu a l'interieur de son post ---------- */
@@ -2354,16 +2566,16 @@ function peindreSondage(box, p){
   });
   box.appendChild(opts);
   box.appendChild(el('div', 'poll-total',
-    vote ? (total + ' vote' + (total > 1 ? 's' : '')) : 'Vote pour voir les résultats'));
+    vote ? (total + ' vote' + (total > 1 ? 's' : '')) : MOTS.fil.vote_invite));
 }
 async function voter(p, idx){
   if(porte()) return;
   const res = await api({ action: 'vote', membre_id: ME.id, sondage_id: p.id, option_index: idx });
-  if(!res || !res.ok){ toast('Erreur, réessaie.'); return; }
+  if(!res || !res.ok){ toast(MOTS.erreur.reessaie); return; }
   p.counts = res.counts; p.total = res.total; p.mon_vote = res.mon_vote;
   const box = document.getElementById('sond-' + p.id);
   if(box) peindreSondage(box, p);
-  toast('Vote enregistré !');
+  toast(MOTS.fil.vote_enregistre);
 }
 
 /* ---------- Le live reste epingle en tete, ce n'est pas un post ---------- */
@@ -2456,7 +2668,7 @@ function renderLive(lives){
   if(pt) pt.classList.toggle('hidden', !enDirect);
   renderLiveRepos(enDirect);
   if(!enDirect) return;
-  const t = el('div', 'sec-title', 'EN DIRECT');
+  const t = el('div', 'sec-title', MOTS.fil.en_direct);
   t.style.color = 'var(--rouge)'; t.style.marginTop = '6px';
   el2.appendChild(t);
   for(const c of lives){
@@ -2486,14 +2698,14 @@ function closeLb(e, force){
     document.getElementById('lightbox').classList.remove('open');
 }
 
-function copyLink(){const i=document.getElementById('amb-url');navigator.clipboard?.writeText(i.value).then(()=>toast('Lien copié ! Partage-le.'),()=>{i.select();document.execCommand('copy');toast('Lien copié !');});}
+function copyLink(){const i=document.getElementById('amb-url');navigator.clipboard?.writeText(i.value).then(()=>toast(MOTS.ambassadeur.lien_copie),()=>{i.select();document.execCommand('copy');toast(MOTS.ambassadeur.lien_copie_court);});}
 /* Relancer ceux qui sont entres mais n'ont pas active leurs notifications.
    Sans numero, on ne peut pas viser : WhatsApp ouvre le choix du destinataire,
    et le message est deja ecrit. C'est la seule facon de rendre la relance
    actionnable sans exposer le contact d'un autre membre. */
 function relancerInvites(){
   if(porte()) return;
-  const txt = "Salut ! Tu es bien sur latiss.net \u{1F44A} Pense à activer les notifications depuis ton espace, sinon tu rates ce que Serge publie : "
+  const txt = MOTS.cloche.rappel_whatsapp
     + location.origin + location.pathname;
   window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank');
 }
@@ -2565,7 +2777,7 @@ function replierAmb(ouvrir){
   });
 })();
 
-function shareWa(){if(porte())return;const txt="🔥 Rejoins latiss.net, l'univers officiel de Serge Beynaud ! Contenu exclusif rien que pour nous. C'est gratuit 👉 "+ambLink(ME.code_ambassadeur);window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');}
+function shareWa(){if(porte())return;const txt = MOTS.ambassadeur.invitation_whatsapp+ambLink(ME.code_ambassadeur);window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');}
 
 /* =====================================================================
    LE CLIP D'ENTREE  —  c'est la seule chose a changer
@@ -2779,7 +2991,7 @@ document.getElementById('conc-voir').addEventListener('click',function(){
   const l = document.getElementById('conc-liste');
   const ouvert = !l.classList.contains('hidden');
   l.classList.toggle('hidden', ouvert);
-  this.textContent = ouvert ? 'Voir le classement' : 'Masquer le classement';
+  this.textContent = ouvert ? MOTS.ambassadeur.voir_classement : MOTS.ambassadeur.masquer_classement;
 });
 document.getElementById('retour-apercu').addEventListener('click',function(){
   document.getElementById('view-join').classList.add('hidden');
