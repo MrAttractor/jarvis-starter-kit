@@ -202,6 +202,17 @@ body.bienvenue-on{overflow:hidden;}
 
 /* JOIN */
 .join-hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:28px 22px 34px;overflow:hidden;}
+/* L'ecran d'entree reste NOIR dans les deux themes : c'est une photo sous un
+   voile sombre, pas une surface qui bascule. Les jetons de couleur prevus
+   pour un fond clair y mentent donc sur leur fond, et le rouge sombre
+   #B80000 y tombait a 2,67:1 au lieu de 4,5. On redeclare ici les jetons
+   comme s'ils etaient en mode sombre, parce que c'est ce qu'ils sont.
+   Regle : un jeton de theme ne vaut que sur une surface qui change de theme. */
+:root[data-theme="clair"] .join-hero{
+  --rouge-texte:#FF4D4D;
+  --dim:rgba(255,255,255,.48);
+  --or:#D4A017;
+}
 .join-bg{position:absolute;inset:0;background:url('serge-hero.jpg') center 15%/cover no-repeat;filter:brightness(.44);}
 .join-ov{position:absolute;inset:0;background:linear-gradient(0deg,var(--noir) 4%,rgba(7,7,7,.6) 46%,rgba(150,0,0,.15) 78%,rgba(7,7,7,.85) 100%);}
 /* Meme raison que le bandeau : une photo plein ecran derriere. */
@@ -248,9 +259,17 @@ body.bienvenue-on{overflow:hidden;}
 .j-retour{margin-top:8px;min-height:44px;padding:0 14px;background:none;
   color:var(--rouge-texte);font-size:13px;font-weight:700;text-decoration:underline;
   text-underline-offset:3px;}
-.join-alt a{color:var(--or);font-weight:600;cursor:pointer;}
+/* 131 x 15 px avant le 19/09 : trois fois trop petit pour un pouce, et
+   c'est le lien dont a besoin exactement la personne qui n'arrive pas a
+   entrer. Le bloc en ligne lui donne sa hauteur sans casser la phrase. */
+.join-alt a{color:var(--or);font-weight:600;cursor:pointer;display:inline-flex;
+  align-items:center;min-height:44px;padding:0 6px;}
 .err{color:#ff6b6b;font-size:12px;margin-top:8px;text-align:center;min-height:16px;}
-.legal{font-size:10px;color:rgba(255,255,255,.28);text-align:center;margin-top:14px;line-height:1.5;}
+/* 10 px a 28 % donnait 2,5:1, moitie moins que le seuil, dans les deux
+   themes. Or c'est la phrase qui dit ce qu'on fait du numero du fan : la
+   rendre illisible revient a le demander sans le dire. 11 px a 62 % donne
+   6,0:1. Mesure, pas estime. */
+.legal{font-size:11px;color:rgba(255,255,255,.62);text-align:center;margin-top:14px;line-height:1.55;}
 
 /* MEMBER */
 .m-hero{position:relative;padding:26px 20px 22px;overflow:hidden;}

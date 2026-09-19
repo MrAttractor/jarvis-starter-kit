@@ -471,10 +471,20 @@ function trierContrastes() {
       });
       await pg.waitForTimeout(500);
     };
+    const fermerPorte = async (pg) => {
+      await pg.evaluate(() => { const r = document.getElementById('retour-apercu'); if (r) r.click(); });
+      await pg.waitForTimeout(400);
+    };
+
+    // Le theme se bascule AVANT d'ouvrir la porte : le bouton vit dans
+    // l'en-tete du membre, qui est masque pendant que le formulaire s'affiche.
     await ouvrirPorte(page);
     await auditer(page, 'fan · porte', 'clair', largeur);
-    await page.click('#bascule-theme');
+    await fermerPorte(page);
+
+    await page.click('#bascule-theme');   // retour au sombre
     await page.waitForTimeout(400);
+    await ouvrirPorte(page);
     await auditer(page, 'fan · porte', 'sombre', largeur);
 
     if (largeur === 390) {
@@ -510,8 +520,10 @@ function trierContrastes() {
       if (porte.indicatifParDefaut !== '+225') echecs.push('porte : indicatif par defaut = ' + porte.indicatifParDefaut + ', attendu +225');
     }
 
-    /* On revient a l'apercu : la suite de la recette suppose de le voir. */
-    await page.evaluate(() => { const r = document.getElementById('retour-apercu'); if (r) r.click(); });
+    /* On referme la porte ET on revient au clair : la suite de la recette
+       suppose les deux. */
+    await fermerPorte(page);
+    await page.click('#bascule-theme');
     await page.waitForTimeout(400);
 
     /* La carte Ambassadeur a demenage dans l'onglet Le Club le 19/09, avec la
