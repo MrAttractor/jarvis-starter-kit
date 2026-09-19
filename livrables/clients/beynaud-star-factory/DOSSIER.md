@@ -22,6 +22,78 @@ vrais membres. **Le protocole d'accord n'est toujours pas signé**, mais depuis 
 l'artiste demande lui-même une fonctionnalité payante, ce qui rouvre la négociation par
 le haut.
 
+## La porte à trois champs, et le trou qu'elle a révélé — 19/09/2026
+
+**Décision de Mac Arthur.** L'inscription demande maintenant **le prénom, le numéro
+WhatsApp et le lieu**, les trois obligatoires. L'email et le mot de passe viendront plus
+tard, au moment du badge Ambassadeur ou de l'achat d'un accès payant.
+
+### Pourquoi le numéro
+
+Il règle les doublons **à la racine, pas par une règle qu'on espère appliquer** : la colonne
+porte une contrainte d'unicité en base, donc deux comptes avec le même numéro sont
+impossibles. C'est la base qui refuse.
+
+Et il transforme la liste des membres en actif. Une liste de prénoms ne vaut rien : on ne
+peut joindre personne. **Le 5 décembre, on ne vend pas un billet à un prénom.**
+
+**Ce qui n'allait pas avant, et que personne n'avait vu.** Le serveur savait déjà
+reconnaître un numéro connu et éviter le doublon. Mais rien ne demandait jamais ce numéro :
+la carte « filet de sécurité » censée le collecter dans l'espace du membre avait son style
+complet et son commentaire dans le code, **et n'a jamais été construite**. Le mécanisme
+anti-doublon tournait à vide depuis le premier jour. C'est pour ça que Mac Arthur s'est
+retrouvé avec quatre comptes.
+
+### Le trou de sécurité, trouvé par Mac Arthur
+
+Sa question : *« Je connais le numéro WhatsApp de Cynthia. Je rentre son numéro et hop, je
+suis connecté avec son compte ? »*
+
+**Oui, et pire.** L'inscription ne renvoyait pas une session, elle renvoyait le dossier
+complet du membre existant, **jeton d'accès compris** — décrit dans le code lui-même comme
+« une clé porteuse : qui l'a, entre ». Connaître un numéro suffisait à prendre un compte
+pour de bon. Le même fichier affirmait deux lignes plus haut que ce dossier « n'est jamais
+appliqué au dossier de quelqu'un d'autre » : le commentaire décrivait une règle que le code
+ne tenait pas.
+
+Le défaut dormait, puisque aucun écran n'envoyait de numéro. **Ajouter le champ l'aurait
+réveillé** : n'importe qui aurait pris n'importe quel compte en tapant un seul champ dans
+une page web.
+
+**Refermé le 19/09, aux deux endroits** : la vérification d'avance et le rattrapage quand
+deux inscriptions arrivent au même instant. Le serveur répond « ce numéro est déjà
+inscrit » **et rien d'autre**. Vérifié en production avec un vrai numéro de membre : aucun
+dossier renvoyé.
+
+**Ce n'est pas une serrure, et il ne faut pas le croire.** Le retour sur son compte passe
+encore par « Retrouver mon espace », qui exige numéro **et** prénom — or le prénom s'affiche
+sous chaque commentaire. On est passé d'un fait public à deux faits semi-publics. **Un
+numéro identifie, il n'authentifie pas.** La serrure, c'est le mot de passe de la phase 2.
+
+### Le lieu se choisit, il ne se tape pas
+
+Latiss veut mettre les zones en compétition. Un lieu tapé à la main donne « Abidjan »,
+« abidjan », « ABJ » et « abj » : quatre zones pour une, chacune avec un quart des points,
+et un classement faux sans que ça se voie. Ce n'est pas une crainte : **sur les douze
+premiers membres, trois seulement avaient renseigné un lieu, et l'un avait écrit
+« togo »** — en minuscules, et c'est un pays, pas une ville.
+
+La liste : Abidjan (**pas découpée en communes**, arbitré par Mac Arthur), les dix grandes
+villes, « Autre ville de Côte d'Ivoire », puis la diaspora par pays. Elle est vérifiée
+**côté serveur** et pas seulement dans le formulaire : un formulaire se contourne.
+
+L'indicatif téléphonique se déduit du lieu choisi et reste modifiable, parce qu'un Ivoirien
+à Paris garde souvent son numéro de Côte d'Ivoire.
+
+### Le ménage fait le même jour
+
+Le doublon « Mr Attractor » né du déménagement est fusionné (migration `0015`). On a gardé
+**l'ancien**, celui du 14/09 qui porte les trois filleuls, pas le plus récent : les filleuls
+référencent le code en texte, sans clé étrangère, et supprimer le mauvais compte les aurait
+rendus orphelins **sans lever la moindre erreur**. L'abonnement aux notifications créé sur
+latiss.net a été déplacé sur le compte conservé. Vérifié après : un seul Mr Attractor,
+3 filleuls comptés, 3 filleuls réels, 2 appareils.
+
 ## Le déménagement sur latiss.net, le 19/09/2026
 
 **L'application vit maintenant sur son domaine.** `latiss.net/fan` pour les fans,
@@ -998,11 +1070,12 @@ séries et live YouTube verrouillés, sondages, application installable.
 | D-17 | **L'espace de Serge ne savait pas cocher « payant »** | le verrou existait mais Serge ne pouvait pas l'activer seul | **soldée le 18/09.** Le sélecteur d'accès propose trois valeurs, pour une vidéo comme pour un direct : tous les membres, Ambassadeurs, ou payant. La base garde deux notions distinctes, la traduction se fait en un seul endroit |
 | D-07 | **Compteur de parrainage lu puis écrit**, non atomique | des points perdus en pic, sans moyen de reconstituer la vérité | **soldée le 18/09.** Un seul `update` en base (migration 0011), la ligne se verrouille et les appels simultanés se mettent en file. Éprouvé sur la production : **12 inscriptions au même instant sur un même lien, compteur à 12**, grade Ambassadeur déclenché automatiquement, 13 lignes de test supprimées derrière. Une fonction de recalage est livrée avec, pour recoler le compteur sur la vérité le jour où l'on doute d'un classement |
 | D-08 | **Point de rupture inconnu** | on découvrirait le plafond pendant le lancement | **mesuré le 17/09, en lecture seule.** Genou de saturation à **~55 ouvertures de page par seconde** : de 40 à 80 appels simultanés, la latence double (751 → 1 403 ms) et le débit ne gagne que 7 %. **Zéro erreur sur 975 requêtes** : sous surcharge le système ralentit, il ne casse pas. Reste inconnu : le comportement en écriture, non testé pour ne pas créer de faux comptes en production |
-| D-09 | **Doublons de comptes** : sans numéro, une réinscription crée une ligne de plus | des fans fantômes qu'aucune clé ne permet de reconnaître | ouvert |
+| D-09 | **Doublons de comptes** : sans numéro, une réinscription crée une ligne de plus | des fans fantômes qu'aucune clé ne permet de reconnaître | **soldée le 19/09.** Le numéro WhatsApp devient obligatoire à l'inscription, et la colonne porte une contrainte d'unicité : le doublon n'est plus découragé, il est impossible |
 | D-10 | **`photo_add` force `.jpg` et `image/jpeg`** en dur | un fichier qui ment sur son contenu, et le WebP impossible | **soldée le 17/09.** Le type est lu sur l'image elle-même, liste blanche webp/jpeg/png, extension déduite. `bey-admin` v19 |
 | D-11 | **Colonne morte `bey_membres.push_subscription`**, 0 ligne renseignée, les abonnements vivent dans `bey_push` | schéma qui ment sur lui-même, piège pour la prochaine personne | ouvert |
 | D-12 | **Panier `bey-photos` public** | aucune exclusivité possible sur une photo, quel que soit le grade | ouvert. **La fonction Cloudflare ne la referme pas** : l'adresse Supabase d'origine reste accessible directement. Servir par notre domaine est une affaire de coût et de vitesse, pas de verrou |
 | D-13 | **Lien de partage générique** : il ouvre l'accueil, pas la publication partagée | l'ami arrive et doit chercher la vidéo dont on lui a parlé | ouvert |
+| D-20 | **Le retour sur son compte n'est pas authentifié.** « Retrouver mon espace » demande numéro **et** prénom, or le prénom s'affiche sous chaque commentaire | qui connaît un membre peut reprendre son compte, et son jeton d'accès avec | **ouvert, et c'est la phase 2 décidée le 19/09** : email ou téléphone plus un mot de passe choisi, demandé au badge Ambassadeur ou à l'achat. Trouvé par Mac Arthur. Le chemin de l'inscription, lui, est refermé le 19/09 |
 
 **Rustines assumées, écrites comme telles.** La vidéo déposée en fichier (17/09) est un chemin
 **pour essayer** : le fichier reste téléchargeable par son adresse, il n'y a aucune

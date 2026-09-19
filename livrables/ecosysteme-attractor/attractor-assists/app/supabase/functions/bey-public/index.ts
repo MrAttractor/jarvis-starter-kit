@@ -82,6 +82,31 @@ const normWa = (s: unknown) => {
   return v;
 };
 const waValide = (v: string) => /^\+[1-9]\d{7,14}$/.test(v);
+
+/* Les lieux, et pourquoi c'est une LISTE et pas un champ libre.
+   Latiss veut mettre les zones en competition. Un lieu tape a la main donne
+   « Abidjan », « abidjan », « ABJ » et « abj » : quatre zones pour une seule,
+   chacune avec un quart des points, et un classement faux sans que ca se voie.
+   Ce n'est pas une crainte : sur les DOUZE premiers membres, trois seulement
+   avaient renseigne un lieu, et l'un d'eux avait ecrit « togo » — en
+   minuscules, et c'est un pays, pas une ville.
+
+   Abidjan n'est PAS decoupee en communes. Arbitre par Mac Arthur le 19/09 :
+   la commune est plus fine que ce dont la competition a besoin, et elle
+   allonge la liste au moment ou le fan hesite deja.
+
+   Verifie ici et pas seulement dans le formulaire : un formulaire se
+   contourne, le serveur non. La meme liste existe dans fan.html ; si les deux
+   divergent, le serveur refuse et le fan voit une erreur. Visible, donc
+   reparable, contrairement a une donnee fausse qui passe. */
+const LIEUX = [
+  // Cote d'Ivoire
+  "Abidjan", "Bouake", "Yamoussoukro", "Daloa", "Korhogo", "San-Pedro",
+  "Man", "Gagnoa", "Abengourou", "Divo", "Autre ville de Cote d'Ivoire",
+  // Ailleurs
+  "France", "Burkina Faso", "Mali", "Senegal", "Ghana", "Togo",
+  "Canada", "Etats-Unis", "Belgique", "Italie", "Autre pays",
+];
 const slug = (s: unknown) =>
   (String(s ?? "FAN").toUpperCase().normalize("NFD").replace(/[^A-Z]/g, "").slice(0, 6) || "FAN");
 function makeCode(prenom: unknown) {
@@ -175,13 +200,41 @@ Deno.serve(async (req) => {
       const prenom = String(d.prenom ?? "").trim();
       if (!prenom) return json({ ok: false, error: "Ton prénom, stp." });
 
-      // Le numero est facultatif depuis le 13/09. Quand il est donne quand meme,
-      // il sert a retrouver un compte existant plutot qu'a en creer un doublon.
+      /* Le numero est OBLIGATOIRE depuis le 19/09. Il etait facultatif depuis
+         le 13/09, et personne ne le donnait jamais : la carte censee le
+         demander plus tard a l'interieur n'a jamais ete construite. Resultat,
+         le mecanisme anti-doublon du serveur tournait a vide depuis le
+         premier jour, et Mac Arthur s'est retrouve avec quatre comptes.
+         C'est aussi lui qui fait de la liste des membres autre chose qu'une
+         liste de prenoms qu'on ne peut joindre nulle part : le 5 decembre,
+         on ne vend pas un billet a un prenom. */
       const wa = normWa(d.whatsapp);
-      const avecNumero = waValide(wa);
-      if (avecNumero) {
-        const ex = await (await sb(`bey_membres?whatsapp=eq.${encodeURIComponent(wa)}&select=*`)).json();
-        if (Array.isArray(ex) && ex.length) return json({ ok: true, membre: pub(ex[0]), returning: true });
+      if (!waValide(wa)) {
+        return json({ ok: false, error: "Ton numero WhatsApp, avec l'indicatif du pays." });
+      }
+
+      const lieu = String(d.lieu ?? "").trim();
+      if (!LIEUX.includes(lieu)) {
+        return json({ ok: false, error: "Choisis ton lieu dans la liste." });
+      }
+
+      /* CE NUMERO EST DEJA INSCRIT : ON NE RENVOIE RIEN.
+         Avant aujourd'hui, on renvoyait ici le dossier du membre existant,
+         son jeton d'acces compris — decrit dans ce fichier meme comme « une
+         cle porteuse : qui l'a, entre ». Connaitre le numero de quelqu'un
+         suffisait donc a prendre son compte pour de bon. Le defaut dormait :
+         aucun ecran n'envoyait de numero. Le rendre obligatoire dans le
+         formulaire l'aurait reveille, et n'importe qui aurait pris n'importe
+         quel compte en tapant un seul champ.
+
+         Tant que le numero est la seule chose demandee, il IDENTIFIE, il
+         n'AUTHENTIFIE pas. Le retour sur son compte passe par « Retrouver mon
+         espace », qui exige numero ET prenom — ce qui n'est pas non plus une
+         serrure, et c'est pourquoi la suite est un vrai mot de passe. */
+      const ex = await (await sb(`bey_membres?whatsapp=eq.${encodeURIComponent(wa)}&select=id`)).json();
+      if (Array.isArray(ex) && ex.length) {
+        return json({ ok: false, code: "deja_inscrit",
+          error: "Ce numero est deja inscrit. Utilise « Retrouver mon espace »." });
       }
 
       const ref = d.ref ? String(d.ref).toUpperCase().replace(/[^A-Z0-9]/g, "") : null;
@@ -190,17 +243,18 @@ Deno.serve(async (req) => {
         const res = await sb("bey_membres", {
           method: "POST", headers: { Prefer: "return=representation" },
           body: JSON.stringify({
-            prenom, whatsapp: avecNumero ? wa : null,
-            lieu: d.lieu ? String(d.lieu).trim() : null,
+            prenom, whatsapp: wa, lieu,
             code_ambassadeur: makeCode(prenom), parraine_par: ref,
           }),
         });
         if (res.ok) { inserted = (await res.json())[0]; break; }
         const t = await res.text();
-        if (avecNumero && t.includes("whatsapp")) {
-          const again = await (await sb(`bey_membres?whatsapp=eq.${encodeURIComponent(wa)}&select=*`)).json();
-          if (again.length) return json({ ok: true, membre: pub(again[0]), returning: true });
-          return json({ ok: false, error: "inscription impossible" });
+        /* Deux inscriptions au meme instant avec le meme numero : la base
+           refuse la seconde. On ne renvoie PAS le dossier de la premiere,
+           pour la meme raison qu'au-dessus. */
+        if (t.includes("whatsapp")) {
+          return json({ ok: false, code: "deja_inscrit",
+            error: "Ce numero est deja inscrit. Utilise « Retrouver mon espace »." });
         }
       }
       if (!inserted) return json({ ok: false, error: "inscription impossible" });

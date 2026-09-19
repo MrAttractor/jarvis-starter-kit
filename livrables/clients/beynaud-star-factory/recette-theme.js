@@ -458,6 +458,62 @@ function trierContrastes() {
     await auditer(page, 'fan · visiteur', 'clair', largeur);
     if (largeur === 390) await page.screenshot({ path: path.join(__dirname, 'recette-theme-fan-clair.png'), fullPage: true });
 
+    /* ── LA PORTE, c'est-a-dire le formulaire d'inscription ──
+       La recette ne l'ouvrait jamais : elle mesurait l'apercu du fil et
+       passait directement au membre. Les trois champs poses le 19/09
+       (prenom, numero, lieu) n'etaient donc mesures nulle part. Meme angle
+       mort que les onglets, meme motif : une recette ne se plaint jamais de
+       ce qu'elle n'a jamais regarde. */
+    const ouvrirPorte = async (pg) => {
+      await pg.evaluate(() => {
+        const b = [...document.querySelectorAll('button')].find(x => /rejoins/i.test(x.textContent));
+        if (b) b.click();
+      });
+      await pg.waitForTimeout(500);
+    };
+    await ouvrirPorte(page);
+    await auditer(page, 'fan · porte', 'clair', largeur);
+    await page.click('#bascule-theme');
+    await page.waitForTimeout(400);
+    await auditer(page, 'fan · porte', 'sombre', largeur);
+
+    if (largeur === 390) {
+      const porte = await page.evaluate(() => {
+        const mesure = (sel) => {
+          const n = document.querySelector(sel);
+          if (!n) return null;
+          const r = n.getBoundingClientRect();
+          return { h: Math.round(r.height), l: Math.round(r.width) };
+        };
+        const s = document.getElementById('j-lieu');
+        return {
+          prenom: mesure('#j-prenom'), indicatif: mesure('#j-ind'),
+          numero: mesure('#j-wa'), lieu: mesure('#j-lieu'),
+          bouton: mesure('#j-btn'),
+          optionsLieu: s ? s.options.length : 0,
+          groupesLieu: s ? s.querySelectorAll('optgroup').length : 0,
+          indicatifParDefaut: (document.getElementById('j-ind') || {}).value,
+        };
+      });
+      for (const [nom, m] of Object.entries(porte)) {
+        if (m && typeof m === 'object') {
+          if (m.h < 44) echecs.push('porte : le champ « ' + nom + ' » fait ' + m.h + ' px de haut, seuil 44');
+        }
+      }
+      if (!porte.prenom) echecs.push('porte : le champ prenom est absent');
+      if (!porte.numero) echecs.push('porte : le champ numero est absent');
+      if (!porte.lieu) echecs.push('porte : le choix du lieu est absent');
+      /* La liste doit etre servie par le script : si elle est vide, le fan ne
+         peut pas s'inscrire du tout, et rien d'autre ne le dirait. */
+      if (porte.optionsLieu < 5) echecs.push('porte : la liste des lieux ne contient que ' + porte.optionsLieu + ' entree(s)');
+      if (porte.groupesLieu !== 2) echecs.push('porte : attendu 2 groupes de lieux, trouve ' + porte.groupesLieu);
+      if (porte.indicatifParDefaut !== '+225') echecs.push('porte : indicatif par defaut = ' + porte.indicatifParDefaut + ', attendu +225');
+    }
+
+    /* On revient a l'apercu : la suite de la recette suppose de le voir. */
+    await page.evaluate(() => { const r = document.getElementById('retour-apercu'); if (r) r.click(); });
+    await page.waitForTimeout(400);
+
     /* La carte Ambassadeur a demenage dans l'onglet Le Club le 19/09, avec la
        refonte a trois onglets. On y va avant de la mesurer, sinon la recette
        cherche un element cache et echoue sur un faux probleme. */

@@ -222,10 +222,32 @@ body.bienvenue-on{overflow:hidden;}
 .field input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:14px 15px;font-size:15px;color:#fff;}
 .field input:focus{border-color:var(--rouge);background:rgba(255,255,255,.09);}
 .field input::placeholder{color:rgba(255,255,255,.3);}
+/* Le numero se saisit en deux morceaux : l'indicatif, et le reste. Le
+   serveur refuse un numero sans indicatif, et c'est delibere : 07... peut
+   etre ivoirien comme francais, et deviner reviendrait a inventer. Comme on
+   demande aussi le lieu, l'indicatif se pre-remplit tout seul. */
+.tel{display:flex;gap:8px;}
+.tel input.ind{width:88px;flex:0 0 88px;text-align:center;}
+.tel input.num{flex:1;min-width:0;}
+/* 16px au moins : en dessous, Safari sur iPhone zoome tout seul a la saisie
+   et le formulaire sort de l'ecran. */
+.field select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  border-radius:11px;padding:14px 15px;font-size:16px;color:#fff;appearance:none;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;background-size:18px;
+  padding-right:40px;}
+.field select:focus{border-color:var(--rouge);background-color:rgba(255,255,255,.09);}
+/* La liste deroulante est peinte par le systeme : sans couleur explicite sur
+   les options, Android les affiche en blanc sur blanc. */
+.field select option{background:#141414;color:#fff;}
+:root[data-theme="clair"] .field select option{background:#fff;color:#141414;}
 .btn-join{width:100%;background:var(--rouge);color:#fff;padding:16px;border-radius:12px;font-size:14px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-top:6px;box-shadow:0 8px 30px var(--rouge-glow);display:flex;align-items:center;justify-content:center;gap:9px;}
 .btn-join:active{background:var(--rouge-vif);}
 .btn-join:disabled{opacity:.55;}
 .join-alt{text-align:center;margin-top:16px;font-size:12px;color:var(--dim);}
+.j-retour{margin-top:8px;min-height:44px;padding:0 14px;background:none;
+  color:var(--rouge-texte);font-size:13px;font-weight:700;text-decoration:underline;
+  text-underline-offset:3px;}
 .join-alt a{color:var(--or);font-weight:600;cursor:pointer;}
 .err{color:#ff6b6b;font-size:12px;margin-top:8px;text-align:center;min-height:16px;}
 .legal{font-size:10px;color:rgba(255,255,255,.28);text-align:center;margin-top:14px;line-height:1.5;}
@@ -876,15 +898,22 @@ const MOTS = {
   entree: {
     surtitre: 'latiss.net · Officiel',
     titre: 'latiss.net',
-    sous_titre: 'L\'univers officiel de Serge Beynaud. Ton prénom suffit, et tu es dedans.',
+    sous_titre: 'L\'univers officiel de Serge Beynaud. Trois lignes, et tu es dedans.',
     parrain: 'Tu entres sur l\'invitation d\'un membre de latiss.net.',
     champ: 'Ton prénom',
     exemple: 'Ex : Awa',
+    numero: 'Ton numero WhatsApp',
+    numero_exemple: '07 09 54 33 55',
+    lieu: 'Tu es ou ?',
+    lieu_choisir: 'Choisis ton lieu',
+    numero_manquant: 'Ton numero WhatsApp, stp.',
+    lieu_manquant: 'Dis-nous ou tu es.',
+    retrouver: 'Retrouver mon espace',
     bouton: 'Entrer sur latiss.net',
     prenom_manquant: 'Ton prénom, stp.',
-    deja_membre: { html: 'Déjà membre ? <a onclick="recover()">Retrouver mon espace</a>' },
+    deja_membre: 'Déjà membre ?',
     retour_apercu: 'Revenir à l’aperçu',
-    legal: 'C’est gratuit. On ne demande rien d’autre que ton prénom, et tu peux effacer ton compte quand tu veux depuis ton espace.',
+    legal: 'C’est gratuit. Ton numéro sert à retrouver ton compte et à te prévenir des dates, rien d’autre. Tu peux effacer ton compte quand tu veux.',
     retrouver_numero: 'Le numéro WhatsApp que tu as enregistré (avec l’indicatif) :',
     retrouver_prenom: 'Et le prénom de ton compte :',
     retrouver_introuvable: 'Aucun compte ne correspond à ce numéro et ce prénom.',
@@ -895,7 +924,6 @@ const MOTS = {
     marque: 'latiss.net',
     grade: 'Membre',
     sous_titre: 'Tu es sur latiss.net. Bienvenue chez toi.',
-    retour: 'Content de te revoir, {prenom} !',
     rappel_cloche: { html: 'Pense à activer <u>la cloche en haut</u> pour ne rien rater' },
     theme_vers_sombre: 'Passer en mode sombre',
     theme_vers_clair: 'Passer en mode clair',
@@ -1091,11 +1119,20 @@ remplirMots(document);
         <span data-mot="entree.parrain"></span>
       </div>
       <div class="field"><label data-mot="entree.champ"></label><input id="j-prenom" type="text" data-mot-ph="entree.exemple" autocomplete="given-name"/></div>
+      <div class="field"><label data-mot="entree.numero"></label>
+        <div class="tel">
+          <input id="j-ind" class="ind" type="tel" inputmode="tel" value="+225" aria-label="Indicatif du pays" maxlength="5"/>
+          <input id="j-wa" class="num" type="tel" inputmode="tel" data-mot-ph="entree.numero_exemple" autocomplete="tel-national"/>
+        </div>
+      </div>
+      <div class="field"><label data-mot="entree.lieu"></label>
+        <select id="j-lieu"></select>
+      </div>
       <button id="j-btn" class="btn-join" onclick="doJoin()"><span data-mot="entree.bouton"></span>
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
       </button>
       <div id="j-err" class="err"></div>
-      <div class="join-alt" data-mot="entree.deja_membre"></div>
+      <div class="join-alt"><span data-mot="entree.deja_membre"></span> <a onclick="recover()" data-mot="entree.retrouver"></a></div>
       <button class="retour-apercu" id="retour-apercu" data-mot="entree.retour_apercu"></button>
       <div class="legal" data-mot="entree.legal"></div>
     </div>
@@ -1338,15 +1375,49 @@ async function doJoin(){
   const prenom=document.getElementById('j-prenom').value.trim();
   const err=document.getElementById('j-err'); err.textContent='';
   if(!prenom){err.textContent=MOTS.entree.prenom_manquant;return;}
+
+  /* Trois champs depuis le 19/09. Le numero rend le doublon IMPOSSIBLE : la
+     colonne porte une contrainte d'unicite en base, ce n'est donc plus une
+     regle qu'on applique mais un refus de la base. Et le lieu sert la
+     competition par zone que Latiss veut lancer. */
+  const ind=(document.getElementById('j-ind').value||'').trim();
+  const num=(document.getElementById('j-wa').value||'').trim();
+  if(!num){err.textContent=MOTS.entree.numero_manquant;return;}
+  const whatsapp=ind+num;
+
+  const lieu=document.getElementById('j-lieu').value;
+  if(!lieu){err.textContent=MOTS.entree.lieu_manquant;return;}
+
   const btn=document.getElementById('j-btn'); btn.disabled=true; const old=btn.innerHTML; btn.innerHTML='<span class="spin"></span>';
-  // Un seul champ part au serveur. Le numero se proposera plus tard, dans son
-  // espace, quand il aura quelque chose a perdre.
-  const res=await api({action:'join',prenom,ref:refParam()});
+  const res=await api({action:'join',prenom,whatsapp,lieu,ref:refParam()});
   btn.disabled=false; btn.innerHTML=old;
-  if(!res.ok){err.textContent=res.error||MOTS.erreur.generique;return;}
+
+  if(!res.ok){
+    err.textContent=res.error||MOTS.erreur.generique;
+    /* Numero deja inscrit : le serveur ne renvoie PLUS le compte existant,
+       parce que connaitre un numero suffirait alors a le prendre. On propose
+       le chemin de retour au lieu de laisser le fan devant un mur. */
+    if(res.code==='deja_inscrit') proposerRetour();
+    return;
+  }
   saveMembre(res.membre);
-  if(res.returning) toast(MOTS.membre.retour.replace('{prenom}', res.membre.prenom));
   renderMember(res.membre);
+}
+
+/* Le bouton « Retrouver mon espace » existe deja en bas du formulaire, mais
+   quelqu'un qui vient de se voir refuser son numero ne va pas le chercher. */
+function proposerRetour(){
+  const z=document.getElementById('j-err');
+  const b=document.createElement('button');
+  b.type='button'; b.className='j-retour';
+  b.setAttribute('data-mot','entree.retrouver');
+  b.addEventListener('click',recover);
+  z.appendChild(document.createElement('br'));
+  z.appendChild(b);
+  remplirMots(z);
+  // Le lien permanent dirait la meme chose a soixante pixels de la.
+  const alt = document.querySelector('.join-alt');
+  if(alt) alt.classList.add('hidden');
 }
 async function recover(){
   // Le prenom est demande EN PLUS du numero. Connaitre le seul numero d'un fan
@@ -3072,6 +3143,61 @@ const BIENVENUE = {
   // qu'il ait entendu les premiers mots.
   avant_suite : 5,
 };
+
+/* Les lieux, et pourquoi c'est une liste et pas un champ libre.
+   Latiss veut mettre les zones en competition. Un lieu tape a la main donne
+   « Abidjan », « abidjan », « ABJ » et « abj » : quatre zones pour une seule,
+   chacune avec un quart des points, et un classement faux sans que ca se
+   voie. Ce n'est pas une crainte : sur les douze premiers membres, trois
+   avaient renseigne un lieu, et l'un d'eux avait ecrit « togo ».
+
+   Abidjan n'est pas decoupee en communes : arbitre par Mac Arthur le 19/09,
+   la commune est plus fine que ce dont la competition a besoin.
+
+   CETTE LISTE EXISTE AUSSI DANS bey-public (constante LIEUX), qui refuse
+   toute valeur absente de la sienne. Un formulaire se contourne, le serveur
+   non. Si les deux divergent, le fan voit une erreur : visible, donc
+   reparable, contrairement a une donnee fausse qui passe. */
+const LIEUX = {
+  "Cote d'Ivoire": ["Abidjan", "Bouake", "Yamoussoukro", "Daloa", "Korhogo",
+    "San-Pedro", "Man", "Gagnoa", "Abengourou", "Divo", "Autre ville de Cote d'Ivoire"],
+  "Ailleurs": ["France", "Burkina Faso", "Mali", "Senegal", "Ghana", "Togo",
+    "Canada", "Etats-Unis", "Belgique", "Italie", "Autre pays"],
+};
+/* L'indicatif se deduit du lieu choisi. Le fan tape son numero comme il le
+   dit, sans se demander ce qu'est un indicatif. Il reste modifiable : un
+   Ivoirien a Paris garde souvent son numero de Cote d'Ivoire. */
+const INDICATIFS = {
+  "France": '+33', "Burkina Faso": '+226', "Mali": '+223', "Senegal": '+221',
+  "Ghana": '+233', "Togo": '+228', "Canada": '+1', "Etats-Unis": '+1',
+  "Belgique": '+32', "Italie": '+39',
+};
+
+(function monterLieux(){
+  const s = document.getElementById('j-lieu');
+  if(!s) return;
+  const vide = document.createElement('option');
+  vide.value = ''; vide.textContent = MOTS.entree.lieu_choisir;
+  vide.disabled = true; vide.selected = true;
+  s.appendChild(vide);
+  Object.keys(LIEUX).forEach(function(groupe){
+    const g = document.createElement('optgroup');
+    g.label = groupe;
+    LIEUX[groupe].forEach(function(l){
+      const o = document.createElement('option');
+      o.value = l; o.textContent = l;
+      g.appendChild(o);
+    });
+    s.appendChild(g);
+  });
+  s.addEventListener('change', function(){
+    const ind = document.getElementById('j-ind');
+    // On ne remplace l'indicatif que s'il n'a pas ete touche a la main.
+    if(ind && !ind.dataset.modifie) ind.value = INDICATIFS[s.value] || '+225';
+  });
+  const ind = document.getElementById('j-ind');
+  if(ind) ind.addEventListener('input', function(){ ind.dataset.modifie = '1'; });
+})();
 
 const bienvenueEl = document.getElementById('bienvenue');
 
