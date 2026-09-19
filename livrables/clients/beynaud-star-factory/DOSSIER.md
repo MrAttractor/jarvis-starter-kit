@@ -13,6 +13,7 @@
 | Échéance | à fixer avec la date du prochain concert, encore inconnue |
 | Argent en attente | non chiffré, plateforme livrée sans contrepartie signée. **Le live est le premier poste qui engage de la trésorerie réelle** (voir `COUTS-LIVE-PRO.md`) |
 | Coût de fonctionnement | mesuré le 17/09 : **~26 $/mois à 50 000 fans** hors vidéo exclusive, **+50 $ par vidéo exclusive vue par tous**. Aujourd'hui 0 $, mais sur un forfait gratuit **partagé avec tous les autres clients**, qui tombent ensemble s'il saute |
+| En attente du point financier | **L'envoi de vidéo depuis le téléphone de Serge**, mis en attente par Mac Arthur le 19/09 : il veut d'abord savoir combien investir, et éventuellement chercher un investisseur. La décision tient en un point, qui compresse la vidéo. Un iPhone sort 80 à 150 Mo pour 30 secondes, donc il faut réencoder quelque part. **Cloudflare Stream** est la seule voie qui règle vraiment la demande (Serge filme, il envoie, c'est publié) : ~12 €/mois à 5 000 membres, ~250 €/mois à 50 000. Les deux autres voies remettent une étape sur le dos de Serge (YouTube) ou demandent d'écrire un encodeur dans le navigateur (Supabase). **Rien n'est activé, aucun engagement pris.** |
 | Alerte juridique | **le protocole interdit à l'agence de se dire prestataire de Serge pendant 5 ans** (Art. 3). Clause de droit de référence à ajouter **avant** signature |
 
 ## En une phrase
