@@ -22,6 +22,38 @@ vrais membres. **Le protocole d'accord n'est toujours pas signé**, mais depuis 
 l'artiste demande lui-même une fonctionnalité payante, ce qui rouvre la négociation par
 le haut.
 
+## Le déménagement sur latiss.net, le 19/09/2026
+
+**L'application vit maintenant sur son domaine.** `latiss.net/fan` pour les fans,
+`latiss.net/app` pour Serge. Le site mutualisé ne garde que les pages commerciales du
+dossier : `/beynaud`, `/beynaud/offre`, la maquette.
+
+**Pourquoi maintenant et pas plus tard.** Le navigateur range ses données par adresse. Un
+membre inscrit sur `demo.agenceattractor.com` qui arrive sur `latiss.net` n'est pas
+déconnecté, il est **inconnu** : ni prénom, ni grade, ni lien de parrainage. Même chose
+pour la cloche, qu'il faut réactiver, et pour l'application installée sur l'écran
+d'accueil, qui continue de pointer vers l'ancienne adresse. Mac Arthur a confirmé que les
+11 membres inscrits étaient des testeurs : le déménagement leur coûte une réinscription de
+dix secondes. Après le lancement, ce sont de vrais fans recrutés par de vrais Ambassadeurs
+qui perdent leur grade, et ça ne se rattrape plus.
+
+**Les anciens liens continuent de marcher, avec leur code de parrainage.** Vérifié sur les
+quatre portes d'entrée : la chaîne de requête survit à chaque redirection. Sans elle, un
+filleul arriverait sans le code de son parrain, personne ne verrait d'erreur, et le
+compteur de l'Ambassadeur resterait simplement à zéro.
+
+**Le piège qui aurait été silencieux.** Le fil mis en cache et le relais des photos sont
+du code, pas des fichiers. Sur le site mutualisé, ce sont des Pages Functions, un simple
+dossier `functions/`. **Ce dossier n'existe pas sur la nouvelle plateforme** où est né
+`latiss.net`. Copiés tels quels, les deux fichiers n'auraient rien fait, sans erreur et
+sans avertissement : le fil serait reparti taper Supabase à chaque ouverture de page
+(plafond mesuré à ~55 par seconde) et chaque photo serait repartie du quota de sortie
+Supabase (épuisé à 8 197 visiteurs). Le site aurait eu l'air normal jusqu'au lancement.
+Ils sont portés en Worker, et vérifiés en ligne : le fil répond `miss` puis `hit`, un appel
+identifié ne rentre jamais dans le cache partagé, et les photos sortent de Cloudflare.
+
+Le détail des réglages est dans `site/DEPLOIEMENT.md`.
+
 ## La navigation à trois onglets, en service le 19/09/2026
 
 Validée par Mac Arthur. **Le fil unique est supprimé**, et avec lui le fichier jumeau qui

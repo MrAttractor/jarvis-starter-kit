@@ -1,11 +1,28 @@
-# La page d'attente change souvent tant que les textes ne sont pas arrêtés :
-# elle se revalide à chaque visite. Les images, elles, portent un nom stable et
-# ne bougent pas : un an de cache, et on change le NOM du fichier pour en
-# remplacer une, jamais son contenu. Même règle que sur le site mutualisé.
+# La page d'attente et les pages de l'application changent souvent : elles se
+# revalident a chaque visite. Les images portent un nom stable et ne bougent
+# pas : un an de cache, et on change le NOM du fichier pour en remplacer une,
+# jamais son contenu.
+#
+# Le cas /fan merite d'etre dit : sur le site mutualise, cette page portait
+# s-maxage d'une semaine faute de regle, et une version supprimee a continue
+# d'etre servie pendant des heures apres son retrait. Ici elle est nommee.
 /
+  Cache-Control: public, max-age=0, must-revalidate
+/fan
+  Cache-Control: public, max-age=0, must-revalidate
+/app
+  Cache-Control: public, max-age=0, must-revalidate
+/rejoindre
+  Cache-Control: public, max-age=0, must-revalidate
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+/manifest.webmanifest
+  Content-Type: application/manifest+json
   Cache-Control: public, max-age=0, must-revalidate
 
 /*.webp
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=604800
+/*.jpg
+  Cache-Control: public, max-age=604800
 /*.png
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=604800

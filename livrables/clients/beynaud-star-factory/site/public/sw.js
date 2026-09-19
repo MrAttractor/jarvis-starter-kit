@@ -23,7 +23,7 @@ self.addEventListener('push', (e) => {
   // Un push sans contenu lisible reste un push : on affiche quelque chose
   // plutôt que rien. Un navigateur qui reçoit une notification et n'affiche
   // rien peut révoquer la permission.
-  let d = { titre: 'latiss.net', corps: 'Du nouveau chez Serge.', url: '/beynaud/fan' };
+  let d = { titre: 'latiss.net', corps: 'Du nouveau chez Serge.', url: '/fan' };
   try { if (e.data) d = Object.assign(d, JSON.parse(e.data.text())); } catch (_) {}
 
   e.waitUntil(
@@ -39,7 +39,7 @@ self.addEventListener('push', (e) => {
       // ce que Mac Arthur a pris pour « la notification ne part pas », alors
       // que le serveur l'envoyait et qu'Apple l'acceptait.
       tag: 'bey-' + (d.id || Date.now()),
-      data: { url: d.url || '/beynaud/fan' },
+      data: { url: d.url || '/fan' },
     })
   );
 });
@@ -47,7 +47,7 @@ self.addEventListener('push', (e) => {
 // ---------- Le fan tape la notification ----------
 self.addEventListener('notificationclick', (e) => {
   e.notification.close();
-  const cible = (e.notification.data && e.notification.data.url) || '/beynaud/fan';
+  const cible = (e.notification.data && e.notification.data.url) || '/fan';
   e.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((fenetres) => {
       // Si latiss.net est déjà ouvert quelque part, on le ramène au

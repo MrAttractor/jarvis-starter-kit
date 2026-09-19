@@ -1,11 +1,45 @@
 # latiss.net — comment on déploie
 
-> Révision du 19/09/2026, jour de la mise en ligne du domaine.
+> Révision du 19/09/2026, jour où l'application a emménagé sur le domaine.
 
 ## Ce que c'est
 
-Le site de **Latiss**, sur son domaine propre `latiss.net`. Il a son **propre projet
-Cloudflare Pages**, séparé du site mutualisé `demo.agenceattractor.com`.
+Le site de **latiss.net**, sur son domaine propre. Il a son **propre projet
+Cloudflare**, séparé du site mutualisé `demo.agenceattractor.com`.
+
+**Depuis le 19/09/2026, il porte l'application elle-même**, et plus seulement une page
+d'attente :
+
+| Adresse | Ce que c'est |
+|---|---|
+| `/` | la page d'attente : le clip, la signature, « Bientôt disponible » |
+| `/fan` | **l'espace des fans.** C'est l'adresse des liens de parrainage |
+| `/app` | le tableau de bord de Serge |
+| `/api/feed` | le fil public, mis en cache 30 s au bord du réseau |
+| `/img/<uuid>.<ext>` | les photos, servies par Cloudflare et non par Supabase |
+
+## Le piège du déménagement, et il aurait été silencieux
+
+Les deux derniers chemins demandent du **code**. Sur le site mutualisé, c'étaient des
+**Pages Functions** : un dossier `functions/`, et Cloudflare s'occupe du reste. **Ce
+dossier n'existe pas ici**, parce que ce projet est né sur la nouvelle plateforme où Pages
+est fondu dans Workers.
+
+Copiés tels quels, ces deux fichiers n'auraient **rien fait**, sans erreur et sans
+avertissement. Le fil serait reparti taper Supabase à chaque ouverture de page, dont le
+plafond mesuré est de ~55 par seconde. Chaque photo serait repartie du quota de sortie de
+Supabase, épuisé à 8 197 visiteurs. Le site aurait eu l'air parfaitement normal jusqu'au
+jour du lancement.
+
+Ils sont donc **portés en Worker**, dans `src/index.js`, et `wrangler.jsonc` déclare
+`main`. Deux réglages y méritent d'être lus avant d'y toucher :
+
+- **`not_found_handling: "none"`**, et surtout pas `"single-page-application"`. En mode
+  SPA, toute adresse qui ne correspond à aucun fichier reçoit `index.html`, ce qui inclut
+  `/api/feed` : le Worker ne serait jamais appelé et le fil recevrait du HTML à la place
+  du JSON.
+- **`html_handling: "auto-trailing-slash"`**, qui sert `fan.html` sur `/fan`. C'est ce qui
+  permet aux liens de parrainage d'être courts et dictables.
 
 **C'est délibéré.** Le site mutualisé héberge dix clients derrière un seul projet : une
 erreur sur l'un les touche tous. Latiss vise une audience de dizaines de milliers de
@@ -91,16 +125,34 @@ Choisir `latiss.net` comme adresse canonique, plus court à dicter et à écrire
 affiche, et rediriger `www` vers lui. **À faire avant la bascule de l'espace fan, pas
 après** : après, ce sont de vrais fans qui perdent leur compte.
 
-## Ce qui n'a PAS été fait, et pourquoi
+## Le déménagement du 19/09/2026
 
-**L'espace fan n'a pas bougé.** Il reste sur `demo.agenceattractor.com/beynaud/fan`, et
-c'est volontaire : les Ambassadeurs ont déjà partagé des liens de parrainage à cette
-adresse sur WhatsApp. Les déplacer maintenant casserait le recrutement déjà fait, pour
-rien, puisque le contenu de démarrage n'est pas prêt.
+Fait le jour où Mac Arthur a confirmé que les 11 membres inscrits étaient des testeurs.
+**C'était le bon moment, et il ne se représentera pas** : le navigateur range ses données
+par adresse, donc un membre inscrit sur l'ancienne adresse arrive sur la nouvelle **sans
+compte** — ni prénom, ni grade, ni lien de parrainage. Avec 11 testeurs, ça coûte une
+réinscription de dix secondes. Après le lancement, ce sont de vrais fans recrutés par de
+vrais Ambassadeurs qui perdent leur grade.
 
-La bascule de l'espace fan se fera avec **la redirection des anciens liens posée le jour
-même**, pas après. C'est la seule partie de cette migration qui casse quelque chose si
-elle est mal faite.
+Les anciennes adresses redirigent, **et elles gardent la chaîne de requête**. Ce n'est pas
+un détail de confort : c'est elle qui porte le `?ref=` des liens déjà envoyés sur WhatsApp.
+Sans elle, un filleul arrive sans le code de son parrain, personne ne voit d'erreur, et le
+compteur de l'Ambassadeur reste simplement à zéro.
+
+```
+demo.agenceattractor.com/beynaud/fan?ref=X   -> 1 saut  -> latiss.net/fan?ref=X
+demo.agenceattractor.com/beynaud/app         -> 1 saut  -> latiss.net/app
+http://demo.agenceattractor.com/...?ref=X    -> 2 sauts -> latiss.net/fan?ref=X
+```
+
+**Les pages commerciales du dossier restent sur le site mutualisé** : `/beynaud`,
+`/beynaud/offre`, `/beynaud/maquette`. Ce ne sont pas l'application, ce sont des supports
+de vente de l'agence.
+
+**Les deux Pages Functions n'ont pas été supprimées du site mutualisé**, et c'est
+délibéré : un testeur qui a installé l'application sur son écran d'accueil garde une
+copie en cache qui les appelle encore. Elles ne coûtent rien et elles pourront partir
+quand plus personne n'ouvrira l'ancienne adresse.
 
 **Le domaine n'a pas été attaché par script.** Wrangler ne sait pas attacher un domaine, et
 le `CLOUDFLARE_API_TOKEN` du `.env` est **invalide**, vérifié le 19/09 auprès de l'API.

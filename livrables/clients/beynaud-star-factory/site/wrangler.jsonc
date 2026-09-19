@@ -12,7 +12,25 @@
   "observability": {
     "enabled": true
   },
+
+  // `main` est arrive le 19/09 avec le demenagement de l'espace fan. Il porte
+  // les deux chemins qui demandent du code (/api/feed et /img/), qui vivaient
+  // en Pages Functions sur le site mutualise et n'ont pas d'equivalent ici.
+  "main": "src/index.js",
+
   "assets": {
-    "directory": "public"
+    "directory": "public",
+    // Le Worker doit pouvoir renvoyer vers les fichiers du site.
+    "binding": "ASSETS",
+    // `/fan` sert `fan.html` sans que l'adresse porte l'extension. C'est ce
+    // qui permet aux liens de parrainage d'etre courts et dictables.
+    "html_handling": "auto-trailing-slash",
+    // "none", et surtout PAS "single-page-application". Avec le mode SPA,
+    // toute adresse qui ne correspond a aucun fichier recoit index.html, ce
+    // qui inclut /api/feed et /img/ : le Worker ne serait jamais appele, le
+    // fil recevrait du HTML a la place du JSON, et rien n'aurait l'air casse
+    // avant qu'un fan n'ouvre la page. Ici, ce qui ne correspond a aucun
+    // fichier tombe dans le Worker, qui sait quoi en faire.
+    "not_found_handling": "none"
   }
 }
