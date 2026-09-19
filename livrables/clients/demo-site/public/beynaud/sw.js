@@ -53,7 +53,7 @@ self.addEventListener('notificationclick', (e) => {
       // Si latiss.net est déjà ouvert quelque part, on le ramène au
       // premier plan plutôt que d'ouvrir un deuxième onglet.
       for (const f of fenetres) {
-        if (f.url.indexOf('/beynaud/') !== -1 && 'focus' in f) return f.focus();
+        if (f.url.startsWith(self.location.origin) && 'focus' in f) return f.focus();
       }
       return self.clients.openWindow(cible);
     })
