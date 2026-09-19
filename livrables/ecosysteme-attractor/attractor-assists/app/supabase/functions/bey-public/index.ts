@@ -419,7 +419,7 @@ Deno.serve(async (req) => {
       const arr = (x: unknown) => (Array.isArray(x) ? x : []);
 
       const [contenus, photos, messages, sondages] = await Promise.all([
-        j(`bey_contenus?actif=eq.true${gate}&order=created_at.desc&select=id,titre,description,type,youtube_url,cover_url,grade_requis,billet_requis,created_at`),
+        j(`bey_contenus?actif=eq.true${gate}&order=created_at.desc&select=id,titre,description,type,youtube_url,cover_url,grade_requis,billet_requis,created_at,vertical`),
         j(`bey_photos?actif=eq.true${gate}&order=created_at.desc&limit=60&select=id,url,legende,grade_requis,created_at`),
         j(`bey_messages?order=created_at.desc&limit=40&select=id,contenu,created_at`),
         j(`bey_sondages?actif=eq.true${gate}&order=created_at.desc&select=id,question,options,grade_requis,created_at`),
@@ -462,7 +462,7 @@ Deno.serve(async (req) => {
            ouvre les outils de developpement la lit, quelle que soit l'apparence
            de la carte. */
         const verrouille = c.billet_requis === true && !billets.has(String(c.id));
-        fil.push({ type: "contenu", id: c.id, created_at: c.created_at, titre: c.titre, description: c.description, format: c.type, youtube_url: verrouille ? null : c.youtube_url, cover_url: c.cover_url, grade_requis: c.grade_requis, billet_requis: c.billet_requis === true, verrouille });
+        fil.push({ type: "contenu", id: c.id, created_at: c.created_at, titre: c.titre, description: c.description, format: c.type, youtube_url: verrouille ? null : c.youtube_url, cover_url: c.cover_url, grade_requis: c.grade_requis, billet_requis: c.billet_requis === true, verrouille, vertical: c.vertical === true });
       }
       for (const q of arr(sondages)) {
         fil.push({ type: "sondage", id: q.id, created_at: q.created_at, question: q.question, options: q.options || [], grade_requis: q.grade_requis });

@@ -2682,8 +2682,14 @@ function renderReels(liste){
   const box = document.getElementById('reels');
   if(!box) return;
   box.innerHTML = '';
+  /* Depuis le 19/09, c'est Serge qui dit si une video est verticale, en
+     cochant une case a la publication. On ne le devine plus a l'adresse : un
+     .mp4 depose directement ou un lien YouTube normal d'une verticale
+     passaient a travers, et Mac Arthur annonce 90 % de vertical. La regle
+     « /shorts/ » reste en second, pour les liens deja publies. */
   const reels = liste.filter(p =>
-    p.type === 'contenu' && !p.verrouille && /\/shorts\//i.test(String(p.youtube_url || '')));
+    p.type === 'contenu' && !p.verrouille &&
+    (p.vertical === true || /\/shorts\//i.test(String(p.youtube_url || ''))));
   if(!reels.length){ box.classList.add('hidden'); return; }
   box.classList.remove('hidden');
 

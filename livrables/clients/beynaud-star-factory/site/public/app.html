@@ -123,6 +123,11 @@ svg{display:block;}
 .block-title{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);margin-bottom:12px;}
 .bc-card{background:linear-gradient(135deg,var(--brulee),var(--n3));border-color:rgba(204,0,0,.3);}
 textarea{resize:vertical;min-height:74px;line-height:1.5;}
+/* La case a cocher. 44 px de haut pour le pouce, et le libelle fait partie
+   de la zone qu'on touche : une case de 16 px toute seule se rate. */
+.case{display:flex;align-items:center;gap:10px;min-height:44px;cursor:pointer;}
+.case input{width:20px;height:20px;flex-shrink:0;accent-color:var(--rouge);}
+.case span{font-size:13px;font-weight:600;}
 .bc-btn{width:100%;margin-top:11px;background:var(--rouge);color:#fff;border-radius:12px;padding:14px;font-size:13px;font-weight:800;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 6px 22px var(--rouge-glow);}
 .bc-btn:active{background:var(--rouge-vif);}
 .bc-hint{font-size:11px;color:var(--dim);margin-top:9px;line-height:1.5;}
@@ -359,6 +364,7 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
           <div class="f-type hidden" id="f-video">
             <div class="field"><label>Titre</label><input id="c-titre" type="text" placeholder="Ex : Série des coulisses"/></div>
             <div class="field"><label>Lien de la vidéo</label><input id="c-url" type="text" placeholder="https://youtube.com/... ou un fichier .mp4"/><div class="aide-champ">YouTube pour ce qui est public. Un lien finissant par .mp4 est lu directement dans l’app, sans passer par YouTube.</div></div>
+            <div class="field"><label class="case"><input type="checkbox" id="c-vertical"/><span>Vidéo verticale (filmée au téléphone)</span></label><div class="aide-champ">À cocher pour tout ce qui est filmé debout. La vidéo s’affiche alors en plein cadre, et elle apparaît dans la rangée du haut de l’onglet Latiss.</div></div>
             <div class="field"><label>Accès</label><select id="c-grade"><option value="membre">Tous les membres</option><option value="ambassadeur">Ambassadeurs seulement</option><option value="billet">Payant, billet requis</option></select><div class="aide-champ">Un grade se gagne, un billet s’achète. « Payant » laisse la publication visible de tous, mais la vidéo ne s’ouvre qu’avec un billet.</div></div>
             <button class="btn" id="c-btn" onclick="saveContent()">Publier</button>
             <button class="add-toggle hidden" id="c-annuler" onclick="cancelEdit()">Annuler la modification</button>
@@ -1105,6 +1111,8 @@ function editContent(id){
   editId = c.id;
   document.getElementById('c-titre').value = c.titre||'';
   document.getElementById('c-url').value = c.youtube_url||'';
+  // Sans cette ligne, corriger un titre decocherait la video verticale.
+  document.getElementById('c-vertical').checked = c.vertical === true;
   document.getElementById('c-grade').value = c.grade_requis==='ambassadeur'?'ambassadeur':'membre';
   document.getElementById('c-btn').textContent = 'Enregistrer';
   document.getElementById('c-annuler').classList.remove('hidden');
@@ -1116,6 +1124,7 @@ function cancelEdit(silencieux){
   editId = null;
   document.getElementById('c-titre').value='';
   document.getElementById('c-url').value='';
+  document.getElementById('c-vertical').checked=false;
   document.getElementById('c-grade').value='membre';
   document.getElementById('c-btn').textContent = 'Publier';
   document.getElementById('c-annuler').classList.add('hidden');
@@ -1127,12 +1136,13 @@ async function saveContent(){
   const url=normalizeYt(document.getElementById('c-url').value);
   const grade=document.getElementById('c-grade').value;
   if(!titre||!url){toast('Titre et lien requis.');return;}
+  const vertical=document.getElementById('c-vertical').checked;
   const btn=document.getElementById('c-btn'); btn.disabled=true; const old=btn.innerHTML; btn.innerHTML='<span class="spin"></span>';
   // Une correction ne renotifie pas : les fans ont deja ete prevenus a la
   // publication, une faute de frappe corrigee ne vaut pas une notification.
   const res = editId
-    ? await api({action:'content_update',id:editId,titre,youtube_url:url,...acces(grade)})
-    : await api({action:'content_add',titre,youtube_url:url,...acces(grade),type:'serie',ordre:50});
+    ? await api({action:'content_update',id:editId,titre,youtube_url:url,vertical,...acces(grade)})
+    : await api({action:'content_add',titre,youtube_url:url,vertical,...acces(grade),type:'serie',ordre:50});
   btn.disabled=false; btn.innerHTML=old;
   if(res&&res.ok){
     const corrige = !!editId;

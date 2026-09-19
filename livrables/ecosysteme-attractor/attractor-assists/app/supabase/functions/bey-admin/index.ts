@@ -230,6 +230,9 @@ Deno.serve(async (req) => {
           // qu'une chaine vide ou un "false" venu d'un formulaire ne rende
           // jamais un contenu payant par accident.
           billet_requis: d.billet_requis === true,
+          // Meme prudence que ci-dessus : une chaine vide venue d'un
+          // formulaire ne doit pas rendre une video verticale par accident.
+          vertical: d.vertical === true,
           ordre: Number(d.ordre) || 99,
         }),
       });
@@ -251,6 +254,7 @@ Deno.serve(async (req) => {
         if (!t) return json({ ok: false, error: "titre vide" });
         champs.titre = t;
       }
+      if (d.vertical !== undefined) champs.vertical = d.vertical === true;
       if (d.youtube_url !== undefined) {
         const u = String(d.youtube_url).trim();
         if (!u) return json({ ok: false, error: "lien vide" });
