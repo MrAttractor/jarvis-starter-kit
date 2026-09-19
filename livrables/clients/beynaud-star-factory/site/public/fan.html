@@ -153,6 +153,53 @@ body.splash-on{overflow:hidden;}
 .btn-clip:active{background:var(--rouge-vif);transform:scale(.985);}
 .btn-clip svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.4;flex-shrink:0;}
 
+/* ── L'ECRAN DE BIENVENUE ──────────────────────────────────────────────
+   La video ou Serge accueille le fan, plein ecran, a la verticale.
+
+   POURQUOI ICI ET PAS AVANT LE CLIC. Les telephones interdisent de lancer
+   une video AVEC LE SON tant que la personne n'a pas touche l'ecran. Le
+   clip de fond est donc muet, avec un bouton pour le son. Le clic sur
+   « Vu sur le net » est ce geste : la video de bienvenue demarre donc avec
+   le son, tout de suite. Placee avant le clic, elle serait muette, et une
+   video ou l'artiste t'accueille sans qu'on l'entende ne sert a rien. */
+#bienvenue{position:fixed;inset:0;z-index:85;background:var(--noir);overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 22px calc(38px + env(safe-area-inset-bottom,0px));
+  opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s ease;}
+#bienvenue.vu{opacity:1;visibility:visible;}
+body.bienvenue-on{overflow:hidden;}
+/* La video couvre l'ecran : un plan vertical remplit, un plan horizontal se
+   recadre plutot que de poser deux bandes noires. */
+.bv-media{position:absolute;inset:0;z-index:0;}
+.bv-media video,.bv-media img{width:100%;height:100%;object-fit:cover;display:block;}
+.bv-ov{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(0deg,rgba(7,7,7,.92) 0%,rgba(7,7,7,.55) 16%,rgba(7,7,7,0) 38%);}
+.bv-sig{position:absolute;top:calc(20px + env(safe-area-inset-top,0px));left:22px;z-index:3;
+  font-family:var(--manus);font-size:26px;line-height:1;color:rgba(255,255,255,.94);
+  text-shadow:0 1px 0 rgba(255,255,255,.22),0 -1px 1px rgba(0,0,0,.55),0 2px 14px rgba(0,0,0,.75);
+  transform:rotate(-3deg);transform-origin:left center;}
+.bv-c{position:relative;z-index:2;max-width:560px;margin:0 auto;width:100%;}
+/* Le bouton n'apparait qu'au bout de quelques secondes, et c'est delibere :
+   assez tot pour qu'un fan sur une mauvaise connexion ne soit jamais pris au
+   piege, assez tard pour qu'il ait entendu les premiers mots. */
+.bv-suite{width:100%;min-height:56px;background:var(--rouge);color:#fff;padding:17px 20px;
+  border-radius:12px;font-size:14px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;
+  box-shadow:0 10px 34px var(--rouge-glow);display:flex;align-items:center;justify-content:center;gap:10px;
+  opacity:0;visibility:hidden;transition:opacity .4s ease,visibility .4s ease,transform .2s;}
+.bv-suite.vu{opacity:1;visibility:visible;}
+.bv-suite:active{background:var(--rouge-vif);transform:scale(.985);}
+.bv-suite svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.4;flex-shrink:0;}
+/* Le son : une video de bienvenue muette n'accueille personne. Le bouton ne
+   sert que si le telephone a quand meme refuse le son malgre le geste. */
+.bv-son{position:absolute;top:calc(18px + env(safe-area-inset-top,0px));right:22px;z-index:3;
+  width:44px;height:44px;border-radius:12px;background:rgba(7,7,7,.5);
+  border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;}
+/* Sans cette ligne, le display:flex ci-dessus ecrase l’attribut hidden et le
+   bouton se montre alors qu aucune video ne joue. */
+.bv-son[hidden]{display:none;}
+.bv-son svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;}
+
 /* JOIN */
 .join-hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:28px 22px 34px;overflow:hidden;}
 .join-bg{position:absolute;inset:0;background:url('serge-hero.jpg') center 15%/cover no-repeat;filter:brightness(.44);}
@@ -809,6 +856,12 @@ const MOTS = {
     bouton: 'Vu sur le net',
   },
 
+  /* ── 1 bis. LA BIENVENUE, la video ou Serge parle au fan ── */
+  bienvenue: {
+    suite: 'Continuer',
+    son: 'Couper le son',
+  },
+
   /* ── 2. L'APERCU, ce que voit quelqu'un qui n'est pas encore entre ── */
   apercu: {
     sous_titre: 'Bienvenue dans la fanbase Serge Beynaud',
@@ -995,6 +1048,22 @@ function remplirMots(racine) {
     </button>
   </div>
 </section>
+<!-- ============ L'ECRAN DE BIENVENUE : SERGE PARLE AU FAN ============ -->
+<section id="bienvenue" aria-hidden="true">
+  <div class="bv-media" id="bv-media"></div>
+  <div class="bv-ov"></div>
+  <div class="bv-sig">latiss.net</div>
+  <button class="bv-son" id="bv-son" type="button" data-mot-label="bienvenue.son" hidden>
+    <svg viewBox="0 0 24 24" id="bv-son-ico" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a9 9 0 0 1 0 12"/></svg>
+  </button>
+  <div class="bv-c">
+    <button class="bv-suite" id="bv-suite" type="button">
+      <span data-mot="bienvenue.suite"></span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+</section>
+
 <script>
 /* Un membre deja inscrit ne revoit jamais le clip. La decision se prend ici,
    avant le premier affichage : lue plus bas dans le script principal, elle
@@ -2974,10 +3043,113 @@ function monterClip(){
 }
 
 const splashEl=document.getElementById('splash');
+/* =====================================================================
+   LA VIDEO DE BIENVENUE  —  c'est la seule chose a changer
+   ---------------------------------------------------------------------
+   fichier : nom du .mp4 pose a cote de cette page. Laisse VIDE, l'ecran
+             n'existe pas et le fan passe directement a l'apercu, comme
+             avant. C'est l'etat au 19/09/2026 : la video n'est pas
+             tournee, et un ecran de plus qui ne montre rien couterait des
+             inscriptions pour zero benefice.
+
+   Pour la voir avec l'image fixe avant que la video n'existe, ouvrir
+   l'adresse avec ?bienvenue=1 a la fin.
+
+   CE QU'IL FAUT TOURNER : telephone a la VERTICALE, 20 a 25 secondes, face
+   camera, endroit calme, lumiere sur le visage. Trois choses a dire :
+   bienvenue, ce qu'on trouve ici, et « laisse-moi ton prenom ».
+
+   LE POIDS COMPTE. Un fan a Abidjan en 3G. 720x1280 a ~1,5 Mbit/s donne
+   environ 5 Mo pour 25 secondes, ce qui passe. Au-dela de 10 Mo, il faut
+   passer par Cloudflare Stream, qui adapte la qualite a la connexion : le
+   nom du fichier suffira a basculer, rien d'autre ne changera ici.
+   ===================================================================== */
+const BIENVENUE = {
+  fichier : '',                 // ex : 'bienvenue.mp4'
+  affiche : 'serge-hero.webp',  // l'image montree avant que la video ne demarre
+  // secondes avant que « Continuer » n'apparaisse. Assez tot pour qu'une
+  // mauvaise connexion ne prenne jamais personne au piege, assez tard pour
+  // qu'il ait entendu les premiers mots.
+  avant_suite : 5,
+};
+
+const bienvenueEl = document.getElementById('bienvenue');
+
+function bienvenueDemandee(){
+  if(BIENVENUE.fichier) return true;
+  try{ return new URLSearchParams(location.search).get('bienvenue') === '1'; }
+  catch(_){ return false; }
+}
+
+function allerAuFil(){
+  document.body.classList.remove('bienvenue-on');
+  bienvenueEl.classList.remove('vu');
+  bienvenueEl.setAttribute('aria-hidden','true');
+  // La video continuerait de jouer derriere, son compris.
+  const v = bienvenueEl.querySelector('video');
+  if(v){ try{ v.pause(); }catch(_){} }
+  window.scrollTo(0,0);
+}
+
+function ouvrirBienvenue(){
+  const media = document.getElementById('bv-media');
+  const suite = document.getElementById('bv-suite');
+  const son   = document.getElementById('bv-son');
+  media.innerHTML = '';
+
+  if(BIENVENUE.fichier){
+    const v = document.createElement('video');
+    v.src = BIENVENUE.fichier;
+    v.playsInline = true;              // sans ca, iPhone ouvre son lecteur plein ecran
+    v.setAttribute('playsinline','');
+    v.preload = 'auto';
+    v.poster = BIENVENUE.affiche || '';
+    /* Le son est allume : on arrive d'un clic, donc le telephone l'autorise.
+       S'il refuse quand meme, on retombe en muet plutot que de ne rien
+       jouer du tout, et le bouton de son apparait pour le rallumer. */
+    v.muted = false;
+    media.appendChild(v);
+    v.play().catch(function(){
+      v.muted = true;
+      son.hidden = false;
+      son.querySelector('svg').innerHTML = '<path d="M11 5L6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/>';
+      v.play().catch(function(){});
+    });
+    // La fin de la video avance toute seule : personne n'attend devant une
+    // image figee en se demandant si c'est casse.
+    v.addEventListener('ended', allerAuFil);
+  } else {
+    const i = document.createElement('img');
+    i.src = BIENVENUE.affiche;
+    i.alt = '';
+    media.appendChild(i);
+  }
+
+  bienvenueEl.classList.add('vu');
+  bienvenueEl.setAttribute('aria-hidden','false');
+  document.body.classList.add('bienvenue-on');
+
+  suite.classList.remove('vu');
+  setTimeout(function(){ suite.classList.add('vu'); },
+             BIENVENUE.fichier ? (BIENVENUE.avant_suite * 1000) : 0);
+}
+
+document.getElementById('bv-suite').addEventListener('click', allerAuFil);
+document.getElementById('bv-son').addEventListener('click', function(){
+  const v = bienvenueEl.querySelector('video');
+  if(!v) return;
+  v.muted = !v.muted;
+  this.querySelector('svg').innerHTML = v.muted
+    ? '<path d="M11 5L6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/>'
+    : '<path d="M11 5L6 9H3v6h3l5 4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a9 9 0 0 1 0 12"/>';
+});
+
 function fermerSplash(){
   splashEl.classList.add('out');
   document.body.classList.remove('splash-on');
   window.scrollTo(0,0);
+  // Le clic qui vient d'avoir lieu est le geste qui autorise le son.
+  if(bienvenueDemandee()) ouvrirBienvenue();
 }
 document.getElementById('enter-btn').addEventListener('click',fermerSplash);
 // La cloche ouvre et referme le panneau, elle ne declenche jamais la demande
