@@ -277,6 +277,22 @@
 **Vérification** : piloter le formulaire de bout en bout dans un navigateur, réseau intercepté, et constater que la requête part avec tous ses champs. Un clic manuel qui « semble marcher » ne prouve pas qu'une requête est partie.
 **Assists** : tout parcours du produit qui attend une réponse serveur porte une issue visible en cas d'échec.
 
+### R-90 · Avant de conclure qu'un serveur plafonne, lancer la même charge sur une cible qui ne peut pas plafonner
+**Origine** : EXP-050, 19/09/2026.
+**Application** : tout test de charge s'accompagne d'un **témoin** : la même charge, depuis le même poste, vers une cible qui ne peut pas être saturée (un fichier statique sur un réseau de diffusion). Si le témoin tombe aussi, le plafond mesuré est celui de l'instrument. Et l'instrument ne doit pas ouvrir une connexion par appel : il garde un petit nombre de connexions ouvertes et y fait passer les requêtes en continu, sinon il mesure la capacité d'un ordinateur à ouvrir des sockets.
+**Vérification** : le témoin tourne AVANT que le verdict ne soit écrit, pas après qu'on l'ait mis en doute.
+**Assists** : toute mesure de performance du produit publie son témoin à côté de son résultat.
+
+---
+
+### R-91 · Un changement de domaine est une perte de session pour 100 % des utilisateurs : il se fait avant le lancement, jamais après
+**Origine** : EXP-049, 19/09/2026.
+**Application** : le stockage d'un navigateur est lié à l'adresse et rien ne le transporte. Déménager un produit qui garde une session, un panier ou une préférence, c'est rendre inconnus tous ses utilisateurs. On le fait **tant que la base est vide ou composée de testeurs**. Le jour du déménagement, les redirections sont posées **en même temps**, et elles conservent la chaîne de requête : c'est elle qui porte les codes de parrainage, les sources de campagne et les liens déjà partagés.
+**Vérification** : essayer les quatre portes d'entrée (http, https, avec et sans www) avec un paramètre dans l'adresse, et constater qu'il survit à chaque saut.
+**Assists** : tout produit qui garde quelque chose dans le navigateur sort avec son adresse définitive, ou avec un compte qui permet de se retrouver ailleurs.
+
+---
+
 ### R-87 · Une recette ne se plaint jamais de ce qu'elle a cessé de voir : elle compte ce qu'elle mesure, et le compte se relit après chaque refonte
 **Origine** : EXP-048, quatre fois dans la journée du 19/09/2026.
 **Application** : toute recette automatique affiche **le nombre d'éléments mesurés**, pas seulement son verdict. Ce nombre se relit après toute refonte qui déplace du contenu : onglet, dépliant, écran, domaine. Une chute du compte est un échec, même si tout le reste est vert. Et on étend la couverture **avant** de corriger le défaut qu'elle révèle, pour que la mesure prouve la correction.

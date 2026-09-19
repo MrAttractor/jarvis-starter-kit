@@ -7,6 +7,82 @@
 
 ---
 
+## 2026-09-19 → 20 (session 136 : La Beynaumania devient latiss.net, et déménage)
+
+> Session longue, entièrement sur Beynaud. Mac Arthur arbitre au fil de l'eau, et c'est
+> **lui** qui trouve le défaut le plus grave de la journée.
+
+### Le renommage
+
+La plateforme s'appelle **latiss.net**, écrit en entier, extension comprise. Pas « Latiss » :
+ce mot-là désigne déjà l'artiste dans l'application, et « Latiss démarre, Latiss poste
+bientôt » n'aurait aucun sens. La marque s'écrit **à la main**, en Caveat 700, choisie sur
+planche contre quatre cursives : deux d'entre elles sont illisibles à 13 px, la taille
+réelle du nom dans l'en-tête. La signature sert là où le nom se pose en tant que nom, jamais
+là où l'adresse doit être tapée ou copiée.
+
+Ne sont **pas** renommés, et c'est délibéré : les tables `bey_*`, les fonctions serveur, la
+clé du navigateur, et le `id` du manifeste, par lequel Android reconnaît l'application déjà
+installée.
+
+### Les trois onglets, et le fichier jumeau supprimé
+
+Validés. Le fil unique disparaît, et avec lui la copie du fichier qui doublait chaque
+correction de texte. **Ce que la bascule a failli emporter sans bruit** : la recette
+mesurait 53 textes dans l'espace du membre, elle est tombée à 34 sans qu'aucun contrôle ne
+s'en plaigne, parce qu'un onglet fermé n'affiche rien et que ce qui n'est pas affiché n'est
+pas mesuré. Quatre fois dans la journée, un défaut réel est apparu **au moment précis où un
+contrôle a su regarder au bon endroit**, jamais avant.
+
+### Le déménagement sur latiss.net
+
+L'application vit sur son domaine. Le piège, et il aurait été silencieux : le fil en cache et
+le relais des photos sont des **Pages Functions**, un dossier qui **n'existe pas** sur la
+plateforme où est né latiss.net. Copiés tels quels, ils n'auraient rien fait, sans erreur.
+Le fil serait reparti taper Supabase à chaque ouverture, et chaque photo serait repartie du
+quota de sortie. Portés en Worker, vérifiés en ligne.
+
+Fait le jour où Mac Arthur confirme que les 11 membres sont des testeurs : **le navigateur
+range ses données par adresse**, donc un membre qui change de domaine n'est pas déconnecté,
+il est inconnu.
+
+### La porte à trois champs, et le trou que Mac Arthur a trouvé
+
+Prénom, numéro WhatsApp, lieu choisi dans une liste. Sa question : *« Je connais le numéro de
+Cynthia. Je rentre son numéro et hop, je suis connecté avec son compte ? »* **Oui, et pire** :
+le serveur renvoyait son **jeton d'accès**, décrit dans le code lui-même comme « une clé
+porteuse : qui l'a, entre ». Le défaut dormait puisque aucun écran n'envoyait de numéro ;
+ajouter le champ l'aurait réveillé. Refermé aux deux endroits, vérifié en production avec le
+vrai numéro d'un membre.
+
+### Le test de charge, enfin fait
+
+Dernier point bloquant du contre-audit. 452 appels/seconde sur tout sauf l'écriture,
+133/seconde en inscriptions réelles, 11/seconde quand elles partagent le même lien de
+parrainage. **Zéro panne**, et le compteur du parrain valait exactement 200 après 200
+inscriptions simultanées sur sa ligne.
+
+**Mon premier instrument était faux.** Il annonçait 38 pannes sur 200 ; le témoin l'a
+prouvé, un fichier statique sur Cloudflare échouait 13 fois sur 200 depuis le même poste. Le
+plafond mesuré était celui de l'ordinateur portable.
+
+### Le coût, chiffré
+
+**11 $ par an jusqu'à 48 000 membres**, 911 $ à 50 000 avec la vidéo exclusive, soit deux
+centimes par membre et par an. L'infrastructure ne demande pas d'investissement ; le live,
+si. Et le vrai plafond n'est pas le nombre de membres mais la brutalité du pic : une
+notification d'un coup tient jusqu'à ~94 000 membres, étalée sur une heure jusqu'à près d'un
+million.
+
+### Le reste
+
+Bloc unique des 103 phrases du site, écran de bienvenue écrit mais éteint tant que la vidéo
+de Serge n'existe pas, pagination du fil, lecteur plein écran des verticales avec swipe, case
+« vidéo verticale » pour Serge, doublon de compte fusionné. **L'envoi de vidéo depuis le
+téléphone est mis en attente du point financier de Mac Arthur.**
+
+---
+
 ## 2026-09-13 → 14 (session 135 — La Beynaumania devient une vraie plateforme, en une nuit)
 
 > Session longue, entièrement sur Beynaud, menée en aller-retour avec Mac Arthur

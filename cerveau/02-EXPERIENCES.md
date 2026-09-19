@@ -418,6 +418,46 @@
 
 ---
 
+### EXP-050 · Le serveur ne plafonnait pas, c'était l'ordinateur qui mesurait
+**DÉBLOCAGE** · 19/09/2026 · latiss.net
+
+**Situation.** Dernier point bloquant du contre-audit : le chemin d'écriture n'avait jamais été mesuré au-delà de 12 appels simultanés, pour un pic attendu de 200.
+
+**Ce qu'on a fait d'abord.** 200 appels lancés d'un coup avec `fetch`. Résultat : **38 pannes sur 200**, et le débit s'effondrait à partir de 100 appels. La conclusion évidente était que le serveur plafonnait.
+
+**Ce qui a évité l'erreur.** Avant d'écrire ce verdict, la même charge a été lancée depuis le même poste sur **un fichier statique servi par Cloudflare** — une cible qui ne peut pas être saturée par 200 requêtes. Elle échouait **13 fois sur 200**, avec la même erreur de connexion et le même débit de 19/s. Le plafond mesuré était celui de l'ordinateur portable.
+
+**Ce qu'on a fait ensuite.** Réécriture de l'instrument : il n'ouvre plus une connexion par appel, il garde un petit nombre de connexions ouvertes et y fait passer les requêtes en continu pendant une durée fixée. On mesure alors le débit que le serveur soutient, pas la capacité d'un poste à ouvrir des sockets.
+
+**Résultat.** 452 appels/seconde sur le chemin de lecture, 133/seconde en inscriptions réelles, 11/seconde quand elles partagent le même lien de parrainage. **Zéro panne sur plus de 15 500 requêtes**, et le compteur du parrain valait exactement 200 après 200 inscriptions simultanées sur sa ligne. Soit l'inverse exact du premier verdict.
+
+**Pourquoi.** Un test de charge mesure **le maillon le plus faible de la chaîne**, et le poste qui mesure fait partie de la chaîne. Ouvrir 200 connexions simultanées sature un ordinateur portable et une connexion domestique bien avant de gêner un service distribué. Sans témoin, on attribue au serveur une limite qui est la sienne, on ralentit un produit qui n'en avait pas besoin, ou pire, on renonce à un lancement.
+
+**Règle.** → R-90
+
+**Réutilisable pour.** Tout test de charge, toute mesure de performance, sur n'importe quel dossier. Et plus largement : toute mesure dont l'instrument peut être le facteur limitant.
+
+---
+
+### EXP-049 · Changer de domaine fait perdre son compte à chaque membre
+**DÉBLOCAGE** · 19/09/2026 · latiss.net
+
+**Situation.** L'espace fan vivait sur le site mutualisé de l'agence. Il déménage sur son domaine propre.
+
+**Ce qui s'est passé.** Le navigateur range ses données **par adresse**. Un membre inscrit sur l'ancien domaine qui arrive sur le nouveau n'est pas déconnecté, il est **inconnu** : ni prénom, ni grade, ni lien de parrainage. Même chose pour les notifications, qu'il faut réactiver, et pour l'application installée sur l'écran d'accueil, qui continue de pointer vers l'ancienne adresse. Mac Arthur s'est retrouvé avec un compte en double le jour même, et un compte sans moyen de retour puisqu'il datait d'avant le champ numéro.
+
+**Ce qu'on a fait.** Déménagé le jour où le client a confirmé que les 11 membres étaient des testeurs. Redirections posées le même jour, **en conservant la chaîne de requête** : c'est elle qui porte le code de parrainage des liens déjà partagés sur WhatsApp. Sans elle, un filleul arrive sans code, personne ne voit d'erreur, et le compteur de l'Ambassadeur reste à zéro.
+
+**Résultat.** Quatre portes d'entrée vérifiées, le code survit à chaque redirection. Coût réel : une réinscription de dix secondes pour onze testeurs.
+
+**Pourquoi.** Le stockage d'un navigateur est lié à l'origine, et rien ne le transporte : c'est une règle de sécurité, pas une limite qu'on contourne. Un déménagement de domaine est donc **une perte de session pour 100 % des utilisateurs**, et le prix se paie en comptes perdus, en grades effacés et en parrainages orphelins. Ce prix ne fait que monter avec le nombre d'inscrits : il est nul avant le lancement, il est irrattrapable après.
+
+**Règle.** → R-91
+
+**Réutilisable pour.** Tout changement de domaine, de sous-domaine ou de chemin sur un produit qui garde quoi que ce soit dans le navigateur. Vrai pour tous les dossiers clients de l'agence.
+
+---
+
 ### EXP-048 · Un contrôle vert parce qu'il avait cessé de regarder, quatre fois dans la même journée
 **BLOCAGE** · 19/09/2026 · latiss.net (ex-Beynaumania)
 
