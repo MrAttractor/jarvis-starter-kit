@@ -733,6 +733,12 @@ body.bienvenue-on{overflow:hidden;}
 .filet-b:active{background:var(--rouge);color:#fff;}
 .filet-ok{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--vert);font-weight:700;}
 .filet-err{font-size:12px;color:var(--erreur);min-height:16px;}
+/* Le repere de bas de fil. Il se voit peu : dans le cas normal il est
+   appuye tout seul avant meme que le fan n'y arrive. */
+.fil-suite{width:100%;min-height:48px;margin:2px 0 18px;background:var(--n3);
+  border:1px solid var(--faint);border-radius:12px;color:var(--doux);
+  font-size:13px;font-weight:700;}
+.fil-suite:active{background:var(--n4);}
 .zone-danger{text-align:center;padding:6px 0 26px;}
 /* Effacer son compte doit rester discret, pas invisible. A var(--tres-dim) le
    texte tombait a 2,55:1, sous le seuil de lisibilite : c'est un droit du fan,
@@ -1047,6 +1053,7 @@ const MOTS = {
     commenter: 'Commenter',
     inviter_ami: 'Inviter un ami',
     en_direct: 'EN DIRECT',
+    voir_suite: 'Voir la suite',
     premier_commentaire: 'Sois le premier à commenter',
     code_etiquette: 'Ton code d’accès',
     code_ouvert: 'Accès ouvert.',
@@ -2583,6 +2590,52 @@ function carteEntree(){
   return c;
 }
 
+/* Le fil se peint par tranches de dix. Avant, tout partait d'un coup :
+   avec quatre publications ca ne se voyait pas, mais le serveur en remonte
+   jusqu'a cent, et peindre cent cartes avant d'afficher la premiere se paie
+   sur un telephone d'entree de gamme en 3G. */
+const PAR_TRANCHE = 10;
+let FIL_RENDUS = 0;
+let VEILLE_FIL = null;
+
+function peindreTranche(box, liste){
+  const frag = document.createDocumentFragment();
+  const fin = Math.min(liste.length, FIL_RENDUS + PAR_TRANCHE);
+  for(let i = FIL_RENDUS; i < fin; i++){
+    const art = construirePost(liste[i]);
+    // Le dernier post de l'apercu s'estompe : on sent que le fil continue.
+    if(APERCU && i === liste.length - 1) art.classList.add('fondu');
+    frag.appendChild(art);
+  }
+  FIL_RENDUS = fin;
+
+  const ancien = document.getElementById('fil-suite');
+  if(ancien) ancien.remove();
+  box.appendChild(frag);
+
+  if(FIL_RENDUS >= liste.length) return;
+
+  /* C'est un BOUTON, pas un repere invisible. L'observateur l'appuie tout
+     seul quand il approche ; s'il manque, le fan peut encore appuyer. Un
+     seul chemin de code, et aucun fil bloque. */
+  const suite = el('button', 'fil-suite');
+  suite.id = 'fil-suite';
+  suite.type = 'button';
+  suite.setAttribute('data-mot', 'fil.voir_suite');
+  suite.addEventListener('click', function(){ peindreTranche(box, liste); });
+  box.appendChild(suite);
+  remplirMots(box);
+
+  if(!('IntersectionObserver' in window)) return;
+  if(VEILLE_FIL) VEILLE_FIL.disconnect();
+  /* 600 px d'avance : la tranche suivante arrive avant que le fan ne touche
+     le bas, donc il ne voit jamais le bouton ni d'attente. */
+  VEILLE_FIL = new IntersectionObserver(function(entrees){
+    if(entrees.some(function(e){ return e.isIntersecting; })) suite.click();
+  }, { rootMargin: '600px' });
+  VEILLE_FIL.observe(suite);
+}
+
 function renderFil(){
   const box = document.getElementById('fil');
   box.innerHTML = '';
@@ -2599,14 +2652,9 @@ function renderFil(){
   const pourLeFil = FIL.filter(p => p.type !== 'sondage');
   const sondages  = FIL.filter(p => p.type === 'sondage');
 
-  const frag = document.createDocumentFragment();
-  pourLeFil.forEach(function(p, i){
-    const art = construirePost(p);
-    // Le dernier post de l'apercu s'estompe : on sent que le fil continue.
-    if(APERCU && i === pourLeFil.length - 1) art.classList.add('fondu');
-    frag.appendChild(art);
-  });
-  box.appendChild(frag);
+  FIL_RENDUS = 0;
+  if(VEILLE_FIL){ VEILLE_FIL.disconnect(); VEILLE_FIL = null; }
+  peindreTranche(box, pourLeFil);
   if(APERCU) box.appendChild(carteEntree());
 
   renderSondages(sondages);
