@@ -798,6 +798,87 @@ Trois clauses engageantes dès signature : **NDA 5 ans**, **non-contournement 24
 **À compléter avant signature** : la qualité du représentant de STAR FACTORY, le RCCM, les
 coordonnées, et le montant de l'indemnité forfaitaire de non-contournement.
 
+## Le coût de latiss.net sur un an — 20/09/2026
+
+> Calculé sur l'architecture d'aujourd'hui, **pas celle du 17/09** : les photos sont passées
+> derrière Cloudflare depuis, le fil est mis en cache 30 s, et le site a son propre projet.
+> La section du 17/09 ci-dessous reste comme journal de la mesure d'origine.
+
+### Les hypothèses, et elles sont discutables
+
+Un investisseur attaquera celles-là en premier, donc elles sont écrites avant les chiffres :
+**8 ouvertures de l'app par membre et par mois**, 3 photos par ouverture, 4 vidéos
+exclusives par mois de 30 secondes, **vues par 45 % des membres**.
+
+### Le socle : ce que le site coûte pour exister
+
+| Membres | Appels serveur / mois | Sortie réseau | Coût / mois |
+|---|---|---|---|
+| 1 000 | 10 400 | 0,06 Go | **~1 $** |
+| 10 000 | 104 000 | 0,57 Go | **~1 $** |
+| 25 000 | 260 000 | 1,4 Go | **~1 $** |
+| 50 000 | 520 000 | 2,9 Go | **26 $** |
+| 100 000 | 1 040 000 | 5,7 Go | **31 $** |
+
+**Jusqu'à 48 000 membres, la plateforme coûte le prix du domaine : 11 $ par an.** Tout le
+reste tient dans les forfaits gratuits. Ce n'est pas une optimisation à venir, c'est l'état
+d'aujourd'hui, après les correctifs du 17 et du 18/09.
+
+**Ce qui déclenche la bascule** n'est ni la base de données ni la bande passante, c'est le
+nombre d'appels aux fonctions serveur : 500 000 par mois sur le forfait gratuit, atteints
+vers **48 000 membres**.
+
+**Une nuance qui compte, et qui rapproche l'échéance.** Ce quota est celui du **projet
+Supabase entier**, partagé avec huit autres clients de l'agence. Latiss seul y arrive à
+48 000 membres ; avec les autres dessus, la bascule vient plus tôt. Et les 25 $/mois du
+forfait Pro couvrent **tous les clients à la fois** et soldent D-01, l'absence de
+sauvegarde, d'un seul coup.
+
+### La vidéo exclusive, si on active Cloudflare Stream
+
+| Membres | Minutes vues / mois | Par mois | Par an |
+|---|---|---|---|
+| 1 000 | 900 | 6 $ | **71 $** |
+| 10 000 | 9 000 | 14 $ | **168 $** |
+| 25 000 | 22 500 | 28 $ | **330 $** |
+| 50 000 | 45 000 | 50 $ | **600 $** |
+| 100 000 | 90 000 | 95 $ | **1 140 $** |
+
+### Le total sur un an
+
+| Membres | Socle seul | Avec la vidéo | Par membre et par an |
+|---|---|---|---|
+| 1 000 | 11 $ | **82 $** | 0,08 $ |
+| 10 000 | 11 $ | **179 $** | 0,02 $ |
+| 25 000 | 11 $ | **341 $** | 0,01 $ |
+| 50 000 | 311 $ | **911 $** | 0,02 $ |
+| 100 000 | 371 $ | **1 511 $** | 0,02 $ |
+
+**Deux centimes par membre et par an.** C'est le chiffre à retenir, et il est stable sur
+toute la courbe : la plateforme ne coûte pas cher à faire grandir.
+
+### Ce qui n'est pas dedans, et qui est plus gros que tout le reste
+
+**Le live des concerts.** ~0,06 $ par fan et par heure, soit **600 $ pour 10 000 fans sur
+une heure**. Ce n'est pas une charge de fonctionnement, c'est un coût d'événement, et il se
+couvre par la billetterie. Le détail est dans `COUTS-LIVE-PRO.md`.
+
+**L'envoi de vidéo depuis le téléphone de Serge.** En attente du point financier, voir le
+Radar. Son coût de stockage est négligeable ; c'est la ligne « vidéo exclusive » ci-dessus
+qui le porte.
+
+**Le temps de l'agence.** Aucune de ces lignes ne le compte.
+
+### La lecture pour la négociation
+
+**La facture monte avec l'audience de Serge, pas avec le travail de l'agence.** À 1 000
+membres, tout tient dans 82 $ par an. À 100 000, dans 1 511 $. C'est l'argument central d'un
+partage de revenus plutôt que d'un forfait, et il est chiffré.
+
+**Et pour un investisseur, la vraie réponse est que l'infrastructure ne demande pas
+d'investissement.** Ce qui en demande, c'est le contenu, la promotion et le live. Le premier
+poste réel à financer est le live, pas le site.
+
 ## Ce que la plateforme coûte réellement — mesuré le 17/09/2026
 
 > Jusqu'ici ce dossier chiffrait le live (`COUTS-LIVE-PRO.md`) et rien d'autre. Le coût de
