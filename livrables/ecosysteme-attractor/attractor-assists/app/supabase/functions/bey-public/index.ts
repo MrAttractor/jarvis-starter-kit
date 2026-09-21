@@ -12,6 +12,7 @@
 // On n'expose jamais le WhatsApp des autres membres.
 // ============================================================
 import { envoyer, type Abonnement, type Reglages } from "../_partage/webpush.ts";
+import { badges } from "../_partage/badges.ts";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
@@ -727,6 +728,38 @@ Deno.serve(async (req) => {
       if (etat === "a_toi")        return json({ ok: true, etat, message: "Ce code est déjà le tien, l'accès est ouvert." });
       if (etat === "deja_utilise") return json({ ok: false, etat, error: "Ce code a déjà été utilisé." });
       return json({ ok: false, etat: "inconnu", error: "Ce code n'existe pas. Vérifie les lettres." });
+    }
+
+    /* ── BADGES : ce que le fan a gagne, et ce qu'il peut gagner ──
+       Aucun badge n'est stocke : la vue rend les compteurs, le catalogue
+       partage rend les paliers. Un badge apparait donc a la seconde ou le
+       compteur passe, sans tache de fond et sans risque d'oubli.
+       Le catalogue est le MEME fichier que celui lu par le tableau de bord de
+       Serge : les deux ecrans ne peuvent pas diverger. */
+    if (action === "badges") {
+      let mid = d.membre_id ? String(d.membre_id) : null;
+      if (!mid && d.jeton) {
+        const j = String(d.jeton).replace(/[^a-zA-Z0-9]/g, "").slice(0, 64);
+        if (j.length >= 16) {
+          const m = await (await sb(`bey_membres?jeton=eq.${encodeURIComponent(j)}&select=id`)).json();
+          if (Array.isArray(m) && m.length) mid = String(m[0].id);
+        }
+      }
+      if (!mid) return json({ ok: false, error: "membre_id requis" });
+      const r = await (await sb(
+        `v_bey_totaux?id=eq.${encodeURIComponent(mid)}&limit=1` +
+          `&select=grade,filleuls,commentaires,votes,coeurs,cloche,arrives_avant`,
+      )).json();
+      if (!Array.isArray(r) || !r.length) return json({ ok: false, error: "introuvable" });
+      const t = r[0];
+      const liste = badges(t);
+      return json({
+        ok: true,
+        badges: liste,
+        gagnes: liste.filter((b) => b.gagne).length,
+        total: liste.length,
+        totaux: t,
+      });
     }
 
     if (action === "classement") {

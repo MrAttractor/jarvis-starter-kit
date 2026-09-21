@@ -44,6 +44,29 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '
 function servir(racine) {
   return http.createServer((req, res) => {
     let u = decodeURIComponent(req.url.split('?')[0]);
+    /* Le fil et les photos ne sont PAS des fichiers : depuis le demenagement
+       du 19/09 c'est un Worker qui les sert. En local ils repondaient donc
+       404, et la recette declarait un echec bloquant a chaque execution, sur
+       un defaut qui n'existe pas en ligne. Un controle qui crie toujours
+       finit par ne plus etre lu : on relaie vers le vrai site, comme le fait
+       Cloudflare. */
+    if (u === '/api/feed' || u.startsWith('/img/')) {
+      const amont = EN_LIGNE + req.url;
+      const corps = [];
+      req.on('data', (c) => corps.push(c));
+      req.on('end', () => {
+        // On repasse les en-tetes du navigateur, l'hote mis a part : c'est
+        // la cle anonyme qui y voyage, et sans elle le relais recevait 401.
+        const entetes = { ...req.headers };
+        delete entetes.host; delete entetes['accept-encoding']; delete entetes['content-length'];
+        require('https').request(amont, { method: req.method, headers: entetes }, (r) => {
+          res.writeHead(r.statusCode, { 'Content-Type': r.headers['content-type'] || 'application/octet-stream' });
+          r.pipe(res);
+        }).on('error', () => { res.writeHead(502); res.end('relais indisponible'); })
+          .end(Buffer.concat(corps));
+      });
+      return;
+    }
     // Meme regle d'adresse propre que Cloudflare : /fan sert fan.html.
     if (/^\/(fan|app|rejoindre)$/.test(u)) u += '.html';
     if (u === '/') u = '/index.html';
@@ -226,18 +249,33 @@ const AUDIT_MISE_EN_PAGE = function () {
 const FACADE = {
   stats: {
     ok: true, total: 1284, ambassadeurs: 37, nbMessages: 18, nbComments: 214,
-    topAmb: [{ prenom: 'Awa', lieu: 'Abidjan', filleuls: 41 }, { prenom: 'Konan', lieu: 'Bouaké', filleuls: 22 }],
+    topAmb: [{ prenom: 'Awa', lieu: 'Abidjan', filleuls: 41 }, { prenom: 'Konan', lieu: 'Bouaké', filleuls: 22 },
+             { prenom: 'Yao', lieu: 'Daloa', filleuls: 9 }, { prenom: 'Fatou', lieu: 'Korhogo', filleuls: 4 },
+             { prenom: 'Ismaël', lieu: 'France', filleuls: 2 }],
+    /* Les meilleurs contributeurs, avec leur badge le plus rare : c'est la
+       seule ligne qui porte le jeton dore .bdg, et sans elle sa couleur
+       n'est jamais mesuree. */
+    topContrib: [{ prenom: 'Mariam', lieu: 'Abidjan', commentaires: 34, votes: 8, coeurs: 61, points: 179, badge: 'Porte-voix' },
+                 { prenom: 'Awa', lieu: 'Abidjan', commentaires: 12, votes: 4, coeurs: 30, points: 74, badge: 'Chef de zone' },
+                 { prenom: 'Konan', lieu: 'Bouaké', commentaires: 5, votes: 2, coeurs: 9, points: 28, badge: 'Recruteur' },
+                 { prenom: 'Yao', lieu: 'Daloa', commentaires: 1, votes: 0, coeurs: 12, points: 15, badge: 'Premier mot' },
+                 { prenom: 'Fatou', lieu: 'Korhogo', commentaires: 0, votes: 1, coeurs: 4, points: 6, badge: null }],
     lieux: [{ lieu: 'Abidjan', ville: 'Abidjan', pays: "Côte d'Ivoire", n: 620, total: 620, lat: 5.35, lon: -4.02 },
             { lieu: 'Paris', ville: 'Paris', pays: 'France', n: 210, total: 210, lat: 48.85, lon: 2.35 }],
-    recents: [{ prenom: 'Mariam', lieu: 'Yopougon', grade: 'ambassadeur', created_at: new Date(Date.now() - 3.6e6).toISOString() },
-              { prenom: 'Yao', lieu: 'Daloa', grade: 'membre', created_at: new Date(Date.now() - 9e7).toISOString() }]
+    recents: [{ prenom: 'Mariam', lieu: 'Abidjan', grade: 'ambassadeur', created_at: new Date(Date.now() - 3.6e6).toISOString() },
+              { prenom: 'Yao', lieu: 'Daloa', grade: 'membre', created_at: new Date(Date.now() - 9e7).toISOString() },
+              { prenom: 'Fatou', lieu: 'Korhogo', grade: 'membre', created_at: new Date(Date.now() - 1.8e8).toISOString() },
+              { prenom: 'Ismaël', lieu: 'France', grade: 'membre', created_at: new Date(Date.now() - 2.6e8).toISOString() },
+              { prenom: 'Aminata', lieu: 'San-Pedro', grade: 'membre', created_at: new Date(Date.now() - 3.4e8).toISOString() }]
   },
   classement: {
     ok: true, joueurs: 12, confirmes: 58,
     saison: { nom: 'Saison 1', fin: new Date(Date.now() + 12 * 864e5).toISOString() },
     podium: [{ rang: 1, prenom: 'Awa', lieu: 'Abidjan', inscrits: 41, points: 28 },
              { rang: 2, prenom: 'Konan', lieu: 'Bouaké', inscrits: 22, points: 14 },
-             { rang: 3, prenom: 'Yao', lieu: 'Daloa', inscrits: 9, points: 5 }]
+             { rang: 3, prenom: 'Yao', lieu: 'Daloa', inscrits: 9, points: 5 },
+             { rang: 4, prenom: 'Fatou', lieu: 'Korhogo', inscrits: 4, points: 2 },
+             { rang: 5, prenom: 'Ismaël', lieu: 'France', inscrits: 2, points: 1 }]
   },
   comments_recent: {
     ok: true, commentaires: [
@@ -388,6 +426,29 @@ function trierContrastes() {
                 { prenom: 'Mano', lieu: null, confirme: false },
               ],
             },
+          }) });
+      }
+      /* Les badges : le membre de recette n'existe pas en base, donc le vrai
+         serveur repondrait « introuvable » et l'etagere resterait cachee. On
+         force les DEUX etats d'une tuile, gagnee et verrouillee, sinon la
+         moitie des couleurs de ce bloc n'est jamais mesuree. Les cles sont
+         celles que rend le serveur : `badges`, `gagne`, `ou_en`, `palier`. */
+      if (action === 'badges') {
+        const b = (cle, nom, famille, ou_en, palier, quoi) =>
+          ({ cle, nom, famille, quoi, ou_en, palier, prestige: 1, gagne: ou_en >= palier });
+        return route.fulfill({ status: 200, contentType: 'application/json',
+          body: JSON.stringify({
+            ok: true, gagnes: 4, total: 8,
+            badges: [
+              b('premier_mot', 'Premier mot', 'parole', 3, 1, 'Laisser un commentaire'),
+              b('coeur_chaud', 'Cœur chaud', 'coeur', 14, 10, '10 cœurs'),
+              b('ton_avis', 'Ton avis compte', 'avis', 5, 3, 'Répondre à 3 sondages'),
+              b('pionnier', 'Pionnier', 'maison', 1, 1, 'Faire partie des 100 premiers inscrits'),
+              b('recruteur', 'Recruteur', 'equipe', 3, 5, 'Faire entrer 5 fans'),
+              b('on_t_entend', "On t'entend", 'parole', 3, 10, '10 commentaires'),
+              b('jury', 'Membre du jury', 'avis', 5, 15, 'Répondre à 15 sondages'),
+              b('griot', 'Le griot', 'parole', 3, 200, '200 commentaires'),
+            ],
           }) });
       }
       try { route.fulfill({ response: await route.fetch() }); }

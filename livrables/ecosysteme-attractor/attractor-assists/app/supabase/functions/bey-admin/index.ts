@@ -6,6 +6,7 @@
 //           classement.
 // ============================================================
 import { envoyer, type Abonnement, type Reglages } from "../_partage/webpush.ts";
+import { badgePhare } from "../_partage/badges.ts";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 // Liste blanche d'UID admin (séparés par virgule). Rétrocompatible avec un seul UID.
@@ -128,7 +129,37 @@ Deno.serve(async (req) => {
       try { const rl = await sb(`rpc/bey_stats_lieu`, { method: "POST", body: "{}" }); if (rl.ok) lieux = await rl.json(); } catch (_) {}
       const nbMessages = await countRows("bey_messages");
       const nbComments = await countRows("bey_commentaires");
-      return json({ ok: true, total, ambassadeurs, topAmb, recents, lieux, nbMessages, nbComments });
+      // Qui ANIME, sur 30 jours glissants. Ce n'est pas la meme population que
+      // topAmb : celui qui amene dix filleuls et disparait n'est pas celui qui
+      // commente chaque publication. La vue porte le detail du calcul.
+      let topContrib: any[] = [];
+      try {
+        const rc = await sb(
+          "v_bey_contributeurs?points=gt.0&order=points.desc,commentaires.desc,prenom.asc&limit=10" +
+            "&select=id,prenom,lieu,grade,commentaires,votes,coeurs,points",
+        );
+        if (rc.ok) topContrib = await rc.json();
+        // Le badge le plus rare de chacun, pour que Serge puisse le citer
+        // nommement. Les compteurs des badges sont ceux de TOUTE la vie du
+        // membre, pas ceux des 30 jours : un badge gagne ne se reprend pas.
+        // Une seule requete pour les dix, pas dix requetes.
+        const ids = topContrib.map((x: any) => x.id).filter(Boolean);
+        if (ids.length) {
+          const rt = await sb(
+            `v_bey_totaux?id=in.(${ids.join(",")})` +
+              `&select=id,grade,filleuls,commentaires,votes,coeurs,cloche,arrives_avant`,
+          );
+          if (rt.ok) {
+            const parId: Record<string, any> = {};
+            for (const t of await rt.json()) parId[String(t.id)] = t;
+            topContrib = topContrib.map((x: any) => {
+              const b = parId[String(x.id)] ? badgePhare(parId[String(x.id)]) : null;
+              return { ...x, badge: b ? b.nom : null };
+            });
+          }
+        }
+      } catch (_) { /* les vues peuvent ne pas exister encore : le reste des stats passe quand meme */ }
+      return json({ ok: true, total, ambassadeurs, topAmb, recents, lieux, nbMessages, nbComments, topContrib });
     }
 
     // ── BROADCAST ──
