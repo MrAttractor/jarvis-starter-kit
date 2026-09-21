@@ -12,11 +12,16 @@
 // On n'expose jamais le WhatsApp des autres membres.
 // ============================================================
 import { envoyer, type Abonnement, type Reglages } from "../_partage/webpush.ts";
-import { badges } from "../_partage/badges.ts";
+import { distinctions, PALIERS, FENETRE_JOURS } from "../_partage/distinctions.ts";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
-const AMB_THRESHOLD = 5;
+// Le premier palier du grade. Il etait a 5 jusqu'au 21/09/2026 ; Mac Arthur
+// a pose l'echelle 10 / 30 / 100 ce jour-la. Personne n'avait encore atteint
+// 5, relever la barre ne retire donc son grade a personne. La valeur vient du
+// catalogue partage, pour que le serveur et les deux ecrans ne puissent pas
+// se contredire sur ce qu'est un Ambassadeur.
+const AMB_THRESHOLD = PALIERS[0].seuil;
 // Doit rester aligne sur la contrainte bey_*_cible_type_chk de la migration 0005.
 const CIBLES = new Set(["message", "photo", "contenu", "sondage"]);
 // Combien de posts un visiteur sans compte voit avant la porte.
@@ -730,13 +735,18 @@ Deno.serve(async (req) => {
       return json({ ok: false, etat: "inconnu", error: "Ce code n'existe pas. Vérifie les lettres." });
     }
 
-    /* ── BADGES : ce que le fan a gagne, et ce qu'il peut gagner ──
-       Aucun badge n'est stocke : la vue rend les compteurs, le catalogue
-       partage rend les paliers. Un badge apparait donc a la seconde ou le
-       compteur passe, sans tache de fond et sans risque d'oubli.
-       Le catalogue est le MEME fichier que celui lu par le tableau de bord de
-       Serge : les deux ecrans ne peuvent pas diverger. */
-    if (action === "badges") {
+    /* ── DISTINCTIONS : le grade, le titre de la semaine, et Super fan ──
+       Rien n'est stocke. Le grade se lit dans le compteur de filleuls, le
+       titre se lit dans la couverture de la semaine. Un titre apparait donc
+       a la seconde ou le compteur passe, et disparait tout seul quand la
+       semaine glisse. Aucune tache de fond, aucun oubli possible.
+       Le catalogue des seuils est le MEME fichier que celui lu par le
+       tableau de bord de Serge : les deux ecrans ne peuvent pas diverger.
+       Deux lectures, et c'est voulu : « combien Serge a publie » est commun
+       a tout le monde, « combien j'en ai touche » ne regarde que moi. Un
+       membre qui n'a rien fait de la semaine est simplement ABSENT de la
+       seconde vue, et absent se lit zero. */
+    if (action === "distinctions" || action === "badges") {
       let mid = d.membre_id ? String(d.membre_id) : null;
       if (!mid && d.jeton) {
         const j = String(d.jeton).replace(/[^a-zA-Z0-9]/g, "").slice(0, 64);
@@ -746,20 +756,18 @@ Deno.serve(async (req) => {
         }
       }
       if (!mid) return json({ ok: false, error: "membre_id requis" });
-      const r = await (await sb(
-        `v_bey_totaux?id=eq.${encodeURIComponent(mid)}&limit=1` +
-          `&select=grade,filleuls,commentaires,votes,coeurs,cloche,arrives_avant`,
-      )).json();
-      if (!Array.isArray(r) || !r.length) return json({ ok: false, error: "introuvable" });
-      const t = r[0];
-      const liste = badges(t);
-      return json({
-        ok: true,
-        badges: liste,
-        gagnes: liste.filter((b) => b.gagne).length,
-        total: liste.length,
-        totaux: t,
-      });
+
+      const [rsem, ract, rmem] = await Promise.all([
+        (await sb("v_bey_semaine?select=publications&limit=1")).json(),
+        (await sb(`v_bey_actifs_semaine?id=eq.${encodeURIComponent(mid)}&select=touchees,commentaires&limit=1`)).json(),
+        (await sb(`bey_membres?id=eq.${encodeURIComponent(mid)}&select=filleuls&limit=1`)).json(),
+      ]);
+      if (!Array.isArray(rmem) || !rmem.length) return json({ ok: false, error: "introuvable" });
+
+      const publications = Array.isArray(rsem) && rsem.length ? Number(rsem[0].publications) || 0 : 0;
+      const touchees = Array.isArray(ract) && ract.length ? Number(ract[0].touchees) || 0 : 0;
+      const dist = distinctions({ filleuls: Number(rmem[0].filleuls) || 0, touchees, publications });
+      return json({ ok: true, ...dist, fenetre_jours: FENETRE_JOURS });
     }
 
     if (action === "classement") {

@@ -506,49 +506,34 @@ body.reels-on{overflow:hidden;}
 .card{background:var(--n3);border:1px solid var(--faint);border-radius:18px;padding:18px;margin-bottom:14px;}
 .sec-title{font-family:var(--bebas);font-size:24px;letter-spacing:1px;margin:22px 0 12px;}
 
-/* ===== L'ETAGERE A BADGES =====
-   Un fan qui commente ne recevait rien en retour : le concours ne recompense
-   que le parrainage, donc ceux qui amenent du monde. Le badge recompense
-   celui qui est la.
-   CE QUI N'EST PAS ENCORE GAGNE COMPTE AUTANT que ce qui l'est : une etagere
-   qui ne montre que le passe ne fait rien faire. Un badge verrouille porte
-   donc sa barre de progression et ce qu'il reste a faire, en clair.
-   Trois par ligne sur un telephone : au-dela le nom se coupe. */
-.bdg-tete{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
-.bdg-titre{font-size:14px;font-weight:800;}
-.bdg-sous{font-size:12px;color:var(--dim);line-height:1.5;}
-.bdg-grille{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-@media (max-width:359px){ .bdg-grille{grid-template-columns:repeat(2,1fr);} }
-.bdg-t{background:var(--n4);border:1px solid var(--faint);border-radius:14px;
-  padding:12px 8px 10px;text-align:center;}
-.bdg-t.on{background:var(--or-dim);border-color:rgba(212,160,23,.42);}
-.bdg-ico{width:38px;height:38px;border-radius:50%;margin:0 auto 7px;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,.06);}
-.bdg-t.on .bdg-ico{background:linear-gradient(135deg,var(--or-plein),#8B6914);}
-:root[data-theme="clair"] .bdg-ico{background:rgba(20,20,20,.07);}
-.bdg-ico svg{width:19px;height:19px;stroke:var(--dim);fill:none;stroke-width:2;
-  stroke-linecap:round;stroke-linejoin:round;}
-.bdg-t.on .bdg-ico svg{stroke:#1a1207;}
-.bdg-nom{font-size:11px;font-weight:800;line-height:1.25;color:var(--dim);}
-.bdg-t.on .bdg-nom{color:var(--or);}
-.bdg-quoi{font-size:10px;color:var(--dim);margin-top:3px;line-height:1.3;}
-/* Sur la tuile doree, le fond remonte et le gris de la charte tombe a 4,28:1.
-   Meme correction que sur la carte Ambassadeur, qui a le meme fond : on
-   releve le gris ICI, sans toucher au jeton global. Mesure au script. */
-:root:not([data-theme="clair"]) .bdg-t.on{--dim:rgba(255,255,255,.60);}
-/* La barre ne s'affiche que s'il y a du chemin de fait : une barre a zero
-   dit « tu n'as rien fait », et ce n'est pas ce qu'on veut dire a quelqu'un
-   qui vient d'arriver. */
-.bdg-jauge{height:3px;border-radius:3px;background:rgba(255,255,255,.12);
-  margin-top:7px;overflow:hidden;}
-:root[data-theme="clair"] .bdg-jauge{background:rgba(20,20,20,.12);}
-.bdg-jauge i{display:block;height:100%;background:var(--or-plein);border-radius:3px;}
-.bdg-compte{font-family:var(--bebas);font-size:20px;letter-spacing:.5px;color:var(--or);}
-.bdg-voir{width:100%;margin-top:12px;background:var(--n4);
-  border:1px dashed rgba(255,255,255,.18);border-radius:11px;padding:12px;
-  font-size:12px;font-weight:700;color:var(--dim);min-height:44px;}
-:root[data-theme="clair"] .bdg-voir{border-color:rgba(20,20,20,.18);}
+/* ===== TON RANG =====
+   Quinze badges le matin, juges « trop detailles » le soir par Mac Arthur.
+   Il en reste TROIS, et chacune repond a une question differente :
+   qui amene du monde (le grade, acquis a vie), qui est la (le titre de la
+   semaine, qui se rejoue), et qui fait les deux (Super fan).
+   Deux blocs dans une seule carte : ce qui ne se perd jamais en haut, ce qui
+   se rejoue chaque semaine en bas. Le fan doit voir d'un coup d'oeil ce qu'il
+   a, et ce qui lui manque. */
+.rg-tete{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;}
+.rg-titre{font-size:14px;font-weight:800;}
+.rg-sceau{font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
+  padding:5px 11px;border-radius:20px;background:var(--or-dim);color:var(--or);
+  border:1px solid rgba(212,160,23,.42);white-space:nowrap;}
+.rg-part{padding:14px 0;border-top:1px solid var(--faint);}
+.rg-part:first-of-type{border-top:none;padding-top:0;}
+.rg-quoi{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--dim);margin-bottom:7px;}
+.rg-nom{font-family:var(--bebas);font-size:27px;letter-spacing:.8px;line-height:1.05;color:var(--or);}
+.rg-nom.gris{color:var(--doux);}
+.rg-chiffre{font-size:12px;color:var(--dim);margin-top:3px;line-height:1.5;}
+/* La jauge dit ce qui reste, pas ce qui est fait : c'est la distance au
+   palier suivant qui fait bouger quelqu'un, pas la distance parcourue. */
+.rg-jauge{height:5px;border-radius:5px;background:rgba(255,255,255,.12);margin-top:10px;overflow:hidden;}
+:root[data-theme="clair"] .rg-jauge{background:rgba(20,20,20,.12);}
+.rg-jauge i{display:block;height:100%;background:var(--or-plein);border-radius:5px;}
+.rg-jauge.vert i{background:var(--vert);}
+.rg-reste{font-size:12px;color:var(--doux);margin-top:8px;line-height:1.5;}
+.rg-reste b{color:var(--or);}
 
 /* ===== AMBASSADEUR, REPLIABLE =====
    « La partie Ambassadeur prend trop de place » (Mac Arthur, 15/09). Depliee
@@ -1117,17 +1102,28 @@ const MOTS = {
     invitation_whatsapp: '🔥 Rejoins latiss.net, l\'univers officiel de Serge Beynaud ! Contenu exclusif rien que pour nous. C\'est gratuit 👉 ',
   },
 
-  /* ── 6 bis. LES BADGES ──
-     Les noms des badges eux-memes ne sont pas ici : ils vivent dans
-     `_partage/badges.ts`, cote serveur, parce que le tableau de bord de Serge
-     lit le meme catalogue. Deux listes de noms auraient fini par diverger. */
-  badges: {
-    titre: 'Tes badges',
-    resume_zero: 'Ils se gagnent tout seuls. Commente, vote, mets des cœurs, invite tes gens.',
-    resume: 'Ils se gagnent tout seuls. Le prochain est juste là.',
-    voir_tout: 'Voir tout ce qu’il y a à gagner',
-    reduire: 'Réduire',
-    gagne: 'Nouveau badge : {nom} !',
+  /* -- 6 bis. TON RANG --
+     Les NOMS des grades ne sont pas ici : ils vivent dans
+     `_partage/distinctions.ts`, cote serveur, parce que le tableau de bord de
+     Serge lit le meme catalogue. Deux listes de noms auraient fini par
+     diverger. */
+  rang: {
+    titre: 'Ton rang',
+    grade_quoi: 'Ce que tu gardes pour toujours',
+    semaine_quoi: 'Cette semaine',
+    filleuls_zero: 'Personne n’est encore entré grâce à toi.',
+    filleuls_un: '1 personne est entrée grâce à toi.',
+    filleuls_n: '{n} personnes sont entrées grâce à toi.',
+    reste_grade: 'Encore <b>{n}</b> et tu passes {grade}.',
+    au_sommet: 'Tu es au sommet. Il n’y a rien au-dessus.',
+    semaine_titre: 'Meilleur contributeur',
+    semaine_encours: 'Tu suis',
+    semaine_vide: 'Rien de publié',
+    couverture: 'Tu as répondu à {n} des {total} publications.',
+    couverture_rien: 'Serge n’a rien publié ces 7 derniers jours.',
+    reste_semaine: 'Il t’en reste <b>{n}</b> pour avoir le titre de la semaine.',
+    reste_zero: 'Tu n’as rien raté. Le titre est à toi.',
+    superfan: 'Super fan',
   },
 
   /* ── 7. LE FIL ── */
@@ -1383,18 +1379,30 @@ remplirMots(document);
         </div>
       </div>
 
-      <!-- Les badges. Places APRES la carte Ambassadeur, qui porte le lien de
-           parrainage, et AVANT les sondages : c'est la recompense de celui qui
-           est deja la, elle ne doit pas passer apres une question. -->
-      <div class="card hidden" id="bdg-card">
-        <div class="bdg-tete">
-          <div class="bdg-titre" data-mot="badges.titre"></div>
-          <div class="bdg-compte" id="bdg-compte">—</div>
+      <!-- Ton rang. Place APRES la carte Ambassadeur, qui porte le lien de
+           parrainage, et AVANT les sondages : c'est ce que le fan a deja
+           gagne, ca ne doit pas passer apres une question. -->
+      <div class="card hidden" id="rg-card">
+        <div class="rg-tete">
+          <div class="rg-titre" data-mot="rang.titre"></div>
+          <div class="rg-sceau hidden" id="rg-sceau"></div>
         </div>
-        <div class="bdg-sous" id="bdg-sous" style="margin-bottom:12px"></div>
-        <div class="bdg-grille" id="bdg-grille"></div>
-        <div class="bdg-grille hidden" id="bdg-reste" style="margin-top:10px"></div>
-        <button class="bdg-voir hidden" id="bdg-voir" type="button" onclick="basculerBadges()"></button>
+
+        <div class="rg-part">
+          <div class="rg-quoi" data-mot="rang.grade_quoi"></div>
+          <div class="rg-nom" id="rg-grade"></div>
+          <div class="rg-chiffre" id="rg-filleuls"></div>
+          <div class="rg-jauge hidden" id="rg-jauge-grade"><i></i></div>
+          <div class="rg-reste" id="rg-reste-grade"></div>
+        </div>
+
+        <div class="rg-part">
+          <div class="rg-quoi" data-mot="rang.semaine_quoi"></div>
+          <div class="rg-nom gris" id="rg-semaine"></div>
+          <div class="rg-chiffre" id="rg-couverture"></div>
+          <div class="rg-jauge hidden" id="rg-jauge-semaine"><i></i></div>
+          <div class="rg-reste" id="rg-reste-semaine"></div>
+        </div>
       </div>
 
       <div id="club-sondages"></div>
@@ -1662,7 +1670,7 @@ function peindreCoquille(m){
   document.querySelector('.zone-danger').classList.remove('hidden');
   etatCloche();
   chargerConcours();
-  chargerBadges();
+  chargerRang();
 }
 
 /* Visiteur : le meme ecran, mais sans son nom, sans ses outils, et avec trois
@@ -1703,100 +1711,116 @@ function joursRestants(fin){
   return Math.max(0, Math.ceil(ms / 86400000));
 }
 
-/* ══════════════ LES BADGES ══════════════
-   Ils ne sont pas stockes : le serveur lit des compteurs et applique des
-   paliers, donc un badge apparait a la seconde ou le compteur passe. Rien a
-   decerner, rien a oublier, et aucun badge ne peut rester accroche a
-   quelqu'un par erreur.
-   Le catalogue des paliers vit cote serveur, dans un seul fichier lu AUSSI
-   par le tableau de bord de Serge : les deux ecrans ne peuvent pas raconter
-   deux histoires differentes.
-   On garde ici ce qui etait deja gagne a la visite precedente, uniquement
-   pour pouvoir feliciter au bon moment. Ce n'est pas la verite du compte,
-   c'est un souvenir : le serveur reste seul juge. */
-let BADGES = null, badgesSeq = 0, badgesOuvert = false;
-const BDG_VISIBLES = 6;
-const BDG_MEMOIRE = 'bey_badges_vus';
+/* ══════════════ TON RANG ══════════════
+   Rien n'est stocke. Le grade se lit dans le compteur de filleuls, le titre
+   de la semaine se lit dans la couverture des sept derniers jours. Un titre
+   apparait donc a la seconde ou le compteur passe, et il disparait tout seul
+   quand la semaine glisse. Aucune tache de fond, aucun oubli possible.
 
-/* Une icone par famille, pas une par badge. Quinze dessins differents, ce
-   sont quinze occasions d'en rater un ; cinq familles se reconnaissent du
-   premier coup et disent deja de quoi il s'agit. */
-const BDG_ICONES = {
-  parole: '<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.8-.9L3 21l2-4.9A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/>',
-  coeur:  '<path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 1 0-7.1 7.1l8.8 8.8 8.8-8.8a5 5 0 0 0 0-7.1z"/>',
-  avis:   '<polyline points="20 6 9 17 4 12"/>',
-  equipe: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9"/>',
-  maison: '<polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3"/>',
-};
+   LE TITRE DE LA SEMAINE SE COMPTE EN COUVERTURE, PAS EN POINTS. Trente
+   coeurs sur une seule publication font un gros score et une mauvaise
+   semaine ; un seul coeur sur chacune fait une presence parfaite. C'est la
+   seconde qu'on recompense : « il n'a rien rate » est une phrase vraie, que
+   Serge peut dire en video, et « il a 179 points » n'en est pas une.
 
-async function chargerBadges(){
-  const rang = ++badgesSeq;
-  const carte = document.getElementById('bdg-card');
+   Le catalogue des seuils vit cote serveur, dans un seul fichier lu AUSSI
+   par le tableau de bord : les deux ecrans ne peuvent pas diverger. */
+let RANG = null, rangSeq = 0;
+const RG_MEMOIRE = 'bey_rang_vu';
+
+async function chargerRang(){
+  const tour = ++rangSeq;
+  const carte = document.getElementById('rg-card');
   if(!carte) return;
   if(APERCU || !ME){ carte.classList.add('hidden'); return; }
   let r = null;
-  try{ r = await api({ action:'badges', membre_id: ME.id }); }catch(e){ r = null; }
-  if(rang !== badgesSeq) return;           // une demande plus recente est passee devant
-  if(!r || !r.ok || !r.badges){ carte.classList.add('hidden'); return; }
-  BADGES = r;
+  try{ r = await api({ action:'distinctions', membre_id: ME.id }); }catch(e){ r = null; }
+  if(tour !== rangSeq) return;            // une demande plus recente est passee devant
+  if(!r || !r.ok || !r.grade){ carte.classList.add('hidden'); return; }
+  RANG = r;
   carte.classList.remove('hidden');
-  peindreBadges();
-  feliciter(r.badges);
+  peindreRang();
+  feliciter(r);
 }
 
-function peindreBadges(){
-  if(!BADGES) return;
-  const gagnes = BADGES.badges.filter(function(b){ return b.gagne; });
-  document.getElementById('bdg-compte').textContent = gagnes.length + ' / ' + BADGES.badges.length;
-  document.getElementById('bdg-sous').textContent = gagnes.length
-    ? MOTS.badges.resume : MOTS.badges.resume_zero;
+function peindreRang(){
+  if(!RANG) return;
+  const M = MOTS.rang, g = RANG.grade, s = RANG.semaine;
 
-  /* Les gagnes d'abord, puis les plus proches d'etre gagnes : le serveur les
-     range deja dans cet ordre. On en montre six, le reste se deplie. */
-  const tous = BADGES.badges;
-  const tete = tous.slice(0, BDG_VISIBLES), reste = tous.slice(BDG_VISIBLES);
-  document.getElementById('bdg-grille').innerHTML = tete.map(tuileBadge).join('');
-  const boiteReste = document.getElementById('bdg-reste');
-  const bouton = document.getElementById('bdg-voir');
-  boiteReste.innerHTML = reste.map(tuileBadge).join('');
-  boiteReste.classList.toggle('hidden', !reste.length || !badgesOuvert);
-  bouton.classList.toggle('hidden', !reste.length);
-  bouton.textContent = badgesOuvert ? MOTS.badges.reduire : MOTS.badges.voir_tout;
+  /* Le sceau : le seul mot a retenir quand il n'y a de place que pour un.
+     Super fan passe devant le grade, il dit les deux a la fois. */
+  const sceau = document.getElementById('rg-sceau');
+  const mot = RANG.superfan ? M.superfan : (RANG.contributeur ? M.semaine_titre : '');
+  sceau.textContent = mot;
+  sceau.classList.toggle('hidden', !mot);
+
+  // ── Ce qui ne se perd jamais ──
+  const nomGrade = document.getElementById('rg-grade');
+  nomGrade.textContent = g.nom.toUpperCase();
+  nomGrade.classList.toggle('gris', g.niveau === 0);
+  document.getElementById('rg-filleuls').textContent = g.filleuls === 0
+    ? M.filleuls_zero
+    : (g.filleuls === 1 ? M.filleuls_un : M.filleuls_n.replace('{n}', g.filleuls));
+
+  const jg = document.getElementById('rg-jauge-grade');
+  const rg = document.getElementById('rg-reste-grade');
+  if(g.prochain){
+    jg.classList.remove('hidden');
+    jg.querySelector('i').style.width = Math.round(Math.min(1, g.filleuls / g.prochain) * 100) + '%';
+    // Le nom du palier vise, pas son numero : « Grand Ambassadeur » se
+    // retient, « niveau 2 » ne veut rien dire.
+    rg.innerHTML = M.reste_grade.replace('{n}', g.manque).replace('{grade}', esc(nomProchainGrade(g)));
+  } else {
+    jg.classList.add('hidden');
+    rg.textContent = M.au_sommet;
+  }
+
+  // ── Ce qui se rejoue chaque semaine ──
+  const nomSem = document.getElementById('rg-semaine');
+  nomSem.textContent = (s.publications === 0 ? M.semaine_vide
+    : (s.complet ? M.semaine_titre : M.semaine_encours)).toUpperCase();
+  nomSem.classList.toggle('gris', !s.complet);
+  document.getElementById('rg-couverture').textContent = s.publications === 0
+    ? M.couverture_rien
+    : M.couverture.replace('{n}', s.touchees).replace('{total}', s.publications);
+
+  const js = document.getElementById('rg-jauge-semaine');
+  const rs = document.getElementById('rg-reste-semaine');
+  if(s.publications === 0){
+    js.classList.add('hidden');
+    rs.textContent = '';
+  } else {
+    js.classList.remove('hidden');
+    js.classList.toggle('vert', s.complet);
+    js.querySelector('i').style.width = Math.round((s.touchees / s.publications) * 100) + '%';
+    if(s.complet) rs.textContent = M.reste_zero;
+    else rs.innerHTML = M.reste_semaine.replace('{n}', s.manque);
+  }
 }
 
-function tuileBadge(b){
-  const ico = BDG_ICONES[b.famille] || BDG_ICONES.maison;
-  // Un badge verrouille dit ou on en est. Un badge gagne n'a plus rien a
-  // demander : on affiche ce qu'il a fallu faire, au passe.
-  const part = Math.min(1, (b.ou_en || 0) / Math.max(1, b.palier));
-  const jauge = (!b.gagne && b.ou_en > 0 && b.palier > 1)
-    ? '<div class="bdg-jauge"><i style="width:' + Math.round(part * 100) + '%"></i></div>'
-    : '';
-  const sous = b.gagne ? esc(b.quoi)
-    : (b.palier > 1 ? b.ou_en + ' / ' + b.palier : esc(b.quoi));
-  return '<div class="bdg-t' + (b.gagne ? ' on' : '') + '">'
-       +   '<div class="bdg-ico"><svg viewBox="0 0 24 24" aria-hidden="true">' + ico + '</svg></div>'
-       +   '<div class="bdg-nom">' + esc(b.nom) + '</div>'
-       +   '<div class="bdg-quoi">' + sous + '</div>'
-       +   jauge
-       + '</div>';
+/* Le nom du palier suivant. Il vit cote serveur, mais l'echelle est courte et
+   fixe : on la reconstitue ici plutot que de faire un aller-retour de plus
+   pour trois mots. Si elle bouge, elle bouge dans distinctions.ts ET ici. */
+function nomProchainGrade(g){
+  if(g.prochain === 30) return 'Grand Ambassadeur';
+  if(g.prochain === 100) return 'Super Ambassadeur';
+  return 'Ambassadeur';
 }
 
-function basculerBadges(){ badgesOuvert = !badgesOuvert; peindreBadges(); }
-
-/* Feliciter, mais une seule fois, et seulement pour ce qui vient d'etre
-   gagne. Un fan qui rouvre l'application ne doit pas revoir defiler ses
-   anciens badges : la fete ne vaut que si elle est rare. */
-function feliciter(liste){
-  let vus = [];
-  try{ vus = JSON.parse(localStorage.getItem(BDG_MEMOIRE) || '[]'); }catch(e){ vus = []; }
-  const gagnes = liste.filter(function(b){ return b.gagne; }).map(function(b){ return b.cle; });
-  const nouveaux = liste.filter(function(b){ return b.gagne && vus.indexOf(b.cle) === -1; });
-  try{ localStorage.setItem(BDG_MEMOIRE, JSON.stringify(gagnes)); }catch(e){}
+/* Feliciter, mais une seule fois, et seulement pour ce qui vient de changer.
+   Un fan qui rouvre l'application ne doit pas revoir defiler ce qu'il a deja.
+   On retient le dernier etat vu : le grade et le titre de la semaine. */
+function feliciter(r){
+  let vu = null;
+  try{ vu = JSON.parse(localStorage.getItem(RG_MEMOIRE) || 'null'); }catch(e){ vu = null; }
+  const etat = { niveau: r.grade.niveau, contributeur: !!r.contributeur, superfan: !!r.superfan };
+  try{ localStorage.setItem(RG_MEMOIRE, JSON.stringify(etat)); }catch(e){}
   // Rien au tout premier chargement : sinon un membre de longue date recoit
-  // dix felicitations d'affilee pour des badges qu'il a depuis des mois.
-  if(!vus.length) return;
-  if(nouveaux.length) toast(MOTS.badges.gagne.replace('{nom}', nouveaux[0].nom));
+  // une felicitation pour un grade qu'il a depuis des mois.
+  if(!vu) return;
+  if(etat.superfan && !vu.superfan) return toast(MOTS.rang.superfan + ' !');
+  if(etat.niveau > vu.niveau) return toast(r.grade.nom + ' !');
+  if(etat.contributeur && !vu.contributeur) toast(MOTS.rang.semaine_titre + ' !');
 }
 
 /* Cette fonction est appelee deux fois au demarrage : une fois avec ce que le
@@ -3133,7 +3157,7 @@ async function basculerCoeur(p){
     p.likes = res.likes; p.liked = res.liked;
     if(btn) btn.classList.toggle('liked', p.liked);
     if(lk) majTexteLikes(lk, p.likes);
-    chargerBadges();
+    chargerRang();
   }
 }
 
@@ -3166,7 +3190,7 @@ async function envoyerCommentaire(p){
   const span = cmtBtn && cmtBtn.querySelector('span');
   if(span) span.textContent = String(p.comments.length);
   toast(MOTS.fil.commentaire_publie);
-  chargerBadges();
+  chargerRang();
 }
 
 /* ---------- Sondage, rendu a l'interieur de son post ---------- */
@@ -3211,7 +3235,7 @@ async function voter(p, idx){
   const box = document.getElementById('sond-' + p.id);
   if(box) peindreSondage(box, p);
   toast(MOTS.fil.vote_enregistre);
-  chargerBadges();
+  chargerRang();
 }
 
 /* ---------- Le live reste epingle en tete, ce n'est pas un post ---------- */

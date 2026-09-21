@@ -6,7 +6,7 @@
 //           classement.
 // ============================================================
 import { envoyer, type Abonnement, type Reglages } from "../_partage/webpush.ts";
-import { badgePhare } from "../_partage/badges.ts";
+import { distinctions, FENETRE_JOURS } from "../_partage/distinctions.ts";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 // Liste blanche d'UID admin (séparés par virgule). Rétrocompatible avec un seul UID.
@@ -129,37 +129,47 @@ Deno.serve(async (req) => {
       try { const rl = await sb(`rpc/bey_stats_lieu`, { method: "POST", body: "{}" }); if (rl.ok) lieux = await rl.json(); } catch (_) {}
       const nbMessages = await countRows("bey_messages");
       const nbComments = await countRows("bey_commentaires");
-      // Qui ANIME, sur 30 jours glissants. Ce n'est pas la meme population que
-      // topAmb : celui qui amene dix filleuls et disparait n'est pas celui qui
-      // commente chaque publication. La vue porte le detail du calcul.
+      /* QUI EST LA CETTE SEMAINE. Ce n'est pas la meme population que
+         topAmb : celui qui amene dix filleuls et disparait n'est pas celui
+         qui repond a chaque publication.
+         Et ce n'est pas un score : c'est une COUVERTURE. Trente coeurs sur
+         une seule publication font un gros score et une mauvaise semaine ;
+         un seul coeur sur chacune fait une presence parfaite. Serge a besoin
+         de la seconde, c'est elle qui donne une phrase vraie a dire en video.
+         La vue part des gestes et non des membres : son cout suit l'activite
+         reelle, pas le nombre d'inscrits. */
+      let publicationsSemaine = 0;
       let topContrib: any[] = [];
       try {
+        const rs = await sb("v_bey_semaine?select=publications&limit=1");
+        if (rs.ok) {
+          const l = await rs.json();
+          if (Array.isArray(l) && l.length) publicationsSemaine = Number(l[0].publications) || 0;
+        }
         const rc = await sb(
-          "v_bey_contributeurs?points=gt.0&order=points.desc,commentaires.desc,prenom.asc&limit=10" +
-            "&select=id,prenom,lieu,grade,commentaires,votes,coeurs,points",
+          "v_bey_actifs_semaine?order=touchees.desc,commentaires.desc,prenom.asc&limit=10" +
+            "&select=prenom,lieu,grade,filleuls,touchees,commentaires",
         );
-        if (rc.ok) topContrib = await rc.json();
-        // Le badge le plus rare de chacun, pour que Serge puisse le citer
-        // nommement. Les compteurs des badges sont ceux de TOUTE la vie du
-        // membre, pas ceux des 30 jours : un badge gagne ne se reprend pas.
-        // Une seule requete pour les dix, pas dix requetes.
-        const ids = topContrib.map((x: any) => x.id).filter(Boolean);
-        if (ids.length) {
-          const rt = await sb(
-            `v_bey_totaux?id=in.(${ids.join(",")})` +
-              `&select=id,grade,filleuls,commentaires,votes,coeurs,cloche,arrives_avant`,
-          );
-          if (rt.ok) {
-            const parId: Record<string, any> = {};
-            for (const t of await rt.json()) parId[String(t.id)] = t;
-            topContrib = topContrib.map((x: any) => {
-              const b = parId[String(x.id)] ? badgePhare(parId[String(x.id)]) : null;
-              return { ...x, badge: b ? b.nom : null };
+        if (rc.ok) {
+          const liste = await rc.json();
+          topContrib = (Array.isArray(liste) ? liste : []).map((x: any) => {
+            const dist = distinctions({
+              filleuls: Number(x.filleuls) || 0,
+              touchees: Number(x.touchees) || 0,
+              publications: publicationsSemaine,
             });
-          }
+            return {
+              prenom: x.prenom, lieu: x.lieu,
+              touchees: dist.semaine.touchees, manque: dist.semaine.manque,
+              commentaires: Number(x.commentaires) || 0,
+              filleuls: Number(x.filleuls) || 0,
+              titre: dist.titre, contributeur: dist.contributeur, superfan: dist.superfan,
+            };
+          });
         }
       } catch (_) { /* les vues peuvent ne pas exister encore : le reste des stats passe quand meme */ }
-      return json({ ok: true, total, ambassadeurs, topAmb, recents, lieux, nbMessages, nbComments, topContrib });
+      return json({ ok: true, total, ambassadeurs, topAmb, recents, lieux, nbMessages, nbComments,
+        topContrib, publicationsSemaine, fenetreJours: FENETRE_JOURS });
     }
 
     // ── BROADCAST ──

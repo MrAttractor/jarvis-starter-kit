@@ -252,14 +252,16 @@ const FACADE = {
     topAmb: [{ prenom: 'Awa', lieu: 'Abidjan', filleuls: 41 }, { prenom: 'Konan', lieu: 'Bouaké', filleuls: 22 },
              { prenom: 'Yao', lieu: 'Daloa', filleuls: 9 }, { prenom: 'Fatou', lieu: 'Korhogo', filleuls: 4 },
              { prenom: 'Ismaël', lieu: 'France', filleuls: 2 }],
-    /* Les meilleurs contributeurs, avec leur badge le plus rare : c'est la
-       seule ligne qui porte le jeton dore .bdg, et sans elle sa couleur
-       n'est jamais mesuree. */
-    topContrib: [{ prenom: 'Mariam', lieu: 'Abidjan', commentaires: 34, votes: 8, coeurs: 61, points: 179, badge: 'Porte-voix' },
-                 { prenom: 'Awa', lieu: 'Abidjan', commentaires: 12, votes: 4, coeurs: 30, points: 74, badge: 'Chef de zone' },
-                 { prenom: 'Konan', lieu: 'Bouaké', commentaires: 5, votes: 2, coeurs: 9, points: 28, badge: 'Recruteur' },
-                 { prenom: 'Yao', lieu: 'Daloa', commentaires: 1, votes: 0, coeurs: 12, points: 15, badge: 'Premier mot' },
-                 { prenom: 'Fatou', lieu: 'Korhogo', commentaires: 0, votes: 1, coeurs: 4, points: 6, badge: null }],
+    /* Qui est la cette semaine. Il FAUT au moins une ligne avec un titre :
+       c'est la seule qui porte le jeton dore .sceau, et sans elle sa couleur
+       n'est jamais mesuree. Et au moins une sans titre, sinon c'est l'etat
+       ordinaire qui n'est jamais mesure. */
+    publicationsSemaine: 4, fenetreJours: 7,
+    topContrib: [{ prenom: 'Mariam', lieu: 'Abidjan', touchees: 4, manque: 0, commentaires: 34, filleuls: 12, titre: 'Super fan', contributeur: true, superfan: true },
+                 { prenom: 'Awa', lieu: 'Abidjan', touchees: 4, manque: 0, commentaires: 12, filleuls: 0, titre: 'Meilleur contributeur', contributeur: true, superfan: false },
+                 { prenom: 'Konan', lieu: 'Bouaké', touchees: 3, manque: 1, commentaires: 5, filleuls: 31, titre: 'Grand Ambassadeur', contributeur: false, superfan: false },
+                 { prenom: 'Yao', lieu: 'Daloa', touchees: 2, manque: 2, commentaires: 1, filleuls: 0, titre: 'Membre', contributeur: false, superfan: false },
+                 { prenom: 'Fatou', lieu: 'Korhogo', touchees: 1, manque: 3, commentaires: 0, filleuls: 0, titre: 'Membre', contributeur: false, superfan: false }],
     lieux: [{ lieu: 'Abidjan', ville: 'Abidjan', pays: "Côte d'Ivoire", n: 620, total: 620, lat: 5.35, lon: -4.02 },
             { lieu: 'Paris', ville: 'Paris', pays: 'France', n: 210, total: 210, lat: 48.85, lon: 2.35 }],
     recents: [{ prenom: 'Mariam', lieu: 'Abidjan', grade: 'ambassadeur', created_at: new Date(Date.now() - 3.6e6).toISOString() },
@@ -428,27 +430,19 @@ function trierContrastes() {
             },
           }) });
       }
-      /* Les badges : le membre de recette n'existe pas en base, donc le vrai
-         serveur repondrait « introuvable » et l'etagere resterait cachee. On
-         force les DEUX etats d'une tuile, gagnee et verrouillee, sinon la
-         moitie des couleurs de ce bloc n'est jamais mesuree. Les cles sont
-         celles que rend le serveur : `badges`, `gagne`, `ou_en`, `palier`. */
-      if (action === 'badges') {
-        const b = (cle, nom, famille, ou_en, palier, quoi) =>
-          ({ cle, nom, famille, quoi, ou_en, palier, prestige: 1, gagne: ou_en >= palier });
+      /* Le rang : le membre de recette n'existe pas en base, donc le vrai
+         serveur repondrait « introuvable » et la carte resterait cachee.
+         On choisit un etat qui allume TOUT ce qui se colore : un grade
+         atteint, un palier encore a viser, le sceau dore, et une semaine
+         incomplete pour que la jauge or ET la jauge verte soient mesurees
+         sur deux executions. Les cles sont celles que rend le serveur. */
+      if (action === 'distinctions' || action === 'badges') {
         return route.fulfill({ status: 200, contentType: 'application/json',
           body: JSON.stringify({
-            ok: true, gagnes: 4, total: 8,
-            badges: [
-              b('premier_mot', 'Premier mot', 'parole', 3, 1, 'Laisser un commentaire'),
-              b('coeur_chaud', 'Cœur chaud', 'coeur', 14, 10, '10 cœurs'),
-              b('ton_avis', 'Ton avis compte', 'avis', 5, 3, 'Répondre à 3 sondages'),
-              b('pionnier', 'Pionnier', 'maison', 1, 1, 'Faire partie des 100 premiers inscrits'),
-              b('recruteur', 'Recruteur', 'equipe', 3, 5, 'Faire entrer 5 fans'),
-              b('on_t_entend', "On t'entend", 'parole', 3, 10, '10 commentaires'),
-              b('jury', 'Membre du jury', 'avis', 5, 15, 'Répondre à 15 sondages'),
-              b('griot', 'Le griot', 'parole', 3, 200, '200 commentaires'),
-            ],
+            ok: true, fenetre_jours: 7,
+            grade: { niveau: 1, nom: 'Ambassadeur', filleuls: 12, prochain: 30, manque: 18 },
+            semaine: { publications: 4, touchees: 4, complet: true, manque: 0 },
+            contributeur: true, superfan: true, titre: 'Super fan',
           }) });
       }
       try { route.fulfill({ response: await route.fetch() }); }

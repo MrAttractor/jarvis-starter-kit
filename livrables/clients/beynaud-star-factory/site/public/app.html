@@ -134,7 +134,11 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 .row{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--faint);}
 .row:last-child{border-bottom:none;}
 .av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--rouge),#800000);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;}
-.av.or{background:linear-gradient(135deg,var(--or-plein),#8B6914);color:#000;}
+/* Le bas du degrade etait a #8B6914 : l'initiale noire n'y faisait que
+   4,13:1, sous le seuil, dans les DEUX themes. Neuf pastilles etaient
+   concernees sur quatre listes. Relever ce seul arret les corrige toutes,
+   plutot que d'epingler une couleur liste par liste. Mesure au script. */
+.av.or{background:linear-gradient(135deg,var(--or-plein),#9A7418);color:#000;}
 .row-body{flex:1;min-width:0;}
 .row-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .row-sub{font-size:11px;color:var(--dim);margin-top:1px;}
@@ -152,9 +156,10 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
 /* Un trait annonce une ligne dessous. Quand le reste est replie, il n'y en a
    pas : le trait ment, on l'enleve. */
 .sans-trait{border-bottom:none!important;}
-/* Le badge le plus rare d'un contributeur, cite a cote de son prenom. Memes
-   couleurs que tag-amb : elles sont deja mesurees dans les deux themes. */
-.bdg{display:inline-block;margin-left:6px;padding:2px 7px;border-radius:6px;
+/* Le titre d'un fan, cite a cote de son prenom : Super fan, Ambassadeur.
+   Memes couleurs que tag-amb, elles sont deja mesurees dans les deux
+   themes. */
+.sceau{display:inline-block;margin-left:6px;padding:2px 7px;border-radius:6px;
   font-size:9px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
   background:var(--or-dim);color:var(--or);}
 /* ── La carte du monde ──────────────────────────────────────────────
@@ -441,14 +446,16 @@ textarea{resize:vertical;min-height:74px;line-height:1.5;}
           <button class="add-toggle hidden" id="cl-copier" onclick="copierClassement()">Copier le classement à lire</button>
         </div>
 
-        <!-- Qui ANIME. Ce n'est pas la meme population que les ambassadeurs :
+        <!-- Qui EST LA. Ce n'est pas la meme population que les ambassadeurs :
              celui qui amene dix filleuls et disparait n'est pas celui qui
-             commente chaque publication. La regle de calcul est ecrite a
-             l'ecran, un classement dont on ignore la regle ne fait bouger
-             personne. -->
+             repond a chaque publication.
+             Et ce n'est pas un score, c'est une COUVERTURE : trente coeurs sur
+             une seule publication font un gros score et une mauvaise semaine.
+             Le titre va a ceux qui n'ont RIEN rate, et c'est la seule phrase
+             que Serge peut redire telle quelle en video. -->
         <div class="card">
           <div class="block-title">Meilleurs contributeurs</div>
-          <div class="row-sub" style="margin-bottom:8px">Sur 30 jours. Un commentaire vaut 3 points, un vote 2, un cœur 1.</div>
+          <div class="row-sub" id="contrib-regle" style="margin-bottom:8px">Sur 7 jours.</div>
           <div id="top-contrib"></div>
         </div>
 
@@ -981,11 +988,16 @@ async function loadStats(){
     (st.topAmb||[]).map(m=>`<div class="row"><div class="av or">${esc((m.prenom||'?')[0]).toUpperCase()}</div><div class="row-body"><div class="row-name">${esc(m.prenom)}</div><div class="row-sub">${esc(m.lieu||'—')}</div></div><div class="row-amt">${m.filleuls}</div></div>`),
     '<div class="row-sub">Aucun parrainage pour l\'instant.</div>', 'autres');
 
-  // Le detail sous le prenom dit d'ou viennent les points. Sans lui, le
-  // chiffre de droite est un score que personne ne sait expliquer.
+  /* Le chiffre de droite est une COUVERTURE, pas un score : 4/4 se lit tout
+     seul, et 3/4 dit exactement ce qui manque. Le titre se pose a cote du
+     prenom, pour que Serge puisse citer quelqu'un sans calculer. */
+  const pubs = st.publicationsSemaine || 0;
+  document.getElementById('contrib-regle').textContent = pubs
+    ? `Sur ${st.fenetreJours||7} jours. Serge a publié ${pubs} fois. Le titre va à ceux qui n’ont rien raté.`
+    : `Sur ${st.fenetreJours||7} jours. Rien n’a été publié : personne ne peut décrocher le titre.`;
   listeRepliable('top-contrib',
-    (st.topContrib||[]).map(m=>`<div class="row"><div class="av${m.grade==='ambassadeur'?' or':''}">${esc((m.prenom||'?')[0]).toUpperCase()}</div><div class="row-body"><div class="row-name">${esc(m.prenom)}${m.badge?`<span class="bdg">${esc(m.badge)}</span>`:''}</div><div class="row-sub">${detailContrib(m)}</div></div><div class="row-amt">${m.points||0}</div></div>`),
-    '<div class="row-sub">Personne n’a encore commenté, voté ni aimé ces 30 derniers jours. Publie quelque chose, la liste se remplit toute seule.</div>', 'autres');
+    (st.topContrib||[]).map(m=>`<div class="row"><div class="av${m.contributeur?' or':''}">${esc((m.prenom||'?')[0]).toUpperCase()}</div><div class="row-body"><div class="row-name">${esc(m.prenom)}${m.titre&&m.titre!=='Membre'?`<span class="sceau">${esc(m.titre)}</span>`:''}</div><div class="row-sub">${detailContrib(m)}</div></div><div class="row-amt">${m.touchees||0}/${pubs}</div></div>`),
+    '<div class="row-sub">Personne n’a encore répondu à une publication cette semaine. Publie quelque chose, la liste se remplit toute seule.</div>', 'autres');
 
   peindreCarte(st.lieux||[]);
 
@@ -993,14 +1005,15 @@ async function loadStats(){
     (st.recents||[]).map(m=>`<div class="row"><div class="av${m.grade==='ambassadeur'?' or':''}">${esc((m.prenom||'?')[0]).toUpperCase()}</div><div class="row-body"><div class="row-name">${esc(m.prenom)}</div><div class="row-sub">${esc(m.lieu||'—')} · ${timeAgo(m.created_at)}</div></div><div class="row-tag ${m.grade==='ambassadeur'?'tag-amb':'tag-mem'}">${m.grade==='ambassadeur'?'Ambassadeur':'Membre'}</div></div>`),
     '<div class="row-sub">Aucune inscription encore. Partage le lien fan pour lancer latiss.net.</div>', 'autres');
 }
-/* On ne cite que ce qui existe : « 4 commentaires · 2 cœurs », jamais
-   « 4 commentaires · 0 vote · 2 cœurs ». Les zeros allongent la ligne sans
-   rien apprendre. */
+/* Ce qui MANQUE passe avant ce qui est fait : c'est la seule information
+   qui peut encore changer la semaine de quelqu'un. Pour celui qui n'a rien
+   rate, il n'y a plus rien a demander, on cite alors ce qu'il a ecrit.
+   On ne cite jamais un zero : il allonge la ligne sans rien apprendre. */
 function detailContrib(m){
   const p=[];
+  if(m.manque)       p.push('il en manque '+m.manque);
   if(m.commentaires) p.push(m.commentaires+' commentaire'+(m.commentaires>1?'s':''));
-  if(m.votes)        p.push(m.votes+' vote'+(m.votes>1?'s':''));
-  if(m.coeurs)       p.push(m.coeurs+' cœur'+(m.coeurs>1?'s':''));
+  if(m.filleuls)     p.push(m.filleuls+' entrée'+(m.filleuls>1?'s':'')+' grâce à lui');
   return (esc(m.lieu||'—')+' · '+p.join(' · ')).replace(/ · $/,'');
 }
 
