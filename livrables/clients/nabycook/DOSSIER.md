@@ -1,22 +1,21 @@
 # Nabycook — l'état du dossier
 
-> Révision du 17/08/2026. **Cette fiche est la première chose à lire du dossier.**
+> Révision du 22/09/2026. **Cette fiche est la première chose à lire du dossier.**
 
 | Radar | |
 |---|---|
 | Statut | **site en production sur `nabycook.com`, mais pas annonçable** |
-| Dernier contact | **2026-08-19 : elle demande si elle peut verser une seconde tranche (le solde) dans les jours à venir** |
-| Prochaine action | **Lui fournir son tableau de bord**, et relancer sur les 3 vidéos |
+| Dernier contact | **2026-09-22 : les 3 vidéos sont tournées et livrées. Elle accepte de tourner une vidéo témoignage pour le site de l'agence, à la demande** (confirmé par Mac Arthur) |
+| Prochaine action | **1.** Lui fournir son tableau de bord. **2.** Lui demander sa vidéo témoignage et les 4 chiffres du bloc 6 (`refonte-site-agenceattractor/BLOC-6-PREUVE.md` §7). **3.** Réclamer le solde de 150 € |
 | Échéance | forum du 5 septembre 2026 cité dans sa liste d'éléments |
-| Argent en attente | **175 € d'acompte, toujours pas encaissés** |
+| Argent en attente | **150 €**. Elle a réglé **200 €** en deux versements de 100 € ; solde de 150 € sur les 350 € du partenariat (au 22/09/2026) |
 
 ## En une phrase
 
 Le site est **en production sur son domaine `nabycook.com`** depuis le 13/08, mais
 **quatre défauts empêchent de l'annoncer** (pas de page 404, `noindex` encore posé,
-aucune balise de partage, pas de `robots.txt`). En face, **les 3 vidéos qui sont la
-seule partie facturée ne sont pas tournées**, et **l'agence lui doit son tableau de
-bord**.
+aucune balise de partage, pas de `robots.txt`). **Les 3 vidéos, seule partie facturée,
+sont tournées et livrées** (22/09/2026). Reste dû par l'agence : **son tableau de bord**.
 
 ## Ce qui bloque, des deux côtés
 
@@ -29,11 +28,27 @@ bord**.
 6. Lui fournir son tableau de bord.
 
 **Côté cliente :**
-- **Les 3 vidéos promotionnelles.** C'est la partie facturée du deal (350 €), et rien n'est tourné.
+- ~~Les 3 vidéos promotionnelles~~ : **tournées et livrées, confirmé le 22/09/2026.**
 - Sa charte éditoriale, citée le 31/07 et jamais transmise.
 
-**Règle à tenir, rappelée :** encaisser les **175 €** avant de tourner. Elle vient du
-réseau personnel, la règle vaut quand même.
+**Point d'argent, au 22/09/2026.** Elle a réglé **200 €**, en deux versements de 100 €.
+**Il reste 150 €** sur les 350 € du partenariat.
+
+La règle SOP était d'encaisser l'acompte **avant** de tourner. Les vidéos ont été tournées
+et livrées avec 200 € encaissés sur 350. Le solde est donc réclamé **après** livraison, ce
+qui est une position plus faible qu'avant. Ce n'est pas un incident, la relation est bonne
+et elle a payé en deux fois d'elle-même : c'est noté pour le prochain dossier, pas pour
+celui-ci.
+
+## Contrepartie ouverte, et elle est précieuse (22/09/2026)
+
+**Nabintou accepte de tourner une vidéo témoignage pour le site de l'agence, à la demande
+de Mac Arthur.** C'est la preuve la plus forte dont l'agence dispose : son accompagnement
+2023-2026 est le seul parcours long et abouti du portefeuille, et il est documenté dans
+`livrables/commercial/refonte-site-agenceattractor/BLOC-6-PREUVE.md`.
+
+Ce qu'il faut obtenir avec, et qu'une vidéo seule ne donne pas : **les quatre chiffres
+avant/après** du §7 de ce document. Une vidéo sans chiffres reste un compliment.
 
 ## L'infrastructure, à ne pas réapprendre
 
@@ -68,10 +83,12 @@ Partenariat DMV, pas une vente au prix fort.
 | Vrai coût du travail | 1 300 € |
 | Prix partenariat | **350 €** pour 3 vidéos promotionnelles |
 | Site vitrine | **offert**, en échange de promotion active dans son réseau et de l'autorisation de communiquer sur le cas |
-| Acompte 50 % | **175 €**, facture `ATR-2026-0012-A` |
+| Acompte 50 % prévu | **175 €**, facture `ATR-2026-0012-A` |
+| **Réglé au 22/09/2026** | **200 €**, en deux versements de 100 € |
+| **Solde dû** | **150 €** |
 
-**Règle à tenir : encaisser les 175 € AVANT de tourner.** C'est la règle SOP, elle vaut
-aussi pour le réseau personnel. À vérifier avant toute production.
+**Règle SOP, non tenue sur ce dossier :** encaisser l'acompte avant de tourner. Les vidéos
+sont parties avec 200 € encaissés sur 350. À tenir sur le prochain dossier.
 
 ## Ce qui fait foi
 
@@ -103,4 +120,4 @@ aussi pour le réseau personnel. À vérifier avant toute production.
 Encore attendus d'elle, sans bloquer : témoignages, revue de presse, formulaire Brevo,
 composition du bureau, charte éditoriale.
 
-Et côté agence : encaisser les 175 € avant de tourner les vidéos.
+Et côté agence : **réclamer le solde de 150 €**, et lui fournir son tableau de bord.

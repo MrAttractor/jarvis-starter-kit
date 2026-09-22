@@ -24,24 +24,37 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
-<!-- Facebook Pixel Code -->
+<!-- ══════════ MESURE D'AUDIENCE — chargée seulement après consentement ══════════ -->
 <script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window,document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1225122193019269');
-fbq('track', 'PageView');
+/* fbq est défini tout de suite pour que les appels de la page ne plantent jamais,
+   mais AUCUNE requête ne part vers Facebook tant que le visiteur n'a pas accepté. */
+(function(f){
+  if (f.fbq) return;
+  var n = f.fbq = function(){ n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+  if (!f._fbq) f._fbq = n;
+  n.push = n; n.loaded = false; n.version = '2.0'; n.queue = [];
+})(window);
+
+window.ATTR_PIXEL_ID = '1225122193019269';
+
+window.attrChargerPixel = function(){
+  if (window.fbq.loaded || document.getElementById('fb-pixel-src')) return;
+  window.fbq.queue = [];                       // on jette ce qui précède le consentement
+  var t = document.createElement('script');
+  t.id = 'fb-pixel-src'; t.async = true;
+  t.src = 'https://connect.facebook.net/en_US/fbevents.js';
+  document.head.appendChild(t);
+  window.fbq('init', window.ATTR_PIXEL_ID);
+  window.fbq('track', 'PageView');
+};
+
+(function(){
+  var choix = null;
+  try { choix = localStorage.getItem('attr-consent'); } catch(e) {}
+  if (choix === 'oui') window.attrChargerPixel();
+  else if (choix !== 'non') window.ATTR_CONSENT_A_DEMANDER = true;
+})();
 </script>
-<noscript>
-  <img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1225122193019269&ev=PageView&noscript=1"/>
-</noscript>
-<!-- End Facebook Pixel Code -->
 
 <style>
 /* ═══════════════════════════════════════
@@ -988,7 +1001,7 @@ footer {
         <div class="app-preview" style="background:linear-gradient(180deg,rgba(26,23,20,.55),rgba(26,23,20,.9)),url('images/bg-mynugo.jpg') center 20%/cover;padding:0;overflow:hidden;">
           <div class="app-phone"><div class="mock-browser">
             <div class="mock-app-header" style="background:#1A1714;border-bottom:1px solid rgba(255,255,255,.06);">
-              <img src="images/logo-mynugo.png" style="height:26px;object-fit:contain;">
+              <img src="images/logo-mynugo.png" alt="MY NUGO" width="74" height="26" loading="lazy" decoding="async" style="height:26px;object-fit:contain;">
               <span style="font-size:9px;background:rgba(61,220,132,.15);color:#3DDC84;padding:3px 8px;border-radius:100px;font-weight:700;">● En ligne</span>
             </div>
             <div class="mock-body">
@@ -1066,7 +1079,7 @@ footer {
                 <div class="mock-app-name">J'Envoie Express</div>
                 <div class="mock-status">Paris ↔ Abidjan</div>
               </div>
-              <img src="images/logo-jenvoie.jpg" style="height:28px;border-radius:4px;object-fit:contain;">
+              <img src="images/logo-jenvoie.jpg" alt="J'Envoie Express" width="28" height="28" loading="lazy" decoding="async" style="height:28px;border-radius:4px;object-fit:contain;">
             </div>
             <div class="mock-body">
               <div class="mock-stat-row">
@@ -1336,7 +1349,7 @@ footer {
 <!-- ══════════ CHAT MAC ARTHUR ══════════ -->
 <button id="chat-btn" onclick="location.href='https://demo.agenceattractor.com/diagnostic'" data-track="chat_btn_open">
   <div class="chat-avatar">
-    <img src="images/mac-arthur.jpg" alt="Mac">
+    <img src="images/mac-arthur.jpg" alt="Mac Arthur Kouassi" width="240" height="360" decoding="async">
   </div>
   <div class="chat-label">
     <span class="chat-name">Faire mon diagnostic</span>
@@ -1348,7 +1361,7 @@ footer {
 <div id="chat-window">
   <div class="chat-header">
     <div class="chat-h-info">
-      <div class="chat-h-photo"><img src="images/mac-arthur.jpg" alt="Mac"></div>
+      <div class="chat-h-photo"><img src="images/mac-arthur.jpg" alt="Mac Arthur Kouassi" width="240" height="360" decoding="async"></div>
       <div>
         <div class="chat-h-name">Mac Arthur</div>
         <div class="chat-h-status">● En ligne</div>
@@ -1714,6 +1727,62 @@ async function submitChallenge() {
 }
 
 document.addEventListener('keydown', e => { if(e.key === 'Escape') closeChallengeModal(); });
+</script>
+
+<!-- ══════════ BANDEAU DE CONSENTEMENT ══════════ -->
+<style>
+#attr-consent {
+  position:fixed; left:0; right:0; bottom:0; z-index:9999;
+  background:var(--charbon); color:var(--sable);
+  padding:18px 20px calc(18px + env(safe-area-inset-bottom, 0px));
+  box-shadow:0 -8px 40px rgba(0,0,0,.35);
+  display:flex; flex-wrap:wrap; align-items:center; gap:14px 20px;
+  font-family:'Sora',sans-serif; max-width:100%;
+}
+#attr-consent p { font-size:13px; line-height:1.55; flex:1 1 280px; margin:0; color:rgba(250,246,240,.86); }
+#attr-consent a { color:var(--orange); text-decoration:underline; }
+#attr-consent .attr-c-actions { display:flex; flex-wrap:wrap; gap:10px; flex:0 0 auto; }
+#attr-consent button {
+  min-height:44px; padding:0 22px; border-radius:10px; cursor:pointer;
+  font-family:'Sora',sans-serif; font-size:14px; font-weight:700; border:1.5px solid transparent;
+  transition:opacity .2s, background .2s;
+}
+#attr-c-oui  { background:var(--orange); color:#fff; }
+#attr-c-non  { background:transparent; color:var(--sable); border-color:rgba(250,246,240,.35); }
+#attr-consent button:hover { opacity:.85; }
+@media (max-width:520px){
+  #attr-consent .attr-c-actions { width:100%; }
+  #attr-consent button { flex:1 1 0; padding:0 12px; }
+}
+</style>
+<script>
+(function(){
+  if (!window.ATTR_CONSENT_A_DEMANDER) return;
+
+  var bandeau = document.createElement('div');
+  bandeau.id = 'attr-consent';
+  bandeau.setAttribute('role', 'dialog');
+  bandeau.setAttribute('aria-label', 'Consentement à la mesure d\'audience');
+  bandeau.innerHTML =
+    '<p>On aimerait mesurer la fréquentation de ce site avec un outil de Meta (Facebook), '
+  + 'ce qui suppose de déposer des traceurs sur votre appareil. '
+  + 'Le site fonctionne exactement pareil si vous refusez. '
+  + '<a href="legal.html">En savoir plus</a></p>'
+  + '<div class="attr-c-actions">'
+  + '<button type="button" id="attr-c-non">Refuser</button>'
+  + '<button type="button" id="attr-c-oui">Accepter</button>'
+  + '</div>';
+
+  function repondre(valeur){
+    try { localStorage.setItem('attr-consent', valeur); } catch(e) {}
+    if (valeur === 'oui' && typeof window.attrChargerPixel === 'function') window.attrChargerPixel();
+    bandeau.remove();
+  }
+
+  document.body.appendChild(bandeau);
+  document.getElementById('attr-c-oui').addEventListener('click', function(){ repondre('oui'); });
+  document.getElementById('attr-c-non').addEventListener('click', function(){ repondre('non'); });
+})();
 </script>
 </body>
 </html>
