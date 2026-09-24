@@ -12,6 +12,14 @@
 | Échéance | **Tranche 2 le 28/09**, bêta le 19/10, mise en production le **02/11/2026**. Calendrier détaillé plus bas |
 | Argent en attente | 2 050 €. **Tranche 2 (900 €) exigible à la livraison du prototype, visée au 28/09.** Le devis complémentaire n'a plus lieu d'être sur l'encaissement, il est entré au périmètre |
 
+
+> **Écart de date à trancher, relevé le 25/09/2026.** Un agent cloud a écrit le 09/09
+> (commit `bd2b08b`) « package signé le 08/09, **J0 au 08/09** », là où cette fiche dit
+> **signature Élise le 06/09 à 20h21 UTC, contresignature le 07/09 à 21h10 UTC**, avec
+> preuves vérifiées. La fiche a été gardée à la fusion parce qu'elle est horodatée et
+> sourcée. **L'écart est réel et il déplace la livraison à J0 + 40 jours ouvrés :
+> à confirmer par Mac Arthur.**
+
 ## Son mail du 28/08 : ce qu'il demande vraiment
 
 Elle écrit vouloir « aller à l'essentiel » et « ne pas ajouter beaucoup de nouvelles

@@ -11,6 +11,14 @@
 | Échéance | **ouverture de la billetterie le 31/08**. Prochaine séance vendredi 04/09. **Gel de la programmation, de la jauge et du site au 05/09**, et dépôt du dossier sécurité le même jour. Événement le 11/10, dans 41 jours |
 | Argent en attente | **honoraires de Thim toujours non fixés à 9 jours de retard**, et le contrat que les deux parties attendent reste bloqué dessus. **Toujours aucune convention Mr Attractor / Thim**, alors que le travail court depuis le 25/07 et que la séance du 28/08 nous confie encore le plan de communication |
 
+
+> **Écart à trancher, relevé le 25/09/2026.** Un agent cloud a écrit le 09/09
+> (commit `bd2b08b`) « proposition d'honoraires faite, contrat en cours de signature »,
+> là où cette fiche, révisée le 31/08, dit les honoraires toujours non fixés. La fiche a
+> été gardée à la fusion parce qu'elle est la plus détaillée, mais **l'écriture du cloud
+> est postérieure de neuf jours : si les honoraires ont été proposés entre-temps, c'est
+> ici qu'il faut le dire.**
+
 ## Ce que la séance du 28/08 a changé, et ce qu'elle n'a pas traité
 
 **Cinq points actés** (détail et points d'action dans `CR-SEANCE-2026-08-28.md`) :

@@ -15,6 +15,7 @@
 
 | Date | Dû, non encaissé | En jeu | Clients qui attendent une réponse | Silence 14 j et plus | Ce qui a progressé |
 |---|---|---|---|---|---|
+| 2026-09-09 | 2 317 € | 3 392 à 4 042 € | 2 (Thim, Nabycook) | 21 dossiers, tous au-delà de 21 jours | Club Élévia : package contractuel signé (avenant, devis, CDC). Vies Croisées : fix mis en ligne |
 | 2026-08-20 | 2 317 € | 3 900 à 5 800 € | 3 (Thim, Élise, Nabycook) | 10 dossiers, dont 5 au-delà de 21 jours | rien |
 | 2026-08-19 | 2 317 € | 3 900 à 5 800 € | 1 (Nabycook) | 10 dossiers, dont 5 au-delà de 21 jours | rien |
 | 2026-08-19 | 2 317 € | 3 900 à 5 800 € | 3 (Thim, Élise, Nabycook) | 10 dossiers, dont 5 au-delà de 21 jours | rien |
