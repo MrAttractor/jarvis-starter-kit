@@ -67,6 +67,21 @@ Question de vérification : **« À quoi tu verrais que tu as atteint ton but ? 
 ### La lecture ennéagramme
 **Un profil fort n'est pas un profil mal utilisé.** Il a une **zone de maîtrise** et une **zone critique**. On ne fait pas baisser, on **rééquilibre** par les profils peu développés. Trois méthodes admises : rééquilibrage fort/faible (privilégiée), lois d'harmonisation, intégrations et désintégrations.
 
+**Les flèches, dans le bon sens.** Le schéma du fascicule dessine la **désintégration** : le sens des flèches est celui du stress, l'**intégration** se lit à l'envers. Désintégration 1→4→2→8→5→7→1 et 3→9→6→3. Intégration 1→7→5→8→2→4→1 et 3→6→9→3. Donc le 8 se **désintègre en 5** et s'**intègre en 2**. Un plan de travail suit toujours l'intégration, puisqu'on construit une croissance et non une chute.
+
+**Les lois d'harmonisation** (planche « Harmonisation »). Quatre axes horizontaux, le 9 seul au sommet :
+
+| Axe | Paire | Ce qu'il porte |
+|---|---|---|
+| **Loi** | 8 Leader ↔ 1 Perfectionniste | l'autorité, la règle, l'exigence |
+| **Lien** | 7 Épicurien ↔ 2 Aidant | le contact et l'attention à l'autre |
+| **Action** | 6 Loyaliste ↔ 3 Compétiteur | agir avec le collectif ou agir seul |
+| **Évolution** | 5 Penseur ↔ 4 Artiste | le recul et l'écoute émotionnelle, donc la capacité à se transformer |
+
+Lecture : on compare les **deux scores d'un même axe**. Un axe très déséquilibré désigne le chantier, un axe à plat en bas désigne une ressource absente. C'est la troisième lecture, et elle se croise avec les deux autres.
+
+**Vocabulaire du 7 :** les planches du fascicule écrivent **L'Épicurien**, le questionnaire écrit « Jouisseur ». Retenir Épicurien.
+
 ### Les trois zones
 Zone critique **haute** (sur-activation) / **zone de maîtrise** / zone critique **basse** (sous-activation). Ce qui fait descendre : relaxations, EMCT. Ce qui fait **remonter** : la D.P.M.
 

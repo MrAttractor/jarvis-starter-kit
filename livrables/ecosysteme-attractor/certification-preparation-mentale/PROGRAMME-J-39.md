@@ -52,7 +52,7 @@ Le support est un **instrument de typage**, pas un cours. 135 affirmations noté
 | 4 | **Artiste** | Individualiste, Romantique |
 | 5 | **Penseur** | Observateur, Investigateur |
 | 6 | **Loyaliste** | Loyal |
-| 7 | **Jouisseur** | Épicurien, Enthousiaste |
+| 7 | **Épicurien** *(le questionnaire écrit « Jouisseur », les planches du fascicule écrivent « L'Épicurien ». Les deux sont de l'Académie. Retenir **Épicurien**, c'est le mot des schémas sur lesquels le jury enseigne.)* | Enthousiaste, Optimiste |
 | 8 | **Leader** | Chef, Protecteur |
 | 9 | **Médiateur** | Pacificateur |
 
