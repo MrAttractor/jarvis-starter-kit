@@ -1,15 +1,50 @@
 # Festival des Grillades de Paris — l'état du dossier
 
-> Révision du 08/08/2026, après la séance technique n°1 et la lecture du dossier Drive
-> de Thim. **Cette fiche est la première chose à lire du dossier.**
+> Révision du 31/08/2026, après la séance technique du 28/08. **Cette fiche est la
+> première chose à lire du dossier.**
 
 | Radar | |
 |---|---|
-| Statut | **en cours, et le dossier se réveille. Advantage attend LE CONTRAT, et propose une réunion hebdomadaire jusqu'au 11/10** |
-| Dernier contact | **2026-08-20 : accord de confidentialité envoyé à Thim Production.** La veille, **le 19/08, mail de Marius A. (Advantage) à Arnaud YORO (Thim)** : il réclame le contrat, annonce le démarrage de la communication officielle, donne le prix du billet (150 €) et l'état de la salle (12 000 €, 7 800 € payés), demande un plan de communication, une solution de billetterie et le prix de l'assistance visas. Réponse rédigée dans `REPONSE-A-MARIUS-2026-08-20.md`, préparation de séance dans `SEANCE-2-PREPARATION.md` |
-| Prochaine action | Dans cet ordre : **1.** fixer les honoraires de Thim (art. 9) **aujourd'hui**, c'est ce qu'Advantage attend. **2.** envoyer la réponse à Marius avec le logo Thim et l'attestation de mandat. **3.** signer la convention Mr Attractor / Thim avant de produire les quatre nouveaux chantiers demandés (plan de communication, billetterie, visas, sécurité). **4.** tenir la séance n°2 vendredi et en sortir avec la jauge, le titulaire du contrat de salle et la liste nominative des artistes |
-| Échéance | **réunion vendredi 21/08**, puis hebdomadaire. Passeports des artistes disponibles la semaine du 24/08, donc lettres d'invitation avant. Solde de la salle, 4 200 €, fin août. Événement le 11/10 |
-| Argent en attente | **honoraires de Thim toujours non fixés, et c'est désormais le seul obstacle à un contrat qu'Advantage réclame par écrit.** Toujours aucune convention Mr Attractor / Thim, alors que le mail du 19/08 ajoute quatre chantiers qui atterrissent chez nous |
+| Statut | **le projet avance sur l'exploitation et recule sur le droit. La billetterie ouvre le 31/08 alors que ni le contrat, ni l'assurance annulation, ni la question de qui encaisse ne sont réglés** |
+| Dernier contact | **2026-08-28 : séance technique tenue, hors de l'espace de pilotage.** Thim Production a transmis son relevé et **demande à Mr Attractor le compte rendu officiel et la mise à jour des points d'action**. Acté en séance : lien de billetterie prêt et envoyé à Advantage, ouverture au 31/08, retrait du contrat Advantage / Factory 58, Moët et Veuve Clicquot retenus en achat-revente au même tarif, carte Metro obtenue par Thim, prise de contact sécurité faite avec Harry. CR rédigé dans `CR-SEANCE-2026-08-28.md` |
+| Prochaine action | Dans cet ordre : **1.** compléter les participants du CR et l'envoyer aux deux parties. **2.** obtenir avant le premier billet vendu **qui encaisse et sur quel compte**. **3.** fixer les honoraires de Thim (art. 9), en retard de 9 jours, c'est le seul verrou du contrat. **4.** vérifier le titre de débit de boissons, la carte Metro ne donne aucun droit de vendre de l'alcool. **5.** signer la convention Mr Attractor / Thim, qui n'existe toujours pas |
+| Échéance | **ouverture de la billetterie le 31/08**. Prochaine séance vendredi 04/09. **Gel de la programmation, de la jauge et du site au 05/09**, et dépôt du dossier sécurité le même jour. Événement le 11/10, dans 41 jours |
+| Argent en attente | **honoraires de Thim toujours non fixés à 9 jours de retard**, et le contrat que les deux parties attendent reste bloqué dessus. **Toujours aucune convention Mr Attractor / Thim**, alors que le travail court depuis le 25/07 et que la séance du 28/08 nous confie encore le plan de communication |
+
+## Ce que la séance du 28/08 a changé, et ce qu'elle n'a pas traité
+
+**Cinq points actés** (détail et points d'action dans `CR-SEANCE-2026-08-28.md`) :
+billetterie prête et ouverture au 31/08, retrait du contrat Advantage / Factory 58,
+mandat d'Advantage vers Thim renvoyé à la signature du contrat, deux marques de champagne
+retenues en achat-revente sans autres alcools, prise de contact sécurité effectuée.
+
+**Quatre points de vigilance relevés à la production :**
+
+1. **La billetterie ouvre sans ses conditions.** Plan de salle, prix, catégories et
+   commissions ne sont pas arrêtés, et le plan de salle vient d'être confié à Thim, donc
+   il n'existe pas encore. Vendre un billet est **le premier engagement du dossier envers
+   des tiers**, pris sans contrat signé et sans assurance annulation.
+2. **Le plan de salle change de porteur.** Le 7 août, le plan d'implantation était gardé
+   par Advantage. Si les deux termes désignent la même opération, le cahier des charges,
+   Annexe 4 du contrat, doit être corrigé.
+3. **La carte Metro règle l'approvisionnement, pas le droit de vendre.** Le champagne
+   suppose une autorisation municipale de débit de boissons temporaire et un permis
+   d'exploitation. Opération 1.8 du cahier des charges, attribuée à Thim. Rattrapable à
+   44 jours, plus en octobre.
+4. **Moët et Veuve Clicquot sont des fournisseurs, pas des partenaires.** Le parrainage
+   par un producteur de boissons alcooliques est interdit (art. L.3323-2 du CSP). Aucune
+   contrepartie de visibilité ne peut leur être accordée, alors que des courriers de
+   sollicitation leur sont partis en août.
+
+**L'espace de pilotage n'a pas servi.** La séance n°2, créée pour le 21/08, est restée
+ouverte et **aucun de ses 14 points n'a été statué**. Les décisions du 28/08 ne sont donc
+tracées nulle part en ligne, et les 12 actions de la base portent toutes des échéances
+dépassées sauf une. Trois semaines de suite, les mêmes quatre sujets qui engagent
+reviennent sans être décidés.
+
+**Nouveau chantier qui atterrit chez nous** : le plan de communication détaillé, à
+produire à partir du brief de Mac Arthur. Il s'ajoute aux quatre chantiers du 19/08,
+toujours sans convention Mr Attractor / Thim.
 
 ## En une phrase
 
@@ -238,9 +273,10 @@ Périmètre : **France et diaspora, hors comptes déjà engagés à Abidjan**. S
 
 **Rien ne part avant ces trois verrous** :
 
-1. **Neuf informations manquent au dossier**, dont la jauge et la fréquentation de la première
-   édition parisienne. Six sont chez Advantage et font partie des 29, trois sont des décisions de
-   Thim qu'elle peut prendre aujourd'hui.
+1. **Neuf informations manquent au dossier**, dont ~~la fréquentation de la première édition
+   parisienne~~ (**obtenue le 22/09 : 400 personnes**, voir ci-dessous) et la jauge. Six sont
+   chez Advantage et font partie des 29, trois sont des décisions de Thim qu'elle peut prendre
+   aujourd'hui.
 2. **La grille de montants doit être validée par Advantage.** Elle fixe les tarifs de son concept,
    sinon deux grilles circulent et un sponsor compare Paris à un package d'Abidjan.
 3. **L'attestation de mandat de démarchage n'est pas signée.** Une page, prête, elle débloque la
@@ -262,6 +298,64 @@ négociation et les scénarios de recettes **ne sont pas dans l'envoi**.
 **Fenêtre réelle : quatre semaines.** Le 19 septembre est le dernier jour utile pour signer et
 figurer sur les supports imprimés. Conséquence assumée : le palier haut est un actif pour 2027, ce
 qui se signera en 2026 sont les décisions à un seul décideur et les partenariats en nature.
+
+### Taptap Send, offre sur mesure du 05/09/2026
+
+Cinq courriers sont partis le 21/08 (Taptap Send, Orange Money France, Veuve Clicquot, Champagne
+Mercier, Moët & Chandon). **Aucune réponse à ce jour, soit 15 jours.** Plutôt qu'une relance de
+courtoisie, le dossier repart sur Taptap Send par une **offre chiffrée**, la meilleure cible du lot :
+son métier est exactement le corridor France vers l'Afrique de l'Ouest, et son public est celui de
+la salle.
+
+Deux formules, dispositif en trois temps (avant, pendant, après), dans
+`sponsoring/taptap-send/` : **17 000 € HT** avec l'exclusivité de catégorie et la production de
+l'activation, **12 000 € HT** en mise à disposition, sans exclusivité. Elles se raccordent à la
+grille générale : 17 000 € est le palier Officiel à 15 000 € augmenté de la production, 12 000 € se
+situe entre l'Officiel et le Prestige.
+
+**Arbitrage de Mac Arthur du 05/09** : l'exclusivité de la catégorie transfert d'argent est
+proposée à Taptap Send. **Si elle est signée, Orange Money France ne peut plus être partenaire de
+l'édition parisienne 2026 sur cette catégorie.** Tant que rien n'est signé, les deux restent
+travaillés en parallèle et l'exclusivité va au premier qui signe.
+
+**Trois points à régler avant l'envoi**, détaillés dans `sponsoring/taptap-send/NOTE-INTERNE-TAPTAP.md` :
+l'accord écrit d'Advantage sur les montants et sur le principe de l'exclusivité (article 13 du
+mandat, Thim ne signe pas seule), le **coût réel des contreparties produites, toujours non chiffré**
+sur la formule à 17 000 €, et la **convention Mr Attractor / Thim qui n'existe toujours pas** alors
+que ces documents sont de la production intellectuelle livrée.
+
+**Deux effets de bord** : les 10 places de la formule haute consomment un cinquième du contingent
+d'invitations sur une salle de 400 personnes avec 350 billets à vendre, et le **code de billetterie
+propre au partenaire**, contrepartie la plus vendeuse du lot, n'a pas été vérifié comme faisable
+sur la billetterie ouverte le 31/08.
+
+## La référence 2025, et ce qu'elle révèle (22/09/2026)
+
+**L'édition parisienne 2025 a rassemblé 400 personnes** (confirmé par Mac Arthur le 22/09).
+C'est la première des trois données de référence, les deux autres restent à obtenir auprès
+d'Advantage : **la jauge de 2025** et **la recette boissons** (action n° 19 du CR du 28/08,
+échue le 05/09).
+
+**Ce que ce chiffre met en lumière, et qui n'avait pas été vu :** la salle de 2026 fait
+**400 personnes, avec 350 billets à vendre**. La deuxième édition est donc dimensionnée
+**au niveau exact de la fréquentation de la première, moins 50 places**.
+
+Autrement dit, **le plafond de recette billetterie est fixé sous le résultat de l'an
+dernier**, avant même d'avoir vendu un billet. Trois lectures possibles, et il faut savoir
+laquelle est la bonne :
+
+1. C'est un choix assumé (meilleure salle, meilleur placement, billet plus cher).
+2. La salle a été retenue avant que la fréquentation de 2025 soit connue.
+3. Personne n'a fait le rapprochement.
+
+**À poser en séance**, avec la recette 2025 en main : à 400 entrées l'an dernier, que
+vise-t-on cette année, et le format de salle le permet-il ? La question appartient au
+consultant, c'est exactement le type d'angle mort que le rôle sert à couvrir.
+
+**Et pour le 11 octobre :** relever le jour J les **trois mêmes indicateurs** (fréquentation,
+jauge utilisée, recette boissons). C'est l'après de la première étude de cas d'accompagnement
+de l'agence, et il ne se reconstitue pas après coup. Voir
+`livrables/commercial/refonte-site-agenceattractor/BLOC-6-PREUVE.md` §4.
 
 ## Ce qui bloque
 
