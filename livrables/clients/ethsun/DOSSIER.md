@@ -4,17 +4,81 @@
 
 | Radar | |
 |---|---|
-| Statut | **note envoyée, en attente de réponse** |
-| Dernier contact | 2026-08-19, échange bref avec Jean-Calvin Ethien, relance amicale envoyée le jour même |
-| Prochaine action | Obtenir le choix d'axe et les 7 réponses du point 7, puis **caler la réunion sur l'économie du partenariat** |
-| Échéance | relance du 20/08/2026 non tenue, repoussée au 21/08/2026 |
-| Argent en attente | rien de chiffré, rien de signé. **L'économie se traite en réunion, pas par écrit** (décision de Mac Arthur du 10/08) |
+| Statut | **le dossier repart par l'offre, pas par la relance.** Bascule du 27/08 : le Sprint devient un outil, pas un cours. Plan de formation au format du gabarit et deck d'approche **produits, prêts à envoyer, pas encore envoyés** |
+| Dernier contact | 2026-08-19, échange bref avec Jean-Calvin Ethien, relance amicale envoyée le jour même. **Sans réponse depuis, soit 8 jours** |
+| Prochaine action | **Envoyer le plan de formation et le deck à Jean-Calvin.** Ils remplacent la relance et contiennent les 3 questions de gabarit à trancher. Puis **caler la réunion sur l'économie du partenariat** |
+| Échéance | l'envoi lève l'attente : la note du 10/08 demandait un choix d'axe, l'approche outil répond à la question sans lui |
+| Argent en attente | rien de chiffré, rien de signé. **L'économie se traite en réunion, pas par écrit** (décision de Mac Arthur du 10/08). **Le calcul de rentabilité de l'état des lieux est à refaire avant cette réunion** : l'outil alourdit la conception initiale |
 
 ## En une phrase
 
-Partenariat en revenue-sharing où Mac Arthur anime des Sprints IA.
-**L'état des lieux est écrit et doit maintenant être envoyé au partenaire.**
+Partenariat en revenue-sharing où Mac Arthur anime des Sprints IA. Le partenaire
+n'a pas répondu à la note du 10/08. **Plutôt que de relancer une troisième fois,
+le 27/08 le dossier repart par l'offre** : le Sprint devient un outil, le plan de
+formation est écrit au format de leur gabarit, et le tout attend d'être envoyé.
 Rien n'est signé, rien n'est chiffré.
+
+## La bascule du 27/08/2026 : le Sprint devient un outil
+
+Décision de Mac Arthur. Le Sprint cesse d'être deux jours de cours suivis d'un
+plan d'action à remplir chez soi. Le participant **arrive avec ses propres
+données d'exploitation**, les saisit dans un tableau de bord ouvert avant la
+séance, et **repart avec sa feuille de route générée depuis ses chiffres**. La
+théorie n'intervient plus à vide : elle explique le chiffre qu'il vient de voir,
+puis le mécanisme par lequel l'IA le déplace.
+
+**Ce que ça règle.** L'approche répond à la question d'axe sans avoir besoin de
+la réponse de Jean-Calvin : les quatre modules du catalogue sont conservés à
+l'identique et deviennent quatre axes de diagnostic. C'est le quatrième scénario
+de la note du 10/08, et il débloque un dossier immobile depuis le 19/08.
+
+**L'outil retenu est une web app de l'agence**, pas un classeur remis aux
+participants. Motif principal : il reste chez nous, donc le Sprint ne tourne pas
+sans nous, ce qui traite le risque de propriété du contenu (point 3 de l'état
+des lieux) mieux qu'une clause. Conception détaillée, **interne**, dans
+`sprint-ia-tourisme/NOTE-CONCEPTION-OUTIL.md`.
+
+### Ce que le gabarit ETHSUN a appris quand on l'a enfin lu
+
+Récupéré le 27/08 sur le Drive `Ethsun Partenaire` (`GABARIT.doc`). Deux
+constats qui vont au-delà de ce que le §7 de l'état des lieux anticipait.
+
+1. **La réserve de format est confirmée, et elle est réelle.** La grille de
+   qualité cadre trois formats : 3 heures « en salle ou Webinaire », 7 heures
+   « formation en salle », 2 jours « formation en salle ». **Le seul format à
+   distance qu'ils cadrent est le webinaire de 3 heures.** Or le Sprint est
+   annoncé 2 jours à 100 % en ligne. Aucun barème ne lui correspond. Le plan
+   applique le plus exigeant, celui de 2 jours, et pose la question.
+2. **Le gabarit se contredit lui-même.** La grille de critères impose « au moins
+   4 objectifs généraux » pour 2 jours. La section « TRUCS et astuces », juste
+   en dessous, dit « Rédiger deux ou trois objectifs généraux ». Le plan suit la
+   grille de critères, qui fait foi, et signale la contradiction pour qu'elle ne
+   surgisse pas à la validation.
+
+### Ce qui a été produit le 27/08
+
+| Document | Fichier | Usage |
+|---|---|---|
+| **Plan de formation au format du gabarit** | `PLAN-DE-FORMATION-SPRINT-TOURISME.docx` et `.pdf` | **Externe.** 16 pages paysage. 6 objectifs généraux, 18 spécifiques, 60 éléments de contenu, 14 h. Conforme au barème 2 jours, qui en demande 4 et 30 |
+| **Deck d'approche** | `DECK-APPROCHE-OUTIL-ETHSUN.pptx` et `.pdf` | **Externe.** 11 pages. Vend l'approche outil, **sans aucun contenu pédagogique ni aucun chiffre d'économie du partenariat** |
+| Source du plan | `sprint-ia-tourisme/plan-de-formation.json` | Interne. **Source unique.** Le .docx se regénère, il ne s'édite pas à la main |
+| Conception de l'outil | `sprint-ia-tourisme/NOTE-CONCEPTION-OUTIL.md` | **Interne, ne sort jamais** |
+| Rendu du plan | `scripts/remplir_gabarit_ethsun.py` | Durées d'objectif général et totaux de journée **calculés**, jamais recopiés (R-29) |
+| Rendu du deck | `scripts/deck_ethsun.py` | Contrôle de contraste et contrôle de débordement **bloquants** avant écriture (R-24, R-69) |
+
+**Les trois questions posées à l'Institut**, portées à la fois par le plan et par
+le deck : quel barème s'applique à un format 2 jours en ligne, combien
+d'objectifs généraux sont réellement attendus, et combien d'allers-retours de
+validation sont prévus et sous quel délai.
+
+**Ce qui ne part pas** : les supports d'animation, la bibliothèque
+d'instructions sectorielles et l'outil lui-même. Ordre de marche inchangé.
+
+**Non fait** : les deux documents n'ont pas été relus sur un vrai téléphone
+(R-51), et le précédent envoi du 10/08 était déjà parti par WhatsApp sans cette
+relecture.
+
+---
 
 ## Le partenaire
 
