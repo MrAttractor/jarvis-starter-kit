@@ -298,3 +298,35 @@ L'impact social ne ramène personne **par Google**. Il ramène du monde **par pr
 | **Impact social** | **non** | mission, filtre, et canal de prescription |
 
 Rien ne se jette. Chaque axe a une place, et une seule.
+
+
+---
+
+## 9. « Système digital » : mesuré le 22/09, et c'est un mot interne
+
+Mac Arthur précise que la construction est une **offre séparée**, et qu'il ne vend pas des sites mais **un système digital**. La nuance est juste sur le fond. Elle ne tient pas comme mot de référencement.
+
+| Requête | Sug. | Ce qui remonte |
+|---|---|---|
+| **système digital** | 4 | **digital signage, digital twin, digital computer, digital marketing** : de l'anglais technique, rien du sens visé |
+| systeme digital entreprise | **0** | rien |
+| digitalisation TPE | 2 | « digital tpe grand est », un dispositif régional |
+
+**Personne ne tape « système digital » dans ton sens.** C'est un mot de conversation, pas un mot de porte d'entrée.
+
+### Ce qui se tape, en revanche
+
+| Requête | Sug. | Ce qui remonte |
+|---|---|---|
+| **digitaliser son entreprise** | 4 | **comment**, **pourquoi**, **aide pour**, digitaliser son commerce |
+| **automatiser son business** | 5 | **avec l'IA**, comment, **automatiser son WhatsApp business** |
+| **site avec prise de rendez-vous** | 4 | **création site internet avec prise de rendez-vous** |
+| logiciel pour coach | 9 | mais très marqué sport et nutrition |
+
+**Trois enseignements.**
+
+1. **« Digitaliser son entreprise » est le terme français réel**, et ses suggestions (comment, pourquoi, aide pour) montrent quelqu'un qui cherche à comprendre puis à être aidé.
+2. **« Automatiser son business avec l'IA » est actif**, et « automatiser son WhatsApp business » l'est aussi : c'est exactement ce que l'agence sait faire, et c'est déjà dans son portefeuille.
+3. **« Création site internet avec prise de rendez-vous » est une requête d'achat**, très concrète, et elle décrit littéralement ce dont un coach a besoin.
+
+**Règle, la même que pour « alignement » et « couloir » :** « système digital » reste dans la page et dans ta bouche. Dans les titres et les balises, on écrit la langue du marché.

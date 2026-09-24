@@ -14,8 +14,56 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      SITE: ./livrables/commercial/site-agenceattractor
     steps:
       - uses: actions/checkout@v4
+
+      # Ce workflow publie TOUT le contenu du dossier du site. C'est la cause des trois
+      # récidives de la règle R-70 (un document interne se retrouve en ligne parce qu'il
+      # a été déposé dans le dossier). La barrière ci-dessous fait échouer le déploiement
+      # au lieu de publier. Elle est volontairement bête : un marqueur, un refus.
+      - name: Barrière anti-publication d'un document interne
+        run: |
+          set -euo pipefail
+          echo "Analyse du dossier publié : $SITE"
+
+          ECHEC=0
+
+          # 1. Marqueurs de confidentialité dans le contenu des pages
+          if grep -rliE "confidentiel|usage interne|ne pas diffuser|brief interne" \
+               --include="*.html" --include="*.md" --include="*.txt" "$SITE" > /tmp/marques.txt 2>/dev/null; then
+            if [ -s /tmp/marques.txt ]; then
+              echo "::error::Des fichiers portent un marqueur de confidentialité et seraient publiés :"
+              cat /tmp/marques.txt
+              ECHEC=1
+            fi
+          fi
+
+          # 2. Fichiers qui n'ont rien à faire sur un serveur public
+          INTERDITS=$(find "$SITE" \
+            \( -name ".env" -o -name "*.key" -o -name "*.pem" -o -name "id_rsa*" \
+               -o -name "wrangler-account.json" -o -name "*.sql" -o -name "DOSSIER.md" \
+               -o -path "*/.wrangler/*" -o -path "*/node_modules/*" \) -print || true)
+          if [ -n "$INTERDITS" ]; then
+            echo "::error::Des fichiers non publiables sont présents dans le dossier :"
+            echo "$INTERDITS"
+            ECHEC=1
+          fi
+
+          # 3. Poids total. La page d'accueil est passée de 9,3 Mo à 433 Ko le 22/09,
+          #    ce garde-fou existe pour que ça ne se reperde pas sans qu'on le voie.
+          POIDS=$(du -sk "$SITE" | cut -f1)
+          echo "Poids du dossier publié : ${POIDS} Ko"
+          if [ "$POIDS" -gt 5120 ]; then
+            echo "::error::Le dossier publié dépasse 5 Mo (${POIDS} Ko). Vérifier les images avant de publier."
+            ECHEC=1
+          fi
+
+          if [ "$ECHEC" -eq 1 ]; then
+            echo "Déploiement interrompu. Sortir les fichiers concernés du dossier du site, puis repousser."
+            exit 1
+          fi
+          echo "Rien à signaler, publication autorisée."
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

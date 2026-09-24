@@ -28,7 +28,7 @@
 | **2019-2020** | Tu vois la marque continuer d'engranger sans toi. Déstabilisation mentale et émotionnelle. Tu approfondis le développement personnel et spirituel. **C'est là que tu découvres que ton histoire peut servir à aider des milliers de personnes dans ta situation** |
 | **2021** | Expatriation en **France**. Tout reprendre à zéro. Métiers de la logistique. Certification **copywriting** (LiveMentor), certification **business development** (Iconoclass), certification **YouTube** (Olivier Juprelle) |
 | **2024** | Certification en **préparation mentale, Académie de la Puissance Mentale** |
-| **3 sept. 2026** | Soutenance de cette certification |
+| **3 sept. 2026** | Soutenance. **Certification NON OBTENUE**, pour insuffisance de maîtrise du vocabulaire de l'Académie. Points d'amélioration identifiés, **nouveau passage en décembre 2026** |
 
 ---
 
@@ -145,7 +145,7 @@ C'est le plus délicat, et c'est ta décision, pas la mienne. Voici ma lecture.
 1. ~~Les dates du Maroc~~ : **réglé le 22/09. Du 5 août 2011 à décembre 2014, soit 3 ans et 4 mois**, en plusieurs séjours. **Ne jamais écrire « cinq ans »** : c'est un chiffre faux sur une page qui vend la rigueur.
 2. ~~Le titre vérifiable~~ : **réglé. DESCOM, AGITEL FORMATION, Abidjan.** Voir §8.
 3. **La question 19 : la phrase que tes clients te renvoient.** Tu l'as à moitié : ils te disent *« booster »* et *« intelligent »*. **« Booster » est utilisable, « intelligent » ne sert à rien** : ça ne dit rien de ce que tu produis, et tout le monde le dit à tout le monde. Il faut la phrase complète d'une vraie personne.
-4. **Le résultat de ta certification du 3 septembre.** Rien dans le journal ne dit comment ça s'est passé.
+4. ~~Le résultat de la certification~~ : **réglé le 22/09. Non obtenue**, repassage en décembre. Voir §9.
 5. **Et la décision du §4 :** qui tu factures, et qui tu aides autrement. Tant qu'elle n'est pas prise, la page pourra être belle, elle ne réglera pas le problème.
 
 ---
@@ -164,3 +164,61 @@ Vérifié en source ouverte, et c'est mieux que ce que tu en dis :
 > DESCOM, Diplôme d'Études Supérieures en Communication (bac+4), Institut Supérieur de la Communication et des Ressources Humaines, AGITEL FORMATION, Abidjan.
 
 **La reconnaissance CAMES et l'appartenance à l'AACSB comptent** pour un prospect français qui ne connaît pas l'école : ce sont deux références qu'il peut vérifier en trente secondes. C'est la question 21 du guide appliquée à ton diplôme : ne jamais affirmer sans donner la source.
+
+---
+
+## 9. La certification en préparation mentale n'est pas acquise
+
+**Soutenance du 3 septembre 2026 : non obtenue**, pour insuffisance de maîtrise du vocabulaire de l'Académie. Points d'amélioration identifiés, **repassage en décembre 2026**. Décision de Mac Arthur : continuer à travailler, **et ne pas annoncer la certification tant qu'elle n'est pas acquise.**
+
+C'est la bonne décision, et elle n'a pas besoin d'être discutée. Ce qui suit est ce qu'elle change ailleurs.
+
+### Ce que ça invalide dans les documents de ce chantier
+
+| Où | Ce qui était écrit | Correction |
+|---|---|---|
+| `PPSD-ET-POSITIONNEMENT.md` §6 | « ta certification du 3 septembre le rend vérifiable **tout de suite** » | **faux.** L'argument tombe |
+| `AUDIT-ET-PLAN.md` Phase 3 | « ta certification du 3 septembre affichée » | **retiré.** Rien ne s'affiche tant que ce n'est pas acquis |
+
+**Combiné à la mesure du 22/09** (« préparation mentale dirigeant » : zéro requête), ça règle définitivement le sujet : **la préparation mentale n'est ni une porte d'entrée, ni une preuve.** C'est un chantier personnel en cours. Il n'a pas sa place sur le site de septembre, il en aura peut-être une en janvier.
+
+### Ce que ça ne change pas
+
+**Quatre titres restent affichables et vérifiables**, et c'est suffisant :
+
+- **DESCOM**, bac+4, AGITEL FORMATION, Abidjan (§8)
+- **Copywriting**, LiveMentor
+- **Business development**, Iconoclass
+- **YouTube**, Olivier Juprelle
+
+Et surtout, **ta légitimité ne vient pas d'un diplôme, elle vient de 2018.** Philippe n'a pas de diplôme de préparateur mental : il a vingt ans de circuits, une chute, et cinq formations nommées. Toi, tu as dix-huit ans de terrain, une éjection à zéro, une reconstruction, et douze ans de fidélité au même client.
+
+---
+
+## 10. La décision est prise : qui tu factures
+
+Arbitrage de Mac Arthur, 22/09/2026, en réponse au §4.
+
+> **« Je facture des personnes qui ont les moyens de financer leur ambition. Ils comprennent l'importance d'avoir un coach. Les autres auront accès à mes ressources, moins chères ou gratuites, rédigées il y a quelques années, sans mon intervention. »**
+
+**C'est net, et ça résout la contradiction du §4.** Trois conséquences, à tenir.
+
+### a) La cible change, et le site avec
+
+Ce n'est plus « le leader en souffrance » indistinctement. C'est **celui qui a les moyens de financer son ambition et qui a compris qu'il a besoin d'un accompagnement.** Deux filtres, pas un.
+
+Ça renforce le personal branding comme porte d'entrée : on paie pour être mieux vu quand on a déjà quelque chose à montrer et de quoi investir. Ça écarte définitivement les requêtes de détresse pure, qui n'étaient de toute façon pas cherchées.
+
+### b) Les ressources deviennent un vrai étage, pas un lot de consolation
+
+Tu as déjà de quoi le remplir, et ça dort : l'**ebook des 200 idées de publications**, le **livre sur les stratégies d'attraction**, l'ebook `LEAD_MAGNET_SYSTEME_ATTRACTOR`, le **challenge 7 jours** déjà en ligne sur le site.
+
+**Sans ton intervention, c'est la clé.** Ces ressources se vendent peu cher ou se donnent, elles ne se transforment jamais en heures non facturées. C'est ce qui protège ta décision : le jour où quelqu'un au fond du gouffre t'écrit, tu as quelque chose de concret à lui donner **au lieu de ton temps**.
+
+C'est aussi ce qui alimente le référencement, et c'est le seul étage qui travaille pendant que tu dors.
+
+### c) Le prix cesse d'être une question de conscience
+
+Nabycook facturé 350 € pour 1 300 € de travail réel n'est pas de la générosité, **c'est un transfert non décidé.** Avec la règle du §10, ce genre de dossier devient un choix explicite (un partenariat DMV assumé, avec sa contrepartie écrite) au lieu d'un réflexe.
+
+**La règle à tenir, en une phrase :** le prix se fixe sur la valeur produite, la générosité se décide ensuite et s'écrit, et elle ne passe jamais par un rabais silencieux.

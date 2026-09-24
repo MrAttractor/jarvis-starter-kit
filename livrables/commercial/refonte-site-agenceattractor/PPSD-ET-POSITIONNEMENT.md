@@ -131,7 +131,7 @@ C'est le bon mot **pour toi**. Ce n'est probablement pas le bon mot **sur la pag
 
 **Mon avis, et c'est un avis, pas une décision :** une porte d'entrée unique, le coaching, et les deux autres présentées comme la suite possible, pas comme des alternatives. Raisons :
 - c'est le service qui répond à la douleur que décrit ton PPSD ;
-- ta certification du 3 septembre le rend vérifiable **tout de suite**, ce qui n'est vrai d'aucun des deux autres ;
+- ~~ta certification du 3 septembre le rend vérifiable tout de suite~~ → **FAUX, corrigé le 22/09 : la certification n'a pas été obtenue**, repassage en décembre 2026. Cet argument tombe ;
 - « consultant » et « formation » sont deux des marchés les plus encombrés du web français, « préparation mentale pour dirigeant » l'est beaucoup moins.
 
 **À noter :** la préparation mentale appliquée au dirigeant, et non au sportif, est un angle peu occupé, et c'est précisément le croisement de ta certification et de tes 23 ans d'entrepreneuriat. Personne n'a les deux.
