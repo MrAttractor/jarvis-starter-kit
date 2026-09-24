@@ -721,3 +721,59 @@ Copier ce gabarit, numéroter à la suite, classer dans la bonne section :
 ```
 
 Le champ **Pourquoi** est le seul qui compte vraiment. Une fiche sans cause profonde est une anecdote.
+
+---
+
+### EXP-051 · Le site ne ramenait aucun lead, et le titre disait exactement pourquoi
+**BLOCAGE** · 22/09/2026 · agenceattractor.com
+
+**Situation.** Le site de l'agence, en ligne depuis des mois, n'a produit **aucun lead**. Hypothèse spontanée : un problème de design ou de positionnement mal formulé.
+
+**Ce que la mesure a montré.** Le titre de la page dit « Ton app métier, prête en 7 jours ». Google range donc le site en **agence de développement d'applications**. Un prospect cherchant un coach ne tape jamais cette requête. Il n'y a aucun dysfonctionnement : le moteur a rangé exactement ce qu'on lui a demandé de ranger. S'y ajoutent `robots.txt` et `sitemap.xml` en 404, zéro donnée structurée, une page unique donc un seul sujet indexable, et **9,2 Mo d'images sur l'accueil** sans chargement différé, dont un portrait de 5,8 Mo affiché en vignette de 34 px. Score d'audit : **29/100**.
+
+**Pourquoi.** **On avait écrit le site dans les mots du produit qu'on vendait hier, pas dans les mots que la cible tape aujourd'hui.** Et personne n'avait jamais vérifié qu'un seul de ces mots était cherché. La mesure à l'autocomplétion a ensuite démoli trois formulations tenues pour acquises, dont deux venaient de recommandations faites le matin même : « alignement » renvoie au parallélisme des roues, « préparation mentale dirigeant » ne retourne rien, « marque personnelle » remonte les mots fléchés et une chaîne de pharmacies canadiennes.
+
+**Ce qui en sort.** **R-92** (mesurer avant d'écrire un titre), **R-93** (on ne cherche pas son état). Et un actif retrouvé au passage : `mr-attractor.fr`, domaine mort renvoyant 34 octets de page de parking, **conserve quatre pages indexées portant le positionnement coach recherché**, qui se désindexent faute d'avoir été traitées.
+
+---
+
+### EXP-052 · Trois ans d'accompagnement qui n'avaient jamais été écrits nulle part
+**RÉUSSITE** · 22/09/2026 · Nabycook / Nabintou Dosso
+
+**Situation.** Recherche d'une étude de cas pour la refonte. Constat initial, vérifié dossier par dossier : **preuve de livraison abondante, preuve de présence réelle, preuve de transformation nulle.** Aucun accompagnement terminé avec un avant/après mesuré, sur vingt-cinq dossiers clients.
+
+**Ce qui s'est passé.** Interrogé à l'oral sur un cas représentatif, Mac Arthur a raconté un accompagnement de **2023 à 2026** dont aucun document du workspace ne portait la trace : quelqu'un qui « avait rangé dans le tiroir sa force principale », passé par le chaos, un manque de confiance criard et un entourage qui ne soutenait pas, et qui revendique aujourd'hui sa place d'entrepreneur culinaire, avec une marque, une association qu'elle pilote, un site en production et des partenaires institutionnels.
+
+**Pourquoi ça n'avait pas été écrit.** Le dossier client ne tenait que la **transaction en cours** (un site, trois vidéos, 350 €). **Les trois ans de relation qui l'avaient précédée n'appartenaient à aucune case du système.** Le workspace sait suivre des livrables, il ne savait pas suivre une trajectoire.
+
+**Ce que ça a débloqué.** Le PPSD écrit le matin même s'est révélé être **le portrait de cette cliente, six correspondances sur six** : le PPSD n'était pas théorique, il était observé. Et l'arc complet (quelqu'un qui n'osait pas assumer ce qu'il portait en fait une marque publique) a tranché un positionnement qui flottait depuis trois jours. **Elle accepte de tourner une vidéo témoignage.**
+
+**Ce qui en sort.** Sur chaque dossier ancien, chercher la relation **avant** la transaction : la meilleure preuve de l'agence dormait dans une conversation, pas dans un livrable.
+
+**Mise à jour du 23/09/2026 : le schéma s'est répété quatre fois en deux jours.**
+
+| Ce qui manquait | Où c'était réellement |
+|---|---|
+| Un accompagnement long et abouti | dans la tête de Mac Arthur, Nabycook 2023-2026 |
+| **Trois preuves de transformation** (Rosine : deux masters puis l'examen d'avocat ; sa filleule : le DEC après deux échecs ; Bérénice) | nulle part, alors que le constat écrit le matin même disait « zéro sur vingt-cinq dossiers » |
+| Le dossier d'une cliente accompagnée depuis **2019** et sa bascule du 20/09 | classé « à trancher », dernier contact au 02/08 |
+| **Le déclencheur**, demandé trois fois sans réponse | c'est **la première question qu'il pose à chaque appel depuis des années** |
+
+**La cause est unique et structurelle : le workspace sait suivre des livrables, il ne sait pas suivre des personnes.** Un dossier client retient la transaction en cours ; la relation qui l'a précédée, parfois de plusieurs années, n'appartient à aucune case.
+
+**Conséquence pratique, à appliquer sur tous les dossiers anciens :** avant de conclure qu'une preuve manque, **demander à l'oral**. Et sur chaque dossier, chercher la relation **avant** la transaction.
+
+---
+
+### EXP-053 · Les deux sites qui nous battent n'ont pas de back end
+**DÉBLOCAGE** · 23/09/2026 · refonte agenceattractor.com
+
+**Situation.** Question de Mac Arthur : que se passe-t-il dans le back end des deux sites de référence ? L'hypothèse implicite était qu'un site qui convertit repose sur une infrastructure.
+
+**Ce que la vérification a montré.** Rien. `cpcoachingmental.com` et `heromental.fr` sont **deux sites statiques**. Le formulaire poste vers `api.web3forms.com`, un service gratuit jusqu'à 250 soumissions par mois qui transforme la soumission en e-mail, clé d'accès en clair dans le HTML. **Aucune base de données, aucun compte, aucune prise de rendez-vous en ligne.** CP Coaching mesure avec Plausible, sans cookie, donc sans bandeau de consentement. Hero Mental, l'agence qui vend des sites, n'a aucun script de mesure sur le sien.
+
+**Pourquoi c'est un déblocage.** En face, `agenceattractor.com` embarquait un chat, un diagnostic, un suivi d'événements sur chaque bouton et un pixel publicitaire, **pour zéro lead**. La tentation, sur ce chantier comme sur les précédents, était de repousser la mise en ligne jusqu'à ce que la technique soit prête. **La cause du résultat n'est pas là : elle est dans le contenu et la structure.** Cette vérification a évité des semaines de construction inutile et a débloqué le vrai chemin, qui est d'écrire.
+
+**Deux gains annexes.** Plausible étant sans cookie, **remplacer le pixel supprime le bandeau de consentement** et la friction qui va avec. Et l'absence de prise de rendez-vous, comptée comme un défaut dans l'audit du 22/09, s'est révélée être un choix : **le formulaire filtre, le calendrier non.**
+
+**Ce qui en sort.** **R-98** (le résultat ne vient pas du back end), **R-100** (formulaire plutôt que calendrier).

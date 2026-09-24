@@ -67,6 +67,12 @@
 
 ---
 
+
+### R-100 · Formulaire plutôt que calendrier quand la capacité est limitée et la sélection compte
+**Origine** : analyse des deux références et capacité de Mac Arthur, 23/09/2026.
+**Application** : `cpcoachingmental.com` et `heromental.fr` n'ont **aucune prise de rendez-vous en ligne**, et c'est délibéré. Un créneau cliquable laisse n'importe qui réserver ; un formulaire de qualification suivi d'un rappel laisse choisir. Dès que la capacité est plafonnée (7 places) ou que l'engagement du client conditionne le résultat, **le formulaire vaut mieux que le calendrier**. Le formulaire porte 6 champs de qualification pour 2 d'identité, dont le déclencheur (« qu'est-ce qui t'amène aujourd'hui ? ») et le degré d'urgence. Un délai de réponse affiché remplace le créneau.
+**Assists** : proposer la prise de rendez-vous automatique seulement quand le volume prime sur la sélection.
+
 ## B · RELATION CLIENT ET LIVRAISON
 
 ### R-12 · Français simple, zéro jargon
@@ -133,7 +139,25 @@
 
 ---
 
+
+### R-96 · Quand un prospect demande ce qui se passe si ça échoue, montrer la sortie, jamais le parapluie
+**Origine** : contrat de coaching, 23/09/2026.
+**Application** : « obligation de moyens et non de résultat » est la bonne clause à avoir au contrat et **la pire réponse à donner à un prospect** : elle protège le prestataire et confirme la peur de celui qui interroge. La réponse se prend dans la clause de **résiliation** : préavis, séances tenues dues, séances non tenues remboursées au prorata. Même contrat, deux clauses, effets opposés. Règle générale : à une question de risque, on répond par ce que le client peut faire, pas par ce dont on n'est pas tenu.
+**Assists** : quand un utilisateur rédige ses conditions, distinguer les clauses qui le protègent de celles qui rassurent, et n'afficher que les secondes côté public.
+
+---
+
 ## C · PRODUCTION TECHNIQUE
+
+### R-98 · Le résultat ne vient pas du back end. On n'ajoute pas de technique avant que le contenu soit écrit
+**Origine** : EXP-053, analyse du back end de `cpcoachingmental.com` et `heromental.fr`, 23/09/2026.
+**Application** : les deux sites de référence du marché sont **statiques**. Formulaire vers un service tiers qui envoie un mail, aucune base, aucun compte, aucune prise de rendez-vous. En face, `agenceattractor.com` avait un chat, un diagnostic, un suivi d'événements complet et un pixel publicitaire, **et zéro lead**. Sur un site de vitrine ou de vente : écrire le contenu d'abord, mettre en ligne en statique, n'ajouter de la technique que quand un besoin mesuré l'exige. Vaut aussi pour les maquettes clientes, la technique ne sauve jamais un message absent.
+**Assists** : quand un utilisateur veut « un site », commencer par lui faire écrire ce qu'il a à dire.
+
+### R-99 · On ne génère jamais un visage, une preuve, ou une interface qui n'existe pas
+**Origine** : direction artistique de la refonte, 23/09/2026.
+**Application** : l'image générée sert les fonds, les textures, les matières et l'abstrait. **Jamais le visage du client ni le nôtre** : on traite la vraie photo, détourage, relight, upscale. **Jamais la capture d'un outil qui n'est pas construit**, c'est une promesse que le client viendra réclamer. **Jamais une scène qui prétend s'être produite.** Sur un bloc de preuve, une capture d'écran réelle d'un livrable en ligne bat toute image générée, parce qu'elle est vraie. Contradiction à éviter absolument : une page qui vend l'authenticité et affiche un portrait fabriqué.
+**Assists** : refuser de produire un visuel qui simule une preuve.
 
 ### R-17 · Deploy Pages sur la branche de production DU PROJET, vérifiée
 **Origine** : EXP-015, corrigée le 06/08/2026.
@@ -368,6 +392,27 @@
 **Application** : ne jamais entrer dans les étapes techniques avant que le raisonnement de fond soit posé et compris.
 
 ---
+
+
+### R-92 · Les mots par lesquels on te trouve ne sont pas ceux par lesquels on te reconnaît
+**Origine** : EXP-051, refonte `agenceattractor.com`, 22/09/2026.
+**Application** : avant d'écrire un titre de page, une balise ou un nom d'offre, **mesurer la demande réelle à l'autocomplétion Google** (`suggestqueries.google.com/complete/search?client=firefox&hl=fr&gl=fr&q=...`). Google ne suggère que des requêtes réellement tapées : zéro suggestion sur une formulation complète veut dire que personne ne l'écrit comme ça. Le vocabulaire de la marque reste dans le corps de la page, jamais dans un titre. Vérifié sur « alignement » (remonte le parallélisme des roues), « marque personnelle » (mots fléchés et pharmacie canadienne), « système digital » (digital signage).
+**Assists** : quand un utilisateur nomme son offre, l'assistant distingue le mot qui attire du mot qui décrit, et propose de vérifier le premier.
+
+### R-93 · On ne cherche pas son état, on cherche la solution qu'on a déjà en tête
+**Origine** : EXP-051, mesure du 22/09/2026.
+**Application** : ne jamais bâtir une page d'entrée sur la description d'une douleur (« je me disperse », « solitude du dirigeant », « mon business stagne » : quasi aucune demande mesurée). La douleur va dans le bloc « ce que tu vis », à l'intérieur de la page. La porte d'entrée se prend sur le **nom de la solution** que la personne cherche déjà.
+**Assists** : distinguer, dans toute stratégie de contenu, les requêtes de solution des descriptions d'état.
+
+### R-94 · Rien qui ne soit destiné au public ne se dépose dans un dossier publié
+**Origine** : cause racine des trois occurrences de R-70 d'août 2026, identifiée le 22/09/2026.
+**Application** : le déploiement d'un site publie **le dossier entier**, sans filtre (`publish_dir` sur GitHub Pages, `wrangler pages deploy` sur un dossier de travail). Avant tout commit, vérifier que le dossier publié ne contient que des fichiers destinés aux visiteurs. Les documents de chantier, les notes internes, les sauvegardes et les README vivent **en dehors**. La correction durable est de construire le déploiement à partir d'une liste de fichiers choisis, comme fait pour Nabycook le 13/08/2026.
+**Assists** : —
+
+### R-95 · Une promesse d'après-vente vague est pire que pas de promesse
+**Origine** : bloc 7 des objections, 22/09/2026.
+**Application** : à la question « et après, vous me laissez seul ? », répondre par un périmètre, une durée et un prix, ou ne rien promettre. « Un accompagnement moins formel, sous forme de conseils, des sessions possibles » contient trois flous et s'adresse à quelqu'un qui demande justement s'il y aura du flou : il entend « il ne sait pas non plus ». Vaut pour tout livrable : le support après livraison se borne ou ne s'annonce pas.
+**Assists** : l'assistant qui aide à construire une offre exige le périmètre de l'après-vente avant de laisser annoncer un accompagnement.
 
 ## E · PHILOSOPHIE ET PRODUIT
 
