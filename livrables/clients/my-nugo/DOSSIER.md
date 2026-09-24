@@ -1,12 +1,12 @@
 # MY NUGO — l'état du dossier
 
-> Révision du 31/07/2026. **Cette fiche est la première chose à lire du dossier.**
+> Révision du 23/09/2026. **Cette fiche est la première chose à lire du dossier.**
 
 | Radar | |
 |---|---|
-| Statut | à trancher |
-| Dernier contact | 2026-08-02 |
-| Prochaine action | Clarifier ce qui a été facturé, puis décider si on finit la bascule en base |
+| Statut | **le dossier se rouvre par la personne, pas par la technique** |
+| Dernier contact | **2026-09-20 : elle écrit d'avoir décidé de « ne plus avoir honte de parler de MY NUGO »**, et d'être « en plein boulot du côté de la mission » |
+| Prochaine action | **1.** Répondre à son message du 20/09, la bascule a sept ans de retard et trois jours d'âge. **2.** Clarifier ce qui a été facturé. **3.** Décider si on finit la bascule en base |
 | Échéance | — |
 | Argent en attente | rien de tracé |
 
@@ -83,3 +83,28 @@ par le script : si le JavaScript échoue, l'événement ne réapparaît pas tout
 
 1. Décider si on finit la bascule en base pour la rendre autonome, et le chiffrer
 2. Clarifier ce qui a été facturé sur ce dossier
+
+## La bascule du 20 septembre 2026
+
+Accompagnée depuis **2019**, rencontrée pendant la promotion du livre sur les stratégies
+d'attraction. Sa marque est née pendant sa lutte contre la maladie, et sa mission est
+**d'aider les personnes vulnérables à retrouver leur dignité**.
+
+Le blocage n'a jamais été marketing : **elle n'a jamais voulu se mettre en avant.** Elle se
+forme, elle suit des coachings, et le passage à l'action vacille. Plusieurs plans et
+relances sur le volet mission, sans démarrage réel.
+
+**Le 20/09/2026, elle écrit :** « J'ai décidé aussi de ne plus avoir honte de parler de
+MY NUGO. Je dois rien à personne, et même si je devais, on va s'arranger. »
+
+Sept ans de formations, de coachings et de plans, et le verrou ne lâche que maintenant.
+**Aucune agence web n'aurait pu le faire sauter.** À traiter comme un dossier vivant, pas
+comme une bascule technique en attente.
+
+**Détail à corriger en priorité :** le logo MY NUGO affiché sur `agenceattractor.com` est
+le logo Attractor, fichiers identiques au MD5 près. Sur la carte d'une cliente accompagnée
+sept ans à oser se montrer, c'est notre logo qui s'affiche à sa place.
+
+**Précaution :** son parcours personnel comporte des données de santé. Rien de son histoire
+ne se publie sans accord explicite et écrit, et sa phrase du 20/09 vient d'une conversation
+privée.
