@@ -5,7 +5,7 @@
 | Radar | |
 |---|---|
 | Statut | en production |
-| Dernier contact | 2026-08-10 |
+| Dernier contact | 2026-08-10 (refonte catalogue livrée le 25/09, sans échange client) |
 | Prochaine action | Caler le rendez-vous physique proposé par Charles (pas encore trouvé le temps). Récupérer aussi les 11,86 €. Le mensuel attend l'activation des récurrents, chantier collectif |
 | Échéance | — |
 | Argent en attente | 11,86 €. Le mensuel de 35 € est contractuel, pas encaissé |
@@ -62,9 +62,32 @@ Le compte membre est devenu optionnel, relégué sous la sélection. Conséquenc
 pour une commande sans compte, l'admin affiche `client_nom = "Client via WhatsApp"`, le
 vrai contact étant dans le fil WhatsApp de Charles.
 
-Quatre modules en place : vitrine catalogue, conseiller IA (Claude Haiku, branché sur le
-catalogue réel, ne doit jamais inventer un produit ni un prix), suivi des commandes,
-espace privilèges.
+Modules en place : vitrine catalogue, suivi des commandes, espace privilèges. Le
+conseiller IA a été **désactivé le 25/09** (décision de Mac Arthur), voir plus bas.
+
+## Refonte du catalogue, 25/09 (offerte)
+
+Demandée par Mac Arthur, livrée **sans facturation**.
+
+- **Deux types de produits.** Une *offre du jour* est effacée définitivement 48h après
+  être passée en offre, **fiche et photo**. Un produit *en stock* reste en ligne jusqu'à
+  ce que Charles le supprime. Un bouton fait passer de l'un à l'autre, et le compteur
+  des 48h repart à zéro quand un produit en stock redevient offre du jour.
+- **La purge** est l'edge function `getwinworld-purge`, appelée toutes les 15 min par
+  le job `gw_purge_offres` (colonne `offre_depuis`, migration `supabase-schema-04`).
+  Elle efface aussi les photos orphelines : **68 photos** laissées par l'ancienne règle
+  des 24h ont été supprimées au premier passage. L'ancien job `gw_expire_produits`
+  (tout effacer à 24h, stock compris) est retiré.
+- **Admin :** modifier tous les champs (photo, type, nom, prix, catégorie, maison,
+  description, délai, étiquette, visible ou masqué), suppression définitive avec
+  confirmation, filtres Tous / Offres / Stock, photo depuis la **galerie** ou
+  l'**appareil photo**, et un affichage adapté à l'ordinateur.
+- **Vitrine :** photos affichées entières dans un cadre 4:5 (les photos de Charles font
+  1200×1600, elles étaient coupées en carré), grille de 2 à 4 colonnes selon l'écran,
+  fiche produit en deux colonnes sur ordinateur. Les textes « 0 stock » sont corrigés.
+- **Conseiller IA désactivé :** l'onglet a disparu et les boutons « Faire une demande »
+  ouvrent WhatsApp. La fonction `getwinworld-chat` est toujours déployée mais n'est
+  plus appelée. Pour réactiver le conseiller, il suffit de restaurer l'onglet depuis git.
 
 ## Ce qui fait foi
 

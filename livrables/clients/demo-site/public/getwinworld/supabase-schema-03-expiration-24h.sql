@@ -1,4 +1,5 @@
 -- ============================================================
+-- REMPLACÉ le 25/09/2026 par supabase-schema-04-offres-48h-stock.sql (job gw_expire_produits retiré).
 -- GetWinWorld — Expiration automatique des articles après 24h en ligne
 -- Projet : lgdgbrivnhgeupqhkckd (Attractor Assists — projet partagé)
 -- Exécuter dans : Supabase Dashboard > SQL Editor

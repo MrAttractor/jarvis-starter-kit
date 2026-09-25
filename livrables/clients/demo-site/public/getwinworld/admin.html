@@ -26,7 +26,8 @@
     }
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
     html,body { height:100%; background:var(--blanc); color:var(--ink); font-family:'Space Grotesk',sans-serif; }
-    .app { max-width:430px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; background:var(--blanc); }
+    .app { max-width:430px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; background:var(--blanc); overflow-x:hidden; }
+    img { max-width:100%; }
 
     /* ── LOGIN ── */
     #login-screen { flex:1; display:flex; flex-direction:column; justify-content:center; padding:32px 28px; }
@@ -54,7 +55,7 @@
     .logout-btn { font-size:11px; color:var(--muted); cursor:pointer; text-decoration:underline; }
 
     .tabs { display:flex; border-bottom:1px solid var(--border); background:var(--blanc); position:sticky; top:60px; z-index:99; }
-    .tab { flex:1; padding:12px 4px; text-align:center; cursor:pointer; font-size:10px; font-weight:600; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; border-bottom:2px solid transparent; }
+    .tab { flex:1; padding:14px 4px; min-height:44px; text-align:center; cursor:pointer; font-size:10px; font-weight:600; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; border-bottom:2px solid transparent; }
     #demandes-badge { background:var(--rouge); color:#fff; font-size:9px; font-weight:600; border-radius:8px; padding:1px 6px; margin-left:3px; }
     .tab.active { color:var(--vert); border-bottom-color:var(--vert); }
 
@@ -63,17 +64,30 @@
 
     .add-btn { width:100%; padding:14px; background:var(--vert); color:#fff; border:none; font-size:12px; font-weight:600; letter-spacing:0.04em; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:16px; }
 
-    .prod-row { display:flex; gap:12px; padding:10px; border:1px solid var(--border); background:var(--blanc); margin-bottom:8px; align-items:center; }
-    .prod-row img { width:52px; height:52px; object-fit:cover; flex-shrink:0; }
-    .prod-row .info { flex:1; min-width:0; }
-    .prod-row .nom { font-family:'Cormorant Garamond',serif; font-size:14px; margin-bottom:2px; }
-    .prod-row .meta { font-size:10px; color:var(--muted); }
-    .prod-row .actions { display:flex; flex-direction:column; gap:4px; align-items:flex-end; }
-    .pill { font-size:9px; padding:3px 8px; border:1px solid var(--border); cursor:pointer; letter-spacing:0.04em; white-space:nowrap; }
-    .pill.on { background:var(--vert); color:#fff; border-color:var(--vert); }
-    .pill.offre { font-size:9px; padding:3px 8px; border:1px solid var(--rouge-b); cursor:pointer; letter-spacing:0.04em; white-space:nowrap; color:var(--rouge); }
-    .pill.offre.on { background:var(--rouge); color:#fff; border-color:var(--rouge); }
-    .pill.edit { color:var(--vert); border-color:var(--vert-b); }
+    .filters { display:flex; gap:8px; margin-bottom:16px; overflow-x:auto; }
+    .filters::-webkit-scrollbar { display:none; }
+    .filter { flex-shrink:0; min-height:44px; padding:0 16px; border:1px solid var(--border2); background:var(--blanc); font-family:'Space Grotesk',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; }
+    .filter.on { background:var(--vert); border-color:var(--vert); color:#fff; }
+
+    .products-list { display:grid; grid-template-columns:1fr; gap:8px; }
+    .prod-card { border:1px solid var(--border); background:var(--blanc); display:flex; flex-direction:column; min-width:0; }
+    .prod-card.masque { opacity:0.55; }
+    .prod-top { display:flex; gap:12px; padding:8px; align-items:center; min-width:0; cursor:pointer; }
+    .prod-thumb { width:72px; height:88px; flex-shrink:0; background:var(--sable); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .prod-thumb img { width:100%; height:100%; object-fit:contain; display:block; }
+    .prod-top .info { flex:1; min-width:0; }
+    .prod-top .nom { font-family:'Cormorant Garamond',serif; font-size:16px; margin-bottom:2px; overflow-wrap:anywhere; }
+    .prod-top .meta { font-size:11px; color:var(--muted); overflow-wrap:anywhere; }
+    .statut { display:inline-block; margin-top:6px; font-size:10px; font-weight:600; letter-spacing:0.04em; padding:3px 8px; }
+    .statut.offre { background:var(--rouge-d); color:var(--rouge); }
+    .statut.stock { background:var(--vert-d); color:var(--vert); }
+    .statut.masque { background:var(--sable); color:var(--muted); margin-left:4px; }
+    .prod-actions { display:grid; grid-template-columns:1fr 1fr 1fr; border-top:1px solid var(--border); }
+    .act { min-height:44px; border:none; border-right:1px solid var(--border); background:var(--blanc); font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:600; color:var(--ink2); cursor:pointer; padding:0 6px; }
+    .act:last-child { border-right:none; }
+    .act.stock { color:var(--vert); }
+    .act.offre { color:var(--rouge); }
+    .act.suppr { color:var(--rouge); }
 
     .res-row { padding:14px; border:1px solid var(--border); border-left:3px solid var(--border); background:var(--blanc); margin-bottom:8px; }
     .res-row.untreated { border-left-color:var(--rouge); }
@@ -93,19 +107,47 @@
     .modal-overlay.open { display:flex; }
     .modal-sheet { background:var(--blanc); width:100%; max-width:430px; margin:0 auto; max-height:88vh; overflow-y:auto; padding:20px; }
     .modal-sheet-title { font-family:'Cormorant Garamond',serif; font-size:20px; margin-bottom:16px; }
-    .photo-input-zone { border:1.5px dashed var(--border2); padding:20px; text-align:center; margin-bottom:14px; cursor:pointer; position:relative; }
-    .photo-input-zone img { max-width:100%; max-height:160px; display:block; margin:0 auto; }
-    .photo-input-zone .placeholder { font-size:11px; color:var(--muted); }
-    .photo-input-zone input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; }
+    .photo-zone { border:1.5px dashed var(--border2); background:var(--sable); margin-bottom:8px; min-height:120px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .photo-zone img { max-width:100%; max-height:320px; display:block; object-fit:contain; }
+    .photo-zone .placeholder { font-size:12px; color:var(--muted); padding:24px; text-align:center; }
+    .photo-btns { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
+    .photo-btn { position:relative; min-height:48px; border:1px solid var(--vert-b); background:var(--vert-d); color:var(--vert); font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; overflow:hidden; }
+    .photo-btn input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; }
+    .type-choice { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
+    .type-opt { min-height:56px; border:1px solid var(--border2); background:var(--blanc); padding:8px 10px; text-align:left; cursor:pointer; font-family:'Space Grotesk',sans-serif; }
+    .type-opt b { display:block; font-size:12px; color:var(--ink); margin-bottom:2px; }
+    .type-opt span { font-size:10px; color:var(--muted); }
+    .type-opt.on.offre { border-color:var(--rouge); background:var(--rouge-d); }
+    .type-opt.on.stock { border-color:var(--vert); background:var(--vert-d); }
+    .field-row { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px; }
+    .field textarea { resize:vertical; min-height:80px; }
+    .btn-danger { width:100%; min-height:44px; margin-top:10px; background:var(--blanc); color:var(--rouge); border:1px solid var(--rouge-b); font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:600; cursor:pointer; }
     .toggle-row { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-top:1px solid var(--border); margin-top:8px; }
     .toggle-row span { font-size:12px; }
-    .switch { position:relative; width:40px; height:22px; background:var(--border2); cursor:pointer; flex-shrink:0; }
+    .switch { position:relative; width:44px; height:24px; background:var(--border2); cursor:pointer; flex-shrink:0; }
     .switch.on { background:var(--vert); }
     .switch::after { content:''; position:absolute; top:2px; left:2px; width:18px; height:18px; background:#fff; transition:left 0.15s; }
-    .switch.on::after { left:20px; }
+    .switch.on::after { left:22px; }
     .modal-actions { display:flex; gap:8px; margin-top:18px; }
     .upload-status { font-size:11px; color:var(--muted); margin-top:8px; text-align:center; display:none; }
     .upload-status.show { display:block; }
+
+    .confirm-box { background:var(--blanc); width:100%; max-width:400px; margin:auto; padding:24px; }
+    .confirm-box p { font-size:13px; color:var(--ink2); line-height:1.6; margin:8px 0 18px; }
+
+    /* ── ORDINATEUR ── */
+    @media (min-width:768px) {
+      .app { max-width:1100px; }
+      .panel { padding:24px 32px; }
+      .products-list { grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px; }
+      .add-btn { width:auto; padding:14px 32px; }
+      .modal-overlay { align-items:center; padding:24px; }
+      .modal-sheet { max-width:640px; max-height:90vh; padding:32px; }
+      #panel-reservations, #panel-inscriptions { max-width:760px; }
+    }
+    @media (min-width:1024px) {
+      .products-list { grid-template-columns:repeat(3, minmax(0,1fr)); }
+    }
 
     .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; padding:10px 18px; font-size:12px; z-index:600; white-space:nowrap; opacity:0; transition:opacity 0.3s; pointer-events:none; }
     .toast.show { opacity:1; }
@@ -157,7 +199,12 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Publier un arrivage
       </button>
-      <div id="products-list"></div>
+      <div class="filters" id="filters">
+        <button class="filter on" data-f="tous" onclick="setFilter('tous')">Tous</button>
+        <button class="filter" data-f="offre" onclick="setFilter('offre')">Offres du jour</button>
+        <button class="filter" data-f="stock" onclick="setFilter('stock')">En stock</button>
+      </div>
+      <div class="products-list" id="products-list"></div>
     </div>
 
     <!-- RÉSERVATIONS -->
@@ -173,37 +220,70 @@
 </div>
 
 <!-- MODAL PUBLIER / ÉDITER -->
-<div class="modal-overlay" id="product-modal-overlay">
+<div class="modal-overlay" id="product-modal-overlay" onclick="if(event.target===this) closeProductForm()">
   <div class="modal-sheet">
     <div class="modal-sheet-title" id="product-modal-title">Publier un arrivage</div>
 
-    <div class="photo-input-zone" id="photo-zone">
-      <div class="placeholder" id="photo-placeholder">Touchez pour prendre ou choisir une photo</div>
-      <img id="photo-preview" style="display:none">
-      <input type="file" accept="image/*" capture="environment" id="photo-input" onchange="onPhotoSelected(event)">
+    <div class="photo-zone" id="photo-zone">
+      <div class="placeholder" id="photo-placeholder">Aucune photo choisie</div>
+      <img id="photo-preview" style="display:none" alt="">
+    </div>
+    <div class="photo-btns">
+      <label class="photo-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Galerie
+        <input type="file" accept="image/*" id="photo-input-galerie" onchange="onPhotoSelected(event)">
+      </label>
+      <label class="photo-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        Appareil photo
+        <input type="file" accept="image/*" capture="environment" id="photo-input-camera" onchange="onPhotoSelected(event)">
+      </label>
+    </div>
+
+    <div class="field"><label>Type de produit</label></div>
+    <div class="type-choice">
+      <button type="button" class="type-opt offre" id="type-offre" onclick="setType(true)"><b>Offre du jour</b><span>Supprimée au bout de 48h</span></button>
+      <button type="button" class="type-opt stock" id="type-stock" onclick="setType(false)"><b>En stock</b><span>Reste en ligne</span></button>
     </div>
 
     <div class="field">
       <label>Nom de la pièce</label>
       <input type="text" id="f-nom" placeholder="Ex. Loafer Cuir Noir">
     </div>
-    <div class="field">
-      <label>Prix</label>
-      <input type="text" id="f-prix" placeholder="Ex. 450 €">
-    </div>
-    <div class="field">
-      <label>Catégorie</label>
-      <input type="text" id="f-categorie" list="cat-list" placeholder="Ex. Chaussures">
-      <datalist id="cat-list"></datalist>
+    <div class="field-row">
+      <div class="field">
+        <label>Prix</label>
+        <input type="text" id="f-prix" placeholder="Ex. 450 €">
+      </div>
+      <div class="field">
+        <label>Catégorie</label>
+        <input type="text" id="f-categorie" list="cat-list" placeholder="Ex. Chaussures">
+        <datalist id="cat-list"></datalist>
+      </div>
     </div>
     <div class="field">
       <label>Maison (optionnel)</label>
       <input type="text" id="f-maison" placeholder="Ex. Filangieri 1966 — Italy">
     </div>
+    <div class="field">
+      <label>Description (optionnel)</label>
+      <textarea id="f-description" placeholder="Matière, couleur, tailles disponibles..."></textarea>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Délai / disponibilité</label>
+        <input type="text" id="f-delai" placeholder="Ex. Livré sous 5 jours">
+      </div>
+      <div class="field">
+        <label>Étiquette (optionnel)</label>
+        <input type="text" id="f-badge" placeholder="Ex. Nouveauté">
+      </div>
+    </div>
 
     <div class="toggle-row">
-      <span>Marquer comme offre du jour</span>
-      <div class="switch" id="f-offre" onclick="this.classList.toggle('on')"></div>
+      <span>Visible sur la vitrine</span>
+      <div class="switch on" id="f-actif" onclick="this.classList.toggle('on')"></div>
     </div>
 
     <div class="upload-status" id="upload-status">Envoi en cours...</div>
@@ -211,6 +291,19 @@
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeProductForm()" style="flex:1">Annuler</button>
       <button class="btn-primary" id="save-product-btn" onclick="saveProduct()" style="flex:1">Publier</button>
+    </div>
+    <button class="btn-danger" id="delete-in-form" style="display:none" onclick="askDelete(editingId)">Supprimer définitivement</button>
+  </div>
+</div>
+
+<!-- CONFIRMATION SUPPRESSION -->
+<div class="modal-overlay" id="confirm-overlay" style="align-items:center;padding:16px" onclick="if(event.target===this) closeConfirm()">
+  <div class="confirm-box">
+    <div class="modal-sheet-title" style="margin-bottom:0">Supprimer cette pièce ?</div>
+    <p id="confirm-text">La fiche et sa photo seront effacées définitivement. Impossible de revenir en arrière.</p>
+    <div class="modal-actions" style="margin-top:0">
+      <button class="btn-secondary" onclick="closeConfirm()" style="flex:1">Annuler</button>
+      <button class="btn-primary" id="confirm-delete-btn" style="flex:1;background:var(--rouge);margin-top:0" onclick="confirmDelete()">Supprimer</button>
     </div>
   </div>
 </div>
@@ -279,6 +372,13 @@ function switchTab(name, el) {
 }
 
 // ── CATALOGUE ────────────────────────────────────────────
+// Offre du jour : supprimée définitivement (fiche + photo) 48h après
+// `offre_depuis` par l'edge function getwinworld-purge. En stock : permanent.
+const OFFRE_TTL_H = 48;
+let filtre = 'tous';
+let formEstOffre = true;
+let deletingId = null;
+
 async function loadProducts() {
   const { data, error } = await sb.from('gw_produits').select('*').order('created_at', { ascending:false });
   if (error) { showToast('Erreur de chargement catalogue'); return; }
@@ -287,22 +387,49 @@ async function loadProducts() {
   renderCategoryDatalist();
 }
 
+function heuresRestantes(p) {
+  const fin = new Date(p.offre_depuis || p.created_at).getTime() + OFFRE_TTL_H*3600*1000;
+  return Math.max(0, Math.ceil((fin - Date.now()) / 3600000));
+}
+
+function setFilter(f) {
+  filtre = f;
+  document.querySelectorAll('#filters .filter').forEach(b => b.classList.toggle('on', b.dataset.f === f));
+  renderProducts();
+}
+
 function renderProducts() {
   const el = document.getElementById('products-list');
-  if (!products.length) { el.innerHTML = '<div class="empty-state">Aucun produit publié pour l\'instant.</div>'; return; }
-  el.innerHTML = products.map(p => `
-    <div class="prod-row">
-      <img src="${p.photo_url}" alt="">
-      <div class="info">
-        <div class="nom">${escapeHtml(p.nom)}</div>
-        <div class="meta">${escapeHtml(p.categorie)} · ${escapeHtml(p.prix)}</div>
+  const nbOffre = products.filter(p=>p.est_offre_du_jour).length;
+  const btns = document.querySelectorAll('#filters .filter');
+  btns[0].textContent = `Tous (${products.length})`;
+  btns[1].textContent = `Offres du jour (${nbOffre})`;
+  btns[2].textContent = `En stock (${products.length - nbOffre})`;
+  const list = products.filter(p => filtre==='tous' || (filtre==='offre') === !!p.est_offre_du_jour);
+  if (!list.length) { el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">Aucun produit ici pour l\'instant.</div>'; return; }
+  el.innerHTML = list.map(p => {
+    const statut = p.est_offre_du_jour
+      ? `<span class="statut offre">Offre du jour · retrait dans ${heuresRestantes(p)} h</span>`
+      : `<span class="statut stock">En stock</span>`;
+    return `
+    <div class="prod-card ${p.est_actif?'':'masque'}">
+      <div class="prod-top" onclick="openProductForm('${p.id}')">
+        <div class="prod-thumb"><img src="${escapeHtml(p.photo_url)}" alt="" loading="lazy"></div>
+        <div class="info">
+          <div class="nom">${escapeHtml(p.nom)}</div>
+          <div class="meta">${escapeHtml(p.categorie)} · ${escapeHtml(p.prix)}</div>
+          ${statut}${p.est_actif?'':'<span class="statut masque">Masqué</span>'}
+        </div>
       </div>
-      <div class="actions">
-        <div class="pill ${p.est_actif?'on':''}" onclick="toggleActif('${p.id}', ${!p.est_actif})">${p.est_actif?'Actif':'Archivé'}</div>
-        <div class="pill offre ${p.est_offre_du_jour?'on':''}" onclick="toggleOffre('${p.id}', ${!p.est_offre_du_jour})">Offre du jour</div>
-        <div class="pill edit" onclick="openProductForm('${p.id}')">Éditer</div>
+      <div class="prod-actions">
+        ${p.est_offre_du_jour
+          ? `<button class="act stock" onclick="setOffre('${p.id}', false)">Passer en stock</button>`
+          : `<button class="act offre" onclick="setOffre('${p.id}', true)">Offre du jour</button>`}
+        <button class="act" onclick="openProductForm('${p.id}')">Modifier</button>
+        <button class="act suppr" onclick="askDelete('${p.id}')">Supprimer</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function renderCategoryDatalist() {
@@ -310,46 +437,90 @@ function renderCategoryDatalist() {
   document.getElementById('cat-list').innerHTML = cats.map(c=>`<option value="${escapeHtml(c)}">`).join('');
 }
 
-async function toggleActif(id, value) {
-  const { error } = await sb.from('gw_produits').update({ est_actif: value }).eq('id', id);
+async function setOffre(id, value) {
+  const { error } = await sb.from('gw_produits').update({ est_offre_du_jour: value }).eq('id', id);
   if (error) { showToast('Erreur'); return; }
+  showToast(value ? `Offre du jour : en ligne ${OFFRE_TTL_H} h` : 'Passé en stock, reste en ligne');
   await loadProducts();
 }
 
-async function toggleOffre(id, value) {
-  const { error } = await sb.from('gw_produits').update({ est_offre_du_jour: value }).eq('id', id);
-  if (error) { showToast('Erreur'); return; }
-  await loadProducts();
+// ── SUPPRESSION DÉFINITIVE (fiche + photo) ───────────────
+function storagePath(url) {
+  const marker = '/object/public/gw-photos/';
+  const i = (url || '').indexOf(marker);
+  return i === -1 ? null : decodeURIComponent(url.slice(i + marker.length).split('?')[0]);
+}
+
+async function removePhoto(url) {
+  const path = storagePath(url);
+  if (!path) return;
+  const { error } = await sb.storage.from('gw-photos').remove([path]);
+  if (error) throw error;
+}
+
+function askDelete(id) {
+  const p = products.find(x=>x.id===id);
+  if (!p) return;
+  deletingId = id;
+  document.getElementById('confirm-text').textContent = `« ${p.nom} » et sa photo seront effacés définitivement. Impossible de revenir en arrière.`;
+  document.getElementById('confirm-overlay').classList.add('open');
+}
+
+function closeConfirm() {
+  deletingId = null;
+  document.getElementById('confirm-overlay').classList.remove('open');
+}
+
+async function confirmDelete() {
+  const p = products.find(x=>x.id===deletingId);
+  if (!p) return closeConfirm();
+  const btn = document.getElementById('confirm-delete-btn');
+  btn.disabled = true;
+  try {
+    await removePhoto(p.photo_url);
+    const { error } = await sb.from('gw_produits').delete().eq('id', p.id);
+    if (error) throw error;
+    showToast('Pièce supprimée définitivement');
+    closeConfirm();
+    closeProductForm();
+    await loadProducts();
+  } catch (e) {
+    showToast('Erreur : ' + (e.message || 'suppression échouée'));
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ── FORMULAIRE ───────────────────────────────────────────
+function setType(estOffre) {
+  formEstOffre = estOffre;
+  document.getElementById('type-offre').classList.toggle('on', estOffre);
+  document.getElementById('type-stock').classList.toggle('on', !estOffre);
+}
+
+function setPreview(src) {
+  const preview = document.getElementById('photo-preview');
+  preview.style.display = src ? 'block' : 'none';
+  if (src) preview.src = src;
+  document.getElementById('photo-placeholder').style.display = src ? 'none' : 'block';
 }
 
 function openProductForm(id) {
   editingId = id || null;
   pendingPhotoBlob = null;
-  document.getElementById('photo-preview').style.display = 'none';
-  document.getElementById('photo-placeholder').style.display = 'block';
-  document.getElementById('photo-input').value = '';
-
-  if (id) {
-    const p = products.find(x=>x.id===id);
-    document.getElementById('product-modal-title').textContent = 'Éditer la pièce';
-    document.getElementById('f-nom').value = p.nom || '';
-    document.getElementById('f-prix').value = p.prix || '';
-    document.getElementById('f-categorie').value = p.categorie || '';
-    document.getElementById('f-maison').value = p.maison || '';
-    document.getElementById('f-offre').classList.toggle('on', !!p.est_offre_du_jour);
-    document.getElementById('photo-preview').src = p.photo_url;
-    document.getElementById('photo-preview').style.display = 'block';
-    document.getElementById('photo-placeholder').style.display = 'none';
-    document.getElementById('save-product-btn').textContent = 'Enregistrer';
-  } else {
-    document.getElementById('product-modal-title').textContent = 'Publier un arrivage';
-    document.getElementById('f-nom').value = '';
-    document.getElementById('f-prix').value = '';
-    document.getElementById('f-categorie').value = '';
-    document.getElementById('f-maison').value = '';
-    document.getElementById('f-offre').classList.remove('on');
-    document.getElementById('save-product-btn').textContent = 'Publier';
-  }
+  document.getElementById('photo-input-galerie').value = '';
+  document.getElementById('photo-input-camera').value = '';
+  const p = id ? products.find(x=>x.id===id) : {};
+  const set = (k, v) => { document.getElementById(k).value = v || ''; };
+  set('f-nom', p.nom); set('f-prix', p.prix); set('f-categorie', p.categorie);
+  set('f-maison', p.maison); set('f-description', p.description);
+  set('f-delai', id ? p.note_delai : 'Sur commande · Délai 5-8 jours'); set('f-badge', p.badge);
+  setType(id ? !!p.est_offre_du_jour : true);
+  document.getElementById('f-actif').classList.toggle('on', id ? !!p.est_actif : true);
+  setPreview(id ? p.photo_url : null);
+  document.getElementById('product-modal-title').textContent = id ? 'Modifier la pièce' : 'Publier un arrivage';
+  document.getElementById('save-product-btn').textContent = id ? 'Enregistrer' : 'Publier';
+  document.getElementById('delete-in-form').style.display = id ? 'block' : 'none';
   document.getElementById('product-modal-overlay').classList.add('open');
 }
 
@@ -357,16 +528,16 @@ function closeProductForm() {
   document.getElementById('product-modal-overlay').classList.remove('open');
 }
 
-// Redimensionnement côté client avant upload (cap 1600px, JPEG qualité 0.82)
+// Redimensionnement côté client avant upload (cap 1600px, JPEG qualité 0.82).
+// Les proportions sont conservées : une photo verticale reste verticale.
 function resizeImage(file) {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    const reader = new FileReader();
-    reader.onload = e => { img.src = e.target.result; };
-    reader.onerror = reject;
+    const url = URL.createObjectURL(file);
     img.onload = () => {
+      URL.revokeObjectURL(url);
       const maxSide = 1600;
-      let { width, height } = img;
+      let width = img.naturalWidth, height = img.naturalHeight;
       if (width > maxSide || height > maxSide) {
         if (width > height) { height = Math.round(height * maxSide / width); width = maxSide; }
         else { width = Math.round(width * maxSide / height); height = maxSide; }
@@ -374,21 +545,23 @@ function resizeImage(file) {
       const canvas = document.createElement('canvas');
       canvas.width = width; canvas.height = height;
       canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-      canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.82);
+      canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('conversion impossible')), 'image/jpeg', 0.82);
     };
-    img.onerror = reject;
-    reader.readAsDataURL(file);
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('format de photo non lu')); };
+    img.src = url;
   });
 }
 
 async function onPhotoSelected(event) {
   const file = event.target.files[0];
   if (!file) return;
-  pendingPhotoBlob = await resizeImage(file);
-  const preview = document.getElementById('photo-preview');
-  preview.src = URL.createObjectURL(pendingPhotoBlob);
-  preview.style.display = 'block';
-  document.getElementById('photo-placeholder').style.display = 'none';
+  try {
+    pendingPhotoBlob = await resizeImage(file);
+    setPreview(URL.createObjectURL(pendingPhotoBlob));
+  } catch (e) {
+    pendingPhotoBlob = null;
+    showToast('Photo illisible, essayez-en une autre');
+  }
 }
 
 function slugify(str) {
@@ -396,12 +569,8 @@ function slugify(str) {
 }
 
 async function saveProduct() {
-  const nom = document.getElementById('f-nom').value.trim();
-  const prix = document.getElementById('f-prix').value.trim();
-  const categorie = document.getElementById('f-categorie').value.trim() || 'Divers';
-  const maison = document.getElementById('f-maison').value.trim() || 'GetWinWorld Sélection';
-  const estOffre = document.getElementById('f-offre').classList.contains('on');
-
+  const val = k => document.getElementById(k).value.trim();
+  const nom = val('f-nom'), prix = val('f-prix');
   if (!nom || !prix) { showToast('Nom et prix obligatoires'); return; }
   if (!editingId && !pendingPhotoBlob) { showToast('Ajoutez une photo'); return; }
 
@@ -409,27 +578,38 @@ async function saveProduct() {
   const btn = document.getElementById('save-product-btn');
   status.classList.add('show'); btn.disabled = true;
 
+  const ancienne = editingId ? products.find(p=>p.id===editingId).photo_url : null;
   try {
-    let photoUrl = editingId ? products.find(p=>p.id===editingId).photo_url : null;
-
+    let photoUrl = ancienne;
     if (pendingPhotoBlob) {
-      const path = `charles/${Date.now()}-${slugify(nom)}.jpg`;
-      const { error: upErr } = await sb.storage.from('gw-photos').upload(path, pendingPhotoBlob, { contentType:'image/jpeg', upsert:true });
+      const path = `charles/${Date.now()}-${slugify(nom) || 'piece'}.jpg`;
+      const { error: upErr } = await sb.storage.from('gw-photos').upload(path, pendingPhotoBlob, { contentType:'image/jpeg', upsert:false });
       if (upErr) throw upErr;
-      const { data: pub } = sb.storage.from('gw-photos').getPublicUrl(path);
-      photoUrl = pub.publicUrl;
+      photoUrl = sb.storage.from('gw-photos').getPublicUrl(path).data.publicUrl;
     }
 
-    const payload = { nom, prix, categorie, maison, photo_url: photoUrl, est_offre_du_jour: estOffre };
+    const payload = {
+      nom, prix,
+      categorie: val('f-categorie') || 'Divers',
+      maison: val('f-maison') || null,
+      description: val('f-description') || null,
+      note_delai: val('f-delai') || null,
+      badge: val('f-badge') || null,
+      photo_url: photoUrl,
+      est_offre_du_jour: formEstOffre,
+      est_actif: document.getElementById('f-actif').classList.contains('on'),
+    };
 
     if (editingId) {
       const { error } = await sb.from('gw_produits').update(payload).eq('id', editingId);
       if (error) throw error;
+      // L'ancienne photo remplacée ne doit pas traîner dans le stockage
+      if (pendingPhotoBlob && ancienne) { try { await removePhoto(ancienne); } catch (e) {} }
       showToast('Pièce mise à jour');
     } else {
       const { error } = await sb.from('gw_produits').insert(payload);
       if (error) throw error;
-      showToast('Arrivage publié');
+      showToast(formEstOffre ? `Offre publiée, en ligne ${OFFRE_TTL_H} h` : 'Produit en stock publié');
     }
 
     closeProductForm();

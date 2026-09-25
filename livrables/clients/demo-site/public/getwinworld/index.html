@@ -25,7 +25,7 @@
       --border2: #D0C8BE;
     }
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-    html,body { height:100%; background:var(--blanc); color:var(--ink); font-family:'Space Grotesk',sans-serif; }
+    html,body { height:100%; background:var(--blanc); color:var(--ink); font-family:'Space Grotesk',sans-serif; overflow-x:hidden; }
 
     /* ── APP ── */
     .app { max-width:430px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; background:var(--blanc); }
@@ -87,7 +87,8 @@
     .products-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); }
     .product-card { background:var(--blanc); cursor:pointer; transition:background 0.15s; position:relative; overflow:hidden; }
     .product-card:active { background:var(--sable); }
-    .product-img  { width:100%; aspect-ratio:1/1; object-fit:cover; display:block; }
+    .product-media { width:100%; aspect-ratio:4/5; background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .product-img  { width:100%; height:100%; object-fit:contain; display:block; }
     .product-info { padding:10px 12px 14px; }
     .product-house { font-size:9px; color:var(--rouge); letter-spacing:0.14em; text-transform:uppercase; margin-bottom:3px; font-weight:600; }
     .product-name  { font-family:'Cormorant Garamond',serif; font-size:14px; font-weight:400; line-height:1.3; margin-bottom:6px; }
@@ -144,7 +145,8 @@
     .modal-overlay.open { display:flex; }
     .modal { background:var(--blanc); width:100%; max-width:430px; margin:0 auto; max-height:92vh; overflow-y:auto; border-radius:12px 12px 0 0; }
     .modal-bar  { width:32px; height:3px; background:var(--border2); border-radius:2px; margin:12px auto 0; }
-    .modal-img  { width:100%; height:280px; object-fit:cover; display:block; }
+    .modal-media { background:#fff; display:flex; align-items:center; justify-content:center; }
+    .modal-img  { width:100%; height:auto; max-height:62vh; object-fit:contain; display:block; }
     .modal-body { padding:20px; }
     .modal-house { font-size:9px; color:var(--rouge); letter-spacing:0.16em; text-transform:uppercase; margin-bottom:5px; font-weight:600; }
     .modal-name  { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:400; line-height:1.2; margin-bottom:6px; }
@@ -246,7 +248,40 @@
     .wa-bubble:active { transform:scale(0.92); }
     .wa-bubble svg { width:30px; height:30px; }
     .wa-bubble.hidden { display:none; }
-    @media (min-width:462px) { .wa-bubble { right:calc(50% - 215px + 16px); } }
+    @media (min-width:462px) and (max-width:767px) { .wa-bubble { right:calc(50% - 215px + 16px); } }
+
+    /* ── ORDINATEUR ── */
+    @media (min-width:768px) {
+      .app { max-width:1180px; }
+      .hero { aspect-ratio:auto; height:min(460px, 60vh); }
+      .hero-content { left:40px; right:40px; bottom:40px; }
+      .hero-title { font-size:46px; }
+      .how { padding:32px 40px; }
+      .how-steps { flex-direction:row; gap:24px; }
+      .how-step { flex:1; }
+      .products-grid { grid-template-columns:repeat(3, minmax(0,1fr)); }
+      .cat-chips { padding:0 24px 16px; }
+      .inscribe-banner { margin:16px 24px; }
+      .conc-offers { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); padding:24px; gap:16px; }
+      #section-conseils .conc-offers { grid-template-columns:repeat(2, minmax(0,1fr)); }
+      .conc-hero { padding:40px; }
+      .order-list { max-width:760px; margin:0 auto; width:100%; }
+      #send-commande-wrap, #membre-block { max-width:760px; margin-left:auto !important; margin-right:auto !important; }
+      .nav { justify-content:center; }
+      .nav-item { flex:0 0 160px; }
+      .modal-overlay { align-items:center; padding:24px; }
+      .modal { max-width:560px; border-radius:12px; }
+      .modal-bar { display:none; }
+      .modal.modal-product { max-width:980px; display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); overflow:hidden; }
+      .modal-product .modal-media { height:100%; max-height:92vh; }
+      .modal-product .modal-img { max-height:92vh; }
+      .modal-product .modal-body { overflow-y:auto; max-height:92vh; padding:32px; align-self:center; }
+      .cart-bar { max-width:520px; }
+      .wa-bubble { right:max(16px, calc(50% - 590px + 24px)); }
+    }
+    @media (min-width:1024px) {
+      .products-grid { grid-template-columns:repeat(4, minmax(0,1fr)); }
+    }
 
     /* ── BARRE PANIER FLOTTANTE ── */
     .cart-bar { position:fixed; left:50%; transform:translateX(-50%); bottom:80px; width:calc(100% - 24px); max-width:406px; background:var(--vert); color:#fff; display:none; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; border-radius:12px; box-shadow:0 8px 24px rgba(27,58,45,0.38); z-index:150; cursor:pointer; }
@@ -311,7 +346,7 @@
             <div class="how-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
             <div class="how-body">
               <div class="how-name" data-i18n="how2_name">Vous parcourez, vous choisissez</div>
-              <div class="how-desc" data-i18n="how2_desc">Une seule vitrine, mise à jour en continu. Vous ajoutez vos coups de cœur à votre sélection, ou demandez conseil au conseiller.</div>
+              <div class="how-desc" data-i18n="how2_desc">Une seule vitrine, mise à jour en continu. Vous ajoutez vos coups de cœur à votre sélection, ou vous écrivez directement à Charles.</div>
             </div>
           </div>
           <div class="how-step">
@@ -324,7 +359,7 @@
         </div>
         <div class="how-warning">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          <div class="how-warning-text" data-i18n="how_warning"><strong>Offres journalières, non garanties le lendemain.</strong> Charles ne garde rien en stock : chaque pièce vue aujourd'hui peut être commandée par un autre client avant vous. Ne remettez pas votre sélection à demain.</div>
+          <div class="how-warning-text" data-i18n="how_warning"><strong>Les offres du jour restent en ligne 48h, pas une de plus.</strong> Passé ce délai, la pièce disparaît de la vitrine, et elle peut partir chez un autre client avant. Ne remettez pas votre sélection à plus tard.</div>
         </div>
       </div>
 
@@ -357,19 +392,19 @@
             <div class="offer-num">01</div>
             <div class="offer-title" data-i18n="offer1_title">Événements privés</div>
             <div class="offer-desc" data-i18n="offer1_desc">Dîners d'affaires, soirées de gala, célébrations. Charles gère la venue, le traiteur, la décoration et la liste des invités.</div>
-            <div class="offer-cta" onclick="goTo('conseiller',document.querySelectorAll('.nav-item')[1])"><span data-i18n="offer_cta">Faire une demande</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+            <div class="offer-cta" onclick="openWa()"><span data-i18n="offer_cta">Faire une demande</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
           </div>
           <div class="offer-card">
             <div class="offer-num">02</div>
             <div class="offer-title" data-i18n="offer2_title">Accès & Réservations VIP</div>
-            <div class="offer-desc" data-i18n="offer2_desc">Tables dans les meilleurs restaurants, loges privées, accès backstage. Sur simple demande au conseiller.</div>
-            <div class="offer-cta" onclick="goTo('conseiller',document.querySelectorAll('.nav-item')[1])"><span data-i18n="offer_cta">Faire une demande</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+            <div class="offer-desc" data-i18n="offer2_desc">Tables dans les meilleurs restaurants, loges privées, accès backstage. Sur simple demande à Charles.</div>
+            <div class="offer-cta" onclick="openWa()"><span data-i18n="offer_cta">Faire une demande</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
           </div>
           <div class="offer-card">
             <div class="offer-num">03</div>
             <div class="offer-title" data-i18n="offer3_title">Déplacements & Séjours</div>
             <div class="offer-desc" data-i18n="offer3_desc">Voyages sur mesure, chauffeurs privés, suites hôtelières. L'expérience de bout en bout.</div>
-            <div class="offer-cta" onclick="goTo('conseiller',document.querySelectorAll('.nav-item')[1])"><span data-i18n="offer_cta">Faire une demande</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+            <div class="offer-cta" onclick="openWa()"><span data-i18n="offer_cta">Faire une demande</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
           </div>
         </div>
       </div>
@@ -405,49 +440,13 @@
           <div class="offer-card">
             <div class="offer-num">05</div>
             <div class="offer-title" data-i18n="tip5_title">Délais de livraison : à quoi s'attendre</div>
-            <div class="offer-desc" data-i18n="tip5_desc">0 stock signifie chaque pièce commandée sur mesure auprès des maisons partenaires. Cinq à huit jours pour les chaussures, sept à douze jours pour les costumes. La qualité prime sur l'immédiateté.</div>
+            <div class="offer-desc" data-i18n="tip5_desc">Les pièces en stock partent rapidement. Les pièces sur commande sont commandées auprès des maisons partenaires : cinq à huit jours pour les chaussures, sept à douze jours pour les costumes. Le délai est indiqué sur chaque fiche.</div>
           </div>
         </div>
         <div class="tips-cta">
           <div class="tips-cta-text" data-i18n="tips_cta_text">Une question précise sur votre situation ?</div>
-          <div class="tips-cta-link" onclick="goTo('conseiller',document.querySelectorAll('.nav-item')[1])" data-i18n="tips_cta_link">Demander conseil au conseiller →</div>
+          <div class="tips-cta-link" onclick="openWa()" data-i18n="tips_cta_link">Demander conseil à Charles sur WhatsApp →</div>
         </div>
-      </div>
-    </div>
-
-    <!-- CONSEILLER -->
-    <div class="screen" id="screen-conseiller">
-      <div class="chat-header">
-        <div class="chat-hd-top">
-          <div class="chat-av">GW</div>
-          <div>
-            <div class="chat-title" data-i18n="chat_title">Votre conseiller</div>
-            <div class="chat-status" data-i18n="chat_status">Disponible · Répond en quelques secondes</div>
-          </div>
-        </div>
-        <div class="chat-sub" data-i18n="chat_sub">Style, occasion, événement ou pièce en tête — dites-moi tout. Charles s'occupe du reste.</div>
-        <div class="quick-chips">
-          <div class="quick-chip" onclick="sendQuick('qs_ceremonie')" data-i18n="quick_ceremonie">Cérémonie</div>
-          <div class="quick-chip" onclick="sendQuick('qs_voyage')" data-i18n="quick_voyage">Voyage</div>
-          <div class="quick-chip" onclick="sendQuick('qs_evenement')" data-i18n="quick_evenement">Événement</div>
-          <div class="quick-chip" onclick="sendQuick('qs_delais')" data-i18n="quick_delais">Délais</div>
-          <div class="quick-chip" onclick="sendQuick('qs_dispo')" data-i18n="quick_dispo">Disponibilités</div>
-        </div>
-      </div>
-      <div class="chat-area" id="chat-area">
-        <div class="msg bot">
-          <div class="msg-av2">GW</div>
-          <div>
-            <div class="msg-bubble" data-i18n="greeting">Bonjour. Je suis votre conseiller GetWinWorld.<br><br>Dites-moi quelle est l'occasion, votre style ou une pièce en tête — je vous propose une sélection sur mesure parmi les maisons italiennes de Charles.</div>
-            <div class="msg-time" data-i18n="time_now">Maintenant</div>
-          </div>
-        </div>
-      </div>
-      <div class="chat-wrap">
-        <input class="chat-input" id="chat-input" placeholder="Votre demande..." data-i18n-ph="chat_ph" onkeydown="handleKey(event)">
-        <button class="chat-send" onclick="sendMessage()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
       </div>
     </div>
 
@@ -547,15 +546,11 @@
       <span class="nav-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>
       <span class="nav-label" data-i18n="nav_vitrine">Vitrine</span>
     </div>
-    <div class="nav-item" onclick="goTo('conseiller',this)">
-      <span class="nav-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-      <span class="nav-label" data-i18n="nav_conseiller">Conseiller</span>
-    </div>
     <div class="nav-item" onclick="goTo('commandes',this)">
       <span class="nav-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10"/><rect x="1" y="3" width="22" height="7" rx="1"/></svg></span>
       <span class="nav-label" data-i18n="nav_commandes">Commandes</span>
     </div>
-    <div class="nav-item" onclick="goTo('espace',this)" style="position:relative">
+    <div class="nav-item" id="nav-espace" onclick="goTo('espace',this)" style="position:relative">
       <span class="nav-icon" style="position:relative"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="cart-badge" id="cart-badge" style="display:none">0</span></span>
       <span class="nav-label" data-i18n="nav_membre">Sélection</span>
     </div>
@@ -564,9 +559,9 @@
 
 <!-- MODAL PRODUIT -->
 <div class="modal-overlay" id="product-modal" onclick="closeModal(event)">
-  <div class="modal">
+  <div class="modal modal-product">
     <div class="modal-bar"></div>
-    <img class="modal-img" id="modal-img" src="" alt="">
+    <div class="modal-media"><img class="modal-img" id="modal-img" src="" alt=""></div>
     <div class="modal-body">
       <div class="modal-house" id="modal-brand"></div>
       <div class="modal-name"  id="modal-name"></div>
@@ -576,7 +571,7 @@
         <span id="modal-note"></span>
       </div>
       <div class="modal-desc" id="modal-desc"></div>
-      <div id="modal-urgency" style="display:none;font-size:11.5px;color:var(--rouge);font-weight:600;margin:-8px 0 14px" data-i18n="modal_urgency">Offre du jour — non garantie demain, à réserver aujourd'hui.</div>
+      <div id="modal-urgency" style="display:none;font-size:11.5px;color:var(--rouge);font-weight:600;margin:-8px 0 14px" data-i18n="modal_urgency">Offre du jour, en ligne 48h seulement. À réserver sans attendre.</div>
       <div class="modal-tags" id="modal-tags"></div>
       <div class="modal-acts">
         <button class="btn-secondary" onclick="closeProductModal()">✕</button>
@@ -650,9 +645,8 @@ const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
 const GW_WHATSAPP = '33613057138'; // numéro WhatsApp de Charles (canal de vente)
 let PRODUCTS = [];
-let currentProduct = null, chatBusy = false;
+let currentProduct = null;
 let activeCategory = 'Tous';
-let chatHistory = [];
 let currentScreen = 'vitrine';
 
 // ── i18n : FR / EN ──────────────────────────────────────────
@@ -668,10 +662,10 @@ const I18N = {
     how1_name: `Charles déniche les pépites`,
     how1_desc: `Il sélectionne chaussures et costumes auprès de ses maisons italiennes partenaires, et met à jour les arrivages chaque jour.`,
     how2_name: `Vous parcourez, vous choisissez`,
-    how2_desc: `Une seule vitrine, mise à jour en continu. Vous ajoutez vos coups de cœur à votre sélection, ou demandez conseil au conseiller.`,
+    how2_desc: `Une seule vitrine, mise à jour en continu. Vous ajoutez vos coups de cœur à votre sélection, ou vous écrivez directement à Charles.`,
     how3_name: `Charles s'occupe du reste`,
     how3_desc: `Vous envoyez votre sélection sur WhatsApp en un clic. Charles confirme la disponibilité, commande et vous livre.`,
-    how_warning: `<strong>Offres journalières, non garanties le lendemain.</strong> Charles ne garde rien en stock : chaque pièce vue aujourd'hui peut être commandée par un autre client avant vous. Ne remettez pas votre sélection à demain.`,
+    how_warning: `<strong>Les offres du jour restent en ligne 48h, pas une de plus.</strong> Passé ce délai, la pièce disparaît de la vitrine, et elle peut partir chez un autre client avant. Ne remettez pas votre sélection à plus tard.`,
     tab_vest: `Vestimentaire`,
     tab_event: `Événements`,
     tab_conseils: `Conseils`,
@@ -682,7 +676,7 @@ const I18N = {
     offer1_title: `Événements privés`,
     offer1_desc: `Dîners d'affaires, soirées de gala, célébrations. Charles gère la venue, le traiteur, la décoration et la liste des invités.`,
     offer2_title: `Accès & Réservations VIP`,
-    offer2_desc: `Tables dans les meilleurs restaurants, loges privées, accès backstage. Sur simple demande au conseiller.`,
+    offer2_desc: `Tables dans les meilleurs restaurants, loges privées, accès backstage. Sur simple demande à Charles.`,
     offer3_title: `Déplacements & Séjours`,
     offer3_desc: `Voyages sur mesure, chauffeurs privés, suites hôtelières. L'expérience de bout en bout.`,
     offer_cta: `Faire une demande`,
@@ -698,25 +692,9 @@ const I18N = {
     tip4_title: `Costume complet ou blazer seul`,
     tip4_desc: `Le costume complet pour les occasions formelles. Le blazer seul, associé à un pantalon différent, pour un usage plus quotidien ou décontracté-chic.`,
     tip5_title: `Délais de livraison : à quoi s'attendre`,
-    tip5_desc: `0 stock signifie chaque pièce commandée sur mesure auprès des maisons partenaires. Cinq à huit jours pour les chaussures, sept à douze jours pour les costumes. La qualité prime sur l'immédiateté.`,
+    tip5_desc: `Les pièces en stock partent rapidement. Les pièces sur commande sont commandées auprès des maisons partenaires : cinq à huit jours pour les chaussures, sept à douze jours pour les costumes. Le délai est indiqué sur chaque fiche.`,
     tips_cta_text: `Une question précise sur votre situation ?`,
-    tips_cta_link: `Demander conseil au conseiller →`,
-    chat_title: `Votre conseiller`,
-    chat_status: `Disponible · Répond en quelques secondes`,
-    chat_sub: `Style, occasion, événement ou pièce en tête — dites-moi tout. Charles s'occupe du reste.`,
-    quick_ceremonie: `Cérémonie`,
-    quick_voyage: `Voyage`,
-    quick_evenement: `Événement`,
-    quick_delais: `Délais`,
-    quick_dispo: `Disponibilités`,
-    qs_ceremonie: `Je cherche un costume pour une cérémonie`,
-    qs_voyage: `Chaussures pour un voyage business`,
-    qs_evenement: `Organiser un événement privé`,
-    qs_delais: `Quels sont les délais de livraison ?`,
-    qs_dispo: `Pièces disponibles cette semaine ?`,
-    greeting: `Bonjour. Je suis votre conseiller GetWinWorld.<br><br>Dites-moi quelle est l'occasion, votre style ou une pièce en tête — je vous propose une sélection sur mesure parmi les maisons italiennes de Charles.`,
-    time_now: `Maintenant`,
-    chat_ph: `Votre demande...`,
+    tips_cta_link: `Demander conseil à Charles sur WhatsApp →`,
     cmd_title: `Mes commandes`,
     cmd_sub: `Suivi de vos pièces en cours`,
     cmd_empty: `Aucune commande pour l'instant.<br><br>Une fois votre demande envoyée depuis la vitrine, Charles vous contacte directement sur WhatsApp pour la confirmation, le paiement et la livraison.`,
@@ -748,10 +726,9 @@ const I18N = {
     wa_see_article: `Voir l'article :`,
     wa_client_placeholder: `Client via WhatsApp`,
     nav_vitrine: `Vitrine`,
-    nav_conseiller: `Conseiller`,
     nav_commandes: `Commandes`,
     nav_membre: `Sélection`,
-    modal_urgency: `Offre du jour — non garantie demain, à réserver aujourd'hui.`,
+    modal_urgency: `Offre du jour, en ligne 48h seulement. À réserver sans attendre.`,
     modal_add: `Ajouter à ma sélection`,
     inscription_title: `Liste prioritaire`,
     inscription_desc: `Soyez informé en priorité des nouveaux arrivages de Charles, avant tout le monde.`,
@@ -764,8 +741,8 @@ const I18N = {
     confirm_btn: `Parfait, merci`,
     toast_survey: `Enquête satisfaction`,
     badge_offre: `Offre du jour`,
-    stock_today: `Dispo aujourd'hui uniquement`,
-    stock_order: `Sur commande`,
+    stock_today: `Offre du jour · 48h`,
+    stock_order: `En stock`,
     cat_all: `Tous`,
     catalogue_unavailable: `Catalogue indisponible pour l'instant.`,
     empty_category: `Aucune pièce dans cette catégorie pour l'instant.`,
@@ -782,8 +759,6 @@ const I18N = {
     btn_remove: `Retirer`,
     toast_sent_charles: `WhatsApp ouvert — envoyez votre message à Charles pour finaliser`,
     toast_inscription_ok: `Inscription confirmée — vous serez prévenu en priorité`,
-    chat_reply_fallback: `Je reviens vers vous dans un instant.`,
-    chat_reply_error: `Je reviens vers vous, réessayez dans un instant.`,
     wa_msg: `Bonjour Charles, je vous contacte depuis GetWinWorld.`,
   },
   en: {
@@ -797,10 +772,10 @@ const I18N = {
     how1_name: `Charles finds the gems`,
     how1_desc: `He selects shoes and suits from his partner Italian houses, and updates the new arrivals every day.`,
     how2_name: `You browse, you choose`,
-    how2_desc: `A single storefront, continuously updated. Add your favourites to your selection, or ask the adviser for advice.`,
+    how2_desc: `A single storefront, continuously updated. Add your favourites to your selection, or write to Charles directly.`,
     how3_name: `Charles handles the rest`,
     how3_desc: `You send your selection on WhatsApp in one tap. Charles confirms availability, orders and delivers.`,
-    how_warning: `<strong>Daily offers, not guaranteed the next day.</strong> Charles keeps nothing in stock: every piece seen today may be ordered by another client before you. Don't put off your selection until tomorrow.`,
+    how_warning: `<strong>Today's offers stay online for 48 hours, not one more.</strong> After that the piece leaves the storefront, and another client may take it first. Don't put off your selection.`,
     tab_vest: `Clothing`,
     tab_event: `Events`,
     tab_conseils: `Tips`,
@@ -811,7 +786,7 @@ const I18N = {
     offer1_title: `Private events`,
     offer1_desc: `Business dinners, gala evenings, celebrations. Charles handles the venue, catering, décor and guest list.`,
     offer2_title: `VIP Access & Bookings`,
-    offer2_desc: `Tables at the finest restaurants, private boxes, backstage access. Just ask the adviser.`,
+    offer2_desc: `Tables at the finest restaurants, private boxes, backstage access. Just ask Charles.`,
     offer3_title: `Travel & Stays`,
     offer3_desc: `Bespoke travel, private drivers, hotel suites. The end-to-end experience.`,
     offer_cta: `Make a request`,
@@ -827,25 +802,9 @@ const I18N = {
     tip4_title: `Full suit or blazer alone`,
     tip4_desc: `The full suit for formal occasions. The blazer alone, paired with different trousers, for more everyday or smart-casual wear.`,
     tip5_title: `Delivery times: what to expect`,
-    tip5_desc: `Zero stock means every piece is made to order from the partner houses. Five to eight days for shoes, seven to twelve days for suits. Quality comes before immediacy.`,
+    tip5_desc: `In-stock pieces ship quickly. Made-to-order pieces are ordered from the partner houses: five to eight days for shoes, seven to twelve days for suits. The lead time is shown on each item.`,
     tips_cta_text: `A specific question about your situation?`,
-    tips_cta_link: `Ask the adviser →`,
-    chat_title: `Your adviser`,
-    chat_status: `Available · Replies in seconds`,
-    chat_sub: `Style, occasion, event or a piece in mind — tell me everything. Charles handles the rest.`,
-    quick_ceremonie: `Ceremony`,
-    quick_voyage: `Travel`,
-    quick_evenement: `Event`,
-    quick_delais: `Timing`,
-    quick_dispo: `Availability`,
-    qs_ceremonie: `I'm looking for a suit for a ceremony`,
-    qs_voyage: `Shoes for a business trip`,
-    qs_evenement: `Organise a private event`,
-    qs_delais: `What are the delivery times?`,
-    qs_dispo: `Which pieces are available this week?`,
-    greeting: `Hello. I'm your GetWinWorld adviser.<br><br>Tell me the occasion, your style or a piece in mind — I'll suggest a bespoke selection from Charles's Italian houses.`,
-    time_now: `Now`,
-    chat_ph: `Your request...`,
+    tips_cta_link: `Ask Charles on WhatsApp →`,
     cmd_title: `My orders`,
     cmd_sub: `Track your pieces in progress`,
     cmd_empty: `No orders yet.<br><br>Once you send your request from the storefront, Charles contacts you directly on WhatsApp for confirmation, payment and delivery.`,
@@ -877,10 +836,9 @@ const I18N = {
     wa_see_article: `See item:`,
     wa_client_placeholder: `Client via WhatsApp`,
     nav_vitrine: `Store`,
-    nav_conseiller: `Adviser`,
     nav_commandes: `Orders`,
     nav_membre: `Selection`,
-    modal_urgency: `Today's offer — not guaranteed tomorrow, reserve it today.`,
+    modal_urgency: `Today's offer, online for 48 hours only. Reserve it now.`,
     modal_add: `Add to my selection`,
     inscription_title: `Priority list`,
     inscription_desc: `Be the first to know about Charles's new arrivals, before everyone else.`,
@@ -893,8 +851,8 @@ const I18N = {
     confirm_btn: `Perfect, thanks`,
     toast_survey: `Satisfaction survey`,
     badge_offre: `Today's offer`,
-    stock_today: `Available today only`,
-    stock_order: `Made to order`,
+    stock_today: `Today's offer · 48h`,
+    stock_order: `In stock`,
     cat_all: `All`,
     catalogue_unavailable: `Catalogue unavailable right now.`,
     empty_category: `No pieces in this category right now.`,
@@ -911,8 +869,6 @@ const I18N = {
     btn_remove: `Remove`,
     toast_sent_charles: `WhatsApp opened — send your message to Charles to finalise`,
     toast_inscription_ok: `Subscription confirmed — you'll be notified first`,
-    chat_reply_fallback: `I'll get back to you in a moment.`,
-    chat_reply_error: `I'll get back to you, please try again in a moment.`,
     wa_msg: `Hello Charles, I'm reaching out from GetWinWorld.`,
   },
 };
@@ -929,6 +885,9 @@ function t(key) {
   return (I18N[LANG] && I18N[LANG][key] != null) ? I18N[LANG][key] : (I18N.fr[key] != null ? I18N.fr[key] : key);
 }
 
+function openWa() {
+  window.open('https://wa.me/' + GW_WHATSAPP + '?text=' + encodeURIComponent(t('wa_msg')), '_blank', 'noopener');
+}
 function updateWaBubble() {
   const b = document.getElementById('wa-bubble');
   if (b) b.href = 'https://wa.me/33613057138?text=' + encodeURIComponent(t('wa_msg'));
@@ -956,9 +915,13 @@ function toggleLang() { applyLang(LANG === 'fr' ? 'en' : 'fr'); }
 
 async function loadProducts() {
   document.getElementById('products-grid').innerHTML = Array.from({length:4}).map(()=>'<div class="product-card skeleton"></div>').join('');
-  // Articles retirés automatiquement après 24h en ligne : on ne charge que les pièces mises en ligne il y a moins de 24h
-  const since = new Date(Date.now() - 24*60*60*1000).toISOString();
-  const { data, error } = await sb.from('gw_produits').select('*').eq('est_actif', true).gte('created_at', since).order('created_at', { ascending:false });
+  // Offre du jour : supprimée définitivement 48h après `offre_depuis` (edge function
+  // getwinworld-purge). Ce filtre couvre les minutes entre deux passages de la purge.
+  // Les produits en stock restent affichés sans limite.
+  const since = new Date(Date.now() - 48*60*60*1000).toISOString();
+  const { data, error } = await sb.from('gw_produits').select('*').eq('est_actif', true)
+    .or(`est_offre_du_jour.eq.false,offre_depuis.gte.${since}`)
+    .order('created_at', { ascending:false });
   if (error) { document.getElementById('products-grid').innerHTML = `<div class="empty-cat">${t('catalogue_unavailable')}</div>`; return; }
   PRODUCTS = data || [];
   renderCategoryChips();
@@ -978,6 +941,12 @@ function filterCategory(cat) {
   renderProducts();
 }
 
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str ?? '';
+  return d.innerHTML.replace(/"/g, '&quot;');
+}
+
 function isNew(p) {
   return (Date.now() - new Date(p.created_at).getTime()) < 7*24*60*60*1000;
 }
@@ -992,15 +961,15 @@ function renderProducts() {
   document.getElementById('products-grid').innerHTML = list.map(p => {
     let badge = '';
     if (p.est_offre_du_jour) badge = `<div class="product-badge offre">${t('badge_offre')}</div>`;
-    else if (p.badge) badge = `<div class="product-badge">${p.badge}</div>`;
+    else if (p.badge) badge = `<div class="product-badge">${esc(p.badge)}</div>`;
     return `
     <div class="product-card" onclick="openProduct('${p.id}')">
-      <img class="product-img" src="${p.photo_url}" alt="${p.nom}" loading="lazy">
+      <div class="product-media"><img class="product-img" src="${esc(p.photo_url)}" alt="${esc(p.nom)}" loading="lazy"></div>
       ${badge}
       <div class="product-info">
-        <div class="product-house">${(p.maison||'').substring(0,18)}</div>
-        <div class="product-name">${p.nom}</div>
-        <div class="product-price">${p.prix}</div>
+        <div class="product-house">${esc((p.maison||'').substring(0,18))}</div>
+        <div class="product-name">${esc(p.nom)}</div>
+        <div class="product-price">${esc(p.prix)}</div>
         <div class="product-stock"${p.est_offre_du_jour?' style="color:var(--rouge);font-weight:600"':''}>${p.est_offre_du_jour?t('stock_today'):t('stock_order')}</div>
       </div>
     </div>`;
@@ -1024,7 +993,7 @@ function openProduct(id) {
   document.getElementById('modal-note').textContent  = currentProduct.note_delai || '';
   document.getElementById('modal-desc').textContent  = currentProduct.description || '';
   document.getElementById('modal-urgency').style.display = currentProduct.est_offre_du_jour ? 'block' : 'none';
-  document.getElementById('modal-tags').innerHTML    = `<span class="modal-tag">${currentProduct.categorie}</span>`;
+  document.getElementById('modal-tags').innerHTML    = `<span class="modal-tag">${esc(currentProduct.categorie)}</span>`;
   document.getElementById('product-modal').classList.add('open');
 }
 function closeModal(e) { if(e.target===e.currentTarget) closeProductModal(); }
@@ -1052,7 +1021,7 @@ function updateCartBadge() {
 // Barre panier flottante + bulle WhatsApp : coordination de l'affichage
 function updateFloatingUI() {
   const cart = getCart();
-  const barVisible = cart.length > 0 && currentScreen !== 'espace' && currentScreen !== 'conseiller';
+  const barVisible = cart.length > 0 && currentScreen !== 'espace';
   const bar = document.getElementById('cart-bar');
   if (bar) {
     bar.classList.toggle('show', barVisible);
@@ -1060,11 +1029,11 @@ function updateFloatingUI() {
     if (c) c.textContent = cart.length;
   }
   const b = document.getElementById('wa-bubble');
-  if (b) b.classList.toggle('hidden', currentScreen === 'conseiller' || barVisible);
+  if (b) b.classList.toggle('hidden', barVisible);
 }
 
 function goToSelection() {
-  goTo('espace', document.querySelectorAll('.nav-item')[3]);
+  goTo('espace', document.getElementById('nav-espace'));
 }
 
 function addToSelection() {
@@ -1261,53 +1230,6 @@ function dismissInscribeBanner(e) {
   localStorage.setItem('gw_inscribe_dismissed','1');
   document.getElementById('inscribe-banner').style.display = 'none';
 }
-
-function appendMsg(text, type) {
-  const area = document.getElementById('chat-area');
-  const now  = new Date().toLocaleTimeString(LANG === 'en' ? 'en-GB' : 'fr',{hour:'2-digit',minute:'2-digit'});
-  const d = document.createElement('div');
-  d.className = 'msg '+type;
-  d.innerHTML = type==='bot'
-    ? `<div class="msg-av2">GW</div><div><div class="msg-bubble">${text}</div><div class="msg-time">${now}</div></div>`
-    : `<div><div class="msg-bubble">${text}</div><div class="msg-time" style="text-align:right">${now}</div></div>`;
-  area.appendChild(d);
-  area.scrollTop = area.scrollHeight;
-}
-async function sendMessage() {
-  const input = document.getElementById('chat-input');
-  const msg   = input.value.trim();
-  if(!msg||chatBusy) return;
-  input.value = '';
-  appendMsg(msg,'user');
-  chatHistory.push({role:'user', content:msg});
-  if (chatHistory.length > 12) chatHistory = chatHistory.slice(-12);
-  chatBusy = true;
-  try {
-    const res = await fetch(SUPABASE_URL + '/functions/v1/getwinworld-chat', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + SUPABASE_ANON,
-        'apikey': SUPABASE_ANON,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ messages: chatHistory, lang: LANG }),
-    });
-    const data = await res.json();
-    const reply = data.reply || t('chat_reply_fallback');
-    appendMsg(reply,'bot');
-    chatHistory.push({role:'assistant', content:reply});
-  } catch (e) {
-    appendMsg(t('chat_reply_error'),'bot');
-  } finally {
-    chatBusy = false;
-  }
-}
-function sendQuick(key) {
-  goTo('conseiller', document.querySelectorAll('.nav-item')[1]);
-  document.getElementById('chat-input').value = t(key);
-  sendMessage();
-}
-function handleKey(e) { if(e.key==='Enter') sendMessage(); }
 
 function goTo(screen, el) {
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
