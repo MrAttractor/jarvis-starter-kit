@@ -36,8 +36,8 @@ ce disque) :
 - path : `livrables`
 - output_mode : `content`, avec `-n`
 
-Ajoute `livrables/clients/air-cote-divoire/VSD.md`, qui porte le même bloc sous un autre
-nom de fichier.
+Écarte tout ce qui est sous un dossier `_archive/` : ces dossiers sont classés (tri du
+25/09/2026) et ne doivent plus remonter dans le radar.
 
 Lis aussi les tableaux `## Chantiers ouverts` quand il y en a : ce sont des projets sans
 dossier propre, et sans cette lecture ils n'apparaissent nulle part.
