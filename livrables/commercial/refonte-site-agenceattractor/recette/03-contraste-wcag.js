@@ -1,6 +1,6 @@
 const { chromium } = require('playwright');
 const BASE = 'http://127.0.0.1:8777';
-const PAGES = ['/', '/personal-branding.html', '/methode.html', '/qui-je-suis.html', '/contact.html'];
+const PAGES = ['/', '/personal-branding.html', '/digitaliser-son-activite.html', '/methode.html', '/qui-je-suis.html', '/contact.html'];
 
 (async () => {
   const nav = await chromium.launch();
@@ -57,7 +57,7 @@ const PAGES = ['/', '/personal-branding.html', '/methode.html', '/qui-je-suis.ht
 
   console.log('═══ CONTRASTE (WCAG AA) ═══');
   if (!fautes.length) {
-    console.log('Aucun texte sous le seuil, sur les 5 pages.');
+    console.log('Aucun texte sous le seuil, sur les ' + PAGES.length + ' pages.');
   } else {
     const vus = new Set();
     fautes.forEach(f => {

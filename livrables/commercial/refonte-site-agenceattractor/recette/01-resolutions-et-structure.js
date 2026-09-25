@@ -1,7 +1,7 @@
 const { chromium } = require('playwright');
 
 const BASE = 'http://127.0.0.1:8777';
-const PAGES = ['/', '/personal-branding.html', '/methode.html', '/qui-je-suis.html', '/contact.html'];
+const PAGES = ['/', '/personal-branding.html', '/digitaliser-son-activite.html', '/methode.html', '/qui-je-suis.html', '/contact.html'];
 const TAILLES = [375, 390, 414, 768, 1024, 1440];
 
 (async () => {
