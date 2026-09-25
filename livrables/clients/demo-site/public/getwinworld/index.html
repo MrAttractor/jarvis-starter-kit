@@ -28,9 +28,9 @@
     html,body { height:100%; background:var(--blanc); color:var(--ink); font-family:'Space Grotesk',sans-serif; overflow-x:hidden; }
 
     /* ── APP ── */
-    .app { max-width:430px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; background:var(--blanc); }
+    .app { max-width:430px; margin:0 auto; height:100vh; height:100dvh; display:flex; flex-direction:column; background:var(--blanc); overflow:hidden; }
 
-    .header { position:sticky; top:0; z-index:100; background:rgba(250,250,249,0.97); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:14px 20px 12px; display:flex; align-items:center; justify-content:space-between; }
+    .header { flex-shrink:0; position:sticky; top:0; z-index:100; background:rgba(250,250,249,0.97); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:14px 20px 12px; display:flex; align-items:center; justify-content:space-between; }
     .brand { display:flex; align-items:center; gap:10px; }
     .brand-mark { width:30px; height:30px; background:var(--vert); display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:12px; font-weight:500; color:#fff; letter-spacing:0.04em; }
     .brand-name { font-family:'Cormorant Garamond',serif; font-size:17px; font-weight:500; letter-spacing:0.04em; color:var(--ink); }
@@ -38,12 +38,12 @@
     .hdr-btn { width:34px; height:34px; border-radius:50%; border:1px solid var(--border); background:var(--blanc); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink2); position:relative; }
     .notif-dot { position:absolute; top:7px; right:7px; width:6px; height:6px; background:var(--rouge); border-radius:50%; border:1.5px solid var(--blanc); }
 
-    .screens { flex:1; overflow:hidden; }
-    .screen { display:none; height:calc(100vh - 114px); overflow-y:auto; }
+    .screens { flex:1; min-height:0; overflow:hidden; }
+    .screen { display:none; height:100%; overflow-y:auto; overflow-x:hidden; }
     .screen.active { display:block; }
     .screen::-webkit-scrollbar { display:none; }
 
-    .nav { position:sticky; bottom:0; z-index:100; background:rgba(250,250,249,0.97); backdrop-filter:blur(16px); border-top:1px solid var(--border); display:flex; padding:8px 0 20px; }
+    .nav { flex-shrink:0; position:sticky; bottom:0; z-index:100; background:rgba(250,250,249,0.97); backdrop-filter:blur(16px); border-top:1px solid var(--border); display:flex; padding:8px 0 20px; }
     .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:6px 0; }
     .nav-icon  { color:var(--muted2); transition:color 0.2s; }
     .nav-label { font-size:9px; font-weight:500; color:var(--muted2); letter-spacing:0.06em; text-transform:uppercase; transition:color 0.2s; }
@@ -51,7 +51,7 @@
     .nav-item.active .nav-icon  { color:var(--vert); }
 
     /* ── VITRINE ── */
-    .hero { position:relative; width:100vw; margin-left:calc(50% - 50vw); aspect-ratio:9/16; max-height:640px; overflow:hidden; background:var(--vert); }
+    .hero { position:relative; width:100%; aspect-ratio:9/16; max-height:640px; overflow:hidden; background:var(--vert); }
     .hero-img { width:100%; height:100%; object-fit:cover; filter:brightness(0.7); }
     .hero-overlay { position:absolute; inset:0; background:linear-gradient(180deg, rgba(27,58,45,0.2) 0%, rgba(27,58,45,0.85) 100%); }
     .hero-content { position:absolute; bottom:20px; left:20px; right:20px; }
@@ -460,7 +460,6 @@
         <div class="empty-cat" style="padding:40px 20px" data-i18n="cmd_empty">
           Aucune commande pour l'instant.<br><br>
           Une fois votre demande envoyée depuis la vitrine, Charles vous contacte directement sur WhatsApp pour la confirmation, le paiement et la livraison.
-        </div>
         </div>
       </div>
     </div>
