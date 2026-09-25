@@ -7,27 +7,23 @@
 <title>Méthode ATTRACTOR — Reçois l'ebook gratuit · Mr Attractor</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-<script>
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init','1225122193019269');
-fbq('track','PageView');
-</script>
+
 
 <style>
-:root {
-  --orange: #F25C05;
-  --orange-d: #B84403;
-  --charbon: #1A1714;
-  --sable: #FAF6F0;
+:root {--jaune:#F2C10D;--jaune-vif:#FFD21F;
+  --orange: #F2C10D;
+  --orange-d: #C99E08;
+  --charbon: #0B0B0C;
+  --sable: #F1EDE4;
   --white: #FFFFFF;
-  --g700: #4A443E;
-  --g400: #9A938B;
-  --g200: #E7E1D8;
-  --g100: #F2EDE6;
+  --g700: #55524C;
+  --g400: #8C877D;
+  --g200: #DCD6C9;
+  --g100: #FAF7F1;
   --green: #1E8A4C;
   --red: #C0392B;
-  --shadow: 0 2px 12px rgba(26,23,20,.08);
-  --shadow-lg: 0 8px 40px rgba(26,23,20,.14);
+  --shadow: 0 2px 12px rgba(11,11,12,.08);
+  --shadow-lg: 0 8px 40px rgba(11,11,12,.14);
 }
 
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -51,9 +47,9 @@ nav {
 }
 .logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
 .logo-mark {
-  width:30px; height:30px; border-radius:7px; background:var(--orange);
+  width:30px; height:30px; border-radius:7px; background:var(--jaune);
   display:flex; align-items:center; justify-content:center;
-  font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#fff;
+  font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:var(--charbon);
 }
 .logo-name { font-size:13px; font-weight:800; color:var(--sable); }
 .nav-back {
@@ -71,7 +67,7 @@ nav {
 }
 .hero-pill {
   display:inline-flex; align-items:center; gap:6px;
-  background:rgba(242,92,5,.1); border:1px solid rgba(242,92,5,.2);
+  background:rgba(110,82,0,.1); border:1px solid rgba(110,82,0,.2);
   border-radius:100px; padding:4px 14px;
   font-family:'Space Mono',monospace; font-size:9px; font-weight:700;
   color:var(--orange); letter-spacing:.12em; text-transform:uppercase;
@@ -123,8 +119,8 @@ nav {
   background:rgba(255,255,255,.04); border:1.5px solid rgba(255,255,255,.08);
   cursor:pointer; transition:all .2s; text-align:left;
 }
-.opt:hover { border-color:rgba(242,92,5,.35); background:rgba(242,92,5,.05); }
-.opt.selected { border-color:var(--orange); background:rgba(242,92,5,.1); }
+.opt:hover { border-color:rgba(110,82,0,.35); background:rgba(110,82,0,.05); }
+.opt.selected { border-color:var(--orange); background:rgba(110,82,0,.1); }
 .opt-letter {
   width:28px; height:28px; border-radius:6px; flex-shrink:0;
   background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
@@ -132,7 +128,7 @@ nav {
   font-family:'Space Mono',monospace; font-size:11px; font-weight:700;
   color:rgba(250,246,240,.5); transition:all .2s;
 }
-.opt.selected .opt-letter { background:var(--orange); border-color:var(--orange); color:#fff; }
+.opt.selected .opt-letter { background:var(--jaune); border-color:var(--orange); color:var(--charbon); }
 .opt-label { font-size:14px; font-weight:600; color:var(--sable); line-height:1.4; }
 .opt-sub { font-size:12px; color:rgba(250,246,240,.4); margin-top:2px; }
 
@@ -145,11 +141,11 @@ nav {
   background:rgba(255,255,255,.12); transition:all .3s;
 }
 .prog-dot.active { background:var(--orange); width:20px; border-radius:3px; }
-.prog-dot.done { background:rgba(242,92,5,.4); }
+.prog-dot.done { background:rgba(110,82,0,.4); }
 
 /* BTN */
 .btn-next {
-  width:100%; background:var(--orange); color:#fff;
+  width:100%; background:var(--jaune); color:var(--charbon);
   border:none; border-radius:10px; padding:15px;
   font-family:'Sora',sans-serif; font-size:15px; font-weight:700;
   cursor:pointer; margin-top:1rem; transition:all .2s;
@@ -170,12 +166,12 @@ nav {
   margin-bottom:1rem;
 }
 .result-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:rgba(255,255,255,.06); border-radius:10px; overflow:hidden; margin-bottom:1.5rem; }
-.rstat { padding:1.2rem 1rem; background:rgba(26,23,20,.8); text-align:center; }
+.rstat { padding:1.2rem 1rem; background:rgba(11,11,12,.8); text-align:center; }
 .rstat-num { font-family:'Space Mono',monospace; font-size:clamp(1.6rem,4vw,2.2rem); font-weight:700; color:var(--orange); line-height:1; }
 .rstat-lbl { font-size:10px; color:rgba(250,246,240,.4); margin-top:5px; line-height:1.4; }
 .result-insight {
   font-size:14px; color:rgba(250,246,240,.75); line-height:1.75;
-  padding:1rem 1.2rem; background:rgba(242,92,5,.06);
+  padding:1rem 1.2rem; background:rgba(110,82,0,.06);
   border-left:2px solid var(--orange); border-radius:0 8px 8px 0;
   margin-bottom:1.5rem;
 }
@@ -198,7 +194,7 @@ nav {
 }
 .capture-input:focus { border-color:var(--orange); }
 .btn-capture {
-  width:100%; background:var(--orange); color:#fff; border:none;
+  width:100%; background:var(--jaune); color:var(--charbon); border:none;
   border-radius:10px; padding:16px; font-family:'Sora',sans-serif;
   font-size:15px; font-weight:700; cursor:pointer; margin-top:.5rem;
   transition:all .2s; display:flex; align-items:center; justify-content:center; gap:10px;
@@ -223,7 +219,7 @@ nav {
 .confirm-next { display:flex; flex-direction:column; gap:10px; }
 .btn-challenge {
   display:flex; align-items:center; justify-content:center; gap:8px;
-  background:var(--orange); color:#fff; text-decoration:none;
+  background:var(--jaune); color:var(--charbon); text-decoration:none;
   padding:14px 24px; border-radius:10px; font-size:14px; font-weight:700;
   transition:all .2s;
 }
@@ -546,7 +542,6 @@ function showResult() {
   document.getElementById('insideSection').style.display = 'none';
   document.getElementById('progressDots').style.display = 'none';
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  fbq('track', 'Lead', { content_name: 'diagnostic-complete' });
 }
 
 async function submitCapture(e) {
@@ -579,8 +574,6 @@ async function submitCapture(e) {
   } catch (_) {
     // no-cors = on ne peut pas lire la réponse, ça passe quand même
   }
-
-  fbq('track', 'CompleteRegistration', { content_name: 'ebook-capture', value: 0, currency: 'EUR' });
 
   // Confirmation
   document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
