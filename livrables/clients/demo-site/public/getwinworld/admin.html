@@ -73,7 +73,7 @@
     .prod-card { border:1px solid var(--border); background:var(--blanc); display:flex; flex-direction:column; min-width:0; }
     .prod-card.masque { opacity:0.55; }
     .prod-top { display:flex; gap:12px; padding:8px; align-items:center; min-width:0; cursor:pointer; }
-    .prod-thumb { width:72px; height:88px; flex-shrink:0; background:var(--sable); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .prod-thumb { position:relative; width:72px; height:88px; flex-shrink:0; background:var(--sable); display:flex; align-items:center; justify-content:center; overflow:hidden; }
     .prod-thumb img { width:100%; height:100%; object-fit:contain; display:block; }
     .prod-top .info { flex:1; min-width:0; }
     .prod-top .nom { font-family:'Cormorant Garamond',serif; font-size:16px; margin-bottom:2px; overflow-wrap:anywhere; }
@@ -110,6 +110,15 @@
     .photo-zone { border:1.5px dashed var(--border2); background:var(--sable); margin-bottom:8px; min-height:120px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
     .photo-zone img { max-width:100%; max-height:320px; display:block; object-fit:contain; }
     .photo-zone .placeholder { font-size:12px; color:var(--muted); padding:24px; text-align:center; }
+    .photo-strip { display:flex; gap:8px; overflow-x:auto; margin-bottom:8px; padding-bottom:2px; }
+    .photo-strip::-webkit-scrollbar { display:none; }
+    .ph { position:relative; flex-shrink:0; width:64px; height:80px; background:var(--sable); border:2px solid transparent; cursor:pointer; }
+    .ph.main { border-color:var(--vert); }
+    .ph img { width:100%; height:100%; object-fit:contain; display:block; }
+    .ph .ph-main { position:absolute; left:0; right:0; bottom:0; background:var(--vert); color:#fff; font-size:8px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; text-align:center; padding:2px 0; }
+    .ph .ph-del { position:absolute; top:-2px; right:-2px; width:28px; height:28px; border:none; background:rgba(26,22,20,0.75); color:#fff; font-size:14px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .photo-hint { font-size:10px; color:var(--muted); margin-bottom:12px; }
+    .thumb-count { position:absolute; right:3px; bottom:3px; background:rgba(26,22,20,0.75); color:#fff; font-size:9px; font-weight:600; padding:1px 5px; }
     .photo-btns { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
     .photo-btn { position:relative; min-height:48px; border:1px solid var(--vert-b); background:var(--vert-d); color:var(--vert); font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; overflow:hidden; }
     .photo-btn input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; }
@@ -228,11 +237,13 @@
       <div class="placeholder" id="photo-placeholder">Aucune photo choisie</div>
       <img id="photo-preview" style="display:none" alt="">
     </div>
+    <div class="photo-strip" id="photo-strip"></div>
+    <div class="photo-hint" id="photo-hint"></div>
     <div class="photo-btns">
       <label class="photo-btn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
         Galerie
-        <input type="file" accept="image/*" id="photo-input-galerie" onchange="onPhotoSelected(event)">
+        <input type="file" accept="image/*" multiple id="photo-input-galerie" onchange="onPhotoSelected(event)">
       </label>
       <label class="photo-btn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
@@ -318,7 +329,6 @@ const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON, {auth:{storageKey:'gww-admin-auth',persistSession:true,autoRefreshToken:true}});
 
 let products = [];
-let pendingPhotoBlob = null;
 let editingId = null;
 
 function showToast(msg) {
@@ -378,6 +388,14 @@ const OFFRE_TTL_H = 48;
 let filtre = 'tous';
 let formEstOffre = true;
 let deletingId = null;
+// Photos du formulaire, dans l'ordre : { url } pour une photo déjà en ligne,
+// { blob, preview } pour une photo à envoyer. La première est la principale.
+let formPhotos = [];
+const MAX_PHOTOS = 10;
+
+function photosOf(p) {
+  return (p.photos && p.photos.length) ? p.photos : (p.photo_url ? [p.photo_url] : []);
+}
 
 async function loadProducts() {
   const { data, error } = await sb.from('gw_produits').select('*').order('created_at', { ascending:false });
@@ -414,7 +432,7 @@ function renderProducts() {
     return `
     <div class="prod-card ${p.est_actif?'':'masque'}">
       <div class="prod-top" onclick="openProductForm('${p.id}')">
-        <div class="prod-thumb"><img src="${escapeHtml(p.photo_url)}" alt="" loading="lazy"></div>
+        <div class="prod-thumb"><img src="${escapeHtml(p.photo_url)}" alt="" loading="lazy">${photosOf(p).length > 1 ? `<span class="thumb-count">${photosOf(p).length} photos</span>` : ''}</div>
         <div class="info">
           <div class="nom">${escapeHtml(p.nom)}</div>
           <div class="meta">${escapeHtml(p.categorie)} · ${escapeHtml(p.prix)}</div>
@@ -451,10 +469,10 @@ function storagePath(url) {
   return i === -1 ? null : decodeURIComponent(url.slice(i + marker.length).split('?')[0]);
 }
 
-async function removePhoto(url) {
-  const path = storagePath(url);
-  if (!path) return;
-  const { error } = await sb.storage.from('gw-photos').remove([path]);
+async function removePhotos(urls) {
+  const paths = [...new Set(urls.map(storagePath).filter(Boolean))];
+  if (!paths.length) return;
+  const { error } = await sb.storage.from('gw-photos').remove(paths);
   if (error) throw error;
 }
 
@@ -462,7 +480,8 @@ function askDelete(id) {
   const p = products.find(x=>x.id===id);
   if (!p) return;
   deletingId = id;
-  document.getElementById('confirm-text').textContent = `« ${p.nom} » et sa photo seront effacés définitivement. Impossible de revenir en arrière.`;
+  const n = photosOf(p).length;
+  document.getElementById('confirm-text').textContent = `« ${p.nom} » et ${n > 1 ? `ses ${n} photos seront effacés` : 'sa photo seront effacés'} définitivement. Impossible de revenir en arrière.`;
   document.getElementById('confirm-overlay').classList.add('open');
 }
 
@@ -477,7 +496,7 @@ async function confirmDelete() {
   const btn = document.getElementById('confirm-delete-btn');
   btn.disabled = true;
   try {
-    await removePhoto(p.photo_url);
+    await removePhotos(photosOf(p));
     const { error } = await sb.from('gw_produits').delete().eq('id', p.id);
     if (error) throw error;
     showToast('Pièce supprimée définitivement');
@@ -498,16 +517,38 @@ function setType(estOffre) {
   document.getElementById('type-stock').classList.toggle('on', !estOffre);
 }
 
-function setPreview(src) {
+function renderFormPhotos() {
   const preview = document.getElementById('photo-preview');
-  preview.style.display = src ? 'block' : 'none';
-  if (src) preview.src = src;
-  document.getElementById('photo-placeholder').style.display = src ? 'none' : 'block';
+  const main = formPhotos[0];
+  preview.style.display = main ? 'block' : 'none';
+  if (main) preview.src = main.url || main.preview;
+  document.getElementById('photo-placeholder').style.display = main ? 'none' : 'block';
+  document.getElementById('photo-strip').innerHTML = formPhotos.length > 1 || formPhotos.length === 1
+    ? formPhotos.map((ph, i) => `
+      <div class="ph ${i===0?'main':''}" onclick="setMainPhoto(${i})">
+        <img src="${escapeHtml(ph.url || ph.preview)}" alt="">
+        ${i===0 ? '<span class="ph-main">Principale</span>' : ''}
+        <button type="button" class="ph-del" onclick="event.stopPropagation(); removeFormPhoto(${i})" aria-label="Retirer la photo">×</button>
+      </div>`).join('')
+    : '';
+  document.getElementById('photo-hint').textContent = formPhotos.length > 1
+    ? `${formPhotos.length} photos. Touchez une photo pour la mettre en principale.`
+    : (formPhotos.length ? 'Vous pouvez ajouter d\'autres photos du même produit.' : `Jusqu'à ${MAX_PHOTOS} photos par produit.`);
+}
+
+function setMainPhoto(i) {
+  if (i === 0) return;
+  formPhotos.unshift(formPhotos.splice(i, 1)[0]);
+  renderFormPhotos();
+}
+
+function removeFormPhoto(i) {
+  formPhotos.splice(i, 1);
+  renderFormPhotos();
 }
 
 function openProductForm(id) {
   editingId = id || null;
-  pendingPhotoBlob = null;
   document.getElementById('photo-input-galerie').value = '';
   document.getElementById('photo-input-camera').value = '';
   const p = id ? products.find(x=>x.id===id) : {};
@@ -517,7 +558,8 @@ function openProductForm(id) {
   set('f-delai', id ? p.note_delai : 'Sur commande · Délai 5-8 jours'); set('f-badge', p.badge);
   setType(id ? !!p.est_offre_du_jour : true);
   document.getElementById('f-actif').classList.toggle('on', id ? !!p.est_actif : true);
-  setPreview(id ? p.photo_url : null);
+  formPhotos = id ? photosOf(p).map(url => ({ url })) : [];
+  renderFormPhotos();
   document.getElementById('product-modal-title').textContent = id ? 'Modifier la pièce' : 'Publier un arrivage';
   document.getElementById('save-product-btn').textContent = id ? 'Enregistrer' : 'Publier';
   document.getElementById('delete-in-form').style.display = id ? 'block' : 'none';
@@ -553,15 +595,21 @@ function resizeImage(file) {
 }
 
 async function onPhotoSelected(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  try {
-    pendingPhotoBlob = await resizeImage(file);
-    setPreview(URL.createObjectURL(pendingPhotoBlob));
-  } catch (e) {
-    pendingPhotoBlob = null;
-    showToast('Photo illisible, essayez-en une autre');
+  const files = [...event.target.files];
+  event.target.value = '';
+  if (!files.length) return;
+  const place = MAX_PHOTOS - formPhotos.length;
+  if (place <= 0) { showToast(`${MAX_PHOTOS} photos maximum`); return; }
+  if (files.length > place) showToast(`${MAX_PHOTOS} photos maximum, ${files.length - place} ignorée(s)`);
+  let illisibles = 0;
+  for (const file of files.slice(0, place)) {
+    try {
+      const blob = await resizeImage(file);
+      formPhotos.push({ blob, preview: URL.createObjectURL(blob) });
+      renderFormPhotos();
+    } catch (e) { illisibles++; }
   }
+  if (illisibles) showToast(`${illisibles} photo(s) illisible(s), essayez-en d'autres`);
 }
 
 function slugify(str) {
@@ -572,21 +620,27 @@ async function saveProduct() {
   const val = k => document.getElementById(k).value.trim();
   const nom = val('f-nom'), prix = val('f-prix');
   if (!nom || !prix) { showToast('Nom et prix obligatoires'); return; }
-  if (!editingId && !pendingPhotoBlob) { showToast('Ajoutez une photo'); return; }
+  if (!formPhotos.length) { showToast('Ajoutez au moins une photo'); return; }
 
   const status = document.getElementById('upload-status');
   const btn = document.getElementById('save-product-btn');
   status.classList.add('show'); btn.disabled = true;
 
-  const ancienne = editingId ? products.find(p=>p.id===editingId).photo_url : null;
+  const anciennes = editingId ? photosOf(products.find(p=>p.id===editingId)) : [];
+  const envoyees = [];
   try {
-    let photoUrl = ancienne;
-    if (pendingPhotoBlob) {
-      const path = `charles/${Date.now()}-${slugify(nom) || 'piece'}.jpg`;
-      const { error: upErr } = await sb.storage.from('gw-photos').upload(path, pendingPhotoBlob, { contentType:'image/jpeg', upsert:false });
+    const aEnvoyer = formPhotos.filter(ph => ph.blob).length;
+    const urls = [];
+    for (const ph of formPhotos) {
+      if (ph.url) { urls.push(ph.url); continue; }
+      status.textContent = `Envoi des photos ${envoyees.length + 1}/${aEnvoyer}...`;
+      const path = `charles/${Date.now()}-${envoyees.length}-${slugify(nom) || 'piece'}.jpg`;
+      const { error: upErr } = await sb.storage.from('gw-photos').upload(path, ph.blob, { contentType:'image/jpeg', upsert:false });
       if (upErr) throw upErr;
-      photoUrl = sb.storage.from('gw-photos').getPublicUrl(path).data.publicUrl;
+      const url = sb.storage.from('gw-photos').getPublicUrl(path).data.publicUrl;
+      envoyees.push(url); urls.push(url);
     }
+    status.textContent = 'Enregistrement...';
 
     const payload = {
       nom, prix,
@@ -595,7 +649,8 @@ async function saveProduct() {
       description: val('f-description') || null,
       note_delai: val('f-delai') || null,
       badge: val('f-badge') || null,
-      photo_url: photoUrl,
+      photo_url: urls[0],
+      photos: urls,
       est_offre_du_jour: formEstOffre,
       est_actif: document.getElementById('f-actif').classList.contains('on'),
     };
@@ -603,8 +658,9 @@ async function saveProduct() {
     if (editingId) {
       const { error } = await sb.from('gw_produits').update(payload).eq('id', editingId);
       if (error) throw error;
-      // L'ancienne photo remplacée ne doit pas traîner dans le stockage
-      if (pendingPhotoBlob && ancienne) { try { await removePhoto(ancienne); } catch (e) {} }
+      // Les photos retirées de la fiche ne doivent pas traîner dans le stockage
+      const retirees = anciennes.filter(u => !urls.includes(u));
+      if (retirees.length) { try { await removePhotos(retirees); } catch (e) {} }
       showToast('Pièce mise à jour');
     } else {
       const { error } = await sb.from('gw_produits').insert(payload);
@@ -615,9 +671,12 @@ async function saveProduct() {
     closeProductForm();
     await loadProducts();
   } catch (e) {
+    // Envoi interrompu : les photos déjà parties ne sont rattachées à rien
+    if (envoyees.length) { try { await removePhotos(envoyees); } catch (_) {} }
     showToast('Erreur : ' + (e.message || 'envoi échoué'));
   } finally {
     status.classList.remove('show'); btn.disabled = false;
+    status.textContent = 'Envoi en cours...';
   }
 }
 

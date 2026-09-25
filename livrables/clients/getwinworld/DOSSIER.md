@@ -85,6 +85,15 @@ Demandée par Mac Arthur, livrée **sans facturation**.
 - **Vitrine :** photos affichées entières dans un cadre 4:5 (les photos de Charles font
   1200×1600, elles étaient coupées en carré), grille de 2 à 4 colonnes selon l'écran,
   fiche produit en deux colonnes sur ordinateur. Les textes « 0 stock » sont corrigés.
+- **Plusieurs photos par produit** (jusqu'à 10, colonne `photos`, migration
+  `supabase-schema-05`) : Charles créait une fiche par photo (18 fiches « Ensemble Sac,
+  Chaussures AS » le 24/09). Galerie à faire défiler sur la fiche produit, choix de la
+  photo principale dans l'admin. `photo_url` reste synchronisée sur la première photo
+  par un déclencheur.
+- **Vidéo d'accueil entière** : elle est verticale (720×1280). Sur ordinateur elle
+  s'affiche en entier à droite de la bannière, sur téléphone sans être rognée.
+- **Affichage ordinateur corrigé** : une balise fermante en trop sortait la barre de
+  navigation du cadre et recouvrait le bas des écrans (défaut présent depuis juillet).
 - **Conseiller IA désactivé :** l'onglet a disparu et les boutons « Faire une demande »
   ouvrent WhatsApp. La fonction `getwinworld-chat` est toujours déployée mais n'est
   plus appelée. Pour réactiver le conseiller, il suffit de restaurer l'onglet depuis git.

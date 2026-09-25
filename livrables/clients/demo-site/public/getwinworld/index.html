@@ -51,7 +51,7 @@
     .nav-item.active .nav-icon  { color:var(--vert); }
 
     /* ── VITRINE ── */
-    .hero { position:relative; width:100%; aspect-ratio:9/16; max-height:640px; overflow:hidden; background:var(--vert); }
+    .hero { position:relative; width:100%; aspect-ratio:9/16; overflow:hidden; background:var(--vert); }
     .hero-img { width:100%; height:100%; object-fit:cover; filter:brightness(0.7); }
     .hero-overlay { position:absolute; inset:0; background:linear-gradient(180deg, rgba(27,58,45,0.2) 0%, rgba(27,58,45,0.85) 100%); }
     .hero-content { position:absolute; bottom:20px; left:20px; right:20px; }
@@ -87,7 +87,7 @@
     .products-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); }
     .product-card { background:var(--blanc); cursor:pointer; transition:background 0.15s; position:relative; overflow:hidden; }
     .product-card:active { background:var(--sable); }
-    .product-media { width:100%; aspect-ratio:4/5; background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .product-media { position:relative; width:100%; aspect-ratio:4/5; background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden; }
     .product-img  { width:100%; height:100%; object-fit:contain; display:block; }
     .product-info { padding:10px 12px 14px; }
     .product-house { font-size:9px; color:var(--rouge); letter-spacing:0.14em; text-transform:uppercase; margin-bottom:3px; font-weight:600; }
@@ -145,8 +145,17 @@
     .modal-overlay.open { display:flex; }
     .modal { background:var(--blanc); width:100%; max-width:430px; margin:0 auto; max-height:92vh; overflow-y:auto; border-radius:12px 12px 0 0; }
     .modal-bar  { width:32px; height:3px; background:var(--border2); border-radius:2px; margin:12px auto 0; }
-    .modal-media { background:#fff; display:flex; align-items:center; justify-content:center; }
-    .modal-img  { width:100%; height:auto; max-height:62vh; object-fit:contain; display:block; }
+    .modal-media { position:relative; background:#fff; min-width:0; }
+    .modal-track { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; }
+    .modal-track::-webkit-scrollbar { display:none; }
+    .modal-img  { flex:0 0 100%; width:100%; height:min(62vh, 125vw); object-fit:contain; display:block; scroll-snap-align:center; }
+    .gal-dots { position:absolute; left:0; right:0; bottom:10px; display:flex; justify-content:center; gap:6px; pointer-events:none; }
+    .gal-dot { width:6px; height:6px; border-radius:50%; background:rgba(26,22,20,0.25); }
+    .gal-dot.on { background:var(--vert); }
+    .gal-count { position:absolute; top:10px; right:10px; background:rgba(26,22,20,0.7); color:#fff; font-size:10px; font-weight:600; padding:3px 8px; }
+    .gal-nav { display:none; position:absolute; top:50%; transform:translateY(-50%); width:44px; height:44px; border-radius:50%; border:1px solid var(--border); background:rgba(250,250,249,0.92); color:var(--ink); cursor:pointer; align-items:center; justify-content:center; }
+    .gal-nav.prev { left:12px; } .gal-nav.next { right:12px; }
+    .photo-count { position:absolute; right:8px; bottom:8px; background:rgba(26,22,20,0.7); color:#fff; font-size:9px; font-weight:600; padding:2px 6px; letter-spacing:0.04em; }
     .modal-body { padding:20px; }
     .modal-house { font-size:9px; color:var(--rouge); letter-spacing:0.16em; text-transform:uppercase; margin-bottom:5px; font-weight:600; }
     .modal-name  { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:400; line-height:1.2; margin-bottom:6px; }
@@ -253,8 +262,12 @@
     /* ── ORDINATEUR ── */
     @media (min-width:768px) {
       .app { max-width:1180px; }
-      .hero { aspect-ratio:auto; height:min(460px, 60vh); }
-      .hero-content { left:40px; right:40px; bottom:40px; }
+      /* La vidéo est verticale (9:16) : sur ordinateur elle s'affiche en entier à droite,
+         le texte occupe la gauche sur le fond vert */
+      .hero { aspect-ratio:auto; height:min(640px, 78vh); }
+      .hero-video { position:absolute; top:24px; bottom:24px; right:40px; height:calc(100% - 48px); width:auto; aspect-ratio:9/16; object-fit:contain; filter:none; box-shadow:0 12px 40px rgba(0,0,0,0.35); }
+      .hero-overlay { display:none; }
+      .hero-content { left:40px; right:auto; max-width:calc(100% - 520px); bottom:auto; top:50%; transform:translateY(-50%); }
       .hero-title { font-size:46px; }
       .how { padding:32px 40px; }
       .how-steps { flex-direction:row; gap:24px; }
@@ -273,8 +286,9 @@
       .modal { max-width:560px; border-radius:12px; }
       .modal-bar { display:none; }
       .modal.modal-product { max-width:980px; display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); overflow:hidden; }
-      .modal-product .modal-media { height:100%; max-height:92vh; }
-      .modal-product .modal-img { max-height:92vh; }
+      .modal-product .modal-media { align-self:center; }
+      .modal-product .modal-img { height:min(86vh, 760px); }
+      .gal-nav.show { display:flex; }
       .modal-product .modal-body { overflow-y:auto; max-height:92vh; padding:32px; align-self:center; }
       .cart-bar { max-width:520px; }
       .wa-bubble { right:max(16px, calc(50% - 590px + 24px)); }
@@ -560,7 +574,13 @@
 <div class="modal-overlay" id="product-modal" onclick="closeModal(event)">
   <div class="modal modal-product">
     <div class="modal-bar"></div>
-    <div class="modal-media"><img class="modal-img" id="modal-img" src="" alt=""></div>
+    <div class="modal-media">
+      <div class="modal-track" id="modal-track" onscroll="onGalleryScroll()"></div>
+      <div class="gal-count" id="gal-count" style="display:none"></div>
+      <button class="gal-nav prev" id="gal-prev" onclick="galleryStep(-1)" aria-label="Photo précédente"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <button class="gal-nav next" id="gal-next" onclick="galleryStep(1)" aria-label="Photo suivante"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+      <div class="gal-dots" id="gal-dots"></div>
+    </div>
     <div class="modal-body">
       <div class="modal-house" id="modal-brand"></div>
       <div class="modal-name"  id="modal-name"></div>
@@ -963,7 +983,7 @@ function renderProducts() {
     else if (p.badge) badge = `<div class="product-badge">${esc(p.badge)}</div>`;
     return `
     <div class="product-card" onclick="openProduct('${p.id}')">
-      <div class="product-media"><img class="product-img" src="${esc(p.photo_url)}" alt="${esc(p.nom)}" loading="lazy"></div>
+      <div class="product-media"><img class="product-img" src="${esc(p.photo_url)}" alt="${esc(p.nom)}" loading="lazy">${photosOf(p).length > 1 ? `<span class="photo-count">${photosOf(p).length} photos</span>` : ''}</div>
       ${badge}
       <div class="product-info">
         <div class="product-house">${esc((p.maison||'').substring(0,18))}</div>
@@ -985,7 +1005,7 @@ function switchSvc(tab, el) {
 function openProduct(id) {
   currentProduct = PRODUCTS.find(p=>p.id===id);
   if(!currentProduct) return;
-  document.getElementById('modal-img').src    = currentProduct.photo_url;
+  renderGallery(photosOf(currentProduct), currentProduct.nom);
   document.getElementById('modal-brand').textContent = currentProduct.maison || '';
   document.getElementById('modal-name').textContent  = currentProduct.nom;
   document.getElementById('modal-price').textContent = currentProduct.prix;
@@ -995,6 +1015,38 @@ function openProduct(id) {
   document.getElementById('modal-tags').innerHTML    = `<span class="modal-tag">${esc(currentProduct.categorie)}</span>`;
   document.getElementById('product-modal').classList.add('open');
 }
+// ── Galerie photos de la fiche produit ─────────────────────
+function photosOf(p) {
+  return (p.photos && p.photos.length) ? p.photos : (p.photo_url ? [p.photo_url] : []);
+}
+let galleryIndex = 0, galleryCount = 0;
+function renderGallery(urls, nom) {
+  galleryIndex = 0; galleryCount = urls.length;
+  const track = document.getElementById('modal-track');
+  track.innerHTML = urls.map((u, i) => `<img class="modal-img" src="${esc(u)}" alt="${esc(nom)}"${i ? ' loading="lazy"' : ''}>`).join('');
+  track.scrollLeft = 0;
+  const multi = urls.length > 1;
+  document.getElementById('gal-dots').innerHTML = multi ? urls.map((_, i) => `<span class="gal-dot${i ? '' : ' on'}"></span>`).join('') : '';
+  document.getElementById('gal-count').style.display = multi ? 'block' : 'none';
+  document.getElementById('gal-prev').classList.toggle('show', multi);
+  document.getElementById('gal-next').classList.toggle('show', multi);
+  updateGalleryUI();
+}
+function updateGalleryUI() {
+  document.querySelectorAll('#gal-dots .gal-dot').forEach((d, i) => d.classList.toggle('on', i === galleryIndex));
+  document.getElementById('gal-count').textContent = `${galleryIndex + 1} / ${galleryCount}`;
+}
+function onGalleryScroll() {
+  const track = document.getElementById('modal-track');
+  const i = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+  if (i !== galleryIndex) { galleryIndex = i; updateGalleryUI(); }
+}
+function galleryStep(delta) {
+  const track = document.getElementById('modal-track');
+  const i = (galleryIndex + delta + galleryCount) % galleryCount;
+  track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' });
+}
+
 function closeModal(e) { if(e.target===e.currentTarget) closeProductModal(); }
 function closeProductModal() { document.getElementById('product-modal').classList.remove('open'); }
 

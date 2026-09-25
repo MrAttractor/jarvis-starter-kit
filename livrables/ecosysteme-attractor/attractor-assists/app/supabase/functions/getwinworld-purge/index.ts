@@ -32,6 +32,11 @@ function jwtRole(header: string | null): string | null {
   }
 }
 
+// Toutes les photos d'une fiche : la liste `photos` et, par sécurité, `photo_url`
+function allPaths(p: { photo_url: string | null; photos: string[] | null }): string[] {
+  return [...new Set([p.photo_url, ...(p.photos ?? [])].map(storagePath).filter(Boolean))] as string[];
+}
+
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
 }
@@ -47,14 +52,14 @@ serve(async (req) => {
   // 1. Offres du jour expirées : photo d'abord, fiche ensuite
   const { data: expired, error: selErr } = await sb
     .from("gw_produits")
-    .select("id, photo_url")
+    .select("id, photo_url, photos")
     .eq("est_offre_du_jour", true)
     .lt("offre_depuis", limit);
   if (selErr) return json({ error: selErr.message }, 500);
 
-  const expiredPaths = (expired ?? []).map((p) => storagePath(p.photo_url)).filter(Boolean) as string[];
-  if (expiredPaths.length) {
-    const { error } = await sb.storage.from(BUCKET).remove(expiredPaths);
+  const expiredPaths = (expired ?? []).flatMap(allPaths);
+  for (let i = 0; i < expiredPaths.length; i += 100) {
+    const { error } = await sb.storage.from(BUCKET).remove(expiredPaths.slice(i, i + 100));
     if (error) return json({ error: error.message }, 500);
   }
   if (expired?.length) {
@@ -64,8 +69,9 @@ serve(async (req) => {
 
   // 2. Photos orphelines : plus rattachées à aucune fiche (anciennes purges
   // 24h, photos remplacées, envois abandonnés)
-  const { data: live } = await sb.from("gw_produits").select("photo_url");
-  const used = new Set((live ?? []).map((p) => storagePath(p.photo_url)).filter(Boolean));
+  const { data: live, error: liveErr } = await sb.from("gw_produits").select("photo_url, photos");
+  if (liveErr) return json({ error: liveErr.message }, 500);
+  const used = new Set((live ?? []).flatMap(allPaths));
   const orphans: string[] = [];
   for (let offset = 0; ; offset += 1000) {
     const { data: files, error } = await sb.storage.from(BUCKET).list(FOLDER, { limit: 1000, offset });
