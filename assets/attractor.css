@@ -241,6 +241,25 @@ p:last-child { margin-bottom: 0; }
   .duo-media { justify-self: end; }
 }
 
+/* Texte, photo, puis suite du texte.
+   En mobile, une colonne unique enchaînait titre, citation et deux paragraphes
+   avant que la photo n'arrive : trop de texte d'affilée. La photo se glisse
+   maintenant juste après le titre, et reprend sa colonne sur grand écran. */
+.duo-intercale { align-items: start; }
+@media (min-width: 900px) {
+  .duo-intercale { column-gap: var(--e10); row-gap: var(--e3); }
+  .duo-intercale > .duo-titre { grid-column: 1; grid-row: 1; }
+  .duo-intercale > .duo-suite { grid-column: 1; grid-row: 2; }
+  /* La largeur est posée sur le conteneur, pas laissée à l'image.
+     Avec `justify-self: end`, la boîte se réduit à son contenu : une image
+     en chargement différé n'ayant encore aucun pixel, elle mesurait 0 de large
+     et sautait à 360 en arrivant. Mesuré à 1024 et 1440 px. */
+  .duo-intercale > .duo-photo { grid-column: 2; grid-row: 1 / span 2; align-self: start; justify-self: end; width: 360px; }
+}
+/* Filet de sécurité : la place verticale est réservée même si le rapport
+   n'est pas encore connu du moteur de rendu. */
+.duo-photo img { aspect-ratio: 4 / 5; object-fit: cover; }
+
 /* ── Premier écran ─────────────────────────────────────────────
    Le tracé animé passe derrière le titre, comme la trajectoire de
    circuit de la référence. Il se dessine une fois, puis ne bouge plus. */
@@ -333,23 +352,50 @@ p:last-child { margin-bottom: 0; }
 .js .reveler[data-delai="2"] { transition-delay: .2s; }
 .js .reveler[data-delai="3"] { transition-delay: .3s; }
 
+/* ── Cadre d'image ─────────────────────────────────────────────
+   Relevé sur la référence, en mobile : le CADRE est arrondi à 24 px et
+   découpe, l'IMAGE elle-même n'a aucun rayon, et une légende en chasse fixe
+   est incrustée en bas. C'est ce cadre commun qui fait tenir ensemble des
+   images aux couleurs très différentes — sans lui, trois captures de sites
+   aux chartes opposées se télescopent. */
+.cadre {
+  position: relative; overflow: hidden; border-radius: 24px;
+  background: var(--surface); line-height: 0;
+}
+.cadre img {
+  width: 100%; border-radius: 0; display: block;
+  /* L'harmonisation de la référence, mesurée dans son code. */
+  filter: saturate(1.05) contrast(1.03);
+  transition: transform .5s cubic-bezier(.16,1,.3,1);
+}
+.cadre-legende {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 12px 16px;
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; line-height: 1.4;
+  color: var(--texte); background: rgba(11, 11, 12, 0.78);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+}
+/* Une légende peut passer en accent quand elle porte un fait, pas un titre. */
+.cadre-legende.accent { background: var(--accent); color: var(--noir); }
+
+/* Le portrait principal porte l'ombre profonde de la référence : c'est elle
+   qui le détache du fond au lieu de le laisser posé dessus. */
+.cadre-portrait { box-shadow: 0 40px 90px rgba(0, 0, 0, 0.55); }
+
+/* Dans une carte, le cadre est déjà contenu : on évite l'arrondi dans l'arrondi. */
+.carte > .cadre { border-radius: 14px; }
+
 /* ── Vignettes de réalisation ──────────────────────────────── */
 .vitrine { display: grid; gap: var(--e4); grid-template-columns: 1fr; }
 @media (min-width: 760px) { .vitrine { grid-template-columns: repeat(2, 1fr); } }
 
 .realisation { text-decoration: none; display: block; }
-.realisation img {
-  width: 100%; border-radius: 16px; border: 1px solid var(--sep);
-  transition: transform .45s cubic-bezier(.16,1,.3,1);
-}
-.realisation:hover img { transform: translateY(-6px) scale(1.012); }
-.realisation-nom { margin: var(--e3) 0 4px; font-size: 20px; font-weight: 700; }
-.realisation-quoi {
-  font-family: 'Space Mono', ui-monospace, monospace; font-size: 13px;
-  letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin: 0;
-}
-.section-claire .realisation img { border-color: var(--sep-clair); }
-.section-claire .realisation-quoi { color: var(--ocre); }
+.realisation:hover .cadre img { transform: scale(1.03); }
+/* Le nom du client vit dans la légende incrustée, jamais deux fois. Sous
+   l'image, une seule ligne : ce qui a été livré. */
+.realisation-quoi { margin: var(--e3) 0 0; font-size: 19px; font-weight: 600; color: var(--texte); }
+.section-claire .realisation-quoi { color: var(--encre); }
 
 /* ── Questions fréquentes ──────────────────────────────────── */
 .q { border-top: 1px solid var(--sep); }
